@@ -126,6 +126,7 @@ __forceinline T(__cdecl *Make_VA_Function_Ptr(const uintptr_t address))(Types...
     return reinterpret_cast<T(__cdecl *)(Types..., ...)>(address);
 }
 #endif
+
 // A nice struct to pack the assembly in for jumping into replacement code.
 // So long as the calling conventions and arguments for the replaced and
 // replacement functions are the same, everything should just work.
@@ -137,11 +138,16 @@ __forceinline T(__cdecl *Make_VA_Function_Ptr(const uintptr_t address))(Types...
     };
 #pragma pack(pop)
 
-// Use these to hook existing functions and replace them with newly written ones
-// to either replace them permenantly or just to test correctness of a newly
-// written one.
-// Typically the in pointer will be provided by one of the Make_*_Ptr functions
-// above to ensure the parameters are correct.
+/**
+ * @brief Replaces a function in the original binary with a new one at run time.
+ *
+ * Replaces a function with a different function at run time by patching in an assembly "jump" instruction to jump to the new
+ * function. Provided the new function has the same parameters and calling convention as the one that is replaced, it should
+ * work without issue so long as it can fulfill the same role.
+ *
+ * @param in The address of the function to replace.
+ * @param out The address of the function to replace with.
+ */
 inline void Hook_Function(void *in, void *out)
 {
     //static_assert(sizeof(x86_jump) == 5, "Jump struct not expected size.");
@@ -152,11 +158,10 @@ inline void Hook_Function(void *in, void *out)
     WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
 }
 
-#if 0
 // Method pointers need funky syntax to get the underlying function address
 // hence the odd cast to void for the out pointer.
-template<typename T, typename C, typename... Types>
-void Hook_Method(T(__thiscall *in)(C *, Types...), T(C:: *out)(Types...))
+template<typename T, typename C>
+void Hook_Method(void *in, T(C:: *out)())
 {
     static_assert(sizeof(x86_jump) == 5, "Jump struct not expected size.");
 
@@ -164,7 +169,7 @@ void Hook_Method(T(__thiscall *in)(C *, Types...), T(C:: *out)(Types...))
     cmd.addr = reinterpret_cast<uintptr_t>((void*&)out) - reinterpret_cast<uintptr_t>(in) - 5;
     WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
 }
-#endif
+
 __declspec(dllexport) void StartHooking();
 __declspec(dllexport) void StopHooking();
 

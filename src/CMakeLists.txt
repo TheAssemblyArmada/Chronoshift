@@ -15,9 +15,12 @@ set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 
 set(GAMEENGINE_SRC
     game/alloc.cpp
+    game/buffer.cpp
     game/critsection.cpp
+    game/fileclass.cpp
     game/gamedebug.cpp
     game/newdel.cpp
+    game/rawfileclass.cpp
 )
 
 add_library(rapp SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})

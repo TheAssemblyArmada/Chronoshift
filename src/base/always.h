@@ -57,7 +57,7 @@
 //  Define nullptr when standard is less than C++x0
 //
 ////////////////////////////////////////////////////////////////////////////////
-#if __cplusplus <= 199711L
+#if __cplusplus <= 199711L && !defined COMPILER_MSVC
     #define nullptr NULL
 #endif
 

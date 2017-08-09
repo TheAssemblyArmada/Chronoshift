@@ -55,7 +55,7 @@ void Debug_Init(int flags)
 
     if ( tmp != NULL ) {
         strcpy(dirbuf, tmp);
-        strcat(dirbuf, "\\Documents\\Redalert++ Data");
+        strcat(dirbuf, "\\Documents\\RedalertPlusPlus Data");
         mkdir(dirbuf);
         strcat(dirbuf, "\\");
     } else {
@@ -74,10 +74,10 @@ void Debug_Init(int flags)
     const char *prefix = "";
     strcpy(prevbuf, dirbuf);
     strcat(prevbuf, prefix);
-    strcat(prevbuf, "Redalert++DebugLogPrev.txt");
+    strcat(prevbuf, "RedalertPlusPLusDebugLogPrev.txt");
     strcpy(curbuf, dirbuf);
     strcat(curbuf, prefix);
-    strcat(curbuf, "Redalert++DebugLogFile.txt");
+    strcat(curbuf, "RedalertPlusPlusDebugLogFile.txt");
     remove(prevbuf);
     rename(curbuf, prevbuf);
     DebugLogFile = fopen(curbuf, "w");

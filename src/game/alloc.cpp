@@ -34,7 +34,7 @@ unsigned int MaxRam;
 
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags)
 {
-    DEBUG_LOG("Attempting to allocate memory of size %d with flags %d.\n", bytes_to_alloc, flags);
+    //DEBUG_LOG("Attempting to allocate memory of size %d with flags %d.\n", bytes_to_alloc, flags);
     void *ptr = malloc(bytes_to_alloc);
 
     if ( ptr == nullptr && g_memoryError != nullptr ) {

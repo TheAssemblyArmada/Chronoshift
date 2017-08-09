@@ -27,8 +27,10 @@
 //  Includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "alloc.h"
+#include "buffer.h"
 #include "hooker.h"
 #include "gamedebug.h"
+#include "rawfileclass.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -57,6 +59,7 @@ void Setup_Hooks()
     Hook_Function((void*)0x005D5FC0, (void*)&Alloc);
     Hook_Function((void*)0x005D6010, (void*)&Free);
     Hook_Function((void*)0x005D6020, (void*)&Resize_Alloc);
+    RawFileClass::Hook_Me();
 }
 
 StaticInitObject::StaticInitObject()
