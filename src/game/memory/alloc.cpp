@@ -72,15 +72,13 @@ void *Resize_Alloc(void *original_ptr, unsigned int new_size_in_bytes)
 }
 
 int Ram_Free(MemoryFlagType flag)
-{/*
-    MEMORYSTATUSEX mem_struct; // [sp+0h] [bp-20h]@1
+{
+    MEMORYSTATUSEX mem_struct;
 
     mem_struct.dwLength = sizeof(mem_struct);
     GlobalMemoryStatusEx(&mem_struct);
 
     return mem_struct.ullAvailPhys > 0x7FFFFFFF ? 0x7FFFFFFF : mem_struct.ullAvailPhys;
-    */
-    return 0x7FFFFFFF;;
 }
 
 int Heap_Size(MemoryFlagType flag)

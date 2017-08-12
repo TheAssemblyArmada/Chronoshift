@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-//                               --  THYME  --                                //
+//                            --  REDALERT++ --                               //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  Project Name:: Thyme
+//  Project Name:: Redalert++
 //
 //          File:: FILECLASS.H
 //
@@ -59,8 +59,8 @@ public:
     virtual BOOL Open(const char *filename, int rights = FM_READ) = 0;
     virtual BOOL Open(int rights = FM_READ) = 0;
     virtual int Read(void *buffer, int length) = 0;
-    virtual int Seek(int offset, int whence = FS_SEEK_CURRENT) = 0;
-    virtual int Size() = 0;
+    virtual off_t Seek(off_t offset, int whence = FS_SEEK_CURRENT) = 0;
+    virtual off_t Size() = 0;
     virtual int Write(void const *buffer, int size) = 0;
     virtual void Close() = 0;
     virtual time_t Get_Date_Time();

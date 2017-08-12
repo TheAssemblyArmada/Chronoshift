@@ -31,6 +31,7 @@
 #include "hooker.h"
 #include "gamedebug.h"
 #include "rawfileclass.h"
+#include "straw.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -53,13 +54,9 @@ void Setup_Hooks()
     //Hook_StdCall_Function((Make_StdCall_Ptr<int, HINSTANCE, HINSTANCE, LPSTR, int>(0x00401700)), Main_Func);
 
     // Hooking memory allocation functions.
-    Hook_Function((void*)0x005C5965, (void*)&malloc);
-    Hook_Function((void*)0x005C3945, (void*)&free);
-    Hook_Function((void*)0x005DE4DE, (void*)&realloc);
-    Hook_Function((void*)0x005D5FC0, (void*)&Alloc);
-    Hook_Function((void*)0x005D6010, (void*)&Free);
-    Hook_Function((void*)0x005D6020, (void*)&Resize_Alloc);
+    Memory_Hook_Me();
     RawFileClass::Hook_Me();
+    Straw::Hook_Me();
 }
 
 StaticInitObject::StaticInitObject()

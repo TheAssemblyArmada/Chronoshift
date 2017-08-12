@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-//                               --  THYME  --                                //
+//                            --  REDALERT++ --                               //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  Project Name:: Thyme
+//  Project Name:: Redalert++
 //
 //          File:: RAWFILECLASS.H
 //
@@ -53,8 +53,8 @@ public:
     virtual BOOL Open(const char *filename, int rights = FM_READ);
     virtual BOOL Open(int rights = FM_READ);
     virtual int Read(void *buffer, int length);
-    virtual int Seek(int offset, int whence = FS_SEEK_CURRENT);
-    virtual int Size();
+    virtual off_t Seek(off_t offset, int whence = FS_SEEK_CURRENT);
+    virtual off_t Size();
     virtual int Write(void const *buffer, int length);
     virtual void Close();
     virtual time_t Get_Date_Time();
@@ -73,7 +73,7 @@ public:
 
 private:
     void Reset();
-    int Raw_Seek(int offset, int whence = FS_SEEK_CURRENT);
+    off_t Raw_Seek(off_t offset, int whence = FS_SEEK_CURRENT);
 
 #ifndef RAPP_STANDALONE
     static const char *Hook_File_Name(RawFileClass *ptr);
@@ -83,11 +83,11 @@ private:
     static BOOL Hook_Open(RawFileClass *ptr, int rights = FM_READ);
     static BOOL Hook_Is_Available(RawFileClass *ptr, BOOL forced = false);
     static int Hook_Read(RawFileClass *ptr, void *buffer, int length);
-    static int Hook_Seek(RawFileClass *ptr, int offset, int whence = FS_SEEK_CURRENT);
-    static int Hook_Size(RawFileClass *ptr);
+    static off_t Hook_Seek(RawFileClass *ptr, off_t offset, int whence = FS_SEEK_CURRENT);
+    static off_t Hook_Size(RawFileClass *ptr);
     static int Hook_Write(RawFileClass *ptr, void const *buffer, int length);
     static void Hook_Close(RawFileClass *ptr);
-    static int Hook_Raw_Seek(RawFileClass *ptr, int offset, int whence = FS_SEEK_CURRENT);
+    static off_t Hook_Raw_Seek(RawFileClass *ptr, off_t offset, int whence = FS_SEEK_CURRENT);
 #endif
 
 protected:

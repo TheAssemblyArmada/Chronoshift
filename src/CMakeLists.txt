@@ -9,23 +9,35 @@ endif()
 set(GAMEENGINE_INCLUDES
     base
     game
+    game/common
+    game/crypto
+    game/io
+    game/memory
 )
 
 set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 
 set(GAMEENGINE_SRC
-    game/alloc.cpp
-    game/buffer.cpp
-    game/critsection.cpp
-    game/fileclass.cpp
     game/gamedebug.cpp
-    game/newdel.cpp
-    game/rawfileclass.cpp
+    game/common/buffer.cpp
+    game/common/critsection.cpp
+    game/crypto/sha.cpp
+    game/io/fileclass.cpp
+    game/io/pipe.cpp
+    game/io/rawfileclass.cpp
+    game/io/shapipe.cpp
+    game/io/shastraw.cpp
+    game/io/straw.cpp
+    game/memory/alloc.cpp
+    game/memory/newdel.cpp
 )
 
-add_library(rapp SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})
-
-target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES} hooker ${GAMEENGINE_INCLUDES})
-#set_target_properties(rapp PROPERTIES LINK_FLAGS "option start=DllMain")
+if(STANDALONE)
+    add_executable(rapp ${GAMEENGINE_SRC})
+    target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES})
+else()
+    add_library(rapp SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})
+    target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES} hooker ${GAMEENGINE_INCLUDES})
+endif()
 
 target_link_libraries(rapp ${PLATFORM_LIBS})

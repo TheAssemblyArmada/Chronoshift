@@ -27,6 +27,10 @@
 #define ALLOC_H
 
 #include "always.h"
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+#include <malloc.h>
+#endif
 
 enum MemoryFlagType
 {
@@ -41,5 +45,17 @@ void *Resize_Alloc(void *original_ptr, unsigned int new_size_in_bytes);
 int Ram_Free(MemoryFlagType flag);
 int Heap_Size(MemoryFlagType flag);
 int Total_Ram_Free(MemoryFlagType flag);
+
+#ifndef RAPP_STANDALONE
+inline void Memory_Hook_Me(void)
+{
+    Hook_Function((void*)0x005C5965, (void*)&malloc);
+    Hook_Function((void*)0x005C3945, (void*)&free);
+    Hook_Function((void*)0x005DE4DE, (void*)&realloc);
+    Hook_Function((void*)0x005D5FC0, (void*)&Alloc);
+    Hook_Function((void*)0x005D6010, (void*)&Free);
+    Hook_Function((void*)0x005D6020, (void*)&Resize_Alloc);
+}
+#endif
 
 #endif
