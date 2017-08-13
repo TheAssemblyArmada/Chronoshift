@@ -41,7 +41,6 @@ Straw::~Straw()
 
 void Straw::Get_From(Straw *straw)
 {
-    DEBUG_LOG("Calling Straw::Get_From.\n");
     if (m_chainTo != straw) {
         if (straw != nullptr && m_chainFrom != nullptr) {
             m_chainFrom->Get_From(nullptr);
@@ -62,7 +61,6 @@ void Straw::Get_From(Straw *straw)
 
 int Straw::Get(void *source, int length)
 {
-    DEBUG_LOG("Calling Straw::Get.\n");
     if (m_chainTo != nullptr) {
         return m_chainTo->Get(source, length);
     }

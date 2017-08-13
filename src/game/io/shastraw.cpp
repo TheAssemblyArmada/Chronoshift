@@ -23,6 +23,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #include "shastraw.h"
+#include "gamedebug.h"
 
 /**
  * @brief Read data from the straw into specified memory buffer.
@@ -40,3 +41,28 @@ int SHAStraw::Get(void *buffer, int length)
 
     return retval;
 }
+
+/**
+* @brief Read the SHA1 hash result into the specified memory buffer.
+*
+* @return Returns the number of bytes read into the buffer.
+*/
+int SHAStraw::Result(void *data)
+{
+    return m_sha1.Result(data);
+}
+
+#ifndef RAPP_STANDALONE
+int SHAStraw::Hook_Result(SHAStraw *ptr, void *data)
+{
+    char hash[41];
+    ptr->m_sha1.Print_Result(hash);
+    DEBUG_LOG("SHAStraw returns hash of '%s'.\n", hash);
+    return ptr->SHAStraw::Result(data);
+}
+
+int SHAStraw::Hook_Get(SHAStraw *ptr, void *source, int length)
+{
+    return ptr->SHAStraw::Get(source, length);
+}
+#endif

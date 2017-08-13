@@ -443,7 +443,7 @@ off_t RawFileClass::Size()
     return m_biasLength;
 }
 
-int RawFileClass::Write(void const *buffer, int length)
+int RawFileClass::Write(const void *buffer, int length)
 {
     int writelen = 0; // total bytes written to file.
     bool opened = false; // have we opened the file to allow us to write?
@@ -652,7 +652,7 @@ off_t RawFileClass::Hook_Size(RawFileClass *ptr)
     return ptr->RawFileClass::Size();
 }
 
-int RawFileClass::Hook_Write(RawFileClass *ptr, void const *buffer, int length)
+int RawFileClass::Hook_Write(RawFileClass *ptr, const void *buffer, int length)
 {
     return ptr->RawFileClass::Write(buffer, length);
 }

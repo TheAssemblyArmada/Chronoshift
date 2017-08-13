@@ -30,6 +30,9 @@
 #include "always.h"
 #include "sha.h"
 #include "straw.h"
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+#endif
 
 class SHAStraw : public Straw
 {
@@ -39,11 +42,25 @@ public:
 
     virtual int Get(void *buffer, int length) override;
 
-    int const Result(void *data) { return m_sha1.Result(data); }
+    int Result(void *data);
+
+#ifndef RAPP_STANDALONE
+    static int Hook_Result(SHAStraw *ptr, void *data);
+    static int Hook_Get(SHAStraw *ptr, void *source, int length);
+    static void Hook_Me();
+#endif
 
 protected:
     SHAEngine m_sha1; // A instance of the SHA-1 Engine class.
 
 };
+
+#ifndef RAPP_STANDALONE
+inline void SHAStraw::Hook_Me()
+{
+    Hook_Function((void*)0x005D5B04, (void*)&Hook_Result);
+    Hook_Function((void*)0x005D5AD0, (void*)&Hook_Get);
+}
+#endif
 
 #endif // SHASTRAW_H

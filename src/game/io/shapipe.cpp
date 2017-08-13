@@ -29,7 +29,7 @@
 *
 * @return Returns the number of bytes written from the buffer.
 */
-int SHAPipe::Put(void const *buffer, int length)
+int SHAPipe::Put(const void *buffer, int length)
 {
     m_sha1.Hash(buffer, length);
 

@@ -32,6 +32,7 @@
 #include "gamedebug.h"
 #include "rawfileclass.h"
 #include "straw.h"
+#include "shastraw.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -57,6 +58,7 @@ void Setup_Hooks()
     Memory_Hook_Me();
     RawFileClass::Hook_Me();
     Straw::Hook_Me();
+    SHAStraw::Hook_Me();
 }
 
 StaticInitObject::StaticInitObject()

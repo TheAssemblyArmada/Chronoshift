@@ -43,17 +43,17 @@ public:
         uint32_t H4;
     };
 
-    SHAEngine(void);
-    ~SHAEngine(void);
+    SHAEngine();
+    ~SHAEngine();
 
-    void Hash(void const *input, int length);
-    int const Result(void *output);
-    int const Print_Result(char *output);
+    void Hash(const void *input, int length);
+    int Result(void *output);
+    int Print_Result(char *output);
 
 private:
-    void Process_Partial(void const *&data, int &length);
-    void const Process_Block(void const *data, SHADigest &digest) const;
-    void Print(void const *buffer, char *stringbuff);
+    void Process_Partial(const void *&data, int &length);
+    void Process_Block(const void *data, SHADigest &digest) const;
+    void Print(const void *buffer, char *stringbuff);
 
 private:
     BOOL m_computed;

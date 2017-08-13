@@ -55,7 +55,7 @@ SHAEngine::~SHAEngine()
 /**
  * @brief Process data for the hash that doesn't fit into the 64bit processing block..
  */
-void SHAEngine::Process_Partial(void const *&data, int &length)
+void SHAEngine::Process_Partial(const void *&data, int &length)
 {
     unsigned int bytestoprocess;
 
@@ -84,7 +84,7 @@ void SHAEngine::Process_Partial(void const *&data, int &length)
 /**
  * @brief Process data for the hash.
  */
-void SHAEngine::Hash(void const *data, int length)
+void SHAEngine::Hash(const void *data, int length)
 {
     m_computed = false;
     Process_Partial(data, length);
@@ -108,7 +108,7 @@ void SHAEngine::Hash(void const *data, int length)
 /**
  * @brief Finalise the hash and outputs it to the provided buffer.
  */
-int const SHAEngine::Result(void *output)
+int SHAEngine::Result(void *output)
 {
     int bytesremaining;
     uint32_t *finalp;
@@ -173,10 +173,8 @@ int const SHAEngine::Result(void *output)
 /**
  * @brief Processes a 64 byte block into the hash..
  */
-void const SHAEngine::Process_Block(void const *input, SHADigest &digest) const
+void SHAEngine::Process_Block(const void *input, SHADigest &digest) const
 {
-    DEBUG_ASSERT_PRINT(m_unprocessedBytes == SHA_BLOCK_LENGTH, "Unprocessed byte count does not equal block length.\n");
-
     const uint8_t *data = static_cast<const uint8_t *>(input);
     int t;
     uint32_t a;
@@ -242,7 +240,7 @@ void const SHAEngine::Process_Block(void const *input, SHADigest &digest) const
 /**
  * @brief Formats the hash into a string for printing.
  */
-void SHAEngine::Print(void const *buffer, char *output)
+void SHAEngine::Print(const void *buffer, char *output)
 {
     for (int i = 0; i < 20; i++) {
         sprintf(&output[2 * i], "%02x", *(static_cast<const uint8_t *>(buffer) + i));
@@ -255,7 +253,7 @@ void SHAEngine::Print(void const *buffer, char *output)
  * @param output Pointer to the destination buffer.
  * @return Length of the string in bytes.
  */
-int const SHAEngine::Print_Result(char *output)
+int SHAEngine::Print_Result(char *output)
 {
     uint8_t buffer[20];
 

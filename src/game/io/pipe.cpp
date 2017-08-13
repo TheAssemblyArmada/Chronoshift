@@ -60,7 +60,7 @@ void Pipe::Put_To(Pipe *pipe)
     }
 }
 
-int Pipe::Put(void const *source, int length)
+int Pipe::Put(const void *source, int length)
 {
     DEBUG_ASSERT(source != nullptr);
     DEBUG_ASSERT(length > 0);
