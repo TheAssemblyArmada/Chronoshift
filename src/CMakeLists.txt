@@ -22,6 +22,7 @@ set(GAMEENGINE_SRC
     game/common/buffer.cpp
     game/common/critsection.cpp
     game/crypto/sha.cpp
+    game/io/bfiofileclass.cpp
     game/io/fileclass.cpp
     game/io/pipe.cpp
     game/io/rawfileclass.cpp
