@@ -35,6 +35,7 @@
 #include "config.h"
 #include "macros.h"
 #include "targetver.h"
+#include "watcomintrin.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 

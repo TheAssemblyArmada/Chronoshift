@@ -21,7 +21,7 @@
 //                 LICENSE
 //
 ////////////////////////////////////////////////////////////////////////////////
-#include	"critsection.h"
+#include "critsection.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 ///
@@ -115,32 +115,7 @@ void CriticalSectionClass::Unlock()
 ////////////////////////////////////////////////////////////////////////////////
 void FastCriticalSectionClass::Thread_Safe_Set_Flag()
 {
-#ifdef COMPILER_WATCOM
-    #if 0
-    volatile uint32_t nFlag = Flag;
-
-    #define	ts_lock		_emit 0xF0		//This is the x86 lock prefix
-
-    __asm __volatile {
-        mov		ebx, [nFlag]			;
-        ts_lock							;
-        bts		dword ptr [ebx], 0		;
-        jc		The_Bit_Was_Previously_Set_So_Try_Again
-    }
-    return;
-
-The_Bit_Was_Previously_Set_So_Try_Again:
-
-    Sleep(1);
-
-    __asm __volatile {
-        mov		ebx, [nFlag]			;
-        ts_lock							;
-        bts		dword ptr [ebx], 0		;
-        jc		The_Bit_Was_Previously_Set_So_Try_Again
-    }
-    #endif
-#elif defined PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
     //
     // Should work for both x86_32 and x86_64 plus no assembly.
     //
