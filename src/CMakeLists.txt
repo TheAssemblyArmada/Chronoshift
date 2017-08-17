@@ -20,6 +20,7 @@ set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 set(GAMEENGINE_SRC
     game/gamedebug.cpp
     game/common/buffer.cpp
+    game/common/crc.cpp
     game/common/critsection.cpp
     game/crypto/sha.cpp
     game/io/bfiofileclass.cpp
