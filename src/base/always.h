@@ -112,6 +112,8 @@
 #if !defined(__forceinline)
 #define __forceinline inline __attribute__((__always_inline__))
 #endif
+#elif defined COMPILER_WATCOM
+//Nothing yet
 #else // !COMPILER_GNUC || !COMPILER_CLANG
 // otherwise, nullify fastcall
 #if !defined(__fastcall)
