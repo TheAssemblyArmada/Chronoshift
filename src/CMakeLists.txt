@@ -24,9 +24,13 @@ set(GAMEENGINE_SRC
     game/common/critsection.cpp
     game/crypto/sha.cpp
     game/io/bfiofileclass.cpp
+    game/io/buffpipe.cpp
+    game/io/buffstraw.cpp
     game/io/cd.cpp
     game/io/cdfileclass.cpp
     game/io/fileclass.cpp
+    game/io/filepipe.cpp
+    game/io/filestraw.cpp
     game/io/pipe.cpp
     game/io/rawfileclass.cpp
     game/io/shapipe.cpp

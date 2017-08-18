@@ -57,8 +57,6 @@ void Setup_Hooks()
     // Hooking memory allocation functions.
     Memory_Hook_Me();
     RawFileClass::Hook_Me();
-    Straw::Hook_Me();
-    SHAStraw::Hook_Me();
 }
 
 StaticInitObject::StaticInitObject()
