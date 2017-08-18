@@ -161,9 +161,9 @@ COMPILER_ERROR("byte order not supported");
         (p)[1] = (((value) >> 8) & 0xFF), \
         (p)[2] = (((value) >> 16) & 0xFF), \
         (p)[3] = (((value) >> 24) & 0xFF))
-#define READ_LE_UINT16(p) ((uint16)(p)[0] | ((uint16)(p)[1] << 8))
-#define READ_LE_UINT32(p) ((uint32)(p)[0] | ((uint32)(p)[1] << 8) | ((uint32)(p)[2] << 16) | ((uint32)(p)[3] << 24))
-#define GETBYTE(x, n) (*((uint8 *)&(x) + n))
-#define GETSBYTE(x, n) (*((sint8 *)&(x) + n))
+#define READ_LE_UINT16(p) ((uint16_t)(p)[0] | ((uint16_t)(p)[1] << 8))
+#define READ_LE_UINT32(p) ((uint32_t)(p)[0] | ((uint32_t)(p)[1] << 8) | ((uint32_t)(p)[2] << 16) | ((uint32_t)(p)[3] << 24))
+#define GETBYTE(x, n) (*((uint8_t *)&(x) + n))
+#define GETSBYTE(x, n) (*((int8_t *)&(x) + n))
 
 #endif // _ENDIAN_H
