@@ -23,6 +23,16 @@ if(MSVC)
     set(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "/INCREMENTAL:NO ${replacementFlags}")
 endif()
 
+if(WATCOM)
+# Removes the -br flag, similar to using -static-libgcc and -static-libstdc++ with GCC
+    foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        message("Processing flags ${flag_var}")
+        STRING (REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")
+    endforeach(flag_var)
+endif()
+    
 # We don't support in tree builds, so help people make the right choice.
 if (CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
     message(FATAL_ERROR "Building in-source is not supported! Create a build dir and remove ${CMAKE_SOURCE_DIR}/CMakeCache.txt")
