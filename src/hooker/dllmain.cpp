@@ -27,12 +27,9 @@
 //  Includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "alloc.h"
-#include "buffer.h"
 #include "hooker.h"
 #include "gamedebug.h"
 #include "rawfileclass.h"
-#include "straw.h"
-#include "shastraw.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
