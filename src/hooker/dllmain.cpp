@@ -27,6 +27,7 @@
 //  Includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "alloc.h"
+#include "cpudetect.h"
 #include "hooker.h"
 #include "gamedebug.h"
 #include "rawfileclass.h"
@@ -60,9 +61,14 @@ StaticInitObject::StaticInitObject()
 {
     printf("Initialising DLL.\n");
     DEBUG_INIT(DEBUG_LOG_TO_FILE);
-    DEBUG_LOG("Attaching DLL.\n");
     StartHooking();
     Setup_Hooks();
+
+    if (CPUDetectClass::Has_CPUID_Instruction()) {
+        DEBUG_LOG("%s.\n", CPUDetectClass::Get_Processor_Log());
+    } else {
+        DEBUG_LOG("Doesn't look like CPUDetect is initialised yet.\n");
+    }
 }
 
 StaticInitObject::~StaticInitObject()
