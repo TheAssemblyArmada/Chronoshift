@@ -25,6 +25,8 @@ set(GAMEENGINE_SRC
     game/common/critsection.cpp
     game/common/wwstring.cpp
     game/crypto/blowfish.cpp
+    game/crypto/pk.cpp
+    game/crypto/mpmath.cpp
     game/crypto/sha.cpp
     game/io/bfiofileclass.cpp
     game/io/blowpipe.cpp
