@@ -27,6 +27,7 @@
 //  Includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "alloc.h"
+#include "blowstraw.h"
 #include "cpudetect.h"
 #include "hooker.h"
 #include "gamedebug.h"
@@ -55,6 +56,7 @@ void Setup_Hooks()
     // Hooking memory allocation functions.
     Memory_Hook_Me();
     RawFileClass::Hook_Me();
+    Hook_Function((void*)0x005E5200, (void*)0x005E53CD); //This one forces better interpolation algo.
 }
 
 StaticInitObject::StaticInitObject()

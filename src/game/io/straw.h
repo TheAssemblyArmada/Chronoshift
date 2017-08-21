@@ -33,12 +33,12 @@
 
 enum StrawControl
 {
-    STRAW_DECODE = 0,
-    STRAW_DECRYPT = 0,
-    STRAW_UNCOMPRESS = 0,
-    STRAW_ENCODE = 1,
-    STRAW_ENCRYPT = 1,
-    STRAW_COMPRESS = 1,
+    STRAW_DECODE = 1,
+    STRAW_DECRYPT = 1,
+    STRAW_UNCOMPRESS = 1,
+    STRAW_ENCODE = 0,
+    STRAW_ENCRYPT = 0,
+    STRAW_COMPRESS = 0,
 };
 
 /*

@@ -27,6 +27,8 @@ set(GAMEENGINE_SRC
     game/crypto/blowfish.cpp
     game/crypto/sha.cpp
     game/io/bfiofileclass.cpp
+    game/io/blowpipe.cpp
+    game/io/blowstraw.cpp
     game/io/buffpipe.cpp
     game/io/buffstraw.cpp
     game/io/cd.cpp

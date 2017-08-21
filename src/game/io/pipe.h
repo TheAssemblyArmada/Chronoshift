@@ -30,12 +30,12 @@
 
 enum PipeControl
 {
-    PIPE_DECODE = 0,
-    PIPE_DECRYPT = 0,
-    PIPE_UNCOMPRESS = 0,
-    PIPE_ENCODE = 1,
-    PIPE_ENCRYPT = 1,
-    PIPE_COMPRESS = 1
+    PIPE_DECODE = 1,
+    PIPE_DECRYPT = 1,
+    PIPE_UNCOMPRESS = 1,
+    PIPE_ENCODE = 0,
+    PIPE_ENCRYPT = 0,
+    PIPE_COMPRESS = 0
 };
 
 class Pipe
