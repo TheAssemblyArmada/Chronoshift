@@ -23,6 +23,7 @@ set(GAMEENGINE_SRC
     game/common/cpudetect.cpp
     game/common/crc.cpp
     game/common/critsection.cpp
+    game/common/random.cpp
     game/common/wwstring.cpp
     game/crypto/blowfish.cpp
     game/crypto/pk.cpp
@@ -39,7 +40,10 @@ set(GAMEENGINE_SRC
     game/io/filepipe.cpp
     game/io/filestraw.cpp
     game/io/pipe.cpp
+    game/io/pkpipe.cpp
+    game/io/pkstraw.cpp
     game/io/rawfileclass.cpp
+    game/io/rndstraw.cpp
     game/io/shapipe.cpp
     game/io/shastraw.cpp
     game/io/straw.cpp

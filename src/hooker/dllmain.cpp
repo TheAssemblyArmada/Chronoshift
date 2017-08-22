@@ -27,7 +27,6 @@
 //  Includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "alloc.h"
-#include "blowstraw.h"
 #include "cpudetect.h"
 #include "hooker.h"
 #include "gamedebug.h"

@@ -1,24 +1,24 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief RSA Encryption engine.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @Author CCHyper, OmniBlade
+ *
+ * @brief RSA Encryption engine.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "pk.h"
 #include "straw.h"
 
 // RSA keys
 #ifndef RAPP_STANDALONE
-PKey &g_publicKey = *reinterpret_cast<PKey*>(0x00665F68);
+PKey &g_publicKey = *reinterpret_cast<PKey *>(0x00665F68);
 #else
 PKey g_publicKey(nullptr, nullptr);
 #endif
@@ -49,7 +49,7 @@ int PKey::Get_Count_Bits() const
     return MPMath::Count_Bits(m_modulus, MAX_UNIT_PRECISION) - 1;
 }
 
-int const PKey::Encode_Modulus(void *buffer) const
+int PKey::Encode_Modulus(void *buffer) const
 {
     if (buffer != nullptr) {
         return m_modulus.DER_Encode(static_cast<uint8_t *>(buffer));
@@ -64,7 +64,7 @@ void PKey::Decode_Modulus(const void *modulus)
     m_bitPrecision = Get_Count_Bits();
 }
 
-int const PKey::Encode_Exponent(void *buffer) const
+int PKey::Encode_Exponent(void *buffer) const
 {
     if (buffer != nullptr) {
         return m_exponent.DER_Encode(static_cast<uint8_t *>(buffer));
@@ -85,7 +85,7 @@ void PKey::Generate(Straw &random, int bits, PKey &fastkey, PKey &slowkey)
     // It is possible support will be added later.
 }
 
-int const PKey::Encrypt(void *src, int size, void *dst) const
+int PKey::Encrypt(void *src, int size, void *dst) const
 {
     mp_digit_u tmp2[64];
     mp_digit_u tmp3[64];
@@ -118,7 +118,7 @@ int const PKey::Encrypt(void *src, int size, void *dst) const
     return total;
 }
 
-int const PKey::Decrypt(void *src, int size, void *dst) const
+int PKey::Decrypt(void *src, int size, void *dst) const
 {
     mp_digit_u tmp2[64];
     mp_digit_u tmp3[64];
