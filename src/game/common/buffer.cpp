@@ -122,12 +122,12 @@ void BufferClass::Resize(void *buff, int size)
     }
 }
 
-uint8_t *BufferClass::Get_Buffer()
+uint8_t *BufferClass::Get_Buffer() const
 { 
     return m_buffer;
 }
 
-int BufferClass::Get_Size()
+int BufferClass::Get_Size() const
 { 
     return m_size;
 }

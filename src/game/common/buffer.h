@@ -33,8 +33,8 @@ public:
     bool operator==(BufferClass const &that);
     bool operator!=(BufferClass const &that);
 
-    uint8_t *Get_Buffer();
-    int Get_Size();
+    uint8_t *Get_Buffer() const;
+    int Get_Size() const;
     BOOL Is_Allocated() { return m_allocated; }
     bool Is_Valid() { return m_buffer != nullptr && m_size > 0; }
     void Reset() { Free(); Clear(); }
