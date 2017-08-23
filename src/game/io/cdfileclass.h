@@ -46,9 +46,9 @@ public:
     CDFileClass(char *filename);
     virtual ~CDFileClass() {}
 
-    virtual const char *Set_Name(const char *filename);
-    virtual BOOL Open(FileOpenType rights);
-    virtual BOOL Open(const char *filename, FileOpenType rights);
+    virtual const char *Set_Name(const char *filename) override;
+    virtual BOOL Open(int rights) override;
+    virtual BOOL Open(const char *filename, int rights) override;
     void Disable_Search_Drives(bool disable) { m_disableSearchDrives = disable; }
 
     static void Refresh_Search_Drives();

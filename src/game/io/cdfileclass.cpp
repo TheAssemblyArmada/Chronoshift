@@ -48,7 +48,7 @@ int CDFileClass::s_lastCDDrive;
 char CDFileClass::s_rawPath[PATH_MAX * 2]; // full raw path of the search drive set.
 const char *CDFileClass::s_pathSeperator = ";";
 
-CDFileClass::CDFileClass(void) : m_disableSearchDrives(false) {}
+CDFileClass::CDFileClass() : m_disableSearchDrives(false) {}
 
 CDFileClass::CDFileClass(char *filename) : m_disableSearchDrives(false)
 {
@@ -85,7 +85,7 @@ const char *CDFileClass::Set_Name(const char *filename)
 /**
 * @brief Open the file from the internally set file name.
 */
-BOOL CDFileClass::Open(FileOpenType rights)
+BOOL CDFileClass::Open(int rights)
 {
     return BufferIOFileClass::Open(rights);
 }
@@ -93,7 +93,7 @@ BOOL CDFileClass::Open(FileOpenType rights)
 /**
 * @brief Open a file with a given file name.
 */
-BOOL CDFileClass::Open(const char *filename, FileOpenType rights)
+BOOL CDFileClass::Open(const char *filename, int rights)
 {
     BufferIOFileClass::Close();
 
@@ -113,7 +113,7 @@ BOOL CDFileClass::Open(const char *filename, FileOpenType rights)
 /**
 * @brief Resets the search path to only those drives stored in s_rawPath.
 */
-void CDFileClass::Refresh_Search_Drives(void)
+void CDFileClass::Refresh_Search_Drives()
 {
     Clear_Search_Drives();
     Set_Search_Drives(s_rawPath);
@@ -230,7 +230,7 @@ void CDFileClass::Set_CD_Drive(int cd_drive)
 /**
 * @brief Clears the list of paths to search for files.
 */
-void CDFileClass::Clear_Search_Drives(void)
+void CDFileClass::Clear_Search_Drives()
 {
     SearchDriveType *entry = s_first;
 
