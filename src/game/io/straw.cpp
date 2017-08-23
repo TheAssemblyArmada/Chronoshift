@@ -22,25 +22,24 @@ Straw::~Straw()
         m_chainTo->m_chainFrom = m_chainFrom;
     }
 
-    m_chainTo = nullptr;
-
     if (m_chainFrom != nullptr) {
-        m_chainFrom->Get_From(m_chainFrom);
+        m_chainFrom->Get_From(m_chainTo);
     }
 
+    m_chainTo = nullptr;
     m_chainFrom = nullptr;
 }
 
 void Straw::Get_From(Straw *straw)
 {
     if (m_chainTo != straw) {
-        if (straw != nullptr && m_chainFrom != nullptr) {
-            m_chainFrom->Get_From(nullptr);
-            m_chainFrom = nullptr;
+        if (straw != nullptr && straw->m_chainFrom != nullptr) {
+            straw->m_chainFrom->Get_From(nullptr);
+            straw->m_chainFrom = nullptr;
         }
 
         if (m_chainTo != nullptr) {
-            m_chainFrom = nullptr;
+            m_chainTo->m_chainFrom = nullptr;
         }
 
         m_chainTo = straw;
