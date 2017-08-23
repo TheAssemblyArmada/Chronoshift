@@ -24,13 +24,16 @@ if(MSVC)
 endif()
 
 if(WATCOM)
-# Removes the -br flag, similar to using -static-libgcc and -static-libstdc++ with GCC
+    # Removes the -br flag, similar to using -static-libgcc and -static-libstdc++ with GCC
     foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
         message("Processing flags ${flag_var}")
-        STRING (REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")
+        string(REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")   
     endforeach(flag_var)
+    
+    # Set packing and alignment to 1 byte to match original game ABI
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -zp1")
 endif()
     
 # We don't support in tree builds, so help people make the right choice.
