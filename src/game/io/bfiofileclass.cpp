@@ -38,7 +38,6 @@ BufferIOFileClass::BufferIOFileClass() :
 }
 
 BufferIOFileClass::BufferIOFileClass(char const *filename) :
-    RawFileClass(filename),
     m_bufferAllocated(false),
     m_bufferedFileAvailable(false),
     m_bufferedFileOpen(false),
@@ -593,3 +592,64 @@ void BufferIOFileClass::Close()
         RawFileClass::Close();
     }
 }
+
+#ifndef RAPP_STANDALONE
+
+void BufferIOFileClass::Hook_Me()
+{
+    Hook_Function((void*)0x005BD734, (void*)&Hook_Is_Available);
+    Hook_Function((void*)0x005BD754, (void*)&Hook_Is_Open);
+    Hook_Function((void*)0x005BD780, (void*)&Hook_Open_Name);
+    Hook_Function((void*)0x005BD79C, (void*)&Hook_Open);
+    Hook_Function((void*)0x005BDAD4, (void*)&Hook_Read);
+    Hook_Function((void*)0x005BDCF4, (void*)&Hook_Seek);
+    Hook_Function((void*)0x005BDDF0, (void*)&Hook_Size);
+    Hook_Function((void*)0x005BD870, (void*)&Hook_Write);
+    Hook_Function((void*)0x005BDE14, (void*)&Hook_Close);
+}
+
+BOOL BufferIOFileClass::Hook_Is_Available(BufferIOFileClass *ptr, BOOL forced)
+{
+    return ptr->BufferIOFileClass::Is_Available(forced);
+}
+
+BOOL BufferIOFileClass::Hook_Is_Open(BufferIOFileClass *ptr)
+{
+    return ptr->BufferIOFileClass::Is_Open();
+}
+
+BOOL BufferIOFileClass::Hook_Open_Name(BufferIOFileClass *ptr, const char *filename, int rights)
+{
+    return ptr->BufferIOFileClass::Open(filename, rights);
+}
+
+BOOL BufferIOFileClass::Hook_Open(BufferIOFileClass *ptr, int rights)
+{
+    return ptr->BufferIOFileClass::Open(rights);
+}
+
+int BufferIOFileClass::Hook_Read(BufferIOFileClass *ptr, void *buffer, int length)
+{
+    return ptr->BufferIOFileClass::Read(buffer, length);
+}
+
+off_t BufferIOFileClass::Hook_Seek(BufferIOFileClass *ptr, off_t offset, int whence)
+{
+    return ptr->BufferIOFileClass::Seek(offset, whence);
+}
+
+off_t BufferIOFileClass::Hook_Size(BufferIOFileClass *ptr)
+{
+    return ptr->BufferIOFileClass::Size();
+}
+
+int BufferIOFileClass::Hook_Write(BufferIOFileClass *ptr, void const *buffer, int length)
+{
+    return ptr->BufferIOFileClass::Write(buffer, length);
+}
+
+void BufferIOFileClass::Hook_Close(BufferIOFileClass *ptr)
+{
+    ptr->BufferIOFileClass::Close();
+}
+#endif

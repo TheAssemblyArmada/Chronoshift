@@ -40,19 +40,48 @@ public:
     virtual off_t Seek(off_t offset = 0, int whence = FS_SEEK_CURRENT) override;
     virtual off_t Size() override;
     virtual int Write(void const *buffer, int length) override;
-    virtual void Close();
+    virtual void Close() override;
 
     BOOL Cache(int size = 0, void *buffer = nullptr);
     void Free();
     BOOL Commit();
 
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+    static BOOL Hook_Is_Available(BufferIOFileClass *ptr, BOOL forced);
+    static BOOL Hook_Is_Open(BufferIOFileClass *ptr);
+    static BOOL Hook_Open_Name(BufferIOFileClass *ptr, const char *filename, int rights);
+    static BOOL Hook_Open(BufferIOFileClass *ptr, int rights);
+    static int Hook_Read(BufferIOFileClass *ptr, void *buffer, int length);
+    static off_t Hook_Seek(BufferIOFileClass *ptr, off_t offset, int whence);
+    static off_t Hook_Size(BufferIOFileClass *ptr);
+    static int Hook_Write(BufferIOFileClass *ptr, void const *buffer, int length);
+    static void Hook_Close(BufferIOFileClass *ptr);
+#endif
 protected:
-    bool m_bufferAllocated:1; // & 1
-    bool m_bufferedFileAvailable:1; // & 2
-    bool m_bufferedFileOpen:1; // & 4 //This or BoolOne could be IsFileOpen, Two could also be IsWriteable
-    bool m_bufferFull:1; // & 8	//leaning toward this being a buffer full flag
-    bool m_uncommited:1; // & 0x10 //Looks like it keeps track of if we have unwritten data
-    bool m_buffered:1; // & 0x20 //Is there cached data
+#ifndef RAPP_STANDALONE
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool m_bufferAllocated : 1; // & 1
+            bool m_bufferedFileAvailable : 1; // & 2
+            bool m_bufferedFileOpen : 1; // & 4
+            bool m_bufferFull : 1; // & 8
+            bool m_uncommited : 1; // & 0x10
+            bool m_buffered : 1; // & 0x20
+        };
+        int m_bufferFlags;
+    };
+#else
+    bool m_bufferAllocated;
+    bool m_bufferedFileAvailable;
+    bool m_bufferedFileOpen;
+    bool m_bufferFull;
+    bool m_uncommited;
+    bool m_buffered;
+#endif
     int m_bufferedRights; //Duplicate of Rights member inherited from RawFile???
     void *m_buffer; // 0x2C
     int m_bufferedSize; //Looks like this is the current size of the buffer??

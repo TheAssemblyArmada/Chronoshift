@@ -60,7 +60,19 @@ public:
     static BOOL Has_Paths() { return s_first != nullptr; }
 
 protected:
-    bool m_disableSearchDrives : 1;
+#ifndef RAPP_STANDALONE
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool m_disableSearchDrives : 1;
+        };
+        int m_cdFlags;
+    };
+#else
+    bool m_disableSearchDrives;
+#endif
 
 private:
     static char s_rawPath[];
