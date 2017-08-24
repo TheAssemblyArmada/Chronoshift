@@ -27,9 +27,11 @@
 //  Includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "alloc.h"
+#include "ccfileclass.h"
 #include "cpudetect.h"
 #include "hooker.h"
 #include "gamedebug.h"
+#include "mixfile.h"
 #include "rawfileclass.h"
 #include <windows.h>
 #include <stdarg.h>
@@ -55,6 +57,9 @@ void Setup_Hooks()
     // Hooking memory allocation functions.
     Memory_Hook_Me();
     RawFileClass::Hook_Me();
+    BufferIOFileClass::Hook_Me();
+    CCFileClass::Hook_Me();
+    Hook_Function((void*)0x005B96F0, (void*)&MixFileClass<CCFileClass>::Offset);
     Hook_Function((void*)0x005E5200, (void*)0x005E53CD); //This one forces better interpolation algo.
 }
 

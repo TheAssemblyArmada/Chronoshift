@@ -19,6 +19,7 @@ set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 
 set(GAMEENGINE_SRC
     game/gamedebug.cpp
+    game/startup.cpp
     game/common/buffer.cpp
     game/common/cpudetect.cpp
     game/common/crc.cpp
@@ -34,11 +35,13 @@ set(GAMEENGINE_SRC
     game/io/blowstraw.cpp
     game/io/buffpipe.cpp
     game/io/buffstraw.cpp
+    game/io/ccfileclass.cpp
     game/io/cd.cpp
     game/io/cdfileclass.cpp
     game/io/fileclass.cpp
     game/io/filepipe.cpp
     game/io/filestraw.cpp
+    game/io/mixfile.cpp
     game/io/pipe.cpp
     game/io/pkpipe.cpp
     game/io/pkstraw.cpp
