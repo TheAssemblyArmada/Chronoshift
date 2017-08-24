@@ -39,7 +39,7 @@ public:
     bool Is_Valid() { return m_buffer != nullptr && m_size > 0; }
     void Reset() { Free(); Clear(); }
     void Resize(int size = 0);
-    void Resize(void *buff = nullptr, int size = 0);
+    void Resize(void *buff, int size = 0);
 
 private:
     // These should only be called internally to control the buffer state
