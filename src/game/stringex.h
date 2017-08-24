@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 // BSD strl*** functions
-#if defined(__linux__) || defined(_WIN32)
+#if defined __linux__ || defined _WIN32
 /*
 * Copyright (c) 1998, 2015 Todd C. Miller <Todd.Miller@courtesan.com>
 *
@@ -121,6 +121,19 @@ inline size_t strlcpy(char *dst, const char *src, size_t dsize)
     return(src - osrc - 1);	/* count does not include NUL */
 }
 
+#endif
+
+#ifndef _WIN32
+inline char *strupr(char *string)
+{
+    char *p = string;
+
+    while ((*p = toupper(*p)) != '\0') {
+        p++;
+    }
+
+    return string;
+}
 #endif
 
 inline char *strtrim(char *str)
