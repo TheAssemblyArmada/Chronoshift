@@ -40,7 +40,7 @@ BufferClass::BufferClass(void *buff, int size) :
 	m_size(size),
 	m_allocated(false)
 {
-	if ( buff != nullptr && size > 0 ) {
+	if ( buff == nullptr && size > 0 ) {
 		m_buffer = new uint8_t[size];
 		m_allocated = true;
 	}
