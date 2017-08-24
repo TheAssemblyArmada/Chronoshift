@@ -25,11 +25,13 @@ endif()
 
 if(WATCOM)
     # Removes the -br flag, similar to using -static-libgcc and -static-libstdc++ with GCC
+    # Removes the -xs flag, similar to using -fno-exceptions with GCC
     foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
         message("Processing flags ${flag_var}")
-        string(REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")   
+        string(REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")
+        string(REGEX REPLACE "-xs[^ ]*" "" ${flag_var} "${${flag_var}}")
     endforeach(flag_var)
     
     # Set packing and alignment to 1 byte to match original game ABI

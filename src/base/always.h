@@ -156,6 +156,10 @@ typedef struct stat stat_t;
 typedef struct stat stat_t;
 #endif // PLATFORM_WINDOWS
 
+#if defined COMPILER_WATCOM
+#pragma off(check_stack)
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Microsoft / Visual Studio
@@ -164,7 +168,7 @@ typedef struct stat stat_t;
 // This includes the minimum set of compiler defines and pragmas in order to bring the
 // various compilers to a common behavior such that the engine will compile without
 // error or warning.
-#if defined(COMPILER_MSVC)
+#if defined COMPILER_MSVC
 // "conversion from 'double' to 'float', possible loss of data".
 #pragma warning(disable : 4244)
 #endif
