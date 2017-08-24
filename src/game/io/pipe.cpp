@@ -30,25 +30,24 @@ Pipe::~Pipe()
         m_chainTo->m_chainFrom = m_chainFrom;
     }
 
-    m_chainTo = nullptr;
-
     if (m_chainFrom != nullptr) {
         m_chainFrom->Put_To(m_chainTo);
     }
 
+    m_chainTo = nullptr;
     m_chainFrom = nullptr;
 }
 
 void Pipe::Put_To(Pipe *pipe)
 {
     if (m_chainTo != pipe) {
-        if (pipe != nullptr && m_chainFrom != nullptr) {
-            m_chainFrom->Put_To(nullptr);
-            m_chainFrom = nullptr;
+        if (pipe != nullptr && pipe->m_chainFrom != nullptr) {
+            pipe->m_chainFrom->Put_To(nullptr);
+            pipe->m_chainFrom = nullptr;
         }
 
         if (m_chainTo != nullptr) {
-            m_chainFrom = nullptr;
+            m_chainTo->m_chainFrom = nullptr;
             m_chainTo->Flush();
         }
 

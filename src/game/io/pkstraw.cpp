@@ -20,7 +20,7 @@
 PKStraw::PKStraw(StrawControl mode, Straw &rstraw) :
     m_changeKey(true),
     m_cryptRandom(rstraw),
-    m_blowFish(STRAW_DECRYPT),
+    m_blowFish(mode),
     m_mode(mode),
     m_rsaKey(nullptr),
     m_encryptedKeyLength(0),
@@ -41,7 +41,7 @@ int PKStraw::Get(void *buffer, int length)
     char *outbuff = static_cast<char *>(buffer);
     int getcount = 0;
 
-    if (buffer == nullptr || length <= 0 || m_rsaKey == nullptr) {
+    if (buffer == nullptr || length < 1 || m_rsaKey == nullptr) {
         Straw::Get(buffer, length);
     }
 
@@ -56,7 +56,7 @@ int PKStraw::Get(void *buffer, int length)
             // If we didn't get a full keyblock as expected we can't
             // decrypt anymore of the stream, so print an error and abort.
             if (bytes_retrieved != Encrypted_Key_Length()) {
-                //DEBUG_ERROR("PKStraw::Get() - Failed to retrieve file key!\n");
+                DEBUG_LOG("PKStraw::Get() - Failed to retrieve file key!\n");
                 return 0;
             }
 

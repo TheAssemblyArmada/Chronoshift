@@ -52,12 +52,14 @@ public:
     virtual time_t Get_Date_Time();
     virtual BOOL Set_Date_Time(time_t date_time);
     virtual void Error(int error, BOOL can_retry = false, const char *filename = nullptr);
+
+    void Bias(int start, int length = -1);
+    int Get_Bias_Start() const { return m_biasStart; }
 #ifdef PLATFORM_WINDOWS
     HANDLE Get_File_Handle() { return m_handle; }
 #else
     int Get_File_Handle() { return m_handle; }
 #endif
-    void Bias(int start, int length = -1);
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
