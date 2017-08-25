@@ -291,9 +291,7 @@ void *MixFileClass<FC>::Retrieve(const char *filename)
     void *data = nullptr;
     Offset(filename, &data);
 
-    if (data == nullptr) {
-        DEBUG_LOG("MixFileClass::Retrieve() - Unable to retrieve %s\n", filename);
-    }
+    DEBUG_ASSERT_PRINT(data != nullptr, "MixFileClass::Retrieve() - Unable to retrieve %s\n", filename)
 
     return data;
 }
@@ -493,7 +491,6 @@ BOOL MixFileClass<FC>::Offset(
     // If the filename is valid, generate a hash based on the filename so we
     entry.m_crc = Calculate_CRC(strupr(fname), strlen(fname));
 
-    DEBUG_LOG("Searching for '%s' in mix files.\n", fname);
     // Iterate over the list of loaded MixFileClass' and search them until
     // we find one that has the file or we reach the end of the list.
     for (MixFileClass<FC> *tmp_mix = s_mixList.First(); tmp_mix != nullptr && tmp_mix->Is_Valid();
@@ -530,8 +527,6 @@ BOOL MixFileClass<FC>::Offset(
             // position in memory, we set it here.
             if (cachedfile != nullptr && tmp_mix->m_fileCache) {
                 *cachedfile = entry_pointer->m_offset + tmp_mix->m_fileCache;
-                // DEBUG_SAY("\tGot [%s] at offset 0x%08x size %d, in cached mix file %s\n", filename, entry_pointer->Offset,
-                // entry_pointer->m_size, tmp_mix->m_fileName);
             }
 
             // If the Mix isn't cached and we have a pointer for the offset in the

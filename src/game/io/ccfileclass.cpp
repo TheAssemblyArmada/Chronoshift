@@ -31,7 +31,7 @@ void CCFileClass::Error(int error, BOOL can_retry, const char *filename)
 int CCFileClass::Write(void const *buffer, int length)
 {
     // if the buffer pointer is null, raise an error.
-    if (!Buffer_Allocated()) {
+    if (Is_Cached()) {
         // raise an error.
         Error(13, 0, File_Name());
     }
@@ -41,60 +41,39 @@ int CCFileClass::Write(void const *buffer, int length)
 
 int CCFileClass::Read(void *buffer, int length)
 {
-    //DEBUG_LOG("CCFileClass::Read(%s) - Attempting to read %d bytes\n", File_Name(), length);
     BOOL opened = false;
 
     if (!Is_Open() && Open(FM_READ)) {
-        //DEBUG_LOG("CCFileClass::Read(%s) - Opened file OK\n", File_Name());
         opened = true;
     }
 
-    if (Buffer_Allocated()) {
-        //DEBUG_LOG("CCFileClass::Read(%s) - File buffer is %d bytes\n", File_Name(), m_fileBuffer.Get_Size());
-
-        // if ( m_fileBuffer.Get_Size() - m_cachePosition < length ) {
-        //	length = m_fileBuffer.Get_Size() - m_cachePosition;
-        //}
-
-        //DEBUG_LOG("CCFileClass::Read(%s) - Reading from cached file %s with start pos of %d\n", File_Name(), File_Name(), m_cachePosition);
-
+    if (Is_Cached()) {
         length = Min((int)m_fileBuffer.Get_Size() - m_cachePosition, length);
 
         if (length > 0) {
-            //DEBUG_LOG("CCFileClass::Read(%s) - Read size is %d\n", File_Name(), length);
             memmove(buffer, (m_fileBuffer.Get_Buffer() + m_cachePosition), length);
             m_cachePosition += length;
-            //DEBUG_LOG("CCFileClass::Read(%s) - m_cachePosition is %d\n", File_Name(), m_cachePosition);
         }
 
         if (opened) {
-            //DEBUG_LOG("CCFileClass::Read(%s) - We opened the file, calling Close()\n", File_Name());
             Close();
         }
-
-        //DEBUG_LOG("CCFileClass::Read(%s) - Read %d bytes\n", File_Name(), length);
 
         return length;
     }
 
-    //DEBUG_LOG("CCFileClass::Read(%s) - About to call BufferIOFileClass::Read()\n", File_Name());
     length = BufferIOFileClass::Read(buffer, length);
 
     if (opened) {
-        //DEBUG_LOG("CCFileClass::Read(%s) - We opened the file, calling Close()\n", File_Name());
         Close();
     }
-
-    //DEBUG_LOG("CCFileClass::Read(%s) - Read %d bytes\n", File_Name(), length);
 
     return length;
 }
 
 off_t CCFileClass::Seek(off_t offset, int whence)
 {
-    //DEBUG_LOG("CCFileClass::Seek() Seeking in file to %d with mode %d.\n", offset, whence);
-    if (Buffer_Allocated()) {
-        //DEBUG_LOG("CCFileClass::Seek() Seeking in cached file.\n");
+    if (Is_Cached()) {
         switch (whence) {
             case FS_SEEK_START:
                 m_cachePosition = 0;
@@ -113,14 +92,13 @@ off_t CCFileClass::Seek(off_t offset, int whence)
         return m_cachePosition;
     }
 
-    //DEBUG_LOG("CCFileClass::Seek() Seeking in physical file.\n");
     return BufferIOFileClass::Seek(offset, whence);
 }
 
 off_t CCFileClass::Size()
 {
     // if Buffer is valid, return buffer Size.
-    if (Buffer_Allocated()) {
+    if (Is_Cached()) {
         return m_fileBuffer.Get_Size();
     }
 
@@ -153,7 +131,7 @@ BOOL CCFileClass::Is_Available(BOOL forced)
 BOOL CCFileClass::Is_Open() const
 {
     // if the buffer pointer is set, return true.
-    if (Buffer_Allocated()) {
+    if (Is_Cached()) {
         return true;
     }
 
@@ -184,12 +162,8 @@ BOOL CCFileClass::Open(int mode)
     void *cachedfile = nullptr;
 
     if ((mode & FM_WRITE) || BufferIOFileClass::Is_Available()) {
-        DEBUG_LOG("CCFileClass::Open(%s) - Opening raw file from disk.\n", File_Name());
         return CDFileClass::Open(mode);
     }
-
-
-    DEBUG_LOG("CCFileClass::Open(%s) - About to call MixFileClass::Offset()\n", File_Name());
 
     if (CCMixFileClass::Offset(File_Name(), &cachedfile, &mixfile, &fileoffset, &filesize)) {
         DEBUG_ASSERT(mixfile != nullptr);
@@ -197,37 +171,26 @@ BOOL CCFileClass::Open(int mode)
         if (cachedfile == nullptr && mixfile != nullptr) {
             char *tmpfilename = strdup(File_Name());
 
-            //DEBUG_LOG("CCFileClass::Open(%s) - Opening file from disk\n", tmpfilename);
             Open(mixfile->Get_Filename(), FM_READ);
 
-            //DEBUG_LOG("CCFileClass::Open(%s) - about to disable search drives to set the filename\n", tmpfilename);
             Disable_Search_Drives(false);
             Set_Name(tmpfilename);
             Disable_Search_Drives(true);
             free((void *)tmpfilename);
 
-            //DEBUG_LOG("CCFileClass::Open(%s) - setting file bias %d, size %d\n", m_filename, fileoffset, filesize);
             Bias(0);
             Bias(fileoffset, filesize);
 
-            //DEBUG_LOG("CCFileClass::Open(%s) - seeking file\n", m_filename);
             Seek(0, FS_SEEK_START);
 
-            DEBUG_LOG("CCFileClass::Open(%s) - opened from disk OK\n", m_filename);
-
             return true;
-
         } else {
-            DEBUG_LOG("CCFileClass::Open(%s) - Opening file from cache\n", m_filename);
             if (m_fileBuffer.Get_Buffer() == nullptr) {
-                //m_fileBuffer = BufferClass(cachedfile, filesize);
-                DEBUG_LOG("CCFileClass::Open(%s) - Setting up buffer with size %d\n", m_filename, filesize);
                 new(&m_fileBuffer) BufferClass(cachedfile, filesize);
             }
 
             m_cachePosition = 0;
 
-            //DEBUG_LOG("CCFileClass::Open(%s) - opened from cache OK\n", m_filename);
             return true;
         }
 

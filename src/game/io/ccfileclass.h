@@ -41,7 +41,7 @@ public:
     virtual BOOL Set_Date_Time(time_t date_time) override;
     virtual void Error(int error, BOOL can_retry = false, const char *filename = nullptr) override;
 
-    BOOL Buffer_Allocated() const { return m_fileBuffer.Get_Buffer() != nullptr; }
+    BOOL Is_Cached() const { return m_fileBuffer.Get_Buffer() != nullptr; }
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
