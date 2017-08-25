@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief FileClass for reading files with raw OS API calls.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @Author CCHyper, OmniBlade
+ *
+ * @brief FileClass for reading files with raw OS API calls.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "rawfileclass.h"
 #include "gamedebug.h"
 #include "stringex.h"
@@ -151,11 +151,6 @@ BOOL RawFileClass::Open(int rights)
 
 #ifdef PLATFORM_WINDOWS
     switch (rights) {
-        // this needs looking into.
-        // case 0:
-        //	m_handle = CreateFileA(m_filename,GENERIC_READ | GENERIC_WRITE,0,0,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,0);
-        //	break;
-
         case FM_READ:
             m_handle = CreateFileA(m_filename, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
             break;
@@ -226,23 +221,28 @@ BOOL RawFileClass::Is_Available(BOOL forced)
     }
 
 #ifdef PLATFORM_WINDOWS
-    HANDLE tmp_hnd = CreateFileA(m_filename, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-    if (tmp_hnd != INVALID_HANDLE_VALUE) {
+    m_handle = CreateFileA(m_filename, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+    if (m_handle != INVALID_HANDLE_VALUE) {
         // close the file handle/stream.
         if (!CloseHandle(m_handle)) {
             Error(GetLastError(), 0, m_filename);
         }
 
+        m_handle = INVALID_HANDLE_VALUE;
+
         return true;
     }
 #else
-    int tmp_hnd = open(m_filename, O_RDONLY, S_IREAD);
+    m_handle = open(m_filename, O_RDONLY, S_IREAD);
 
-    if (tmp_hnd != -1) {
+    if (m_handle != -1) {
         // close the file handle/stream.
         if (close(m_handle) == -1) {
             Error(errno, 0, m_filename);
         }
+
+        m_handle = -1;
 
         return true;
     }
@@ -401,17 +401,17 @@ off_t RawFileClass::Size()
 
     return m_biasLength;
     */
-    
+
     int size = 0;
 
     if (m_biasLength == -1) {
         if (Is_Open()) {
-        #ifdef PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
             size = GetFileSize(m_handle, 0);
             if (size == -1) {
                 Error(GetLastError(), 0, m_filename);
             }
-        #else
+#else
 
             off_t cur = lseek(m_handle, 0, FS_SEEK_CURRENT);
 
@@ -423,7 +423,7 @@ off_t RawFileClass::Size()
 
             // reset our pos in the file
             lseek(m_handle, cur, FS_SEEK_START);
-        #endif
+#endif
         } else if (Open(FM_READ)) {
             size = Size();
             Close();
@@ -448,8 +448,8 @@ int RawFileClass::Write(const void *buffer, int length)
         opened = true;
     }
 
-    // write the data in the buffer to the file, and
-    // store the total bytes written.
+// write the data in the buffer to the file, and
+// store the total bytes written.
 #if defined(_WIN32)
     if (!WriteFile(m_handle, buffer, length, reinterpret_cast<LPDWORD>(&writelen), 0)) {
         Error(GetLastError(), 0, m_filename);
@@ -514,7 +514,7 @@ time_t RawFileClass::Get_Date_Time()
     if (stat(m_filename, &attrib) == 0) {
         return attrib.st_mtime;
     }
-    
+
     return 0;
 }
 
@@ -578,8 +578,8 @@ off_t RawFileClass::Raw_Seek(off_t offset, int whence)
 #ifdef PLATFORM_WINDOWS
     int retval = 0;
 
-    //seek to the offset specified, return the position.
-    //and if fseek returned with a error, raise an error too.
+    // seek to the offset specified, return the position.
+    // and if fseek returned with a error, raise an error too.
     retval = SetFilePointer(m_handle, offset, 0, whence);
     if (retval == -1) {
         Error(GetLastError(), 0, m_filename);
