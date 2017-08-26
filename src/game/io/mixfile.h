@@ -291,8 +291,6 @@ void *MixFileClass<FC>::Retrieve(const char *filename)
     void *data = nullptr;
     Offset(filename, &data);
 
-    DEBUG_ASSERT_PRINT(data != nullptr, "MixFileClass::Retrieve() - Unable to retrieve %s\n", filename)
-
     return data;
 }
 

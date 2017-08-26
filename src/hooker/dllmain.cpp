@@ -60,6 +60,7 @@ void Setup_Hooks()
     BufferIOFileClass::Hook_Me();
     CCFileClass::Hook_Me();
     Hook_Function((void*)0x005B96F0, (void*)&MixFileClass<CCFileClass>::Offset);
+    Hook_Function((void*)0x005B9330, (void*)&MixFileClass<CCFileClass>::Retrieve);
     Hook_Function((void*)0x005E5200, (void*)0x005E53CD); //This one forces better interpolation algo.
 }
 
