@@ -45,6 +45,7 @@ endif()
 
 # This doesn't really work yet, work ongoing to make it usable
 option(STANDALONE "Build a standalone version." OFF)
+option(NO_BITFIELDS "Use standard bool type in place of bitfields." OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${rapp_SOURCE_DIR}/cmake/modules)
 
@@ -133,6 +134,10 @@ endif()
 
 if(STANDALONE)
     add_definitions(-DRAPP_STANDALONE)
+endif()
+
+if(NO_BITFIELDS)
+    add_definitions(-DRAPP_NO_BITFIELDS)
 endif()
 
 # Set where the build results will end up

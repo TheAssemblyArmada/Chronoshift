@@ -114,7 +114,7 @@ private:
 
 private:
     char *m_fileName;
-#ifndef RAPP_STANDALONE
+#ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {
