@@ -1,34 +1,23 @@
-////////////////////////////////////////////////////////////////////////////////
-//                            --  REDALERT++ --                               //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Redalert++
-//
-//          File:: ENDIANTYPE.H
-//
-//        Author:: OmniBlade
-//
-//  Contributors:: CCHyper
-//
-//   Description:: Base class for archive file handling.
-//
-//       License:: Redalert++ is free software: you can redistribute it and/or
-//                 modify it under the terms of the GNU General Public License
-//                 as published by the Free Software Foundation, either version
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+* @file
+*
+* @Author CCHyper, OmniBlade
+*
+* @brief Macros for handling different platform endian formats.
+*
+* @copyright Redalert++ is free software: you can redistribute it and/or
+*            modify it under the terms of the GNU General Public License
+*            as published by the Free Software Foundation, either version
+*            2 of the License, or (at your option) any later version.
+*
+*            A full copy of the GNU General Public License can be found in
+*            LICENSE
+*/
 #pragma once
 
 #ifndef BASE_ENDIANTYPE_H
 #define BASE_ENDIANTYPE_H
 
-////////////////////////////////////////////////////////////////////////////////
-//  Includes
-////////////////////////////////////////////////////////////////////////////////
 #include "bittype.h"
 
 // Implement missing intrinsics for watcom build.
@@ -40,15 +29,9 @@ extern uint32_t _byteswap_ulong(uint32_t uInput);
 #pragma aux _byteswap_ulong = "bswap eax" parm[eax] value[eax] modify exact[eax] nomemory;
 #endif
 
-//
-// If building for Linux...
-//
 #if defined(PLATFORM_LINUX)
 #include <endian.h>
 
-//
-// If building for Mac OS X...
-//
 #elif defined(PLATFORM_OSX)
 #include <libkern/OSByteOrder.h>
 
@@ -111,50 +94,36 @@ extern uint32_t _byteswap_ulong(uint32_t uInput);
 #define le64toh(x) (x)
 #endif // SYSTEM_LITTLE_ENDIAN
 
-//
-// Unsupported platform, report this to the compiler.
-//
 #else
 #error platform not supported
 #endif // PLATFORM_LINUX || PLATFORM_OSX || PLATFORM_WINDOWS
 
-//
-// Byte access macros for different word sizes for Little Endian.
-//
+// Byte access macros for different word sizes.
 #if defined(SYSTEM_LITTLE_ENDIAN)
-#define GETBYTE32(x, n) (*((uint8 *)&(x) + n))
-#define GETSBYTE32(x, n) (*((sint8 *)&(x) + n))
-#define GETBYTE16(x, n) (*((uint8 *)&(x) + n))
-#define GETSBYTE16(x, n) (*((sint8 *)&(x) + n))
-#define GETWORD32(x, n) (*((uint16 *)&(x) + n))
-#define GETSWORD32(x, n) (*((sint16 *)&(x) + n))
+#define GETBYTE32(x, n) (*((uint8_t *)&(x) + n))
+#define GETSBYTE32(x, n) (*((int8_t *)&(x) + n))
+#define GETBYTE16(x, n) (*((uint8_t *)&(x) + n))
+#define GETSBYTE16(x, n) (*((int8_t *)&(x) + n))
+#define GETWORD32(x, n) (*((uint16_t *)&(x) + n))
+#define GETSWORD32(x, n) (*((int16_t *)&(x) + n))
 
 #define htolef(x) (x)
 #define leftoh(x) (x)
-
-//
-// Byte access macros for different word sizes for Big Endian.
-//
 #elif defined(SYSTEM_BIG_ENDIAN)
-#define GETBYTE32(x, n) (*((uint8 *)&(x) + (3 - n)))
-#define GETSBYTE32(x, n) (*((sint8 *)&(x) + (3 - n)))
-#define GETBYTE16(x, n) (*((uint8 *)&(x) + (1 - n)))
-#define GETSBYTE16(x, n) (*((sint8 *)&(x) + (1 - n)))
-#define GETWORD32(x, n) (*((uint16 *)&(x) + (1 - n)))
-#define GETSWORD32(x, n) (*((sint16 *)&(x) + (1 - n)))
+#define GETBYTE32(x, n) (*((uint8_t *)&(x) + (3 - n)))
+#define GETSBYTE32(x, n) (*((int8_t *)&(x) + (3 - n)))
+#define GETBYTE16(x, n) (*((uint8_t *)&(x) + (1 - n)))
+#define GETSBYTE16(x, n) (*((int8_t *)&(x) + (1 - n)))
+#define GETWORD32(x, n) (*((uint16_t *)&(x) + (1 - n)))
+#define GETSWORD32(x, n) (*((int16_t *)&(x) + (1 - n)))
 
 #define htolef(x) *(float *)(&(htole32(*(uint32_a *)(&x))))
 #define leftoh(x) *(float *)(&(le32toh(*(uint32_a *)(&x))))
-//
-// Unsupported byte order, report this to the compiler.
-//
+
 #else
-COMPILER_ERROR("byte order not supported");
+#error byte order not supported
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////////////////////
 #define WRITE_LE_UINT16(p, value) ((p)[0] = ((value)&0xFF), (p)[1] = (((value) >> 8) & 0xFF))
 #define WRITE_LE_UINT32(p, value) \
     ((p)[0] = ((value)&0xFF), \
