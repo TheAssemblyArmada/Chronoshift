@@ -20,6 +20,7 @@ set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 set(GAMEENGINE_SRC
     game/gamedebug.cpp
     game/startup.cpp
+    game/common/base64.cpp
     game/common/buffer.cpp
     game/common/cpudetect.cpp
     game/common/crc.cpp
