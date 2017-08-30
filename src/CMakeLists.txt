@@ -33,6 +33,8 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
+    game/io/b64pipe.cpp
+    game/io/b64straw.cpp
     game/io/bfiofileclass.cpp
     game/io/blowpipe.cpp
     game/io/blowstraw.cpp
