@@ -1,26 +1,18 @@
-////////////////////////////////////////////////////////////////////////////////
-//                               --  THYME  --                                //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Thyme
-//
-//          File:: GAMEDEBUG.H
-//
-//        Author:: OmniBlade
-//
-//  Contributors:: 
-//
-//   Description:: 
-//
-//       License:: Thyme is free software: you can redistribute it and/or 
-//                 modify it under the terms of the GNU General Public License 
-//                 as published by the Free Software Foundation, either version 
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @Author OmniBlade
+ *
+ * @brief Debug logging interface.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef GAMEDEBUG_H
@@ -34,19 +26,32 @@ extern "C" {
 
 #ifdef GAME_DEBUG_LOG
 
-#define DEBUG_LOG(message, ...)		        Debug_Log(message, ##__VA_ARGS__)
-#define DEBUG_LINE_LOG(message, ...)		Debug_Log("%s %d " message, __FILE__, __LINE__, ##__VA_ARGS__)
-#define DEBUG_INIT(flags)		            Debug_Init(flags)
-#define DEBUG_STOP()		                Debug_Shutdown()
-#define DEBUG_ASSERT(exp)                   if (!(exp)) { Debug_Log("%s %d Assert failed", __FILE__, __LINE__); }
-#define ASSERT_PRINT(exp, msg, ...)         if (!(exp)) { Debug_Log("%s %d " msg, __FILE__, __LINE__, ##__VA_ARGS__); }
-#define DEBUG_ASSERT_PRINT(exp, msg, ...)   if (!(exp)) { Debug_Log("%s %d " msg, __FILE__, __LINE__, ##__VA_ARGS__); }
+#define DEBUG_LOG(message, ...) Debug_Log(message, ##__VA_ARGS__)
+#define DEBUG_LINE_LOG(message, ...) Debug_Log("%s %d " message, __FILE__, __LINE__, ##__VA_ARGS__)
+#define DEBUG_INIT(flags) Debug_Init(flags)
+#define DEBUG_STOP() Debug_Shutdown()
 
-enum DebugOptions {
-    DEBUG_LOG_TO_FILE    = 1 << 0,
+#define DEBUG_ASSERT(exp) \
+    if (!(exp)) { \
+        Debug_Log("%s %d Assert failed", __FILE__, __LINE__); \
+    }
+
+#define ASSERT_PRINT(exp, msg, ...) \
+    if (!(exp)) { \
+        Debug_Log("%s %d " msg, __FILE__, __LINE__, ##__VA_ARGS__); \
+    }
+
+#define DEBUG_ASSERT_PRINT(exp, msg, ...) \
+    if (!(exp)) { \
+        Debug_Log("%s %d " msg, __FILE__, __LINE__, ##__VA_ARGS__); \
+    }
+
+enum DebugOptions
+{
+    DEBUG_LOG_TO_FILE = 1 << 0,
     DEBUG_LOG_TO_CONSOLE = 1 << 1,
-    DEBUG_PREFIX_TICKS   = 1 << 2,
-    DEBUG_BUFFER_SIZE    = 0x2000,
+    DEBUG_PREFIX_TICKS = 1 << 2,
+    DEBUG_BUFFER_SIZE = 0x2000,
 };
 
 void Debug_Init(int flags);
@@ -62,17 +67,19 @@ void Debug_Shutdown(void);
 int Debug_Get_Flags(void);
 void Debug_Set_Flags(int flags);
 
-#else   //GAME_DEBUG_LOG
+#else // GAME_DEBUG_LOG
 
-#define DEBUG_LOG(message, ...)             ((void)0)
-#define DEBUG_LINE_LOG(message, ...)		((void)0)
-#define DEBUG_INIT(flags)		            ((void)0)
-#define DEBUG_STOP()                        ((void)0)
-#define DEBUG_ASSERT(exp)                   ((void)0)
-#define ASSERT_PRINT(exp, msg, ...)         if (!(exp)) { }
-#define DEBUG_ASSERT_PRINT(exp, msg, ...)   ((void)0)
+#define DEBUG_LOG(message, ...) ((void)0)
+#define DEBUG_LINE_LOG(message, ...) ((void)0)
+#define DEBUG_INIT(flags) ((void)0)
+#define DEBUG_STOP() ((void)0)
+#define DEBUG_ASSERT(exp) ((void)0)
+#define ASSERT_PRINT(exp, msg, ...) \
+    if (!(exp)) { \
+    }
+#define DEBUG_ASSERT_PRINT(exp, msg, ...) ((void)0)
 
-#endif  //GAME_DEBUG_LOG
+#endif // GAME_DEBUG_LOG
 
 #ifdef __cplusplus
 } // extern "C"

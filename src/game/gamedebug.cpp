@@ -1,26 +1,18 @@
-////////////////////////////////////////////////////////////////////////////////
-//                               --  THYME  --                                //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Thyme
-//
-//          File:: GAMEDEBUG.CPP
-//
-//        Author:: OmniBlade
-//
-//  Contributors:: 
-//
-//   Description:: 
-//
-//       License:: Thyme is free software: you can redistribute it and/or 
-//                 modify it under the terms of the GNU General Public License 
-//                 as published by the Free Software Foundation, either version 
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @Author OmniBlade
+ *
+ * @brief Debug logging interface.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "gamedebug.h"
 #include "critsection.h"
 #include <stdio.h>
@@ -41,7 +33,7 @@ CriticalSectionClass DebugMutex;
 
 void Debug_Init(int flags)
 {
-    if ( DebugFlags != 0 ) {
+    if (DebugFlags != 0) {
         return;
     }
 
@@ -53,7 +45,7 @@ void Debug_Init(int flags)
 #ifdef PLATFORM_WINDOWS
     char *tmp = getenv("USERPROFILE");
 
-    if ( tmp != NULL ) {
+    if (tmp != NULL) {
         strcpy(dirbuf, tmp);
         strcat(dirbuf, "\\Documents\\RedalertPlusPlus Data");
         mkdir(dirbuf);
@@ -62,7 +54,7 @@ void Debug_Init(int flags)
         GetModuleFileNameA(0, dirbuf, sizeof(dirbuf));
 
         // Get the path to the executable minus the actual filename.
-        for ( char *i = &dirbuf[strlen(dirbuf)]; i >= dirbuf && (*i != '\\' || *i != '/'); --i ) {
+        for (char *i = &dirbuf[strlen(dirbuf)]; i >= dirbuf && (*i != '\\' || *i != '/'); --i) {
             *i = '\0';
         }
     }
@@ -70,7 +62,7 @@ void Debug_Init(int flags)
 
 #endif
 
-    //const char *prefix = gAppPrefix;      //todo
+    // const char *prefix = gAppPrefix;      //todo
     const char *prefix = "";
     strcpy(prevbuf, dirbuf);
     strcat(prevbuf, prefix);
@@ -82,7 +74,7 @@ void Debug_Init(int flags)
     rename(curbuf, prevbuf);
     DebugLogFile = fopen(curbuf, "w");
 
-    if ( DebugLogFile != nullptr ) {
+    if (DebugLogFile != nullptr) {
         Debug_Log("Log %s opened: %s\n", curbuf, Get_Time_String());
     }
 }
@@ -101,22 +93,22 @@ void Debug_Log(const char *format, ...)
     va_list va;
     va_start(va, format);
 
-    if ( DebugFlags == 0 ) {
-    #ifdef PLATFORM_WINDOWS
+    if (DebugFlags == 0) {
+#ifdef PLATFORM_WINDOWS
         MessageBoxA(0, "Debug not initialised properly", DebugCaption, 0);
-    #else
+#else
 
-    #endif
+#endif
     }
 
     vsprintf(&DebugBuffer[strlen(DebugBuffer)], Prep_Buffer(format, DebugBuffer), va);
 
-    if ( strlen(DebugBuffer) >= 0x2000 ) {
-    #ifdef PLATFORM_WINDOWS
+    if (strlen(DebugBuffer) >= 0x2000) {
+#ifdef PLATFORM_WINDOWS
         MessageBoxA(0, "String too long for debug buffer", DebugCaption, 0);
-    #else
+#else
 
-    #endif
+#endif
     }
 
     Remove_Unprintable(DebugBuffer);
@@ -127,7 +119,7 @@ const char *Prep_Buffer(const char *format, char *buffer)
 {
     *buffer = '\0';
 
-    if ( DebugFlags & DEBUG_PREFIX_TICKS ) {
+    if (DebugFlags & DEBUG_PREFIX_TICKS) {
         strcpy(buffer, Get_Tick_String());
         strcat(buffer, " ");
     }
@@ -147,7 +139,7 @@ char *Get_Tick_String(void)
 #else
     struct timespec now;
 
-    if ( clock_gettime(CLOCK_MONOTONIC, &now) != 0 ) {
+    if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) {
         ticks = 0;
     }
 
@@ -163,29 +155,29 @@ void Log_Output(const char *buffer)
 {
     CriticalSectionClass::LockClass m(DebugMutex);
 
-    if ( (DebugFlags & DEBUG_LOG_TO_FILE) && DebugLogFile != nullptr ) {
+    if ((DebugFlags & DEBUG_LOG_TO_FILE) && DebugLogFile != nullptr) {
         fprintf(DebugLogFile, "%s", buffer);
         fflush(DebugLogFile);
     }
 
-    if ( DebugFlags & DEBUG_LOG_TO_CONSOLE ) {
-    #ifdef PLATFORM_WINDOWS
+    if (DebugFlags & DEBUG_LOG_TO_CONSOLE) {
+#ifdef PLATFORM_WINDOWS
         OutputDebugStringA(buffer);
-    #else
+#else
         printf(buffer);
-    #endif
+#endif
     }
 }
 
 void Remove_Unprintable(char *buffer)
 {
-    for ( char *i = &buffer[strlen(buffer) - 1]; i >= buffer; --i ) {
+    for (char *i = &buffer[strlen(buffer) - 1]; i >= buffer; --i) {
         char tmp = *i;
 
         //
         // Chars in the range 0 - 32 ('\0' - ' ') are unprintable so remove.
         //
-        if ( tmp >= '\0' && tmp < ' ' && tmp != '\n' && tmp != '\r' ) {
+        if (tmp >= '\0' && tmp < ' ' && tmp != '\n' && tmp != '\r') {
             *i = ' ';
         }
     }
@@ -196,35 +188,35 @@ void Debug_Crash(const char *format, ...)
     va_list va;
     va_start(va, format);
 
-    if ( DebugFlags = 0 ) {
-    #ifdef PLATFORM_WINDOWS
+    if (DebugFlags = 0) {
+#ifdef PLATFORM_WINDOWS
         MessageBoxA(0, "Debug not initialized properly", DebugCaption, 0);
-    #else
+#else
 
-    #endif
+#endif
     }
 
     strcat(DebugBuffer, "ASSERTION FAILURE: ");
 
     vsprintf(&DebugBuffer[strlen(DebugBuffer)], Prep_Buffer(format, DebugBuffer), va);
 
-    if ( strlen(DebugBuffer) >= 0x2000 ) {
-    #ifdef PLATFORM_WINDOWS
+    if (strlen(DebugBuffer) >= 0x2000) {
+#ifdef PLATFORM_WINDOWS
         MessageBoxA(0, "String too long for debug buffers", DebugCaption, 0);
-    #else
+#else
 
-    #endif
+#endif
     }
 
-    //if ( !DX8Wrapper_IsWindowed ) {
+    // if ( !DX8Wrapper_IsWindowed ) {
     //    Log_Output("**** CRASH IN FULL SCREEN - Auto-ignored, CHECK THIS LOG!\n");
     //}
 
     Remove_Unprintable(DebugBuffer);
     Log_Output(DebugBuffer);
-    //doStackDump();
-    //strcat(DebugBuffer, "\n\nAbort->exception; Retry->debugger; Ignore->continue\n");
-    //if ( doCrashBox(DebugBuffer, 1) == 5 && TheCurrentAllowCrashPtr ) {
+    // doStackDump();
+    // strcat(DebugBuffer, "\n\nAbort->exception; Retry->debugger; Ignore->continue\n");
+    // if ( doCrashBox(DebugBuffer, 1) == 5 && TheCurrentAllowCrashPtr ) {
     //    if ( !DX8Wrapper_IsWindowed || MessageBoxA(0, "Ignore this crash from now on?", &password, 4u) == 6 )
     //        *(_BYTE *)TheCurrentAllowCrashPtr = 0;
     //    if ( TheKeyboard )
@@ -241,7 +233,7 @@ int Debug_Crash_Box(const char *buffer, int log_result)
 
 void Debug_Shutdown(void)
 {
-    if ( DebugLogFile ) {
+    if (DebugLogFile) {
         Debug_Log("Log closed: %s\n", Get_Time_String());
         fclose(DebugLogFile);
     }
