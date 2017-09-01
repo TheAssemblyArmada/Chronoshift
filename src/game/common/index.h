@@ -53,8 +53,8 @@ public:
     ~IndexClass() { Clear(); }
 
     const ValueType &operator[](const KeyType &id) const;
-    const ValueType Fetch_Index(const KeyType &id) const;
-    const ValueType &Fetch_Data_By_Index(int index) { return m_indexTable[index].m_data; }
+    ValueType Fetch_Index(const KeyType &id) const;
+    ValueType &Fetch_Data_By_Index(int index) { return m_indexTable[index].m_data; }
     KeyType Fetch_ID_By_Index(int index) { return m_indexTable[index].m_id; }
     BOOL Is_Present(const KeyType &id) const;
     BOOL Add_Index(const KeyType &id, const ValueType &data);
@@ -111,7 +111,7 @@ BOOL IndexClass<KeyType, ValueType>::Is_Present(const KeyType &id) const
 }
 
 template<typename KeyType, class ValueType>
-const ValueType IndexClass<KeyType, ValueType>::Fetch_Index(const KeyType &id) const
+ValueType IndexClass<KeyType, ValueType>::Fetch_Index(const KeyType &id) const
 {
     if (Is_Present(id)) {
         return m_archive->m_data;
@@ -240,7 +240,7 @@ typename IndexClass<KeyType, ValueType>::NodeElement *IndexClass<KeyType, ValueT
         NodeElement elem;
         elem.m_id = id;
 
-        return bsearch(&elem, m_indexTable, m_indexCount, sizeof(NodeElement), Search_Compare);
+        return (NodeElement *)bsearch(&elem, m_indexTable, m_indexCount, sizeof(NodeElement), Search_Compare);
     }
 
     return nullptr;

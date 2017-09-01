@@ -26,6 +26,7 @@ set(GAMEENGINE_SRC
     game/common/crc.cpp
     game/common/critsection.cpp
     game/common/fixed.cpp
+    game/common/ini.cpp
     game/common/random.cpp
     game/common/readline.cpp
     game/common/wwstring.cpp
