@@ -34,6 +34,9 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
+    game/gfx/hsv.cpp
+    game/gfx/palette.cpp
+    game/gfx/rgb.cpp
     game/io/b64pipe.cpp
     game/io/b64straw.cpp
     game/io/bfiofileclass.cpp
