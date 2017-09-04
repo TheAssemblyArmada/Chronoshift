@@ -14,15 +14,12 @@
  *            LICENSE
  */
 #include "palette.h"
+#include "pal.h"
 
 PaletteClass WhitePalette(RGBClass::WhiteColor);
 PaletteClass BlackPalette(RGBClass::BlackColor);
 
-#ifndef RAPP_STANDALONE
-PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(0x0060CE90);
-#else
-PaletteClass &PaletteClass::CurrentPalette = WhitePalette; // TODO, should be asm _CurrentPalette;
-#endif
+PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g_currentPalette);
 
 PaletteClass::PaletteClass(RGBClass const &rgb)
 {

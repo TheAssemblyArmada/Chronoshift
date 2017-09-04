@@ -11,6 +11,7 @@ set(GAMEENGINE_INCLUDES
     game
     game/common
     game/crypto
+    game/gfx
     game/io
     game/memory
 )
@@ -35,6 +36,7 @@ set(GAMEENGINE_SRC
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
     game/gfx/hsv.cpp
+    game/gfx/pal.cpp
     game/gfx/palette.cpp
     game/gfx/rgb.cpp
     game/io/b64pipe.cpp
