@@ -74,7 +74,7 @@ StaticInitObject::StaticInitObject()
     Setup_Hooks();
 
     if (CPUDetectClass::Has_CPUID_Instruction()) {
-        DEBUG_LOG("%s.\n", CPUDetectClass::Get_Processor_Log());
+        DEBUG_LOG("%s", CPUDetectClass::Get_Processor_Log());
     } else {
         DEBUG_LOG("Doesn't look like CPUDetect is initialised yet.\n");
     }
