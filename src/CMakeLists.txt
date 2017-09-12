@@ -1,5 +1,13 @@
 # Add platform libraries needed for the build
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
+    find_package(DirectX)
+    
+    if(DirectX_DDRAW_FOUND)
+        message("Located DirectDraw.")
+        set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${DirectX_DDRAW_INCLUDE_DIR})
+        set(PLATFORM_LIBS ${PLATFORM_LIBS} ${DirectX_DDRAW_LIBRARY})
+    endif()
+    
     set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm)
 else()
     #No other platforms yet.
@@ -39,6 +47,8 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
+    game/gfx/blitters.cpp
+    game/gfx/gbuffer.cpp
     game/gfx/hsv.cpp
     game/gfx/pal.cpp
     game/gfx/palette.cpp

@@ -27,6 +27,7 @@
 //  Includes
 ////////////////////////////////////////////////////////////////////////////////
 #include "alloc.h"
+#include "blitters.h"
 #include "ccfileclass.h"
 #include "cpudetect.h"
 #include "hooker.h"
@@ -64,6 +65,7 @@ void Setup_Hooks()
     CCFileClass::Hook_Me();
     INIClass::Hook_Me();
     PlatformTimerClass::Hook_Me();
+    Blitters::Hook_Me();
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
     Hook_Function(0x005E5200, (void*)0x005E53CD); //This one forces better interpolation algo.

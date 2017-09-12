@@ -20,53 +20,12 @@
 
 #include "always.h"
 
-////////////////////////////////////////////////////////////////////////////////
-///
-/// <!-- MIN() -->
-///
-/// \brief
-///     Returns the minimum of 'minval' and 'maxval'.
-///
-/// \param
-///     minval      The lowest value to compare.
-///
-/// \param
-///     maxval      The largest value to compare.
-///
-/// \return
-///     value       The lesser of the values passed as arguments.
-///
-/// \warning
-///     None
-///
-////////////////////////////////////////////////////////////////////////////////
 template<typename T>
 T Min(T minval, T maxval)
 {
     return minval < maxval ? minval : maxval;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-///
-/// <!-- MAX() -->
-///
-/// \brief
-///     Returns the maximum of 'minval' and 'maxval'.
-///
-/// \param
-///     minval      The lowest value to compare.
-///
-/// \param
-///     maxval      The largest value to compare.
-///
-/// \return
-///     value       The largest of the values passed as arguments.
-///
-/// \warning
-///     None
-///
-////////////////////////////////////////////////////////////////////////////////
 template<typename T>
 T Max(T minval, T maxval)
 {
