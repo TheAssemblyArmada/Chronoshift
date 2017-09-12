@@ -58,8 +58,8 @@ protected:
 #ifndef RAPP_STANDALONE
 inline void SHAStraw::Hook_Me()
 {
-    Hook_Function((void*)0x005D5B04, (void*)&Hook_Result);
-    Hook_Function((void*)0x005D5AD0, (void*)&Hook_Get);
+    Hook_Function(0x005D5B04, &Hook_Result);
+    Hook_Function(0x005D5AD0, &Hook_Get);
 }
 #endif
 

@@ -15,6 +15,7 @@
  */
 #include "palette.h"
 #include "pal.h"
+#include "ttimer.h"
 
 PaletteClass WhitePalette(RGBClass::WhiteColor);
 PaletteClass BlackPalette(RGBClass::BlackColor);
@@ -99,13 +100,6 @@ int PaletteClass::Closest_Color(RGBClass &rgb) const
 
 void PaletteClass::Set(int fading_steps, void (*callback)())
 {
-#ifndef RAPP_STANDALONE
-    static void (*hooked_set)(PaletteClass *, int, void (*)()) =
-        reinterpret_cast<void (*)(PaletteClass *, int, void (*)())>(0x005BCF44);
-    hooked_set(this, fading_steps, callback);
-#endif
-    // TODO requires timer classes and low level palette set function.
-    /*
     PaletteClass tmppal;
     PaletteClass adjpal;
     TCountDownTimerClass<SystemTimerClass> timer;
@@ -132,5 +126,4 @@ void PaletteClass::Set(int fading_steps, void (*callback)())
     }
 
     Set_Palette((uint8_t *)m_palette);
-    */
 }

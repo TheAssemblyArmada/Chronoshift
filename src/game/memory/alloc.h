@@ -49,12 +49,12 @@ int Total_Ram_Free(MemoryFlagType flag);
 #ifndef RAPP_STANDALONE
 inline void Memory_Hook_Me(void)
 {
-    Hook_Function((void*)0x005C5965, (void*)&malloc);
-    Hook_Function((void*)0x005C3945, (void*)&free);
-    Hook_Function((void*)0x005DE4DE, (void*)&realloc);
-    Hook_Function((void*)0x005D5FC0, (void*)&Alloc);
-    Hook_Function((void*)0x005D6010, (void*)&Free);
-    Hook_Function((void*)0x005D6020, (void*)&Resize_Alloc);
+    Hook_Function(0x005C5965, &malloc);
+    Hook_Function(0x005C3945, &free);
+    Hook_Function(0x005DE4DE, &realloc);
+    Hook_Function(0x005D5FC0, &Alloc);
+    Hook_Function(0x005D6010, &Free);
+    Hook_Function(0x005D6020, &Resize_Alloc);
 }
 #endif
 

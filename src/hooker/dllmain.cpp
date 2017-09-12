@@ -33,7 +33,9 @@
 #include "gamedebug.h"
 #include "ini.h"
 #include "mixfile.h"
+#include "ostimer.h"
 #include "rawfileclass.h"
+#include "rgb.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -61,9 +63,10 @@ void Setup_Hooks()
     BufferIOFileClass::Hook_Me();
     CCFileClass::Hook_Me();
     INIClass::Hook_Me();
-    Hook_Function((void*)0x005B96F0, (void*)&MixFileClass<CCFileClass>::Offset);
-    Hook_Function((void*)0x005B9330, (void*)&MixFileClass<CCFileClass>::Retrieve);
-    Hook_Function((void*)0x005E5200, (void*)0x005E53CD); //This one forces better interpolation algo.
+    PlatformTimerClass::Hook_Me();
+    Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
+    Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
+    Hook_Function(0x005E5200, (void*)0x005E53CD); //This one forces better interpolation algo.
 }
 
 StaticInitObject::StaticInitObject()

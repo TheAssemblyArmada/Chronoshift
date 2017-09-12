@@ -101,18 +101,18 @@ protected:
 #ifndef RAPP_STANDALONE
 inline void RawFileClass::Hook_Me()
 {
-    Hook_Function((void*)0x005C063C, (void*)&Hook_File_Name);
-    Hook_Function((void*)0x005C063C, (void*)&Hook_Set_Name);
-    Hook_Function((void*)0x005C063C, (void*)&Hook_Create);
-    Hook_Function((void*)0x005C063C, (void*)&Hook_Delete);
-    Hook_Function((void*)0x005C0100, (void*)&Hook_Open);
-    Hook_Function((void*)0x005C0210, (void*)&Hook_Is_Available);
-    Hook_Function((void*)0x005C0314, (void*)&Hook_Read);
-    Hook_Function((void*)0x005C04E8, (void*)&Hook_Seek);
-    Hook_Function((void*)0x005C056C, (void*)&Hook_Size);
-    Hook_Function((void*)0x005C0430, (void*)&Hook_Write);
-    Hook_Function((void*)0x005C02C8, (void*)&Hook_Close);
-    Hook_Function((void*)0x005C07CC, (void*)&Hook_Raw_Seek);
+    Hook_Function(0x005C063C, &Hook_File_Name);
+    Hook_Function(0x005C063C, &Hook_Set_Name);
+    Hook_Function(0x005C063C, &Hook_Create);
+    Hook_Function(0x005C063C, &Hook_Delete);
+    Hook_Function(0x005C0100, &Hook_Open);
+    Hook_Function(0x005C0210, &Hook_Is_Available);
+    Hook_Function(0x005C0314, &Hook_Read);
+    Hook_Function(0x005C04E8, &Hook_Seek);
+    Hook_Function(0x005C056C, &Hook_Size);
+    Hook_Function(0x005C0430, &Hook_Write);
+    Hook_Function(0x005C02C8, &Hook_Close);
+    Hook_Function(0x005C07CC, &Hook_Raw_Seek);
 }
 #endif
 

@@ -597,15 +597,15 @@ void BufferIOFileClass::Close()
 
 void BufferIOFileClass::Hook_Me()
 {
-    Hook_Function((void*)0x005BD734, (void*)&Hook_Is_Available);
-    Hook_Function((void*)0x005BD754, (void*)&Hook_Is_Open);
-    Hook_Function((void*)0x005BD780, (void*)&Hook_Open_Name);
-    Hook_Function((void*)0x005BD79C, (void*)&Hook_Open);
-    Hook_Function((void*)0x005BDAD4, (void*)&Hook_Read);
-    Hook_Function((void*)0x005BDCF4, (void*)&Hook_Seek);
-    Hook_Function((void*)0x005BDDF0, (void*)&Hook_Size);
-    Hook_Function((void*)0x005BD870, (void*)&Hook_Write);
-    Hook_Function((void*)0x005BDE14, (void*)&Hook_Close);
+    Hook_Function(0x005BD734, &Hook_Is_Available);
+    Hook_Function(0x005BD754, &Hook_Is_Open);
+    Hook_Function(0x005BD780, &Hook_Open_Name);
+    Hook_Function(0x005BD79C, &Hook_Open);
+    Hook_Function(0x005BDAD4, &Hook_Read);
+    Hook_Function(0x005BDCF4, &Hook_Seek);
+    Hook_Function(0x005BDDF0, &Hook_Size);
+    Hook_Function(0x005BD870, &Hook_Write);
+    Hook_Function(0x005BDE14, &Hook_Close);
 }
 
 BOOL BufferIOFileClass::Hook_Is_Available(BufferIOFileClass *ptr, BOOL forced)

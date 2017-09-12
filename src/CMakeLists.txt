@@ -27,9 +27,13 @@ set(GAMEENGINE_SRC
     game/common/crc.cpp
     game/common/critsection.cpp
     game/common/fixed.cpp
+    game/common/globals.cpp
     game/common/ini.cpp
+    game/common/ostimer.cpp
     game/common/random.cpp
     game/common/readline.cpp
+    game/common/timer.cpp
+    game/common/ttimer.cpp
     game/common/wwstring.cpp
     game/crypto/blowfish.cpp
     game/crypto/pk.cpp

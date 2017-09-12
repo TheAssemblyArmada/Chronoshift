@@ -15,6 +15,7 @@
  */
 #include "rgb.h"
 #include "abs.h"
+#include "gamedebug.h"
 #include "hsv.h"
 #include "minmax.h"
 #include "palette.h"
