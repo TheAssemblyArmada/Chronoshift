@@ -267,10 +267,10 @@ void __cdecl Buffer_Remap(GraphicViewPortClass &vp, int x, int y, int w, int h, 
     }
 }
 
-uint8_t __cdecl Buffer_Get_Pixel(GraphicViewPortClass &vp, int x, int y)
+int __cdecl Buffer_Get_Pixel(GraphicViewPortClass &vp, int x, int y)
 {
-    if (x >= 0 && x < vp.Get_Width() && y >= 0 && y < vp.Get_Height()) {
-        return *(vp.Get_Full_Pitch() * y + x + static_cast<uint8_t*>(vp.Get_Offset()));
+    if (x < vp.Get_Width() && y < vp.Get_Height()) {
+        return *(static_cast<uint8_t*>(vp.Get_Offset()) + x + y * vp.Get_Full_Pitch());
     }
 
     return 0;
@@ -278,8 +278,8 @@ uint8_t __cdecl Buffer_Get_Pixel(GraphicViewPortClass &vp, int x, int y)
 
 void __cdecl Buffer_Put_Pixel(GraphicViewPortClass &vp, int x, int y, uint8_t val)
 {
-    if (x >= 0 && x < vp.Get_Width() && y >= 0 && y < vp.Get_Height()) {
-        *(vp.Get_Full_Pitch() * y + x + static_cast<uint8_t*>(vp.Get_Offset())) = val;
+    if (x < vp.Get_Width() && y < vp.Get_Height()) {
+        *(static_cast<uint8_t*>(vp.Get_Offset()) + x + y * vp.Get_Full_Pitch()) = val;
     }
 }
 
