@@ -41,21 +41,18 @@ enum GBC_Enum
 
 class GraphicBufferClass;
 
-class GBufferBitmapClass
+class BitmapClass
 {
 public:
-    GBufferBitmapClass(int w, int h, void *bitmap) : Width(w), Height(h), Data(bitmap) {}
-    GBufferBitmapClass(const GBufferBitmapClass &that);
+    BitmapClass(int w, int h, void *bitmap) : Width(w), Height(h), Data(bitmap) {}
+    BitmapClass(const BitmapClass &that) : Width(that.Width), Height(that.Height), Data(that.Data) {};
 
-    ~GBufferBitmapClass() {}
-
-    void Set_Dimensions(int w, int h);
-
+    void Set_Dimensions(int w, int h) { Width = w; Height = h; }
     int Get_Width() { return Width; }
     int Get_Height() { return Height; }
     void *Get_Bitmap() { return Data; }
 
-protected:
+private:
     int Width;
     int Height;
     void *Data;
@@ -64,12 +61,12 @@ protected:
 class GraphicViewPortClass
 {
 public:
-    GraphicViewPortClass();
-    GraphicViewPortClass(GraphicBufferClass *buffer, int x_pos, int y_pos, int width, int height);
+    GraphicViewPortClass() {}
+    GraphicViewPortClass(GraphicBufferClass *buffer, int x, int y, int w, int h);
     ~GraphicViewPortClass();
 
-    void Attach(GraphicBufferClass *buffer, int x_pos, int y_pos, int width, int height);
-    BOOL Change(int x_pos, int y_pos, int width, int height);
+    void Attach(GraphicBufferClass *buffer, int x, int y, int w, int h);
+    BOOL Change(int x, int y, int w, int h);
     BOOL Lock();
     BOOL Unlock();
     void *Get_Offset() { return Offset; }
@@ -86,17 +83,17 @@ public:
 
     void Set_XY_Pos(int x, int y) { XPos = x; YPos = y; }
     void Put_Pixel(int x, int y, unsigned char value);
-    int Get_Pixel(int x, int y);
+    unsigned char Get_Pixel(int x, int y);
     void Remap(int x, int y, int w, int h, unsigned char *fading_table);
-    void Draw_Rect(int x_pos, int y_pos, int width, int height, unsigned char color = 0);
-    void Draw_Line(int x1_pos, int y1_pos, int x2_pos, int y2_pos, unsigned char color = 0);
-    void Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
-    void Overlay_Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
+    void Draw_Rect(int x, int y, int w, int h, unsigned char color = 0);
+    void Draw_Line(int x1, int y1, int x2, int y2, unsigned char color = 0);
+    void Fill_Rect(int x, int y, int w, int h, unsigned char color);
+    //void Overlay_Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
     unsigned int Print(char *string, int x_pos, int y_pos, int a4, int a5);
     void Clear(unsigned char color = 0);
 
-    int Blit(GraphicViewPortClass &viewport, int src_x_pos, int src_y_pos, int dest_x_pos, int dest_y_pos, int width,
-        int height, BOOL use_keysrc = false);
+    int Blit(GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
+        BOOL use_keysrc = false);
 
     int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
@@ -114,8 +111,8 @@ public:
 
 private:
     // This one should only be called from Blit or Full_Blit and should probably be a protected function
-    int DD_Linear_Blit_To_Linear(GraphicViewPortClass &viewport, int src_x_pos, int src_y_pos, int dest_x_pos,
-        int dest_y_pos, int width, int height, BOOL use_keysrc = false);
+    int DD_Linear_Blit_To_Linear(GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
+        BOOL use_keysrc = false);
 
 protected:
     void *Offset;
@@ -149,13 +146,13 @@ public:
     void Attach_DD_Surface(GraphicBufferClass *buffer);
 
     // needs defualt angle
-    //void Scale_Rotate(GBufferBitmapClass &input_bitmap, TPoint2D<int> &input_point, int scale, char angle);
+    //void Scale_Rotate(BitmapClass &input_bitmap, TPoint2D<int> &input_point, int scale, char angle);
 
     void Init(int width, int height, void *buffer, int size, GBC_Enum = GBC_DD_SOFTWARE_BUFF);
     void Un_Init();
 
-    BOOL Lock();
-    BOOL Unlock();
+    BOOL Lock() { return true; }
+    BOOL Unlock() { return true; }
 
     static int TotalLocks;
 

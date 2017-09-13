@@ -60,8 +60,9 @@ void __cdecl Buffer_Draw_Line(GraphicViewPortClass &vp, int x1, int y1, int x2, 
     int increment = 1;
 
     // Do we need to do any clipping
-    if (x1 < vp.Get_XPos() || x1 >= vp.Get_Width() || y1 < vp.Get_YPos() || y1 >= vp.Get_Height() || x2 < vp.Get_XPos()
-        || x2 >= vp.Get_Width() || y2 < vp.Get_YPos() || y2 >= vp.Get_Height()) {
+    if (x1 < 0 || x1 >= vp.Get_Width() || y1 < 0 || y1 >= vp.Get_Height() || x2 < 0
+        || x2 >= vp.Get_Width() || y2 < 0 || y2 >= vp.Get_Height()) {
+
         while (true) {
             unsigned clip1 = Line_Get_Clipping(vp, x1, y1);
             unsigned clip2 = Line_Get_Clipping(vp, x2, y2);
@@ -356,5 +357,15 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
                 src += s_scanline;
             }
         }
+    }
+}
+
+void __cdecl Buffer_Clear(GraphicViewPortClass &vp, uint8_t color)
+{
+    uint8_t *offset = static_cast<uint8_t *>(vp.Get_Offset());
+
+    for (int h = 0; h < vp.Get_Height(); ++h) {
+        memset(offset, color, vp.Get_Width());
+        offset += vp.Get_Full_Pitch();
     }
 }
