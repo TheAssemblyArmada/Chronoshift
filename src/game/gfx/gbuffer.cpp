@@ -22,12 +22,30 @@
  //BOOL &GraphicViewPortClass::AllowStretchBlits;
 int &GraphicViewPortClass::ScreenWidth = Make_Global<int>(0x006016B0);
 int &GraphicViewPortClass::ScreenHeight = Make_Global<int>(0x006016B4);
+GraphicViewPortClass *&g_logicPage = Make_Global<GraphicViewPortClass *>(0x006AC274);
 #else
 BOOL GraphicViewPortClass::AllowHardwareBlitFills;
 BOOL GraphicViewPortClass::AllowStretchBlits;
 int GraphicViewPortClass::ScreenWidth = 640;
 int GraphicViewPortClass::ScreenHeight = 400;
+GraphicViewPortClass *g_logicPage = nullptr;
 #endif
+
+GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp)
+{
+    GraphicViewPortClass *old = g_logicPage;
+    g_logicPage = vp;
+    
+    return old;
+}
+
+GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp)
+{
+    GraphicViewPortClass *old = g_logicPage;
+    g_logicPage = &vp;
+
+    return old;
+}
 
 GraphicViewPortClass::GraphicViewPortClass(GraphicBufferClass *buffer, int x, int y, int w, int h) : 
     GraphicBuff(nullptr),
@@ -119,9 +137,9 @@ void GraphicViewPortClass::Put_Pixel(int x, int y, unsigned char value)
     Unlock();
 }
 
-unsigned char GraphicViewPortClass::Get_Pixel(int x, int y)
+unsigned GraphicViewPortClass::Get_Pixel(int x, int y)
 {
-    uint8_t val = 0;
+    unsigned val = 0;
 
     if (Lock()) {
         val = Buffer_Get_Pixel(*this, x, y);
@@ -180,8 +198,35 @@ void GraphicViewPortClass::Clear(unsigned char color)
     Unlock();
 }
 
-int GraphicViewPortClass::Blit(GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
+int GraphicViewPortClass::Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
     BOOL use_keysrc)
 {
+    if (Lock()) {
+        if (vp.Lock()) {
+            Linear_Blit_To_Linear(*this,
+                vp,
+                src_x,
+                src_y,
+                dst_x,
+                dst_y,
+                w,
+                h,
+                use_keysrc);   
+        }
+
+        vp.Unlock();
+    }
+
+    Unlock();
+
     return 0;
+}
+
+void GraphicViewPortClass::From_Buffer(int x, int y, int w, int h, void* buffer)
+{
+    if (Lock()) {
+        Buffer_To_Page(x, y, w, h, buffer, *this);
+    }
+
+    Unlock();
 }

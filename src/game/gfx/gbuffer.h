@@ -83,19 +83,20 @@ public:
 
     void Set_XY_Pos(int x, int y) { XPos = x; YPos = y; }
     void Put_Pixel(int x, int y, unsigned char value);
-    unsigned char Get_Pixel(int x, int y);
+    unsigned Get_Pixel(int x, int y);
     void Remap(int x, int y, int w, int h, unsigned char *fading_table);
     void Draw_Rect(int x, int y, int w, int h, unsigned char color = 0);
     void Draw_Line(int x1, int y1, int x2, int y2, unsigned char color = 0);
     void Fill_Rect(int x, int y, int w, int h, unsigned char color);
     //void Overlay_Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
-    unsigned int Print(char *string, int x_pos, int y_pos, int a4, int a5);
+    unsigned int Print(char *string, int x, int y, int a4, int a5);
     void Clear(unsigned char color = 0);
+    void From_Buffer(int x, int y, int w, int h, void* buffer);
 
-    int Blit(GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
+    int Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
         BOOL use_keysrc = false);
 
-    int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
+    //int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
 #ifndef RAPP_STANDALONE
     //static BOOL &AllowHardwareBlitFills;
@@ -166,5 +167,11 @@ private:
 
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp);
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp);
+
+#ifndef RAPP_STANDALONE
+extern GraphicViewPortClass *&g_logicPage;
+#else
+extern GraphicViewPortClass *g_logicPage;
+#endif
 
 #endif // GBUFFER_H

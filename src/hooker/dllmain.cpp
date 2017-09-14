@@ -37,6 +37,7 @@
 #include "ostimer.h"
 #include "rawfileclass.h"
 #include "rgb.h"
+#include "textprint.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -66,6 +67,7 @@ void Setup_Hooks()
     INIClass::Hook_Me();
     PlatformTimerClass::Hook_Me();
     Blitters::Hook_Me();
+    Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
     Hook_Function(0x005E5200, (void*)0x005E53CD); //This one forces better interpolation algo.
