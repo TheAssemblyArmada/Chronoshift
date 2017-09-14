@@ -31,7 +31,7 @@ BraceWrapping:
   BeforeCatch:     false
   BeforeElse:      false
   IndentBraces:    false
-  SplitEmptyFunctionBody: true
+  SplitEmptyFunction: true
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BreakBeforeInheritanceComma: false
@@ -47,6 +47,7 @@ Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
 ForEachMacros: []
+KeepEmptyLinesAtTheStartOfBlocks: false
 IncludeCategories:
   - Regex:           'always.h'
     Priority:        -1
