@@ -101,9 +101,9 @@ protected:
 #ifndef RAPP_STANDALONE
 inline void RawFileClass::Hook_Me()
 {
-    Hook_Function(0x005C063C, &Hook_File_Name);
-    Hook_Function(0x005C063C, &Hook_Set_Name);
-    Hook_Function(0x005C063C, &Hook_Create);
+    Hook_Function(0x00426390, &Hook_File_Name);
+    Hook_Function(0x005C006C, &Hook_Set_Name);
+    Hook_Function(0x005C05F8, &Hook_Create);
     Hook_Function(0x005C063C, &Hook_Delete);
     Hook_Function(0x005C0100, &Hook_Open);
     Hook_Function(0x005C0210, &Hook_Is_Available);
