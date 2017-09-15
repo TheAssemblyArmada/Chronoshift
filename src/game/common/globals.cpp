@@ -17,6 +17,8 @@
 
 #ifndef RAPP_STANDALONE
 int &g_frame = Make_Global<int>(0x006680C4);
+BOOL &g_gameInFocus = Make_Global<int>(0x00665F64);
 #else
 int g_frame;
+BOOL g_gameInFocus;
 #endif

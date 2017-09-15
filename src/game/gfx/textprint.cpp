@@ -14,15 +14,14 @@
  *            LICENSE
  */
 #include "textprint.h"
-#include "gamedebug.h"
-#include "minmax.h"
 #include "abs.h"
 #include "endiantype.h"
-#include "gbuffer.h"
+#include "gamedebug.h"
+#include "minmax.h"
 
 #ifndef RAPP_STANDALONE
-char *&g_fontPtr = Make_Global<char*>(0x006B1974);
-char *&FontWidthBlockPtr = Make_Global<char*>(0x006B1978);
+char *&g_fontPtr = Make_Global<char *>(0x006B1974);
+char *&FontWidthBlockPtr = Make_Global<char *>(0x006B1978);
 int &g_fontYSpacing = Make_Global<int>(0x006B1970);
 int &g_fontXSpacing = Make_Global<int>(0x006B196C);
 uint8_t &g_fontHeight = Make_Global<uint8_t>(0x0060CE65);
@@ -71,11 +70,11 @@ void *__cdecl Set_Font(void *font)
 {
     FontHeader *header;
 
-    header = static_cast<FontHeader*>(font);
+    header = static_cast<FontHeader *>(font);
 
     if (font) {
-        g_fontPtr = static_cast<char*>(font);
-        FontWidthBlockPtr = static_cast<char*>(font) + le16toh(header->width_list);
+        g_fontPtr = static_cast<char *>(font);
+        FontWidthBlockPtr = static_cast<char *>(font) + le16toh(header->width_list);
         g_fontHeight = le16toh(header->max_height);
         g_fontWidth = le16toh(header->max_width);
     }
@@ -116,35 +115,37 @@ uint16_t __cdecl String_Pixel_Width(const char *string)
 
 int __cdecl Buffer_Print(GraphicViewPortClass &vp, const char *string, int x, int y, uint8_t fground, uint8_t bground)
 {
-    FontHeader *fntheader = reinterpret_cast<FontHeader*>(g_fontPtr);
+    FontHeader *fntheader = reinterpret_cast<FontHeader *>(g_fontPtr);
     int pitch = vp.Get_Full_Pitch();
-    uint8_t *offset = y * pitch + static_cast<uint8_t*>(vp.Get_Offset());
+    uint8_t *offset = y * pitch + static_cast<uint8_t *>(vp.Get_Offset());
     uint8_t *dst = x + offset;
     int char_width = 0;
     int base_x = x;
 
     if (g_fontPtr != nullptr) {
-        uint16_t *datalist = reinterpret_cast<uint16_t*>(reinterpret_cast<char*>(g_fontPtr) + le16toh(fntheader->data_offset_list));
-        uint8_t *widthlist = reinterpret_cast<uint8_t*>(g_fontPtr) + le16toh(fntheader->width_list);
-        uint16_t *linelist = reinterpret_cast<uint16_t*>(reinterpret_cast<char*>(g_fontPtr) + le16toh(fntheader->line_list));
+        uint16_t *datalist =
+            reinterpret_cast<uint16_t *>(reinterpret_cast<char *>(g_fontPtr) + le16toh(fntheader->data_offset_list));
+        uint8_t *widthlist = reinterpret_cast<uint8_t *>(g_fontPtr) + le16toh(fntheader->width_list);
+        uint16_t *linelist =
+            reinterpret_cast<uint16_t *>(reinterpret_cast<char *>(g_fontPtr) + le16toh(fntheader->line_list));
 
         int fntheight = fntheader->max_height;
         int ydisplace = g_fontYSpacing + fntheight;
 
-        //Check if we are drawing in bounds, we don't draw clipped text
+        // Check if we are drawing in bounds, we don't draw clipped text
         if (y + fntheight <= vp.Get_Height()) {
             int fntbottom = y + fntheight;
-            //Set colors to draw with
+            // Set colors to draw with
             g_colorXlat[1] = fground;
             g_colorXlat[0] = bground;
 
             while (true) {
-                //Handle a new line
+                // Handle a new line
                 uint8_t char_num;
                 uint8_t *char_dst;
                 while (true) {
-                    char_num = *(uint8_t*)string;
-                    
+                    char_num = uint8_t(*string);
+
                     if (char_num == '\0') {
                         return 0;
                     }
@@ -156,12 +157,12 @@ int __cdecl Buffer_Print(GraphicViewPortClass &vp, const char *string, int x, in
                         break;
                     }
 
-                    //We don't handle clipping text, it either draws or it doesn't
+                    // We don't handle clipping text, it either draws or it doesn't
                     if (ydisplace + fntbottom > vp.Get_Height()) {
                         return 0;
                     }
 
-                    // If its a new line, we are just going to set the start to an increased y displacement, hence x_pos 
+                    // If its a new line, we are just going to set the start to an increased y displacement, hence x_pos
                     // becomes 0
                     x = char_num == '\n' ? 0 : base_x;
                     dst = ydisplace * pitch + offset + x;
@@ -169,21 +170,21 @@ int __cdecl Buffer_Print(GraphicViewPortClass &vp, const char *string, int x, in
                     fntbottom += ydisplace;
                 }
 
-                //Move to the start of the next char
+                // Move to the start of the next char
                 char_width = widthlist[char_num];
                 dst += g_fontXSpacing + char_width;
 
-                //Handle text wrapping for long strings
+                // Handle text wrapping for long strings
                 if (g_fontXSpacing + char_width + x > vp.Get_Width()) {
                     --string;
                     char_num = '\0';
 
-                    //We don't handle clipping text, it either draws or it doesn't
+                    // We don't handle clipping text, it either draws or it doesn't
                     if (ydisplace + fntbottom > vp.Get_Height()) {
                         return 0;
                     }
 
-                    // If its a new line, we are just going to set the start to an increased y displacement, hence x_pos 
+                    // If its a new line, we are just going to set the start to an increased y displacement, hence x_pos
                     // becomes 0
                     x = char_num == '\n' ? 0 : base_x;
                     dst = ydisplace * pitch + offset + x;
@@ -193,17 +194,17 @@ int __cdecl Buffer_Print(GraphicViewPortClass &vp, const char *string, int x, in
                     continue;
                 }
 
-                //Prepare variables for drawing
+                // Prepare variables for drawing
                 x += g_fontXSpacing + char_width;
                 int next_line = pitch - char_width;
-                uint8_t *char_data = reinterpret_cast<uint8_t*>(g_fontPtr) + datalist[char_num];
+                uint8_t *char_data = reinterpret_cast<uint8_t *>(g_fontPtr) + datalist[char_num];
                 int char_lle = le16toh(linelist[char_num]);
                 int char_ypos = char_lle & 0xFF;
                 int char_lines = char_lle >> 8;
                 int char_height = fntheight - (char_ypos + char_lines);
                 int blit_width = widthlist[char_num];
 
-                //Fill unused lines if we have a color other than 0
+                // Fill unused lines if we have a color other than 0
                 if (char_ypos) {
                     uint8_t color = g_colorXlat[0];
                     if (color) {
@@ -216,7 +217,7 @@ int __cdecl Buffer_Print(GraphicViewPortClass &vp, const char *string, int x, in
                     }
                 }
 
-                //Draw the character
+                // Draw the character
                 if (char_lines) {
                     for (int i = 0; i < char_lines; ++i) {
                         int width_todraw = blit_width;
@@ -250,9 +251,10 @@ int __cdecl Buffer_Print(GraphicViewPortClass &vp, const char *string, int x, in
                         char_dst += next_line;
                     }
 
-                    //Fill any remaining unused lines.
+                    // Fill any remaining unused lines.
                     if (char_height) {
                         uint8_t color = g_colorXlat[0];
+
                         if (color) {
                             for (int i = char_height; i; --i) {
                                 memset(char_dst, color, blit_width);

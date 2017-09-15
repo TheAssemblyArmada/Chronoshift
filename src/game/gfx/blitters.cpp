@@ -75,9 +75,8 @@ void __cdecl Buffer_Draw_Line(GraphicViewPortClass &vp, int x1, int y1, int x2, 
     int increment = 1;
 
     // Do we need to do any clipping
-    if (x1 < 0 || x1 >= vp.Get_Width() || y1 < 0 || y1 >= vp.Get_Height() || x2 < 0
-        || x2 >= vp.Get_Width() || y2 < 0 || y2 >= vp.Get_Height()) {
-
+    if (x1 < 0 || x1 >= vp.Get_Width() || y1 < 0 || y1 >= vp.Get_Height() || x2 < 0 || x2 >= vp.Get_Width() || y2 < 0
+        || y2 >= vp.Get_Height()) {
         while (true) {
             unsigned clip1 = Line_Get_Clipping(vp, x1, y1);
             unsigned clip2 = Line_Get_Clipping(vp, x2, y2);
@@ -285,7 +284,7 @@ void __cdecl Buffer_Remap(GraphicViewPortClass &vp, int x, int y, int w, int h, 
 int __cdecl Buffer_Get_Pixel(GraphicViewPortClass &vp, unsigned x, unsigned y)
 {
     if (x < (unsigned)vp.Get_Width() && y < (unsigned)vp.Get_Height()) {
-        return *(static_cast<uint8_t*>(vp.Get_Offset()) + x + y * vp.Get_Full_Pitch());
+        return *(static_cast<uint8_t *>(vp.Get_Offset()) + x + y * vp.Get_Full_Pitch());
     }
 
     return 0;
@@ -294,23 +293,20 @@ int __cdecl Buffer_Get_Pixel(GraphicViewPortClass &vp, unsigned x, unsigned y)
 void __cdecl Buffer_Put_Pixel(GraphicViewPortClass &vp, unsigned x, unsigned y, uint8_t val)
 {
     if (x < (unsigned)vp.Get_Width() && y < (unsigned)vp.Get_Height()) {
-        *(static_cast<uint8_t*>(vp.Get_Offset()) + x + y * vp.Get_Full_Pitch()) = val;
+        *(static_cast<uint8_t *>(vp.Get_Offset()) + x + y * vp.Get_Full_Pitch()) = val;
     }
 }
 
-void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPortClass &dst_vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h, bool use_key)
+void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPortClass &dst_vp, int src_x, int src_y,
+    int dst_x, int dst_y, int w, int h, bool use_key)
 {
     uint8_t *src = static_cast<uint8_t *>(src_vp.Get_Offset()) + src_vp.Get_XAdd();
     uint8_t *dst = static_cast<uint8_t *>(dst_vp.Get_Offset()) + dst_vp.Get_XAdd();
     int s_scanline = (src_vp.Get_Pitch() + src_vp.Get_XAdd() + src_vp.Get_Width());
     int d_scanline = (dst_vp.Get_Pitch() + dst_vp.Get_XAdd() + dst_vp.Get_Width());
 
-    if (src_x >= src_vp.Get_Width() ||
-        src_y >= src_vp.Get_Height() ||
-        dst_x >= dst_vp.Get_Width() ||
-        dst_y >= dst_vp.Get_Height() ||
-        h < 0 || w < 1) {
-
+    if (src_x >= src_vp.Get_Width() || src_y >= src_vp.Get_Height() || dst_x >= dst_vp.Get_Width()
+        || dst_y >= dst_vp.Get_Height() || h < 0 || w < 1) {
         return;
     }
 
@@ -322,7 +318,7 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
     h = (dst_y + h) > dst_vp.Get_Height() ? dst_vp.Get_Height() - 1 - dst_y : h;
     w = (dst_x + w) > dst_vp.Get_Width() ? dst_vp.Get_Width() - 1 - dst_x : w;
 
-    //move our pointers to the start locations
+    // move our pointers to the start locations
     src += src_x + src_y * s_scanline;
     dst += dst_x + dst_y * d_scanline;
 
@@ -334,7 +330,7 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
         if (use_key) {
             char key_colour = 0;
             while (h-- != 0) {
-                //Can't optimize as we need to check every pixel against key colour :(
+                // Can't optimize as we need to check every pixel against key colour :(
                 for (int i = w - 1; i >= 0; --i) {
                     if (esrc[i] != key_colour) {
                         edst[i] = esrc[i];
@@ -355,7 +351,7 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
         if (use_key) {
             uint8_t key_colour = 0;
             while (h-- != 0) {
-                //Can't optimize as we need to check every pixel against key colour :(
+                // Can't optimize as we need to check every pixel against key colour :(
                 for (int i = 0; i < w; ++i) {
                     if (src[i] != key_colour) {
                         dst[i] = src[i];
@@ -385,7 +381,6 @@ void __cdecl Buffer_Clear(GraphicViewPortClass &vp, uint8_t color)
     }
 }
 
-
 void __cdecl Buffer_To_Buffer(GraphicViewPortClass &vp, int x, int y, int w, int h, void *buffer, int length)
 {
     int xstart = x;
@@ -396,11 +391,8 @@ void __cdecl Buffer_To_Buffer(GraphicViewPortClass &vp, int x, int y, int w, int
     int xoffset = 0;
     int yoffset = 0;
 
-    //If we aren't drawing within the viewport, return
-    if (!buffer || length <= 0 ||
-        xstart >= vp.Get_Width() ||
-        ystart >= vp.Get_Height() ||
-        xend < 0 || yend < 0) {
+    // If we aren't drawing within the viewport, return
+    if (!buffer || length <= 0 || xstart >= vp.Get_Width() || ystart >= vp.Get_Height() || xend < 0 || yend < 0) {
         return;
     }
 
@@ -418,18 +410,18 @@ void __cdecl Buffer_To_Buffer(GraphicViewPortClass &vp, int x, int y, int w, int
     xend = Min(xend, (int)vp.Get_Width() - 1);
     yend = Min(yend, (int)vp.Get_Height() - 1);
 
-    //Setup parameters for blit
+    // Setup parameters for blit
     int pitch = vp.Get_Pitch() + vp.Get_Width() + vp.Get_XAdd();
-    uint8_t *src = y * pitch + x + static_cast<uint8_t*>(vp.Get_Offset());
-    uint8_t *dst = xoffset + w * yoffset + static_cast<uint8_t*>(buffer);
-    //int src_pitch = x_pos + pitch - xend + 1;
-    //int dst_pitch = x_pos + width - xend + 1;
+    uint8_t *src = y * pitch + x + static_cast<uint8_t *>(vp.Get_Offset());
+    uint8_t *dst = xoffset + w * yoffset + static_cast<uint8_t *>(buffer);
+    // int src_pitch = x_pos + pitch - xend + 1;
+    // int dst_pitch = x_pos + width - xend + 1;
     int lines = yend - ystart + 1;
     int blit_width = xend - xstart + 1;
 
-    //Is our buffer large enough?
+    // Is our buffer large enough?
     if (lines * w <= length) {
-        //blit
+        // blit
         while (lines--) {
             memcpy(dst, src, blit_width);
             src += pitch;
@@ -449,10 +441,7 @@ void __cdecl Buffer_To_Page(int x, int y, int w, int h, void *buffer, GraphicVie
     int yoffset = 0;
 
     // If we aren't drawing within the viewport, return
-    if (!buffer ||
-        xstart >= vp.Get_Width() ||
-        ystart >= vp.Get_Height() ||
-        xend < 0 || yend < 0) {
+    if (!buffer || xstart >= vp.Get_Width() || ystart >= vp.Get_Height() || xend < 0 || yend < 0) {
     }
 
     // Clipping
@@ -470,17 +459,146 @@ void __cdecl Buffer_To_Page(int x, int y, int w, int h, void *buffer, GraphicVie
     yend = Min(yend, vp.Get_Height() - 1);
 
     int pitch = vp.Get_Pitch() + vp.Get_Width() + vp.Get_XAdd();
-    uint8_t *dst = y * pitch + x + static_cast<uint8_t*>(vp.Get_Offset());
-    uint8_t *src = xoffset + w * yoffset + static_cast<uint8_t*>(buffer);
-    //int dst_pitch = x_pos + pitch - xend;
-    //int src_pitch = x_pos + width - xend;
+    uint8_t *dst = y * pitch + x + static_cast<uint8_t *>(vp.Get_Offset());
+    uint8_t *src = xoffset + w * yoffset + static_cast<uint8_t *>(buffer);
+    // int dst_pitch = x_pos + pitch - xend;
+    // int src_pitch = x_pos + width - xend;
     int lines = yend - ystart + 1;
     int blit_width = xend - xstart + 1;
 
-    //blit
+    // blit
     while (lines--) {
         memcpy(dst, src, blit_width);
         src += w;
         dst += pitch;
+    }
+}
+
+void __cdecl Linear_Scale_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPortClass &dst_vp, int src_x, int src_y,
+    int dst_x, int dst_y, int src_w, int src_h, int dst_w, int dst_h, bool use_keysrc, void *fade)
+{
+    // If there is nothing to scale, just return.
+    if (src_w <= 0 || src_h <= 0 || dst_w <= 0 || dst_h <= 0) {
+        return;
+    }
+
+    int sx = src_x;
+    int sy = src_y;
+    int dx = dst_x;
+    int dy = dst_y;
+    int dw = dst_w + dst_x;
+    int dh = dst_h + dst_y;
+
+    // These ifs are all for clipping purposes incase coords are outside
+    // the expected area.
+    if (src_x < 0) {
+        sx = 0;
+        dx = dst_x + ((dst_w * -src_x) / src_w);
+    }
+
+    if (src_y < 0) {
+        sy = 0;
+        dy = dst_y + ((dst_h * -src_y) / src_h);
+    }
+
+    if (src_x + src_w > src_vp.Get_Width() + 1) {
+        dw = dst_x + (dst_w * (src_vp.Get_Width() - src_x) / src_w);
+    }
+
+    if (src_y + src_h > src_vp.Get_Height() + 1) {
+        dh = dst_y + (dst_h * (src_vp.Get_Height() - src_y) / src_h);
+    }
+
+    if (dx < 0) {
+        dx = 0;
+        sx = src_x + ((src_w * -dst_x) / dst_w);
+    }
+
+    if (dy < 0) {
+        dy = 0;
+        sy = src_y + ((src_h * -dst_y) / dst_h);
+    }
+
+    if (dw > dst_vp.Get_Width() + 1) {
+        dw = dst_vp.Get_Width();
+    }
+
+    if (dh > dst_vp.Get_Height() + 1) {
+        dh = dst_vp.Get_Height();
+    }
+
+    if (dy > dh || dx > dw) {
+        return;
+    }
+
+    uint8_t *src = sy * src_vp.Get_Full_Pitch() + sx + static_cast<uint8_t *>(src_vp.Get_Offset());
+    uint8_t *dst = dy * dst_vp.Get_Full_Pitch() + dx + static_cast<uint8_t *>(dst_vp.Get_Offset());
+    dw -= dx;
+    dh -= dy;
+    int x_ratio = ((src_w << 16) / dw) + 1;
+    int y_ratio = ((src_h << 16) / dh) + 1;
+    
+    // keysrc basically means do we skip index 0 entries, thus treating them as
+    // transparent?
+    if (use_keysrc) {
+        if (fade != nullptr) {
+            for (int i = 0; i < dh; ++i) {
+                uint8_t *d = dst + i * dst_vp.Get_Full_Pitch();
+                uint8_t *s = src + ((i * y_ratio) >> 16) * src_vp.Get_Full_Pitch();
+                int xrat = 0;
+
+                for (int j = 0; j < dw; ++j) {
+                    uint8_t tmp = s[xrat >> 16];
+
+                    if (tmp != 0) {
+                        *d = static_cast<uint8_t *>(fade)[tmp];
+                    }
+
+                    ++d;
+                    xrat += x_ratio;
+                }
+            }
+        } else {
+            for (int i = 0; i < dh; ++i) {
+                uint8_t *d = dst + i * dst_vp.Get_Full_Pitch();
+                uint8_t *s = src + ((i * y_ratio) >> 16) * src_vp.Get_Full_Pitch();
+                int xrat = 0;
+
+                for (int j = 0; j < dw; ++j) {
+                    uint8_t tmp = s[xrat >> 16];
+
+                    if (tmp != 0) {
+                        *d = tmp;
+                    }
+
+                    ++d;
+                    xrat += x_ratio;
+                }
+            }
+        }
+    } else {
+        if (fade != nullptr) {
+            for (int i = 0; i < dh; ++i) {
+                uint8_t *d = dst + i * dst_vp.Get_Full_Pitch();
+                uint8_t *s = src + ((i * y_ratio) >> 16) * src_vp.Get_Full_Pitch();
+                int xrat = 0;
+
+                for (int j = 0; j < dw; ++j) {
+                    *d++ = static_cast<uint8_t *>(fade)[s[xrat >> 16]];
+                    xrat += x_ratio;
+                }
+            }
+        } else {
+            for (int i = 0; i < dh; ++i) {
+                uint8_t *d = dst + i * dst_vp.Get_Full_Pitch();
+                uint8_t *s = src + ((i * y_ratio) >> 16) * src_vp.Get_Full_Pitch();
+                int xrat = 0;
+
+                for (int j = 0; j < dw; ++j) {
+                    *d++ = s[xrat >> 16];
+                    xrat += x_ratio;
+                }
+            }
+        }
     }
 }

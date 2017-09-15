@@ -25,8 +25,10 @@
 #include "hooker.h"
 
 extern int &g_frame;
+extern BOOL &g_gameInFocus;
 #else
 extern int g_frame;
+extern BOOL g_gameInFocus;
 #endif
 
 #endif

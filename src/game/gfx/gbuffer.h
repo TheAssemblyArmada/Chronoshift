@@ -30,11 +30,11 @@
 #endif
 
 // Flags for using DD surfaces in GBC
-enum GBC_Enum
+enum GBCEnum
 {
-    GBC_DD_SOFTWARE_BUFF = 0,
-    GBC_DD_SURFACE_BUFFER = 1,
-    GBC_DD_PRIMARY_SURFACE = 2,
+    GBC_NONE = 0,
+    GBC_VIDEO_MEM = 1,
+    GBC_VISIBLE = 2,
 };
 
 #define BLIT_GET_PITCH(vp) (vp.Get_Full_Pitch())
@@ -44,18 +44,22 @@ class GraphicBufferClass;
 class BitmapClass
 {
 public:
-    BitmapClass(int w, int h, void *bitmap) : Width(w), Height(h), Data(bitmap) {}
-    BitmapClass(const BitmapClass &that) : Width(that.Width), Height(that.Height), Data(that.Data) {};
+    BitmapClass(int w, int h, void *bitmap) : m_width(w), m_height(h), m_data(bitmap) {}
+    BitmapClass(const BitmapClass &that) : m_width(that.m_width), m_height(that.m_height), m_data(that.m_data){};
 
-    void Set_Dimensions(int w, int h) { Width = w; Height = h; }
-    int Get_Width() { return Width; }
-    int Get_Height() { return Height; }
-    void *Get_Bitmap() { return Data; }
+    void Set_Dimensions(int w, int h)
+    {
+        m_width = w;
+        m_height = h;
+    }
+    int Get_Width() { return m_width; }
+    int Get_Height() { return m_height; }
+    void *Get_Bitmap() { return m_data; }
 
 private:
-    int Width;
-    int Height;
-    void *Data;
+    int m_width;
+    int m_height;
+    void *m_data;
 };
 
 class GraphicViewPortClass
@@ -69,39 +73,39 @@ public:
     BOOL Change(int x, int y, int w, int h);
     BOOL Lock();
     BOOL Unlock();
-    void *Get_Offset() { return Offset; }
-    int Get_XAdd() { return XAdd; }
-    int Get_XPos() { return XPos; }
-    int Get_YPos() { return YPos; }
-    int Get_Width() { return Width; }
-    int Get_Height() { return Height; }
-    int Get_Pitch() { return Pitch; }
-    int Get_LockCount() { return LockCount; }
+    void *Get_Offset() { return m_offset; }
+    int Get_XAdd() { return m_xAdd; }
+    int Get_XPos() { return m_xPos; }
+    int Get_YPos() { return m_yPos; }
+    int Get_Width() { return m_width; }
+    int Get_Height() { return m_height; }
+    int Get_Pitch() { return m_pitch; }
+    int Get_LockCount() { return m_lockCount; }
     int Get_Full_Pitch() { return Get_Pitch() + Get_XAdd() + Get_Width(); }
-    BOOL In_Video_Memory() { return InVideoMemory; }
-    GraphicBufferClass *Get_Graphic_Buffer() { return GraphicBuff; }
+    BOOL In_Video_Memory() { return m_inVideoMemory; }
+    GraphicBufferClass *Get_Graphic_Buffer() { return m_graphicBuff; }
 
-    void Set_XY_Pos(int x, int y) { XPos = x; YPos = y; }
+    void Set_XY_Pos(int x, int y) {  m_xPos = x; m_yPos = y; }
     void Put_Pixel(int x, int y, unsigned char value);
     unsigned Get_Pixel(int x, int y);
     void Remap(int x, int y, int w, int h, unsigned char *fading_table);
     void Draw_Rect(int x, int y, int w, int h, unsigned char color = 0);
     void Draw_Line(int x1, int y1, int x2, int y2, unsigned char color = 0);
     void Fill_Rect(int x, int y, int w, int h, unsigned char color);
-    //void Overlay_Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
-    unsigned int Print(char *string, int x, int y, int a4, int a5);
+    // void Overlay_Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
+    unsigned Print(char *string, int x, int y, int fground, int bground);
     void Clear(unsigned char color = 0);
-    void From_Buffer(int x, int y, int w, int h, void* buffer);
+    void From_Buffer(int x, int y, int w, int h, void *buffer);
+    void Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h, int dst_w,
+        int dst_h, bool use_keysrc, void *fade);
+    int Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
 
-    int Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
-        BOOL use_keysrc = false);
-
-    //int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
+    // int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
 #ifndef RAPP_STANDALONE
-    //static BOOL &AllowHardwareBlitFills;
-    //static BOOL &AllowStretchBlits;
-    static int &ScreenWidth; 
+    // static BOOL &AllowHardwareBlitFills;
+    // static BOOL &AllowStretchBlits;
+    static int &ScreenWidth;
     static int &ScreenHeight;
 #else
     static BOOL AllowHardwareBlitFills;
@@ -112,56 +116,56 @@ public:
 
 private:
     // This one should only be called from Blit or Full_Blit and should probably be a protected function
-    int DD_Linear_Blit_To_Linear(GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h,
-        BOOL use_keysrc = false);
+    int DD_Linear_Blit_To_Linear(
+        GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
 
 protected:
-    void *Offset;
-    int Width;
-    int Height;
-    int XAdd;
-    int XPos;
-    int YPos;
-    int Pitch;
-    GraphicBufferClass *GraphicBuff;
-    BOOL InVideoMemory;
-    int LockCount;
+    void *m_offset;
+    int m_width;
+    int m_height;
+    int m_xAdd;
+    int m_xPos;
+    int m_yPos;
+    int m_pitch;
+    GraphicBufferClass *m_graphicBuff;
+    BOOL m_inVideoMemory;
+    int m_lockCount;
 };
 
 class GraphicBufferClass : public GraphicViewPortClass
 {
 public:
     GraphicBufferClass();
-    GraphicBufferClass(int width, int height, void *buffer, int size);
-    GraphicBufferClass(int width, int height, void *buffer);
-    GraphicBufferClass(int width, int height, GBC_Enum mode = GBC_DD_SOFTWARE_BUFF);
+    GraphicBufferClass(int w, int h, void *buffer, int size);
+    GraphicBufferClass(int w, int h, void *buffer);
+    GraphicBufferClass(int w, int h, GBCEnum mode = GBC_NONE);
     ~GraphicBufferClass();
 
-    BufferClass *Get_GBuffer() { return &GBuffer; }
+    BufferClass *Get_GBuffer() { return &m_graphicBuffer; }
 
-    void DD_Init(GBC_Enum mode);
+    void DD_Init(GBCEnum mode);
 #ifdef PLATFORM_WINDOWS
-    LPDIRECTDRAWSURFACE Get_DD_Surface() { return DDSurface; }
+    LPDIRECTDRAWSURFACE Get_DD_Surface() { return m_videoSurface; }
 #endif
 
     void Attach_DD_Surface(GraphicBufferClass *buffer);
 
     // needs defualt angle
-    //void Scale_Rotate(BitmapClass &input_bitmap, TPoint2D<int> &input_point, int scale, char angle);
+    // void Scale_Rotate(BitmapClass &input_bitmap, TPoint2D<int> &input_point, int scale, char angle);
 
-    void Init(int width, int height, void *buffer, int size, GBC_Enum = GBC_DD_SOFTWARE_BUFF);
+    void Init(int width, int height, void *buffer, int size, GBCEnum mode = GBC_NONE);
     void Un_Init();
 
-    BOOL Lock() { return true; }
-    BOOL Unlock() { return true; }
+    BOOL Lock();
+    BOOL Unlock();
 
     static int TotalLocks;
 
 private:
-    BufferClass GBuffer;
+    BufferClass m_graphicBuffer;
 #ifdef PLATFORM_WINDOWS
-    LPDIRECTDRAWSURFACE DDSurface;
-    DDSURFACEDESC SurfaceInfo;
+    LPDIRECTDRAWSURFACE m_videoSurface;
+    DDSURFACEDESC m_surfaceInfo;
 #endif
 };
 

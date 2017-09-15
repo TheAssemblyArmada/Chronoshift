@@ -35,6 +35,9 @@ public:
 
     uint8_t *Get_Buffer() const;
     int Get_Size() const;
+    void Set_Size(int size) { m_size = size; }
+    void Set_Buffer(void *buffer) { m_buffer = static_cast<uint8_t*>(buffer); }
+    void Set_Allocated(BOOL allocated) { m_allocated = allocated; }
     BOOL Is_Allocated() { return m_allocated; }
     bool Is_Valid() { return m_buffer != nullptr && m_size > 0; }
     void Reset() { Free(); Clear(); }
