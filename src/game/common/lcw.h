@@ -1,0 +1,47 @@
+/**
+ * @file
+ *
+ * @Author OmniBlade
+ *
+ * @brief Implementation of LCW, a custom compression format used in many Westwood games.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
+#pragma once
+
+#ifndef LCW_H
+#define LCW_H
+
+#include "always.h"
+
+/**
+ * @brief Get the worst case for LCW compression given the starting size.
+ */
+inline int LCW_Worst_Case(int bytes)
+{
+    // LCWStraw/Pipe suggest that this is actually datasize + (datasize / 128) + 1
+    return bytes + (bytes / 63) + 1;
+}
+
+int __cdecl LCW_Uncomp(void const *src, void *dst, unsigned int bytes = 0);
+int __cdecl LCW_Comp(void const *src, void *dst, unsigned int bytes = 0);
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+namespace Lcw {
+inline void Hook_Me()
+{
+    Hook_Function(0x005D6880, LCW_Uncomp);
+    Hook_Function(0x005DD28C, LCW_Comp);
+}
+}
+#endif
+
+#endif // LCW_H

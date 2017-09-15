@@ -38,6 +38,7 @@ set(GAMEENGINE_SRC
     game/common/dipthong.cpp
     game/common/globals.cpp
     game/common/ini.cpp
+    game/common/lcw.cpp
     game/common/ostimer.cpp
     game/common/random.cpp
     game/common/readline.cpp

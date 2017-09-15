@@ -32,6 +32,7 @@
 
 //We aren't supporting MSVC versions earlier than 2010
 #if defined(__GNUC__) || defined(__clang__) || defined(__WATCOMC__) || _MSC_VER >= 1600 // GNU C++ or clang
+    #define __STDC_LIMIT_MACROS
     #include    <stdint.h>
     #include    <limits.h>
 #else // !_MSC_VER || !(__GNUC__ || __clang__ || __WATCOM__)

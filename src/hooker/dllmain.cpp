@@ -33,6 +33,7 @@
 #include "hooker.h"
 #include "gamedebug.h"
 #include "ini.h"
+#include "lcw.h"
 #include "mixfile.h"
 #include "ostimer.h"
 #include "rawfileclass.h"
@@ -67,6 +68,7 @@ void Setup_Hooks()
     INIClass::Hook_Me();
     PlatformTimerClass::Hook_Me();
     Blitters::Hook_Me();
+    Lcw::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
