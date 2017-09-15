@@ -7,12 +7,15 @@
 #include <stdio.h>
 #include <string.h>
 
+#define CCFILE_HANDLE_COUNT 10
+
+#ifndef RAPP_STANDALONE
+CCFileClass *g_handles = Make_Pointer<CCFileClass>(0x00635BE4);
+#else
+CCFileClass g_handles[CCFILE_HANDLE_COUNT];
+#endif
+
 typedef MixFileClass<CCFileClass> CCMixFileClass;
-
-CCFileClass::CCFileClass() : m_fileBuffer()
-{
-
-}
 
 CCFileClass::CCFileClass(const char *filename) : m_fileBuffer()
 {
@@ -227,6 +230,75 @@ BOOL CCFileClass::Set_Date_Time(time_t date_time)
     return tmpfile.Set_Date_Time(date_time);
 }
 
+int Open_File(const char *filename, int mode)
+{
+    int handle = 0;
+
+    while (g_handles[handle].Is_Open()) {
+        ++handle;
+
+        if (handle >= CCFILE_HANDLE_COUNT) {
+            return -1;
+        }
+    }
+
+    if (!g_handles[handle].Open(filename)) {
+        return -1;
+    }
+
+    return handle;
+}
+
+void Close_File(int handle)
+{
+    if (handle != -1) {
+        g_handles[handle].Close();
+    }
+}
+
+int Read_File(int handle, void *buffer, unsigned length)
+{
+    if (handle != -1 && g_handles[handle].Is_Open()) {
+        return g_handles[handle].Read(buffer, length);
+    }
+
+    return 0;
+}
+
+int Write_File(int handle, const void *buffer, unsigned length)
+{
+    if (handle != -1 && g_handles[handle].Is_Open()) {
+        return g_handles[handle].Write(buffer, length);
+    }
+
+    return 0;
+}
+
+unsigned File_Size(int handle)
+{
+    if (handle != -1 && g_handles[handle].Is_Open()) {
+        return g_handles[handle].Size();
+    }
+
+    return 0;
+}
+
+unsigned Seek_File(int handle, off_t offset, int whence)
+{
+    if (handle != -1 && g_handles[handle].Is_Open()) {
+        return g_handles[handle].Seek(offset, whence);
+    }
+
+    return 0;
+}
+
+int Find_File(const char *filename)
+{
+    CCFileClass fc(filename);
+
+    return fc.Is_Available();
+}
+
 void *Hires_Load(const char *filename)
 {
     static char _hires_filename[32];
@@ -237,7 +309,7 @@ void *Hires_Load(const char *filename)
     return Load_Alloc_Data(file);
 }
 
-void *Load_Alloc_Data(const char *filename)
+void *Load_Alloc_Data(const char *filename, int mode)
 {
     CCFileClass file(filename);
 

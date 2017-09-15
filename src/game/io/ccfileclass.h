@@ -24,7 +24,7 @@
 class CCFileClass : public CDFileClass
 {
 public:
-    CCFileClass();
+    CCFileClass() : m_fileBuffer() {}
     CCFileClass(const char *filename);
     virtual ~CCFileClass() {};
 
@@ -63,9 +63,16 @@ private:
     int m_cachePosition;
 };
 
-// this stays
+// Wrappers for old stype IO.
+int Open_File(const char *filename, int mode);
+void Close_File(int handle);
+int Read_File(int handle, void *buffer, unsigned length);
+int Write_File(int handle, const void *buffer, unsigned length);
+unsigned File_Size(int handle);
+unsigned Seek_File(int handle, off_t offset, int whence);
+int Find_File(const char *filename);
 void *Hires_Load(const char *filename);
 void *Load_Alloc_Data(FileClass &file);
-void *Load_Alloc_Data(const char *filename);
+void *Load_Alloc_Data(const char *filename, int mode);
 
 #endif // CCFILECLASS_H
