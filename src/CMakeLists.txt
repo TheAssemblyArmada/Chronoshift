@@ -35,6 +35,7 @@ set(GAMEENGINE_SRC
     game/common/crc.cpp
     game/common/critsection.cpp
     game/common/fixed.cpp
+    game/common/dipthong.cpp
     game/common/globals.cpp
     game/common/ini.cpp
     game/common/ostimer.cpp
