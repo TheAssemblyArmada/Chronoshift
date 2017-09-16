@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @Author OmniBlade
+ * @author OmniBlade
  *
  * @brief Implementation of LCW, a custom compression format used in many Westwood games.
  *
@@ -25,8 +25,7 @@
  */
 inline int LCW_Worst_Case(int bytes)
 {
-    // LCWStraw/Pipe suggest that this is actually datasize + (datasize / 128) + 1
-    return bytes + (bytes / 63) + 1;
+    return bytes + (bytes / 128) + 1;
 }
 
 int __cdecl LCW_Uncomp(void const *src, void *dst, unsigned int bytes = 0);

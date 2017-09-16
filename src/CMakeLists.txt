@@ -45,6 +45,7 @@ set(GAMEENGINE_SRC
     game/common/timer.cpp
     game/common/ttimer.cpp
     game/common/wwstring.cpp
+    game/common/xordelta.cpp
     game/crypto/blowfish.cpp
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
@@ -69,6 +70,8 @@ set(GAMEENGINE_SRC
     game/io/fileclass.cpp
     game/io/filepipe.cpp
     game/io/filestraw.cpp
+    game/io/lcwpipe.cpp
+    game/io/lcwstraw.cpp
     game/io/mixfile.cpp
     game/io/pipe.cpp
     game/io/pkpipe.cpp

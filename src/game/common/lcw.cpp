@@ -61,6 +61,9 @@ int __cdecl LCW_Uncomp(void const *src, void *dst, unsigned int bytes)
     const uint8_t *getp = static_cast<const uint8_t *>(src);
     // const uint8_t *getstart = getp;
 
+    // If first byte is 0, the all offsets are relative to current position. Otherwise some are absolute to the start of the
+    // buffer, meaning only ~64KB can be compressed effectively. Compressor implemented in this file uses size to determine
+    // compression scheme used.
     if (*getp == 0) {
         // DEBUG_LOG("LCW Relative Decompression... \n");
         getp++;
@@ -272,9 +275,9 @@ int __cdecl LCW_Uncomp(void const *src, void *dst, unsigned int bytes)
 }
 
 /**
-* @brief Compresses data to the proprietary LCW format used in many games developed by Westwood Studios.
-* @warning Worst case can have the compressed data larger than the original.
-*/
+ * @brief Compresses data to the proprietary LCW format used in many games developed by Westwood Studios.
+ * @warning Worst case can have the compressed data larger than the original.
+ */
 int __cdecl LCW_Comp(void const *src, void *dst, unsigned int bytes)
 {
     DEBUG_ASSERT(src != nullptr);

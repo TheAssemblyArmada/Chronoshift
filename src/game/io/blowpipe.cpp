@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief Pipe stream class implementation writing data processed with the blowfish algorithm.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @Author CCHyper, OmniBlade
+ *
+ * @brief Pipe stream class implementation writing data processed with the blowfish algorithm.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "blowpipe.h"
 #include "minmax.h"
 
@@ -26,8 +26,8 @@ BlowPipe::~BlowPipe()
 }
 
 /**
-* @brief Flushes any remaining data that is waiting to be encrypted.
-*/
+ * @brief Flushes any remaining data that is waiting to be encrypted.
+ */
 int BlowPipe::Flush()
 {
     int putcount = 0;
@@ -58,8 +58,8 @@ int BlowPipe::Flush()
 }
 
 /**
-* @brief Writes data from the buffer to the next pipe in the chain, processing it with blowfish.
-*/
+ * @brief Writes data from the buffer to the next pipe in the chain, processing it with blowfish.
+ */
 int BlowPipe::Put(const void *buffer, int length)
 {
     // If a blowfish instance hasn't been allocated yet, just pass it through to
@@ -121,8 +121,8 @@ int BlowPipe::Put(const void *buffer, int length)
 }
 
 /**
-* @brief Submit the key the blowfish engine should use during encryption/decryption.
-*/
+ * @brief Submit the key the blowfish engine should use during encryption/decryption.
+ */
 void BlowPipe::Key(void *key, int length)
 {
     // If we haven't got a Blowfish instance, create one to accept the key.

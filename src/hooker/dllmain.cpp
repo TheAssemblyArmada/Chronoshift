@@ -39,6 +39,7 @@
 #include "rawfileclass.h"
 #include "rgb.h"
 #include "textprint.h"
+#include "xordelta.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -69,6 +70,7 @@ void Setup_Hooks()
     PlatformTimerClass::Hook_Me();
     Blitters::Hook_Me();
     Lcw::Hook_Me();
+    XorDelta::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
