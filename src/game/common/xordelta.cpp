@@ -114,12 +114,14 @@ void __cdecl Apply_XOR_Delta(void *dst, void *src)
     }
 }
 
-void Copy_Delta_Buffer(int x, unsigned int count, int width, void *offset, void *delta, int pitch)
+void Copy_Delta_Buffer(int width, void *offset, void *delta, int pitch)
 {
     int8_t *putp = static_cast<int8_t *>(offset);
     int8_t *getp = static_cast<int8_t *>(delta);
     int8_t value = 0;
     int8_t cmd = 0;
+    int length = 0;
+    int count = 0;
 
     while (true) {
         // DEBUG_LOG("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
@@ -143,7 +145,15 @@ void Copy_Delta_Buffer(int x, unsigned int count, int width, void *offset, void 
             // 0b1??????? remove most significant bit
             count &= 0x7F;
             if (count != 0) {
-                putp += count;
+                putp -= length;
+                length += count;
+
+                while (length >= width) {
+                    length -= width;
+                    putp += pitch;
+                }
+
+                putp += length;
                 // DEBUG_LOG("0b1??????? Skip Count %d\n", count);
                 continue;
             }
@@ -161,13 +171,15 @@ void Copy_Delta_Buffer(int x, unsigned int count, int width, void *offset, void 
 
             // 0b100000000 0?
             if ((count & 0x8000) == 0) {
-                putp -= x;
-                x += count;
-                while (x >= width) {
-                    x -= width;
+                putp -= length;
+                length += count;
+
+                while (length >= width) {
+                    length -= width;
                     putp += pitch;
                 }
-                putp += x;
+
+                putp += length;
                 // DEBUG_LOG("0b100000000 0? Skip Count %d\n", count);
                 continue;
             } else {
@@ -189,10 +201,10 @@ void Copy_Delta_Buffer(int x, unsigned int count, int width, void *offset, void 
             // DEBUG_LOG("XOR Val %d\n", value);
             for (; count > 0; --count) {
                 *putp++ = value;
-                ++x;
+                ++length;
 
-                if (x == width) {
-                    x = 0;
+                if (length == width) {
+                    length = 0;
                     putp += pitch - width;
                 }
             }
@@ -200,10 +212,10 @@ void Copy_Delta_Buffer(int x, unsigned int count, int width, void *offset, void 
             // DEBUG_LOG("XOR Source to Dest\n");
             for (; count > 0; --count) {
                 *putp++ = *getp++;
-                ++x;
+                ++length;
 
-                if (x == width) {
-                    x = 0;
+                if (length == width) {
+                    length = 0;
                     putp += pitch - width;
                 }
             }
@@ -211,12 +223,14 @@ void Copy_Delta_Buffer(int x, unsigned int count, int width, void *offset, void 
     }
 }
 
-void XOR_Delta_Buffer(int x, unsigned int count, int width, void *offset, void *delta, int pitch)
+void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
 {
     int8_t *putp = static_cast<int8_t *>(offset);
     int8_t *getp = static_cast<int8_t *>(delta);
     int8_t value = 0;
     int8_t cmd = 0;
+    int length = 0;
+    int count = 0;
 
     while (true) {
         // DEBUG_LOG("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
@@ -240,7 +254,15 @@ void XOR_Delta_Buffer(int x, unsigned int count, int width, void *offset, void *
             // 0b1??????? remove most significant bit
             count &= 0x7F;
             if (count != 0) {
-                putp += count;
+                putp -= length;
+                length += count;
+
+                while (length >= width) {
+                    length -= width;
+                    putp += pitch;
+                }
+
+                putp += length;
                 // DEBUG_LOG("0b1??????? Skip Count %d\n", count);
                 continue;
             }
@@ -258,13 +280,15 @@ void XOR_Delta_Buffer(int x, unsigned int count, int width, void *offset, void *
 
             // 0b100000000 0?
             if ((count & 0x8000) == 0) {
-                putp -= x;
-                x += count;
-                while (x >= width) {
-                    x -= width;
+                putp -= length;
+                length += count;
+
+                while (length >= width) {
+                    length -= width;
                     putp += pitch;
                 }
-                putp += x;
+
+                putp += length;
                 // DEBUG_LOG("0b100000000 0? Skip Count %d\n", count);
                 continue;
             } else {
@@ -286,10 +310,10 @@ void XOR_Delta_Buffer(int x, unsigned int count, int width, void *offset, void *
             // DEBUG_LOG("XOR Val %d\n", value);
             for (; count > 0; --count) {
                 *putp++ ^= value;
-                ++x;
+                ++length;
 
-                if (x == width) {
-                    x = 0;
+                if (length == width) {
+                    length = 0;
                     putp += pitch - width;
                 }
             }
@@ -297,10 +321,10 @@ void XOR_Delta_Buffer(int x, unsigned int count, int width, void *offset, void *
             // DEBUG_LOG("XOR Source to Dest\n");
             for (; count > 0; --count) {
                 *putp++ ^= *getp++;
-                ++x;
+                ++length;
 
-                if (x == width) {
-                    x = 0;
+                if (length == width) {
+                    length = 0;
                     putp += pitch - width;
                 }
             }
@@ -316,9 +340,9 @@ void __cdecl Apply_XOR_Delta_To_Page_Or_Viewport(void *offset, void *delta, int 
 {
     DEBUG_LOG("Applying delta to viewport.\n");
     if (use_xor) {
-        XOR_Delta_Buffer(0, 0, width, offset, delta, pitch);
+        XOR_Delta_Buffer(width, offset, delta, pitch);
     } else {
-        Copy_Delta_Buffer(0, 0, width, offset, delta, pitch);
+        Copy_Delta_Buffer(width, offset, delta, pitch);
     }
 }
 
