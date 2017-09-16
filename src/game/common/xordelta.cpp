@@ -336,13 +336,13 @@ void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
  * @brief Applies a binary delta to a viewport.
  * @warning Assumes the destination buffer is of the correct size.
  */
-void __cdecl Apply_XOR_Delta_To_Page_Or_Viewport(void *offset, void *delta, int width, int pitch, BOOL use_xor)
+void __cdecl Apply_XOR_Delta_To_Page_Or_Viewport(void *offset, void *delta, int width, int pitch, BOOL copy)
 {
     DEBUG_LOG("Applying delta to viewport.\n");
-    if (use_xor) {
-        XOR_Delta_Buffer(width, offset, delta, pitch);
-    } else {
+    if (copy) {
         Copy_Delta_Buffer(width, offset, delta, pitch);
+    } else {
+        XOR_Delta_Buffer(width, offset, delta, pitch);
     }
 }
 

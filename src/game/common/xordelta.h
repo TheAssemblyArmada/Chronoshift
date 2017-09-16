@@ -29,7 +29,7 @@ inline int XOR_Worst_Case(int bytes)
 }
 
 void __cdecl Apply_XOR_Delta(void *dst, void *src);
-void __cdecl Apply_XOR_Delta_To_Page_Or_Viewport(void *offset, void *delta, int width, int pitch, BOOL use_xor);
+void __cdecl Apply_XOR_Delta_To_Page_Or_Viewport(void *offset, void *delta, int width, int pitch, BOOL copy);
 int Generate_XOR_Delta(void *dst, void *src, void *base, int size);
 
 #ifndef RAPP_STANDALONE
