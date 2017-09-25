@@ -90,7 +90,7 @@ struct SysAnimHeaderType
     uint16_t y_pos;
     uint16_t width;
     uint16_t height;
-    uint32_t largest_frame_size;
+    uint32_t largest_frame_size;  // This is needed for higher res wsa files.
     void *delta_buffer;
     void *file_buffer;
     char file_name[13];

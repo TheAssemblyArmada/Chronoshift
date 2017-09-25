@@ -174,7 +174,7 @@ SysAnimHeaderType *__cdecl Open_Animation(char const *filename, void *buffer, in
     // Added adjustment based on size of SysAnimHeaderType incase of pointer sizes
     // greater than 4 bytes which is what original was hardcoded to expect
     delta_size = is_hd ? fileheader.hd.largest_frame_size : fileheader.sd.largest_frame_size;
-    delta_size += 6;// +(sizeof(SysAnimHeaderType) - 45);
+    delta_size += 6 + (sizeof(SysAnimHeaderType) - 43);
 
     decode_size = delta_size + frame_size;
     file_and_decode_size = file_size + delta_size + frame_size;
@@ -333,9 +333,9 @@ BOOL __cdecl Animate_Frame(SysAnimHeaderType *header, GraphicViewPortClass &view
 
             // We are handling the first frame if current and total frames are equal
             if (header->current_frame == header->total_frames) {
-                DEBUG_LOG("Animate_Frame() - Handing initial frame\n");
+                //DEBUG_LOG("Animate_Frame() - Handing initial frame\n");
                 if (!(header->flags & WSA_NO_INIT)) {
-                    DEBUG_LOG("Animate_Frame() - Anim_Open staged initial frame, applying now\n");
+                    //DEBUG_LOG("Animate_Frame() - Anim_Open staged initial frame, applying now\n");
                     if (xor_to_vp) {
                         Apply_XOR_Delta_To_Page_Or_Viewport(
                             frame_buff, header->delta_buffer, header->width, pitch, (header->flags & WSA_ALLOC) == 0);
@@ -461,11 +461,13 @@ unsigned __cdecl Get_Animation_Size(SysAnimHeaderType *header)
     if (header != nullptr) {
         return header->anim_mem_size;
     }
+
     return 0;
 }
 
 unsigned Get_Resident_Frame_Offset(void *anim, int frame)
 {
+    DEBUG_LOG("Getting resident frame offsets.\n");
     uint32_t *offsets = static_cast<uint32_t *>(anim);
     int first_frame_size = 0;
 
@@ -476,27 +478,31 @@ unsigned Get_Resident_Frame_Offset(void *anim, int frame)
     if (offsets[frame]) {
         return offsets[frame] - (first_frame_size + 14);
     }
+
     return 0;
 }
 
 unsigned Get_File_Frame_Offset(int handle, int frame, int palette_adjust)
 {
+    DEBUG_LOG("Getting file frame offsets.\n");
     uint32_t offset;
     Seek_File(handle, 4 * frame + sizeof(SysAnimHeaderType), FS_SEEK_START);
 
-    if (Read_File(handle, &offset, sizeof(uint32_t)) != 4) {
+    if (Read_File(handle, &offset, sizeof(uint32_t)) != sizeof(uint32_t)) {
         offset = 0;
     }
 
     offset += palette_adjust;
+
     return offset;
 }
 
 int __cdecl Get_Animation_Frame_Count(SysAnimHeaderType *header)
 {
     if (header != nullptr) {
-        return header->current_frame;
+        return header->total_frames;
     }
+
     return 0;
 }
 
@@ -505,6 +511,7 @@ int Get_Animation_X(SysAnimHeaderType *header)
     if (header != nullptr) {
         return header->x_pos;
     }
+
     return 0;
 }
 
@@ -513,6 +520,7 @@ int Get_Animation_Y(SysAnimHeaderType *header)
     if (header != nullptr) {
         return header->y_pos;
     }
+
     return 0;
 }
 
@@ -521,6 +529,7 @@ int Get_Animation_Width(SysAnimHeaderType *header)
     if (header != nullptr) {
         return header->width;
     }
+
     return 0;
 }
 
@@ -529,6 +538,7 @@ int Get_Animation_Height(SysAnimHeaderType *header)
     if (header != nullptr) {
         return header->height;
     }
+
     return 0;
 }
 
@@ -537,5 +547,6 @@ int Get_Animation_Palette(SysAnimHeaderType *header)
     if (header != nullptr) {
         return header->flags & 0x100;
     }
+
     return 0;
 }
