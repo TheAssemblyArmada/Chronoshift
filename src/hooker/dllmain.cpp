@@ -30,6 +30,7 @@
 #include "blitters.h"
 #include "ccfileclass.h"
 #include "cpudetect.h"
+#include "fading.h"
 #include "hooker.h"
 #include "gamedebug.h"
 #include "ini.h"
@@ -70,6 +71,7 @@ void Setup_Hooks()
     INIClass::Hook_Me();
     PlatformTimerClass::Hook_Me();
     Blitters::Hook_Me();
+    Fading::Hook_Me();
     Lcw::Hook_Me();
     WSAFile::Hook_Me();
     XorDelta::Hook_Me();
