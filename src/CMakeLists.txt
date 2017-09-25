@@ -57,6 +57,7 @@ set(GAMEENGINE_SRC
     game/gfx/palette.cpp
     game/gfx/rgb.cpp
     game/gfx/textprint.cpp
+    game/gfx/wsa.cpp
     game/io/b64pipe.cpp
     game/io/b64straw.cpp
     game/io/bfiofileclass.cpp

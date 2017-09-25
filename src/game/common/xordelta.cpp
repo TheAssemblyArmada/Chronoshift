@@ -338,7 +338,6 @@ void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
  */
 void __cdecl Apply_XOR_Delta_To_Page_Or_Viewport(void *offset, void *delta, int width, int pitch, BOOL copy)
 {
-    DEBUG_LOG("Applying delta to viewport.\n");
     if (copy) {
         Copy_Delta_Buffer(width, offset, delta, pitch);
     } else {

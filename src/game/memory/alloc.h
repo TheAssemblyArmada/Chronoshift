@@ -42,7 +42,7 @@ enum MemoryFlagType
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags);
 void Free(void *pointer);
 void *Resize_Alloc(void *original_ptr, unsigned int new_size_in_bytes);
-int Ram_Free(MemoryFlagType flag);
+int Ram_Free();
 int Heap_Size(MemoryFlagType flag);
 int Total_Ram_Free(MemoryFlagType flag);
 
