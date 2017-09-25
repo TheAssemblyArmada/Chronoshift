@@ -51,6 +51,7 @@ set(GAMEENGINE_SRC
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
     game/gfx/blitters.cpp
+    game/gfx/fading.cpp
     game/gfx/gbuffer.cpp
     game/gfx/hsv.cpp
     game/gfx/pal.cpp
