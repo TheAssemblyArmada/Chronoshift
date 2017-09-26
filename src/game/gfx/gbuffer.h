@@ -103,6 +103,7 @@ public:
     // int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
 #ifndef RAPP_STANDALONE
+    static void Hook_Me();
     // static BOOL &AllowHardwareBlitFills;
     // static BOOL &AllowStretchBlits;
     static int &ScreenWidth;
@@ -169,13 +170,24 @@ private:
 #endif
 };
 
+void Wait_Blit();
+
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp);
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp);
 
 #ifndef RAPP_STANDALONE
+inline void GraphicViewPortClass::Hook_Me()
+{
+
+}
+
 extern GraphicViewPortClass *&g_logicPage;
+extern LPDIRECTDRAWSURFACE &g_paletteSurface;
+extern GraphicViewPortClass &g_seenBuff;
 #else
 extern GraphicViewPortClass *g_logicPage;
+extern LPDIRECTDRAWSURFACE g_paletteSurface;
+extern GraphicViewPortClass g_seenBuff;
 #endif
 
 #endif // GBUFFER_H

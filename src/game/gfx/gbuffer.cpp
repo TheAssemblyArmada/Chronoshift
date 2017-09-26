@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "gbuffer.h"
+#include "gamedebug.h"
 #include "blitters.h"
 #include "minmax.h"
 #include "textprint.h"
@@ -24,13 +25,25 @@
 int &GraphicViewPortClass::ScreenWidth = Make_Global<int>(0x006016B0);
 int &GraphicViewPortClass::ScreenHeight = Make_Global<int>(0x006016B4);
 GraphicViewPortClass *&g_logicPage = Make_Global<GraphicViewPortClass *>(0x006AC274);
+LPDIRECTDRAWSURFACE &g_paletteSurface = Make_Global<LPDIRECTDRAWSURFACE>(0x006B18A4);
+GraphicViewPortClass &g_seenBuff = Make_Global<GraphicViewPortClass>(0x006807A4);
 #else
 BOOL GraphicViewPortClass::AllowHardwareBlitFills;
 BOOL GraphicViewPortClass::AllowStretchBlits;
 int GraphicViewPortClass::ScreenWidth = 640;
 int GraphicViewPortClass::ScreenHeight = 400;
 GraphicViewPortClass *g_logicPage = nullptr;
+LPDIRECTDRAWSURFACE g_paletteSurface = nullptr;
+GraphicViewPortClass g_seenBuff;
 #endif
+
+void Wait_Blit()
+{
+    DWORD result;
+    do {
+        result = g_paletteSurface->GetBltStatus(DDGBS_ISBLTDONE);
+    } while (result != 0 && result != DDERR_SURFACELOST);
+}
 
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp)
 {

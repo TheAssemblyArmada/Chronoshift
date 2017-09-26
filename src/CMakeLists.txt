@@ -22,6 +22,7 @@ set(GAMEENGINE_INCLUDES
     game/gfx
     game/io
     game/memory
+    game/platform
 )
 
 set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
@@ -54,6 +55,7 @@ set(GAMEENGINE_SRC
     game/gfx/fading.cpp
     game/gfx/gbuffer.cpp
     game/gfx/hsv.cpp
+    game/gfx/mouseshape.cpp
     game/gfx/pal.cpp
     game/gfx/palette.cpp
     game/gfx/rgb.cpp
@@ -85,6 +87,7 @@ set(GAMEENGINE_SRC
     game/io/straw.cpp
     game/memory/alloc.cpp
     game/memory/newdel.cpp
+    game/platform/mouse.cpp
 )
 
 if(STANDALONE)

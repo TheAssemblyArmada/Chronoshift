@@ -33,9 +33,12 @@
 #include "fading.h"
 #include "hooker.h"
 #include "gamedebug.h"
+#include "gbuffer.h"
 #include "ini.h"
 #include "lcw.h"
 #include "mixfile.h"
+#include "mouse.h"
+#include "mouseshape.h"
 #include "ostimer.h"
 #include "rawfileclass.h"
 #include "rgb.h"
@@ -68,12 +71,15 @@ void Setup_Hooks()
     RawFileClass::Hook_Me();
     BufferIOFileClass::Hook_Me();
     CCFileClass::Hook_Me();
+    GraphicViewPortClass::Hook_Me();
     INIClass::Hook_Me();
     PlatformTimerClass::Hook_Me();
     Blitters::Hook_Me();
     Fading::Hook_Me();
     Lcw::Hook_Me();
+    MouseShape::Hook_Me();
     WSAFile::Hook_Me();
+    WWMouseClass::Hook_Me();
     XorDelta::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
