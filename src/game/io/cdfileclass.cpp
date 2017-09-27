@@ -68,14 +68,23 @@ const char *CDFileClass::Set_Name(const char *filename)
         return File_Name();
     }
 
-    for (SearchDriveType *i = s_first; i != nullptr; i = i->m_next) {
+    SearchDriveType *drive = s_first;
+
+    while (true) {
         // make full or relivent file path.
         snprintf(path_buffer, sizeof(path_buffer), "%s%s", s_first->m_path, filename);
 
         BufferIOFileClass::Set_Name(path_buffer);
 
         if (BufferIOFileClass::Is_Available()) {
-            return File_Name();
+            break;
+        }
+
+        drive = drive->m_next;
+
+        if (drive == nullptr) {
+            BufferIOFileClass::Set_Name(filename);
+            break;
         }
     }
 
