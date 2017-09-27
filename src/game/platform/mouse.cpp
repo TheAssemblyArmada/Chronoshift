@@ -25,7 +25,7 @@
 #endif
 
 #ifndef RAPP_STANDALONE
-WWMouseClass *&Mouse = Make_Global<WWMouseClass *>(0x006AC284);
+WWMouseClass *&g_mouse = Make_Global<WWMouseClass *>(0x006AC284);
 
 void WWMouseClass::Hook_Low_Hide(WWMouseClass *ptr)
 {
@@ -37,7 +37,7 @@ void WWMouseClass::Hook_Low_Show(WWMouseClass *ptr, int x, int y)
     ptr->WWMouseClass::Low_Show_Mouse(x, y);
 }
 #else
-WWMouseClass *Mouse = nullptr;
+WWMouseClass *g_mouse = nullptr;
 #endif
 //
 // Frequency to update the mouse in ms
@@ -54,9 +54,9 @@ void __stdcall Process_Mouse(
 {
     static bool InMouseCallback;
 
-    if (Mouse != nullptr && !InMouseCallback) {
+    if (g_mouse != nullptr && !InMouseCallback) {
         InMouseCallback = true;
-        Mouse->Process_Mouse();
+        g_mouse->Process_Mouse();
         InMouseCallback = false;
     }
 }

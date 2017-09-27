@@ -121,9 +121,9 @@ inline void WWMouseClass::Hook_Me()
     Hook_Function(0x005C1BF0, Hook_Low_Show);
 }
 
-extern WWMouseClass *&Mouse;
+extern WWMouseClass *&g_mouse;
 #else
-extern WWMouseClass *Mouse;
+extern WWMouseClass *g_mouse;
 #endif
 
 #endif // MOUSE_H
