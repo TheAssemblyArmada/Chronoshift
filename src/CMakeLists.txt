@@ -55,6 +55,7 @@ set(GAMEENGINE_SRC
     game/gfx/fading.cpp
     game/gfx/gbuffer.cpp
     game/gfx/hsv.cpp
+    game/gfx/interpolate.cpp
     game/gfx/mouseshape.cpp
     game/gfx/pal.cpp
     game/gfx/palette.cpp

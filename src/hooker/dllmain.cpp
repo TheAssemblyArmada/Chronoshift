@@ -35,6 +35,7 @@
 #include "gamedebug.h"
 #include "gbuffer.h"
 #include "ini.h"
+#include "interpolate.h"
 #include "lcw.h"
 #include "mixfile.h"
 #include "mouse.h"
@@ -76,6 +77,7 @@ void Setup_Hooks()
     PlatformTimerClass::Hook_Me();
     Blitters::Hook_Me();
     Fading::Hook_Me();
+    Interpolate::Hook_Me();
     Lcw::Hook_Me();
     MouseShape::Hook_Me();
     WSAFile::Hook_Me();
