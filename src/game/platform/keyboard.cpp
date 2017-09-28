@@ -33,6 +33,8 @@ KeyboardClass::KeyboardClass()
 
 BOOL KeyboardClass::Is_Mouse_Key(KeyType keycode)
 {
+    keycode = keycode & 0xFF; // Strip off any flags.
+
     return keycode == VK_LBUTTON || keycode == VK_MBUTTON || keycode == VK_RBUTTON;
 }
 
@@ -64,11 +66,11 @@ uint16_t KeyboardClass::Get()
 BOOL KeyboardClass::Put(KeyType keycode)
 {
     if (Is_Buffer_Full()) {
-        DEBUG_LOG("KeyboardClass::Put() buffer is full, unable to put key (%d) and returning %s.\n", keycode, "false");
+        //DEBUG_LOG("KeyboardClass::Put() buffer is full, unable to put key (%d) and returning %s.\n", keycode, "false");
 
         return false;
     } else {
-        DEBUG_LOG("KeyboardClass::Put() setting key (%d) and returning %s.\n", keycode, "true");
+        //DEBUG_LOG("KeyboardClass::Put() setting key (%d) and returning %s.\n", keycode, "true");
         return Put_Element(keycode);
 
         return true;
@@ -82,19 +84,19 @@ BOOL KeyboardClass::Put_Key_Message(KeyType keycode, BOOL release)
         // Is the shift key pressed?
         if ((GetKeyState(VK_SHIFT) >> 8) & 0x80 || GetKeyState(VK_CAPITAL) & 8 || GetKeyState(VK_NUMLOCK) & 8) {
             keycode |= SHIFT_KEY_PRESSED;
-            DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_SHIFT is held down\n");
+            //DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_SHIFT is held down\n");
         }
 
         // Is the ctrl key pressed?
         if ((GetKeyState(VK_CONTROL) >> 8) & 0x80) {
             keycode |= CTRL_KEY_PRESSED;
-            DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_CONTROL is held down\n");
+            //DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_CONTROL is held down\n");
         }
 
         // Is the alt key pressed?
         if ((GetKeyState(VK_MENU) >> 8) & 0x80) {
             keycode |= ALT_KEY_PRESSED;
-            DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_MENU is held down\n");
+            //DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_MENU is held down\n");
         }
     }
 
@@ -109,11 +111,11 @@ BOOL KeyboardClass::Put_Key_Message(KeyType keycode, BOOL release)
 BOOL KeyboardClass::Put_Mouse_Message(KeyType keycode, int x, int y, BOOL release)
 {
     if (Available_Buffer_Room() >= 3 && Is_Mouse_Key(keycode)) {
-        DEBUG_LOG("KeyboardClass::Put_Mouse_Message() - key = %d, mouse_x = %d, mouse_y = %d, release = %d.\n",
+        /*DEBUG_LOG("KeyboardClass::Put_Mouse_Message() - key = %d, mouse_x = %d, mouse_y = %d, release = %d.\n",
             keycode,
             x,
             y,
-            release);
+            release);*/
         Put_Key_Message(keycode, release);
         Put(x);
         Put(y);
@@ -246,19 +248,19 @@ BOOL KeyboardClass::Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
     switch (message) {
         case WM_LBUTTONDOWN:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_LBUTTONDOWN), %d, %d.\n", point.x, point.y);
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_LBUTTONDOWN), %d, %d.\n", point.x, point.y);
             Put_Mouse_Message(VK_LBUTTON, point.x, point.y, false);
             handled = true;
             break;
 
         case WM_LBUTTONUP:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_LBUTTONUP).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_LBUTTONUP).\n");
             Put_Mouse_Message(VK_LBUTTON, point.x, point.y, true);
             handled = true;
             break;
 
         case WM_LBUTTONDBLCLK:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_LBUTTONDBLCLK).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_LBUTTONDBLCLK).\n");
 
             // register double click?
             Put_Mouse_Message(VK_LBUTTON, point.x, point.y, false);
@@ -269,19 +271,19 @@ BOOL KeyboardClass::Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPAR
             break;
 
         case WM_MBUTTONDOWN:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_MBUTTONDOWN).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_MBUTTONDOWN).\n");
             Put_Mouse_Message(VK_MBUTTON, point.x, point.y, false);
             handled = true;
             break;
 
         case WM_MBUTTONUP:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_MBUTTONUP).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_MBUTTONUP).\n");
             Put_Mouse_Message(VK_MBUTTON, point.x, point.y, true);
             handled = true;
             break;
 
         case WM_MBUTTONDBLCLK:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_MBUTTONDBLCLK).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_MBUTTONDBLCLK).\n");
             Put_Mouse_Message(VK_MBUTTON, point.x, point.y, false);
             Put_Mouse_Message(VK_MBUTTON, point.x, point.y, true);
             Put_Mouse_Message(VK_MBUTTON, point.x, point.y, false);
@@ -290,19 +292,19 @@ BOOL KeyboardClass::Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPAR
             break;
 
         case WM_RBUTTONDOWN:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_RBUTTONDOWN).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_RBUTTONDOWN).\n");
             Put_Mouse_Message(VK_RBUTTON, point.x, point.y, false);
             handled = true;
             break;
 
         case WM_RBUTTONUP:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_RBUTTONUP).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_RBUTTONUP).\n");
             Put_Mouse_Message(VK_RBUTTON, point.x, point.y, true);
             handled = true;
             break;
 
         case WM_RBUTTONDBLCLK:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_RBUTTONDBLCLK).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_RBUTTONDBLCLK).\n");
             Put_Mouse_Message(VK_RBUTTON, point.x, point.y, false);
             Put_Mouse_Message(VK_RBUTTON, point.x, point.y, true);
             Put_Mouse_Message(VK_RBUTTON, point.x, point.y, false);
@@ -311,13 +313,13 @@ BOOL KeyboardClass::Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPAR
             break;
 
         case WM_SYSKEYUP:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_SYSKEYUP).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_SYSKEYUP).\n");
             Put_Key_Message(wParam, true);
             handled = true;
             break;
 
         case WM_KEYUP:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_KEYUP).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_KEYUP).\n");
             if (wParam != VK_SCROLL) {
                 Put_Key_Message(wParam, true);
             }
@@ -326,14 +328,14 @@ BOOL KeyboardClass::Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPAR
             break;
 
         case WM_SYSKEYDOWN:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_SYSKEYDOWN).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_SYSKEYDOWN).\n");
             Put_Key_Message(wParam, false);
             handled = true;
             break;
 
         // WM_KEYDOWN and WM_KEYFIRST have the same value so only KEYDOWN
         case WM_KEYDOWN:
-            DEBUG_LOG("KeyboardClass::Message_Handler(WM_KEYDOWN).\n");
+            // DEBUG_LOG("KeyboardClass::Message_Handler(WM_KEYDOWN).\n");
             // Scroll lock ran Stop_Execution which appears empty, prob for debugging?
             if (wParam != VK_SCROLL) {
                 Put_Key_Message(wParam, false);
@@ -371,6 +373,8 @@ uint16_t KeyboardClass::Buff_Get()
     if (Is_Mouse_Key(key_val)) {
         m_mouseQX = Fetch_Element();
         m_mouseQY = Fetch_Element();
+
+        // DEBUG_LOG("Getting Mouse button event at %d, %d.\n", m_mouseQX, m_mouseQY);
     }
 
     return key_val;
