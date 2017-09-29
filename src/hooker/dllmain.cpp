@@ -31,6 +31,7 @@
 #include "ostimer.h"
 #include "rawfileclass.h"
 #include "rgb.h"
+#include "shape.h"
 #include "textprint.h"
 #include "wsa.h"
 #include "xordelta.h"
@@ -69,6 +70,7 @@ void Setup_Hooks()
     Interpolate::Hook_Me();
     Lcw::Hook_Me();
     MouseShape::Hook_Me();
+    Shape::Hook_Me();
     WSAFile::Hook_Me();
     WWMouseClass::Hook_Me();
     XorDelta::Hook_Me();

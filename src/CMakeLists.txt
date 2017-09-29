@@ -60,6 +60,7 @@ set(GAMEENGINE_SRC
     game/gfx/pal.cpp
     game/gfx/palette.cpp
     game/gfx/rgb.cpp
+    game/gfx/shape.cpp
     game/gfx/textprint.cpp
     game/gfx/wsa.cpp
     game/io/b64pipe.cpp
