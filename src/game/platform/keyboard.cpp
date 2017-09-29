@@ -136,15 +136,15 @@ char KeyboardClass::To_ASCII(KeyType keycode)
         return 0;
     } else {
         if (keycode & 0x100) {
-            m_keyboardState[16] = 0x80u;
+            m_keyboardState[16] = 0x80;
         }
 
         if (keycode & 0x200) {
-            m_keyboardState[17] = 0x80u;
+            m_keyboardState[17] = 0x80;
         }
 
         if (keycode & 0x400) {
-            m_keyboardState[18] = 0x80u;
+            m_keyboardState[18] = 0x80;
         }
 
         ascii_out = ToAscii(keycode, MapVirtualKeyA(keycode, MAPVK_VK_TO_VSC), m_keyboardState, charbuff, 0);
