@@ -1091,12 +1091,12 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         if (frame_type & SHP_XOR_PREV_FRAME) {
             DEBUG_LOG("Decoding delta sequence.\n");
             ++ref_frame;
-            int offset_index = 0;
+            int offset_index = 2;
 
             while (ref_frame <= frame) {
-                offset_index += 2;
                 Apply_XOR_Delta(buffer, &lcw_data[(le32toh(offset_buff[offset_index]) & 0xFFFFFF) - base_frame_offset]);
                 ++ref_frame;
+                offset_index += 2;
 
                 if (offset_index >= 6 && ref_frame <= frame) {
                     offset_index = 0;
