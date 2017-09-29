@@ -23,12 +23,12 @@ uint8_t g_mouseShapeBuffer[65000]; // Original code shares the global ShapeBuffe
 
 int Get_Shape_Uncomp_Size(void *shape)
 {
-    return static_cast<MouseShapeFrameHeader *>(shape)->UncompressedSize;
+    return static_cast<MouseShapeFrameHeader *>(shape)->uncompressed_size;
 }
 
 int Extract_Shape_Count(void *shape)
 {
-    return static_cast<MouseShapeHeader *>(shape)->FrameCount;
+    return static_cast<MouseShapeHeader *>(shape)->frame_count;
 }
 
 void *Extract_Shape(void *shape, int frame)
@@ -36,8 +36,8 @@ void *Extract_Shape(void *shape, int frame)
     char *data = static_cast<char *>(shape);
     MouseShapeHeader *header = static_cast<MouseShapeHeader *>(shape);
 
-    if (shape && frame >= 0 && header->FrameCount > frame) {
-        return data + (&header->Offset)[frame] + 2;
+    if (shape && frame >= 0 && header->frame_count > frame) {
+        return data + (&header->offset)[frame] + 2;
     }
 
     return nullptr;
@@ -46,24 +46,24 @@ void *Extract_Shape(void *shape, int frame)
 int Get_Shape_Width(void *shape)
 {
     // return static_cast<ShapeHeaderStruct*>(shape)->Width;
-    return static_cast<MouseShapeFrameHeader *>(shape)->Width;
+    return static_cast<MouseShapeFrameHeader *>(shape)->width;
 }
 
 int Get_Shape_Height(void *shape)
 {
-    return static_cast<MouseShapeFrameHeader *>(shape)->Lines;
+    return static_cast<MouseShapeFrameHeader *>(shape)->lines;
 }
 
 int Restore_Shape_Height(void *shape)
 {
-    int oldheight = static_cast<MouseShapeFrameHeader *>(shape)->Lines;
-    static_cast<MouseShapeFrameHeader *>(shape)->Lines = static_cast<MouseShapeFrameHeader *>(shape)->Height;
+    int oldheight = static_cast<MouseShapeFrameHeader *>(shape)->lines;
+    static_cast<MouseShapeFrameHeader *>(shape)->lines = static_cast<MouseShapeFrameHeader *>(shape)->height;
     return oldheight;
 }
 
 int Get_Shape_Original_Height(void *shape)
 {
-    return static_cast<MouseShapeFrameHeader *>(shape)->Height;
+    return static_cast<MouseShapeFrameHeader *>(shape)->height;
 }
 
 void __cdecl Mouse_Shadow_Buffer(WWMouseClass &mouse, GraphicViewPortClass &viewport, void *buffer, int x_pos, int y_pos, int hspot_x, int hspot_y, BOOL save)
@@ -203,14 +203,14 @@ void *__cdecl Mouse_Set_Cursor(WWMouseClass &mouse, int hspot_x, int hspot_y, vo
     if (width <= mouse.Get_Max_Width() && height <= mouse.Get_Max_Height()) {
         frame_buff = mouse.Get_Image_Buff();
         data_buff = static_cast<uint8_t*>(frame);
-        frame_flags = frame_header->Flags;
+        frame_flags = frame_header->flags;
 
         //Flag bit 2 is flag for no compression on frame, decompress to
         //intermediate buffer if flag is clear
-        if (!(frame_header->Flags & 2)) {
+        if (!(frame_header->flags & 2)) {
             decmp_buff = g_mouseShapeBuffer;
             lcw_buff = reinterpret_cast<uint8_t*>(frame_header);
-            frame_flags = frame_header->Flags | 2;
+            frame_flags = frame_header->flags | 2;
 
             memcpy(decmp_buff, lcw_buff, sizeof(MouseShapeFrameHeader));
             decmp_buff += sizeof(MouseShapeFrameHeader);

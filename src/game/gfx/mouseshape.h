@@ -24,19 +24,19 @@
 // Header for each frame in the old SHP format... only used for mouse now.
 struct MouseShapeFrameHeader
 {
-    uint16_t Flags;
-    uint8_t Lines;
-    uint16_t Width;
-    uint8_t Height; // always same as lines?
-    uint16_t CompressedSize;
-    uint16_t UncompressedSize;
+    uint16_t flags;
+    uint8_t lines;
+    uint16_t width;
+    uint8_t height; // always same as lines?
+    uint16_t compressed_size;
+    uint16_t uncompressed_size;
 };
 
 // Header for the old SHP format... only used for mouse now. Offset values need +2 to get actual frame pos.
 struct MouseShapeHeader
 {
-    uint16_t FrameCount;
-    uint32_t Offset;
+    uint16_t frame_count;
+    uint32_t offset;
 };
 #pragma pack(pop)
 
