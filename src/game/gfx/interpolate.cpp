@@ -97,7 +97,6 @@ void Write_Interpolation_Palette(const char *filename)
  */
 void Rebuild_Interpolated_Palette(void *ipalette)
 {
-    DEBUG_LOG("Rebuilding interpolated pallet from VQP data.\n");
     uint8_t *ipal = static_cast<uint8_t *>(ipalette);
 
     int k = 0;
@@ -195,8 +194,6 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
     BOOL src_locked = false;
 
     if (g_interpolationPaletteChanged) {
-        DEBUG_LOG("Palette has changed, loading new table.\n");
-
         if (filename) {
             Read_Interpolation_Palette(filename);
         }
@@ -239,7 +236,6 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
         return;
     }
 
-    DEBUG_LOG("Interpolatng for mode %d.\n", g_interpolationMode);
     switch (g_interpolationMode) {
         case COPY_INTERLEAVE:
             /* Temp fall through to force best method.
@@ -373,7 +369,6 @@ static void Interpolate_Y_Axis(void *top_line, void *bottom_line, void *middle_l
  */
 void __cdecl Interpolate_Line_Interpolate(void *src, void *dst, int src_height, int src_width, int dst_pitch)
 {
-    DEBUG_LOG("Performing full interpolation.\n");
     uint8_t *dptr = static_cast<uint8_t *>(dst);
     uint8_t *buff_offset1 = g_interpolationBuffer + 2560;
     uint8_t *buff_offset2 = g_interpolationBuffer + 5120;
