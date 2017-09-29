@@ -1,32 +1,25 @@
-////////////////////////////////////////////////////////////////////////////////
-//                            --  REDALERT++ --                               //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Redalert++
-//
-//          File:: ALLOC.H
-//
-//        Author:: tomsons26
-//
-//  Contributors:: OmniBlade
-//
-//   Description:: Memory allocation functions.
-//
-//       License:: Redalert++ is free software: you can redistribute it and/or 
-//                 modify it under the terms of the GNU General Public License 
-//                 as published by the Free Software Foundation, either version 
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @author tomsons26
+ * @author OmniBlade
+ *
+ * @brief Memory allocation wrapper functions.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef ALLOC_H
 #define ALLOC_H
 
 #include "always.h"
+
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
 #include <malloc.h>
@@ -34,10 +27,13 @@
 
 enum MemoryFlagType
 {
-	MEM_NORMAL = 0,
-	MEM_NEW = 1,
-	MEM_CLEAR = 2,
+    MEM_NORMAL = 0,
+    MEM_NEW = 1,
+    MEM_CLEAR = 2,
 };
+
+typedef int(*memerror_t)();
+extern memerror_t g_memoryError; // Memory error handler function pointer.
 
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags);
 void Free(void *pointer);

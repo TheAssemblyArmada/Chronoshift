@@ -1,36 +1,28 @@
-////////////////////////////////////////////////////////////////////////////////
-//                            --  REDALERT++ --                               //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Redalert++
-//
-//          File:: ALLOC.H
-//
-//        Author:: tomsons26
-//
-//  Contributors:: OmniBlade
-//
-//   Description:: Memory allocation functions.
-//
-//       License:: Redalert++ is free software: you can redistribute it and/or 
-//                 modify it under the terms of the GNU General Public License 
-//                 as published by the Free Software Foundation, either version 
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+* @file
+*
+* @author tomsons26
+* @author OmniBlade
+*
+* @brief Memory allocation wrapper functions.
+*
+* @copyright Redalert++ is free software: you can redistribute it and/or
+*            modify it under the terms of the GNU General Public License
+*            as published by the Free Software Foundation, either version
+*            2 of the License, or (at your option) any later version.
+*            A full copy of the GNU General Public License can be found in
+*            LICENSE
+*/
 #include "alloc.h"
 #include "gamedebug.h"
+#include <malloc.h>
 #include <stdlib.h>
 
-typedef int(*memerror_t)();
-static memerror_t g_memoryError = nullptr; // Memory error handler function pointer.
+memerror_t g_memoryError = nullptr; // Memory error handler function pointer.
 static int g_memoryCalls;
-unsigned int TotalRam;
-unsigned int MinRam;
-unsigned int MaxRam;
+unsigned int g_totalRam;
+unsigned int g_minRam;
+unsigned int g_maxRam;
 
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags)
 {
