@@ -34,14 +34,14 @@ BOOL &IsTheaterShape = Make_Global<BOOL>(0x006A1788);
 BOOL &OriginalUseBigShapeBuffer = Make_Global<BOOL>(0x006A178C);
 char *&BigShapeBufferStart = Make_Global<char *>(0x006A177C);
 char *&BigShapeBufferPtr = Make_Global<char *>(0x006A1790);
-//int &TotalBigShapes;
+// int &TotalBigShapes;
 BOOL &ReallocShapeBufferFlag = Make_Global<BOOL>(0x006A1798);
 char *&TheaterShapeBufferStart = Make_Global<char *>(0x006A1780);
 char *&TheaterShapeBufferPtr = Make_Global<char *>(0x006A179C);
 int &TotalTheaterShapes = Make_Global<int>(0x006A17A0);
 uint32_t **KeyFrameSlots = reinterpret_cast<uint32_t **>(0x006A17A4);
 int &TotalSlotsUsed = Make_Global<int>(0x006A2F14);
-//int &BuildFrameLength;
+// int &BuildFrameLength;
 BOOL &UseOldShapeDraw = Make_Global<BOOL>(0x00655C08);
 uint8_t *&ShapeBuffer = Make_Global<uint8_t *>(0x0060BE58);
 int &ShapeBufferSize = Make_Global<int>(0x0060BE5C);
@@ -55,14 +55,14 @@ BOOL IsTheaterShape = false;
 BOOL OriginalUseBigShapeBuffer;
 char *BigShapeBufferStart = nullptr;
 char *BigShapeBufferPtr = nullptr;
-//int TotalBigShapes = 0;
+// int TotalBigShapes = 0;
 BOOL ReallocShapeBufferFlag;
 char *TheaterShapeBufferStart = nullptr;
 char *TheaterShapeBufferPtr = nullptr;
 int TotalTheaterShapes = 0;
 uint32_t *KeyFrameSlots[1500];
 int TotalSlotsUsed = 0;
-//int BuildFrameLength = 0;
+// int BuildFrameLength = 0;
 BOOL UseOldShapeDraw = false;
 uint8_t *ShapeBuffer = nullptr;
 int ShapeBufferSize = 0;
@@ -889,10 +889,113 @@ static Single_Line_Function NewShapeJumpTable[32] = { Single_Line_Copy,
     Single_Line_Skip,
     Single_Line_Skip };
 
-TRect<int> Shape_Dimensions(void *a1, int a2)
+TRect<int> Shape_Dimensions(void *shape, int frame)
 {
-    // TODO
-    return TRect<int>();
+    TRect<int> rect;
+
+    if (shape != nullptr && frame >= 0 && frame <= Get_Build_Frame_Count(shape)) {
+        void *bframe = Build_Frame(shape, frame, ShapeBuffer);
+
+        if (bframe != nullptr) {
+            void *data = Get_Shape_Header_Data(bframe);
+            int w = Get_Build_Frame_Width(shape);
+            int h = Get_Build_Frame_Height(shape);
+
+            // top, left, bottom, right
+            int t = 0;
+            int l = 0;
+            int b = h - 1;
+            int r = w - 1;
+
+            for (int i = 0; i <= b; ++i) {
+                if (r >= 0) {
+                    uint8_t *sptr = static_cast<uint8_t *>(data) + i * h;
+                    int tmp_l = 0;
+
+                    while (*sptr++ == 0) {
+                        ++tmp_l;
+
+                        if (tmp_l > r) {
+                            break;
+                        }
+                    }
+
+                    if (tmp_l <= r) {
+                        t = i;
+                        l = tmp_l;
+                        i = b + 1;
+                    }
+                }
+            }
+
+            for (int i = b; i >= t; --i) {
+                if (r >= 0) {
+                    uint8_t *sptr = static_cast<uint8_t *>(data) + r + i * w;
+                    int tmp_r = r;
+
+                    while (*sptr-- == 0) {
+                        --tmp_r;
+
+                        if (tmp_r < 0) {
+                            break;
+                        }
+                    }
+
+                    if (tmp_r >= 0) {
+                        rect.Bottom = i - t + 1;
+                        r = tmp_r;
+                        i = t - 1;
+                    }
+                }
+            }
+
+            for (int i = 0; i < l; ++i) {
+                if (rect.Bottom + t > t) {
+                    uint8_t *sptr = static_cast<uint8_t *>(data) + w * t + i;
+                    int tmp_t = t;
+
+                    while (*sptr == 0) {
+                        sptr += w;
+                        ++tmp_t;
+
+                        if (tmp_t >= rect.Bottom + t) {
+                            break;
+                        }
+                    }
+
+                    if (tmp_t < rect.Bottom + t) {
+                        l = i;
+                    }
+                }
+            }
+
+            for (int i = w - 1; i > r; --i) {
+                if (rect.Bottom + t > t) {
+                    uint8_t *sptr = static_cast<uint8_t *>(data) + w * t + i;
+                    int tmp_t = t;
+
+                    while (*sptr == 0) {
+                        sptr += w;
+                        ++tmp_t;
+
+                        if (tmp_t >= rect.Bottom + t) {
+                            break;
+                        }
+                    }
+
+                    if (tmp_t < rect.Bottom + t) {
+                        rect.Right = i - l + 1;
+                        i = r - 1;
+                    }
+                }
+            }
+
+            rect.Top = t - h / 2;
+            rect.Left = l - w / 2;
+        }
+    }
+
+    return rect;
 }
 
 // This one appears to deal with the buffered shape data
@@ -981,7 +1084,7 @@ void Check_Use_Compressed_Shapes()
         UseBigShapeBuffer = false;
         OriginalUseBigShapeBuffer = false;
     }
-#else // TODO Posix version
+#else // Posix version?
     // This should be sufficient on both Linux and OS X
     size_t totalmem = (size_t)sysconf(_SC_PHYS_PAGES) * (size_t)sysconf(_SC_PAGESIZE);
 
@@ -993,7 +1096,7 @@ void Check_Use_Compressed_Shapes()
 void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 {
     uint8_t *shape_data = static_cast<uint8_t *>(shape);
-    //frame = frame;
+    // frame = frame;
     Length = 0;
 
     if (shape == nullptr || buffer == nullptr) {
@@ -1002,8 +1105,9 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
     ShapeHeaderStruct *header = static_cast<ShapeHeaderStruct *>(shape);
     if (frame >= le16toh(header->frame_count)) {
-        DEBUG_LOG("Requested frame %d is greater than total frames %d in this shape file.\n", frame, le16toh(header->frame_count));
-        
+        DEBUG_LOG(
+            "Requested frame %d is greater than total frames %d in this shape file.\n", frame, le16toh(header->frame_count));
+
         return nullptr;
     }
 
@@ -1126,7 +1230,6 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
             aligned_tsbp = (char *)align;
 
-
             memcpy(aligned_tsbp, buffer, frame_size);
             buff_header = reinterpret_cast<ShapeBufferHeader *>(TheaterShapeBufferPtr);
             buff_header->draw_flags = -1;
@@ -1140,8 +1243,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
             if ((align % sizeof(void *)) != 0) {
                 align += sizeof(void *) - (align % sizeof(void *));
             }
-            TheaterShapeBufferPtr = (char*)align;
-
+            TheaterShapeBufferPtr = (char *)align;
 
             Length = frame_size;
 
@@ -1159,7 +1261,6 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
             aligned_bsbp = (char *)align;
 
-
             memcpy(aligned_bsbp, buffer, frame_size);
             buff_header = reinterpret_cast<ShapeBufferHeader *>(BigShapeBufferPtr);
             buff_header->draw_flags = -1;
@@ -1172,11 +1273,10 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
             align = (uintptr_t)BigShapeBufferPtr;
 
             if ((align % sizeof(void *)) != 0) {
-                align += sizeof(void *) - (align % sizeof(void*));
+                align += sizeof(void *) - (align % sizeof(void *));
             }
 
             BigShapeBufferPtr = (char *)align;
-
 
             Length = frame_size;
             return saved_bsbp;
@@ -1486,6 +1586,5 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
         // DEBUG_SAY("Drawing with BF draw functions\n");
         OldShapeJumpTable[blit_style & 0xF](
             blit_width, blit_height, dst, src, dst_pitch, src_pitch, ghost_lookup, ghost_table, fade_table, fade_count);
-
     }
 }

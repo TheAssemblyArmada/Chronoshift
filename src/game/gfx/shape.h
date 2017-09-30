@@ -109,7 +109,7 @@ extern int TheaterSlotsUsed;
 extern int Length;
 #endif
 
-TRect<int> Shape_Dimensions(void *a1, int a2);
+TRect<int> Shape_Dimensions(void *shape, int frame);
 void *Get_Shape_Header_Data(void *shape);
 int Get_Last_Frame_Length();
 void Reset_Theater_Shapes();
@@ -138,6 +138,7 @@ inline void Hook_Me()
 {
     Hook_Function(0x005B48EC, Build_Frame);
     Hook_Function(0x005AB354, Buffer_Frame_To_Page);
+    Hook_Function(0x004A9AB8, Shape_Dimensions);
 }
 
 }
