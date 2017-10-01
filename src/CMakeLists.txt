@@ -62,6 +62,7 @@ set(GAMEENGINE_SRC
     game/gfx/rgb.cpp
     game/gfx/shape.cpp
     game/gfx/textprint.cpp
+    game/gfx/surfacemonitor.cpp
     game/gfx/wsa.cpp
     game/io/b64pipe.cpp
     game/io/b64straw.cpp

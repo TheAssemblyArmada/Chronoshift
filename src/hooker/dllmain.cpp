@@ -33,6 +33,7 @@
 #include "rgb.h"
 #include "shape.h"
 #include "textprint.h"
+#include "surfacemonitor.h"
 #include "wsa.h"
 #include "xordelta.h"
 #include <stdarg.h>
@@ -74,6 +75,7 @@ void Setup_Hooks()
     WSAFile::Hook_Me();
     WWMouseClass::Hook_Me();
     XorDelta::Hook_Me();
+    SurfaceMonitorClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
