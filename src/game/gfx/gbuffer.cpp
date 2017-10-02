@@ -281,7 +281,7 @@ void GraphicViewPortClass::From_Buffer(int x, int y, int w, int h, void *buffer)
     Unlock();
 }
 
-unsigned GraphicViewPortClass::Print(char *string, int x, int y, int fground, int bground)
+unsigned GraphicViewPortClass::Print(const char *string, int x, int y, int fground, int bground)
 {
     unsigned ret = 0;
 

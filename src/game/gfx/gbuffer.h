@@ -93,7 +93,7 @@ public:
     void Draw_Line(int x1, int y1, int x2, int y2, unsigned char color = 0);
     void Fill_Rect(int x, int y, int w, int h, unsigned char color);
     // void Overlay_Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
-    unsigned Print(char *string, int x, int y, int fground, int bground);
+    unsigned Print(const char *string, int x, int y, int fground, int bground);
     void Clear(unsigned char color = 0);
     void From_Buffer(int x, int y, int w, int h, void *buffer);
     void Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h, int dst_w,
