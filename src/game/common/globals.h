@@ -9,7 +9,6 @@
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -26,9 +25,33 @@
 
 extern int &g_frame;
 extern BOOL &g_gameInFocus;
+extern BOOL &g_inMapEditor;
+extern char *&Metal12FontPtr;
+extern char *&MapFontPtr;
+extern char *&Font6Ptr;
+extern char *&GradFont6Ptr;
+extern char *&EditorFont;
+extern char *&Font8Ptr;
+extern char *&Font3Ptr;
+extern char *&ScoreFontPtr;
+extern char *&FontLEDPtr;
+extern char *&VCRFontPtr;
+extern char *&TypeFontPtr;
 #else
 extern int g_frame;
 extern BOOL g_gameInFocus;
+extern BOOL g_inMapEditor;
+extern char *Metal12FontPtr;
+extern char *MapFontPtr;
+extern char *Font6Ptr;
+extern char *GradFont6Ptr;
+extern char *EditorFont;
+extern char *Font8Ptr;
+extern char *Font3Ptr;
+extern char *ScoreFontPtr;
+extern char *FontLEDPtr;
+extern char *VCRFontPtr;
+extern char *TypeFontPtr;
 #endif
 
 #endif
