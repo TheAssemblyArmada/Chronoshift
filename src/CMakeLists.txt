@@ -24,6 +24,7 @@ set(GAMEENGINE_INCLUDES
     game/io
     game/memory
     game/platform
+    game/ui
 )
 
 set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
@@ -40,10 +41,12 @@ set(GAMEENGINE_SRC
     game/common/dipthong.cpp
     game/common/globals.cpp
     game/common/ini.cpp
+    game/common/language.cpp
     game/common/lcw.cpp
     game/common/ostimer.cpp
     game/common/random.cpp
     game/common/readline.cpp
+    game/common/remap.cpp
     game/common/timer.cpp
     game/common/ttimer.cpp
     game/common/wwstring.cpp
@@ -95,6 +98,9 @@ set(GAMEENGINE_SRC
     game/net/field.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
+    game/ui/dialog.cpp
+    game/ui/gadget.cpp
+    game/ui/link.cpp
 )
 
 if(STANDALONE)
