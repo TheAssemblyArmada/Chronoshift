@@ -21,7 +21,7 @@
 
 #ifndef RAPP_STANDALONE
 char *&g_fontPtr = Make_Global<char *>(0x006B1974);
-char *&FontWidthBlockPtr = Make_Global<char *>(0x006B1978);
+char *&g_fontWidthBlockPtr = Make_Global<char *>(0x006B1978);
 int &g_fontYSpacing = Make_Global<int>(0x006B1970);
 int &g_fontXSpacing = Make_Global<int>(0x006B196C);
 uint8_t &g_fontHeight = Make_Global<uint8_t>(0x0060CE65);
@@ -48,7 +48,7 @@ uint8_t byte_608988[] = {
     15, 0, 0, 0 };
 
 char *g_fontPtr = nullptr;
-char *FontWidthBlockPtr = nullptr;
+char *g_fontWidthBlockPtr = nullptr;
 
 uint8_t g_fontHeight = 8;
 uint8_t g_fontWidth = 8;
@@ -74,7 +74,7 @@ void *__cdecl Set_Font(void *font)
 
     if (font) {
         g_fontPtr = static_cast<char *>(font);
-        FontWidthBlockPtr = static_cast<char *>(font) + le16toh(header->width_list);
+        g_fontWidthBlockPtr = static_cast<char *>(font) + le16toh(header->width_list);
         g_fontHeight = le16toh(header->max_height);
         g_fontWidth = le16toh(header->max_width);
     }
@@ -86,7 +86,7 @@ int __cdecl Char_Pixel_Width(char letter)
 {
     // Cast to unsigned as all blocks index from zero to NumberOfChars + 1
     // Original watcom compiler had char as an unsigned type by default.
-    return FontWidthBlockPtr[(uint8_t)letter] + g_fontXSpacing;
+    return g_fontWidthBlockPtr[(uint8_t)letter] + g_fontXSpacing;
 }
 
 uint16_t __cdecl String_Pixel_Width(const char *string)
