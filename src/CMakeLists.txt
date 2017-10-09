@@ -90,6 +90,7 @@ set(GAMEENGINE_SRC
     game/io/straw.cpp
     game/memory/alloc.cpp
     game/memory/newdel.cpp
+    game/net/field.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
 )
