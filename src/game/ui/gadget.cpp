@@ -14,16 +14,23 @@
  *            LICENSE
  */
 #include "gadget.h"
+#include "gamedebug.h"
 #include "gbuffer.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "remap.h"
 
+#ifndef RAPP_STANDALONE
+RemapControlType *&GadgetClass::ColorScheme = Make_Global<RemapControlType *>(0x00601694);
+GadgetClass *&GadgetClass::StuckOn = Make_Global<GadgetClass *>(0x0065D7B0);
+GadgetClass *&GadgetClass::LastList = Make_Global<GadgetClass *>(0x0065D7B4);
+GadgetClass *&GadgetClass::Focused = Make_Global<GadgetClass *>(0x0065D7B8);
+#else
 RemapControlType *GadgetClass::ColorScheme = &GreyScheme;
-
 GadgetClass *GadgetClass::StuckOn = nullptr;
 GadgetClass *GadgetClass::LastList = nullptr;
 GadgetClass *GadgetClass::Focused = nullptr;
+#endif
 
 GadgetClass::GadgetClass(unsigned input_flag, BOOL sticky) : XPos(0), YPos(0), Width(0), Height(0), IsSticky(sticky) {}
 
@@ -91,12 +98,12 @@ GadgetClass &GadgetClass::operator=(GadgetClass &that)
     return *this;
 }
 
-GadgetClass *const GadgetClass::Get_Next() const
+GadgetClass *GadgetClass::Get_Next() const
 {
     return reinterpret_cast<GadgetClass *>(LinkClass::Get_Next());
 }
 
-GadgetClass *const GadgetClass::Get_Prev() const
+GadgetClass *GadgetClass::Get_Prev() const
 {
     return reinterpret_cast<GadgetClass *>(LinkClass::Get_Prev());
 }
@@ -297,6 +304,7 @@ unsigned GadgetClass::Get_ID() const
 
 void GadgetClass::Flag_To_Redraw()
 {
+    DEBUG_LOG("Gadget flagged to redraw.\n");
     ToRedraw = true;
 }
 

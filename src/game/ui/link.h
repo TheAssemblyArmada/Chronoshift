@@ -27,8 +27,8 @@ public:
     LinkClass(LinkClass &that) : Next(nullptr), Prev(nullptr) { Add(that); }
     virtual ~LinkClass() { Remove(); }
 
-    virtual LinkClass *const Get_Next() const { return Next; }
-    virtual LinkClass *const Get_Prev() const { return Prev; }
+    virtual LinkClass *Get_Next() const { return Next; }
+    virtual LinkClass *Get_Prev() const { return Prev; }
     virtual LinkClass &Add(LinkClass &that);
     virtual LinkClass &Add_Tail(LinkClass &that);
     virtual LinkClass &Add_Head(LinkClass &that);

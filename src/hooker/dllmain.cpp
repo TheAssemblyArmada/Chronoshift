@@ -18,6 +18,7 @@
 #include "ccfileclass.h"
 #include "cpudetect.h"
 #include "fading.h"
+#include "gadget.h"
 #include "gamedebug.h"
 #include "gbuffer.h"
 #include "hooker.h"
@@ -68,6 +69,7 @@ void Setup_Hooks()
     PlatformTimerClass::Hook_Me();
     Blitters::Hook_Me();
     Fading::Hook_Me();
+    GadgetClass::Hook_Me();
     Interpolate::Hook_Me();
     Lcw::Hook_Me();
     MouseShape::Hook_Me();

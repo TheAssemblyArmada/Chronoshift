@@ -73,7 +73,6 @@ void Plain_Text_Print(
     char const *string, unsigned x, unsigned y, uint8_t fgcolor, uint8_t bgcolor, TextPrintType style, ...);
 int Format_Window_String(char *string, int max_w, int &w, int &h);
 int Format_Window_String_New(char const *string, int max_w, int &w, int &h, char *new_string, int offset);
-char *Font_Palette(int a1);
 void Draw_Caption(char const *string, int x, int y, int w);
 void Draw_Caption(int str_id, int x, int y, int w);
 
