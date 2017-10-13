@@ -164,7 +164,12 @@ void Hook_Method(uintptr_t in, T out)
     static_assert(sizeof(x86_jump) == 5, "Jump struct not expected size.");
 
     x86_jump cmd;
+#ifdef COMPILER_WATCOM
+    x86_jump *tmp = reinterpret_cast<x86_jump*>((void *&)out);
+    cmd.addr = tmp.addr - in - 5;
+#else
     cmd.addr = reinterpret_cast<uintptr_t>((void *&)out) - in - 5;
+#endif
     WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
 }
 
