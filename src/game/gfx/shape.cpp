@@ -1039,7 +1039,7 @@ void Reallocate_Big_Shape_Buffer()
         g_bigShapeBufferLength += BIGSHP_BUFFER_GROW;
         g_bigShapeBufferPtr -= (intptr_t)g_bigShapeBufferStart;
         g_bigShapeBufferStart = (char *)Resize_Alloc(g_bigShapeBufferStart, g_bigShapeBufferLength);
-        DEBUG_LOG("Reallocating Big Shape Buffer, size is now %d.\n", g_bigShapeBufferLength);
+        //DEBUG_LOG("Reallocating Big Shape Buffer, size is now %d.\n", g_bigShapeBufferLength);
         // TODO
         // g_memoryError = Memory_Error_Handler;
         if (g_bigShapeBufferStart) {
@@ -1072,7 +1072,7 @@ void Check_Use_Compressed_Shapes()
     GlobalMemoryStatusEx(&Buffer);
     g_useBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
     g_originalUseBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
-    DEBUG_LOG("Using Big Shape Buffer and Original Buffer is %s.\n", Buffer.ullTotalPhys > 0x1000000 ? "true" : "false");
+    //DEBUG_LOG("Using Big Shape Buffer and Original Buffer is %s.\n", Buffer.ullTotalPhys > 0x1000000 ? "true" : "false");
 #elif defined PLATFORM_OSX
     size_t totalmem;
     size_t len = sizeof(totalmem);
@@ -1105,8 +1105,8 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
     ShapeHeaderStruct *header = static_cast<ShapeHeaderStruct *>(shape);
     if (frame >= le16toh(header->frame_count)) {
-        DEBUG_LOG(
-            "Requested frame %d is greater than total frames %d in this shape file.\n", frame, le16toh(header->frame_count));
+        //DEBUG_LOG(
+        //    "Requested frame %d is greater than total frames %d in this shape file.\n", frame, le16toh(header->frame_count));
 
         return nullptr;
     }
@@ -1114,7 +1114,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
     // If we are using a cache
     if (g_useBigShapeBuffer) {
         if (!g_bigShapeBufferStart) {
-            DEBUG_LOG("Allocating buffers for g_useBigShapeBuffer.\n");
+           // DEBUG_LOG("Allocating buffers for g_useBigShapeBuffer.\n");
             g_bigShapeBufferStart = static_cast<char *>(Alloc(g_bigShapeBufferLength, MEM_NORMAL));
             g_bigShapeBufferPtr = g_bigShapeBufferStart;
             g_theaterShapeBufferStart = static_cast<char *>(Alloc(g_theaterShapeBufferLength, MEM_NORMAL));
@@ -1141,7 +1141,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         // Do we have anything in our keyframe slot yet? If so, return it.
         uint32_t shp_buff_offset = g_keyFrameSlots[header->y_pos][frame];
         if (shp_buff_offset != 0) {
-            DEBUG_LOG("Using Cached frame.\n");
+            //DEBUG_LOG("Using Cached frame.\n");
 
             if (g_isTheaterShape) {
                 return shp_buff_offset + g_theaterShapeBufferStart;
@@ -1158,7 +1158,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
     uint8_t frame_type = (le32toh(offset_buff[0]) & 0xFF000000) >> 24;
 
     if (frame_type & SHP_LCW_FRAME) {
-        DEBUG_LOG("Decoding key frame.\n");
+        //DEBUG_LOG("Decoding key frame.\n");
         uint8_t *frame_data = &shape_data[le32toh(offset_buff[0]) & 0xFFFFFF];
 
         // Amazingly it seems that shp files actually do support having a pal, just none do.
@@ -1168,7 +1168,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
         frame_size = LCW_Uncomp(frame_data, buffer, frame_size);
     } else {
-        DEBUG_LOG("Decoding XOR frame.\n");
+        //DEBUG_LOG("Decoding XOR frame.\n");
         int ref_frame = 0;
         // If we have an Xor chain, load first delta address into buffer
         if (frame_type & SHP_XOR_PREV_FRAME) {
@@ -1186,14 +1186,14 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         }
 
         if (LCW_Uncomp(lcw_data, buffer, frame_size) > frame_size) {
-            DEBUG_LOG("LCW decompressed more data than expected.\n");
+            //DEBUG_LOG("LCW decompressed more data than expected.\n");
             return nullptr;
         }
 
         Apply_XOR_Delta(buffer, lcw_data + xor_data_offset);
 
         if (frame_type & SHP_XOR_PREV_FRAME) {
-            DEBUG_LOG("Decoding delta sequence.\n");
+            //DEBUG_LOG("Decoding delta sequence.\n");
             ++ref_frame;
             int offset_index = 2;
 
