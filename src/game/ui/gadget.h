@@ -20,10 +20,10 @@
 
 #include "keyboard.h"
 #include "link.h"
+#include "remap.h"
 #include "trect.h"
 
 class ControlClass;
-struct RemapControlType;
 
 enum GadgetInput
 {
