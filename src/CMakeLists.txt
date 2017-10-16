@@ -102,6 +102,7 @@ set(GAMEENGINE_SRC
     game/ui/dialog.cpp
     game/ui/gadget.cpp
     game/ui/link.cpp
+    game/ui/toggle.cpp
 )
 
 if(STANDALONE)
