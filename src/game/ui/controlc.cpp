@@ -13,7 +13,7 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "control.h"
+#include "controlc.h"
 
 ControlClass::ControlClass(unsigned id, int x, int y, int w, int h, unsigned input_flag, BOOL is_sticky) :
     GadgetClass(x, y, w, h, input_flag, is_sticky),

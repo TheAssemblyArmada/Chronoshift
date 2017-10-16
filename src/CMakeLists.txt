@@ -98,7 +98,7 @@ set(GAMEENGINE_SRC
     game/net/field.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
-    game/ui/control.cpp
+    game/ui/controlc.cpp
     game/ui/dialog.cpp
     game/ui/gadget.cpp
     game/ui/link.cpp
@@ -109,7 +109,7 @@ if(STANDALONE)
     target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES})
 else()
     add_library(rapp SHARED ${GAMEENGINE_SRC} ${HOOKER_SRC})
-    target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES}  ${GAMEENGINE_INCLUDES} hooker)
+    target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES} hooker)
 endif()
 
 target_link_libraries(rapp ${PLATFORM_LIBS})

@@ -16,6 +16,7 @@
 #include "alloc.h"
 #include "blitters.h"
 #include "ccfileclass.h"
+#include "controlc.h"
 #include "cpudetect.h"
 #include "fading.h"
 #include "gadget.h"
@@ -63,6 +64,7 @@ void Setup_Hooks()
     RawFileClass::Hook_Me();
     BufferIOFileClass::Hook_Me();
     CCFileClass::Hook_Me();
+    ControlClass::Hook_Me();
     GraphicViewPortClass::Hook_Me();
     INIClass::Hook_Me();
     KeyboardClass::Hook_Me();

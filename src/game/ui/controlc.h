@@ -15,8 +15,8 @@
  */
 #pragma once
 
-#ifndef CONTROL_H
-#define CONTROL_H
+#ifndef CONTROLC_H
+#define CONTROLC_H
 
 #include "always.h"
 #include "gadget.h"
@@ -70,4 +70,4 @@ inline void ControlClass::Hook_Me()
 }
 #endif
 
-#endif // CONTROL_H
+#endif // CONTROLC_H
