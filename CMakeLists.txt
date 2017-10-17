@@ -26,16 +26,26 @@ endif()
 if(WATCOM)
     # Removes the -br flag, similar to using -static-libgcc and -static-libstdc++ with GCC
     # Removes the -xs flag, similar to using -fno-exceptions with GCC
+    # Changes debug level to -d1 rather than -d2 to give mangled names
     foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
         message("Processing flags ${flag_var}")
         string(REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")
         string(REGEX REPLACE "-xs[^ ]*" "" ${flag_var} "${${flag_var}}")
+        string(REGEX REPLACE "-d2" "-d1" ${flag_var} "${${flag_var}}")
     endforeach(flag_var)
     
     # Set packing and alignment to 1 byte to match original game ABI
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -zp1")
+    
+    # Make watcom dump the debug symbols to a file with the .sym extension
+    set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "opt symf ${CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
+    set(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "opt symf ${CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO}")
+    set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "opt symf ${CMAKE_MODULE_LINKER_FLAGS_DEBUG}")
+    set(CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO "opt symf ${CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO}")
+    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "opt symf ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+    set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "opt symf ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
 endif()
     
 # We don't support in tree builds, so help people make the right choice.
