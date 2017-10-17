@@ -23,18 +23,18 @@
 
 TextButtonClass::TextButtonClass() :
     ToggleClass(0, 0, 0, 0, 0),
-    HasOutline(false),
+    FilledBackground(false),
     HasShadow(false),
-    HasFilledBackground(true),
+    HasOutline(true),
     ButtonText(nullptr)
 {
 }
 
-TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w, int h, BOOL background) :
+TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w, int h, BOOL outline) :
     ToggleClass(id, x, y, w, h),
-    HasOutline(false),
+    FilledBackground(false),
     HasShadow(false),
-    HasFilledBackground(background),
+    HasOutline(outline),
     ButtonText(string)
 {
     Set_Style(style);
@@ -53,11 +53,11 @@ TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType 
     }
 }
 
-TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w, int h, BOOL background) :
+TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w, int h, BOOL outline) :
     ToggleClass(id, x, y, w, h),
-    HasOutline(false),
+    FilledBackground(false),
     HasShadow(false),
-    HasFilledBackground(background),
+    HasOutline(outline),
     ButtonText(nullptr)
 {
     Set_Style(style);
@@ -79,8 +79,8 @@ TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, i
 
 TextButtonClass::TextButtonClass(TextButtonClass &that) :
     ToggleClass(that),
+    FilledBackground(that.FilledBackground),
     HasOutline(that.HasOutline),
-    HasFilledBackground(that.HasFilledBackground),
     ButtonText(that.ButtonText),
     TextStyle(that.TextStyle)
 {
@@ -136,7 +136,9 @@ void TextButtonClass::Draw_Background()
 {
     BoxStyleEnum style;
 
-    if (HasFilledBackground) {
+    if (HasOutline) {
+        g_logicPage->Draw_Rect(XPos - 1, YPos - 1, Width + XPos + 2, Height + YPos + 2, COLOR_BLACK);
+
         // Draw an drop shadow underneath the button if required.
         //if (HasShadow) {
         //    LogicPage->Draw_Line(Width + XPos + 2, YPos, Width + XPos + 2, Height + YPos + 2, ShadowColor);
@@ -144,23 +146,22 @@ void TextButtonClass::Draw_Background()
         //}
 
         // Draw an outline around the button if required.
-        //if (HasOutline) {
+        //if (FilledBackground) {
         //    LogicPage->Fill_Rect(XPos - 1, YPos - 1, Width + XPos + 2, Height + YPos + 2, OutlineColor);
         //}
-
-        // Select required box style based on button state.
-        if (IsDisabled) {
-            style = BOX_STYLE_4;
-        } else {
-            if (Toggle_Boolean1) {
-                style = BOX_STYLE_0;
-            } else {
-                style = BOX_STYLE_1;
-            }
-        }
-
-        Draw_Box(XPos, YPos, Width, Height, style, true);
     }
+        // Select required box style based on button state.
+    if (IsDisabled) {
+        style = BOX_STYLE_4;
+    } else {
+        if (Toggle_Boolean1) {
+            style = BOX_STYLE_0;
+        } else {
+            style = BOX_STYLE_1;
+        }
+    }
+
+    Draw_Box(XPos, YPos, Width, Height, style, true);
 }
 
 void TextButtonClass::Draw_Text(const char *string)

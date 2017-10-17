@@ -27,8 +27,8 @@ class TextButtonClass : public ToggleClass
 {
 public:
     TextButtonClass();
-    TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL background = true);
-    TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL background = true);
+    TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL outline = true);
+    TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL outline = true);
     TextButtonClass(TextButtonClass &that);
     virtual ~TextButtonClass() {}
 
@@ -52,15 +52,15 @@ protected:
     {
         struct
         {
-            bool HasFilledBackground : 1; // & 1
-            bool HasOutline : 1; // & 2
+            bool HasOutline : 1; // & 1
+            bool FilledBackground : 1; // & 2
             bool HasShadow : 1; // & 4
         };
         int m_toggleFlags;
     };
 #else
-    bool HasFilledBackground;
     bool HasOutline;
+    bool FilledBackground;
     bool HasShadow;
 #endif
     const char *ButtonText;
@@ -75,9 +75,9 @@ inline TextButtonClass &TextButtonClass::operator=(TextButtonClass &that)
 {
     if (this != &that) {
         ToggleClass::operator=(that);
-        HasOutline = that.HasOutline;
+        FilledBackground = that.FilledBackground;
         HasShadow = that.HasShadow;
-        HasFilledBackground = that.HasFilledBackground;
+        HasOutline = that.HasOutline;
         ButtonText = that.ButtonText;
         TextStyle = that.TextStyle;
         //OutlineColor = that.OutlineColor;
