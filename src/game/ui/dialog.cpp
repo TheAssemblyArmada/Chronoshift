@@ -381,6 +381,16 @@ void Plain_Text_Print(int str_id, unsigned x, unsigned y, uint8_t fgcolor, uint8
 
     memset(&remapper, 0, sizeof(RemapControlType));
     memset(&remapper.FontPalette[4], fgcolor, 12);
+    remapper.BrightColor = fgcolor;
+    remapper.MediumColor = fgcolor;
+    remapper.WindowPalette[0] = fgcolor;
+    remapper.WindowPalette[1] = fgcolor;
+    remapper.WindowPalette[2] = fgcolor;
+    remapper.WindowPalette[3] = fgcolor;
+    remapper.WindowPalette[4] = fgcolor;
+    remapper.WindowPalette[5] = fgcolor;
+    remapper.WindowPalette[6] = fgcolor;
+    remapper.WindowPalette[7] = fgcolor;
 
     va_list args;
     va_start(args, style);
@@ -394,6 +404,16 @@ void Plain_Text_Print(char const *string, unsigned x, unsigned y, uint8_t fgcolo
 
     memset(&remapper, 0, sizeof(RemapControlType));
     memset(&remapper.FontPalette[4], fgcolor, 12);
+    remapper.BrightColor = fgcolor;
+    remapper.MediumColor = fgcolor;
+    remapper.WindowPalette[0] = fgcolor;
+    remapper.WindowPalette[1] = fgcolor;
+    remapper.WindowPalette[2] = fgcolor;
+    remapper.WindowPalette[3] = fgcolor;
+    remapper.WindowPalette[4] = fgcolor;
+    remapper.WindowPalette[5] = fgcolor;
+    remapper.WindowPalette[6] = fgcolor;
+    remapper.WindowPalette[7] = fgcolor;
 
     va_list args;
     va_start(args, style);
@@ -660,7 +680,7 @@ void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, B
 {
     DEBUG_ASSERT(style != BOX_STYLE_NONE);
     DEBUG_ASSERT(style < BOX_STYLE_COUNT);
-
+    
     // this is a list of colour indices for rendering the bevel effect of a box i think.
     // Looks like each style has 4 colours, one for the body of the button,
     // two for a beveled look if its a button and 1 for the bevel corner transitions
