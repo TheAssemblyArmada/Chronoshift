@@ -109,7 +109,7 @@ if(STANDALONE)
     add_executable(rapp ${GAMEENGINE_SRC})
     target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES})
 else()
-    add_library(rapp SHARED ${GAMEENGINE_SRC} ${HOOKER_SRC})
+    add_library(rapp SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})
     target_include_directories(rapp BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES} hooker)
 endif()
 
