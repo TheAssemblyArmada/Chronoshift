@@ -35,6 +35,10 @@ public:
     void Turn_On();
     void Turn_Off();
 
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+#endif
+
 protected:
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
@@ -66,5 +70,16 @@ inline ToggleClass &ToggleClass::operator=(ToggleClass &that)
 
     return *this;
 }
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+inline void ToggleClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x0056C4C8, *ToggleClass::Action);
+#endif
+}
+#endif
 
 #endif // TOGGLE_H

@@ -34,7 +34,9 @@
 #include "rawfileclass.h"
 #include "rgb.h"
 #include "shape.h"
+#include "textbtn.h"
 #include "textprint.h"
+#include "toggle.h"
 #include "surfacemonitor.h"
 #include "wsa.h"
 #include "xordelta.h"
@@ -76,6 +78,8 @@ void Setup_Hooks()
     Lcw::Hook_Me();
     MouseShape::Hook_Me();
     Shape::Hook_Me();
+    TextButtonClass::Hook_Me();
+    ToggleClass::Hook_Me();
     WSAFile::Hook_Me();
     WWMouseClass::Hook_Me();
     XorDelta::Hook_Me();

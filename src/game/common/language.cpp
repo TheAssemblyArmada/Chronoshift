@@ -402,7 +402,7 @@ const char *Fetch_String(int str_id)
     }
 
     if (str_id < TXT_FIRST && Abs(str_id) < 25) {
-        return NameOverride[Abs(str_id)];
+        return NameOverride[-(str_id + 1)];
     }
 
     DEBUG_ASSERT(str_id < TXT_COUNT);

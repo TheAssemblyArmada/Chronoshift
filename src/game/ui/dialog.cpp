@@ -15,12 +15,14 @@
  */
 #include "dialog.h"
 #include "abs.h"
+#include "ccfileclass.h"
 #include "gadget.h"
+#include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "language.h"
+#include "mixfile.h"
 #include "textprint.h"
-#include "gamedebug.h"
 #include <stdio.h>
 
 /**
@@ -552,7 +554,8 @@ void Draw_Caption(char const *string, int x, int y, int w)
                 0,
                 TPF_EDITOR | TPF_NOSHADOW | TPF_CENTER | TPF_USE_GRAD_PAL);
         } else {
-            Fancy_Text_Print(string, middle, y + 16, GadgetClass::Get_Color_Scheme(), 0, TPF_6PT_GRAD | TPF_NOSHADOW | TPF_CENTER);
+            Fancy_Text_Print(
+                string, middle, y + 16, GadgetClass::Get_Color_Scheme(), 0, TPF_6PT_GRAD | TPF_NOSHADOW | TPF_CENTER);
 
             int width = String_Pixel_Width(string) / 2;
 
@@ -568,4 +571,145 @@ void Draw_Caption(char const *string, int x, int y, int w)
 void Draw_Caption(int str_id, int x, int y, int w)
 {
     Draw_Caption(Fetch_String(str_id), x, y, w);
+}
+
+void Dialog_Box(int x_pos, int y_pos, int width, int height)
+{
+    // TODO requires CC_Draw_Shape
+#if 0
+    int new_x_pos = Max(x_pos - 30, 0);
+    int new_y_pos = Max(y_pos - 8, 0);
+
+    int new_width = Min(width + 60, GraphicViewPortClass::ScreenWidth - new_x_pos);
+    int new_height = Min(height + 16, GraphicViewPortClass::ScreenHeight - new_y_pos);
+
+    WindowList[WINDOW_6].X = new_x_pos;
+    WindowList[WINDOW_6].Y = new_y_pos;
+    WindowList[WINDOW_6].W = new_width;
+    WindowList[WINDOW_6].H = new_height;
+
+    Set_Logic_Page(HidPage);
+
+    // Draw dialog background.
+    void *bkgndshape = MixFileClass<CCFileClass>::Retrieve("DD-BKGND.SHP");
+    CC_Draw_Shape(bkgndshape,
+        0,
+        width / 2 - Get_Shape_Width(bkgndshape),
+        height - Get_Shape_Height(bkgndshape),
+        WINDOW_6,
+        SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(bkgndshape, 1, width / 2, height - Get_Shape_Height(bkgndshape), WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(bkgndshape, 2, width / 2 - Get_Shape_Width(bkgndshape), height, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(bkgndshape, 3, width / 2, height - Get_Shape_Height(bkgndshape), WINDOW_6, SHAPE_VIEWPORT_REL);
+
+    // Draw dialog inner edges.
+    void *edgeshape = MixFileClass<CCFileClass>::Retrieve("DD-EDGE.SHP");
+    for (int i = 0; i < height; i += Get_Shape_Height(edgeshape)) {
+        CC_Draw_Shape(edgeshape, 0, 14, i, WINDOW_6, SHAPE_VIEWPORT_REL);
+        CC_Draw_Shape(edgeshape, 1, width - 30, i, WINDOW_6, SHAPE_VIEWPORT_REL);
+    }
+
+    // Draw dialog left border.
+    void *leftshape = MixFileClass<CCFileClass>::Retrieve("DD-LEFT.SHP");
+    CC_Draw_Shape(leftshape, 0, 0, height - Get_Shape_Height(leftshape), WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(leftshape, 0, 0, height, WINDOW_6, SHAPE_VIEWPORT_REL);
+
+    // Draw dialog right border.
+    void *rightshape = MixFileClass<CCFileClass>::Retrieve("DD-RIGHT.SHP");
+    CC_Draw_Shape(rightshape,
+        0,
+        width - Get_Shape_Width(rightshape),
+        height - Get_Shape_Height(rightshape),
+        WINDOW_6,
+        SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(rightshape, 0, width - Get_Shape_Width(rightshape), height, WINDOW_6, SHAPE_VIEWPORT_REL);
+
+    // Draw dialog bottom border.
+    void *botmshape = MixFileClass<CCFileClass>::Retrieve("DD-BOTM.SHP");
+    CC_Draw_Shape(botmshape, 0, width / 2 - 320, height - 16, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(botmshape, 0, width / 2, height - 16, WINDOW_6, SHAPE_VIEWPORT_REL);
+
+    // Draw dialog top border.
+    void *topshape = MixFileClass<CCFileClass>::Retrieve("DD-TOP.SHP");
+    CC_Draw_Shape(topshape, 0, width / 2 - 320, 0, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(topshape, 0, width / 2, 0, WINDOW_6, SHAPE_VIEWPORT_REL);
+
+    // Draw dialog corners.
+    void *cornershape = MixFileClass<CCFileClass>::Retrieve("DD-CRNR.SHP");
+    CC_Draw_Shape(cornershape, 0, 0, 0, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(cornershape, 1, width - Get_Shape_Width(cornershape), 0, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(cornershape, 2, 0, height - Get_Shape_Height(cornershape), WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(cornershape,
+        3,
+        width - Get_Shape_Width(cornershape),
+        height - Get_Shape_Height(cornershape),
+        WINDOW_6,
+        SHAPE_VIEWPORT_REL);
+
+    Mouse->Draw_Mouse(HidPage);
+
+    HidPage.Blit(SeenPage, x_pos, y_pos, x_pos, y_pos, width, height, false);
+
+    Mouse->Erase_Mouse(HidPage, false);
+
+    Restore_Logic_Page();
+#endif
+}
+
+void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, BOOL fill)
+{
+    DEBUG_ASSERT(style != BOX_STYLE_NONE);
+    DEBUG_ASSERT(style < BOX_STYLE_COUNT);
+
+    // this is a list of colour indices for rendering the bevel effect of a box i think.
+    // Looks like each style has 4 colours, one for the body of the button,
+    // two for a beveled look if its a button and 1 for the bevel corner transitions
+    static BoxStyleType base_styles[BOX_STYLE_COUNT] = { { COLOR_TBLACK, COLOR_TBLACK, COLOR_TBLACK, COLOR_TBLACK },
+        { COLOR_TBLACK, COLOR_TBLACK, COLOR_TBLACK, COLOR_TBLACK },
+        { COLOR_GREY, COLOR_WHITE, COLOR_BLACK, COLOR_GREY },
+        { COLOR_GREY, COLOR_BLACK, COLOR_LTGREY, COLOR_GREY },
+        { COLOR_BLACK, COLOR_TBLACK, COLOR_TBLACK, COLOR_BLACK },
+        { COLOR_BLACK, COLOR_TBLACK, COLOR_TBLACK, COLOR_BLACK } };
+
+    BoxStyleType styles[BOX_STYLE_COUNT];
+    memcpy(styles, base_styles, sizeof(base_styles));
+    styles[BOX_STYLE_0].FillColor = GadgetClass::Get_Color_Scheme()->WindowPalette[1];
+    styles[BOX_STYLE_0].ButtonLowColor = GadgetClass::Get_Color_Scheme()->WindowPalette[3];
+    styles[BOX_STYLE_0].ButtonHighColor = GadgetClass::Get_Color_Scheme()->WindowPalette[0];
+    styles[BOX_STYLE_0].TransitionColor = GadgetClass::Get_Color_Scheme()->WindowPalette[2];
+    styles[BOX_STYLE_1].FillColor = GadgetClass::Get_Color_Scheme()->WindowPalette[1];
+    styles[BOX_STYLE_1].ButtonLowColor = GadgetClass::Get_Color_Scheme()->WindowPalette[0];
+    styles[BOX_STYLE_1].ButtonHighColor = GadgetClass::Get_Color_Scheme()->WindowPalette[3];
+    styles[BOX_STYLE_1].TransitionColor = GadgetClass::Get_Color_Scheme()->WindowPalette[2];
+    styles[BOX_STYLE_4].ButtonLowColor = GadgetClass::Get_Color_Scheme()->WindowPalette[4];
+    styles[BOX_STYLE_4].ButtonHighColor = GadgetClass::Get_Color_Scheme()->WindowPalette[4];
+    styles[BOX_STYLE_5].ButtonLowColor = GadgetClass::Get_Color_Scheme()->WindowPalette[4];
+    styles[BOX_STYLE_5].ButtonHighColor = GadgetClass::Get_Color_Scheme()->WindowPalette[4];
+
+    BoxStyleType *box_style = &styles[style];
+
+    if (fill) {
+        g_logicPage->Fill_Rect(x_pos, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->FillColor);
+    }
+
+    switch (style) {
+        case BOX_STYLE_4:
+            g_logicPage->Draw_Rect(x_pos, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->ButtonHighColor);
+            break;
+
+        case BOX_STYLE_5:
+            g_logicPage->Draw_Rect(x_pos + 1, y_pos + 1, width + x_pos - 2, height + y_pos - 2, box_style->ButtonHighColor);
+            break;
+
+        default:
+            g_logicPage->Draw_Line(
+                x_pos, height + y_pos - 1, width + x_pos - 1, height + y_pos - 1, box_style->ButtonLowColor); // bottom line
+            g_logicPage->Draw_Line(
+                width + x_pos - 1, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->ButtonLowColor); // left line
+            g_logicPage->Draw_Line(x_pos, y_pos, width + x_pos - 1, y_pos, box_style->ButtonHighColor); // top line
+            g_logicPage->Draw_Line(x_pos, y_pos, x_pos, height + y_pos - 1, box_style->ButtonHighColor); // right line
+            g_logicPage->Put_Pixel(x_pos, height + y_pos - 1, box_style->TransitionColor); // transition bottom left
+            g_logicPage->Put_Pixel(width + x_pos - 1, y_pos, box_style->TransitionColor); // transition top right
+            break;
+    }
 }

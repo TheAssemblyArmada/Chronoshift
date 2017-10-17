@@ -21,6 +21,55 @@
 #include "always.h"
 #include "remap.h"
 
+enum ColorType
+{
+    COLOR_NONE = -1,
+    COLOR_TBLACK = 0,
+    COLOR_PURPLE = 1,
+    COLOR_CYAN = 2,
+    COLOR_GREEN = 3,
+    COLOR_LTGREEN = 4,
+    COLOR_YELLOW = 5,
+    COLOR_PINK = 6,
+    COLOR_BROWN = 7,
+    COLOR_RED = 8,
+    COLOR_LTCYAN = 9,
+    COLOR_LTBLUE = 10,
+    COLOR_BLUE = 11,
+    COLOR_BLACK = 12,
+    COLOR_GREY = 13,
+    COLOR_LTGREY = 14,
+    COLOR_WHITE = 15,
+};
+
+ //0 - 3 look like they draw button styles
+ //0 and 1 look like up and down styles for a remapped button
+ //2 and 3 look like styles for fixed color scheme buttons
+ //4 draws a box
+ //5 draws an inset box, probably to look like it has a border?
+enum BoxStyleEnum
+{
+    BOX_STYLE_NONE = -1,
+
+    BOX_STYLE_0 = 0,
+    BOX_STYLE_1 = 1,
+    BOX_STYLE_2 = 2,
+    BOX_STYLE_3 = 3,
+    BOX_STYLE_4 = 4,
+    BOX_STYLE_5 = 5,
+
+    BOX_STYLE_COUNT = 6
+};
+
+struct BoxStyleType
+{
+    uint8_t FillColor;
+    uint8_t ButtonLowColor;
+    uint8_t ButtonHighColor;
+    uint8_t TransitionColor;
+
+};
+
 enum TextPrintType
 {
     TPF_NONE = 0,
@@ -75,5 +124,7 @@ int Format_Window_String(char *string, int max_w, int &w, int &h);
 int Format_Window_String_New(char const *string, int max_w, int &w, int &h, char *new_string, int offset);
 void Draw_Caption(char const *string, int x, int y, int w);
 void Draw_Caption(int str_id, int x, int y, int w);
+void Dialog_Box(int x_pos, int y_pos, int width, int height);
+void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, BOOL unk);
 
 #endif // DIALOG_H
