@@ -304,7 +304,6 @@ unsigned GadgetClass::Get_ID() const
 
 void GadgetClass::Flag_To_Redraw()
 {
-    DEBUG_LOG("Gadget flagged to redraw.\n");
     ToRedraw = true;
 }
 
