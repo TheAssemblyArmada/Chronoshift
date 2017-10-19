@@ -611,16 +611,16 @@ void Draw_Caption(int str_id, int x, int y, int w)
 
 void Dialog_Box(int x_pos, int y_pos, int width, int height)
 {
-    int new_x_pos = Max(x_pos - 30, 0);
-    int new_y_pos = Max(y_pos - 8, 0);
+    //int new_x_pos = Max(x_pos - 30, 0);
+    //int new_y_pos = Max(y_pos - 8, 0);
 
-    int new_width = Min(width + 60, GraphicViewPortClass::ScreenWidth - new_x_pos);
-    int new_height = Min(height + 16, GraphicViewPortClass::ScreenHeight - new_y_pos);
+    //int new_width = Min(width + 60, GraphicViewPortClass::ScreenWidth - new_x_pos);
+    //int new_height = Min(height + 16, GraphicViewPortClass::ScreenHeight - new_y_pos);
 
-    WindowList[WINDOW_6].X = new_x_pos;
-    WindowList[WINDOW_6].Y = new_y_pos;
-    WindowList[WINDOW_6].W = new_width;
-    WindowList[WINDOW_6].H = new_height;
+    WindowList[WINDOW_6].X = x_pos;
+    WindowList[WINDOW_6].Y = y_pos;
+    WindowList[WINDOW_6].W = width;
+    WindowList[WINDOW_6].H = height;
 
     GraphicViewPortClass *saved = Set_Logic_Page(g_hidPage);
 
@@ -629,12 +629,12 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
     CC_Draw_Shape(bkgndshape,
         0,
         width / 2 - Get_Build_Frame_Width(bkgndshape),
-        height - Get_Build_Frame_Height(bkgndshape),
+        height / 2 - Get_Build_Frame_Height(bkgndshape),
         WINDOW_6,
         SHAPE_VIEWPORT_REL);
-    CC_Draw_Shape(bkgndshape, 1, width / 2, height - Get_Build_Frame_Height(bkgndshape), WINDOW_6, SHAPE_VIEWPORT_REL);
-    CC_Draw_Shape(bkgndshape, 2, width / 2 - Get_Build_Frame_Width(bkgndshape), height, WINDOW_6, SHAPE_VIEWPORT_REL);
-    CC_Draw_Shape(bkgndshape, 3, width / 2, height - Get_Build_Frame_Height(bkgndshape), WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(bkgndshape, 1, width / 2, height / 2 - Get_Build_Frame_Height(bkgndshape), WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(bkgndshape, 2, width / 2 - Get_Build_Frame_Width(bkgndshape), height / 2, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(bkgndshape, 3, width / 2, height / 2, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog inner edges.
     void *edgeshape = MixFileClass<CCFileClass>::Retrieve("DD-EDGE.SHP");
@@ -645,18 +645,18 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
 
     // Draw dialog left border.
     void *leftshape = MixFileClass<CCFileClass>::Retrieve("DD-LEFT.SHP");
-    CC_Draw_Shape(leftshape, 0, 0, height - Get_Build_Frame_Height(leftshape), WINDOW_6, SHAPE_VIEWPORT_REL);
-    CC_Draw_Shape(leftshape, 0, 0, height, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(leftshape, 0, 0, height / 2 - Get_Build_Frame_Height(leftshape), WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(leftshape, 0, 0, height / 2, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog right border.
     void *rightshape = MixFileClass<CCFileClass>::Retrieve("DD-RIGHT.SHP");
     CC_Draw_Shape(rightshape,
         0,
         width - Get_Build_Frame_Width(rightshape),
-        height - Get_Build_Frame_Height(rightshape),
+        height / 2 - Get_Build_Frame_Height(rightshape),
         WINDOW_6,
         SHAPE_VIEWPORT_REL);
-    CC_Draw_Shape(rightshape, 0, width - Get_Build_Frame_Width(rightshape), height, WINDOW_6, SHAPE_VIEWPORT_REL);
+    CC_Draw_Shape(rightshape, 0, width - Get_Build_Frame_Width(rightshape), height / 2, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog bottom border.
     void *botmshape = MixFileClass<CCFileClass>::Retrieve("DD-BOTM.SHP");
