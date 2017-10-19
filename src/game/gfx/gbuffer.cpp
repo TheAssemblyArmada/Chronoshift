@@ -27,6 +27,7 @@ int &GraphicViewPortClass::ScreenHeight = Make_Global<int>(0x006016B4);
 GraphicViewPortClass *&g_logicPage = Make_Global<GraphicViewPortClass *>(0x006AC274);
 LPDIRECTDRAWSURFACE &g_paletteSurface = Make_Global<LPDIRECTDRAWSURFACE>(0x006B18A4);
 GraphicViewPortClass &g_seenBuff = Make_Global<GraphicViewPortClass>(0x006807A4);
+GraphicViewPortClass &g_hidPage = Make_Global<GraphicViewPortClass>(0x006807CC);
 #else
 BOOL GraphicViewPortClass::AllowHardwareBlitFills;
 BOOL GraphicViewPortClass::AllowStretchBlits;
@@ -35,6 +36,7 @@ int GraphicViewPortClass::ScreenHeight = 400;
 GraphicViewPortClass *g_logicPage = nullptr;
 LPDIRECTDRAWSURFACE g_paletteSurface = nullptr;
 GraphicViewPortClass g_seenBuff;
+GraphicViewPortClass g_hidPage;
 #endif
 
 void Wait_Blit()

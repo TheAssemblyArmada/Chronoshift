@@ -185,10 +185,12 @@ inline void GraphicViewPortClass::Hook_Me()
 extern GraphicViewPortClass *&g_logicPage;
 extern LPDIRECTDRAWSURFACE &g_paletteSurface;
 extern GraphicViewPortClass &g_seenBuff;
+extern GraphicViewPortClass &g_hidPage;
 #else
 extern GraphicViewPortClass *g_logicPage;
 extern LPDIRECTDRAWSURFACE g_paletteSurface;
 extern GraphicViewPortClass g_seenBuff;
+extern GraphicViewPortClass g_hidPage;
 #endif
 
 #endif // GBUFFER_H
