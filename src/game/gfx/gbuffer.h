@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "buffer.h"
+#include "tpoint.h"
 
 #ifdef PLATFORM_WINDOWS
 #include "ddraw.h"
@@ -152,7 +153,7 @@ public:
     void Attach_DD_Surface(GraphicBufferClass *buffer);
 
     // needs defualt angle
-    // void Scale_Rotate(BitmapClass &input_bitmap, TPoint2D<int> &input_point, int scale, char angle);
+    void Scale_Rotate(BitmapClass &bitmap, TPoint2D<int> &pivot, int scale, uint8_t angle);
 
     void Init(int width, int height, void *buffer, int size, GBCEnum mode = GBC_NONE);
     void Un_Init();

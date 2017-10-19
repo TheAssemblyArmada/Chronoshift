@@ -335,6 +335,197 @@ void GraphicBufferClass::Attach_DD_Surface(GraphicBufferClass *buffer)
     m_videoSurface->AddAttachedSurface(buffer->m_videoSurface);
 }
 
+void GraphicBufferClass::Scale_Rotate(BitmapClass & bitmap, TPoint2D<int>& pivot, int scale, uint8_t angle)
+{
+    static const int _SineTab[256] = {
+        0, 6, 12, 18, 25, 31, 37, 43, 49, 56, 62, 68, 74, 80, 86, 92,
+        97, 103, 109, 115, 120, 126, 131, 136, 142, 147, 152, 157, 162, 167, 171, 176,
+        180, 185, 189, 193, 197, 201, 205, 209, 212, 216, 219, 222, 225, 228, 231, 233,
+        236, 238, 240, 243, 244, 246, 248, 249, 251, 252, 253, 254, 254, 255, 255, 255,
+        255, 255, 255, 255, 254, 254, 253, 252, 251, 249, 248, 246, 245, 243, 241, 238,
+        236, 234, 231, 228, 225, 222, 219, 216, 213, 209, 205, 201, 198, 194, 189, 185,
+        181, 176, 172, 167, 162, 157, 152, 147, 142, 137, 131, 126, 120, 115, 109, 104,
+        98, 92, 86, 80, 74, 68, 62, 56, 50, 44, 37, 31, 25, 19, 12, 6,
+        0, -5, -12, -18, -24, -30, -37, -43, -49, -55, -61, -67, -73, -79, -85, -91,
+        -97, -103, -109, -114, -120, -125, -131, -136, -141, -147, -152, -157, -162, -166, -171, -176,
+        -180, -185, -189, -193, -197, -201, -205, -208, -212, -215, -219, -222, -225, -228, -231, -233,
+        -236, -238, -240, -242, -244, -246, -248, -249, -250, -252, -253, -254, -254, -255, -255, -255,
+        -255, -255, -255, -255, -254, -254, -253, -252, -251, -249, -248, -246, -245, -243, -241, -239,
+        -236, -234, -231, -228, -226, -223, -219, -216, -213, -209, -206, -202, -198, -194, -190, -185,
+        -181, -177, -172, -167, -162, -158, -153, -148, -142, -137, -132, -126, -121, -115, -110, -104,
+        -98, -92, -86, -81, -75, -69, -62, -56, -50, -44, -38, -32, -25, -19, -13, -7
+    };
+
+    static const int _CosineTab[256] = {
+        256, 255, 255, 255, 254, 254, 253, 252, 251, 249, 248, 246, 244, 243, 241, 238,
+        236, 234, 231, 228, 225, 222, 219, 216, 212, 209, 205, 201, 197, 193, 189, 185,
+        181, 176, 171, 167, 162, 157, 152, 147, 142, 137, 131, 126, 120, 115, 109, 103,
+        98, 92, 86, 80, 74, 68, 62, 56, 50, 43, 37, 31, 25, 19, 12, 6,
+        0, -6, -12, -18, -24, -31, -37, -43, -49, -55, -61, -68, -74, -80, -86, -91,
+        -97, -103, -109, -114, -120, -125, -131, -136, -141, -147, -152, -157, -162, -166, -171, -176,
+        -180, -185, -189, -193, -197, -201, -205, -209, -212, -216, -219, -222, -225, -228, -231, -233,
+        -236, -238, -240, -242, -244, -246, -248, -249, -251, -252, -253, -254, -254, -255, -255, -255,
+        -255, -255, -255, -255, -254, -254, -253, -252, -251, -249, -248, -246, -245, -243, -241, -239,
+        -236, -234, -231, -228, -225, -222, -219, -216, -213, -209, -205, -202, -198, -194, -190, -185,
+        -181, -176, -172, -167, -162, -157, -152, -147, -142, -137, -132, -126, -121, -115, -109, -104,
+        -98, -92, -86, -80, -74, -68, -62, -56, -50, -44, -38, -31, -25, -19, -13, -6,
+        0, 5, 11, 18, 24, 30, 36, 43, 49, 55, 61, 67, 73, 79, 85, 91,
+        97, 103, 108, 114, 120, 125, 131, 136, 141, 146, 151, 156, 161, 166, 171, 176,
+        180, 184, 189, 193, 197, 201, 205, 208, 212, 215, 219, 222, 225, 228, 231, 233,
+        236, 238, 240, 242, 244, 246, 248, 249, 250, 252, 253, 253, 254, 255, 255, 255
+    };
+
+    // Calculate transformation values using fixed point maths.
+    int cos_val = _CosineTab[angle];
+    int sin_val = _SineTab[angle];
+    int bmp_w_scale = (bitmap.Get_Width() * scale) / 2;
+    int bmp_h_scale = (bitmap.Get_Height() * scale) / 2;
+    int x_dst_start = ((((cos_val * bmp_h_scale) >> 8) - ((sin_val * bmp_w_scale) >> 8)) >> 8) + pivot.x;
+    int y_dst_start = (((-(sin_val * bmp_h_scale) >> 8) - ((cos_val * bmp_w_scale) >> 8)) >> 8) + pivot.y;
+    int x_tran_two = ((((cos_val * bmp_h_scale) >> 8) + ((sin_val * bmp_w_scale) >> 8)) >> 8) + pivot.x;
+    int y_tran_two = (((-(sin_val * bmp_h_scale) >> 8) + ((cos_val * bmp_w_scale) >> 8)) >> 8) + pivot.y;
+    int x_tran_three = (((-(cos_val * bmp_h_scale) >> 8) - ((sin_val * bmp_w_scale) >> 8)) >> 8) + pivot.x;
+    int y_tran_three = ((((sin_val * bmp_h_scale) >> 8) - ((cos_val * bmp_w_scale) >> 8)) >> 8) + pivot.y;
+    int x_diff_one = x_tran_two - x_dst_start;
+    int y_diff_one = y_tran_two - y_dst_start;
+    int x_diff_two = x_tran_three - x_dst_start;
+    int y_diff_two = y_tran_three - y_dst_start;
+    int adj_w_one = m_width;
+    int adj_w_two = m_width;
+    int x_inc_one = 1;
+    int x_inc_two = 1;
+    int inc_counter_one = 0;
+    int inc_counter_two = 0;
+    int pos_one = 0;
+    int pos_two = 0;
+    int src_pos = 0;
+    int dst_pos = 0;
+    uint8_t *src_ptr = static_cast<uint8_t*>(bitmap.Get_Bitmap());
+    uint8_t *dst_ptr = m_graphicBuffer.Get_Buffer();
+
+    // Perform adjustments different rotation directions?
+    if (y_diff_one < 0) {
+        y_diff_one = -y_diff_one;
+        adj_w_one = -m_width;
+    }
+
+    if (x_diff_one < 0) {
+        x_diff_one = -x_diff_one;
+        x_inc_one = -1;
+    }
+
+    if (y_diff_two < 0) {
+        y_diff_two = -y_diff_two;
+        adj_w_two = -m_width;
+    }
+
+    if (x_diff_two < 0) {
+        x_diff_two = -x_diff_two;
+        x_inc_two = -1;
+    }
+
+    dst_pos = y_dst_start * m_width + x_dst_start;
+    
+    // Decide which way we are rotating?
+    if (x_diff_one > y_diff_one) {
+        for (int k = 0; ; ++k) {
+            if (k >= y_diff_two) {
+                break;
+            }
+
+            int saved_dst_pos = dst_pos;
+
+            for (int l = 0; l < x_diff_one; ++l) {
+                uint8_t tmp = src_ptr[src_pos];
+
+                if (tmp != 0) {
+                    dst_ptr[dst_pos] = tmp;
+                }
+
+                for (inc_counter_one += bitmap.Get_Width(); inc_counter_one > x_diff_one; inc_counter_one -= x_diff_one) {
+                    ++src_pos;
+                }
+
+                dst_pos += x_inc_one;
+                pos_one += y_diff_one;
+
+                if (pos_one > x_diff_one) {
+                    if (tmp) {
+                        dst_ptr[dst_pos] = tmp;
+                    }
+
+                    pos_one -= x_diff_one;
+                    dst_pos += adj_w_one;
+                }
+            }
+
+            inc_counter_one = 0;
+            src_pos -= bitmap.Get_Width() - 1;
+
+            for (inc_counter_two += bitmap.Get_Height(); inc_counter_two > y_diff_two; inc_counter_two -= y_diff_two) {
+                src_pos += bitmap.Get_Width();
+            }
+
+            pos_one = 0;
+            dst_pos = adj_w_two + saved_dst_pos;
+            pos_two += x_diff_two;
+
+            if (pos_two > y_diff_two) {
+                pos_two -= y_diff_two;
+                dst_pos += x_inc_two;
+            }
+        }
+    } else {
+        for (int i = 0; ; ++i) {
+            if (i >= x_diff_two) {
+                break;
+            }
+
+            int saved_dst_pos = dst_pos;
+
+            for (int j = 0; j < y_diff_one; ++j) {
+                uint8_t tmp = src_ptr[src_pos];
+
+                if (tmp) {
+                    dst_ptr[dst_pos] = tmp;
+                }
+
+                for (inc_counter_one += bitmap.Get_Width(); inc_counter_one > y_diff_one; inc_counter_one -= y_diff_one) {
+                    ++src_pos;
+                }
+
+                dst_pos += adj_w_one;
+                pos_one += x_diff_one;
+
+                if (pos_one > y_diff_one) {
+                    if (tmp) {
+                        dst_ptr[dst_pos] = tmp;
+                    }
+
+                    pos_one -= y_diff_one;
+                    dst_pos += x_inc_one;
+                }
+            }
+
+            inc_counter_one = 0;
+            src_pos -= bitmap.Get_Width() - 1;
+
+            for (inc_counter_two += bitmap.Get_Height(); inc_counter_two > x_diff_two; inc_counter_two -= x_diff_two) {
+                src_pos += bitmap.Get_Width();
+            }
+
+            dst_pos = x_inc_two + saved_dst_pos;
+            pos_two += y_diff_two;
+            pos_one = 0;
+
+            if (pos_two > x_diff_two) {
+                pos_two -= x_diff_two;
+                dst_pos += adj_w_two;
+            }
+        }
+    }
+}
+
 void GraphicBufferClass::Init(int width, int height, void *buffer, int size, GBCEnum mode)
 {
     m_graphicBuffer.Set_Size(size);
