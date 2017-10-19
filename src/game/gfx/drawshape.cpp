@@ -69,15 +69,14 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
                 // Scale of 256 is 100%
                 if (angle != DIR_NORTH || scale != 256) {
                     g_useOldShapeDraw = true;
-
-                    int tmp_height = 2 * shape_height;
-                    int tmp_width = 2 * shape_width;
                     BitmapClass data_bitmap(shape_width, shape_height, Get_Shape_Header_Data(shape_frame));
-                    shape_height = tmp_height;
+                    shape_width *= 2;
+                    shape_height *= 2;
                     memset(_xbuffer, 0, SHAPE_BUFFER_SIZE);
-                    GraphicBufferClass xform_buff(tmp_width, shape_height, _xbuffer);
+                    GraphicBufferClass xform_buff(shape_width, shape_height, _xbuffer);
                     TPoint2D<int> point(shape_width / 2, shape_height / 2);
                     xform_buff.Scale_Rotate(data_bitmap, point, scale, -(char)(angle - 64));
+                    shape_frame = _xbuffer;
                 }
 
                 if ((flags & (SHAPE_FADING | SHAPE_PREDATOR)) == (SHAPE_FADING | SHAPE_PREDATOR)) {
