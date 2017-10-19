@@ -1461,7 +1461,7 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
     }
 
     // Sets for BF_Trans functions
-    if (flags & 0x40) {
+    if (flags & SHAPE_TRANSPARENT) {
         blit_style |= 1;
     }
 

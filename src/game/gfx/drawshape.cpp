@@ -19,10 +19,6 @@
 #include "gbuffer.h"
 #include "globals.h"
 
-// TODO these should both be from DisplayClass
-static char FadingShade[256];
-static char SpecialGhost[256 * 2];
-
 /**
  * @brief Main function used to draw sprites to the screen, wraps lower level handling.
  */
@@ -38,14 +34,14 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
 
     if (shape_ptr != nullptr) {
         if (flags & SHAPE_FADING && fading_table == nullptr) {
-            fading_table = FadingShade;
+            fading_table = reinterpret_cast<void*>(0x006561E0); // TODO these should both be from DisplayClass
         }
 
         if (flags & SHAPE_GHOST && ghost_table == nullptr) {
-            ghost_table = SpecialGhost;
+            ghost_table = reinterpret_cast<void*>(0x006580E4); // TODO these should both be from DisplayClass
         }
 
-        if (!_xbuffer) {
+        if (_xbuffer == nullptr) {
             _xbuffer = new uint8_t[SHAPE_BUFFER_SIZE];
         }
 
@@ -85,7 +81,7 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
                 }
 
                 if ((flags & (SHAPE_FADING | SHAPE_PREDATOR)) == (SHAPE_FADING | SHAPE_PREDATOR)) {
-                    ghost_table = SpecialGhost;
+                    ghost_table = reinterpret_cast<void*>(0x006580E4); // TODO these should both be from DisplayClass
                     flags &= ~(SHAPE_FADING | SHAPE_PREDATOR);
                     flags |= SHAPE_GHOST;
                 }
@@ -104,8 +100,8 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
                             shape_frame,
                             vp,
                             flags | SHAPE_TRANSPARENT,
-                            fading_table,
                             ghost_table,
+                            fading_table,
                             1,
                             curr_frame);
                     } else if ((flags & SHAPE_FADING) != 0) {
