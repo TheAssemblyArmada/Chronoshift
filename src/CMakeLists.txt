@@ -57,6 +57,7 @@ set(GAMEENGINE_SRC
     game/crypto/sha.cpp
     game/engine/utracker.cpp
     game/gfx/blitters.cpp
+    game/gfx/drawshape.cpp
     game/gfx/fading.cpp
     game/gfx/gbuffer.cpp
     game/gfx/hsv.cpp

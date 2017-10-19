@@ -25,6 +25,20 @@
 #include "textprint.h"
 #include <stdio.h>
 
+#ifndef RAPP_STANDALONE
+WindowType *WindowList = reinterpret_cast<WindowType*>(0x006016CC);
+#else
+WindowType WindowList[WINDOW_COUNT] = {
+    { 0, 0, 640, 400, 15, 12, 0, 0 },
+    { 8, 75, 304, 100, 15, 12, 0, 0 },
+    { 0, 0, 640, 400, 15, 14, 0, 0 },
+    { 96, 157, 128, 42, 14, 13, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 40, 30, 240, 140, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 15, 12, 0, 0 }
+};
+#endif
+
 /**
  * @brief Prints a string to the current logic page using font and settings based on TextPrintType passed in.
  */

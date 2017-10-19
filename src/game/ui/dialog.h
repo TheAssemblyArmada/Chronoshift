@@ -109,6 +109,50 @@ enum TextPrintType
 
 DEFINE_ENUMERATION_BITWISE_OPERATORS(TextPrintType);
 
+struct WindowType
+{
+    int X;		//window x
+    int Y;		//window y
+    int W;		//window width
+    int H;		//window height
+    int C;	//window foreground color
+    int B;	//window background color
+    int Cx;		//window cursor x
+    int Cy;		//window cursor y
+};
+
+enum WindowIndexType
+{
+    WINDOWX = 0,
+    WINDOWY = 1,
+    WINDOWWIDTH = 2,
+    WINDOWHEIGHT = 3,
+    WINDOWFCOL = 4,
+    WINDOWBCOL = 5,
+    WINDOWCURSORX = 6,
+    WINDOWCURSORY = 7,
+};
+
+enum WindowNumberType
+{
+//    WINDOW_NONE = -1,
+    WINDOW_0 = 0,
+    WINDOW_1 = 1,
+    WINDOW_TACTICAL = 2,
+    WINDOW_3 = 3,
+    WINDOW_SIDEBAR = 4,
+    WINDOW_5 = 5,
+    WINDOW_6 = 6,
+    WINDOW_COUNT = 7
+};
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+extern WindowType *WindowList;
+#else
+extern WindowType WindowList[WINDOW_COUNT];
+#endif
+
 void Simple_Text_Print(
     char const *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor, TextPrintType style);
 void Fancy_Text_Print(
