@@ -99,6 +99,7 @@ set(GAMEENGINE_SRC
     game/net/field.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
+    game/ui/checkbox.cpp
     game/ui/controlc.cpp
     game/ui/dialog.cpp
     game/ui/gadget.cpp
