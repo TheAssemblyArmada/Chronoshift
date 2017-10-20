@@ -45,7 +45,7 @@ WindowType WindowList[WINDOW_COUNT] = {
  * @brief Prints a string to the current logic page using font and settings based on TextPrintType passed in.
  */
 void Simple_Text_Print(
-    char const *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor, TextPrintType style)
+    const char *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor, TextPrintType style)
 {
     // Are these static for some reason?
     static int yspace;
@@ -253,7 +253,7 @@ void Simple_Text_Print(
 /**
  * @brief Static function available only in this translation unit (cpp file) as low level handler for variadic functions.
  */
-static void Fancy_Text_Print_VL(char const *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor,
+static void Fancy_Text_Print_VL(const char *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor,
     TextPrintType style, va_list args)
 {
     char str_buff[512];
@@ -286,7 +286,7 @@ void Fancy_Text_Print(
  * @brief Prints a string to the current logic page using font and settings based on TextPrintType passed in.
  */
 void Fancy_Text_Print(
-    char const *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor, TextPrintType style, ...)
+    const char *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor, TextPrintType style, ...)
 {
     if (string) {
         va_list args;
@@ -298,7 +298,7 @@ void Fancy_Text_Print(
     }
 }
 
-void Conquer_Clip_Text_Print(char const *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor,
+void Conquer_Clip_Text_Print(const char *string, unsigned x, unsigned y, RemapControlType *remapper, uint8_t bgcolor,
     TextPrintType style, int x_max, int *tabs)
 {
     char fmt_buff[512];
@@ -414,7 +414,7 @@ void Plain_Text_Print(int str_id, unsigned x, unsigned y, uint8_t fgcolor, uint8
     va_end(args);
 }
 
-void Plain_Text_Print(char const *string, unsigned x, unsigned y, uint8_t fgcolor, uint8_t bgcolor, TextPrintType style, ...)
+void Plain_Text_Print(const char *string, unsigned x, unsigned y, uint8_t fgcolor, uint8_t bgcolor, TextPrintType style, ...)
 {
     RemapControlType remapper;
 
@@ -501,7 +501,7 @@ int Format_Window_String(char *string, int max_w, int &w, int &h)
     return 0;
 }
 
-int Format_Window_String_New(char const *string, int max_w, int &w, int &h, char *new_string, int offset)
+int Format_Window_String_New(const char *string, int max_w, int &w, int &h, char *new_string, int offset)
 {
     w = 0;
     h = 0;
@@ -532,7 +532,7 @@ int Format_Window_String_New(char const *string, int max_w, int &w, int &h, char
             // If scanning through string exceeded max width in pixels, back up
             // to a suitable line break point.
             if (width >= max_w) {
-                char const *string_pos;
+                const char *string_pos;
                 char past_char;
 
                 for (string_pos = string; width > 0; width -= Char_Pixel_Width(past_char)) {
@@ -577,9 +577,9 @@ int Format_Window_String_New(char const *string, int max_w, int &w, int &h, char
     return 0;
 }
 
-void Draw_Caption(char const *string, int x, int y, int w)
+void Draw_Caption(const char *string, int x, int y, int w)
 {
-    if (string && *string) {
+    if (string != nullptr && *string != '\0') {
         int middle = w / 2 + x;
 
         if (g_inMapEditor) {
@@ -744,5 +744,21 @@ void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, B
             g_logicPage->Put_Pixel(x_pos, height + y_pos - 1, box_style->TransitionColor); // transition bottom left
             g_logicPage->Put_Pixel(width + x_pos - 1, y_pos, box_style->TransitionColor); // transition top right
             break;
+    }
+}
+
+void Window_Box(WindowNumberType type, BoxStyleEnum style)
+{
+    if (g_logicPage == &g_seenBuff) {
+        g_mouse->Conditional_Hide_Mouse(WindowList[style].X,
+            WindowList[style].Y,
+            WindowList[style].X + WindowList[style].W,
+            WindowList[style].Y + WindowList[style].H);
+    }
+
+    Draw_Box(WindowList[style].X, WindowList[style].Y, WindowList[style].W, WindowList[style].H, style, true);
+
+    if (g_logicPage == &g_seenBuff) {
+        g_mouse->Conditional_Show_Mouse();
     }
 }

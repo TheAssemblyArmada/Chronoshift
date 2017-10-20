@@ -94,10 +94,10 @@ uint16_t __cdecl String_Pixel_Width(const char *string)
     uint16_t width;
     uint16_t linewidth = 0;
 
-    if (string) {
+    if (string != nullptr) {
         width = 0;
 
-        while (*string) {
+        while (*string != '\0') {
             if (*string == '\r') {
                 ++string;
                 linewidth = Max(linewidth, width);
