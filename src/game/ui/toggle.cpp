@@ -20,7 +20,7 @@ ToggleClass::ToggleClass(unsigned id, int x, int y, int w, int h) :
     ControlClass(id, x, y, w, h, MOUSE_LEFT_PRESS | MOUSE_LEFT_RLSE, true),
     Toggle_Boolean1(false),
     ToggleState(false),
-    Toggle_Boolean3(false)
+    ToggleDisabled(false)
 {
 }
 
@@ -28,7 +28,7 @@ ToggleClass::ToggleClass(ToggleClass &that) :
     ControlClass(that),
     Toggle_Boolean1(that.Toggle_Boolean1),
     ToggleState(that.ToggleState),
-    Toggle_Boolean3(that.Toggle_Boolean3)
+    ToggleDisabled(that.ToggleDisabled)
 {
 }
 
@@ -61,7 +61,7 @@ BOOL ToggleClass::Action(unsigned flags, KeyNumType &key)
 
     if (flags & MOUSE_LEFT_RLSE) {
         if (Toggle_Boolean1) {
-            if (Toggle_Boolean3) {
+            if (ToggleDisabled) {
                 if (((unsigned)g_mouse->Get_Mouse_X() - XPos) < (unsigned)Width
                     && ((unsigned)g_mouse->Get_Mouse_Y() - YPos) < (unsigned)Height) {
                     ToggleState = (ToggleState == false);

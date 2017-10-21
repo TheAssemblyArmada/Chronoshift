@@ -48,14 +48,14 @@ protected:
         {
             bool Toggle_Boolean1 : 1; // & 1
             bool ToggleState : 1; // & 2
-            bool Toggle_Boolean3 : 1; // & 4
+            bool ToggleDisabled : 1; // & 4
         };
         int m_toggleFlags;
     };
 #else
     bool Toggle_Boolean1;
     bool ToggleState;
-    bool Toggle_Boolean3;
+    bool ToggleDisabled;
 #endif
 };
 
@@ -65,7 +65,7 @@ inline ToggleClass &ToggleClass::operator=(ToggleClass &that)
         ControlClass::operator=(that);
         Toggle_Boolean1 = that.Toggle_Boolean1;
         ToggleState = that.ToggleState;
-        Toggle_Boolean3 = that.Toggle_Boolean3;
+        ToggleDisabled = that.ToggleDisabled;
     }
 
     return *this;
