@@ -57,7 +57,8 @@ public:
     fixed(fixed const &that) : m_number(that.m_number) {}
     ~fixed() {}
 
-    operator int() const;
+    //operator int() const;
+    int To_Int() const;
     fixed &operator=(int const &num);
     fixed &operator=(fixed const &that);
     fixed operator+(fixed const &that) const;
@@ -94,7 +95,8 @@ private:
     Data m_number;
 };
 
-inline fixed::operator int() const
+//inline fixed::operator int() const
+inline int fixed::To_Int() const
 {
     Data tmp;
     tmp.word = m_number.word + 128;
