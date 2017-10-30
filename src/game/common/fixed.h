@@ -154,12 +154,12 @@ inline fixed fixed::operator*(fixed const &that) const
 
 inline int operator*(int const &a, fixed const &b)
 {
-    return (a * b.m_number.word + 128) / 256;
+    return (unsigned)(a * b.m_number.word + 128) / 256;
 }
 
 inline int operator*(fixed const &a, int const &b)
 {
-    return (b * a.m_number.word + 128) / 256;
+    return (unsigned)(b * a.m_number.word + 128) / 256;
 }
 
 inline bool operator>(fixed const &a, int const &b)

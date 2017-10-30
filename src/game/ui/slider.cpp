@@ -94,31 +94,31 @@ BOOL SliderClass::Action(unsigned flags, KeyNumType &key)
             gadget_pos = YPos;
         }
 
-        ++gadget_pos;
+        gadget_pos += ThumbnailSize + 1;
 
-        if (ThumbnailSize + gadget_pos <= mouse_pos) {
-            if (ThumbnailPixels + ThumbnailSize + gadget_pos >= mouse_pos) {
-                GadgetClass::Action(flags, key);
+        if (mouse_pos >= gadget_pos) {
+            if (mouse_pos <= ThumbnailPixels + gadget_pos) {
+                GaugeClass::Action(flags, key);
                 key = KN_NONE;
 
                 return true;
             } else {
                 Bump(false); // bump down
-                GadgetClass::Action(0, key);
+                GaugeClass::Action(0, key);
                 key = KN_NONE;
 
                 return true;
             }
         } else {
             Bump(true); // bump up
-            GadgetClass::Action(0, key);
+            GaugeClass::Action(0, key);
             key = KN_NONE;
 
             return true;
         }
     }
 
-    return GadgetClass::Action(flags, key);
+    return GaugeClass::Action(flags, key);
 }
 
 BOOL SliderClass::Set_Maximum(int max)
@@ -147,9 +147,9 @@ void SliderClass::Draw_Thumb()
 {
     if (IsHorizontal) {
         Draw_Box(ThumbnailSize + XPos, YPos, ThumbnailPixels, Height, BOX_STYLE_1, true);
+    } else {
+        Draw_Box(XPos, ThumbnailSize + YPos, Width, ThumbnailPixels, BOX_STYLE_1, true);
     }
-
-    Draw_Box(XPos, ThumbnailSize + YPos, ThumbnailPixels, Height, BOX_STYLE_1, true);
 }
 
 void SliderClass::Set_Thumb_Size(int size)
@@ -180,5 +180,5 @@ void SliderClass::Recalc_Thumb()
 {
     int length = IsHorizontal ? Width : Height;
     ThumbnailPixels = Max(4, length * fixed(BumpSize, Maximum));
-    ThumbnailSize = Max(length - ThumbnailPixels, length * fixed(Value, Maximum));
+    ThumbnailSize = Min(length - ThumbnailPixels, length * fixed(Value, Maximum));
 }

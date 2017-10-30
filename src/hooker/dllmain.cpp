@@ -35,6 +35,7 @@
 #include "rawfileclass.h"
 #include "rgb.h"
 #include "shape.h"
+#include "slider.h"
 #include "textbtn.h"
 #include "textprint.h"
 #include "toggle.h"
@@ -85,6 +86,7 @@ void Setup_Hooks()
     WWMouseClass::Hook_Me();
     XorDelta::Hook_Me();
     SurfaceMonitorClass::Hook_Me();
+    SliderClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
