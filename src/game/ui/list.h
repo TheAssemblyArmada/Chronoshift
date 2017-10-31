@@ -54,8 +54,8 @@ public:
     virtual void Remove_Item(int string_index);
     virtual void Remove_Item(const char *string);
     virtual BOOL Remove_Scroll_Bar();
-    virtual void Set_Selected_Index(const char *string);
     virtual void Set_Selected_Index(int string_index);
+    virtual void Set_Selected_Index(const char *string);
     virtual void Set_Tabs(int *tab_list);
     virtual BOOL Set_View_Index(int index);
     virtual void Step(BOOL step_up);

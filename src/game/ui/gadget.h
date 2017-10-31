@@ -52,7 +52,7 @@ public:
 
     virtual GadgetClass *Get_Next() const override;
     virtual GadgetClass *Get_Prev() const override;
-    virtual GadgetClass *Remove();
+    virtual GadgetClass *Remove() override;
     virtual KeyNumType Input();
     virtual void Draw_All(BOOL redraw);
     virtual void Delete_List();

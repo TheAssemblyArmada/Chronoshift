@@ -174,7 +174,7 @@ BOOL ListClass::Draw_Me(BOOL redraw)
             g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos, Height + YPos);
         }
 
-        Draw_Box(YPos, XPos, Width, Height, BOX_STYLE_4, 1);
+        Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_4, 1);
 
         if (Entries.Count()) {
             for (int index = 0; index < ThumbSize; ++index) {
@@ -332,8 +332,8 @@ const char *ListClass::Get_Item(int string_index) const
 
 int ListClass::Step_Selected_Index(int index)
 {
-    int curr_idx = Current_Index();
-    Set_Selected_Index(index + Current_Index());
+    int curr_idx = CurrentIndex;
+    Set_Selected_Index(index + CurrentIndex);
 
     return curr_idx;
 }
@@ -422,16 +422,8 @@ void ListClass::Set_Selected_Index(const char *string)
 
 void ListClass::Set_Selected_Index(int string_index)
 {
-    if (Count() <= string_index) {
-        if (string_index == 0) {
-            CurrentIndex = Count() - 1;
-        } else {
-            CurrentIndex = 0;
-        }
-
-        Set_View_Index(CurrentIndex);
-        Flag_To_Redraw();
-
+    if ((unsigned)string_index >= (unsigned)Entries.Count()) {
+        CurrentIndex = 0;
     } else {
         CurrentIndex = string_index;
         Flag_To_Redraw();
@@ -453,20 +445,20 @@ void ListClass::Set_Tabs(int *tab_list)
 
 BOOL ListClass::Set_View_Index(int index)
 {
-    int new_index = Clamp(index, 0, Max(Count() - ThumbSize, 0));
+    int new_index = Clamp(index, 0, Max(Entries.Count() - ThumbSize, 0));
 
     if (new_index == ViewIndex) {
         return false;
-    } else {
-        ViewIndex = new_index;
-        Flag_To_Redraw();
-
-        if (HasScrollbar) {
-            Scrollbar.Set_Value(ViewIndex);
-        }
-
-        return true;
     }
+
+    ViewIndex = new_index;
+    Flag_To_Redraw();
+
+    if (HasScrollbar) {
+        Scrollbar.Set_Value(ViewIndex);
+    }
+
+    return true;
 }
 
 void ListClass::Step(BOOL step_up)

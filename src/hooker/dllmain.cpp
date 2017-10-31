@@ -28,6 +28,7 @@
 #include "interpolate.h"
 #include "keyboard.h"
 #include "lcw.h"
+#include "list.h"
 #include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
@@ -87,6 +88,7 @@ void Setup_Hooks()
     XorDelta::Hook_Me();
     SurfaceMonitorClass::Hook_Me();
     SliderClass::Hook_Me();
+    ListClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
