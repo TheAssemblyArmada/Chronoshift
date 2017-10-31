@@ -77,6 +77,14 @@ public:
     GadgetClass &operator=(GadgetClass &that);
 
     void Set_Size(int w, int h);
+    void Set_XPos(int x) { XPos = x; }
+    void Set_YPos(int y) { YPos = y; }
+    void Set_Width(int w) { Width = w; }
+    void Set_Height(int h) { Height = h; }
+    int Get_XPos() { return XPos; }
+    int Get_YPos() { return YPos; }
+    int Get_Width() { return Width; }
+    int Get_Height() { return Height; }
 
     static RemapControlType *Get_Color_Scheme() { return ColorScheme; }
     static void Set_Color_Scheme(RemapControlType *remap) { ColorScheme = remap; }
