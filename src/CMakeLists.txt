@@ -33,6 +33,7 @@ set(GAMEENGINE_SRC
     game/gamedebug.cpp
     game/startup.cpp
     game/common/base64.cpp
+    game/common/bitarray.cpp
     game/common/buffer.cpp
     game/common/cpudetect.cpp
     game/common/crc.cpp
@@ -49,6 +50,7 @@ set(GAMEENGINE_SRC
     game/common/remap.cpp
     game/common/timer.cpp
     game/common/ttimer.cpp
+    game/common/vector.cpp
     game/common/wwstring.cpp
     game/common/xordelta.cpp
     game/crypto/blowfish.cpp
