@@ -84,7 +84,7 @@ LinkClass &ListClass::Add(LinkClass &that)
         Scrollbar.Add(that);
     }
 
-    return Add(that);
+    return LinkClass::Add(that);
 }
 
 LinkClass &ListClass::Add_Tail(LinkClass &that)
