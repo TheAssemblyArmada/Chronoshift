@@ -171,16 +171,16 @@ BOOL ListClass::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
         if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos - 1, Height + YPos - 1);
+            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos, Height + YPos);
         }
 
         Draw_Box(YPos, XPos, Width, Height, BOX_STYLE_4, 1);
 
-        if (Count()) {
+        if (Entries.Count()) {
             for (int index = 0; index < ThumbSize; ++index) {
-                if (Count() > index + ViewIndex) {
+                if (Entries.Count() > index + ViewIndex) {
                     BOOL redraw_entry = index + ViewIndex == Current_Index();
-                    Draw_Entry(index + ViewIndex, YPos + 1, XPos + index * YSpacing + 1, Width - 2, redraw_entry);
+                    Draw_Entry(index + ViewIndex, XPos + 1, YPos + index * YSpacing + 1, Width - 2, redraw_entry);
                 }
             }
         }
@@ -197,30 +197,27 @@ BOOL ListClass::Draw_Me(BOOL redraw)
 
 BOOL ListClass::Action(unsigned flags, KeyNumType &key)
 {
-    // this whole function is TODO, blasted bitfield...
     if (flags & MOUSE_LEFT_RLSE) {
         key = KN_NONE;
         ControlClass::Action(flags & (~MOUSE_LEFT_RLSE), key);
+
         return true;
     } else {
-        if (flags & MOUSE_LEFT_PRESS) {
-            if (key == KN_E_UP) { // 0x26, VK_UP
+        if (flags & KEYBOARD_INPUT) {
+            if (key == KN_UP) {
                 Step_Selected_Index(-1);
                 key = KN_NONE;
+            } else if (key == KN_DOWN) {
+                Step_Selected_Index(1);
+                key = KN_NONE;
             } else {
-                if (key == KN_E_DOWN) { // 0x28 VK_DOWN
-                    Step_Selected_Index(1);
-                    key = KN_NONE;
-                } else {
-                    key = KN_NONE;
-                    flags &= ~MOUSE_LEFT_PRESS;
-                }
+                flags &= ~KEYBOARD_INPUT;
             }
         } else {
-            CurrentIndex = ViewIndex + (g_mouse->Get_Mouse_Y() - YPos - 1) / YSpacing;
-            CurrentIndex = Min(Current_Index(), Count() - 1);
+            CurrentIndex = ViewIndex + (g_mouse->Get_Mouse_Y() - YPos) / YSpacing;
+            CurrentIndex = Min(CurrentIndex, Entries.Count() - 1);
 
-            if (Current_Index() == -1) {
+            if (CurrentIndex == -1) {
                 CurrentIndex = 0;
             }
         }
@@ -498,7 +495,13 @@ void ListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL redraw)
 
 void Clear_Listbox(ListClass *list)
 {
-    // TODO
+    while (list->Count()) {
+        const char *item = list->Get_Item(0);
+        list->Remove_Item(item);
+        delete[] item;
+    }
+
+    list->Flag_To_Redraw();
 }
 
 BOOL Is_Link_In_List(LinkClass *list, LinkClass *link)
