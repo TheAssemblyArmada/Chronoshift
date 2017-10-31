@@ -1,3 +1,18 @@
+/**
+ * @file
+ *
+ * @author OmniBlade
+ * @author CCHyper
+ *
+ * @brief Class for representing slider elements such as scroll bars.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "slider.h"
 #include "ccfileclass.h"
 #include "dialog.h"
@@ -45,6 +60,19 @@ SliderClass::SliderClass(SliderClass &that) :
     ThumbnailPixels(that.ThumbnailPixels),
     ThumbnailSize(that.ThumbnailSize)
 {
+}
+
+SliderClass::~SliderClass()
+{
+    if (ButtonPlus != nullptr) {
+        delete ButtonPlus;
+        ButtonPlus = nullptr;
+    }
+
+    if (ButtonMinus != nullptr) {
+        delete ButtonMinus;
+        ButtonMinus = nullptr;
+    }
 }
 
 void SliderClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &peer)

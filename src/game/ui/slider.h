@@ -18,6 +18,7 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
+#include "always.h"
 #include "gauge.h"
 #include "globals.h"
 #include "shapebtn.h"
@@ -29,7 +30,7 @@ class SliderClass : public GaugeClass
 public:
     SliderClass(unsigned id, int x, int y, int w, int h, BOOL no_buttons);
     SliderClass(SliderClass &that);
-    virtual ~SliderClass() {}
+    virtual ~SliderClass();
 
     SliderClass &operator=(SliderClass &that);
 
