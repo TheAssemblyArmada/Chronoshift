@@ -30,6 +30,10 @@ public:
     virtual BOOL Action(unsigned flags, KeyNumType &key) override;
 
     CheckBoxClass &operator=(CheckBoxClass &that);
+
+#ifndef RAPP_STANDALONE
+static void Hook_Me();
+#endif
 };
 
 inline CheckBoxClass &CheckBoxClass::operator=(CheckBoxClass &that)
@@ -40,5 +44,17 @@ inline CheckBoxClass &CheckBoxClass::operator=(CheckBoxClass &that)
 
     return *this;
 }
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+inline void CheckBoxClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004A1F00, *CheckBoxClass::Draw_Me);
+    Hook_Function(0x004A22E4, *CheckBoxClass::Action);
+#endif
+}
+#endif
 
 #endif // CHECKBOX_H

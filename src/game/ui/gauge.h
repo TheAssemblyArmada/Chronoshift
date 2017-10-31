@@ -43,6 +43,10 @@ public:
 
     int const Get_Maximum() const { return Maximum; }
 
+#ifndef RAPP_STANDALONE
+static void Hook_Me();
+#endif
+
 protected:
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
@@ -83,5 +87,25 @@ inline GaugeClass &GaugeClass::operator=(GaugeClass &that)
 
     return *this;
 }
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+inline void GaugeClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004C4E70, *GaugeClass::Draw_Me);
+    Hook_Function(0x004C52D0, *GaugeClass::Action);
+    Hook_Function(0x004C4D70, *GaugeClass::Set_Maximum);
+    Hook_Function(0x004C4D90, *GaugeClass::Set_Value);
+    //Hook_Function(0x004C6FB0, *GaugeClass::Get_Value);
+    Hook_Function(0x004C6FC0, *GaugeClass::Use_Thumb);
+    Hook_Function(0x004C6FF0, *GaugeClass::Thumb_Pixels);
+    Hook_Function(0x004C5440, *GaugeClass::Draw_Thumb);
+    Hook_Function(0x004C4DC8, *GaugeClass::Pixel_To_Value);
+    Hook_Function(0x004C4E28, *GaugeClass::Value_To_Pixel);
+#endif
+}
+#endif
 
 #endif // GAUGE_H

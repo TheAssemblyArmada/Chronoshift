@@ -172,4 +172,26 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height);
 void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, BOOL unk);
 void Window_Box(WindowNumberType type, BoxStyleEnum style);
 
+
+namespace Dialog
+{
+
+inline void Hook_Me()
+{
+    Hook_Function(0x004AE3FC, &Simple_Text_Print);
+    Hook_Function(0x004AE7FC, static_cast<void(*)(int, unsigned, unsigned, RemapControlType *, uint8_t, TextPrintType, ...)>(&Fancy_Text_Print));//int
+    Hook_Function(0x004AE8C0, static_cast<void(*)(char const *, unsigned, unsigned, RemapControlType *, uint8_t, TextPrintType, ...)>(&Fancy_Text_Print));//char
+    Hook_Function(0x004AE930, &Conquer_Clip_Text_Print);
+    Hook_Function(0x004AEA74, static_cast<void(*)(int, unsigned, unsigned, uint8_t, uint8_t, TextPrintType, ...)>(&Plain_Text_Print));//int
+    Hook_Function(0x004AEAF8, static_cast<void(*)(char const *, unsigned, unsigned, uint8_t, uint8_t, TextPrintType, ...)>(&Plain_Text_Print));//char
+    Hook_Function(0x004AE284, &Format_Window_String);
+    Hook_Function(0x00591F3C, &Format_Window_String_New);
+    Hook_Function(0x004AEBB4, static_cast<void(*)(int, int, int, int)>(&Draw_Caption));//int
+    Hook_Function(0x004AEC14, static_cast<void(*)(char const *, int, int, int)>(&Draw_Caption));//char
+    Hook_Function(0x004AD670, &Dialog_Box);
+    Hook_Function(0x004ADB5C, &Draw_Box);
+    Hook_Function(0x004AE350, &Window_Box);
+}
+}
+
 #endif // DIALOG_H
