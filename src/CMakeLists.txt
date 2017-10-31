@@ -107,6 +107,7 @@ set(GAMEENGINE_SRC
     game/ui/gadget.cpp
     game/ui/gauge.cpp
     game/ui/link.cpp
+    game/ui/list.cpp
     game/ui/slider.cpp
     game/ui/shapebtn.cpp
     game/ui/textbtn.cpp
