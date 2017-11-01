@@ -332,6 +332,14 @@ enum KeyNumType
     KN_BUTTON = 0x8000,
 };
 
+enum KeyASCIIType
+{
+    KA_BACKSPACE = 8,
+    KA_RETURN = 13,
+    KA_SPACE = 32,
+    KEY_MAX = 0x7FFF,
+};
+
 class KeyboardClass
 {
 public:
