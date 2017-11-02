@@ -114,6 +114,7 @@ set(GAMEENGINE_SRC
     game/ui/list.cpp
     game/ui/slider.cpp
     game/ui/shapebtn.cpp
+    game/ui/staticbtn.cpp
     game/ui/textbtn.cpp
     game/ui/toggle.cpp
 )

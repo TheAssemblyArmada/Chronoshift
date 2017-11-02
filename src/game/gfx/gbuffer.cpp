@@ -283,6 +283,15 @@ void GraphicViewPortClass::From_Buffer(int x, int y, int w, int h, void *buffer)
     Unlock();
 }
 
+void GraphicViewPortClass::To_Buffer(int x, int y, int w, int h, void *buffer, int size)
+{
+    if (Lock()) {
+        Buffer_To_Buffer(*this, x, y, w, h, buffer, size);
+    }
+
+    Unlock();
+}
+
 unsigned GraphicViewPortClass::Print(const char *string, int x, int y, int fground, int bground)
 {
     unsigned ret = 0;

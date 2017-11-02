@@ -1,7 +1,8 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Wrapper class for platform drawing engine.
  *
@@ -9,7 +10,6 @@
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -86,7 +86,11 @@ public:
     BOOL In_Video_Memory() { return m_inVideoMemory; }
     GraphicBufferClass *Get_Graphic_Buffer() { return m_graphicBuff; }
 
-    void Set_XY_Pos(int x, int y) {  m_xPos = x; m_yPos = y; }
+    void Set_XY_Pos(int x, int y)
+    {
+        m_xPos = x;
+        m_yPos = y;
+    }
     void Put_Pixel(int x, int y, unsigned char value);
     unsigned Get_Pixel(int x, int y);
     void Remap(int x, int y, int w, int h, unsigned char *fading_table);
@@ -97,6 +101,7 @@ public:
     unsigned Print(const char *string, int x, int y, int fground, int bground);
     void Clear(unsigned char color = 0);
     void From_Buffer(int x, int y, int w, int h, void *buffer);
+    void To_Buffer(int x, int y, int w, int h, void *buffer, int size);
     void Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h, int dst_w,
         int dst_h, bool use_keysrc, void *fade);
     int Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
@@ -177,10 +182,7 @@ GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp);
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp);
 
 #ifndef RAPP_STANDALONE
-inline void GraphicViewPortClass::Hook_Me()
-{
-
-}
+inline void GraphicViewPortClass::Hook_Me() {}
 
 extern GraphicViewPortClass *&g_logicPage;
 extern LPDIRECTDRAWSURFACE &g_paletteSurface;
