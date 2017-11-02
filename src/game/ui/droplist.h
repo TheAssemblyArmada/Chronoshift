@@ -54,7 +54,19 @@ public:
     void Collapse();
 
 protected:
+#ifndef RAPP_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool IsExpanded : 1; // & 1
+        };
+        int m_dropListFlags;
+    };
+#else
     bool IsExpanded;
+#endif
     int DropHeight;
     ShapeButtonClass DropButton;
     ListClass DropList;
