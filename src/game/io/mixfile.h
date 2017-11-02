@@ -81,6 +81,11 @@ inline int FileInfo_Compare(const void *info1, const void *info2)
 template<class FC>
 class MixFileClass : public Node<MixFileClass<FC> *>
 {
+#ifndef COMPILER_WATCOM
+    // Looks like watcom doesn't like these declarations, newer compilers need them for standards compliance related to
+    // template lookup.
+    using Node<MixFileClass<FC> *>::Unlink;
+#endif
 public:
     MixFileClass(const char *filename, PKey *key);
     MixFileClass(FC &file, PKey *key);

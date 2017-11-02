@@ -288,8 +288,8 @@ template<typename T>
 BOOL DynamicVectorClass<T>::Resize(int newsize, const T *array)
 {
     if (VectorClass<T>::Resize(newsize, array)) {
-        if (Length() < ActiveCount)
-            ActiveCount = Length();
+        if (VectorMax < ActiveCount)
+            ActiveCount = VectorMax;
         return true;
     }
     return false;
@@ -309,9 +309,9 @@ int DynamicVectorClass<T>::ID(const T &object)
 template<typename T>
 BOOL DynamicVectorClass<T>::Add(const T &object)
 {
-    if (ActiveCount >= Length()) {
+    if (ActiveCount >= VectorMax) {
         if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
-            if (!Resize(Length() + GrowthStep)) {
+            if (!Resize(VectorMax + GrowthStep)) {
                 return false;
             }
         } else {
@@ -327,9 +327,9 @@ BOOL DynamicVectorClass<T>::Add(const T &object)
 template<typename T>
 BOOL DynamicVectorClass<T>::Add_Head(const T &object)
 {
-    if (ActiveCount >= Length()) {
+    if (ActiveCount >= VectorMax) {
         if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
-            if (!Resize(Length() + GrowthStep)) {
+            if (!Resize(VectorMax + GrowthStep)) {
                 return false;
             }
         } else {
@@ -355,9 +355,9 @@ BOOL DynamicVectorClass<T>::Insert(int index, const T &object)
     if (index > ActiveCount)
         return false;
 
-    if (ActiveCount >= Length()) {
+    if (ActiveCount >= VectorMax) {
         if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
-            if (!Resize(Length() + GrowthStep)) {
+            if (!Resize(VectorMax + GrowthStep)) {
                 return false;
             }
         } else {
@@ -414,9 +414,9 @@ void DynamicVectorClass<T>::Delete_All()
 template<typename T>
 T *DynamicVectorClass<T>::Uninitialized_Add()
 {
-    if (ActiveCount >= Length()) {
+    if (ActiveCount >= VectorMax) {
         if (GrowthStep > 0) {
-            if (!Resize(Length() + GrowthStep)) {
+            if (!Resize(VectorMax + GrowthStep)) {
                 return nullptr;
             }
         } else {
