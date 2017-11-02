@@ -2,6 +2,7 @@
  * @file
  *
  * @author tomsons26
+ * @author OmniBlade
  *
  * @brief Class for packing network fields used for packets and the statistics function.
  *
@@ -21,12 +22,12 @@
 
 enum FieldDataType
 {
-    FD_CHAR = 1,
+    FD_UINT8 = 1,
     FD_BOOLEAN = 2,
-    FD_SHORT = 3,
-    FD_USHORT = 4,
-    FD_LONG = 5,
-    FD_ULONG = 6,
+    FD_INT16 = 3,
+    FD_UINT16 = 4,
+    FD_INT32 = 5,
+    FD_UINT32 = 6,
     FD_STRING = 7,
     FD_CUSTOM = 20
 };
@@ -34,23 +35,27 @@ enum FieldDataType
 class FieldClass
 {
 public:
-    FieldClass::FieldClass(char *fieldname, char data);
-    FieldClass::FieldClass(char *fieldname, bool data);
-    FieldClass::FieldClass(char *fieldname, short data);
-    FieldClass::FieldClass(char *fieldname, unsigned short data);
-    FieldClass::FieldClass(char *fieldname, long data);
-    FieldClass::FieldClass(char *fieldname, unsigned long data);
-    FieldClass::FieldClass(char *fieldname, char *data);
-    FieldClass::FieldClass(char *fieldname, void *data, int size);
-	~FieldClass(void) { delete[] m_data; m_data = nullptr; }
-    void FieldClass::Host_To_Net();
-    void FieldClass::Net_To_Host();
+    FieldClass(char *fieldname, uint8_t data);
+    FieldClass(char *fieldname, bool data);
+    FieldClass(char *fieldname, int16_t data);
+    FieldClass(char *fieldname, uint16_t data);
+    FieldClass(char *fieldname, int32_t data);
+    FieldClass(char *fieldname, uint32_t data);
+    FieldClass(char *fieldname, char *data);
+    FieldClass(char *fieldname, void *data, int size);
+    ~FieldClass(void)
+    {
+        delete[] m_data;
+        m_data = nullptr;
+    }
+    void Host_To_Net();
+    void Net_To_Host();
 
 protected:
     char m_name[4];
-    short m_type;
-    short m_size;
+    int16_t m_type;
+    int16_t m_size;
     char *m_data;
-    int m_unknown; //whatever it is its used in PacketClass::Find_Field
+    int32_t m_unknown; // whatever it is its used in PacketClass::Find_Field
 };
 #endif // FIELD_H
