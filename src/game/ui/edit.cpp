@@ -22,9 +22,9 @@ EditClass::EditClass(int id, char *textbuffer, int bufferlength, TextPrintType t
     ControlClass(id, x, y, w, h, MOUSE_LEFT_PRESS, false),
     TextStyle(text_style & (~TPF_CENTER)),
     EditStyle(edit_style),
-    Text((char *)textbuffer),
+    Text(textbuffer),
     MaxTextLength(bufferlength - 1),
-    TextLength((int)strlen(textbuffer)),
+    TextLength(strlen(textbuffer)),
     ColorScheme(GadgetClass::ColorScheme)
 {
     Flag_To_Redraw();
@@ -71,7 +71,7 @@ void EditClass::Set_Text(char *text, int max_len)
 {
     MaxTextLength = max_len - 1;
     Text = text;
-    TextLength = (int)strlen(text);
+    TextLength = strlen(text);
     Flag_To_Redraw();
 }
 
@@ -121,6 +121,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
                 if (!(flags & MOUSE_LEFT_RLSE) && !(flags & MOUSE_RIGHT_RLSE) && Handle_Key((KeyASCIIType)character)) {
                     key = KN_NONE;
                     flags &= ~KEYBOARD_INPUT;
+
                     return ControlClass::Action(flags, key);
                 }
             } else if ((key & 0x1000 || character < ' ' || character > '\xFF') && key != KN_RETURN && key != KN_BACKSPACE) {
@@ -130,6 +131,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
                 if (Handle_Key((KeyASCIIType)g_keyboard->To_ASCII(key))) {
                     key = KN_NONE;
                     flags &= ~KEYBOARD_INPUT;
+
                     return ControlClass::Action(flags, key);
                 }
             }
@@ -166,7 +168,7 @@ void EditClass::Draw_Text(const char *text)
 int EditClass::Handle_Key(KeyASCIIType character)
 {
     if (character < KA_BACKSPACE) {
-        if (!character) {
+        if (character == KA_NULL) {
             return true;
         }
     } else {

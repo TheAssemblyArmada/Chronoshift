@@ -334,6 +334,7 @@ enum KeyNumType
 
 enum KeyASCIIType
 {
+    KA_NULL = 0,
     KA_BACKSPACE = 8,
     KA_RETURN = 13,
     KA_SPACE = 32,
