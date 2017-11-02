@@ -101,6 +101,7 @@ set(GAMEENGINE_SRC
     game/net/field.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
+    game/ui/bigcheck.cpp
     game/ui/checklist.cpp
     game/ui/checkbox.cpp
     game/ui/controlc.cpp

@@ -23,19 +23,34 @@
 class BigCheckBoxClass : public ToggleClass
 {
 public:
-    BigCheckBoxClass{};
-    virtual ~BigCheckBoxClass(void);
+    BigCheckBoxClass(unsigned id, int x, int y, int w, int h, const char *text, TextPrintType style);
+    BigCheckBoxClass(BigCheckBoxClass &that);
+    virtual ~BigCheckBoxClass();
+
     virtual BOOL Draw_Me(BOOL redraw) override;
     virtual BOOL Action(unsigned flags, KeyNumType &key) override;
+
+    BigCheckBoxClass & operator=(BigCheckBoxClass &that);
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
 #endif
 
 protected:
-    TextPrintType m_textStyle;
-    const char *m_textString;
+    TextPrintType TextStyle;
+    const char *TextString;
 };
+
+inline BigCheckBoxClass &BigCheckBoxClass::operator=(BigCheckBoxClass &that)
+{
+    if (this != &that) {
+        ToggleClass::operator=(that);
+        TextStyle = that.TextStyle;
+        TextString = that.TextString;
+    }
+
+    return *this;
+}
 
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
