@@ -181,7 +181,7 @@ void DropListClass::Expand()
         DropList.Set_Width(Width);
         DropList.Set_Height(DropHeight);
         DropList.Add(Head_Of_List());
-        DropList.Flag_List_To_Redraw();
+        DropList.Flag_To_Redraw();
         IsExpanded = true;
     }
 }
