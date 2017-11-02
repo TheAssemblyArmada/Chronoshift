@@ -104,6 +104,7 @@ set(GAMEENGINE_SRC
     game/ui/bigcheck.cpp
     game/ui/checklist.cpp
     game/ui/checkbox.cpp
+    game/ui/colrlist.cpp
     game/ui/controlc.cpp
     game/ui/dialog.cpp
     game/ui/droplist.cpp
