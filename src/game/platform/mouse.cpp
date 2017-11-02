@@ -92,7 +92,7 @@ WWMouseClass::WWMouseClass(GraphicViewPortClass *scr, int width, int height) :
 #ifdef PLATFORM_WINDOWS
     InitializeCriticalSection(&m_mouseCritSec);
     timeBeginPeriod(MOUSE_UPDATE_FREQ);
-    m_timerHandle = timeSetEvent(MOUSE_UPDATE_FREQ, 1, ::Process_Mouse, NULL, TIME_PERIODIC);
+    m_timerHandle = timeSetEvent(MOUSE_UPDATE_FREQ, 1, ::Process_Mouse, 0, TIME_PERIODIC);
 #endif
     Set_Cursor_Clip();
 }
