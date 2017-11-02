@@ -42,6 +42,8 @@ public:
     virtual BOOL Draw_Me(BOOL redraw) override;
     virtual void Set_Shape(void *button_shape);
 
+    void *Get_Shape() { return ButtonShape; }
+
 #ifndef RAPP_STANDALONE
 static void Hook_Me();
 #endif

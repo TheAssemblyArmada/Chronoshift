@@ -106,6 +106,7 @@ set(GAMEENGINE_SRC
     game/ui/checkbox.cpp
     game/ui/controlc.cpp
     game/ui/dialog.cpp
+    game/ui/droplist.cpp
     game/ui/edit.cpp
     game/ui/gadget.cpp
     game/ui/gauge.cpp
