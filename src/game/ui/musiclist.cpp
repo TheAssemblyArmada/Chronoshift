@@ -14,13 +14,15 @@
  *            LICENSE
  */
 #include "musiclist.h"
+#include "ccfileclass.h"
 #include "gbuffer.h"
 #include "globals.h"
+#include "mixfile.h"
 #include "remap.h"
 
-MusicListClass::MusicListClass(
-    int id, int x, int y, int w, int h, TextPrintType style, void *up_btn_shape, void *down_btn_shape) :
-    ListClass(id, x, y, w, h, style | TPF_6PT_GRAD | TPF_NOSHADOW, up_btn_shape, down_btn_shape)
+MusicListClass::MusicListClass(int id, int x, int y, int w, int h, TextPrintType style) :
+    ListClass(id, x, y, w, h, style | TPF_6PT_GRAD | TPF_NOSHADOW, MixFileClass<CCFileClass>::Retrieve("BTN-DN.SHP"),
+        MixFileClass<CCFileClass>::Retrieve("BTN-UP.SHP"))
 {
     // empty
 }

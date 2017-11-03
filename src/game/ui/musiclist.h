@@ -25,7 +25,7 @@
 class MusicListClass : public ListClass
 {
 public:
-    MusicListClass(int id, int x, int y, int w, int h, TextPrintType style, void *up_btn_shape, void *down_btn_shape);
+    MusicListClass(int id, int x, int y, int w, int h, TextPrintType style);
     MusicListClass(MusicListClass &that) : ListClass(that) {}
     virtual ~MusicListClass(void) {}
 
