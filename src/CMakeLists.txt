@@ -113,6 +113,7 @@ set(GAMEENGINE_SRC
     game/ui/gauge.cpp
     game/ui/link.cpp
     game/ui/list.cpp
+    game/ui/musiclist.cpp
     game/ui/slider.cpp
     game/ui/shapebtn.cpp
     game/ui/staticbtn.cpp

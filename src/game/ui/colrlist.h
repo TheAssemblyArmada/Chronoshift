@@ -63,4 +63,5 @@ inline ColorListClass &ColorListClass::operator=(ColorListClass &that)
 
     return *this;
 }
+
 #endif // COLRLIST_H
