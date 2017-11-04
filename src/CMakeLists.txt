@@ -19,6 +19,7 @@ set(GAMEENGINE_INCLUDES
     game
     game/common
     game/crypto
+    game/engine
     game/gfx
     game/io
     game/memory
@@ -51,6 +52,7 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
+    game/engine/utracker.cpp
     game/gfx/blitters.cpp
     game/gfx/fading.cpp
     game/gfx/gbuffer.cpp
