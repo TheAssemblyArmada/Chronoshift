@@ -53,16 +53,19 @@ public:
         m_accumulated = value;
     }
 
-    int Time() { return m_timer() - m_started; }
+    int Time()
+    {
+        int ret = m_accumulated;
+
+        if (m_started != -1) {
+            ret += Get_Ticks();
+        }
+
+        return ret;
+    }
 
 private:
-    int Get_Ticks()
-    {
-        if (m_started != -1) {
-            m_accumulated += m_timer();
-        }
-        return m_accumulated;
-    }
+    int Get_Ticks() { return m_timer() - m_started; }
 
 private:
     T m_timer;
@@ -72,7 +75,11 @@ protected:
     int m_accumulated;
 };
 
+#ifndef RAPP_STANDALONE
+extern TTimerClass<SystemTimerClass> &TickCountTimer;
+#else
 extern TTimerClass<SystemTimerClass> TickCountTimer;
+#endif
 
 template<typename T>
 TTimerClass<T> &TTimerClass<T>::operator=(TTimerClass<T> &that)
@@ -115,7 +122,9 @@ class TCountDownTimerClass
 {
 public:
     TCountDownTimerClass(int value = 0) : m_started(m_timer()), m_accumulated(value) {}
-    TCountDownTimerClass(TCountDownTimerClass<T> const &that) : m_started(that.m_started), m_accumulated(that.m_accumulated) {}
+    TCountDownTimerClass(TCountDownTimerClass<T> const &that) : m_started(that.m_started), m_accumulated(that.m_accumulated)
+    {
+    }
 
     TCountDownTimerClass<T> &operator=(TCountDownTimerClass<T> &that);
     TCountDownTimerClass<T> &operator=(int value);

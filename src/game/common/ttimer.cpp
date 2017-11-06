@@ -17,6 +17,12 @@
 #include "globals.h"
 #include "ostimer.h"
 
+#ifndef RAPP_STANDALONE
+TTimerClass<SystemTimerClass> &TickCountTimer = *reinterpret_cast<TTimerClass<SystemTimerClass> *>(0x00680870);
+#else
+TTimerClass<SystemTimerClass> TickCountTimer;
+#endif
+
 int SystemTimerClass::operator()() const
 {
     if (PlatformTimer != nullptr) {
