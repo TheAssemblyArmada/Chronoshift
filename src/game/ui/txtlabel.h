@@ -36,10 +36,19 @@ public:
     TextLabelClass &operator=(TextLabelClass &that);
     
     void Set_Style(TextPrintType style);
-    
+    void Set_Delay(int delay) { Delay = delay; }
+    void Set_ID(int id) { ID = id; }
+    void Set_Remap(RemapControlType *remap) { Remap = remap; }
+    void Set_XPos_Max(int max) { XPosMax = max; }
+    char *Get_Text() { return LabelText; }
+    TextPrintType Get_Style() { return TextStyle; }
+    int Get_Delay() { return Delay; }
+    int Get_ID() { return ID; }
+    RemapControlType *Get_Remap() { return Remap; }
+
 protected:
-    int UnkInt1;
-    int UnkInt2;
+    int Delay;
+    int ID;
     TextPrintType TextStyle;
     char *LabelText;
     RemapControlType *Remap;
@@ -50,8 +59,8 @@ inline TextLabelClass &TextLabelClass::operator=(TextLabelClass &that)
 {
     if (this != &that) {
         GadgetClass::operator=(that);
-        UnkInt1 = that.UnkInt1;
-        UnkInt2 = that.UnkInt2;
+        Delay = that.Delay;
+        ID = that.ID;
         TextStyle = that.TextStyle;
         LabelText = that.LabelText;
         Remap = that.Remap;

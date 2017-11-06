@@ -18,8 +18,8 @@
 
 TextLabelClass::TextLabelClass(char *text, int x, int y, RemapControlType *remap, TextPrintType style) :
     GadgetClass(x, y, 1, 1, INPUT_NONE, false),
-    UnkInt1(0),
-    UnkInt2(0),
+    Delay(0),
+    ID(0),
     TextStyle(style),
     LabelText(text),
     Remap(remap),
@@ -29,8 +29,8 @@ TextLabelClass::TextLabelClass(char *text, int x, int y, RemapControlType *remap
 
 TextLabelClass::TextLabelClass(TextLabelClass &that) :
     GadgetClass(that),
-    UnkInt1(that.UnkInt1),
-    UnkInt2(that.UnkInt2),
+    Delay(that.Delay),
+    ID(that.ID),
     TextStyle(that.TextStyle),
     LabelText(that.LabelText),
     Remap(that.Remap),

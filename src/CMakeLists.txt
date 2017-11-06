@@ -57,6 +57,7 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
+    game/engine/msglist.cpp
     game/engine/utracker.cpp
     game/gfx/blitters.cpp
     game/gfx/drawshape.cpp

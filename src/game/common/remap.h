@@ -20,6 +20,12 @@
 
 #include "always.h"
 
+enum PlayerColorType
+{
+    PREMAP_NONE = -1,
+    // TODO
+};
+
 enum RemapType
 {
     REMAP_NONE = -1,
