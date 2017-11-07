@@ -337,6 +337,7 @@ enum KeyASCIIType
     KA_NULL = 0,
     KA_BACKSPACE = 8,
     KA_RETURN = 13,
+    KA_ESC = 27,
     KA_SPACE = 32,
     KEY_MAX = 0x7FFF,
 };
