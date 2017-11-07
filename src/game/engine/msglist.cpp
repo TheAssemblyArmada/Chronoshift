@@ -55,7 +55,7 @@ MessageListClass::~MessageListClass()
     Init(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 640);
 }
 
-void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int max_msg, int edit_x, int edit_y,
+void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int height, int edit_x, int edit_y,
     BOOL concatenate, int trim_start, int trim_end, int width)
 {
     Width = width;
@@ -80,7 +80,7 @@ void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int max_
     YPos = y;
     FreeSlots = Min((int)MAX_MESSAGES, max_lines);
     MaxChars = Min(120, max_chars);
-    MessageHeight = max_msg;
+    MessageHeight = height;
     Concatenate = concatenate;
 
     if (edit_x != -1 && edit_y != -1) {
@@ -632,7 +632,7 @@ int MessageListClass::Num_Messages()
 
 void MessageListClass::Set_Width(int width)
 {
-    for (TextLabelClass *label = LabelList; label != nullptr; reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
+    for (TextLabelClass *label = LabelList; label != nullptr; label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
         label->Set_XPos_Max(width);
     }
 
@@ -709,7 +709,7 @@ void MessageListClass::Compute_Y()
         ypos = YPos;
     }
 
-    for (TextLabelClass *label = LabelList; label != nullptr; reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
+    for (TextLabelClass *label = LabelList; label != nullptr; label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
         label->Set_YPos(ypos);
         ypos += MessageHeight;
     }
