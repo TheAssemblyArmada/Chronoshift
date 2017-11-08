@@ -39,7 +39,7 @@ public:
     void Set_Delay(int delay) { Delay = delay; }
     void Set_ID(int id) { ID = id; }
     void Set_Remap(RemapControlType *remap) { Remap = remap; }
-    void Set_XPos_Max(int max) { XPosMax = max; }
+    void Set_Max_Width(int max) { MaxWidth = max; }
     char *Get_Text() { return LabelText; }
     TextPrintType Get_Style() { return TextStyle; }
     int Get_Delay() { return Delay; }
@@ -52,7 +52,7 @@ protected:
     TextPrintType TextStyle;
     char *LabelText;
     RemapControlType *Remap;
-    int XPosMax;
+    int MaxWidth;
 };
 
 inline TextLabelClass &TextLabelClass::operator=(TextLabelClass &that)
@@ -64,7 +64,7 @@ inline TextLabelClass &TextLabelClass::operator=(TextLabelClass &that)
         TextStyle = that.TextStyle;
         LabelText = that.LabelText;
         Remap = that.Remap;
-        XPosMax = that.XPosMax;
+        MaxWidth = that.MaxWidth;
     }
 
     return *this;

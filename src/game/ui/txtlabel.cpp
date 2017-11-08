@@ -23,7 +23,7 @@ TextLabelClass::TextLabelClass(char *text, int x, int y, RemapControlType *remap
     TextStyle(style),
     LabelText(text),
     Remap(remap),
-    XPosMax(-1)
+    MaxWidth(-1)
 {
 }
 
@@ -34,17 +34,17 @@ TextLabelClass::TextLabelClass(TextLabelClass &that) :
     TextStyle(that.TextStyle),
     LabelText(that.LabelText),
     Remap(that.Remap),
-    XPosMax(that.XPosMax)
+    MaxWidth(that.MaxWidth)
 {
 }
 
 BOOL TextLabelClass::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
-        if (XPosMax == -1) {
+        if (MaxWidth == -1) {
             Simple_Text_Print(LabelText, XPos, YPos, Remap, 0, TextStyle);
         } else {
-            Conquer_Clip_Text_Print(LabelText, XPos, YPos, Remap, 0, TextStyle, XPosMax, nullptr);
+            Conquer_Clip_Text_Print(LabelText, XPos, YPos, Remap, 0, TextStyle, MaxWidth, nullptr);
         }
 
         return true;

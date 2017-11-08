@@ -55,6 +55,9 @@ MessageListClass::~MessageListClass()
     Init(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 640);
 }
 
+/**
+ * @brief Initialises a MessageListClass.
+ */
 void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int height, int edit_x, int edit_y, BOOL concatenate,
     int trim_start, int trim_end, int width)
 {
@@ -103,6 +106,9 @@ void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int heig
     EditTrimStart = trim_start >= EditTrimEnd ? EditTrimEnd - 1 : trim_start;
 }
 
+/**
+ * @brief Resets a MessageListClass.
+ */
 void MessageListClass::Reset()
 {
     for (TextLabelClass *label = LabelList; label != nullptr; label = LabelList) {
@@ -128,6 +134,9 @@ void MessageListClass::Reset()
     Editing = false;
 }
 
+/**
+ * @brief Adds a message to be displayed.
+ */
 TextLabelClass *MessageListClass::Add_Message(
     char const *player, int id, char const *message, PlayerColorType color, TextPrintType style, int delay)
 {
@@ -243,6 +252,9 @@ TextLabelClass *MessageListClass::Add_Message(
     return msglabel;
 }
 
+/**
+ * @brief Get the contents of a message based on its ID.
+ */
 char *MessageListClass::Get_Message(int id)
 {
     TextLabelClass *label = LabelList;
@@ -262,6 +274,9 @@ char *MessageListClass::Get_Message(int id)
     return nullptr;
 }
 
+/**
+ * @brief Get the TextLabelClass gadget based on its ID.
+ */
 TextLabelClass *MessageListClass::Get_Label(int id)
 {
     TextLabelClass *label = LabelList;
@@ -281,6 +296,9 @@ TextLabelClass *MessageListClass::Get_Label(int id)
     return nullptr;
 }
 
+/**
+ * @brief Concatenate two messages.
+ */
 BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int delay)
 {
     if (msg == nullptr || !Concatenate) {
@@ -338,6 +356,9 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int de
     return false;
 }
 
+/**
+ * @brief Give the TextLabelClass used for editing focus.
+ */
 void MessageListClass::Set_Edit_Focus()
 {
     if (Editing) {
@@ -345,6 +366,9 @@ void MessageListClass::Set_Edit_Focus()
     }
 }
 
+/**
+ * @brief Check if the TextLabelClass used for editing has focus.
+ */
 bool MessageListClass::Has_Edit_Focus()
 {
     if (Editing) {
@@ -354,6 +378,9 @@ bool MessageListClass::Has_Edit_Focus()
     return false;
 }
 
+/**
+ * @brief Add an editable message.
+ */
 TextLabelClass *MessageListClass::Add_Edit(PlayerColorType player, TextPrintType style, char *string, char cursor, int width)
 {
     if (Editing) {
@@ -408,6 +435,9 @@ TextLabelClass *MessageListClass::Add_Edit(PlayerColorType player, TextPrintType
     return EditingLabel;
 }
 
+/**
+ * @brief Remove the editable message.
+ */
 void MessageListClass::Remove_Edit()
 {
     if (!Editing) {
@@ -426,11 +456,17 @@ void MessageListClass::Remove_Edit()
     }
 }
 
+/**
+ * @brief Get the contents of the editable message.
+ */
 char *MessageListClass::Get_Edit_Buf()
 {
     return &EditBuffer[EditStart];
 }
 
+/**
+ * @brief Set the color for the editable message.
+ */
 void MessageListClass::Set_Edit_Color(PlayerColorType player)
 {
     if (Editing) {
@@ -438,6 +474,9 @@ void MessageListClass::Set_Edit_Color(PlayerColorType player)
     }
 }
 
+/**
+ * @brief Perform update tasks for the message list such as removing messages that have displayed long enough.
+ */
 BOOL MessageListClass::Manage()
 {
     bool message_removed = false;
@@ -473,6 +512,9 @@ BOOL MessageListClass::Manage()
     return message_removed;
 }
 
+/**
+ * @brief Handle input to the message list.
+ */
 int MessageListClass::Input(KeyNumType &key)
 {
     if (key == KN_NONE) {
@@ -574,6 +616,9 @@ int MessageListClass::Input(KeyNumType &key)
     return ret_val;
 }
 
+/**
+ * @brief Draw the list.
+ */
 void MessageListClass::Draw()
 {
     if (Editing) {
@@ -614,6 +659,9 @@ void MessageListClass::Draw()
     }
 }
 
+/**
+ * @brief Get the number of messages currently in the list.
+ */
 int MessageListClass::Num_Messages()
 {
     int count = 0;
@@ -631,18 +679,24 @@ int MessageListClass::Num_Messages()
     return count;
 }
 
+/**
+ * @brief Give the TextLabelClass used for editing focus.
+ */
 void MessageListClass::Set_Width(int width)
 {
     for (TextLabelClass *label = LabelList; label != nullptr;
          label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
-        label->Set_XPos_Max(width);
+        label->Set_Max_Width(width);
     }
 
     if (Editing) {
-        EditingLabel->Set_XPos_Max(width);
+        EditingLabel->Set_Max_Width(width);
     }
 }
 
+/**
+ * @brief Trim a message down.
+ */
 int MessageListClass::Trim_Message(char *reserve, char *msg, int trim_start, int trim_end, BOOL trim_right)
 {
     if (trim_start <= 0) {
@@ -701,6 +755,9 @@ int MessageListClass::Trim_Message(char *reserve, char *msg, int trim_start, int
     return trim_pos;
 }
 
+/**
+ * @brief Compute the position for each element in the list.
+ */
 void MessageListClass::Compute_Y()
 {
     int ypos = 0;
