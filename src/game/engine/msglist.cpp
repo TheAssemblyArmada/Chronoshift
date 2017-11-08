@@ -55,8 +55,8 @@ MessageListClass::~MessageListClass()
     Init(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 640);
 }
 
-void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int height, int edit_x, int edit_y,
-    BOOL concatenate, int trim_start, int trim_end, int width)
+void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int height, int edit_x, int edit_y, BOOL concatenate,
+    int trim_start, int trim_end, int width)
 {
     Width = width;
 
@@ -214,6 +214,7 @@ TextLabelClass *MessageListClass::Add_Message(
             memset(MessageBuffers[i], 0, sizeof(MessageBuffers[i]));
             strcpy(MessageBuffers[i], msgbuff);
             new_message = true;
+            msglabel->Set_Text(MessageBuffers[i]);
             break;
         }
     }
@@ -308,7 +309,7 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int de
             char *new_str = new char[MaxChars + 1];
             int width_diff = String_Pixel_Width(label->Get_Text()) - String_Pixel_Width(label_sub_str);
 
-            Fancy_Text_Print(nullptr, 0, 0, label->Get_Remap(), 0, label->Get_Style());
+            Fancy_Text_Print(nullptr, 0, 0, label->Get_Remap(), COLOR_TBLACK, label->Get_Style());
             strcpy(new_str, label_sub_str);
             strcpy(&new_str[strlen(new_str)], to_concat);
 
@@ -488,9 +489,9 @@ int MessageListClass::Input(KeyNumType &key)
 
     char ascii = g_keyboard->To_ASCII(key);
 
-    if (key & 0x1000 && ascii >= '0' && ascii <= '9') {
+    if (key & 0x1000 && isdigit(ascii)) {
         key = (KeyNumType)(key & ~0x1000);
-    } else if (key & 0x1000 || key & KN_BUTTON || ascii < ' ' || ascii > '\x7F') {
+    } else if (key & 0x1000 || key & KN_BUTTON || !isprint(ascii)) {
         int raw_key = key & 0xFF;
 
         if (raw_key != KN_KEYPAD_RETURN && raw_key != KN_BACKSPACE && raw_key != KN_ESC) {
@@ -539,7 +540,7 @@ int MessageListClass::Input(KeyNumType &key)
         default:
             EditingLabel->Set_Focus();
 
-            if (ascii >= ' ' && ascii <= '\x7F') {
+            if (isprint(ascii)) {
                 bool too_long = false;
 
                 if (EditPos - EditStart >= MaxChars - 1) {
@@ -547,7 +548,7 @@ int MessageListClass::Input(KeyNumType &key)
                 } else {
                     EditBuffer[EditPos++] = ascii;
                     EditBuffer[EditPos] = '\0';
-                    Fancy_Text_Print(nullptr, 0, 0, EditingLabel->Get_Remap(), 0, EditingLabel->Get_Style());
+                    Fancy_Text_Print(nullptr, 0, 0, EditingLabel->Get_Remap(), COLOR_TBLACK, EditingLabel->Get_Style());
                     ret_val = 1;
 
                     if (String_Pixel_Width(EditBuffer) >= Width - 10) {
@@ -590,7 +591,7 @@ void MessageListClass::Draw()
                     EditingLabel->Get_XPos() + String_Pixel_Width(EditingLabel->Get_Text()),
                     EditingLabel->Get_YPos(),
                     EditingLabel->Get_Remap(),
-                    0,
+                    COLOR_TBLACK,
                     EditingLabel->Get_Style());
             }
         }
@@ -632,7 +633,8 @@ int MessageListClass::Num_Messages()
 
 void MessageListClass::Set_Width(int width)
 {
-    for (TextLabelClass *label = LabelList; label != nullptr; label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
+    for (TextLabelClass *label = LabelList; label != nullptr;
+         label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
         label->Set_XPos_Max(width);
     }
 
@@ -709,7 +711,8 @@ void MessageListClass::Compute_Y()
         ypos = YPos;
     }
 
-    for (TextLabelClass *label = LabelList; label != nullptr; label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
+    for (TextLabelClass *label = LabelList; label != nullptr;
+         label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
         label->Set_YPos(ypos);
         ypos += MessageHeight;
     }
