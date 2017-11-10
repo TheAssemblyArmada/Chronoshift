@@ -19,6 +19,7 @@
 #include "controlc.h"
 #include "cpudetect.h"
 #include "dialog.h"
+#include "facing.h"
 #include "fading.h"
 #include "gadget.h"
 #include "gamedebug.h"
@@ -98,6 +99,7 @@ void Setup_Hooks()
     LZOPipe::Hook_Me();
     LZOStraw::Hook_Me();
     VersionClass::Hook_Me();
+    FacingClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);

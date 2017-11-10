@@ -74,6 +74,29 @@ DEFINE_ENUMERATION_BITWISE_OPERATORS(DirType);
 // forward decs
 class NoInitClass;
 
+// rename these to Get_*
+DirType Desired_Facing8(int x1, int y1, int x2, int y2);
+DirType Desired_Facing256(int x1, int y1, int x2, int y2);
+
+DirType Facing_To_Direction(FacingType facing);
+FacingType Direction_To_Facing(DirType direction);
+
+// todo, rename and check?
+DirType Round_Direction_To_8(DirType dir);
+DirType Round_Direction_To_16(DirType dir);
+DirType Round_Direction_To_32(DirType dir);
+DirType Round_Direction_To_64(DirType dir);
+DirType Round_Direction_To_128(DirType dir);
+
+FacingType KN_To_Facing(KeyNumType kn);
+
+char const *Name_From_Facing(FacingType facing, BOOL abbreviated = false);
+FacingType Facing_From_Name(char const *name);
+
+char const *Facing_Name_From_Direction(DirType dir);
+
+char const *Name_From_Direction(DirType dir);
+
 class FacingClass
 {
 public:
@@ -101,11 +124,10 @@ public:
 
     void operator=(FacingType const facing)
     {
-        // Current = Facing_To_Direction(facing);
-        // Desired = Facing_To_Direction(facing);
+        Current = Facing_To_Direction(facing);
+        Desired = Facing_To_Direction(facing);
     }
 
-    //
     BOOL Set_Current(DirType const dir);
     BOOL Set_Desired(DirType const dir);
     DirType Get_Current() const { return Current; }
@@ -114,6 +136,10 @@ public:
 
     BOOL Has_Changed() const { return Current != Desired; }
     BOOL Has_Not_Changed() const { return Current == Desired; }
+
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+#endif
 
 public:
     static uint8_t const Facing8[256];
@@ -131,29 +157,6 @@ private:
     DirType Current;
     DirType Desired;
 };
-
-// rename these to Get_*
-DirType Desired_Facing8(int x1, int y1, int x2, int y2);
-DirType Desired_Facing256(int x1, int y1, int x2, int y2);
-
-DirType Facing_To_Direction(FacingType facing);
-FacingType Direction_To_Facing(DirType direction);
-
-// todo, rename and check?
-DirType Round_Direction_To_8(DirType dir);
-DirType Round_Direction_To_16(DirType dir);
-DirType Round_Direction_To_32(DirType dir);
-DirType Round_Direction_To_64(DirType dir);
-DirType Round_Direction_To_128(DirType dir);
-
-FacingType KN_To_Facing(KeyNumType kn);
-
-char const *Name_From_Facing(FacingType facing, BOOL abbreviated = false);
-FacingType Facing_From_Name(char const *name);
-
-char const *Facing_Name_From_Direction(DirType dir);
-
-char const *Name_From_Direction(DirType dir);
 
 // sub_41B710 in SS
 // TODO Same as sub_44BEA4?
@@ -186,5 +189,20 @@ inline FacingType Opposite_Facing(FacingType facing)
 {
     return (FacingType)((unsigned)facing ^ (FACING_COUNT / 2)); // 4
 }
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+inline void FacingClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004BEB44, *FacingClass::Rotation_Adjust);
+    Hook_Function(0x004BEB2C, *FacingClass::Set_Current);
+    Hook_Function(0x004BEB10, *FacingClass::Set_Desired);
+    Hook_Function(0x004BEA7C, Desired_Facing256);
+    //Hook_Function(0x004BEA20, Desired_Facing8);
+#endif
+}
+#endif
 
 #endif // FACING_H

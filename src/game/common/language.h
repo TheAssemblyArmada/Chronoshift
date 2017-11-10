@@ -657,7 +657,9 @@ enum TextEnum
     TXT_EDITOR_CURRENT_MAP = 2038, // Current Map: %s
     TXT_EDITOR_CURRENT_MAP_UNTITLED = 2039, // Current Map: Untitled
 
-    TXT_EDITOR_COUNT = 40
+    TXT_EDITOR_COUNT = 40,
+
+    //TXT_FORCE_INT = 0x7FFFFFFF,
 };
 
 enum LanguageType
