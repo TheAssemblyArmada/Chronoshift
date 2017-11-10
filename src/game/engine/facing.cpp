@@ -128,7 +128,7 @@ BOOL FacingClass::Rotation_Adjust(int adjust)
 {
     if (Has_Changed()) {
         DirType curr = Current;
-        DirType diff = Desired - Current;
+        int diff = (int)Desired - (int)Current; //Fixed watcom optimising DirType to uint8_t and failing abs and diff checks.
 
         adjust = Min(adjust, 127);
 
@@ -196,14 +196,13 @@ DirType Desired_Facing8(int x1, int y1, int x2, int y2)
 
 DirType Desired_Facing256(int x1, int y1, int x2, int y2)
 {
-    DEBUG_LOG("Desired facing 256 between %d.%d and %d.%d.\n", x1, y1, x2, y2);
-    uint8_t unk1 = 0;
+    int8_t unk1 = 0;
 
     int x_diff = x2 - x1;
 
     if (x_diff < 0) {
         x_diff = -x_diff;
-        unk1 = 192;
+        unk1 = -64;
     }
 
     int y_diff = y1 - y2;
@@ -229,19 +228,18 @@ DirType Desired_Facing256(int x1, int y1, int x2, int y2)
         int ranged_dir = unk1 & 64;
 
         if (x_diff > y_diff) {
-            ranged_dir ^= 64;
+            ranged_dir = ranged_dir ^ 64;
         }
 
         if (ranged_dir != 0) {
             unk2 = ranged_dir - unk2 - 1;
         }
 
-        int retval = unk2 + unk1;
-        DEBUG_LOG("  Facing is %d.\n", (DirType)retval);
-        return (DirType)retval;
+        return (DirType)((unk2 + unk1) & 255);
     }
 
     return DIR_NONE;
+
 }
 
 DirType Facing_To_Direction(FacingType facing)

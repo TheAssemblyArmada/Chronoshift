@@ -200,7 +200,7 @@ inline void FacingClass::Hook_Me()
     Hook_Function(0x004BEB2C, *FacingClass::Set_Current);
     Hook_Function(0x004BEB10, *FacingClass::Set_Desired);
     Hook_Function(0x004BEA7C, Desired_Facing256);
-    //Hook_Function(0x004BEA20, Desired_Facing8);
+    Hook_Function(0x004BEA20, Desired_Facing8);
 #endif
 }
 #endif
