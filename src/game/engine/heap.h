@@ -36,33 +36,37 @@ public:
     char &operator[](int index)
     {
         DEBUG_ASSERT(index < ActiveCount);
-        return *(HeapSize * index + static_cast<char *>(Pointer));
+        return *(HeapSize * index + Pointer);
     }
 
     char const &operator[](int index) const
     {
         DEBUG_ASSERT(index < ActiveCount);
-        return *(HeapSize * index + static_cast<char *>(Pointer));
+        return *(HeapSize * index + Pointer);
     }
 
     virtual int ID(const void *object) const;
-    virtual bool Set_Heap(int size, void *buffer = nullptr);
+    virtual BOOL Set_Heap(int size, void *buffer = nullptr);
     virtual void *Allocate();
     virtual void Clear();
-    virtual bool Free(void *object);
-    virtual bool Free_All();
+    virtual BOOL Free(void *object);
+    virtual BOOL Free_All();
 
     int Length() { return HeapLength; }
     int Heap_Size() const { return HeapSize; }
     int Count() const { return ActiveCount; }
     void *Get_Pointer() const { return Pointer; }
 
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+#endif
+
 protected:
     BOOL IsAllocated; // Did this class allocate the memory for the heap?
     int HeapSize; // Size of each object in the heap.
     int HeapLength; // Max number of objects the heap is sized for.
     int ActiveCount; // Number of currently allocated objects in heap.
-    void *Pointer;
+    char *Pointer;
     BooleanVectorClass BitArray; // Tracks free blocks.
 };
 
@@ -73,19 +77,52 @@ public:
     FixedIHeapClass(int size);
     virtual ~FixedIHeapClass();
 
-    virtual bool Set_Heap(int size, void *buffer = nullptr);
-    virtual void *Allocate();
-    virtual void Clear();
-    virtual bool Free(void *object);
-    virtual bool Free_All();
+    virtual BOOL Set_Heap(int size, void *buffer = nullptr) override;
+    virtual void *Allocate() override;
+    virtual void Clear() override;
+    virtual BOOL Free(void *object) override;
+    virtual BOOL Free_All() override;
     virtual int Logical_ID(void *object) const;
     virtual int Logical_ID(int index) const;
     virtual void *Active_Ptr(int index);
     virtual void *Active_Ptr(int index) const;
 
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+#endif
+
 protected:
     DynamicVectorClass<void *> Objects;
 };
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+inline void FixedHeapClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004CD60C, *FixedHeapClass::Allocate);
+    Hook_Function(0x004CD744, *FixedHeapClass::Clear);
+    Hook_Function(0x004CD6A0, *FixedHeapClass::Free);
+    Hook_Function(0x004CD78C, *FixedHeapClass::Free_All);
+    Hook_Function(0x004CD594, *FixedHeapClass::Set_Heap);
+    //Hook_Function(0x004CD718, *FixedHeapClass::ID);
+#endif
+}
+
+inline void FixedIHeapClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004CD818, *FixedIHeapClass::Allocate);
+    Hook_Function(0x004CD7C4, *FixedIHeapClass::Clear);
+    Hook_Function(0x004CD850, *FixedIHeapClass::Free);
+    Hook_Function(0x004CD7A8, *FixedIHeapClass::Free_All);
+    Hook_Function(0x004CD7E4, *FixedIHeapClass::Set_Heap);
+    //Hook_Function();
+#endif
+}
+
+#endif
 
 template<class T>
 class TFixedIHeapClass : public FixedIHeapClass
@@ -108,14 +145,14 @@ public:
     }
 
     // these overide the ones in FixedIHeapClass
-    virtual bool Free(void *object) { return FixedIHeapClass::Free(object); }
+    virtual BOOL Free(void *object) { return FixedIHeapClass::Free(object); }
     virtual int Logical_ID(int index) const { return FixedIHeapClass::Logical_ID(index); }
     virtual int ID(T const *object) const { return FixedIHeapClass::ID(object); }
     virtual int Logical_ID(T *object) const { return FixedIHeapClass::Logical_ID((void *)object); }
     virtual T *Alloc() { return (T *)FixedIHeapClass::Allocate(); }
-    virtual bool Free(T *object) { return FixedIHeapClass::Free(object); }
-    virtual bool Save(Pipe &pipe) const;
-    virtual bool Load(Straw &straw);
+    virtual BOOL Free(T *object) { return FixedIHeapClass::Free(object); }
+    virtual BOOL Save(Pipe &pipe) const;
+    virtual BOOL Load(Straw &straw);
     virtual void Code_Pointers();
     virtual void Decode_Pointers();
     virtual T *Ptr(int id) const { return (T *)Objects[id]; }
@@ -129,7 +166,7 @@ TFixedIHeapClass<T>::~TFixedIHeapClass()
 }
 
 template<class T>
-bool TFixedIHeapClass<T>::Save(Pipe &pipe) const
+BOOL TFixedIHeapClass<T>::Save(Pipe &pipe) const
 {
     int32_t active_count = ActiveCount;
 
@@ -156,7 +193,7 @@ bool TFixedIHeapClass<T>::Save(Pipe &pipe) const
 }
 
 template<class T>
-bool TFixedIHeapClass<T>::Load(Straw &straw)
+BOOL TFixedIHeapClass<T>::Load(Straw &straw)
 {
     int32_t heaplen;
 

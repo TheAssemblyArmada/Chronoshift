@@ -32,7 +32,7 @@ public:
     CCPtr(T *ptr) : ID(-1)
     {
         if (ptr) {
-            ID = Heap->ID(ptr);
+            ID = ptr->Get_Heap_ID();
         }
     }
     CCPtr(CCPtr<T> const &that) {}
@@ -82,7 +82,7 @@ public:
 
     bool operator==(T const &that) const { return strcasecmp((*this).Get_Name(), that.Get_Name()) > 0; }
 
-    bool Is_Valid() const { return Heap != nullptr && Has_Valid_ID(); }
+    bool Is_Valid() const { return Heap != nullptr && ID != -1; }
     bool Has_Valid_ID() const { return ID != -1; }
 
 private:

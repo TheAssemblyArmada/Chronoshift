@@ -42,16 +42,22 @@ FixedHeapClass::~FixedHeapClass()
     Clear();
 }
 
-int FixedHeapClass::ID(void const *object) const
+/**
+ * @brief Returns the position of the object in the heap if present, otherwise returns -1.
+ */
+int FixedHeapClass::ID(const void *object) const
 {
-    if (object && HeapSize) {
-        return (static_cast<char const *>(object) - static_cast<char const *>(Pointer)) / HeapSize;
+    if (object != nullptr && HeapSize > 0) {
+        return (static_cast<const char *>(object) - Pointer) / HeapSize;
     }
 
     return -1;
 }
 
-bool FixedHeapClass::Set_Heap(int size, void *buffer)
+/**
+ * @brief Sets the number of objects the heap can contain and optionally the memory to use for it.
+ */
+BOOL FixedHeapClass::Set_Heap(int size, void *buffer)
 {
     Clear();
 
@@ -61,9 +67,10 @@ bool FixedHeapClass::Set_Heap(int size, void *buffer)
                 return false;
             }
 
-            if (!buffer) {
+            if (buffer == nullptr) {
                 buffer = new char[HeapSize * size];
-                if (!buffer) {
+
+                if (buffer == nullptr) {
                     BitArray.Clear();
                     return false;
                 }
@@ -71,7 +78,7 @@ bool FixedHeapClass::Set_Heap(int size, void *buffer)
                 IsAllocated = true;
             }
 
-            Pointer = buffer;
+            Pointer = static_cast<char *>(buffer);
             HeapLength = size;
         }
 
@@ -81,11 +88,18 @@ bool FixedHeapClass::Set_Heap(int size, void *buffer)
     return false;
 }
 
+/**
+ * @brief Allocate a "HeapSize" block of memory from the heap.
+ */
 void *FixedHeapClass::Allocate()
 {
-    int free_index;
+    if (ActiveCount >= HeapLength) {
+        return nullptr;
+    }
 
-    if (Count() >= Length() || (free_index = BitArray.First_False(), free_index == -1)) {
+    int free_index = BitArray.First_False();
+
+    if (free_index == -1) {
         return nullptr;
     }
 
@@ -95,10 +109,13 @@ void *FixedHeapClass::Allocate()
     return &(*this)[free_index];
 }
 
+/**
+ * @brief Clear the heap and free memory in use if it was allocated by the class.
+ */
 void FixedHeapClass::Clear()
 {
-    if (Pointer && IsAllocated) {
-        delete[] static_cast<char *>(Pointer);
+    if (Pointer != nullptr && IsAllocated) {
+        delete[] Pointer;
     }
 
     Pointer = nullptr;
@@ -108,11 +125,19 @@ void FixedHeapClass::Clear()
     BitArray.Clear();
 }
 
-bool FixedHeapClass::Free(void *object)
+/**
+ * @brief Frees a block of memory allocated from the heap.
+ */
+BOOL FixedHeapClass::Free(void *object)
 {
-    int index;
+    if (object == nullptr || ActiveCount == 0) {
+        return false;
+    }
 
-    if (!object || !Count() || (index = this->ID(object), index >= Count())) {
+    int index = ID(object);
+
+    if (index >= HeapLength) {
+        DEBUG_LOG("Recovered index %d is outside the heap of size %d.\n", index, HeapLength);
         return false;
     }
 
@@ -126,7 +151,10 @@ bool FixedHeapClass::Free(void *object)
     return false;
 }
 
-bool FixedHeapClass::Free_All()
+/**
+ * @brief Frees all objects allocated from the heap.
+ */
+BOOL FixedHeapClass::Free_All()
 {
     ActiveCount = 0;
     BitArray.Reset();
@@ -134,7 +162,7 @@ bool FixedHeapClass::Free_All()
     return true;
 }
 
-FixedIHeapClass::FixedIHeapClass() : FixedHeapClass(), Objects()
+FixedIHeapClass::FixedIHeapClass()
 {
     // empty
 }
@@ -149,7 +177,10 @@ FixedIHeapClass::~FixedIHeapClass()
     Objects.Clear();
 }
 
-bool FixedIHeapClass::Set_Heap(int size, void *buffer)
+/**
+ * @brief Sets the number of objects the heap can contain and optionally the memory to use for it.
+ */
+BOOL FixedIHeapClass::Set_Heap(int size, void *buffer)
 {
     Clear();
 
@@ -162,11 +193,14 @@ bool FixedIHeapClass::Set_Heap(int size, void *buffer)
     return false;
 }
 
+/**
+ * @brief Allocate a "HeapSize" block of memory from the heap.
+ */
 void *FixedIHeapClass::Allocate()
 {
-    void *object = nullptr;
+    void *object = FixedHeapClass::Allocate();
 
-    if ((object = FixedHeapClass::Allocate()) != nullptr) {
+    if (object != nullptr) {
         Objects.Add(object);
         memset(object, 0, HeapSize);
     }
@@ -174,13 +208,19 @@ void *FixedIHeapClass::Allocate()
     return object;
 }
 
+/**
+ * @brief Clear the heap and free memory in use if it was allocated by the class.
+ */
 void FixedIHeapClass::Clear()
 {
     FixedHeapClass::Clear();
     Objects.Clear();
 }
 
-bool FixedIHeapClass::Free(void *object)
+/**
+ * @brief Frees a block of memory allocated from the heap.
+ */
+BOOL FixedIHeapClass::Free(void *object)
 {
     if (FixedHeapClass::Free(object)) {
         Objects.Delete(object);
@@ -191,17 +231,23 @@ bool FixedIHeapClass::Free(void *object)
     return false;
 }
 
-bool FixedIHeapClass::Free_All()
+/**
+ * @brief Frees a all memory allocated from the heap.
+ */
+BOOL FixedIHeapClass::Free_All()
 {
     Objects.Reset_Active();
 
     return FixedHeapClass::Free_All();
 }
 
+/**
+ * @brief Gets the logical ID in the index heap from an object pointer.
+ */
 int FixedIHeapClass::Logical_ID(void *object) const
 {
-    if (object) {
-        for (int index = 0; index < Count(); ++index) {
+    if (object != nullptr) {
+        for (int index = 0; index < ActiveCount; ++index) {
             if (Active_Ptr(index) == object) {
                 return index;
             }
@@ -211,16 +257,25 @@ int FixedIHeapClass::Logical_ID(void *object) const
     return -1;
 }
 
+/**
+ * @brief Gets the logical ID in the index heap from an heap ID.
+ */
 int FixedIHeapClass::Logical_ID(int index) const
 {
     return Logical_ID((char *)&FixedHeapClass::operator[](index));
 }
 
+/**
+ * @brief Gets a pointer to an object from its logical ID.
+ */
 void *FixedIHeapClass::Active_Ptr(int index)
 {
     return Objects[index];
 }
 
+/**
+ * @brief Gets a pointer to an object from its logical ID (const).
+ */
 void *FixedIHeapClass::Active_Ptr(int index) const
 {
     return Objects[index];
