@@ -1,8 +1,23 @@
-#include	"facing.h"
-#include    "gamedebug.h"
-#include    "minmax.h"
-#include	"swap.h"
-#include    "abs.h"
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Classes, types and functions related to managing the facings and directions of objects.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
+#include "facing.h"
+#include "abs.h"
+#include "gamedebug.h"
+#include "minmax.h"
+#include "swap.h"
 
 uint8_t const FacingClass::Facing8[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -128,14 +143,13 @@ BOOL FacingClass::Rotation_Adjust(int adjust)
 {
     if (Has_Changed()) {
         DirType curr = Current;
-        int diff = (int)Desired - (int)Current; //Fixed watcom optimising DirType to uint8_t and failing abs and diff checks.
+        int8_t diff = (int8_t)Desired - (int8_t)Current; //Fixed watcom optimising DirType to uint8_t and failing diff check.
 
         adjust = Min(adjust, 127);
 
         if (Abs(diff) >= adjust) {
             if (diff >= 0) {
                 Current += adjust;
-
             } else {
                 Current -= adjust;
             }

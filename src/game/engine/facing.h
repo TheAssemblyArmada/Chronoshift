@@ -1,17 +1,18 @@
-/*******************************************************************************
- ***                      --  R E D  A L E R T  + +  --                      ***
- *******************************************************************************
- *  Project Name:: RedAlert++
+/**
+ * @file
  *
- *          File:: FACING.H
- *        Author:: CCHyper
- *  Contributors::
- *       History::
+ * @author CCHyper
+ * @author OmniBlade
  *
- *   Description::
+ * @brief Classes, types and functions related to managing the facings and directions of objects.
  *
- *    Class List:: FacingClass
- *-----------------------------------------------------------------------------*/
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef FACING_H
@@ -46,7 +47,11 @@ enum FacingType
 DEFINE_ENUMERATION_OPERATORS(FacingType);
 DEFINE_ENUMERATION_BITWISE_OPERATORS(FacingType);
 
+#ifdef COMPILER_WATCOM
 enum DirType
+#else
+enum DirType : uint8_t
+#endif
 {
     DIR_NORTH = 0, // 0°
     DIR_NORTH_NORTH_EAST = 16,
@@ -55,7 +60,7 @@ enum DirType
     DIR_EAST = 64, // 90°
     DIR_EAST_SOUTH_EAST = 80,
     DIR_SOUTH_EAST = 96, // 135°
-    DIR_SOUTH_SOUTH_EAST = 114,
+    DIR_SOUTH_SOUTH_EAST = 112,
     DIR_SOUTH = 128, // 180°
     DIR_SOUTH_SOUTH_WEST = 144,
     DIR_SOUTH_WEST = 160, // 225°
