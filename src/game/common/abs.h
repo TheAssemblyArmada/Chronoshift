@@ -26,7 +26,7 @@
 template<typename T>
 T Abs(T const x)
 {
-    return x < 0 ? -x : x;
+    return x < 0 ? (T)(-x) : (T)x;
 };
 
 #endif // ABS_H
