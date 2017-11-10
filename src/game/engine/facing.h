@@ -53,21 +53,21 @@ enum DirType
 enum DirType : uint8_t
 #endif
 {
-    DIR_NORTH = 0, // 0°
+    DIR_NORTH = 0, // 0 degrees
     DIR_NORTH_NORTH_EAST = 16,
-    DIR_NORTH_EAST = 32, // 45°
+    DIR_NORTH_EAST = 32, // 45 degrees
     DIR_EAST_NORTH_EAST = 48,
-    DIR_EAST = 64, // 90°
+    DIR_EAST = 64, // 90 degrees
     DIR_EAST_SOUTH_EAST = 80,
-    DIR_SOUTH_EAST = 96, // 135°
+    DIR_SOUTH_EAST = 96, // 135 degrees
     DIR_SOUTH_SOUTH_EAST = 112,
-    DIR_SOUTH = 128, // 180°
+    DIR_SOUTH = 128, // 180 degrees
     DIR_SOUTH_SOUTH_WEST = 144,
-    DIR_SOUTH_WEST = 160, // 225°
+    DIR_SOUTH_WEST = 160, // 225 degrees
     DIR_WEST_SOUTH_WEST = 176,
-    DIR_WEST = 192, // 270°
+    DIR_WEST = 192, // 270 degrees
     DIR_WEST_NORTH_WEST = 208,
-    DIR_NORTH_WEST = 224, // 315°
+    DIR_NORTH_WEST = 224, // 315 degrees
     DIR_NORTH_WEST_NORTH = 240,
     DIR_LAST = 255,
     DIR_NONE = 255,
