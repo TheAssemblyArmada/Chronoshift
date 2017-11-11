@@ -104,7 +104,7 @@ public:
     virtual const char *Name() const
     {
         DEBUG_ASSERT(this != nullptr);
-        return nullptr;
+        return "";
     }
 
     virtual HousesType Owner() const
