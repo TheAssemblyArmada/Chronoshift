@@ -69,8 +69,6 @@ private:
 
 private:
     T m_timer;
-
-protected:
     int m_started;
     int m_accumulated;
 };
@@ -138,8 +136,6 @@ public:
 
 private:
     T m_timer;
-
-protected:
     int m_started;
     int m_accumulated;
 };
@@ -196,5 +192,96 @@ int TCountDownTimerClass<T>::Time()
 
     return m_accumulated;
 }
+
+class NoInitClass;
+
+template<class T>
+class BasicTimerClass
+{
+public:
+    BasicTimerClass(unsigned int value = 0) : m_started(m_timer()), m_accumulated(value) {}
+    BasicTimerClass(BasicTimerClass const &that) : m_started(that.m_started), m_accumulated(that.m_accumulated) {}
+    BasicTimerClass(NoInitClass const &noinit) {}
+    ~BasicTimerClass() {}
+
+    BasicTimerClass &operator=(BasicTimerClass const &that)
+    {
+        if (this != &that) {
+            m_timer = that.m_timer;
+            m_started = that.m_started;
+            m_accumulated = that.m_accumulated;
+        }
+
+        return *this;
+    }
+
+    BasicTimerClass &operator=(unsigned int value)
+    {
+        Set(value);
+        return *this;
+    }
+
+    bool Has_Started() { return m_started != -1; }
+
+    void Start()
+    {
+        if (!Has_Started()) {
+            m_started = m_timer();
+        }
+    }
+
+    void Stop()
+    {
+        if (Has_Started()) {
+            m_accumulated = Value();
+            m_started = -1;
+        }
+    }
+
+    bool Has_Expired() { return Remaining() <= 0; }
+    void Set(int value) { m_started = m_timer() - value; }
+
+    // Clear the accumulated time. The value to reset to is
+    // optional, otherwise it is reset to zero.
+    void Reset(unsigned int value = 0)
+    {
+        m_started = m_timer();
+        m_accumulated = value;
+    }
+
+    //
+    unsigned int const Value() const { return m_timer() - m_started; }
+
+    // Get the time left until the countdown reaches 0.
+    int const Remaining() // Advance?
+    {
+        unsigned int accum = m_accumulated;
+        if (Has_Started()) {
+            accum -= Value();
+
+            if (accum < 0) {
+                accum = 0;
+            }
+        }
+
+        return accum;
+    }
+
+    unsigned int const Func() // TODO, need to work out name.
+    {
+        unsigned int accum = m_accumulated;
+
+        if (Has_Started()) {
+            accum += Value();
+        }
+
+        return accum;
+    }
+
+private:
+    T m_timer;
+    int m_started;
+    unsigned int m_accumulated;
+};
 
 #endif
