@@ -1,0 +1,183 @@
+#include "gscreen.h"
+#include "gamedebug.h"
+#include "gbuffer.h"
+#include "globals.h"
+#include "msglist.h"
+
+#ifndef RAPP_STANDALONE
+GadgetClass *&GameScreenClass::Buttons = *reinterpret_cast<GadgetClass **>(0x00680900);
+GraphicViewPortClass *&GameScreenClass::ShadowPage = *reinterpret_cast<GraphicViewPortClass **>(0x00680904);
+#else
+GadgetClass *GameScreenClass::Buttons = nullptr;
+GraphicViewPortClass *GameScreenClass::ShadowPage = nullptr;
+#endif
+
+GameScreenClass::GameScreenClass() :
+    RedrawFlag(REDRAW_FORCE_MAYBE | REDRAW_2)
+{
+
+}
+
+GameScreenClass::~GameScreenClass()
+{
+    
+}
+
+void GameScreenClass::One_Time()
+{
+    Buttons = nullptr;
+    ShadowPage = new GraphicBufferClass(320, 200, nullptr);
+    ShadowPage->Clear();
+    g_hidPage.Clear();
+}
+
+void GameScreenClass::Init(TheaterType theater)
+{
+    Init_Clear();
+    Init_IO();
+    Init_Theater(theater);
+}
+
+void GameScreenClass::Init_Clear()
+{
+    if (ShadowPage != nullptr) {
+        ShadowPage->Clear();
+        g_hidPage.Clear();
+    }
+
+    RedrawFlag |= REDRAW_FORCE_MAYBE;
+}
+
+void GameScreenClass::Init_IO()
+{
+    Buttons = nullptr;
+}
+
+void GameScreenClass::Flag_To_Redraw(BOOL a1)
+{
+    RedrawFlag |= REDRAW_2;
+
+    if (a1) {
+        RedrawFlag |= REDRAW_FORCE_MAYBE;
+    }
+}
+
+void GameScreenClass::Input(KeyNumType &key, int &mouse_x, int &mouse_y)
+{
+    key = KeyNumType(g_keyboard->Check());
+    mouse_x = g_mouse->Get_Mouse_X();
+    mouse_y = g_mouse->Get_Mouse_Y();
+
+    if (Buttons != nullptr) {
+        if (Buttons->Is_List_To_Redraw()) {
+            Flag_To_Redraw();
+        }
+
+        GraphicViewPortClass *old = Set_Logic_Page(g_hidPage);
+        key = Buttons->Input();
+        Set_Logic_Page(old);
+
+    } else if (key != KN_NONE) {
+        key = KeyNumType(g_keyboard->Get());
+    }
+
+    AI(key, mouse_x, mouse_y);
+}
+
+void GameScreenClass::Add_A_Button(GadgetClass &gadget)
+{
+    if (&gadget == Buttons) {
+        Remove_A_Button(gadget);
+    } else {
+        gadget.Remove();
+    }
+
+    if (Buttons != nullptr) {
+        gadget.Add_Tail(*Buttons);
+    } else {
+        Buttons = &gadget;
+    }
+}
+
+void GameScreenClass::Remove_A_Button(GadgetClass &gadget)
+{
+    Buttons = gadget.Remove();
+}
+
+void GameScreenClass::Render()
+{
+    // This if is only done in EDWIN, so editor only?
+    if (g_inMapEditor && Buttons != nullptr && Buttons->Is_List_To_Redraw()) {
+        RedrawFlag |= REDRAW_2;
+    }
+
+    if ((RedrawFlag & REDRAW_FORCE_MAYBE) || (RedrawFlag & REDRAW_2)) {
+        GraphicViewPortClass *old = Set_Logic_Page(g_hidPage);
+
+        BOOL to_redraw = (RedrawFlag & REDRAW_FORCE_MAYBE) != 0;
+
+        if (g_inMapEditor && to_redraw) {
+            g_hidPage.Clear();
+        }
+
+        Draw_It(to_redraw);
+
+        if (Buttons != nullptr) {
+            Buttons->Draw_All(false);
+        }
+
+        // TODO Requires SessionClass.
+        if (!g_inMapEditor) {
+            //if (Session.Messages.Num_Messages() > 0) {
+                //
+                //
+                //
+                // if ( Get_Lepton_X(Loc2) < 128 ) {
+                //	v4 = Get_Lepton_X(Loc2);
+                //} else {
+                //	v4 = Get_Lepton_X(Loc2) + 1;
+                //}
+
+                //
+                //
+                //
+                // Session.MessageList.Set_Width(v3 * 24);
+            //}
+
+            //
+            //
+            //
+            // Session.MessageList.Draw();
+        }
+
+        // EDWIN uses a bool param to the function to decide to do this.
+        Blit_Display();
+        // Otherwise it does this:
+        //g_mouse->Erase_Mouse(g_hidPage, true);
+
+        RedrawFlag &= ~(REDRAW_FORCE_MAYBE | REDRAW_2); // Clear redraw flags
+        Set_Logic_Page(old);
+    }
+}
+
+void GameScreenClass::Draw_It(BOOL force_redraw) {}
+
+void GameScreenClass::Blit_Display()
+{
+    g_mouse->Draw_Mouse(g_hidPage);
+
+    g_hidPage.Blit(g_seenBuff,
+        g_hidPage.Get_XPos(),
+        g_hidPage.Get_YPos(),
+        g_seenBuff.Get_XPos(),
+        g_seenBuff.Get_YPos(),
+        g_hidPage.Get_Width(),
+        g_hidPage.Get_Height());
+
+    g_mouse->Erase_Mouse(g_hidPage);
+}
+
+void GameScreenClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
+{
+    return;
+}

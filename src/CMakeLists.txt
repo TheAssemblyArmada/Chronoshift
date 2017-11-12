@@ -73,14 +73,16 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
-    game/engine/expansion.cpp
     game/engine/abstract.cpp
+    game/engine/expansion.cpp
     game/engine/facing.cpp
     game/engine/getcd.cpp
+    game/engine/gscreen.cpp
     game/engine/heap.cpp
     game/engine/msglist.cpp
     game/engine/rtti.cpp
     game/engine/special.cpp
+    game/engine/theater.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
     game/gfx/blitters.cpp
