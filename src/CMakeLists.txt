@@ -13,6 +13,22 @@ else()
     #No other platforms yet.
 endif()
 
+# Add LZO compression for save game support
+find_package(LZO)
+
+if(LZO_FOUND)
+    message("LZO found, will not download and build an internal version.")
+    set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${LZO_INCLUDE_DIRS})
+    set(PLATFORM_LIBS ${PLATFORM_LIBS} ${LZO_LIBRARIES})
+else()
+    message("LZO not found, will download and build an internal version.")
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init -- libs/lzo
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    add_subdirectory("${CMAKE_SOURCE_DIR}/libs/lzo" "${CMAKE_BINARY_DIR}/libs/lzo" EXCLUDE_FROM_ALL)
+    set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${CMAKE_SOURCE_DIR}/libs/lzo/include)
+    set(PLATFORM_LIBS ${PLATFORM_LIBS} lzo_static_lib)
+endif()
+
 # Build and link the DLL.
 set(GAMEENGINE_INCLUDES
     base

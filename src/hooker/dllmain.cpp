@@ -44,6 +44,7 @@
 #include "surfacemonitor.h"
 #include "wsa.h"
 #include "xordelta.h"
+#include <lzo/lzo1x.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,6 +97,8 @@ void Setup_Hooks()
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
     Hook_Function(0x004AD670, Dialog_Box);
+    Hook_Function(0x005DDE50, lzo1x_decompress);
+    //Hook_Function(0x005DE470, lzo1x_1_compress);
     //Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
 }
 

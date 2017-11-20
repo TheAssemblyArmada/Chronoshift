@@ -1,0 +1,3 @@
+[submodule "libs/lzo"]
+	path = libs/lzo
+	url = https://github.com/TheAssemblyArmada/lzo.git
