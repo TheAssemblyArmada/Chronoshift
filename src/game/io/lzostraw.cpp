@@ -87,8 +87,6 @@ int LZOStraw::Get(void *buffer, int length)
             m_compressedBytes = le16toh(tmp[0]);
             m_uncompressedBytes = le16toh(tmp[1]);
 
-            DEBUG_LOG("Decompressing %d bytes to %d.\n", m_compressedBytes, m_uncompressedBytes);
-
             // TODO replace this workmem with m_outBuffer when original LZO calls replaced as original doesn't allocate
             // m_outBuffer in its ctor and does this temp allocation instead.
             uint8_t *workmem = new uint8_t[m_compressedBytes];

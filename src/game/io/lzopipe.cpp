@@ -117,8 +117,7 @@ int LZOPipe::Put(void const *source, int length)
                 delete[] workmem;
                 m_uncompressedBytes = m_blockSize;
                 m_compressedBytes = outsize;
-                DEBUG_LOG("Writing %d bytes compressed from %d.\n", m_compressedBytes, m_uncompressedBytes);
-
+                
                 // On disk format is little endian so need to convert.
                 int16_t tmp[2];
                 tmp[0] = htole16(m_compressedBytes);
@@ -140,8 +139,7 @@ int LZOPipe::Put(void const *source, int length)
             m_compressedBytes = outsize;
             src += m_blockSize;
             length -= m_blockSize;
-            DEBUG_LOG("Writing %d bytes compressed from %d.\n", m_compressedBytes, m_uncompressedBytes);
-
+            
             // On disk format is little endian so need to convert.
             int16_t tmp[2];
             tmp[0] = htole16(m_compressedBytes);
@@ -194,7 +192,7 @@ int LZOPipe::Flush()
 
             m_compressedBytes = outsize;
             m_uncompressedBytes = m_dataInBuffer;
-            DEBUG_LOG("Flushing %d bytes compressed from %d.\n", m_compressedBytes, m_uncompressedBytes);
+            
             // On disk format is little endian so need to convert.
             int16_t tmp[2];
             tmp[0] = htole16(m_compressedBytes);
