@@ -105,6 +105,8 @@ set(GAMEENGINE_SRC
     game/io/filestraw.cpp
     game/io/lcwpipe.cpp
     game/io/lcwstraw.cpp
+    game/io/lzopipe.cpp
+    game/io/lzostraw.cpp
     game/io/mixfile.cpp
     game/io/pipe.cpp
     game/io/pkpipe.cpp

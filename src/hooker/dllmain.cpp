@@ -30,6 +30,8 @@
 #include "keyboard.h"
 #include "lcw.h"
 #include "list.h"
+#include "lzostraw.h"
+#include "lzopipe.h"
 #include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
@@ -44,7 +46,6 @@
 #include "surfacemonitor.h"
 #include "wsa.h"
 #include "xordelta.h"
-#include <lzo/lzo1x.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,12 +94,12 @@ void Setup_Hooks()
     ListClass::Hook_Me();
     FixedHeapClass::Hook_Me();
     FixedIHeapClass::Hook_Me();
+    //LZOPipe::Hook_Me();
+    LZOStraw::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
     Hook_Function(0x004AD670, Dialog_Box);
-    Hook_Function(0x005DDE50, lzo1x_decompress);
-    //Hook_Function(0x005DE470, lzo1x_1_compress);
     //Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
 }
 
