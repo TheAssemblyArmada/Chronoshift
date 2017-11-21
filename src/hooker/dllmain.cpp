@@ -94,7 +94,7 @@ void Setup_Hooks()
     ListClass::Hook_Me();
     FixedHeapClass::Hook_Me();
     FixedIHeapClass::Hook_Me();
-    //LZOPipe::Hook_Me();
+    LZOPipe::Hook_Me();
     LZOStraw::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);

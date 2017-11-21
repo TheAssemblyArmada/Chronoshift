@@ -49,7 +49,7 @@ int LZOPipe::Put(void const *source, int length)
 {
     int putbytes = 0;
 
-    if (source == nullptr || length <= 1) {
+    if (source == nullptr || length < 1) {
         return Pipe::Put(source, length);
     }
 
