@@ -74,6 +74,7 @@ set(GAMEENGINE_SRC
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
     game/engine/expansion.cpp
+    game/engine/getcd.cpp
     game/engine/heap.cpp
     game/engine/msglist.cpp
     game/engine/special.cpp
