@@ -76,6 +76,7 @@ set(GAMEENGINE_SRC
     game/engine/expansion.cpp
     game/engine/heap.cpp
     game/engine/msglist.cpp
+    game/engine/special.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
     game/gfx/blitters.cpp
