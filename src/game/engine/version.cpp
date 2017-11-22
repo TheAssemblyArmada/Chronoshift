@@ -97,10 +97,12 @@ const char *VersionClass::Version_String()
             strlcat(_buffer, "AM", sizeof(_buffer));
         }
 
-        strlcat(_buffer, "\r" RAPP_BRANCH, sizeof(_buffer));
         strlcat(_buffer, "\r" RAPP_COMMIT_SHA1_SHORT, sizeof(_buffer));
-        strlcat(_buffer, "\r", sizeof(_buffer));
-        strlcat(_buffer, m_fileVersionName, sizeof(_buffer));
+
+        if (strlen(m_fileVersionName) > 0) {
+            strlcat(_buffer, "\r", sizeof(_buffer));
+            strlcat(_buffer, m_fileVersionName, sizeof(_buffer));
+        }
     }
 
     return _buffer;
