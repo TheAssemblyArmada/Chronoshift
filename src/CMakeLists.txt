@@ -73,6 +73,7 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
+    game/engine/expansion.cpp
     game/engine/heap.cpp
     game/engine/msglist.cpp
     game/engine/utracker.cpp
