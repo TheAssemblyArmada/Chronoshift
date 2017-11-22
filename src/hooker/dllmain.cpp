@@ -44,6 +44,7 @@
 #include "textprint.h"
 #include "toggle.h"
 #include "surfacemonitor.h"
+#include "version.h"
 #include "wsa.h"
 #include "xordelta.h"
 #include <stdarg.h>
@@ -96,6 +97,7 @@ void Setup_Hooks()
     FixedIHeapClass::Hook_Me();
     LZOPipe::Hook_Me();
     LZOStraw::Hook_Me();
+    VersionClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);

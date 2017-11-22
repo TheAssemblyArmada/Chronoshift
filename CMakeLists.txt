@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.0.0)
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "No build type selected, default to Debug")
@@ -9,7 +9,7 @@ if(MSVC)
     set(MSVC_INCREMENTAL_DEFAULT ON)
 endif()
 
-set(PROJECT rapp)
+set(PROJECT rapp VERSION 3.3)
 
 project(${PROJECT})
 
@@ -141,6 +141,9 @@ else()
     add_definitions(-DRAPP_COMMIT_SHA1_SHORT="NOGITHASH")
     add_definitions(-DRAPP_COMMIT_COUNT=0)
 endif()
+
+add_definitions(-DRAPP_MAJOR=${rapp_VERSION_MAJOR})
+add_definitions(-DRAPP_MINOR=${rapp_VERSION_MINOR})
 
 if(STANDALONE)
     add_definitions(-DRAPP_STANDALONE)
