@@ -86,47 +86,23 @@ enum MoveType
 };
 
 DEFINE_ENUMERATION_OPERATORS(MoveType);
+
 class AbstractClass
 {
 public:
     AbstractClass(RTTIType type = RTTI_NONE, int id = -1);
     AbstractClass(AbstractClass const &that);
     AbstractClass(NoInitClass const &noinit) {}
-
     virtual ~AbstractClass() {}
 
-    int Get_Heap_ID() const
-    {
-        DEBUG_ASSERT(this != nullptr);
-        return HeapID;
-    }
-
-    virtual const char *Name() const
-    {
-        DEBUG_ASSERT(this != nullptr);
-        return "";
-    }
-
-    virtual HousesType Owner() const
-    {
-        DEBUG_ASSERT(this != nullptr);
-        return HOUSES_NONE;
-    }
-
-    virtual uint32_t const Center_Coord() const
-    {
-        DEBUG_ASSERT(this != nullptr);
-        return Coord;
-    }
-
-    virtual uint32_t const Target_Coord() const
-    {
-        DEBUG_ASSERT(this != nullptr);
-        return Coord;
-    }
-
+    virtual const char *Name() const { return ""; }
+    virtual HousesType Owner() const { return HOUSES_NONE; }
+    virtual uint32_t const Center_Coord() const { return Coord; }
+    virtual uint32_t const Target_Coord() const { return Coord; }
     virtual MoveType Can_Enter_Cell(int16_t cellnum, FacingType facing = FACING_NONE) const { return MOVE_OK; }
     virtual void AI() {}
+
+    int Get_Heap_ID() const { return HeapID; }
 
 protected:
     RTTIType RTTI; // ID for this object type, set from derived type constructors.
@@ -144,37 +120,34 @@ public:
     AbstractTypeClass(NoInitClass const &noinit) {}
     ~AbstractTypeClass() {}
 
-    AbstractTypeClass &operator=(AbstractTypeClass &that)
-    {
-        if (this != &that) {
-            RTTI = that.RTTI;
-            HeapID = that.HeapID;
-            UIName = that.UIName;
-            strlcpy(Name, that.Name, sizeof(Name));
-        }
+    virtual uint32_t Coord_Fixup(uint32_t coord) const { return coord; }
+    virtual int Full_Name() const;
+    virtual int Get_Ownable() const { return 0xFFFFF; } // This is a bit for each of the normal houses, pluse 8 multiplayer.
 
-        return *this;
-    }
+    AbstractTypeClass &operator=(AbstractTypeClass &that);
 
     int Get_Heap_ID() const { return HeapID; }
     RTTIType const What_Am_I() const { return RTTI; }
-    virtual uint32_t Coord_Fixup(uint32_t coord) const
-    {
-        DEBUG_ASSERT(this != nullptr);
-        return coord;
-    }
-    virtual int Full_Name() const;
-    virtual int Get_Ownable() const
-    {
-        DEBUG_ASSERT(this != nullptr);
-        return 0xFFFFF; // This is a bit for each of the normal houses, pluse 8 multiplayer.
-    }
-
+    
 protected:
     RTTIType RTTI;
     int HeapID;
     char Name[24];
     int UIName;
 };
+
+inline AbstractTypeClass &AbstractTypeClass::operator=(AbstractTypeClass &that)
+{
+    if (this != &that) {
+        RTTI = that.RTTI;
+        HeapID = that.HeapID;
+        UIName = that.UIName;
+        strlcpy(Name, that.Name, sizeof(Name));
+    }
+
+    return *this;
+}
+
+
 
 #endif // _ABSTRACT_H_
