@@ -37,6 +37,9 @@ extern char *&ScoreFontPtr;
 extern char *&FontLEDPtr;
 extern char *&VCRFontPtr;
 extern char *&TypeFontPtr;
+#ifdef PLATFORM_WINDOWS
+extern HWND &MainWindow;
+#endif
 #else
 extern int g_frame;
 extern BOOL g_gameInFocus;
@@ -52,6 +55,9 @@ extern char *ScoreFontPtr;
 extern char *FontLEDPtr;
 extern char *VCRFontPtr;
 extern char *TypeFontPtr;
+#ifdef PLATFORM_WINDOWS
+extern HWND MainWindow;
+#endif
 #endif
 
 #endif

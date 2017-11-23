@@ -29,6 +29,9 @@ char *&ScoreFontPtr = Make_Global<char *>(0x00669950);
 char *&FontLEDPtr = Make_Global<char *>(0x00669948);
 char *&VCRFontPtr = Make_Global<char *>(0x0066994C);
 char *&TypeFontPtr = Make_Global<char *>(0x00669934);
+#ifdef PLATFORM_WINDOWS
+HWND &MainWindow = Make_Global<HWND>(0x006B1498);
+#endif
 #else
 int g_frame;
 BOOL g_gameInFocus;
@@ -44,4 +47,7 @@ char *ScoreFontPtr;
 char *FontLEDPtr;
 char *VCRFontPtr;
 char *TypeFontPtr;
+#ifdef PLATFORM_WINDOWS
+HWND MainWindow;
+#endif
 #endif

@@ -8,7 +8,7 @@ if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
         set(PLATFORM_LIBS ${PLATFORM_LIBS} ${DirectX_DDRAW_LIBRARY})
     endif()
     
-    set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm)
+    set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm wsock32)
 else()
     #No other platforms yet.
 endif()
@@ -39,6 +39,7 @@ set(GAMEENGINE_INCLUDES
     game/gfx
     game/io
     game/memory
+    game/net
     game/platform
     game/ui
 )
@@ -128,6 +129,7 @@ set(GAMEENGINE_SRC
     game/memory/alloc.cpp
     game/memory/newdel.cpp
     game/net/field.cpp
+    game/net/wsock.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
     game/ui/bigcheck.cpp
