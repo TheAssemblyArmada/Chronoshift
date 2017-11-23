@@ -22,9 +22,9 @@
 
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
-extern VersionClass &g_version = Make_Global<VersionClass>(0x00667810);
+VersionClass &g_version = Make_Global<VersionClass>(0x00667810);
 #else
-extern VersionClass g_version;
+VersionClass g_version;
 #endif
 
 VersionClass::VersionClass() :
