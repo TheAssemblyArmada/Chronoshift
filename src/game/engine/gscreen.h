@@ -32,9 +32,6 @@ enum RedrawEnum
     REDRAW_2 = 2
 };
 
-// DEFINE_ENUMERATION_OPERATORS(RedrawEnum);
-// DEFINE_ENUMERATION_BITWISE_OPERATORS(RedrawEnum);
-
 enum MouseType
 {
     MOUSE_NONE = -1,
@@ -104,7 +101,7 @@ public:
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y);
     virtual void Add_A_Button(GadgetClass &gadget);
     virtual void Remove_A_Button(GadgetClass &gadget);
-    virtual void Flag_To_Redraw(BOOL a1 = false);
+    virtual void Flag_To_Redraw(BOOL redraw = false);
     virtual void Render();
     virtual void Draw_It(BOOL force_redraw);
     virtual void Blit_Display();

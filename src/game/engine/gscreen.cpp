@@ -3,6 +3,7 @@
 #include "gbuffer.h"
 #include "globals.h"
 #include "msglist.h"
+#include "session.h"
 
 #ifndef RAPP_STANDALONE
 GadgetClass *&GameScreenClass::Buttons = *reinterpret_cast<GadgetClass **>(0x00680900);
@@ -53,11 +54,11 @@ void GameScreenClass::Init_IO()
     Buttons = nullptr;
 }
 
-void GameScreenClass::Flag_To_Redraw(BOOL a1)
+void GameScreenClass::Flag_To_Redraw(BOOL redraw)
 {
     RedrawFlag |= REDRAW_2;
 
-    if (a1) {
+    if (redraw) {
         RedrawFlag |= REDRAW_FORCE_MAYBE;
     }
 }
@@ -104,6 +105,7 @@ void GameScreenClass::Remove_A_Button(GadgetClass &gadget)
     Buttons = gadget.Remove();
 }
 
+// TODO This function should probably be bumped up to DisplayClass as it relies on DisplayClass members.
 void GameScreenClass::Render()
 {
     // This if is only done in EDWIN, so editor only?
@@ -126,9 +128,9 @@ void GameScreenClass::Render()
             Buttons->Draw_All(false);
         }
 
-        // TODO Requires SessionClass.
+        // TODO Requires DisplayClass layer of IOMap.
         if (!g_inMapEditor) {
-            //if (Session.Messages.Num_Messages() > 0) {
+            if (Session.Get_Messages().Num_Messages() > 0) {
                 //
                 //
                 //
@@ -141,13 +143,10 @@ void GameScreenClass::Render()
                 //
                 //
                 //
-                // Session.MessageList.Set_Width(v3 * 24);
-            //}
+                // Session.Get_Messages().Set_Width(v3 * 24);
+            }
 
-            //
-            //
-            //
-            // Session.MessageList.Draw();
+            Session.Get_Messages().Draw();
         }
 
         // EDWIN uses a bool param to the function to decide to do this.
