@@ -152,7 +152,7 @@ private:
     BOOL Compression;
     BOOL ErrorCorrection;
     BOOL HardwareFlowControl;
-    char UnkGap[63];
+    char ModemName[64];
     DynamicVectorClass<char *> PhoneBookEntries;
     DynamicVectorClass<char *> InitStrings;
     int SyncBugFrame;
