@@ -83,6 +83,7 @@ set(GAMEENGINE_SRC
     game/engine/msglist.cpp
     game/engine/rtti.cpp
     game/engine/special.cpp
+    game/engine/session.cpp
     game/engine/theater.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
