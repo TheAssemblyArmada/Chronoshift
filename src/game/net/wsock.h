@@ -22,9 +22,7 @@
 
 #if defined(PLATFORM_WINDOWS) && !defined(_WINSOCKAPI_)
 #include <winsock.h>
-#endif
-
-#ifndef PLATFORM_WINDOWS
+#else
 #include <sys/types.h>
 
 #ifndef SOCKET
@@ -132,5 +130,12 @@ protected:
     static int SocketsMax;
 #endif
 };
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+extern WinsockInterfaceClass *&g_packetTransport;
+#else
+extern WinsockInterfaceClass *g_packetTransport;
+#endif
 
 #endif // WSOCK_H

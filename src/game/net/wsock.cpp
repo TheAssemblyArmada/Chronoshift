@@ -25,11 +25,19 @@ typedef int socklen_t;
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#define SOCKET_ERROR -1
 #endif
 
 #ifdef RAPP_SOCKETS_API
 int WinsockInterfaceClass::SocketsMax = 0;
 #endif // !PLATFORM_WINDOWS
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>(0x0069172C);
+#else
+WinsockInterfaceClass *g_packetTransport = nullptr;
+#endif
 
 WinsockInterfaceClass::WinsockInterfaceClass() :
     InBuffers(),
@@ -59,8 +67,8 @@ BOOL WinsockInterfaceClass::Init()
         WORD wVersionRequested;
         WSADATA wsaData;
 
-        // TODO RA originally requested 1.1 or higher, we should use the newer version
-        // 2.2 is supported all the way back to win98.
+        // TODO RA originally requested 1.1 or higher, we should use the newer version 2.2 is supported all the way back to
+        // win98.
         wVersionRequested = MAKEWORD(1, 1); // RA, 0x101
 
         if (WSAStartup(wVersionRequested, &wsaData) != 0) { // need to check agaisnt error
@@ -144,9 +152,9 @@ void WinsockInterfaceClass::Write_To(void *src, int src_len, void *src_head)
     // Add it to the outgoing buffer queue
     OutBuffers.Add(out);
 
-#ifndef RAPP_SOCKETS_API
-    // Send a message to our event queue that sent data is pending. Normal sockets api will have to check in event handler
-    // with select.
+#ifdef PLATFORM_WINDOWS
+    // Send a message to our event queue that sent data is pending. 
+    // TODO Will need to change this when we port to SDL or other cross platform event model.
     SendMessageA(MainWindow, Protocol_Event_Message(), 0, 2);
 #endif
 
@@ -167,8 +175,9 @@ void WinsockInterfaceClass::Broadcast(void *src, int src_len)
 
     OutBuffers.Add(wsockbuffer);
 
-#ifndef RAPP_SOCKETS_API
+#ifdef PLATFORM_WINDOWS
     // Send a message to our event queue that sent data is pending.
+    // TODO Will need to change this when we port to SDL or other cross platform event model.
     SendMessageA(MainWindow, Protocol_Event_Message(), 0, 2);
 #endif
 
@@ -194,9 +203,8 @@ void WinsockInterfaceClass::Discard_Out_Buffers()
 BOOL WinsockInterfaceClass::Start_Listening()
 {
 #ifdef RAPP_SOCKETS_API
-    // Without the windows event loop, we have to fall back on non-blocking
-    // sockets and select from the look of things. This sets up what sockets we
-    // want to listen for activity on.
+    // Without the windows event loop, we have to fall back on non-blocking sockets and select from the look of things. This
+    // sets up what sockets we want to listen for activity on.
     FD_SET(Socket, &ReadSockets);
     FD_SET(Socket, &WriteSockets);
 
@@ -207,8 +215,8 @@ BOOL WinsockInterfaceClass::Start_Listening()
     if (WSAAsyncSelect(Socket, MainWindow, Protocol_Event_Message(), FD_READ | FD_WRITE) == -1) {
         DEBUG_LOG("WinsockInterface: Async select failed.\n");
         WSACancelAsyncRequest(TaskHandle);
-
         TaskHandle = INVALID_HANDLE_VALUE;
+
         return false;
     }
 #endif
@@ -243,7 +251,7 @@ BOOL WinsockInterfaceClass::Set_Socket_Options()
     static int socket_recv_buffer_size = SOCKET_BUFFER_SIZE;
     static int socket_tran_buffer_size = SOCKET_BUFFER_SIZE;
 
-    if (setsockopt(Socket, SOL_SOCKET, SO_RCVBUF, (char *)&socket_recv_buffer_size, sizeof(int)) == -1) { // SOCKET_ERROR
+    if (setsockopt(Socket, SOL_SOCKET, SO_RCVBUF, (char *)&socket_recv_buffer_size, sizeof(int)) == SOCKET_ERROR) {
 #if defined(PLATFORM_WINDOWS)
         int error = WSAGetLastError();
 #else // !PLATFORM_WINDOWS
@@ -252,7 +260,7 @@ BOOL WinsockInterfaceClass::Set_Socket_Options()
         DEBUG_LOG("WinsockInterface: Failed to set socket option SO_RCVBUF - error code %d.\n", error);
     }
 
-    if (setsockopt(Socket, SOL_SOCKET, SO_SNDBUF, (char *)&socket_tran_buffer_size, sizeof(int)) == -1) { // SOCKET_ERROR
+    if (setsockopt(Socket, SOL_SOCKET, SO_SNDBUF, (char *)&socket_tran_buffer_size, sizeof(int)) == SOCKET_ERROR) {
 #if defined(PLATFORM_WINDOWS)
         int error = WSAGetLastError();
 #else // !PLATFORM_WINDOWS
