@@ -129,6 +129,7 @@ set(GAMEENGINE_SRC
     game/memory/alloc.cpp
     game/memory/newdel.cpp
     game/net/field.cpp
+    game/net/ipxaddress.cpp
     game/net/wsock.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
