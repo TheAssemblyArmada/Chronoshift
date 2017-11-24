@@ -104,20 +104,20 @@ BOOL IPXAddressClass::operator!=(IPXAddressClass &that)
 
 BOOL IPXAddressClass::operator>(IPXAddressClass &that)
 {
-    return memcmp(NetNum, that.NetNum, sizeof(NetNum)) > 0;
+    return memcmp(this, &that, sizeof(*this)) > 0;
 }
 
 BOOL IPXAddressClass::operator<(IPXAddressClass &that)
 {
-    return memcmp(NetNum, that.NetNum, sizeof(NetNum)) < 0;
+    return memcmp(this, &that, sizeof(*this)) < 0;
 }
 
 BOOL IPXAddressClass::operator>=(IPXAddressClass &that)
 {
-    return memcmp(NetNum, that.NetNum, sizeof(NetNum)) >= 0;
+    return memcmp(this, &that, sizeof(*this)) >= 0;
 }
 
 BOOL IPXAddressClass::operator<=(IPXAddressClass &that)
 {
-    return memcmp(NetNum, that.NetNum, sizeof(NetNum)) <= 0;
+    return memcmp(this, &that, sizeof(*this)) <= 0;
 }
