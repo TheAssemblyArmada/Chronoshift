@@ -123,6 +123,7 @@ set(GAMEENGINE_SRC
     game/io/pkpipe.cpp
     game/io/pkstraw.cpp
     game/io/rawfileclass.cpp
+    game/io/ramfile.cpp
     game/io/rndstraw.cpp
     game/io/shapipe.cpp
     game/io/shastraw.cpp
