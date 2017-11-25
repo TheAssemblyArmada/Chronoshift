@@ -173,14 +173,14 @@ private:
     char ModemGameToPlay;
     DynamicVectorClass<char *> PhoneBookEntries;
     DynamicVectorClass<char *> InitStrings;
-    int SyncBugFrame;
-    RTTIType SyncBugType; // Suspect this is RTTIType but needs confirming.
-    int SyncBugTrappedObject;
-    uint32_t SyncBugCoord;
-    uint32_t SyncBugTarget;
-    uint32_t SyncBugCell;
-    BOOL SyncBugCheckHeap;
-    BOOL SyncBugPrintCRC;
+    int TrapFrame;
+    RTTIType TrapType; // Suspect this is RTTIType but needs confirming.
+    int TrapTrappedObject;
+    uint32_t TrapCoord;
+    uint32_t TrapTarget;
+    uint32_t TrapCell;
+    BOOL TrapCheckHeap;
+    BOOL TrapPrintCRC;
 };
 
 #ifndef RAPP_STANDALONE
