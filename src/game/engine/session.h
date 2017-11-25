@@ -89,22 +89,22 @@ private:
     BOOL MPlayerGhosts;
     int MPlayerUnitCount;
     int MPlayerAIPlayers;
-    char Scenario[44];
+    char MPlayerScenarioName[44];
     int UniqueID;
-    char PlayerHandle[12];
-    PlayerColorType Color;
-    PlayerColorType PlayersColor;
-    HousesType Side; // Should be HouseType?
+    char MPlayerName[12];
+    PlayerColorType MPlayerPrefColor;
+    PlayerColorType MPlayerColorIdx;
+    HousesType MPlayerHouse; // Should be HouseType?
     BOOL MPlayerObiWan;
     BOOL MPlayerBlitz;
     int MPlayerMax;
     int MPlayerCount;
     int MaxAhead;
     int FrameSendRate;
-    int RequestedFPS;
-    int StartTime;
-    int Ticks;
-    int Frames;
+    int DesiredFrameRate;
+    int ProcessingStartTick;
+    int ProcessingTicks;
+    int ProcessingFrames;
     BOOL LoadGame;
     BOOL SaveGame;
     DynamicVectorClass<MultiMission *> MPlayerScenarios;
@@ -123,8 +123,25 @@ private:
     int MPlayerNumScores;
     int MPlayerWinner;
     int MPlayerCurrentGame;
-    CCFileClass SessionRecordFile;
-    int UnkAttractBitfield;
+    CCFileClass RecordFile;
+#ifndef RAPP_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool RecordGame : 1; // & 1
+            bool PlaybackGame : 1; // & 2
+            bool AllowAttract : 1; // & 4
+        };
+        int m_sessionFlags;
+    };
+#else
+    bool RecordGame;
+    bool PlaybackGame;
+    bool AllowAttract;
+
+#endif
     BOOL IsBridge;
     IPXAddressClass BridgeNetwork;
     BOOL NetStealth;
@@ -139,7 +156,7 @@ private:
     int MetaSize;
     DynamicVectorClass<NodeNameTag *> Games;
     DynamicVectorClass<NodeNameTag *> Players;
-    DynamicVectorClass<NodeNameTag *> UnkNodeVector;
+    DynamicVectorClass<NodeNameTag *> NetworkPlayers;
     int UnkInt;
     int PhoneIndex;
     int Port;
@@ -152,7 +169,8 @@ private:
     BOOL Compression;
     BOOL ErrorCorrection;
     BOOL HardwareFlowControl;
-    char ModemName[64];
+    char ModemName[63];
+    char ModemGameToPlay;
     DynamicVectorClass<char *> PhoneBookEntries;
     DynamicVectorClass<char *> InitStrings;
     int SyncBugFrame;
