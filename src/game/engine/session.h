@@ -62,6 +62,21 @@ struct MPlayerScoreType
     PlayerColorType Scheme;
 };
 
+struct SerialSettingsType
+{
+    int Port;
+    int IRQ;
+    int Baud;
+    char DialMethod;
+    int InitStringIndex;
+    int CallWaitStringIndex;
+    char CallWaitString[16];
+    BOOL Compression;
+    BOOL ErrorCorrection;
+    BOOL HardwareFlowControl;
+    char ModemName[63];
+};
+
 struct NodeNameTag
 {
     char Name[12];
@@ -157,19 +172,9 @@ private:
     DynamicVectorClass<NodeNameTag *> Games;
     DynamicVectorClass<NodeNameTag *> Players;
     DynamicVectorClass<NodeNameTag *> NetworkPlayers;
-    int UnkInt;
+    BOOL ModemService;
     int PhoneIndex;
-    int Port;
-    int IRQ;
-    int Baud;
-    char DialMethod;
-    int InitStringIndex;
-    int CallWaitStringIndex;
-    char CallWaitString[16];
-    BOOL Compression;
-    BOOL ErrorCorrection;
-    BOOL HardwareFlowControl;
-    char ModemName[63];
+    SerialSettingsType SerialDefaults;
     char ModemGameToPlay;
     DynamicVectorClass<char *> PhoneBookEntries;
     DynamicVectorClass<char *> InitStrings;
