@@ -215,11 +215,11 @@ public:
         return *this;
     }
 
-    BasicTimerClass &operator=(unsigned int value)
-    {
-        Set(value);
-        return *this;
-    }
+    //BasicTimerClass &operator=(unsigned int value)
+    //{
+    //    Set(value);
+    //    return *this;
+    //}
 
     bool Has_Started() { return m_started != -1; }
 
@@ -238,7 +238,7 @@ public:
         }
     }
 
-    bool Has_Expired() { return Remaining() <= 0; }
+    bool Has_Expired() { return Time() <= 0; }
     void Set(int value) { m_started = m_timer() - value; }
 
     // Clear the accumulated time. The value to reset to is
@@ -250,12 +250,12 @@ public:
     }
 
     //
-    unsigned int const Value() const { return m_timer() - m_started; }
+    int Value() const { return m_timer() - m_started; }
 
     // Get the time left until the countdown reaches 0.
-    int const Remaining() // Advance?
+    int Time() // Advance?
     {
-        unsigned int accum = m_accumulated;
+        int accum = m_accumulated;
         if (Has_Started()) {
             accum -= Value();
 
@@ -281,7 +281,7 @@ public:
 private:
     T m_timer;
     int m_started;
-    unsigned int m_accumulated;
+    int m_accumulated;
 };
 
 #endif
