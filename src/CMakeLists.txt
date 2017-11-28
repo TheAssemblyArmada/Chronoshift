@@ -78,6 +78,7 @@ set(GAMEENGINE_SRC
     game/engine/door.cpp
     game/engine/expansion.cpp
     game/engine/facing.cpp
+    game/engine/flasher.cpp
     game/engine/getcd.cpp
     game/engine/gscreen.cpp
     game/engine/heap.cpp
