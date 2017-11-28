@@ -56,6 +56,8 @@ if(WATCOM)
     # Disable stack checks in debug with -s
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -db -s")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -db")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -db -s")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -db")
     
     # Make watcom dump the debug symbols to a file with the .sym extension
     set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "opt symf ${CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
