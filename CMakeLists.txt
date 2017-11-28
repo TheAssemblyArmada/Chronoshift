@@ -14,6 +14,7 @@ set(PROJECT rapp VERSION 3.3)
 project(${PROJECT})
 
 if(MSVC)
+    # Prevent incremental linking.
     string(REPLACE "INCREMENTAL" "INCREMENTAL:NO" replacementFlags ${CMAKE_EXE_LINKER_FLAGS_DEBUG})
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DYNAMICBASE:NO /NXCOMPAT:NO /INCREMENTAL:NO ${replacementFlags}")
     set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "/DYNAMICBASE:NO /NXCOMPAT:NO /INCREMENTAL:NO ${replacementFlags}")
@@ -21,6 +22,16 @@ if(MSVC)
     string(REPLACE "INCREMENTAL" "INCREMENTAL:NO" replacementFlags ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO})
     set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/INCREMENTAL:NO ${replacementFlags}")
     set(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "/INCREMENTAL:NO ${replacementFlags}")
+    
+    # Disable Run Time Checking.
+    foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+        #message("Processing flags ${flag_var}")
+        string(REGEX REPLACE "/RTC[^ ]*" "" ${flag_var} "${${flag_var}}")
+    endforeach(flag_var)
 endif()
 
 if(WATCOM)
@@ -29,8 +40,10 @@ if(WATCOM)
     # Changes debug level to -d1 rather than -d2 to give mangled names
     foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-        message("Processing flags ${flag_var}")
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+        #message("Processing flags ${flag_var}")
         string(REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")
         string(REGEX REPLACE "-xs[^ ]*" "" ${flag_var} "${${flag_var}}")
         string(REGEX REPLACE "-d2" "-d1" ${flag_var} "${${flag_var}}")
@@ -38,6 +51,11 @@ if(WATCOM)
     
     # Set packing and alignment to 1 byte to match original game ABI
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -zp1")
+    
+    # Dump useful debug info with -db
+    # Disable stack checks in debug with -s
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -db -s")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -db")
     
     # Make watcom dump the debug symbols to a file with the .sym extension
     set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "opt symf ${CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
@@ -79,10 +97,8 @@ endif()
 
 # Enable debug features in MSVC Debug configs.
 if(MSVC)
-    #set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /DGAME_DEBUG_LOG")
-    #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /DGAME_DEBUG_LOG")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /DGAME_DEBUG_LOG")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DGAME_DEBUG_LOG")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /DGAME_DEBUG_LOG")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /DGAME_DEBUG_LOG")
 else()
     add_definitions(-DGAME_DEBUG_LOG)
     add_definitions(-D__STDC_FORMAT_MACROS)
