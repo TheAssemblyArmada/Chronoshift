@@ -34,18 +34,23 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+#endif
+
 private:
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {
+#pragma pack(push, 1)
         struct
         {
-            int Frames : 7;
+            int8_t Frames : 7;
             bool Flashed : 1;
         };
-        // TODO check if this class is an int in size and not a byte.
-        uint8_t Bitfield; // This shouldn't be used in the code.
+#pragma pack(pop)
+        int Bitfield; // This shouldn't be used in the code.
     };
 #else
     int Frames; // Number of frames to flash for.
@@ -58,5 +63,16 @@ inline void FlasherClass::Flash(int flash_frames, bool flash)
     Frames = flash_frames;
     Flashed = flash;
 }
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+inline void FlasherClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004C0690, *FlasherClass::Process);
+#endif
+}
+#endif
 
 #endif // FLASHER_H

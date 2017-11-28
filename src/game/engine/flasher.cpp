@@ -21,8 +21,8 @@
 BOOL FlasherClass::Process()
 {
     if (Frames > 0) {
-        Flashed = false;
         --Frames;
+        Flashed = false;
 
         // Check if we are on an odd frame and if so, set the status to flashed.
         if ((unsigned)Frames % 2) {
