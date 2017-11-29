@@ -514,7 +514,7 @@ enum TextEnum
     TXT_EASY = 469, // Easy
     TXT_HARD = 470, // Hard
     TXT_NORMAL = 471, // Normal
-    // TXT_ 	= 472,		// Please set the difficulty level. It will be used throughout this campaign.
+    TXT_SET_DIFFICULTY = 472,		// Please set the difficulty level. It will be used throughout this campaign.
     TXT_ALLIES = 473, // Allies
     TXT_SOVIET = 474, // Soviet
     // TXT_ 	= ,		// Intro Theme

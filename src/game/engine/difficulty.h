@@ -1,0 +1,70 @@
+/**
+ * @file
+ *
+ * @author OmniBlade
+ * @author CCHyper
+ *
+ * @brief Struct for handling differences between the difficulty levels.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
+#pragma once
+
+#ifndef DIFFICULTY_H
+#define DIFFICULTY_H
+
+#include "always.h"
+#include "fixed.h"
+
+class CCINIClass;
+
+enum DiffType
+{
+    DIFF_NONE = -1,
+    DIFF_EASIEST, // very easy?
+    DIFF_EASIER, // easy?
+    DIFF_NORMAL, // normal
+    DIFF_HARDER, // hard?
+    DIFF_HARDEST = 4, // very hard?
+    DIFF_COUNT
+};
+
+struct DifficultyClass
+{
+    fixed Firepower; // Multiplier to firepower for all weapons [larger means more damage].
+    fixed Groundspeed; // Multiplier to speed for all ground units [larger means faster].
+    fixed Airspeed; // Multiplier to speed for all air units [larger means faster].
+    fixed Armor; // Multiplier to armor damage for all units and buildings [smaller means less damage].
+    fixed ROF; // Multiplier to Rate Of Fire for all weapons [larger means slower ROF].
+    fixed Cost; // Multiplier to cost for all units and buildings [larger means costlier].
+    fixed BuildTime; // Multiplier to general object build time [larger means longer to build].
+    fixed RepairDelay; // Average delay (minutes) between initiating building repair.
+    fixed BuildDelay; // Average delay (minutes) between initiating construction.
+#ifndef RAPP_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool BuildSlowdown : 1; // & 1 Should the computer build slower than the player.
+            bool DestroyWalls : 1; // & 2 Allow scanning for nearby enemy walls and destroy them.
+            bool ContentScan : 1; // & 4 Should the contents of a transport be considered when picking best target?
+        };
+        int Bitfield;
+    };
+#else
+    bool BuildSlowdown; // Should the computer build slower than the player.
+    bool DestroyWalls; // Allow scanning for nearby enemy walls and destroy them.
+    bool ContentScan; // Should the contents of a transport be considered when picking best target?
+#endif
+};
+
+void Difficulty_Get(CCINIClass &ini, DifficultyClass &diff, const char *section);
+int Fetch_Difficulty_Dialog(BOOL one_time_mission = false);
+
+#endif // DIFFICULTY_H
