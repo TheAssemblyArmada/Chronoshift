@@ -27,13 +27,13 @@ void FuseClass::Arm_Fuse(uint32_t pos, uint32_t arm_pos, int duration, int arm_t
     }
 
     if (duration >= 255) {
-        duration = -1;
+        duration = 255;
     }
 
     Duration = duration;
 
     if (arm_time >= 255) {
-        arm_time = -1;
+        arm_time = 255;
     }
 
     ArmTimer = arm_time;
@@ -53,7 +53,7 @@ int FuseClass::Fuse_Checkup(uint32_t pos)
     if (ArmTimer > 0) {
         --ArmTimer;
     } else {
-        if (Duration <= 0) {
+        if (Duration == 0) {
             return FUSE_1;
         }
 

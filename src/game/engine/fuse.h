@@ -45,8 +45,8 @@ public:
     void Fuse_Read(FileClass &file);
 
 private:
-    int Duration;
-    int ArmTimer;
+    uint8_t Duration;
+    uint8_t ArmTimer;
     uint32_t Position;
     int16_t ArmDistance;
 };
