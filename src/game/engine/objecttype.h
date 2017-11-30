@@ -1,0 +1,97 @@
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Base class for most ingame object types.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
+#pragma once
+
+#ifndef OBJECTTYPE_H
+#define OBJECTTYPE_H
+
+#include "always.h"
+#include "abstract.h"
+#include "armor.h"
+
+class ObjectClass;
+class BuildingClass;
+class HouseClass;
+
+class ObjectTypeClass : public AbstractTypeClass
+{
+public:
+    ObjectTypeClass(RTTIType type, int id, BOOL animates, BOOL radar_invisible, BOOL selectable, BOOL legal_target,
+        BOOL insignificant, BOOL is_immune, BOOL logical, int uiname, char const *name);
+    ObjectTypeClass(ObjectTypeClass const &that);
+    ObjectTypeClass(NoInitClass const &noinit) : AbstractTypeClass(noinit) {}
+    virtual ~ObjectTypeClass();
+
+    virtual int Max_Pips() const { return 0; }
+    virtual void Dimensions(int &w, int &h) const;
+    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const = 0;
+    virtual int Cost_Of() const { return 0; }
+    virtual int Time_To_Build() const { return 0; }
+    virtual ObjectClass *Create_One_Of(HouseClass *house) const = 0;
+    virtual int16_t *Occupy_List(BOOL a1 = false) const;
+    virtual int16_t *Overlap_List() const;
+    virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false, HousesType house = HOUSES_NONE) const;
+    virtual void *Get_Cameo_Data() const { return nullptr; };
+
+    static void One_Time();
+
+protected:
+    char ImageName[256];
+#ifndef RAPP_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            BOOL Crushable : 1; // & 1 Can it be crushed by a heavy tracked vehicle (def = false)?
+            BOOL RadarInvisible : 1; // & 2 Is it invisible on radar maps (def = false)? unused in RA?
+            BOOL Selectable : 1; // & 4 Can this object be selected by the player (def = true)?
+            BOOL LegalTarget : 1; // & 8 Is this allowed to be a combat target (def = true)?
+            BOOL Insignificant : 1;	 // & 16 Will this object not be announced when destroyed (def = false)?
+            BOOL Immune : 1; // & 32 Is this object immune to damage (def = false)?
+            BOOL Animates : 1; // & 64 Does this object animate and thus require redraws?
+            BOOL Logical : 1; // & 128 Is this object involved in game logic calculations?
+        };
+        int Bitfield;
+    };
+#else
+    BOOL Crushable; // Can it be crushed by a heavy tracked vehicle (def = false)?
+    BOOL RadarInvisible; // Is it invisible on radar maps (def = false)? unused in RA?
+    BOOL Selectable; // Can this object be selected by the player (def = true)?
+    BOOL LegalTarget; // Is this allowed to be a combat target (def = true)?
+    BOOL Insignificant;	 // Will this object not be announced when destroyed (def = false)?
+    BOOL Immune; // Is this object immune to damage (def = false)?
+    BOOL Animates; // Does this object animate and thus require redraws?
+    BOOL Logical; // Is this object involved in game logic calculations?
+#endif
+                             
+    ArmorType Armor; // The armor type of this object [NONE, WOOD, LIGHT, HEAVY, CONCRETE].
+    int16_t Strength;
+    void *ImageData;
+    int FrameDimensions;
+    void *RadarIconData;
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+    static void *&SelectShapes;
+    static void *&PipShapes;
+#else
+    static void *SelectShapes;
+    static void *PipShapes;
+#endif
+};
+
+#endif // OBJECTTYPE_H
