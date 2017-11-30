@@ -170,7 +170,7 @@ off_t RAMFileClass::Seek(off_t offset, int whence)
 
             default:
                 // for debugging purposes, we want this to hit an assertion.
-                DEBUG_ASSERT_PRINT(nullptr, "Unhandled Seek mode in RAMFileClass::Seek()!");
+                DEBUG_ASSERT_PRINT(false, "Unhandled Seek mode in RAMFileClass::Seek()!");
                 break;
         }
 
