@@ -27,7 +27,6 @@
 
 class NoInitClass;
 
-// TODO Move this to wherever these definitions end up being kept for HouseClass once implemented.
 enum HousesType
 {
     HOUSES_NONE = -1,
@@ -70,6 +69,8 @@ enum HousesType
 
     HOUSES_COUNT = 20
 };
+
+DEFINE_ENUMERATION_OPERATORS(HousesType);
 
 // TODO move to where ever MoveType ends up.
 // https://github.com/Ares-Developers/YRpp/blob/d387fbb9d36e4645d93caf87be502d6d87d042c3/GeneralDefinitions.h#L1359

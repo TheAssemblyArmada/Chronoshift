@@ -22,8 +22,19 @@
 
 enum PlayerColorType
 {
-    PREMAP_NONE = -1,
-    // TODO
+    PLAYER_COLOR_NONE = -1,
+    PLAYER_COLOR_YELLOW,
+    PLAYER_COLOR_LIGHT_BLUE,
+    PLAYER_COLOR_RED,
+    PLAYER_COLOR_GREEN,
+    PLAYER_COLOR_ORANGE,
+    PLAYER_COLOR_GREY,
+    PLAYER_COLOR_BLUE,
+    PLAYER_COLOR_BROWN,
+    PLAYER_COLOR_8,			//TODO, no name, red??
+    PLAYER_COLOR_9,			//TODO, no name, light cyan??
+    PLAYER_COLOR_10,
+    PLAYER_COLOR_COUNT,
 };
 
 enum RemapType

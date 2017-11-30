@@ -86,6 +86,7 @@ set(GAMEENGINE_SRC
     game/engine/getcd.cpp
     game/engine/gscreen.cpp
     game/engine/heap.cpp
+    game/engine/housetype.cpp
     game/engine/msglist.cpp
     game/engine/rtti.cpp
     game/engine/special.cpp
