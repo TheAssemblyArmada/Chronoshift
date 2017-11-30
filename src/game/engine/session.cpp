@@ -16,7 +16,7 @@
 #include "session.h"
 
 #ifndef RAPP_STANDALONE
-extern SessionClass &Session = Make_Global<SessionClass>(0x0067F2B4);
+SessionClass &Session = Make_Global<SessionClass>(0x0067F2B4);
 #else
 SessionClass Session;
 #endif
