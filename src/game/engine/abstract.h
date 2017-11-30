@@ -110,7 +110,19 @@ protected:
     int HeapID;
     uint32_t Coord;
     int Height;
-    bool IsActive; // Is this object allocated and active for use? Set true on creation.
+#ifndef RAPP_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool IsActive : 1; // & 1
+        };
+        int Bitfield;
+    };
+#else
+    bool IsActive;
+#endif
 };
 
 class AbstractTypeClass
