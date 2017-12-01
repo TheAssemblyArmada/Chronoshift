@@ -75,6 +75,7 @@ set(GAMEENGINE_SRC
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
     game/engine/abstract.cpp
+    game/engine/action.cpp
     game/engine/armor.cpp
     game/engine/ccini.cpp
     game/engine/coord.cpp
