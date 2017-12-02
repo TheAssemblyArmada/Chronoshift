@@ -222,6 +222,7 @@ BOOL VectorClass<T>::Resize(int newsize, const T *array)
 template<typename T>
 class DynamicVectorClass : public VectorClass<T>
 {
+protected:
 #ifndef COMPILER_WATCOM
     // Looks like watcom doesn't like these declarations, newer compilers need them for standards compliance related to
     // template lookup.
