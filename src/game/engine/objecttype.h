@@ -46,6 +46,9 @@ public:
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false, HousesType house = HOUSES_NONE) const;
     virtual void *Get_Cameo_Data() const { return nullptr; };
 
+    BOOL Get_Logical() { return Logical; }
+    void *Get_Image_Data() { return ImageData; }
+
     static void One_Time();
 
 protected:
@@ -56,28 +59,28 @@ protected:
     {
         struct
         {
-            BOOL Crushable : 1; // & 1 Can it be crushed by a heavy tracked vehicle (def = false)?
-            BOOL RadarInvisible : 1; // & 2 Is it invisible on radar maps (def = false)? unused in RA?
-            BOOL Selectable : 1; // & 4 Can this object be selected by the player (def = true)?
-            BOOL LegalTarget : 1; // & 8 Is this allowed to be a combat target (def = true)?
-            BOOL Insignificant : 1;	 // & 16 Will this object not be announced when destroyed (def = false)?
-            BOOL Immune : 1; // & 32 Is this object immune to damage (def = false)?
-            BOOL Animates : 1; // & 64 Does this object animate and thus require redraws?
-            BOOL Logical : 1; // & 128 Is this object involved in game logic calculations?
+            bool Crushable : 1; // & 1 Can it be crushed by a heavy tracked vehicle (def = false)?
+            bool RadarInvisible : 1; // & 2 Is it invisible on radar maps (def = false)? unused in RA?
+            bool Selectable : 1; // & 4 Can this object be selected by the player (def = true)?
+            bool LegalTarget : 1; // & 8 Is this allowed to be a combat target (def = true)?
+            bool Insignificant : 1; // & 16 Will this object not be announced when destroyed (def = false)?
+            bool Immune : 1; // & 32 Is this object immune to damage (def = false)?
+            bool Animates : 1; // & 64 Does this object animate and thus require redraws?
+            bool Logical : 1; // & 128 Is this object involved in game logic calculations?
         };
         int Bitfield;
     };
 #else
-    BOOL Crushable; // Can it be crushed by a heavy tracked vehicle (def = false)?
-    BOOL RadarInvisible; // Is it invisible on radar maps (def = false)? unused in RA?
-    BOOL Selectable; // Can this object be selected by the player (def = true)?
-    BOOL LegalTarget; // Is this allowed to be a combat target (def = true)?
-    BOOL Insignificant;	 // Will this object not be announced when destroyed (def = false)?
-    BOOL Immune; // Is this object immune to damage (def = false)?
-    BOOL Animates; // Does this object animate and thus require redraws?
-    BOOL Logical; // Is this object involved in game logic calculations?
+    bool Crushable; // Can it be crushed by a heavy tracked vehicle (def = false)?
+    bool RadarInvisible; // Is it invisible on radar maps (def = false)? unused in RA?
+    bool Selectable; // Can this object be selected by the player (def = true)?
+    bool LegalTarget; // Is this allowed to be a combat target (def = true)?
+    bool Insignificant; // Will this object not be announced when destroyed (def = false)?
+    bool Immune; // Is this object immune to damage (def = false)?
+    bool Animates; // Does this object animate and thus require redraws?
+    bool Logical; // Is this object involved in game logic calculations?
 #endif
-                             
+
     ArmorType Armor; // The armor type of this object [NONE, WOOD, LIGHT, HEAVY, CONCRETE].
     int16_t Strength;
     void *ImageData;

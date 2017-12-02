@@ -68,12 +68,18 @@ ObjectTypeClass::~ObjectTypeClass()
     RadarIconData = nullptr;
 }
 
+/**
+ * @brief Gets the dimensions of the object.
+ */
 void ObjectTypeClass::Dimensions(int &w, int &h) const
 {
     w = 10;
     h = 10;
 }
 
+/**
+ * @brief Gets an occupy list for determining cell occupation.
+ */
 int16_t *ObjectTypeClass::Occupy_List(BOOL a1) const
 {
     static int16_t _list[] = { 0, INT16_MAX };
@@ -81,6 +87,9 @@ int16_t *ObjectTypeClass::Occupy_List(BOOL a1) const
     return _list;
 }
 
+/**
+ * @brief Gets an overlap list for overlapped blitting and refresh calcs.
+ */
 int16_t *ObjectTypeClass::Overlap_List() const
 {
     static int16_t _list[] = { 0, INT16_MAX };
@@ -88,11 +97,14 @@ int16_t *ObjectTypeClass::Overlap_List() const
     return _list;
 }
 
+/**
+ * @brief Gets a pointer to a BuildingClass that builds this object.
+ */
 BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType house) const
 {
     // TODO Requires BuildingClass, BuildingTypeClass, HouseClass
 #ifndef RAPP_STANDALONE
-    static BuildingClass *(*func)(const ObjectTypeClass *, BOOL, BOOL, HousesType) =
+    BuildingClass *(*func)(const ObjectTypeClass *, BOOL, BOOL, HousesType) =
         reinterpret_cast<BuildingClass *(*)(const ObjectTypeClass *, BOOL, BOOL, HousesType)>(0x0051E988);
     return func(this, a1, a2, house);
 #else
@@ -100,6 +112,9 @@ BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType ho
 #endif
 }
 
+/**
+ * @brief Initialises the select and pip sprite pointers.
+ */
 void ObjectTypeClass::One_Time()
 {
     SelectShapes = MixFileClass<CCFileClass>::Retrieve("SELECT.SHP");
