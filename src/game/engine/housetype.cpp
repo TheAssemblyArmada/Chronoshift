@@ -31,14 +31,14 @@ HouseTypeClass const HouseGood(HOUSES_GDI, "GoodGuy", TXT_FRIENDLY, "GDI", 0, PL
 HouseTypeClass const HouseBad(HOUSES_NOD, "BadGuy", TXT_ENEMY, "NOD", 0, PLAYER_COLOR_RED, 'B');
 HouseTypeClass const HouseCivilian(HOUSES_CIV, "Neutral", TXT_CIVILIAN, "CIV", 0, PLAYER_COLOR_YELLOW, 'C');
 HouseTypeClass const HouseJP(HOUSES_JP, "Special", TXT_JP, "JP", 0, PLAYER_COLOR_YELLOW, 'J');
-HouseTypeClass const HouseMulti1(HOUSES_MULTI_1, "Multi1", TXT_CIVILIAN, "MP1", 0, PLAYER_COLOR_YELLOW, 'M');
-HouseTypeClass const HouseMulti2(HOUSES_MULTI_2, "Multi2", TXT_CIVILIAN, "MP2", 0, PLAYER_COLOR_LIGHT_BLUE, 'M');
-HouseTypeClass const HouseMulti3(HOUSES_MULTI_3, "Multi3", TXT_CIVILIAN, "MP3", 0, PLAYER_COLOR_RED, 'M');
-HouseTypeClass const HouseMulti4(HOUSES_MULTI_4, "Multi4", TXT_CIVILIAN, "MP4", 0, PLAYER_COLOR_GREEN, 'M');
-HouseTypeClass const HouseMulti5(HOUSES_MULTI_5, "Multi5", TXT_CIVILIAN, "MP5", 0, PLAYER_COLOR_ORANGE, 'M');
-HouseTypeClass const HouseMulti6(HOUSES_MULTI_6, "Multi6", TXT_CIVILIAN, "MP6", 0, PLAYER_COLOR_GREY, 'M');
-HouseTypeClass const HouseMulti7(HOUSES_MULTI_7, "Multi7", TXT_CIVILIAN, "MP7", 0, PLAYER_COLOR_BLUE, 'M');
-HouseTypeClass const HouseMulti8(HOUSES_MULTI_8, "Multi8", TXT_CIVILIAN, "MP8", 0, PLAYER_COLOR_BROWN, 'M');
+HouseTypeClass const HouseMulti1(HOUSES_MP1, "Multi1", TXT_CIVILIAN, "MP1", 0, PLAYER_COLOR_YELLOW, 'M');
+HouseTypeClass const HouseMulti2(HOUSES_MP2, "Multi2", TXT_CIVILIAN, "MP2", 0, PLAYER_COLOR_LIGHT_BLUE, 'M');
+HouseTypeClass const HouseMulti3(HOUSES_MP3, "Multi3", TXT_CIVILIAN, "MP3", 0, PLAYER_COLOR_RED, 'M');
+HouseTypeClass const HouseMulti4(HOUSES_MP4, "Multi4", TXT_CIVILIAN, "MP4", 0, PLAYER_COLOR_GREEN, 'M');
+HouseTypeClass const HouseMulti5(HOUSES_MP5, "Multi5", TXT_CIVILIAN, "MP5", 0, PLAYER_COLOR_ORANGE, 'M');
+HouseTypeClass const HouseMulti6(HOUSES_MP6, "Multi6", TXT_CIVILIAN, "MP6", 0, PLAYER_COLOR_GREY, 'M');
+HouseTypeClass const HouseMulti7(HOUSES_MP7, "Multi7", TXT_CIVILIAN, "MP7", 0, PLAYER_COLOR_BLUE, 'M');
+HouseTypeClass const HouseMulti8(HOUSES_MP8, "Multi8", TXT_CIVILIAN, "MP8", 0, PLAYER_COLOR_BROWN, 'M');
 
 #ifndef RAPP_STANDALONE
 TFixedIHeapClass<HouseTypeClass> &HouseTypes = Make_Global<TFixedIHeapClass<HouseTypeClass> >(0x0065DD24);

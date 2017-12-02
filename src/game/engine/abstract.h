@@ -19,6 +19,7 @@
 #define _ABSTRACT_H_
 
 #include "always.h"
+#include "cctype.h"
 #include "facing.h"
 #include "language.h"
 #include "rtti.h"
@@ -26,67 +27,6 @@
 #include "vector.h"
 
 class NoInitClass;
-
-enum HousesType
-{
-    HOUSES_NONE = -1,
-
-    HOUSES_FIRST = 0,
-
-    HOUSES_SPN = 0, //"Spain"
-    HOUSES_GRE = 1, //"Greece"
-    HOUSES_RED = 2, //"USSR"
-    HOUSES_ENG = 3, //"England"
-    HOUSES_UKA = 4, //"Ukraine"		//HOUSES_ITA = 4,	//"Italy"		//from EDWIN
-    HOUSES_GER = 5, //"Germany"
-    HOUSES_FRA = 6, //"France"
-    HOUSES_TRK = 7, //"Turkey"
-
-    HOUSES_GDI = 8, //"GoodGuy"
-    HOUSES_NOD = 9, //"BadGuy"
-
-    HOUSES_CIV = 10, //"Neutral"
-    HOUSES_JP = 11, //"Special"
-
-    HOUSES_LAST = 11,
-
-    HOUSES_MULTI_FIRST = 12,
-
-    HOUSES_MULTI_1 = 12, //"Multi1"
-    HOUSES_MULTI_2 = 13, //"Multi2"
-    HOUSES_MULTI_3 = 14, //"Multi3"
-    HOUSES_MULTI_4 = 15, //"Multi4"
-    HOUSES_MULTI_5 = 16, //"Multi5"
-    HOUSES_MULTI_6 = 17, //"Multi6"
-    HOUSES_MULTI_7 = 18, //"Multi7"
-    HOUSES_MULTI_8 = 19, //"Multi8"
-
-    HOUSES_MULTI_LAST = 19,
-
-    HOUSES_ALL_LAST = 19,
-
-    HOUSES_MULTI_COUNT = 8,
-
-    HOUSES_COUNT = 20
-};
-
-DEFINE_ENUMERATION_OPERATORS(HousesType);
-
-// TODO move to where ever MoveType ends up.
-// https://github.com/Ares-Developers/YRpp/blob/d387fbb9d36e4645d93caf87be502d6d87d042c3/GeneralDefinitions.h#L1359
-enum MoveType
-{
-    MOVE_NONE = -1,
-    MOVE_OK,
-    MOVE_CLOAK,
-    MOVE_MOVING_BLOCK,
-    MOVE_DESTROYABLE,
-    MOVE_TEMP,
-    MOVE_NO,
-    MOVE_COUNT,
-};
-
-DEFINE_ENUMERATION_OPERATORS(MoveType);
 
 class AbstractClass
 {
@@ -98,12 +38,13 @@ public:
 
     virtual const char *Name() const { return ""; }
     virtual HousesType Owner() const { return HOUSES_NONE; }
-    virtual uint32_t const Center_Coord() const { return Coord; }
-    virtual uint32_t const Target_Coord() const { return Coord; }
+    virtual uint32_t Center_Coord() const { return Coord; }
+    virtual uint32_t Target_Coord() const { return Coord; }
     virtual MoveType Can_Enter_Cell(int16_t cellnum, FacingType facing = FACING_NONE) const { return MOVE_OK; }
     virtual void AI() {}
 
     int Get_Heap_ID() const { return HeapID; }
+    BOOL Is_Active() const { return IsActive; }
 
 protected:
     RTTIType RTTI; // ID for this object type, set from derived type constructors.
@@ -141,6 +82,7 @@ public:
 
     int Get_Heap_ID() const { return HeapID; }
     RTTIType const What_Am_I() const { return RTTI; }
+    const char *Get_Name() { return Name; }
     
 protected:
     RTTIType RTTI;
