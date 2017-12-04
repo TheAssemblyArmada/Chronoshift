@@ -124,7 +124,7 @@ enum InfDeathType
     INF_DEATH_EXPLODES = 2,
     INF_DEATH_FLYING = 3,
     INF_DEATH_BURN = 4,
-    INF_DEATH_ELECTRO = 5
+    INF_DEATH_ELECTRO = 5,
 };
 
 // might move back to warhead.h
@@ -138,7 +138,7 @@ enum WarheadExplosionType
     WH_EXPLOSION_FIRE = 3,
     WH_EXPLOSION_FRAGS = 4,
     WH_EXPLOSION_POPS = 5,
-    WH_EXPLOSION_NUKE = 6
+    WH_EXPLOSION_NUKE = 6,
 };
 
 // These match the fixed values in GroundClass, update ground.h if we add any
@@ -215,10 +215,6 @@ enum ThreatType
         | THREAT_FACTORIES | THREAT_BASE_DEFENSES) // 0x3D60            //
 };
 
-////////////////////////////////////////////////////////////////////////
-//  Overloaded Enumeration Operators
-////////////////////////////////////////////////////////////////////////
-DEFINE_ENUMERATION_OPERATORS(ThreatType);
 DEFINE_ENUMERATION_BITWISE_OPERATORS(ThreatType);
 
 enum FireErrorType
@@ -252,7 +248,7 @@ enum AttachType
     ATTACH_16 = 16 // 16 seems to be attatch to LogicTriggers
 };
 
-DEFINE_ENUMERATION_OPERATORS(AttachType);
+DEFINE_ENUMERATION_BITWISE_OPERATORS(AttachType);
 
 enum NeedType
 {

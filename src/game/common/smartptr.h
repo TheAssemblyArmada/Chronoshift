@@ -19,7 +19,10 @@
 #define SMARTPTR_H
 
 #include "always.h"
+
+#ifndef COMPILER_WATCOM
 #include <cstddef> // for std::nullptr_t
+#endif
 
 class NoInitClass;
 

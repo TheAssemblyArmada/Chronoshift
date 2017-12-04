@@ -15,12 +15,12 @@
  */
 #pragma once
 
-#ifndef _ABSTRACT_H_
-#define _ABSTRACT_H_
+#ifndef ABSTRACT_H
+#define ABSTRACT_H
 
 #include "always.h"
-#include "cctype.h"
 #include "facing.h"
+#include "gametypes.h"
 #include "language.h"
 #include "rtti.h"
 #include "stringex.h"

@@ -19,7 +19,7 @@
 #define LAYER_H
 
 #include "always.h"
-#include "cctype.h"
+#include "gametypes.h"
 #include "pipe.h"
 #include "straw.h"
 #include "vector.h"
