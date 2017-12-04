@@ -89,6 +89,7 @@ set(GAMEENGINE_SRC
     game/engine/gscreen.cpp
     game/engine/heap.cpp
     game/engine/housetype.cpp
+    game/engine/iomap.cpp
     game/engine/layer.cpp
     game/engine/msglist.cpp
     game/engine/object.cpp

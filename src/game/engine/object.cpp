@@ -15,7 +15,14 @@
  */
 #include "object.h"
 #include "coord.h"
+#include "iomap.h"
 #include "minmax.h"
+
+#ifndef RAPP_STANDALONE
+DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClass<ObjectClass*> >(0x006677F8);
+#else
+DynamicVectorClass<ObjectClass*> CurrentObjects;
+#endif
 
 ObjectClass::ObjectClass() :
     IsDown(false),
@@ -227,11 +234,11 @@ void ObjectClass::Detach_All(int a1)
     void(*func)(ObjectClass *, int) = reinterpret_cast<void(*)(ObjectClass *, int)>(0x0051DFDC);
     func(this, a1);
 #elif 0
-    if (a1 || Owner() != PlayerPtr->What_Type()) {
+    if (damage || Owner() != PlayerPtr->What_Type()) {
         Unselect();
     }
 
-    Detach_This_From_All(As_Target(this), a1);
+    Detach_This_From_All(As_Target(this), damage);
 #else
     return 0;
 #endif
@@ -390,78 +397,256 @@ BOOL ObjectClass::Mark(MarkType mark)
 #endif
 }
 
-void ObjectClass::Mark_For_Redraw() {}
-
-void ObjectClass::Active_Click_With(ActionType action, ObjectClass *object) {}
-
-void ObjectClass::Active_Click_With(ActionType action, int16_t cellnum) {}
-
-void ObjectClass::Clicked_As_Target(int a1) {}
+void ObjectClass::Mark_For_Redraw()
+{
+    if (!ToDisplay) {
+        ToDisplay = true;
+        Map.Flag_To_Redraw();
+    }
+}
 
 BOOL ObjectClass::Select()
 {
+#ifndef RAPP_STANDALONE
+    BOOL(*func)(ObjectClass *) = reinterpret_cast<BOOL(*)(ObjectClass *)>(0x0051DBB0);
+    return func(this);
+#elif 0 // TODO Needs TechnoClass HouseClass DisplayClass
+    DEBUG_ASSERT(IsActive);
+
+    if ((g_inMapEditor || !Selected) && Class_Of().Is_Selectable()) {
+        if (!g_inMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->IsALoaner) {
+            return false;
+        }
+
+        if (Get_Height() <= 0 || (RTTI != RTTI_UNIT && RTTI != RTTI_VESSEL && RTTI != RTTI_INFANTRY)) {
+            if (Map.PendingObjTypePtr == nullptr) {
+                if (CurrentObjects.Count() > 0) {
+                    HouseClass *objowner = HouseClass::As_Pointer(Owner());
+                    HouseClass *current = HouseClass::As_Pointer(CurrentObjects[0]->Owner());
+
+                    // Check if this objects player control matches the current
+                    // selected player control or if the current selected isn't
+                    // player controlled.
+                    if ((current->PlayerControl != objowner->PlayerControl) || !current->PlayerControl) {
+                        Unselect_All();
+                    }
+                }
+
+                TechnoClass *tptr = reinterpret_cast<TechnoClass *>(this);
+
+                if ((tptr != nullptr && tptr->Class_Of().IsLeader)) {
+                    CurrentObjects.Add_Head(tptr);
+                } else {
+                    CurrentObjects.Add(this);
+                }
+
+                if (In_Which_Layer() == LAYER_GROUND) {
+                    Mark(MARK_5);
+                }
+
+                Selected = true;
+
+                if (In_Which_Layer() == LAYER_GROUND) {
+                    Mark(MARK_4);
+                }
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+#else
     return 0;
+#endif
 }
 
-void ObjectClass::Unselect() {}
-
-BOOL ObjectClass::In_Range(uint32_t a1, int weapon) const
+void ObjectClass::Unselect()
 {
-    return 0;
+    // If selected, process unselection.
+    if (Selected) {
+        // Remove this object from the currently selected objects array.
+        CurrentObjects.Delete(this);
+
+        if (In_Which_Layer() == LAYER_GROUND) {
+            Mark(MARK_5);
+        }
+
+        if (In_Which_Layer() == LAYER_GROUND) {
+            Mark(MARK_4);
+        }
+
+        // Set this object to unselected now we have performed the necessary tasks.
+        Selected = false;
+    }
 }
 
-int ObjectClass::Weapon_Range(int weapon) const
+DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
-    return 0;
+#ifndef RAPP_STANDALONE
+    DamageResultType (*func)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int) =
+        reinterpret_cast<DamageResultType (*)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0051E07C);
+    return func(this, damage, a2, warhead, object, a5);
+#elif 0 // Needs IOMap DisplayClass
+    DamageResultType result = DAMAGE_UNAFFECTED;
+
+    int health = Health;
+
+    if (health <= 0 || !damage || (!a5 && Class_Of().Is_Immune())) {
+        return DAMAGE_UNAFFECTED;
+    }
+
+    int strength = Class_Of().Strength;
+
+    if (!a5) {
+        damage = Modify_Damage(damage, warhead, Class_Of().Armor, a2); // needs confirming
+
+        if (object != nullptr) {
+            if (object->RTTI == RTTI_INFANTRY) {
+                InfantryClass *iptr = reinterpret_cast<InfantryClass *>(object);
+                
+                if (iptr->Class_Of().IsCanine) {
+                    if (As_Target(this) == object->TarCom) {
+                        damage = Health;
+                    } else {
+                        damage = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    if (damage <= 0) {
+        return DAMAGE_UNAFFECTED;
+    }
+
+    if (damage > 0) {
+        result = DAMAGE_UNDAMAGED;
+
+        if (health <= damage) {
+            damage = health;
+        } else if ((strength / 2 <= health) && (health - damage < strength / 2)) {
+            result = DAMAGE_YELLOW;
+        }
+
+        Health -= damage;
+
+        if (health == damage) {
+            if (object != nullptr) {
+                Record_The_Kill(object);
+
+                if (Is_Techno()) {
+                    TechnoClass *tptr = reiterpret_cast<TechnoClass *>(object);
+                    
+                    if (tptr != nullptr) {
+                        ObjectClass *v99 = As_Object(tptr->OwnerHouse->field_531);
+                        DEBUG_ASSERT(v99 != nullptr);
+                        if (v99 != nullptr) {
+                            if (this != v99) {
+                                tptr->OwnerHouse->field_531 = NullTarget;
+                            }
+                        }
+                    }
+                }
+
+                Detach_All(1);
+            }
+
+        } else if (Health == 1) {
+            result = DAMAGE_RED;
+        }
+
+        if (object != nullptr) {
+            if (AttachedTrigger != nullptr && result != DAMAGE_DEAD) {
+                AttachedTrigger->Spring(TEVENT_ATTACKED, this);
+            }
+        }
+
+        if (result != DAMAGE_UNAFFECTED && Selected) {
+            Mark(MARK_REDRAW);
+        }
+        
+        return result;
+    }
+
+    // TODO, check why not vessel?
+    if (RTTI == RTTI_INFANTRY || RTTI == RTTI_UNIT || RTTI == RTTI_AIRCRAFT) {
+        Clicked_As_Target(7);
+
+        Health -= damage;
+
+        if (Health > strength) {
+            Health = strength;
+        }
+    }
+
+    return DAMAGE_UNAFFECTED;
+#else
+    return DAMAGE_UNAFFECTED;
+#endif
 }
-
-DamageResultType ObjectClass::Take_Damage(int &a1, int a2, WarheadType warhead, TechnoClass *object, int a5)
-{
-    return DamageResultType();
-}
-
-void ObjectClass::Scatter(uint32_t coord, int a2, BOOL a3) {}
-
-BOOL ObjectClass::Catch_Fire()
-{
-    return 0;
-}
-
-void ObjectClass::Fire_Out() {}
-
-int ObjectClass::Value() const
-{
-    return 0;
-}
-
-MissionType ObjectClass::Get_Mission() const
-{
-    return MissionType();
-}
-
-void ObjectClass::Per_Cell_Process(PCPType pcp) {}
 
 BuildingClass *ObjectClass::Who_Can_Build_Me(BOOL a1, BOOL a2) const
 {
-    return nullptr;
+    return Class_Of().Who_Can_Build_Me(a1, a2, Owner());
 }
 
 RadioMessageType ObjectClass::Receive_Message(RadioClass *radio, RadioMessageType msg, int32_t &a3)
 {
-    return RadioMessageType();
+    switch (msg) {
+        case RADIO_13:
+            Mark(MARK_REDRAW);
+
+            return RADIO_ROGER;
+        default:
+            break;
+    };
+
+    return RADIO_STATIC;
 }
 
 BOOL ObjectClass::Revealed(HouseClass *house)
 {
-    return 0;
+    return house != nullptr;
 }
 
-void ObjectClass::Repair(int a1) {}
+void ObjectClass::Code_Pointers()
+{
+#ifndef RAPP_STANDALONE
+    void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F98E0);
+    func(this);
+#elif 0
+    if (Next != nullptr) {
+        Next = (ObjectClass *)As_Target((ObjectClass *)Next);
+    }
 
-void ObjectClass::Sell_Back(int a1) {}
+    AbstractClass::Code_Pointers();
+#endif
+}
 
-void ObjectClass::Code_Pointers() {}
+void ObjectClass::Decode_Pointers()
+{
+#ifndef RAPP_STANDALONE
+    void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F9924);
+    func(this);
+#elif 0
+    if (Next != nullptr) {
+        Next = As_Object((uintptr_t)Next);
+    }
 
-void ObjectClass::Decode_Pointers() {}
+    AbstractClass::Code_Pointers();
+#endif
+}
 
-void ObjectClass::Move(FacingType facing) {}
+void ObjectClass::Move(FacingType facing)
+{
+    Mark(MARK_REMOVE);
+
+    uint32_t adj = Coord_Get_Adjacent(Coord, facing);
+
+    if (!Can_Enter_Cell(Coord_To_Cell(adj))) {
+        Coord = adj;
+    }
+
+    Mark(MARK_PUT);
+}

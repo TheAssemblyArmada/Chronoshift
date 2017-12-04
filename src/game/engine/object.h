@@ -28,6 +28,7 @@
 #include "objecttype.h"
 #include "rtti.h"
 #include "smartptr.h"
+#include "vector.h"
 
 class TechnoClass;
 class BuildingClass;
@@ -81,25 +82,25 @@ public:
     virtual void Look(BOOL a1 = false) {}
     virtual BOOL Mark(MarkType mark);
     virtual void Mark_For_Redraw();
-    virtual void Active_Click_With(ActionType action, ObjectClass *object);
-    virtual void Active_Click_With(ActionType action, int16_t cellnum);
-    virtual void Clicked_As_Target(int a1);
+    virtual void Active_Click_With(ActionType action, ObjectClass *object) {}
+    virtual void Active_Click_With(ActionType action, int16_t cellnum) {}
+    virtual void Clicked_As_Target(int a1) {}
     virtual BOOL Select();
     virtual void Unselect();
-    virtual BOOL In_Range(uint32_t a1, int weapon = 0) const;
-    virtual int Weapon_Range(int weapon = WEAPON_SLOT_PRIMARY) const;
-    virtual DamageResultType Take_Damage(int &a1, int a2, WarheadType warhead, TechnoClass *object = nullptr, int a5 = 0);
-    virtual void Scatter(uint32_t coord = 0, int a2 = 0, BOOL a3 = false);
-    virtual BOOL Catch_Fire();
-    virtual void Fire_Out();
-    virtual int Value() const;
-    virtual MissionType Get_Mission() const;
-    virtual void Per_Cell_Process(PCPType pcp);
+    virtual BOOL In_Range(uint32_t a1, int weapon = 0) const { return 0; }
+    virtual int Weapon_Range(int weapon = WEAPON_SLOT_PRIMARY) const { return 0; }
+    virtual DamageResultType Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false);
+    virtual void Scatter(uint32_t coord = 0, int a2 = 0, BOOL a3 = false) {}
+    virtual BOOL Catch_Fire() { return 0; }
+    virtual void Fire_Out() {}
+    virtual int Value() const { return 0; }
+    virtual MissionType Get_Mission() const { return MISSION_NONE; }
+    virtual void Per_Cell_Process(PCPType pcp) {}
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false) const;
     virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType msg, int32_t &a3);
     virtual BOOL Revealed(HouseClass *house);
-    virtual void Repair(int a1 = -1);
-    virtual void Sell_Back(int a1);
+    virtual void Repair(int a1 = -1) {}
+    virtual void Sell_Back(int a1) {}
     virtual void Code_Pointers();
     virtual void Decode_Pointers();
     virtual void Move(FacingType facing);
@@ -152,5 +153,12 @@ inline BOOL ObjectClass::Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *
 {
     return object1->Sort_Y() > object2->Sort_Y();
 }
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+extern DynamicVectorClass<ObjectClass*> &CurrentObjects;
+#else
+extern DynamicVectorClass<ObjectClass*> CurrentObjects;
+#endif
 
 #endif // OBJECT_H

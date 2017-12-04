@@ -46,6 +46,8 @@ public:
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false, HousesType house = HOUSES_NONE) const;
     virtual void *Get_Cameo_Data() const { return nullptr; };
 
+    BOOL Is_Selectable() { return Selectable; }
+    BOOL Is_Immune() { return Immune; }
     BOOL Get_Bit64() { return Bit64; }
     BOOL Get_Bit128() { return Bit128; }
     int16_t Get_Strength() { return Strength; }
