@@ -37,6 +37,9 @@ extern char *&ScoreFontPtr;
 extern char *&FontLEDPtr;
 extern char *&VCRFontPtr;
 extern char *&TypeFontPtr;
+extern BOOL &GameActive;
+extern BOOL &ScenarioInit;
+extern BOOL &DebugUnshroud;
 #ifdef PLATFORM_WINDOWS
 extern HWND &MainWindow;
 #endif
@@ -57,6 +60,9 @@ extern char *VCRFontPtr;
 extern char *TypeFontPtr;
 #ifdef PLATFORM_WINDOWS
 extern HWND MainWindow;
+extern BOOL GameActive;
+extern BOOL ScenarioInit;
+extern BOOL DebugUnshroud;
 #endif
 #endif
 

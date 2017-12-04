@@ -25,8 +25,8 @@ void *ObjectTypeClass::SelectShapes = nullptr;
 void *ObjectTypeClass::PipShapes = nullptr;
 #endif
 
-ObjectTypeClass::ObjectTypeClass(RTTIType type, int id, BOOL animates, BOOL radar_invisible, BOOL selectable,
-    BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL logical, int uiname, const char *name) :
+ObjectTypeClass::ObjectTypeClass(RTTIType type, int id, BOOL unk1, BOOL radar_invisible, BOOL selectable,
+    BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL unk2, int uiname, const char *name) :
     AbstractTypeClass(type, id, uiname, name),
     Crushable(false),
     RadarInvisible(radar_invisible),
@@ -34,8 +34,8 @@ ObjectTypeClass::ObjectTypeClass(RTTIType type, int id, BOOL animates, BOOL rada
     LegalTarget(legal_target),
     Insignificant(insignificant),
     Immune(is_immune),
-    Animates(animates),
-    Logical(logical),
+    Bit64(unk1),
+    Bit128(unk2),
     Armor(ARMOR_NONE),
     ImageData(nullptr),
     FrameDimensions(0),
@@ -51,8 +51,8 @@ ObjectTypeClass::ObjectTypeClass(ObjectTypeClass const &that) :
     LegalTarget(that.LegalTarget),
     Insignificant(that.Insignificant),
     Immune(that.Immune),
-    Animates(that.Animates),
-    Logical(that.Logical),
+    Bit64(that.Bit64),
+    Bit128(that.Bit128),
     Armor(that.Armor),
     Strength(that.Strength),
     ImageData(that.ImageData),

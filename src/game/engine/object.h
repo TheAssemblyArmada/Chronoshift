@@ -68,17 +68,17 @@ public:
     virtual BOOL Unlimbo(uint32_t coord, DirType dir = DIR_NORTH);
     virtual void Detach(int32_t target, int a2);
     virtual void Detach_All(int a1 = 1);
-    virtual void Record_The_Kill(TechnoClass *object = nullptr);
+    virtual void Record_The_Kill(TechnoClass *object = nullptr) {}
     virtual BOOL Paradrop(uint32_t coord);
-    virtual void Do_Shimmer();
-    virtual int Exit_Object(TechnoClass *object);
+    virtual void Do_Shimmer() {}
+    virtual int Exit_Object(TechnoClass *object) { return 0; }
     virtual BOOL Render(BOOL force_render = false);
     virtual int16_t *Occupy_List(BOOL a1 = false) const;
     virtual int16_t *Overlap_List(BOOL a1 = false) const;
     virtual fixed Health_Ratio() const;
     virtual void Draw_It(int x, int y, WindowNumberType window) const = 0;
-    virtual void Hidden();
-    virtual void Look(BOOL a1 = false);
+    virtual void Hidden() {}
+    virtual void Look(BOOL a1 = false) {}
     virtual BOOL Mark(MarkType mark);
     virtual void Mark_For_Redraw();
     virtual void Active_Click_With(ActionType action, ObjectClass *object);

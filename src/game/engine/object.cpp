@@ -120,7 +120,7 @@ void ObjectClass::AI()
             Map.Remove(this, layer);
             Map.Submit(this, In_Which_Layer());
 
-            if (Class_Of().Get_Logical()) {
+            if (Class_Of().Get_Bit128()) {
                 if (In_Which_Layer() == LAYER_SURFACE) {
                     Map.Place_Down(Coord_To_Cell(Center_Coord()), this);
                 } else {
@@ -141,59 +141,253 @@ int ObjectClass::Get_Ownable() const
 
 BOOL ObjectClass::Limbo()
 {
+#ifndef RAPP_STANDALONE
+    BOOL (*func)(ObjectClass *) = reinterpret_cast<BOOL (*)(ObjectClass *)>(0x0051DDE8);
+    return func(this);
+#elif 0
+    if (GameActive && !InLimbo) {
+        Unselect();
+        Detach_All();
+        Mark(MARK_REMOVE);
+        Map.Remove(this, In_Which_Layer());
+
+        if (Class_Of().OT_Bit64) {
+            Logic.Remove(this);
+        }
+
+        Hidden();
+        InLimbo = true;
+
+        return true;
+    }
+
+    return false;
+#else
     return 0;
+#endif
 }
 
 BOOL ObjectClass::Unlimbo(uint32_t coord, DirType dir)
 {
+#ifndef RAPP_STANDALONE
+    BOOL (*func)
+    (ObjectClass *, uint32_t, DirType) = reinterpret_cast<BOOL (*)(ObjectClass *, uint32_t, DirType)>(0x0051DE9C);
+    return func(this, coord, dir);
+#elif 0 // Needs IOMapClass and Logic
+    int16_t cell = Coord_To_Cell(coord);
+
+    if (GameActive && InLimbo && !IsDown && (ScenarioInit || Can_Enter_Cell(cell) == MOVE_OK)) {
+        InLimbo = false;
+        ToDisplay = false;
+        uint32_t tmp = Class_Of().Coord_Fixup(coord);
+        Coord = tmp;
+
+        if (Mark(MARK_PUT)) {
+            if (IsActive) {
+                if (In_Which_Layer() != LAYER_NONE) {
+                    Map.Submit(this, In_Which_Layer());
+                }
+
+                if (Class_Of().Get_Bit64()) {
+                    Logic.Submit(this);
+                }
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+#else
     return 0;
+#endif
 }
 
-void ObjectClass::Detach(int32_t target, int a2) {}
+void ObjectClass::Detach(int32_t target, int a2)
+{
+#ifndef RAPP_STANDALONE
+    void(*func)(ObjectClass *, int32_t, int) = reinterpret_cast<void(*)(ObjectClass *, int32_t, int)>(0x0051DF74);
+    func(this, target, a2);
+#elif 0
+    DEBUG_ASSERT(IsActive);
 
-void ObjectClass::Detach_All(int a1) {}
+    if (AttachedTrigger != nullptr && Target_Get_RTTI(target) == RTTI_TRIGGER) {
+        if (AttachedTrigger->As_Target() == target) {
+            Attach_Trigger(nullptr);
+        }
+    }
+#else
+    return 0;
+#endif
+}
 
-void ObjectClass::Record_The_Kill(TechnoClass *object) {}
+void ObjectClass::Detach_All(int a1)
+{
+#ifndef RAPP_STANDALONE
+    void(*func)(ObjectClass *, int) = reinterpret_cast<void(*)(ObjectClass *, int)>(0x0051DFDC);
+    func(this, a1);
+#elif 0
+    if (a1 || Owner() != PlayerPtr->What_Type()) {
+        Unselect();
+    }
+
+    Detach_This_From_All(As_Target(this), a1);
+#else
+    return 0;
+#endif
+}
 
 BOOL ObjectClass::Paradrop(uint32_t coord)
 {
-    return 0;
-}
+#ifndef RAPP_STANDALONE
+    BOOL(*func)(ObjectClass *, uint32_t) = reinterpret_cast<BOOL(*)(ObjectClass *, uint32_t)>(0x0051E5C0);
+    return func(this, coord);
+#elif 0 // Needs AnimClass and Coord_Move
+    DEBUG_ASSERT(IsActive);
 
-void ObjectClass::Do_Shimmer() {}
+    FallingHeight = 256;
+    IsFalling = true;
 
-int ObjectClass::Exit_Object(TechnoClass *object)
-{
+    if (Unlimbo(coord, DIR_SOUTH)) {
+        AnimClass *anim = nullptr;
+        uint32_t coord = Coord_Move(Center_Coord(), DIR_NORTH, Height + 48);
+
+        if (RTTI == RTTI_BULLET) {
+            anim = new AnimClass(ANIM_PARABOMB, coord, 0, 1, true);	//args needs checking
+        } else {
+            anim = new AnimClass(ANIM_PARACHUTE, coord, 0, 1, true);	//args needs checking
+        }
+
+        anim->Attach_To(this);
+    }
+
+    return false;
+#else
     return 0;
+#endif
 }
 
 BOOL ObjectClass::Render(BOOL force_render)
 {
+#ifndef RAPP_STANDALONE
+    BOOL(*func)(ObjectClass *, BOOL) = reinterpret_cast<BOOL(*)(ObjectClass *, BOOL)>(0x0051DD34);
+    return func(this, force_render);
+#elif 0 // Needs IOMap DisplayClass
+    DEBUG_ASSERT(IsActive);
+
+    if ((g_inMapEditor || DebugUnshroud || (force_render || ToDisplay)) && IsDown && !InLimbo) {
+        ToDisplay = false;
+        int x_pos;
+        int y_pos;
+
+        if (Map.Coord_To_Pixel(Coord_To_Cell(Render_Coord()), x_pos, y_pos)) {
+            Draw_It(x_pos, y_pos, WINDOW_TACTICAL);
+
+            return true;
+        }
+    }
+
+    return false;
+#else
     return 0;
+#endif
 }
 
 int16_t *ObjectClass::Occupy_List(BOOL a1) const
 {
-    return nullptr;
+    return Class_Of().Occupy_List();
 }
 
 int16_t *ObjectClass::Overlap_List(BOOL a1) const
 {
-    return nullptr;
+    return Class_Of().Overlap_List();
 }
 
 fixed ObjectClass::Health_Ratio() const
 {
-    return fixed();
+    return fixed(Health, Class_Of().Get_Strength());
 }
-
-void ObjectClass::Hidden() {}
-
-void ObjectClass::Look(BOOL a1) {}
 
 BOOL ObjectClass::Mark(MarkType mark)
 {
+#ifndef RAPP_STANDALONE
+    BOOL(*func)(ObjectClass *, MarkType) = reinterpret_cast<BOOL(*)(ObjectClass *, MarkType)>(0x0051E368);
+    return func(this, mark);
+#elif 0 // Needs IOMap DisplayClass
+    if (!IsActive || InLimbo) {
+        return false;
+    }
+
+    if (mark == MARK_REDRAW || mark == MARK_3) {
+        if ((!ToDisplay || mark == MARK_3) && IsDown) {
+            Mark_For_Redraw();
+            return true;
+        }
+
+        return false;
+    }
+
+    if (mark == MARK_5 && IsDown) {
+        if (Class_Of().Get_Bit128()) {
+            Map.Overlap_Up(Coord_To_Cell(Coord), this);
+        }
+
+        Mark_For_Redraw();
+
+        return true;
+    }
+
+    if (mark == MARK_4 && IsDown) {
+        if (Class_Of().Get_Bit128()) {
+            Map.Overlap_Down(Coord_To_Cell(Coord), this);
+        }
+
+        Mark_For_Redraw();
+
+        return true;
+    }
+
+    if (!g_inMapEditor) {
+        int risk = 0;
+        HousesType house = HOUSES_NONE;
+
+        int16_t cellnum = NullCell;
+
+        bool is_techno = false
+
+        if (Is_Techno()) {
+            risk = reinterpret_cast<TechnoClass *>(this)->Risk();
+            house = reinterpret_cast<TechnoClass *>(this)->Owner();
+            is_techno = true;
+            cellnum = Coord_To_Cell(Get_Coord());
+        }
+
+        if (mark == MARK_PUT && !IsDown) {
+            if (is_techno && Session.GameToPlay == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
+                Map[cellnum].Adjust_Threat(house, risk);
+            }
+
+            IsDown = true;
+            Mark_For_Redraw();
+
+            return true;
+        }
+
+        if (mark != MARK_REMOVE || !IsDown) {
+            return false;
+        }
+
+        if (is_techno && Session.GameToPlay == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
+            Map[cellnum].Adjust_Threat(house, risk);
+        }
+    }
+
+    IsDown = false;
+
+    return true;
+#else
     return 0;
+#endif
 }
 
 void ObjectClass::Mark_For_Redraw() {}

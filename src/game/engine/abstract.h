@@ -43,6 +43,7 @@ public:
     virtual MoveType Can_Enter_Cell(int16_t cellnum, FacingType facing = FACING_NONE) const { return MOVE_OK; }
     virtual void AI() {}
 
+    BOOL Is_Techno();
     int Get_Heap_ID() const { return HeapID; }
     BOOL Is_Active() const { return IsActive; }
 
@@ -66,6 +67,12 @@ protected:
 #endif
 };
 
+inline BOOL AbstractClass::Is_Techno()
+{
+    return RTTI == RTTI_BUILDING || RTTI == RTTI_UNIT || RTTI == RTTI_INFANTRY || RTTI == RTTI_VESSEL
+        || RTTI == RTTI_AIRCRAFT;
+}
+
 class AbstractTypeClass
 {
 public:
@@ -83,7 +90,7 @@ public:
     int Get_Heap_ID() const { return HeapID; }
     RTTIType const What_Am_I() const { return RTTI; }
     const char *Get_Name() { return Name; }
-    
+
 protected:
     RTTIType RTTI;
     int HeapID;
@@ -103,6 +110,4 @@ inline AbstractTypeClass &AbstractTypeClass::operator=(AbstractTypeClass &that)
     return *this;
 }
 
-
-
-#endif // _ABSTRACT_H_
+#endif // ABSTRACT_H

@@ -33,7 +33,7 @@ public:
         BOOL insignificant, BOOL is_immune, BOOL logical, int uiname, char const *name);
     ObjectTypeClass(ObjectTypeClass const &that);
     ObjectTypeClass(NoInitClass const &noinit) : AbstractTypeClass(noinit) {}
-    virtual ~ObjectTypeClass();
+    ~ObjectTypeClass();
 
     virtual int Max_Pips() const { return 0; }
     virtual void Dimensions(int &w, int &h) const;
@@ -46,7 +46,9 @@ public:
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false, HousesType house = HOUSES_NONE) const;
     virtual void *Get_Cameo_Data() const { return nullptr; };
 
-    BOOL Get_Logical() { return Logical; }
+    BOOL Get_Bit64() { return Bit64; }
+    BOOL Get_Bit128() { return Bit128; }
+    int16_t Get_Strength() { return Strength; }
     void *Get_Image_Data() { return ImageData; }
 
     static void One_Time();
@@ -65,8 +67,8 @@ protected:
             bool LegalTarget : 1; // & 8 Is this allowed to be a combat target (def = true)?
             bool Insignificant : 1; // & 16 Will this object not be announced when destroyed (def = false)?
             bool Immune : 1; // & 32 Is this object immune to damage (def = false)?
-            bool Animates : 1; // & 64 Does this object animate and thus require redraws?
-            bool Logical : 1; // & 128 Is this object involved in game logic calculations?
+            bool Bit64 : 1; // & 64 Related to logical or animate?
+            bool Bit128 : 1; // & 128 Related to logical or animate?
         };
         int Bitfield;
     };
@@ -77,8 +79,8 @@ protected:
     bool LegalTarget; // Is this allowed to be a combat target (def = true)?
     bool Insignificant; // Will this object not be announced when destroyed (def = false)?
     bool Immune; // Is this object immune to damage (def = false)?
-    bool Animates; // Does this object animate and thus require redraws?
-    bool Logical; // Is this object involved in game logic calculations?
+    bool Bit64; // Related to logical or animate?
+    bool Bit128; // Related to logical or animate?
 #endif
 
     ArmorType Armor; // The armor type of this object [NONE, WOOD, LIGHT, HEAVY, CONCRETE].

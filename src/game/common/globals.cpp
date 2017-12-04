@@ -29,6 +29,9 @@ char *&ScoreFontPtr = Make_Global<char *>(0x00669950);
 char *&FontLEDPtr = Make_Global<char *>(0x00669948);
 char *&VCRFontPtr = Make_Global<char *>(0x0066994C);
 char *&TypeFontPtr = Make_Global<char *>(0x00669934);
+BOOL &GameActive = Make_Global<BOOL>(0x00669924);
+BOOL &ScenarioInit = Make_Global<BOOL>(0x00669914);
+BOOL &DebugUnshroud = Make_Global<BOOL>(0x0065D7F0);
 #ifdef PLATFORM_WINDOWS
 HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 #endif
@@ -47,6 +50,9 @@ char *ScoreFontPtr;
 char *FontLEDPtr;
 char *VCRFontPtr;
 char *TypeFontPtr;
+BOOL GameActive;
+BOOL ScenarioInit;
+BOOL DebugUnshroud;
 #ifdef PLATFORM_WINDOWS
 HWND MainWindow;
 #endif
