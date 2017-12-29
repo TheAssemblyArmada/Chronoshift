@@ -94,6 +94,7 @@ set(GAMEENGINE_SRC
     game/engine/msglist.cpp
     game/engine/object.cpp
     game/engine/objecttype.cpp
+    game/engine/options.cpp
     game/engine/rtti.cpp
     game/engine/special.cpp
     game/engine/session.cpp
