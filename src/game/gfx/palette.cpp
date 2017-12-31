@@ -22,7 +22,7 @@ PaletteClass BlackPalette(RGBClass::BlackColor);
 
 PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g_currentPalette);
 
-PaletteClass::PaletteClass(RGBClass const &rgb)
+PaletteClass::PaletteClass(const RGBClass &rgb)
 {
     for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_palette); ++index) {
         m_palette[index].Set_Red(rgb.Get_Red());

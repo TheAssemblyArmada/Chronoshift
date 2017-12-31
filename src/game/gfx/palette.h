@@ -25,10 +25,16 @@
 class PaletteClass
 {
 public:
-    PaletteClass(RGBClass const &rgb = RGBClass::BlackColor);
+    enum
+    {
+        PALETTE_ENTRIES = 256,
+    };
+
+public:
+    PaletteClass(const RGBClass &rgb = RGBClass::BlackColor);
 
     RGBClass &operator[](int index) { return m_palette[index]; }
-    RGBClass const &operator[](int index) const { return m_palette[index]; }
+    const RGBClass &operator[](int index) const { return m_palette[index]; }
 
     bool operator==(PaletteClass &pal) const;
     PaletteClass &operator=(PaletteClass &pal);
@@ -44,8 +50,9 @@ public:
     void Set(int fading_steps = 0, void (*callback)() = nullptr);
 
     static PaletteClass &CurrentPalette;
+
 private:
-    RGBClass m_palette[256];
+    RGBClass m_palette[PALETTE_ENTRIES];
 };
 
 extern PaletteClass WhitePalette;
