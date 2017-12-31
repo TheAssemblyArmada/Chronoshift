@@ -15,6 +15,8 @@
 #include "options.h"
 #include "audio.h"
 #include "gbuffer.h"
+#include "hsv.h"
+#include "rgb.h"
 
 #ifndef RAPP_STANDALONE
 GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
@@ -98,9 +100,39 @@ void OptionsClass::One_Time()
     Set_Score_Vol(ScoreVolume * 256);
 }
 
+/**
+ * @brief Carries out a palette adjustment.
+ *
+ * 0x00525884
+ */
+void OptionsClass::Adjust_Palette(PaletteClass & src, PaletteClass & dst, fixed brightness, fixed saturation, fixed tint, fixed contrast)
+{
+    if (&src[0] != nullptr && &dst[0] != nullptr) {
+        for (int index = 0; index < PaletteClass::PALETTE_ENTRIES; ++index) {
+            // Index 16 is pure white, we do not want to adjust this.
+            if (index == 16) {
+                dst[index] = src[index];
+            } else {
+                HSVClass hsv = src[index];
+                hsv.Adjust(brightness, saturation, tint, contrast);
+                dst[index] = hsv;
+            }
+        }
+    }
+}
+
+/**
+ * @brief Performs processing for this object per frame.
+ *
+ * 0x004C9EE0
+ */
 void GameOptionsClass::Process()
 {
     // TODO
+#ifndef RAPP_STANDALONE
+    void (*process)() = reinterpret_cast<void (*)()>(0x004C9EE0);
+    process();
+#endif
 }
 
 /**
@@ -111,15 +143,15 @@ void GameOptionsClass::Process()
 void GameOptionsClass::Adjust_Vars_For_Resolution()
 {
     // TODO work out what these are all used for if anything.
-    field_7C = 448;
-    field_80 = 222;
-    field_84 = (g_seenBuff.Get_Width() - field_7C) / 2;
+    OptionsDialogWidth = 448;
+    OptionsDialogHeight = 222;
+    OptionsDialogCenterX = (g_seenBuff.Get_Width() - OptionsDialogWidth) / 2;
+    OptionsDialogCenterY = (g_seenBuff.Get_Height() - OptionsDialogHeight) / 2;
     field_8C = 260;
-    field_90 = 18;
+    OptionsDialogButtonYSpacing = 18;
     field_94 = 10;
-    field_98 = 42;
+    OptionsDialogButtonOffsetFromTop = 42;
     field_9C = 144;
     field_A0 = 32;
-    field_88 = (g_seenBuff.Get_Height() - field_80) / 2;
-    field_A4 = field_80 - 38;
+    OptionsDialogBottomButtonOffsetTop = OptionsDialogHeight - 38;
 }

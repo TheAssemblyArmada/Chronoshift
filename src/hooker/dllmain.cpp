@@ -37,6 +37,7 @@
 #include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
+#include "options.h"
 #include "ostimer.h"
 #include "rawfileclass.h"
 #include "rgb.h"
@@ -101,6 +102,7 @@ void Setup_Hooks()
     VersionClass::Hook_Me();
     FacingClass::Hook_Me();
     FlasherClass::Hook_Me();
+    OptionsClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);

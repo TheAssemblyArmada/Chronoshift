@@ -20,6 +20,7 @@
 #include "always.h"
 #include "fixed.h"
 #include "keyboard.h"
+#include "palette.h"
 
 enum GameSpeedEnum
 {
@@ -49,7 +50,13 @@ public:
     void One_Time();
     void Process() {}
 
+    void Adjust_Palette(PaletteClass &src, PaletteClass &dst, fixed brightness, fixed saturation, fixed tint, fixed contrast);
     // TODO implement functions as required.
+
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+#endif
+
 private:
     int GameSpeed;
     int ScrollRate;
@@ -145,23 +152,30 @@ public:
     void Adjust_Vars_For_Resolution();
 
 private:
-    int field_7C;
-    int field_80;
-    int field_84;
-    int field_88;
+    int OptionsDialogWidth;
+    int OptionsDialogHeight;
+    int OptionsDialogCenterX;
+    int OptionsDialogCenterY;
     int field_8C;
-    int field_90;
+    int OptionsDialogButtonYSpacing;
     int field_94;
-    int field_98;
+    int OptionsDialogButtonOffsetFromTop;
     int field_9C;
     int field_A0;
-    int field_A4;
+    int OptionsDialogBottomButtonOffsetTop;
 };
 
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
 
 extern GameOptionsClass &Options;
+
+inline void OptionsClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x00525884, *OptionsClass::Adjust_Palette);
+#endif
+}
 #else
 extern GameOptionsClass Options;
 #endif
