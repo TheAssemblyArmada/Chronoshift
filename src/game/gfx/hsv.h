@@ -19,6 +19,7 @@
 #define HSV_H
 
 #include "always.h"
+#include "fixed.h"
 
 class RGBClass;
 
@@ -35,6 +36,7 @@ public:
 
     void Reset() { m_hue = 0; m_sat = 0; m_val = 0; }
     void Adjust(int adjust, HSVClass const &that);
+    void Adjust(fixed brightness, fixed saturation, fixed tint, fixed contrast);
     int const Difference(HSVClass const &that) const;
     void const Set(uint8_t index) const;
 

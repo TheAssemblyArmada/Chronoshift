@@ -15,11 +15,17 @@
  */
 #include "hsv.h"
 #include "abs.h"
+#include "minmax.h"
 #include "rgb.h"
 
 HSVClass const HSVClass::s_blackColor(0, 0, 0);
 HSVClass const HSVClass::s_whiteColor(0, 0, 100);
 
+/**
+ * @brief Carries out an adjustment based on another HSV value.
+ *
+ * 0x005D3C2C
+ */
 void HSVClass::Adjust(int adjust, HSVClass const &that)
 {
     int tmp;
@@ -32,6 +38,29 @@ void HSVClass::Adjust(int adjust, HSVClass const &that)
     m_hue += (tmp - (tmp >> 31 << 8)) >> 8;
 }
 
+/**
+ * @brief Carries out an adjustment based on brightness, saturation, tint and contrast.
+ */
+void HSVClass::Adjust(fixed brightness, fixed saturation, fixed tint, fixed contrast)
+{
+    //int v10 = Clamp(((brightness * 256) * m_val) / 128, 0, 255);
+    //int tmp = ((Clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256));
+    //int v12 = (tmp / 128) + 128;
+
+    int v = Clamp((((Clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256)) / 128) + 128, 0, 255);
+    int s = Clamp(((saturation * 256) * m_sat) / 128, 0, 255);
+    int h = Clamp(((tint * 256) * m_hue) / 128, 0, 255);
+
+    m_hue = h;
+    m_sat = s;
+    m_val = v;
+}
+
+/**
+ * @brief Calculates a numerical distance between this hsv value and another.
+ *
+ * 0x005D3CA4
+ */
 int const HSVClass::Difference(HSVClass const &that) const
 {
     int hue = m_hue - that.m_hue;
@@ -45,6 +74,11 @@ int const HSVClass::Difference(HSVClass const &that) const
     return hue * hue + saturation * saturation + value * value;
 }
 
+/**
+ * @brief Conversion operator to create an RGB value based on this HSV value.
+ *
+ * 0x005D3CFC
+ */
 HSVClass::operator RGBClass() const
 {
     if (m_sat == 0) {
@@ -96,23 +130,11 @@ HSVClass::operator RGBClass() const
     return RGBClass(RGBClass::Contract_VGA(red), RGBClass::Contract_VGA(green), RGBClass::Contract_VGA(blue));
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  NAME:
-//    <function name>
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief Sets the index in the game palette to this HSV value.
+ *
+ * 0x005D3CFC
+ */
 void const HSVClass::Set(uint8_t index) const
 {
     RGBClass rgb;
