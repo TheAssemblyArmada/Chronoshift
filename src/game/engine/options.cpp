@@ -15,17 +15,10 @@
 #include "options.h"
 #include "audio.h"
 #include "ccfileclass.h"
-#include "gbuffer.h"
 #include "hsv.h"
 #include "ini.h"
 #include "rgb.h"
 #include "session.h"
-
-#ifndef RAPP_STANDALONE
-GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
-#else
-GameOptionsClass Options;
-#endif
 
 OptionsClass::OptionsClass() :
     GameSpeed(GAMESPEED_3),
@@ -423,39 +416,4 @@ void OptionsClass::Set()
     Set_Score_Volume(ScoreVolume);
     Set_Shuffle(ScoreShuffles);
     Set_Repeat(ScoreRepeats);
-}
-
-/**
- * @brief Performs processing for this object per frame.
- *
- * 0x004C9EE0
- */
-void GameOptionsClass::Process()
-{
-    // TODO
-#ifndef RAPP_STANDALONE
-    void (*process)() = reinterpret_cast<void (*)()>(0x004C9EE0);
-    process();
-#endif
-}
-
-/**
- * @brief Adjusts the values of variables based on current resolution.
- *
- * 0x004CAC6C
- */
-void GameOptionsClass::Adjust_Vars_For_Resolution()
-{
-    // TODO work out what these are all used for if anything.
-    OptionsDialogWidth = 448;
-    OptionsDialogHeight = 222;
-    OptionsDialogCenterX = (g_seenBuff.Get_Width() - OptionsDialogWidth) / 2;
-    OptionsDialogCenterY = (g_seenBuff.Get_Height() - OptionsDialogHeight) / 2;
-    field_8C = 260;
-    OptionsDialogButtonYSpacing = 18;
-    field_94 = 10;
-    OptionsDialogButtonOffsetFromTop = 42;
-    field_9C = 144;
-    field_A0 = 32;
-    OptionsDialogBottomButtonOffsetTop = OptionsDialogHeight - 38;
 }

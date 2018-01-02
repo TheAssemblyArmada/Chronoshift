@@ -152,30 +152,8 @@ private:
     KeyType KeyTeam10;
 };
 
-class GameOptionsClass : public OptionsClass
-{
-public:
-    void Process();
-    void Adjust_Vars_For_Resolution();
-
-private:
-    int OptionsDialogWidth;
-    int OptionsDialogHeight;
-    int OptionsDialogCenterX;
-    int OptionsDialogCenterY;
-    int field_8C;
-    int OptionsDialogButtonYSpacing;
-    int field_94;
-    int OptionsDialogButtonOffsetFromTop;
-    int field_9C;
-    int field_A0;
-    int OptionsDialogBottomButtonOffsetTop;
-};
-
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
-
-extern GameOptionsClass &Options;
 
 inline void OptionsClass::Hook_Me()
 {
@@ -183,8 +161,6 @@ inline void OptionsClass::Hook_Me()
     //Hook_Function(0x00525884, *OptionsClass::Adjust_Palette);
 #endif
 }
-#else
-extern GameOptionsClass Options;
 #endif
 
 #endif // OPTIONS_H

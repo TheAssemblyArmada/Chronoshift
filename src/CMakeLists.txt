@@ -85,6 +85,7 @@ set(GAMEENGINE_SRC
     game/engine/facing.cpp
     game/engine/flasher.cpp
     game/engine/fuse.cpp
+    game/engine/gameoptions.cpp
     game/engine/getcd.cpp
     game/engine/gscreen.cpp
     game/engine/heap.cpp
