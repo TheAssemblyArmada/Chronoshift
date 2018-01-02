@@ -92,6 +92,7 @@ public:
     SessionClass();
 
     MessageListClass &Get_Messages() { return Messages; }
+    GameEnum Game_To_Play() { return GameToPlay; }
 
 private:
     GameEnum GameToPlay;

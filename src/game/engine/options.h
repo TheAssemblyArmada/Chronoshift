@@ -29,7 +29,9 @@ enum GameSpeedEnum
     GAMESPEED_2 = 2,
     GAMESPEED_3 = 3,
     GAMESPEED_4 = 4,
-    GAMESPEED_5 = 5
+    GAMESPEED_5 = 5,
+    GAMESPEED_6 = 6,
+    GAMESPEED_7 = 7,
 };
 
 enum ScrollSpeedEnum
@@ -39,7 +41,7 @@ enum ScrollSpeedEnum
     SCROLLSPEED_2 = 2,
     SCROLLSPEED_3 = 3,
     SCROLLSPEED_4 = 4,
-    SCROLLSPEED_5 = 5
+    SCROLLSPEED_5 = 5,
 };
 
 class OptionsClass
@@ -49,9 +51,22 @@ public:
 
     void One_Time();
     void Process() {}
-
-    void Adjust_Palette(PaletteClass &src, PaletteClass &dst, fixed brightness, fixed saturation, fixed tint, fixed contrast);
-    // TODO implement functions as required.
+    void Save_Settings();
+    void Load_Settings();
+    void Adjust_Palette(
+        PaletteClass &src, PaletteClass &dst, fixed brightness, fixed saturation, fixed tint, fixed contrast) const;
+    void Fixup_Palette() const;
+    int Normalize_Volume(int volume) const { return volume * Volume; }
+    int Normalize_Delay(int delay) const;
+    void Set_Shuffle(BOOL shuffle) { ScoreShuffles = shuffle; }
+    void Set_Repeat(BOOL repeat) { ScoreRepeats = repeat; }
+    void Set_Score_Volume(fixed volume, BOOL beep = false);
+    void Set_Sound_Volume(fixed volume, BOOL beep = false);
+    void Set_Brightness(fixed brightness);
+    void Set_Saturation(fixed saturation);
+    void Set_Contrast(fixed contrast);
+    void Set_Tint(fixed tint);
+    void Set();
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
@@ -74,25 +89,17 @@ private:
         struct
         {
             bool AutoScroll : 1; // & 1
-            bool IsScoreRepeat : 1; // & 2
-            bool IsScoreShuffle : 1; // & 4
+            bool ScoreRepeats : 1; // & 2
+            bool ScoreShuffles : 1; // & 4
             bool PaletteScroll : 1; // & 8
-            // bool SlowPalette : 1; // & 16    // Global in original at 0x006678E4
-            // bool ToggleSidebar : 1; // & 32
-            // bool FreeScrolling : 1; // & 64
-            // bool DeathAnnounce : 1; // & 128
         };
         int Bitfield;
     };
 #else
     bool AutoScroll;
-    bool IsScoreRepeat;
-    bool IsScoreShuffle;
+    bool ScoreRepeats;
+    bool ScoreShuffles;
     bool PaletteScroll;
-    // bool SlowPalette;
-    // bool ToggleSidebar;
-    // bool FreeScrolling;
-    // bool DeathAnnounce;
 #endif
     KeyType KeyForceMove1;
     KeyType KeyForceMove2;
@@ -173,7 +180,7 @@ extern GameOptionsClass &Options;
 inline void OptionsClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    Hook_Function(0x00525884, *OptionsClass::Adjust_Palette);
+    //Hook_Function(0x00525884, *OptionsClass::Adjust_Palette);
 #endif
 }
 #else

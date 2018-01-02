@@ -14,9 +14,12 @@
  */
 #include "options.h"
 #include "audio.h"
+#include "ccfileclass.h"
 #include "gbuffer.h"
 #include "hsv.h"
+#include "ini.h"
 #include "rgb.h"
+#include "session.h"
 
 #ifndef RAPP_STANDALONE
 GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
@@ -35,8 +38,8 @@ OptionsClass::OptionsClass() :
     Saturation(fixed::_1_2),
     Contrast(fixed::_1_2),
     AutoScroll(true),
-    IsScoreRepeat(false),
-    IsScoreShuffle(false),
+    ScoreRepeats(false),
+    ScoreShuffles(false),
     PaletteScroll(true),
     KeyForceMove1(KN_LALT),
     KeyForceMove2(KN_RALT),
@@ -101,11 +104,170 @@ void OptionsClass::One_Time()
 }
 
 /**
+ * @brief Saves the options out to the configuration file (redalert.ini in Red Alert for example).
+ *
+ * 0x005263A8
+ */
+void OptionsClass::Save_Settings()
+{
+    // TODO Some global to handle if the game is TD or RA for later TD support.
+    CCFileClass fc("redalert.ini");
+    INIClass ini;
+
+    if (fc.Is_Available()) {
+        ini.Load(fc);
+    }
+
+    ini.Put_Int("Options", "GameSpeed", GameSpeed);
+    ini.Put_Int("Options", "ScrollRate", ScrollRate);
+    ini.Put_Fixed("Options", "Volume", Volume);
+
+    if (Session.Game_To_Play() == GAME_CAMPAIGN) {
+        ini.Put_Fixed("Options", "ScoreVolume", ScoreVolume);
+    }
+
+    ini.Put_Fixed("Options", "MultiplayerScoreVolume", MultiplayerScoreVolume);
+    ini.Put_Fixed("Options", "Brightness", Brightness);
+    ini.Put_Fixed("Options", "Contrast", Contrast);
+    ini.Put_Fixed("Options", "Color", Saturation);
+    ini.Put_Fixed("Options", "Tint", Tint);
+    ini.Put_Bool("Options", "IsScoreRepeat", ScoreRepeats);
+    ini.Put_Bool("Options", "IsScoreShuffle", ScoreShuffles);
+    ini.Put_Bool("Options", "PaletteScroll", PaletteScroll);
+    ini.Put_Int("Options", "KeyForceMove1", KeyForceMove1);
+    ini.Put_Int("Options", "KeyForceMove2", KeyForceMove2);
+    ini.Put_Int("Options", "KeyForceAttack1", KeyForceAttack1);
+    ini.Put_Int("Options", "KeyForceAttack2", KeyForceAttack2);
+    ini.Put_Int("Options", "KeySelect1", KeySelect1);
+    ini.Put_Int("Options", "KeySelect2", KeySelect2);
+    ini.Put_Int("Options", "KeyScatter", KeyScatter);
+    ini.Put_Int("Options", "KeyStop", KeyStop);
+    ini.Put_Int("Options", "KeyGuard", KeyGuard);
+    ini.Put_Int("Options", "KeyNext", KeyNext);
+    ini.Put_Int("Options", "KeyPrevious", KeyPrevious);
+    ini.Put_Int("Options", "KeyFormation", KeyFormation);
+    ini.Put_Int("Options", "KeyHome1", KeyHome1);
+    ini.Put_Int("Options", "KeyHome2", KeyHome2);
+    ini.Put_Int("Options", "KeyBase", KeyBase);
+    ini.Put_Int("Options", "KeyResign", KeyResign);
+    ini.Put_Int("Options", "KeyAlliance", KeyAlliance);
+    ini.Put_Int("Options", "KeyBookmark1", KeyBookmark1);
+    ini.Put_Int("Options", "KeyBookmark2", KeyBookmark2);
+    ini.Put_Int("Options", "KeyBookmark3", KeyBookmark3);
+    ini.Put_Int("Options", "KeyBookmark4", KeyBookmark4);
+    ini.Put_Int("Options", "KeySelectView", KeySelectView);
+    ini.Put_Int("Options", "KeyRepairToggle", KeyRepairToggle);
+    ini.Put_Int("Options", "KeyRepairOn", KeyRepairOn);
+    ini.Put_Int("Options", "KeyRepairOff", KeyRepairOff);
+    ini.Put_Int("Options", "KeySellToggle", KeySellToggle);
+    ini.Put_Int("Options", "KeySellOn", KeySellOn);
+    ini.Put_Int("Options", "KeySellOff", KeySellOff);
+    ini.Put_Int("Options", "KeyMapToggle", KeyMapToggle);
+    ini.Put_Int("Options", "KeySidebarUp", KeySidebarUp);
+    ini.Put_Int("Options", "KeySidebarDown", KeySidebarDown);
+    ini.Put_Int("Options", "KeyOption1", KeyOption1);
+    ini.Put_Int("Options", "KeyOption2", KeyOption2);
+    ini.Put_Int("Options", "KeyScrollLeft", KeyScrollLeft);
+    ini.Put_Int("Options", "KeyScrollRight", KeyScrollRight);
+    ini.Put_Int("Options", "KeyScrollUp", KeyScrollUp);
+    ini.Put_Int("Options", "KeyScrollDown", KeyScrollDown);
+    ini.Put_Int("Options", "KeyQueueMove1", KeyQueueMove1);
+    ini.Put_Int("Options", "KeyQueueMove2", KeyQueueMove2);
+    ini.Put_Int("Options", "KeyTeam1", KeyTeam1);
+    ini.Put_Int("Options", "KeyTeam2", KeyTeam2);
+    ini.Put_Int("Options", "KeyTeam3", KeyTeam3);
+    ini.Put_Int("Options", "KeyTeam4", KeyTeam4);
+    ini.Put_Int("Options", "KeyTeam5", KeyTeam5);
+    ini.Put_Int("Options", "KeyTeam6", KeyTeam6);
+    ini.Put_Int("Options", "KeyTeam7", KeyTeam7);
+    ini.Put_Int("Options", "KeyTeam8", KeyTeam8);
+    ini.Put_Int("Options", "KeyTeam9", KeyTeam9);
+    ini.Put_Int("Options", "KeyTeam10", KeyTeam10);
+    ini.Save(fc);
+}
+
+/**
+ * @brief Loads the options from the configuration file (redalert.ini in Red Alert for example).
+ *
+ * 0x005263A8
+ */
+void OptionsClass::Load_Settings()
+{
+    CCFileClass fc("redalert.ini");
+    INIClass ini;
+
+    ini.Load(fc);
+    GameSpeed = ini.Get_Int("Options", "GameSpeed", GameSpeed);
+    ScrollRate = ini.Get_Int("Options", "ScrollRate", ScrollRate);
+    Set_Sound_Volume(ini.Get_Fixed("Options", "Volume", Volume));
+    Set_Score_Volume(ini.Get_Fixed("Options", "ScoreVolume", ScoreVolume));
+    MultiplayerScoreVolume = ini.Get_Fixed("Options", "MultiplayerScoreVolume", MultiplayerScoreVolume);
+    Set_Brightness(ini.Get_Fixed("Options", "Brightness", Brightness));
+    Set_Contrast(ini.Get_Fixed("Options", "Contrast", Contrast));
+    Set_Saturation(ini.Get_Fixed("Options", "Color", Saturation));
+    Set_Tint(ini.Get_Fixed("Options", "Tint", Tint));
+    AutoScroll = ini.Get_Bool("Options", "AutoScroll", AutoScroll);
+    ScoreRepeats = ini.Get_Bool("Options", "IsScoreRepeat", ScoreRepeats);
+    ScoreShuffles = ini.Get_Bool("Options", "IsScoreShuffle", ScoreShuffles);
+    PaletteScroll = ini.Get_Bool("Options", "PaletteScroll", PaletteScroll);
+    KeyForceMove1 = ini.Get_Int("Options", "KeyForceMove1", KeyForceMove1) & 0xEFFF;
+    KeyForceMove2 = ini.Get_Int("Options", "KeyForceMove2", KeyForceMove2) & 0xEFFF;
+    KeyForceAttack1 = ini.Get_Int("Options", "KeyForceAttack1", KeyForceAttack1) & 0xEFFF;
+    KeyForceAttack2 = ini.Get_Int("Options", "KeyForceAttack2", KeyForceAttack2) & 0xEFFF;
+    KeySelect1 = ini.Get_Int("Options", "KeySelect1", KeySelect1) & 0xEFFF;
+    KeySelect2 = ini.Get_Int("Options", "KeySelect2", KeySelect2) & 0xEFFF;
+    KeyScatter = ini.Get_Int("Options", "KeyScatter", KeyScatter) & 0xEFFF;
+    KeyStop = ini.Get_Int("Options", "KeyStop", KeyStop) & 0xEFFF;
+    KeyGuard = ini.Get_Int("Options", "KeyGuard", KeyGuard) & 0xEFFF;
+    KeyNext = ini.Get_Int("Options", "KeyNext", KeyNext) & 0xEFFF;
+    KeyPrevious = ini.Get_Int("Options", "KeyPrevious", KeyPrevious) & 0xEFFF;
+    KeyFormation = ini.Get_Int("Options", "KeyFormation", KeyFormation) & 0xEFFF;
+    KeyHome1 = ini.Get_Int("Options", "KeyHome1", KeyHome1) & 0xEFFF;
+    KeyHome2 = ini.Get_Int("Options", "KeyHome2", KeyHome2) & 0xEFFF;
+    KeyBase = ini.Get_Int("Options", "KeyBase", KeyBase) & 0xEFFF;
+    KeyResign = ini.Get_Int("Options", "KeyResign", KeyResign) & 0xEFFF;
+    KeyAlliance = ini.Get_Int("Options", "KeyAlliance", KeyAlliance) & 0xEFFF;
+    KeyBookmark1 = ini.Get_Int("Options", "KeyBookmark1", KeyBookmark1) & 0xEFFF;
+    KeyBookmark2 = ini.Get_Int("Options", "KeyBookmark2", KeyBookmark2) & 0xEFFF;
+    KeyBookmark3 = ini.Get_Int("Options", "KeyBookmark3", KeyBookmark3) & 0xEFFF;
+    KeyBookmark4 = ini.Get_Int("Options", "KeyBookmark4", KeyBookmark4) & 0xEFFF;
+    KeySelectView = ini.Get_Int("Options", "KeySelectView", KeySelectView) & 0xEFFF;
+    KeyRepairToggle = ini.Get_Int("Options", "KeyRepairToggle", KeyRepairToggle) & 0xEFFF;
+    KeyRepairOn = ini.Get_Int("Options", "KeyRepairOn", KeyRepairOn) & 0xEFFF;
+    KeyRepairOff = ini.Get_Int("Options", "KeyRepairOff", KeyRepairOff) & 0xEFFF;
+    KeySellToggle = ini.Get_Int("Options", "KeySellToggle", KeySellToggle) & 0xEFFF;
+    KeySellOn = ini.Get_Int("Options", "KeySellOn", KeySellOn) & 0xEFFF;
+    KeySellOff = ini.Get_Int("Options", "KeySellOff", KeySellOff) & 0xEFFF;
+    KeyMapToggle = ini.Get_Int("Options", "KeyMapToggle", KeyMapToggle) & 0xEFFF;
+    KeySidebarUp = ini.Get_Int("Options", "KeySidebarUp", KeySidebarUp) & 0xEFFF;
+    KeySidebarDown = ini.Get_Int("Options", "KeySidebarDown", KeySidebarDown) & 0xEFFF;
+    KeyOption1 = ini.Get_Int("Options", "KeyOption1", KeyOption1) & 0xEFFF;
+    KeyOption2 = ini.Get_Int("Options", "KeyOption2", KeyOption2) & 0xEFFF;
+    KeyScrollLeft = ini.Get_Int("Options", "KeyScrollLeft", KeyScrollLeft) & 0xEFFF;
+    KeyScrollRight = ini.Get_Int("Options", "KeyScrollRight", KeyScrollRight) & 0xEFFF;
+    KeyScrollUp = ini.Get_Int("Options", "KeyScrollUp", KeyScrollUp) & 0xEFFF;
+    KeyScrollDown = ini.Get_Int("Options", "KeyScrollDown", KeyScrollDown) & 0xEFFF;
+    KeyQueueMove1 = ini.Get_Int("Options", "KeyQueueMove1", KeyQueueMove1) & 0xEFFF;
+    KeyQueueMove2 = ini.Get_Int("Options", "KeyQueueMove2", KeyQueueMove2) & 0xEFFF;
+    KeyTeam1 = ini.Get_Int("Options", "KeyTeam1", KeyTeam1) & 0xEFFF;
+    KeyTeam2 = ini.Get_Int("Options", "KeyTeam2", KeyTeam2) & 0xEFFF;
+    KeyTeam3 = ini.Get_Int("Options", "KeyTeam3", KeyTeam3) & 0xEFFF;
+    KeyTeam4 = ini.Get_Int("Options", "KeyTeam4", KeyTeam4) & 0xEFFF;
+    KeyTeam5 = ini.Get_Int("Options", "KeyTeam5", KeyTeam5) & 0xEFFF;
+    KeyTeam6 = ini.Get_Int("Options", "KeyTeam6", KeyTeam6) & 0xEFFF;
+    KeyTeam7 = ini.Get_Int("Options", "KeyTeam7", KeyTeam7) & 0xEFFF;
+    KeyTeam8 = ini.Get_Int("Options", "KeyTeam8", KeyTeam8) & 0xEFFF;
+    KeyTeam9 = ini.Get_Int("Options", "KeyTeam9", KeyTeam9) & 0xEFFF;
+    KeyTeam10 = ini.Get_Int("Options", "KeyTeam10", KeyTeam10) & 0xEFFF;
+}
+
+/**
  * @brief Carries out a palette adjustment.
  *
  * 0x00525884
  */
-void OptionsClass::Adjust_Palette(PaletteClass & src, PaletteClass & dst, fixed brightness, fixed saturation, fixed tint, fixed contrast)
+void OptionsClass::Adjust_Palette(
+    PaletteClass &src, PaletteClass &dst, fixed brightness, fixed saturation, fixed tint, fixed contrast) const
 {
     if (&src[0] != nullptr && &dst[0] != nullptr) {
         for (int index = 0; index < PaletteClass::PALETTE_ENTRIES; ++index) {
@@ -119,6 +281,148 @@ void OptionsClass::Adjust_Palette(PaletteClass & src, PaletteClass & dst, fixed 
             }
         }
     }
+}
+
+/**
+ * @brief Fixes up the CCPalette with the current display adjustment values.
+ *
+ * 0x00526BB0
+ */
+void OptionsClass::Fixup_Palette() const
+{
+    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
+    CCPalette = GamePalette;
+}
+
+/**
+ * @brief Returns a delay normalized to the game speed.
+ *
+ * 0x00526B7C
+ */
+int OptionsClass::Normalize_Delay(int delay) const
+{
+    static int _adjust[4][8] = {
+        { 2, 2, 1, 1, 1, 1, 1, 1 },
+        { 3, 3, 3, 2, 2, 2, 1, 1 },
+        { 5, 4, 4, 3, 3, 2, 2, 1 },
+        { 7, 6, 5, 4, 4, 4, 3, 2 }
+    };
+
+    if (delay == 0) {
+        return 0;
+    }
+
+    if (delay < 5) {
+        return _adjust[delay][GameSpeed];
+    }
+
+    return 8 * delay / (GameSpeed + 1);
+}
+
+/**
+ * @brief Sets the volume for background music.
+ *
+ * 0x0052520C
+ */
+void OptionsClass::Set_Score_Volume(fixed volume, BOOL beep)
+{
+    if (volume >= 1) {
+        volume.Set_Word(255);
+    }
+
+    Set_Score_Vol(256 * volume);
+
+    Volume = volume;
+
+    if (beep) {
+        // TODO requires ThemeClass
+        // if (Theme.Still_Playing()) {
+        //    Sound_Effect(VOC_RABEEP1, fixed::_1_1, 1, 0, HOUSES_NONE);
+        //}
+    }
+}
+
+/**
+ * @brief Sets the volume for in game sounds.
+ *
+ * 0x005252BC
+ */
+void OptionsClass::Set_Sound_Volume(fixed volume, BOOL beep)
+{
+    if (volume >= 1) {
+        volume.Set_Word(255);
+    }
+
+    Volume = volume;
+
+    if (beep) {
+        Sound_Effect(VOC_RABEEP1, fixed::_1_1, 1, 0, HOUSES_NONE);
+    }
+}
+
+/**
+ * @brief Sets the display brightness.
+ *
+ * 0x0052534C
+ */
+void OptionsClass::Set_Brightness(fixed brightness)
+{
+    Brightness = brightness * fixed::_1_2 + fixed::_1_4;
+    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
+    GamePalette.Set();
+}
+
+/**
+ * @brief Sets the display saturation.
+ *
+ * 0x0052551C
+ */
+void OptionsClass::Set_Saturation(fixed saturation)
+{
+    Saturation = saturation;
+    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
+    GamePalette.Set();
+}
+
+/**
+ * @brief Sets the display contrast.
+ *
+ * 0x005255E8
+ */
+void OptionsClass::Set_Contrast(fixed contrast)
+{
+    Contrast = contrast * fixed::_1_2 + fixed::_1_4;
+    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
+    GamePalette.Set();
+}
+
+/**
+ * @brief Sets the display tint.
+ *
+ * 0x005257B8
+ */
+void OptionsClass::Set_Tint(fixed tint)
+{
+    Tint = tint;
+    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
+    GamePalette.Set();
+}
+
+/**
+ * @brief Calls most of the set functions with the members existing values.
+ *
+ * 0x00526A88
+ */
+void OptionsClass::Set()
+{
+    Set_Brightness(Brightness);
+    Set_Contrast(Contrast);
+    Set_Saturation(Saturation);
+    Set_Tint(Tint);
+    Set_Sound_Volume(Volume);
+    Set_Score_Volume(ScoreVolume);
+    Set_Shuffle(ScoreShuffles);
+    Set_Repeat(ScoreRepeats);
 }
 
 /**
