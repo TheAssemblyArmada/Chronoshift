@@ -20,6 +20,16 @@
 PaletteClass WhitePalette(RGBClass::WhiteColor);
 PaletteClass BlackPalette(RGBClass::BlackColor);
 
+#ifndef RAPP_STANDALONE
+PaletteClass &GamePalette = Make_Global<PaletteClass>(0x00669C5C);
+PaletteClass &OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
+PaletteClass &CCPalette = Make_Global<PaletteClass>(0x0066995C);
+#else
+PaletteClass GamePalette;
+PaletteClass OriginalPalette;
+PaletteClass &CCPalette;
+#endif
+
 PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g_currentPalette);
 
 PaletteClass::PaletteClass(const RGBClass &rgb)

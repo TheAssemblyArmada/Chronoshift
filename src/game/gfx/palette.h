@@ -58,4 +58,16 @@ private:
 extern PaletteClass WhitePalette;
 extern PaletteClass BlackPalette;
 
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+
+extern PaletteClass &GamePalette;
+extern PaletteClass &OriginalPalette;
+extern PaletteClass &CCPalette;
+#else
+extern PaletteClass GamePalette;
+extern PaletteClass OriginalPalette;
+extern PaletteClass CCPalette;
+#endif
+
 #endif // PALETTE_H
