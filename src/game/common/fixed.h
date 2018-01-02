@@ -28,6 +28,10 @@ public:
     friend int operator*(fixed const &a, int const &b);
     friend bool operator>(fixed const &a, int const &b);
     friend bool operator>(int const &a, fixed const &b);
+    friend bool operator>=(fixed const &a, int const &b);
+    friend bool operator>=(int const &a, fixed const &b);
+    friend bool operator==(fixed const &a, int const &b);
+    friend bool operator==(int const &a, fixed const &b);
 
     struct Data
     {
@@ -81,6 +85,7 @@ public:
     int Round_To_Int() const { return (m_number.word + 128) >> 8; }
     int Chop_To_Int() const { return m_number.word >> 8; }
     int Get_Word() const { return m_number.word; }
+    void Set_Word(uint16_t word) { m_number.word = word; }
 
     static fixed const _0_1; // 0.0	0
     static fixed const _1_1; // 1.0	256
@@ -172,6 +177,26 @@ inline bool operator>(int const &a, fixed const &b)
     return (a << 8) > b.m_number.word;
 }
 
+inline bool operator>=(fixed const &a, int const &b)
+{
+    return a.m_number.word >= (b << 8);
+}
+
+inline bool operator>=(int const &a, fixed const &b)
+{
+    return (a << 8) >= b.m_number.word;
+}
+
+inline bool operator==(fixed const &a, int const &b)
+{
+    return a.m_number.word == (b << 8);
+}
+
+inline bool operator==(int const &a, fixed const &b)
+{
+    return (a << 8) == b.m_number.word;
+}
+
 inline bool operator<(fixed const &a, int const &b)
 {
     return b > a;
@@ -180,6 +205,16 @@ inline bool operator<(fixed const &a, int const &b)
 inline bool operator<(int const &a, fixed const &b)
 {
     return b > a;
+}
+
+inline bool operator<=(fixed const &a, int const &b)
+{
+    return b >= a;
+}
+
+inline bool operator<=(int const &a, fixed const &b)
+{
+    return b >= a;
 }
 
 #endif // FIXED_H
