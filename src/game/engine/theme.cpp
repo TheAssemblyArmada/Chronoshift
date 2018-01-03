@@ -129,7 +129,6 @@ void ThemeClass::AI()
                     }
 
                     Play_Song(QueuedTheme);
-
                     QueuedTheme = THEME_NEXT;
                 }
             }
@@ -307,7 +306,7 @@ void ThemeClass::Suspend()
  */
 BOOL ThemeClass::Still_Playing() const
 {
-    if (ScoresPresent && CurrentTheme != THEME_NONE && !DebugQuiet && ThemeHandle != -1) {
+    if (ScoresPresent && ThemeHandle != -1 && !DebugQuiet) {
         return Sample_Status(ThemeHandle);
     }
 
