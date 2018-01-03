@@ -148,12 +148,8 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
 {
     DEBUG_ASSERT(theme < THEME_COUNT);
 
-    if (theme == THEME_NONE) {
-        return Next_Song(THEME_NEXT);
-    }
-
-    if (theme != THEME_NONE || theme == THEME_NEXT
-        || theme != THEME_SMTHNG3 && !Themes[theme].IsRepeat && !Options.Get_Repeat()) {
+    if (theme == THEME_NONE || theme == THEME_NEXT
+        || (theme != THEME_SMTHNG3 && !Themes[theme].IsRepeat && !Options.Get_Repeat())) {
         // If we are shuffling the score, select a random score. If its the same
         // as the one we were passed or isn't allowed, roll for another.
         if (Options.Get_Shuffle()) {
@@ -400,7 +396,7 @@ void ThemeClass::Scan()
  */
 void ThemeClass::Set_Theme_Data(ThemeType theme, int scenario, int side)
 {
-    if (theme != THEME_NONE && theme < THEME_COUNT) {
+    if (theme > THEME_NONE && theme < THEME_COUNT) {
         Themes[theme].IsNormal = true;
         Themes[theme].Scenario = scenario;
         Themes[theme].Side = side;
