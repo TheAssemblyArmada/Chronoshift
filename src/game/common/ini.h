@@ -29,7 +29,7 @@
 #include "straw.h"
 #include "stringex.h"
 
-#define SYS_NEW_LINE "/r/n"
+#define SYS_NEW_LINE "\r\n"
 
 // find out what this really is.
 enum INIIntegerType
