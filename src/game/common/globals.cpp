@@ -32,6 +32,9 @@ char *&TypeFontPtr = Make_Global<char *>(0x00669934);
 BOOL &GameActive = Make_Global<BOOL>(0x00669924);
 BOOL &ScenarioInit = Make_Global<BOOL>(0x00669914);
 BOOL &DebugUnshroud = Make_Global<BOOL>(0x0065D7F0);
+BOOL &DebugQuiet = Make_Global<BOOL>(0x0065D7CC);
+BOOL &ScoresPresent = Make_Global<BOOL>(0x006680C0);
+BOOL &StreamLowImpact = Make_Global<BOOL>(0x006ABFCC);
 #ifdef PLATFORM_WINDOWS
 HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 #endif
@@ -53,6 +56,9 @@ char *TypeFontPtr;
 BOOL GameActive;
 BOOL ScenarioInit;
 BOOL DebugUnshroud;
+BOOL DebugQuiet;
+BOOL ScoresPresent;
+BOOL StreamLowImpact;
 #ifdef PLATFORM_WINDOWS
 HWND MainWindow;
 #endif

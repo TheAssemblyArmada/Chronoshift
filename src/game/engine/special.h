@@ -19,6 +19,8 @@
 #ifndef SPECIAL_H
 #define SPECIAL_H
 
+#include "always.h"
+
 class SpecialClass
 {
 public:
@@ -35,7 +37,7 @@ public:
         Spawned = false;
     }
 
-    // TODO Getters and Setters as code requires.
+    BOOL Allow_Remixes() { return Remixes; }
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
@@ -57,6 +59,7 @@ private:
             bool OreGrows : 1; // & 64 Set in skirmish menu
             bool OreSpreads : 1; // & 128 Set in skirmish menu
             bool Spawned : 1; // & 1 "About to initialise Winsock" string RA demo, ow only skips intro and fades in the menu.
+            bool Remixes : 1; // & 2 Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
         };
         int SpecialFlags;
     };
@@ -70,6 +73,7 @@ private:
     bool OreGrows;
     bool OreSpreads;
     bool Spawned;
+    bool Remixes;
 #endif
 };
 

@@ -67,6 +67,9 @@ public:
     void Set_Contrast(fixed contrast);
     void Set_Tint(fixed tint);
     void Set();
+    fixed Get_Score_Volume() { return ScoreVolume; }
+    BOOL Get_Repeat() { return ScoreRepeats; }
+    BOOL Get_Shuffle() { return ScoreShuffles; }
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();

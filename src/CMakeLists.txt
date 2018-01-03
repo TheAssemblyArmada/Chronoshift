@@ -100,6 +100,7 @@ set(GAMEENGINE_SRC
     game/engine/special.cpp
     game/engine/session.cpp
     game/engine/theater.cpp
+    game/engine/theme.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
     game/gfx/blitters.cpp
