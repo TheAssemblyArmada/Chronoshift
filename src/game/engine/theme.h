@@ -25,7 +25,7 @@
 
 enum ThemeType
 {
-    THEME_SMTHNG3 = -3, // Think these are play modes.
+    THEME_STOP = -3, // Think these are play modes.
     THEME_NEXT = -2,
     THEME_NONE = -1,
     THEME_BIG_FOOT = 0, // Themes available in playlist

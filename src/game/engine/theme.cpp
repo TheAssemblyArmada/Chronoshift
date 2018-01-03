@@ -148,7 +148,7 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
     DEBUG_ASSERT(theme < THEME_COUNT);
 
     if (theme == THEME_NONE || theme == THEME_NEXT
-        || (theme != THEME_SMTHNG3 && !Themes[theme].IsRepeat && !Options.Get_Repeat())) {
+        || (theme != THEME_STOP && !Themes[theme].IsRepeat && !Options.Get_Repeat())) {
         // If we are shuffling the score, select a random score. If its the same
         // as the one we were passed or isn't allowed, roll for another.
         if (Options.Get_Shuffle()) {
@@ -189,7 +189,7 @@ void ThemeClass::Queue_Song(ThemeType theme)
     DEBUG_ASSERT(theme < THEME_COUNT);
 
     if (ScoresPresent && !DebugQuiet && Options.Get_Score_Volume() != 0) {
-        if (QueuedTheme == THEME_NONE || QueuedTheme == THEME_NEXT || theme == THEME_NONE || theme == THEME_SMTHNG3) {
+        if (QueuedTheme == THEME_NONE || QueuedTheme == THEME_NEXT || theme == THEME_NONE || theme == THEME_STOP) {
             QueuedTheme = theme;
 
             DEBUG_LOG("ThemeClass::Queue_Song(%d : %s)\n", QueuedTheme, Base_Name(QueuedTheme));
@@ -215,7 +215,7 @@ int ThemeClass::Play_Song(ThemeType theme)
         Stop();
         CurrentTheme = theme;
 
-        if (theme != THEME_NONE && theme != THEME_SMTHNG3) {
+        if (theme != THEME_NONE && theme != THEME_STOP) {
             StreamLowImpact = true;
             ThemeHandle = File_Stream_Sample_Vol(Theme_File_Name(theme), 256, true);
             StreamLowImpact = false;
