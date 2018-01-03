@@ -29,9 +29,9 @@ using std::snprintf;
 
 #ifndef RAPP_STANDALONE
 ThemeClass &Theme = Make_Global<ThemeClass>(0x00668248);
+ThemeClass::ThemeControl *ThemeClass::Themes = Make_Pointer<ThemeClass::ThemeControl>(0x006052FC);
 #else
 ThemeClass Theme;
-#endif
 
 // BaseName; Name; Scenario; Length; IsNormal; IsRepeat; IsAvailable; Side;
 ThemeClass::ThemeControl ThemeClass::Themes[THEME_COUNT] = {
@@ -77,6 +77,7 @@ ThemeClass::ThemeControl ThemeClass::Themes[THEME_COUNT] = {
     { "TRACTION", (TextEnum)552, 0, 237, true, false, true, SIDE_ALLIES },
     { "WASTELND", (TextEnum)553, 0, 242, true, false, true, SIDE_SOVIET | OWNER_SPAIN }
 };
+#endif
 
 ThemeClass::~ThemeClass()
 {
@@ -84,17 +85,31 @@ ThemeClass::~ThemeClass()
 }
 
 /**
- * @brief Gets the name of the theme without an extension.
+ * @brief Gets the name of the song without an extension.
  *
  * 0x0056BE60
  */
 const char *ThemeClass::Base_Name(ThemeType theme) const
 {
-    if (theme != THEME_NONE) {
+    if (theme > THEME_NONE) {
         return Themes[theme].BaseName;
     }
 
     return "No theme";
+}
+
+/**
+ * @brief Gets the title of the song from the string table.
+ *
+ * 0x0056BE9C
+ */
+const char *ThemeClass::Full_Name(ThemeType theme) const
+{
+    if (theme > THEME_NONE && theme < THEME_COUNT) {
+        return Fetch_String(Themes[theme].Name);
+    }
+
+    return nullptr;
 }
 
 /**

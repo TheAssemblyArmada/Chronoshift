@@ -100,6 +100,7 @@ public:
     BOOL Still_Playing() const;
     BOOL Is_Allowed(ThemeType theme) const;
     const char *Base_Name(ThemeType theme) const;
+    const char *Full_Name(ThemeType theme) const;
     ThemeType From_Name(const char *name) const;
     void Set_Theme_Data(ThemeType theme, int scenario, int side);
     void Fade_Out() { Queue_Song(THEME_NONE); }
@@ -114,7 +115,11 @@ private:
     int ThemeHandle;
     ThemeType CurrentTheme;
     ThemeType QueuedTheme;
+#ifndef RAPP_STANDALONE
+    static ThemeControl *Themes;
+#else
     static ThemeControl Themes[];
+#endif
 };
 
 #ifndef RAPP_STANDALONE
