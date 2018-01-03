@@ -35,6 +35,7 @@ public:
         OreGrows = true;
         OreSpreads = true;
         Spawned = false;
+        Remixes = false;
     }
 
     BOOL Allow_Remixes() { return Remixes; }
