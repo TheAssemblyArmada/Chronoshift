@@ -97,6 +97,7 @@ set(GAMEENGINE_SRC
     game/engine/objecttype.cpp
     game/engine/options.cpp
     game/engine/rtti.cpp
+    game/engine/scenario.cpp
     game/engine/special.cpp
     game/engine/session.cpp
     game/engine/theater.cpp
