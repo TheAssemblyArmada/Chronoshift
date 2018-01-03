@@ -20,7 +20,9 @@
 #include "gamedebug.h"
 #include "minmax.h"
 #include "mixfile.h"
-#include <stdio.h>
+#include <cstdio>
+
+using std::snprintf;
 
 #ifndef RAPP_STANDALONE
 char *&GameStrings = Make_Global<char *>(0x0066991C);
