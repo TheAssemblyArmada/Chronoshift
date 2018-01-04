@@ -215,6 +215,8 @@ public:
         return *this;
     }
 
+    operator int() { return Time(); }
+
     //BasicTimerClass &operator=(unsigned int value)
     //{
     //    Set(value);
