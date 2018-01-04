@@ -148,20 +148,21 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
     DEBUG_ASSERT(theme < THEME_COUNT);
 
     if (theme == THEME_NONE || theme == THEME_NEXT
-        || (theme != THEME_STOP && !Themes[theme].IsRepeat && !Options.Get_Repeat())) {
-        // If we are shuffling the score, select a random score. If its the same
-        // as the one we were passed or isn't allowed, roll for another.
+        || theme != THEME_STOP && !Themes[theme].IsRepeat && !Options.Get_Repeat()) {
+        // If we are shuffling the score, select a random score. If its the same as the one we were passed or isn't allowed,
+        // roll for another.
         if (Options.Get_Shuffle()) {
-            ThemeType next = Get_Random_Theme();
+            ThemeType next;
 
-            while (!Is_Allowed(next) && next == theme) {
-                next = Get_Random_Theme();
-            }
+            do {
+                do {
+                    next = Get_Random_Theme();
+                } while (next == theme);
+            } while (!Is_Allowed(next));
 
             theme = next;
         } else {
-            // Check if the next theme is allowed and wrap theme back to first
-            // if theme has gone over the max.
+            // Check if the next theme is allowed and wrap theme back to first if theme has gone over the max.
             while (theme < THEME_COUNT) {
                 ++theme;
 
@@ -322,7 +323,8 @@ BOOL ThemeClass::Is_Allowed(ThemeType theme) const
 {
     // TODO Requires HouseClass and ScenarioClass
 #if 1
-    BOOL(*call_Is_Allowed)(const ThemeClass *, ThemeType) = reinterpret_cast<BOOL(*)(const ThemeClass *, ThemeType)>(0x0056C240);
+    BOOL (*call_Is_Allowed)
+    (const ThemeClass *, ThemeType) = reinterpret_cast<BOOL (*)(const ThemeClass *, ThemeType)>(0x0056C240);
     return call_Is_Allowed(this, theme);
 #else
     if (theme >= THEME_COUNT) {
