@@ -692,5 +692,17 @@ enum OwnerType
     SIDE_SOVIET = OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY,
 };
 
+// TODO
+enum MovieType
+{
+    MOVIE_NONE = -1,
+    MOVIE_FIRST = 0,
+    MOVIE_PROLOG = 75,
+    MOVIE_SIZZLE = 97,
+    MOVIE_SIZZLE2 = 98,
+    MOVIE_COUNT = 104
+};
+
+DEFINE_ENUMERATION_OPERATORS(MovieType);
 
 #endif // CCTYPE_H

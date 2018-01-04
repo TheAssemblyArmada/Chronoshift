@@ -23,34 +23,42 @@
 #include "fixed.h"
 #include "gametypes.h"
 #include "random.h"
+#include "theater.h"
 #include "ttimer.h"
 
 class ScenarioClass
 {
+    enum
+    {
+        WAYPOINT_COUNT = 100,
+    };
 public:
     ScenarioClass();
+
+    int Get_Random_Value(int min, int max) { return SyncRandom(min, max); }
+    int Get_Scenario_Index() { return ScenarioIndex; }
 
 private:
     RandomClass SyncRandom;
     DiffType HumanDifficulty;
     DiffType AIDifficulty;
     BasicTimerClass<FrameTimerClass> ElapsedTimer;
-    int16_t Waypoints[100];
+    int16_t Waypoints[WAYPOINT_COUNT];
     int16_t UnkWaypoint;
     BasicTimerClass<FrameTimerClass> GlobalTimer;
     BasicTimerClass<FrameTimerClass> SomeTimer;
     int ScenarioIndex;
-    char Theater;
+    TheaterType Theater;
     char ScenarioName[512];
     char ScenarioDescription[44];
-    char IntroMovie;
-    char BriefMovie;
-    char WinMovie;
-    char LoseMovie;
-    char ActionMovie;
+    MovieType IntroMovie;
+    MovieType BriefMovie;
+    MovieType WinMovie;
+    MovieType LoseMovie;
+    MovieType ActionMovie;
     char BriefingText[1024];
     char TransitTheme;
-    char SomeHouse;
+    HousesType SomeHouse;
     fixed CarryOverMoney;
     int CarryOverMoneyAmount;
     int CarryOverCap;
