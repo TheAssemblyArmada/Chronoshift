@@ -14,6 +14,12 @@
  *            LICENSE
  */
 #include "scenario.h"
+#include "ccfileclass.h"
+#include "gameoptions.h"
+#include "stringex.h"
+#include <cstdio>
+
+using std::snprintf;
 
 #ifndef RAPP_STANDALONE
 ScenarioClass &Scen = Make_Global<ScenarioClass>(0x006678E8);
@@ -34,7 +40,7 @@ ScenarioClass::ScenarioClass() :
     WinMovie(MOVIE_NONE),
     LoseMovie(MOVIE_NONE),
     ActionMovie(MOVIE_NONE),
-    TransitTheme(-1/*THEME_NONE*/),
+    TransitTheme(THEME_NONE),
     SomeHouse(HOUSES_NONE),
     CarryOverMoney(0),
     CarryOverMoneyAmount(0),
@@ -70,4 +76,251 @@ ScenarioClass::ScenarioClass() :
     BriefingText[0] = '\0';
     memset(GlobalVariables, 0, sizeof(GlobalVariables));
     memset(Views, 0, sizeof(Views));
+}
+
+/**
+ * @brief Sets the scenario name and calculates the scenario index from the string.
+ *
+ * 0x0053CFB0
+ */
+void ScenarioClass::Set_Scenario_Name(const char *scen_name)
+{
+    char buffer[3];
+
+    if (scen_name == nullptr) {
+        return;
+    }
+
+    strlcpy(ScenarioName, scen_name, sizeof(ScenarioName));
+    DEBUG_LOG("Set_Scenario_Name() - ScenarioName set to '%s'\n", ScenarioName);
+
+    // Get the number part of the scenario name and calculate the ScenarioIndex.
+    memcpy(&buffer, &ScenarioName[3], sizeof(buffer));
+    buffer[2] = '\0';
+
+    if (buffer[0] <= '9' && buffer[1] <= '9') {
+        ScenarioIndex = atoi(buffer);
+    } else {
+        char digit1;
+        char digit2;
+
+        if (buffer[0] > '9') {
+            digit1 = buffer[0] - 'A';
+        } else {
+            digit1 = buffer[0] - '0';
+        }
+
+        if (buffer[1] > '9') {
+            digit2 = buffer[1] - '7';
+        } else {
+            digit2 = buffer[1] - '0';
+        }
+
+        ScenarioIndex = digit2 + 36 * digit1;
+    }
+}
+
+/**
+ * @brief Constructs the scenario name from the index and variables.
+ *
+ * 0x0053CD80
+ */
+void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, ScenarioDirEnum dir, ScenarioVarEnum var)
+{
+    char prefixvalue = '\0';
+    char dirvalue = '\0';
+    char varvalue = '\0';
+    ScenarioIndex = index;
+
+    switch (player) {
+        case 0:
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_SPN).Get_Prefix();
+            break;
+
+        case 1:
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_GRE).Get_Prefix();
+            break;
+
+        case 2:
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_RED).Get_Prefix();
+            break;
+
+        case 3:
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_JP).Get_Prefix();
+            break;
+
+        default: {
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_MP1).Get_Prefix();
+
+            switch (dir) {
+                case SCEN_DIR_EAST:
+                    dirvalue = 'E';
+                    break;
+
+                case SCEN_DIR_WEST:
+                    dirvalue = 'W';
+                    break;
+
+                default:
+                    if (Scen.Get_Random_Value(0, 99) < 50) {
+                        dirvalue = 'W';
+                    } else {
+                        dirvalue = 'E';
+                    }
+            };
+
+            break;
+        }
+    };
+
+    switch (var) {
+        case SCEN_VAR_M1: {
+            int i = 0;
+            char filename[256];
+
+            for (i = 0; i < SCEN_VAR_COUNT; ++i) {
+                snprintf(filename, sizeof(filename), "SC%c%02d%c%c.INI", prefixvalue, index, 0, index + 'A');
+                CCFileClass file(filename);
+
+                if (!file.Is_Available()) {
+                    break;
+                }
+            }
+
+            if (i != 0) {
+                varvalue = Scen.Get_Random_Value(0, (i - 1)) + 'A';
+            } else {
+                varvalue = 'X';
+            }
+
+            break;
+        }
+
+        case 0:
+            varvalue = 'A';
+            break;
+
+        case 1:
+            varvalue = 'B';
+            break;
+
+        case 2:
+            varvalue = 'C';
+            break;
+
+        case 3:
+            varvalue = 'D';
+            break;
+
+        default:
+            varvalue = 'L';
+            break;
+    };
+
+    char index2 = '\0';
+
+    if (index >= 100) {
+        char remainder = '\0';
+
+        remainder = (index % '$');
+
+        if (remainder >= 10) {
+            index2 = (remainder + '7');
+        } else {
+            index2 = (remainder + '0');
+        }
+
+        snprintf(ScenarioName,
+            sizeof(ScenarioName),
+            "sc%c%c%c%c%c.ini",
+            tolower(prefixvalue),
+            tolower(index / '$' + 'A'),
+            tolower(index2),
+            tolower(dirvalue),
+            tolower(varvalue));
+    } else {
+        snprintf(ScenarioName,
+            sizeof(ScenarioName),
+            "sc%c%02d%c%c.ini",
+            tolower(prefixvalue),
+            index,
+            tolower(dirvalue),
+            tolower(varvalue));
+    }
+}
+
+/**
+ * @brief Set up a black and white fade.
+ *
+ * 0x00539BF8
+ */
+void ScenarioClass::Do_BW_Fade()
+{
+    Bit1_32 = true;
+    Bit1_64 = false;
+    FadeTimer = 15;
+}
+
+/**
+ * @brief Process fade state for this frame.
+ *
+ * 0x00539C40
+ */
+void ScenarioClass::Do_Fade_AI()
+{
+    if (Bit1_64) {
+        if (FadeTimer <= 0) {
+            Bit1_64 = false;
+        }
+
+        Options.Adjust_Palette(
+            OriginalPalette,
+            GamePalette,
+            Options.Get_Brightness(),
+            Options.Get_Saturation() * fixed((FadeTimer - 15), 15),
+            Options.Get_Tint(),
+            Options.Get_Contrast()
+        );
+
+        GamePalette.Set();
+    }
+
+    if (Bit1_32) {
+        if (FadeTimer <= 0) {
+            Bit1_32 = false;
+        }
+
+        Options.Adjust_Palette(
+            OriginalPalette,
+            GamePalette,
+            Options.Get_Brightness(),
+            Options.Get_Saturation() * fixed(FadeTimer, 15),
+            Options.Get_Tint(),
+            Options.Get_Contrast()
+        );
+
+        GamePalette.Set();
+
+        if (!Bit1_32) {
+            Bit1_64 = true;
+            FadeTimer = 15;
+        }
+    }
+}
+
+
+/**
+ * @brief Sets a global to a given state.
+ *
+ * 0x00539EF4
+ */
+BOOL ScenarioClass::Set_Global_To(int a1, BOOL a2)
+{
+    //TODO requires Trigger and TEvent classes.
+#ifndef RAPP_STANDALONE
+    BOOL(*call_Set_Global_To)(int, BOOL) = reinterpret_cast<BOOL(*)(int, BOOL)>(0x00539EF4);
+    return call_Set_Global_To(a1, a2);
+#else
+    return 0;
+#endif
 }

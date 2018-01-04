@@ -42,6 +42,8 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    char Get_Prefix() { return Prefix; }
+
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
     void operator delete(void *ptr);

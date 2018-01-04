@@ -22,9 +22,37 @@
 #include "difficulty.h"
 #include "fixed.h"
 #include "gametypes.h"
+#include "housetype.h"
 #include "random.h"
 #include "theater.h"
+#include "theme.h"
 #include "ttimer.h"
+
+enum ScenarioPlayerEnum
+{
+    SCEN_PLAYER_0 = 0,
+    SCEN_PLAYER_GREECE = HOUSES_GRE,
+    SCEN_PLAYER_USSR = HOUSES_RED,
+    SCEN_PLAYER_3 = 3
+};
+
+enum ScenarioDirEnum
+{
+    SCEN_DIR_NONE = -1,
+    SCEN_DIR_EAST = 0,
+    SCEN_DIR_WEST = 1,
+    SCEN_DIR_COUNT = 2
+};
+
+enum ScenarioVarEnum
+{
+    SCEN_VAR_M1 = -1,
+    SCEN_VAR_A = 0,
+    SCEN_VAR_B = 1,
+    SCEN_VAR_C = 2,
+    SCEN_VAR_D = 3,
+    SCEN_VAR_COUNT = 4
+};
 
 class ScenarioClass
 {
@@ -35,6 +63,11 @@ class ScenarioClass
 public:
     ScenarioClass();
 
+    void Set_Scenario_Name(const char *scen_name);
+    void Set_Scenario_Name(int, ScenarioPlayerEnum, ScenarioDirEnum, ScenarioVarEnum);
+    void Do_BW_Fade();
+    void Do_Fade_AI();
+    BOOL Set_Global_To(int a1, BOOL a2);
     int Get_Random_Value(int min, int max) { return SyncRandom(min, max); }
     int Get_Scenario_Index() { return ScenarioIndex; }
 
@@ -57,7 +90,7 @@ private:
     MovieType LoseMovie;
     MovieType ActionMovie;
     char BriefingText[1024];
-    char TransitTheme;
+    ThemeType TransitTheme;
     HousesType SomeHouse;
     fixed CarryOverMoney;
     int CarryOverMoneyAmount;

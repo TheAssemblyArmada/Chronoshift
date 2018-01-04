@@ -70,6 +70,11 @@ public:
     fixed Get_Score_Volume() { return ScoreVolume; }
     BOOL Get_Repeat() { return ScoreRepeats; }
     BOOL Get_Shuffle() { return ScoreShuffles; }
+    fixed Get_Brightness() { return (Brightness - fixed::_1_4) / fixed::_1_2; }
+    fixed Get_Saturation() { return Saturation; }
+    fixed Get_Contrast() { return (Contrast - fixed::_1_4) / fixed::_1_2; }
+    fixed Get_Tint() { return Tint; }
+
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
