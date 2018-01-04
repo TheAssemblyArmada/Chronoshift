@@ -32,6 +32,8 @@ public:
     friend bool operator>=(int const &a, fixed const &b);
     friend bool operator==(fixed const &a, int const &b);
     friend bool operator==(int const &a, fixed const &b);
+    friend bool operator!=(fixed const &a, int const &b);
+    friend bool operator!=(int const &a, fixed const &b);
 
     struct Data
     {
@@ -141,8 +143,11 @@ inline fixed fixed::operator-(fixed const &that) const
 
 inline fixed fixed::operator/(fixed const &that) const
 {
-    fixed tmp;
-    tmp.m_number.word = ((int)m_number.word << 8) / that.m_number.word;
+    fixed tmp = *this;
+
+    if (that != 0 && that != 1) {
+        tmp.m_number.word = ((int)m_number.word << 8) / that.m_number.word;
+    }
 
     return tmp;
 }
@@ -195,6 +200,16 @@ inline bool operator==(fixed const &a, int const &b)
 inline bool operator==(int const &a, fixed const &b)
 {
     return (a << 8) == b.m_number.word;
+}
+
+inline bool operator!=(fixed const &a, int const &b)
+{
+    return a.m_number.word != (b << 8);
+}
+
+inline bool operator!=(int const &a, fixed const &b)
+{
+    return (a << 8) != b.m_number.word;
 }
 
 inline bool operator<(fixed const &a, int const &b)
