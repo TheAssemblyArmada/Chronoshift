@@ -133,53 +133,59 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
     ScenarioIndex = index;
 
     switch (player) {
-        case 0:
+        case SCEN_PLAYER_SPAIN:
             prefixvalue = HouseTypeClass::As_Reference(HOUSES_SPN).Get_Prefix();
             break;
 
-        case 1:
+        case SCEN_PLAYER_GREECE:
             prefixvalue = HouseTypeClass::As_Reference(HOUSES_GRE).Get_Prefix();
             break;
 
-        case 2:
+        case SCEN_PLAYER_USSR:
             prefixvalue = HouseTypeClass::As_Reference(HOUSES_RED).Get_Prefix();
             break;
 
-        case 3:
+        case SCEN_PLAYER_SPECIAL:
             prefixvalue = HouseTypeClass::As_Reference(HOUSES_JP).Get_Prefix();
             break;
 
-        default: {
+        default:
             prefixvalue = HouseTypeClass::As_Reference(HOUSES_MP1).Get_Prefix();
-
-            switch (dir) {
-                case SCEN_DIR_EAST:
-                    dirvalue = 'E';
-                    break;
-
-                case SCEN_DIR_WEST:
-                    dirvalue = 'W';
-                    break;
-
-                default:
-                    if (Scen.Get_Random_Value(0, 99) < 50) {
-                        dirvalue = 'W';
-                    } else {
-                        dirvalue = 'E';
-                    }
-            };
-
             break;
-        }
+    };
+
+    switch (dir) {
+        case SCEN_DIR_EAST:
+            dirvalue = 'E';
+            break;
+
+        case SCEN_DIR_WEST:
+            dirvalue = 'W';
+            break;
+
+        default:
+            if (Scen.Get_Random_Value(0, 99) < 50) {
+                dirvalue = 'W';
+            } else {
+                dirvalue = 'E';
+            }
     };
 
     switch (var) {
-        case SCEN_VAR_M1: {
+        // Get random variant.
+        case SCEN_VAR_ANY: {
             int i = 0;
             char filename[256];
 
             for (i = 0; i < SCEN_VAR_COUNT; ++i) {
-                snprintf(filename, sizeof(filename), "SC%c%02d%c%c.INI", prefixvalue, index, 0, index + 'A');
+                snprintf(filename,
+                    sizeof(filename),
+                    "sc%c%02d%c%c.ini",
+                    tolower(prefixvalue),
+                    index,
+                    tolower(dirvalue),
+                    tolower('A' + i));
+
                 CCFileClass file(filename);
 
                 if (!file.Is_Available()) {
@@ -196,19 +202,19 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
             break;
         }
 
-        case 0:
+        case SCEN_VAR_A:
             varvalue = 'A';
             break;
 
-        case 1:
+        case SCEN_VAR_B:
             varvalue = 'B';
             break;
 
-        case 2:
+        case SCEN_VAR_C:
             varvalue = 'C';
             break;
 
-        case 3:
+        case SCEN_VAR_D:
             varvalue = 'D';
             break;
 
@@ -217,18 +223,9 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
             break;
     };
 
-    char index2 = '\0';
-
     if (index >= 100) {
-        char remainder = '\0';
-
-        remainder = (index % '$');
-
-        if (remainder >= 10) {
-            index2 = (remainder + '7');
-        } else {
-            index2 = (remainder + '0');
-        }
+        char remainder = (index % '$');
+        char index2 = remainder >= 10 ? remainder + '7' : remainder + '0';
 
         snprintf(ScenarioName,
             sizeof(ScenarioName),
@@ -273,14 +270,12 @@ void ScenarioClass::Do_Fade_AI()
             Bit1_64 = false;
         }
 
-        Options.Adjust_Palette(
-            OriginalPalette,
+        Options.Adjust_Palette(OriginalPalette,
             GamePalette,
             Options.Get_Brightness(),
             Options.Get_Saturation() * fixed((FadeTimer - 15), 15),
             Options.Get_Tint(),
-            Options.Get_Contrast()
-        );
+            Options.Get_Contrast());
 
         GamePalette.Set();
     }
@@ -290,14 +285,12 @@ void ScenarioClass::Do_Fade_AI()
             Bit1_32 = false;
         }
 
-        Options.Adjust_Palette(
-            OriginalPalette,
+        Options.Adjust_Palette(OriginalPalette,
             GamePalette,
             Options.Get_Brightness(),
             Options.Get_Saturation() * fixed(FadeTimer, 15),
             Options.Get_Tint(),
-            Options.Get_Contrast()
-        );
+            Options.Get_Contrast());
 
         GamePalette.Set();
 
@@ -308,18 +301,17 @@ void ScenarioClass::Do_Fade_AI()
     }
 }
 
-
 /**
  * @brief Sets a global to a given state.
  *
  * 0x00539EF4
  */
-BOOL ScenarioClass::Set_Global_To(int a1, BOOL a2)
+BOOL ScenarioClass::Set_Global_To(int global, BOOL value)
 {
-    //TODO requires Trigger and TEvent classes.
+    // TODO requires Trigger and TEvent classes.
 #ifndef RAPP_STANDALONE
-    BOOL(*call_Set_Global_To)(int, BOOL) = reinterpret_cast<BOOL(*)(int, BOOL)>(0x00539EF4);
-    return call_Set_Global_To(a1, a2);
+    BOOL (*call_Set_Global_To)(int, BOOL) = reinterpret_cast<BOOL (*)(int, BOOL)>(0x00539EF4);
+    return call_Set_Global_To(global, value);
 #else
     return 0;
 #endif
