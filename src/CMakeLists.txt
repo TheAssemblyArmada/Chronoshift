@@ -79,6 +79,7 @@ set(GAMEENGINE_SRC
     game/engine/armor.cpp
     game/engine/ccini.cpp
     game/engine/coord.cpp
+    game/engine/crate.cpp
     game/engine/difficulty.cpp
     game/engine/door.cpp
     game/engine/expansion.cpp
