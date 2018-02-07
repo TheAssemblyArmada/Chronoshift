@@ -101,8 +101,9 @@ set(GAMEENGINE_SRC
     game/engine/options.cpp
     game/engine/rtti.cpp
     game/engine/scenario.cpp
-    game/engine/special.cpp
     game/engine/session.cpp
+    game/engine/special.cpp
+    game/engine/templatetype.cpp
     game/engine/theater.cpp
     game/engine/theme.cpp
     game/engine/utracker.cpp
