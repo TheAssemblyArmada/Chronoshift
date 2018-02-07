@@ -57,6 +57,11 @@ inline uint32_t Coord_Centered(uint32_t coord)
     return coord & 0xFF80FF80;
 }
 
+inline uint32_t Coord_Top_Left(uint32_t coord)
+{
+    return coord & 0xFF00FF00;
+}
+
 inline uint32_t Coord_Get_Adjacent(uint32_t coord, FacingType facing)
 {
     static const uint32_t AdjacentCoord[FACING_COUNT] = {
