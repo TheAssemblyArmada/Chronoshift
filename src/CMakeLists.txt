@@ -99,6 +99,7 @@ set(GAMEENGINE_SRC
     game/engine/object.cpp
     game/engine/objecttype.cpp
     game/engine/options.cpp
+    game/engine/overlaytype.cpp
     game/engine/rtti.cpp
     game/engine/scenario.cpp
     game/engine/session.cpp
