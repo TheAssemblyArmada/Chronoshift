@@ -95,6 +95,7 @@ set(GAMEENGINE_SRC
     game/engine/layer.cpp
     game/engine/lists.cpp
     game/engine/msglist.cpp
+    game/engine/mzone.cpp
     game/engine/object.cpp
     game/engine/objecttype.cpp
     game/engine/options.cpp
