@@ -93,6 +93,7 @@ set(GAMEENGINE_SRC
     game/engine/iomap.cpp
     game/engine/land.cpp
     game/engine/layer.cpp
+    game/engine/lists.cpp
     game/engine/msglist.cpp
     game/engine/object.cpp
     game/engine/objecttype.cpp
