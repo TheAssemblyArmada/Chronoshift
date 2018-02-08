@@ -184,7 +184,7 @@ const char *OverlayTypeClass::Name_From(OverlayType overlay)
 
 void OverlayTypeClass::Init(TheaterType theater)
 {
-    // TODO Needs Get_Radar_Icon and TheaterTypeClass
+    // TODO Needs Get_Radar_Icon.
 #ifndef RAPP_STANDALONE
     void(*func)(TheaterType) = reinterpret_cast<void(*)(TheaterType)>(0x00524B28);
     func(theater);
@@ -196,7 +196,7 @@ void OverlayTypeClass::Init(TheaterType theater)
 
     DEBUG_LOG("OverlayTypeClass::Init(enter)\n");
 
-    if (theater != TheaterClass::LastTheater) {
+    if (theater != g_lastTheater) {
         for (OverlayType i = OVERLAY_FIRST; i < OVERLAY_COUNT; ++i) {
             OverlayTypeClass &overlay = As_Reference(i);
 
@@ -204,8 +204,8 @@ void OverlayTypeClass::Init(TheaterType theater)
                 sizeof(filename),
                 "%s.%s",
                 overlay.Get_Name(),
-                overlay.Theater ? TheaterTypeClass::As_Reference(theater).FileExt : "SHP");
-            overlay.ImageData = GameFileClass::Retrieve(filename);
+                overlay.Theater ? g_theaters[theater].ext : "SHP");
+            overlay.ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
 
             g_isTheaterShape = overlay.Theater;
             overlay.RadarIconData = Get_Radar_Icon(overlay.RadarIconData, 0, -3, 3);
