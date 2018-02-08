@@ -15,6 +15,12 @@
  */
 #include "theater.h"
 
+#ifndef RAPP_STANDALONE
+TheaterType &g_lastTheater = Make_Global<TheaterType>(0x006017CC);
+#else
+TheaterType g_lastTheater = THEATER_NONE;
+#endif
+
 TheaterDataType g_theaters[THEATER_COUNT] = {
     {"TEMPERATE", "TEMPERAT", "TMP"},
     {"SNOW", "SNOW", "SNO"},

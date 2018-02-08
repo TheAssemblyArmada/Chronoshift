@@ -51,7 +51,7 @@ public:
     BOOL Get_Bit64() { return Bit64; }
     BOOL Get_Bit128() { return Bit128; }
     int16_t Get_Strength() { return Strength; }
-    void *Get_Image_Data() { return ImageData; }
+    void *Get_Image_Data() const { return ImageData; }
 
     static void One_Time();
 

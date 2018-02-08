@@ -39,8 +39,15 @@ struct TheaterDataType
     const char ext[4];
 };
 
+TheaterType Theater_From_Name(const char *name);
+
 extern TheaterDataType g_theaters[THEATER_COUNT];
 
-TheaterType Theater_From_Name(const char *name);
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+extern TheaterType &g_lastTheater;
+#else
+extern TheaterType g_lastTheater;
+#endif
 
 #endif // THEATER_H

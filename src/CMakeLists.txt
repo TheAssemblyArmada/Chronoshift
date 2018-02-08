@@ -104,6 +104,7 @@ set(GAMEENGINE_SRC
     game/engine/rtti.cpp
     game/engine/scenario.cpp
     game/engine/session.cpp
+    game/engine/smudgetype.cpp
     game/engine/special.cpp
     game/engine/templatetype.cpp
     game/engine/theater.cpp
