@@ -43,12 +43,13 @@ public:
     virtual void Code_Pointers() override {}
     virtual void Decode_Pointers() override {}
 
+    int16_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
 private:
     int MapCellX;
     int MapCellY;
     int MapCellWidth;
     int MapCellHeight;
-    int TotalCells;
+    int TotalValue;
     VectorClass<CellClass> Array;
     int XSize;
     int YSize;

@@ -101,6 +101,8 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    LandType Get_Land() { return Land; }
+
     static void Init_Heap();
     static void Init(TheaterType theater);
     static void One_Time() {}

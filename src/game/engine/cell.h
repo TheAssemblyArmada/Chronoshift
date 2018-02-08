@@ -38,10 +38,10 @@ class TerrainClass;
 class CellClass
 {
 public:
-    CellClass() {} // TODO
+    CellClass();
     CellClass(CellClass const &that) {}
     CellClass(NoInitClass const &noinit) {}
-    ~CellClass() {}
+    ~CellClass() { OccupierPtr = nullptr; } //Null the pointer in memory, but object still exists
 
     BOOL operator==(CellClass const &that) const { return CellNumber == that.CellNumber; }
     BOOL operator!=(CellClass const &that) const { return CellNumber != that.CellNumber; }
@@ -59,7 +59,10 @@ public:
     //SmudgeClass *Cell_Smudge() const;
     //OverlayClass *Cell_Overlay() const;
     uint32_t Cell_Coord() const;
+    void Recalc_Attributes();
 
+
+    HousesType Owner() const { return OwnerHouse; }
 private:
     int16_t CellNumber;
 
@@ -91,7 +94,7 @@ private:
     bool Bit128; // HasFlag in C&C
 #endif
 
-    char field_6[MZONE_COUNT];
+    int8_t field_6[MZONE_COUNT];
     uint16_t field_A;
     int CellTag; // CCPtr<TriggerClass> CellTag; // Needs TriggerClass
     TemplateType Template;
