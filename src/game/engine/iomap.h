@@ -19,14 +19,14 @@
 #define IOMAP_H
 
 #include "always.h"
-#include "gscreen.h"
+#include "map.h"
 
 // TODO Update this as additional layers of the hierachy are implemented.
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
-extern GameScreenClass &Map;
+extern MapClass &Map;
 #else
-extern GameScreenClass Map;
+extern MapClass Map;
 #endif
 
 #endif // IOMAP_H

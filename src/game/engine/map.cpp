@@ -1,10 +1,10 @@
 /**
  * @file
  *
- * @author OmniBlade
  * @author CCHyper
+ * @author OmniBlade
  *
- * @brief Implements global instance of the final IOMap object.
+ * @brief Part of IOMap stack handling map loading and logic.
  *
  * @copyright Redalert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -13,12 +13,4 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "iomap.h"
-
-// TODO Update this as additional layers of the hierachy are implemented.
-#ifndef RAPP_STANDALONE
-#include "hooker.h"
-MapClass &Map = Make_Global<MapClass>(0x00668250);
-#else
-MapClass Map;
-#endif
+#include "map.h"

@@ -84,6 +84,7 @@ enum MouseType
 };
 
 class GraphicViewPortClass;
+class ObjectClass;
 
 class GameScreenClass
 {
@@ -92,6 +93,7 @@ public:
     GameScreenClass(NoInitClass &init) {}
     ~GameScreenClass();
 
+    // Base virtual methods.
     virtual void One_Time();
     virtual void Init(TheaterType theater);
     virtual void Init_Clear();
@@ -110,6 +112,16 @@ public:
     virtual void Revert_Mouse_Shape() = 0;
     virtual void Mouse_Small(BOOL a1) = 0;
     virtual GraphicViewPortClass *Shadow_Address() { return ShadowPage; }
+
+    // Additions for MapClass
+    virtual void Alloc_Cells() = 0;
+    virtual void Free_Cells() = 0;
+    virtual void Init_Cells() = 0;
+    virtual void Detach(ObjectClass *object) = 0;
+    virtual void Logic_AI() = 0;
+    virtual void Set_Map_Dimensions(int x, int y, int w, int h) = 0;
+    virtual void Code_Pointers() = 0;
+    virtual void Decode_Pointers() = 0;
 
 protected:
     int RedrawFlag;

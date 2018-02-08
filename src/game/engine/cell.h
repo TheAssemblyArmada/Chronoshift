@@ -38,10 +38,10 @@ class TerrainClass;
 class CellClass
 {
 public:
-    CellClass();
+    CellClass() {} // TODO
     CellClass(CellClass const &that) {}
     CellClass(NoInitClass const &noinit) {}
-    ~CellClass();
+    ~CellClass() {}
 
     BOOL operator==(CellClass const &that) const { return CellNumber == that.CellNumber; }
     BOOL operator!=(CellClass const &that) const { return CellNumber != that.CellNumber; }
