@@ -16,6 +16,17 @@
 #include "coord.h"
 #include "abs.h"
 
+const uint32_t AdjacentCoord[FACING_COUNT] = {
+    0xFF000000,     // (-256,  0)       // NORTH
+    0xFF000100,     // (-256,  +256)    // NORTH EAST
+    0x00000100,     // (0   ,  +256)    // EAST
+    0x01000100,     // (+256,  +256)    // SOUTH EAST
+    0x01000000,     // (+256,  0)       // SOUTH
+    0x0100FF00,     // (+256,  -256)    // SOUTH WEST
+    0x0000FF00,     // (0   ,  -256)    // WEST
+    0xFF00FF00      // (-256,  -256)    // NORTH WEST
+};
+
 int Distance(uint32_t coord1, uint32_t coord2)
 {
     int ydiff;

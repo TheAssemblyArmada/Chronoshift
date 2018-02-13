@@ -29,6 +29,10 @@
 
 class MapClass : public GameScreenClass
 {
+    enum
+    {
+        MAP_MAX_CRATES = 256,
+    };
 public:
     MapClass();
 
@@ -37,14 +41,20 @@ public:
     virtual void Alloc_Cells() override;
     virtual void Free_Cells() override;
     virtual void Init_Cells() override;
-    virtual void Detach(ObjectClass *object) override;
+    virtual void Detach(ObjectClass *object) override {}
     virtual void Logic_AI() override;
     virtual void Set_Map_Dimensions(int x, int y, int w, int h) override;
     virtual void Code_Pointers() override {}
     virtual void Decode_Pointers() override {}
 
+    BOOL Place_Random_Crate();
+    int16_t Pick_Random_Location() const;
+    BOOL In_Radar(int16_t cellnum) const;
+    void Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4);
+
     int16_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
-private:
+
+protected:
     int MapCellX;
     int MapCellY;
     int MapCellWidth;
@@ -55,13 +65,17 @@ private:
     int YSize;
     int TotalSize;
     CrateClass Crates[256];
-    int16_t TiberiumGrowth[64];
-    int TiberiumGrowthCount;
-    int TiberiumGrowthExcess;
-    int16_t TiberiumSpread[64];
-    int TiberiumSpreadCount;
-    int TiberiumSpreadExcess;
-    int16_t ShortValue_CheckForCellTotal;
+    int16_t OreGrowth[64];
+    int OreGrowthCount;
+    int OreGrowthExcess;
+    int16_t OreSpread[64];
+    int OreSpreadCount;
+    int OreSpreadExcess;
+    int16_t OreSpreadTotal_maybe;
+
+private:
+    static const int MapClass::RadiusOffset[];
+    static const int MapClass::RadiusCount[];
 };
 
 #endif // MAP_H

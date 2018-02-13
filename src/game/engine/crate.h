@@ -52,6 +52,9 @@ public:
 
     BOOL Remove_It();
     BOOL Create_Crate(int16_t cell);
+    int16_t Get_Cell() { return Cell; }
+    BOOL Timer_Expired() { return CrateTimer.Time() <= 0; }
+
     static BOOL Put_Crate(int16_t &cell);
     static BOOL Get_Crate(int16_t cell);
 

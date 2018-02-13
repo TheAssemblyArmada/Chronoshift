@@ -61,7 +61,7 @@ public:
     uint32_t Cell_Coord() const;
     void Recalc_Attributes();
 
-
+    bool Get_Bit4() { return Bit4; }
     HousesType Owner() const { return OwnerHouse; }
 private:
     int16_t CellNumber;

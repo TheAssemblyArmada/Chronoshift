@@ -28,6 +28,13 @@
 #define CELL_MAX_X 128
 #define COORD_MIN 0
 #define COORD_MAX (CELL_LEPTONS * CELL_MAX)
+#define MAP_MAX_WIDTH 128
+#define MAP_MAX_HEIGHT 128
+#define MAPTD_MAX_WIDTH 64
+#define MAPTD_MAX_HEIGHT 64
+#define MAP_MAX_AREA MAP_MAX_WIDTH * MAP_MAX_HEIGHT
+
+extern const uint32_t AdjacentCoord[FACING_COUNT];
 
 inline int16_t Coord_Lepton_X(uint32_t coord)
 {
@@ -64,17 +71,6 @@ inline uint32_t Coord_Top_Left(uint32_t coord)
 
 inline uint32_t Coord_Get_Adjacent(uint32_t coord, FacingType facing)
 {
-    static const uint32_t AdjacentCoord[FACING_COUNT] = {
-        0xFF000000,     // (-256,  0)       // NORTH
-        0xFF000100,     // (-256,  +256)    // NORTH EAST
-        0x00000100,     // (0   ,  +256)    // EAST
-        0x01000100,     // (+256,  +256)    // SOUTH EAST
-        0x01000000,     // (+256,  0)       // SOUTH
-        0x0100FF00,     // (+256,  -256)    // SOUTH WEST
-        0x0000FF00,     // (0   ,  -256)    // WEST
-        0xFF00FF00      // (-256,  -256)    // NORTH WEST
-    };
-
     return Coord_Centered(Coord_Add(coord, AdjacentCoord[(unsigned)facing % FACING_COUNT]));
 }
 
@@ -90,12 +86,27 @@ inline uint8_t Coord_Cell_Y(uint32_t coord)
 
 inline int16_t Cell_From_XY(uint8_t x, uint8_t y)
 {
-    return ((y * CELL_MAX_X) + x);
+    return ((y * MAP_MAX_WIDTH) + x);
 }
 
 inline int16_t Coord_To_Cell(uint32_t coord)
 {
     return Cell_From_XY(Coord_Cell_X(coord), Coord_Cell_Y(coord));
+}
+
+inline uint8_t Cell_Get_X(int16_t cellnum)
+{
+    return (unsigned)cellnum % MAP_MAX_WIDTH;
+}
+
+inline uint8_t Cell_Get_Y(int16_t cellnum)
+{
+    return (unsigned)cellnum / MAP_MAX_HEIGHT;
+}
+
+inline uint32_t Cell_To_Coord(int16_t cellnum)
+{
+    return 0x00800080 | (Cell_Get_X(cellnum) << 8) | (Cell_Get_Y(cellnum) << 24);
 }
 
 int Distance(uint32_t coord1, uint32_t coord2);

@@ -93,6 +93,7 @@ public:
 
     MessageListClass &Get_Messages() { return Messages; }
     GameEnum Game_To_Play() { return GameToPlay; }
+    BOOL MPlayer_Goodies_Allowed() { return MPlayerGoodies; }
 
 private:
     GameEnum GameToPlay;
