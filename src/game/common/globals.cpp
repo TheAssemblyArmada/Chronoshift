@@ -1,7 +1,8 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author OmniBlade
+ * @author CCHyper
  *
  * @brief Global variables that are used amongst many classes.
  *
