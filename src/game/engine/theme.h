@@ -28,6 +28,7 @@ enum ThemeType
     THEME_STOP = -3, // Think these are play modes.
     THEME_NEXT = -2,
     THEME_NONE = -1,
+    THEME_FIRST = 0,
     THEME_BIG_FOOT = 0, // Themes available in playlist
     THEME_CRUSH = 1,
     THEME_FAC1 = 2,

@@ -322,11 +322,11 @@ BOOL ThemeClass::Still_Playing() const
 BOOL ThemeClass::Is_Allowed(ThemeType theme) const
 {
     // TODO Requires HouseClass and ScenarioClass
-#if 1
+#ifndef RAPP_STANDALONE
     BOOL (*call_Is_Allowed)
     (const ThemeClass *, ThemeType) = reinterpret_cast<BOOL (*)(const ThemeClass *, ThemeType)>(0x0056C240);
     return call_Is_Allowed(this, theme);
-#else
+#elif 0
     if (theme >= THEME_COUNT) {
         return true;
     }
@@ -348,6 +348,8 @@ BOOL ThemeClass::Is_Allowed(ThemeType theme) const
     }
 
     return false;
+#else
+    return false;
 #endif
 }
 
@@ -361,13 +363,13 @@ ThemeType ThemeClass::From_Name(const char *name) const
     DEBUG_ASSERT(name != nullptr);
 
     if (name && strlen(name) > 0) {
-        for (ThemeType theme = THEME_BIG_FOOT; theme < THEME_COUNT; ++theme) {
+        for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
             if (strcasecmp(Base_Name(theme), name) == 0) {
                 return theme;
             }
         }
 
-        for (ThemeType theme = THEME_BIG_FOOT; theme < THEME_COUNT; ++theme) {
+        for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
             if (strstr(Fetch_String(Themes[theme].Name), name) != nullptr) {
                 return theme;
             }
@@ -384,7 +386,7 @@ ThemeType ThemeClass::From_Name(const char *name) const
  */
 void ThemeClass::Scan()
 {
-    for (ThemeType theme = THEME_BIG_FOOT; theme < THEME_COUNT; ++theme) {
+    for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
         CCFileClass file(Theme_File_Name(theme));
         Themes[theme].IsAvailable = file.Is_Available();
     }
