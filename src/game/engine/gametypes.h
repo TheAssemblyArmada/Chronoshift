@@ -705,4 +705,14 @@ enum MovieType
 
 DEFINE_ENUMERATION_OPERATORS(MovieType);
 
+#ifdef COMPILER_WATCOM
+enum MPHType
+#else
+enum MPHType : uint8_t
+#endif
+{
+    MPH_MIN = 0,
+    MPH_MAX = 255,
+};
+
 #endif // CCTYPE_H

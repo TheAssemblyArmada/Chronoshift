@@ -19,6 +19,8 @@
 #define CCINI_H
 
 #include "always.h"
+#include "crate.h"
+#include "gametypes.h"
 #include "ini.h"
 #include "sha.h"
 
@@ -27,6 +29,10 @@ class CCINIClass : public INIClass
 public:
     CCINIClass();
 
+    int16_t Get_Lepton(const char *section, const char *entry, const int16_t defvalue = 0) const;
+    MPHType Get_MPHType(const char *section, const char *entry, const MPHType defvalue = MPH_MIN) const;
+    CrateType Get_CrateType(const char *section, const char *entry, const CrateType defvalue = CRATE_MONEY) const;
+        
     // TODO implement functions as required.
 private:
 #ifndef RAPP_NO_BITFIELDS
