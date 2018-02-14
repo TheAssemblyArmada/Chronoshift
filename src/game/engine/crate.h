@@ -24,7 +24,8 @@
 enum CrateType
 {
     CRATE_NONE = -1,
-    CRATE_MONEY,
+    CRATE_FIRST = 0,
+    CRATE_MONEY = 0,
     CRATE_UNIT,
     CRATE_PARA_BOMB,
     CRATE_HEAL_BASE,
@@ -45,6 +46,8 @@ enum CrateType
     CRATE_COUNT,
 };
 
+DEFINE_ENUMERATION_OPERATORS(CrateType);
+
 class CrateClass
 {
 public:
@@ -57,10 +60,28 @@ public:
 
     static BOOL Put_Crate(int16_t &cell);
     static BOOL Get_Crate(int16_t cell);
+    static CrateType Crate_From_Name(const char *name);
+    static const char *Name_From_Crate(CrateType crate) { return CrateNames[crate]; }
 
 private:
     TCountDownTimerClass<FrameTimerClass> CrateTimer;
     int16_t Cell;
+
+public:
+    static const char *CrateNames[];
+#ifndef RAPP_STANDALONE
+    static char *CrateAnims; // TODO should be AnimType *CrateAnims[CRATE_COUNT];
+    static int *CrateShares;
+    static int *CrateData;
+#else
+    static char CrateAnims[CRATE_COUNT]; // TODO should be AnimType CrateAnims[CRATE_COUNT];
+    static int CrateShares[CRATE_COUNT];
+    static int CrateData[CRATE_COUNT];
+#endif
 };
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+#endif
 
 #endif // CRATE_H
