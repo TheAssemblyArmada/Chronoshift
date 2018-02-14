@@ -55,6 +55,7 @@ public:
     static void Init_Heap();
     static HousesType From_Name(const char *name);
     static HouseTypeClass &As_Reference(HousesType type);
+    static int Owner_From_Name(const char *name);
 
 private:
     HousesType Type;

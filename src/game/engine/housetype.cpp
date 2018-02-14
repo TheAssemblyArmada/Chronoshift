@@ -142,6 +142,25 @@ HouseTypeClass &HouseTypeClass::As_Reference(HousesType type)
     return HouseTypes[type];
 }
 
+int HouseTypeClass::Owner_From_Name(const char *name)
+{
+    if (strcasecmp(name, "soviet") == 0) {
+        return SIDE_SOVIET;
+    }
+
+    if (strcasecmp(name, "allies") == 0 || strcasecmp(name, "allied") == 0) {
+        return SIDE_ALLIES;
+    }
+
+    HousesType house = From_Name(name);
+
+    if (house != HOUSES_NONE && (house < HOUSES_MP1 || house > HOUSES_MP8)) {
+        return 1 << house;
+    }
+
+    return 0;
+}
+
 void *HouseTypeClass::operator new(size_t size)
 {
     return HouseTypes.Allocate();
