@@ -104,6 +104,7 @@ set(GAMEENGINE_SRC
     game/engine/options.cpp
     game/engine/overlaytype.cpp
     game/engine/rtti.cpp
+    game/engine/rules.cpp
     game/engine/scenario.cpp
     game/engine/session.cpp
     game/engine/smudgetype.cpp
@@ -111,6 +112,7 @@ set(GAMEENGINE_SRC
     game/engine/templatetype.cpp
     game/engine/theater.cpp
     game/engine/theme.cpp
+    game/engine/unittype.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
     game/gfx/blitters.cpp
