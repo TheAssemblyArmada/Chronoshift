@@ -312,7 +312,7 @@ BOOL RulesClass::Aftermath(CCINIClass &ini)
 
 BOOL RulesClass::General(CCINIClass &ini)
 {
-    // TODO Requires CCINIClass::Get_UnitType
+    // TODO Requires CCINIClass::Get_UnitType, ChronalVortexClass
 #ifndef RAPP_STANDALONE
     BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x005342DC);
     return func(this, ini);
@@ -423,6 +423,11 @@ BOOL RulesClass::General(CCINIClass &ini)
         VortexDamage = ini.Get_Int("General", "VortexDamage", VortexDamage);
         VortexChance = ini.Get_Fixed("General", "VortexChance", VortexChance);
 
+        // Set variables within the vortex class global instance.
+        ChronalVortex.VortexRange = VortexRange / 256;
+        ChronalVortex.VortexSpeed = VortexSpeed;
+        ChronalVortex.VortexDamage = VortexDamage;
+
         return true;
     }
 
@@ -452,11 +457,6 @@ BOOL RulesClass::MPlayer(CCINIClass &ini)
 
 BOOL RulesClass::Recharge(CCINIClass &ini)
 {
-    // TODO Requires SuperWeaponTypeClass
-#ifndef RAPP_STANDALONE
-    BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00535CF0);
-    return func(this, ini);
-#elif 0
     if (ini.Find_Section("Recharge") != nullptr) {
         RechargeSonar = ini.Get_Fixed("Recharge", "Sonar", RechargeSonar);
         RechargeChrono = ini.Get_Fixed("Recharge", "Chrono", RechargeChrono);
@@ -468,23 +468,10 @@ BOOL RulesClass::Recharge(CCINIClass &ini)
         RechargeGPS = ini.Get_Fixed("Recharge", "GPS", RechargeGPS);
         RechargeNuke = ini.Get_Fixed("Recharge", "Nuke", RechargeNuke);
 
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_SONAR_PULSE, RechargeSonar);
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_SONAR_PULSE, RechargeChrono);
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_PARA_BOMB, RechargeParaBomb);
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_PARA_INFANTRY, RechargeParatrooper);
-        // SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_PARA_SABOTEUR, RechargeParaSaboteur);
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_SPY_PLANE, RechargeSpyPlane);
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_IRON_CURTAIN, RechargeIronCurtain);
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_GPS, RechargeGPS);
-        SuperWeaponTypeClass::Set_RechargeTime(SPECIAL_ATOM_BOMB, RechargeNuke);
-
         return true;
     }
 
     return false;
-#else
-    return false;
-#endif
 }
 
 BOOL RulesClass::Heap_Maximums(CCINIClass &ini)
@@ -533,18 +520,41 @@ BOOL RulesClass::Heap_Maximums(CCINIClass &ini)
 
 BOOL RulesClass::AI(CCINIClass &ini)
 {
-#ifndef RAPP_STANDALONE
-    BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00535F38);
-    return func(this, ini);
-#elif 0
     if (ini.Find_Section("AI") != nullptr) {
-        // TODO
+        AttackInterval = ini.Get_Fixed("AI", "AttackInterval", AttackInterval);
+        AttackDelay = ini.Get_Fixed("AI", "AttackDelay", AttackDelay);
+        PatrolScan = ini.Get_Fixed("AI", "PatrolScan", PatrolScan);
+        CreditReserve = ini.Get_Int("AI", "CreditReserve", CreditReserve);
+        PathDelay = ini.Get_Fixed("AI", "PathDelay", PathDelay);
+        OreNearScan = ini.Get_Lepton("AI", "OreNearScan", OreNearScan);
+        OreFarScan = ini.Get_Lepton("AI", "OreFarScan", OreFarScan);
+        AutocreateTime = ini.Get_Fixed("AI", "AutocreateTime", AutocreateTime);
+        InfantryReserve = ini.Get_Int("AI", "InfantryReserve", InfantryReserve);
+        InfantryBaseMult = ini.Get_Int("AI", "InfantryBaseMult", InfantryBaseMult);
+        PowerSurplus = ini.Get_Int("AI", "PowerSurplus", PowerSurplus);
+        BaseSizeAdd = ini.Get_Int("AI", "BaseSizeAdd", BaseSizeAdd);
+        RefineryRatio = ini.Get_Fixed("AI", "RefineryRatio", RefineryRatio);
+        RefineryLimit = ini.Get_Int("AI", "RefineryLimit", RefineryLimit);
+        BarracksRatio = ini.Get_Fixed("AI", "BarracksRatio", BarracksRatio);
+        BarracksLimit = ini.Get_Int("AI", "BarracksLimit", BarracksLimit);
+        WarRatio = ini.Get_Fixed("AI", "WarRatio", WarRatio);
+        WarLimit = ini.Get_Int("AI", "WarLimit", WarLimit);
+        DefenseRatio = ini.Get_Fixed("AI", "DefenseRatio", DefenseRatio);
+        DefenseLimit = ini.Get_Int("AI", "DefenseLimit", DefenseLimit);
+        AARatio = ini.Get_Fixed("AI", "AARatio", AARatio);
+        AALimit = ini.Get_Int("AI", "AALimit", AALimit);
+        TeslaRatio = ini.Get_Fixed("AI", "TeslaRatio", TeslaRatio);
+        TeslaLimit = ini.Get_Int("AI", "TeslaLimit", TeslaLimit);
+        HelipadRatio = ini.Get_Fixed("AI", "HelipadRatio", HelipadRatio);
+        HelipadLimit = ini.Get_Int("AI", "HelipadLimit", HelipadLimit);
+        AirstripRatio = ini.Get_Fixed("AI", "AirstripRatio", AirstripRatio);
+        AirstripLimit = ini.Get_Int("AI", "AirstripLimit", AirstripLimit);
+        CompEasyBonus = ini.Get_Bool("AI", "CompEasyBonus", CompEasyBonus);
+        Paranoid = ini.Get_Bool("AI", "Paranoid", Paranoid);
+        PowerEmergency = ini.Get_Fixed("AI", "PowerEmergency", PowerEmergency);
     }
 
     return false;
-#else
-    return false;
-#endif
 }
 
 BOOL RulesClass::Powerups(CCINIClass &ini)
