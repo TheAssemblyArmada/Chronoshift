@@ -126,8 +126,9 @@ set(GAMEENGINE_SRC
     game/gfx/palette.cpp
     game/gfx/rgb.cpp
     game/gfx/shape.cpp
-    game/gfx/textprint.cpp
     game/gfx/surfacemonitor.cpp
+    game/gfx/textprint.cpp
+    game/gfx/tileset.cpp
     game/gfx/wsa.cpp
     game/io/b64pipe.cpp
     game/io/b64straw.cpp
