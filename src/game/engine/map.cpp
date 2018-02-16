@@ -160,7 +160,7 @@ void MapClass::Logic_AI()
     }
 
     if (Rule.Ore_Grows() || Rule.Ore_Spreads()) {
-        // Limit how much of the map we try to update at any one time.
+        // Limit how much of the map we try to mark at any one time to limit how often the growth logic runs.
         int growth_limit = Max(MAP_MAX_AREA / (Rule.Ore_Growth_Rate() * GAME_TICKS_PER_MINUTE), 1);
         int index;
 
@@ -203,19 +203,15 @@ void MapClass::Logic_AI()
         if (OreLogicPos >= MAP_MAX_AREA) {
             OreLogicPos = 0;
 
-            if (OreGrowthCount > 0) {
-                for (int index = 0; index < OreGrowthCount; ++index) {
-                    Array[OreGrowth[index]].Grow_Ore();
-                }
+            for (int index = 0; index < OreGrowthCount; ++index) {
+                Array[OreGrowth[index]].Grow_Ore();
             }
 
             OreGrowthCount = 0;
             OreGrowthExcess = 0;
 
-            if (OreSpreadCount > 0) {
-                for (int index = 0; index < OreSpreadCount; ++index) {
-                    Array[OreSpread[index]].Spread_Ore(false);
-                }
+            for (int index = 0; index < OreSpreadCount; ++index) {
+                Array[OreSpread[index]].Spread_Ore(false);
             }
 
             OreSpreadCount = 0;
