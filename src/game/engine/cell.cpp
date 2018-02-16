@@ -181,9 +181,9 @@ BOOL CellClass::Can_Ore_Spread() const
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
-    if (Rule.Ore_Grows()) {
+    if (Rule.Ore_Spreads()) {
         if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.MPlayer_Ore_Growth()) {
-            if (Land == LAND_ORE && OverlayFrame < ORESTAGE_SPREADING) {	//see OreStageEnum?
+            if (Land == LAND_ORE && OverlayFrame > ORESTAGE_SPREADING) { //see OreStageEnum?
                 return Contains_Ore();
             }
         }
