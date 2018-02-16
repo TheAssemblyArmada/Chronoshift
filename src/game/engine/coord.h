@@ -109,6 +109,16 @@ inline uint32_t Cell_To_Coord(int16_t cellnum)
     return 0x00800080 | (Cell_Get_X(cellnum) << 8) | (Cell_Get_Y(cellnum) << 24);
 }
 
+inline int16_t Pixel_To_Lepton(int pixel)
+{
+    return ((unsigned(pixel) * 256) + 12) / 24;
+}
+
+inline uint32_t Coord_From_Pixel_XY(int x, int y)
+{
+    return Coord_From_Lepton_XY(Pixel_To_Lepton(x), Pixel_To_Lepton(y));
+}
+
 int Distance(uint32_t coord1, uint32_t coord2);
 
 #endif // COORD_H

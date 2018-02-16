@@ -19,6 +19,7 @@
 #include "rules.h"
 #include "scenario.h"
 #include "session.h"
+#include "theater.h"
 
 CellClass::CellClass() :
     CellNumber(Map.Cell_Number(this)),
@@ -53,6 +54,85 @@ CellClass::CellClass() :
     }
 }
 
+/**
+ * @brief Gets the color of the cell based on what it contains and the type of terrain.
+ *
+ * 0x0049EEF8
+ */
+int CellClass::Cell_Color(BOOL none) const
+{
+#ifndef RAPP_STANDALONE
+    int(*func)(const CellClass *, BOOL) = reinterpret_cast<int(*)(const CellClass *, BOOL)>(0x0049EEF8);
+    return func(this, none);
+#elif 0
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    static const int _ground_color[9] = { 141, 141, 172, 21, 21, 158, 141, 141, 174 };
+    static const int _snow_color[9] = { 141, 141, 172, 21, 21, 158, 141, 141, 174 };
+
+    int color;
+    BuildingClass *bptr = Cell_Building();
+
+    if (bptr == nullptr || bptr->Class_Of().IsInvisible) {
+
+        if (none) {
+            color = 0;
+        } else {
+            switch (g_lastTheater) {
+                case THEATER_SNOW:
+                    color = _snow_color[Land];
+                    break;
+
+                default: // All others use this one.
+                    color = _ground_color[Land];
+                    break;
+
+            }
+        }
+
+        return color;
+    }
+
+    return ColorRemaps[HouseClass::As_Reference(bptr->Owner()).Color].WindowPalette[7];
+#else
+    return 0;
+#endif
+}
+
+/**
+ * @brief Returns a pointer to a TechnoClass object in this cell that can be found closest the given pixel coordinates.
+ *
+ * 0x0049EFBC
+ */
+TechnoClass *CellClass::Cell_Techno(int x, int y) const
+{
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    uint32_t coord = Coord_From_Pixel_XY(x, y);
+    ObjectClass *object = nullptr;
+
+    for (ObjectClass *obj = OccupierPtr; obj != nullptr; obj = obj->Get_Next()) {
+        uint32_t sdistance = 0;
+
+        if (obj->Is_Techno()) {
+            uint32_t obj_coord = obj->Center_Coord();
+            uint32_t distance = Distance(obj_coord &= 0x00FF00FF, coord);   //TODO what is going on with obj_coord?!  is it fetching sub cell or cell xy?
+
+            if (object == nullptr || (signed int)distance < (signed int)sdistance) {
+                sdistance = distance;
+                object = obj;
+            }
+        }
+    }
+
+    return reinterpret_cast<TechnoClass *>(object);
+}
+
+/**
+ * @brief Recalculates the LandType of this cell for movement and pathfind calculations based on current terrain and overlay.
+ *
+ * 0x0049F314
+ */
 void CellClass::Recalc_Attributes()
 {
     if (g_lastTheater != THEATER_INTERIOR || (Template != TEMPLATE_NONE && Template >= TEMPLATE_FIRST)) {
@@ -72,6 +152,11 @@ void CellClass::Recalc_Attributes()
     }
 }
 
+/**
+ * @brief Checks if Ore can grow in this cell. 
+ *
+ * 0x004A1C4C
+ */
 BOOL CellClass::Can_Ore_Grow() const
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
@@ -87,6 +172,11 @@ BOOL CellClass::Can_Ore_Grow() const
     return false;
 }
 
+/**
+ * @brief Checks if Ore can spread from this cell to neighbours.
+ *
+ * 0x004A1CCC
+ */
 BOOL CellClass::Can_Ore_Spread() const
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
@@ -102,6 +192,11 @@ BOOL CellClass::Can_Ore_Spread() const
     return false;
 }
 
+/**
+ * @brief Checks if Ore can spawn in this cell.
+ *
+ * 0x004A1E40
+ */
 BOOL CellClass::Can_Ore_Germinate() const
 {
     // TODO Needs BuildingClass.
@@ -137,6 +232,11 @@ BOOL CellClass::Can_Ore_Germinate() const
 #endif
 }
 
+/**
+ * @brief Performs Ore growth logic in this cell.
+ *
+ * 0x004A1D4C
+ */
 BOOL CellClass::Grow_Ore()
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
@@ -151,6 +251,11 @@ BOOL CellClass::Grow_Ore()
     return false;
 }
 
+/**
+ * @brief Performs Ore spread logic to neighbouring cells.
+ *
+ * 0x004A1D7C
+ */
 BOOL CellClass::Spread_Ore(BOOL force)
 {
     // TODO Requires OverlayClass.
@@ -168,7 +273,7 @@ BOOL CellClass::Spread_Ore(BOOL force)
 
             if (cell.Can_Ore_Germinate()) {
                 OverlayType overlay = (OverlayType)Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04);
-                OverlayClass *optr = new OverlayClass(overlay, cell.Cell_Number(), OwnerHouse);
+                OverlayClass *optr = new OverlayClass(overlay, cell.CellNumber, OwnerHouse);
                 DEBUG_ASSERT(optr != nullptr);
                 OverlayFrame = 0;
 
@@ -183,6 +288,11 @@ BOOL CellClass::Spread_Ore(BOOL force)
 #endif
 }
 
+/**
+ * @brief Gets a reference to the cell that is adjacent on the given facing.
+ *
+ * 0x004A01EC
+ */
 CellClass &CellClass::Adjacent_Cell(FacingType facing)
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
@@ -212,6 +322,11 @@ CellClass &CellClass::Adjacent_Cell(FacingType facing)
     return *this;
 }
 
+/**
+ * @brief Checks if this cell is part of a bridge.
+ *
+ * 0x004A1BE8
+ */
 BOOL CellClass::Is_Bridge_Here() const
 {
     switch (Template) {
@@ -240,6 +355,11 @@ BOOL CellClass::Is_Bridge_Here() const
     return false;
 }
 
+/**
+ * @brief Marks any objects in this cell to be redrawn at the next call to redraw the map.
+ *
+ * 0x0049F10C
+ */
 void CellClass::Redraw_Objects(BOOL force)
 {
     // TODO Requires DisplayClass and RadarClass layers of IOMap hierachy.

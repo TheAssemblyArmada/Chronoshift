@@ -51,7 +51,7 @@ public:
     BOOL operator==(CellClass const &that) const { return CellNumber == that.CellNumber; }
     BOOL operator!=(CellClass const &that) const { return CellNumber != that.CellNumber; }
 
-    int Cell_Color(BOOL a1 = false) const;
+    int Cell_Color(BOOL none = false) const;
     ObjectClass *Cell_Find_Object(RTTIType type) const;
     TechnoClass *Cell_Techno(int x = 0, int y = 0) const;
     ObjectClass *Cell_Object(int x = 0, int y = 0) const;
