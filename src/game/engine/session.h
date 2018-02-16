@@ -94,6 +94,7 @@ public:
     MessageListClass &Get_Messages() { return Messages; }
     GameEnum Game_To_Play() { return GameToPlay; }
     BOOL MPlayer_Goodies_Allowed() { return MPlayerGoodies; }
+    BOOL MPlayer_Ore_Growth() { return MPlayerOre; }
 
 private:
     GameEnum GameToPlay;

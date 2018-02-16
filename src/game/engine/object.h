@@ -105,6 +105,8 @@ public:
     virtual void Decode_Pointers();
     virtual void Move(FacingType facing);
 
+    ObjectClass *Get_Next() { return Next; }
+
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);
 

@@ -71,7 +71,7 @@ protected:
     int16_t OreSpread[64];
     int OreSpreadCount;
     int OreSpreadExcess;
-    int16_t OreSpreadTotal_maybe;
+    int16_t OreLogicPos;
 
 private:
     static const int MapClass::RadiusOffset[];

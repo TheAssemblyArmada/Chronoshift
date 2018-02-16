@@ -37,6 +37,11 @@ class TerrainClass;
 
 class CellClass
 {
+    enum
+    {
+        ORESTAGE_SPREADING = 6,
+        ORESTAGE_FULLGROWN = 11,
+    };
 public:
     CellClass();
     CellClass(CellClass const &that) {}
@@ -63,6 +68,17 @@ public:
 
     bool Get_Bit4() { return Bit4; }
     HousesType Owner() const { return OwnerHouse; }
+    int Cell_Number() { return CellNumber; }
+    BOOL Can_Ore_Grow() const;
+    BOOL Can_Ore_Spread() const;
+    BOOL Can_Ore_Germinate() const;
+    BOOL Contains_Ore() const;
+    BOOL Grow_Ore();
+    BOOL Spread_Ore(BOOL force);
+    CellClass &Adjacent_Cell(FacingType facing);
+    BOOL Is_Bridge_Here() const;
+    void Redraw_Objects(BOOL force = false);
+
 private:
     int16_t CellNumber;
 
@@ -110,5 +126,11 @@ private:
     uint32_t OccupantBit;
     LandType Land;
 };
+
+inline BOOL CellClass::Contains_Ore() const
+{
+    return Overlay == OVERLAY_GOLD_01 || Overlay == OVERLAY_GOLD_02 || Overlay == OVERLAY_GOLD_03
+        || Overlay == OVERLAY_GOLD_04;
+}
 
 #endif // CELL_H

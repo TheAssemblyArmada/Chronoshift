@@ -33,6 +33,7 @@ enum FacingType
 {
     FACING_FIXUP_MARK = -2,
     FACING_NONE = -1,
+    FACING_FIRST = 0,
     FACING_NORTH = 0, // North
     FACING_NORTH_EAST = 1, // North East
     FACING_EAST = 2, // East

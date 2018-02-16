@@ -16,6 +16,9 @@
 #include "map.h"
 #include "abs.h"
 #include "coord.h"
+#include "globals.h"
+#include "minmax.h"
+#include "rules.h"
 #include "scenario.h"
 #include "session.h"
 
@@ -111,7 +114,7 @@ void MapClass::Init_Clear()
 {
     GameScreenClass::Init_Clear();
     Init_Cells();
-    OreSpreadTotal_maybe = 0;
+    OreLogicPos = 0;
     OreGrowthCount = 0;
     OreGrowthExcess = 0;
     OreSpreadCount = 0;
@@ -137,7 +140,7 @@ void MapClass::Init_Cells()
     // Reset the total cell count
     TotalValue = 0;
 
-    // Loop through the whole vector and call the the constructor for each cell.
+    // Loop through the whole vector and call the the constructor for each cell with placement new.
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
         new(&Array[cellnum]) CellClass;
     }
@@ -145,16 +148,8 @@ void MapClass::Init_Cells()
 
 void MapClass::Logic_AI()
 {
-    // TODO requires RuleClass
-#ifndef RAPP_STANDALONE
-    void(*func)(const MapClass*) = reinterpret_cast<void(*)(const MapClass*)>(0x004FEE94);
-    func(this);
-#elif 0
     if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.MPlayer_Goodies_Allowed()) {
         for (int i = 0; i < ARRAY_SIZE(Crates); ++i) {
-
-            CrateClass *crate = &Crates[i];
-
             if (Crates[i].Get_Cell() != -1) {
                 if (Crates[i].Timer_Expired()) {
                     Crates[i].Remove_It();
@@ -164,67 +159,53 @@ void MapClass::Logic_AI()
         }
     }
 
-    if (Rule.OreGrows || Rule.OreSpreads) {
-        int v7 = (Rule.GrowthRate * DEF_TICKS_PER_MINUTE);
-        int v8 = (MapCellTotal / v7);
+    if (Rule.Ore_Grows() || Rule.Ore_Spreads()) {
+        // Limit how much of the map we try to update at any one time.
+        int growth_limit = Max(MAP_MAX_AREA / (Rule.Ore_Growth_Rate() * GAME_TICKS_PER_MINUTE), 1);
+        int index;
 
-        //TODO MIN?
-        if (v8 <= 1) {
-            v8 = 1;
-        }
-
-        int v10 = v8;
-        int index = 0;
-
-        if (OreSpreadTotal_maybe < MapCellTotal) {
-            int cellnum;
-
-            for (index = OreSpreadTotal_maybe; index < MapCellTotal; ++index) {
-                CellClass *cell = &Array[index];
-                cellnum = cell->Cell_Number();
-
-                if (In_Radar(index)) {
-                    if (cell->Can_Ore_Grow()) {
-                        int16_t v40 = Scen.SyncRandom(0, OreGrowthExcess);
-                        int16_t v41 = OreGrowthCount;
-                        if (v40 <= v41) {
-                            if (v41 >= ARRAY_SIZE(OreGrowth)) {
-                                OreGrowth[Scen.SyncRandom(0, v41 - 1)] = index;
-                            } else {
-                                ++OreGrowthCount;
-                                OreGrowth[v41] = index;
-                            }
+        // Build lists of cells that need growth and spreading applied to them.
+        for (index = OreLogicPos; index < MAP_MAX_AREA; ++index) {
+            if (In_Radar(index)) {
+                if (Array[index].Can_Ore_Grow()) {
+                    if (Scen.Get_Random_Value(0, OreGrowthExcess) <= OreGrowthCount) {
+                        if (OreGrowthCount >= ARRAY_SIZE(OreGrowth)) {
+                            OreGrowth[Scen.Get_Random_Value(0, OreGrowthCount - 1)] = index;
+                        } else {
+                            OreGrowth[OreGrowthCount++] = index;
                         }
-
-                        ++OreGrowthExcess;
                     }
 
-                    if (cell->Can_Ore_Spread()) {
-                        int16_t v40 = Scen.SyncRandom(0, OreSpreadExcess);
-                        int16_t v41 = OreSpreadCount;
-                        if (v40 <= v41) {
-                            if (v41 >= ARRAY_SIZE(OreSpread)) {
-                                OreSpread[Scen.SyncRandom(0, v41 - 1)] = index;
-                            } else {
-                                ++OreSpreadCount;
-                                OreSpread[v41] = index;
-                            }
-                        }
-
-                        ++OreSpreadExcess;
-                    }
+                    ++OreGrowthExcess;
                 }
+
+                if (Array[index].Can_Ore_Spread()) {
+                    if (Scen.Get_Random_Value(0, OreSpreadExcess) <= OreSpreadCount) {
+                        if (OreSpreadCount >= ARRAY_SIZE(OreSpread)) {
+                            OreSpread[Scen.Get_Random_Value(0, OreSpreadCount - 1)] = index;
+                        } else {
+                            OreSpread[OreSpreadCount++] = index;
+                        }
+                    }
+
+                    ++OreSpreadExcess;
+                }
+            }
+
+            if (--growth_limit == 0) {
+                break;
             }
         }
 
-        OreSpreadTotal_maybe = index;
+        OreLogicPos = index;
 
-        if (OreSpreadTotal_maybe >= MapCellTotal) {
-            OreSpreadTotal_maybe = 0;
+        // If we've finished marking the whole map, reset our logic position and action what we marked.
+        if (OreLogicPos >= MAP_MAX_AREA) {
+            OreLogicPos = 0;
 
             if (OreGrowthCount > 0) {
                 for (int index = 0; index < OreGrowthCount; ++index) {
-                    Array[index].Grow_Ore();
+                    Array[OreGrowth[index]].Grow_Ore();
                 }
             }
 
@@ -233,7 +214,7 @@ void MapClass::Logic_AI()
 
             if (OreSpreadCount > 0) {
                 for (int index = 0; index < OreSpreadCount; ++index) {
-                    Array[index].Spread_Ore(false);
+                    Array[OreSpread[index]].Spread_Ore(false);
                 }
             }
 
@@ -241,9 +222,6 @@ void MapClass::Logic_AI()
             OreSpreadExcess = 0;
         }
     }
-#else
-
-#endif
 }
 
 void MapClass::Set_Map_Dimensions(int x, int y, int w, int h)

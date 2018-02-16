@@ -34,7 +34,7 @@ int &RulesClass::QuakeInfantryDamage = Make_Global<int>(0x006016AC);
 int &RulesClass::QuakeDelay = Make_Global<int>(0x00665DFC);
 BOOL &RulesClass::OrigNewUnitsEnabled = Make_Global<BOOL>(0x00665DE0);
 BOOL &RulesClass::OrigSecretUnitsEnabled = Make_Global<BOOL>(0x00665DE4);
-extern RulesClass &Rule = Make_Global<RulesClass>(0x00666704);
+RulesClass &Rule = Make_Global<RulesClass>(0x00666704);
 fixed RulesClass::CloakDelay;
 #else
 RulesClass Rule;

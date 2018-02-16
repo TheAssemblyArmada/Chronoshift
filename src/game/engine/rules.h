@@ -64,6 +64,10 @@ public:
     BOOL Objects(CCINIClass &ini);
     BOOL Difficulty(CCINIClass &ini);
 
+    BOOL Ore_Grows() { return OreGrows; }
+    BOOL Ore_Spreads() { return OreSpreads; }
+    fixed Ore_Growth_Rate() { return GrowthRate; }
+
 private:
     fixed TurboBoost;
     fixed AttackInterval;
