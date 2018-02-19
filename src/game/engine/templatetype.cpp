@@ -997,7 +997,7 @@ ObjectClass *TemplateTypeClass::Create_One_Of(HouseClass *house) const
 {
     // TODO requires TemplateClass
 #ifndef RAPP_STANDALONE
-    ObjectClass *(*func)(const TemplateTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const TemplateTypeClass*, HouseClass*)>(0x0049EB84);
+    ObjectClass *(*func)(const TemplateTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const TemplateTypeClass*, HouseClass*)>(0x0049EBBC);
     return func(this, house);
 #elif 0
     DEBUG_ASSERT(this != nullptr);
@@ -1016,7 +1016,7 @@ LandType TemplateTypeClass::Land_Type(int sub_icon) const
 {
     // TODO requires IconControlType
 #ifndef RAPP_STANDALONE
-    LandType(*func)(const TemplateTypeClass*, int) = reinterpret_cast<LandType(*)(const TemplateTypeClass*, int)>(0x0049EB84);
+    LandType(*func)(const TemplateTypeClass*, int) = reinterpret_cast<LandType(*)(const TemplateTypeClass*, int)>(0x0049E98C);
     return func(this, sub_icon);
 #elif 0
     // I think it works like this, the enum entries are the index into _land
