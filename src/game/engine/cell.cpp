@@ -964,7 +964,7 @@ void CellClass::Wall_Update()
             int neighbour_mask = 0;
 
             // Identify neighbour cells that are the same overlay.
-            for (int j = 0; j < ARRAY_SIZE(_offsets); ++j) {
+            for (int j = 0; j < ARRAY_SIZE(_offsets) - 1; ++j) {
                 CellClass &neighbour = adjcell.Adjacent_Cell(_offsets[j]);
 
                 if (neighbour.Overlay == adjcell.Overlay) {
