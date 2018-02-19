@@ -15,8 +15,16 @@
  */
 #include "land.h"
 #include "gamedebug.h"
+#include "minmax.h"
+
+#ifndef RAPP_STANDALONE
+GroundClass *Ground = Make_Pointer<GroundClass>(0x00655DF0);
+#else
+GroundClass Ground[LAND_COUNT];
+#endif
 
 char const *LandName[LAND_COUNT] = { "Clear", "Road", "Water", "Rock", "Wall", "Ore", "Beach", "Rough", "River" };
+const char *GroundClass::s_speedNames[SPEED_COUNT] = { "Foot", "Track", "Wheel", "Winged", "Float" };
 
 LandType Land_From_Name(char const *name)
 {
@@ -44,4 +52,30 @@ char const *Name_From_Land(LandType land)
     }
 
     return "<none>";
+}
+
+BOOL GroundClass::Read_INI(CCINIClass &ini, LandType const land)
+{
+    DEBUG_ASSERT(land != LAND_NONE);
+    DEBUG_ASSERT(land < LAND_COUNT);
+
+    char const *landname = Name_From_Land(land);
+
+    if (ini.Find_Section(landname) != nullptr) {
+        for (SpeedType speed = SPEED_FIRST; speed < SPEED_COUNT; ++speed) {
+            m_speeds[speed] = Min(fixed::_1_1, ini.Get_Fixed(landname, s_speedNames[speed], m_speeds[SPEED_FOOT]));
+        }
+
+        m_buildable = ini.Get_Bool(landname, "Buildable", false);
+
+        return true;
+    }
+
+    return false;
+}
+
+BOOL GroundClass::Write_INI(CCINIClass &ini, LandType const land) const
+{
+    // TODO
+    return 0;
 }

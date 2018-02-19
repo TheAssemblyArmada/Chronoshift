@@ -78,6 +78,9 @@ public:
     virtual int16_t *Overlap_List() const override;
     virtual void Draw_It(int x, int y, int frame) const;
 
+    BOOL Is_Crater() { return Crater; }
+    BOOL Is_Bib() { return Bib; }
+
     static SmudgeType From_Name(char const *name);
     static char const *Name_From(SmudgeType smudge);
     static void Init_Heap();

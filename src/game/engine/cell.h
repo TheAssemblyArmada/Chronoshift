@@ -35,12 +35,35 @@ class VesselClass;
 class AircraftClass;
 class TerrainClass;
 
+enum CellOccupantEnum
+{
+    OCCUPANT_NONE = 0x0,
+    INFANTRY_SPOT_NONE = 0x0,
+    INFANTRY_SPOT_TOP_LEFT = 0x1,
+    INFANTRY_SPOT_TOP_RIGHT = 0x2,
+    INFANTRY_SPOT_BOTTOM_LEFT = 0x4,
+    INFANTRY_SPOT_BOTTOM_RIGHT = 0x8,
+    INFANTRY_SPOT_CENTER = 0x10,
+    OCCUPANT_INFANTRY = INFANTRY_SPOT_TOP_LEFT
+    | INFANTRY_SPOT_TOP_RIGHT
+    | INFANTRY_SPOT_BOTTOM_LEFT
+    | INFANTRY_SPOT_BOTTOM_RIGHT
+    | INFANTRY_SPOT_CENTER,
+    OCCUPANT_UNIT = 0x20, // unit, vessel or aircraft.
+    OCCUPANT_TERRAIN = 0x40,
+    OCCUPANT_BUILDING = 0x80,
+};
+
 class CellClass
 {
     enum
     {
         ORESTAGE_SPREADING = 6,
         ORESTAGE_FULLGROWN = 11,
+        PLACEMENT_CLEAR = 0,
+        PLACEMENT_YELLOW = 1,
+        PLACEMENT_RED = 2,
+        PLACEMENT_SOMETHING = 3,
     };
 public:
     CellClass();
@@ -65,10 +88,6 @@ public:
     //OverlayClass *Cell_Overlay() const;
     uint32_t Cell_Coord() const;
     void Recalc_Attributes();
-
-    bool Get_Bit4() { return Bit4; }
-    HousesType Owner() const { return OwnerHouse; }
-    int Cell_Number() { return CellNumber; }
     BOOL Can_Ore_Grow() const;
     BOOL Can_Ore_Spread() const;
     BOOL Can_Ore_Germinate() const;
@@ -78,6 +97,19 @@ public:
     CellClass &Adjacent_Cell(FacingType facing);
     BOOL Is_Bridge_Here() const;
     void Redraw_Objects(BOOL force = false);
+    BOOL Is_Clear_To_Build(SpeedType speed) const;
+    void Occupy_Down(ObjectClass *object);
+    void Occupy_Up(ObjectClass *object);
+    void Overlap_Down(ObjectClass *object);
+    void Overlap_Up(ObjectClass *object);
+    int Clear_Icon() const;
+    void Draw_It(int x, int y, BOOL unk_bool) const;
+    void Concrete_Calc();
+    void Wall_Update();
+
+    BOOL Get_Bit4() { return Bit4; }
+    HousesType Owner() const { return OwnerHouse; }
+    int Cell_Number() { return CellNumber; }
 
 private:
     int16_t CellNumber;
@@ -89,7 +121,7 @@ private:
         struct
         {
             bool Bit1 : 1; // 1
-            bool Bit2 : 1; // 2
+            bool PlacementCheck : 1; // 2
             bool Bit4 : 1; // 4            //Shrouded?
             bool Bit8 : 1; // 8 //Revealed? //Occupied? //NotSeen? //#define	cf_Explored	0x08 //this means no shroud
             bool Bit16 : 1; // 16	//Could be HasWaypoint?  HasCellTag?
@@ -101,7 +133,7 @@ private:
     };
 #else
     bool Bit1; // 1
-    bool Bit2; // 2
+    bool PlacementCheck; // 2
     bool Bit4; // 4            //Shrouded?
     bool Bit8; // 8 //Revealed? //Occupied? //NotSeen? //#define	cf_Explored	0x08 //this means no shroud
     bool Bit16; // 16	//Could be HasWaypoint?  HasCellTag?

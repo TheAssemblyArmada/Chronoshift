@@ -105,7 +105,7 @@ public:
     void Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h, int dst_w,
         int dst_h, bool use_keysrc, void *fade);
     int Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
-
+    void Draw_Stamp(void *tileset, int icon, int x, int y, void const *remapper, int left, int top, int right, int bottom);
     // int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
 #ifndef RAPP_STANDALONE

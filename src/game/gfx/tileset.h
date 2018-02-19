@@ -63,8 +63,8 @@ struct IconControlType
 #pragma pack(pop)
 
 void __cdecl Buffer_Draw_Stamp(
-    GraphicViewPortClass &viewport, IconControlType *tileset, int32_t icon, int x, int y, void const *remapper);
-void __cdecl Buffer_Draw_Stamp_Clip(GraphicViewPortClass &viewport, IconControlType *tileset, int32_t icon, int x, int y,
+    GraphicViewPortClass &viewport, IconControlType *tileset, int icon, int x, int y, void const *remapper);
+void __cdecl Buffer_Draw_Stamp_Clip(GraphicViewPortClass &viewport, IconControlType *tileset, int icon, int x, int y,
     void const *remapper, int left, int top, int right, int bottom);
 
 #endif // TILESET_H

@@ -102,6 +102,7 @@ public:
     void Decode_Pointers() {}
 
     LandType Get_Land() { return Land; }
+    BOOL Is_Wall() { return Wall; }
 
     static void Init_Heap();
     static void Init(TheaterType theater);

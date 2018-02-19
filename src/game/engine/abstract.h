@@ -46,6 +46,7 @@ public:
     BOOL Is_Techno();
     int Get_Heap_ID() const { return HeapID; }
     BOOL Is_Active() const { return IsActive; }
+    RTTIType What_Am_I() const { return RTTI; }
 
 protected:
     RTTIType RTTI; // ID for this object type, set from derived type constructors.

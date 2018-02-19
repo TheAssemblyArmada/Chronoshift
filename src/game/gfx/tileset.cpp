@@ -49,7 +49,7 @@ void __cdecl Init_Stamps(IconControlType *iconset)
 }
 
 void __cdecl Buffer_Draw_Stamp(
-    GraphicViewPortClass &viewport, IconControlType *tileset, int32_t icon, int x, int y, void const *remapper)
+    GraphicViewPortClass &viewport, IconControlType *tileset, int icon, int x, int y, void const *remapper)
 {
     if (!tileset) {
         return;
@@ -107,7 +107,7 @@ void __cdecl Buffer_Draw_Stamp(
         }
     }
 }
-void __cdecl Buffer_Draw_Stamp_Clip(GraphicViewPortClass &viewport, IconControlType *tileset, int32_t icon, int x, int y,
+void __cdecl Buffer_Draw_Stamp_Clip(GraphicViewPortClass &viewport, IconControlType *tileset, int icon, int x, int y,
     void const *remapper, int left, int top, int right, int bottom)
 {
     if (!tileset) {

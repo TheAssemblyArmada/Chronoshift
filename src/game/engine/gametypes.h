@@ -141,20 +141,6 @@ enum WarheadExplosionType
     WH_EXPLOSION_NUKE = 6,
 };
 
-// These match the fixed values in GroundClass, update ground.h if we add any
-enum SpeedType
-{
-    SPEED_NONE = -1,
-    SPEED_FOOT,
-    SPEED_TRACK,
-    SPEED_WHEEL,
-    SPEED_WINGED,
-    SPEED_FLOAT,
-    SPEED_COUNT,
-};
-
-DEFINE_ENUMERATION_OPERATORS(SpeedType);
-
 // this is temp (made up name) until we work out what it really is
 enum TeamNumberType
 {

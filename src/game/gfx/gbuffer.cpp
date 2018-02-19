@@ -1,7 +1,8 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Wrapper class for platform drawing engine.
  *
@@ -9,7 +10,6 @@
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -18,6 +18,7 @@
 #include "blitters.h"
 #include "minmax.h"
 #include "textprint.h"
+#include "tileset.h"
 
 #ifndef RAPP_STANDALONE
 // BOOL &GraphicViewPortClass::AllowHardwareBlitFills;
@@ -228,6 +229,15 @@ int GraphicViewPortClass::Blit(
     Unlock();
 
     return 0;
+}
+
+void GraphicViewPortClass::Draw_Stamp(void *tileset, int icon, int x, int y, const void *remapper, int left, int top, int right, int bottom)
+{
+    if (Lock()) {
+        Buffer_Draw_Stamp_Clip(*this, (IconControlType*)tileset, icon, x, y, remapper, left, top, right, bottom);
+    }
+
+    Unlock();
 }
 
 void GraphicViewPortClass::Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h,
