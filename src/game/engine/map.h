@@ -53,6 +53,10 @@ public:
     void Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4);
     int Zone_Reset(int zones);
     int Zone_Span(int16_t cell, int zone, MZoneType mzone);
+    int16_t Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZoneType mzone) const;
+    BOOL Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) const;
+    int Destroy_Bridge_At(int16_t cellnum);
+    void Detach(int32_t target, int a2);
 
     int16_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
 

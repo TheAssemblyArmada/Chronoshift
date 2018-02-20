@@ -21,6 +21,7 @@
 #include "rules.h"
 #include "scenario.h"
 #include "session.h"
+#include "target.h"
 
 // TODO this is require for some none virtual calls to functions higher in the stack.
 #include "iomap.h"
@@ -457,4 +458,169 @@ int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
     }
 
     return 0;
+}
+
+int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZoneType mzone) const
+{
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+
+    int16_t near_cells[10];
+    int16_t near_cellnum;
+
+    int near_cell_index = 0;
+    int cell_x = Cell_Get_X(cellnum);
+    int cell_y = Cell_Get_Y(cellnum);
+
+    // Calculate the bounds of the area we want to check
+    int left = cell_x - MapCellX;
+    int right = MapCellWidth - left - 1;
+    int top = cell_y - MapCellY;
+    int bottom = MapCellHeight - top - 1;
+
+    for (int i = 0; i < 64; ++i) {
+        for (int j = -i; j <= i; ++j) {
+            if (j >= -left && i <= top) {
+                near_cellnum = Cell_From_XY(j + cell_x, cell_y - i);
+
+                if (Map.In_Radar(near_cellnum)) {
+                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                        near_cells[near_cell_index++] = near_cellnum;
+                    }
+                }
+            }
+
+            if (near_cell_index == ARRAY_SIZE(near_cells)) {
+                break;
+            }
+
+            if (j <= right && i <= bottom) {
+                near_cellnum = Cell_From_XY(cell_x + j, i + cell_y);
+
+                if (Map.In_Radar(near_cellnum)) {
+                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                        near_cells[near_cell_index++] = near_cellnum;
+                    }
+                }
+            }
+
+            if (near_cell_index == ARRAY_SIZE(near_cells)) {
+                break;
+            }
+        }
+
+        if (near_cell_index == ARRAY_SIZE(near_cells)) {
+            break;
+        }
+
+        for (int k = -(i - 1); k <= i - 1; ++k) {
+            if (k >= -top && i <= left) {
+                near_cellnum = Cell_From_XY(cell_x - i, k + cell_y);
+
+                if (Map.In_Radar(near_cellnum)) {
+                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                        near_cells[near_cell_index++] = near_cellnum;
+                    }
+                }
+            }
+
+            if (near_cell_index == ARRAY_SIZE(near_cells)) {
+                break;
+            }
+
+            if (k <= bottom && i <= right) {
+                near_cellnum = Cell_From_XY(cell_x + i, cell_y + k);
+
+                if (Map.In_Radar(near_cellnum)) {
+                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                        near_cells[near_cell_index++] = near_cellnum;
+                    }
+                }
+            }
+
+            if (near_cell_index == ARRAY_SIZE(near_cells)) {
+                break;
+            }
+        }
+
+        if (near_cell_index > 0) {
+            break;
+        }
+    }
+
+    if (near_cell_index > 0) {
+        return near_cells[g_frame % near_cell_index];
+    }
+
+    return 0;
+}
+
+BOOL MapClass::Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) const
+{
+    // TODO requires HouseClass
+#ifndef RAPP_STANDALONE
+    BOOL(*func)(const MapClass*, int16_t, HousesType&, ZoneType&) = reinterpret_cast<BOOL(*)(const MapClass*, int16_t, HousesType&, ZoneType&)>(0x004FFEAC);
+    return func(this, cellnum, house, zone);
+#elif 0
+    if (cellnum < MAP_MAX_AREA && In_Radar(cellnum)) {
+        for (house = HOUSES_FIRST; house < HOUSES_COUNT; ++house) {
+            HouseClass *hptr = HouseClass::As_Pointer(house);
+            DEBUG_ASSERT(hptr != nullptr);
+
+            if (hptr != nullptr) {
+                if (hptr->Is_Active() && !hptr->Defeated && Valid_Coord(hptr->field_2AE)) {
+                    zone = hptr->Which_Zone(cellnum);
+
+                    if (zone != ZONE_NONE) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+#else
+    return false;
+#endif
+}
+
+int MapClass::Destroy_Bridge_At(int16_t cellnum)
+{
+    // TODO Needs TemplateClass, AnimClass
+#ifndef RAPP_STANDALONE
+    int(*func)(const MapClass*, int16_t) = reinterpret_cast<int(*)(const MapClass*, int16_t)>(0x004FFF1C);
+    return func(this, cellnum);
+#else
+    return 0;
+#endif
+}
+
+void MapClass::Detach(int32_t target, int a2)
+{
+    // TODO Requires TriggerClass
+#ifndef RAPP_STANDALONE
+    void(*func)(const MapClass*, int32_t, int) = reinterpret_cast<void(*)(const MapClass*, int32_t, int)>(0x0050078C);
+    func(this, target, a2);
+#elif 0
+    if (Target_Get_RTTI(target) == RTTI_TRIGGER) {
+        for (int index = 0; index < MapTriggers.Count(); ++index) {
+            TriggerClass *trig = MapTriggers[index];
+            DEBUG_ASSERT(trig != nullptr);
+
+            if (As_Trigger(target) == trig) {
+                MapTriggers.Delete(trig);
+                break;
+            }
+        }
+
+        for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+            CellClass &cell = Array[cellnum];
+
+            if (cell.CellTag == As_Trigger(target)) {
+                cell.CellTag = nullptr;
+            }
+        }
+
+    }
+#endif
 }

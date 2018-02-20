@@ -19,7 +19,13 @@
 #define TARGET_H
 
 #include "always.h"
+#include "rtti.h"
 
 int32_t As_Target(int16_t cellnum);
+
+inline RTTIType Target_Get_RTTI(int32_t target)
+{
+    return RTTIType((target & 0xFF000000) >> 24);
+}
 
 #endif // TARGET_H
