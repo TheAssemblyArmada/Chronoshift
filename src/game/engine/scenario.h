@@ -110,8 +110,8 @@ private:
             bool ToCarryOver : 1; // & 4
             bool ToInherit : 1; // & 8
             bool CivEvac : 1; // & 16
-            bool Bit1_32 : 1; // & 32 looks like FadeToBW
-            bool Bit1_64 : 1; // & 64 and this looks like BWFadeReset
+            bool FadeOutBW : 1; // & 32 looks like FadeToBW
+            bool FadeInBW : 1; // & 64 and this looks like BWFadeReset
             bool EndOfGame : 1; // & 128
             bool TimerInherit : 1; // & 1
             bool NoSpyPlane : 1; // & 2
@@ -129,8 +129,8 @@ private:
     bool ToCarryOver;
     bool ToInherit;
     bool CivEvac;
-    bool Bit1_32; //looks like FadeToBW
-    bool Bit1_64; //and this looks like BWFadeReset
+    bool FadeOutBW; //looks like FadeToBW
+    bool FadeInBW; //and this looks like BWFadeReset
     bool EndOfGame;
     bool TimerInherit;
     bool NoSpyPlane;

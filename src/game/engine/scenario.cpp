@@ -53,8 +53,8 @@ ScenarioClass::ScenarioClass() :
     ToCarryOver(false),
     ToInherit(false),
     CivEvac(false),
-    Bit1_32(false),
-    Bit1_64(false),
+    FadeOutBW(false),
+    FadeInBW(false),
     EndOfGame(false),
     TimerInherit(false),
     NoSpyPlane(false),
@@ -253,8 +253,8 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
  */
 void ScenarioClass::Do_BW_Fade()
 {
-    Bit1_32 = true;
-    Bit1_64 = false;
+    FadeOutBW = true;
+    FadeInBW = false;
     FadeTimer = 15;
 }
 
@@ -265,24 +265,24 @@ void ScenarioClass::Do_BW_Fade()
  */
 void ScenarioClass::Do_Fade_AI()
 {
-    if (Bit1_64) {
+    if (FadeInBW) {
         if (FadeTimer <= 0) {
-            Bit1_64 = false;
+            FadeInBW = false;
         }
 
         Options.Adjust_Palette(OriginalPalette,
             GamePalette,
             Options.Get_Brightness(),
-            Options.Get_Saturation() * fixed((FadeTimer - 15), 15),
+            Options.Get_Saturation() * fixed((15 - FadeTimer), 15),
             Options.Get_Tint(),
             Options.Get_Contrast());
 
         GamePalette.Set();
     }
 
-    if (Bit1_32) {
+    if (FadeOutBW) {
         if (FadeTimer <= 0) {
-            Bit1_32 = false;
+            FadeOutBW = false;
         }
 
         Options.Adjust_Palette(OriginalPalette,
@@ -294,8 +294,8 @@ void ScenarioClass::Do_Fade_AI()
 
         GamePalette.Set();
 
-        if (!Bit1_32) {
-            Bit1_64 = true;
+        if (!FadeOutBW) {
+            FadeInBW = true;
             FadeTimer = 15;
         }
     }
