@@ -106,6 +106,12 @@ public:
     void Draw_It(int x, int y, BOOL unk_bool) const;
     void Concrete_Calc();
     void Wall_Update();
+    int Reduce_Ore(int reduction);
+    BOOL Reduce_Wall(int damage);
+    BOOL Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const;
+
+    int8_t Get_Zone(MZoneType mzone) { return Zones[mzone]; }
+    void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
 
     BOOL Get_Bit4() { return Bit4; }
     HousesType Owner() const { return OwnerHouse; }
@@ -142,7 +148,7 @@ private:
     bool Bit128; // HasFlag in C&C
 #endif
 
-    int8_t field_6[MZONE_COUNT];
+    int8_t Zones[MZONE_COUNT]; // field_6
     uint16_t field_A;
     int CellTag; // CCPtr<TriggerClass> CellTag; // Needs TriggerClass
     TemplateType Template;

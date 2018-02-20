@@ -102,6 +102,8 @@ public:
     void Decode_Pointers() {}
 
     LandType Get_Land() { return Land; }
+    int Get_Damage_Levels() { return DamageLevels; }
+    int Get_Overlay_Strength() { return OverlayStrength; }
     BOOL Is_Wall() { return Wall; }
 
     static void Init_Heap();

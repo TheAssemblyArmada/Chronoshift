@@ -51,6 +51,8 @@ public:
     int16_t Pick_Random_Location() const;
     BOOL In_Radar(int16_t cellnum) const;
     void Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4);
+    int Zone_Reset(int zones);
+    int Zone_Span(int16_t cell, int zone, MZoneType mzone);
 
     int16_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
 

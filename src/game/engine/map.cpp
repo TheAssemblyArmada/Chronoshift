@@ -317,3 +317,144 @@ void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a
     }
 #endif
 }
+
+int MapClass::Zone_Reset(int zones)
+{
+    // Loop through and reset every cells movement zones to 0.
+    for (int index = 0; index < Array.Length(); ++index) {
+        CellClass &cell = Array[index];
+
+        if (zones & (1 << MZONE_NORMAL)) {
+            cell.Set_Zone(MZONE_NORMAL, 0);
+        }
+
+        if (zones & (1 << MZONE_CRUSHER)) {
+            cell.Set_Zone(MZONE_CRUSHER, 0);
+        }
+
+        if (zones & (1 << MZONE_DESTROYER)) {
+            cell.Set_Zone(MZONE_DESTROYER, 0);
+        }
+
+        if (zones & (1 << MZONE_AMPHIBIOUS_DESTROYER)) {
+            cell.Set_Zone(MZONE_AMPHIBIOUS_DESTROYER, 0);
+        }
+    }
+
+    int tmp;
+
+    // Calculate zones on the map that are all suitable for a given movement zone. Zones are contiguous areas on the map that can be reached using a given movement zone.
+    if (zones & (1 << MZONE_NORMAL)) {
+        tmp = 1;
+
+        for (int cell = 0; cell < MAP_MAX_AREA; ++cell) {
+            if (Zone_Span(cell, tmp, MZONE_NORMAL) != 0) {
+                ++tmp;
+            }
+        }
+    }
+
+    if (zones & (1 << MZONE_CRUSHER)) {
+        tmp = 1;
+
+        for (int cell = 0; cell < MAP_MAX_AREA; ++cell) {
+
+            if (Zone_Span(cell, tmp, MZONE_CRUSHER) != 0) {
+                ++tmp;
+            }
+        }
+    }
+
+    if (zones & (1 << MZONE_DESTROYER)) {
+        tmp = 1;
+
+        for (int cell = 0; cell < MAP_MAX_AREA; ++cell) {
+            if (Zone_Span(cell, tmp, MZONE_DESTROYER) != 0) {
+                ++tmp;
+            }
+        }
+    }
+
+    if (zones & (1 << MZONE_AMPHIBIOUS_DESTROYER)) {
+        tmp = 1;
+
+        for (int cell = 0; cell < MAP_MAX_AREA; ++cell) {
+            if (Zone_Span(cell, tmp, MZONE_AMPHIBIOUS_DESTROYER) != 0) {
+                ++tmp;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
+{
+    int16_t coord_x = Cell_Get_X(cell);
+    int16_t coord_y = Cell_Get_Y(cell);
+
+    // Amphibious Destroyer is Vessels and other floaty things?
+    SpeedType speed = (mzone == MZONE_AMPHIBIOUS_DESTROYER ? SPEED_FLOAT : SPEED_TRACK);
+
+    // Check the coords are within the visible part of the map
+    if (coord_y >= MapCellY && coord_y < (MapCellHeight + MapCellY) &&
+        coord_x >= MapCellX && coord_x < (MapCellWidth + MapCellX)) {
+
+        int retval = 0;
+        int left_pos;
+
+        // Scan backwards from coord to edge of map until we find a cell that is already marked for this zone or can't be moved to and record the pos.
+        for (left_pos = coord_x; left_pos >= MapCellX; --left_pos) {
+            CellClass &cell = Array[Cell_From_XY(left_pos, coord_y)];
+
+            // Check if clear to move, ignoring units, buildings and infantry.
+            if (cell.Get_Zone(mzone) != 0 ||
+                !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
+                if (left_pos == coord_x) {
+                    return 0;
+                }
+
+                ++left_pos;
+                break;
+            }
+
+        }
+
+        left_pos = Max(left_pos, MapCellX);
+
+        int right_pos;
+
+        // Scan forward to other edge of the map doing the same.
+        for (right_pos = coord_x; right_pos < MapCellWidth + MapCellX; ++right_pos) {
+            CellClass &cell = Array[Cell_From_XY(right_pos, coord_y)];
+
+            // Check if clear to move, ignoring units, buildings and infantry.
+            if (cell.Get_Zone(mzone) != 0 ||
+                !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
+                --right_pos;
+                break;
+            }
+        }
+
+        right_pos = Min(right_pos, MapCellWidth + MapCellX - 1);
+
+        // Set all the cells between the two positions to our zone value for this movement zone.
+        for (int i = left_pos; i <= right_pos; ++i) {
+            Array[Cell_From_XY(i, coord_y)].Set_Zone(mzone, zone);
+            ++retval;
+        }
+
+        // If we have at least one cell, repeat the process above and below, sweet sweet recursion...
+        if ((left_pos - 1) <= right_pos) {
+            for (int i = left_pos - 1; i <= right_pos; ++i) {
+                retval += Zone_Span(Cell_From_XY(i, coord_y - 1), zone, mzone);
+                retval += Zone_Span(Cell_From_XY(i, coord_y + 1), zone, mzone);
+            }
+        }
+
+        // Return the number of cells that are in this zone.
+        return retval;
+    }
+
+    return 0;
+}

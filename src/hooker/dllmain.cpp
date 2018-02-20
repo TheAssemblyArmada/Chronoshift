@@ -65,6 +65,9 @@ StaticInitObject g_initHooks;
 
 void Setup_Hooks()
 {
+    // Disable the DirectDraw based terrain caching system.
+    Make_Global<BOOL>(0x0060BA6C) = false; // IconCacheAllowed
+
     //
     // Hook WinMain
     //

@@ -53,7 +53,7 @@ CellClass::CellClass() :
     Land(LAND_CLEAR)
 {
     for (int i = 0; i < MZONE_COUNT; ++i) {
-        field_6[i] = 0;
+        Zones[i] = 0;
     }
 
     for (int i = 0; i < ARRAY_SIZE(Overlapper); ++i) {
@@ -900,41 +900,46 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
                     }
                 }
             }
-        }
 #endif
-
-            if (HasFlag) {
-                int flag_x;
-                int flag_y;
-                int flag_frame;
-                void *flag_shape;
-
-                flag_shape = MixFileClass<CCFileClass>::Retrieve("FLAGFLY.SHP");
-
-                // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
-                // game is on, wrapped so it goes 0 to 13. So when game frame is 14 it will return 0, 15 will return 1 and so
-                // on.
-                flag_frame = g_frame % Get_Build_Frame_Count(flag_shape); // shape has 14 frames
-
-                // 12 is what is set, but the shape is 23, so im gonna take it as / 2. or is this centered to a icon w/h? (24
-                // sq)
-                flag_x = x + (Get_Build_Frame_Width(flag_shape) / 2) + 1;
-                flag_y = y + (Get_Build_Frame_Height(flag_shape) / 2) + 1;
-
-                CC_Draw_Shape(
-                    flag_shape, // MixFileClass<CCFileClass>::Retrieve("FLAGFLY.SHP"), //no point called retrieve again.
-                    flag_frame,
-                    flag_x,
-                    flag_y,
-                    WINDOW_TACTICAL,
-                    SHAPE_SHADOW | SHAPE_FADING | SHAPE_CENTER,
-                    HouseClass::As_Pointer(OwnerHouse)->Remap_Table(false, REMAP_1),
-                    DisplayClass::UnitShadow);
-            }
         }
+
+        if (HasFlag) {
+            int flag_x;
+            int flag_y;
+            int flag_frame;
+            void *flag_shape;
+
+            flag_shape = MixFileClass<CCFileClass>::Retrieve("FLAGFLY.SHP");
+
+            // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
+            // game is on, wrapped so it goes 0 to 13. So when game frame is 14 it will return 0, 15 will return 1 and so
+            // on.
+            flag_frame = g_frame % Get_Build_Frame_Count(flag_shape); // shape has 14 frames
+
+            // 12 is what is set, but the shape is 23, so im gonna take it as / 2. or is this centered to a icon w/h? (24
+            // sq)
+            flag_x = x + (Get_Build_Frame_Width(flag_shape) / 2) + 1;
+            flag_y = y + (Get_Build_Frame_Height(flag_shape) / 2) + 1;
+
+            CC_Draw_Shape(
+                flag_shape, // MixFileClass<CCFileClass>::Retrieve("FLAGFLY.SHP"), //no point called retrieve again.
+                flag_frame,
+                flag_x,
+                flag_y,
+                WINDOW_TACTICAL,
+                SHAPE_SHADOW | SHAPE_FADING | SHAPE_CENTER,
+                HouseClass::As_Pointer(OwnerHouse)->Remap_Table(false, REMAP_1),
+                DisplayClass::UnitShadow);
+        }
+    }
 #endif
 }
 
+/**
+ * @brief Unknown, empty function in RA.
+ *
+ * 0x0049FC50
+ */
 void CellClass::Concrete_Calc()
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
@@ -951,6 +956,11 @@ void CellClass::Concrete_Calc()
     // RA? Could be left over from concrete placement in Dune2 which was also in early versions of C&C.
 }
 
+/**
+ * @brief Updates any wall logic overlay in this cell.
+ *
+ * 0x0049FC58
+ */
 void CellClass::Wall_Update()
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
@@ -1016,4 +1026,155 @@ void CellClass::Wall_Update()
             adjcell.Redraw_Objects(false);
         }
     }
+}
+
+/**
+ * @brief Gets this cells position as a Coord.
+ *
+ * 0x0049FDE0
+ */
+uint32_t CellClass::Cell_Coord() const
+{
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    return Cell_To_Coord(CellNumber);
+}
+
+/**
+ * @brief Reduces the amount of ore in a cell and returns the amount it was reduced by.
+ *
+ * 0x0049FE18
+ */
+int CellClass::Reduce_Ore(int reduction)
+{
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    if (reduction > 0 && Land == LAND_ORE) {
+        // If we have a greater reduction than we have frames, set to -1 and return the frame we were on as the reduction,
+        // else reduce by reduction
+        if (OverlayFrame + 1 <= reduction) {
+            int oldframe = OverlayFrame;
+            Overlay = OVERLAY_NONE;
+            OverlayFrame = -1;
+            Recalc_Attributes();
+
+            return oldframe;
+        } else {
+            OverlayFrame -= reduction;
+
+            return reduction;
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * @brief Perform wall reduction logic for a given damage.
+ *
+ * 0x0049FE58
+ */
+BOOL CellClass::Reduce_Wall(int damage)
+{
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    if (Overlay != OVERLAY_NONE) {
+        OverlayTypeClass &overlay = OverlayTypeClass::As_Reference(Overlay);
+        bool is_reduced = false;
+
+        // This looks like it tests if an overlay was reduced by the value in damage. -1 skips the check and auto destroys
+        // the wall. As far as I can tell anyhow.
+        if (overlay.Is_Wall()) {
+            if (damage != -1 && overlay.Get_Overlay_Strength() > damage) {
+                is_reduced = overlay.Get_Overlay_Strength() > damage ? Scen.Get_Random_Value(0, damage) < damage : true;
+            } else {
+                is_reduced = true;
+            }
+        }
+
+        if (is_reduced) {
+            OverlayFrame += 16;
+
+            if ((damage == -1) || (OverlayFrame / 16) >= overlay.Get_Damage_Levels()
+                || ((OverlayFrame / 16) == (overlay.Get_Damage_Levels() - 1) && (OverlayFrame % 16) == 0)) {
+                OwnerHouse = HOUSES_NONE;
+                Overlay = OVERLAY_NONE;
+                OverlayFrame = -1;
+                Recalc_Attributes();
+                Redraw_Objects(0);
+                Adjacent_Cell(FACING_NORTH).Wall_Update();
+                Adjacent_Cell(FACING_WEST).Wall_Update();
+                Adjacent_Cell(FACING_SOUTH).Wall_Update();
+                Adjacent_Cell(FACING_EAST).Wall_Update();
+                Detach_This_From_All(As_Target(Cell_Number()), 1);
+
+                if (overlay.Is_Crushable()) {
+                    Map.Zone_Reset(1 << MZONE_NORMAL);
+                } else {
+                    Map.Zone_Reset((1 << MZONE_NORMAL) | (1 << MZONE_CRUSHER));
+                }
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @brief Check if the cell is clear for movement.
+ *
+ * @param ignore_crushable ignores any infantry in the cell when checking if occupied.
+ * @param ignore_destructable ignores any units or buildings when checking if occupied.
+ *
+ * 0x004A1B0C
+ */
+BOOL CellClass::Is_Clear_To_Move(
+    SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const
+{
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    if (speed == SPEED_WINGED) {
+        return true;
+    }
+
+    if (zone != -1 && Zones[mzone] != zone) {
+        return false;
+    }
+
+    uint32_t occupier = OccupantBit;
+
+    // Mask out infantry so they are ignored.
+    if (ignore_crushable) {
+        occupier &= OCCUPANT_UNIT | OCCUPANT_TERRAIN | OCCUPANT_BUILDING;
+    }
+
+    // Mask out units/buildings so they are ignored.
+    if (ignore_destructable) {
+        occupier &= OCCUPANT_INFANTRY | OCCUPANT_TERRAIN;
+    }
+
+    // Check if occupied.
+    if (occupier != OCCUPANT_NONE) {
+        return false;
+    }
+
+    LandType land = Land;
+
+    if (Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(Overlay).Is_Wall()) {
+        if (mzone != MZONE_DESTROYER
+            && (mzone != MZONE_CRUSHER || !OverlayTypeClass::As_Reference(Overlay).Is_Crushable())) {
+            return false;
+        }
+
+        land = LAND_CLEAR;
+    }
+
+    if (land == LAND_NONE) {
+        return false;
+    }
+
+    // Check to make sure our speed type can actually move on this ground.
+    return (Ground[land].Get_Speed(speed) != fixed::_0_1);
 }
