@@ -23,10 +23,13 @@
 #define GAME_TICKS_PER_SECOND 15
 #define GAME_TICKS_PER_MINUTE GAME_TICKS_PER_SECOND * 60
 
+extern int g_mapBinaryVersion;
+
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
 
+extern int &g_iniFormat;
 extern int &g_frame;
 extern BOOL &g_gameInFocus;
 extern BOOL &g_inMapEditor;
@@ -51,6 +54,7 @@ extern BOOL &StreamLowImpact;
 extern HWND &MainWindow;
 #endif
 #else
+extern int g_iniFormat;
 extern int g_frame;
 extern BOOL g_gameInFocus;
 extern BOOL g_inMapEditor;

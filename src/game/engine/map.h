@@ -51,12 +51,24 @@ public:
     int16_t Pick_Random_Location() const;
     BOOL In_Radar(int16_t cellnum) const;
     void Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4);
+    void Shroud_From(int16_t cellnum, int radius);
+    void Jam_From(int16_t cellnum, int radius, HouseClass *house);
+    void UnJam_From(int16_t cellnum, int radius, HouseClass *house);
+    void Place_Down(int16_t cellnum, ObjectClass *object);
+    void Pick_Up(int16_t cellnum, ObjectClass *object);
+    void Overlap_Down(int16_t cellnum, ObjectClass *object);
+    void Overlap_Up(int16_t cellnum, ObjectClass *object);
+    int Overpass(BOOL randomize);
     int Zone_Reset(int zones);
     int Zone_Span(int16_t cell, int zone, MZoneType mzone);
     int16_t Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZoneType mzone) const;
     BOOL Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) const;
     int Destroy_Bridge_At(int16_t cellnum);
     void Detach(int32_t target, int a2);
+    int Intact_Bridge_Count() const;
+    void Shroud_The_Map();
+    int Write_Binary(Pipe &pipe);
+    BOOL Read_Binary(Straw &straw);
 
     int16_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
 

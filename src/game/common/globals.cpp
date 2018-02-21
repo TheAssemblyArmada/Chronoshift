@@ -15,7 +15,10 @@
  */
 #include "globals.h"
 
+int g_mapBinaryVersion; // For handling C&C and Sole Survivor map formats.
+
 #ifndef RAPP_STANDALONE
+int &g_iniFormat = Make_Global<int>(0x00665DE8);
 int &g_frame = Make_Global<int>(0x006680C4);
 BOOL &g_gameInFocus = Make_Global<BOOL>(0x00665F64);
 BOOL &g_inMapEditor = Make_Global<BOOL>(0x0065D7E8);
@@ -40,6 +43,7 @@ BOOL &StreamLowImpact = Make_Global<BOOL>(0x006ABFCC);
 HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 #endif
 #else
+int g_iniFormat;
 int g_frame;
 BOOL g_gameInFocus;
 BOOL g_inMapEditor;

@@ -17,6 +17,9 @@
 #include "abs.h"
 #include "coord.h"
 #include "globals.h"
+#include "lcwpipe.h"
+#include "lcwstraw.h"
+#include "lists.h"
 #include "minmax.h"
 #include "rules.h"
 #include "scenario.h"
@@ -317,6 +320,262 @@ void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a
         }
     }
 #endif
+}
+
+void MapClass::Shroud_From(int16_t cellnum, int radius)
+{
+    // TODO requires RadarClass
+#ifndef RAPP_STANDALONE
+    void(*func)(const MapClass*, int16_t, int) = reinterpret_cast<void(*)(const MapClass*, int16_t, int)>(0x004FE588);
+    func(this, cellnum, radius);
+#elif 0
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
+
+    // Original code does not check radius is with the array bounds
+    if (In_Radar(cellnum)) {
+        if (radius > 0 && radius <= Rule.Get_Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+            const int32_t *offset_ptr = RadiusOffset;
+            int32_t radius_count = RadiusCount[radius];
+
+            while (radius_count-- >= 0) {
+                int16_t offset_cellnum = offset_ptr[cellnum];
+                ++offset_ptr;
+
+                // TODO, same loop as above pretty much...
+
+                // checks the result of a distance check.
+                if (offset_cellnum < MAP_MAX_AREA && Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+                    // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
+                    // radius, not radius * 256.
+                    if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                        Map.Shroud_Cell(offset_cellnum); // TODO call from display class, should be virtual?
+                    }
+                }
+            }
+        }
+    }
+#endif
+}
+
+void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
+{
+    // TODO requires HouseClass, RadarClass
+#ifndef RAPP_STANDALONE
+    void(*func)(const MapClass*, int16_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *)>(0x004FE68C);
+    func(this, cellnum, radius, house);
+#elif 0
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
+    DEBUG_ASSERT(house != nullptr);
+
+    //this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
+    if (!g_inMapEditor) {
+        // Original does not check radius is within array bounds
+        if (radius >= 0 && radius <= Rule.Get_Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+            const int32_t *offset_ptr = RadiusOffset;
+            int32_t radius_count = RadiusCount[radius];
+
+            while (radius_count-- >= 0) {
+                int16_t offset_cellnum = *offset_ptr + cellnum;
+                ++offset_ptr;
+
+                if (offset_cellnum < MAP_MAX_AREA &&
+                    Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+
+                    if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                        Map.Jam_Cell(offset_cellnum, house);
+                    }
+                }
+            }
+
+            if (house->PlayerControl) {
+                Map.Constrained_Look(Cell_To_Coord(cellnum), Rule.Get_Gap_Radius() * 256);
+            }
+        }
+    }
+#endif
+}
+
+void MapClass::UnJam_From(int16_t cellnum, int radius, HouseClass *house)
+{
+    // TODO requires RadarClass
+#ifndef RAPP_STANDALONE
+    void(*func)(const MapClass*, int16_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *)>(0x004FE7C8);
+    func(this, cellnum, radius, house);
+#elif 0
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
+    DEBUG_ASSERT(house != nullptr);
+
+    //this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
+    if (!g_inMapEditor) {
+        // Original does not check radius is within array bounds
+        if (radius >= 0 && radius <= Rule.Get_Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+            const int32_t *offset_ptr = RadiusOffset;
+            int32_t radius_count = RadiusCount[radius];
+
+            while (radius_count-- >= 0) {
+                int16_t offset_cellnum = *offset_ptr + cellnum;
+                ++offset_ptr;
+
+                if (offset_cellnum < MAP_MAX_AREA &&
+                    Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+
+                    if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                        Map.UnJam_Cell(offset_cellnum, house);
+                    }
+                }
+            }
+        }
+    }
+#endif
+}
+
+void MapClass::Place_Down(int16_t cellnum, ObjectClass *object)
+{
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    DEBUG_ASSERT(object != nullptr);
+
+    int16_t tmp_list[60];
+
+    if (object != nullptr) {
+        if (object->Class_Of().Get_Bit128() && object->In_Which_Layer() == LAYER_GROUND) {
+            List_Copy(tmp_list, object->Occupy_List(), ARRAY_SIZE(tmp_list));
+            int16_t *list_ptr = tmp_list;
+
+            while (*list_ptr != LIST_END) {
+                int16_t occupy_cell = cellnum + *list_ptr++;
+
+                if (occupy_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[occupy_cell];
+                    cell.Occupy_Down(object);
+                    cell.Recalc_Attributes();
+                    cell.Redraw_Objects(false);
+                }
+            }
+
+            List_Copy(tmp_list, object->Overlap_List(false), ARRAY_SIZE(tmp_list));
+            list_ptr = tmp_list;
+
+            while (*list_ptr != LIST_END) {
+                int16_t occupy_cell = cellnum + *list_ptr++;
+
+                if (occupy_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[occupy_cell];
+                    cell.Overlap_Down(object);
+                    cell.Redraw_Objects(false);
+                }
+            }
+        }
+    }
+}
+
+void MapClass::Pick_Up(int16_t cellnum, ObjectClass *object)
+{
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    DEBUG_ASSERT(object != nullptr);
+
+    int16_t tmp_list[60];
+
+    if (object != nullptr) {
+        if (object->Class_Of().Get_Bit128() && object->In_Which_Layer() == LAYER_GROUND) {
+            List_Copy(tmp_list, object->Occupy_List(), ARRAY_SIZE(tmp_list));
+            int16_t *list_ptr = tmp_list;
+
+            while (*list_ptr != LIST_END) {
+                int16_t occupy_cell = cellnum + *list_ptr++;
+
+                if (occupy_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[occupy_cell];
+                    cell.Occupy_Up(object);
+                    cell.Recalc_Attributes();
+                    cell.Redraw_Objects(false);
+                }
+            }
+
+            List_Copy(tmp_list, object->Overlap_List(false), ARRAY_SIZE(tmp_list));
+            list_ptr = tmp_list;
+
+            while (*list_ptr != LIST_END) {
+                int16_t occupy_cell = cellnum + *list_ptr++;
+
+                if (occupy_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[occupy_cell];
+                    cell.Overlap_Up(object);
+                    cell.Redraw_Objects(false);
+                }
+            }
+        }
+    }
+}
+
+void MapClass::Overlap_Down(int16_t cellnum, ObjectClass *object)
+{
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    DEBUG_ASSERT(object != nullptr);
+
+    int16_t tmp_list[60];
+
+    if (object != nullptr) {
+        if (object->Class_Of().Get_Bit128() && object->In_Which_Layer() == LAYER_GROUND) {
+            List_Copy(tmp_list, object->Occupy_List(), ARRAY_SIZE(tmp_list));
+            int16_t *list_ptr = tmp_list;
+
+            while (*list_ptr != LIST_END) {
+                int16_t occupy_cell = cellnum + *list_ptr++;
+
+                if (occupy_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[occupy_cell];
+                    cell.Overlap_Down(object);
+                    cell.Redraw_Objects(false);
+                }
+            }
+        }
+    }
+}
+
+void MapClass::Overlap_Up(int16_t cellnum, ObjectClass *object)
+{
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    DEBUG_ASSERT(object != nullptr);
+
+    int16_t tmp_list[60];
+
+    if (object != nullptr) {
+        if (object->Class_Of().Get_Bit128() && object->In_Which_Layer() == LAYER_GROUND) {
+            List_Copy(tmp_list, object->Occupy_List(), ARRAY_SIZE(tmp_list));
+            int16_t *list_ptr = tmp_list;
+
+            while (*list_ptr != LIST_END) {
+                int16_t occupy_cell = cellnum + *list_ptr++;
+
+                if (occupy_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[occupy_cell];
+                    cell.Overlap_Up(object);
+                    cell.Redraw_Objects(false);
+                }
+            }
+        }
+    }
+}
+
+int MapClass::Overpass(BOOL randomize)
+{
+    int retval = 0;
+
+    if (MapCellHeight > 0) {
+        for (int y = 0; y < MapCellHeight; ++y) {
+            for (int x = 0; x < MapCellWidth; ++x) {
+                int16_t cellnum = Cell_From_XY(MapCellX + x, MapCellY + y);
+                CellClass &cell = Array[cellnum];
+                retval += cell.Ore_Adjust(randomize);
+                cell.Recalc_Attributes();
+            }
+        }
+    }
+
+    return retval;
 }
 
 int MapClass::Zone_Reset(int zones)
@@ -623,4 +882,208 @@ void MapClass::Detach(int32_t target, int a2)
 
     }
 #endif
+}
+
+int MapClass::Intact_Bridge_Count() const
+{
+    int count = 0;
+
+    // We loop through the cell array and only consider the 4 templates that have both bridge ends in the template (so not the long bridges)
+    for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+        const CellClass &cell = Array[cellnum];
+
+        switch (cell.Get_Template()) {
+            case TEMPLATE_BRIDGE1:	//Fall through on intact bridge templates
+            case TEMPLATE_BRIDGE2:
+            case TEMPLATE_BRIDGE1H:
+            case TEMPLATE_BRIDGE2H:
+                // If the Icon is number 6, then we have the intact bridge with an intact bridge cell, increment count.
+                if (cell.Get_Icon() == 6) {
+                    ++count;
+                }
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    return count;
+}
+
+void MapClass::Shroud_The_Map()
+{
+    // TODO Requires DisplayClass, TechnoClass
+#ifndef RAPP_STANDALONE
+    void(*func)(const MapClass*) = reinterpret_cast<void(*)(const MapClass*)>(0x00500908);
+    func(this);
+#elif 0
+    for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+        CellClass &cell = Array[cellnum];
+
+        if (cell.Get_Bit4() || cell.Get_Bit8()) {
+            cell.Redraw_Objects();
+
+            int xpos = Cell_Get_X(cellnum);
+            int ypos = Cell_Get_Y(cellnum);
+
+            if (xpos >= MapCellX && xpos < MapCellWidth + MapCellX &&
+                ypos >= MapCellY && ypos < MapCellHeight + MapCellY) {
+
+                cell.Set_Bit4(false);
+                cell.Set_Bit8(false);
+            }
+        }
+    }
+
+    for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {    
+        if (DisplayClass::Layers[LAYER_GROUND][index]->Is_Techno()) {
+            TechnoClass *tptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][index]);
+
+            if (tptr->OwnerHouse == house) {
+                tptr->Look();
+            }
+        }
+    }
+
+    Flag_To_Redraw(true);
+#endif
+}
+
+int MapClass::Write_Binary(Pipe &pipe)
+{
+    LCWPipe lcw(PIPE_COMPRESS);
+    int total = 0;
+
+    lcw.Put_To(&pipe);
+
+    // Writes for INIFormat = 3 only, Tile first, then the sub cell (Icon).
+    for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+        uint16_t temp = Array[cellnum].Get_Template();
+        temp = htole16(temp);
+        total += lcw.Put(&temp, sizeof(temp));
+    }
+
+    for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+        uint8_t temp = Array[cellnum].Get_Icon();
+        total += lcw.Put(&temp, sizeof(temp));
+    }
+
+    // Return the total bytes written to the pipe.
+    return total;
+}
+
+BOOL MapClass::Read_Binary(Straw &straw)
+{
+    LCWStraw lcw(STRAW_UNCOMPRESS);
+    lcw.Get_From(&straw);
+
+    switch (g_iniFormat) {
+        case INIFORMAT_0:	//Covers both TD and SS maps, .BIN files
+            // TD and SS both "blank" the map cell array first.
+            for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+                CellClass &cell = Array[cellnum];
+
+                cell.Set_Template(TEMPLATE_NONE);
+                cell.Set_Icon(0);
+                cell.Recalc_Attributes();
+            }
+
+            // Handle Sole Survivor maps.
+            if (g_mapBinaryVersion != 0) {
+                // Format is 4 bytes per cell, X pos, Y pos, template type, icon
+                uint8_t coord[2];
+                uint8_t icon[2];
+
+                while (straw.Get(&coord, sizeof(coord)) > 0 && straw.Get(icon, sizeof(icon)) > 0) {
+                    DEBUG_ASSERT((coord[0] * coord[1]) < MAP_MAX_AREA);
+                    CellClass &cell = Array[coord[0] * coord[1]];
+
+                    if (icon[0] == 0xFF) {
+                        cell.Set_Template(TEMPLATE_NONE);
+                        cell.Set_Icon(0);
+                    } else {
+                        cell.Set_Template((TemplateType)icon[0]);
+                        cell.Set_Icon(icon[1]);
+                    }
+
+                    // TD and SS also call a CRC function here, used to calc CRC in absence of SHA1 checksums for the map?
+                    cell.Recalc_Attributes();
+                }
+            } else {
+                // Handle TD maps being loaded into larger array than the original. Like blitting a region in a buffer.
+                for (int h = 0; h < MAPTD_MAX_HEIGHT; ++h) {
+                    for (int w = 0; w < MAPTD_MAX_WIDTH; ++w) {
+                        CellClass &cell = Array[Cell_From_XY(w, h)];
+                        uint8_t icon[2];
+                        straw.Get(icon, sizeof(icon));
+
+                        if (icon[0] == 0xFF) {
+                            cell.Set_Template(TEMPLATE_NONE);
+                            cell.Set_Icon(0);
+                        } else {
+                            cell.Set_Template((TemplateType)icon[0]);
+                            cell.Set_Icon(icon[1]);
+                        }
+
+                        // TD and SS also call a CRC function here, used to calc CRC in absence of SHA1 checksums for the map?
+                        cell.Recalc_Attributes();
+                    }
+                }
+            }
+
+            break;
+
+        case INIFORMAT_1:	// Handles old MapPack data layout, similar to TD layout
+        case INIFORMAT_2:	// Fall through
+            for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+                CellClass &cell = Array[cellnum];
+
+                uint16_t temp;
+                uint8_t icon;
+                lcw.Get(&temp, 2);
+                lcw.Get(&icon, 1);
+                temp = le16toh(temp);
+
+                if (temp == 0xFFFF) {
+                    cell.Set_Template(TEMPLATE_NONE);
+                    cell.Set_Icon(0);
+                } else {
+                    cell.Set_Template((TemplateType)temp);
+                    cell.Set_Icon(icon);
+                }
+
+                cell.Recalc_Attributes();
+            }
+
+            break;
+
+        case INIFORMAT_3: // Handles newest MapPack layout, RA default.
+            for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+                CellClass &cell = Array[cellnum];
+
+                uint16_t temp;
+                lcw.Get(&temp, 2);
+                temp = le16toh(temp);
+                cell.Set_Template(temp == 0xFFFF ? TEMPLATE_NONE : (TemplateType)temp);
+            }
+
+            for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+                CellClass &cell = Array[cellnum];
+
+                uint8_t icon;
+                lcw.Get(&icon, 1);
+                cell.Set_Icon(icon);
+                cell.Recalc_Attributes();
+            }
+
+            break;
+
+        default: // Unknown format, future expansion?
+            DEBUG_ASSERT_PRINT(false, "Invalid Map format\n");
+            break;
+    }
+
+    return true;
 }
