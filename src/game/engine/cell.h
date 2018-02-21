@@ -109,13 +109,21 @@ public:
     int Reduce_Ore(int reduction);
     BOOL Reduce_Wall(int damage);
     BOOL Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const;
+    int Ore_Adjust(BOOL randomize);
 
     int8_t Get_Zone(MZoneType mzone) { return Zones[mzone]; }
     void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
 
-    BOOL Get_Bit4() { return Bit4; }
+    BOOL Get_Bit4() const { return Bit4; }
+    void Set_Bit4(BOOL bit) { Bit4 = bit; }
+    BOOL Get_Bit8() const { return Bit8; }
+    void Set_Bit8(BOOL bit) { Bit8 = bit; }
+    TemplateType Get_Template() const { return Template; }
+    void Set_Template(TemplateType temp) { Template = temp; }
+    uint8_t Get_Icon() const { return Icon; }
+    void Set_Icon(uint8_t icon) { Icon = icon; }
     HousesType Owner() const { return OwnerHouse; }
-    int Cell_Number() { return CellNumber; }
+    int Cell_Number() const { return CellNumber; }
 
 private:
     int16_t CellNumber;

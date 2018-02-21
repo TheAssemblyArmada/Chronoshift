@@ -1178,3 +1178,70 @@ BOOL CellClass::Is_Clear_To_Move(
     // Check to make sure our speed type can actually move on this ground.
     return (Ground[land].Get_Speed(speed) != fixed::_0_1);
 }
+
+int CellClass::Ore_Adjust(BOOL randomize)
+{
+    static int _adj[] = { 0, 1, 3, 4, 6, 7, 8, 10, 11 };
+    static int _adjgem[] = { 0, 0, 0, 1, 1, 1, 2, 2, 2 };
+
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    if (Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(Overlay).Get_Land() == LAND_ORE) {
+        int value = 0;
+        int adjustment = 0;
+        bool is_gems = false;
+
+        if (randomize) {
+            switch (Overlay) {
+                case OVERLAY_GOLD_01:
+                case OVERLAY_GOLD_02:
+                case OVERLAY_GOLD_03:
+                case OVERLAY_GOLD_04: // Fallthrough
+                    is_gems = false;
+                    value = Rule.Get_Gold_Value();
+                    Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04));
+                    break;
+
+                case OVERLAY_GEM_01:
+                case OVERLAY_GEM_02:
+                case OVERLAY_GEM_03:
+                case OVERLAY_GEM_04: // Fallthrough
+                    is_gems = true;
+                    value = Rule.Get_Gem_Value() * 4;
+                    Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GEM_01, OVERLAY_GEM_04));
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        int frame = OverlayFrame;
+
+        for (FacingType facing = FACING_NORTH; facing < FACING_COUNT; ++facing) {
+            CellClass const &cell = Adjacent_Cell(facing);
+
+            if (cell.Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(cell.Overlay).Get_Land() == LAND_ORE) {
+                ++adjustment;
+            }
+        }
+
+        DEBUG_ASSERT(adjustment < ARRAY_SIZE(_adj));
+        DEBUG_ASSERT(adjustment < ARRAY_SIZE(_adjgem));
+
+        if (is_gems) {
+            OverlayFrame = Max(2, _adjgem[adjustment]);
+        } else {
+            OverlayFrame = _adj[adjustment];
+        }
+
+        // This is done in edwin but not final game?
+        //if (OverlayFrame != frame) {
+        //    Redraw_Objects();
+        //}
+
+        return value * (OverlayFrame + 1);
+    }
+
+    return 0;
+}
