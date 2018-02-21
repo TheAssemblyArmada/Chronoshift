@@ -67,6 +67,9 @@ public:
     BOOL Ore_Grows() { return OreGrows; }
     BOOL Ore_Spreads() { return OreSpreads; }
     fixed Ore_Growth_Rate() { return GrowthRate; }
+    int Get_Gap_Radius() { return GapRadius; }
+    int Get_Gold_Value() { return GoldValue; }
+    int Get_Gem_Value() { return GemValue; }
 
 private:
     fixed TurboBoost;
