@@ -257,23 +257,42 @@ void __cdecl Buffer_Remap(GraphicViewPortClass &vp, int x, int y, int w, int h, 
         return;
     }
 
-    if ((x >= vp.Get_Width()) || (y >= vp.Get_Height()) || (x + w < 0) || (y + h < 0)) {
+    int xstart = x;
+    int ystart = y;
+    int xend = x + w - 1;
+    int yend = y + h - 1;
+
+    int xoffset = 0;
+    int yoffset = 0;
+
+    // If we aren't drawing within the viewport, return
+    if (xstart >= vp.Get_Width() || ystart >= vp.Get_Height() || xend < 0 || yend < 0) {
         return;
     }
 
-    uint8_t *offset = static_cast<uint8_t *>(vp.Get_Offset());
+    // Clipping
+    if (xstart < 0) {
+        xoffset = -xstart;
+        xstart = 0;
+    }
 
-    x = Max(0, x);
-    y = Max(0, y);
-    w = x + w >= vp.Get_Width() - 1 ? vp.Get_Width() - x - 1 : w;
-    h = y + h > vp.Get_Height() - 1 ? vp.Get_Height() - y - 1 : h;
+    if (ystart < 0) {
+        yoffset += h * (-ystart);
+        ystart = 0;
+    }
 
-    int pitch = vp.Get_Full_Pitch();
+    xend = Min(xend, (int)vp.Get_Width() - 1);
+    yend = Min(yend, (int)vp.Get_Height() - 1);
 
-    offset += y * pitch + x;
+    // Setup parameters for blit
+    int pitch = vp.Get_Pitch() + vp.Get_Width() + vp.Get_XAdd();
+    uint8_t *offset = y * pitch + x + static_cast<uint8_t *>(vp.Get_Offset());
+    int lines = yend - ystart + 1;
+    int blit_width = xend - xstart + 1;
 
-    while (h-- != 0) {
-        for (int i = 0; i < w; ++i) {
+    // remap blit
+    while (lines--) {
+        for (int i = 0; i < blit_width; ++i) {
             offset[i] = fading_table[offset[i]];
         }
 
