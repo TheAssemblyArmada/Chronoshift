@@ -25,6 +25,7 @@
 #include "scenario.h"
 #include "session.h"
 #include "target.h"
+#include "tileset.h"
 
 // TODO this is require for some none virtual calls to functions higher in the stack.
 #include "iomap.h"
@@ -101,19 +102,30 @@ MapClass::MapClass() :
 {
 }
 
+/**
+ * @brief One time class initialisation.
+ *
+ * 0x004FE310
+ */
 void MapClass::One_Time()
 {
     GameScreenClass::One_Time();
     XSize = MAP_MAX_WIDTH;
     YSize = MAP_MAX_HEIGHT;
-    TotalSize = (YSize * XSize);
+    TotalSize = YSize * XSize;
     Alloc_Cells();
 
+    // Placement new init the crates array.
     for (int i = 0; i < MAP_MAX_CRATES; ++i) {
         new(&Crates[i]) CrateClass;
     }
 }
 
+/**
+ * @brief Clear the game state from the class.
+ *
+ * 0x004FE344
+ */
 void MapClass::Init_Clear()
 {
     GameScreenClass::Init_Clear();
@@ -125,6 +137,11 @@ void MapClass::Init_Clear()
     OreSpreadExcess = 0;
 }
 
+/**
+ * @brief Allocate the CellClass vector.
+ *
+ * 0x004FE3B0
+ */
 void MapClass::Alloc_Cells()
 {
     // Clear all cells in the vector array, reconstruct the vector and then resize to total cell count.
@@ -133,12 +150,22 @@ void MapClass::Alloc_Cells()
     Array.Resize(TotalSize);
 }
 
+/**
+ * @brief Free the CellClass vector.
+ *
+ * 0x004FE3DC
+ */
 void MapClass::Free_Cells()
 {
     // Clear all cells in the vector.
     Array.Clear();
 }
 
+/**
+ * @brief Reinitialise the CellClass array with default constructor.
+ *
+ * 0x004FE3EC
+ */
 void MapClass::Init_Cells()
 {
     // Reset the total cell count
@@ -150,6 +177,11 @@ void MapClass::Init_Cells()
     }
 }
 
+/**
+ * @brief Performs a map logic tick for crate and ore growth handling.
+ *
+ * 0x004FEE94
+ */
 void MapClass::Logic_AI()
 {
     if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.MPlayer_Goodies_Allowed()) {
@@ -224,6 +256,11 @@ void MapClass::Logic_AI()
     }
 }
 
+/**
+ * @brief Sets the maps playable dimensions.
+ *
+ * 0x004FE420
+ */
 void MapClass::Set_Map_Dimensions(int x, int y, int w, int h)
 {
     MapCellX = x;
@@ -232,9 +269,15 @@ void MapClass::Set_Map_Dimensions(int x, int y, int w, int h)
     MapCellHeight = h;
 }
 
+/**
+ * @brief Generates a crate at a random location.
+ *
+ * 0x004FF218
+ */
 BOOL MapClass::Place_Random_Crate()
 {
-    for ( int i = 0; i < ARRAY_SIZE(Crates); ++i ) {
+    for (int i = 0; i < ARRAY_SIZE(Crates); ++i) {
+        // Check if current crate cell is invalid and thus instance can be used for new crate.
         if (Crates[i].Get_Cell() == -1) {
             // Try to place crate up to 1000 times, return result of final attempt if all others fail.
             for (int i = 0; i < 1000; ++i) {
@@ -250,11 +293,51 @@ BOOL MapClass::Place_Random_Crate()
     return false;
 }
 
+/**
+ * @brief Remove a crate from a given location.
+ *
+ * 0x004FF2A0
+ */
+BOOL MapClass::Remove_Crate(int16_t cellnum)
+{
+    if (Session.Game_To_Play() != GAME_CAMPAIGN) {
+        for (int index = 0; index < ARRAY_SIZE(Crates); ++index) {
+            if (Crates[index].Get_Cell() != -1 && Crates[index].Get_Cell() == cellnum) {
+                return Crates[index].Remove_It();
+            }
+        }
+    }
+
+    CellClass &cell = Array[cellnum];
+
+    if (cell.Get_Overlay() != OVERLAY_NONE) {
+        if (OverlayTypeClass::As_Reference(cell.Get_Overlay()).Is_Crate()) {
+            cell.Set_Overlay(OVERLAY_NONE);
+            cell.Set_Overlay_Frame(-1);
+
+            return true;
+        }
+    }
+
+    return false;
+
+}
+
+/**
+ * @brief Get a random location within the playable map.
+ *
+ * 0x005008A4
+ */
 int16_t MapClass::Pick_Random_Location() const
 {
     return Cell_From_XY(MapCellX + Scen.Get_Random_Value(0, MapCellWidth - 1), MapCellY + Scen.Get_Random_Value(0, MapCellHeight - 1));
 }
 
+/**
+ * @brief Check if a location is within the playable map.
+ *
+ * 0x004FE8AC
+ */
 BOOL MapClass::In_Radar(int16_t cellnum) const
 {
     if (cellnum <= MAP_MAX_AREA) {
@@ -271,6 +354,11 @@ BOOL MapClass::In_Radar(int16_t cellnum) const
     return false;
 }
 
+/**
+ * @brief Calculates sight from a given cell.
+ *
+ * 0x004FE438
+ */
 void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4)
 {
     // TODO requires RadarClass
@@ -322,6 +410,11 @@ void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a
 #endif
 }
 
+/**
+ * @brief Shroud a given radius around a cell.
+ *
+ * 0x004FE588
+ */
 void MapClass::Shroud_From(int16_t cellnum, int radius)
 {
     // TODO requires RadarClass
@@ -358,6 +451,11 @@ void MapClass::Shroud_From(int16_t cellnum, int radius)
 #endif
 }
 
+/**
+ * @brief Radar jam a given radius around a cell.
+ *
+ * 0x004FE68C
+ */
 void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires HouseClass, RadarClass
@@ -397,6 +495,11 @@ void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
 #endif
 }
 
+/**
+ * @brief Radar jam a given radius around a cell.
+ *
+ * 0x004FE7C8
+ */
 void MapClass::UnJam_From(int16_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires RadarClass
@@ -432,6 +535,11 @@ void MapClass::UnJam_From(int16_t cellnum, int radius, HouseClass *house)
 #endif
 }
 
+/**
+ * @brief Places down a unit from the cell after performing movement logic...  I think.
+ *
+ * 0x004FE918
+ */
 void MapClass::Place_Down(int16_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -471,6 +579,11 @@ void MapClass::Place_Down(int16_t cellnum, ObjectClass *object)
     }
 }
 
+/**
+ * @brief Picks up a unit from the cell to perform movement logic...  I think.
+ *
+ * 0x004FEA28
+ */
 void MapClass::Pick_Up(int16_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -510,6 +623,11 @@ void MapClass::Pick_Up(int16_t cellnum, ObjectClass *object)
     }
 }
 
+/**
+ * @brief Places down a unit from the cell after performing movement logic...  I think.
+ *
+ * 0x004FEB38
+ */
 void MapClass::Overlap_Down(int16_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -519,7 +637,7 @@ void MapClass::Overlap_Down(int16_t cellnum, ObjectClass *object)
 
     if (object != nullptr) {
         if (object->Class_Of().Get_Bit128() && object->In_Which_Layer() == LAYER_GROUND) {
-            List_Copy(tmp_list, object->Occupy_List(), ARRAY_SIZE(tmp_list));
+            List_Copy(tmp_list, object->Overlap_List(), ARRAY_SIZE(tmp_list));
             int16_t *list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
@@ -535,6 +653,11 @@ void MapClass::Overlap_Down(int16_t cellnum, ObjectClass *object)
     }
 }
 
+/**
+ * @brief Picks up a unit from the cell to perform movement logic...  I think.
+ *
+ * 0x004FEBD8
+ */
 void MapClass::Overlap_Up(int16_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -544,7 +667,7 @@ void MapClass::Overlap_Up(int16_t cellnum, ObjectClass *object)
 
     if (object != nullptr) {
         if (object->Class_Of().Get_Bit128() && object->In_Which_Layer() == LAYER_GROUND) {
-            List_Copy(tmp_list, object->Occupy_List(), ARRAY_SIZE(tmp_list));
+            List_Copy(tmp_list, object->Overlap_List(), ARRAY_SIZE(tmp_list));
             int16_t *list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
@@ -560,7 +683,12 @@ void MapClass::Overlap_Up(int16_t cellnum, ObjectClass *object)
     }
 }
 
-int MapClass::Overpass(BOOL randomize)
+/**
+ * @brief Performs randomized adjustments to ore across the playable map area.
+ *
+ * 0x004FEC78
+ */
+int MapClass::Overpass()
 {
     int retval = 0;
 
@@ -569,7 +697,7 @@ int MapClass::Overpass(BOOL randomize)
             for (int x = 0; x < MapCellWidth; ++x) {
                 int16_t cellnum = Cell_From_XY(MapCellX + x, MapCellY + y);
                 CellClass &cell = Array[cellnum];
-                retval += cell.Ore_Adjust(randomize);
+                retval += cell.Ore_Adjust(true);
                 cell.Recalc_Attributes();
             }
         }
@@ -578,6 +706,58 @@ int MapClass::Overpass(BOOL randomize)
     return retval;
 }
 
+/**
+ * @brief Some calculation relating to where within the area of the map a given is positioned.
+ *
+ * 0x004FF168
+ */
+int MapClass::Cell_Region(int16_t cellnum)
+{
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+
+    return 34 * (Cell_Get_Y(cellnum) / 4 + 1) + (Cell_Get_Y(cellnum) / 4 + 1);
+}
+
+/**
+ * @brief Calculates how dangerous a given cells is?
+ *
+ * 0x004FF1BC
+ */
+int MapClass::Cell_Threat(int16_t cellnum, HousesType house)
+{
+    // TODO requires HouseClass
+#ifndef RAPP_STANDALONE
+    int(*func)(const MapClass*, int16_t, HousesType) = reinterpret_cast<int(*)(const MapClass*, int16_t, HousesType)>(0x004FF1BC);
+    return func(this, cellnum, house);
+#elif 0
+    DEBUG_ASSERT(this != nullptr);
+
+    RegionClass *house_regions = HouseClass::As_Pointer(house)->Regions;
+    int region = Cell_Region(Array[cellnum].Cell_Number());
+
+    if (house_regions != nullptr) {
+        int retval = house_regions[region].field_0;
+
+        if (retval == 0) {
+            if (Array[cellnum].Get_Bit128()) {
+                return 1;
+            }
+        }
+
+        return retval;
+    }
+
+    return 0;
+#else
+    return 0;
+#endif
+}
+
+/**
+ * @brief Recalculates contiguous reachable zones for each movement type.
+ *
+ * 0x004FF690
+ */
 int MapClass::Zone_Reset(int zones)
 {
     // Loop through and reset every cells movement zones to 0.
@@ -603,7 +783,8 @@ int MapClass::Zone_Reset(int zones)
 
     int tmp;
 
-    // Calculate zones on the map that are all suitable for a given movement zone. Zones are contiguous areas on the map that can be reached using a given movement zone.
+    // Calculate zones on the map that are all suitable for a given movement zone. Zones are contiguous areas on the map that
+    // can be reached using a given movement zone.
     if (zones & (1 << MZONE_NORMAL)) {
         tmp = 1;
 
@@ -648,6 +829,11 @@ int MapClass::Zone_Reset(int zones)
     return 0;
 }
 
+/**
+ * @brief Calculates a contiguous reachable zones span within the map.
+ *
+ * 0x004FF7D8
+ */
 int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
 {
     int16_t coord_x = Cell_Get_X(cell);
@@ -657,19 +843,18 @@ int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
     SpeedType speed = (mzone == MZONE_AMPHIBIOUS_DESTROYER ? SPEED_FLOAT : SPEED_TRACK);
 
     // Check the coords are within the visible part of the map
-    if (coord_y >= MapCellY && coord_y < (MapCellHeight + MapCellY) &&
-        coord_x >= MapCellX && coord_x < (MapCellWidth + MapCellX)) {
-
+    if (coord_y >= MapCellY && coord_y < (MapCellHeight + MapCellY) && coord_x >= MapCellX
+        && coord_x < (MapCellWidth + MapCellX)) {
         int retval = 0;
         int left_pos;
 
-        // Scan backwards from coord to edge of map until we find a cell that is already marked for this zone or can't be moved to and record the pos.
+        // Scan backwards from coord to edge of map until we find a cell that is already marked for this zone or can't be
+        // moved to and record the pos.
         for (left_pos = coord_x; left_pos >= MapCellX; --left_pos) {
             CellClass &cell = Array[Cell_From_XY(left_pos, coord_y)];
 
             // Check if clear to move, ignoring units, buildings and infantry.
-            if (cell.Get_Zone(mzone) != 0 ||
-                !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
+            if (cell.Get_Zone(mzone) != 0 || !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
                 if (left_pos == coord_x) {
                     return 0;
                 }
@@ -719,6 +904,11 @@ int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
     return 0;
 }
 
+/**
+ * @brief Something relating to near by reachable cells?
+ *
+ * 0x004FFAC4
+ */
 int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZoneType mzone) const
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -813,6 +1003,11 @@ int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZ
     return 0;
 }
 
+/**
+ * @brief Works out if a cell is within a houses zone and returns the zone type?
+ *
+ * 0x004FFEAC
+ */
 BOOL MapClass::Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) const
 {
     // TODO requires HouseClass
@@ -843,6 +1038,11 @@ BOOL MapClass::Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) c
 #endif
 }
 
+/**
+ * @brief Destroys a bridge at a given location.
+ *
+ * 0x004FFF1C
+ */
 int MapClass::Destroy_Bridge_At(int16_t cellnum)
 {
     // TODO Needs TemplateClass, AnimClass
@@ -854,6 +1054,11 @@ int MapClass::Destroy_Bridge_At(int16_t cellnum)
 #endif
 }
 
+/**
+ * @brief Removes a trigger?
+ *
+ * 0x0050078C
+ */
 void MapClass::Detach(int32_t target, int a2)
 {
     // TODO Requires TriggerClass
@@ -862,8 +1067,8 @@ void MapClass::Detach(int32_t target, int a2)
     func(this, target, a2);
 #elif 0
     if (Target_Get_RTTI(target) == RTTI_TRIGGER) {
-        for (int index = 0; index < MapTriggers.Count(); ++index) {
-            TriggerClass *trig = MapTriggers[index];
+        for (int i = 0; i < MapTriggers.Count(); ++i) {
+            TriggerClass *trig = MapTriggers[i];
             DEBUG_ASSERT(trig != nullptr);
 
             if (As_Trigger(target) == trig) {
@@ -884,6 +1089,11 @@ void MapClass::Detach(int32_t target, int a2)
 #endif
 }
 
+/**
+ * @brief Gets a count of how many intact bridge cells there are on the map.
+ *
+ * 0x0050083C
+ */
 int MapClass::Intact_Bridge_Count() const
 {
     int count = 0;
@@ -912,6 +1122,11 @@ int MapClass::Intact_Bridge_Count() const
     return count;
 }
 
+/**
+ * @brief Unsuprisingly, this shrouds the map.
+ *
+ * 0x00500908
+ */
 void MapClass::Shroud_The_Map()
 {
     // TODO Requires DisplayClass, TechnoClass
@@ -937,9 +1152,9 @@ void MapClass::Shroud_The_Map()
         }
     }
 
-    for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {    
-        if (DisplayClass::Layers[LAYER_GROUND][index]->Is_Techno()) {
-            TechnoClass *tptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][index]);
+    for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {    
+        if (DisplayClass::Layers[LAYER_GROUND][i]->Is_Techno()) {
+            TechnoClass *tptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][i]);
 
             if (tptr->OwnerHouse == house) {
                 tptr->Look();
@@ -951,6 +1166,11 @@ void MapClass::Shroud_The_Map()
 #endif
 }
 
+/**
+ * @brief Write the map data out to the provided pipe in NewINIFormat=3 format.
+ *
+ * 0x004FECFC
+ */
 int MapClass::Write_Binary(Pipe &pipe)
 {
     LCWPipe lcw(PIPE_COMPRESS);
@@ -974,6 +1194,11 @@ int MapClass::Write_Binary(Pipe &pipe)
     return total;
 }
 
+/**
+ * @brief Reads the map data out of the provided straw, handles all known C&C, RA and SS formats.
+ *
+ * 0x004FED90
+ */
 BOOL MapClass::Read_Binary(Straw &straw)
 {
     LCWStraw lcw(STRAW_UNCOMPRESS);
@@ -990,7 +1215,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
                 cell.Recalc_Attributes();
             }
 
-            // Handle Sole Survivor maps.
+            // Handle Sole Survivor maps. Only cells other than TEMPLATE_NONE are saved in the binary.
             if (g_mapBinaryVersion != 0) {
                 // Format is 4 bytes per cell, X pos, Y pos, template type, icon
                 uint8_t coord[2];
@@ -1086,4 +1311,143 @@ BOOL MapClass::Read_Binary(Straw &straw)
     }
 
     return true;
+}
+
+/**
+ * @brief Performs some validation on the map data.
+ *
+ * 0x004FF368
+ */
+BOOL MapClass::Validate()
+{
+    // Some static pointer in CellClass in the original, not clear what it is for... 
+    // CellClass::BlubCell = &Array[797];
+
+    for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+        CellClass &cell = Array[cellnum];
+
+        if (cell.Get_Template() < TEMPLATE_NONE && cell.Get_Template() >= TEMPLATE_COUNT) {
+            return false;
+        }
+
+        if (cell.Get_Template() != TEMPLATE_NONE) {
+            TemplateTypeClass &temptype = TemplateTypeClass::As_Reference(cell.Get_Template());
+            uint8_t icon = cell.Get_Icon();
+            int icon_count = temptype.Get_Width() * temptype.Get_Height();
+            uint8_t *tile_map = Get_Icon_Set_Map(temptype.Get_Image_Data());
+            if (icon > icon_count || tile_map[icon] == 0xFF) {
+                return false;
+            }
+        }
+
+        if (cell.Get_Overlay() < OVERLAY_NONE || cell.Get_Overlay() >= OVERLAY_COUNT) {
+            return false;
+        }
+
+        if (cell.Get_Smudge() < SMUDGE_NONE || cell.Get_Smudge() >= SMUDGE_COUNT) {
+            return false;
+        }
+
+        if (cell.Get_Land() < LAND_NONE || cell.Get_Land() >= LAND_COUNT) {
+            return false;
+        }
+
+        ObjectClass *objptr = cell.Get_Occupier();
+
+        if (objptr != nullptr) {
+            // These two seem to be making assumptions about values a pointer can hold to check if they are currently Coded.
+            // Not sure how valid these assumptions will be cross platform.
+            if (uintptr_t(objptr) & 0xFF000000) {
+                return false;
+            }
+
+            if (uintptr_t(objptr->Get_Next()) & 0xFF000000) {
+                return false;
+            }
+
+            if (objptr->In_Limbo()) {
+                return false;
+            }
+
+            if (Coord_To_Cell(objptr->Get_Coord()) >= MAP_MAX_AREA) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
+            ObjectClass *objptr = cell.Get_Overlapper(i);
+
+            if (objptr != nullptr) {
+                if (uintptr_t(objptr) & 0xFF000000) {
+                    return false;
+                }
+
+                if (uintptr_t(objptr->Get_Next()) & 0xFF000000) {
+                    return false;
+                }
+
+                if (objptr->In_Limbo()) {
+                    return false;
+                }
+
+                if (Coord_To_Cell(objptr->Get_Coord()) >= MAP_MAX_AREA) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @brief Gets the closest object to a given coord.
+ *
+ * 0x004FF554
+ */
+ObjectClass *MapClass::Close_Object(uint32_t coord) const
+{
+    // TODO Requires TechnoClass
+#ifndef RAPP_STANDALONE
+    ObjectClass *(*func)(const MapClass*, uint32_t) = reinterpret_cast<ObjectClass *(*)(const MapClass*, uint32_t)>(0x004FF554);
+    return func(this, coord);
+#elif 0
+    static const int _offsets[9] = { 0, -1, 1, -128, 128, 127, 129, -127, -129 };
+
+    ObjectClass *retval = nullptr;
+    int nearest = 0;
+
+    for (int i = 0; i < ARRAY_SIZE(_offsets); ++i) {
+        int16_t offset_cell = _offsets[i] + Coord_To_Cell(coord);
+
+        if (In_Radar(offset_cell)) {
+            const CellClass &cell = Array[offset_cell];
+
+            for (ObjectClass *obj = cell.Get_Occupier(); obj != nullptr; obj = obj->Next) {
+                if (!obj->Is_Techno() || reinterpret_cast<TechnoClass *>(obj)->PlayerOwned || reinterpret_cast<TechnoClass *>(obj)->Is_Cloaked()) {
+                    int distance;
+
+                    if (obj->What_Am_I() == RTTI_BUILDING) {
+                        distance = Distance(coord, Cell_To_Coord(offset_cell));
+
+                        if (distance > 181) {
+                            distance = -1;
+                        }
+                    } else {
+                        distance = Distance(coord, obj->Center_Coord());
+                    }
+
+                    if (distance >= 0 && (retval == nullptr || distance < nearest)) {
+                        nearest = distance;
+                        retval = obj;
+                    }
+                }
+            }
+        }
+    }
+
+    return retval;
+#else
+    return nullptr;
+#endif
 }

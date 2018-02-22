@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "tileset.h"
+#include "endiantype.h"
 
 static int IconEntry;
 static void *IconData;
@@ -29,21 +30,21 @@ static int IconCount;
 void __cdecl Init_Stamps(IconControlType *iconset)
 {
     if (iconset && LastIconset != iconset) {
-        IconCount = iconset->count;
-        IconWidth = iconset->width;
-        IconHeight = iconset->height;
+        IconCount = le16toh(iconset->count);
+        IconWidth = le16toh(iconset->width);
+        IconHeight = le16toh(iconset->height);
         LastIconset = iconset;
         IconSize = IconWidth * IconHeight;
 
         // TD and RA tileset headers are slightly different, so check a constant that only exists in one type.
-        if (iconset->td.icons == TD_TILESET_CHECK) {
-            MapPtr = reinterpret_cast<uint8_t*>(iconset) + iconset->td.map;
-            StampPtr = reinterpret_cast<uint8_t*>(iconset) + iconset->td.icons;
-            TransFlagPtr = reinterpret_cast<uint8_t*>(iconset) + iconset->td.trans_flag;
+        if (le32toh(iconset->td.icons) == TD_TILESET_CHECK) {
+            MapPtr = reinterpret_cast<uint8_t*>(iconset) + le32toh(iconset->td.map);
+            StampPtr = reinterpret_cast<uint8_t*>(iconset) + le32toh(iconset->td.icons);
+            TransFlagPtr = reinterpret_cast<uint8_t*>(iconset) + le32toh(iconset->td.trans_flag);
         } else {
-            MapPtr = reinterpret_cast<uint8_t*>(iconset) + iconset->ra.map;
-            StampPtr = reinterpret_cast<uint8_t*>(iconset) + iconset->ra.icons;
-            TransFlagPtr = reinterpret_cast<uint8_t*>(iconset) + iconset->ra.trans_flag;
+            MapPtr = reinterpret_cast<uint8_t*>(iconset) + le32toh(iconset->ra.map);
+            StampPtr = reinterpret_cast<uint8_t*>(iconset) + le32toh(iconset->ra.icons);
+            TransFlagPtr = reinterpret_cast<uint8_t*>(iconset) + le32toh(iconset->ra.trans_flag);
         }
     }
 }
@@ -194,4 +195,17 @@ void __cdecl Buffer_Draw_Stamp_Clip(GraphicViewPortClass &viewport, IconControlT
             }
         }
     }
+}
+
+uint8_t *Get_Icon_Set_Map(void *temp)
+{
+    if (temp != nullptr) {
+        if (le32toh(static_cast<IconControlType*>(temp)->td.icons) == TD_TILESET_CHECK) {
+            return static_cast<uint8_t *>(temp) + le32toh(static_cast<IconControlType*>(temp)->td.icons);
+        } else {
+            return static_cast<uint8_t *>(temp) + le32toh(static_cast<IconControlType*>(temp)->ra.icons);
+        }
+    }
+
+    return nullptr;
 }

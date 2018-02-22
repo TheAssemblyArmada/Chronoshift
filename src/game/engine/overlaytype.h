@@ -105,6 +105,7 @@ public:
     int Get_Damage_Levels() { return DamageLevels; }
     int Get_Overlay_Strength() { return OverlayStrength; }
     BOOL Is_Wall() { return Wall; }
+    BOOL Is_Crate() { return Crate; }
 
     static void Init_Heap();
     static void Init(TheaterType theater);

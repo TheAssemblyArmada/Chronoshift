@@ -106,6 +106,7 @@ public:
     virtual void Move(FacingType facing);
 
     SmartPtr<ObjectClass> &Get_Next() { return Next; }
+    BOOL In_Limbo() const { return InLimbo; }
 
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);

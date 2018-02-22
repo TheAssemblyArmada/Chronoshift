@@ -1179,6 +1179,11 @@ BOOL CellClass::Is_Clear_To_Move(
     return (Ground[land].Get_Speed(speed) != fixed::_0_1);
 }
 
+/**
+ * @brief Adjusts the amount of Ore in a cell.
+ *
+ * 0x004A02BC
+ */
 int CellClass::Ore_Adjust(BOOL randomize)
 {
     static int _adj[] = { 0, 1, 3, 4, 6, 7, 8, 10, 11 };

@@ -48,6 +48,7 @@ public:
     virtual void Decode_Pointers() override {}
 
     BOOL Place_Random_Crate();
+    BOOL Remove_Crate(int16_t cellnum);
     int16_t Pick_Random_Location() const;
     BOOL In_Radar(int16_t cellnum) const;
     void Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4);
@@ -58,7 +59,9 @@ public:
     void Pick_Up(int16_t cellnum, ObjectClass *object);
     void Overlap_Down(int16_t cellnum, ObjectClass *object);
     void Overlap_Up(int16_t cellnum, ObjectClass *object);
-    int Overpass(BOOL randomize);
+    int Overpass();
+    int32_t Cell_Region(int16_t cellnum);
+    int Cell_Threat(int16_t cellnum, HousesType house);
     int Zone_Reset(int zones);
     int Zone_Span(int16_t cell, int zone, MZoneType mzone);
     int16_t Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZoneType mzone) const;
@@ -69,6 +72,8 @@ public:
     void Shroud_The_Map();
     int Write_Binary(Pipe &pipe);
     BOOL Read_Binary(Straw &straw);
+    BOOL Validate();
+    ObjectClass *Close_Object(uint32_t coord) const;
 
     int16_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
 
@@ -92,8 +97,8 @@ protected:
     int16_t OreLogicPos;
 
 private:
-    static const int MapClass::RadiusOffset[];
-    static const int MapClass::RadiusCount[];
+    static const int RadiusOffset[];
+    static const int RadiusCount[];
 };
 
 #endif // MAP_H

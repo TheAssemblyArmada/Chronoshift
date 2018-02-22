@@ -35,6 +35,8 @@ class VesselClass;
 class AircraftClass;
 class TerrainClass;
 
+#define OVERLAPPER_COUNT 6
+
 enum CellOccupantEnum
 {
     OCCUPANT_NONE = 0x0,
@@ -111,19 +113,29 @@ public:
     BOOL Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const;
     int Ore_Adjust(BOOL randomize);
 
+    int Cell_Number() const { return CellNumber; }
     int8_t Get_Zone(MZoneType mzone) { return Zones[mzone]; }
     void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
-
     BOOL Get_Bit4() const { return Bit4; }
     void Set_Bit4(BOOL bit) { Bit4 = bit; }
     BOOL Get_Bit8() const { return Bit8; }
     void Set_Bit8(BOOL bit) { Bit8 = bit; }
+    BOOL Get_Bit128() { return Bit128; }
     TemplateType Get_Template() const { return Template; }
     void Set_Template(TemplateType temp) { Template = temp; }
     uint8_t Get_Icon() const { return Icon; }
     void Set_Icon(uint8_t icon) { Icon = icon; }
+    OverlayType Get_Overlay() const { return Overlay; }
+    void Set_Overlay(OverlayType overlay) { Overlay = overlay; }
+    int8_t Get_Overlay_Frame() const { return OverlayFrame; }
+    void Set_Overlay_Frame(int8_t frame) { OverlayFrame = frame; }
+    SmudgeType Get_Smudge() const { return Smudge; }
+    void Set_Smudge(SmudgeType smudge) { Smudge = smudge; }
     HousesType Owner() const { return OwnerHouse; }
-    int Cell_Number() const { return CellNumber; }
+    ObjectClass *Get_Overlapper(int index) { return Overlapper[index]; }
+    ObjectClass *Get_Occupier() const { return OccupierPtr; }
+    LandType Get_Land() { return Land; }
+    void Set_Land(LandType land) { Land = land; }
 
 private:
     int16_t CellNumber;
@@ -141,7 +153,7 @@ private:
             bool Bit16 : 1; // 16	//Could be HasWaypoint?  HasCellTag?
             bool Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
             bool HasFlag : 1; // 64
-            bool Bit128 : 1; // 128 // HasFlag in C&C
+            bool Bit128 : 1; // 128 // HasFlag in C&C relates to Region here.
         };
         int Bitfield;
     };
@@ -168,7 +180,7 @@ private:
     HousesType OwnerHouse;
     HousesType field_18;
     ObjectClass *OccupierPtr;
-    ObjectClass *Overlapper[6];
+    ObjectClass *Overlapper[OVERLAPPER_COUNT];
     uint32_t OccupantBit;
     LandType Land;
 };

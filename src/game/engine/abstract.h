@@ -47,6 +47,7 @@ public:
     int Get_Heap_ID() const { return HeapID; }
     BOOL Is_Active() const { return IsActive; }
     RTTIType What_Am_I() const { return RTTI; }
+    uint32_t Get_Coord() const { return Coord; }
 
 protected:
     RTTIType RTTI; // ID for this object type, set from derived type constructors.
