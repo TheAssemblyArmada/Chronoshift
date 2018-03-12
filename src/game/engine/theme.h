@@ -25,11 +25,14 @@
 
 enum ThemeType
 {
-    THEME_STOP = -3, // Think these are play modes.
+    THEME_STOP = -3,
     THEME_NEXT = -2,
+
     THEME_NONE = -1,
+
     THEME_FIRST = 0,
-    THEME_BIG_FOOT = 0, // Themes available in playlist
+
+    THEME_BIG_FOOT = 0,
     THEME_CRUSH = 1,
     THEME_FAC1 = 2,
     THEME_FAC2 = 3,
@@ -48,11 +51,12 @@ enum ThemeType
     THEME_TERMINAT = 16,
     THEME_TWIN = 17,
     THEME_VECTOR1A = 18,
-    THEME_MAP = 19, // Not available in playlist
+    THEME_MAP = 19,
     THEME_SCORE = 20,
     THEME_INTRO = 21,
     THEME_CREDITS = 22,
-    THEME_2ND_HAND = 23, // Expansion themes
+
+    THEME_2ND_HAND = 23,
     THEME_ARAZOID = 24,
     THEME_BACKSTAB = 25,
     THEME_CHAOS2 = 26,
@@ -68,7 +72,10 @@ enum ThemeType
     THEME_SEARCH = 36,
     THEME_TRACTION = 37,
     THEME_WASTELAND = 38,
-    THEME_COUNT
+
+    THEME_LAST = 38,
+
+    THEME_COUNT = 39
 };
 
 DEFINE_ENUMERATION_OPERATORS(ThemeType);
@@ -91,24 +98,38 @@ private:
 public:
     ThemeClass() : ThemeHandle(-1), CurrentTheme(THEME_NONE), QueuedTheme(THEME_NONE) {}
     ~ThemeClass();
+
     void AI();
+
     ThemeType Next_Song(ThemeType theme) const;
     void Queue_Song(ThemeType theme);
     int Play_Song(ThemeType theme);
+
     int Track_Length(ThemeType theme) const;
+
     void Stop();
     void Suspend();
+
     BOOL Still_Playing() const;
     BOOL Is_Allowed(ThemeType theme) const;
+
     const char *Base_Name(ThemeType theme) const;
     const char *Full_Name(ThemeType theme) const;
+
     ThemeType From_Name(const char *name) const;
+
     void Set_Theme_Data(ThemeType theme, int scenario, int side);
+
     void Fade_Out() { Queue_Song(THEME_NONE); }
-    ThemeType Get_Random_Theme() const { return ThemeType(g_nonCriticalRandom(THEME_BIG_FOOT, THEME_WASTELAND)); }
+    void Stop_Playing_Song() { Queue_Song(THEME_STOP); }
+    void Play_Next_Song() { Queue_Song(THEME_NEXT); }
+
+    ThemeType Get_Random_Theme() const { return ThemeType(g_nonCriticalRandom(THEME_FIRST, THEME_LAST)); }
     ThemeType What_Is_Playing() { return CurrentTheme; }
     ThemeType What_Is_Queued() { return QueuedTheme; }
+
     int Max_Themes() const { return THEME_COUNT; }
+
     static void Scan();
     static const char *Theme_File_Name(ThemeType theme);
 

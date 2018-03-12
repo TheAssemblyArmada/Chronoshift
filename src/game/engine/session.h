@@ -28,6 +28,8 @@
 #include "vector.h"
 #include "version.h" // Current place for CommProtocolEnum but will likely move.
 
+#define     MAX_PROCESSING_TICKS     1000
+
 enum GameEnum
 {
     GAME_NONE = -1,
@@ -39,7 +41,7 @@ enum GameEnum
     GAME_SKIRMISH,
     GAME_6,
     GAME_7,
-    GAME_SOLE_SURVIVOR, // TODO, add SS code to allow RA to have a Sole Survivor mode
+    //GAME_SOLE_SURVIVOR, // TODO, add SS code to allow RA to have a Sole Survivor mode
     GAME_COUNT
 };
 

@@ -35,6 +35,7 @@ set(GAMEENGINE_INCLUDES
     game
     game/common
     game/crypto
+    game/debug
     game/engine
     game/gfx
     game/io
@@ -47,7 +48,6 @@ set(GAMEENGINE_INCLUDES
 set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 
 set(GAMEENGINE_SRC
-    game/gamedebug.cpp
     game/startup.cpp
     game/common/base64.cpp
     game/common/bitarray.cpp
@@ -74,6 +74,7 @@ set(GAMEENGINE_SRC
     game/crypto/pk.cpp
     game/crypto/mpmath.cpp
     game/crypto/sha.cpp
+    game/debug/gamedebug.cpp
     game/engine/abstract.cpp
     game/engine/action.cpp
     game/engine/armor.cpp
