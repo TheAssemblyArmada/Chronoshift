@@ -152,12 +152,29 @@ if(GIT_FOUND)
         ERROR_QUIET
     )
     add_definitions(-DRAPP_COMMIT_COUNT=${RAPP_COMMIT_COUNT})
+    
+    # Define commit date and time. Make builds more reproducible than using __DATE__ and __TIME__
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} log -1 --date=iso --pretty=format:%cd
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE RAPP_DATE_AND_TIME
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+    string(REPLACE " " ";" RAPP_DATE_AND_TIME ${RAPP_DATE_AND_TIME})
+    list(GET RAPP_DATE_AND_TIME 0 RAPP_DATE)
+    list(GET RAPP_DATE_AND_TIME 1 RAPP_TIME)
+    list(GET RAPP_DATE_AND_TIME 2 RAPP_TZONE)
+    add_definitions(-DRAPP_COMMIT_DATE="${RAPP_DATE}")
+    add_definitions(-DRAPP_COMMIT_TIME="${RAPP_TIME} ${RAPP_TZONE}")
 
 else()
-    add_definitions(-DRAPP_BRANCH="NOGITBRANCH")
-    add_definitions(-DRAPP_COMMIT_SHA1="NOGITHASH")
-    add_definitions(-DRAPP_COMMIT_SHA1_SHORT="NOGITHASH")
+    add_definitions(-DRAPP_BRANCH="netherrealm")
+    add_definitions(-DRAPP_COMMIT_SHA1="DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF")
+    add_definitions(-DRAPP_COMMIT_SHA1_SHORT="DEADBEEF")
     add_definitions(-DRAPP_COMMIT_COUNT=0)
+    add_definitions(-DRAPP_COMMIT_DATE="1955-11-12")
+    add_definitions(-DRAPP_COMMIT_TIME="22:04:00 +0000")
 endif()
 
 add_definitions(-DRAPP_MAJOR=${rapp_VERSION_MAJOR})
