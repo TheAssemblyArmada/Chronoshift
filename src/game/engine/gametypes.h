@@ -20,6 +20,10 @@
 
 #include "always.h"
 
+#define DEF_TICKS_PER_SECOND 15
+#define DEF_TICKS_PER_MINUTE (DEF_TICKS_PER_SECOND * 60)
+#define TICKS_HALF_MINUTE (DEF_TICKS_PER_MINUTE / 2)
+
 typedef uint32_t coord_t;
 typedef int16_t cell_t;
 typedef int32_t target_t;

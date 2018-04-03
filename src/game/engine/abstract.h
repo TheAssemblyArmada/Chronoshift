@@ -48,6 +48,7 @@ public:
     BOOL Is_Active() const { return IsActive; }
     RTTIType What_Am_I() const { return RTTI; }
     uint32_t Get_Coord() const { return Coord; }
+    int Get_Height() const { return Height; }
 
 protected:
     RTTIType RTTI; // ID for this object type, set from derived type constructors.
