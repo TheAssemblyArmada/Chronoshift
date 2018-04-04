@@ -78,6 +78,7 @@ set(GAMEENGINE_SRC
     game/engine/abstract.cpp
     game/engine/abstracttype.cpp
     game/engine/action.cpp
+    game/engine/animtype.cpp
     game/engine/armor.cpp
     game/engine/ccini.cpp
     game/engine/cell.cpp
