@@ -113,6 +113,7 @@ set(GAMEENGINE_SRC
     game/engine/smudgetype.cpp
     game/engine/special.cpp
     game/engine/target.cpp
+    game/engine/technotype.cpp
     game/engine/templatetype.cpp
     game/engine/theater.cpp
     game/engine/theme.cpp
