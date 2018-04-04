@@ -149,6 +149,27 @@ void Hook_Function(uintptr_t in, T out)
 }
 
 /**
+* @brief Replaces a function call in the original binary with a new one at run time.
+*
+* Replaces a function with a different function at run time by patching in an assembly "jump" instruction to jump to the new
+* function. Provided the new function has the same parameters and calling convention as the one that it replaced, it should
+* work without issue so long as it can fulfill the same role.
+*
+* @param in The address of the function call to replace.
+* @param out The address of the function to replace with.
+*/
+template<typename T>
+void Hook_Call(uintptr_t in, T out)
+{
+    static_assert(sizeof(x86_jump) == 5, "Jump struct not expected size.");
+
+    x86_jump cmd;
+    cmd.cmd = 0xE8;
+    cmd.addr = reinterpret_cast<uintptr_t>(out) - in - 5;
+    WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
+}
+
+/**
  * @brief Replaces a member function in the original binary with a new one at run time.
  *
  * Replaces a function with a different member function at run time by patching in an assembly "jump" instruction to jump to
