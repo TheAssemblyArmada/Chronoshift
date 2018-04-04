@@ -278,14 +278,14 @@ int TechnoTypeClass::Repair_Cost() const
 {
     if (What_Am_I() == RTTI_INFANTRYTYPE || What_Am_I() == RTTI_UNITTYPE || What_Am_I() == RTTI_VESSELTYPE
         || What_Am_I() == RTTI_AIRCRAFTTYPE) {
-        return (Raw_Cost() / Strength / Rule.Get_Unit_Repair_Step())
+        return (Raw_Cost() / (Strength / Rule.Get_Unit_Repair_Step()))
             * Rule.Get_Unit_Repair_Percent(); // this code check if the result is greater than 1(.0), if so,
                                               // forces 1, see for TS/RA2 version
                                               // http://dc.strategy-x.com/src2/TechnoTypeClass/GetRepairStepCost.cpp needs
                                               // recoding for use with fixed *see (U)RepairPercent type.
     }
 
-    return (Raw_Cost() / Strength / Rule.Get_Repair_Step())
+    return (Raw_Cost() / (Strength / Rule.Get_Repair_Step()))
         * Rule.Get_Repair_Percent(); // same as above, but this is normal repair percent for buildings.
 }
 
