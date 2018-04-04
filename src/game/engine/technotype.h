@@ -96,7 +96,7 @@ protected:
     bool Explodes; // Does it explode violently when destroyed [i.e., does it do collateral damage] (def = false)?
 #endif
     MZoneType MovementZone;
-    int GuardRange; // Distance to scan for enemies to attack (def = use weapon range)
+    int16_t GuardRange; // Distance to scan for enemies to attack in leptons (def = use weapon range)
     int Passengers; // Number of passengers it may carry (def = 0)
     int Sight; // Sight range, in cells (def=1)
     int Cost; // Cost to build object (in credits) (def = 0)
