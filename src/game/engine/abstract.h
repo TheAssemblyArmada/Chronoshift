@@ -21,9 +21,7 @@
 #include "always.h"
 #include "facing.h"
 #include "gametypes.h"
-#include "language.h"
 #include "rtti.h"
-#include "stringex.h"
 #include "vector.h"
 
 class NoInitClass;
@@ -74,43 +72,6 @@ inline BOOL AbstractClass::Is_Techno()
 {
     return RTTI == RTTI_BUILDING || RTTI == RTTI_UNIT || RTTI == RTTI_INFANTRY || RTTI == RTTI_VESSEL
         || RTTI == RTTI_AIRCRAFT;
-}
-
-class AbstractTypeClass
-{
-public:
-    AbstractTypeClass(RTTIType type, int id = -1, int uiname = TXT_NULL, const char *name = nullptr);
-    AbstractTypeClass(AbstractTypeClass const &that);
-    AbstractTypeClass(NoInitClass const &noinit) {}
-    ~AbstractTypeClass() {}
-
-    virtual uint32_t Coord_Fixup(uint32_t coord) const { return coord; }
-    virtual int Full_Name() const;
-    virtual int Get_Ownable() const { return 0xFFFFF; } // This is a bit for each of the normal houses, pluse 8 multiplayer.
-
-    AbstractTypeClass &operator=(AbstractTypeClass &that);
-
-    int Get_Heap_ID() const { return HeapID; }
-    RTTIType const What_Am_I() const { return RTTI; }
-    const char *Get_Name() { return Name; }
-
-protected:
-    RTTIType RTTI;
-    int HeapID;
-    char Name[24];
-    int UIName;
-};
-
-inline AbstractTypeClass &AbstractTypeClass::operator=(AbstractTypeClass &that)
-{
-    if (this != &that) {
-        RTTI = that.RTTI;
-        HeapID = that.HeapID;
-        UIName = that.UIName;
-        strlcpy(Name, that.Name, sizeof(Name));
-    }
-
-    return *this;
 }
 
 #endif // ABSTRACT_H

@@ -19,8 +19,9 @@
 #define HOUSETYPE_H
 
 #include "always.h"
-#include "abstract.h"
+#include "abstracttype.h"
 #include "fixed.h"
+#include "gametypes.h"
 #include "heap.h"
 #include "noinit.h"
 #include "remap.h"

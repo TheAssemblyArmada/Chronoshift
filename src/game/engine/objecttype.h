@@ -19,8 +19,9 @@
 #define OBJECTTYPE_H
 
 #include "always.h"
-#include "abstract.h"
+#include "abstracttype.h"
 #include "armor.h"
+#include "gametypes.h"
 
 class ObjectClass;
 class BuildingClass;

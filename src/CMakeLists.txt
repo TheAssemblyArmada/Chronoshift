@@ -76,6 +76,7 @@ set(GAMEENGINE_SRC
     game/crypto/sha.cpp
     game/debug/gamedebug.cpp
     game/engine/abstract.cpp
+    game/engine/abstracttype.cpp
     game/engine/action.cpp
     game/engine/armor.cpp
     game/engine/ccini.cpp
