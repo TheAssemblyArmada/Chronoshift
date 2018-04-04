@@ -47,6 +47,8 @@ public:
     virtual void Code_Pointers() override {}
     virtual void Decode_Pointers() override {}
 
+    CellClass &operator[](int index) { return Array[index]; }
+
     BOOL Place_Random_Crate();
     BOOL Remove_Crate(int16_t cellnum);
     int16_t Pick_Random_Location() const;
