@@ -64,12 +64,17 @@ public:
     BOOL Objects(CCINIClass &ini);
     BOOL Difficulty(CCINIClass &ini);
 
-    BOOL Ore_Grows() { return OreGrows; }
-    BOOL Ore_Spreads() { return OreSpreads; }
-    fixed Ore_Growth_Rate() { return GrowthRate; }
-    int Get_Gap_Radius() { return GapRadius; }
-    int Get_Gold_Value() { return GoldValue; }
-    int Get_Gem_Value() { return GemValue; }
+    BOOL Ore_Grows() const { return OreGrows; }
+    BOOL Ore_Spreads() const { return OreSpreads; }
+    fixed Ore_Growth_Rate() const { return GrowthRate; }
+    int Get_Gap_Radius() const { return GapRadius; }
+    int Get_Gold_Value() const { return GoldValue; }
+    int Get_Gem_Value() const { return GemValue; }
+    const fixed &Get_Build_Speed() const { return BuildSpeed; }
+    int Get_Repair_Step() const { return RepairStep; }
+    const fixed &Get_Repair_Percent() const { return RepairPercent; }
+    int Get_Unit_Repair_Step() const { return URepairStep; }
+    const fixed &Get_Unit_Repair_Percent() const { return URepairPercent; }
 
 private:
     fixed TurboBoost;
