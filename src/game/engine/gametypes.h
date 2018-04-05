@@ -593,23 +593,6 @@ enum WeaponSlotType
     WEAPON_SLOT_COUNT,
 };
 
-enum WarheadType
-{
-    WARHEAD_NONE = -1,
-    WARHEAD_SA,
-    WARHEAD_HE,
-    WARHEAD_AP,
-    WARHEAD_FIRE,
-    WARHEAD_HOLLOWPOINT,
-    WARHEAD_SUPER,
-    WARHEAD_ORGANIC,
-    WARHEAD_NUKE,
-    WARHEAD_MECHANICAL,
-    WARHEAD_COUNT,
-};
-
-DEFINE_ENUMERATION_OPERATORS(WarheadType);
-
 enum HousesType
 {
     HOUSES_NONE = -1,

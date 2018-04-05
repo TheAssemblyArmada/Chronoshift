@@ -29,6 +29,7 @@
 #include "rtti.h"
 #include "smartptr.h"
 #include "vector.h"
+#include "warheadtype.h"
 
 class TechnoClass;
 class BuildingClass;

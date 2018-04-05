@@ -124,6 +124,7 @@ set(GAMEENGINE_SRC
     game/engine/unittype.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
+    game/engine/warheadtype.cpp
     game/gfx/blitters.cpp
     game/gfx/drawshape.cpp
     game/gfx/fading.cpp
