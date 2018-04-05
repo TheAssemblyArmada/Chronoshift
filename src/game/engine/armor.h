@@ -22,7 +22,8 @@
 
 enum ArmorType {
     ARMOR_INVALID = -1,
-    ARMOR_NONE,
+    ARMOR_FIRST = 0,
+    ARMOR_NONE = 0,
     ARMOR_WOOD,
     ARMOR_LIGHT,
     ARMOR_HEAVY,
