@@ -49,7 +49,7 @@ public:
     WarheadTypeClass(WarheadType warhead, const char *name);
     WarheadTypeClass(WarheadTypeClass const &that);
     WarheadTypeClass(NoInitClass const &noinit) {}
-    virtual ~WarheadTypeClass() {}
+    ~WarheadTypeClass() {}
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
@@ -70,7 +70,7 @@ public:
     static WarheadTypeClass *As_Pointer(WarheadType warhead);
 
 private:
-    WarheadType Type;
+    int Type;
     const char *Name;
     int Spread; // damage spread factor[larger means greater spread]. Damage halves every n pixels from center.
 #ifndef RAPP_NO_BITFIELDS
