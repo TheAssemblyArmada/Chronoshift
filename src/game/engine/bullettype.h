@@ -19,9 +19,10 @@
 #define BULLETTYPE_H
 
 #include "always.h"
-#include "ccini.h"
 #include "heap.h"
 #include "objecttype.h"
+
+class CCINIClass;
 
 // If you add an entry here, add matching entries to bullettype.cpp globals and Init_Heap.
 enum BulletType

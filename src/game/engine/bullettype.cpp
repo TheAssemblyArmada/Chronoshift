@@ -15,6 +15,7 @@
  */
 #include "bullettype.h"
 #include "ccfileclass.h"
+#include "ccini.h"
 #include "mixfile.h"
 #include <cstdio>
 
