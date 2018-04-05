@@ -169,7 +169,7 @@ BulletType BulletTypeClass::From_Name(const char *name)
 }
 
 /**
- * @brief Get type enum value from a string.
+ * @brief Get string from enum value.
  */
 const char *BulletTypeClass::Name_From(BulletType bullet)
 {
