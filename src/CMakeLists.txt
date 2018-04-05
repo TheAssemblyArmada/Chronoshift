@@ -80,6 +80,7 @@ set(GAMEENGINE_SRC
     game/engine/action.cpp
     game/engine/animtype.cpp
     game/engine/armor.cpp
+    game/engine/bullettype.cpp
     game/engine/ccini.cpp
     game/engine/cell.cpp
     game/engine/coord.cpp
