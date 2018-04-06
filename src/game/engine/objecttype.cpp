@@ -130,3 +130,14 @@ void ObjectTypeClass::One_Time()
     SelectShapes = MixFileClass<CCFileClass>::Retrieve("SELECT.SHP");
     PipShapes = MixFileClass<CCFileClass>::Retrieve("PIPS.SHP");
 }
+
+void *ObjectTypeClass::Get_Radar_Icon(void *shape, int frame, int frame_count, int size)
+{
+    // TODO
+#ifndef RAPP_STANDALONE
+    void *(*func)(void *, int, int, int) = reinterpret_cast<void *(*)(void *, int, int, int)>(0x004A9494);
+    return func(shape, frame, frame_count, size);
+#else
+    return nullptr;
+#endif
+}

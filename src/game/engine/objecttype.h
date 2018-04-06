@@ -60,6 +60,9 @@ public:
     static void One_Time();
 
 protected:
+    static void *Get_Radar_Icon(void *shape, int frame, int frame_count, int size);
+
+protected:
     char ImageName[256];
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
