@@ -118,6 +118,7 @@ set(GAMEENGINE_SRC
     game/engine/target.cpp
     game/engine/technotype.cpp
     game/engine/templatetype.cpp
+    game/engine/terraintype.cpp
     game/engine/theater.cpp
     game/engine/theme.cpp
     game/engine/tracker.cpp
