@@ -276,11 +276,11 @@ ThreatType WeaponTypeClass::Allowed_Threats() const
     ThreatType threat = THREAT_ANY;
 
     if (Projectile->Is_Anti_Air()) {
-        threat = THREAT_ANY_AIRCRAFT;
+        threat = THREAT_AIRCRAFT;
     }
 
     if (Projectile->Is_Anti_Ground()) {
-        threat |= (THREAT_INFANTRY | THREAT_ANY_VEHICLE | THREAT_ANY_BUILDING | THREAT_ANY_VESSEL);
+        threat |= (THREAT_INFANTRY | THREAT_VEHICLE | THREAT_BUILDING | THREAT_VESSEL);
     }
 
     return threat;
