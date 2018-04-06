@@ -22,11 +22,11 @@
 #include "abstracttype.h"
 #include "armor.h"
 #include "gametypes.h"
-#include "ccini.h"
 
 class ObjectClass;
 class BuildingClass;
 class HouseClass;
+class CCINIClass;
 
 class ObjectTypeClass : public AbstractTypeClass
 {

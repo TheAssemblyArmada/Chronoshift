@@ -15,6 +15,7 @@
  */
 #include "objecttype.h"
 #include "ccfileclass.h"
+#include "ccini.h"
 #include "mixfile.h"
 
 #ifndef RAPP_STANDALONE
