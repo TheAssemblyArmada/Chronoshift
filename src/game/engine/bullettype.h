@@ -71,6 +71,9 @@ public:
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override { return nullptr; }
     virtual BOOL Read_INI(CCINIClass &ini);
 
+    int Get_Type() const { return Type; }
+    BOOL Is_Anti_Air() const { return AntiAir; }
+    BOOL Is_Anti_Ground() const { return AntiGround; }
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
