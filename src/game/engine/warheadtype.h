@@ -62,6 +62,8 @@ public:
     void Decode_Pointers() {}
     BOOL Read_INI(CCINIClass &ini);
     const char *Get_Name() const { return Name; }
+    int Get_Type() const { return Type; }
+    BOOL Is_Wall_Destroyer() const { return Wall; }
 
     static void Init_Heap();
     static WarheadType From_Name(const char *name);
