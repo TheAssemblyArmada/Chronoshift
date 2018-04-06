@@ -79,8 +79,6 @@ WeaponTypeClass::WeaponTypeClass(WeaponType weapon, const char *name) :
     Supress(false),
     Camera(false),
     Charges(false),
-    ElectricZap(false),
-    LaserZap(false),
     Burst(1),
     Projectile(nullptr),
     Damage(0),
@@ -107,8 +105,6 @@ WeaponTypeClass::WeaponTypeClass(WeaponTypeClass const &that) :
     Supress(that.Supress),
     Camera(that.Camera),
     Charges(that.Charges),
-    ElectricZap(that.ElectricZap),
-    LaserZap(that.LaserZap),
     Burst(that.Burst),
     Projectile(that.Projectile),
     Damage(that.Damage),
@@ -259,8 +255,6 @@ BOOL WeaponTypeClass::Read_INI(CCINIClass &ini)
         Camera = ini.Get_Bool(Get_Name(), "Camera", false);
         Charges = ini.Get_Bool(Get_Name(), "Charges", false);
         TurboBoost = ini.Get_Bool(Get_Name(), "TurboBoost", false);
-        ElectricZap = ini.Get_Bool(Get_Name(), "ElectricZap", false);
-        LaserZap = ini.Get_Bool(Get_Name(), "LaserZap", false);
         Warhead = WarheadTypeClass::As_Pointer(ini.Get_WarheadType(
             Get_Name(), "Warhead", (Warhead != nullptr ? WarheadType(Warhead->Get_Type()) : WARHEAD_NONE)));
         Projectile = BulletTypeClass::As_Pointer(ini.Get_BulletType(

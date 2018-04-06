@@ -123,8 +123,6 @@ private:
             bool Supress : 1;// Should nearby friendly buildings be scanned for and if found, discourage firing on target?
             bool Camera : 1; // Reveals area around firer ?
             bool Charges : 1; // Does it have charge-up-before-firing logic?
-            bool ElectricZap : 1; // RA++ addition, use ElectricZap logic?
-            bool LaserZap : 1; // RA++ addition, use C&C Laser logic?
         };
         int Bitfield;
     };
@@ -133,8 +131,6 @@ private:
     bool Supress;// Should nearby friendly buildings be scanned for and if found, discourage firing on target?
     bool Camera; // Reveals area around firer ?
     bool Charges; // Does it have charge-up-before-firing logic?
-    bool ElectricZap; // RA++ addition, use ElectricZap logic?
-    bool LaserZap; // RA++ addition, use C&C Laser logic?
 #endif
     int Burst; // Number of rapid succession shots from this weapon (def = 1)
     BulletTypeClass *Projectile; // Projectile characteristic to use
