@@ -14,10 +14,12 @@
  *            LICENSE
  */
 #include "overlaytype.h"
+#include "ccfileclass.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "globals.h"
 #include "lists.h"
+#include "mixfile.h"
 #include <cstdio>
 
 using std::snprintf;
@@ -184,17 +186,10 @@ const char *OverlayTypeClass::Name_From(OverlayType overlay)
 
 void OverlayTypeClass::Init(TheaterType theater)
 {
-    // TODO Needs Get_Radar_Icon.
-#ifndef RAPP_STANDALONE
-    void(*func)(TheaterType) = reinterpret_cast<void(*)(TheaterType)>(0x00524B28);
-    func(theater);
-#elif 0
     DEBUG_ASSERT(theater < THEATER_COUNT);
     DEBUG_ASSERT(theater != THEATER_NONE);
 
     char filename[512];
-
-    DEBUG_LOG("OverlayTypeClass::Init(enter)\n");
 
     if (theater != g_lastTheater) {
         for (OverlayType i = OVERLAY_FIRST; i < OVERLAY_COUNT; ++i) {
@@ -204,19 +199,14 @@ void OverlayTypeClass::Init(TheaterType theater)
                 sizeof(filename),
                 "%s.%s",
                 overlay.Get_Name(),
-                overlay.Theater ? g_theaters[theater].ext : "SHP");
+                overlay.Theater ? g_theaters[theater].ext : "shp");
             overlay.ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
 
             g_isTheaterShape = overlay.Theater;
-            overlay.RadarIconData = Get_Radar_Icon(overlay.RadarIconData, 0, -3, 3);
+            overlay.RadarIconData = Get_Radar_Icon(overlay.ImageData, 0, -1, 3);
             g_isTheaterShape = false;
         }
     }
-
-    DEBUG_LOG("OverlayTypeClass::Init(exit)\n");
-#else
-
-#endif
 }
 
 OverlayTypeClass &OverlayTypeClass::As_Reference(OverlayType overlay)
