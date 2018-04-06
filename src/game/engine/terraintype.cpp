@@ -31,84 +31,84 @@ TFixedIHeapClass<TerrainTypeClass> TerrainTypes;
 #endif
 
 // Added fix by AlexB (changed MINE from Coord_From_Pixel_XY(12, 24) to Coord_From_Pixel_XY(12, 12)).
-const TerrainTypeClass TerrainMine(TERRAIN_MINE, "MINE", TXT_ORE_MINE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(12, 12), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes01(TERRAIN_BOXES01, "BOXES01", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes02(TERRAIN_BOXES02, "BOXES02", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes03(TERRAIN_BOXES03, "BOXES03", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes04(TERRAIN_BOXES04, "BOXES04", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes05(TERRAIN_BOXES05, "BOXES05", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes06(TERRAIN_BOXES06, "BOXES06", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes07(TERRAIN_BOXES07, "BOXES07", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes08(TERRAIN_BOXES08, "BOXES08", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
-const TerrainTypeClass TerrainBoxes09(TERRAIN_BOXES09, "BOXES09", TXT_CRATES, THEATER_BIT_TEMPERATE,
-    Coord_From_Pixel_XY(12, 24), true, false, List10, nullptr);
+const TerrainTypeClass TerrainMine(TERRAIN_MINE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 12), true,
+    false, "MINE", TXT_ORE_MINE, List10, nullptr);
+const TerrainTypeClass TerrainBoxes01(
+    TERRAIN_BOXES01, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES01", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes02(
+    TERRAIN_BOXES02, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES02", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes03(
+    TERRAIN_BOXES03, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES03", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes04(
+    TERRAIN_BOXES04, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES04", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes05(
+    TERRAIN_BOXES05, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES05", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes06(
+    TERRAIN_BOXES06, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES06", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes07(
+    TERRAIN_BOXES07, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES07", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes08(
+    TERRAIN_BOXES08, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES08", TXT_CRATES, List10, nullptr);
+const TerrainTypeClass TerrainBoxes09(
+    TERRAIN_BOXES09, THEATER_BIT_INTERIOR, Coord_From_Pixel_XY(12, 24), true, false, "BOXES09", TXT_CRATES, List10, nullptr);
 const TerrainTypeClass TerrainIce01(
-    TERRAIN_ICE01, "ICE01", TXT_ICE, THEATER_BIT_SNOW, Coord_From_Pixel_XY(24, 24), true, true, List1111, nullptr);
+    TERRAIN_ICE01, THEATER_BIT_SNOW, Coord_From_Pixel_XY(24, 24), true, true, "ICE01", TXT_ICE, List1111, nullptr);
 const TerrainTypeClass TerrainIce02(
-    TERRAIN_ICE02, "ICE02", TXT_ICE, THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 24), true, true, List1010, nullptr);
+    TERRAIN_ICE02, THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 24), true, true, "ICE02", TXT_ICE, List1010, nullptr);
 const TerrainTypeClass TerrainIce03(
-    TERRAIN_ICE03, "ICE03", TXT_ICE, THEATER_BIT_SNOW, Coord_From_Pixel_XY(24, 12), true, true, List11, nullptr);
+    TERRAIN_ICE03, THEATER_BIT_SNOW, Coord_From_Pixel_XY(24, 12), true, true, "ICE03", TXT_ICE, List11, nullptr);
 const TerrainTypeClass TerrainIce04(
-    TERRAIN_ICE04, "ICE04", TXT_ICE, THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 12), true, true, List10, nullptr);
+    TERRAIN_ICE04, THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 12), true, true, "ICE04", TXT_ICE, List10, nullptr);
 const TerrainTypeClass TerrainIce05(
-    TERRAIN_ICE05, "ICE05", TXT_ICE, THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 12), true, true, List10, nullptr);
-const TerrainTypeClass TerrainTree1(TERRAIN_TREE1, "T01", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(11, 41), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree2(TERRAIN_TREE2, "T02", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(11, 44), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree3(TERRAIN_TREE3, "T03", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(12, 45), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree5(TERRAIN_TREE5, "T05", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(15, 41), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree6(TERRAIN_TREE6, "T06", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(16, 37), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree7(TERRAIN_TREE7, "T07", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(15, 41), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree8(TERRAIN_TREE8, "T08", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(14, 22), false, false, List10, OList01);
-const TerrainTypeClass TerrainTree10(TERRAIN_TREE10, "T10", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(25, 43), false, false, List0011, OList1100);
-const TerrainTypeClass TerrainTree11(TERRAIN_TREE11, "T11", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(23, 44), false, false, List0011, OList1100);
-const TerrainTypeClass TerrainTree12(TERRAIN_TREE12, "T12", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(14, 36), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree13(TERRAIN_TREE13, "T13", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(19, 40), false, false, List0010, OList1101);
-const TerrainTypeClass TerrainTree14(TERRAIN_TREE14, "T14", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(19, 40), false, false, List0011, OList1100);
-const TerrainTypeClass TerrainTree15(TERRAIN_TREE15, "T15", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(19, 40), false, false, List0011, OList1100);
-const TerrainTypeClass TerrainTree16(TERRAIN_TREE16, "T16", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(13, 36), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTree17(TERRAIN_TREE17, "T17", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(18, 44), false, false, List0010, OList1001);
-const TerrainTypeClass TerrainTreeClump1(TERRAIN_TREECLUMP1, "TC01", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(28, 41), true, false, List000110, OList110001);
-const TerrainTypeClass TerrainTreeClump2(TERRAIN_TREECLUMP2, "TC02", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(38, 41), true, false, List010110, OList101001);
-const TerrainTypeClass TerrainTreeClump3(TERRAIN_TREECLUMP3, "TC03", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(33, 35), true, false, List110110, OList001);
-const TerrainTypeClass TerrainTreeClump4(TERRAIN_TREECLUMP4, "TC04", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(44, 49), true, false, List000011101000, OList111000010110);
-const TerrainTypeClass TerrainTreeClump5(TERRAIN_TREECLUMP5, "TC05", TXT_TREE, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
-    Coord_From_Pixel_XY(49, 58), true, false, List001011100110, OList110000011001);
+    TERRAIN_ICE05, THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 12), true, true, "ICE05", TXT_ICE, List10, nullptr);
+const TerrainTypeClass TerrainTree1(TERRAIN_TREE1, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(11, 41),
+    false, false, "T01", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree2(TERRAIN_TREE2, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(11, 44),
+    false, false, "T02", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree3(TERRAIN_TREE3, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(12, 45),
+    false, false, "T03", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree5(TERRAIN_TREE5, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(15, 41),
+    false, false, "T05", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree6(TERRAIN_TREE6, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(16, 37),
+    false, false, "T06", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree7(TERRAIN_TREE7, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(15, 41),
+    false, false, "T07", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree8(TERRAIN_TREE8, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(14, 22),
+    false, false, "T08", TXT_TREE, List10, OList01);
+const TerrainTypeClass TerrainTree10(TERRAIN_TREE10, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(25, 43),
+    false, false, "T10", TXT_TREE, List0011, OList1100);
+const TerrainTypeClass TerrainTree11(TERRAIN_TREE11, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(23, 44),
+    false, false, "T11", TXT_TREE, List0011, OList1100);
+const TerrainTypeClass TerrainTree12(TERRAIN_TREE12, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(14, 36),
+    false, false, "T12", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree13(TERRAIN_TREE13, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(19, 40),
+    false, false, "T13", TXT_TREE, List0010, OList1101);
+const TerrainTypeClass TerrainTree14(TERRAIN_TREE14, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(19, 40),
+    false, false, "T14", TXT_TREE, List0011, OList1100);
+const TerrainTypeClass TerrainTree15(TERRAIN_TREE15, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(19, 40),
+    false, false, "T15", TXT_TREE, List0011, OList1100);
+const TerrainTypeClass TerrainTree16(TERRAIN_TREE16, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(13, 36),
+    false, false, "T16", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTree17(TERRAIN_TREE17, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW, Coord_From_Pixel_XY(18, 44),
+    false, false, "T17", TXT_TREE, List0010, OList1001);
+const TerrainTypeClass TerrainTreeClump1(TERRAIN_TREECLUMP1, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
+    Coord_From_Pixel_XY(28, 41), true, false, "TC01", TXT_TREE, List000110, OList110001);
+const TerrainTypeClass TerrainTreeClump2(TERRAIN_TREECLUMP2, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
+    Coord_From_Pixel_XY(38, 41), true, false, "TC02", TXT_TREE, List010110, OList101001);
+const TerrainTypeClass TerrainTreeClump3(TERRAIN_TREECLUMP3, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
+    Coord_From_Pixel_XY(33, 35), true, false, "TC03", TXT_TREE, List110110, OList001);
+const TerrainTypeClass TerrainTreeClump4(TERRAIN_TREECLUMP4, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
+    Coord_From_Pixel_XY(44, 49), true, false, "TC04", TXT_TREE, List000011101000, OList111000010110);
+const TerrainTypeClass TerrainTreeClump5(TERRAIN_TREECLUMP5, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
+    Coord_From_Pixel_XY(49, 58), true, false, "TC05", TXT_TREE, List001011100110, OList110000011001);
 const TerrainTypeClass TerrainFlagFly(
-    TERRAIN_FLAGFLY, "FLAGFLY", TXT_NULL, THEATER_BIT_ANY, Coord_From_Pixel_XY(15, 41), true, false, List10, OList01);
+    TERRAIN_FLAGFLY, THEATER_BIT_NONE, Coord_From_Pixel_XY(15, 41), true, false, "FLAGFLY", TXT_NULL, List10, OList01);
 
 /**
  * 0x005563EC
  */
-TerrainTypeClass::TerrainTypeClass(TerrainType type, const char *name, int uiname, int theater, uint32_t a3, BOOL immune,
-    BOOL waterbound, const int16_t *occupy_list, const int16_t *overlap_list) :
+TerrainTypeClass::TerrainTypeClass(TerrainType type, int theater, uint32_t a3, BOOL immune, BOOL waterbound,
+    const char *name, int uiname, const int16_t *occupy_list, const int16_t *overlap_list) :
     ObjectTypeClass(RTTI_TERRAINTYPE, type, true, true, false, false, true, immune, true, uiname, name),
     Type(type),
     UnkInt(a3),
@@ -202,7 +202,9 @@ BOOL TerrainTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
     // TODO requires TerrainClass
 #ifndef RAPP_STANDALONE
-    BOOL(*func)(const TerrainTypeClass*, int16_t, HousesType) = reinterpret_cast<BOOL(*)(const TerrainTypeClass*, int16_t, HousesType)>(0x0055B9E4);
+    BOOL(*func)
+    (const TerrainTypeClass *, int16_t, HousesType) =
+        reinterpret_cast<BOOL (*)(const TerrainTypeClass *, int16_t, HousesType)>(0x0055B9E4);
     return func(this, cellnum, house);
 #elif 0
     return new TerrainClass(Type, Cell_To_Coord(cellnum)) != nullptr;
@@ -220,7 +222,8 @@ ObjectClass *TerrainTypeClass::Create_One_Of(HouseClass *house) const
 {
     // TODO requires TerrainClass
 #ifndef RAPP_STANDALONE
-    ObjectClass *(*func)(const TerrainTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const TerrainTypeClass*, HouseClass*)>(0x0055BA1C);
+    ObjectClass *(*func)(const TerrainTypeClass *, HouseClass *) =
+        reinterpret_cast<ObjectClass *(*)(const TerrainTypeClass *, HouseClass *)>(0x0055BA1C);
     return func(this, house);
 #elif 0
     DEBUG_ASSERT(house != nullptr);

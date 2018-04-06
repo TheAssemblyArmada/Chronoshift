@@ -72,7 +72,7 @@ class HouseClass;
 class TerrainTypeClass : public ObjectTypeClass
 {
 public:
-    TerrainTypeClass(TerrainType type, const char *name, int uiname, int theater, uint32_t unk, BOOL immune, BOOL waterbound, const int16_t *occupy_list, const int16_t *overlap_list);
+    TerrainTypeClass(TerrainType type, int theater, uint32_t a3, BOOL immune, BOOL waterbound, const char *name, int uiname, const int16_t *occupy_list, const int16_t *overlap_list);
     TerrainTypeClass(TerrainTypeClass const &that);
     TerrainTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
     ~TerrainTypeClass();
