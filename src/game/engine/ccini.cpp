@@ -32,7 +32,7 @@ MPHType CCINIClass::Get_MPHType(const char *section, const char *entry, const MP
 
 CrateType CCINIClass::Get_CrateType(const char *section, const char *entry, const CrateType defvalue) const
 {
-    char value[INIClass::MAX_LINE_LENGTH];
+    char value[MAX_LINE_LENGTH];
 
     if (Get_String(section, entry, "", value, sizeof(value)) > 0) {
         return CrateClass::Crate_From_Name(value);
@@ -43,7 +43,7 @@ CrateType CCINIClass::Get_CrateType(const char *section, const char *entry, cons
 
 VocType CCINIClass::Get_VocType(const char *section, const char *entry, const VocType defvalue) const
 {
-    char value[INIClass::MAX_LINE_LENGTH];
+    char value[MAX_LINE_LENGTH];
 
     if (Get_String(section, entry, Voc_Name(defvalue), value, sizeof(value)) > 0) {
         return Voc_From_Name(value);
@@ -54,7 +54,7 @@ VocType CCINIClass::Get_VocType(const char *section, const char *entry, const Vo
 
 AnimType CCINIClass::Get_AnimType(const char *section, const char *entry, const AnimType defvalue) const
 {
-    char value[INIClass::MAX_LINE_LENGTH];
+    char value[MAX_LINE_LENGTH];
 
     if (Get_String(section, entry, AnimTypeClass::Name_From(defvalue), value, sizeof(value)) > 0) {
         return AnimTypeClass::From_Name(value);
@@ -65,7 +65,7 @@ AnimType CCINIClass::Get_AnimType(const char *section, const char *entry, const 
 
 WarheadType CCINIClass::Get_WarheadType(const char *section, const char *entry, const WarheadType defvalue) const
 {
-    char value[INIClass::MAX_LINE_LENGTH];
+    char value[MAX_LINE_LENGTH];
 
     if (Get_String(section, entry, "", value, sizeof(value)) > 0) {
         for (WarheadType wh = WARHEAD_FIRST; wh < WARHEAD_COUNT; ++wh) {
@@ -80,7 +80,7 @@ WarheadType CCINIClass::Get_WarheadType(const char *section, const char *entry, 
 
 BulletType CCINIClass::Get_BulletType(const char *section, const char *entry, const BulletType defvalue) const
 {
-    char value[INIClass::MAX_LINE_LENGTH];
+    char value[MAX_LINE_LENGTH];
 
     if (Get_String(section, entry, "", value, sizeof(value)) > 0) {
         for (BulletType bt = BULLET_FIRST; bt < BULLET_COUNT; ++bt) {
