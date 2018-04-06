@@ -101,8 +101,8 @@ const TerrainTypeClass TerrainTreeClump4(TERRAIN_TREECLUMP4, THEATER_BIT_TEMPERA
     Coord_From_Pixel_XY(44, 49), true, false, "TC04", TXT_TREE, List000011101000, OList111000010110);
 const TerrainTypeClass TerrainTreeClump5(TERRAIN_TREECLUMP5, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
     Coord_From_Pixel_XY(49, 58), true, false, "TC05", TXT_TREE, List001011100110, OList110000011001);
-const TerrainTypeClass TerrainFlagFly(
-    TERRAIN_FLAGFLY, THEATER_BIT_NONE, Coord_From_Pixel_XY(15, 41), true, false, "FLAGFLY", TXT_NULL, List10, OList01);
+//const TerrainTypeClass TerrainFlagFly(
+//    TERRAIN_FLAGFLY, THEATER_BIT_NONE, Coord_From_Pixel_XY(15, 41), true, false, "FLAGFLY", TXT_NULL, List10, OList01);
 
 /**
  * 0x005563EC
@@ -292,7 +292,7 @@ void TerrainTypeClass::Init_Heap()
 
     new TerrainTypeClass(TerrainMine);
 
-    new TerrainTypeClass(TerrainFlagFly);
+    //new TerrainTypeClass(TerrainFlagFly);
 }
 
 /**
