@@ -19,10 +19,14 @@
 #define CCINI_H
 
 #include "always.h"
+#include "animtype.h"
+#include "audio.h"
+#include "bullettype.h"
 #include "crate.h"
 #include "gametypes.h"
 #include "ini.h"
 #include "sha.h"
+#include "warheadtype.h"
 
 class CCINIClass : public INIClass
 {
@@ -32,7 +36,11 @@ public:
     int16_t Get_Lepton(const char *section, const char *entry, const int16_t defvalue = 0) const;
     MPHType Get_MPHType(const char *section, const char *entry, const MPHType defvalue = MPH_MIN) const;
     CrateType Get_CrateType(const char *section, const char *entry, const CrateType defvalue = CRATE_MONEY) const;
-        
+    VocType Get_VocType(const char *section, const char *entry, const VocType defvalue = VOC_NONE) const;
+    AnimType Get_AnimType(const char *section, const char *entry, const AnimType defvalue = ANIM_NONE) const;
+    WarheadType Get_WarheadType(const char *section, const char *entry, const WarheadType defvalue = WARHEAD_NONE) const;
+    BulletType Get_BulletType(const char *section, const char *entry, const BulletType defvalue = BULLET_NONE) const;
+
     // TODO implement functions as required.
 private:
 #ifndef RAPP_NO_BITFIELDS
