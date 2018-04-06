@@ -25,8 +25,6 @@ TheaterDataType g_theaters[THEATER_COUNT] = {
     {"TEMPERATE", "TEMPERAT", "TMP"},
     {"SNOW", "SNOW", "SNO"},
     {"INTERIOR", "INTERIOR", "INT"},
-    {"DESERT", "DESERT", "DES"},
-    {"WINTER", "WINTER", "WIN"}
 };
 
 TheaterType Theater_From_Name(const char *name)
