@@ -81,9 +81,9 @@ void ObjectTypeClass::Dimensions(int &w, int &h) const
 /**
  * @brief Gets an occupy list for determining cell occupation.
  */
-int16_t *ObjectTypeClass::Occupy_List(BOOL a1) const
+const int16_t *ObjectTypeClass::Occupy_List(BOOL a1) const
 {
-    static int16_t _list[] = { 0, INT16_MAX };
+    static const int16_t _list[] = { 0, INT16_MAX };
 
     return _list;
 }
@@ -91,9 +91,9 @@ int16_t *ObjectTypeClass::Occupy_List(BOOL a1) const
 /**
  * @brief Gets an overlap list for overlapped blitting and refresh calcs.
  */
-int16_t *ObjectTypeClass::Overlap_List() const
+const int16_t *ObjectTypeClass::Overlap_List() const
 {
-    static int16_t _list[] = { 0, INT16_MAX };
+    static const int16_t _list[] = { 0, INT16_MAX };
 
     return _list;
 }

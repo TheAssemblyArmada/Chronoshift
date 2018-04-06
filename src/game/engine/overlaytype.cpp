@@ -271,9 +271,9 @@ ObjectClass *OverlayTypeClass::Create_One_Of(HouseClass *house) const
 #endif
 }
 
-int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
+const int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
 {
-    static int16_t _simple[] = { 0, LIST_END };
+    static const int16_t _simple[] = { 0, LIST_END };
 
     return _simple;
 }

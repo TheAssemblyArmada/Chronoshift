@@ -15,7 +15,7 @@
  */
 #include "lists.h"
 
-void List_Copy(int16_t *dst, int16_t *src, int size)
+void List_Copy(int16_t *dst, const int16_t *src, int size)
 {
     // Iterate the list and stop when we run out of size for the destination
     // or we encounter LIST_END which terminates the overlap and occupy lists.

@@ -455,7 +455,7 @@ public:
     virtual uint32_t Coord_Fixup(uint32_t coord) const override;
     virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
-    virtual int16_t *Occupy_List(BOOL a1 = false) const override;
+    virtual const int16_t *Occupy_List(BOOL a1 = false) const override;
 
     LandType Land_Type(int sub_icon) const;
     void Code_Pointers() {}

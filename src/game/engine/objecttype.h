@@ -43,8 +43,8 @@ public:
     virtual int Cost_Of() const { return 0; }
     virtual int Time_To_Build() const { return 0; }
     virtual ObjectClass *Create_One_Of(HouseClass *house) const = 0;
-    virtual int16_t *Occupy_List(BOOL a1 = false) const;
-    virtual int16_t *Overlap_List() const;
+    virtual const int16_t *Occupy_List(BOOL a1 = false) const;
+    virtual const int16_t *Overlap_List() const;
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false, HousesType house = HOUSES_NONE) const;
     virtual void *Get_Cameo_Data() const { return nullptr; };
     virtual BOOL Read_INI(CCINIClass &ini);

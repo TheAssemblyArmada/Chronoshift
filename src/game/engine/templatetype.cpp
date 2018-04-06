@@ -1098,11 +1098,11 @@ const char *TemplateTypeClass::Name_From(TemplateType tem)
 }
 
 
-int16_t *TemplateTypeClass::Occupy_List(BOOL a1) const
+const int16_t *TemplateTypeClass::Occupy_List(BOOL a1) const
 {
     // TODO requires IconControlType
 #ifndef RAPP_STANDALONE
-    int16_t *(*func)(const TemplateTypeClass*, BOOL) = reinterpret_cast<int16_t *(*)(const TemplateTypeClass*, BOOL)>(0x0049EA2C);
+    const int16_t *(*func)(const TemplateTypeClass*, BOOL) = reinterpret_cast<const int16_t *(*)(const TemplateTypeClass*, BOOL)>(0x0049EA2C);
     return func(this, a1);
 #else
     return nullptr;

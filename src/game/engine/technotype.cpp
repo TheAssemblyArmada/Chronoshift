@@ -199,7 +199,7 @@ BOOL TechnoTypeClass::Is_Two_Shooter() const
 BOOL TechnoTypeClass::Legal_Placement(int16_t cellnum) const
 {
     if (cellnum != -1) {
-        for (int16_t *list_pos = Occupy_List(true); list_pos[0] == LIST_END; ++list_pos) {
+        for (const int16_t *list_pos = Occupy_List(true); list_pos[0] == LIST_END; ++list_pos) {
             int16_t offset_cellnum = (list_pos[0] + cellnum);
 
             if (!Map.In_Radar(offset_cellnum)) {

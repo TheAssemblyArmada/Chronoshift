@@ -74,8 +74,8 @@ public:
 
     virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
-    virtual int16_t *Occupy_List(BOOL a1 = false) const override;
-    virtual int16_t *Overlap_List() const override;
+    virtual const int16_t *Occupy_List(BOOL a1 = false) const override;
+    virtual const int16_t *Overlap_List() const override;
     virtual void Draw_It(int x, int y, int frame) const;
 
     BOOL Is_Crater() { return Crater; }

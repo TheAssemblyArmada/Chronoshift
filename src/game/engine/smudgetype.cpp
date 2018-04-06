@@ -110,7 +110,7 @@ ObjectClass *SmudgeTypeClass::Create_One_Of(HouseClass *house) const
 #endif
 }
 
-int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const
+const int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const
 {
     DEBUG_ASSERT(this != nullptr);
 
@@ -128,7 +128,7 @@ int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const
     return _occupy;
 }
 
-int16_t *SmudgeTypeClass::Overlap_List() const
+const int16_t *SmudgeTypeClass::Overlap_List() const
 {
     DEBUG_ASSERT(this != nullptr);
     return Occupy_List(false);
