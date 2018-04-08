@@ -22,7 +22,7 @@
 using std::snprintf;
 
 #ifndef RAPP_STANDALONE
-TFixedIHeapClass<BulletTypeClass> &BulletTypes = Make_Global<TFixedIHeapClass<BulletTypeClass> >(0x0065DE54);
+TFixedIHeapClass<BulletTypeClass> &BulletTypes = *reinterpret_cast<TFixedIHeapClass<BulletTypeClass> *>(0x0065DE54);
 #else
 TFixedIHeapClass<BulletTypeClass> BulletTypes;
 #endif
@@ -53,7 +53,7 @@ const BulletTypeClass BulletNukeDown(BULLET_NUKEDOWN, "NukeDown");
  * 0x00426A20 Prototypes don't match but it fulfills same purpose, do not hook.
  */
 BulletTypeClass::BulletTypeClass(BulletType bullet, const char *name) :
-    ObjectTypeClass(RTTI_BULLETTYPE, BulletTypes.ID(this), true, true, false, false, true, true, false, TXT_NULL, name),
+    ObjectTypeClass(RTTI_BULLETTYPE, bullet, true, true, false, false, true, true, false, TXT_NULL, name),
     High(false),
     Shadow(true),
     Arcing(false),

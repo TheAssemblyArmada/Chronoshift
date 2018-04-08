@@ -71,8 +71,8 @@ set(GAMEENGINE_SRC
     game/common/wwstring.cpp
     game/common/xordelta.cpp
     game/crypto/blowfish.cpp
-    game/crypto/pk.cpp
     game/crypto/mpmath.cpp
+    game/crypto/pk.cpp
     game/crypto/sha.cpp
     game/debug/gamedebug.cpp
     game/engine/abstract.cpp
