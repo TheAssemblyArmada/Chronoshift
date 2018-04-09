@@ -40,27 +40,27 @@ DEFINE_ENUMERATION_BITWISE_OPERATORS(GroundType);
 
 class CCINIClass;
 
-struct GroundClass
+class GroundClass
 {
 public:
-    GroundClass(void) : Speeds(), Buildable(false) {}
-    GroundClass(GroundClass const &that) :
+    //GroundClass(void) : Speeds(), Buildable(false) {}
+    /*GroundClass(GroundClass const &that) :
         Buildable(that.Buildable)
     {
         memcpy(Speeds, that.Speeds, sizeof(Speeds));
-    }
+    }*/
 
-    ~GroundClass(void) {}
+    //~GroundClass(void) {}
 
-    bool operator==(GroundClass const &that) const
+    /*bool operator==(GroundClass const &that) const
     {
         return memcmp(Speeds, that.Speeds, sizeof(Speeds)) == 0 && Buildable == that.Buildable;
-    }
+    }*/
 
-    bool operator!=(GroundClass const &that) const
+    /*bool operator!=(GroundClass const &that) const
     {
         return !(this == &that); 
-    }
+    }*/
 
     BOOL Read_INI(CCINIClass &ini, const LandType land);
     BOOL Write_INI(CCINIClass &ini, const LandType land) const;
