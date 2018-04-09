@@ -67,19 +67,16 @@ const MovieType CCINIClass::Get_MovieType(const char *section, const char *entry
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    //TODO: Requires Movie interface to be complete
-    /*if (Get_String(section, entry, Name_From_Movie(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
+    if (Get_String(section, entry, Name_From_Movie(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
         return Movie_From_Name(valuebuf);
-    }*/
+    }
 
     return defvalue;
 }
 
 bool CCINIClass::Put_MovieType(const char *section, const char *entry, const MovieType value)
 {
-    //TODO: Requires Movie interface to be complete
-    //return Put_String(section, entry, Name_From_Movie(value));
-    return false;
+    return Put_String(section, entry, Name_From_Movie(value));
 }
 
 const TheaterType CCINIClass::Get_TheaterType(const char *section, const char *entry, const TheaterType defvalue)
@@ -408,8 +405,35 @@ const int CCINIClass::Get_Owners(const char *section, const char *entry, int con
 
 bool CCINIClass::Put_Owners(const char *section, const char *entry, const int value)
 {
-    //TODO: OmniBlade, please implement.
-    return false;
+    static char buffer[MAX_LINE_LENGTH];
+
+    buffer[0] = '\0';
+
+    int owner = value;
+
+    if ( (owner & SIDE_SOVIET) == SIDE_SOVIET ) {
+        strcat(buffer, "soviet");
+        owner &= ~(SIDE_SOVIET);
+    }
+
+    if ( (owner & SIDE_ALLIES) == SIDE_ALLIES ) {
+        if ( buffer[0] != '\0' ) {
+            strcat(&buffer[strlen(buffer)], ",");
+        }
+        strcat(buffer, "allies");
+        owner &= ~(SIDE_ALLIES);
+    }
+
+    for ( int type = 0; type < HOUSES_COUNT; ++type ) {
+        if ( (1 << type) & owner ) {
+            if ( buffer[0] != '\0' ) {
+                strcat(&buffer[strlen(buffer)], ",");
+            }
+            strcat(&buffer[strlen(buffer)], HouseTypeClass::As_Reference((HousesType)type).Get_Name());
+        }
+    }
+
+    return buffer[0] != '\0' ? Put_String(section, entry, buffer) : true;
 }
 
 const int CCINIClass::Get_Units(const char *section, const char *entry, int const defvalue) const
@@ -429,8 +453,20 @@ const int CCINIClass::Get_Units(const char *section, const char *entry, int cons
 
 bool CCINIClass::Put_Units(const char *section, const char *entry, const int value)
 {
-    //TODO: OmniBlade, please implement (to be based on Put_Buildings).
-    return false;
+    static char buffer[MAX_LINE_LENGTH];
+
+    buffer[0] = '\0';
+
+    for ( int type = 0; type < UNIT_COUNT; ++type ) {
+        if ( (1 << type) & value ) {
+            if ( buffer[0] != '\0' ) {
+                strcat(&buffer[strlen(buffer)], ",");
+            }
+            //TODO: Requires UnitTypeClass to be complete
+            strcat(&buffer[strlen(buffer)], nullptr /*UnitTypeClass::As_Reference((UnitType)type).Get_Name()*/);
+        }
+    }
+    return Put_String(section, entry, buffer);
 }
 
 const int CCINIClass::Get_Infantry(const char *section, const char *entry, int const defvalue) const
@@ -450,8 +486,20 @@ const int CCINIClass::Get_Infantry(const char *section, const char *entry, int c
 
 bool CCINIClass::Put_Infantry(const char *section, const char *entry, const int value)
 {
-    //TODO: OmniBlade, please implement (to be based on Put_Buildings).
-    return false;
+    static char buffer[MAX_LINE_LENGTH];
+
+    buffer[0] = '\0';
+
+    for ( int type = 0; type < INFANTRY_COUNT; ++type ) {
+        if ( (1 << type) & value ) {
+            if ( buffer[0] != '\0' ) {
+                strcat(&buffer[strlen(buffer)], ",");
+            }
+            //TODO: Requires InfantryTypeClass to be complete
+            strcat(&buffer[strlen(buffer)], nullptr /*InfantryTypeClass::As_Reference((InfantryType)type).Get_Name()*/);
+        }
+    }
+    return Put_String(section, entry, buffer);
 }
 
 const int CCINIClass::Get_Aircrafts(const char *section, const char *entry, int const defvalue) const
@@ -471,8 +519,20 @@ const int CCINIClass::Get_Aircrafts(const char *section, const char *entry, int 
 
 bool CCINIClass::Put_Aircrafts(const char *section, const char *entry, const int value)
 {
-    //TODO: OmniBlade, please implement (to be based on Put_Buildings).
-    return false;
+    static char buffer[MAX_LINE_LENGTH];
+
+    buffer[0] = '\0';
+
+    for ( int type = 0; type < AIRCRAFT_COUNT; ++type ) {
+        if ( (1 << type) & value ) {
+            if ( buffer[0] != '\0' ) {
+                strcat(&buffer[strlen(buffer)], ",");
+            }
+            //TODO: Requires AircraftTypeClass to be complete
+            strcat(&buffer[strlen(buffer)], nullptr /*AircraftTypeClass::As_Reference((AircraftType)type).Get_Name()*/);
+        }
+    }
+    return Put_String(section, entry, buffer);
 }
 
 const int CCINIClass::Get_Vessels(char const *section, char const *entry, int const defvalue) const
@@ -492,8 +552,20 @@ const int CCINIClass::Get_Vessels(char const *section, char const *entry, int co
 
 bool CCINIClass::Put_Vessels(char const *section, char const *entry, const int value)
 {
-    //TODO: OmniBlade, please implement (to be based on Put_Buildings).
-    return false;
+    static char buffer[MAX_LINE_LENGTH];
+
+    buffer[0] = '\0';
+
+    for ( int type = 0; type < VESSEL_COUNT; ++type ) {
+        if ( (1 << type) & value ) {
+            if ( buffer[0] != '\0' ) {
+                strcat(&buffer[strlen(buffer)], ",");
+            }
+            //TODO: Requires VesselTypeClass to be complete
+            strcat(&buffer[strlen(buffer)], nullptr /*VesselTypeClass::As_Reference((VesselType)type).Get_Name()*/);
+        }
+    }
+    return Put_String(section, entry, buffer);
 }
 
 const int CCINIClass::Get_Buildings(char const *section, char const *entry, int const defvalue) const
@@ -513,8 +585,20 @@ const int CCINIClass::Get_Buildings(char const *section, char const *entry, int 
 
 bool CCINIClass::Put_Buildings(char const *section, char const *entry, const int value)
 {
-    //TODO: OmniBlade, please implement.
-    return false;
+    static char buffer[MAX_LINE_LENGTH];
+
+    buffer[0] = '\0';
+
+    for ( int type = 0; type < 32; ++type ) {        // 32 corresponds to the first 32 entrys of BuildingType
+        if ( (1 << type) & value ) {
+            if ( buffer[0] != '\0' ) {
+                strcat(&buffer[strlen(buffer)], ",");
+            }
+            //TODO: Requires BuildingTypeClass to be complete
+            strcat(&buffer[strlen(buffer)], nullptr /*BuildingTypeClass::As_Reference((BuildingType)type).Get_Name()*/);
+        }
+    }
+    return Put_String(section, entry, buffer);
 }
 
 void CCINIClass::Calculate_Message_Digest(void)
@@ -536,10 +620,7 @@ void CCINIClass::Invalidate_Message_Digest(void)
 int32_t const CCINIClass::Get_Unique_ID(void)
 {
     if ( !DigestValid ) {
-        SHAPipe pipe;
-        INIClass::Save(pipe);
-        pipe.Result(&Digest);
-        DigestValid = true;
+        Calculate_Message_Digest();
     }
     return Calculate_CRC(&Digest, sizeof(Digest));
 }

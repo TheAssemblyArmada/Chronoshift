@@ -38,6 +38,7 @@
 #include "ground.h"
 #include "source.h"
 #include "theme.h"
+#include "movie.h"
 
 class TriggerTypeClass;
 
