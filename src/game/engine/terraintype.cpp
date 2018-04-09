@@ -310,6 +310,7 @@ void TerrainTypeClass::Init(TheaterType theater)
     if (theater != g_lastTheater) {
         for (TerrainType i = TERRAIN_FIRST; i < TERRAIN_COUNT; ++i) {
             TerrainTypeClass &terrain = As_Reference(i);
+            terrain.ImageData = nullptr;
 
             // TODO, im pretty certain, but needs checking
             if (terrain.Theater & (1 << theater)) {
@@ -318,6 +319,7 @@ void TerrainTypeClass::Init(TheaterType theater)
                     "%s.%s",
                     /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.Get_Name(),
                     /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_theaters[theater].ext);
+                DEBUG_LOG("Retrieving '%s'.\n", filename);
                 terrain.ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
                 g_isTheaterShape = true;
 
