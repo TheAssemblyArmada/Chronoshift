@@ -210,18 +210,18 @@ DEFINE_ENUMERATION_BITWISE_OPERATORS(ThreatType);
 
 enum FireErrorType
 {
-    FIRE_NONE = -1, // no valid value
-    FIRE_OK, // no problem, can fire
-    FIRE_AMMO, // no ammo
-    FIRE_FACING, // bad facing
-    FIRE_REARM, // still reloading
-    FIRE_ROTATING, // busy rotating
-    FIRE_ILLEGAL, // can't fire
-    FIRE_CANT, // sorry, I can't do that
-    FIRE_MOVING, // moving, can't fire
-    FIRE_RANGE, // out of range
-    FIRE_CLOAKED, // need to decloak
-    FIRE_BUSY, // busy, please hold
+    FIRE_NONE = -1,     // no valid value
+    FIRE_OK,            // no problem, can fire
+    FIRE_AMMO,          // no ammo
+    FIRE_FACING,        // bad facing
+    FIRE_REARM,         // still reloading
+    FIRE_ROTATING,      // busy rotating
+    FIRE_ILLEGAL,       // can't fire
+    FIRE_CANT,          // sorry, I can't do that
+    FIRE_MOVING,        // moving, can't fire
+    FIRE_RANGE,         // out of range
+    FIRE_CLOAKED,       // need to decloak
+    FIRE_BUSY,          // busy, please hold
     FIRE_COUNT,
 };
 
@@ -344,9 +344,9 @@ enum MarkType
     MARK_REMOVE,
     MARK_PUT,
     MARK_REDRAW,
-    MARK_3, // add content?
-    MARK_4, // MARK_OVERLAP_PUT?
-    MARK_5, // MARK_OVERLAP_REMOVE?
+    MARK_3,         // TODO: choose a name; this one adds content?
+    MARK_4,         // TODO: choose a name; MARK_OVERLAP_PUT?
+    MARK_5,         // TODO: choose a name; MARK_OVERLAP_REMOVE?
     MARK_COUNT,
 };
 
@@ -366,7 +366,8 @@ enum MoveType
 
 DEFINE_ENUMERATION_OPERATORS(MoveType);
 
-// these definately needs renaming
+//TODO: consider renaming enum.
+// these definately needs renaming.
 enum DamageResultType
 {
     DAMAGE_NONE = -1,
@@ -381,6 +382,7 @@ enum DamageResultType
     DAMAGE_COUNT = 6
 };
 
+// "per cell process" types.
 enum PCPType
 {
     PCP_NONE = -1,
@@ -424,7 +426,7 @@ enum PipEnum
     PIP_NUM_9 = 17,
     PIP_FAKE = 18,
     PIP_SM_FAKE = 19,
-    PIP_SMALL_F = 19, // just for readablity
+    PIP_SMALL_F = 19,   // just for readablity
     PIP_MEDIC = 20,
     PIP_SM_PRIMARY = 21,
 
@@ -454,6 +456,7 @@ enum INIFormatEnum
     INIFORMAT_3 = 3,
 };
 
+//TODO: To be moved to mission.h when class is implimented
 enum MissionType
 {
     MISSION_NONE = -1,
@@ -491,6 +494,234 @@ enum MissionType
     MISSION_COUNT = 25
 };
 
+//TODO: To be moved to aircrafttype.h when class is implimented.
+enum AircraftType {
+    AIRCRAFT_NONE = -1,
+
+    AIRCRAFT_FIRST = 0,
+
+    AIRCRAFT_TRANSPORT = 0,
+    AIRCRAFT_BADGER = 1,
+    AIRCRAFT_U2 = 2,
+    AIRCRAFT_MIG = 3,
+    AIRCRAFT_YAK = 4,
+    AIRCRAFT_HELI = 5,
+    AIRCRAFT_HIND = 6,
+
+    AIRCRAFT_LAST = 6,
+
+    AIRCRAFT_COUNT = 7
+};
+
+//TODO: To be moved to vesseltype.h when class is implimented.
+enum VesselType {
+    VESSEL_NONE = -1,
+
+    VESSEL_FIRST = 0,
+
+    VESSEL_SUBMARINE = 0,
+    VESSEL_DESTROYER = 1,
+    VESSEL_CRUISER = 2,
+    VESSEL_TRANSPORT = 3,
+    VESSEL_PT_BOAT = 4,
+    VESSEL_MISSILE_SUB = 5,
+    VESSEL_CARRIER = 6,
+
+    VESSEL_LAST = 6,
+
+    VESSEL_COUNT = 7
+};
+
+//TODO: To be moved to buildingtype.h when class is implimented.
+enum BuildingType {
+    BUILDING_NONE = -1,
+
+    BUILDING_FIRST = 0,
+
+    // The follow right hand comments are the bit index (uint32) for storing
+    // which buildings are set, ie, HouseClas storing the buildings the house
+    // has constructed, or CCINIClass writing an entry.
+    BUILDING_ATEK = 0,				// 1 - 1
+    BUILDING_IRON_CURTAIN = 1,		// 1 - 2
+    BUILDING_WEAP = 2,				// 1 - 4
+    BUILDING_PDOX = 3,				// 1 - 8
+    BUILDING_PBOX = 4,				// 1 - 16
+    BUILDING_HBOX = 5,				// 1 - 32
+    BUILDING_DOME = 6,				// 1 - 64
+    BUILDING_GAP_GENERATOR = 7,		// 1 - 128
+    BUILDING_GUN = 8,				// 2 - 1
+    BUILDING_AGUN = 9,				// 2 - 2
+    BUILDING_FTUR = 10,				// 2 - 4
+    BUILDING_FACT = 11,				// 2 - 8
+    BUILDING_PROC = 12,				// 2 - 16
+    BUILDING_SILO = 13,				// 2 - 32
+    BUILDING_HELIPAD = 14,		    // 2 - 64
+    BUILDING_SAM = 15,				// 2 - 128
+    BUILDING_AIRFIELD = 16,			// 3 - 1
+    BUILDING_POWR = 17,				// 3 - 2
+    BUILDING_APWR = 18,				// 3 - 4
+    BUILDING_STEK = 19,				// 3 - 8
+    BUILDING_HOSPITAL = 20,			// 3 - 16
+    BUILDING_BARR = 21,				// 3 - 32
+    BUILDING_TENT = 22,				// 3 - 64
+    BUILDING_KENN = 23,				// 3 - 128
+    BUILDING_FIX = 24,				// 4 - 1
+    BUILDING_BIO = 25,				// 4 - 2
+    BUILDING_MISS = 26,				// 4 - 4
+    BUILDING_SYRD = 27,				// 4 - 8
+    BUILDING_SPEN = 28,				// 4 - 16
+    BUILDING_MSLO = 29,				// 4 - 32
+    BUILDING_FCOM = 30,				// 4 - 64
+    BUILDING_TESLA_COIL = 31,		// 4 - 128
+
+    // Fakes
+    BUILDING_WEAF = 32,
+    BUILDING_FACF = 33,
+    BUILDING_SYRF = 34,
+    BUILDING_SPEF = 35,
+    BUILDING_DOMF = 36,
+
+    // Walls
+    BUILDING_SBAG = 37,
+    BUILDING_CYCL = 38,
+    BUILDING_BRIK = 39,
+    BUILDING_BARB = 40,
+    BUILDING_WOOD = 41,
+    BUILDING_FENC = 42,
+
+    // Mines
+    BUILDING_MINV = 43,
+    BUILDING_MINP = 44,
+
+    // 
+    BUILDING_V01 = 45,
+    BUILDING_V02 = 46,
+    BUILDING_V03 = 47,
+    BUILDING_V04 = 48,
+    BUILDING_V05 = 49,
+    BUILDING_V06 = 50,
+    BUILDING_V07 = 51,
+    BUILDING_V08 = 52,
+    BUILDING_V09 = 53,
+    BUILDING_V10 = 54,
+    BUILDING_V11 = 55,
+    BUILDING_V12 = 56,
+    BUILDING_V13 = 57,
+    BUILDING_V14 = 58,
+    BUILDING_V15 = 59,
+    BUILDING_V16 = 60,
+    BUILDING_V17 = 61,
+    BUILDING_V18 = 62,
+    BUILDING_V19 = 63,
+    BUILDING_V20 = 64,
+    BUILDING_V21 = 65,
+    BUILDING_V22 = 66,
+    BUILDING_V23 = 67,
+    BUILDING_V24 = 68,
+    BUILDING_V25 = 69,
+    BUILDING_V26 = 70,
+    BUILDING_V27 = 71,
+    BUILDING_V28 = 72,
+    BUILDING_V29 = 73,
+    BUILDING_V30 = 74,
+    BUILDING_V31 = 75,
+    BUILDING_V32 = 76,
+    BUILDING_V33 = 77,
+    BUILDING_V34 = 78,
+    BUILDING_V35 = 79,
+    BUILDING_V36 = 80,
+    BUILDING_V37 = 81,
+
+    // Barrels
+    BUILDING_BARREL = 82,
+    BUILDING_BRL3 = 83,
+
+    // Ants
+    BUILDING_QUEE = 84,
+    BUILDING_LAR1 = 85,
+    BUILDING_LAR2 = 86,
+
+    BUILDING_LAST = 86,
+
+    BUILDING_COUNT = 87
+};
+
+//TODO: To be moved to infantrytype.h when class is implimented.
+enum InfantryType {
+    INFANTRY_NONE				= -1,		// Invalid InfantryType
+
+    INFANTRY_FIRST				= 0,
+
+    INFANTRY_E1					= 0,		// Rifle Infantry
+    INFANTRY_E2					= 1,		// Grenadier
+    INFANTRY_E3					= 2,		// Rocket Soldier
+    INFANTRY_FLAME_TROOPER		= 3,		// Flamethrower
+    INFANTRY_ENGINEER			= 4,		// Engineer
+    INFANTRY_TANYA			    = 5,		// Tanya
+    INFANTRY_SPY				= 6,		// Spy
+    INFANTRY_THIEF				= 7,		// Theif
+    INFANTRY_MEDIC				= 8,		// Medic
+    INFANTRY_GENERAL			= 9,		// General
+    INFANTRY_DOG				= 10,		// Attack Dog
+    INFANTRY_C1					= 11,		//
+    INFANTRY_C2					= 12,		//
+    INFANTRY_C3					= 13,		//
+    INFANTRY_C4					= 14,		//
+    INFANTRY_C5					= 15,		//
+    INFANTRY_C6					= 16,		//
+    INFANTRY_C7					= 17,		//
+    INFANTRY_C8					= 18,		//
+    INFANTRY_C9					= 19,		//
+    INFANTRY_C10				= 20,		//
+    INFANTRY_EINSTEIN			= 21,		// Einstein
+    INFANTRY_DELPHI				= 22,		// Delphi
+    INFANTRY_CHAN				= 23,		//
+    INFANTRY_SHOCK_TROOPER		= 24,		// Shock Trooper
+    INFANTRY_MECHANIC			= 25,		// Mechanic
+
+    INFANTRY_LAST				= 25,		//
+
+    INFANTRY_COUNT				= 26		//
+};
+
+//TODO: To be moved to infantry.h when class is implimented.
+enum DoType {
+    DO_NONE = -1,
+
+    DO_FIRST = 0,
+
+    DO_READY = 0,
+    DO_GUARD = 1,
+    DO_PRONE = 2,
+    DO_WALK = 3,
+    DO_FIRE_UP = 4,
+    DO_DOWN = 5,
+    DO_CRAWL = 6,
+    DO_UP = 7,
+    DO_FIRE_PRONE = 8,
+
+    DO_IDLE1 = 9,
+    DO_IDLE2 = 10,
+
+    DO_DIE1 = 11,
+    DO_DIE2 = 12,
+    DO_DIE3 = 13,
+    DO_DIE4 = 14,
+    DO_DIE5 = 15,
+
+    DO_16 = 16,
+    DO_17 = 17,
+    DO_18 = 18,
+    DO_19 = 19,
+    DO_20 = 20,
+
+    DO_LAST = 20,
+
+    DO_COUNT = 21
+};
+
+
+//TODO: To be moved to mission.h when class is implimented.
 // this might be might worst nightmare come true, status per mission type... D:
 // EDIT: im sure that each mission would share the same status type regardless of class, but tomsons is sure...
 enum MissionStatusType
@@ -539,8 +770,7 @@ enum MissionStatusType
     STATUS_MISSION_HARVEST_0 = 0, // from tomsons testing, Moving to resources
     STATUS_MISSION_HARVEST_1 = 1, // from tomsons testing, Harvesting
     STATUS_MISSION_HARVEST_2 = 2, // from tomsons testing, Returing to Refinery
-    STATUS_MISSION_HARVEST_3 =
-        3, // from tomsons testing, Radio'ing Refinery, then it switches to 2 and then to Enter Mission
+    STATUS_MISSION_HARVEST_3 = 3, // from tomsons testing, Radio'ing Refinery, then it switches to 2 and then to Enter Mission
     STATUS_MISSION_HARVEST_4 = 4, // from tomsons testing, ?????????
 
     // MISSION_AREA_GUARD
@@ -598,39 +828,40 @@ enum WeaponSlotType
     WEAPON_SLOT_COUNT,
 };
 
+//TODO: To be moved to housetype.h when class is implimented.
 enum HousesType
 {
     HOUSES_NONE = -1,
 
     HOUSES_FIRST = 0,
 
-    HOUSES_SPN = 0, //"Spain"
-    HOUSES_GRE = 1, //"Greece"
-    HOUSES_RED = 2, //"USSR"
-    HOUSES_ENG = 3, //"England"
-    HOUSES_UKA = 4, //"Ukraine"        //HOUSES_ITA = 4,    //"Italy"        //from EDWIN
-    HOUSES_GER = 5, //"Germany"
-    HOUSES_FRA = 6, //"France"
-    HOUSES_TRK = 7, //"Turkey"
+    HOUSES_SPN = 0,         //"Spain"
+    HOUSES_GRE = 1,         //"Greece"
+    HOUSES_RED = 2,         //"USSR"
+    HOUSES_ENG = 3,         //"England"
+    HOUSES_UKA = 4,         //"Ukraine"		    //EDWIN shows entry 4 as "Italy"       // HOUSES_ITA = 4,
+    HOUSES_GER = 5,         //"Germany"
+    HOUSES_FRA = 6,         //"France"
+    HOUSES_TRK = 7,         //"Turkey"
 
-    HOUSES_GDI = 8, //"GoodGuy"
-    HOUSES_NOD = 9, //"BadGuy"
+    HOUSES_GDI = 8,         //"GoodGuy"
+    HOUSES_NOD = 9,         //"BadGuy"
 
-    HOUSES_CIV = 10, //"Neutral"
-    HOUSES_JP = 11, //"Special"
+    HOUSES_CIV = 10,        //"Neutral"
+    HOUSES_JP = 11,         //"Special"
 
     HOUSES_LAST = 11,
 
     HOUSES_MULTI_FIRST = 12,
 
-    HOUSES_MP1 = 12, //"Multi1"
-    HOUSES_MP2 = 13, //"Multi2"
-    HOUSES_MP3 = 14, //"Multi3"
-    HOUSES_MP4 = 15, //"Multi4"
-    HOUSES_MP5 = 16, //"Multi5"
-    HOUSES_MP6 = 17, //"Multi6"
-    HOUSES_MP7 = 18, //"Multi7"
-    HOUSES_MP8 = 19, //"Multi8"
+    HOUSES_MP1 = 12,        //"Multi1"
+    HOUSES_MP2 = 13,        //"Multi2"
+    HOUSES_MP3 = 14,        //"Multi3"
+    HOUSES_MP4 = 15,        //"Multi4"
+    HOUSES_MP5 = 16,        //"Multi5"
+    HOUSES_MP6 = 17,        //"Multi6"
+    HOUSES_MP7 = 18,        //"Multi7"
+    HOUSES_MP8 = 19,        //"Multi8"
 
     HOUSES_MPLAST = 19,
 
@@ -643,6 +874,7 @@ enum HousesType
 
 DEFINE_ENUMERATION_OPERATORS(HousesType);
 
+//TODO: To be moved to house.h when class is implimented.
 enum OwnerType
 {
     OWNER_NONE = 0, // No owner
@@ -680,6 +912,32 @@ DEFINE_ENUMERATION_OPERATORS(OwnerType);
 
 enum SideType
 {
+=======
+    OWNER_NONE = 0,         // No house
+
+    OWNER_SPAIN = 1 << HOUSES_SPN,          //"Spain"		//Allies
+    OWNER_GREECE = 1 << HOUSES_GRE,         //"Greece"		//Allies
+    OWNER_USSR = 1 << HOUSES_RED,           //"USSR"		//Soviet            //  OWNER_ITALY	= 4,		//"Italy"		//Allies
+    OWNER_ENGLAND = 1 << HOUSES_ENG,        //"England"		//Allies
+    OWNER_UKRAINE = 1 << HOUSES_UKA,        //"Ukraine"		//Soviet
+    OWNER_GERMANY = 1 << HOUSES_GER,        //"Germany"		//Allies
+    OWNER_FRANCE = 1 << HOUSES_FRA,         //"France"		//Allies
+    OWNER_TURKEY = 1 << HOUSES_TRK,         //"Turkey"		//Allies
+    OWNER_GOODGUY = 1 << HOUSES_GDI,        //"GoodGuy"		//Allies
+    OWNER_BADGUY = 1 << HOUSES_NOD,         //"BadGuy"		//Soviet
+    OWNER_NEUTRAL = 1 << HOUSES_CIV,        //"Neutral"
+    OWNER_SPECIAL = 1 << HOUSES_JP,         //"Special"
+
+    OWNER_MP1 = 1 << HOUSES_MP1,        //"Multi1"
+    OWNER_MP2 = 1 << HOUSES_MP2,        //"Multi2"
+    OWNER_MP3 = 1 << HOUSES_MP3,        //"Multi3"
+    OWNER_MP4 = 1 << HOUSES_MP4,        //"Multi4"
+    OWNER_MP5 = 1 << HOUSES_MP5,        //"Multi5"
+    OWNER_MP6 = 1 << HOUSES_MP6,        //"Multi6"
+    OWNER_MP7 = 1 << HOUSES_MP7,        //"Multi7"
+    OWNER_MP8 = 1 << HOUSES_MP8,        //"Multi8"
+
+>>>>>>> Added required enums (AircrafType, VesselType etc) for additional CCINIClass functions.
     SIDE_ALLIES = OWNER_SPAIN | OWNER_GREECE | OWNER_ENGLAND | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY | OWNER_GOODGUY,
     SIDE_SOVIET = OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY,
 
@@ -689,7 +947,7 @@ enum SideType
 
 DEFINE_ENUMERATION_OPERATORS(SideType);
 
-// TODO
+//TODO: To be moved to movie.h when class is implimented.
 enum MovieType
 {
     MOVIE_NONE = -1,
