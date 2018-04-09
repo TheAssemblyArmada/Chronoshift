@@ -54,8 +54,10 @@ public:
 
     static void One_Time() {}
     static void Init_Heap();
+    static const char *Name_From(HousesType mission);
     static HousesType From_Name(const char *name);
     static HouseTypeClass &As_Reference(HousesType type);
+    static const char *Name_From_Owner(int owner);
     static int Owner_From_Name(const char *name);
 
 private:

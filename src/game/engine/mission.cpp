@@ -292,7 +292,7 @@ BOOL MissionClass::Is_Recruitable_Mission(MissionType mission)
  *
  * 0x00502C8C
  */
-MissionType MissionClass::Mission_From_Name(const char *name)
+MissionType MissionClass::From_Name(const char *name)
 {
     DEBUG_ASSERT(name != nullptr);
 
@@ -316,7 +316,7 @@ MissionType MissionClass::Mission_From_Name(const char *name)
  *
  * 0x00502CDC
  */
-const char *MissionClass::Mission_Name(MissionType mission)
+const char *MissionClass::Name_From(MissionType mission)
 {
     if (mission != MISSION_NONE && mission < MISSION_COUNT) {
         return Missions[mission];

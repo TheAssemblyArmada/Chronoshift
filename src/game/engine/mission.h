@@ -72,8 +72,9 @@ public:
     int Get_Mission_Status() const { return Status; }
 
     static BOOL Is_Recruitable_Mission(MissionType mission);
-    static MissionType Mission_From_Name(char const *name);
-    static const char *Mission_Name(MissionType mission);
+
+    static MissionType From_Name(char const *name);
+    static const char *Name_From(MissionType mission);
 
 protected:
     MissionType Mission; // The current mission of this object (def = MISSION_NONE).

@@ -379,6 +379,15 @@ ThemeType ThemeClass::From_Name(const char *name) const
     return THEME_NONE;
 }
 
+const char *ThemeClass::Name_From(ThemeType theme)
+{
+    if (theme >= THEME_FIRST && theme < THEME_COUNT) {
+        return Fetch_String(Themes[theme].Name);
+    }
+
+    return "None";
+}
+
 /**
  * @brief Scans to check which songs are actually available on disk.
  *

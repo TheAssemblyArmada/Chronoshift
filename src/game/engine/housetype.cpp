@@ -124,6 +124,14 @@ void HouseTypeClass::Init_Heap(void)
     new HouseTypeClass(HouseMulti7);
     new HouseTypeClass(HouseMulti8);
 }
+const char *HouseTypeClass::Name_From(HousesType type)
+{
+    if (type >= HOUSES_FIRST && type < HOUSES_COUNT) {
+        return As_Reference(type).Name;
+    }
+
+    return "None";
+}
 
 HousesType HouseTypeClass::From_Name(const char *name)
 {
@@ -140,6 +148,12 @@ HousesType HouseTypeClass::From_Name(const char *name)
 HouseTypeClass &HouseTypeClass::As_Reference(HousesType type)
 {
     return HouseTypes[type];
+}
+
+const char * HouseTypeClass::Name_From_Owner(int owner)
+{
+    //TODO: OmniBlade, please implement.
+    return nullptr;
 }
 
 int HouseTypeClass::Owner_From_Name(const char *name)

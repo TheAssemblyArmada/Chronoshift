@@ -117,6 +117,7 @@ public:
     const char *Full_Name(ThemeType theme) const;
 
     ThemeType From_Name(const char *name) const;
+    const char *Name_From(ThemeType theme);
 
     void Set_Theme_Data(ThemeType theme, int scenario, int side);
 

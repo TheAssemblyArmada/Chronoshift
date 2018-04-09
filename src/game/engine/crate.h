@@ -60,8 +60,8 @@ public:
 
     static BOOL Put_Crate(int16_t &cell);
     static BOOL Get_Crate(int16_t cell);
-    static CrateType Crate_From_Name(const char *name);
-    static const char *Name_From_Crate(CrateType crate) { return CrateNames[crate]; }
+    static CrateType From_Name(const char *name);
+    static const char *Name_From(CrateType crate) { return CrateNames[crate]; }
 
 private:
     TCountDownTimerClass<FrameTimerClass> CrateTimer;

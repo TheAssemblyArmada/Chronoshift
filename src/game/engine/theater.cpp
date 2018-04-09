@@ -39,3 +39,12 @@ TheaterType Theater_From_Name(const char *name)
 
     return THEATER_NONE;
 }
+
+const char *Name_From_Theater(TheaterType theater)
+{
+    if (theater >= THEATER_NONE && theater < THEATER_COUNT) {
+        return g_theaters[theater].name;
+    }
+
+    return "none";
+}

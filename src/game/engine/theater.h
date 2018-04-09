@@ -45,6 +45,7 @@ struct TheaterDataType
 };
 
 TheaterType Theater_From_Name(const char *name);
+const char *Name_From_Theater(TheaterType theater);
 
 extern TheaterDataType g_theaters[THEATER_COUNT];
 

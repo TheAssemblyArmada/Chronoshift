@@ -103,7 +103,7 @@ BOOL CrateClass::Get_Crate(int16_t cell)
 #endif
 }
 
-CrateType CrateClass::Crate_From_Name(const char *name)
+CrateType CrateClass::From_Name(const char *name)
 {
     if (name != nullptr) {
         for (CrateType i = CRATE_MONEY; i < CRATE_COUNT; ++i) {
