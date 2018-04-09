@@ -41,12 +41,12 @@ char *Make_Args(const char *args)
 }
 
 // Based on code from http://www.codeproject.com/Articles/4610/Three-Ways-to-Inject-Your-Code-into-Another-Proces
-void Inject_Dll(const char *dllname, HANDLE hProcess)
+bool Inject_Dll(const char *dllname, HANDLE hProcess)
 {
     HANDLE hThread;
     char szLibPath[_MAX_PATH]; // Buffer to hold the name of the DLL (including full path!)
     void *pLibRemote; // The address (in the remote process) where szLibPath will be copied to.
-    DWORD hLibModule; // Base address of loaded module.
+    DWORD exitCode; // exit code of the dll
     HMODULE hKernel32 = GetModuleHandleA("Kernel32"); // For the LoadLibraryA func.
 
     GetFullPathNameA(dllname, _MAX_PATH, szLibPath, NULL);
@@ -67,11 +67,13 @@ void Inject_Dll(const char *dllname, HANDLE hProcess)
     WaitForSingleObject(hThread, INFINITE);
 
     // Get handle of the loaded module
-    GetExitCodeThread(hThread, &hLibModule);
+    GetExitCodeThread(hThread, &exitCode);
 
     // Clean up
     CloseHandle(hThread);
     VirtualFreeEx(hProcess, pLibRemote, sizeof(szLibPath), MEM_RELEASE);
+    // LoadLibrary return is 0 on failure.
+    return exitCode != 0;
 }
 
 // Based on code snippet from https://opcode0x90.wordpress.com/2011/01/15/injecting-dll-into-process-on-load/
@@ -125,8 +127,14 @@ void Inject_Loader(const char *path, const char *dllname, char *args)
             exit(1);
         }
 
-        // inject DLL payload into remote process
-        Inject_Dll(dllname, hProcess);
+        // inject DLL payload into remote process, check if injection succeeded
+        if (!Inject_Dll(dllname, hProcess)) {
+            // Since DLL failed to load, kill the process we started as it won't behave as expected."
+            TerminateProcess(hProcess,1);
+            MessageBox(NULL, "Injection failed!", "Launcher", MB_OK|MB_SERVICE_NOTIFICATION);
+            //exit launcher
+            exit(1);
+        }
 
         // pause and restore original entry point unless DLL init overwrote
         // it already.
