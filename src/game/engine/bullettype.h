@@ -56,7 +56,7 @@ class BulletTypeClass : public ObjectTypeClass
 {
 public:
     BulletTypeClass(BulletType bullet, const char *name);
-    BulletTypeClass(BulletTypeClass const &that) : ObjectTypeClass(that) {}
+    BulletTypeClass(BulletTypeClass const &that);
     BulletTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
     ~BulletTypeClass() {}
 

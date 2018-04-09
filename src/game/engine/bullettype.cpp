@@ -81,6 +81,33 @@ BulletTypeClass::BulletTypeClass(BulletType bullet, const char *name) :
     // Bit128 = false;
 }
 
+BulletTypeClass::BulletTypeClass(BulletTypeClass const &that) :
+    ObjectTypeClass(that),
+    High(that.High),
+    Shadow(that.Shadow),
+    Arcing(that.Arcing),
+    Dropping(that.Dropping),
+    Inviso(that.Inviso),
+    Proximity(that.Proximity),
+    Animates(that.Animates),
+    Ranged(that.Ranged),
+    Rotates(that.Rotates),
+    Inaccurate(that.Inaccurate),
+    Translucent(that.Translucent),
+    AntiAir(that.AntiAir),
+    AntiGround(that.AntiGround),
+    AntiSubWarfare(that.AntiSubWarfare),
+    Degenerates(that.Degenerates),
+    UnderWater(that.UnderWater),
+    Parachuted(that.Parachuted),
+    Gigundo(that.Gigundo),
+    Type(that.Type),
+    ROT(that.ROT),
+    Arm(that.Arm),
+    Frames(that.Frames)
+{
+}
+
 /**
  * @brief Initialises the object heap for this class.
  *
