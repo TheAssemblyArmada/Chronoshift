@@ -27,6 +27,7 @@
 typedef uint32_t coord_t;
 typedef int16_t cell_t;
 typedef int32_t target_t;
+typedef uint16_t lepton_t;
 
 inline int Cells_To_Pixels(uint32_t cells)
 {
