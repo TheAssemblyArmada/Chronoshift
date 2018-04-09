@@ -93,6 +93,7 @@ set(GAMEENGINE_SRC
     game/engine/fuse.cpp
     game/engine/gameoptions.cpp
     game/engine/getcd.cpp
+    game/engine/ground.cpp
     game/engine/gscreen.cpp
     game/engine/heap.cpp
     game/engine/housetype.cpp
@@ -116,6 +117,7 @@ set(GAMEENGINE_SRC
     game/engine/scenario.cpp
     game/engine/session.cpp
     game/engine/smudgetype.cpp
+    game/engine/source.cpp
     game/engine/special.cpp
     game/engine/target.cpp
     game/engine/technotype.cpp

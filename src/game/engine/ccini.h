@@ -30,15 +30,16 @@
 #include "overlaytype.h"
 #include "weapontype.h"
 #include "terraintype.h"
-//#include "triggertype.h"
 #include "mission.h"
 #include "crate.h"
 #include "action.h"
 #include "mzone.h"
 #include "land.h"
-//#include "ground.h"
-//#include "source.h"
+#include "ground.h"
+#include "source.h"
 #include "theme.h"
+
+class TriggerTypeClass;
 
 class CCINIClass : public INIClass
 {
@@ -106,14 +107,14 @@ public:
     const TheaterType Get_TheaterType(const char *section, const char *entry, const TheaterType defvalue = THEATER_NONE);
     bool Put_TheaterType(const char *section, const char *entry, const TheaterType value);
 
-    //const TriggerTypeClass *Get_TriggerType(const char *section, const char *entry) const;
-    //bool Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *value);
+    const TriggerTypeClass *Get_TriggerType(const char *section, const char *entry) const;
+    bool Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *value);
 
     const ThemeType Get_ThemeType(const char *section, const char *entry, const ThemeType defvalue = THEME_NONE) const;
     bool Put_ThemeType(const char *section, const char *entry, const ThemeType value);
 
-    //const SourceType Get_SourceType(const char *section, const char *entry, const SourceType defvalue = SOURCE_NONE) const;
-    //bool Put_SourceType(const char *section, const char *entry, const SourceType value);
+    const SourceType Get_SourceType(const char *section, const char *entry, const SourceType defvalue = SOURCE_NONE) const;
+    bool Put_SourceType(const char *section, const char *entry, const SourceType value);
 
     const CrateType Get_CrateType(const char *section, const char *entry, const CrateType defvalue = CRATE_NONE) const;
     bool Put_CrateType(const char *section, const char *entry, const CrateType value);
@@ -124,8 +125,8 @@ public:
     const MZoneType Get_MZoneType(const char *section, const char *entry, const MZoneType defvalue = MZONE_NONE) const;
     bool Put_MZoneType(const char *section, const char *entry, const MZoneType value);
 
-    //const GroundType Get_GroundType(const char *section, const char *entry, const GroundType defvalue = GROUND_NONE) const;
-    //bool Put_GroundType(const char *section, const char *entry, const GroundType value);
+    const GroundType Get_GroundType(const char *section, const char *entry, const GroundType defvalue = GROUND_NONE) const;
+    bool Put_GroundType(const char *section, const char *entry, const GroundType value);
 
     const TerrainType Get_TerrainType(const char *section, const char *entry, const TerrainType defvalue = TERRAIN_NONE) const;
     bool Put_TerrainType(const char *section, const char *entry, const TerrainType value);
@@ -133,7 +134,7 @@ public:
     const RTTIType Get_RTTIType(const char *section, const char *entry, const RTTIType defvalue = RTTI_NONE) const;
     bool Put_RTTIType(const char *section, const char *entry, const RTTIType value);
 
-    const ActionType Get_ActionType(const char *section, const char *entry, const ActionType defvalue) const;
+    const ActionType Get_ActionType(const char *section, const char *entry, const ActionType defvalue = ACTION_NONE) const;
     bool Put_ActionType(const char *section, const char *entry, const ActionType value);
 
     const int Get_Owners(const char *section, const char *entry, int const defvalue = OWNER_NONE) const;

@@ -17,6 +17,7 @@
 #include "minmax.h"
 #include "shapipe.h"
 #include "crc.h"
+ //#include "triggertype.h"
 
 CCINIClass::CCINIClass() : DigestValid(false) {}
 

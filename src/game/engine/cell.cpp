@@ -16,6 +16,7 @@
 #include "cell.h"
 #include "ccfileclass.h"
 #include "coord.h"
+#include "ground.h"
 #include "drawshape.h"
 #include "globals.h"
 #include "iomap.h"
