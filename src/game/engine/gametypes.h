@@ -912,7 +912,6 @@ DEFINE_ENUMERATION_OPERATORS(OwnerType);
 
 enum SideType
 {
-=======
     OWNER_NONE = 0,         // No house
 
     OWNER_SPAIN = 1 << HOUSES_SPN,          //"Spain"		//Allies
@@ -937,7 +936,6 @@ enum SideType
     OWNER_MP7 = 1 << HOUSES_MP7,        //"Multi7"
     OWNER_MP8 = 1 << HOUSES_MP8,        //"Multi8"
 
->>>>>>> Added required enums (AircrafType, VesselType etc) for additional CCINIClass functions.
     SIDE_ALLIES = OWNER_SPAIN | OWNER_GREECE | OWNER_ENGLAND | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY | OWNER_GOODGUY,
     SIDE_SOVIET = OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY,
 

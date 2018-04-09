@@ -26,6 +26,7 @@
 #include "random.h"
 #include "theater.h"
 #include "theme.h"
+#include "movie.h"
 #include "ttimer.h"
 
 enum ScenarioPlayerEnum
