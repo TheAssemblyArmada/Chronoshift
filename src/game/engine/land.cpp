@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "land.h"
+#include "ccini.h"
 #include "gamedebug.h"
 #include "minmax.h"
 

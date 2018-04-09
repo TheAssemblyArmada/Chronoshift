@@ -19,9 +19,10 @@
 #define LAND_H
 
 #include "always.h"
-#include "ccini.h"
 #include "fixed.h"
 #include "gametypes.h"
+
+class CCINIClass;
 
 enum SpeedType
 {
