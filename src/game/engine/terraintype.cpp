@@ -316,10 +316,15 @@ void TerrainTypeClass::Init(TheaterType theater)
                 snprintf(filename,
                     sizeof(filename),
                     "%s.%s",
-                    terrain.ImageName[0] != '\0' ? terrain.ImageName : terrain.Get_Name(),
-                    i == TERRAIN_FLAGFLY ? "shp" : g_theaters[theater].ext);
+                    /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.Get_Name(),
+                    /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_theaters[theater].ext);
                 terrain.ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
                 g_isTheaterShape = true;
+
+                if (terrain.RadarIconData != nullptr) {
+                    delete[] static_cast<char *>(terrain.RadarIconData);
+                }
+
                 terrain.RadarIconData = Get_Radar_Icon(terrain.ImageData, 0, 1, 3);
                 g_isTheaterShape = false;
             }

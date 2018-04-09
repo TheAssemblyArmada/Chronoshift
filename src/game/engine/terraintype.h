@@ -61,7 +61,7 @@ enum TerrainType {
     TERRAIN_BOXES08 = 32,
     TERRAIN_BOXES09 = 33,
     TERRAIN_MINE = 34,
-    TERRAIN_FLAGFLY = 35,
+    //TERRAIN_FLAGFLY = 35,
     TERRAIN_COUNT,
 };
 
