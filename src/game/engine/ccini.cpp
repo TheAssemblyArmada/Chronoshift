@@ -28,7 +28,7 @@ const lepton_t CCINIClass::Get_Lepton(const char *section, const char *entry, co
     return Get_Fixed(section, entry, fixed(defvalue, 256)) * 256;
 }
 
-bool CCINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)
+BOOL CCINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)
 {
     //TODO: OmniBlade, please implement.
     return false;
@@ -41,7 +41,7 @@ const MPHType CCINIClass::Get_MPHType(const char *section, const char *entry, co
     return (MPHType)Min((value * 256) / 100, 255);
 }
 
-bool CCINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)
+BOOL CCINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)
 {
     //TODO: OmniBlade, please implement.
     return false;
@@ -58,7 +58,7 @@ HousesType CCINIClass::Get_HousesType(const char *section, const char *entry, co
     return defvalue;
 }
 
-bool CCINIClass::Put_HousesType(const char *section, const char *entry, const HousesType value)
+BOOL CCINIClass::Put_HousesType(const char *section, const char *entry, const HousesType value)
 {
     return Put_String(section, entry, HouseTypeClass::Name_From(value));
 }
@@ -74,7 +74,7 @@ const MovieType CCINIClass::Get_MovieType(const char *section, const char *entry
     return defvalue;
 }
 
-bool CCINIClass::Put_MovieType(const char *section, const char *entry, const MovieType value)
+BOOL CCINIClass::Put_MovieType(const char *section, const char *entry, const MovieType value)
 {
     return Put_String(section, entry, Name_From_Movie(value));
 }
@@ -90,7 +90,7 @@ const TheaterType CCINIClass::Get_TheaterType(const char *section, const char *e
     return defvalue;
 }
 
-bool CCINIClass::Put_TheaterType(const char *section, const char *entry, const TheaterType value)
+BOOL CCINIClass::Put_TheaterType(const char *section, const char *entry, const TheaterType value)
 {
     return Put_String(section, entry, Name_From_Theater(value));
 }
@@ -106,7 +106,7 @@ const ThemeType CCINIClass::Get_ThemeType(const char *section, const char *entry
     return defvalue;
 }
 
-bool CCINIClass::Put_ThemeType(const char *section, const char *entry, const ThemeType value)
+BOOL CCINIClass::Put_ThemeType(const char *section, const char *entry, const ThemeType value)
 {
     return Put_String(section, entry, Theme.Base_Name(value));
 }
@@ -122,7 +122,7 @@ const CrateType CCINIClass::Get_CrateType(const char *section, const char *entry
     return defvalue;
 }
 
-bool CCINIClass::Put_CrateType(const char *section, const char *entry, const CrateType value)
+BOOL CCINIClass::Put_CrateType(const char *section, const char *entry, const CrateType value)
 {
     return Put_String(section, entry, CrateClass::Name_From(value));
 }
@@ -138,7 +138,7 @@ const MissionType CCINIClass::Get_MissionType(const char *section, const char *e
     return defvalue;
 }
 
-bool CCINIClass::Put_MissionType(const char *section, const char *entry, const MissionType value)
+BOOL CCINIClass::Put_MissionType(const char *section, const char *entry, const MissionType value)
 {
     return Put_String(section, entry, MissionClass::Name_From(value));
 }
@@ -154,7 +154,7 @@ const ArmorType CCINIClass::Get_ArmorType(const char *section, const char *entry
     return defvalue;
 }
 
-bool CCINIClass::Put_ArmorType(const char *section, const char *entry, const ArmorType value)
+BOOL CCINIClass::Put_ArmorType(const char *section, const char *entry, const ArmorType value)
 {
     return Put_String(section, entry, Name_From_Armor(value));
 }
@@ -170,7 +170,7 @@ const VocType CCINIClass::Get_VocType(const char *section, const char *entry, co
     return defvalue;
 }
 
-bool CCINIClass::Put_VocType(const char *section, const char *entry, const VocType value)
+BOOL CCINIClass::Put_VocType(const char *section, const char *entry, const VocType value)
 {
     return Put_String(section, entry, Voc_Name(value));
 }
@@ -187,7 +187,7 @@ const VoxType CCINIClass::Get_VoxType(const char *section, const char *entry, co
     return defvalue;
 }
 
-bool CCINIClass::Put_VoxType(const char *section, const char *entry, const VoxType value)
+BOOL CCINIClass::Put_VoxType(const char *section, const char *entry, const VoxType value)
 {
     //TODO: Requires Vox interface to be complete
     //return Put_String(section, entry, Vox_Name(value));
@@ -205,7 +205,7 @@ const AnimType CCINIClass::Get_AnimType(const char *section, const char *entry, 
     return defvalue;
 }
 
-bool CCINIClass::Put_AnimType(const char *section, const char *entry, const AnimType value)
+BOOL CCINIClass::Put_AnimType(const char *section, const char *entry, const AnimType value)
 {
     return Put_String(section, entry, AnimTypeClass::Name_From(value));
 }
@@ -222,7 +222,7 @@ const UnitType CCINIClass::Get_UnitType(const char *section, const char *entry, 
     return defvalue;
 }
 
-bool CCINIClass::Put_UnitType(const char *section, const char *entry, const UnitType value)
+BOOL CCINIClass::Put_UnitType(const char *section, const char *entry, const UnitType value)
 {
     //TODO: Requires UnitTypeClass to be complete
     //return Put_String(section, entry, UnitTypeClass::Name_From(value));
@@ -240,7 +240,7 @@ const WeaponType CCINIClass::Get_WeaponType(const char *section, const char *ent
     return defvalue;
 }
 
-bool CCINIClass::Put_WeaponType(const char *section, const char *entry, const WeaponType value)
+BOOL CCINIClass::Put_WeaponType(const char *section, const char *entry, const WeaponType value)
 {
     return Put_String(section, entry, WeaponTypeClass::Name_From(value));
 }
@@ -256,7 +256,7 @@ const WarheadType CCINIClass::Get_WarheadType(const char *section, const char *e
     return defvalue;
 }
 
-bool CCINIClass::Put_WarheadType(const char *section, const char *entry, const WarheadType value)
+BOOL CCINIClass::Put_WarheadType(const char *section, const char *entry, const WarheadType value)
 {
     return Put_String(section, entry, WarheadTypeClass::Name_From(value));
 }
@@ -272,7 +272,7 @@ const OverlayType CCINIClass::Get_OverlayType(const char *section, const char *e
     return defvalue;
 }
 
-bool CCINIClass::Put_OverlayType(const char *section, const char *entry, const OverlayType value)
+BOOL CCINIClass::Put_OverlayType(const char *section, const char *entry, const OverlayType value)
 {
     return Put_String(section, entry, OverlayTypeClass::Name_From(value));
 }
@@ -288,7 +288,7 @@ const SmudgeType CCINIClass::Get_SmudgeType(const char *section, const char *ent
     return defvalue;
 }
 
-bool CCINIClass::Put_SmudgeType(const char *section, const char *entry, const SmudgeType value)
+BOOL CCINIClass::Put_SmudgeType(const char *section, const char *entry, const SmudgeType value)
 {
     return Put_String(section, entry, SmudgeTypeClass::Name_From(value));
 }
@@ -304,7 +304,7 @@ const BulletType CCINIClass::Get_BulletType(const char *section, const char *ent
     return defvalue;
 }
 
-bool CCINIClass::Put_BulletType(const char *section, const char *entry, const BulletType value)
+BOOL CCINIClass::Put_BulletType(const char *section, const char *entry, const BulletType value)
 {
     return Put_String(section, entry, BulletTypeClass::Name_From(value));
 }
@@ -320,7 +320,7 @@ const LandType CCINIClass::Get_LandType(const char *section, const char *entry, 
     return defvalue;
 }
 
-bool CCINIClass::Put_LandType(const char *section, const char *entry, const LandType value)
+BOOL CCINIClass::Put_LandType(const char *section, const char *entry, const LandType value)
 {
     return Put_String(section, entry, Name_From_Land(value));
 }
@@ -336,7 +336,7 @@ const MZoneType CCINIClass::Get_MZoneType(const char *section, const char *entry
     return defvalue;
 }
 
-bool CCINIClass::Put_MZoneType(const char *section, const char *entry, const MZoneType value)
+BOOL CCINIClass::Put_MZoneType(const char *section, const char *entry, const MZoneType value)
 {
     return Put_String(section, entry, Name_From_MZone(value));
 }
@@ -352,7 +352,7 @@ const TerrainType CCINIClass::Get_TerrainType(const char *section, const char *e
     return defvalue;
 }
 
-bool CCINIClass::Put_TerrainType(const char *section, const char *entry, const TerrainType value)
+BOOL CCINIClass::Put_TerrainType(const char *section, const char *entry, const TerrainType value)
 {
     return Put_String(section, entry, TerrainTypeClass::Name_From(value));
 }
@@ -368,7 +368,7 @@ const RTTIType CCINIClass::Get_RTTIType(const char *section, const char *entry, 
     return defvalue;
 }
 
-bool CCINIClass::Put_RTTIType(const char *section, const char *entry, const RTTIType value)
+BOOL CCINIClass::Put_RTTIType(const char *section, const char *entry, const RTTIType value)
 {
     return Put_String(section, entry, Name_From_RTTI(value));
 }
@@ -384,7 +384,7 @@ const ActionType CCINIClass::Get_ActionType(const char *section, const char *ent
     return defvalue;
 }
 
-bool CCINIClass::Put_ActionType(const char *section, const char *entry, const ActionType value)
+BOOL CCINIClass::Put_ActionType(const char *section, const char *entry, const ActionType value)
 {
     return Put_String(section, entry, Name_From_Action(value));
 }
@@ -403,7 +403,7 @@ const int CCINIClass::Get_Owners(const char *section, const char *entry, int con
     return owners;
 }
 
-bool CCINIClass::Put_Owners(const char *section, const char *entry, const int value)
+BOOL CCINIClass::Put_Owners(const char *section, const char *entry, const int value)
 {
     static char buffer[MAX_LINE_LENGTH];
 
@@ -451,7 +451,7 @@ const int CCINIClass::Get_Units(const char *section, const char *entry, int cons
     return value;
 }
 
-bool CCINIClass::Put_Units(const char *section, const char *entry, const int value)
+BOOL CCINIClass::Put_Units(const char *section, const char *entry, const int value)
 {
     static char buffer[MAX_LINE_LENGTH];
 
@@ -484,7 +484,7 @@ const int CCINIClass::Get_Infantry(const char *section, const char *entry, int c
     return value;
 }
 
-bool CCINIClass::Put_Infantry(const char *section, const char *entry, const int value)
+BOOL CCINIClass::Put_Infantry(const char *section, const char *entry, const int value)
 {
     static char buffer[MAX_LINE_LENGTH];
 
@@ -517,7 +517,7 @@ const int CCINIClass::Get_Aircrafts(const char *section, const char *entry, int 
     return value;
 }
 
-bool CCINIClass::Put_Aircrafts(const char *section, const char *entry, const int value)
+BOOL CCINIClass::Put_Aircrafts(const char *section, const char *entry, const int value)
 {
     static char buffer[MAX_LINE_LENGTH];
 
@@ -550,7 +550,7 @@ const int CCINIClass::Get_Vessels(char const *section, char const *entry, int co
     return value;
 }
 
-bool CCINIClass::Put_Vessels(char const *section, char const *entry, const int value)
+BOOL CCINIClass::Put_Vessels(char const *section, char const *entry, const int value)
 {
     static char buffer[MAX_LINE_LENGTH];
 
@@ -583,7 +583,7 @@ const int CCINIClass::Get_Buildings(char const *section, char const *entry, int 
     return value;
 }
 
-bool CCINIClass::Put_Buildings(char const *section, char const *entry, const int value)
+BOOL CCINIClass::Put_Buildings(char const *section, char const *entry, const int value)
 {
     static char buffer[MAX_LINE_LENGTH];
 
