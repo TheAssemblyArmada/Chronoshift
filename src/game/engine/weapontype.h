@@ -20,7 +20,7 @@
 
 #include "always.h"
 #include "animtype.h"
-#include "audio.h"
+#include "voc.h"
 #include "gametypes.h"
 #include "heap.h"
 

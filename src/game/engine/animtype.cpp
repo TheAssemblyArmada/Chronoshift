@@ -17,6 +17,7 @@
 #include "ccfileclass.h"
 #include "coord.h"
 #include "mixfile.h"
+#include "voc.h"
 #include <cstdio>
 
 using std::snprintf;

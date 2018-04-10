@@ -130,6 +130,8 @@ set(GAMEENGINE_SRC
     game/engine/unittype.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
+    game/engine/voc.cpp
+    game/engine/vox.cpp
     game/engine/warheadtype.cpp
     game/engine/weapontype.cpp
     game/gfx/blitters.cpp
