@@ -229,23 +229,28 @@ void __cdecl Buffer_Draw_Line(GraphicViewPortClass &vp, int x1, int y1, int x2, 
 
 void __cdecl Buffer_Fill_Rect(GraphicViewPortClass &vp, int x, int y, int w, int h, uint8_t color)
 {
-    uint8_t *offset = static_cast<uint8_t *>(vp.Get_Offset());
-
-    if ((x >= vp.Get_Width()) || (y >= vp.Get_Height()) || (x + w < 0) || (y + h < 0)) {
+    // If we aren't drawing within the viewport, return
+    if (x >= vp.Get_Width() || y >= vp.Get_Height() || w < 0 || h < 0) {
         return;
     }
 
-    x = Max(0, x);
-    y = Max(0, y);
+    // Clipping
+    if (x < 0) {
+        x = 0;
+    }
 
-    int width = w >= vp.Get_Width() ? vp.Get_Width() - x : w - x + 1;
-    int height = h >= vp.Get_Height() ? vp.Get_Height() - y : h - y + 1;
+    if (y < 0) {
+        y = 0;
+    }
 
-    // DEBUG_LOG("Actual Fill_Rect(%u, %d, %d, %d, %d, %d)\n", view, x_pos, y_pos, width, height, color);
+    w = Min(w, vp.Get_Width() - 1);
+    h = Min(h, vp.Get_Height() - 1);
 
-    offset += y * vp.Get_Full_Pitch() + x;
+    uint8_t *offset = y * vp.Get_Full_Pitch() + x + static_cast<uint8_t *>(vp.Get_Offset());
+    int height = h - y + 1;
+    int width = w - x + 1;
 
-    for (int h = 0; h < height; ++h) {
+    for (int i = 0; i < height; ++i) {
         memset(offset, color, width);
         offset += vp.Get_Full_Pitch();
     }
@@ -262,9 +267,6 @@ void __cdecl Buffer_Remap(GraphicViewPortClass &vp, int x, int y, int w, int h, 
     int xend = x + w - 1;
     int yend = y + h - 1;
 
-    int xoffset = 0;
-    int yoffset = 0;
-
     // If we aren't drawing within the viewport, return
     if (xstart >= vp.Get_Width() || ystart >= vp.Get_Height() || xend < 0 || yend < 0) {
         return;
@@ -272,21 +274,18 @@ void __cdecl Buffer_Remap(GraphicViewPortClass &vp, int x, int y, int w, int h, 
 
     // Clipping
     if (xstart < 0) {
-        xoffset = -xstart;
         xstart = 0;
     }
 
     if (ystart < 0) {
-        yoffset += h * (-ystart);
         ystart = 0;
     }
 
-    xend = Min(xend, (int)vp.Get_Width() - 1);
-    yend = Min(yend, (int)vp.Get_Height() - 1);
+    xend = Min(xend, vp.Get_Width() - 1);
+    yend = Min(yend, vp.Get_Height() - 1);
 
     // Setup parameters for blit
-    int pitch = vp.Get_Pitch() + vp.Get_Width() + vp.Get_XAdd();
-    uint8_t *offset = y * pitch + x + static_cast<uint8_t *>(vp.Get_Offset());
+    uint8_t *offset = ystart * vp.Get_Full_Pitch() + xstart + static_cast<uint8_t *>(vp.Get_Offset());
     int lines = yend - ystart + 1;
     int blit_width = xend - xstart + 1;
 
@@ -296,7 +295,7 @@ void __cdecl Buffer_Remap(GraphicViewPortClass &vp, int x, int y, int w, int h, 
             offset[i] = fading_table[offset[i]];
         }
 
-        offset += pitch;
+        offset += vp.Get_Full_Pitch();
     }
 }
 
