@@ -19,13 +19,94 @@
 #define TARGET_H
 
 #include "always.h"
+#include "gametypes.h"
 #include "rtti.h"
 
-int32_t As_Target(int16_t cellnum);
+class CellClass;
+class TriggerClass;
+class TriggerTypeClass;
+class TeamClass;
+class TeamTypeClass;
+class AnimClass;
+class BulletClass;
+class TerrainClass;
+class AircraftClass;
+class TechnoClass;
+class TechnoTypeClass;
+class AbstractClass;
+class ObjectClass;
+class UnitClass;
+class VesselClass;
+class InfantryClass;
+class BuildingClass;
 
-inline RTTIType Target_Get_RTTI(int32_t target)
+inline RTTIType Target_Get_RTTI(target_t target)
 {
-    return RTTIType((target & 0xFF000000) >> 24);
+	return RTTIType((target & 0xFF000000) >> 24);
 }
+
+inline int Target_Get_ID(target_t target)
+{
+	return (target & 0xFFFFFF);
+}
+
+inline const bool Target_Is_Building(target_t target)
+{
+	return Target_Get_RTTI(target) == RTTI_BUILDING;
+}
+
+inline const bool Target_Is_Unit(target_t target)
+{
+	return Target_Get_RTTI(target) == RTTI_UNIT;
+}
+
+inline const bool Target_Is_Vessel(target_t target)
+{
+	return Target_Get_RTTI(target) == RTTI_VESSEL;
+}
+
+inline const bool Target_Is_Infantry(target_t target)
+{
+	return Target_Get_RTTI(target) == RTTI_INFANTRY;
+}
+
+inline const bool Target_Is_Terrain(target_t target)
+{
+	return Target_Get_RTTI(target) == RTTI_TERRAIN;
+}
+
+inline const bool Target_Is_Cell(target_t target)
+{
+	return Target_Get_RTTI(target) == RTTI_CELL;
+}
+
+const bool Target_Is_Techno(target_t target);
+
+const bool Target_Legal(target_t target);
+
+target_t As_Target(cell_t cellnum);
+target_t As_Target(CellClass *cell);
+target_t As_Target(coord_t coord);
+
+TriggerClass *As_Trigger(target_t target);
+TriggerTypeClass *As_TriggerType(target_t target);
+TeamClass *As_Team(target_t target);
+TeamTypeClass *As_TeamType(target_t target);
+AbstractClass *As_Abstract(target_t target);
+ObjectClass *As_Object(target_t target);
+AnimClass *As_Animation(target_t target);
+BulletClass *As_Bullet(target_t target);
+TerrainClass *As_Terrain(target_t target);
+TechnoClass *As_Techno(target_t target);
+TechnoTypeClass *As_TechnoType(target_t target);
+AircraftClass *As_Aircraft(target_t target);
+UnitClass *As_Unit(target_t target);
+VesselClass *As_Vessel(target_t target);
+InfantryClass *As_Infantry(target_t target);
+BuildingClass *As_Building(target_t target);
+
+cell_t As_Cell(target_t target);
+coord_t As_Coord(target_t target);
+coord_t As_Movement_Coord(target_t target);
 
 #endif // TARGET_H
