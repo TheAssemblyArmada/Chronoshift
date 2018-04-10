@@ -22,7 +22,7 @@ TheaterType g_lastTheater = THEATER_NONE;
 #endif
 
 TheaterDataType g_theaters[THEATER_COUNT] = {
-    {"TEMPERATE", "TEMPERAT", "TMP"},
+    {"TEMPERATE", "TEMPERAT", "TEM"},
     {"SNOW", "SNOW", "SNO"},
     {"INTERIOR", "INTERIOR", "INT"},
 };

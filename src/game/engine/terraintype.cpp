@@ -319,7 +319,6 @@ void TerrainTypeClass::Init(TheaterType theater)
                     "%s.%s",
                     /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.Get_Name(),
                     /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_theaters[theater].ext);
-                DEBUG_LOG("Retrieving '%s'.\n", filename);
                 terrain.ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
                 g_isTheaterShape = true;
 
