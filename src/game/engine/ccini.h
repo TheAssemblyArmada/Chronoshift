@@ -30,6 +30,7 @@
 #include "overlaytype.h"
 #include "weapontype.h"
 #include "terraintype.h"
+#include "triggertype.h"
 #include "mission.h"
 #include "crate.h"
 #include "action.h"
@@ -39,8 +40,8 @@
 #include "source.h"
 #include "theme.h"
 #include "movie.h"
-
-class TriggerTypeClass;
+#include "voc.h"
+#include "vox.h"
 
 class CCINIClass : public INIClass
 {
