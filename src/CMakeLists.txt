@@ -100,6 +100,7 @@ set(GAMEENGINE_SRC
     game/engine/land.cpp
     game/engine/layer.cpp
     game/engine/lists.cpp
+    game/engine/logic.cpp
     game/engine/map.cpp
     game/engine/mission.cpp
     game/engine/missioncontrol.cpp
