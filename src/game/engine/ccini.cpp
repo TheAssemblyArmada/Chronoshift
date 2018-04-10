@@ -191,7 +191,7 @@ const VoxType CCINIClass::Get_VoxType(const char *section, const char *entry, co
 {
 #ifndef RAPP_STANDALONE
     // Inlined in RA
-    return false;
+    return VOX_NONE;
 #else
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -253,7 +253,7 @@ BOOL CCINIClass::Put_UnitType(const char *section, const char *entry, const Unit
 {
 #ifndef RAPP_STANDALONE
     BOOL (*func)(CCINIClass *, const char *, const char *, const UnitType) =
-        reinterpret_cast<UnitType (*)(CCINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
+        reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
     return func(this, section, entry, value);
 #else
     //TODO: Requires UnitTypeClass to be complete
@@ -644,7 +644,7 @@ const int CCINIClass::Get_Buildings(char const *section, char const *entry, cons
 {
 #ifndef RAPP_STANDALONE
     int (*func)(CCINIClass *, const char *, const char *, const int) =
-        reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const int)>(0x00463A88);
+        reinterpret_cast<int (*)(CCINIClass *, const char *, const char *, const int)>(0x00463A88);
     return func(this, section, entry, value);
 #else
     char valuebuf[MAX_LINE_LENGTH];
