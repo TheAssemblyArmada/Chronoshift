@@ -127,6 +127,7 @@ set(GAMEENGINE_SRC
     game/engine/theater.cpp
     game/engine/theme.cpp
     game/engine/tracker.cpp
+    game/engine/triggertype.cpp
     game/engine/unittype.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
