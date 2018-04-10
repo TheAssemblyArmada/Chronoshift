@@ -139,7 +139,7 @@ VoxType Vox_From_Name(char const *name)
 char const *Name_From_Vox(VoxType vox)
 {
     if ( vox != VOX_NONE && vox < VOX_COUNT ) {
-        return SpeechName[vox];
+        return VoxName[vox];
     }
     return "<none>";
 }
