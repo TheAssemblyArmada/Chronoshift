@@ -143,7 +143,7 @@ BOOL FacingClass::Rotation_Adjust(int adjust)
 {
     if (Has_Changed()) {
         DirType curr = Current;
-        int8_t diff = (int8_t)Desired - (int8_t)Current; //Fixed watcom optimising DirType to uint8_t and failing diff check.
+        int diff = (int8_t)(Desired - Current); //Fixed watcom optimising DirType to uint8_t and failing diff check.
 
         adjust = Min(adjust, 127);
 
