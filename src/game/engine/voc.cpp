@@ -5,7 +5,7 @@ SoundEffectType SoundEffectName[] = {
 	{ "GIRLYEAH", 20, 0 },
 	{ "GUYOKAY1", 20, 0 },
 	{ "GUYYEAH1", 20, 0 },
-	{ "MINELAY1", 5, 1 },
+	{ "MINELAY1", 5, 0 },		// Changed from 1 to 0 as it doesnt have a variation.
 	{ "ACKNO", 20, 1 },
 	{ "AFFIRM1", 20, 1 },
 	{ "AWAIT1", 20, 1 },
