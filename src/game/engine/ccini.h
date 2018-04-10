@@ -138,22 +138,22 @@ public:
     const ActionType Get_ActionType(const char *section, const char *entry, const ActionType defvalue = ACTION_NONE) const;
     BOOL Put_ActionType(const char *section, const char *entry, const ActionType value);
 
-    const int Get_Owners(const char *section, const char *entry, int const defvalue = OWNER_NONE) const;
+    const int Get_Owners(const char *section, const char *entry, const int defvalue = OWNER_NONE) const;
     BOOL Put_Owners(const char *section, const char *entry, const int value);
 
-    const int Get_Units(const char *section, const char *entry, int const defvalue = 0) const;
+    const int Get_Units(const char *section, const char *entry, const int defvalue = 0) const;
     BOOL Put_Units(const char *section, const char *entry, const int value);
 
-    const int Get_Infantry(const char *section, const char *entry, int const defvalue = 0) const;
+    const int Get_Infantry(const char *section, const char *entry, const int defvalue = 0) const;
     BOOL Put_Infantry(const char *section, const char *entry, const int value);
 
-    const int Get_Aircrafts(const char *section, const char *entry, int const defvalue = 0) const;
+    const int Get_Aircrafts(const char *section, const char *entry, const int defvalue = 0) const;
     BOOL Put_Aircrafts(const char *section, const char *entry, const int value);
 
-    const int Get_Vessels(const char *section, const char *entry, int const defvalue = 0) const;
+    const int Get_Vessels(const char *section, const char *entry, const int defvalue = 0) const;
     BOOL Put_Vessels(const char *section, const char *entry, const int value);
 
-    const int Get_Buildings(const char *section, const char *entry, int const defvalue = 0) const;
+    const int Get_Buildings(const char *section, const char *entry, const int defvalue = 0) const;
     BOOL Put_Buildings(const char *section, const char *entry, const int value);
 
     void Calculate_Message_Digest(void);
