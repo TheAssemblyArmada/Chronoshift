@@ -48,8 +48,11 @@ enum CellOccupantEnum
     INFANTRY_SPOT_BOTTOM_LEFT = 0x4,
     INFANTRY_SPOT_BOTTOM_RIGHT = 0x8,
     INFANTRY_SPOT_CENTER = 0x10,
-    OCCUPANT_INFANTRY = INFANTRY_SPOT_TOP_LEFT | INFANTRY_SPOT_TOP_RIGHT | INFANTRY_SPOT_BOTTOM_LEFT
-        | INFANTRY_SPOT_BOTTOM_RIGHT | INFANTRY_SPOT_CENTER,
+    OCCUPANT_INFANTRY = INFANTRY_SPOT_TOP_LEFT
+    | INFANTRY_SPOT_TOP_RIGHT
+    | INFANTRY_SPOT_BOTTOM_LEFT
+    | INFANTRY_SPOT_BOTTOM_RIGHT
+    | INFANTRY_SPOT_CENTER,
     OCCUPANT_UNIT = 0x20, // unit, vessel or aircraft.
     OCCUPANT_TERRAIN = 0x40,
     OCCUPANT_BUILDING = 0x80,
@@ -74,8 +77,8 @@ public:
     CellClass(NoInitClass const &noinit) {}
     ~CellClass() { OccupierPtr = nullptr; } // Null the pointer in memory, but object still exists
 
-    BOOL operator==(CellClass const &that) const;
-    BOOL operator!=(CellClass const &that) const { return !(*this == that); }
+    BOOL operator==(CellClass const &that) const { return CellNumber == that.CellNumber; }
+    BOOL operator!=(CellClass const &that) const { return CellNumber != that.CellNumber; }
 
     int Cell_Color(BOOL none = false) const;
     ObjectClass *Cell_Find_Object(RTTIType type) const;
@@ -87,8 +90,8 @@ public:
     VesselClass *Cell_Vessel() const;
     AircraftClass *Cell_Aircraft() const;
     TerrainClass *Cell_Terrain() const;
-    // SmudgeClass *Cell_Smudge() const;
-    // OverlayClass *Cell_Overlay() const;
+    //SmudgeClass *Cell_Smudge() const;
+    //OverlayClass *Cell_Overlay() const;
     uint32_t Cell_Coord() const;
     void Recalc_Attributes();
     BOOL Can_Ore_Grow() const;
@@ -119,8 +122,8 @@ public:
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
 
-    int Cell_Number() const { return CellNumber; }
-    int8_t Get_Zone(MZoneType mzone) const { return Zones[mzone]; }
+    cell_t Cell_Number() const { return CellNumber; }
+    int8_t Get_Zone(MZoneType mzone) { return Zones[mzone]; }
     void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
     BOOL Get_Placement_Check() const { return PlacementCheck; }
     void Set_Placement_Check(BOOL check) { PlacementCheck = check; }
@@ -157,7 +160,7 @@ public:
     CellClass *Hook_Ctor() { return new (this) CellClass; }
 #endif
 private:
-    int16_t CellNumber;
+    cell_t CellNumber;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
