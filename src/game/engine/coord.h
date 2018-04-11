@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "facing.h"
+#include "gametypes.h"
 
 #define CELL_PIXELS 24
 #define CELL_LEPTONS 256
@@ -34,15 +35,15 @@
 #define MAPTD_MAX_HEIGHT 64
 #define MAP_MAX_AREA MAP_MAX_WIDTH * MAP_MAX_HEIGHT
 
-extern const uint32_t AdjacentCoord[FACING_COUNT];
-extern const int16_t AdjacentCell[FACING_COUNT];
+extern const coord_t AdjacentCoord[FACING_COUNT];
+extern const cell_t AdjacentCell[FACING_COUNT];
 
-inline int16_t Coord_Lepton_X(uint32_t coord)
+inline uint16_t Coord_Lepton_X(coord_t coord)
 {
     return coord & 0x0000FFFF;
 }
 
-inline int16_t Coord_Lepton_Y(uint32_t coord)
+inline uint16_t Coord_Lepton_Y(coord_t coord)
 {
     return (coord & 0xFFFF0000) >> 16;
 }
@@ -57,69 +58,70 @@ inline int16_t Coord_Sub_Cell_Y(uint32_t coord)
     return (coord >> 16) & 0xFF;
 }
 
-inline uint32_t Coord_From_Lepton_XY(int16_t x, int16_t y)
+inline coord_t Coord_From_Lepton_XY(int16_t x, int16_t y)
 {
     return (x & 0xFFFF) | (y << 16);
 }
 
-inline uint32_t Coord_Add(uint32_t coord1, uint32_t coord2)
+inline coord_t Coord_Add(coord_t coord1, coord_t coord2)
 {
-    int16_t lx = Coord_Lepton_X(coord1) + Coord_Lepton_X(coord2);
-    int16_t ly = Coord_Lepton_Y(coord1) + Coord_Lepton_Y(coord2);
+    uint16_t lx = Coord_Lepton_X(coord1) + Coord_Lepton_X(coord2);
+    uint16_t ly = Coord_Lepton_Y(coord1) + Coord_Lepton_Y(coord2);
 
     return Coord_From_Lepton_XY(lx, ly);
 }
 
-inline uint32_t Coord_Centered(uint32_t coord)
+inline coord_t Coord_Centered(coord_t coord)
 {
     return coord & 0xFF80FF80;
 }
 
-inline uint32_t Coord_Top_Left(uint32_t coord)
+inline coord_t Coord_Top_Left(coord_t coord)
 {
     return coord & 0xFF00FF00;
 }
 
-inline uint32_t Coord_Get_Adjacent(uint32_t coord, FacingType facing)
+inline coord_t Coord_Get_Adjacent(coord_t coord, FacingType facing)
 {
     return Coord_Centered(Coord_Add(coord, AdjacentCoord[(unsigned)facing % FACING_COUNT]));
 }
 
-inline uint8_t Coord_Cell_X(uint32_t coord)
+inline uint8_t Coord_Cell_X(coord_t coord)
 {
     return (coord & 0x00007F00) >> 8;
 }
 
-inline uint8_t Coord_Cell_Y(uint32_t coord)
+inline uint8_t Coord_Cell_Y(coord_t coord)
 {
     return (coord & 0x7F000000) >> 24;
 }
 
-inline BOOL Coord_Is_Negative(uint32_t coord) {
+inline BOOL Coord_Is_Negative(uint32_t coord)
+{
     return (coord & 0x80008000) != 0;
 }
 
-inline int16_t Cell_From_XY(uint8_t x, uint8_t y)
+inline cell_t Cell_From_XY(uint8_t x, uint8_t y)
 {
     return ((y * MAP_MAX_WIDTH) + x);
 }
 
-inline int16_t Coord_To_Cell(uint32_t coord)
+inline cell_t Coord_To_Cell(coord_t coord)
 {
     return Cell_From_XY(Coord_Cell_X(coord), Coord_Cell_Y(coord));
 }
 
-inline uint8_t Cell_Get_X(int16_t cellnum)
+inline uint8_t Cell_Get_X(cell_t cellnum)
 {
     return (unsigned)cellnum % MAP_MAX_WIDTH;
 }
 
-inline uint8_t Cell_Get_Y(int16_t cellnum)
+inline uint8_t Cell_Get_Y(cell_t cellnum)
 {
     return (unsigned)cellnum / MAP_MAX_HEIGHT;
 }
 
-inline uint32_t Cell_To_Coord(int16_t cellnum)
+inline coord_t Cell_To_Coord(cell_t cellnum)
 {
     return 0x00800080 | (Cell_Get_X(cellnum) << 8) | (Cell_Get_Y(cellnum) << 24);
 }
@@ -144,7 +146,7 @@ inline int16_t Lepton_Round_To_Pixel(int16_t lepton)
     return Pixel_To_Lepton(Lepton_To_Pixel(lepton));
 }
 
-inline uint32_t Coord_From_Pixel_XY(int x, int y)
+inline coord_t Coord_From_Pixel_XY(int x, int y)
 {
     return Coord_From_Lepton_XY(Pixel_To_Lepton(x), Pixel_To_Lepton(y));
 }
@@ -163,5 +165,7 @@ int Distance(uint32_t coord1, uint32_t coord2);
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 uint32_t Coord_Move(uint32_t coord, DirType dir, uint16_t distance);
 BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h);
+
+int Distance(coord_t coord1, coord_t coord2);
 
 #endif // COORD_H
