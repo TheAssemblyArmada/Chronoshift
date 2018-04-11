@@ -2,7 +2,7 @@
 //#include    "techno.h"
 
 // A invalid target instance parsed into Transmit_Message() as a default param.
-target_t NullRadioTarget = 0;
+const target_t NullRadioTarget = 0;
 
 char const *RadioClass::Messages[RADIO_COUNT] = {
     "static (no message)",
@@ -98,8 +98,8 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
 
             if ( (Radio == nullptr || Radio == radio) && radio != nullptr ) {
 
-                TechnoClass *t_radioptr = dynamic_cast<TechnoClass *>(radio);
-                TechnoClass *t_this = dynamic_cast<TechnoClass *>(this);
+                TechnoClass *t_radioptr = reinterpret_cast<TechnoClass *>(radio);
+                TechnoClass *t_this = reinterpret_cast<TechnoClass *>(this);
 
                 if ( t_radioptr != nullptr && t_this != nullptr ) {
 

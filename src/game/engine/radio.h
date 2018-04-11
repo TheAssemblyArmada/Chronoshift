@@ -26,7 +26,7 @@ class TechnoClass;
 class FootClass;
 
 // A invalid target instance parsed into Transmit_Message() as a default param.
-extern target_t NullRadioTarget;
+extern const target_t NullRadioTarget;
 
 class RadioClass : public MissionClass
 {
