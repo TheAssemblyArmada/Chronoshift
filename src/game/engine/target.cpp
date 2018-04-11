@@ -40,12 +40,12 @@ BOOL Target_Legal(target_t target)
 
 target_t As_Target(cell_t cellnum)
 {
-    return Make_Target(RTTI_CELL, (16 * Cell_Get_X(cellnum) + 8) + 8) | ((16 * Cell_Get_Y(cellnum) + 8) << 12);
+    return Make_Target(RTTI_CELL, (16 * Cell_Get_X(cellnum) + 8)) | ((16 * Cell_Get_Y(cellnum) + 8) << 12);
 }
 
 target_t As_Target(coord_t coord)
 {
-    return Make_Target(RTTI_CELL, (Coord_Lepton_X(coord) >> 4) | (Coord_Lepton_Y(coord) >> 4 << 12));
+    return Make_Target(RTTI_CELL, (Coord_Lepton_X(coord) >> 4) | ((Coord_Lepton_Y(coord) >> 4) << 12));
 }
 
 target_t As_Target(CellClass *cell)
