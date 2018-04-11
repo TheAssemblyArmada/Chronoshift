@@ -25,7 +25,7 @@ BOOL Target_Is_Techno(target_t target)
 {
 #ifndef RAPP_STANDALONE
     // TODO: Inlined in RA
-    return nullptr;
+    return false;
 #else
     // TODO: Requires TechnoClass implementation.
     TechnoClass *ptr = As_Techno(target);
@@ -40,23 +40,17 @@ BOOL Target_Legal(target_t target)
 
 target_t As_Target(cell_t cellnum)
 {
-    return (((16 * Cell_Get_Y(cellnum) + 8) << 12) | (16 * Cell_Get_X(cellnum) + 8)) & 0xFFFFFF | 0x9000000;
+    return Make_Target(RTTI_CELL, (16 * Cell_Get_X(cellnum) + 8) + 8) | ((16 * Cell_Get_Y(cellnum) + 8) << 12);
+}
+
+target_t As_Target(coord_t coord)
+{
+    return Make_Target(RTTI_CELL, (Coord_Lepton_X(coord) >> 4) | (Coord_Lepton_Y(coord) >> 4 << 12));
 }
 
 target_t As_Target(CellClass *cell)
 {
     return cell != nullptr ? As_Target(cell->Cell_Number()) : 0;
-}
-
-target_t As_Target(coord_t coord)
-{
-#ifndef RAPP_STANDALONE
-    target_t (*func)(coord_t) = reinterpret_cast<target_t (*)(coord_t)>(0x00555930);
-    return func(coord);
-#else
-    // TODO: OmniBlade please implement.
-    return 0;
-#endif
 }
 
 TriggerClass *As_Trigger(target_t target)
@@ -286,13 +280,15 @@ coord_t As_Coord(target_t target)
     return func(target);
 #else
     if (!Target_Legal(target)) {
-        return false;
+        return 0;
 }
     if (Target_Is_Cell(target)) {
         ObjectClass *objptr = As_Object(target);
         return (objptr != nullptr ? objptr->Target_Coord() : 0);
     }
-    return Coord_From_Lepton_XY(16 * (Target_Get_ID(target) & 0xFFF) + 8, 16 * ((Target_Get_ID(target) >> 12) & 0xFFF) + 8);
+    int16_t lx = 16 * (Target_Get_ID(target) & 0xFFF) + 8;
+    int16_t ly = 16 * ((Target_Get_ID(target) >> 12) & 0xFFF) + 8;
+    return Coord_From_Lepton_XY(lx, ly);
 #endif
 }
 
@@ -303,7 +299,7 @@ coord_t As_Movement_Coord(target_t target)
     return func(target);
 #else
     if (!Target_Legal(target)) {
-        return false;
+        return 0;
     }
     if (Target_Is_Cell(target)) {
         ObjectClass *objptr = As_Object(target);

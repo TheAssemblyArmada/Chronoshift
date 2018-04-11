@@ -40,6 +40,11 @@ class VesselClass;
 class InfantryClass;
 class BuildingClass;
 
+inline target_t Make_Target(RTTIType type, int id)
+{
+    return (id & 0xFFFFFF) | ((type << 24) & 0xFF000000);
+}
+
 inline RTTIType Target_Get_RTTI(target_t target)
 {
     return RTTIType((target & 0xFF000000) >> 24);
@@ -85,8 +90,8 @@ BOOL Target_Is_Techno(target_t target);
 BOOL Target_Legal(target_t target);
 
 target_t As_Target(cell_t cellnum);
-target_t As_Target(CellClass *cell);
 target_t As_Target(coord_t coord);
+target_t As_Target(CellClass *cell);
 
 TriggerClass *As_Trigger(target_t target);
 TriggerTypeClass *As_TriggerType(target_t target);
