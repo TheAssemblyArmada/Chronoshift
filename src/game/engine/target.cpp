@@ -285,18 +285,30 @@ coord_t As_Coord(target_t target)
     coord_t (*func)(target_t) = reinterpret_cast<coord_t (*)(target_t)>(0x00555384);
     return func(target);
 #else
-    // TODO: OmniBlade please implement.
-    return 0;
+    if (!Target_Legal(target)) {
+        return false;
+}
+    if (Target_Is_Cell(target)) {
+        ObjectClass *objptr = As_Object(target);
+        return (objptr != nullptr ? objptr->Target_Coord() : 0);
+    }
+    return Coord_From_Lepton_XY(16 * (Target_Get_ID(target) & 0xFFF) + 8, 16 * ((Target_Get_ID(target) >> 12) & 0xFFF) + 8);
 #endif
 }
 
 coord_t As_Movement_Coord(target_t target)
 {
 #ifndef RAPP_STANDALONE
-    coord_t (*func)(target_t) = reinterpret_cast<coord_t (*)(target_t)>(0x005553F8);
+    coord_t(*func)(target_t) = reinterpret_cast<coord_t(*)(target_t)>(0x005553F8);
     return func(target);
 #else
-    // TODO: OmniBlade please implement.
-    return 0;
+    if (!Target_Legal(target)) {
+        return false;
+    }
+    if (Target_Is_Cell(target)) {
+        ObjectClass *objptr = As_Object(target);
+        return (objptr != nullptr ? objptr->Docking_Coord() : 0);
+    }
+    return Cell_To_Coord(Target_Get_ID(target));
 #endif
 }
