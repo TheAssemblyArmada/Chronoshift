@@ -66,7 +66,7 @@ public:
     }
 
     static char const *Message_From(RadioMessageType message);
-	static RadioMessageType RadioClass::From_Message(char const *message);
+    static RadioMessageType RadioClass::From_Message(char const *message);
 
 private:
     static char const *Messages[RADIO_COUNT];

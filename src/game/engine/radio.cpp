@@ -77,14 +77,14 @@ BOOL RadioClass::Limbo(void)
 
 RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
-	DEBUG_ASSERT(this != nullptr);
-	DEBUG_ASSERT(radio != nullptr);
-	DEBUG_ASSERT(message != RADIO_NONE);
-	DEBUG_ASSERT(message < RADIO_COUNT);
+    DEBUG_ASSERT(this != nullptr);
+    DEBUG_ASSERT(radio != nullptr);
+    DEBUG_ASSERT(message != RADIO_NONE);
+    DEBUG_ASSERT(message < RADIO_COUNT);
 
 #ifndef RAPP_STANDALONE
-	RadioMessageType(*func)(RadioClass *, RadioMessageType, target_t &) = reinterpret_cast<RadioMessageType(*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
-	return func(radio, message, target);
+    RadioMessageType(*func)(RadioClass *, RadioMessageType, target_t &) = reinterpret_cast<RadioMessageType(*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
+    return func(radio, message, target);
 #else
     if ( message != ReceivedMessage ) {
         LastMessage = TransmittedMessage;
@@ -128,13 +128,13 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
 #endif
 }
 
-RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t &a2, RadioClass *radio)
+RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t &target, RadioClass *radio)
 {
     DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-    RadioClass *radioptr = (radio == nullptr) ? dynamic_cast<RadioClass *>(Radio.Get_Pointer()) : radio;
+    RadioClass *radioptr = (radio == nullptr) ? reinterpret_cast<RadioClass *>(Radio.Get_Pointer()) : radio;
 
     if ( radioptr == nullptr ) {
         return RADIO_STATIC;
@@ -145,12 +145,12 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
     }
     
     if ( message != RADIO_HELLO ) {
-        return radioptr->Receive_Message(this, message, a2);
+        return radioptr->Receive_Message(this, message, target);
     }
 
     Transmit_Message(RADIO_OVER_AND_OUT);
 
-    if ( radioptr->Receive_Message(this, message, a2) == RADIO_ROGER ) {
+    if ( radioptr->Receive_Message(this, message, target) == RADIO_ROGER ) {
         Radio = radioptr;
         return RADIO_ROGER;
     }
@@ -165,8 +165,8 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioCla
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 #ifndef RAPP_STANDALONE
-	RadioMessageType(*func)(RadioMessageType, RadioClass *) = reinterpret_cast<RadioMessageType(*)(RadioMessageType, RadioClass *)>(0x00532AF0);
-	return func(message, radio);
+    RadioMessageType(*func)(RadioMessageType, RadioClass *) = reinterpret_cast<RadioMessageType(*)(RadioMessageType, RadioClass *)>(0x00532AF0);
+    return func(message, radio);
 #else
     return Transmit_Message(message, NullRadioTarget, radio);
 #endif
@@ -197,18 +197,18 @@ char const *RadioClass::Message_From(RadioMessageType message)
 
 RadioMessageType RadioClass::From_Message(char const *message)
 {
-	DEBUG_ASSERT(message != nullptr);
+    DEBUG_ASSERT(message != nullptr);
 
-	if (strcasecmp(message, "Invalid message") == 0 || strcasecmp(message, "<none>") == 0 || strcasecmp(message, "none") == 0) {
-		return RADIO_NONE;
-	}
+    if (strcasecmp(message, "Invalid message") == 0 || strcasecmp(message, "<none>") == 0 || strcasecmp(message, "none") == 0) {
+        return RADIO_NONE;
+    }
 
-	if (message != nullptr) {
-		for (RadioMessageType type = RADIO_FIRST; type < RADIO_COUNT; ++type) {
-			if (strcasecmp(message, Message_From(type)) == 0) {
-				return type;
-			}
-		}
-	}
-	return RADIO_NONE;
+    if (message != nullptr) {
+        for (RadioMessageType type = RADIO_FIRST; type < RADIO_COUNT; ++type) {
+            if (strcasecmp(message, Message_From(type)) == 0) {
+                return type;
+            }
+        }
+    }
+    return RADIO_NONE;
 }
