@@ -216,6 +216,7 @@ set(GAMEENGINE_SRC
     game/ui/textbtn.cpp
     game/ui/txtlabel.cpp
     game/ui/toggle.cpp
+    game/ui/msgbox.cpp
 )
 
 if(STANDALONE)
