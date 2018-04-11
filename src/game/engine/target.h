@@ -6,7 +6,7 @@
  *
  * @brief Functions for converting to and from target values.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -42,47 +42,47 @@ class BuildingClass;
 
 inline RTTIType Target_Get_RTTI(target_t target)
 {
-	return RTTIType((target & 0xFF000000) >> 24);
+    return RTTIType((target & 0xFF000000) >> 24);
 }
 
 inline int Target_Get_ID(target_t target)
 {
-	return (target & 0xFFFFFF);
+    return (target & 0xFFFFFF);
 }
 
-inline const bool Target_Is_Building(target_t target)
+inline BOOL Target_Is_Building(target_t target)
 {
-	return Target_Get_RTTI(target) == RTTI_BUILDING;
+    return Target_Get_RTTI(target) == RTTI_BUILDING;
 }
 
-inline const bool Target_Is_Unit(target_t target)
+inline BOOL Target_Is_Unit(target_t target)
 {
-	return Target_Get_RTTI(target) == RTTI_UNIT;
+    return Target_Get_RTTI(target) == RTTI_UNIT;
 }
 
-inline const bool Target_Is_Vessel(target_t target)
+inline BOOL Target_Is_Vessel(target_t target)
 {
-	return Target_Get_RTTI(target) == RTTI_VESSEL;
+    return Target_Get_RTTI(target) == RTTI_VESSEL;
 }
 
-inline const bool Target_Is_Infantry(target_t target)
+inline BOOL Target_Is_Infantry(target_t target)
 {
-	return Target_Get_RTTI(target) == RTTI_INFANTRY;
+    return Target_Get_RTTI(target) == RTTI_INFANTRY;
 }
 
-inline const bool Target_Is_Terrain(target_t target)
+inline BOOL Target_Is_Terrain(target_t target)
 {
-	return Target_Get_RTTI(target) == RTTI_TERRAIN;
+    return Target_Get_RTTI(target) == RTTI_TERRAIN;
 }
 
-inline const bool Target_Is_Cell(target_t target)
+inline BOOL Target_Is_Cell(target_t target)
 {
-	return Target_Get_RTTI(target) == RTTI_CELL;
+    return Target_Get_RTTI(target) == RTTI_CELL;
 }
 
-const bool Target_Is_Techno(target_t target);
+BOOL Target_Is_Techno(target_t target);
 
-const bool Target_Legal(target_t target);
+BOOL Target_Legal(target_t target);
 
 target_t As_Target(cell_t cellnum);
 target_t As_Target(CellClass *cell);
