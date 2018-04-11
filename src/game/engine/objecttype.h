@@ -56,6 +56,7 @@ public:
     BOOL Get_Bit128() { return Bit128; }
     int16_t Get_Strength() { return Strength; }
     void *Get_Image_Data() const { return ImageData; }
+    const char *Get_Image_Name() const { return ImageName[0] != '\0' ? ImageName : Get_Name(); }
 
     static void One_Time();
 
@@ -76,8 +77,8 @@ protected:
             bool LegalTarget : 1; // & 8 Is this allowed to be a combat target (def = true)?
             bool Insignificant : 1; // & 16 Will this object not be announced when destroyed (def = false)?
             bool Immune : 1; // & 32 Is this object immune to damage (def = false)?
-            bool Bit64 : 1; // & 64 Related to logical or animate?
-            bool Bit128 : 1; // & 128 Related to logical or animate?
+            bool Bit64 : 1; // & 64 TODO: Related to logical or animate?
+            bool Bit128 : 1; // & 128 TODO: Related to logical or animate?
         };
         int Bitfield;
     };
@@ -88,11 +89,11 @@ protected:
     bool LegalTarget; // Is this allowed to be a combat target (def = true)?
     bool Insignificant; // Will this object not be announced when destroyed (def = false)?
     bool Immune; // Is this object immune to damage (def = false)?
-    bool Bit64; // Related to logical or animate?
-    bool Bit128; // Related to logical or animate?
+    bool Bit64; // TODO: Related to logical or animate?
+    bool Bit128; // TODO: Related to logical or animate?
 #endif
 
-    ArmorType Armor; // The armor type of this object [NONE, WOOD, LIGHT, HEAVY, CONCRETE].
+    ArmorType Armor; // The armor type of this object, see ArmorType (def = ARMOR_NONE).
     int16_t Strength;
     void *ImageData;
     int FrameDimensions;

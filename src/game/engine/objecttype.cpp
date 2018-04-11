@@ -127,17 +127,17 @@ BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType ho
  */
 void ObjectTypeClass::One_Time()
 {
-    SelectShapes = MixFileClass<CCFileClass>::Retrieve("SELECT.SHP");
-    PipShapes = MixFileClass<CCFileClass>::Retrieve("PIPS.SHP");
+    SelectShapes = MixFileClass<CCFileClass>::Retrieve("select.shp");
+    PipShapes = MixFileClass<CCFileClass>::Retrieve("pips.shp");
 }
 
 void *ObjectTypeClass::Get_Radar_Icon(void *shape, int frame, int frame_count, int size)
 {
-    // TODO
 #ifndef RAPP_STANDALONE
     void *(*func)(void *, int, int, int) = reinterpret_cast<void *(*)(void *, int, int, int)>(0x004A9494);
     return func(shape, frame, frame_count, size);
 #else
+    // TODO
     return nullptr;
 #endif
 }

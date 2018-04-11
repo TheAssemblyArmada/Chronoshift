@@ -6,7 +6,7 @@
 *
 * @brief Base class for most in game objects.
 *
-* @copyright Redalert++ is free software: you can redistribute it and/or
+* @copyright RedAlert++ is free software: you can redistribute it and/or
 *            modify it under the terms of the GNU General Public License
 *            as published by the Free Software Foundation, either version
 *            2 of the License, or (at your option) any later version.
@@ -40,7 +40,7 @@ public:
 
     int Get_Heap_ID() const { return HeapID; }
     RTTIType const What_Am_I() const { return RTTI; }
-    const char *Get_Name() { return Name; }
+    const char *Get_Name() const { return Name; }
 
 protected:
     RTTIType RTTI;

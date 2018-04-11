@@ -16,6 +16,7 @@
 #include "object.h"
 #include "coord.h"
 #include "iomap.h"
+//#include "anim.h"
 #include "minmax.h"
 
 #ifndef RAPP_STANDALONE
@@ -36,7 +37,6 @@ ObjectClass::ObjectClass() :
     FallingHeight(0),
     Next(nullptr),
     AttachedTrigger(-1),
-    // AttachedTrigger(nullptr), // should be this when TriggerClass implemented.
     Health(255)
 {
 }
@@ -54,7 +54,6 @@ ObjectClass::ObjectClass(RTTIType type, int id) :
     FallingHeight(0),
     Next(nullptr),
     AttachedTrigger(-1),
-    // AttachedTrigger(nullptr), // should be this when TriggerClass implemented.
     Health(255)
 {
 }
@@ -180,7 +179,8 @@ BOOL ObjectClass::Unlimbo(uint32_t coord, DirType dir)
     BOOL (*func)
     (ObjectClass *, uint32_t, DirType) = reinterpret_cast<BOOL (*)(ObjectClass *, uint32_t, DirType)>(0x0051DE9C);
     return func(this, coord, dir);
-#elif 0 // Needs IOMapClass and Logic
+#elif 0
+    // Needs IOMapClass and Logic
     int16_t cell = Coord_To_Cell(coord);
 
     if (GameActive && InLimbo && !IsDown && (ScenarioInit || Can_Enter_Cell(cell) == MOVE_OK)) {
@@ -249,7 +249,8 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
 #ifndef RAPP_STANDALONE
     BOOL(*func)(ObjectClass *, uint32_t) = reinterpret_cast<BOOL(*)(ObjectClass *, uint32_t)>(0x0051E5C0);
     return func(this, coord);
-#elif 0 // Needs AnimClass and Coord_Move
+#else
+    // Needs AnimClass and Coord_Move
     DEBUG_ASSERT(IsActive);
 
     FallingHeight = 256;
@@ -260,7 +261,7 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
         uint32_t coord = Coord_Move(Center_Coord(), DIR_NORTH, Height + 48);
 
         if (RTTI == RTTI_BULLET) {
-            anim = new AnimClass(ANIM_PARABOMB, coord, 0, 1, true);	//args needs checking
+            anim = new AnimClass(ANIM_PARABOMB, coord, 0, 1, true);	    //args needs checking
         } else {
             anim = new AnimClass(ANIM_PARACHUTE, coord, 0, 1, true);	//args needs checking
         }
@@ -269,8 +270,6 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
     }
 
     return false;
-#else
-    return 0;
 #endif
 }
 
@@ -279,7 +278,8 @@ BOOL ObjectClass::Render(BOOL force_render)
 #ifndef RAPP_STANDALONE
     BOOL(*func)(ObjectClass *, BOOL) = reinterpret_cast<BOOL(*)(ObjectClass *, BOOL)>(0x0051DD34);
     return func(this, force_render);
-#elif 0 // Needs IOMap DisplayClass
+#elif 0
+    // Needs IOMap DisplayClass
     DEBUG_ASSERT(IsActive);
 
     if ((g_inMapEditor || DebugUnshroud || (force_render || ToDisplay)) && IsDown && !InLimbo) {
@@ -320,7 +320,8 @@ BOOL ObjectClass::Mark(MarkType mark)
 #ifndef RAPP_STANDALONE
     BOOL(*func)(ObjectClass *, MarkType) = reinterpret_cast<BOOL(*)(ObjectClass *, MarkType)>(0x0051E368);
     return func(this, mark);
-#elif 0 // Needs IOMap DisplayClass
+#elif 0
+    // Needs IOMap DisplayClass
     if (!IsActive || InLimbo) {
         return false;
     }
@@ -410,7 +411,8 @@ BOOL ObjectClass::Select()
 #ifndef RAPP_STANDALONE
     BOOL(*func)(ObjectClass *) = reinterpret_cast<BOOL(*)(ObjectClass *)>(0x0051DBB0);
     return func(this);
-#elif 0 // TODO Needs TechnoClass HouseClass DisplayClass
+#elif 0
+    // TODO Needs TechnoClass HouseClass DisplayClass
     DEBUG_ASSERT(IsActive);
 
     if ((g_inMapEditor || !Selected) && Class_Of().Is_Selectable()) {
@@ -487,7 +489,8 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
     DamageResultType (*func)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int) =
         reinterpret_cast<DamageResultType (*)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0051E07C);
     return func(this, damage, a2, warhead, object, a5);
-#elif 0 // Needs IOMap DisplayClass
+#elif 0
+    // Needs IOMap DisplayClass
     DamageResultType result = DAMAGE_UNAFFECTED;
 
     int health = Health;
