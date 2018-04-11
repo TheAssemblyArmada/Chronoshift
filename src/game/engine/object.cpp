@@ -254,9 +254,9 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
         uint32_t coord = Coord_Move(Center_Coord(), DIR_NORTH, Height + 48);
 
         if (RTTI == RTTI_BULLET) {
-            anim = new AnimClass(ANIM_PARABOMB, coord, 0, 1, true);	    //args needs checking
+            anim = new AnimClass(ANIM_PARABOMB, coord, 0, 1, true);   //args needs checking
         } else {
-            anim = new AnimClass(ANIM_PARACHUTE, coord, 0, 1, true);	//args needs checking
+            anim = new AnimClass(ANIM_PARACHUTE, coord, 0, 1, true);   //args needs checking
         }
 
         anim->Attach_To(this);

@@ -49,13 +49,13 @@ inline uint32_t Pixels_To_Cells(int pixels)
 
 // Ingame GUI Gadget ID's
 #define BUTTON_REPAIR 101
-//#define		BUTTON_
+//#define BUTTON_
 #define BUTTON_SELL 103
-//#define		BUTTON_
+//#define BUTTON_
 #define BUTTON_ZOOM 105
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
 #define BUTTON_ED_CLEAR 109
 #define BUTTON_ED_ORE 110
 #define BUTTON_ED_GEMS 111
@@ -70,14 +70,14 @@ inline uint32_t Pixels_To_Cells(int pixels)
 #define BUTTON_ED_NEXT_ITEM 114
 #define BUTTON_ED_START_FLAG 116
 #define CONTROL_ED_PREVIEW 117
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
 
 #define CONTROL_SB_SELECT_BUTTON 0
 #define CONTROL_TILE_BROWSER 150
@@ -86,12 +86,12 @@ inline uint32_t Pixels_To_Cells(int pixels)
 #define GADGET_STRIP_COLUMN_LEFT 200
 #define GADGET_STRIP_COLUMN_RIGHT 210
 
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
-//#define		BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
+//#define BUTTON_
 
 // Menu Button IDs
 #define BUTTON_CS 1000
@@ -607,7 +607,7 @@ enum HousesType
     HOUSES_GRE = 1, //"Greece"
     HOUSES_RED = 2, //"USSR"
     HOUSES_ENG = 3, //"England"
-    HOUSES_UKA = 4, //"Ukraine"		//HOUSES_ITA = 4,	//"Italy"		//from EDWIN
+    HOUSES_UKA = 4, //"Ukraine"        //HOUSES_ITA = 4,    //"Italy"        //from EDWIN
     HOUSES_GER = 5, //"Germany"
     HOUSES_FRA = 6, //"France"
     HOUSES_TRK = 7, //"Turkey"
@@ -646,17 +646,17 @@ enum OwnerType
 {
     OWNER_NONE = 0, // No owner
 
-    OWNER_SPAIN = 1 << HOUSES_SPN,      //"Spain"		//Allies
-    OWNER_GREECE = 1 << HOUSES_GRE,     //"Greece"		//Allies
-    OWNER_USSR = 1 << HOUSES_RED,       //"USSR"		//Soviet            //  OWNER_ITALY	= 4,		//"Italy"		//Allies
-    OWNER_ENGLAND = 1 << HOUSES_ENG,    //"England"		//Allies
-    OWNER_UKRAINE = 1 << HOUSES_UKA,    //"Ukraine"		//Soviet
-    OWNER_GERMANY = 1 << HOUSES_GER,    //"Germany"		//Allies
-    OWNER_FRANCE = 1 << HOUSES_FRA,     //"France"		//Allies
-    OWNER_TURKEY = 1 << HOUSES_TRK,     //"Turkey"		//Allies
+    OWNER_SPAIN = 1 << HOUSES_SPN,      //"Spain"         //Allies
+    OWNER_GREECE = 1 << HOUSES_GRE,     //"Greece"        //Allies
+    OWNER_USSR = 1 << HOUSES_RED,       //"USSR"          //Soviet            //  OWNER_ITALY    = 4,        //"Italy"        //Allies
+    OWNER_ENGLAND = 1 << HOUSES_ENG,    //"England"       //Allies
+    OWNER_UKRAINE = 1 << HOUSES_UKA,    //"Ukraine"       //Soviet
+    OWNER_GERMANY = 1 << HOUSES_GER,    //"Germany"       //Allies
+    OWNER_FRANCE = 1 << HOUSES_FRA,     //"France"        //Allies
+    OWNER_TURKEY = 1 << HOUSES_TRK,     //"Turkey"        //Allies
 
-    OWNER_GOODGUY = 1 << HOUSES_GDI,    //"GoodGuy"		//Allies
-    OWNER_BADGUY = 1 << HOUSES_NOD,     //"BadGuy"		//Soviet
+    OWNER_GOODGUY = 1 << HOUSES_GDI,    //"GoodGuy"       //Allies
+    OWNER_BADGUY = 1 << HOUSES_NOD,     //"BadGuy"        //Soviet
 
     OWNER_NEUTRAL = 1 << HOUSES_CIV,    //"Neutral"
     OWNER_SPECIAL = 1 << HOUSES_JP,     //"Special"
