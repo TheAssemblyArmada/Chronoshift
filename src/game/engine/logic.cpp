@@ -47,7 +47,7 @@ void LogicClass::Init(void)
 
 void LogicClass::Remove(ObjectClass *const object)
 {
-	LayerClass::Remove(object);
+    LayerClass::Remove(object);
 }
 
 bool LogicClass::Submit(ObjectClass *object, bool sort)
@@ -61,11 +61,11 @@ bool LogicClass::Submit(ObjectClass *object, bool sort)
 void LogicClass::AI(void)
 {
 #ifndef RAPP_STANDALONE
-	void(*func)(LogicClass *) = reinterpret_cast<void(*)(LogicClass *)>(0x004FDD70);
-	return func(this);
+    void(*func)(LogicClass *) = reinterpret_cast<void(*)(LogicClass *)>(0x004FDD70);
+    return func(this);
 #else
 
-	//TODO: This function requires a lot of classes.
+    //TODO: This function requires a lot of classes.
 
     ++FramesPerSecond;
 
@@ -167,24 +167,24 @@ void LogicClass::AI(void)
 
                         if ( Target_Distance(As_Target(objptr), TimeQuakeCenter) / 256 < Rule.MTankDistance ) {
 
-                            int v36 = 0;
+                            int quake_damage = 0;
 
                             switch ( objptr->What_Am_I() ) {
 
                                 case RTTI_BUILDING:
-                                    v36 = objptr->Class_Of().Get_Strength() * Rule.QuakeBuildingDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeBuildingDamage;
                                     break;
 
                                 case RTTI_INFANTRY:
-                                    v36 = Rule.QuakeInfantryDamage;
+                                    quake_damage = Rule.QuakeInfantryDamage;
                                     break;
 
                                 case RTTI_VESSEL:
-                                    v36 = objptr->Class_Of().Get_Strength() * Rule.QuakeVesselDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeVesselDamage;
                                     break;
 
                                 case RTTI_UNIT:
-                                    v36 = objptr->Class_Of().Get_Strength() * Rule.QuakeUnitDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeUnitDamage;
                                     break;
 
                                 case RTTI_AIRCRAFT:
@@ -195,19 +195,19 @@ void LogicClass::AI(void)
                                     if ( aptr != nullptr ) {
                                         if ( aptr->On_Ground() ) {
                                             //todo, new aircraft key
-                                            //v36 = objptr->Class_Of().Strength * Rule.QuakeAircraftDamage;
+                                            //quake_damage = objptr->Class_Of().Strength * Rule.QuakeAircraftDamage;
                                         }
                                     }
                                     break;
                                 }
 
                                 default:
-                                    v36 = objptr->Class_Of().Get_Strength() * Rule.QuakeDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeDamage;
                                     break;
 
                             };
 
-                            if ( v36 > 0 ) {
+                            if ( quake_damage > 0 ) {
 
                                 objptr->Clicked_As_Target(7);
 
@@ -303,11 +303,11 @@ void LogicClass::AI(void)
 void LogicClass::Detach(target_t target, int a2)
 {
 #ifndef RAPP_STANDALONE
-	void(*func)(LogicClass *, target_t, int) = reinterpret_cast<void(*)(LogicClass *, target_t, int)>(0x004FE2BC);
-	return func(this, target, a2);
+    void(*func)(LogicClass *, target_t, int) = reinterpret_cast<void(*)(LogicClass *, target_t, int)>(0x004FE2BC);
+    return func(this, target, a2);
 #else
 
-	//TODO: This function requires TriggerClass implimentation.
+    //TODO: This function requires TriggerClass implimentation.
 
     if ( (RTTIType)a2 == RTTI_TRIGGER ) {
 
