@@ -591,12 +591,11 @@ BuildingClass *ObjectClass::Who_Can_Build_Me(BOOL a1, BOOL a2) const
     return Class_Of().Who_Can_Build_Me(a1, a2, Owner());
 }
 
-RadioMessageType ObjectClass::Receive_Message(RadioClass *radio, RadioMessageType msg, int32_t &a3)
+RadioMessageType ObjectClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
-    switch (msg) {
+    switch (message) {
         case RADIO_13:
             Mark(MARK_REDRAW);
-
             return RADIO_ROGER;
         default:
             break;

@@ -98,7 +98,7 @@ public:
     virtual MissionType Get_Mission() const { return MISSION_NONE; }
     virtual void Per_Cell_Process(PCPType pcp) {}
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false) const;
-    virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType msg, int32_t &a3);
+    virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target);
     virtual BOOL Revealed(HouseClass *house);
     virtual void Repair(int a1 = -1) {}
     virtual void Sell_Back(int a1) {}

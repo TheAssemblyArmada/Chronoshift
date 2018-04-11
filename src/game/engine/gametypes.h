@@ -226,6 +226,56 @@ enum FireErrorType
 
 DEFINE_ENUMERATION_OPERATORS(FireErrorType);
 
+//TODO: This enum must stay here becuase of a ciruclar includ issue with
+//      object.h using RadioMessageType.
+//TODO2: one of these is RADIO_CONTACT and one is RADIO_ENTER
+enum RadioMessageType {
+	RADIO_NONE					= -1,
+
+	RADIO_FIRST 				= 0,
+
+	RADIO_STATIC				= 0,	// "static (no message)"
+	RADIO_ROGER					= 1,	// "Roger."
+	RADIO_HELLO					= 2,	// "Come in."
+	RADIO_OVER_AND_OUT			= 3,	// "Over and out."
+	RADIO_REQ_TRANSPORT			= 4,	// "Requesting transport."
+	RADIO_ATTACH_TO_TRANSPORT	= 5,	// "Attach to transport."
+	RADIO_GOT_DELIVERY			= 6,	// "I've got a delivery for you."
+	RADIO_7						= 7,	// "I'm performing load/unload maneuver. Be careful.""
+	RADIO_CLEAR					= 8,	// "I'm clear."
+	RADIO_9						= 9,	// "You are clear to unload. Driving away now.
+	RADIO_UNABLE_TO_COMPLY		= 10,	// "Am unable to comply."
+	RADIO_11					= 11,	// "I'm starting construction now... act busy."
+	RADIO_12					= 12,	// "I've finished construction. You are free."
+	RADIO_13					= 13,	// "We bumped, redraw yourself please."
+	RADIO_14					= 14,	// "I'm trying to load up now."
+	RADIO_REQ_PASSENGER			= 15,	// "May I become a passenger?"
+	RADIO_16					= 16,	// "Are you ready to receive shipment?"
+	RADIO_17					= 17,	// "Are you trying to become a passenger?""
+	RADIO_MOVE_TO_LOCATION		= 18,	// "Move to location X."
+	RADIO_NEED_TO_MOVE			= 19,	// "Do you need to move?"
+	RADIO_20					= 20,	// "All right already. Now what?"
+	RADIO_21					= 21,	// "I'm a passenger now."
+	RADIO_22					= 22,	// "Backup into refinery now."
+	RADIO_RUN_AWAY				= 23,	// "Run away!"
+	RADIO_TETHER_ESTABLISHED	= 24,	// "Tether established."
+	RADIO_TETHER_BROKEN			= 25,	// "Tether broken."
+	RADIO_REPAIR_ONE_STEP		= 26,	// "Repair one step."
+	RADIO_27					= 27,	// "Are you prepared to fight?"
+	RADIO_28					= 28,	// "Attack this target please."
+	RADIO_29					= 29,	// "Reload one step."
+	RADIO_30					= 30,	// "Circumstances prevent success."
+	RADIO_31					= 31,	// "All done with the request."
+	RADIO_32					= 32,	// "Do you need service depot work?"
+	RADIO_33					= 33,	// "Are you sitting on service depot?
+
+	RADIO_LAST					= 34,
+
+	RADIO_COUNT = 34
+};
+
+DEFINE_ENUMERATION_OPERATORS(RadioMessageType);
+
 // in Fill_In_Data, TriggerTypeClass::Attaches_To() is used to check what a trigger
 // attaches to, and it checks 4, 8 and 16.
 enum AttachType
@@ -401,53 +451,6 @@ enum INIFormatEnum
     INIFORMAT_2 = 2,
     INIFORMAT_3 = 3,
 };
-
-enum RadioMessageType
-{
-    RADIO_NONE = -1,
-    RADIO_STATIC = 0, // "static (no message)"
-    RADIO_ROGER = 1, // "Roger."
-    RADIO_HELLO = 2, // "Come in."
-    RADIO_OVER_AND_OUT = 3, // "Over and out."
-    RADIO_REQ_TRANSPORT = 4, // "Requesting transport."
-    RADIO_ATTACH_TO_TRANSPORT = 5, // "Attach to transport."
-    RADIO_GOT_DELIVERY = 6, // "I've got a delivery for you."
-    RADIO_7 = 7, // "I'm performing load/unload maneuver. Be careful.""
-    RADIO_CLEAR = 8, // "I'm clear."
-    RADIO_9 = 9, // "You are clear to unload. Driving away now.
-    RADIO_UNABLE_TO_COMPLY = 10, // "Am unable to comply."
-    RADIO_11 = 11, // "I'm starting construction now... act busy."
-    RADIO_12 = 12, // "I've finished construction. You are free."
-    RADIO_13 = 13, // "We bumped, redraw yourself please."
-    RADIO_14 = 14, // "I'm trying to load up now."
-    RADIO_REQ_PASSENGER = 15, // "May I become a passenger?"
-    RADIO_16 = 16, // "Are you ready to receive shipment?"
-    RADIO_17 = 17, // "Are you trying to become a passenger?""
-    RADIO_MOVE_TO_LOCATION = 18, // "Move to location X."
-    RADIO_NEED_TO_MOVE = 19, // "Do you need to move?"
-    RADIO_20 = 20, // "All right already. Now what?"
-    RADIO_21 = 21, // "I'm a passenger now."
-    RADIO_22 = 22, // "Backup into refinery now."
-    RADIO_RUN_AWAY = 23, // "Run away!"
-    RADIO_TETHER_ESTABLISHED = 24, // "Tether established."
-    RADIO_TETHER_BROKEN = 25, // "Tether broken."
-    RADIO_REPAIR_ONE_STEP = 26, // "Repair one step."
-    RADIO_27 = 27, // "Are you prepared to fight?"
-    RADIO_28 = 28, // "Attack this target please."
-    RADIO_29 = 29, // "Reload one step."
-    RADIO_30 = 30, // "Circumstances prevent success."
-    RADIO_31 = 31, // "All done with the request."
-    RADIO_32 = 32, // "Do you need service depot work?"
-    RADIO_33 = 33, // "Are you sitting on service depot?
-
-    // From TD
-    // RADIO_34 = 34,	// "Take this kick! You... You..."
-    // RADIO_35 = 35,	// "Take this punch! You... You..."
-    // RADIO_36 = 36,	// "Fancy a little fisticuffs, eh?"
-    RADIO_COUNT,
-};
-
-DEFINE_ENUMERATION_OPERATORS(RadioMessageType);
 
 enum MissionType
 {
