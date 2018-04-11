@@ -26,12 +26,12 @@ class TriggerClass;
 class LogicClass : public LayerClass
 {
     public:
-        LogicClass(void);
-        virtual ~LogicClass(void);
+        LogicClass();
+        virtual ~LogicClass();
 
-        void AI(void);
+        void AI();
 
-        void Init(void);
+        void Init();
 
         void Remove(ObjectClass *const object);
 

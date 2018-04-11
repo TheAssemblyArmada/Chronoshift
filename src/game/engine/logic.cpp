@@ -33,12 +33,12 @@ DynamicVectorClass<TriggerClass *> &LogicTriggers = Make_Global<DynamicVectorCla
 
 LogicClass::LogicClass() {}
 
-LogicClass::~LogicClass(void)
+LogicClass::~LogicClass()
 {
     LogicTriggers.Clear();
 }
 
-void LogicClass::Init(void)
+void LogicClass::Init()
 {
     DEBUG_LOG("LogicClass::Clear()\n");
 
@@ -58,7 +58,7 @@ bool LogicClass::Submit(ObjectClass *object, bool sort)
 /**
 * @brief AI processing entry function.
 */
-void LogicClass::AI(void)
+void LogicClass::AI()
 {
 #ifndef RAPP_STANDALONE
     void(*func)(LogicClass *) = reinterpret_cast<void(*)(LogicClass *)>(0x004FDD70);
