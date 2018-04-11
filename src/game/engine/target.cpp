@@ -323,7 +323,7 @@ coord_t As_Coord(target_t target)
     if (!Target_Legal(target)) {
         return 0;
 }
-    if (Target_Is_Cell(target)) {
+    if (!Target_Is_Cell(target)) {
         ObjectClass *objptr = As_Object(target);
         return (objptr != nullptr ? objptr->Target_Coord() : 0);
     }
@@ -342,7 +342,7 @@ coord_t As_Movement_Coord(target_t target)
     if (!Target_Legal(target)) {
         return 0;
     }
-    if (Target_Is_Cell(target)) {
+    if (!Target_Is_Cell(target)) {
         ObjectClass *objptr = As_Object(target);
         return (objptr != nullptr ? objptr->Docking_Coord() : 0);
     }
