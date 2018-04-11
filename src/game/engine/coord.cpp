@@ -16,7 +16,7 @@
 #include "coord.h"
 #include "abs.h"
 
-const uint32_t AdjacentCoord[FACING_COUNT] = {
+const coord_t AdjacentCoord[FACING_COUNT] = {
     0xFF000000,     // (-256,  0)       // NORTH
     0xFF000100,     // (-256,  +256)    // NORTH EAST
     0x00000100,     // (0   ,  +256)    // EAST
@@ -27,7 +27,7 @@ const uint32_t AdjacentCoord[FACING_COUNT] = {
     0xFF00FF00      // (-256,  -256)    // NORTH WEST
 };
 
-const int16_t AdjacentCell[FACING_COUNT] = {
+const cell_t AdjacentCell[FACING_COUNT] = {
     -MAP_MAX_WIDTH,     // North
     -MAP_MAX_WIDTH + 1, // North East
     1,                  // East
@@ -36,7 +36,6 @@ const int16_t AdjacentCell[FACING_COUNT] = {
     MAP_MAX_WIDTH - 1,  // South West
     -1,                 // West
     -MAP_MAX_WIDTH - 1  // North West
-
 };
 
 /**
@@ -44,7 +43,7 @@ const int16_t AdjacentCell[FACING_COUNT] = {
  *
  * 0x004AC41C
  */
-int Distance(uint32_t coord1, uint32_t coord2)
+int Distance(coord_t coord1, coord_t coord2)
 {
     int ydiff;
     int xdiff;
