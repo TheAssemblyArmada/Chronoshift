@@ -54,7 +54,7 @@ public:
     virtual ActionType What_Action(ObjectClass *object) const { return ACTION_NONE; }
     virtual ActionType What_Action(int16_t cellnum) const { return ACTION_NONE; }
     virtual LayerType In_Which_Layer() const { return Height > 171 ? LAYER_TOP : LAYER_GROUND; }
-    virtual int Get_Ownable() const;
+    virtual int Get_Ownable() const { return OWNER_ALL; }
     virtual ObjectTypeClass &Class_Of() const = 0;
     virtual int Full_Name() const { return Class_Of().Full_Name(); }
     virtual BOOL Can_Repair() const { return false; }

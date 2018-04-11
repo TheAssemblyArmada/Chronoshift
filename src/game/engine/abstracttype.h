@@ -35,7 +35,7 @@ public:
 
     virtual uint32_t Coord_Fixup(uint32_t coord) const { return coord; }
     virtual int Full_Name() const;
-    virtual int Get_Ownable() const { return 0xFFFFF; }
+    virtual int Get_Ownable() const { return OWNER_ALL; }
 
     AbstractTypeClass &operator=(AbstractTypeClass &that);
 

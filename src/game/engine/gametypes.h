@@ -644,30 +644,49 @@ DEFINE_ENUMERATION_OPERATORS(HousesType);
 
 enum OwnerType
 {
-    OWNER_NONE = 0, // No house
-    OWNER_SPAIN = 1 << HOUSES_SPN, //"Spain"		//Allies
-    OWNER_GREECE = 1 << HOUSES_GRE, //"Greece"		//Allies
-    OWNER_USSR = 1 << HOUSES_RED, //"USSR"		//Soviet            //  OWNER_ITALY	= 4,		//"Italy"		//Allies
-    OWNER_ENGLAND = 1 << HOUSES_ENG, //"England"		//Allies
-    OWNER_UKRAINE = 1 << HOUSES_UKA, //"Ukraine"		//Soviet
-    OWNER_GERMANY = 1 << HOUSES_GER, //"Germany"		//Allies
-    OWNER_FRANCE = 1 << HOUSES_FRA, //"France"		//Allies
-    OWNER_TURKEY = 1 << HOUSES_TRK, //"Turkey"		//Allies
-    OWNER_GOODGUY = 1 << HOUSES_GDI, //"GoodGuy"		//Allies
-    OWNER_BADGUY = 1 << HOUSES_NOD, //"BadGuy"		//Soviet
-    OWNER_NEUTRAL = 1 << HOUSES_CIV, //"Neutral"
-    OWNER_SPECIAL = 1 << HOUSES_JP, //"Special"
-    OWNER_MP1 = 1 << HOUSES_MP1, //"Multi1"
-    OWNER_MP2 = 1 << HOUSES_MP2, //"Multi2"
-    OWNER_MP3 = 1 << HOUSES_MP3, //"Multi3"
-    OWNER_MP4 = 1 << HOUSES_MP4, //"Multi4"
-    OWNER_MP5 = 1 << HOUSES_MP5, //"Multi5"
-    OWNER_MP6 = 1 << HOUSES_MP6, //"Multi6"
-    OWNER_MP7 = 1 << HOUSES_MP7, //"Multi7"
-    OWNER_MP8 = 1 << HOUSES_MP8, //"Multi8"
+    OWNER_NONE = 0, // No owner
+
+    OWNER_SPAIN = 1 << HOUSES_SPN,      //"Spain"		//Allies
+    OWNER_GREECE = 1 << HOUSES_GRE,     //"Greece"		//Allies
+    OWNER_USSR = 1 << HOUSES_RED,       //"USSR"		//Soviet            //  OWNER_ITALY	= 4,		//"Italy"		//Allies
+    OWNER_ENGLAND = 1 << HOUSES_ENG,    //"England"		//Allies
+    OWNER_UKRAINE = 1 << HOUSES_UKA,    //"Ukraine"		//Soviet
+    OWNER_GERMANY = 1 << HOUSES_GER,    //"Germany"		//Allies
+    OWNER_FRANCE = 1 << HOUSES_FRA,     //"France"		//Allies
+    OWNER_TURKEY = 1 << HOUSES_TRK,     //"Turkey"		//Allies
+
+    OWNER_GOODGUY = 1 << HOUSES_GDI,    //"GoodGuy"		//Allies
+    OWNER_BADGUY = 1 << HOUSES_NOD,     //"BadGuy"		//Soviet
+
+    OWNER_NEUTRAL = 1 << HOUSES_CIV,    //"Neutral"
+    OWNER_SPECIAL = 1 << HOUSES_JP,     //"Special"
+
+    OWNER_MP1 = 1 << HOUSES_MP1,    //"Multi1"
+    OWNER_MP2 = 1 << HOUSES_MP2,    //"Multi2"
+    OWNER_MP3 = 1 << HOUSES_MP3,    //"Multi3"
+    OWNER_MP4 = 1 << HOUSES_MP4,    //"Multi4"
+    OWNER_MP5 = 1 << HOUSES_MP5,    //"Multi5"
+    OWNER_MP6 = 1 << HOUSES_MP6,    //"Multi6"
+    OWNER_MP7 = 1 << HOUSES_MP7,    //"Multi7"
+    OWNER_MP8 = 1 << HOUSES_MP8,    //"Multi8"
+
+    OWNER_ALL = OWNER_SPAIN | OWNER_GREECE | OWNER_USSR | OWNER_ENGLAND | OWNER_UKRAINE | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY
+            | OWNER_GOODGUY | OWNER_BADGUY | OWNER_NEUTRAL | OWNER_SPECIAL
+            | OWNER_MP1 | OWNER_MP2 | OWNER_MP3 | OWNER_MP4 | OWNER_MP5 | OWNER_MP6 | OWNER_MP7 | OWNER_MP8
+};
+
+DEFINE_ENUMERATION_OPERATORS(OwnerType);
+
+enum SideType
+{
     SIDE_ALLIES = OWNER_SPAIN | OWNER_GREECE | OWNER_ENGLAND | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY | OWNER_GOODGUY,
     SIDE_SOVIET = OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY,
+
+    SIDE_ALL = OWNER_SPAIN | OWNER_GREECE | OWNER_ENGLAND | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY | OWNER_GOODGUY
+            | OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY
 };
+
+DEFINE_ENUMERATION_OPERATORS(SideType);
 
 // TODO
 enum MovieType
