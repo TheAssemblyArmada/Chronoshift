@@ -21,6 +21,47 @@
 #include "technotype.h"
 //#include "triggertype.h"
 
+CellClass *const xTargetClass::As_Cell() const
+{
+    return nullptr;
+}
+
+AbstractClass *const xTargetClass::As_Abstract() const
+{
+    return nullptr;
+}
+
+AbstractTypeClass *const xTargetClass::As_TypeClass() const
+{
+    return nullptr;
+}
+
+TechnoClass *const xTargetClass::As_Techno() const
+{
+    return nullptr;
+}
+
+ObjectClass *const xTargetClass::As_Object() const
+{
+    return nullptr;
+}
+
+TargetClass::TargetClass(target_t target)
+{
+}
+
+TargetClass::TargetClass(AbstractClass *abstract)
+{
+}
+
+TargetClass::TargetClass(AbstractTypeClass *abstractype)
+{
+}
+
+TargetClass::TargetClass(CellClass *cell)
+{
+}
+
 BOOL Target_Is_Techno(target_t target)
 {
 #ifndef RAPP_STANDALONE

@@ -34,11 +34,61 @@ class AircraftClass;
 class TechnoClass;
 class TechnoTypeClass;
 class AbstractClass;
+class AbstractTypeClass;
 class ObjectClass;
 class UnitClass;
 class VesselClass;
 class InfantryClass;
 class BuildingClass;
+
+//TODO: It is possible that this struct is what TargetClass uses for its data type.
+struct TARGET_COMPOSITE
+{
+public:
+    struct Sub
+    {
+    public:
+        Sub() {}
+        Sub(Sub &that) {}
+
+    protected:
+        target_t field_0;
+    };
+
+public:
+    TARGET_COMPOSITE() {}
+    TARGET_COMPOSITE(TARGET_COMPOSITE &that) {}
+
+protected:
+    Sub field_0;
+
+};
+
+class xTargetClass
+{
+public:
+    CellClass * const As_Cell() const;
+    AbstractClass *const As_Abstract() const;
+    AbstractTypeClass *const As_TypeClass() const;
+    TechnoClass *const As_Techno() const;
+    ObjectClass *const As_Object() const;
+
+protected:
+    TARGET_COMPOSITE Data;
+};
+
+class TargetClass
+{
+public:
+    TargetClass(target_t target);
+    TargetClass(AbstractClass *abstract);
+    TargetClass(AbstractTypeClass *abstractype);
+    TargetClass(CellClass *cell);
+    ~TargetClass() {}
+
+protected:
+    TARGET_COMPOSITE Data;
+};
 
 inline target_t Make_Target(RTTIType type, int id)
 {
