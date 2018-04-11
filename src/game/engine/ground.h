@@ -17,9 +17,10 @@
 #ifndef GROUND_H
 #define GROUND_H
 
-#include	"always.h"
-#include	"land.h"
-#include	"fixed.h"
+#include "always.h"
+#include "gametypes.h"
+#include "land.h"
+#include "fixed.h"
 
 enum GroundType {
     GROUND_NONE = -1,

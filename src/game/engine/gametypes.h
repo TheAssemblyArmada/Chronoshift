@@ -208,6 +208,20 @@ enum ThreatType
 
 DEFINE_ENUMERATION_BITWISE_OPERATORS(ThreatType);
 
+enum SpeedType
+{
+    SPEED_NONE = -1,
+    SPEED_FIRST = 0,
+    SPEED_FOOT = 0,
+    SPEED_TRACK,
+    SPEED_WHEEL,
+    SPEED_WINGED,
+    SPEED_FLOAT,
+    SPEED_COUNT
+};
+
+DEFINE_ENUMERATION_OPERATORS(SpeedType);
+
 enum FireErrorType
 {
     FIRE_NONE = -1,     // no valid value
