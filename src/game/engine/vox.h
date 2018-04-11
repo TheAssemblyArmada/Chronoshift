@@ -153,7 +153,6 @@ enum VoxType {
 };
 
 DEFINE_ENUMERATION_OPERATORS(VoxType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(VoxType);
 
 VoxType Vox_From_Name(char const *name);
 char const *Name_From_Vox(VoxType vox);

@@ -9,30 +9,30 @@ TFixedIHeapClass<TriggerTypeClass> TriggerTypes;
 void TriggerTypeClass::Code_Pointers()
 {
 #ifndef RAPP_STANDALONE
-	void(*func)(TriggerTypeClass *) =
-		reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9448);
-	return func(this);
+    void(*func)(TriggerTypeClass *) =
+        reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9448);
+    return func(this);
 #else
-	//TODO: Requires TActionClass and TEventClass
-	//EventOne.Code_Pointers();
-	//EventTwo.Code_Pointers();
-	//ActionOne.Code_Pointers();
-	//ActionTwo.Code_Pointers();
+    //TODO: Requires TActionClass and TEventClass
+    //EventOne.Code_Pointers();
+    //EventTwo.Code_Pointers();
+    //ActionOne.Code_Pointers();
+    //ActionTwo.Code_Pointers();
 #endif
 }
 
 void TriggerTypeClass::Decode_Pointers()
 {
 #ifndef RAPP_STANDALONE
-	void(*func)(TriggerTypeClass *) =
-		reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9464);
-	return func(this);
+    void(*func)(TriggerTypeClass *) =
+        reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9464);
+    return func(this);
 #else
-	//TODO: Requires TActionClass and TEventClass
-	//EventOne.Decode_Pointers();
-	//EventTwo.Decode_Pointers();
-	//ActionOne.Decode_Pointers();
-	//ActionTwo.Decode_Pointers();
+    //TODO: Requires TActionClass and TEventClass
+    //EventOne.Decode_Pointers();
+    //EventTwo.Decode_Pointers();
+    //ActionOne.Decode_Pointers();
+    //ActionTwo.Decode_Pointers();
 #endif
 }
 
@@ -68,10 +68,10 @@ char const *TriggerTypeClass::Name_From(TriggerTypeClass *trigger)
 
 TriggerTypeClass &TriggerTypeClass::As_Reference(TriggerType trigger)
 {
-	return TriggerTypes[trigger];
+    return TriggerTypes[trigger];
 }
 
 TriggerTypeClass *TriggerTypeClass::As_Pointer(TriggerType trigger)
 {
-	return trigger != TRIGGER_NONE && trigger < TRIGGER_COUNT ? &TriggerTypes[trigger] : nullptr;
+    return trigger != TRIGGER_NONE && trigger < TriggerTypes.Count() ? &TriggerTypes[trigger] : nullptr;
 }

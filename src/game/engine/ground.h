@@ -36,31 +36,34 @@ enum GroundType {
 };
 
 DEFINE_ENUMERATION_OPERATORS(GroundType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(GroundType);
 
 class CCINIClass;
 
 class GroundClass
 {
 public:
-    //GroundClass(void) : Speeds(), Buildable(false) {}
-    /*GroundClass(GroundClass const &that) :
+    GroundClass(void) : Buildable(false)
+    {
+        memcpy(Speeds, 0, sizeof(Speeds));
+    }
+
+    GroundClass(GroundClass const &that) :
         Buildable(that.Buildable)
     {
         memcpy(Speeds, that.Speeds, sizeof(Speeds));
-    }*/
+    }
 
     //~GroundClass(void) {}
 
-    /*bool operator==(GroundClass const &that) const
+    bool operator==(GroundClass const &that) const
     {
         return memcmp(Speeds, that.Speeds, sizeof(Speeds)) == 0 && Buildable == that.Buildable;
-    }*/
+    }
 
-    /*bool operator!=(GroundClass const &that) const
+    bool operator!=(GroundClass const &that) const
     {
         return !(this == &that); 
-    }*/
+    }
 
     BOOL Read_INI(CCINIClass &ini, const LandType land);
     BOOL Write_INI(CCINIClass &ini, const LandType land) const;
@@ -75,9 +78,19 @@ public:
     // Percent of full speed for each speed type (0.0 means impassable) [def = 1.0]
     fixed Speeds[SPEED_COUNT];
         
-    // Can buildings be built upon this terrain [def = false]?
-    bool Buildable;
-
+#ifndef RAPP_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool Buildable : 1; // & 1
+        };
+        int Bitfield;
+    };
+#else
+    bool Buildable;     // Can buildings be built upon this terrain [def = false]?
+#endif
 };
 
 #ifndef RAPP_STANDALONE

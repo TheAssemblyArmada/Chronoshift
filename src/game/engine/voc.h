@@ -238,17 +238,16 @@ enum VocType {
 };
 
 DEFINE_ENUMERATION_OPERATORS(VocType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(VocType);
 
 struct SoundEffectType
 {
-	const char *BaseName;		//0x00
+    const char *BaseName;		//0x00
 
-	// Priority adjustment from normal (def = 10)
-	// Increasing numbers have higher priority.
-	int Priority;		//0x04
+    // Priority adjustment from normal (def = 10)
+    // Increasing numbers have higher priority.
+    int Priority;		//0x04
 
-	char Unknown1;		//0x08		
+    char Unknown1;		//0x08		
 };
 
 VocType Voc_From_Name(char const *name);

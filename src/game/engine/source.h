@@ -34,7 +34,6 @@ enum SourceType {
 };
 
 DEFINE_ENUMERATION_OPERATORS(SourceType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(SourceType);
 
 SourceType Source_From_Name(char const *name);
 char const *Name_From_Source(SourceType source);
