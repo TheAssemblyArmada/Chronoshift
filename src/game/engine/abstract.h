@@ -41,7 +41,8 @@ public:
     virtual MoveType Can_Enter_Cell(int16_t cellnum, FacingType facing = FACING_NONE) const { return MOVE_OK; }
     virtual void AI() {}
 
-    BOOL Is_Techno();
+    BOOL Is_Techno() const;
+    BOOL Is_Foot() const;
     int Get_Heap_ID() const { return HeapID; }
     BOOL Is_Active() const { return IsActive; }
     RTTIType What_Am_I() const { return RTTI; }
@@ -68,10 +69,15 @@ protected:
 #endif
 };
 
-inline BOOL AbstractClass::Is_Techno()
+inline BOOL AbstractClass::Is_Techno() const
 {
     return RTTI == RTTI_BUILDING || RTTI == RTTI_UNIT || RTTI == RTTI_INFANTRY || RTTI == RTTI_VESSEL
         || RTTI == RTTI_AIRCRAFT;
+}
+
+inline BOOL AbstractClass::Is_Foot() const
+{
+    return RTTI == RTTI_UNIT || RTTI == RTTI_INFANTRY || RTTI == RTTI_VESSEL || RTTI == RTTI_AIRCRAFT;
 }
 
 #endif // ABSTRACT_H

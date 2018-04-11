@@ -22,6 +22,7 @@
 #include "language.h"
 #include "noinit.h"
 #include "rtti.h"
+#include "gametypes.h"
 #include "stringex.h"
 
 class AbstractTypeClass
@@ -34,10 +35,12 @@ public:
 
     virtual uint32_t Coord_Fixup(uint32_t coord) const { return coord; }
     virtual int Full_Name() const;
-    virtual int Get_Ownable() const { return 0xFFFFF; } // This is a bit for each of the normal houses, pluse 8 multiplayer.
+    virtual int Get_Ownable() const { return 0xFFFFF; }
 
     AbstractTypeClass &operator=(AbstractTypeClass &that);
 
+    BOOL Is_TechnoType() const;
+    BOOL Is_FootType() const;
     int Get_Heap_ID() const { return HeapID; }
     RTTIType const What_Am_I() const { return RTTI; }
     const char *Get_Name() const { return Name; }
@@ -61,5 +64,15 @@ inline AbstractTypeClass &AbstractTypeClass::operator=(AbstractTypeClass &that)
     return *this;
 }
 
+inline BOOL AbstractTypeClass::Is_TechnoType() const
+{
+    return RTTI == RTTI_BUILDINGTYPE || RTTI == RTTI_UNITTYPE || RTTI == RTTI_INFANTRYTYPE || RTTI == RTTI_VESSELTYPE
+        || RTTI == RTTI_AIRCRAFTTYPE;
+}
+
+inline BOOL AbstractTypeClass::Is_FootType() const
+{
+    return RTTI == RTTI_UNITTYPE || RTTI == RTTI_INFANTRYTYPE || RTTI == RTTI_VESSELTYPE || RTTI == RTTI_AIRCRAFTTYPE;
+}
 
 #endif // ABSTRACTTYPE_H

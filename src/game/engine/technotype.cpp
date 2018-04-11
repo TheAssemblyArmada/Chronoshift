@@ -276,8 +276,7 @@ void *TechnoTypeClass::Get_Cameo_Data() const
  */
 int TechnoTypeClass::Repair_Cost() const
 {
-    if (What_Am_I() == RTTI_INFANTRYTYPE || What_Am_I() == RTTI_UNITTYPE || What_Am_I() == RTTI_VESSELTYPE
-        || What_Am_I() == RTTI_AIRCRAFTTYPE) {
+    if (Is_FootType()) {
         return (Raw_Cost() / (Strength / Rule.Get_Unit_Repair_Step()))
             * Rule.Get_Unit_Repair_Percent(); // this code check if the result is greater than 1(.0), if so,
                                               // forces 1, see for TS/RA2 version
@@ -296,8 +295,7 @@ int TechnoTypeClass::Repair_Cost() const
  */
 int TechnoTypeClass::Repair_Step() const
 {
-    if (What_Am_I() == RTTI_INFANTRYTYPE || What_Am_I() == RTTI_UNITTYPE || What_Am_I() == RTTI_VESSELTYPE
-        || What_Am_I() == RTTI_AIRCRAFTTYPE) {
+    if (Is_FootType()) {
         return Rule.Get_Unit_Repair_Step();
     }
 
@@ -398,27 +396,27 @@ void TechnoTypeClass::One_Time()
 {
     // NOTE, Moved from UnitTypeClass as it was actually setting TechnoType statics. Call from UnitTypeClass One_Time().
     if (!WakeShapes) {
-        WakeShapes = MixFileClass<CCFileClass>::Retrieve("WAKE.SHP");
+        WakeShapes = MixFileClass<CCFileClass>::Retrieve("wake.shp");
         DEBUG_ASSERT(WakeShapes != nullptr);
     }
     if (!TurretShapes) {
-        TurretShapes = MixFileClass<CCFileClass>::Retrieve("TURR.SHP");
+        TurretShapes = MixFileClass<CCFileClass>::Retrieve("turr.shp");
         DEBUG_ASSERT(TurretShapes != nullptr);
     }
     if (!SamShapes) {
-        SamShapes = MixFileClass<CCFileClass>::Retrieve("SSAM.SHP");
+        SamShapes = MixFileClass<CCFileClass>::Retrieve("ssam.shp");
         DEBUG_ASSERT(SamShapes != nullptr);
     }
     if (!MGunShapes) {
-        MGunShapes = MixFileClass<CCFileClass>::Retrieve("MGUN.SHP");
+        MGunShapes = MixFileClass<CCFileClass>::Retrieve("mgun.shp");
         DEBUG_ASSERT(MGunShapes != nullptr);
     }
     if (!LightningShapes) {
-        LightningShapes = MixFileClass<CCFileClass>::Retrieve("LITNING.SHP");
+        LightningShapes = MixFileClass<CCFileClass>::Retrieve("litning.shp");
         DEBUG_ASSERT(LightningShapes != nullptr);
     }
     if (!MissingCameoShape) {
-        MissingCameoShape = MixFileClass<CCFileClass>::Retrieve("XXICON.SHP");
+        MissingCameoShape = MixFileClass<CCFileClass>::Retrieve("xxicon.shp");
         DEBUG_ASSERT(MissingCameoShape != nullptr);
     }
 }
