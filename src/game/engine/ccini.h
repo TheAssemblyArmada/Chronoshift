@@ -42,6 +42,7 @@
 #include "movie.h"
 #include "voc.h"
 #include "vox.h"
+#include "pk.h"
 
 class CCINIClass : public INIClass
 {
@@ -156,6 +157,12 @@ public:
 
     const int Get_Buildings(const char *section, const char *entry, const int defvalue = 0) const;
     BOOL Put_Buildings(const char *section, const char *entry, const int value);
+
+    const KeyNumType Get_KeyNumType(const char *section, const char *entry, const KeyNumType defvalue = KN_NONE) const;
+    BOOL Put_KeyNumType(const char *section, const char *entry, const KeyNumType value);
+
+    const PKey Get_PKey(BOOL fast) const;
+    BOOL Put_PKey(PKey &key);
 
     void Calculate_Message_Digest(void);
     void Invalidate_Message_Digest(void);

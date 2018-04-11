@@ -786,46 +786,6 @@ fixed const INIClass::Get_Fixed(const char *section, const char *entry, fixed de
     return defvalue;
 }
 
-BOOL INIClass::Put_PKey(PKey &key)
-{
-    char buffer[sizeof(PKey)];
-
-    // Put public key
-    Put_UUBlock("PublicKey", &buffer, key.Encode_Modulus(&buffer));
-
-    // Put private key
-    Put_UUBlock("PrivateKey", &buffer, key.Encode_Exponent(&buffer));
-
-    return true;
-}
-
-PKey INIClass::Get_PKey(BOOL fast) const
-{
-    PKey key;
-    uint8_t buffer[512];
-
-    if (fast) {
-        DEBUG_LOG("INIClass::Get_PKey() - Preparing PublicKey...\n");
-        Int<MAX_UNIT_PRECISION> exp(0x10001);
-        MPMath::DER_Encode(exp, buffer, MAX_UNIT_PRECISION);
-    } else {
-        DEBUG_LOG("INIClass::Get_PKey() - Loading PrivateKey\n");
-        Get_UUBlock("PrivateKey", buffer, sizeof(buffer));
-    }
-
-    DEBUG_LOG("INIClass::Get_PKey() - Decoding Exponent\n");
-    key.Decode_Exponent(buffer);
-
-    DEBUG_LOG("INIClass::Get_PKey() - Loading PublicKey\n");
-
-    Get_UUBlock("PublicKey", buffer, sizeof(buffer));
-
-    DEBUG_LOG("INIClass::Get_PKey() - Decoding Modulus\n");
-    key.Decode_Modulus(buffer);
-
-    return key;
-}
-
 void INIClass::Strip_Comments(char *line)
 {
     DEBUG_ASSERT(line != nullptr);

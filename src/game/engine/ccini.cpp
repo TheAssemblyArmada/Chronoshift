@@ -110,29 +110,29 @@ BOOL CCINIClass::Put_TheaterType(const char *section, const char *entry, const T
 const TriggerTypeClass *CCINIClass::Get_TriggerType(const char *section, const char *entry) const
 {
 #ifndef RAPP_STANDALONE
-	TriggerTypeClass *(*func)(CCINIClass *, const char *, const char *) =
-		reinterpret_cast<TriggerTypeClass *(*)(CCINIClass *, const char *, const char *)>(0x004638BC);
-	return func((CCINIClass *)this, section, entry);
+    TriggerTypeClass *(*func)(CCINIClass *, const char *, const char *) =
+        reinterpret_cast<TriggerTypeClass *(*)(CCINIClass *, const char *, const char *)>(0x004638BC);
+    return func((CCINIClass *)this, section, entry);
 #else
-	//TODO: Requires TriggerTypeClass interface to be complete
-	char valuebuf[MAX_LINE_LENGTH];
+    //TODO: Requires TriggerTypeClass interface to be complete
+    char valuebuf[MAX_LINE_LENGTH];
 
-	if (Get_String(section, entry, "<none>", valuebuf, sizeof(valuebuf)) > 0) {
-		return TriggerTypeClass::From_Name(valuebuf);
-	}
+    if (Get_String(section, entry, "<none>", valuebuf, sizeof(valuebuf)) > 0) {
+        return TriggerTypeClass::From_Name(valuebuf);
+    }
 
-	return defvalue;
+    return defvalue;
 #endif
 }
 
 BOOL CCINIClass::Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *trigger)
 {
 #ifndef RAPP_STANDALONE
-	BOOL(*func)(CCINIClass *, const char *, const char *, const TriggerTypeClass *) =
-		reinterpret_cast<BOOL(*)(CCINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
-	return func(this, section, entry, trigger);
+    BOOL(*func)(CCINIClass *, const char *, const char *, const TriggerTypeClass *) =
+        reinterpret_cast<BOOL(*)(CCINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
+    return func(this, section, entry, trigger);
 #else
-	return Put_String(section, entry, trigger != nullptr ? trigger->Get_Name() : "<none>");
+    return Put_String(section, entry, trigger != nullptr ? trigger->Get_Name() : "<none>");
 #endif
 }
 
@@ -154,18 +154,18 @@ BOOL CCINIClass::Put_ThemeType(const char *section, const char *entry, const The
 
 const SourceType CCINIClass::Get_SourceType(const char *section, const char *entry, const SourceType defvalue) const
 {
-	char valuebuf[MAX_LINE_LENGTH];
+    char valuebuf[MAX_LINE_LENGTH];
 
-	if (Get_String(section, entry, Name_From_Source(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
-		return Source_From_Name(valuebuf);
-	}
+    if (Get_String(section, entry, Name_From_Source(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
+        return Source_From_Name(valuebuf);
+    }
 
-	return defvalue;
+    return defvalue;
 }
 
 BOOL CCINIClass::Put_SourceType(const char *section, const char *entry, const SourceType value)
 {
-	return Put_String(section, entry, Name_From_Source(value));
+    return Put_String(section, entry, Name_From_Source(value));
 }
 
 const CrateType CCINIClass::Get_CrateType(const char *section, const char *entry, const CrateType defvalue) const
@@ -309,108 +309,108 @@ BOOL CCINIClass::Put_UnitType(const char *section, const char *entry, const Unit
 const InfantryType CCINIClass::Get_InfantryType(const char *section, const char *entry, const InfantryType defvalue) const
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return INFANTRY_NONE;
+    // Inlined in RA
+    return INFANTRY_NONE;
 #else
-	char valuebuf[MAX_LINE_LENGTH];
+    char valuebuf[MAX_LINE_LENGTH];
 
-	if (Get_String(section, entry, InfantryTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
-		return InfantryTypeClass::From_Name(valuebuf);
-	}
+    if (Get_String(section, entry, InfantryTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
+        return InfantryTypeClass::From_Name(valuebuf);
+    }
 
-	return defvalue;
+    return defvalue;
 #endif
 }
 
 BOOL CCINIClass::Put_InfantryType(const char *section, const char *entry, const InfantryType value)
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return false;
+    // Inlined in RA
+    return false;
 #else
-	//TODO: Requires InfantryTypeClass to be complete
-	return Put_String(section, entry, InfantryTypeClass::Name_From(value));
+    //TODO: Requires InfantryTypeClass to be complete
+    return Put_String(section, entry, InfantryTypeClass::Name_From(value));
 #endif
 }
 
 const AircraftType CCINIClass::Get_AircraftType(const char *section, const char *entry, const AircraftType defvalue) const
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return AIRCRAFT_NONE;
+    // Inlined in RA
+    return AIRCRAFT_NONE;
 #else
-	char valuebuf[MAX_LINE_LENGTH];
+    char valuebuf[MAX_LINE_LENGTH];
 
-	if (Get_String(section, entry, AircraftTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
-		return AircraftTypeClass::From_Name(valuebuf);
-	}
+    if (Get_String(section, entry, AircraftTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
+        return AircraftTypeClass::From_Name(valuebuf);
+    }
 
-	return defvalue;
+    return defvalue;
 #endif
 }
 
 BOOL CCINIClass::Put_AircraftType(const char *section, const char *entry, const AircraftType value)
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return false;
+    // Inlined in RA
+    return false;
 #else
-	//TODO: Requires AircraftTypeClass to be complete
-	return Put_String(section, entry, AircraftTypeClass::Name_From(value));
+    //TODO: Requires AircraftTypeClass to be complete
+    return Put_String(section, entry, AircraftTypeClass::Name_From(value));
 #endif
 }
 
 const VesselType CCINIClass::Get_VesselType(const char *section, const char *entry, const VesselType defvalue) const
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return VESSEL_NONE;
+    // Inlined in RA
+    return VESSEL_NONE;
 #else
-	char valuebuf[MAX_LINE_LENGTH];
+    char valuebuf[MAX_LINE_LENGTH];
 
-	if (Get_String(section, entry, VesselTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
-		return VesselTypeClass::From_Name(valuebuf);
-	}
+    if (Get_String(section, entry, VesselTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
+        return VesselTypeClass::From_Name(valuebuf);
+    }
 
-	return defvalue;
+    return defvalue;
 #endif
 }
 
 BOOL CCINIClass::Put_VesselType(const char *section, const char *entry, const VesselType value)
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return false;
+    // Inlined in RA
+    return false;
 #else
-	//TODO: Requires VesselTypeClass to be complete
-	return Put_String(section, entry, VesselTypeClass::Name_From(value));
+    //TODO: Requires VesselTypeClass to be complete
+    return Put_String(section, entry, VesselTypeClass::Name_From(value));
 #endif
 }
 
 const BuildingType CCINIClass::Get_BuildingType(const char *section, const char *entry, const BuildingType defvalue) const
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return BUILDING_NONE;
+    // Inlined in RA
+    return BUILDING_NONE;
 #else
-	char valuebuf[MAX_LINE_LENGTH];
+    char valuebuf[MAX_LINE_LENGTH];
 
-	if (Get_String(section, entry, BuildingTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
-		return BuildingTypeClass::From_Name(valuebuf);
-	}
+    if (Get_String(section, entry, BuildingTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
+        return BuildingTypeClass::From_Name(valuebuf);
+    }
 
-	return defvalue;
+    return defvalue;
 #endif
 }
 
 BOOL CCINIClass::Put_BuildingType(const char *section, const char *entry, const BuildingType value)
 {
 #ifndef RAPP_STANDALONE
-	// Inlined in RA
-	return false;
+    // Inlined in RA
+    return false;
 #else
-	//TODO: Requires BuildingTypeClass to be complete
-	return Put_String(section, entry, BuildingTypeClass::Name_From(value));
+    //TODO: Requires BuildingTypeClass to be complete
+    return Put_String(section, entry, BuildingTypeClass::Name_From(value));
 #endif
 }
 
@@ -528,12 +528,12 @@ BOOL CCINIClass::Put_MZoneType(const char *section, const char *entry, const MZo
 
 const GroundType CCINIClass::Get_GroundType(const char *section, const char *entry, const GroundType defvalue) const
 {
-	return GroundType();
+    return GroundType();
 }
 
 BOOL CCINIClass::Put_GroundType(const char *section, const char *entry, const GroundType value)
 {
-	return 0;
+    return 0;
 }
 
 const TerrainType CCINIClass::Get_TerrainType(const char *section, const char *entry, const TerrainType defvalue) const
@@ -846,6 +846,56 @@ BOOL CCINIClass::Put_Buildings(char const *section, char const *entry, const int
     }
     return Put_String(section, entry, buffer);
 #endif
+}
+
+const KeyNumType CCINIClass::Get_KeyNumType(const char *section, const char *entry, const KeyNumType defvalue) const
+{
+    return (KeyNumType)(Get_Int(section, entry, defvalue) & 0xEFFF);
+}
+
+BOOL CCINIClass::Put_KeyNumType(const char *section, const char *entry, const KeyNumType value)
+{
+    return (KeyNumType)(Put_Int(section, entry, value));
+}
+
+const PKey CCINIClass::Get_PKey(BOOL fast) const
+{
+    PKey key;
+    uint8_t buffer[512];
+
+    if (fast) {
+        DEBUG_LOG("CCINIClass::Get_PKey() - Preparing PublicKey...\n");
+        Int<MAX_UNIT_PRECISION> exp(0x10001);
+        MPMath::DER_Encode(exp, buffer, MAX_UNIT_PRECISION);
+    } else {
+        DEBUG_LOG("CCINIClass::Get_PKey() - Loading PrivateKey\n");
+        Get_UUBlock("PrivateKey", buffer, sizeof(buffer));
+    }
+
+    DEBUG_LOG("CCINIClass::Get_PKey() - Decoding Exponent\n");
+    key.Decode_Exponent(buffer);
+
+    DEBUG_LOG("CCINIClass::Get_PKey() - Loading PublicKey\n");
+
+    Get_UUBlock("PublicKey", buffer, sizeof(buffer));
+
+    DEBUG_LOG("CCINIClass::Get_PKey() - Decoding Modulus\n");
+    key.Decode_Modulus(buffer);
+
+    return key;
+}
+
+BOOL CCINIClass::Put_PKey(PKey &key)
+{
+    char buffer[sizeof(PKey)];
+
+    // Put public key
+    Put_UUBlock("PublicKey", &buffer, key.Encode_Modulus(&buffer));
+
+    // Put private key
+    Put_UUBlock("PrivateKey", &buffer, key.Encode_Exponent(&buffer));
+
+    return true;
 }
 
 void CCINIClass::Calculate_Message_Digest(void)

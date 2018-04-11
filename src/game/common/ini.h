@@ -24,7 +24,6 @@
 #include "fixed.h"
 #include "index.h"
 #include "listnode.h"
-#include "pk.h"
 #include "pipe.h"
 #include "straw.h"
 #include "stringex.h"
@@ -192,8 +191,6 @@ public:
         int length = 0) const;
     BOOL Put_Fixed(const char *section, const char *entry, fixed value);
     fixed const Get_Fixed(const char *section, const char *entry, fixed defvalue = 0) const;
-    BOOL Put_PKey(PKey &key);
-    PKey Get_PKey(BOOL fast) const;
     //void Duplicate_CRC_Error(const char *function_name, const char *section, const char *entry);
     //void Duplicate_CRC(const char *function_name, const char *section, const char *entry);
 
