@@ -1,8 +1,23 @@
-#include	"radio.h"
-//#include    "techno.h"
+/**
+* @file
+*
+* @author CCHyper
+*
+* @brief <todo>
+*
+* @copyright RedAlert++ is free software: you can redistribute it and/or
+*            modify it under the terms of the GNU General Public License
+*            as published by the Free Software Foundation, either version
+*            2 of the License, or (at your option) any later version.
+*            A full copy of the GNU General Public License can be found in
+*            LICENSE
+*/
+
+#include "radio.h"
+//#include "techno.h"
 
 // A invalid target instance parsed into Transmit_Message() as a default param.
-const target_t NullRadioTarget = 0;
+target_t NullRadioTarget = 0;
 
 char const *RadioClass::Messages[RADIO_COUNT] = {
     "static (no message)",
@@ -68,7 +83,7 @@ BOOL RadioClass::Limbo(void)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    if ( !InLimbo ) {
+    if (!InLimbo) {
         Transmit_Message(RADIO_OVER_AND_OUT);
     }
 
@@ -83,41 +98,34 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
     DEBUG_ASSERT(message < RADIO_COUNT);
 
 #ifndef RAPP_STANDALONE
-    RadioMessageType(*func)(RadioClass *, RadioMessageType, target_t &) = reinterpret_cast<RadioMessageType(*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
+    RadioMessageType (*func)(RadioClass *, RadioMessageType, target_t &) =
+        reinterpret_cast<RadioMessageType (*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
     return func(radio, message, target);
 #else
-    if ( message != ReceivedMessage ) {
+    if (message != ReceivedMessage) {
         LastMessage = TransmittedMessage;
         TransmittedMessage = ReceivedMessage;
         ReceivedMessage = message;
     }
 
-    if ( Radio != radio || message != RADIO_OVER_AND_OUT ) {
-
-        if ( message == RADIO_HELLO && Health > 0 ) {
-
-            if ( (Radio == nullptr || Radio == radio) && radio != nullptr ) {
-
+    if (Radio != radio || message != RADIO_OVER_AND_OUT) {
+        if (message == RADIO_HELLO && Health > 0) {
+            if ((Radio == nullptr || Radio == radio) && radio != nullptr) {
                 TechnoClass *t_radioptr = reinterpret_cast<TechnoClass *>(radio);
                 TechnoClass *t_this = reinterpret_cast<TechnoClass *>(this);
 
-                if ( t_radioptr != nullptr && t_this != nullptr ) {
-
-                    if ( t_radioptr->OwnerHouse->Is_Ally(this) && t_this->OwnerHouse->Is_Ally(t_radioptr) ) {
+                if (t_radioptr != nullptr && t_this != nullptr) {
+                    if (t_radioptr->OwnerHouse->Is_Ally(this) && t_this->OwnerHouse->Is_Ally(t_radioptr)) {
                         Radio = radio;
                         return RADIO_ROGER;
                     }
-
                 }
-
             }
 
             return RADIO_UNABLE_TO_COMPLY;
-
         }
 
         return ObjectClass::Receive_Message(radio, RADIO_OVER_AND_OUT, target);
-
     }
 
     ObjectClass::Receive_Message(radio, RADIO_OVER_AND_OUT, target);
@@ -136,36 +144,37 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
 
     RadioClass *radioptr = (radio == nullptr) ? reinterpret_cast<RadioClass *>(Radio.Get_Pointer()) : radio;
 
-    if ( radioptr == nullptr ) {
+    if (radioptr == nullptr) {
         return RADIO_STATIC;
     }
 
-    if ( Radio == radioptr && message == RADIO_OVER_AND_OUT ) {
+    if (Radio == radioptr && message == RADIO_OVER_AND_OUT) {
         Radio = nullptr;
     }
-    
-    if ( message != RADIO_HELLO ) {
+
+    if (message != RADIO_HELLO) {
         return radioptr->Receive_Message(this, message, target);
     }
 
     Transmit_Message(RADIO_OVER_AND_OUT);
 
-    if ( radioptr->Receive_Message(this, message, target) == RADIO_ROGER ) {
+    if (radioptr->Receive_Message(this, message, target) == RADIO_ROGER) {
         Radio = radioptr;
         return RADIO_ROGER;
     }
-    
+
     return RADIO_UNABLE_TO_COMPLY;
 }
 
 RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioClass *radio)
 {
     DEBUG_ASSERT(this != nullptr);
-    //DEBUG_ASSERT(radio != nullptr);
+    // DEBUG_ASSERT(radio != nullptr);
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 #ifndef RAPP_STANDALONE
-    RadioMessageType(*func)(RadioMessageType, RadioClass *) = reinterpret_cast<RadioMessageType(*)(RadioMessageType, RadioClass *)>(0x00532AF0);
+    RadioMessageType (*func)(RadioMessageType, RadioClass *) =
+        reinterpret_cast<RadioMessageType (*)(RadioMessageType, RadioClass *)>(0x00532AF0);
     return func(message, radio);
 #else
     return Transmit_Message(message, NullRadioTarget, radio);
@@ -186,10 +195,10 @@ void RadioClass::Decode_Pointers(void)
 
 char const *RadioClass::Message_From(RadioMessageType message)
 {
-    //DEBUG_ASSERT(message != RADIO_NONE);
+    // DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-    if ( message != RADIO_NONE && message < RADIO_COUNT ) {
+    if (message != RADIO_NONE && message < RADIO_COUNT) {
         return Messages[message];
     }
     return "Invalid message";
@@ -199,7 +208,8 @@ RadioMessageType RadioClass::From_Message(char const *message)
 {
     DEBUG_ASSERT(message != nullptr);
 
-    if (strcasecmp(message, "Invalid message") == 0 || strcasecmp(message, "<none>") == 0 || strcasecmp(message, "none") == 0) {
+    if (strcasecmp(message, "Invalid message") == 0 || strcasecmp(message, "<none>") == 0
+        || strcasecmp(message, "none") == 0) {
         return RADIO_NONE;
     }
 
