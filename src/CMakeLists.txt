@@ -78,8 +78,10 @@ set(GAMEENGINE_SRC
     game/engine/abstract.cpp
     game/engine/abstracttype.cpp
     game/engine/action.cpp
+    game/engine/aircrafttype.cpp
     game/engine/animtype.cpp
     game/engine/armor.cpp
+    game/engine/buildingtype.cpp
     game/engine/bullettype.cpp
     game/engine/ccini.cpp
     game/engine/cell.cpp
@@ -102,6 +104,7 @@ set(GAMEENGINE_SRC
     game/engine/layer.cpp
     game/engine/lists.cpp
     game/engine/logic.cpp
+    game/engine/infantrytype.cpp
     game/engine/map.cpp
     game/engine/mission.cpp
     game/engine/missioncontrol.cpp
@@ -131,6 +134,7 @@ set(GAMEENGINE_SRC
     game/engine/unittype.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
+    game/engine/vesseltype.cpp
     game/engine/voc.cpp
     game/engine/vox.cpp
     game/engine/warheadtype.cpp
