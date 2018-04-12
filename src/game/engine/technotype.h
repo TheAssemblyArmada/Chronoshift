@@ -19,12 +19,13 @@
 #define TECHNOTYPE_H
 
 #include "always.h"
-#include "ccini.h"
 #include "gametypes.h"
 #include "land.h"
 #include "mzone.h"
 #include "objecttype.h"
 #include "remap.h"
+
+class CCINIClass;
 
 class TechnoTypeClass : public ObjectTypeClass
 {
