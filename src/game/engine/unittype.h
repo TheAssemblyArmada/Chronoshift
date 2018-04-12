@@ -6,7 +6,7 @@
  *
  * @brief Class containing information about unit types.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -19,6 +19,7 @@
 #define UNITTYPE_H
 
 #include "always.h"
+#include "technotype.h"
 
 enum UnitType
 {
@@ -46,9 +47,22 @@ enum UnitType
     UNIT_MAD_TANK = 19,
     UNIT_DEMO_TRUCK = 20,
     UNIT_PHASE = 21,
+    UNIT_LAST = 21,
     UNIT_COUNT,
 };
 
 DEFINE_ENUMERATION_OPERATORS(UnitType);
+DEFINE_ENUMERATION_BITWISE_OPERATORS(UnitType);
+
+class UnitTypeClass : public TechnoTypeClass
+{
+};
+
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+//extern TFixedIHeapClass<UnitTypeClass> &UnitTypes;
+#else
+//extern TFixedIHeapClass<UnitTypeClass> UnitTypes;
+#endif
 
 #endif

@@ -63,6 +63,9 @@ enum BuildingType
     BUILDING_FCOM = 30,				// 4 - 64
     BUILDING_TESLA_COIL = 31,		// 4 - 128
 
+    // Only the first 32 entries of BuildingType are valid within a 32 integer.
+    BUILDING_VALID_COUNT = 32,      // TOOD: Rename this.
+
     // Fakes
     BUILDING_WEAF = 32,
     BUILDING_FACF = 33,
@@ -82,7 +85,7 @@ enum BuildingType
     BUILDING_MINV = 43,
     BUILDING_MINP = 44,
 
-    // 
+    // Villages
     BUILDING_V01 = 45,
     BUILDING_V02 = 46,
     BUILDING_V03 = 47,
@@ -138,9 +141,15 @@ enum BuildingType
 DEFINE_ENUMERATION_OPERATORS(BuildingType);
 DEFINE_ENUMERATION_BITWISE_OPERATORS(BuildingType);
 
+class BuildingTypeClass : public TechnoTypeClass
+{
+};
+
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
+//extern TFixedIHeapClass<BuildingTypeClass> &BuildingTypes;
 #else
+//extern TFixedIHeapClass<BuildingTypeClass> BuildingTypes;
 #endif
 
 #endif // BUILDINGTYPE_H

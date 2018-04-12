@@ -24,9 +24,7 @@
 enum InfantryType
 {
     INFANTRY_NONE				= -1,		// Invalid InfantryType
-
     INFANTRY_FIRST				= 0,
-
     INFANTRY_E1					= 0,		// Rifle Infantry
     INFANTRY_E2					= 1,		// Grenadier
     INFANTRY_E3					= 2,		// Rocket Soldier
@@ -53,9 +51,7 @@ enum InfantryType
     INFANTRY_CHAN				= 23,		//
     INFANTRY_SHOCK_TROOPER		= 24,		// Shock Trooper
     INFANTRY_MECHANIC			= 25,		// Mechanic
-
     INFANTRY_LAST				= 25,		//
-
     INFANTRY_COUNT				= 26		//
 };
 
@@ -65,9 +61,7 @@ DEFINE_ENUMERATION_BITWISE_OPERATORS(InfantryType);
 enum DoType
 {
     DO_NONE = -1,
-
     DO_FIRST = 0,
-
     DO_READY = 0,
     DO_GUARD = 1,
     DO_PRONE = 2,
@@ -77,32 +71,33 @@ enum DoType
     DO_CRAWL = 6,
     DO_UP = 7,
     DO_FIRE_PRONE = 8,
-
     DO_IDLE1 = 9,
     DO_IDLE2 = 10,
-
     DO_DIE1 = 11,
     DO_DIE2 = 12,
     DO_DIE3 = 13,
     DO_DIE4 = 14,
     DO_DIE5 = 15,
-
     DO_16 = 16,
     DO_17 = 17,
     DO_18 = 18,
     DO_19 = 19,
     DO_20 = 20,
-
     DO_LAST = 20,
-
     DO_COUNT = 21
 };
 
 DEFINE_ENUMERATION_OPERATORS(DoType);
 
+class InfantryTypeClass : public TechnoTypeClass
+{
+};
+
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
+//extern TFixedIHeapClass<InfantryTypeClass> &InfantryTypes;
 #else
+//extern TFixedIHeapClass<InfantryTypeClass> InfantryTypes;
 #endif
 
 #endif // INFANTRYTYPE_H

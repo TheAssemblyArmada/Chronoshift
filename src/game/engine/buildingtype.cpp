@@ -16,5 +16,7 @@
 #include "buildingtype.h"
 
 #ifndef RAPP_STANDALONE
+//TFixedIHeapClass<BuildingTypeClass> &BuildingTypes = *reinterpret_cast<TFixedIHeapClass<BuildingTypeClass> *>(0x);
 #else
+//TFixedIHeapClass<BuildingTypeClass> BuildingTypes;
 #endif

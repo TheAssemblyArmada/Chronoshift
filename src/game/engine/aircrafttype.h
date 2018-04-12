@@ -24,9 +24,7 @@
 enum AircraftType
 {
     AIRCRAFT_NONE = -1,
-
     AIRCRAFT_FIRST = 0,
-
     AIRCRAFT_TRANSPORT = 0,
     AIRCRAFT_BADGER = 1,
     AIRCRAFT_U2 = 2,
@@ -34,18 +32,22 @@ enum AircraftType
     AIRCRAFT_YAK = 4,
     AIRCRAFT_HELI = 5,
     AIRCRAFT_HIND = 6,
-
     AIRCRAFT_LAST = 6,
-
     AIRCRAFT_COUNT = 7
 };
 
 DEFINE_ENUMERATION_OPERATORS(AircraftType);
 DEFINE_ENUMERATION_BITWISE_OPERATORS(AircraftType);
 
+class AircraftTypeClass : public TechnoTypeClass
+{
+};
+
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
+//extern TFixedIHeapClass<AircraftTypeClass> &AircraftTypes;
 #else
+//extern TFixedIHeapClass<AircraftTypeClass> AircraftTypes;
 #endif
 
 #endif // AIRCRAFTTYPE_H

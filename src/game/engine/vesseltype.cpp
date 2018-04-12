@@ -16,5 +16,7 @@
 #include "vesseltype.h"
 
 #ifndef RAPP_STANDALONE
+//TFixedIHeapClass<VesselTypeClass> &VesselTypes = *reinterpret_cast<TFixedIHeapClass<VesselTypeClass> *>(0x);
 #else
+//TFixedIHeapClass<VesselTypeClass> VesselTypes;
 #endif

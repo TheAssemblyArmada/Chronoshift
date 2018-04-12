@@ -24,9 +24,7 @@
 enum VesselType
 {
     VESSEL_NONE = -1,
-
     VESSEL_FIRST = 0,
-
     VESSEL_SUBMARINE = 0,
     VESSEL_DESTROYER = 1,
     VESSEL_CRUISER = 2,
@@ -34,18 +32,22 @@ enum VesselType
     VESSEL_PT_BOAT = 4,
     VESSEL_MISSILE_SUB = 5,
     VESSEL_CARRIER = 6,
-
     VESSEL_LAST = 6,
-
-    VESSEL_COUNT = 7
+    VESSEL_COUNT
 };
 
 DEFINE_ENUMERATION_OPERATORS(VesselType);
 DEFINE_ENUMERATION_BITWISE_OPERATORS(VesselType);
 
+class VesselTypeClass : public TechnoTypeClass
+{
+};
+
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
+//extern TFixedIHeapClass<VesselTypeClass> &VesselTypes;
 #else
+//extern TFixedIHeapClass<VesselTypeClass> VesselTypes;
 #endif
 
 #endif // VESSELTYPE_H
