@@ -17,7 +17,6 @@
 #include "minmax.h"
 #include "shapipe.h"
 #include "crc.h"
-#include "triggertype.h"
 
 CCINIClass::CCINIClass() : DigestValid(false) {}
 
@@ -588,21 +587,19 @@ const int CCINIClass::Get_Owners(const char *section, const char *entry, const i
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    int owners = defvalue;
-
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
-        for ( char *t = strtok(valuebuf, ","); t != nullptr; t = strtok(nullptr, ",") ) {
-            owners |= 1 << HouseTypeClass::Owner_From_Name(valuebuf);
+        int owners = 0;
+        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
+            owners |= HouseTypeClass::Owner_From_Name(token);
         }
+        return owners;
     }
-    return owners;
+    return defvalue;
 }
 
 BOOL CCINIClass::Put_Owners(const char *section, const char *entry, const int value)
 {
-    static char buffer[MAX_LINE_LENGTH];
-
-    buffer[0] = '\0';
+    char buffer[MAX_LINE_LENGTH];
 
     int owner = value;
 
@@ -633,174 +630,138 @@ BOOL CCINIClass::Put_Owners(const char *section, const char *entry, const int va
 
 const int CCINIClass::Get_Units(const char *section, const char *entry, const int defvalue) const
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return 0;
-#else
     char valuebuf[MAX_LINE_LENGTH];
 
-    int value = defvalue;
-
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
-        for ( char *t = strtok(valuebuf, ","); t != nullptr; t = strtok(nullptr, ",") ) {
+        int value = 0;
+        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
             //TODO: Requires UnitTypeClass to be complete
-            value |= (int)UnitTypeClass::From_Name(valuebuf);
+            UnitType type = UNIT_NONE; //UnitTypeClass::From_Name(token);
+            if (type != UNIT_NONE && type < UNIT_COUNT) {
+                value |= (1 << type);
+            }
         }
+        return value;
     }
-    return value;
-#endif
+    return defvalue;
 }
 
 BOOL CCINIClass::Put_Units(const char *section, const char *entry, const int value)
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return false;
-#else
-    static char buffer[MAX_LINE_LENGTH];
+    char buffer[MAX_LINE_LENGTH];
 
-    buffer[0] = '\0';
-
-    for ( int type = 0; type < UNIT_COUNT; ++type ) {
+    for (UnitType type = UNIT_FIRST; type < UNIT_COUNT; ++type ) {
         if ( (1 << type) & value ) {
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
             //TODO: Requires UnitTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], UnitTypeClass::As_Reference((UnitType)type).Get_Name());
+            strcat(&buffer[strlen(buffer)], nullptr /*UnitTypeClass::As_Reference(type).Get_Name()*/);
         }
     }
     return Put_String(section, entry, buffer);
-#endif
 }
 
 const int CCINIClass::Get_Infantry(const char *section, const char *entry, const int defvalue) const
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return 0;
-#else
     char valuebuf[MAX_LINE_LENGTH];
 
-    int value = defvalue;
-
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
-        for ( char *t = strtok(valuebuf, ","); t != nullptr; t = strtok(nullptr, ",") ) {
+        int value = 0;
+        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
             //TODO: Requires InfantryTypeClass to be complete
-            value |= (int)InfantryTypeClass::From_Name(valuebuf);
+            InfantryType type = INFANTRY_NONE; //InfantryTypeClass::From_Name(token);
+            if (type != INFANTRY_NONE && type < INFANTRY_COUNT) {
+                value |= (1 << type);
+            }
         }
+        return value;
     }
-    return value;
-#endif
+    return defvalue;
 }
 
 BOOL CCINIClass::Put_Infantry(const char *section, const char *entry, const int value)
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return false;
-#else
-    static char buffer[MAX_LINE_LENGTH];
+    char buffer[MAX_LINE_LENGTH];
 
-    buffer[0] = '\0';
-
-    for ( int type = 0; type < INFANTRY_COUNT; ++type ) {
+    for (InfantryType type = INFANTRY_FIRST; type < INFANTRY_COUNT; ++type ) {
         if ( (1 << type) & value ) {
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
             //TODO: Requires InfantryTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], InfantryTypeClass::As_Reference((InfantryType)type).Get_Name());
+            strcat(&buffer[strlen(buffer)], nullptr /*InfantryTypeClass::As_Reference(type).Get_Name()*/);
         }
     }
     return Put_String(section, entry, buffer);
-#endif
 }
 
 const int CCINIClass::Get_Aircrafts(const char *section, const char *entry, const int defvalue) const
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return 0;
-#else
     char valuebuf[MAX_LINE_LENGTH];
 
-    int value = defvalue;
-
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
-        for ( char *t = strtok(valuebuf, ","); t != nullptr; t = strtok(nullptr, ",") ) {
+        int value = 0;
+        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
             //TODO: Requires AircraftTypeClass to be complete
-            value |= (int)AircraftTypeClass::From_Name(valuebuf);
+            AircraftType type = AIRCRAFT_NONE; //AircraftTypeClass::From_Name(token);
+            if (type != AIRCRAFT_NONE && type < AIRCRAFT_COUNT) {
+                value |= (1 << type);
+            }
         }
+        return value;
     }
-    return value;
-#endif
+    return defvalue;
 }
 
 BOOL CCINIClass::Put_Aircrafts(const char *section, const char *entry, const int value)
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return false;
-#else
-    static char buffer[MAX_LINE_LENGTH];
+    char buffer[MAX_LINE_LENGTH];
 
-    buffer[0] = '\0';
-
-    for ( int type = 0; type < AIRCRAFT_COUNT; ++type ) {
+    for (AircraftType type = AIRCRAFT_FIRST; type < AIRCRAFT_COUNT; ++type ) {
         if ( (1 << type) & value ) {
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
             //TODO: Requires AircraftTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], AircraftTypeClass::As_Reference((AircraftType)type).Get_Name());
+            strcat(&buffer[strlen(buffer)], nullptr /*AircraftTypeClass::As_Reference(type).Get_Name()*/);
         }
     }
     return Put_String(section, entry, buffer);
-#endif
 }
 
 const int CCINIClass::Get_Vessels(char const *section, char const *entry, const int defvalue) const
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return 0;
-#else
     char valuebuf[MAX_LINE_LENGTH];
 
-    int value = defvalue;
-
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
-        for ( char *t = strtok(valuebuf, ","); t != nullptr; t = strtok(nullptr, ",") ) {
+        int value = 0;
+        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
             //TODO: Requires VesselTypeClass to be complete
-            value |= (int)VesselTypeClass::From_Name(valuebuf);
+            VesselType type = VESSEL_NONE; //VesselTypeClass::From_Name(token);
+            if (type != VESSEL_NONE && type < VESSEL_COUNT) {
+                value |= (1 << type);
+            }
         }
+        return value;
     }
-    return value;
-#endif
+    return defvalue;
 }
 
 BOOL CCINIClass::Put_Vessels(char const *section, char const *entry, const int value)
 {
-#ifndef RAPP_STANDALONE
-    // Inlined in RA
-    return false;
-#else
-    static char buffer[MAX_LINE_LENGTH];
+    char buffer[MAX_LINE_LENGTH];
 
-    buffer[0] = '\0';
-
-    for ( int type = 0; type < VESSEL_COUNT; ++type ) {
+    for (VesselType type = VESSEL_FIRST; type < VESSEL_COUNT; ++type ) {
         if ( (1 << type) & value ) {
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
             //TODO: Requires VesselTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], VesselTypeClass::As_Reference((VesselType)type).Get_Name());
+            strcat(&buffer[strlen(buffer)], nullptr /*VesselTypeClass::As_Reference(type).Get_Name()*/);
         }
     }
     return Put_String(section, entry, buffer);
-#endif
 }
 
 const int CCINIClass::Get_Buildings(char const *section, char const *entry, const int defvalue) const
@@ -812,15 +773,18 @@ const int CCINIClass::Get_Buildings(char const *section, char const *entry, cons
 #else
     char valuebuf[MAX_LINE_LENGTH];
 
-    int value = defvalue;
-
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
-        for ( char *t = strtok(valuebuf, ","); t != nullptr; t = strtok(nullptr, ",") ) {
+        int value = 0;
+        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
             //TODO: Requires BuildingTypeClass to be complete
-            value |= (int)BuildingTypeClass::From_Name(valuebuf);
+            BuildingType type = BuildingTypeClass::From_Name(token);
+            if (type != BUILDING_NONE && type < BUILDING_COUNT) {
+                value |= (1 << type);
+            }
         }
+        return value;
     }
-    return value;
+    return defvalue;
 #endif
 }
 
@@ -831,17 +795,15 @@ BOOL CCINIClass::Put_Buildings(char const *section, char const *entry, const int
         reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const int)>(0x00463AFC);
     return func(this, section, entry, value);
 #else
-    static char buffer[MAX_LINE_LENGTH];
+    char buffer[MAX_LINE_LENGTH];
 
-    buffer[0] = '\0';
-
-    for ( int type = 0; type < 32; ++type ) {        // 32 corresponds to the first 32 entrys of BuildingType
+    for ( BuildingType type = BUILDING_FIRST; type < BUILDING_VALID_COUNT; ++type ) {
         if ( (1 << type) & value ) {
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
             //TODO: Requires BuildingTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], BuildingTypeClass::As_Reference((BuildingType)type).Get_Name());
+            strcat(&buffer[strlen(buffer)], BuildingTypeClass::As_Reference(type).Get_Name());
         }
     }
     return Put_String(section, entry, buffer);
