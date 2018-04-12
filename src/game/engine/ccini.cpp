@@ -592,7 +592,7 @@ const int CCINIClass::Get_Owners(const char *section, const char *entry, const i
 
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
         for ( char *t = strtok(valuebuf, ","); t != nullptr; t = strtok(nullptr, ",") ) {
-            owners |= HouseTypeClass::Owner_From_Name(valuebuf);
+            owners |= 1 << HouseTypeClass::Owner_From_Name(valuebuf);
         }
     }
     return owners;
