@@ -27,9 +27,13 @@
 //#include "anim.h"
 #include "target.h"
 
+#ifndef RAPP_STANDALONE
 LogicClass &Logic = Make_Global<LogicClass>(0x00668230);
-
 DynamicVectorClass<TriggerClass *> &LogicTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F270);
+#else
+LogicClass Logic;
+DynamicVectorClass<TriggerClass *> LogicTriggers;
+#endif
 
 LogicClass::LogicClass() {}
 
@@ -50,7 +54,7 @@ void LogicClass::Remove(ObjectClass *const object)
     LayerClass::Remove(object);
 }
 
-bool LogicClass::Submit(ObjectClass *object, bool sort)
+BOOL LogicClass::Submit(ObjectClass *object, BOOL sort)
 {
     return LayerClass::Submit(object, sort);
 }

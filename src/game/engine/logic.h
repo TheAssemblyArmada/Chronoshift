@@ -34,8 +34,7 @@ class LogicClass : public LayerClass
         void Init();
 
         void Remove(ObjectClass *const object);
-
-        bool Submit(ObjectClass *object, bool sort = false);
+        BOOL Submit(ObjectClass *object, BOOL sort = false);
 
         void Detach(target_t target, int a2);
 
