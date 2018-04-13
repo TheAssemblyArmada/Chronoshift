@@ -39,9 +39,7 @@ const char *MissionClass::Missions[MISSION_COUNT] = {
     "Repair",
     "Rescue",
     "Missile",
-    "Harmless",
-    "Find Crate",
-    "Timed Hunt"
+    "Harmless"
 };
 
 /**

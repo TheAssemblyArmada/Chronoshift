@@ -58,10 +58,6 @@ public:
     virtual int Mission_Deconstruction() { return TICKS_HALF_MINUTE; }
     virtual int Mission_Repair() { return TICKS_HALF_MINUTE; }
     virtual int Mission_Missile() { return TICKS_HALF_MINUTE; }
-#ifdef RAPP_STANDALONE
-    virtual int Mission_Find_Crate() { return TICKS_HALF_MINUTE; } // From Sole, can't add until standalone
-    virtual int Mission_Timed_Hunt() { return TICKS_HALF_MINUTE; }  // From C&C, can't add until standalone
-#endif
     virtual void Set_Mission(MissionType mission);
     virtual void Override_Mission(MissionType mission, int target1 = -1, int target2 = -1);
     virtual BOOL Restore_Mission(); 
