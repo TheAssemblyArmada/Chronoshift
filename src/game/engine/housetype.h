@@ -59,6 +59,7 @@ public:
     static HouseTypeClass &As_Reference(HousesType type);
     static const char *Name_From_Owner(int owner);
     static int Owner_From_Name(const char *name);
+    static BOOL Is_Multiplayer_House(HousesType type);
 
 private:
     HousesType Type;

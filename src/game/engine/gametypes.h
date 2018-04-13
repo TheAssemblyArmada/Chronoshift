@@ -6,7 +6,7 @@
  *
  * @brief Enumerations and other constant defintions that don't have a better home.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -15,8 +15,8 @@
  */
 #pragma once
 
-#ifndef CCTYPE_H
-#define CCTYPE_H
+#ifndef GAMETYPES_H
+#define GAMETYPES_H
 
 #include "always.h"
 
@@ -150,9 +150,7 @@ enum WarheadExplosionType
 enum TeamNumberType
 {
     TEAM_NUMBER_NONE = -1,
-
     TEAM_NUMBER_FIRST = 0,
-
     TEAM_NUMBER_0 = 0,
     TEAM_NUMBER_1 = 1,
     TEAM_NUMBER_2 = 2,
@@ -163,9 +161,6 @@ enum TeamNumberType
     TEAM_NUMBER_7 = 7,
     TEAM_NUMBER_8 = 8,
     TEAM_NUMBER_9 = 9,
-
-    TEAM_NUMBER_LAST = 9,
-
     TEAM_NUMBER_COUNT = 10
 };
 
@@ -184,26 +179,23 @@ enum TeamEventType
 enum ThreatType
 {
     THREAT_NONE = -1,
-
     THREAT_ANY = 0x0,
     THREAT_1 = 0x1,
     THREAT_2 = 0x2,
-    THREAT_AIRCRAFT = 0x4, // AIR / AIRCRAFT?
+    THREAT_AIRCRAFT = 0x4,          // AIR / AIRCRAFT?
     THREAT_INFANTRY = 0x8,
     THREAT_VEHICLE = 0x10,
     THREAT_BUILDING = 0x20,
-    THREAT_HARVESTERS = 0x40, // Economy?
+    THREAT_HARVESTERS = 0x40,       // Economy?
     THREAT_VESSEL = 0x80,
-    THREAT_NEUTRAL = 0x100, // from RA1
+    THREAT_NEUTRAL = 0x100,
     THREAT_CAPTURE = 0x200,
-    THREAT_FAKES = 0x400, // from RA1
+    THREAT_FAKES = 0x400,
     THREAT_POWER_FACILTIES = 0x800,
     THREAT_FACTORIES = 0x1000,
     THREAT_BASE_DEFENSES = 0x2000,
-
-    // combined
     THREAT_3D60 = (THREAT_BUILDING | THREAT_HARVESTERS | THREAT_NEUTRAL | THREAT_FAKES | THREAT_POWER_FACILTIES
-        | THREAT_FACTORIES | THREAT_BASE_DEFENSES) // 0x3D60            //
+        | THREAT_FACTORIES | THREAT_BASE_DEFENSES)  // 0x3D60
 };
 
 DEFINE_ENUMERATION_BITWISE_OPERATORS(ThreatType);
@@ -247,47 +239,42 @@ DEFINE_ENUMERATION_OPERATORS(FireErrorType);
 enum RadioMessageType
 {
     RADIO_NONE = -1,
-
     RADIO_FIRST = 0,
-
-    RADIO_STATIC = 0,               // "static (no message)"
-    RADIO_ROGER = 1,                // "Roger."
-    RADIO_HELLO = 2,                // "Come in."
-    RADIO_OVER_AND_OUT = 3,         // "Over and out."
-    RADIO_REQ_TRANSPORT = 4,        // "Requesting transport."
-    RADIO_ATTACH_TO_TRANSPORT = 5,  // "Attach to transport."
-    RADIO_GOT_DELIVERY = 6,         // "I've got a delivery for you."
-    RADIO_7 = 7,                    // "I'm performing load/unload maneuver. Be careful.""
-    RADIO_CLEAR = 8,                // "I'm clear."
-    RADIO_9 = 9,                    // "You are clear to unload. Driving away now.
-    RADIO_UNABLE_TO_COMPLY = 10,    // "Am unable to comply."
-    RADIO_11 = 11,                  // "I'm starting construction now... act busy."
-    RADIO_12 = 12,                  // "I've finished construction. You are free."
-    RADIO_13 = 13,                  // "We bumped, redraw yourself please."
-    RADIO_14 = 14,                  // "I'm trying to load up now."
-    RADIO_REQ_PASSENGER = 15,       // "May I become a passenger?"
-    RADIO_16 = 16,                  // "Are you ready to receive shipment?"
-    RADIO_17 = 17,                  // "Are you trying to become a passenger?""
-    RADIO_MOVE_TO_LOCATION = 18,    // "Move to location X."
-    RADIO_NEED_TO_MOVE = 19,        // "Do you need to move?"
-    RADIO_20 = 20,                  // "All right already. Now what?"
-    RADIO_21 = 21,                  // "I'm a passenger now."
-    RADIO_22 = 22,                  // "Backup into refinery now."
-    RADIO_RUN_AWAY = 23,            // "Run away!"
-    RADIO_TETHER_ESTABLISHED = 24,  // "Tether established."
-    RADIO_TETHER_BROKEN = 25,       // "Tether broken."
-    RADIO_REPAIR_ONE_STEP = 26,     // "Repair one step."
-    RADIO_27 = 27,                  // "Are you prepared to fight?"
-    RADIO_28 = 28,                  // "Attack this target please."
-    RADIO_29 = 29,                  // "Reload one step."
-    RADIO_30 = 30,                  // "Circumstances prevent success."
-    RADIO_31 = 31,                  // "All done with the request."
-    RADIO_32 = 32,                  // "Do you need service depot work?"
-    RADIO_33 = 33,                  // "Are you sitting on service depot?
-
-    RADIO_LAST = 34,
-
-    RADIO_COUNT = 34
+    RADIO_STATIC = 0,          // "static (no message)"
+    RADIO_ROGER,               // "Roger."
+    RADIO_HELLO,               // "Come in."
+    RADIO_OVER_AND_OUT,        // "Over and out."
+    RADIO_REQ_TRANSPORT,       // "Requesting transport."
+    RADIO_ATTACH_TO_TRANSPORT, // "Attach to transport."
+    RADIO_GOT_DELIVERY,        // "I've got a delivery for you."
+    RADIO_7,                   // "I'm performing load/unload maneuver. Be careful.""
+    RADIO_CLEAR,               // "I'm clear."
+    RADIO_9,                   // "You are clear to unload. Driving away now.
+    RADIO_UNABLE_TO_COMPLY,    // "Am unable to comply."
+    RADIO_11,                  // "I'm starting construction now... act busy."
+    RADIO_12,                  // "I've finished construction. You are free."
+    RADIO_13,                  // "We bumped, redraw yourself please."
+    RADIO_14,                  // "I'm trying to load up now."
+    RADIO_REQ_PASSENGER,       // "May I become a passenger?"
+    RADIO_16,                  // "Are you ready to receive shipment?"
+    RADIO_17,                  // "Are you trying to become a passenger?""
+    RADIO_MOVE_TO_LOCATION,    // "Move to location X."
+    RADIO_NEED_TO_MOVE,        // "Do you need to move?"
+    RADIO_20,                  // "All right already. Now what?"
+    RADIO_21,                  // "I'm a passenger now."
+    RADIO_22,                  // "Backup into refinery now."
+    RADIO_RUN_AWAY,            // "Run away!"
+    RADIO_TETHER_ESTABLISHED,  // "Tether established."
+    RADIO_TETHER_BROKEN,       // "Tether broken."
+    RADIO_REPAIR_ONE_STEP,     // "Repair one step."
+    RADIO_27,                  // "Are you prepared to fight?"
+    RADIO_28,                  // "Attack this target please."
+    RADIO_29,                  // "Reload one step."
+    RADIO_30,                  // "Circumstances prevent success."
+    RADIO_31,                  // "All done with the request."
+    RADIO_32,                  // "Do you need service depot work?"
+    RADIO_33,                  // "Are you sitting on service depot?
+    RADIO_COUNT
 };
 
 DEFINE_ENUMERATION_OPERATORS(RadioMessageType);
@@ -306,38 +293,35 @@ enum AttachType
 
 DEFINE_ENUMERATION_BITWISE_OPERATORS(AttachType);
 
+//TODO: Will need looking into to really confirm, but credit to tomsons for the list.
 enum NeedType
 {
-    NEED_NONE = -1,
-
+    NEED_NONE = 0,
     NEED_FIRST = 0,
-
-    NEED_0 = 0,
-    NEED_1 = 1,
-    NEED_2 = 2,
-    NEED_3 = 3,
-    NEED_4 = 4,
-    NEED_5 = 5,
-    NEED_6 = 6,
-    NEED_7 = 7,
-    NEED_8 = 8,
-    NEED_9 = 9,
-    NEED_10 = 10,
-    NEED_11 = 11,
-    NEED_12 = 12, // team?
-    NEED_13 = 13,
-    NEED_14 = 14,
-    NEED_15 = 15,
-    NEED_16 = 16,
-    NEED_17 = 17,
-    NEED_18 = 18,
-    NEED_19 = 19,
-    NEED_20 = 20,
-
-    NEED_LAST = 999,
-
-    NEED_COUNT = 999
+    NEED_THEME,
+    NEED_MOVIE,             //see MovieType
+    NEED_SOUND,
+    NEED_SPEECH,
+    NEED_INFANTRY,
+    NEED_UNIT,
+    NEED_AIRCRAFT,
+    NEED_BUILDING,
+    NEED_WAYPOINT,
+    NEED_NUMBER,
+    NEED_TRIGGER,
+    NEED_TEAM,
+    NEED_HOUSE,
+    NEED_14,               // not used, only odd ones out seem Source, Crate, Armor, Animation
+    NEED_QUARRY,           //see QuarryType
+    NEED_FORMATION,        //see FormationName
+    NEED_BOOL,
+    NEED_SPECIAL,          //see SpecialWeaponFile
+    NEED_MISSION,          //see MissionType
+    NEED_CELL,
+    NEED_COUNT,
 };
+
+DEFINE_ENUMERATION_OPERATORS(NeedType);
 
 enum ZoneType
 {
@@ -385,14 +369,12 @@ DEFINE_ENUMERATION_OPERATORS(MoveType);
 enum DamageResultType
 {
     DAMAGE_NONE = -1,
-
     DAMAGE_UNAFFECTED = 0,
     DAMAGE_UNDAMAGED = 1,
     DAMAGE_YELLOW = 2,
     DAMAGE_RED = 3,
     DAMAGE_DEAD = 4,
     DAMAGE_POST_MORTEM = 5,
-
     DAMAGE_COUNT = 6
 };
 
@@ -405,6 +387,8 @@ enum PCPType
     PCP_2 = 2,
     PCP_COUNT = 3
 };
+
+DEFINE_ENUMERATION_OPERATORS(PCPType);
 
 /*
 enum _PipScaleType {
@@ -419,7 +403,6 @@ enum _PipScaleType {
 enum PipEnum
 {
     PIP_NONE = -1,
-
     PIP_EMPTY = 0,
     PIP_GREEN = 1,
     PIP_PRIMARY = 2,
@@ -443,7 +426,6 @@ enum PipEnum
     PIP_SMALL_F = 19,   // just for readablity
     PIP_MEDIC = 20,
     PIP_SM_PRIMARY = 21,
-
     PIP_COUNT = 22
 };
 
@@ -474,38 +456,31 @@ enum INIFormatEnum
 enum MissionType
 {
     MISSION_NONE = -1,
-
     MISSION_FIRST = 0,
-
     MISSION_SLEEP = 0,
-    MISSION_ATTACK = 1,
-    MISSION_MOVE = 2,
-    MISSION_QMOVE = 3,
-    MISSION_RETREAT = 4,
-    MISSION_GUARD = 5,
-    MISSION_STICKY = 6,
-    MISSION_ENTER = 7,
-    MISSION_CAPTURE = 8,
-    MISSION_HARVEST = 9,
-    MISSION_AREA_GUARD = 10,
-    MISSION_RETURN = 11,
-    MISSION_STOP = 12,
-    MISSION_AMBUSH = 13,
-    MISSION_HUNT = 14,
-    MISSION_UNLOAD = 15,
-    MISSION_SABOTAGE = 16,
-    MISSION_CONSTRUCTION = 17,
-    MISSION_DECONSTRUCTION = 18,
-    MISSION_REPAIR = 19,
-    MISSION_RESCUE = 20,
-    MISSION_MISSILE = 21,
-    MISSION_HARMLESS = 22,
-    MISSION_FIND_CRATE = 23,
-    MISSION_TIMED_HUNT = 24,
-
-    MISSION_LAST = 24,
-
-    MISSION_COUNT = 25
+    MISSION_ATTACK,
+    MISSION_MOVE,
+    MISSION_QMOVE,
+    MISSION_RETREAT,
+    MISSION_GUARD,
+    MISSION_STICKY,
+    MISSION_ENTER,
+    MISSION_CAPTURE,
+    MISSION_HARVEST,
+    MISSION_AREA_GUARD,
+    MISSION_RETURN,
+    MISSION_STOP,
+    MISSION_AMBUSH,
+    MISSION_HUNT,
+    MISSION_UNLOAD,
+    MISSION_SABOTAGE,
+    MISSION_CONSTRUCTION,
+    MISSION_DECONSTRUCTION,
+    MISSION_REPAIR,
+    MISSION_RESCUE,
+    MISSION_MISSILE,
+    MISSION_HARMLESS,
+    MISSION_COUNT
 };
 
 DEFINE_ENUMERATION_OPERATORS(MissionType);
@@ -600,10 +575,6 @@ enum MissionStatusType
 
     // MISSION_HARMLESS
 
-    // MISSION_FIND_CRATE
-
-    // MISSION_TIMED_HUNT
-
 };
 
 DEFINE_ENUMERATION_OPERATORS(MissionStatusType);
@@ -620,43 +591,32 @@ enum WeaponSlotType
 enum HousesType
 {
     HOUSES_NONE = -1,
-
     HOUSES_FIRST = 0,
-
-    HOUSES_SPN = 0,         //"Spain"
-    HOUSES_GRE = 1,         //"Greece"
-    HOUSES_RED = 2,         //"USSR"
-    HOUSES_ENG = 3,         //"England"
-    HOUSES_UKA = 4,         //"Ukraine"		    //EDWIN shows entry 4 as "Italy"       // HOUSES_ITA = 4,
-    HOUSES_GER = 5,         //"Germany"
-    HOUSES_FRA = 6,         //"France"
-    HOUSES_TRK = 7,         //"Turkey"
-
-    HOUSES_GDI = 8,         //"GoodGuy"
-    HOUSES_NOD = 9,         //"BadGuy"
-
-    HOUSES_CIV = 10,        //"Neutral"
-    HOUSES_JP = 11,         //"Special"
-
+    HOUSES_SPAIN = 0,
+    HOUSES_GREECE = 1,
+    HOUSES_USSR = 2,
+    HOUSES_ENGLAND = 3,
+    HOUSES_UKRAINE = 4,        //HOUSES_ITALY = 4,        //from EDWIN
+    HOUSES_GERMANY = 5,
+    HOUSES_FRANCE = 6,
+    HOUSES_TURKEY = 7,
+    HOUSES_GOODGUY = 8,
+    HOUSES_BADGUY = 9,
+    HOUSES_NEUTRAL = 10,
+    HOUSES_SPECIAL = 11,
     HOUSES_LAST = 11,
-
     HOUSES_MULTI_FIRST = 12,
-
-    HOUSES_MP1 = 12,        //"Multi1"
-    HOUSES_MP2 = 13,        //"Multi2"
-    HOUSES_MP3 = 14,        //"Multi3"
-    HOUSES_MP4 = 15,        //"Multi4"
-    HOUSES_MP5 = 16,        //"Multi5"
-    HOUSES_MP6 = 17,        //"Multi6"
-    HOUSES_MP7 = 18,        //"Multi7"
-    HOUSES_MP8 = 19,        //"Multi8"
-
-    HOUSES_MPLAST = 19,
-
+    HOUSES_MULTI_1 = 12,
+    HOUSES_MULTI_2 = 13,
+    HOUSES_MULTI_3 = 14,
+    HOUSES_MULTI_4 = 15,
+    HOUSES_MULTI_5 = 16,
+    HOUSES_MULTI_6 = 17,
+    HOUSES_MULTI_7 = 18,
+    HOUSES_MULTI_8 = 19,
+    HOUSES_MULTI_LAST = 19,
+    HOUSES_MULTI_COUNT = 8,
     HOUSES_ALL_LAST = 19,
-
-    HOUSES_MPCOUNT = 8,
-
     HOUSES_COUNT = 20
 };
 
@@ -665,35 +625,30 @@ DEFINE_ENUMERATION_OPERATORS(HousesType);
 //TODO: To be moved to house.h when class is implimented.
 enum OwnerType
 {
-    OWNER_NONE = 0, // No owner
-
-    OWNER_SPAIN = 1 << HOUSES_SPN,      //"Spain"         //Allies
-    OWNER_GREECE = 1 << HOUSES_GRE,     //"Greece"        //Allies
-    OWNER_USSR = 1 << HOUSES_RED,       //"USSR"          //Soviet            //  OWNER_ITALY    = 4,        //"Italy"        //Allies
-    OWNER_ENGLAND = 1 << HOUSES_ENG,    //"England"       //Allies
-    OWNER_UKRAINE = 1 << HOUSES_UKA,    //"Ukraine"       //Soviet
-    OWNER_GERMANY = 1 << HOUSES_GER,    //"Germany"       //Allies
-    OWNER_FRANCE = 1 << HOUSES_FRA,     //"France"        //Allies
-    OWNER_TURKEY = 1 << HOUSES_TRK,     //"Turkey"        //Allies
-
-    OWNER_GOODGUY = 1 << HOUSES_GDI,    //"GoodGuy"       //Allies
-    OWNER_BADGUY = 1 << HOUSES_NOD,     //"BadGuy"        //Soviet
-
-    OWNER_NEUTRAL = 1 << HOUSES_CIV,    //"Neutral"
-    OWNER_SPECIAL = 1 << HOUSES_JP,     //"Special"
-
-    OWNER_MP1 = 1 << HOUSES_MP1,    //"Multi1"
-    OWNER_MP2 = 1 << HOUSES_MP2,    //"Multi2"
-    OWNER_MP3 = 1 << HOUSES_MP3,    //"Multi3"
-    OWNER_MP4 = 1 << HOUSES_MP4,    //"Multi4"
-    OWNER_MP5 = 1 << HOUSES_MP5,    //"Multi5"
-    OWNER_MP6 = 1 << HOUSES_MP6,    //"Multi6"
-    OWNER_MP7 = 1 << HOUSES_MP7,    //"Multi7"
-    OWNER_MP8 = 1 << HOUSES_MP8,    //"Multi8"
-
+    OWNER_NONE = 0,                             // No owner(s)
+    OWNER_SPAIN = 1 << HOUSES_SPAIN,            //Allies
+    OWNER_GREECE = 1 << HOUSES_GREECE,          //Allies
+    OWNER_USSR = 1 << HOUSES_USSR,              //Soviet            //  OWNER_ITALY = 1 << HOUSES_ITALY,        //Allies
+    OWNER_ENGLAND = 1 << HOUSES_ENGLAND,        //Allies
+    OWNER_UKRAINE = 1 << HOUSES_UKRAINE,        //Soviet
+    OWNER_GERMANY = 1 << HOUSES_GERMANY,        //Allies
+    OWNER_FRANCE = 1 << HOUSES_FRANCE,          //Allies
+    OWNER_TURKEY = 1 << HOUSES_TURKEY,          //Allies
+    OWNER_GOODGUY = 1 << HOUSES_GOODGUY,        //Allies
+    OWNER_BADGUY = 1 << HOUSES_BADGUY,          //Soviet
+    OWNER_NEUTRAL = 1 << HOUSES_NEUTRAL,
+    OWNER_SPECIAL = 1 << HOUSES_SPECIAL,
+    OWNER_MULTI_1 = 1 << HOUSES_MULTI_1,
+    OWNER_MULTI_2 = 1 << HOUSES_MULTI_2,
+    OWNER_MULTI_3 = 1 << HOUSES_MULTI_3,
+    OWNER_MULTI_4 = 1 << HOUSES_MULTI_4,
+    OWNER_MULTI_5 = 1 << HOUSES_MULTI_5,
+    OWNER_MULTI_6 = 1 << HOUSES_MULTI_6,
+    OWNER_MULTI_7 = 1 << HOUSES_MULTI_7,
+    OWNER_MULTI_8 = 1 << HOUSES_MULTI_8,
     OWNER_ALL = OWNER_SPAIN | OWNER_GREECE | OWNER_USSR | OWNER_ENGLAND | OWNER_UKRAINE | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY
-            | OWNER_GOODGUY | OWNER_BADGUY | OWNER_NEUTRAL | OWNER_SPECIAL
-            | OWNER_MP1 | OWNER_MP2 | OWNER_MP3 | OWNER_MP4 | OWNER_MP5 | OWNER_MP6 | OWNER_MP7 | OWNER_MP8
+              | OWNER_GOODGUY | OWNER_BADGUY | OWNER_NEUTRAL | OWNER_SPECIAL
+              | OWNER_MULTI_1 | OWNER_MULTI_2 | OWNER_MULTI_3 | OWNER_MULTI_4 | OWNER_MULTI_5 | OWNER_MULTI_6 | OWNER_MULTI_7 | OWNER_MULTI_8
 };
 
 DEFINE_ENUMERATION_OPERATORS(OwnerType);
@@ -726,9 +681,8 @@ enum SideType
 
     SIDE_ALLIES = OWNER_SPAIN | OWNER_GREECE | OWNER_ENGLAND | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY | OWNER_GOODGUY,
     SIDE_SOVIET = OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY,
-
     SIDE_ALL = OWNER_SPAIN | OWNER_GREECE | OWNER_ENGLAND | OWNER_GERMANY | OWNER_FRANCE | OWNER_TURKEY | OWNER_GOODGUY
-            | OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY
+             | OWNER_USSR | OWNER_UKRAINE | OWNER_BADGUY
 };
 
 DEFINE_ENUMERATION_OPERATORS(SideType);
@@ -738,10 +692,108 @@ enum MovieType
 {
     MOVIE_NONE = -1,
     MOVIE_FIRST = 0,
-    MOVIE_PROLOG = 75,
-    MOVIE_SIZZLE = 97,
-    MOVIE_SIZZLE2 = 98,
-    MOVIE_COUNT = 104
+    MOVIE_AAGUN = 0,
+    MOVIE_MIG,
+    MOVIE_SFROZEN,
+    MOVIE_AIRFIELD,
+    MOVIE_BATTLE,
+    MOVIE_BMAP,
+    MOVIE_BOMBRUN,
+    MOVIE_DPTHCHRG,
+    MOVIE_GRVESTNE,
+    MOVIE_MONTPASS,
+    MOVIE_MTNKFACT,
+    MOVIE_CRONTEST,
+    MOVIE_OILDRUM,
+    MOVIE_ALLYEND,
+    MOVIE_RADRRAID,
+    MOVIE_SHIPYARD,
+    MOVIE_SHORBOMB,
+    MOVIE_SITDUCK,
+    MOVIE_SLNTSRVC,
+    MOVIE_SNOWBASE,
+    MOVIE_EXECUTE,
+    MOVIE_REDINTRO,
+    MOVIE_NUKESTOK,
+    MOVIE_V2ROCKET,
+    MOVIE_SEARCH,
+    MOVIE_BINOC,
+    MOVIE_ELEVATOR,
+    MOVIE_FROZEN,
+    MOVIE_MCV,
+    MOVIE_SHIPSINK,
+    MOVIE_SOVMCV,
+    MOVIE_TRINITY,
+    MOVIE_ALLYMORF,
+    MOVIE_APCESCPE,
+    MOVIE_BRDGTILT,
+    MOVIE_CRONFAIL,
+    MOVIE_STRAFE,
+    MOVIE_DESTROYR,
+    MOVIE_DOUBLE,
+    MOVIE_FLARE,
+    MOVIE_SNSTRAFE,
+    MOVIE_LANDING,
+    MOVIE_ONTHPRWL,
+    MOVIE_OVERRUN,
+    MOVIE_SNOWBOMB,
+    MOVIE_SOVCEMET,
+    MOVIE_TAKE_OFF,
+    MOVIE_TESLA,
+    MOVIE_SOVIET8,
+    MOVIE_SPOTTER,
+    MOVIE_ALLY1,
+    MOVIE_ALLY2,
+    MOVIE_ALLY4,
+    MOVIE_SOVFINAL,
+    MOVIE_ASSESS,
+    MOVIE_SOVIET10,
+    MOVIE_DUD,
+    MOVIE_MCV_LAND,
+    MOVIE_MCVBRDGE,
+    MOVIE_PERISCOP,
+    MOVIE_SHORBOM1,
+    MOVIE_SHORBOM2,
+    MOVIE_SOVBATL,
+    MOVIE_SOVTSTAR,
+    MOVIE_AFTRMATH,
+    MOVIE_SOVIET11,
+    MOVIE_MASASSLT,
+    MOVIE_ENGLISH,
+    MOVIE_SOVIET1,
+    MOVIE_SOVIET2,
+    MOVIE_SOVIET3,
+    MOVIE_SOVIET4,
+    MOVIE_SOVIET5,
+    MOVIE_SOVIET6,
+    MOVIE_SOVIET7,
+    MOVIE_PROLOG,
+    MOVIE_AVERTED,
+    MOVIE_COUNTDWN,
+    MOVIE_MOVINGIN,
+    MOVIE_ALLY10,
+    MOVIE_ALLY12,
+    MOVIE_ALLY5,
+    MOVIE_ALLY6,
+    MOVIE_ALLY8,
+    MOVIE_TANYA1,
+    MOVIE_TANYA2,
+    MOVIE_ALLY10B,
+    MOVIE_ALLY11,
+    MOVIE_ALLY14,
+    MOVIE_ALLY9,
+    MOVIE_SPY,
+    MOVIE_TOOFAR,
+    MOVIE_SOVIET12,
+    MOVIE_SOVIET13,
+    MOVIE_SOVIET9,
+    MOVIE_BEACHEAD,
+    MOVIE_SOVIET14,
+    MOVIE_SIZZLE,
+    MOVIE_SIZZLE2,
+    MOVIE_ANTEND,
+    MOVIE_ANTINTRO,
+    MOVIE_COUNT
 };
 
 DEFINE_ENUMERATION_OPERATORS(MovieType);
@@ -756,4 +808,4 @@ enum MPHType : uint8_t
     MPH_MAX = 255,
 };
 
-#endif // CCTYPE_H
+#endif // GAMETYPES_H

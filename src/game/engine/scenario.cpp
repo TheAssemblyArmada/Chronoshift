@@ -134,23 +134,23 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
 
     switch (player) {
         case SCEN_PLAYER_SPAIN:
-            prefixvalue = HouseTypeClass::As_Reference(HOUSES_SPN).Get_Prefix();
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_SPAIN).Get_Prefix();
             break;
 
         case SCEN_PLAYER_GREECE:
-            prefixvalue = HouseTypeClass::As_Reference(HOUSES_GRE).Get_Prefix();
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_GREECE).Get_Prefix();
             break;
 
         case SCEN_PLAYER_USSR:
-            prefixvalue = HouseTypeClass::As_Reference(HOUSES_RED).Get_Prefix();
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_USSR).Get_Prefix();
             break;
 
         case SCEN_PLAYER_SPECIAL:
-            prefixvalue = HouseTypeClass::As_Reference(HOUSES_JP).Get_Prefix();
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_SPECIAL).Get_Prefix();
             break;
 
         default:
-            prefixvalue = HouseTypeClass::As_Reference(HOUSES_MP1).Get_Prefix();
+            prefixvalue = HouseTypeClass::As_Reference(HOUSES_MULTI_1).Get_Prefix();
             break;
     };
 
