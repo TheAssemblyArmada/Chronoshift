@@ -32,6 +32,7 @@ const WeaponTypeClass WeaponCamera(WEAPON_CAMERA, "Camera");
 const WeaponTypeClass WeaponFireballLauncher(WEAPON_FIREBALL_LAUNCHER, "FireballLauncher");
 const WeaponTypeClass WeaponSniper(WEAPON_SNIPER, "Sniper");
 const WeaponTypeClass WeaponChainGun(WEAPON_CHAINGUN, "ChainGun");
+const WeaponTypeClass WeaponPistol(WEAPON_PISTOL, "Pistol");
 const WeaponTypeClass WeaponM1Carbine(WEAPON_M1CARBINE, "M1Carbine");
 const WeaponTypeClass WeaponDragon(WEAPON_DRAGON, "Dragon");
 const WeaponTypeClass WeaponHellfire(WEAPON_HELLFIRE, "Hellfire");
@@ -148,6 +149,7 @@ void WeaponTypeClass::Init_Heap()
     new WeaponTypeClass(WeaponFireballLauncher);
     new WeaponTypeClass(WeaponSniper);
     new WeaponTypeClass(WeaponChainGun);
+    new WeaponTypeClass(WeaponPistol);
     new WeaponTypeClass(WeaponM1Carbine);
     new WeaponTypeClass(WeaponDragon);
     new WeaponTypeClass(WeaponHellfire);
