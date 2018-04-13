@@ -19,7 +19,7 @@
 #include "warheadtype.h"
 
 #ifndef RAPP_STANDALONE
-TFixedIHeapClass<WeaponTypeClass> &WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x00691600);
+TFixedIHeapClass<WeaponTypeClass> &WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x0069164C);
 #else
 TFixedIHeapClass<WeaponTypeClass> WeaponTypes;
 #endif
