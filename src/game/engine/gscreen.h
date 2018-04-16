@@ -19,7 +19,10 @@
 #define GSCREEN_H
 
 #include "always.h"
+#include "action.h"
+#include "facing.h"
 #include "gadget.h"
+#include "gametypes.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "noinit.h"
@@ -83,8 +86,11 @@ enum MouseType
     MOUSE_COUNT = 43
 };
 
+class CCINIClass;
 class GraphicViewPortClass;
+class HouseClass;
 class ObjectClass;
+class TechnoClass;
 
 class GameScreenClass
 {
@@ -122,6 +128,25 @@ public:
     virtual void Set_Map_Dimensions(int x, int y, int w, int h) = 0;
     virtual void Code_Pointers() = 0;
     virtual void Decode_Pointers() = 0;
+
+    // Additions for DisplayClass
+    virtual void Read_INI(CCINIClass &ini) = 0;
+    virtual void Write_INI(CCINIClass &ini) = 0;
+    virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) = 0;
+    virtual int16_t Click_Cell_Calc(int x, int y) const = 0;
+    virtual void Help_Text(int str_id, int x = -1, int y = -1, BOOL on_wait = false) = 0;
+    virtual MouseType Get_Mouse_Shape(void) const = 0;
+    virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) = 0;
+    virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) = 0;
+    virtual void Set_View_Dimensions(int x, int y, int w = -1, int h = -1) = 0;
+    virtual void Put_Place_Back(TechnoClass *) = 0;
+    virtual void Set_Tactical_Position(uint32_t location) = 0;
+    virtual void Flag_Cell(int16_t cellnum) = 0;
+    virtual void Mouse_Right_Press(int mouse_x, int mouse_y) = 0;
+    virtual void Mouse_Left_Press(int mouse_x, int mouse_y) = 0;
+    virtual void Mouse_Left_Up(int16_t cellnum, BOOL cell_shrouded = false, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
+    virtual void Mouse_Left_Held(int mouse_x, int mouse_y) = 0;
+    virtual void Mouse_Left_Release(int16_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
 
 protected:
     int RedrawFlag;
