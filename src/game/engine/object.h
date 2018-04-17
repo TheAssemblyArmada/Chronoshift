@@ -146,6 +146,8 @@ protected:
     int16_t Health;
 };
 
+void Unselect_All();
+
 //EDWIN 0x0044021C
 inline BOOL ObjectClass::Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2)
 {

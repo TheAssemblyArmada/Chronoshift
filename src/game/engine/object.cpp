@@ -645,3 +645,12 @@ void ObjectClass::Move(FacingType facing)
 
     Mark(MARK_PUT);
 }
+
+void Unselect_All()
+{
+    while (CurrentObjects.Count() > 0) {
+        CurrentObjects[0]->Unselect();
+    }
+
+    CurrentObjects.Clear();
+}
