@@ -109,9 +109,19 @@ inline uint32_t Cell_To_Coord(int16_t cellnum)
     return 0x00800080 | (Cell_Get_X(cellnum) << 8) | (Cell_Get_Y(cellnum) << 24);
 }
 
+inline int16_t Coord_Cell_To_Lepton(int cellcoord)
+{
+    return cellcoord * 256;
+}
+
 inline int16_t Pixel_To_Lepton(int pixel)
 {
     return ((unsigned(pixel) * 256) + 12) / 24;
+}
+
+inline int Lepton_To_Pixel(int16_t lepton)
+{
+    return (24 * lepton + 128) / 256;
 }
 
 inline uint32_t Coord_From_Pixel_XY(int x, int y)
@@ -120,5 +130,8 @@ inline uint32_t Coord_From_Pixel_XY(int x, int y)
 }
 
 int Distance(uint32_t coord1, uint32_t coord2);
+void Move_Point(int &x, int &y, DirType dir, int16_t distance);
+uint32_t Coord_Move(uint32_t coord, DirType dir, int16_t distance);
+BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h);
 
 #endif // COORD_H
