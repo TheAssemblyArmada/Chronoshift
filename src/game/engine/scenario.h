@@ -69,8 +69,9 @@ public:
     void Do_Fade_AI();
     BOOL Set_Global_To(int global, BOOL value);
     int Get_Random_Value(int min, int max) { return SyncRandom(min, max); }
-    int Get_Scenario_Index() { return ScenarioIndex; }
-
+    int Get_Scenario_Index() const { return ScenarioIndex; }
+    TheaterType Get_Theater() const { return Theater; }
+    void Set_Theater(TheaterType theater) { Theater = theater; }
 private:
     RandomClass SyncRandom;
     DiffType HumanDifficulty;
