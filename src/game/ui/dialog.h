@@ -146,11 +146,40 @@ enum WindowNumberType
     WINDOW_COUNT = 7
 };
 
+// TODO Refactor global naming after all locations implemented.
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
 extern WindowType *WindowList;
+extern unsigned &Window;
+extern int &WindowColumns;
+extern int &WindowLines;
+extern int &WindowWidth;
+extern int &WPos;
+extern int &WinX;
+extern int &WinY;
+extern int &WinW;
+extern int &WinH;
+extern int &WinC;
+extern int &WinB;
+extern int &WinCx;
+extern int &WinCy;
+extern int &ScrollCounter;
 #else
 extern WindowType WindowList[WINDOW_COUNT];
+extern unsigned Window;
+extern int WindowColumns;
+extern int WindowLines;
+extern int WindowWidth;
+extern int WPos;
+extern int WinX;
+extern int WinY;
+extern int WinW;
+extern int WinH;
+extern int WinC;
+extern int WinB;
+extern int WinCx;
+extern int WinCy;
+extern int ScrollCounter;
 #endif
 
 void Simple_Text_Print(
@@ -171,7 +200,7 @@ void Draw_Caption(int str_id, int x, int y, int w);
 void Dialog_Box(int x_pos, int y_pos, int width, int height);
 void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, BOOL unk);
 void Window_Box(WindowNumberType type, BoxStyleEnum style);
-
+unsigned Change_Window(unsigned window);
 
 namespace Dialog
 {

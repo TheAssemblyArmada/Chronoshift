@@ -29,6 +29,20 @@
 
 #ifndef RAPP_STANDALONE
 WindowType *WindowList = reinterpret_cast<WindowType*>(0x006016CC);
+unsigned &Window = Make_Global<unsigned>(0x006B1A08);
+int &WindowColumns = Make_Global<int>(0x0060CE6C);
+int &WindowLines = Make_Global<int>(0x0060CE70);
+int &WindowWidth = Make_Global<int>(0x0060CE74);
+int &WPos = Make_Global<int>(0x006B19DC);
+int &WinX = Make_Global<int>(0x006B19F8);
+int &WinY = Make_Global<int>(0x006B19FC);
+int &WinW = Make_Global<int>(0x0060CE80);
+int &WinH = Make_Global<int>(0x0060CE7C);
+int &WinC = Make_Global<int>(0x0060CE78);
+int &WinB = Make_Global<int>(0x006B19F4);
+int &WinCx = Make_Global<int>(0x006B1A00);
+int &WinCy = Make_Global<int>(0x006B1A04);
+int &ScrollCounter = Make_Global<int>(0x006B197C);
 #else
 WindowType WindowList[WINDOW_COUNT] = {
     { 0, 0, 640, 400, 15, 12, 0, 0 },
@@ -39,6 +53,20 @@ WindowType WindowList[WINDOW_COUNT] = {
     { 40, 30, 240, 140, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 15, 12, 0, 0 }
 };
+unsigned Window;
+int WindowColumns = 40;
+int WindowLines = 25;
+int WindowWidth = 40;
+int WPos = 0;
+int WinX = 0;
+int WinY = 0;
+int WinW = 40;
+int WinH = 25;
+int WinC = 1;
+int WinB = 0;
+int WinCx = 0;
+int WinCy = 0;
+int ScrollCounter = 0;
 #endif
 
 /**
@@ -761,4 +789,28 @@ void Window_Box(WindowNumberType type, BoxStyleEnum style)
     if (g_logicPage == &g_seenBuff) {
         g_mouse->Conditional_Show_Mouse();
     }
+}
+
+unsigned Change_Window(unsigned window)
+{
+    unsigned old_window;
+    old_window = Window;
+    Window = window;
+    WinX = WindowList[window].X;
+    WinY = WindowList[window].Y;
+    WinW = WindowList[window].W;
+    WinH = WindowList[window].H;
+    WinC = WindowList[window].C;
+    WinB = WindowList[window].B;
+    WinCx = WindowList[window].Cx;
+    WinCy = WindowList[window].Cy;
+
+    int full_width = g_fontXSpacing + g_fontWidth;
+    WPos = WinCx / full_width;
+    WindowLines = (WinH - g_fontYSpacing) / (g_fontHeight + g_fontYSpacing);
+    WindowWidth = 8 * WinW;
+    ScrollCounter = 0;
+    WindowColumns = (8 * WinW) / full_width;
+
+    return old_window;
 }
