@@ -116,6 +116,8 @@ public:
     int Cell_Number() const { return CellNumber; }
     int8_t Get_Zone(MZoneType mzone) { return Zones[mzone]; }
     void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
+    BOOL Get_Placement_Check() const { return PlacementCheck; }
+    void Set_Placement_Check(BOOL check) { PlacementCheck = check; }
     BOOL Get_Bit4() const { return Bit4; }
     void Set_Bit4(BOOL bit) { Bit4 = bit; }
     BOOL Get_Bit8() const { return Bit8; }
