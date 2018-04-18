@@ -29,7 +29,8 @@ class ObjectClass;
 enum LayerType
 {
     LAYER_NONE = -1,
-    LAYER_SURFACE,
+    LAYER_FIRST = 0,
+    LAYER_SURFACE = 0,
     LAYER_GROUND,
     LAYER_AIR,
     LAYER_TOP,
