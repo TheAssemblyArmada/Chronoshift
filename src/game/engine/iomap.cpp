@@ -18,7 +18,7 @@
 // TODO Update this as additional layers of the hierachy are implemented.
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
-MapClass &Map = Make_Global<MapClass>(0x00668250);
+DisplayClass &Map = Make_Global<DisplayClass>(0x00668250);
 #else
-MapClass Map;
+DisplayClass Map;
 #endif
