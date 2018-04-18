@@ -169,7 +169,7 @@ MixFileClass<FC>::MixFileClass(const char *filename, PKey *key) :
     DEBUG_ASSERT(filename != nullptr);
     DEBUG_ASSERT(key != nullptr);
 
-    if (Force_CD_Available(g_requiredCD)) {
+    if (!Force_CD_Available(g_requiredCD)) {
         Emergency_Exit(0xFF);
     }
 
