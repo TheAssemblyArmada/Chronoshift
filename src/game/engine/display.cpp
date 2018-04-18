@@ -29,6 +29,7 @@
 #include "scenario.h"
 #include "swap.h"
 #include "target.h"
+#include "textprint.h"
 #include "theater.h"
 #include <cstdio>
 
@@ -52,6 +53,7 @@ char *DisplayClass::UnitShadow = Make_Pointer<char>(0x00657CE4);
 char *DisplayClass::UnitShadowAir = Make_Pointer<char>(0x00657EE4);
 char *DisplayClass::SpecialGhost = Make_Pointer<char>(0x006580E4);
 void *&DisplayClass::TransIconset = Make_Global<void *>(0x00657CE0);
+void *&DisplayClass::ShadowShapes = Make_Global<void *>(0x006582E4);
 BufferClass *&DisplayClass::TheaterBuffer = Make_Global<BufferClass *>(0x006680E4);
 BooleanVectorClass &DisplayClass::CellRedraw = Make_Global<BooleanVectorClass>(0x006587E8);
 #else
@@ -72,6 +74,7 @@ char DisplayClass::UnitShadow[2][256];
 char DisplayClass::UnitShadowAir[2][256];
 char DisplayClass::SpecialGhost[2][256];
 void *DisplayClass::TransIconset = nullptr;
+void *DisplayClass::ShadowShapes = nullptr;
 BufferClass *DisplayClass::TheaterBuffer = nullptr;
 BooleanVectorClass DisplayClass::CellRedraw;
 #endif
@@ -194,20 +197,21 @@ void DisplayClass::Init_Theater(TheaterType theater)
     Scen.Set_Theater(theater);
 
     char mix_name[32];
-    sprintf(mix_name, "%s.mix", g_theaters[theater].name);
+    snprintf(mix_name, sizeof(mix_name), "%s.mix", g_theaters[theater].data);
 
     // Does the theater we want to initialise match the last one loaded? If so we don't need to do anything.
     if (Scen.Get_Theater() != g_lastTheater) {
         if (_theater_data != nullptr) {
             delete _theater_data;
         }
-
+        
         _theater_data = new MixFileClass<CCFileClass>(mix_name, &g_publicKey);
         _theater_data->Cache(TheaterBuffer);
     }
 
     char pal_name[32];
-    sprintf(pal_name, "%s.pal", g_theaters[theater].data);
+    snprintf(pal_name, sizeof(pal_name), "%s.pal", g_theaters[theater].data);
+    
     GamePalette = *static_cast<PaletteClass *>(MixFileClass<CCFileClass>::Retrieve(pal_name));
     OriginalPalette = GamePalette;
 
@@ -325,7 +329,7 @@ BOOL DisplayClass::Map_Cell(int16_t cellnum, HouseClass *house)
 {
     // TODO requires HouseClass
 #ifndef RAPP_STANDALONE
-    BOOL (*func)
+    BOOL(*func)
     (const DisplayClass *, int16_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const DisplayClass *, int16_t, HouseClass *)>(0x004B0788);
     return func(this, cellnum, house);
@@ -644,6 +648,30 @@ void DisplayClass::Mouse_Left_Release(
 }
 
 /**
+ * @brief Initialise data that doesn't change once loaded during runtime.
+ *
+ * 0x004AEEF4
+ */
+void DisplayClass::One_Time() {
+    MapClass::One_Time();
+
+    // Resize the cell redraw vector to cover the map.
+    CellRedraw.Resize(MAP_MAX_AREA);
+
+    for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
+        Layers[layer].One_Time();
+    }
+
+    TransIconset = MixFileClass<CCFileClass>::Retrieve("trans.icn");
+    DEBUG_ASSERT(TransIconset != nullptr);
+
+    ShadowShapes = MixFileClass<CCFileClass>::Retrieve("shadow.shp");
+    DEBUG_ASSERT(ShadowShapes != nullptr);
+
+    Set_View_Dimensions(0, 16);
+}
+
+/**
  * @brief Converts a pixel on screen to the logical location in the engine.
  *
  * 0x004B2694
@@ -662,13 +690,33 @@ uint32_t DisplayClass::Pixel_To_Coord(int x, int y)
 
 void DisplayClass::Set_Cursor_Shape(int16_t *list)
 {
-    // TODO needs other none virtual DisplayClass functions.
-#ifndef RAPP_STANDALONE
-    void(*func)(const DisplayClass *, int16_t *) = reinterpret_cast<void(*)(const DisplayClass *, int16_t *)>(0x004AF700);
-    func(this, list);
-#endif
+    static int16_t tmp_list[60] = { 0 };
+
+    if (DisplayCursorOccupy != nullptr) {
+        Cursor_Mark(DisplayCursorStart + DisplayCursorEnd, false);
+    }
+
+    DisplayCursorEnd = 0;
+
+    if (list != nullptr) {
+        int x;
+        int y;
+
+        List_Copy(tmp_list, list, ARRAY_SIZE(tmp_list));
+        DisplayCursorOccupy = tmp_list;
+        Get_Occupy_Dimensions(x, y, tmp_list);
+        DisplayCursorEnd = -Cell_From_XY(x / 2, y / 2);
+        Cursor_Mark(DisplayCursorStart + DisplayCursorEnd, true);
+    } else {
+        DisplayCursorOccupy = nullptr;
+    }
 }
 
+/**
+ * @brief Draw the selection band box.
+ *
+ * 0x004B2E84
+ */
 void DisplayClass::Refresh_Band()
 {
     if (DisplayBit8) {
@@ -720,4 +768,126 @@ void DisplayClass::Refresh_Band()
         Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
         Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
     }
+}
+
+void DisplayClass::Cursor_Mark(int16_t cellnum, BOOL flag)
+{
+    // Check we have a valid cellnum
+    if (cellnum == -1) {
+        return;
+    }
+
+    for (int16_t *offsets = DisplayCursorOccupy; *offsets != LIST_END; ++offsets) {
+        int16_t offset_cell = cellnum + *offsets;
+
+        if (MapClass::In_Radar(offset_cell)) {
+            CellClass &cell_ref = Map[offset_cell];
+            cell_ref.Redraw_Objects();
+            cell_ref.Set_Placement_Check(flag);
+        }
+    }
+
+    if (PendingObjectPtr != nullptr) {
+        for (const int16_t *overlap = PendingObjectPtr->Overlap_List(); *overlap != LIST_END; ++overlap) {
+            int16_t offset_cell = cellnum + *overlap;
+
+            if (MapClass::In_Radar(offset_cell)) {
+                Map[offset_cell].Redraw_Objects();
+            }
+        }
+    }
+}
+
+void DisplayClass::Get_Occupy_Dimensions(int &w, int &h, int16_t *list) const
+{
+    int left = -128;
+    int top = -128;
+    int right = 128;
+    int bottom = 128;
+
+    w = 0;
+    h = 0;
+
+    // Original has code to calculate dimensions from an occupy list, but the code checks if the pointer is null before doing
+    // it, so it always just sets w and h to 0 instead. After debugging RA and changing this to a "cell != nullptr" check, I
+    // noticed no real difference, i suppose we need to find out what is done with the returned dimensions.
+
+#if 1 // This is original logic. Bad juju as it will dereference a null pointer if ever passed null.
+    if (list == nullptr) {
+#else // This is what it probably should have been.
+    if (list != nullptr) {
+#endif
+        while (*list != LIST_END) {
+            int cell_x = Cell_Get_X(*list);
+            int cell_y = Cell_Get_Y(*list);
+
+            left = Max(left, cell_x);
+            right = Min(right, cell_x);
+            top = Max(top, cell_y);
+            bottom = Min(bottom, cell_y);
+            ++list;
+        }
+
+        w = Max(1, left - right + 1);
+        h = Max(1, top - bottom + 1);
+    }
+}
+
+/**
+ * @brief Creates an overlap list of the cells that will be obscured by text at a given position.
+ *
+ * 0x004AF2D8
+ */
+const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y) const
+{
+    static int16_t _list[60];
+    int16_t *w_list = _list;
+
+    if (string != nullptr) {
+        int count = 60;
+        int str_width = String_Pixel_Width(string) + 24;
+        int width = TacOffsetX + Lepton_To_Pixel(DisplayWidth);
+
+        if ((str_width + x) > width) {
+            str_width = width - x;
+            w_list[0] = LIST_START;
+            --count;
+            ++w_list;
+        }
+
+        if (x <= width) {
+            int16_t click_cell = Click_Cell_Calc(x, y - 1);
+            int height = Clamp(y + 24, TacOffsetY, TacOffsetY + (Lepton_To_Pixel(DisplayHeight) - 1));
+            int16_t offset_click = Click_Cell_Calc(width + x - 1, height);
+
+            if (click_cell == -1) {
+                click_cell = Click_Cell_Calc(x, y);
+            }
+
+            if (click_cell != -1 && offset_click != -1) {
+                // If we have two valid cells locations, iterate through the cells between them.
+                for (int i = Cell_Get_Y(click_cell); i < Cell_Get_Y(offset_click); ++i) {
+                    for (int j = Cell_Get_X(click_cell); j <= Cell_Get_X(offset_click); ++j) {
+                        int16_t current_cell = Coord_To_Cell(DisplayPos);
+                        *w_list = Cell_From_XY(j, i) - current_cell;
+                        --count;
+                        ++w_list;
+
+                        // Break if there is only one slot left
+                        if (count < 2) {
+                            break;
+                        }
+                    }
+
+                    if (count < 2) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        *w_list = LIST_END;
+    }
+
+    return _list;
 }
