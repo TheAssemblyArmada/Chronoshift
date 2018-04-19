@@ -343,15 +343,11 @@ BOOL DisplayClass::Map_Cell(int16_t cellnum, HouseClass *house)
 
 int16_t DisplayClass::Click_Cell_Calc(int x, int y) const
 {
-    int xpos = Pixel_To_Lepton(x - TacOffsetX);
-    int ypos = Pixel_To_Lepton(y - TacOffsetY);
+    int xpos = (uint16_t)Pixel_To_Lepton(x - TacOffsetX);
+    int ypos = (uint16_t)Pixel_To_Lepton(y - TacOffsetY);
 
     if (xpos < DisplayWidth && ypos < DisplayHeight) {
-        uint32_t coord1 =
-            Coord_From_Pixel_XY(Lepton_To_Pixel(Coord_Lepton_X(DisplayPos)), Lepton_To_Pixel(Coord_Lepton_Y(DisplayPos)));
-        uint32_t coord2 = Coord_From_Lepton_XY(xpos, ypos);
-
-        return Coord_To_Cell(Coord_Add(coord1, coord2));
+        return Coord_To_Cell(Coord_From_Lepton_XY(xpos + Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos)), ypos + Lepton_Round_To_Pixel(Coord_Lepton_Y(DisplayPos))));
     }
 
     return -1;
@@ -480,7 +476,7 @@ void DisplayClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
             int16_t refresh_cell = cellnum + tmp_list[i];
 
             if (In_Radar(refresh_cell)) {
-                (*this)[refresh_cell].Redraw_Objects();
+                Array[refresh_cell].Redraw_Objects();
             }
         }
     }
@@ -897,3 +893,10 @@ const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y)
 
     return _list;
 }
+
+#ifndef RAPP_STANDALONE
+int16_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
+{
+    return DisplayClass::Click_Cell_Calc(x, y);
+}
+#endif

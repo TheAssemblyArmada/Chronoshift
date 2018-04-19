@@ -124,6 +124,11 @@ inline int Lepton_To_Pixel(int16_t lepton)
     return (24 * lepton + 128) / 256;
 }
 
+inline int16_t Lepton_Round_To_Pixel(int16_t lepton)
+{
+    return Pixel_To_Lepton(Lepton_To_Pixel(lepton));
+}
+
 inline uint32_t Coord_From_Pixel_XY(int x, int y)
 {
     return Coord_From_Lepton_XY(Pixel_To_Lepton(x), Pixel_To_Lepton(y));
