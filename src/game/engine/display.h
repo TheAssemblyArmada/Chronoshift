@@ -50,7 +50,7 @@ public:
     virtual void Decode_Pointers() override;
 
     virtual void Read_INI(CCINIClass &ini) override;
-    virtual void Write_INI(CCINIClass &ini) override;
+    void Write_INI(CCINIClass &ini); // Not virtual in RA.
     virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) override;
     virtual int16_t Click_Cell_Calc(int x, int y) const override;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, BOOL on_wait = false) override {}
@@ -184,9 +184,9 @@ inline void DisplayClass::Hook_Me()
     Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);  //seems to work
     Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press); //seems to work
     Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press); //seems to work
-    //Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held); //crashes on Refresh_Band call
+    Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held); //crashes on Refresh_Band call
     Hook_Function(0x004B2694, *DisplayClass::Pixel_To_Coord); //seems to work
-    //Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); //crashes
+    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); //crashes
     //Hook_Function(0x005CC697, Confine_Rect); //seems to work
     //Hook_Function(0x005CC890, Change_Window); //seems to work
 #endif

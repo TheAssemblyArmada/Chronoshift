@@ -297,7 +297,7 @@ void DisplayClass::Decode_Pointers()
 {
     // Requires target functions.
 #ifndef RAPP_STANDALONE
-    void (*func)(const DisplayClass *) = reinterpret_cast<void (*)(const DisplayClass *)>(0x004F91DC);
+    void (*func)(const DisplayClass *) = reinterpret_cast<void (*)(const DisplayClass *)>(0x004F9220);
     func(this);
 #elif 0
     if ((uintptr_t)PendingObjectPtr != 0) {
@@ -736,18 +736,18 @@ void DisplayClass::Refresh_Band()
         }
 
         // This loop should redraw the left and right side of the selection band.
-        for (int i = box_y; i < (box_h + 24); i += 24) {
+        for (int i = box_y; i <= (box_h + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayHeight) + TacOffsetY;
             int16_t click_cell = Click_Cell_Calc(box_x, Clamp(i, 0, b_pxl));
-
+            
             if (click_cell != -1) {
-                Map[click_cell].Redraw_Objects();
+                Array[click_cell].Redraw_Objects();
             }
 
             click_cell = Click_Cell_Calc(box_w, Clamp(i, 0, b_pxl));
 
             if (click_cell != -1) {
-                Map[click_cell].Redraw_Objects();
+                Array[click_cell].Redraw_Objects();
             }
         }
 
@@ -755,15 +755,15 @@ void DisplayClass::Refresh_Band()
         for (int i = box_x; i < (box_w + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayWidth) + TacOffsetX;
             int16_t click_cell = Click_Cell_Calc(Clamp(i, 0, b_pxl), box_y);
-
+            
             if (click_cell != -1) {
-                Map[click_cell].Redraw_Objects();
+                Array[click_cell].Redraw_Objects();
             }
 
             click_cell = Click_Cell_Calc(Clamp(i, 0, b_pxl), box_h);
-
+            
             if (click_cell != -1) {
-                Map[click_cell].Redraw_Objects();
+                Array[click_cell].Redraw_Objects();
             }
         }
 
