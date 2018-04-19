@@ -178,7 +178,7 @@ inline void DisplayClass::Hook_Me()
     //Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc); //crashes
     //Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); //doesn't let me scroll
     Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells); //seems to work
-    //Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); //crashes on TacticalButton
+    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); //crashes on TacticalButton issue with init order?
     Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position); //seems to work
     Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);  //seems to work
     Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press); //seems to work

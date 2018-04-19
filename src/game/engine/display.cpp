@@ -112,6 +112,9 @@ DisplayClass::DisplayClass() :
     PendingSuper(SPECIAL_NONE),
     BandBox(0, 0, 0, 0)
 {
+    ShadowShapes = nullptr;
+    TransIconset = nullptr;
+    Set_View_Dimensions(0, 8, 13, 8);
 }
 
 /**
@@ -486,20 +489,21 @@ void DisplayClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
 /**
  * @brief Sets the dimensions of the tactical view in pixels.
  *
- * 0x004B0628
+ * 0x004AF4E0
  */
 void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
 {
     if (w == -1) {
-        w = g_seenBuff.Get_Width() - x;
+        DisplayWidth = Pixel_To_Lepton(g_seenBuff.Get_Width() - x);
+    } else {
+        DisplayWidth = w * 256;
     }
 
     if (h == -1) {
-        h = g_seenBuff.Get_Height() - y;
+        DisplayHeight = Pixel_To_Lepton(g_seenBuff.Get_Height() - y);
+    } else {
+        DisplayHeight = h * 256;
     }
-
-    DisplayWidth = Pixel_To_Lepton(w);
-    DisplayHeight = Pixel_To_Lepton(h);
 
     int x_pos = Coord_Lepton_X(DisplayPos) - (MapCellX * 256);
     int y_pos = Coord_Lepton_Y(DisplayPos) - (MapCellY * 256);
@@ -525,8 +529,10 @@ void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
     DisplayToRedraw = true;
     Flag_To_Redraw();
 
-    TacticalButton.Set_Position(x, y);
-    TacticalButton.Set_Size(Lepton_To_Pixel(DisplayWidth), Lepton_To_Pixel(DisplayHeight));
+    TacticalButton.Set_XPos(TacOffsetX);
+    TacticalButton.Set_YPos(TacOffsetY);
+    TacticalButton.Set_Width(Lepton_To_Pixel(DisplayWidth));
+    TacticalButton.Set_Height(Lepton_To_Pixel(DisplayHeight));
 }
 
 /**
