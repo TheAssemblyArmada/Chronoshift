@@ -135,8 +135,8 @@ inline uint32_t Coord_From_Pixel_XY(int x, int y)
 }
 
 int Distance(uint32_t coord1, uint32_t coord2);
-void Move_Point(int &x, int &y, DirType dir, int16_t distance);
-uint32_t Coord_Move(uint32_t coord, DirType dir, int16_t distance);
+void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
+uint32_t Coord_Move(uint32_t coord, DirType dir, uint16_t distance);
 BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h);
 
 #endif // COORD_H

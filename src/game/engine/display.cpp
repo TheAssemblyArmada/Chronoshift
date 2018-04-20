@@ -369,6 +369,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             if (face == FACING_SOUTH_WEST) {
                 dir = DIR_SOUTH;
             }
+
             if (face == FACING_NORTH_WEST) {
                 dir = DIR_NORTH;
             }
@@ -378,6 +379,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             if (face == FACING_NORTH_WEST) {
                 dir = DIR_WEST;
             }
+
             if (face == FACING_NORTH_EAST) {
                 dir = DIR_EAST;
             }
@@ -401,6 +403,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             if (face == FACING_SOUTH_EAST) {
                 dir = DIR_EAST;
             }
+
             if (face == FACING_SOUTH_WEST) {
                 dir = DIR_WEST;
             }
@@ -436,7 +439,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
         }
 
         // If we actually moved, redraw.
-        if (distance > 0 && pos_coord != DisplayPos) {
+        if (distance != 0 && pos_coord != DisplayPos) {
             if (redraw) {
                 Set_Tactical_Position(pos_coord);
                 DisplayToRedraw = true;
