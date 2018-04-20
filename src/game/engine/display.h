@@ -79,6 +79,7 @@ public:
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
     int16_t Hook_Click_Cell_Calc(int x, int y);
+    const int16_t *Hook_Text_Overlap_List(char const *string, int x, int y);
 #endif
 
 protected:
@@ -168,6 +169,10 @@ protected:
 
 #ifndef RAPP_STANALONE
 #include "hooker.h"
+inline const int16_t *DisplayClass::Hook_Text_Overlap_List(char const *string, int x, int y)
+{
+    return DisplayClass::Text_Overlap_List(string, x, y);
+}
 
 inline void DisplayClass::Hook_Me()
 {
@@ -177,7 +182,7 @@ inline void DisplayClass::Hook_Me()
     Hook_Function(0x004AF02C, *DisplayClass::Init_Theater); // invokes emergency exit
     Hook_Function(0x004B0140, *DisplayClass::AI); //seems to work
     Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc); //crashes
-    //Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); //doesn't let me scroll
+    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); //doesn't let me scroll
     Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells); //seems to work
     Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); //crashes on TacticalButton issue with init order?
     Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position); //seems to work
@@ -187,6 +192,7 @@ inline void DisplayClass::Hook_Me()
     Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held); //crashes on Refresh_Band call
     Hook_Function(0x004B2694, *DisplayClass::Pixel_To_Coord); //seems to work
     Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); //crashes
+    Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);
     //Hook_Function(0x005CC697, Confine_Rect); //seems to work
     //Hook_Function(0x005CC890, Change_Window); //seems to work
 #endif

@@ -693,6 +693,11 @@ uint32_t DisplayClass::Pixel_To_Coord(int x, int y)
     return 0;
 }
 
+/**
+ * @brief Sets the occupy list for the cells the band box currently covers.
+ *
+ * 0x004AF700
+ */
 void DisplayClass::Set_Cursor_Shape(int16_t *list)
 {
     static int16_t tmp_list[60] = { 0 };
@@ -853,7 +858,7 @@ const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y)
         int str_width = String_Pixel_Width(string) + 24;
         int width = TacOffsetX + Lepton_To_Pixel(DisplayWidth);
 
-        if ((str_width + x) > width) {
+        if (str_width + x >= width) {
             str_width = width - x;
             w_list[0] = LIST_START;
             --count;
@@ -863,7 +868,7 @@ const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y)
         if (x <= width) {
             int16_t click_cell = Click_Cell_Calc(x, y - 1);
             int height = Clamp(y + 24, TacOffsetY, TacOffsetY + (Lepton_To_Pixel(DisplayHeight) - 1));
-            int16_t offset_click = Click_Cell_Calc(width + x - 1, height);
+            int16_t offset_click = Click_Cell_Calc(str_width + x - 1, height);
 
             if (click_cell == -1) {
                 click_cell = Click_Cell_Calc(x, y);
