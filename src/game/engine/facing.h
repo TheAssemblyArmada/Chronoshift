@@ -46,7 +46,6 @@ enum FacingType
 };
 
 DEFINE_ENUMERATION_OPERATORS(FacingType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(FacingType);
 
 #ifdef COMPILER_WATCOM
 enum DirType
