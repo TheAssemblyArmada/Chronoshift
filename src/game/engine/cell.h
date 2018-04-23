@@ -150,7 +150,7 @@ private:
         {
             bool Bit1 : 1; // 1
             bool PlacementCheck : 1; // 2
-            bool Bit4 : 1; // 4            //Shrouded?
+            bool Bit4 : 1; // 4 // Shrouded? Looks like it means partly visible, a neighbour is revealed.
             bool Bit8 : 1; // 8 //Revealed? //Occupied? //NotSeen? //#define	cf_Explored	0x08 //this means no shroud
             bool Bit16 : 1; // 16	//Could be HasWaypoint?  HasCellTag?
             bool Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?

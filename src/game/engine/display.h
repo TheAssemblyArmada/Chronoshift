@@ -25,6 +25,12 @@
 
 class BufferClass;
 
+enum ModeControl {
+    MODE_CONTROL_TOGGLE = -1,
+    MODE_CONTROL_OFF = 0,
+    MODE_CONTROL_ON = 1
+};
+
 class DisplayClass : public MapClass
 {
     // Internal gadget class for handling input to the tactical area of the game screen.
@@ -75,12 +81,33 @@ public:
     void Cursor_Mark(int16_t cellnum, BOOL flag);
     void Get_Occupy_Dimensions(int &w, int &h, int16_t *list) const;
     const int16_t *Text_Overlap_List(const char *string, int x, int y) const;
+    ObjectClass *Next_Object(ObjectClass *object) const;
+    void Submit(ObjectClass *object, LayerType layer);
+    void Remove(ObjectClass *object, LayerType layer);
+    ObjectClass *Cell_Object(int16_t cellnum, int x, int y) const;
+    void Select_These(uint32_t start, uint32_t finish);
+    void Sell_Mode_Control(int mode);
+    void Repair_Mode_Control(int mode);
+    void Center_Map(uint32_t coord);
+    int16_t Set_Cursor_Pos(int16_t cell);
+    BOOL Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, int16_t cell) const;
+    void Redraw_Icons();
+    void Redraw_Shadow();
+    BOOL In_View(int16_t cellnum) const;
+    BOOL Coord_To_Pixel(uint32_t coord, int &x, int &y) const;
+    int Cell_Shadow(int16_t cellnum) const;
+
+    static BOOL Is_Cell_Flagged(int16_t cellnum) { return CellRedraw[cellnum]; }
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
     int16_t Hook_Click_Cell_Calc(int x, int y);
     const int16_t *Hook_Text_Overlap_List(char const *string, int x, int y);
 #endif
+
+private:
+    // This only seems to be used by DisplayClass, so made it a static helper of this class.
+    static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
 
 protected:
     uint32_t DisplayPos; // Coord of top left of tactical display within the map.
@@ -172,6 +199,11 @@ protected:
 inline const int16_t *DisplayClass::Hook_Text_Overlap_List(char const *string, int x, int y)
 {
     return DisplayClass::Text_Overlap_List(string, x, y);
+}
+
+inline int16_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
+{
+    return DisplayClass::Click_Cell_Calc(x, y);
 }
 
 inline void DisplayClass::Hook_Me()

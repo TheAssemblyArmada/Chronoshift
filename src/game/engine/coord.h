@@ -134,6 +134,11 @@ inline uint32_t Coord_From_Pixel_XY(int x, int y)
     return Coord_From_Lepton_XY(Pixel_To_Lepton(x), Pixel_To_Lepton(y));
 }
 
+inline uint8_t Lepton_To_Cell_Coord(int16_t lepton)
+{
+    return (lepton >> 8) & 0xFF;
+}
+
 int Distance(uint32_t coord1, uint32_t coord2);
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 uint32_t Coord_Move(uint32_t coord, DirType dir, uint16_t distance);

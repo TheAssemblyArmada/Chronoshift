@@ -17,6 +17,7 @@
 #include "abs.h"
 #include "ccfileclass.h"
 #include "coord.h"
+#include "drawshape.h"
 #include "fading.h"
 #include "gameoptions.h"
 #include "gbuffer.h"
@@ -902,9 +903,541 @@ const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y)
     return _list;
 }
 
-#ifndef RAPP_STANDALONE
-int16_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
+ObjectClass *DisplayClass::Next_Object(ObjectClass *object) const
 {
-    return DisplayClass::Click_Cell_Calc(x, y);
+    ObjectClass *retval = nullptr;
+    bool found = false;
+
+    // Flag to return the first object encountered when iterating the list.
+    if (object == nullptr) {
+        found = true;
+    }
+
+    LayerClass *layerptr = &Layers[LAYER_GROUND];
+
+    for (int index = 0; index < Layers[LAYER_GROUND].Count(); ++index) {
+        ObjectClass *next = Layers[LAYER_GROUND][index];
+
+        if (next != nullptr && next->Is_Player_Army()) {
+            if (retval == nullptr) {
+                retval = next;
+            }
+
+            if (found) {
+                return next;
+            }
+
+            if (object == next) {
+                found = true;
+            }
+        }
+    }
+
+    return retval;
 }
+
+void DisplayClass::Submit(ObjectClass *object, LayerType layer)
+{
+    if (object != nullptr) {
+        Layers[layer].Submit(object, layer == LAYER_GROUND);
+    }
+}
+
+void DisplayClass::Remove(ObjectClass *object, LayerType layer)
+{
+    if (object != nullptr) {
+        Layers[layer].Remove(object);
+    }
+}
+
+ObjectClass *DisplayClass::Cell_Object(int16_t cellnum, int x, int y) const
+{
+    return Array[cellnum].Cell_Object(x, y);
+}
+
+void DisplayClass::Select_These(uint32_t start, uint32_t finish)
+{
+    // Needs HouseClass.
+#ifndef RAPP_STANDALONE
+    void(*func)(const DisplayClass *, uint32_t, uint32_t) = reinterpret_cast<void(*)(const DisplayClass *, uint32_t, uint32_t)>(0x004B2C50);
+    func(this, start, finish);
 #endif
+}
+
+void DisplayClass::Sell_Mode_Control(int mode)
+{
+    // Needs HouseClass.
+#ifndef RAPP_STANDALONE
+    void(*func)(const DisplayClass *, int) = reinterpret_cast<void(*)(const DisplayClass *, int)>(0x004B4B68);
+    func(this, mode);
+#elif 0
+    bool flag = DisplaySellMode;
+
+    switch (mode) {
+        case MODE_CONTROL_TOGGLE:
+            flag = !DisplaySellMode;
+            break;
+
+        case MODE_CONTROL_OFF:
+            flag = false;
+            break;
+
+        case MODE_CONTROL_ON:
+            flag = true;
+            break;
+
+        default:
+            break;
+    }
+
+    if (flag != DisplaySellMode && PendingObjectTypePtr == nullptr) {
+        DisplayRepairMode = false;
+
+        if (flag && !PlayerPtr->field_137.All_False()) {
+            DisplaySellMode = true;
+            Unselect_All();
+        } else {
+            DisplaySellMode = false;
+            Revert_Mouse_Shape();
+        }
+    }
+#endif
+}
+
+void DisplayClass::Repair_Mode_Control(int mode)
+{
+    // Needs HouseClass.
+#ifndef RAPP_STANDALONE
+    void(*func)(const DisplayClass *, int) = reinterpret_cast<void(*)(const DisplayClass *, int)>(0x004B4C10);
+    func(this, mode);
+#elif 0
+    bool flag = DisplayRepairMode;
+
+    switch (mode) {
+        case MODE_CONTROL_TOGGLE:
+            flag = !DisplayRepairMode;
+            break;
+
+        case MODE_CONTROL_OFF:
+            flag = false;
+            break;
+
+        case MODE_CONTROL_ON:
+            flag = true;
+            break;
+
+        default:
+            break;
+    }
+
+    if (flag != DisplayRepairMode && PendingObjectTypePtr == nullptr) {
+        DisplaySellMode = false;
+
+        if (flag && !PlayerPtr->field_137.All_False()) {
+            DisplayRepairMode = true;
+            Unselect_All();
+        } else {
+            DisplayRepairMode = false;
+            Revert_Mouse_Shape();
+        }
+    }
+#endif
+}
+
+/**
+ * @brief Centers display to given coord.
+ *
+ * 0x004B4E20
+ */
+void DisplayClass::Center_Map(uint32_t coord)
+{
+    bool coord_set = false;
+    int x = 0;
+    int y = 0;
+
+    // Calculate a position based on units selected, used if no coord is passed.
+    if (CurrentObjects.Count() > 0) {
+        int x_sum = 0;
+        int y_sum = 0;
+
+        for (int i = 0; i < CurrentObjects.Count(); ++i) {
+            ObjectClass *obj = CurrentObjects[i];
+            x_sum += Coord_Lepton_X(obj->Center_Coord());
+            y_sum += Coord_Lepton_Y(obj->Center_Coord());
+        }
+
+        x = x_sum / CurrentObjects.Count();
+        y = y_sum / CurrentObjects.Count();
+        coord_set = true;
+    }
+
+    // SS version doesn't take a coord, just calculates based on units selected.
+    if (coord != 0) {
+        x = Coord_Lepton_X(coord);
+        y = Coord_Lepton_Y(coord);
+        coord_set = true;
+    }
+
+    // Only bother setting the position if we have a coord from somewhere. SS doesn't do the min X/Y checks
+    if (coord_set) {
+        int16_t x_lep = Max((int16_t)(x - Coord_Lepton_X(DisplayWidth) / 2), Coord_Cell_To_Lepton(MapCellX));
+        int16_t y_lep = Max((int16_t)(y - Coord_Lepton_Y(DisplayHeight) / 2), Coord_Cell_To_Lepton(MapCellY));
+        Set_Tactical_Position(Coord_From_Lepton_XY(x_lep, y_lep));
+    }
+}
+
+/**
+ * @brief Registers the cell in the band box cursor list, calculates from mouse pos if cell is -1.
+ *
+ * 0x004AFD40
+ */
+int16_t DisplayClass::Set_Cursor_Pos(int16_t cell)
+{
+    int16_t retval;
+
+    if (cell == -1) {
+        cell = Click_Cell_Calc(g_mouse->Get_Mouse_X(), g_mouse->Get_Mouse_Y());
+    }
+
+    if (DisplayCursorOccupy != nullptr) {
+        int occupy_x;
+        int occupy_y;
+
+        Get_Occupy_Dimensions(occupy_x, occupy_y, DisplayCursorOccupy);
+
+        int cell_x = Max(Cell_Get_X(DisplayCursorEnd + cell), Coord_Cell_X(DisplayPos));
+        int cell_y = Max(Cell_Get_Y(DisplayCursorEnd + cell), Coord_Cell_Y(DisplayPos));
+
+        if (cell_x + occupy_x >= Coord_Lepton_X(DisplayPos) + Lepton_To_Cell_Coord(DisplayWidth)) {
+            cell_x = Coord_Lepton_X(DisplayPos) + cell_x - occupy_x;
+        }
+
+        if (cell_y + occupy_y >= Coord_Lepton_Y(DisplayPos) + Lepton_To_Cell_Coord(DisplayHeight)) {
+            cell_y = Coord_Lepton_Y(DisplayPos) + cell_y - occupy_y;
+        }
+
+        retval = Cell_From_XY(cell_x, cell_y) - DisplayCursorEnd;
+
+        if (retval != DisplayCursorStart) {
+            if (DisplayCursorOccupy != nullptr) {
+                if (retval != DisplayCursorStart && DisplayCursorStart != -1) {
+                    Cursor_Mark(DisplayCursorStart + DisplayCursorEnd, false);
+                }
+
+                if (retval != -1) {
+                    Cursor_Mark(retval + DisplayCursorEnd, true);
+                }
+            }
+
+            PassedProximityCheck = Passes_Proximity_Check(
+                PendingObjectTypePtr, PendingObjectHouse, DisplayCursorOccupy, DisplayCursorEnd + retval);
+
+            Swap(DisplayCursorStart, retval);
+        }
+    } else {
+        retval = DisplayCursorStart;
+        DisplayCursorStart = cell;
+    }
+
+    return retval;
+}
+
+BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, int16_t cell) const
+{
+    // Needs HouseClass, BuildingTypeClass.
+#ifndef RAPP_STANDALONE
+    BOOL(*func)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, int16_t) = reinterpret_cast<BOOL(*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, int16_t)>(0x004AF7DC);
+    return func(this, object, house, list, cell);
+#else
+    return false;
+#endif
+}
+
+/**
+ * @brief Redraw cell tiles.
+ *
+ * 0x004B1FD0
+ */
+void DisplayClass::Redraw_Icons()
+{
+    RedrawShadow = false;
+
+    // Iterate over every position within the tactical view and evaluate for a cell redraw.
+    for (int16_t i = -Coord_Lepton_Y(DisplayPos); i <= DisplayHeight; i += 256) {
+        for (int16_t j = -Coord_Lepton_X(DisplayPos); j <= DisplayWidth; j += 256) {
+            int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(j, i)));
+            uint32_t coord = Cell_To_Coord(cellnum) & 0xFF00FF00;
+            int draw_x = 0;
+            int draw_y = 0;
+
+            // Check conditions for current position warrant attempting a redraw.
+            if (In_View(cellnum) && Is_Cell_Flagged(cellnum) && Coord_To_Pixel(coord, draw_x, draw_y)) {
+                CellClass &cell = Map[Coord_To_Cell(coord)];
+
+                if (cell.Get_Bit4() || DebugUnshroud) {
+                    cell.Draw_It(draw_x, draw_y, false);
+                }
+
+                if (!cell.Get_Bit8() && !DebugUnshroud) {
+                    RedrawShadow = true;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @brief Redraw shroud.
+ *
+ * 0x004B2178
+ */
+void DisplayClass::Redraw_Shadow()
+{
+    if (RedrawShadow) {
+        // Iterate over every position within the tactical view and evaluate for a shadow redraw.
+        for (int i = -Coord_Lepton_Y(DisplayPos); i <= DisplayHeight; i += 256) {
+            for (int j = -Coord_Lepton_X(DisplayPos); j <= DisplayWidth; j += 256) {
+                int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(j, i)));
+                uint32_t coord = Coord_Top_Left(Cell_To_Coord(cellnum));
+                int draw_x = 0;
+                int draw_y = 0;
+
+                if (In_View(cellnum) && Is_Cell_Flagged(cellnum) && Coord_To_Pixel(coord, draw_x, draw_y)) {
+                    CellClass &cell = Map[Coord_To_Cell(coord)];
+
+                    if (!cell.Get_Bit8() && cell.Get_Bit4()) {
+                        int frame = Cell_Shadow(cellnum);
+
+                        if (frame >= 0) { // If we have a valid frame, draw the shroud frame.
+                            CC_Draw_Shape(
+                                ShadowShapes, frame, draw_x, draw_y, WINDOW_TACTICAL, SHAPE_SHADOW, nullptr, ShadowTrans);
+                        } else if (frame != -1) { // Otherwise, if we don't have -1 fill black
+                            int w = CELL_PIXELS;
+                            int h = CELL_PIXELS;
+
+                            int x_clip = Lepton_To_Pixel(DisplayWidth);
+                            int y_clip = Lepton_To_Pixel(DisplayHeight);
+
+                            if (Clip_Rect(draw_x, draw_y, w, h, x_clip, y_clip) >= 0) {
+                                g_logicPage->Fill_Rect(draw_x + TacOffsetX,
+                                    draw_y + TacOffsetY,
+                                    w + draw_x + TacOffsetX - 1,
+                                    h + draw_y + TacOffsetY - 1,
+                                    12);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @brief Check if a cell is within the tactical view at all.
+ *
+ * 0x004B4CB8
+ */
+BOOL DisplayClass::In_View(int16_t cellnum) const
+{
+    // Check high bits aren't set, ensures not negative and is within range of 128 * 128 map.
+    if ((cellnum & 0xC000) != 0) {
+        return false;
+    }
+
+    uint32_t cell = Coord_Top_Left(Cell_To_Coord(cellnum));
+    uint32_t loc1 = Coord_Top_Left(DisplayPos);
+
+    // Makes use of unsigned underflow to detect if we are greater than DisplayPos but within display dimensions in two compares.
+    if ((uint16_t)Coord_Lepton_X(cell) - (uint32_t)Coord_Lepton_X(loc1) <= (uint32_t)DisplayWidth + 255) {
+        if ((uint16_t)Coord_Lepton_Y(cell) - (uint32_t)Coord_Lepton_Y(loc1) <= (uint32_t)DisplayHeight + 255) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @brief Convert a coord to the pixel x y position on screen.
+ *
+ * 0x004B0968
+ */
+BOOL DisplayClass::Coord_To_Pixel(uint32_t coord, int &x, int &y) const
+{
+    if (coord != 0) {
+        int16_t view_x = Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos));
+        int16_t view_y = Lepton_Round_To_Pixel(Coord_Lepton_Y(DisplayPos));
+        int16_t lep_x = Lepton_Round_To_Pixel(Coord_Lepton_X(coord)) + 512 - view_x;
+        int16_t lep_y = Lepton_Round_To_Pixel(Coord_Lepton_Y(coord)) + 512 - view_y;
+
+        if (lep_x <= (DisplayWidth + 1024) && lep_y <= (DisplayHeight + 1024)) {
+            x = Lepton_To_Pixel(lep_x) - 48;
+            y = Lepton_To_Pixel(lep_y) - 48;
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @brief Calculate how to draw shroud (if at all) for a given cell.
+ *
+ * 0x004B0698
+ */
+int DisplayClass::Cell_Shadow(int16_t cellnum) const
+{
+    static char const _shadow[] = {
+        -1, 33, 2, 2, 34, 37, 2, 2,
+        4, 26, 6, 6, 4, 26, 6, 6,
+        35, 45, 17, 17, 38, 41, 17, 17,
+        4, 26, 6, 6, 4, 26, 6, 6,
+        8, 21, 10, 10, 27, 31, 10, 10,
+        12, 23, 14, 14, 12, 23, 14, 14,
+        8, 21, 10, 10, 27, 31, 10, 10,
+        12, 23, 14, 14, 12, 23, 14, 14,
+        32, 36, 25, 25, 44, 40, 25, 25,
+        19, 30, 20, 20, 19, 30, 20, 20,
+        39, 43, 29, 29, 42, 46, 29, 29,
+        19, 30, 20, 20, 19, 30, 20, 20,
+        8, 21, 10, 10, 27, 31, 10, 10,
+        12, 23, 14, 14, 12, 23, 14, 14,
+        8, 21, 10, 10, 27, 31, 10, 10,
+        12, 23, 14, 14, 12, 23, 14, 14,
+        1, 1, 3, 3, 16, 16, 3, 3,
+        5, 5, 7, 7, 5, 5, 7, 7,
+        24, 24, 18, 18, 28, 28, 18, 18,
+        5, 5, 7, 7, 5, 5, 7, 7,
+        9, 9, 11, 11, 22, 22, 11, 11,
+        13, 13, -2, -2, 13, 13, -2, -2,
+        9, 9, 11, 11, 22, 22, 11, 11,
+        13, 13, -2, -2, 13, 13, -2, -2,
+        1, 1, 3, 3, 16, 16, 3, 3,
+        5, 5, 7, 7, 5, 5, 7, 7,
+        24, 24, 18, 18, 28, 28, 18, 18,
+        5, 5, 7, 7, 5, 5, 7, 7,
+        9, 9, 11, 11, 22, 22, 11, 11,
+        13, 13, -2, -2, 13, 13, -2, -2,
+        9, 9, 11, 11, 22, 22, 11, 11,
+        13, 13, -2, -2, 13, 13, -2, -2,
+    };
+
+    int16_t cell_x = Cell_Get_X(cellnum);
+    int16_t cell_y = Cell_Get_Y(cellnum);
+
+    // Check we are in bounds, SS checks all 4 map bounds, RA only checks right edge bound with if ( cell_x - 1 < 127 ).
+    if (cell_x >= 1 && cell_x < 127 && cell_y >= 1 && cell_y < 127) { // SS extended check.
+        int index = 0;
+
+        // Use pointer here rather than reference as we are going to do some pointer arithmetic on it.
+        CellClass const *cell = &Array[cellnum];
+
+        // If we aren't at least partly revealed, then no need to do anything else
+        if (!cell->Get_Bit8() && !cell->Get_Bit4()) {
+            index = -2;
+        }
+
+        // If we are redrawing the icon, we need to know which frame we will need for the shroud
+        // SS and C&C check in a different pattern and use two smaller tables to do the lookup, but result should be the
+        // same.
+        if (cell->Get_Bit4()) {
+            int index = 0;
+
+            // NW adjacent
+            if (cell[-129].Get_Bit4()) {
+                index = 0x40;
+            }
+
+            // N adjacent
+            if (cell[-128].Get_Bit4()) {
+                index |= 0x80;
+            }
+
+            // NE adjacent
+            if (cell[-127].Get_Bit4()) {
+                index |= 0x01;
+            }
+
+            // W adjacent
+            if (cell[-1].Get_Bit4()) {
+                index |= 0x20;
+            }
+
+            // E adjacent
+            if (cell[1].Get_Bit4()) {
+                index |= 0x02;
+            }
+
+            // SW adjacent
+            if (cell[127].Get_Bit4()) {
+                index |= 0x10;
+            }
+
+            // S adjacent
+            if (cell[128].Get_Bit4()) {
+                index |= 0x08;
+            }
+
+            // SE adjacent
+            if (cell[129].Get_Bit4()) {
+                index |= 0x04;
+            }
+
+            return _shadow[index];
+        }
+    }
+
+    // -1 indicates no shroud, -2 indicates draw black if cell is not partly visible.Return is the frame of the shadow shape
+    // file otherwise.
+    return -1;
+}
+
+/**
+ * @brief Clip a rectangle. Written in asm in original.
+ *
+ * 0x005CC5C8
+ */
+int __cdecl DisplayClass::Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h)
+{
+    int xstart = x;
+    int ystart = y;
+    int yend = y + h - 1;
+    int xend = x + w - 1;
+    int result = 0;
+
+    // If we aren't drawing within bounds, return -1
+    if (xstart >= clip_w || ystart >= clip_h || xend <= 0 || yend <= 0) {
+        return -1;
+    }
+
+    if (xstart < 0) {
+        xend -= xstart; // start is -ve, makes it add ABS(xstart)
+        xstart = 0;
+        result = 1;
+    }
+
+    if (ystart < 0) {
+        yend -= ystart; // start is -ve, makes it add ABS(ystart)
+        ystart = 0;
+        result = 1;
+    }
+
+    if (xend >= clip_w - 1) {
+        xend = clip_w - 1;
+        result = 1;
+    }
+
+    if (yend >= clip_h - 1) {
+        yend = clip_h - 1;
+        result = 1;
+    }
+
+    x = xstart;
+    y = ystart;
+    w = xend - xstart + 1;
+    h = yend - ystart + 1;
+
+    return result;
+}
