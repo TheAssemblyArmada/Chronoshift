@@ -1395,6 +1395,208 @@ int DisplayClass::Cell_Shadow(int16_t cellnum) const
 }
 
 /**
+ * @brief Not sure exactly what this one does.
+ *
+ * 0x004B0B10
+ */
+BOOL DisplayClass::Push_Onto_TacMap(uint32_t &coord1, uint32_t &coord2)
+{
+    // Check trivial case that a coord is 0
+    if (coord1 == 0 || coord2 == 0) {
+        return false;
+    }
+
+    int coord1_x = Coord_Lepton_X(coord1);
+    int coord1_y = Coord_Lepton_Y(coord1);
+    int coord2_x = Coord_Lepton_X(coord2);
+    int coord2_y = Coord_Lepton_Y(coord2);
+    int start_x = Coord_Lepton_X(DisplayPos);
+    int start_y = Coord_Lepton_Y(DisplayPos);
+    int end_x = start_x + DisplayWidth;
+    int end_y = start_y + DisplayHeight;
+
+    // Check trivial case where a coord is not within view
+    if ((coord1_x < start_x && coord2_x < start_x) || (coord1_x > end_x && coord2_x > end_x)
+        || (coord1_y < start_y && coord2_y < start_y) || (coord1_y > end_y && coord2_y > end_y)) {
+        return false;
+    }
+
+    // Set bounded coords.
+    coord1 = Coord_From_Lepton_XY(Clamp(coord1_x, start_x, end_x), Clamp(coord1_y, start_y, end_y));
+    coord2 = Coord_From_Lepton_XY(Clamp(coord2_x, start_x, end_x), Clamp(coord2_y, start_y, end_y));
+
+    return true;
+}
+
+/**
+ * 0x004B274C
+ */
+int16_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, int16_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const
+{
+    int16_t cell_num = -1;
+    int zone = -1;
+
+    if (waypoint != -1) {
+        cell_num = Scen.Get_Waypoint(waypoint);
+    }
+
+    if (cell_num == -1) {
+        cell_num = cellnum;
+    }
+
+    if (use_zone && cell_num != -1) {
+        zone = Array[cell_num].Get_Zone(mzone);
+    }
+
+    bool y_clipped = false;
+    bool x_clipped = false;
+
+    int x = 0;
+    int y = 0;
+
+    // If we have a cell number from either the parameters or a waypoint, calculate an x and y position and ensure its within
+    // the visible map. We also work out which edges we should clip to, x (east and west) or y (north and south).
+    if (cell_num != -1) {
+        int x_pos = Min(Cell_Get_X(cell_num) - MapCellX, MapCellWidth + MapCellX - Cell_Get_X(cell_num));
+
+        int y_pos = Min(Cell_Get_Y(cell_num) - MapCellY, MapCellHeight + MapCellY - Cell_Get_Y(cell_num));
+
+        if (x_pos > y_pos) {
+            y_clipped = true;
+            x_clipped = false;
+
+            if (MapCellHeight / 2 <= Cell_Get_Y(cell_num) - MapCellY) {
+                y = MapCellHeight;
+            } else {
+                y = -1;
+            }
+
+            x = Cell_Get_X(cell_num) - MapCellX;
+        } else {
+            y_clipped = false;
+            x_clipped = true;
+
+            if (MapCellWidth / 2 <= Cell_Get_X(cell_num) - MapCellX) {
+                x = MapCellWidth;
+            } else {
+                x = -1;
+            }
+
+            y = Cell_Get_Y(cell_num) - MapCellY;
+        }
+    }
+
+    // These won't be true if we didn't get a valid cell from the function parameters or a waypoint. In that case, we
+    // randomly generate them based on the edge we are using as the source.
+    if (!x_clipped && !y_clipped) {
+        switch (source) {
+            case SOURCE_EAST:
+                x = MapCellWidth;
+                y = Scen.Get_Random_Value(0, MapCellHeight - 1);
+                break;
+
+            case SOURCE_SOUTH:
+                y_clipped = true;
+                x = Scen.Get_Random_Value(0, MapCellWidth - 1);
+                y = MapCellWidth;
+                break;
+
+            case SOURCE_WEST:
+                x = -1;
+                y = Scen.Get_Random_Value(0, MapCellHeight - 1);
+                break;
+
+            default:
+                break;
+        };
+    }
+
+    // Test cells along the left and right edges first.
+    if (x_clipped && MapCellHeight > 0) {
+        // Depending on edge, offset cell is always 1 cell toward the center of the map, applies to Y dimension as well
+        // below.
+        int offset = x <= MapCellX ? 1 : -1;
+        int ny = y;
+
+        for (int i = 0; i < MapCellHeight; ++i) {
+            int16_t test_cell = Cell_From_XY(MapCellX + x, MapCellY + (ny % MapCellHeight));
+
+            if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
+                return test_cell;
+            }
+
+            ++ny;
+        }
+
+        if (y_clipped && MapCellWidth > 0) {
+            offset = y <= MapCellY ? 128 : -128;
+            int nx = x;
+
+            for (int i = 0; i < MapCellWidth; ++i) {
+                int16_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
+
+                if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
+                    return test_cell;
+                }
+
+                ++nx;
+            }
+        }
+    } else if (y_clipped && MapCellWidth > 0) {
+        int offset = y <= MapCellY ? 128 : -128;
+        int nx = x;
+
+        for (int i = 0; i < MapCellWidth; ++i) {
+            int16_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
+
+            if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
+                return test_cell;
+            }
+
+            ++nx;
+        }
+    }
+
+    return Cell_From_XY(MapCellX + x, MapCellY + y);
+}
+
+/**
+ * @brief Determines if a cell is a good reinforcement starting cell for moving into a cell offset from it.
+ *
+ * 0x004B2B90
+ */
+BOOL DisplayClass::Good_Reinforcement_Cell(int16_t cell1, int16_t cell2, SpeedType speed, int zone, MZoneType mzone) const
+{
+    if (Array[cell1].Is_Clear_To_Move(speed, false, false, zone, mzone)
+        && Array[cell2].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+        if (Array[cell1].Cell_Techno(0, 0) != nullptr) {
+            return false;
+        } else {
+            return Array[cell2].Cell_Techno(0, 0) == nullptr;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @brief Determines closest free spot in the cell at the given coord.
+ *
+ * 0x004B4D80
+ */
+uint32_t DisplayClass::Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const
+{
+    if (!Coord_Is_Negative(coord)) {
+        return 0x800080; // Middle of cell 0, the top left cell off the edge of visible map.
+    }
+
+    int16_t cellnum = Coord_To_Cell(coord);
+
+    return Array[cellnum].Closest_Free_Spot(coord, skip_occupied);
+
+}
+
+/**
  * @brief Clip a rectangle. Written in asm in original.
  *
  * 0x005CC5C8
