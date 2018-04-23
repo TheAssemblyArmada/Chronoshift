@@ -54,6 +54,7 @@ enum CellOccupantEnum
     OCCUPANT_UNIT = 0x20, // unit, vessel or aircraft.
     OCCUPANT_TERRAIN = 0x40,
     OCCUPANT_BUILDING = 0x80,
+    CELL_SPOT_COUNT = 5,
 };
 
 class CellClass
@@ -112,9 +113,11 @@ public:
     BOOL Reduce_Wall(int damage);
     BOOL Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const;
     int Ore_Adjust(BOOL randomize);
+    uint32_t Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const;
+    BOOL Is_Spot_Free(int spotindex) const { return ((1 << spotindex) & OccupantBit) == 0; }
 
     int Cell_Number() const { return CellNumber; }
-    int8_t Get_Zone(MZoneType mzone) { return Zones[mzone]; }
+    int8_t Get_Zone(MZoneType mzone) const { return Zones[mzone]; }
     void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
     BOOL Get_Placement_Check() const { return PlacementCheck; }
     void Set_Placement_Check(BOOL check) { PlacementCheck = check; }
@@ -138,6 +141,8 @@ public:
     ObjectClass *Get_Occupier() const { return OccupierPtr; }
     LandType Get_Land() { return Land; }
     void Set_Land(LandType land) { Land = land; }
+
+    static int Spot_Index(uint32_t coord);
 
 private:
     int16_t CellNumber;
@@ -185,6 +190,7 @@ private:
     ObjectClass *Overlapper[OVERLAPPER_COUNT];
     uint32_t OccupantBit;
     LandType Land;
+    static const uint32_t StoppingCoordAbs[CELL_SPOT_COUNT];
 };
 
 inline BOOL CellClass::Contains_Ore() const

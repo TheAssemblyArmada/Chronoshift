@@ -84,6 +84,10 @@ inline uint8_t Coord_Cell_Y(uint32_t coord)
     return (coord & 0x7F000000) >> 24;
 }
 
+inline BOOL Coord_Is_Negative(uint32_t coord) {
+    return (coord & 0x80008000) != 0;
+}
+
 inline int16_t Cell_From_XY(uint8_t x, uint8_t y)
 {
     return ((y * MAP_MAX_WIDTH) + x);

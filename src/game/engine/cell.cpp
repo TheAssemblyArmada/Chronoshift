@@ -29,6 +29,14 @@
 #include "tileset.h"
 #include "tracker.h"
 
+const uint32_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
+    0x00800080,     // abs center of cell                       //INFANTRY_SPOT_CENTER
+    0x00400040,     // center of top left quadrant of cell      //INFANTRY_SPOT_TOP_LEFT
+    0x004000C0,     // center of top right quadrant of cell     //INFANTRY_SPOT_TOP_RIGHT
+    0x00C00040,     // center of bottom left quadrant of cell   //INFANTRY_SPOT_BOTTOM_LEFT
+    0x00C000C0      // center of bottom right quadrant of cell  //INFANTRY_SPOT_BOTTOM_RIGHT
+};
+
 CellClass::CellClass() :
     CellNumber(Map.Cell_Number(this)),
     Bit1(false),
@@ -1247,6 +1255,86 @@ int CellClass::Ore_Adjust(BOOL randomize)
         //}
 
         return value * (OverlayFrame + 1);
+    }
+
+    return 0;
+}
+
+/**
+ * 0x004B4D80
+ */
+uint32_t CellClass::Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const
+{
+    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+
+    static char _sequence[][4] = {
+        { 1, 2, 3, 4 },
+        { 0, 2, 3, 4 },
+        { 0, 1, 4, 3 },
+        { 0, 1, 4, 2 },
+        { 0, 2, 3, 1 }
+    };
+
+    static char _alternate[][4] = {
+        { 1, 2, 3, 4 },
+        { 2, 3, 4, 1 },
+        { 3, 4, 1, 2 },
+        { 4, 1, 2, 3 }
+    };
+
+    int spotindex = Spot_Index(coord);
+
+    // If we have a unit or terrain object, return is 0;
+    if (!skip_occupied && ((OccupantBit & OCCUPANT_UNIT) != 0 || (OccupantBit & OCCUPANT_TERRAIN) != 0)) {
+        return 0;
+    }
+
+    //If our intended spot is free or we are skipping occupied, return it.
+    if (skip_occupied || Is_Spot_Free(spotindex)) {
+        return Coord_Add(coord, StoppingCoordAbs[spotindex]);
+    }
+
+    // If we already have an occupier on our intended spot, recalculate next best.
+    int coord_index = 0;
+    char *spots = nullptr;
+
+    if (spotindex > 0) {
+        spots = _sequence[spotindex];
+    } else {
+        spots = _alternate[Scen.Get_Random_Value((OccupantBit & 1) == 0, 3)];
+    }
+
+    // From our possible spots list, find a free one, if not, return 0.
+    for (int i = 0; i < 4; ++i) {
+        if (Is_Spot_Free(spots[i])) {
+            return Coord_Add(coord, StoppingCoordAbs[coord_index]);
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * 0x0049FF98
+ */
+int CellClass::Spot_Index(uint32_t coord)
+{
+    uint32_t spot = coord & 0x00FF00FF;
+
+    // Looks like it checks the lepton distance and then does some math on the X and Y lepton dimensions to decide which spot
+    // the passed packed coords are in.
+    if (Distance(spot, 0x00800080) >= 60) {
+        int spot_index = 0;
+
+        if (Coord_Lepton_X(spot) > 128) {
+            spot_index = 1;
+        }
+
+        if (Coord_Lepton_Y(spot) > 128) {
+            spot_index |= 2;
+        }
+
+        return spot_index + 1;
     }
 
     return 0;
