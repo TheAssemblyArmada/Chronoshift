@@ -96,11 +96,16 @@ public:
     void Redraw_Shadow();
     BOOL In_View(int16_t cellnum) const;
     BOOL Coord_To_Pixel(uint32_t coord, int &x, int &y) const;
+    uint32_t Pixel_To_Coord(int x, int y) const;
     int Cell_Shadow(int16_t cellnum) const;
     BOOL Push_Onto_TacMap(uint32_t &coord1, uint32_t &coord2);
     int16_t Calculated_Cell(SourceType source, int waypoint, int16_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const;
     BOOL Good_Reinforcement_Cell(int16_t cell1, int16_t cell2, SpeedType speed, int zone, MZoneType mzone) const;
     uint32_t Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const;
+    void All_To_Look(BOOL skip_buildings);
+    void Constrained_Look(uint32_t coord, int constraint);
+    void Encroach_Shadow();
+    void Shroud_Cell(int16_t cellnum);
 
     static BOOL Is_Cell_Flagged(int16_t cellnum) { return CellRedraw[cellnum]; }
 

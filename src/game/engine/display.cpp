@@ -27,8 +27,10 @@
 #include "mixfile.h"
 #include "palette.h"
 #include "pk.h"
+#include "rules.h"
 #include "scenario.h"
 #include "swap.h"
+#include "technotype.h"
 #include "target.h"
 #include "textprint.h"
 #include "theater.h"
@@ -1283,6 +1285,23 @@ BOOL DisplayClass::Coord_To_Pixel(uint32_t coord, int &x, int &y) const
 }
 
 /**
+ * @brief Convert a pixel x y position on screen to a coord.
+ *
+ * 0x004B2694
+ */
+uint32_t DisplayClass::Pixel_To_Coord(int x, int y) const
+{
+    int x_pos = Pixel_To_Lepton(x - TacOffsetX);
+    int y_pos = Pixel_To_Lepton(y - TacOffsetY);
+
+    if (x_pos < DisplayWidth && y_pos < DisplayHeight) {
+        return Coord_From_Lepton_XY(x_pos + Coord_Lepton_X(DisplayPos), y_pos + Coord_Lepton_Y(DisplayPos));
+    }
+
+    return 0;
+}
+
+/**
  * @brief Calculate how to draw shroud (if at all) for a given cell.
  *
  * 0x004B0698
@@ -1594,6 +1613,159 @@ uint32_t DisplayClass::Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) con
 
     return Array[cellnum].Closest_Free_Spot(coord, skip_occupied);
 
+}
+
+/**
+ * @brief Sets all objects to "look"?.
+ *
+ * 0x004B5680
+ */
+void DisplayClass::All_To_Look(BOOL skip_buildings)
+{
+    // Needs HouseClass, TechnoClass.
+#ifndef RAPP_STANDALONE
+    void(*func)(const DisplayClass *, BOOL) = reinterpret_cast<void(*)(const DisplayClass *, BOOL)>(0x004B5680);
+    func(this, skip_buildings);
+#elif 0
+    for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {
+        ObjectClass *objptr = DisplayClass::Layers[LAYER_GROUND][i];
+
+        if (objptr != nullptr && objptr->Is_Techno()) {
+            if (objptr->What_Am_I() != RTTI_BUILDING || !skip_buildings) {
+                TechnoClass *tcptr = reinterpret_cast<TechnoClass *>(objptr);
+
+                if (tcptr->OwnerHouse->PlayerControl) {
+                    if (tcptr->PlayerAware) {
+                        tcptr->Look();
+                    }
+                } else if (objptr->What_Am_I() == RTTI_BUILDING) {
+                    if (Rule.Ally_Reveal()) {
+                        if (PlayerPtr->Is_Ally(objptr->OwnerHouse)) {
+                            objptr->Look();
+                        }
+                    }
+                }
+            }
+        }
+    }
+#endif
+}
+
+/**
+ * @brief 
+ *
+ * 0x004B5788
+ */
+void DisplayClass::Constrained_Look(uint32_t coord, int constraint)
+{
+    // Needs HouseClass, TechnoClass.
+#ifndef RAPP_STANDALONE
+    void(*func)(const DisplayClass *, uint32_t, int) = reinterpret_cast<void(*)(const DisplayClass *, uint32_t, int)>(0x004B5788);
+    func(this, coord, constraint);
+#elif 0
+    for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {
+        ObjectClass *objptr = DisplayClass::Layers[LAYER_GROUND][index];
+
+        if (objptr != nullptr && objptr->Is_Techno()) {
+            TechnoClass *tcptr = reinterpret_cast<TechnoClass *>(objptr);
+
+            if (tcptr->OwnerHouse->PlayerControl) {
+                if (tcptr->PlayerAware) {
+                    int lepton_sight = constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
+
+                    if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
+                        tcptr->Look();
+                    }
+                }
+            } else if (tcptr->What_Am_I() == RTTI_BUILDING) {
+                if (Rule.Ally_Reveal()) {
+                    if (PlayerPtr->Is_Ally(tcptr->OwnerHouse->What_Type())) {
+                        int lepton_sight = constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
+
+                        if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
+                            tcptr->Look();
+                        }
+                    }
+                }
+            }
+        }
+    }
+#endif
+}
+
+/**
+ * @brief Moves shroud in one step.
+ *
+ * 0x004B4F44
+ */
+void DisplayClass::Encroach_Shadow()
+{
+    if (!DebugUnshroud) {
+        // Check every cell and mark unrevealed cells
+        for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+            if (In_Radar(cellnum)) {
+                CellClass &cell = Array[cellnum];
+
+                if (!cell.Get_Bit8()) {
+                    if (cell.Get_Bit4()) {
+                        cell.Set_Bit128(true);
+                    }
+                }
+            }
+        }
+
+        for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+            if (In_Radar(cellnum)) {
+                CellClass &cell = Array[cellnum];
+
+                if (cell.Get_Bit128()) {
+                    cell.Set_Bit128(false);
+                    Shroud_Cell(cellnum);
+                }
+            }
+        }
+
+        All_To_Look(false);
+    }
+
+    Flag_To_Redraw(true);
+}
+
+/**
+ * @brief Shrouds a given cell.
+ *
+ * 0x004B4FF4
+ */
+void DisplayClass::Shroud_Cell(int16_t cellnum)
+{
+    // Needs HouseClass, TechnoClass.
+#ifndef RAPP_STANDALONE
+    void(*func)(const DisplayClass *, int16_t) = reinterpret_cast<void(*)(const DisplayClass *, int16_t)>(0x004B4FF4);
+    func(this, cellnum);
+#elif 0
+    // If player has GPS or has units in the cell, then don't do anything.
+    if (!PlayerPtr->GPSActive || Array[cellnum].field_A[PlayerPtr->What_Type()] == false) { //TODO, needs confirming
+        if (In_Radar(cellnum)) {
+            CellClass &cell = Array[cellnum];
+
+            if (cell.Bit4) {
+                cell.Bit4 = false;
+                cell.Bit8 = false;
+                cell.Redraw_Objects();
+
+                for (FacingType facing = FACING_FIRST; facing < FACING_COUNT; ++facing) {
+                    int16_t adjcell = cellnum + AdjacentCell[facing];
+
+                    if (adjcell != cellnum) {
+                        Array[adjcell].Bit8 = false;
+                    }
+
+                    Array[adjcell].Redraw_Objects();
+                }
+            }
+        }
+    }
+#endif
 }
 
 /**
