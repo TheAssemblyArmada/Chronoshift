@@ -126,6 +126,7 @@ public:
     BOOL Get_Bit8() const { return Bit8; }
     void Set_Bit8(BOOL bit) { Bit8 = bit; }
     BOOL Get_Bit128() { return Bit128; }
+    void Set_Bit128(BOOL bit) { Bit128 = bit; }
     TemplateType Get_Template() const { return Template; }
     void Set_Template(TemplateType temp) { Template = temp; }
     uint8_t Get_Icon() const { return Icon; }
@@ -160,7 +161,7 @@ private:
             bool Bit16 : 1; // 16	//Could be HasWaypoint?  HasCellTag?
             bool Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
             bool HasFlag : 1; // 64
-            bool Bit128 : 1; // 128 // HasFlag in C&C relates to Region here.
+            bool Bit128 : 1; // 128 // HasFlag in C&C relates to Region here. Look like it marks a cell to advance shroud.
         };
         int Bitfield;
     };
