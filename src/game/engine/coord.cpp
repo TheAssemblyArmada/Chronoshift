@@ -27,6 +27,18 @@ const uint32_t AdjacentCoord[FACING_COUNT] = {
     0xFF00FF00      // (-256,  -256)    // NORTH WEST
 };
 
+const int16_t AdjacentCell[FACING_COUNT] = {
+    -MAP_MAX_WIDTH,     // North
+    -MAP_MAX_WIDTH + 1, // North East
+    1,                  // East
+    MAP_MAX_WIDTH + 1,  // South East
+    MAP_MAX_WIDTH,      // South
+    MAP_MAX_WIDTH - 1,  // South West
+    -1,                 // West
+    -MAP_MAX_WIDTH - 1  // North West
+
+};
+
 /**
  * Calculate the distance between two Coords. 
  *

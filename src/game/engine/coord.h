@@ -35,6 +35,7 @@
 #define MAP_MAX_AREA MAP_MAX_WIDTH * MAP_MAX_HEIGHT
 
 extern const uint32_t AdjacentCoord[FACING_COUNT];
+extern const int16_t AdjacentCell[FACING_COUNT];
 
 inline int16_t Coord_Lepton_X(uint32_t coord)
 {
