@@ -397,7 +397,7 @@ void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a
                     if (Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                         // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <= radius, not radius * 256.
                         if (Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
-                            if (!cell->Get_Bit4()) {
+                            if (!cell->Is_Visible()) {
                                 // TODO Calls to RadarClass function higherup class stack, bad juju, should be virtual.
                                 Map.Map_Cell(offset_cellnum, house);
                             }
@@ -1137,7 +1137,7 @@ void MapClass::Shroud_The_Map()
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
         CellClass &cell = Array[cellnum];
 
-        if (cell.Get_Bit4() || cell.Get_Bit8()) {
+        if (cell.Is_Visible() || cell.Is_Revealed()) {
             cell.Redraw_Objects();
 
             int xpos = Cell_Get_X(cellnum);
@@ -1146,8 +1146,8 @@ void MapClass::Shroud_The_Map()
             if (xpos >= MapCellX && xpos < MapCellWidth + MapCellX &&
                 ypos >= MapCellY && ypos < MapCellHeight + MapCellY) {
 
-                cell.Set_Bit4(false);
-                cell.Set_Bit8(false);
+                cell.Set_Visible(false);
+                cell.Set_Revealed(false);
             }
         }
     }

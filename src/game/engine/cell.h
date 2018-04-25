@@ -121,10 +121,10 @@ public:
     void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
     BOOL Get_Placement_Check() const { return PlacementCheck; }
     void Set_Placement_Check(BOOL check) { PlacementCheck = check; }
-    BOOL Get_Bit4() const { return Bit4; }
-    void Set_Bit4(BOOL bit) { Bit4 = bit; }
-    BOOL Get_Bit8() const { return Bit8; }
-    void Set_Bit8(BOOL bit) { Bit8 = bit; }
+    BOOL Is_Visible() const { return Visible; }
+    void Set_Visible(BOOL bit) { Visible = bit; }
+    BOOL Is_Revealed() const { return Revealed; }
+    void Set_Revealed(BOOL bit) { Revealed = bit; }
     BOOL Get_Bit128() { return Bit128; }
     void Set_Bit128(BOOL bit) { Bit128 = bit; }
     TemplateType Get_Template() const { return Template; }
@@ -156,8 +156,8 @@ private:
         {
             bool Bit1 : 1; // 1
             bool PlacementCheck : 1; // 2
-            bool Bit4 : 1; // 4 // Shrouded? Looks like it means partly visible, a neighbour is revealed.
-            bool Bit8 : 1; // 8 //Revealed? //Occupied? //NotSeen? //#define	cf_Explored	0x08 //this means no shroud
+            bool Visible : 1; // 4 // Is this cell at least partly visible due ot being next to a revealed or visible cell.
+            bool Revealed : 1; // 8 // Is this cell fully revealed and thus has no shroud at all.
             bool Bit16 : 1; // 16	//Could be HasWaypoint?  HasCellTag?
             bool Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
             bool HasFlag : 1; // 64
@@ -166,13 +166,13 @@ private:
         int Bitfield;
     };
 #else
-    bool Bit1; // 1
-    bool PlacementCheck; // 2
-    bool Bit4; // 4            //Shrouded?
-    bool Bit8; // 8 //Revealed? //Occupied? //NotSeen? //#define	cf_Explored	0x08 //this means no shroud
-    bool Bit16; // 16	//Could be HasWaypoint?  HasCellTag?
-    bool Bit32; // 32    //MarkedOnRadar?  appears to be IsWaypoint in C&C     //does the radar cursor cover this cell?
-    bool HasFlag; // 64
+    bool Bit1;
+    bool PlacementCheck;
+    bool Visible; // Is this cell at least partly visible due ot being next to a revealed or visible cell.
+    bool Revealed; // Is this cell fully revealed and thus has no shroud at all.
+    bool Bit16; //Could be HasWaypoint?  HasCellTag?
+    bool Bit32; //MarkedOnRadar?  appears to be IsWaypoint in C&C     //does the radar cursor cover this cell?
+    bool HasFlag;
     bool Bit128; // HasFlag in C&C
 #endif
 

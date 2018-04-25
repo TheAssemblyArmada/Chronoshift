@@ -875,7 +875,7 @@ const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y)
             ++w_list;
         }
 
-        if (x <= width) {
+        if (width >= x) {
             int16_t click_cell = Click_Cell_Calc(x, y - 1);
             int height = Clamp(y + 24, TacOffsetY, TacOffsetY + (Lepton_To_Pixel(DisplayHeight) - 1));
             int16_t offset_click = Click_Cell_Calc(str_width + x - 1, height);
@@ -1169,8 +1169,8 @@ void DisplayClass::Redraw_Icons()
     RedrawShadow = false;
 
     // Iterate over every position within the tactical view and evaluate for a cell redraw.
-    for (int16_t i = -Coord_Lepton_Y(DisplayPos); i <= DisplayHeight; i += 256) {
-        for (int16_t j = -Coord_Lepton_X(DisplayPos); j <= DisplayWidth; j += 256) {
+    for (int16_t i = -Coord_Sub_Cell_Y(DisplayPos); i <= DisplayHeight; i += 256) {
+        for (int16_t j = -Coord_Sub_Cell_X(DisplayPos); j <= DisplayWidth; j += 256) {
             int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(j, i)));
             uint32_t coord = Cell_To_Coord(cellnum) & 0xFF00FF00;
             int draw_x = 0;
@@ -1178,13 +1178,13 @@ void DisplayClass::Redraw_Icons()
 
             // Check conditions for current position warrant attempting a redraw.
             if (In_View(cellnum) && Is_Cell_Flagged(cellnum) && Coord_To_Pixel(coord, draw_x, draw_y)) {
-                CellClass &cell = Map[Coord_To_Cell(coord)];
+                CellClass &cell = Array[Coord_To_Cell(coord)];
 
-                if (cell.Get_Bit4() || DebugUnshroud) {
+                if (cell.Is_Visible() || DebugUnshroud) {
                     cell.Draw_It(draw_x, draw_y, false);
                 }
 
-                if (!cell.Get_Bit8() && !DebugUnshroud) {
+                if (!cell.Is_Revealed() && !DebugUnshroud) {
                     RedrawShadow = true;
                 }
             }
@@ -1201,18 +1201,22 @@ void DisplayClass::Redraw_Shadow()
 {
     if (RedrawShadow) {
         // Iterate over every position within the tactical view and evaluate for a shadow redraw.
-        for (int i = -Coord_Lepton_Y(DisplayPos); i <= DisplayHeight; i += 256) {
-            for (int j = -Coord_Lepton_X(DisplayPos); j <= DisplayWidth; j += 256) {
+        for (int16_t i = -Coord_Sub_Cell_Y(DisplayPos); i <= DisplayHeight; i += 256) {
+            for (int16_t j = -Coord_Sub_Cell_X(DisplayPos); j <= DisplayWidth; j += 256) {
                 int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(j, i)));
                 uint32_t coord = Coord_Top_Left(Cell_To_Coord(cellnum));
                 int draw_x = 0;
                 int draw_y = 0;
 
                 if (In_View(cellnum) && Is_Cell_Flagged(cellnum) && Coord_To_Pixel(coord, draw_x, draw_y)) {
-                    CellClass &cell = Map[Coord_To_Cell(coord)];
+                    CellClass &cell = Array[Coord_To_Cell(coord)];
 
-                    if (!cell.Get_Bit8() && cell.Get_Bit4()) {
-                        int frame = Cell_Shadow(cellnum);
+                    if (!cell.Is_Revealed()) {
+                        int frame = -2;
+                            
+                        if (cell.Is_Visible()) {
+                            frame = Cell_Shadow(cellnum);
+                        }
 
                         if (frame >= 0) { // If we have a valid frame, draw the shroud frame.
                             CC_Draw_Shape(
@@ -1352,59 +1356,57 @@ int DisplayClass::Cell_Shadow(int16_t cellnum) const
 
     // Check we are in bounds, SS checks all 4 map bounds, RA only checks right edge bound with if ( cell_x - 1 < 127 ).
     if (cell_x >= 1 && cell_x < 127 && cell_y >= 1 && cell_y < 127) { // SS extended check.
-        int index = 0;
-
         // Use pointer here rather than reference as we are going to do some pointer arithmetic on it.
         CellClass const *cell = &Array[cellnum];
 
         // If we aren't at least partly revealed, then no need to do anything else
-        if (!cell->Get_Bit8() && !cell->Get_Bit4()) {
-            index = -2;
+        if (!cell->Is_Revealed() && !cell->Is_Visible()) {
+            return -2;
         }
 
         // If we are redrawing the icon, we need to know which frame we will need for the shroud
         // SS and C&C check in a different pattern and use two smaller tables to do the lookup, but result should be the
         // same.
-        if (cell->Get_Bit4()) {
+        if (cell->Is_Visible()) {
             int index = 0;
 
             // NW adjacent
-            if (cell[-129].Get_Bit4()) {
+            if (cell[-129].Is_Visible()) {
                 index = 0x40;
             }
 
             // N adjacent
-            if (cell[-128].Get_Bit4()) {
+            if (cell[-128].Is_Visible()) {
                 index |= 0x80;
             }
 
             // NE adjacent
-            if (cell[-127].Get_Bit4()) {
+            if (cell[-127].Is_Visible()) {
                 index |= 0x01;
             }
 
             // W adjacent
-            if (cell[-1].Get_Bit4()) {
+            if (cell[-1].Is_Visible()) {
                 index |= 0x20;
             }
 
             // E adjacent
-            if (cell[1].Get_Bit4()) {
+            if (cell[1].Is_Visible()) {
                 index |= 0x02;
             }
 
             // SW adjacent
-            if (cell[127].Get_Bit4()) {
+            if (cell[127].Is_Visible()) {
                 index |= 0x10;
             }
 
             // S adjacent
-            if (cell[128].Get_Bit4()) {
+            if (cell[128].Is_Visible()) {
                 index |= 0x08;
             }
 
             // SE adjacent
-            if (cell[129].Get_Bit4()) {
+            if (cell[129].Is_Visible()) {
                 index |= 0x04;
             }
 
@@ -1710,8 +1712,8 @@ void DisplayClass::Encroach_Shadow()
             if (In_Radar(cellnum)) {
                 CellClass &cell = Array[cellnum];
 
-                if (!cell.Get_Bit8()) {
-                    if (cell.Get_Bit4()) {
+                if (!cell.Is_Revealed()) {
+                    if (cell.Is_Visible()) {
                         cell.Set_Bit128(true);
                     }
                 }
@@ -1752,16 +1754,16 @@ void DisplayClass::Shroud_Cell(int16_t cellnum)
         if (In_Radar(cellnum)) {
             CellClass &cell = Array[cellnum];
 
-            if (cell.Bit4) {
-                cell.Bit4 = false;
-                cell.Bit8 = false;
+            if (cell.Visible) {
+                cell.Visible = false;
+                cell.Revealed = false;
                 cell.Redraw_Objects();
 
                 for (FacingType facing = FACING_FIRST; facing < FACING_COUNT; ++facing) {
                     int16_t adjcell = cellnum + AdjacentCell[facing];
 
                     if (adjcell != cellnum) {
-                        Array[adjcell].Bit8 = false;
+                        Array[adjcell].Revealed = false;
                     }
 
                     Array[adjcell].Redraw_Objects();

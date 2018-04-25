@@ -41,8 +41,8 @@ CellClass::CellClass() :
     CellNumber(Map.Cell_Number(this)),
     Bit1(false),
     PlacementCheck(false),
-    Bit4(false),
-    Bit8(false),
+    Visible(false),
+    Revealed(false),
     Bit16(false),
     Bit32(false),
     HasFlag(false),
@@ -586,7 +586,7 @@ void CellClass::Occupy_Down(ObjectClass *object)
         // Dunno what this does yet.
         Map.Radar_Pixel(CellNumber);
 
-        if (Bit4 && Session.Game_To_Play() != GAME_CAMPAIGN) {
+        if (Visible && Session.Game_To_Play() != GAME_CAMPAIGN) {
             object->Revealed(PlayerPtr);
         }
 
@@ -724,7 +724,7 @@ void CellClass::Overlap_Down(ObjectClass *object)
     }
 
     // Reveal object to the player?
-    if (Bit4) {
+    if (Visible) {
         object->Revealed(PlayerPtr);
     }
 #endif
