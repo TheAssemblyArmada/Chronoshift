@@ -85,11 +85,18 @@ BooleanVectorClass DisplayClass::CellRedraw;
 DisplayClass::TacticalClass::TacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
 {
+
 }
 
 BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
 {
+    // TODO, needs HouseClass, TechnoClass.
+#ifndef RAPP_STANDALONE
+    BOOL(*func)(const TacticalClass *, unsigned, KeyNumType &) = reinterpret_cast<BOOL(*)(const TacticalClass *, unsigned, KeyNumType &)>(0x004B3108);
+    return func(this, flags, key);
+#else
     return false;
+#endif
 }
 
 DisplayClass::DisplayClass() :
