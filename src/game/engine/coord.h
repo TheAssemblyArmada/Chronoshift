@@ -47,6 +47,16 @@ inline int16_t Coord_Lepton_Y(uint32_t coord)
     return (coord & 0xFFFF0000) >> 16;
 }
 
+inline int16_t Coord_Sub_Cell_X(uint32_t coord)
+{
+    return coord & 0xFF;
+}
+
+inline int16_t Coord_Sub_Cell_Y(uint32_t coord)
+{
+    return (coord >> 16) & 0xFF;
+}
+
 inline uint32_t Coord_From_Lepton_XY(int16_t x, int16_t y)
 {
     return x | (y << 16);
