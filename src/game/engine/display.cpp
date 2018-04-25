@@ -1066,17 +1066,14 @@ void DisplayClass::Center_Map(uint32_t coord)
 
     // Calculate a position based on units selected, used if no coord is passed.
     if (CurrentObjects.Count() > 0) {
-        int x_sum = 0;
-        int y_sum = 0;
-
         for (int i = 0; i < CurrentObjects.Count(); ++i) {
-            ObjectClass *obj = CurrentObjects[i];
-            x_sum += Coord_Lepton_X(obj->Center_Coord());
-            y_sum += Coord_Lepton_Y(obj->Center_Coord());
+            uint32_t center = CurrentObjects[i]->Center_Coord();
+            x += Coord_Lepton_X(center);
+            y += Coord_Lepton_Y(center);
         }
 
-        x = x_sum / CurrentObjects.Count();
-        y = y_sum / CurrentObjects.Count();
+        x /= CurrentObjects.Count();
+        y /= CurrentObjects.Count();
         coord_set = true;
     }
 
@@ -1089,8 +1086,8 @@ void DisplayClass::Center_Map(uint32_t coord)
 
     // Only bother setting the position if we have a coord from somewhere. SS doesn't do the min X/Y checks
     if (coord_set) {
-        int16_t x_lep = Max((int16_t)(x - Coord_Lepton_X(DisplayWidth) / 2), Coord_Cell_To_Lepton(MapCellX));
-        int16_t y_lep = Max((int16_t)(y - Coord_Lepton_Y(DisplayHeight) / 2), Coord_Cell_To_Lepton(MapCellY));
+        int16_t x_lep = Max((int16_t)(x - DisplayWidth / 2), Coord_Cell_To_Lepton(MapCellX));
+        int16_t y_lep = Max((int16_t)(y - DisplayHeight / 2), Coord_Cell_To_Lepton(MapCellY));
         Set_Tactical_Position(Coord_From_Lepton_XY(x_lep, y_lep));
     }
 }
