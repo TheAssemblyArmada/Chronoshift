@@ -232,7 +232,7 @@ inline void DisplayClass::Hook_Me()
     Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press); //seems to work
     Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press); //seems to work
     Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held); //crashes on Refresh_Band call
-    Hook_Function(0x004B2694, *DisplayClass::Pixel_To_Coord); //seems to work
+    //Hook_Function(0x004B2694, *DisplayClass::Pixel_To_Coord); //seems to work
     Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); //crashes
     Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);
     //Hook_Function(0x005CC697, Confine_Rect); //seems to work
