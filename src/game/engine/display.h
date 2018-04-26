@@ -237,6 +237,8 @@ inline void DisplayClass::Hook_Me()
     Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);
     //Hook_Function(0x005CC697, Confine_Rect); //seems to work
     //Hook_Function(0x005CC890, Change_Window); //seems to work
+    Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons); // causes trailing
+    Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow); // shroud broken
 #endif
 }
 #endif
