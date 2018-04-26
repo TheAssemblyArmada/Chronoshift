@@ -59,7 +59,7 @@ inline int16_t Coord_Sub_Cell_Y(uint32_t coord)
 
 inline uint32_t Coord_From_Lepton_XY(int16_t x, int16_t y)
 {
-    return x | (y << 16);
+    return (x & 0xFFFF) | (y << 16);
 }
 
 inline uint32_t Coord_Add(uint32_t coord1, uint32_t coord2)
