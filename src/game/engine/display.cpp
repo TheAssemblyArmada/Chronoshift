@@ -870,7 +870,7 @@ const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y)
 
         if (str_width + x >= width) {
             str_width = width - x;
-            w_list[0] = LIST_START;
+            *w_list = LIST_START;
             --count;
             ++w_list;
         }
@@ -886,7 +886,7 @@ const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y)
 
             if (click_cell != -1 && offset_click != -1) {
                 // If we have two valid cells locations, iterate through the cells between them.
-                for (int i = Cell_Get_Y(click_cell); i < Cell_Get_Y(offset_click); ++i) {
+                for (int i = Cell_Get_Y(click_cell); i <= Cell_Get_Y(offset_click); ++i) {
                     for (int j = Cell_Get_X(click_cell); j <= Cell_Get_X(offset_click); ++j) {
                         int16_t current_cell = Coord_To_Cell(DisplayPos);
                         *w_list = Cell_From_XY(j, i) - current_cell;
