@@ -1201,9 +1201,9 @@ void DisplayClass::Redraw_Shadow()
 {
     if (RedrawShadow) {
         // Iterate over every position within the tactical view and evaluate for a shadow redraw.
-        for (int16_t i = -Coord_Sub_Cell_Y(DisplayPos); i <= DisplayHeight; i += 256) {
-            for (int16_t j = -Coord_Sub_Cell_X(DisplayPos); j <= DisplayWidth; j += 256) {
-                int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(j, i)));
+        for (int16_t y = -Coord_Sub_Cell_Y(DisplayPos); y <= DisplayHeight; y += 256) {
+            for (int16_t x = -Coord_Sub_Cell_X(DisplayPos); x <= DisplayWidth; x += 256) {
+                int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(x, y)));
                 uint32_t coord = Coord_Top_Left(Cell_To_Coord(cellnum));
                 int draw_x = 0;
                 int draw_y = 0;
@@ -1355,7 +1355,7 @@ int DisplayClass::Cell_Shadow(int16_t cellnum) const
     int16_t cell_y = Cell_Get_Y(cellnum);
 
     // Check we are in bounds, SS checks all 4 map bounds, RA only checks right edge bound with if ( cell_x - 1 < 127 ).
-    if (cell_x >= 1 && cell_x < 126 && cell_y >= 1 && cell_y < 126) { // SS extended check.
+    if (cell_x >= 1 && cell_x < 127 && cell_y >= 1 && cell_y < 127) { // SS extended check.
         // Use pointer here rather than reference as we are going to do some pointer arithmetic on it.
         CellClass const *cell = &Array[cellnum];
 
