@@ -142,11 +142,16 @@ public:
     virtual void Put_Place_Back(TechnoClass *) = 0;
     virtual void Set_Tactical_Position(uint32_t location) = 0;
     virtual void Flag_Cell(int16_t cellnum) = 0;
-    virtual void Mouse_Right_Press(int mouse_x, int mouse_y) = 0;
+    virtual void Mouse_Right_Press() = 0;
     virtual void Mouse_Left_Press(int mouse_x, int mouse_y) = 0;
     virtual void Mouse_Left_Up(int16_t cellnum, BOOL cell_shrouded = false, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
     virtual void Mouse_Left_Held(int mouse_x, int mouse_y) = 0;
     virtual void Mouse_Left_Release(int16_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
+
+    // Additions for RadarClass
+    virtual BOOL Jam_Cell(int16_t cellnum, HouseClass *house) = 0;
+    virtual BOOL UnJam_Cell(int16_t cellnum, HouseClass *house) = 0;
+
 
 protected:
     int RedrawFlag;
