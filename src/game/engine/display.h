@@ -48,6 +48,7 @@ class DisplayClass : public MapClass
 public:
     DisplayClass();
 
+    virtual void One_Time() override;
     virtual void Init_Clear() override;
     virtual void Init_IO() override;
     virtual void Init_Theater(TheaterType theater) override;
@@ -67,7 +68,7 @@ public:
     virtual void Put_Place_Back(TechnoClass *obj) override {}
     virtual void Set_Tactical_Position(uint32_t location) override;
     virtual void Flag_Cell(int16_t cellnum) override;
-    virtual void Mouse_Right_Press(int mouse_x, int mouse_y) override;
+    virtual void Mouse_Right_Press() override;
     virtual void Mouse_Left_Press(int mouse_x, int mouse_y) override;
     virtual void Mouse_Left_Up(int16_t cellnum, BOOL cell_shrouded = false, ObjectClass *object = nullptr,
         ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) override;
@@ -75,7 +76,6 @@ public:
     virtual void Mouse_Left_Release(int16_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr,
         ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) override;
 
-    void One_Time();
     uint32_t Pixel_To_Coord(int x, int y);
     void Set_Cursor_Shape(int16_t *list = nullptr);
     void Refresh_Band();
@@ -118,6 +118,50 @@ public:
 private:
     // This only seems to be used by DisplayClass, so made it a static helper of this class.
     static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
+    static void Hook_Get_Occupy_Dimensions(DisplayClass* ptr, int &w, int &h, int16_t *list)
+    {
+        ptr->Get_Occupy_Dimensions(w, h, list);
+    }
+
+    static ObjectClass *Hook_Cell_Object(DisplayClass* ptr, int16_t cellnum, int x, int y)
+    {
+        return ptr->Cell_Object(cellnum, x, y);
+    }
+    
+    static ObjectClass *Hook_Next_Object(DisplayClass* ptr, ObjectClass *object)
+    {
+        return ptr->Next_Object(object);
+    }
+
+    static BOOL Hook_In_View(DisplayClass* ptr, int16_t cellnum)
+    {
+        return ptr->In_View(cellnum);
+    }
+    
+    static BOOL Hook_Coord_To_Pixel(DisplayClass* ptr, uint32_t coord, int &x, int &y)
+    {
+        return ptr->Coord_To_Pixel(coord, x, y);
+    }
+
+    static int Hook_Cell_Shadow(DisplayClass* ptr, int16_t cellnum)
+    {
+        return ptr->Cell_Shadow(cellnum);
+    }
+
+    static uint32_t Hook_Closest_Free_Spot(DisplayClass* ptr, uint32_t coord, BOOL skip_occupied)
+    {
+        return ptr->Closest_Free_Spot(coord, skip_occupied);
+    }
+
+    static int16_t Hook_Calculated_Cell(DisplayClass* ptr, SourceType source, int waypoint, int16_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
+    {
+        return ptr->Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
+    }
+
+    static BOOL Hook_Good_Reinforcement_Cell(DisplayClass* ptr, int16_t cell1, int16_t cell2, SpeedType speed, int zone, MZoneType mzone)
+    {
+        return ptr->Good_Reinforcement_Cell(cell1, cell2, speed, zone, mzone);
+    }
 
 protected:
     uint32_t DisplayPos; // Coord of top left of tactical display within the map.
@@ -219,26 +263,51 @@ inline int16_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
 inline void DisplayClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
+    // ** DisplayClass implamentation pass 1 ** //
     Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear); //seems to work
     Hook_Function(0x004AEFF4, *DisplayClass::Init_IO); //seems to work
-    Hook_Function(0x004AF02C, *DisplayClass::Init_Theater); // invokes emergency exit
+    Hook_Function(0x004AF02C, *DisplayClass::Init_Theater); //seems to work
     Hook_Function(0x004B0140, *DisplayClass::AI); //seems to work
-    Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc); //crashes
-    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); //doesn't let me scroll
+    Hook_Function(0x004AEEF4, *DisplayClass::One_Time); //seems to work
+    Hook_Function(0x004AF700, *DisplayClass::Set_Cursor_Shape); //seems to work
+    Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc); //seems to work
+    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); //seems to work
     Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells); //seems to work
-    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); //crashes on TacticalButton issue with init order?
+    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); //seems to work
     Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position); //seems to work
     Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);  //seems to work
     Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press); //seems to work
     Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press); //seems to work
-    Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held); //crashes on Refresh_Band call
+    Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held); //seems to work
     //Hook_Function(0x004B2694, *DisplayClass::Pixel_To_Coord); //seems to work
-    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); //crashes
-    Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);
+    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); //seems to work
+    Hook_Function(0x004B006C, *DisplayClass::Cursor_Mark); //seems to work
+    Hook_Function(0x004AFFA8, *DisplayClass::Hook_Get_Occupy_Dimensions); //seems to work
+    Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);//seems to work
     //Hook_Function(0x005CC697, Confine_Rect); //seems to work
     //Hook_Function(0x005CC890, Change_Window); //seems to work
-    Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons); // causes trailing
-    Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow); // shroud broken
+
+    // ** DisplayClass implamentation pass 2 ** //
+    //*****************************************************//
+    Hook_Function(0x004B25A4, *DisplayClass::Hook_Next_Object); //seems to work
+    Hook_Function(0x004B0214, *DisplayClass::Submit); //seems to work
+    Hook_Function(0x004B0248, *DisplayClass::Remove); //seems to work
+    Hook_Function(0x004B0C78, *DisplayClass::Hook_Cell_Object); //seems to work
+    Hook_Function(0x004B4E20, *DisplayClass::Center_Map); //seems to work
+    Hook_Function(0x004AFD40, *DisplayClass::Set_Cursor_Pos); //seems to work
+    Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons); //seems to work
+    Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow); //seems to work
+    Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View); //seems to work
+    Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel); //seems to work
+    Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);//seems to work
+
+    //*****************************************************//
+    Hook_Function(0x0049FF98, *CellClass::Spot_Index); //seems to work
+    Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap); //seems to work
+    Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell); //seems to work
+    Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell); //seems to work
+    Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot); //seems to work
+    Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow); //seems to work
 #endif
 }
 #endif

@@ -153,6 +153,30 @@ void DisplayClass::Init_Clear()
 }
 
 /**
+ * @brief Initialise data that doesn't change once loaded during runtime.
+ *
+ * 0x004AEEF4
+ */
+void DisplayClass::One_Time() {
+    MapClass::One_Time();
+
+    // Resize the cell redraw vector to cover the map.
+    CellRedraw.Resize(MAP_MAX_AREA);
+
+    for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
+        Layers[layer].One_Time();
+    }
+
+    TransIconset = MixFileClass<CCFileClass>::Retrieve("trans.icn");
+    DEBUG_ASSERT(TransIconset != nullptr);
+
+    ShadowShapes = MixFileClass<CCFileClass>::Retrieve("shadow.shp");
+    DEBUG_ASSERT(ShadowShapes != nullptr);
+
+    Set_View_Dimensions(0, 16);
+}
+
+/**
  * @brief Initialises the UI gadgets to receive input for this layer.
  *
  * 0x004AEFF4
@@ -585,7 +609,7 @@ void DisplayClass::Flag_Cell(int16_t cellnum)
     Flag_To_Redraw();
 }
 
-void DisplayClass::Mouse_Right_Press(int mouse_x, int mouse_y)
+void DisplayClass::Mouse_Right_Press()
 {
     if (PendingObjectPtr != nullptr && PendingObjectPtr->Is_Techno()) {
         PendingObjectPtr = nullptr;
@@ -660,30 +684,6 @@ void DisplayClass::Mouse_Left_Release(
         reinterpret_cast<void (*)(const DisplayClass *, int16_t, int, int, ObjectClass *, ActionType, BOOL)>(0x004B3CA8);
     func(this, cellnum, mouse_x, mouse_y, object, action, mouse_in_radar);
 #endif
-}
-
-/**
- * @brief Initialise data that doesn't change once loaded during runtime.
- *
- * 0x004AEEF4
- */
-void DisplayClass::One_Time() {
-    MapClass::One_Time();
-
-    // Resize the cell redraw vector to cover the map.
-    CellRedraw.Resize(MAP_MAX_AREA);
-
-    for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
-        Layers[layer].One_Time();
-    }
-
-    TransIconset = MixFileClass<CCFileClass>::Retrieve("trans.icn");
-    DEBUG_ASSERT(TransIconset != nullptr);
-
-    ShadowShapes = MixFileClass<CCFileClass>::Retrieve("shadow.shp");
-    DEBUG_ASSERT(ShadowShapes != nullptr);
-
-    Set_View_Dimensions(0, 16);
 }
 
 /**
