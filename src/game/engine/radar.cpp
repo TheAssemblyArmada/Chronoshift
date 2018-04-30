@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief Part of IOMap stack handling tactical display (main action pane when in game).
+ * @brief Part of IOMap stack handling radar (minimap when in game).
  *
  * @copyright Redalert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
