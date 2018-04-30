@@ -22,6 +22,7 @@
 #include "minmax.h"
 #include "coord.h"
 #include "display.h"
+#include "iomap.h"
 
 RadarClass::RTacticalClass &RadarClass::RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
 void *&RadarClass::RadarAnim = Make_Global<void *>(0x00687908);
@@ -39,7 +40,7 @@ RadarClass::RTacticalClass::RTacticalClass() :
 
 BOOL RadarClass::RTacticalClass::Action(unsigned flags, KeyNumType &key)
 {
-    // TODO, needs HouseClass, TechnoClass.
+    // TODO, needs HelpClass, MouseClass, TechnoClass.
 #ifndef RAPP_STANDALONE
     BOOL(*func)(const RTacticalClass *, unsigned, KeyNumType &) = reinterpret_cast<BOOL(*)(const RTacticalClass *, unsigned, KeyNumType &)>(0x00531034);
     return func(this, flags, key);
@@ -58,9 +59,9 @@ RadarClass::RadarClass() :
     RadarDeactivating(false),
     RadarJammed(false),
     RadarPulseActive(false),
-    Zoomed(false),
-    DrawNames(false),
-    DrawSpiedInfo(false),
+    RadarZoomed(false),
+    RadarDrawNames(false),
+    RadarDrawSpiedInfo(false),
     RadarPulseFrame(0),
     RadarCursorFrame(0),
     RadarAnimFrame(0),
@@ -97,7 +98,7 @@ void RadarClass::One_Time()
     RadarButton.Set_Size(RadarButtonHeight, RadarButtonWidth);
 
     // Moved from Draw_It as its the same no matter what.
-    RadarPulse = MixFileClass<CCFileClass>::Retrieve("PULSE.SHP");
+    RadarPulse = MixFileClass<CCFileClass>::Retrieve("pulse.shp");
 }
 
 void RadarClass::Init_Clear()
@@ -112,12 +113,12 @@ void RadarClass::Init_Clear()
     RadarActive = false;
     RadarActivating = false;
     RadarDeactivating = false;
-    DrawNames = false;
+    RadarDrawNames = false;
 
     MiniMapCellCount = 0;
 
     if (MapCellWidth > 0 || MapCellHeight > 0) {
-        Zoomed = false;
+        RadarZoomed = false;
         Zoom_Mode(Coord_To_Cell(DisplayPos));
     }
 }
@@ -141,18 +142,10 @@ void RadarClass::Draw_It(BOOL force_redraw)
 
 void RadarClass::Set_Map_Dimensions(int x, int y, int w, int h)
 {
-    // TODO do we have Cell_From_Cell_XY equvalent?
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, int, int, int, int) =
-        reinterpret_cast<void (*)(const RadarClass *, int, int, int, int)>(0x00532010);
-    func(this, x, y, w, h);
-#endif
-    /*
     DEBUG_ASSERT(this != nullptr);
 
-    Set_Radar_Position(Cell_From_Cell_XY(x, y));
+    Set_Radar_Position(Cell_From_XY(x, y));
     MapClass::Set_Map_Dimensions(x, y, w, h);
-    */
 }
 
 BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
@@ -171,12 +164,7 @@ BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
 
 int16_t RadarClass::Click_Cell_Calc(int x, int y) const
 {
-    // TODO do we have Cell_From_Cell_XY equvalent?
-#ifndef RAPP_STANDALONE
-    int16_t (*func)(const RadarClass *, int, int) = reinterpret_cast<int16_t (*)(const RadarClass *, int, int)>(0x0052FE28);
-    return func(this, x, y);
-#endif
-    /*
+
     DEBUG_ASSERT(this != nullptr);
 
     switch (Click_In_Radar(x, y, true)) {
@@ -184,14 +172,12 @@ int16_t RadarClass::Click_Cell_Calc(int x, int y) const
             return -1;
 
         case RADAR_CLICK_1:
-            return Cell_From_Cell_XY(x, y);
+            return Cell_From_XY(x, y);
 
         case RADAR_CLICK_0:
         default:
             return DisplayClass::Click_Cell_Calc(x, y);
     }
-    */
-    return 0;
 }
 
 void RadarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
@@ -243,10 +229,10 @@ BOOL RadarClass::UnJam_Cell(int16_t cellnum, HouseClass *house)
     return 0;
 }
 
-BOOL RadarClass::Get_Jammed()
+//Renamed from Get_Jammed
+BOOL RadarClass::Is_Radar_Jammed()
 {
     // TODO Requires HouseClass
-
 #ifndef RAPP_STANDALONE
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x005329C4);
     return func(this);
@@ -302,7 +288,7 @@ void RadarClass::Activate_Pulse()
 
 void RadarClass::Radar_Pixel(int16_t cellnum)
 {
-    // TODO Throws issue on Map
+    // TODO needs SidebarClass for SidebarIsDrawn
 #ifndef RAPP_STANDALONE
     void (*func)(const RadarClass *, int16_t) = reinterpret_cast<void (*)(const RadarClass *, int16_t)>(0x0052FCC0);
     func(this, cellnum);
@@ -312,7 +298,7 @@ void RadarClass::Radar_Pixel(int16_t cellnum)
 
     if (RadarActive && Map.SidebarIsDrawn && Cell_On_Radar(cellnum)) {
         RadarToRedraw = true;
-        Map[cellnum].Bit1 = true;
+        Map[cellnum].Set_Bit1(true);
 
         if (MiniMapCellCount < ARRAY_SIZE(MiniMapCells)) {
             MiniMapCells[MiniMapCellCount++] = cellnum;
@@ -447,11 +433,11 @@ BOOL const RadarClass::Cell_On_Radar(int16_t cellnum)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    if (cellnum > 128 * 128) {
+    if (cellnum > MAP_MAX_AREA) {
         return false;
     }
 
-    if (!Zoomed) {
+    if (!RadarZoomed) {
         return true;
     }
 
@@ -492,7 +478,7 @@ void RadarClass::Radar_Anim()
     /*
     DEBUG_ASSERT(this != nullptr);
 
-    if (!DrawNames && Map.SidebarIsDrawn) {
+    if (!RadarDrawNames && Map.SidebarIsDrawn) {
         Set_Logic_Page(&g_hidPage);
 
         GraphicViewPortClass vp(g_logicPage->Get_Graphic_Buffer(),
@@ -529,7 +515,7 @@ void RadarClass::Player_Names(BOOL draw)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    DrawNames = draw;
+    RadarDrawNames = draw;
     Flag_To_Redraw(true);
 }
 
@@ -551,13 +537,6 @@ void RadarClass::Draw_Names()
 
 void RadarClass::Mark_Radar(int left, int top, int right, int bottom, BOOL mark, int size)
 {
-    // TODO do we have Cell_From_Cell_XY equvalent?
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, int, int, int, int, BOOL, int) =
-        reinterpret_cast<void (*)(const RadarClass *, int, int, int, int, BOOL, int)>(0x0052FF40);
-    func(this, left, top, right, bottom, mark, size);
-#endif
-    /*
     DEBUG_ASSERT(this != nullptr);
 
     int l_adj = (left / MiniMapScale) + MiniMapXOffset;
@@ -567,27 +546,19 @@ void RadarClass::Mark_Radar(int left, int top, int right, int bottom, BOOL mark,
     int scaling = (size / MiniMapScale) + 1;
 
     for (int index = 0; index < scaling; ++index) {
-        Cursor_Cell(Cell_From_Cell_XY(index + l_adj, t_adj), mark);
-        Cursor_Cell(Cell_From_Cell_XY(index + l_adj, b_adj), mark);
-        Cursor_Cell(Cell_From_Cell_XY(r_adj - index, t_adj), mark);
-        Cursor_Cell(Cell_From_Cell_XY(r_adj - index, b_adj), mark);
-        Cursor_Cell(Cell_From_Cell_XY(l_adj, index + t_adj), mark);
-        Cursor_Cell(Cell_From_Cell_XY(r_adj, index + t_adj), mark);
-        Cursor_Cell(Cell_From_Cell_XY(l_adj, b_adj - index), mark);
-        Cursor_Cell(Cell_From_Cell_XY(r_adj, b_adj - index), mark);
+        Cursor_Cell(Cell_From_XY(index + l_adj, t_adj), mark);
+        Cursor_Cell(Cell_From_XY(index + l_adj, b_adj), mark);
+        Cursor_Cell(Cell_From_XY(r_adj - index, t_adj), mark);
+        Cursor_Cell(Cell_From_XY(r_adj - index, b_adj), mark);
+        Cursor_Cell(Cell_From_XY(l_adj, index + t_adj), mark);
+        Cursor_Cell(Cell_From_XY(r_adj, index + t_adj), mark);
+        Cursor_Cell(Cell_From_XY(l_adj, b_adj - index), mark);
+        Cursor_Cell(Cell_From_XY(r_adj, b_adj - index), mark);
     }
-    */
 }
 
 void RadarClass::Cursor_Cell(int16_t cellnum, BOOL mark)
 {
-    // TODO throws issues on Map
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, int16_t, BOOL) =
-        reinterpret_cast<void (*)(const RadarClass *, int16_t, BOOL)>(0x0052FED8);
-    func(this, cellnum, mark);
-#endif
-    /*
     DEBUG_ASSERT(this != nullptr);
 
     if (Cell_On_Radar(cellnum)) {
@@ -597,15 +568,14 @@ void RadarClass::Cursor_Cell(int16_t cellnum, BOOL mark)
 
         // If the cell isn't already marked the same way we want, change it and
         // redraw if situation warrants.
-        if (cell->Bit32 != mark) {
-            cell->Bit32 = mark;
+        if (cell->Get_Bit32() != mark) {
+            cell->Set_Bit32(mark);
 
             if (!mark) {
                 Plot_Radar_Pixel(cellnum);
             }
         }
     }
-    */
 }
 
 void RadarClass::Plot_Radar_Pixel(int16_t cellnum)

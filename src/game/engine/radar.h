@@ -67,7 +67,7 @@ public:
     virtual BOOL Jam_Cell(int16_t cellnum, HouseClass *house) override;
     virtual BOOL UnJam_Cell(int16_t cellnum, HouseClass *house) override;
 
-    BOOL Get_Jammed();
+    BOOL Is_Radar_Jammed();
     BOOL Is_Radar_Active();
     BOOL Is_Radar_Existing();
     void Activate_Pulse();
@@ -125,9 +125,9 @@ protected:
             bool RadarJammed : 1; // 64
             bool RadarPulseActive : 1; // 128 this is also set when the radar is being jammed? see HouseClass::AI
             // bitfield 0xCB1
-            bool Zoomed : 1; // 1 Zoomed?
-            bool DrawNames : 1; // 2
-            bool DrawSpiedInfo : 1; // 4 tomsons said this does some type of redraw?
+            bool RadarZoomed : 1; // 1 Zoomed?
+            bool RadarDrawNames : 1; // 2
+            bool RadarDrawSpiedInfo : 1; // 4 tomsons said this does some type of redraw?
             bool RadarBit2_8 : 1; // 8
             bool RadarBit2_16 : 1; // 16
             bool RadarBit2_32 : 1; // 32
@@ -147,9 +147,9 @@ protected:
     bool RadarJammed; // 64
     bool RadarPulseActive; // 128 this is also set when the radar is being jammed? see HouseClass::AI
     // bitfield 0xCB1
-    bool Zoomed; // 1 Zoomed?
-    bool DrawNames; // 2
-    bool DrawSpiedInfo; // 4 tomsons said this does some type of redraw?
+    bool RadarZoomed; // 1 Zoomed?
+    bool RadarDrawNames; // 2
+    bool RadarDrawSpiedInfo; // 4 tomsons said this does some type of redraw?
     bool RadarBit2_8; //
     bool RadarBit2_16; // 16
     bool RadarBit2_32; // 32
