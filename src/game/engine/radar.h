@@ -40,7 +40,7 @@ enum RadarClickEnum
 
 class RadarClass : public DisplayClass
 {
-    // Internal gadget class for handling input to the tactical area of the game screen.
+    // Internal gadget class for handling input to the radar area of the game screen.
     class RTacticalClass : public GadgetClass
     {
     public:
@@ -54,7 +54,7 @@ class RadarClass : public DisplayClass
 public:
     RadarClass();
 
-    void One_Time(); // um guys this is virtual, how did displayclass virtual calls even work if this wasn't defined......
+    virtual void One_Time() override;
     virtual void Init_Clear() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Draw_It(BOOL force_redraw) override;
@@ -176,7 +176,7 @@ protected:
     static void *&RadarAnim;
     static void *&RadarPulse;
     static void *&RadarFrame;
-    static bool &FullRedraw;
+    static BOOL &FullRedraw;
     static GraphicBufferClass &IconStage;
     static GraphicBufferClass &TileStage;
 #else

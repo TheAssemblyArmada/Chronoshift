@@ -13,36 +13,36 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-
 #include "radar.h"
-#include "globals.h"
 #include "ccfileclass.h"
-#include "mixfile.h"
-#include "lists.h"
-#include "minmax.h"
 #include "coord.h"
 #include "display.h"
+#include "globals.h"
 #include "iomap.h"
+#include "lists.h"
+#include "minmax.h"
+#include "mixfile.h"
 
 RadarClass::RTacticalClass &RadarClass::RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
 void *&RadarClass::RadarAnim = Make_Global<void *>(0x00687908);
 void *&RadarClass::RadarPulse = Make_Global<void *>(0x0068790C);
 void *&RadarClass::RadarFrame = Make_Global<void *>(0x00687910);
-bool &RadarClass::FullRedraw = Make_Global<bool>(0x00687914);
+BOOL &RadarClass::FullRedraw = Make_Global<BOOL>(0x00687914);
 GraphicBufferClass &RadarClass::IconStage = Make_Global<GraphicBufferClass>(0x00687918);
 GraphicBufferClass &RadarClass::TileStage = Make_Global<GraphicBufferClass>(0x006879BC);
 
 RadarClass::RTacticalClass::RTacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
 {
-
 }
 
 BOOL RadarClass::RTacticalClass::Action(unsigned flags, KeyNumType &key)
 {
     // TODO, needs HelpClass, MouseClass, TechnoClass.
 #ifndef RAPP_STANDALONE
-    BOOL(*func)(const RTacticalClass *, unsigned, KeyNumType &) = reinterpret_cast<BOOL(*)(const RTacticalClass *, unsigned, KeyNumType &)>(0x00531034);
+    BOOL(*func)
+    (const RTacticalClass *, unsigned, KeyNumType &) =
+        reinterpret_cast<BOOL (*)(const RTacticalClass *, unsigned, KeyNumType &)>(0x00531034);
     return func(this, flags, key);
 #else
     return false;
@@ -164,7 +164,6 @@ BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
 
 int16_t RadarClass::Click_Cell_Calc(int x, int y) const
 {
-
     DEBUG_ASSERT(this != nullptr);
 
     switch (Click_In_Radar(x, y, true)) {
@@ -229,7 +228,7 @@ BOOL RadarClass::UnJam_Cell(int16_t cellnum, HouseClass *house)
     return 0;
 }
 
-//Renamed from Get_Jammed
+// Renamed from Get_Jammed
 BOOL RadarClass::Is_Radar_Jammed()
 {
     // TODO Requires HouseClass
@@ -343,9 +342,9 @@ void RadarClass::Zoom_Mode(int16_t cellnum)
     DEBUG_ASSERT(this != nullptr);
 
     if (Is_Zoomable()) {
-        Zoomed = !Zoomed;
+        RadarZoomed = !RadarZoomed;
     } else {
-        Zoomed = true;
+        RadarZoomed = true;
     }
 
     MiniMap.X = 0;
@@ -401,6 +400,7 @@ BOOL const RadarClass::Is_Zoomable() const
 
 int const RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
+    // TODO Requires SidebarClass for SidebarIsDrawn
 #ifndef RAPP_STANDALONE
     void (*func)(const RadarClass *, int &, int &, BOOL) =
         reinterpret_cast<void (*)(const RadarClass *, int &, int &, BOOL)>(0x0052FD3C);
