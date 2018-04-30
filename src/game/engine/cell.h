@@ -125,6 +125,10 @@ public:
     void Set_Visible(BOOL bit) { Visible = bit; }
     BOOL Is_Revealed() const { return Revealed; }
     void Set_Revealed(BOOL bit) { Revealed = bit; }
+    BOOL Get_Bit1() { return Bit1; }
+    void Set_Bit1(BOOL bit) { Bit1 = bit; }
+    BOOL Get_Bit32() { return Bit32; }
+    void Set_Bit32(BOOL bit) { Bit32 = bit; }
     BOOL Get_Bit128() { return Bit128; }
     void Set_Bit128(BOOL bit) { Bit128 = bit; }
     TemplateType Get_Template() const { return Template; }
