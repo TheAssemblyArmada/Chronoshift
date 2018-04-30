@@ -165,7 +165,6 @@ BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
 int16_t RadarClass::Click_Cell_Calc(int x, int y) const
 {
     DEBUG_ASSERT(this != nullptr);
-
     switch (Click_In_Radar(x, y, true)) {
         case RADAR_CLICK_M1:
             return -1;
@@ -217,6 +216,7 @@ BOOL RadarClass::Jam_Cell(int16_t cellnum, HouseClass *house)
 #endif
     return 0;
 }
+
 BOOL RadarClass::UnJam_Cell(int16_t cellnum, HouseClass *house)
 {
 #ifndef RAPP_STANDALONE
@@ -323,6 +323,7 @@ void RadarClass::Render_Infantry(int16_t cellnum, int x, int y, int scale)
     func(this, cellnum, x, y, scale);
 #endif
 }
+
 void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
 {
 #ifndef RAPP_STANDALONE
@@ -331,6 +332,7 @@ void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
     func(this, cellnum, x, y, scale);
 #endif
 }
+
 void RadarClass::Zoom_Mode(int16_t cellnum)
 {
     // TODO figure out Rect stuff
@@ -400,11 +402,12 @@ BOOL const RadarClass::Is_Zoomable() const
 
 int const RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
+    DEBUG_LOG("Click_In_Radar - entered\n");
     // TODO Requires SidebarClass for SidebarIsDrawn
 #ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, int &, int &, BOOL) =
-        reinterpret_cast<void (*)(const RadarClass *, int &, int &, BOOL)>(0x0052FD3C);
-    func(this, x, y, set_coords);
+    int (*func)(const RadarClass *, int &, int &, BOOL) =
+        reinterpret_cast<int (*)(const RadarClass *, int &, int &, BOOL)>(0x0052FD3C);
+    return func(this, x, y, set_coords);
 #endif
     /*
     DEBUG_ASSERT(this != nullptr);
@@ -585,6 +588,7 @@ void RadarClass::Plot_Radar_Pixel(int16_t cellnum)
     func(this, cellnum);
 #endif
 }
+
 int RadarClass::Radar_Activate(int mode)
 {
 #ifndef RAPP_STANDALONE

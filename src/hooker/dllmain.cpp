@@ -41,6 +41,7 @@
 #include "mouseshape.h"
 #include "options.h"
 #include "ostimer.h"
+#include "radar.h"
 #include "rawfileclass.h"
 #include "rgb.h"
 #include "shape.h"
@@ -109,6 +110,7 @@ void Setup_Hooks()
     FlasherClass::Hook_Me();
     OptionsClass::Hook_Me();
     DisplayClass::Hook_Me();
+    RadarClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);

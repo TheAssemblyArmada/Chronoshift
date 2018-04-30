@@ -95,6 +95,9 @@ public:
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
+    int16_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
+    static BOOL Hook_Is_Zoomable(RadarClass *ptr) { return ptr->Is_Zoomable(); }
+    static BOOL Hook_Cell_On_Radar(RadarClass *ptr, int16_t cellnum) { return ptr->Cell_On_Radar(cellnum); }
 #endif
 
 protected:
@@ -195,7 +198,22 @@ protected:
 inline void RadarClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    // Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear); //seems to work
+    Hook_Function(0x0052D668, *RadarClass::One_Time); // seems to work
+    Hook_Function(0x0052D718, *RadarClass::Init_Clear); // seems to work
+    Hook_Function(0x00532010, *RadarClass::Set_Map_Dimensions); // seems to work
+    Hook_Function(0x0052FEAC, *RadarClass::Map_Cell); // seems to work
+    Hook_Function(0x0052FE28, *RadarClass::Hook_Click_Cell_Calc); // seems to work
+    Hook_Function(0x00531474, *RadarClass::Refresh_Cells); // seems to work
+    Hook_Function(0x00532070, *RadarClass::Set_Tactical_Position); // seems to work
+    Hook_Function(0x005329EC, *RadarClass::Flag_Cell); // seems to work
+    Hook_Function(0x00532938, *RadarClass::Activate_Pulse); // seems to work
+    Hook_Function(0x0052F460, *RadarClass::Hook_Is_Zoomable); // seems to work
+    Hook_Function(0x00532098, *RadarClass::Hook_Cell_On_Radar); // seems to work
+    Hook_Function(0x00532000, *RadarClass::Radar_Position); // seems to work
+    Hook_Function(0x005301B4, *RadarClass::Cell_XY_To_Radar_Pixel); // seems to work
+    Hook_Function(0x0053210C, *RadarClass::Player_Names); // seems to work
+    Hook_Function(0x0052FF40, *RadarClass::Mark_Radar); // seems to work
+    Hook_Function(0x0052FED8, *RadarClass::Cursor_Cell); // seems to work
 #endif
 }
 #endif
