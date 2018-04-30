@@ -134,7 +134,7 @@ public:
     // virtual void Write_INI(CCINIClass &ini) = 0; // Not virtual in RA.
     virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) = 0;
     virtual int16_t Click_Cell_Calc(int x, int y) const = 0;
-    virtual void Help_Text(int str_id, int x = -1, int y = -1, int schemecolor = 14, BOOL on_wait = false) = 0;
+    virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL on_wait = false) = 0;
     virtual MouseType Get_Mouse_Shape(void) const = 0;
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) = 0;
     virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) = 0;
