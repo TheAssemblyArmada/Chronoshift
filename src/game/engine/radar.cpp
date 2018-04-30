@@ -402,7 +402,6 @@ BOOL const RadarClass::Is_Zoomable() const
 
 int const RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
-    DEBUG_LOG("Click_In_Radar - entered\n");
     // TODO Requires SidebarClass for SidebarIsDrawn
 #ifndef RAPP_STANDALONE
     int (*func)(const RadarClass *, int &, int &, BOOL) =
