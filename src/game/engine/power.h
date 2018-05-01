@@ -23,7 +23,7 @@
 
 class PowerClass : public RadarClass
 {
-    // Internal gadget class for handling input to the radar area of the game screen.
+    // Internal gadget class for handling input to the powerbar area of the sidebar.
     class PowerButtonClass : public GadgetClass
     {
     public:
