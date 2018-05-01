@@ -125,6 +125,7 @@ set(GAMEENGINE_SRC
     game/engine/session.cpp
     game/engine/smudgetype.cpp
     game/engine/source.cpp
+    game/engine/sidebar.cpp
     game/engine/special.cpp
     game/engine/target.cpp
     game/engine/technotype.cpp

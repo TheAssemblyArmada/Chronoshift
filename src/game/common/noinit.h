@@ -26,4 +26,10 @@ public:
     void operator()() const {};
 };
 
+class InitClass
+{
+public:
+    void operator()() const {};
+};
+
 #endif // NOINIT_H
