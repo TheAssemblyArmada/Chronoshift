@@ -242,21 +242,33 @@ void SidebarClass::StripClass::Deactivate()
 #endif
 }
 
-bool SidebarClass::StripClass::Add(RTTIType type, int id)
+BOOL SidebarClass::StripClass::Add(RTTIType type, int id)
 {
 #ifndef RAPP_STANDALONE
-    bool (*func)(const StripClass *, RTTIType, int) =
-        reinterpret_cast<bool (*)(const StripClass *, RTTIType, int)>(0x0054E1F8);
+    BOOL (*func)
+    (const StripClass *, RTTIType, int) = reinterpret_cast<BOOL (*)(const StripClass *, RTTIType, int)>(0x0054E1F8);
     return func(this, type, id);
 #endif
 }
 
-bool SidebarClass::StripClass::Scroll(bool reverse)
+BOOL SidebarClass::StripClass::Scroll(BOOL reverse)
 {
-#ifndef RAPP_STANDALONE
-    bool (*func)(const StripClass *, bool) = reinterpret_cast<bool (*)(const StripClass *, bool)>(0x0054E290);
-    return func(this, reverse);
-#endif
+    if (reverse) {
+        // We can't go below 0 for the current row, so check and if we are
+        // trying to, just return false.
+        if (CurrentRow == 0) {
+            return false;
+        }
+        --RowStartIndex;
+    } else {
+        // We can't go beyond the count of cameos we have, so again return false
+        // if we try.
+        if (CurrentRow + ROW_COUNT >= CameoCount) {
+            return false;
+        }
+        ++RowStartIndex;
+    }
+    return true;
 }
 
 void SidebarClass::StripClass::Flag_To_Redraw()
@@ -266,36 +278,38 @@ void SidebarClass::StripClass::Flag_To_Redraw()
     Map.Flag_To_Redraw();
 }
 
-bool SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
+BOOL SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
 #ifndef RAPP_STANDALONE
-    bool (*func)(const StripClass *, KeyNumType &, int, int) =
-        reinterpret_cast<bool (*)(const StripClass *, KeyNumType &, int, int)>(0x0054E2E8);
+    BOOL (*func)
+    (const StripClass *, KeyNumType &, int, int) =
+        reinterpret_cast<BOOL (*)(const StripClass *, KeyNumType &, int, int)>(0x0054E2E8);
     return func(this, key, mouse_x, mouse_y);
 #endif
 }
 
-void SidebarClass::StripClass::Draw_It(bool force_redraw)
+void SidebarClass::StripClass::Draw_It(BOOL force_redraw)
 {
 #ifndef RAPP_STANDALONE
-    void (*func)(const StripClass *, bool) = reinterpret_cast<void (*)(const StripClass *, bool)>(0x0054E6FC);
+    void (*func)(const StripClass *, BOOL) = reinterpret_cast<void (*)(const StripClass *, BOOL)>(0x0054E6FC);
     func(this, force_redraw);
 #endif
 }
 
-bool SidebarClass::StripClass::Recalc()
+BOOL SidebarClass::StripClass::Recalc()
 {
 #ifndef RAPP_STANDALONE
-    bool (*func)(const StripClass *) = reinterpret_cast<bool (*)(const StripClass *)>(0x0054EB1C);
+    BOOL (*func)(const StripClass *) = reinterpret_cast<BOOL (*)(const StripClass *)>(0x0054EB1C);
     return func(this);
 #endif
 }
 
-bool SidebarClass::StripClass::Factory_Link(int a1, RTTIType type, int a3)
+BOOL SidebarClass::StripClass::Factory_Link(int a1, RTTIType type, int a3)
 {
 #ifndef RAPP_STANDALONE
-    bool (*func)(const StripClass *, int, RTTIType, int) =
-        reinterpret_cast<bool (*)(const StripClass *, int, RTTIType, int)>(0x0054F3B4);
+    BOOL (*func)
+    (const StripClass *, int, RTTIType, int) =
+        reinterpret_cast<BOOL (*)(const StripClass *, int, RTTIType, int)>(0x0054F3B4);
     return func(this, a1, type, a3);
 #endif
 }
@@ -320,18 +334,6 @@ SidebarClass::SidebarClass(void) :
     for (int column = 0; column < ARRAY_SIZE(Columns); ++column) {
         new (&Columns[column]) StripClass(init);
     }
-}
-
-// cannot initalize Columns
-SidebarClass::SidebarClass(SidebarClass const &that) :
-    PowerClass(that),
-    SidebarIsDrawn(that.SidebarIsDrawn),
-    SidebarToRedraw(that.SidebarToRedraw),
-    SidebarBit4(that.SidebarBit4),
-    SidebarBit8(that.SidebarBit8),
-    SidebarBit16(that.SidebarBit16) //,
-// Columns()
-{
 }
 
 /*
@@ -433,7 +435,7 @@ void SidebarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
 
 void SidebarClass::Reload_Sidebar(void)
 {
-//TODO Needs HouseClass
+// TODO Needs HouseClass
 #ifndef RAPP_STANDALONE
     void (*func)(const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D340);
     func(this);
@@ -514,7 +516,7 @@ BOOL SidebarClass::Activate_Upgrade(int a1)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    bool v5 = SidebarToRedraw;
+    BOOL v5 = SidebarToRedraw;
 
     if (a1 == -1) {
         a1 = (SidebarBit8 == 0);
@@ -542,7 +544,7 @@ BOOL SidebarClass::Activate_Demolish(int a1)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    bool v5 = SidebarToRedraw;
+    BOOL v5 = SidebarToRedraw;
 
     if (a1 == -1) {
         a1 = (SidebarBit16 == 0);
@@ -591,7 +593,7 @@ BOOL SidebarClass::Add(RTTIType item, int id)
 BOOL SidebarClass::Scroll(BOOL reverse, ColumnType column)
 {
 #ifndef RAPP_STANDALONE
-    BOOL (*func)
+    BOOL(*func)
     (const SidebarClass *, BOOL, ColumnType) =
         reinterpret_cast<BOOL (*)(const SidebarClass *, BOOL, ColumnType)>(0x0054D684);
     return func(this, reverse, column);
@@ -602,7 +604,7 @@ void SidebarClass::Recalc(void)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    bool v1 = false;
+    BOOL v1 = false;
 
     for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
         v1 = Columns[column].Recalc();
@@ -620,7 +622,7 @@ void SidebarClass::Recalc(void)
 BOOL SidebarClass::Activate(int mode)
 {
 #ifndef RAPP_STANDALONE
-    bool (*func)(const SidebarClass *, int) = reinterpret_cast<bool (*)(const SidebarClass *, int)>(0x0054DA70);
+    BOOL (*func)(const SidebarClass *, int) = reinterpret_cast<BOOL (*)(const SidebarClass *, int)>(0x0054DA70);
     return func(this, mode);
 #endif
 }

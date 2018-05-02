@@ -97,13 +97,13 @@ class SidebarClass : public PowerClass
         void Reload_LogoShapes();
         void Activate();
         void Deactivate();
-        bool Add(RTTIType type, int id);
-        bool Scroll(bool reverse);
+        BOOL Add(RTTIType type, int id);
+        BOOL Scroll(BOOL reverse);
         void Flag_To_Redraw();
-        bool AI(KeyNumType &key, int mouse_x, int mouse_y);
-        void Draw_It(bool force_redraw = false);
-        bool Recalc();
-        bool Factory_Link(int a1, RTTIType type, int a3);
+        BOOL AI(KeyNumType &key, int mouse_x, int mouse_y);
+        void Draw_It(BOOL force_redraw = false);
+        BOOL Recalc();
+        BOOL Factory_Link(int a1, RTTIType type, int a3);
         int Abandon_Production(int a1);
 
     private:
@@ -190,7 +190,6 @@ class SidebarClass : public PowerClass
 
 public:
     SidebarClass();
-    SidebarClass(SidebarClass const &that);
     SidebarClass(NoInitClass &);
 
     virtual void One_Time() override;
