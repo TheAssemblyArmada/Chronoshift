@@ -21,6 +21,9 @@
 #include "mixfile.h"
 #include "session.h"
 
+void *&SidebarClass::SidebarShape = Make_Global<void *>(0x00689F0C);
+void *SidebarClass::SidebarAddonShape = NULL;
+
 SidebarClass::SBGadgetClass::SBGadgetClass() : GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false) {}
 
 BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
@@ -91,8 +94,6 @@ SidebarClass::StripClass::StripClass() :
 {
 }
 
-/*
-Both can't init Entries
 SidebarClass::StripClass::StripClass(StripClass const &that) :
     ProgressTimer(that.ProgressTimer),
     XPos(that.XPos),
@@ -109,15 +110,16 @@ SidebarClass::StripClass::StripClass(StripClass const &that) :
     RowStartIndex(that.RowStartIndex),
     field_2D(that.field_2D),
     field_31(that.field_31),
-    CameoCount(that.CameoCount),
-    Entries(that.Entries)
+    CameoCount(that.CameoCount)
 {
-    memcpy(Entries, that.Entries, sizeof(Entries));
+    for (int index = 0; index < ARRAY_SIZE(Entries); ++index) {
+        new (&Entries[index]) SelectButtonType;
+    }
 }
 
 SidebarClass::StripClass::StripClass(InitClass const &init) :
 
-    //TODO, one of thse is -1
+    // TODO, one of thse is -1
     XPos(0),
     YPos(0),
     WhichColumn(),
@@ -132,15 +134,12 @@ SidebarClass::StripClass::StripClass(InitClass const &init) :
     RowStartIndex(0),
     field_2D(0),
     field_31(0),
-    CameoCount(0),
-    Entries()
+    CameoCount(0)
 {
-    for ( int index = 0; index < ARRAY_SIZE(Entries); ++index ) {
-        new(&Entries[index]) SelectButtonType;
+    for (int index = 0; index < ARRAY_SIZE(Entries); ++index) {
+        new (&Entries[index]) SelectButtonType;
     }
-
 }
-*/
 
 SidebarClass::StripClass::~StripClass() {}
 
@@ -149,7 +148,7 @@ void SidebarClass::StripClass::One_Time(int column)
 {
     // TODO, needs HouseClass, TabClass, HelpClass.
 #ifndef RAPP_STANDALONE
-    void(*func) (const StripClass *, int) = reinterpret_cast<void (*)(const StripClass *, int)>(0x0054DD54);
+    void (*func)(const StripClass *, int) = reinterpret_cast<void (*)(const StripClass *, int)>(0x0054DD54);
     func(this, column);
 #else
     DEBUG_ASSERT(this != nullptr);
@@ -167,22 +166,21 @@ void SidebarClass::StripClass::One_Time(int column)
 void *SidebarClass::StripClass::Get_Special_Cameo(SpecialWeaponType super)
 {
 #ifndef RAPP_STANDALONE
-    void *(*func) (const StripClass *, SpecialWeaponType) = reinterpret_cast<void * (*)(const StripClass *, SpecialWeaponType)>(0x0054DDE0);
+    void *(*func)(const StripClass *, SpecialWeaponType) =
+        reinterpret_cast<void *(*)(const StripClass *, SpecialWeaponType)>(0x0054DDE0);
     return func(this, super);
 #else
     DEBUG_ASSERT(this != nullptr);
     if (super != SPECIAL_NONE && super < SPECIAL_COUNT) {
-        //return SpecialShapes[super];
+        // return SpecialShapes[super];
     }
     return nullptr;
 #endif
 }
 
-//how much is MaxCameoPerColumn?
+// how much is MaxCameoPerColumn?
 void SidebarClass::StripClass::Init_Clear()
 {
-    DEBUG_ASSERT(this != nullptr);
-
     field_21 = -1;
     CurrentRow = 0;
     field_2D = 0;
@@ -192,17 +190,17 @@ void SidebarClass::StripClass::Init_Clear()
     Strip_Boolean8 = false;
 
     // Reset all the cameo entries
-    //for (int index = 0; index < MaxCameoPerColumn; ++index) {
-    //    Entries[index].ID = 0;
-    //    Entries[index].Type = RTTI_NONE;
-    //    Entries[index].Factory = -1;
-    //}
+    for (int i = 0; i < MAX_BUTTONS_PER_COLUMN; ++i) {
+        Entries[i].ID = 0;
+        Entries[i].Type = RTTI_NONE;
+        Entries[i].Factory = 0xFFFFFFFF;
+    }
 }
 
 void SidebarClass::StripClass::Init_IO(int column)
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const StripClass *, int) = reinterpret_cast<void (*)(const StripClass *, int)>(0x0054DE54);
+    void (*func)(const StripClass *, int) = reinterpret_cast<void (*)(const StripClass *, int)>(0x0054DE54);
     func(this, column);
 #endif
 }
@@ -210,15 +208,20 @@ void SidebarClass::StripClass::Init_IO(int column)
 void SidebarClass::StripClass::Init_Theater(TheaterType theater)
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const StripClass *, TheaterType) = reinterpret_cast<void (*)(const StripClass *, TheaterType)>(0x0054E008);
+    void (*func)(const StripClass *, TheaterType) = reinterpret_cast<void (*)(const StripClass *, TheaterType)>(0x0054E008);
     func(this, theater);
 #endif
+    // Error! E374: col(16) object (or object pointer) required to access non-static data member
+    // Reload_Sidebar();
+    // DisplayClass::Init_Theater(theater);
+    // Columns[COLUMN_LEFT]Init_Theater(theater);
+    // Columns[COLUMN_RIGHT].Init_Theater(theater);
 }
 
 void SidebarClass::StripClass::Reload_LogoShapes()
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E094);
+    void (*func)(const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E094);
     func(this);
 #endif
 }
@@ -226,7 +229,7 @@ void SidebarClass::StripClass::Reload_LogoShapes()
 void SidebarClass::StripClass::Activate()
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E0C4);
+    void (*func)(const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E0C4);
     func(this);
 #endif
 }
@@ -234,7 +237,7 @@ void SidebarClass::StripClass::Activate()
 void SidebarClass::StripClass::Deactivate()
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E184);
+    void (*func)(const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E184);
     func(this);
 #endif
 }
@@ -242,7 +245,8 @@ void SidebarClass::StripClass::Deactivate()
 bool SidebarClass::StripClass::Add(RTTIType type, int id)
 {
 #ifndef RAPP_STANDALONE
-    bool(*func) (const StripClass *, RTTIType, int) = reinterpret_cast<bool (*)(const StripClass *, RTTIType, int)>(0x0054E1F8);
+    bool (*func)(const StripClass *, RTTIType, int) =
+        reinterpret_cast<bool (*)(const StripClass *, RTTIType, int)>(0x0054E1F8);
     return func(this, type, id);
 #endif
 }
@@ -250,7 +254,7 @@ bool SidebarClass::StripClass::Add(RTTIType type, int id)
 bool SidebarClass::StripClass::Scroll(bool reverse)
 {
 #ifndef RAPP_STANDALONE
-    bool(*func) (const StripClass *, bool) = reinterpret_cast<bool (*)(const StripClass *, bool)>(0x0054E290);
+    bool (*func)(const StripClass *, bool) = reinterpret_cast<bool (*)(const StripClass *, bool)>(0x0054E290);
     return func(this, reverse);
 #endif
 }
@@ -274,7 +278,7 @@ bool SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 void SidebarClass::StripClass::Draw_It(bool force_redraw)
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const StripClass *, bool) = reinterpret_cast<void (*)(const StripClass *, bool)>(0x0054E6FC);
+    void (*func)(const StripClass *, bool) = reinterpret_cast<void (*)(const StripClass *, bool)>(0x0054E6FC);
     func(this, force_redraw);
 #endif
 }
@@ -282,7 +286,7 @@ void SidebarClass::StripClass::Draw_It(bool force_redraw)
 bool SidebarClass::StripClass::Recalc()
 {
 #ifndef RAPP_STANDALONE
-    bool(*func) (const StripClass *) = reinterpret_cast<bool (*)(const StripClass *)>(0x0054EB1C);
+    bool (*func)(const StripClass *) = reinterpret_cast<bool (*)(const StripClass *)>(0x0054EB1C);
     return func(this);
 #endif
 }
@@ -290,7 +294,8 @@ bool SidebarClass::StripClass::Recalc()
 bool SidebarClass::StripClass::Factory_Link(int a1, RTTIType type, int a3)
 {
 #ifndef RAPP_STANDALONE
-    bool(*func) (const StripClass *, int, RTTIType, int) = reinterpret_cast<bool (*)(const StripClass *, int, RTTIType, int)>(0x0054F3B4);
+    bool (*func)(const StripClass *, int, RTTIType, int) =
+        reinterpret_cast<bool (*)(const StripClass *, int, RTTIType, int)>(0x0054F3B4);
     return func(this, a1, type, a3);
 #endif
 }
@@ -298,12 +303,11 @@ bool SidebarClass::StripClass::Factory_Link(int a1, RTTIType type, int a3)
 int SidebarClass::StripClass::Abandon_Production(int a1)
 {
 #ifndef RAPP_STANDALONE
-    int(*func) (const StripClass *, int) = reinterpret_cast<int (*)(const StripClass *, int)>(0x0054F434);
+    int (*func)(const StripClass *, int) = reinterpret_cast<int (*)(const StripClass *, int)>(0x0054F434);
     return func(this, a1);
 #endif
 }
 
-//eh what?
 SidebarClass::SidebarClass(void) :
     PowerClass(),
     SidebarIsDrawn(false),
@@ -313,26 +317,24 @@ SidebarClass::SidebarClass(void) :
     SidebarBit16(false)
 {
     InitClass init;
-
-    //
-    // 
-    //
-    //for ( int column = 0; column < ARRAY_SIZE(Columns); ++column ) {
-    //    chrono_placement_new(&Columns[column]) StripClass(init);
-    //}
+    for (int column = 0; column < ARRAY_SIZE(Columns); ++column) {
+        new (&Columns[column]) StripClass(init);
+    }
 }
-/*
+
+// cannot initalize Columns
 SidebarClass::SidebarClass(SidebarClass const &that) :
     PowerClass(that),
     SidebarIsDrawn(that.SidebarIsDrawn),
     SidebarToRedraw(that.SidebarToRedraw),
     SidebarBit4(that.SidebarBit4),
     SidebarBit8(that.SidebarBit8),
-    SidebarBit16(that.SidebarBit16),
-    Columns()
+    SidebarBit16(that.SidebarBit16) //,
+// Columns()
 {
 }
 
+/*
 SidebarClass::SidebarClass(NoInitClass const &noinit) :
     PowerClass(noinit),
     Columns()
@@ -342,24 +344,48 @@ SidebarClass::SidebarClass(NoInitClass const &noinit) :
 
 void SidebarClass::One_Time()
 {
-#ifndef RAPP_STANDALONE
-    void(*func) (const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D07C);
-    func(this);
-#endif
+    PowerClass::One_Time();
+
+    WindowList[WINDOW_SIDEBAR].X = 496;
+    WindowList[WINDOW_SIDEBAR].Y = 180;
+    WindowList[WINDOW_SIDEBAR].W = 160;
+    WindowList[WINDOW_SIDEBAR].H = 192;
+
+    for (int column = 0; column < ARRAY_SIZE(Columns); ++column) {
+        Columns[column].One_Time(column);
+    }
+
+    if (SidebarShape != NULL) {
+        delete SidebarShape;
+    }
+
+    SidebarShape = MixFileClass<CCFileClass>::Retrieve("sidebar.shp");
+    DEBUG_ASSERT(SidebarShape != NULL);
+
+    if (SidebarAddonShape != NULL) {
+        delete SidebarAddonShape;
+    }
+
+    SidebarAddonShape = MixFileClass<CCFileClass>::Retrieve("addon.shp");
 }
 
 void SidebarClass::Init_Clear()
 {
-#ifndef RAPP_STANDALONE
-    void(*func) (const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D0F8);
-    func(this);
-#endif
+    PowerClass::Init_Clear();
+    SidebarToRedraw = true;
+    SidebarBit4 = false;
+    SidebarBit8 = false;
+    SidebarBit16 = false;
+    for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+        Columns[column].Init_Clear();
+    }
+    Activate(0);
 }
 
 void SidebarClass::Init_IO()
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D144);
+    void (*func)(const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D144);
     func(this);
 #endif
 }
@@ -367,7 +393,8 @@ void SidebarClass::Init_IO()
 void SidebarClass::Init_Theater(TheaterType theater)
 {
 #ifndef RAPP_STANDALONE
-    void(*func) (const SidebarClass *, TheaterType) = reinterpret_cast<void (*)(const SidebarClass *, TheaterType)>(0x0054D304);
+    void (*func)(const SidebarClass *, TheaterType) =
+        reinterpret_cast<void (*)(const SidebarClass *, TheaterType)>(0x0054D304);
     func(this, theater);
 #endif
 }
@@ -393,9 +420,9 @@ void SidebarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
 {
     DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    if ( overlap_list != nullptr ) {
-        if ( overlap_list[0] == LIST_START ) {
-            for ( ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column ) {
+    if (overlap_list != nullptr) {
+        if (overlap_list[0] == LIST_START) {
+            for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
                 Columns[column].StripToRedraw = true;
             }
             Flag_To_Redraw();
@@ -406,17 +433,48 @@ void SidebarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
 
 void SidebarClass::Reload_Sidebar(void)
 {
+//TODO Needs HouseClass
 #ifndef RAPP_STANDALONE
     void (*func)(const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D340);
     func(this);
+#else
+    // in order of the houses.
+    char *sidebarnames[HOUSES_COUNT] = { "SIDE?NA.SHP",
+        "SIDE?NA.SHP",
+        "SIDE?US.SHP",
+        "SIDE?NA.SHP",
+        "SIDE?US.SHP",
+        "SIDE?NA.SHP",
+        "SIDE?NA.SHP",
+        "SIDE?NA.SHP",
+        "SIDE?NA.SHP",
+        "SIDE?US.SHP" };
+
+    int side_index;
+
+    if (PlayerPtr) {
+        side_index = PlayerPtr->Side;
+    } else {
+        side_index = 0;
+    }
+
+    // char *shape_name = sidebarnames[side_index];
+
+    // this basicly replaces the '?' in the filenames above with a number.
+    SidebarShape = CCMixFileClass::Retrieve((char const *)(sidebarnames[side_index][4] = '1'));
+    SidebarMiddleShape = CCMixFileClass::Retrieve((char const *)(sidebarnames[side_index][4] = '2'));
+    SidebarBottomShape = CCMixFileClass::Retrieve((char const *)(sidebarnames[side_index][4] = '3'));
+
+    // reload the side specific stip backgrounds.
+    Strips[COLUMN_LEFT].Reload_LogoShapes();
+    Strips[COLUMN_LEFT].Reload_LogoShapes();
 #endif
 }
 
 ColumnType SidebarClass::Which_Column(RTTIType type)
 {
     DEBUG_ASSERT(this != nullptr);
-    switch ( type ) {
-
+    switch (type) {
         case RTTI_BUILDING:
         case RTTI_BUILDINGTYPE:
             return COLUMN_LEFT;
@@ -437,14 +495,12 @@ ColumnType SidebarClass::Which_Column(RTTIType type)
     }
 }
 
-
 BOOL SidebarClass::Factory_Link(int a1, RTTIType type, int a3)
 {
     DEBUG_ASSERT(this != nullptr);
 
     return Columns[Which_Column(type)].Factory_Link(a1, type, a3);
 }
-
 
 BOOL SidebarClass::Activate_Repair(int a1)
 {
@@ -459,55 +515,54 @@ BOOL SidebarClass::Activate_Upgrade(int a1)
     DEBUG_ASSERT(this != nullptr);
 
     bool v5 = SidebarToRedraw;
-    
-    if ( a1 == -1 ) {
+
+    if (a1 == -1) {
         a1 = (SidebarBit8 == 0);
     }
-    
-    if ( a1 == 1 ) {
+
+    if (a1 == 1) {
         SidebarBit8 = true;
     } else {
         SidebarBit8 = false;
     }
-    
-    if ( SidebarToRedraw != v5 ) {
+
+    if (SidebarToRedraw != v5) {
         Flag_To_Redraw();
         SidebarToRedraw = true;
-        
-        if ( !SidebarBit8 ) {
+
+        if (!SidebarBit8) {
             Set_Default_Mouse(MOUSE_POINTER);
         }
     }
-    
+
     return v5;
 }
-
 
 BOOL SidebarClass::Activate_Demolish(int a1)
 {
     DEBUG_ASSERT(this != nullptr);
 
     bool v5 = SidebarToRedraw;
-    
-    if ( a1 == -1 ) {
+
+    if (a1 == -1) {
         a1 = (SidebarBit16 == 0);
     }
-    
-    if ( a1 == 1 ) {
+
+    if (a1 == 1) {
         SidebarBit16 = true;
     } else {
         SidebarBit16 = false;
     }
-    
-    if ( SidebarToRedraw != v5 ) {
+
+    if (SidebarToRedraw != v5) {
         Flag_To_Redraw();
         SidebarToRedraw = true;
-        
-        if ( !SidebarBit16 ) {
+
+        if (!SidebarBit16) {
             Set_Default_Mouse(MOUSE_POINTER);
         }
     }
-    
+
     return v5;
 }
 
@@ -515,30 +570,30 @@ BOOL SidebarClass::Add(RTTIType item, int id)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    //if ( InMapEditor ) {
+    // if ( InMapEditor ) {
     //    return false;
     //}
 
-    //get Left or Right strip and add the "item", based on return value of Which_Column().
-    if ( Columns[Which_Column(item)].Add(item, id) ) {
-
+    // get Left or Right strip and add the "item", based on return value of Which_Column().
+    if (Columns[Which_Column(item)].Add(item, id)) {
         Activate(1);
 
         SidebarToRedraw = true;
 
         Flag_To_Redraw();
-    
+
         return true;
     }
 
     return false;
-
 }
 
 BOOL SidebarClass::Scroll(BOOL reverse, ColumnType column)
 {
 #ifndef RAPP_STANDALONE
-    BOOL (*func)(const SidebarClass *, BOOL, ColumnType) = reinterpret_cast<BOOL (*)(const SidebarClass *, BOOL, ColumnType)>(0x0054D684);
+    BOOL (*func)
+    (const SidebarClass *, BOOL, ColumnType) =
+        reinterpret_cast<BOOL (*)(const SidebarClass *, BOOL, ColumnType)>(0x0054D684);
     return func(this, reverse, column);
 #endif
 }
@@ -549,18 +604,17 @@ void SidebarClass::Recalc(void)
 
     bool v1 = false;
 
-    for ( ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column ) {
+    for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
         v1 = Columns[column].Recalc();
-        if ( v1 ) {
+        if (v1) {
             break;
         }
     }
 
-    if ( v1 ) {
+    if (v1) {
         SidebarToRedraw = true;
         Flag_To_Redraw();
     }
-
 }
 
 BOOL SidebarClass::Activate(int mode)
@@ -580,34 +634,27 @@ int SidebarClass::Abandon_Production(RTTIType type, int a2)
 
 void SidebarClass::Zoom_Mode_Control(ModeControl mode)
 {
+    // TODO, check all bools in this function, OmniBlade?
+    // see pesudo in RA, not sure if i have the correct ones.
 
-    //TODO, check all bools in this function, OmniBlade?
-    //see pesudo in RA, not sure if i have the correct ones.
-
-    if ( !RadarActive ) {
-
-        if ( Session.Game_To_Play() != GAME_CAMPAIGN ) {
+    if (!RadarActive) {
+        if (Session.Game_To_Play() != GAME_CAMPAIGN) {
             Player_Names((RadarZoomed == false));
         }
 
-
-    } else if ( RadarDrawNames || Session.Game_To_Play() == GAME_CAMPAIGN ) {
-
-        if ( RadarDrawNames || !Spy_Next_House() ) {
+    } else if (RadarDrawNames || Session.Game_To_Play() == GAME_CAMPAIGN) {
+        if (RadarDrawNames || !Spy_Next_House()) {
             Zoom_Mode(Coord_To_Cell(DisplayPos));
         }
 
-    } else if ( !RadarPulseActive && !RadarZoomed ) {
-
+    } else if (!RadarPulseActive && !RadarZoomed) {
         Player_Names();
 
     } else {
-
         Player_Names(false);
 
-        if ( !Spy_Next_House() ) {
+        if (!Spy_Next_House()) {
             Zoom_Mode(Coord_To_Cell(DisplayPos));
         }
-
     }
 }

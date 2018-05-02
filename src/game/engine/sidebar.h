@@ -190,6 +190,7 @@ class SidebarClass : public PowerClass
 
 public:
     SidebarClass();
+    SidebarClass(SidebarClass const &that);
     SidebarClass(NoInitClass &);
 
     virtual void One_Time() override;
@@ -253,7 +254,6 @@ protected:
     static void *&SidebarShape;
     static void *&SidebarMiddleShape;
     static void *&SidebarBottomShape;
-    static void *SidebarAddonShape;//RAPP addition
 #else
     static SBGadgetClass Background;
     static ShapeButtonClass RepairButton;
@@ -263,8 +263,8 @@ protected:
     static void *SidebarShape;
     static void *SidebarMiddleShape;
     static void *SidebarBottomShape;
-    static void *SidebarAddonShape;
 #endif
+    static void *SidebarAddonShape;//RAPP addition
 };
 
 
