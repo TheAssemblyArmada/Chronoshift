@@ -22,6 +22,7 @@
 #include "session.h"
 
 void *&SidebarClass::SidebarShape = Make_Global<void *>(0x00689F0C);
+void **SidebarClass::StripClass::SpecialShapes = Make_Pointer<void *>(0x0068A46C);
 void *SidebarClass::SidebarAddonShape = NULL;
 
 SidebarClass::SBGadgetClass::SBGadgetClass() : GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false) {}
@@ -94,6 +95,7 @@ SidebarClass::StripClass::StripClass() :
 {
 }
 
+/*
 SidebarClass::StripClass::StripClass(StripClass const &that) :
     ProgressTimer(that.ProgressTimer),
     XPos(that.XPos),
@@ -116,6 +118,7 @@ SidebarClass::StripClass::StripClass(StripClass const &that) :
         new (&Entries[index]) SelectButtonType;
     }
 }
+*/
 
 SidebarClass::StripClass::StripClass(InitClass const &init) :
 
@@ -162,20 +165,13 @@ void SidebarClass::StripClass::One_Time(int column)
 
 void *SidebarClass::StripClass::Get_Special_Cameo(SpecialWeaponType super)
 {
-#ifndef RAPP_STANDALONE
-    void *(*func)(const StripClass *, SpecialWeaponType) =
-        reinterpret_cast<void *(*)(const StripClass *, SpecialWeaponType)>(0x0054DDE0);
-    return func(this, super);
-#else
     DEBUG_ASSERT(this != nullptr);
     if (super != SPECIAL_NONE && super < SPECIAL_COUNT) {
-        // return SpecialShapes[super];
+        return SpecialShapes[super];
     }
     return nullptr;
-#endif
 }
 
-// how much is MaxCameoPerColumn?
 void SidebarClass::StripClass::Init_Clear()
 {
     field_21 = -1;
@@ -217,6 +213,7 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
 
 void SidebarClass::StripClass::Reload_LogoShapes()
 {
+    // TODO Needs HouseClass
 #ifndef RAPP_STANDALONE
     void (*func)(const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E094);
     func(this);
@@ -242,7 +239,7 @@ void SidebarClass::StripClass::Deactivate()
 BOOL SidebarClass::StripClass::Add(RTTIType type, int id)
 {
 #ifndef RAPP_STANDALONE
-    BOOL (*func)
+    BOOL(*func)
     (const StripClass *, RTTIType, int) = reinterpret_cast<BOOL (*)(const StripClass *, RTTIType, int)>(0x0054E1F8);
     return func(this, type, id);
 #endif
@@ -277,8 +274,9 @@ void SidebarClass::StripClass::Flag_To_Redraw()
 
 BOOL SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
+    // TODO needs EventClass and FactoryClass
 #ifndef RAPP_STANDALONE
-    BOOL (*func)
+    BOOL(*func)
     (const StripClass *, KeyNumType &, int, int) =
         reinterpret_cast<BOOL (*)(const StripClass *, KeyNumType &, int, int)>(0x0054E2E8);
     return func(this, key, mouse_x, mouse_y);
@@ -287,6 +285,7 @@ BOOL SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void SidebarClass::StripClass::Draw_It(BOOL force_redraw)
 {
+    // TODO Needs HouseClass and TechnoClass
 #ifndef RAPP_STANDALONE
     void (*func)(const StripClass *, BOOL) = reinterpret_cast<void (*)(const StripClass *, BOOL)>(0x0054E6FC);
     func(this, force_redraw);
@@ -295,6 +294,7 @@ void SidebarClass::StripClass::Draw_It(BOOL force_redraw)
 
 BOOL SidebarClass::StripClass::Recalc()
 {
+    // TODO Needs HouseClass, HouseTypeClass, and TechnoClass
 #ifndef RAPP_STANDALONE
     BOOL (*func)(const StripClass *) = reinterpret_cast<BOOL (*)(const StripClass *)>(0x0054EB1C);
     return func(this);
@@ -304,7 +304,7 @@ BOOL SidebarClass::StripClass::Recalc()
 BOOL SidebarClass::StripClass::Factory_Link(int unk1, RTTIType type, int unk3)
 {
 #ifndef RAPP_STANDALONE
-    BOOL (*func)
+    BOOL(*func)
     (const StripClass *, int, RTTIType, int) =
         reinterpret_cast<BOOL (*)(const StripClass *, int, RTTIType, int)>(0x0054F3B4);
     return func(this, unk1, type, unk3);
@@ -313,6 +313,7 @@ BOOL SidebarClass::StripClass::Factory_Link(int unk1, RTTIType type, int unk3)
 
 int SidebarClass::StripClass::Abandon_Production(int unk1)
 {
+    // TODO Needs FactoryClass
 #ifndef RAPP_STANDALONE
     int (*func)(const StripClass *, int) = reinterpret_cast<int (*)(const StripClass *, int)>(0x0054F434);
     return func(this, unk1);
@@ -356,7 +357,6 @@ void SidebarClass::One_Time()
     if (SidebarAddonShape != NULL) {
         delete SidebarAddonShape;
     }
-
     SidebarAddonShape = MixFileClass<CCFileClass>::Retrieve("addon.shp");
 }
 

@@ -85,7 +85,7 @@ class SidebarClass : public PowerClass
 
     public:
         StripClass();
-        StripClass(StripClass const &that);
+        //StripClass(StripClass const &that);
         StripClass(InitClass const &init); // not a spelling mistake, this is in fact InitClass, not NoInitClass...
         ~StripClass();
 
@@ -110,18 +110,18 @@ class SidebarClass : public PowerClass
 #ifndef RAPP_STANDALONE
         static void *&LogoShapes;
         static void *&ClockShapes;
-        static void *&SpecialShapes;
+        static void **SpecialShapes;
         // this is an array of 2x4.
         // (1) left strip, cameo 1,2,3,4
         // (2) right strip, cameo 1,2,3,4
         // based on column count and row count, this will grow dynamicly.
-        static SelectClass &SelectButton;
+        static SelectClass *SelectButton;
 
         // these are the strip scrolling buttons, 2 pairs of up and down.
         // based on the column count, buttons will be allocated dynamicly.
-        static ShapeButtonClass &UpButton;
-        static ShapeButtonClass &DownButton;
-        static char &ClockTranslucentTable;
+        static ShapeButtonClass *UpButton;
+        static ShapeButtonClass *DownButton;
+        static char *ClockTranslucentTable;
 #else
         static void *LogoShapes;
         static void *ClockShapes;
