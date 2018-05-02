@@ -23,6 +23,7 @@
 #include "map.h"
 #include "source.h"
 #include "trect.h"
+#include "noinit.h"
 
 class BufferClass;
 
@@ -47,6 +48,7 @@ class DisplayClass : public MapClass
 
 public:
     DisplayClass();
+    DisplayClass(NoInitClass &noinit) : MapClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;

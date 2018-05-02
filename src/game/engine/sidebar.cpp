@@ -136,9 +136,6 @@ SidebarClass::StripClass::StripClass(InitClass const &init) :
     field_31(0),
     CameoCount(0)
 {
-    for (int index = 0; index < ARRAY_SIZE(Entries); ++index) {
-        new (&Entries[index]) SelectButtonType;
-    }
 }
 
 SidebarClass::StripClass::~StripClass() {}
@@ -304,25 +301,25 @@ BOOL SidebarClass::StripClass::Recalc()
 #endif
 }
 
-BOOL SidebarClass::StripClass::Factory_Link(int a1, RTTIType type, int a3)
+BOOL SidebarClass::StripClass::Factory_Link(int unk1, RTTIType type, int unk3)
 {
 #ifndef RAPP_STANDALONE
     BOOL (*func)
     (const StripClass *, int, RTTIType, int) =
         reinterpret_cast<BOOL (*)(const StripClass *, int, RTTIType, int)>(0x0054F3B4);
-    return func(this, a1, type, a3);
+    return func(this, unk1, type, unk3);
 #endif
 }
 
-int SidebarClass::StripClass::Abandon_Production(int a1)
+int SidebarClass::StripClass::Abandon_Production(int unk1)
 {
 #ifndef RAPP_STANDALONE
     int (*func)(const StripClass *, int) = reinterpret_cast<int (*)(const StripClass *, int)>(0x0054F434);
-    return func(this, a1);
+    return func(this, unk1);
 #endif
 }
 
-SidebarClass::SidebarClass(void) :
+SidebarClass::SidebarClass() :
     PowerClass(),
     SidebarIsDrawn(false),
     SidebarToRedraw(true),
@@ -335,14 +332,6 @@ SidebarClass::SidebarClass(void) :
         new (&Columns[column]) StripClass(init);
     }
 }
-
-/*
-SidebarClass::SidebarClass(NoInitClass const &noinit) :
-    PowerClass(noinit),
-    Columns()
-{
-}
-*/
 
 void SidebarClass::One_Time()
 {
@@ -433,7 +422,7 @@ void SidebarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
     PowerClass::Refresh_Cells(cellnum, overlap_list);
 }
 
-void SidebarClass::Reload_Sidebar(void)
+void SidebarClass::Reload_Sidebar()
 {
 // TODO Needs HouseClass
 #ifndef RAPP_STANDALONE
@@ -497,38 +486,38 @@ ColumnType SidebarClass::Which_Column(RTTIType type)
     }
 }
 
-BOOL SidebarClass::Factory_Link(int a1, RTTIType type, int a3)
+BOOL SidebarClass::Factory_Link(int unk1, RTTIType type, int unk3)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    return Columns[Which_Column(type)].Factory_Link(a1, type, a3);
+    return Columns[Which_Column(type)].Factory_Link(unk1, type, unk3);
 }
 
-BOOL SidebarClass::Activate_Repair(int a1)
+BOOL SidebarClass::Activate_Repair(int unk1)
 {
 #ifndef RAPP_STANDALONE
     BOOL (*func)(const SidebarClass *, int) = reinterpret_cast<BOOL (*)(const SidebarClass *, int)>(0x0054D464);
-    return func(this, a1);
+    return func(this, unk1);
 #endif
 }
 
-BOOL SidebarClass::Activate_Upgrade(int a1)
+BOOL SidebarClass::Activate_Upgrade(int unk1)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    BOOL v5 = SidebarToRedraw;
+    BOOL unk5 = SidebarToRedraw;
 
-    if (a1 == -1) {
-        a1 = (SidebarBit8 == 0);
+    if (unk1 == -1) {
+        unk1 = (SidebarBit8 == 0);
     }
 
-    if (a1 == 1) {
+    if (unk1 == 1) {
         SidebarBit8 = true;
     } else {
         SidebarBit8 = false;
     }
 
-    if (SidebarToRedraw != v5) {
+    if (SidebarToRedraw != unk5) {
         Flag_To_Redraw();
         SidebarToRedraw = true;
 
@@ -537,26 +526,26 @@ BOOL SidebarClass::Activate_Upgrade(int a1)
         }
     }
 
-    return v5;
+    return unk5;
 }
 
-BOOL SidebarClass::Activate_Demolish(int a1)
+BOOL SidebarClass::Activate_Demolish(int unk1)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    BOOL v5 = SidebarToRedraw;
+    BOOL unk5 = SidebarToRedraw;
 
-    if (a1 == -1) {
-        a1 = (SidebarBit16 == 0);
+    if (unk1 == -1) {
+        unk1 = (SidebarBit16 == 0);
     }
 
-    if (a1 == 1) {
+    if (unk1 == 1) {
         SidebarBit16 = true;
     } else {
         SidebarBit16 = false;
     }
 
-    if (SidebarToRedraw != v5) {
+    if (SidebarToRedraw != unk5) {
         Flag_To_Redraw();
         SidebarToRedraw = true;
 
@@ -565,7 +554,7 @@ BOOL SidebarClass::Activate_Demolish(int a1)
         }
     }
 
-    return v5;
+    return unk5;
 }
 
 BOOL SidebarClass::Add(RTTIType item, int id)
@@ -600,20 +589,20 @@ BOOL SidebarClass::Scroll(BOOL reverse, ColumnType column)
 #endif
 }
 
-void SidebarClass::Recalc(void)
+void SidebarClass::Recalc()
 {
     DEBUG_ASSERT(this != nullptr);
 
-    BOOL v1 = false;
+    BOOL unk1 = false;
 
     for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-        v1 = Columns[column].Recalc();
-        if (v1) {
+        unk1 = Columns[column].Recalc();
+        if (unk1) {
             break;
         }
     }
 
-    if (v1) {
+    if (unk1) {
         SidebarToRedraw = true;
         Flag_To_Redraw();
     }
@@ -627,11 +616,11 @@ BOOL SidebarClass::Activate(int mode)
 #endif
 }
 
-int SidebarClass::Abandon_Production(RTTIType type, int a2)
+int SidebarClass::Abandon_Production(RTTIType type, int unk2)
 {
     DEBUG_ASSERT(this != nullptr);
 
-    return Columns[Which_Column(type)].Abandon_Production(a2);
+    return Columns[Which_Column(type)].Abandon_Production(unk2);
 }
 
 void SidebarClass::Zoom_Mode_Control(ModeControl mode)

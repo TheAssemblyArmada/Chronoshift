@@ -103,8 +103,8 @@ class SidebarClass : public PowerClass
         BOOL AI(KeyNumType &key, int mouse_x, int mouse_y);
         void Draw_It(BOOL force_redraw = false);
         BOOL Recalc();
-        BOOL Factory_Link(int a1, RTTIType type, int a3);
-        int Abandon_Production(int a1);
+        BOOL Factory_Link(int unk1, RTTIType type, int unk3);
+        int Abandon_Production(int unk1);
 
     private:
 #ifndef RAPP_STANDALONE
@@ -190,7 +190,7 @@ class SidebarClass : public PowerClass
 
 public:
     SidebarClass();
-    SidebarClass(NoInitClass &);
+    SidebarClass(NoInitClass &noinit) : PowerClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;
@@ -202,10 +202,10 @@ public:
 
     void Reload_Sidebar();
     ColumnType Which_Column(RTTIType type);
-    BOOL Factory_Link(int a1, RTTIType type, int a3);
-    BOOL Activate_Repair(int a1);
-    BOOL Activate_Upgrade(int a1);
-    BOOL Activate_Demolish(int a1);
+    BOOL Factory_Link(int unk1, RTTIType type, int unk3);
+    BOOL Activate_Repair(int unk1);
+    BOOL Activate_Upgrade(int unk1);
+    BOOL Activate_Demolish(int unk1);
     BOOL Add(RTTIType type, int id);
     BOOL Scroll(BOOL reverse, ColumnType column);
     void Recalc();

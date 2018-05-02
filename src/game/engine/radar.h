@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "display.h"
+#include "noinit.h"
 
 enum RadarStateType
 {
@@ -53,6 +54,7 @@ class RadarClass : public DisplayClass
 
 public:
     RadarClass();
+    RadarClass(NoInitClass &noinit) : DisplayClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;

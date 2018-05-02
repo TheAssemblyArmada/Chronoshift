@@ -26,6 +26,7 @@
 #include "pipe.h"
 #include "straw.h"
 #include "vector.h"
+#include "noinit.h"
 
 class MapClass : public GameScreenClass
 {
@@ -35,6 +36,7 @@ class MapClass : public GameScreenClass
     };
 public:
     MapClass();
+    MapClass(NoInitClass &noinit) : GameScreenClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;

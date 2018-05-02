@@ -96,7 +96,7 @@ class GameScreenClass
 {
 public:
     GameScreenClass();
-    GameScreenClass(NoInitClass &init) {}
+    GameScreenClass(NoInitClass &noinit) {}
     ~GameScreenClass();
 
     // Base virtual methods.
