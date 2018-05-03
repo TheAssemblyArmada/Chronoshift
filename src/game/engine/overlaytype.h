@@ -101,12 +101,14 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    LandType Get_Land() { return Land; }
-    int Get_Damage_Levels() { return DamageLevels; }
-    int Get_Overlay_Strength() { return OverlayStrength; }
-    BOOL Is_Wall() { return Wall; }
-    BOOL Is_Crate() { return Crate; }
-
+    LandType Get_Land() const { return Land; }
+    int Get_Damage_Levels() const { return DamageLevels; }
+    int Get_Overlay_Strength() const { return OverlayStrength; }
+    BOOL Is_Wall() const { return Wall; }
+    BOOL Is_Crate() const { return Crate; }
+    BOOL Is_Radar_Visible() const { return RadarVisible; }
+    BOOL Is_Ore() const { return Ore; }
+#
     static void Init_Heap();
     static void Init(TheaterType theater);
     static void One_Time() {}
