@@ -81,6 +81,7 @@ public:
     void Set_YPos(int y) { YPos = y; }
     void Set_Width(int w) { Width = w; }
     void Set_Height(int h) { Height = h; }
+    void Set_Sticky(BOOL sticky) { IsSticky = sticky; }
     int Get_XPos() { return XPos; }
     int Get_YPos() { return YPos; }
     int Get_Width() { return Width; }
