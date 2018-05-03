@@ -78,9 +78,9 @@ public:
     void Render_Infantry(int16_t cellnum, int x, int y, int scale);
     void Render_Overlay(int16_t cellnum, int x, int y, int scale);
     void Zoom_Mode(int16_t cellnum);
-    BOOL const Is_Zoomable() const;
-    int const Click_In_Radar(int &x, int &y, BOOL set_coords = false) const;
-    BOOL const Cell_On_Radar(int16_t cellnum);
+    BOOL Is_Zoomable() const;
+    int Click_In_Radar(int &x, int &y, BOOL set_coords = false) const;
+    BOOL Cell_On_Radar(int16_t cellnum);
     void Set_Radar_Position(int16_t cellnum);
     int16_t Radar_Position();
     void Cell_XY_To_Radar_Pixel(int cell_x, int cell_y, int &x, int &y);
@@ -98,21 +98,21 @@ public:
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
     int16_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
-    static BOOL Hook_Is_Zoomable(RadarClass *ptr) { return ptr->Is_Zoomable(); }
-    static BOOL Hook_Cell_On_Radar(RadarClass *ptr, int16_t cellnum) { return ptr->Cell_On_Radar(cellnum); }
+    BOOL Hook_Is_Zoomable() { return Is_Zoomable(); }
+    BOOL Hook_Cell_On_Radar(int16_t cellnum) { return Cell_On_Radar(cellnum); }
 #endif
 
 protected:
-    int RadarButtonXPos; // 0xC88						//radar frame left?
-    int MinRadarX; // 0xC8C MinimapX			//radar map offset left?
-    int RadarButtonYPos; // 0xC90						//radar frame top?
-    int MinRadarY; // 0xC94 MinimapY			//radar map offset top?
-    int RadarButtonHeight; // 0xC98
-    int RadarButtonWidth; // 0xC9C
-    int MaxRadarWidth; // 0xCA0 MaxRadarWidth?
-    int MaxRadarHeight; // 0xCA4 MaxRadarHeight?
-    int field_CA8; // 0xCA8
-    int field_CAC; // 0xCAC
+    int RadarButtonXPos;
+    int MinRadarX;
+    int RadarButtonYPos;
+    int MinRadarY;
+    int RadarButtonHeight;
+    int RadarButtonWidth;
+    int MaxRadarWidth;
+    int MaxRadarHeight;
+    int field_CA8;
+    int field_CAC;
 
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
@@ -120,7 +120,6 @@ protected:
     {
         struct
         {
-            // bitfield 0xCB0
             bool RadarToRedraw : 1; // 1
             bool RadarCursorRedraw : 1; // 2
             bool RadarExists : 1; // 4 Low power?
@@ -129,7 +128,6 @@ protected:
             bool RadarDeactivating : 1; // 32 //RadarDeactivating?
             bool RadarJammed : 1; // 64
             bool RadarPulseActive : 1; // 128 this is also set when the radar is being jammed? see HouseClass::AI
-            // bitfield 0xCB1
             bool RadarZoomed : 1; // 1 Zoomed?
             bool RadarDrawNames : 1; // 2
             bool RadarDrawSpiedInfo : 1; // 4 tomsons said this does some type of redraw?
@@ -151,7 +149,6 @@ protected:
     bool RadarDeactivating; // 32 //RadarDeactivating?
     bool RadarJammed; // 64
     bool RadarPulseActive; // 128 this is also set when the radar is being jammed? see HouseClass::AI
-    // bitfield 0xCB1
     bool RadarZoomed; // 1 Zoomed?
     bool RadarDrawNames; // 2
     bool RadarDrawSpiedInfo; // 4 tomsons said this does some type of redraw?
@@ -161,18 +158,18 @@ protected:
     bool RadarBit2_64; // 64
     bool RadarBit2_128; // 128
 #endif
-    int RadarPulseFrame; // 0xCB4
+    int RadarPulseFrame;
     int RadarCursorFrame; // bytes relating to region box focus in animation.
-    int RadarAnimFrame; // 0xCBC
-    int MiniMapXOffset; // TODO, convert to rect
+    int RadarAnimFrame;
+    int MiniMapXOffset;
     int MiniMapYOffset;
     int MiniMapCellWidth;
     int MiniMapCellHeight;
     int16_t MiniMapCell;
     char padding[2]; // needed cause someone made MiniMapCell a int but Radar_Position returns it, its a short
-    TRect<int> MiniMap; // 0xCD4
-    int MiniMapScale; // 0xCE4 scale?
-    HousesType SpiedHouse; // HousesType
+    TRect<int> MiniMap;
+    int MiniMapScale;
+    HousesType SpiedHouse;
     int MiniMapCellCount;
     int16_t MiniMapCells[400];
 
@@ -189,7 +186,7 @@ protected:
     static void *RadarAnim;
     static void *RadarPulse;
     static void *RadarFrame;
-    static bool FullRedraw;
+    static BOOL FullRedraw;
     static GraphicBufferClass IconStage;
     static GraphicBufferClass TileStage;
 #endif

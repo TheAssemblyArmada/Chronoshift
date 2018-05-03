@@ -213,6 +213,10 @@ public:
     int Abandon_Production(RTTIType, int);
     void Zoom_Mode_Control(ModeControl mode);
 
+    BOOL Is_Sidebar_Drawn() const { return SidebarIsDrawn; }
+    void Disable_Zoom_Button() { ZoomButton.Disable(); }
+    void Enable_Zoom_Button() { ZoomButton.Enable(); }
+
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
 #endif

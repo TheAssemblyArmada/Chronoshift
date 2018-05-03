@@ -14,15 +14,21 @@
  *            LICENSE
  */
 #include "radar.h"
+#include "audio.h"
 #include "ccfileclass.h"
 #include "coord.h"
 #include "display.h"
+#include "drawshape.h"
 #include "globals.h"
 #include "iomap.h"
 #include "lists.h"
 #include "minmax.h"
 #include "mixfile.h"
+#include "session.h"
+#include "swap.h"
+#include "voc.h"
 
+#ifndef RAPP_STANDALONE
 RadarClass::RTacticalClass &RadarClass::RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
 void *&RadarClass::RadarAnim = Make_Global<void *>(0x00687908);
 void *&RadarClass::RadarPulse = Make_Global<void *>(0x0068790C);
@@ -30,6 +36,15 @@ void *&RadarClass::RadarFrame = Make_Global<void *>(0x00687910);
 BOOL &RadarClass::FullRedraw = Make_Global<BOOL>(0x00687914);
 GraphicBufferClass &RadarClass::IconStage = Make_Global<GraphicBufferClass>(0x00687918);
 GraphicBufferClass &RadarClass::TileStage = Make_Global<GraphicBufferClass>(0x006879BC);
+#else
+RadarClass::RTacticalClass &RadarClass::RadarButton;
+void *RadarClass::RadarAnim = nullptr;
+void *RadarClass::RadarPulse = nullptr;
+void *RadarClass::RadarFrame = nullptr;
+BOOL RadarClass::FullRedraw;
+GraphicBufferClass RadarClass::IconStage;
+GraphicBufferClass RadarClass::TileStage;
+#endif
 
 RadarClass::RTacticalClass::RTacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
@@ -50,7 +65,6 @@ BOOL RadarClass::RTacticalClass::Action(unsigned flags, KeyNumType &key)
 }
 
 RadarClass::RadarClass() :
-    DisplayClass(),
     RadarToRedraw(false),
     RadarCursorRedraw(false),
     RadarExists(false),
@@ -79,8 +93,6 @@ RadarClass::RadarClass() :
 
 void RadarClass::One_Time()
 {
-    DEBUG_ASSERT(this != nullptr);
-
     RadarButtonHeight = 160;
     RadarButtonWidth = 140;
     RadarButtonYPos = 14;
@@ -103,8 +115,6 @@ void RadarClass::One_Time()
 
 void RadarClass::Init_Clear()
 {
-    DEBUG_ASSERT(this != nullptr);
-
     DisplayClass::Init_Clear();
 
     RadarToRedraw = true;
@@ -114,7 +124,6 @@ void RadarClass::Init_Clear()
     RadarActivating = false;
     RadarDeactivating = false;
     RadarDrawNames = false;
-
     MiniMapCellCount = 0;
 
     if (MapCellWidth > 0 || MapCellHeight > 0) {
@@ -125,6 +134,7 @@ void RadarClass::Init_Clear()
 
 void RadarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
+    // TODO Needs SidebarClass.
 #ifndef RAPP_STANDALONE
     void (*func)(const RadarClass *, KeyNumType &, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, KeyNumType &, int, int)>(0x00530E6C);
@@ -134,6 +144,7 @@ void RadarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void RadarClass::Draw_It(BOOL force_redraw)
 {
+    // TODO Needs HouseClass.
 #ifndef RAPP_STANDALONE
     void (*func)(const RadarClass *, BOOL) = reinterpret_cast<void (*)(const RadarClass *, BOOL)>(0x0052DA14);
     func(this, force_redraw);
@@ -142,15 +153,12 @@ void RadarClass::Draw_It(BOOL force_redraw)
 
 void RadarClass::Set_Map_Dimensions(int x, int y, int w, int h)
 {
-    DEBUG_ASSERT(this != nullptr);
-
     Set_Radar_Position(Cell_From_XY(x, y));
     MapClass::Set_Map_Dimensions(x, y, w, h);
 }
 
 BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
     if (DisplayClass::Map_Cell(cellnum, house)) {
@@ -164,7 +172,6 @@ BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
 
 int16_t RadarClass::Click_Cell_Calc(int x, int y) const
 {
-    DEBUG_ASSERT(this != nullptr);
     switch (Click_In_Radar(x, y, true)) {
         case RADAR_CLICK_M1:
             return -1;
@@ -180,7 +187,6 @@ int16_t RadarClass::Click_Cell_Calc(int x, int y) const
 
 void RadarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
     if (overlap_list != nullptr) {
@@ -189,43 +195,44 @@ void RadarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
             Flag_To_Redraw();
         }
     }
+
     DisplayClass::Refresh_Cells(cellnum, overlap_list);
 }
 
 void RadarClass::Set_Tactical_Position(uint32_t location)
 {
-    DEBUG_ASSERT(this != nullptr);
     DisplayClass::Set_Tactical_Position(location);
     Set_Radar_Position(Coord_To_Cell(DisplayPos));
 }
 
 void RadarClass::Flag_Cell(int16_t cellnum)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DisplayClass::Flag_Cell(cellnum);
 }
 
 BOOL RadarClass::Jam_Cell(int16_t cellnum, HouseClass *house)
 {
+    // TODO Needs HouseClass.
 #ifndef RAPP_STANDALONE
     BOOL(*func)
     (const RadarClass *, int16_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const RadarClass *, int16_t, HouseClass *)>(0x005301F0);
     return func(this, cellnum, house);
 #endif
-    return 0;
+    return false;
 }
 
 BOOL RadarClass::UnJam_Cell(int16_t cellnum, HouseClass *house)
 {
+    // TODO Needs HouseClass.
 #ifndef RAPP_STANDALONE
     BOOL(*func)
     (const RadarClass *, int16_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const RadarClass *, int16_t, HouseClass *)>(0x00530274);
     return func(this, cellnum, house);
 #endif
-    return 0;
+    return false;
 }
 
 // Renamed from Get_Jammed
@@ -253,11 +260,9 @@ BOOL RadarClass::Is_Radar_Active()
     return func(this);
 #endif
     /*
-    DEBUG_ASSERT(this != nullptr);
-
     return RadarActive || PlayerPtr->GPSActive;
     */
-    return 0;
+    return false;
 }
 
 BOOL RadarClass::Is_Radar_Existing()
@@ -268,8 +273,6 @@ BOOL RadarClass::Is_Radar_Existing()
     return func(this);
 #endif
     /*
-    DEBUG_ASSERT(this != nullptr);
-
     return RadarExists || PlayerPtr->GPSActive;
     */
     return 0;
@@ -277,8 +280,6 @@ BOOL RadarClass::Is_Radar_Existing()
 
 void RadarClass::Activate_Pulse()
 {
-    DEBUG_ASSERT(this != nullptr);
-
     if (Is_Radar_Active()) {
         RadarPulseFrame = 0;
         RadarPulseActive = true;
@@ -293,11 +294,9 @@ void RadarClass::Radar_Pixel(int16_t cellnum)
     func(this, cellnum);
 #endif
     /*
-    DEBUG_ASSERT(this != nullptr);
-
     if (RadarActive && Map.SidebarIsDrawn && Cell_On_Radar(cellnum)) {
         RadarToRedraw = true;
-        Map[cellnum].Set_Bit1(true);
+        Array[cellnum].Set_Bit1(true);
 
         if (MiniMapCellCount < ARRAY_SIZE(MiniMapCells)) {
             MiniMapCells[MiniMapCellCount++] = cellnum;
@@ -308,10 +307,55 @@ void RadarClass::Radar_Pixel(int16_t cellnum)
 
 void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
 {
+    // TODO Needs TerrainClass
 #ifndef RAPP_STANDALONE
     void (*func)(const RadarClass *, int16_t, int, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, int16_t, int, int, int)>(0x0052E5BC);
     func(this, cellnum, x, y, scale);
+#else
+    //static TerrainClass const *terrains[3];	//not sure, but its there...
+    ObjectClass *objects[4];
+    int objectcount = 0;
+
+    ObjectClass *occupier = Array[cellnum].Get_Occupier();
+
+    if (occupier != nullptr && occupier->What_Am_I() == RTTI_TERRAIN) {
+        objects[objectcount++] = occupier;
+    }
+
+    for (int index = 0; index < OVERLAPPER_COUNT; ++index) {
+        ObjectClass *overlap = Array[cellnum].Get_Overlapper(index);
+
+        if (overlap != nullptr && overlap->What_Am_I() == RTTI_TERRAIN) {
+            objects[objectcount++] = overlap;
+        }
+    }
+
+    if (objectcount > 0) {
+
+        if (scale == 1) {
+            g_logicPage->Put_Pixel(x, y, 21);
+        } else {
+            // TODO, A simple sort algo?
+            for (int i = 0; i < objectcount - 1; ++i) {
+                for (int j = i + 1; j < objectcount; ++j) {
+                    if (ObjectClass::Sort_Y_Greater_Than(objects[i], objects[j])) {
+                        Swap(objects[i], objects[j]);
+                    }
+                }
+            }
+
+            // Render loop for objects
+            for (int index = 0; index < objectcount; ++index) {
+                char *icondata = reinterpret_cast<TerrainClass *>(objects[index])->Radar_Icon(cellnum);
+
+                if (icondata != nullptr) {
+                    IconStage.From_Buffer(0, 0, 3, 3, icondata);
+                    IconStage.Scale(*g_logicPage, 0, 0, x, y, 3, 3, MiniMapScale, MiniMapScale, true, FadingBrighten);
+                }
+            }
+        }
+    }
 #endif
 }
 
@@ -326,43 +370,52 @@ void RadarClass::Render_Infantry(int16_t cellnum, int x, int y, int scale)
 
 void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, int16_t, int, int, int) =
-        reinterpret_cast<void (*)(const RadarClass *, int16_t, int, int, int)>(0x0052EF8C);
-    func(this, cellnum, x, y, scale);
-#endif
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+
+    CellClass &cell = Array[cellnum];
+    if (cell.Get_Overlay() != OVERLAY_NONE) {
+        OverlayTypeClass &optr = OverlayTypeClass::As_Reference(cell.Get_Overlay());
+
+        if (optr.Is_Radar_Visible()) {
+            uint8_t *icondata = optr.Radar_Icon(cell.Get_Overlay_Frame());
+
+            if (icondata != nullptr) {
+                IconStage.From_Buffer(0, 0, 3, 3, icondata);
+
+                if (optr.Is_Ore()) {
+                    if (scale == 1) {
+                        g_logicPage->Put_Pixel(x, y, COLOR_GREY);
+                    } else {
+                        IconStage.Scale(*g_logicPage, 0, 0, x, y, 3, 3, scale, scale, true, FadingYellow);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void RadarClass::Zoom_Mode(int16_t cellnum)
 {
-    // TODO figure out Rect stuff
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, int16_t) = reinterpret_cast<void (*)(const RadarClass *, int16_t)>(0x0052F294);
-    func(this, cellnum);
-#endif
-    /*
-    DEBUG_ASSERT(this != nullptr);
-
     if (Is_Zoomable()) {
         RadarZoomed = !RadarZoomed;
     } else {
         RadarZoomed = true;
     }
 
-    MiniMap.X = 0;
-    MiniMap.Y = 0;
+    MiniMap.m_left = 0;
+    MiniMap.m_top = 0;
 
     int width;
     int height;
 
-    if (Zoomed) {
+    if (RadarZoomed) {
         MiniMapScale = 3;
         width = MaxRadarWidth / MiniMapScale;
         height = MaxRadarHeight / MiniMapScale;
     } else {
         int xscale = MaxRadarWidth / MapCellWidth;
         int yscale = MaxRadarHeight / MapCellHeight;
-        MiniMapScale = Bound(Min(xscale, yscale), 1, yscale);
+        MiniMapScale = Clamp(Min(xscale, yscale), 1, yscale);
         width = MapCellWidth;
         height = MapCellHeight;
     }
@@ -373,34 +426,28 @@ void RadarClass::Zoom_Mode(int16_t cellnum)
     int xremain = MaxRadarWidth - MiniMapScale * width;
     int yremain = MaxRadarHeight - MiniMapScale * height;
 
-    MiniMap.X = xremain / 2;
-    MiniMap.Y = yremain / 2;
-    MiniMap.Width = MaxRadarWidth - xremain;
-    MiniMap.Height = MaxRadarHeight - yremain;
+    MiniMap.m_left = xremain / 2;
+    MiniMap.m_top = yremain / 2;
+    MiniMap.m_right = MaxRadarWidth - xremain;
+    MiniMap.m_bottom = MaxRadarHeight - yremain;
     MiniMapCellWidth = width;
     MiniMapCellHeight = height;
 
     Set_Radar_Position(cellnum);
-
     RadarToRedraw = true;
-
     Flag_To_Redraw();
-
     FullRedraw = true;
-    */
 }
 
-BOOL const RadarClass::Is_Zoomable() const
+BOOL RadarClass::Is_Zoomable() const
 {
-    DEBUG_ASSERT(this != nullptr);
-
     int wratio = MaxRadarWidth / MapCellWidth;
     int hratio = MaxRadarHeight / MapCellHeight;
 
     return Max(1, Min(wratio, hratio)) != 3;
 }
 
-int const RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
+int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
     // TODO Requires SidebarClass for SidebarIsDrawn
 #ifndef RAPP_STANDALONE
@@ -409,8 +456,6 @@ int const RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
     return func(this, x, y, set_coords);
 #endif
     /*
-    DEBUG_ASSERT(this != nullptr);
-
     if (Map.SidebarIsDrawn && RadarActive && x - (MinRadarX + RadarButtonXPos) < MaxRadarWidth
         && y - (MinRadarY + RadarButtonYPos) < MaxRadarHeight) {
         int xpos = x - (MinRadarX + RadarButtonXPos) - MiniMap.X;
@@ -431,10 +476,8 @@ int const RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
     return 0;
 }
 
-BOOL const RadarClass::Cell_On_Radar(int16_t cellnum)
+BOOL RadarClass::Cell_On_Radar(int16_t cellnum)
 {
-    DEBUG_ASSERT(this != nullptr);
-
     if (cellnum > MAP_MAX_AREA) {
         return false;
     }
@@ -465,23 +508,14 @@ int16_t RadarClass::Radar_Position()
 
 void RadarClass::Cell_XY_To_Radar_Pixel(int cell_x, int cell_y, int &x, int &y)
 {
-    DEBUG_ASSERT(this != nullptr);
-
     x = MiniMapScale * (cell_x - MiniMapXOffset);
     y = MiniMapScale * (cell_y - MiniMapYOffset);
 }
 
 void RadarClass::Radar_Anim()
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *) = reinterpret_cast<void (*)(const RadarClass *)>(0x00530CF4);
-    func(this);
-#endif
-    /*
-    DEBUG_ASSERT(this != nullptr);
-
-    if (!RadarDrawNames && Map.SidebarIsDrawn) {
-        Set_Logic_Page(&g_hidPage);
+    if (!RadarDrawNames && Map.Is_Sidebar_Drawn()) {
+        GraphicViewPortClass *old_vp = Set_Logic_Page(&g_hidPage);
 
         GraphicViewPortClass vp(g_logicPage->Get_Graphic_Buffer(),
             MinRadarX + RadarButtonXPos + g_logicPage->Get_XPos(),
@@ -500,23 +534,112 @@ void RadarClass::Radar_Anim()
 
         CC_Draw_Shape(RadarAnim, RadarAnimFrame, RadarButtonXPos, RadarButtonYPos + 2);
 
-        Restore_Logic_Page();
+        Set_Logic_Page(old_vp);
     }
-    */
 }
 
 void RadarClass::Radar_Cursor(BOOL redraw)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, BOOL) = reinterpret_cast<void (*)(const RadarClass *, BOOL)>(0x00530300);
-    func(this, redraw);
-#endif
+#define RADAR_CURSOR_SIZE 6
+    static int16_t _last_pos = -1;
+    static int _last_frame = -1;
+
+    int16_t cell = Coord_To_Cell(DisplayPos);
+    int cell_x = Cell_Get_X(cell);
+    int cell_y = Cell_Get_Y(cell);
+
+    if (cell == -1 || cell != _last_pos || RadarCursorFrame != _last_frame || redraw) {
+        int pixel_left;
+        int pixel_top;
+        int pixel_right;
+        int pixel_btm;
+
+        // Unmarks cells marked in the last frame if it changed.
+        if (_last_pos != -1) {
+
+            int last_x = Cell_Get_X(_last_pos);
+            int last_y = Cell_Get_Y(_last_pos);
+
+            Cell_XY_To_Radar_Pixel(last_x, last_y, pixel_left, pixel_top);
+
+            Cell_XY_To_Radar_Pixel(
+                last_x + DisplayWidth,
+                last_y + DisplayHeight,
+                pixel_right,
+                pixel_btm
+            );
+
+            --pixel_right;
+            --pixel_btm;
+
+            pixel_left -= _last_frame;
+            pixel_top -= _last_frame;
+            pixel_right += _last_frame;
+            pixel_btm += _last_frame;
+
+            Mark_Radar(pixel_left, pixel_top, pixel_right, pixel_btm, false, RADAR_CURSOR_SIZE);
+        }
+
+        // Get extents of the cursor and mark any cells where their pixel will be covered by the cursor and so shouldn't be redrawn.
+        Cell_XY_To_Radar_Pixel(cell_x, cell_y, pixel_left, pixel_top);
+
+        Cell_XY_To_Radar_Pixel(
+            cell_x + DisplayWidth,
+            cell_y + DisplayHeight,
+            pixel_right,
+            pixel_btm
+        );
+
+        --pixel_right;
+        --pixel_btm;
+
+        pixel_left -= RadarCursorFrame;
+        pixel_top -= RadarCursorFrame;
+        pixel_right += RadarCursorFrame;
+        pixel_btm += RadarCursorFrame;
+
+        Mark_Radar(pixel_left, pixel_top, pixel_right, pixel_btm, true, RADAR_CURSOR_SIZE);
+
+        GraphicViewPortClass *old = Set_Logic_Page(&g_hidPage);
+
+        GraphicViewPortClass gvp(
+            g_logicPage->Get_Graphic_Buffer(),
+            g_logicPage->Get_XPos() + MinRadarX + RadarButtonXPos + MiniMap.m_left,
+            g_logicPage->Get_YPos() + MinRadarY + RadarButtonYPos + MiniMap.m_top,
+            MiniMap.m_right,
+            MiniMap.m_bottom
+        );
+
+        // Top left
+        gvp.Draw_Line(pixel_left, pixel_top, pixel_left + RADAR_CURSOR_SIZE, pixel_top, COLOR_LTGREEN);
+        gvp.Draw_Line(pixel_left, pixel_top, pixel_left, pixel_top + RADAR_CURSOR_SIZE, COLOR_LTGREEN);
+
+        // Top right
+        gvp.Draw_Line(pixel_right - RADAR_CURSOR_SIZE, pixel_top, pixel_right, pixel_top, COLOR_LTGREEN);
+        gvp.Draw_Line(pixel_right, pixel_top, pixel_right, pixel_top + RADAR_CURSOR_SIZE, COLOR_LTGREEN);
+
+        // Bottom left
+        gvp.Draw_Line(pixel_left, pixel_btm - RADAR_CURSOR_SIZE, pixel_left, pixel_btm, COLOR_LTGREEN);
+        gvp.Draw_Line(pixel_left, pixel_btm, pixel_left + RADAR_CURSOR_SIZE, pixel_btm, COLOR_LTGREEN);
+
+        // Bottom right
+        gvp.Draw_Line(pixel_right, pixel_btm - RADAR_CURSOR_SIZE, pixel_right, pixel_btm, COLOR_LTGREEN);
+        gvp.Draw_Line(pixel_right - RADAR_CURSOR_SIZE, pixel_btm, pixel_right, pixel_btm, COLOR_LTGREEN);
+
+        Set_Logic_Page(old);
+
+        _last_pos = cell;
+        _last_frame = RadarCursorFrame;
+
+        RadarCursorRedraw = false;
+    }
+
+    // Undefine line length so not misused elsewhere.
+#undef RADAR_CURSOR_SIZE
 }
 
 void RadarClass::Player_Names(BOOL draw)
 {
-    DEBUG_ASSERT(this != nullptr);
-
     RadarDrawNames = draw;
     Flag_To_Redraw(true);
 }
@@ -539,8 +662,6 @@ void RadarClass::Draw_Names()
 
 void RadarClass::Mark_Radar(int left, int top, int right, int bottom, BOOL mark, int size)
 {
-    DEBUG_ASSERT(this != nullptr);
-
     int l_adj = (left / MiniMapScale) + MiniMapXOffset;
     int t_adj = (top / MiniMapScale) + MiniMapYOffset;
     int r_adj = (right / MiniMapScale) + MiniMapXOffset;
@@ -561,17 +682,12 @@ void RadarClass::Mark_Radar(int left, int top, int right, int bottom, BOOL mark,
 
 void RadarClass::Cursor_Cell(int16_t cellnum, BOOL mark)
 {
-    DEBUG_ASSERT(this != nullptr);
-
     if (Cell_On_Radar(cellnum)) {
-        CellClass *cell = &Map[cellnum];
+        CellClass &cell = Array[cellnum];
 
-        DEBUG_ASSERT(cell != nullptr);
-
-        // If the cell isn't already marked the same way we want, change it and
-        // redraw if situation warrants.
-        if (cell->Get_Bit32() != mark) {
-            cell->Set_Bit32(mark);
+        // If the cell isn't already marked the same way we want, change it and redraw if situation warrants.
+        if (cell.Get_Bit32() != mark) {
+            cell.Set_Bit32(mark);
 
             if (!mark) {
                 Plot_Radar_Pixel(cellnum);
@@ -590,10 +706,121 @@ void RadarClass::Plot_Radar_Pixel(int16_t cellnum)
 
 int RadarClass::Radar_Activate(int mode)
 {
+    // TODO
 #ifndef RAPP_STANDALONE
     int (*func)(const RadarClass *, int) = reinterpret_cast<int (*)(const RadarClass *, int)>(0x0052D790);
     return func(this, mode);
 #endif
+    bool is_active = RadarActive;
+
+    switch (mode) {
+
+        default:
+        case RADAR_M1:	//Toggle active and inactive
+            if (RadarActive) {
+                Radar_Activate(RADAR_0);
+                DEBUG_LOG("Radar: TacticalMap availability is off\n");
+            } else {
+                Radar_Activate(RADAR_1);
+                DEBUG_LOG("Radar: TacticalMap availability is on\n");
+            }
+
+            break;
+
+        case RADAR_0: //Turn radar off
+            if (!Map.Is_Sidebar_Drawn()) {
+                Radar_Activate(RADAR_2);
+
+                return is_active;
+            }
+
+            if (!RadarActive || RadarDeactivating) {
+                return is_active;
+            }
+
+            Sound_Effect(VOC_RADAR_OFF, fixed::_1_1, 1, 0, HOUSES_NONE);
+
+            DEBUG_LOG("Radar: DEACTIVING\n");
+
+            RadarDeactivating = true;
+            RadarActive = false;
+
+            if (RadarActivating) {
+                RadarActivating = false;
+            } else {
+                RadarAnimFrame = 22;
+            }
+
+            return is_active;
+
+        case RADAR_1: //Turn radar on
+            if (!Map.Is_Sidebar_Drawn()) {
+                Radar_Activate(RADAR_3);
+
+                return is_active;
+            }
+
+            if (RadarActivating || RadarActive) {
+                return is_active;
+            }
+
+            Sound_Effect(VOC_RADAR_ON, fixed::_1_1, 1, 0, HOUSES_NONE);
+
+            DEBUG_LOG("Radar: ACTIVATING\n");
+
+            RadarActivating = true;
+
+            if (RadarDeactivating) {
+                RadarDeactivating = false;
+            } else {
+                RadarAnimFrame = RadarExists ? 41 : 0;
+            }
+
+            return is_active;
+
+        case RADAR_2: // Radar off no side bar.
+            if (Session.Game_To_Play() != GAME_CAMPAIGN) {
+                Map.Enable_Zoom_Button();
+            } else {
+                Map.Disable_Zoom_Button();
+            }
+
+            RadarActivating = false;
+            RadarDeactivating = false;
+
+            break;
+
+        case RADAR_3: // Radar on no side bar
+            if (Session.Game_To_Play() == GAME_CAMPAIGN && Is_Zoomable()) {
+                Map.Enable_Zoom_Button();
+            }
+
+            RadarActive = true;
+            RadarActivating = false;
+            RadarDeactivating = false;
+
+            break;
+
+        case RADAR_4: // Remove radar
+            RadarExists = false;
+            RadarActive = false;
+            RadarActivating = false;
+            RadarDeactivating = false;
+            Flag_To_Redraw();
+            RadarToRedraw = true;
+
+            break;
+
+    }
+
+    if (is_active != RadarActive) {
+        RadarToRedraw = true;
+        Flag_To_Redraw();
+    }
+
+    FullRedraw = RadarActive;
+
+    return is_active;
 }
 
 BOOL RadarClass::Spy_Next_House()
@@ -604,8 +831,6 @@ BOOL RadarClass::Spy_Next_House()
     return func(this);
 #endif
     /*
-    DEBUG_ASSERT(this != nullptr);
-
     DrawNames = false;
     RadarToRedraw = true;
 
