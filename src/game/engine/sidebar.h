@@ -28,15 +28,10 @@
 enum ColumnType
 {
     COLUMN_NONE = -1,
-
     COLUMN_FIRST = 0,
-
     COLUMN_LEFT = 0,
-    COLUMN_RIGHT = 1,
-
-    COLUMN_LAST = 1,
-
-    COLUMN_COUNT = 2
+    COLUMN_RIGHT,
+    COLUMN_COUNT,
 };
 
 DEFINE_ENUMERATION_OPERATORS(ColumnType);
@@ -63,10 +58,15 @@ class SidebarClass : public PowerClass
 
         virtual BOOL Action(unsigned flags, KeyNumType &key) override;
     };
+
     class StripClass
     {
         friend class SidebarClass;
 
+        enum
+        {
+            STRIP_ROWS = 4,
+        };
     public:
         class SelectClass : public ControlClass
         {
@@ -85,9 +85,8 @@ class SidebarClass : public PowerClass
 
     public:
         StripClass();
-        //StripClass(StripClass const &that);
-        StripClass(InitClass const &init); // not a spelling mistake, this is in fact InitClass, not NoInitClass...
-        ~StripClass();
+        StripClass(InitClass const &init);
+        ~StripClass() {}
 
         void One_Time(int column);
         void *Get_Special_Cameo(SpecialWeaponType super);
@@ -103,7 +102,7 @@ class SidebarClass : public PowerClass
         BOOL AI(KeyNumType &key, int mouse_x, int mouse_y);
         void Draw_It(BOOL force_redraw = false);
         BOOL Recalc();
-        BOOL Factory_Link(int unk1, RTTIType type, int unk3);
+        BOOL Factory_Link(int factory_id, RTTIType type, int id);
         int Abandon_Production(int unk1);
 
     private:
@@ -202,10 +201,10 @@ public:
 
     void Reload_Sidebar();
     ColumnType Which_Column(RTTIType type);
-    BOOL Factory_Link(int unk1, RTTIType type, int unk3);
-    BOOL Activate_Repair(int unk1);
-    BOOL Activate_Upgrade(int unk1);
-    BOOL Activate_Demolish(int unk1);
+    BOOL Factory_Link(int factory_id, RTTIType type, int id);
+    BOOL Activate_Repair(int state);
+    BOOL Activate_Upgrade(int state);
+    BOOL Activate_Demolish(int state);
     BOOL Add(RTTIType type, int id);
     BOOL Scroll(BOOL reverse, ColumnType column);
     void Recalc();
@@ -229,13 +228,11 @@ protected:
     {
         struct
         {
-            // bitfield 0x15F6
-            bool SidebarIsDrawn : 1; // when set to false, the sidebar is not drawn.(related to the sidebar TAB hidding in
-                                     // C&C)
-            bool SidebarToRedraw : 1; // buttons to redraw?
-            bool SidebarBit4 : 1; // repair active
-            bool SidebarBit8 : 1; // upgrade active
-            bool SidebarBit16 : 1; // demolish active
+            bool SidebarIsDrawn : 1; // 1 when set to false, the sidebar is not drawn (for sidebar TAB hidding in C&C).
+            bool SidebarToRedraw : 1; // 2 buttons to redraw?
+            bool SidebarBit4 : 1; // 4 repair active
+            bool SidebarBit8 : 1; // 8 upgrade active
+            bool SidebarBit16 : 1; // 16 demolish active
         };
         int Bitfield;
     };
