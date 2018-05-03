@@ -16,6 +16,7 @@
 #include "power.h"
 #include "ccfileclass.h"
 #include "coord.h"
+#include "drawshape.h"
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
@@ -93,14 +94,14 @@ void PowerClass::Init_Clear(void)
 
 void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    //Needs SidebarClass
+    //Needs HouseClass
 #ifndef RAPP_STANDALONE
     void (*func)(const PowerClass *, KeyNumType &, int, int) =
         reinterpret_cast<void (*)(const PowerClass *, KeyNumType &, int, int)>(0x00527C60);
     func(this, key, mouse_x, mouse_y);
 #endif
     /*
-    if (Map.SidebarIsDrawn) {
+    if (Map.Is_Sidebar_Drawn()) {
         int prev_drain = DrainHeight;
         int prev_output = OutputHeight;
 
@@ -130,8 +131,7 @@ void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             }
         }
 
-        // Wobble when settling at new drain level after gaining/loosing some
-        // power draining structure.
+        // Wobble when settling at new drain level after gaining/loosing some power draining structure.
         if (DrainMod > 0 && DrainHeight == NewDrainHeight) {
             PowerToRedraw = true;
             Flag_To_Redraw();
@@ -140,8 +140,7 @@ void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             DrainHeight += DrainInc;
         }
 
-        // Wobble when settling at new output level after gaining/loosing some
-        // power generating structure.
+        // Wobble when settling at new output level after gaining/loosing some power generating structure.
         if (OutputMod > 0 && OutputHeight == NewOutputHeight) {
             PowerToRedraw = true;
             Flag_To_Redraw();
@@ -167,15 +166,15 @@ void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void PowerClass::Draw_It(BOOL force_redraw)
 {
-    //Needs SidebarClass
+    //Needs HouseClass
 #ifndef RAPP_STANDALONE
     void (*func)(const PowerClass *, BOOL) = reinterpret_cast<void (*)(const PowerClass *, BOOL)>(0x0052762C);
     func(this, force_redraw);
 #endif
-/*
+    /*
     static int _modtable[] = { 0, -1, 0, 1, 0, -1, -2, -1, 0, 1, 2, 1, 0 };
 
-    if ((PowerToRedraw || force_redraw) && Map.SidebarIsDrawn) {
+    if ((PowerToRedraw || force_redraw) && Map.Is_Sidebar_Drawn()) {
         PowerToRedraw = false;
 
         ShapeFlags flags = SHAPE_NORMAL;
@@ -186,17 +185,17 @@ void PowerClass::Draw_It(BOOL force_redraw)
         int drain_height = 0;
 
         // If timer is set, flash the bar red?
-        if (!FlashTimer.Has_Expired() && FlashTimer.Remaining() > 1) {
+        if (!FlashTimer.Has_Expired() && FlashTimer.Time() > 1) {
             // If remaining time mod 3 is odd?
-            if ((FlashTimer.Remaining() % 3) & 1) {
+            if ((FlashTimer.Time() % 3) & 1) {
                 flags |= SHAPE_FADING;
                 fadingtable = DisplayClass::FadingRed;
             }
         }
 
         // Draw the power bar background shapes
-        ShapeDrawer.Draw_Shape(PowerBarShape, 0, PowerButton.XPos, 176, WINDOW_0, flags | SHAPE_WIN_REL, fadingtable);
-        ShapeDrawer.Draw_Shape(PowerBarShape, 1, PowerButton.XPos, 288, WINDOW_0, flags | SHAPE_WIN_REL, fadingtable);
+        CC_Draw_Shape(PowerBarShape, 0, PowerButton.Get_XPos(), 176, WINDOW_0, flags | SHAPE_WIN_REL, fadingtable);
+        CC_Draw_Shape(PowerBarShape, 1, PowerButton.Get_XPos(), 288, WINDOW_0, flags | SHAPE_WIN_REL, fadingtable);
 
         if (OutputHeight == NewOutputHeight) {
             output_height = OutputHeight + _modtable[OutputMod] * OutputInc;
@@ -210,46 +209,46 @@ void PowerClass::Draw_It(BOOL force_redraw)
             drain_height = DrainHeight;
         }
 
-        output_height = Bound(output_height, 0, POWER_MAX_HEIGHT);
-        drain_height = Bound(drain_height, 0, POWER_MAX_HEIGHT);
+        output_height = Clamp(output_height, 0, POWER_MAX_HEIGHT);
+        drain_height = Clamp(drain_height, 0, POWER_MAX_HEIGHT);
 
         // If we actually have some power
         if (output_height > 0) {
-            uint8 lcolor = G_COLOR_LTGREEN;
-            uint8 dcolor = G_COLOR_GREEN;
+            uint8_t lcolor = COLOR_LTGREEN;
+            uint8_t dcolor = COLOR_GREEN;
 
             // Slightly low power
             if (PlayerPtr->Power <= PlayerPtr->Drain) {
-                lcolor = G_COLOR_211; // lightish orange
-                dcolor = G_COLOR_214; // darkish orange
+                lcolor = 211; // lightish orange
+                dcolor = 214; // darkish orange
             }
 
             // Very low power
             if ((PlayerPtr->Power * 2) < PlayerPtr->Drain) {
-                lcolor = G_COLOR_230; // lightish red
-                dcolor = G_COLOR_235; // darkish red
+                lcolor = 230; // lightish red
+                dcolor = 235; // darkish red
             }
 
             output_height = (output_height / 107) * 153;
             drain_height = (drain_height / 107) * 153;
 
             // Draw the power bar, two similar color lines next to each other
-            g_logicPage->Fill_Rect(PowerButton.XPos + 10, output_height - 351, PowerButton.XPos + 11, 351, lcolor);
-            g_logicPage->Fill_Rect(PowerButton.XPos + 12, output_height - 351, PowerButton.XPos + 13, 351, dcolor);
+            g_logicPage->Fill_Rect(PowerButton.Get_XPos() + 10, output_height - 351, PowerButton.Get_XPos() + 11, 351, lcolor);
+            g_logicPage->Fill_Rect(PowerButton.Get_XPos() + 12, output_height - 351, PowerButton.Get_XPos() + 13, 351, dcolor);
         }
 
         // Draw the power level indicator.
-        ShapeDrawer.Draw_Shape(
-            PowerShape, 0, PowerButton.XPos + 2, (drain_height + 4) - 351, WINDOW_0, flags | SHAPE_WIN_REL);
+        CC_Draw_Shape(
+            PowerShape, 0, PowerButton.Get_XPos() + 2, (drain_height + 4) - 351, WINDOW_0, flags | SHAPE_WIN_REL);
         PowerToRedraw = false;
     }
+
     RadarClass::Draw_It(force_redraw);
     */
 }
 
 void PowerClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
     if (overlap_list != nullptr) {

@@ -59,27 +59,25 @@ protected:
     {
         struct
         {
-            // bitfield 0x100D
             bool PowerToRedraw : 1; // 1
         };
         int Bitfield;
     };
 #else
-    // bitfield 0x100D
     bool PowerToRedraw; // 1
 #endif
     //might not be BTC, but TCountDownTimerClass<FrameTimerClass>
-    BasicTimerClass<FrameTimerClass> FlashTimer;		// 0x1011
-    int Drain;		// 0x101A
-    int Output;		// 0x101E
-    int NewDrainHeight;		// 0x1022
-    int NewOutputHeight;		// 0x1026
-    int DrainHeight;		// 0x102A
-    int OutputHeight;		// 0x102E
-    int DrainMod;		// 0x1032
-    int OutputMod;		// 0x1036
-    int16_t OutputInc;	// 0x103A
-    int16_t DrainInc;	// 0x103C
+    BasicTimerClass<FrameTimerClass> FlashTimer;
+    int Drain;
+    int Output;
+    int NewDrainHeight;
+    int NewOutputHeight;
+    int DrainHeight;
+    int OutputHeight;
+    int DrainMod;
+    int OutputMod;
+    int16_t OutputInc;
+    int16_t DrainInc;
 
 #ifndef RAPP_STANDALONE
     static PowerButtonClass &PowerButton;
