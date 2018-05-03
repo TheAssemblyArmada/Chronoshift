@@ -35,6 +35,8 @@ public:
     void Turn_On();
     void Turn_Off();
 
+    void Set_Toggle_Disabled(BOOL disabled) { ToggleDisabled = disabled; }
+
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
 #endif
