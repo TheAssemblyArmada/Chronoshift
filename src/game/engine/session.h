@@ -94,9 +94,10 @@ public:
     SessionClass();
 
     MessageListClass &Get_Messages() { return Messages; }
-    GameEnum Game_To_Play() { return GameToPlay; }
-    BOOL MPlayer_Goodies_Allowed() { return MPlayerGoodies; }
-    BOOL MPlayer_Ore_Growth() { return MPlayerOre; }
+    GameEnum Game_To_Play() const { return GameToPlay; }
+    BOOL MPlayer_Goodies_Allowed() const { return MPlayerGoodies; }
+    BOOL MPlayer_Ore_Growth() const { return MPlayerOre; }
+    BOOL Playback_Game() const { return PlaybackGame; }
 
 private:
     GameEnum GameToPlay;
