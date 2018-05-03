@@ -19,14 +19,14 @@
 #define IOMAP_H
 
 #include "always.h"
-#include "display.h"
+#include "sidebar.h"
 
 // TODO Update this as additional layers of the hierachy are implemented.
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
-extern DisplayClass &Map;
+extern SidebarClass &Map;
 #else
-extern DisplayClass Map;
+extern SidebarClass Map;
 #endif
 
 #endif // IOMAP_H
