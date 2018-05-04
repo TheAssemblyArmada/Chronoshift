@@ -290,11 +290,13 @@ void OverlayTypeClass::Draw_It(int x, int y, int frame) const
 #endif
 }
 
-uint8_t *OverlayTypeClass::Radar_Icon(int a1) const
+uint8_t *OverlayTypeClass::Radar_Icon(int frame) const
 {
     if (RadarIconData != nullptr) {
         // TODO, correct casting, find out what stuct it is casting to.
-        return ((uint8_t *)RadarIconData + 9 * a1 + 2);
+        // Each radar icon is 3 x 3 bytes (hence 9 * frame number to get to relevant frame).
+        // + 2 appears to account for some kind of header for when the data is generated.
+        return (static_cast<uint8_t *>(RadarIconData) + 9 * frame + 2);
     }
 
     return nullptr;
