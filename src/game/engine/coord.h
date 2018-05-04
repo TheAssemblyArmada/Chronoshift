@@ -151,7 +151,12 @@ inline uint32_t Coord_From_Pixel_XY(int x, int y)
 
 inline uint8_t Lepton_To_Cell_Coord(int16_t lepton)
 {
-    return (lepton >> 8) & 0xFF;
+    return ((uint16_t)lepton >> 8) & 0xFF;
+}
+
+inline uint8_t Lepton_Sub_Cell(int16_t lepton)
+{
+    return lepton & 0xFF;
 }
 
 int Distance(uint32_t coord1, uint32_t coord2);

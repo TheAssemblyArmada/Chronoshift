@@ -177,6 +177,7 @@ protected:
     HousesType SpiedHouse;
     int MiniMapCellCount;
     int16_t MiniMapCells[MINI_MAP_CELLS];
+    static GraphicBufferClass IconStage;
 
 #ifndef RAPP_STANDALONE
     static RTacticalClass &RadarButton;
@@ -184,7 +185,6 @@ protected:
     static void *&RadarPulse;
     static void *&RadarFrame;
     static BOOL &FullRedraw;
-    static GraphicBufferClass &IconStage;
     static GraphicBufferClass &TileStage;
 #else
     static TacticalClass RadarButton;
@@ -192,7 +192,6 @@ protected:
     static void *RadarPulse;
     static void *RadarFrame;
     static BOOL FullRedraw;
-    static GraphicBufferClass IconStage;
     static GraphicBufferClass TileStage;
 #endif
 };
@@ -218,8 +217,8 @@ inline void RadarClass::Hook_Me()
     Hook_Function(0x0053210C, *RadarClass::Player_Names); // seems to work
     Hook_Function(0x0052FF40, *RadarClass::Mark_Radar); // seems to work
     Hook_Function(0x0052FED8, *RadarClass::Cursor_Cell); // seems to work
-    //Hook_Function(0x0052EF8C, *RadarClass::Render_Overlay); // crashes
-    //Hook_Function(0x00530300, *RadarClass::Radar_Cursor); // draws cornder of box
+    Hook_Function(0x0052EF8C, *RadarClass::Render_Overlay); // crashes
+    Hook_Function(0x00530300, *RadarClass::Radar_Cursor); // works
     //Hook_Function(0x0052F294, *RadarClass::Zoom_Mode); // 
     //Hook_Function(0x0052FCC0, *RadarClass::Radar_Pixel); // 
     //Hook_Function(0x0052FD3C, *RadarClass::Click_In_Radar); //

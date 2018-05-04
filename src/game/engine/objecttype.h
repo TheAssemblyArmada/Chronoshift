@@ -47,7 +47,8 @@ public:
     virtual const int16_t *Overlap_List() const;
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false, HousesType house = HOUSES_NONE) const;
     virtual void *Get_Cameo_Data() const { return nullptr; };
-    virtual BOOL Read_INI(CCINIClass &ini);
+
+    BOOL Read_INI(CCINIClass &ini);
 
     BOOL Is_Crushable() { return Crushable; }
     BOOL Is_Selectable() { return Selectable; }

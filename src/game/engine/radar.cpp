@@ -34,7 +34,6 @@ void *&RadarClass::RadarAnim = Make_Global<void *>(0x00687908);
 void *&RadarClass::RadarPulse = Make_Global<void *>(0x0068790C);
 void *&RadarClass::RadarFrame = Make_Global<void *>(0x00687910);
 BOOL &RadarClass::FullRedraw = Make_Global<BOOL>(0x00687914);
-GraphicBufferClass &RadarClass::IconStage = Make_Global<GraphicBufferClass>(0x00687918);
 GraphicBufferClass &RadarClass::TileStage = Make_Global<GraphicBufferClass>(0x006879BC);
 #else
 RadarClass::RTacticalClass &RadarClass::RadarButton;
@@ -42,9 +41,10 @@ void *RadarClass::RadarAnim = nullptr;
 void *RadarClass::RadarPulse = nullptr;
 void *RadarClass::RadarFrame = nullptr;
 BOOL RadarClass::FullRedraw;
-GraphicBufferClass RadarClass::IconStage;
 GraphicBufferClass RadarClass::TileStage;
 #endif
+
+GraphicBufferClass RadarClass::IconStage(3, 3);
 
 RadarClass::RTacticalClass::RTacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
@@ -364,15 +364,14 @@ void RadarClass::Render_Infantry(int16_t cellnum, int x, int y, int scale)
 void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-
     CellClass &cell = Array[cellnum];
 
     if (cell.Get_Overlay() != OVERLAY_NONE) {
         OverlayTypeClass &optr = OverlayTypeClass::As_Reference(cell.Get_Overlay());
-
+        
         if (optr.Is_Radar_Visible()) {
             uint8_t *icondata = optr.Radar_Icon(cell.Get_Overlay_Frame());
-
+            
             if (icondata != nullptr) {
                 IconStage.From_Buffer(0, 0, 3, 3, icondata);
 
@@ -535,12 +534,14 @@ void RadarClass::Radar_Cursor(BOOL redraw)
     int16_t cell = Coord_To_Cell(DisplayPos);
     int cell_x = Cell_Get_X(cell);
     int cell_y = Cell_Get_Y(cell);
+    int cell_w = 0;
+    int cell_h = 0;
 
     if (cell == -1 || cell != _last_pos || RadarCursorFrame != _last_frame || redraw) {
-        int pixel_left;
-        int pixel_top;
-        int pixel_right;
-        int pixel_btm;
+        int pixel_left = 0;
+        int pixel_top = 0;
+        int pixel_right = 0;
+        int pixel_btm = 0;
 
         // Unmarks cells marked in the last frame if it changed.
         if (_last_pos != -1) {
@@ -550,9 +551,13 @@ void RadarClass::Radar_Cursor(BOOL redraw)
 
             Cell_XY_To_Radar_Pixel(last_x, last_y, pixel_left, pixel_top);
 
+            // Add 1 to the dimensions if the position lies more than half way into another cell.
+            cell_w = last_x + Lepton_To_Cell_Coord(DisplayWidth) + (Lepton_Sub_Cell(DisplayWidth) < 128 ? 0 : 1);
+            cell_h = last_y + Lepton_To_Cell_Coord(DisplayHeight) + (Lepton_Sub_Cell(DisplayHeight) < 128 ? 0 : 1);
+            
             Cell_XY_To_Radar_Pixel(
-                last_x + DisplayWidth,
-                last_y + DisplayHeight,
+                cell_w,
+                cell_h,
                 pixel_right,
                 pixel_btm
             );
@@ -571,9 +576,13 @@ void RadarClass::Radar_Cursor(BOOL redraw)
         // Get extents of the cursor and mark any cells where their pixel will be covered by the cursor and so shouldn't be redrawn.
         Cell_XY_To_Radar_Pixel(cell_x, cell_y, pixel_left, pixel_top);
 
+        // Add 1 to the dimensions if the position lies more than half way into another cell.
+        cell_w = cell_x + Lepton_To_Cell_Coord(DisplayWidth) + (Lepton_Sub_Cell(DisplayWidth) < 128 ? 0 : 1);
+        cell_h = cell_y + Lepton_To_Cell_Coord(DisplayHeight) + (Lepton_Sub_Cell(DisplayHeight) < 128 ? 0 : 1);
+
         Cell_XY_To_Radar_Pixel(
-            cell_x + DisplayWidth,
-            cell_y + DisplayHeight,
+            cell_w,
+            cell_h,
             pixel_right,
             pixel_btm
         );
