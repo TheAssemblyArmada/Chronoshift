@@ -288,21 +288,14 @@ void RadarClass::Activate_Pulse()
 
 void RadarClass::Radar_Pixel(int16_t cellnum)
 {
-    // TODO needs SidebarClass for SidebarIsDrawn
-#ifndef RAPP_STANDALONE
-    void (*func)(const RadarClass *, int16_t) = reinterpret_cast<void (*)(const RadarClass *, int16_t)>(0x0052FCC0);
-    func(this, cellnum);
-#endif
-    /*
-    if (RadarActive && Map.SidebarIsDrawn && Cell_On_Radar(cellnum)) {
+    if (RadarActive && Map.Is_Sidebar_Drawn() && Cell_On_Radar(cellnum)) {
         RadarToRedraw = true;
         Array[cellnum].Set_Bit1(true);
 
-        if (MiniMapCellCount < ARRAY_SIZE(MiniMapCells)) {
+        if (MiniMapCellCount < MINI_MAP_CELLS) {
             MiniMapCells[MiniMapCellCount++] = cellnum;
         }
     }
-    */
 }
 
 void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
@@ -373,6 +366,7 @@ void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
     CellClass &cell = Array[cellnum];
+
     if (cell.Get_Overlay() != OVERLAY_NONE) {
         OverlayTypeClass &optr = OverlayTypeClass::As_Reference(cell.Get_Overlay());
 
@@ -449,19 +443,13 @@ BOOL RadarClass::Is_Zoomable() const
 
 int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
-    // TODO Requires SidebarClass for SidebarIsDrawn
-#ifndef RAPP_STANDALONE
-    int (*func)(const RadarClass *, int &, int &, BOOL) =
-        reinterpret_cast<int (*)(const RadarClass *, int &, int &, BOOL)>(0x0052FD3C);
-    return func(this, x, y, set_coords);
-#endif
-    /*
-    if (Map.SidebarIsDrawn && RadarActive && x - (MinRadarX + RadarButtonXPos) < MaxRadarWidth
+    // TODO, make sidebar check virtual so don't need global object.
+    if (Map.Is_Sidebar_Drawn() && RadarActive && x - (MinRadarX + RadarButtonXPos) < MaxRadarWidth
         && y - (MinRadarY + RadarButtonYPos) < MaxRadarHeight) {
-        int xpos = x - (MinRadarX + RadarButtonXPos) - MiniMap.X;
-        int ypos = y - (MinRadarY + RadarButtonYPos) - MiniMap.Y;
+        int xpos = x - (MinRadarX + RadarButtonXPos) - MiniMap.m_left;
+        int ypos = y - (MinRadarY + RadarButtonYPos) - MiniMap.m_top;
 
-        if (xpos >= MiniMapScale - 1 + MiniMap.Width || ypos >= MiniMapScale - 1 + MiniMap.Height) {
+        if (xpos >= MiniMapScale - 1 + MiniMap.m_right || ypos >= MiniMapScale - 1 + MiniMap.m_bottom) {
             return -1;
         } else {
             if (set_coords) {
@@ -472,7 +460,7 @@ int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
             return 1;
         }
     }
-    */
+
     return 0;
 }
 
@@ -706,15 +694,9 @@ void RadarClass::Plot_Radar_Pixel(int16_t cellnum)
 
 int RadarClass::Radar_Activate(int mode)
 {
-    // TODO
-#ifndef RAPP_STANDALONE
-    int (*func)(const RadarClass *, int) = reinterpret_cast<int (*)(const RadarClass *, int)>(0x0052D790);
-    return func(this, mode);
-#endif
     bool is_active = RadarActive;
 
     switch (mode) {
-
         default:
         case RADAR_M1:	//Toggle active and inactive
             if (RadarActive) {

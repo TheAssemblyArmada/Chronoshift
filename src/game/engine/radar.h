@@ -41,6 +41,11 @@ enum RadarClickEnum
 
 class RadarClass : public DisplayClass
 {
+    enum
+    {
+        MINI_MAP_CELLS = 400,
+    };
+
     // Internal gadget class for handling input to the radar area of the game screen.
     class RTacticalClass : public GadgetClass
     {
@@ -171,7 +176,7 @@ protected:
     int MiniMapScale;
     HousesType SpiedHouse;
     int MiniMapCellCount;
-    int16_t MiniMapCells[400];
+    int16_t MiniMapCells[MINI_MAP_CELLS];
 
 #ifndef RAPP_STANDALONE
     static RTacticalClass &RadarButton;
@@ -213,6 +218,12 @@ inline void RadarClass::Hook_Me()
     Hook_Function(0x0053210C, *RadarClass::Player_Names); // seems to work
     Hook_Function(0x0052FF40, *RadarClass::Mark_Radar); // seems to work
     Hook_Function(0x0052FED8, *RadarClass::Cursor_Cell); // seems to work
+    //Hook_Function(0x0052EF8C, *RadarClass::Render_Overlay); // crashes
+    //Hook_Function(0x00530300, *RadarClass::Radar_Cursor); // draws cornder of box
+    //Hook_Function(0x0052F294, *RadarClass::Zoom_Mode); // 
+    //Hook_Function(0x0052FCC0, *RadarClass::Radar_Pixel); // 
+    //Hook_Function(0x0052FD3C, *RadarClass::Click_In_Radar); //
+    //Hook_Function(0x0052D790, *RadarClass::Radar_Activate); //
 #endif
 }
 #endif
