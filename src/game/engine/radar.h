@@ -105,6 +105,8 @@ public:
     int16_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
     BOOL Hook_Is_Zoomable() { return Is_Zoomable(); }
     BOOL Hook_Cell_On_Radar(int16_t cellnum) { return Cell_On_Radar(cellnum); }
+    int Hook_Click_In_Radar(int &x, int &y, BOOL set_coords = false) { return RadarClass::Click_In_Radar(x, y, set_coords); }
+
 #endif
 
 protected:
@@ -128,7 +130,7 @@ protected:
             bool RadarToRedraw : 1; // 1
             bool RadarCursorRedraw : 1; // 2
             bool RadarExists : 1; // 4 Low power?
-            bool RadarActive : 1; // enabling from power off?
+            bool RadarActive : 1; // 8 enabling from power off?
             bool RadarActivating : 1; // 16 //RadarActivating?
             bool RadarDeactivating : 1; // 32 //RadarDeactivating?
             bool RadarJammed : 1; // 64
@@ -217,12 +219,12 @@ inline void RadarClass::Hook_Me()
     Hook_Function(0x0053210C, *RadarClass::Player_Names); // seems to work
     Hook_Function(0x0052FF40, *RadarClass::Mark_Radar); // seems to work
     Hook_Function(0x0052FED8, *RadarClass::Cursor_Cell); // seems to work
-    Hook_Function(0x0052EF8C, *RadarClass::Render_Overlay); // crashes
+    Hook_Function(0x0052EF8C, *RadarClass::Render_Overlay); // works
     Hook_Function(0x00530300, *RadarClass::Radar_Cursor); // works
-    //Hook_Function(0x0052F294, *RadarClass::Zoom_Mode); // 
-    //Hook_Function(0x0052FCC0, *RadarClass::Radar_Pixel); // 
-    //Hook_Function(0x0052FD3C, *RadarClass::Click_In_Radar); //
-    //Hook_Function(0x0052D790, *RadarClass::Radar_Activate); //
+    Hook_Function(0x0052F294, *RadarClass::Zoom_Mode); // 
+    Hook_Function(0x0052FCC0, *RadarClass::Radar_Pixel); // 
+    Hook_Function(0x0052FD3C, *RadarClass::Hook_Click_In_Radar); //
+    Hook_Function(0x0052D790, *RadarClass::Radar_Activate); //
 #endif
 }
 #endif

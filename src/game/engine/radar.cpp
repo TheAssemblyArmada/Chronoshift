@@ -443,20 +443,27 @@ BOOL RadarClass::Is_Zoomable() const
 int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
     // TODO, make sidebar check virtual so don't need global object.
-    if (Map.Is_Sidebar_Drawn() && RadarActive && x - (MinRadarX + RadarButtonXPos) < MaxRadarWidth
-        && y - (MinRadarY + RadarButtonYPos) < MaxRadarHeight) {
-        int xpos = x - (MinRadarX + RadarButtonXPos) - MiniMap.m_left;
-        int ypos = y - (MinRadarY + RadarButtonYPos) - MiniMap.m_top;
+    if (Map.Is_Sidebar_Drawn() && RadarActive) {
+        unsigned x_diff = x - (MinRadarX + RadarButtonXPos);
+        unsigned y_diff = y - (MinRadarY + RadarButtonYPos);
 
-        if (xpos >= MiniMapScale - 1 + MiniMap.m_right || ypos >= MiniMapScale - 1 + MiniMap.m_bottom) {
-            return -1;
-        } else {
-            if (set_coords) {
-                x = xpos / MiniMapScale + MiniMapXOffset;
-                y = ypos / MiniMapScale + MiniMapYOffset;
+        // Abuses unsigned underflow to check if within bounds or negative in fewer compares.
+        if (x_diff < (unsigned)MaxRadarWidth && y_diff < (unsigned)MaxRadarHeight) {
+            int xpos = x - (MinRadarX + RadarButtonXPos) - MiniMap.m_left;
+            int ypos = y - (MinRadarY + RadarButtonYPos) - MiniMap.m_top;
+            int scale = MiniMapScale - 1;
+
+            if ((unsigned)xpos >= (unsigned)(scale + MiniMap.m_right)
+                || (unsigned)ypos >= (unsigned)(scale + MiniMap.m_bottom)) {
+                return -1;
+            } else {
+                if (set_coords) {
+                    x = xpos / MiniMapScale + MiniMapXOffset;
+                    y = ypos / MiniMapScale + MiniMapYOffset;
+                }
+
+                return 1;
             }
-
-            return 1;
         }
     }
 
