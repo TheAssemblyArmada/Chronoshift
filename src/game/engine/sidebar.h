@@ -19,9 +19,9 @@
 #define SIDEBAR_H
 
 #include "always.h"
-#include "power.h"
-#include "noinit.h"
 #include "controlc.h"
+#include "noinit.h"
+#include "power.h"
 #include "shapebtn.h"
 #include "stage.h"
 
@@ -44,7 +44,7 @@ enum SidebarStateType
 };
 
 #define MAX_BUTTONS_PER_COLUMN 75
-#define ROW_COUNT 40 // 4
+//#define ROW_COUNT 4
 
 class SidebarClass : public PowerClass
 {
@@ -65,8 +65,9 @@ class SidebarClass : public PowerClass
 
         enum
         {
-            STRIP_ROWS = 4,
+            ROW_COUNT = 4,
         };
+
     public:
         class SelectClass : public ControlClass
         {
@@ -200,13 +201,13 @@ public:
     virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) override;
 
     void Reload_Sidebar();
-    ColumnType Which_Column(RTTIType type);
+    int Which_Column(RTTIType type);
     BOOL Factory_Link(int factory_id, RTTIType type, int id);
     BOOL Activate_Repair(int state);
     BOOL Activate_Upgrade(int state);
     BOOL Activate_Demolish(int state);
     BOOL Add(RTTIType type, int id);
-    BOOL Scroll(BOOL reverse, ColumnType column);
+    BOOL Scroll(BOOL reverse, int column);
     void Recalc();
     BOOL Activate(int mode = SIDEBAR_TOGGLE);
     int Abandon_Production(RTTIType, int);
@@ -264,19 +265,40 @@ protected:
     static void *SidebarMiddleShape;
     static void *SidebarBottomShape;
 #endif
-    static void *SidebarAddonShape;//RAPP addition
+    static void *SidebarAddonShape; // RAPP addition
 };
-
 
 #ifndef RAPP_STANALONE
 #include "hooker.h"
 inline void SidebarClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    //Hook_Function(0x005275CC, *PowerClass::One_Time); // seems to work
+    Hook_Function(0x0054ECA8, *SidebarClass::StripClass::SelectClass::Set_Owner); // seems to work
+    Hook_Function(0x0054DDE0, *SidebarClass::StripClass::Get_Special_Cameo); // seems to work
+    Hook_Function(0x0054DE00, *SidebarClass::StripClass::Init_Clear); // seems to work
+    Hook_Function(0x0054DE54, *SidebarClass::StripClass::Init_IO); //works
+    Hook_Function(0x0054E008, *SidebarClass::StripClass::Init_Theater); //works
+    Hook_Function(0x0054E0C4, *SidebarClass::StripClass::Activate); // seems to work
+    Hook_Function(0x0054E184, *SidebarClass::StripClass::Deactivate); // seems to work
+    Hook_Function(0x0054E1F8, *SidebarClass::StripClass::Add); // seems to work
+    Hook_Function(0x0054E290, *SidebarClass::StripClass::Scroll); // seems to work
+    Hook_Function(0x0054E2CC, *SidebarClass::StripClass::Flag_To_Redraw); // seems to work
+    Hook_Function(0x0054F3B4, *SidebarClass::StripClass::Factory_Link); //works
+    Hook_Function(0x0054D07C,  *SidebarClass::One_Time); // seems to work
+    Hook_Function(0x0054D0F8, *SidebarClass::Init_Clear); //works 
+    Hook_Function(0x0054D144, *SidebarClass::Init_IO); //works 
+    Hook_Function(0x0054D304, *SidebarClass::Init_Theater); //works
+    //Hook_Function(0x0054D724, *SidebarClass::Draw_It); //Powerbar needed shows even when power structure not in play.
+    Hook_Function(0x0054D404, *SidebarClass::Refresh_Cells); //works
+    Hook_Function(0x0054D3B0, *SidebarClass::Which_Column); // works
+    Hook_Function(0x0054D61C, *SidebarClass::Add); // seems to work
+    //Hook_Function(0x0054D684, *SidebarClass::Scroll); //breaks scrolling both strips at same time
+    Hook_Function(0x0054DA2C, *SidebarClass::Recalc); // seems to work
+    Hook_Function(0x0054DA70, *SidebarClass::Activate); //works
+    Hook_Function(0x0054F408, *SidebarClass::Abandon_Production); // seems to work
+    Hook_Function(0x0054F4B8, *SidebarClass::Zoom_Mode_Control); //works
 #endif
 }
 #endif
-
 
 #endif // SIDEBAR_H

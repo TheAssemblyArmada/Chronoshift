@@ -46,6 +46,7 @@
 #include "rawfileclass.h"
 #include "rgb.h"
 #include "shape.h"
+#include "sidebar.h"
 #include "slider.h"
 #include "textbtn.h"
 #include "textprint.h"
@@ -113,6 +114,7 @@ void Setup_Hooks()
     DisplayClass::Hook_Me();
     RadarClass::Hook_Me();
     PowerClass::Hook_Me();
+    SidebarClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);

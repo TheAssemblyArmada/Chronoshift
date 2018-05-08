@@ -35,6 +35,7 @@ public:
     void Turn_On();
     void Turn_Off();
 
+    void Set_Toggle_Bool1(BOOL unk) { Toggle_Boolean1 = unk; }
     void Set_Toggle_Disabled(BOOL disabled) { ToggleDisabled = disabled; }
 
 #ifndef RAPP_STANDALONE

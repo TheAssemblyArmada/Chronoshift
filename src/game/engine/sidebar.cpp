@@ -182,26 +182,36 @@ void SidebarClass::StripClass::Init_IO(int column)
         WhichColumn = column;
 
         UpButton[WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_LEFT);
-        UpButton[WhichColumn].Set_Position(XPos + 4, YPos + 194);
+        UpButton[WhichColumn].Set_XPos(XPos + 4);
+        UpButton[WhichColumn].Set_YPos(YPos + 194);
         UpButton[WhichColumn].Set_Shape(MixFileClass<CCFileClass>::Retrieve("stripup.shp"));
         UpButton[WhichColumn].Set_Sticky(true);
 
         DownButton[WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_RIGHT);
-        DownButton[WhichColumn].Set_Position(XPos + 36, YPos + 194);
+        DownButton[WhichColumn].Set_XPos(XPos + 36);
+        DownButton[WhichColumn].Set_YPos(YPos + 194);
         DownButton[WhichColumn].Set_Shape(MixFileClass<CCFileClass>::Retrieve("stripdn.shp"));
         DownButton[WhichColumn].Set_Sticky(true);
 
-        for (int index = 0; index < STRIP_ROWS; ++index) {
-            SelectButton[WhichColumn * index].Set_Size(64, 48);
-            SelectButton[WhichColumn * index].Set_Position(XPos, 220);
-            SelectButton[WhichColumn * index].Set_Owner(*this, index);
+        for (int index = 0; index < ROW_COUNT; ++index) {
+#ifndef RAPP_STANDALONE
+            SelectButton[WhichColumn * 4 + index].Set_Size(64, 48);
+            SelectButton[WhichColumn * 4 + index].Set_XPos(XPos);
+            SelectButton[WhichColumn * 4 + index].Set_YPos(YPos + index * 48);
+            SelectButton[WhichColumn * 4 + index].Set_Owner(*this, index);
+#else
+            SelectButton[WhichColumn][index].Set_Size(64, 48);
+            SelectButton[WhichColumn][index].Set_XPos(XPos);
+            SelectButton[WhichColumn][index].Set_YPos(YPos + index * 48);
+            SelectButton[WhichColumn][index].Set_Owner(*this, index);
+#endif
         }
     }
 }
 
 void SidebarClass::StripClass::Init_Theater(TheaterType theater)
 {
-    static TLucentType const _clock_cols[] = { { 3, 12, 100, 0 } };
+    static const TLucentType _clock_cols = { 3, 12, 100, 0 };
 
     PaletteClass palette;
 
@@ -209,18 +219,18 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
         Reload_LogoShapes();
 
         if (theater != THEATER_NONE && theater != g_lastTheater) {
-            memcpy(&palette, &OriginalPalette, sizeof(PaletteClass));
+            palette = OriginalPalette;
 
             // Block out 7 (21 / 3 = 7) entries of the temp palette as white (63, 63, 63 is white in 7bit vga pal)
             memset(&palette[32], 63, 21);
 
             // Build the fading tables for drawing the clock sweep overlay.
 #ifndef RAPP_STANDALONE
-            Build_Translucent_Table(palette, _clock_cols, 1, ClockTranslucentTable);
-            Conquer_Build_Fading_Table(palette, ClockTranslucentTable + 256, 12, 100);
+            Build_Translucent_Table(palette, &_clock_cols, 1, ClockTranslucentTable);
+            Conquer_Build_Fading_Table(GamePalette, &ClockTranslucentTable[256], 12, 100);
 #else
-            Build_Translucent_Table(palette, _clock_cols, 1, ClockTranslucentTable[0]);
-            Conquer_Build_Fading_Table(palette, ClockTranslucentTable[1], 12, 100);
+            Build_Translucent_Table(palette, &_clock_cols, 1, ClockTranslucentTable[0]);
+            Conquer_Build_Fading_Table(GamePalette, ClockTranslucentTable[1], 12, 100);
 #endif
         }
     }
@@ -242,7 +252,7 @@ void SidebarClass::StripClass::Activate()
     Map.Add_A_Button(UpButton[WhichColumn]);
     Map.Add_A_Button(DownButton[WhichColumn]);
 
-    for (int index = 0; index < STRIP_ROWS; ++index) {
+    for (int index = 0; index < ROW_COUNT; ++index) {
 #ifndef RAPP_STANDALONE
         SelectButton[(WhichColumn * ROW_COUNT) + index].Unlink();
         Map.Add_A_Button(SelectButton[(WhichColumn * ROW_COUNT) + index]);
@@ -258,7 +268,7 @@ void SidebarClass::StripClass::Deactivate()
     Map.Remove_A_Button(UpButton[WhichColumn]);
     Map.Remove_A_Button(DownButton[WhichColumn]);
 
-    for (int index = 0; index < STRIP_ROWS; ++index) {
+    for (int index = 0; index < ROW_COUNT; ++index) {
 #ifndef RAPP_STANDALONE
         Map.Remove_A_Button(SelectButton[(WhichColumn * ROW_COUNT) + index]);
 #else
@@ -357,15 +367,13 @@ BOOL SidebarClass::StripClass::Recalc()
 
 BOOL SidebarClass::StripClass::Factory_Link(int factory_id, RTTIType type, int id)
 {
-    if (CameoCount > 0) {
-        for (int index = 0; index < MAX_BUTTONS_PER_COLUMN; ++index) {
-            if (Entries[index].Type == type && Entries[index].ID == id) {
-                Entries->Factory = factory_id;
-                Strip_Boolean2 = true;
-                Flag_To_Redraw();
+    for (int index = 0; index < CameoCount; ++index) {
+        if (Entries[index].Type == type && Entries[index].ID == id) {
+            Entries[index].Factory = factory_id;
+            Strip_Boolean2 = true;
+            Flag_To_Redraw();
 
-                return true;
-            }
+            return true;
         }
     }
 
@@ -446,6 +454,7 @@ void SidebarClass::Init_IO()
         RepairButton.Set_ID(BUTTON_REPAIR);
         RepairButton.Set_Position(498, 150);
         RepairButton.Set_Sticky(true);
+        RepairButton.Set_Toggle_Bool1(false);
         RepairButton.Set_Toggle_Disabled(true);
         RepairButton.Set_Shape_Bool_One(true);
         RepairButton.Set_Shape(MixFileClass<CCFileClass>::Retrieve("repair.shp"));
@@ -453,6 +462,7 @@ void SidebarClass::Init_IO()
         SellButton.Set_ID(BUTTON_SELL);
         SellButton.Set_Position(543, 150);
         SellButton.Set_Sticky(true);
+        SellButton.Set_Toggle_Bool1(false);
         SellButton.Set_Toggle_Disabled(true);
         SellButton.Set_Shape_Bool_One(true);
         SellButton.Set_Shape(MixFileClass<CCFileClass>::Retrieve("sell.shp"));
@@ -460,11 +470,10 @@ void SidebarClass::Init_IO()
         ZoomButton.Set_ID(BUTTON_ZOOM);
         ZoomButton.Set_Position(588, 150);
         ZoomButton.Set_Sticky(true);
-        ZoomButton.Set_Toggle_Disabled(true);
-        ZoomButton.Set_Shape_Bool_One(true);
+        ZoomButton.Set_Toggle_Bool1(false);
         ZoomButton.Set_Shape(MixFileClass<CCFileClass>::Retrieve("map.shp"));
 
-        if (RadarActive && (Is_Zoomable() || Session.Game_To_Play() != GAME_CAMPAIGN)) {
+        if ((RadarActive && Is_Zoomable()) || Session.Game_To_Play() != GAME_CAMPAIGN) {
             ZoomButton.Enable();
         } else {
             ZoomButton.Disable();
@@ -511,76 +520,81 @@ void SidebarClass::Draw_It(BOOL force_redraw)
     PowerClass::Draw_It(force_redraw);
 
     if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && !g_inMapEditor ) {
-        if (SidebarBottomShape != nullptr) {
-            CC_Draw_Shape(
-                SidebarShape,
-                0,
-                480, // GVPC Width - Sidebar width
-                16, // Height of TabClass
-                WINDOW_SIDEBAR,
-                SHAPE_WIN_REL
-            );
-        }
-
-        if (SidebarBottomShape != nullptr) {
-            CC_Draw_Shape(
-                SidebarMiddleShape,
-                (force_redraw == false) ? 1 : 0,
-                480,
-                176,	//TabClass::TabButtonHeight + 160, height of the first sidebar piece
-                WINDOW_SIDEBAR,
-                SHAPE_WIN_REL
-            );
-        }
-
-        if (SidebarBottomShape != nullptr) {
-            CC_Draw_Shape(
-                SidebarBottomShape,
-                0,
-                480,
-                372,	//TabClass::TabButtonHeight + 160 + 100 + 96, height of last piece added on
-                WINDOW_SIDEBAR,
-                SHAPE_WIN_REL
-            );
-        }
-
-        // Handles drawing extra bits for higher resolutions.
-        if (g_logicPage->Get_Height() > 400) {
-            if (SidebarAddonShape != nullptr) {
-                int addonheight = Get_Build_Frame_Height(SidebarAddonShape);
-
-                //TODO
-                //new shape, draw this as the resolution requires the black underneath to be filled with a image.
+        SidebarToRedraw = false;
+        if (g_logicPage->Lock()) {
+            if (SidebarShape != nullptr) {
                 CC_Draw_Shape(
-                    SidebarAddonShape,
+                    SidebarShape,
                     0,
-                    480,
-                    400, // Draw after everything else... Sidebar height.
-                    WINDOW_SIDEBAR,
+                    480, // GVPC Width - Sidebar width
+                    16, // Height of TabClass
+                    WINDOW_0,
                     SHAPE_WIN_REL
                 );
             }
-        }
 
-        RepairButton.Draw_Me(true);
-        SellButton.Draw_Me(true);
-        ZoomButton.Draw_Me(true);
+            if (SidebarMiddleShape != nullptr) {
+                CC_Draw_Shape(
+                    SidebarMiddleShape,
+                    force_redraw ? 0 : 1,
+                    480,
+                    176,	//TabClass::TabButtonHeight + 160, height of the first sidebar piece
+                    WINDOW_0,
+                    SHAPE_WIN_REL
+                );
+            }
 
-        for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-            Columns[column].StripToRedraw = true;
+            if (SidebarBottomShape != nullptr) {
+                CC_Draw_Shape(
+                    SidebarBottomShape,
+                    force_redraw ? 0 : 1,
+                    480,
+                    372,	//TabClass::TabButtonHeight + 160 + 100 + 96, height of last piece added on
+                    WINDOW_0,
+                    SHAPE_WIN_REL
+                );
+            }
+
+            // Handles drawing extra bits for higher resolutions.
+            if (g_logicPage->Get_Height() > 400) {
+                if (SidebarAddonShape != nullptr) {
+                    int addonheight = Get_Build_Frame_Height(SidebarAddonShape);
+
+                    //TODO
+                    //new shape, draw this as the resolution requires the black underneath to be filled with a image.
+                    CC_Draw_Shape(
+                        SidebarAddonShape,
+                        0,
+                        480,
+                        400, // Draw after everything else... Sidebar height.
+                        WINDOW_0,
+                        SHAPE_WIN_REL
+                    );
+                }
+            }
+
+            RepairButton.Draw_Me(true);
+            SellButton.Draw_Me(true);
+            ZoomButton.Draw_Me(true);
+
+            //for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+            //    Columns[column].StripToRedraw = true;
+            //}
+
+            g_logicPage->Unlock();
         }
     }
 
-    if (SidebarIsDrawn || force_redraw) {
+    if (SidebarIsDrawn) {
         for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
             Columns[column].Draw_It(force_redraw);
         }
-    }
 
-    if (SidebarToRedraw || force_redraw) {
-        RepairButton.Draw_Me(true);
-        SellButton.Draw_Me(true);
-        ZoomButton.Draw_Me(true);
+        if (SidebarToRedraw || force_redraw) {
+            RepairButton.Draw_Me(true);
+            SellButton.Draw_Me(true);
+            ZoomButton.Draw_Me(true);
+        }
     }
 
     SidebarToRedraw = false;
@@ -595,6 +609,7 @@ void SidebarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
                 Columns[column].StripToRedraw = true;
             }
 
+            SidebarToRedraw = true;
             Flag_To_Redraw();
         }
     }
@@ -610,7 +625,7 @@ void SidebarClass::Reload_Sidebar()
     func(this);
 #else
     // in order of the houses.
-    char *sidebarnames[HOUSES_COUNT] = { "SIDE?NA.SHP",
+    static char sidebarnames[HOUSES_COUNT][12] = { "SIDE?NA.SHP",
         "SIDE?NA.SHP",
         "SIDE?US.SHP",
         "SIDE?NA.SHP",
@@ -629,12 +644,13 @@ void SidebarClass::Reload_Sidebar()
         side_index = 0;
     }
 
-    // char *shape_name = sidebarnames[side_index];
-
     // this basicly replaces the '?' in the filenames above with a number.
-    SidebarShape = MixFileClass<CCFileClass>::Retrieve((char const *)(sidebarnames[side_index][4] = '1'));
-    SidebarMiddleShape = MixFileClass<CCFileClass>::Retrieve((char const *)(sidebarnames[side_index][4] = '2'));
-    SidebarBottomShape = MixFileClass<CCFileClass>::Retrieve((char const *)(sidebarnames[side_index][4] = '3'));
+    sidebarnames[side_index][4] = '1';
+    SidebarShape = MixFileClass<CCFileClass>::Retrieve(sidebarnames[side_index]);
+    sidebarnames[side_index][4] = '2';
+    SidebarMiddleShape = MixFileClass<CCFileClass>::Retrieve(sidebarnames[side_index]);
+    sidebarnames[side_index][4] = '3';
+    SidebarBottomShape = MixFileClass<CCFileClass>::Retrieve(sidebarnames[side_index]);
 
     // reload the side specific stip backgrounds.
     Strips[COLUMN_LEFT].Reload_LogoShapes();
@@ -642,7 +658,7 @@ void SidebarClass::Reload_Sidebar()
 #endif
 }
 
-ColumnType SidebarClass::Which_Column(RTTIType type)
+int SidebarClass::Which_Column(RTTIType type)
 {
     switch (type) {
         case RTTI_BUILDING:
@@ -660,8 +676,8 @@ ColumnType SidebarClass::Which_Column(RTTIType type)
             return COLUMN_RIGHT;
 
         default:
-            DEBUG_ASSERT_PRINT(false, "Unhandled RTTIType in Which_Column() returning COLUMN_NONE, We should never reach here!");
-            return COLUMN_NONE;
+            DEBUG_ASSERT_PRINT(false, "Unhandled RTTIType in Which_Column() returning COLUMN_RIGHT, We should never reach here!");
+            return COLUMN_RIGHT;
     }
 }
 
@@ -739,9 +755,7 @@ BOOL SidebarClass::Add(RTTIType item, int id)
     // get Left or Right strip and add the "item", based on return value of Which_Column().
     if (Columns[Which_Column(item)].Add(item, id)) {
         Activate(1);
-
         SidebarToRedraw = true;
-
         Flag_To_Redraw();
 
         return true;
@@ -750,7 +764,7 @@ BOOL SidebarClass::Add(RTTIType item, int id)
     return false;
 }
 
-BOOL SidebarClass::Scroll(BOOL reverse, ColumnType column)
+BOOL SidebarClass::Scroll(BOOL reverse, int column)
 {
     BOOL scroll_result;
 
@@ -862,22 +876,16 @@ int SidebarClass::Abandon_Production(RTTIType type, int unk2)
 
 void SidebarClass::Zoom_Mode_Control(ModeControl mode)
 {
-    // TODO, check all bools in this function, OmniBlade?
-    // see pesudo in RA, not sure if i have the correct ones.
-
     if (!RadarActive) {
         if (Session.Game_To_Play() != GAME_CAMPAIGN) {
-            Player_Names((RadarZoomed == false));
+            Player_Names(!RadarDrawNames);
         }
-
-    } else if (RadarDrawNames || Session.Game_To_Play() == GAME_CAMPAIGN) {
-        if (RadarDrawNames || !Spy_Next_House()) {
+    } else if (RadarZoomed || Session.Game_To_Play() == GAME_CAMPAIGN) {
+        if (RadarZoomed || !Spy_Next_House()) {
             Zoom_Mode(Coord_To_Cell(DisplayPos));
         }
-
-    } else if (!RadarPulseActive && !RadarZoomed) {
-        Player_Names();
-
+    } else if (!RadarDrawNames && !RadarZoomed) {
+        Player_Names(true);
     } else {
         Player_Names(false);
 
