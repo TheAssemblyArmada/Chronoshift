@@ -527,7 +527,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                     SidebarShape,
                     0,
                     480, // GVPC Width - Sidebar width
-                    16, // Height of TabClass
+                    16, // 16, Height of Tabs
                     WINDOW_0,
                     SHAPE_WIN_REL
                 );
@@ -538,7 +538,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                     SidebarMiddleShape,
                     force_redraw ? 0 : 1,
                     480,
-                    176,	//TabClass::TabButtonHeight + 160, height of the first sidebar piece
+                    176,	//Height of tab + 160, height of the first sidebar piece
                     WINDOW_0,
                     SHAPE_WIN_REL
                 );
@@ -549,7 +549,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                     SidebarBottomShape,
                     force_redraw ? 0 : 1,
                     480,
-                    372,	//TabClass::TabButtonHeight + 160 + 100 + 96, height of last piece added on
+                    276,	//Height of tab + 160 + 100,, height of last piece added on
                     WINDOW_0,
                     SHAPE_WIN_REL
                 );

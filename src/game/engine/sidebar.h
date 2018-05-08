@@ -288,11 +288,11 @@ inline void SidebarClass::Hook_Me()
     Hook_Function(0x0054D0F8, *SidebarClass::Init_Clear); //works 
     Hook_Function(0x0054D144, *SidebarClass::Init_IO); //works 
     Hook_Function(0x0054D304, *SidebarClass::Init_Theater); //works
-    //Hook_Function(0x0054D724, *SidebarClass::Draw_It); //Powerbar needed shows even when power structure not in play.
+    Hook_Function(0x0054D724, *SidebarClass::Draw_It); //Powerbar needed shows even when power structure not in play.
     Hook_Function(0x0054D404, *SidebarClass::Refresh_Cells); //works
     Hook_Function(0x0054D3B0, *SidebarClass::Which_Column); // works
     Hook_Function(0x0054D61C, *SidebarClass::Add); // seems to work
-    //Hook_Function(0x0054D684, *SidebarClass::Scroll); //breaks scrolling both strips at same time
+    Hook_Function(0x0054D684, *SidebarClass::Scroll); //breaks scrolling both strips at same time
     Hook_Function(0x0054DA2C, *SidebarClass::Recalc); // seems to work
     Hook_Function(0x0054DA70, *SidebarClass::Activate); //works
     Hook_Function(0x0054F408, *SidebarClass::Abandon_Production); // seems to work
