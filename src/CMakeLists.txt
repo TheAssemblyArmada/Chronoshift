@@ -17,16 +17,15 @@ endif()
 find_package(LZO)
 
 if(LZO_FOUND)
-    message("LZO found, will not download and build an internal version.")
+    message("LZO found, building with system LZO library.")
     set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${LZO_INCLUDE_DIRS})
     set(PLATFORM_LIBS ${PLATFORM_LIBS} ${LZO_LIBRARIES})
 else()
-    message("LZO not found, will download and build an internal version.")
-    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init -- libs/lzo
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-    add_subdirectory("${CMAKE_SOURCE_DIR}/libs/lzo" "${CMAKE_BINARY_DIR}/libs/lzo" EXCLUDE_FROM_ALL)
-    set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${CMAKE_SOURCE_DIR}/libs/lzo/include)
-    set(PLATFORM_LIBS ${PLATFORM_LIBS} lzo_static_lib)
+    message("LZO not found, using minilzo.")
+    add_library(minilzo STATIC EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/libs/minilzo/minilzo.c)
+    set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${CMAKE_SOURCE_DIR}/libs)
+    set(PLATFORM_LIBS ${PLATFORM_LIBS} minilzo)
+    add_definitions(-DRAPP_USE_MINILZO)
 endif()
 
 # Build and link the DLL.

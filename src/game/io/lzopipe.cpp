@@ -17,7 +17,12 @@
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "minmax.h"
+
+#ifdef RAPP_USE_MINILZO
+#include <minilzo/minilzo.h>
+#else
 #include <lzo/lzo1x.h>
+#endif
 
 LZOPipe::LZOPipe(PipeControl mode, int size) :
     m_mode(mode),
