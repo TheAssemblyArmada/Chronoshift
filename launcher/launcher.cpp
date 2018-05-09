@@ -20,7 +20,9 @@
 #include <windows.h>
 
 // Use WinMain and don't make a console window.
+#ifdef _MSC_VER
 #pragma comment(linker, "/subsystem:windows /ENTRY:WinMainCRTStartup")
+#endif
 
 // Define the point to stall at while the DLL loads.
 #define EXE_ENTRY 0x005D6148 // RA real entry point
