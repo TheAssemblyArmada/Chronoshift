@@ -104,7 +104,7 @@ mp_digit_u Rotate_Right(mp_digit_u *number, mp_digit_u carry, int32_t precision)
 //  Comparison Operators
 //
 ////////////////////////////////////////////////////////////////////////////////
-mp_digit_u Test_Eq_Int(mp_digit_u const *number, int32_t value, int32_t precision);
+BOOL Test_Eq_Int(mp_digit_u const *number, int32_t value, int32_t precision);
 int32_t Compare(mp_digit_u const *num1, mp_digit_u const *num2, int32_t precision);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,9 +112,9 @@ int32_t Compare(mp_digit_u const *num1, mp_digit_u const *num2, int32_t precisio
 //  Arithmetic Operators
 //
 ///////////////////////////////////////////////////////////////////////////////
-mp_digit_u Add(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, mp_digit_u carry, int32_t precision);
+mp_digit_u Add(mp_digit_u *result, const mp_digit_u *num1, const mp_digit_u *num2, mp_digit_u carry, int32_t precision);
 mp_digit_u Add_Int(mp_digit_u *result, mp_digit_u *num1, mp_digit_u num2, mp_digit_u carry, int32_t precision);
-mp_digit_u Sub(mp_digit_u *result, mp_digit_u *left_number, mp_digit_u *right_number, mp_digit_u borrow, int32_t precision);
+mp_digit_u Sub(mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u borrow, int32_t precision);
 mp_digit_u Sub_Int(mp_digit_u *result, mp_digit_u *num1, mp_digit_u num2, mp_digit_u borrow, int32_t precision);
 int32_t Unsigned_Mul(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
 int32_t Unsigned_Mul_Int(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_s multiplier, int32_t precision);
@@ -150,13 +150,13 @@ uint16_t const *Fetch_Prime_Table(void);
 int Fetch_Prime_Size(void);
 void Decode_ASCII(char const *str, unsigned int *mpn, int precision);
 mp_digit_u Rabin_Miller_Test(Straw *rng, unsigned int const *w, int rounds, int precision);
-mp_digit_u Fermat_Test(unsigned int const *candidate_prime, unsigned int rounds, int precision);
-mp_digit_u Is_Small_Prime(unsigned int const *candidate, int precision);
-mp_digit_u Is_Prime(unsigned int const *prime, int precision);
+BOOL Fermat_Test(const mp_digit_u *candidate_prime, unsigned int rounds, int precision);
+BOOL Is_Small_Prime(const mp_digit_u *candidate, int precision);
+BOOL Is_Prime(const mp_digit_u *prime, int precision);
 void Randomize_Bounded(
-    unsigned int *result, Straw *rng, unsigned int const *minval, unsigned int const *maxval, int precision);
-void Randomize(unsigned int *result, Straw *rng, int total_bits, int precision);
-mp_digit_u Small_Divisors_Test(mp_digit_u const *candidate, int precision);
+    mp_digit_u *result, Straw *rng, const mp_digit_u *minval, const mp_digit_u *maxval, int precision);
+void Randomize(mp_digit_u *result, Straw *rng, int total_bits, int precision);
+BOOL Small_Divisors_Test(mp_digit_u const *candidate, int precision);
 
 inline mp_digit_u Add_Carry(mp_digit_u a, mp_digit_u b, mp_digit_u c)
 {

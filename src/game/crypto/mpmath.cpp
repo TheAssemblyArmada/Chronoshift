@@ -18,6 +18,8 @@
 #include "minmax.h"
 #include "endiantype.h"
 
+#include <stdlib.h>
+
 static mp_digit_u _scratch_modulus[MAX_UNIT_PRECISION];
 static mp_digit_u _double_staging_number[MAX_UNIT_PRECISION * 2 + 2];
 static mp_digit_u _upton_e_number[MAX_UNIT_PRECISION * 2 + 2];
@@ -3542,6 +3544,17 @@ static uint16_t mp_primeTable[MAX_PRIME_TABLE_SIZE] = {
                    // including this?? unless its producing code that checks for numbers above?
 };
 
+static int Prime_Compare_Func(const void *a, const void *b)
+{
+    if (*static_cast<const mp_digit_u *>(a) < *static_cast<const uint16_t *>(b)) {
+        return 1;
+    } else if (*static_cast<const mp_digit_u *>(a) > *static_cast<const uint16_t *>(b)) {
+        return -1;
+    }
+
+    return 0;
+}
+
 int32_t MPMath::Byte_Precision(int32_t length)
 {
     DEBUG_ASSERT(length > 0);
@@ -3559,7 +3572,7 @@ int32_t MPMath::Byte_Precision(int32_t length)
     return bytes;
 }
 
-int32_t MPMath::Significance(mp_digit_u const *number, int32_t precision)
+int32_t MPMath::Significance(const mp_digit_u *number, int32_t precision)
 {
     DEBUG_ASSERT(number != nullptr);
     DEBUG_ASSERT(precision > 0);
@@ -3573,7 +3586,7 @@ int32_t MPMath::Significance(mp_digit_u const *number, int32_t precision)
     return i + 1;
 }
 
-int32_t MPMath::Count_Bits(mp_digit_u const *number, int32_t precision)
+int32_t MPMath::Count_Bits(const mp_digit_u *number, int32_t precision)
 {
     DEBUG_ASSERT(number != nullptr);
     DEBUG_ASSERT(precision > 0);
@@ -3625,33 +3638,33 @@ void MPMath::Init(mp_digit_u *number, mp_digit_u value, int32_t precision)
     *number = value;
 }
 
-void MPMath::Move(mp_digit_u *dest, mp_digit_u const *source, int32_t precision)
+void MPMath::Move(mp_digit_u *dest, const mp_digit_u *source, int32_t precision)
 {
     memcpy(dest, source, precision * BYTES_PER_UNIT);
 }
 
-void MPMath::Move_HTOLE(mp_digit_u *dst, mp_digit_u const *src, int32_t precision)
+void MPMath::Move_HTOLE(mp_digit_u *dst, const mp_digit_u *src, int32_t precision)
 {
     for (int i = 0; i < precision; ++i) {
         dst[i] = htolexmp(src[i]);
     }
 }
 
-void MPMath::Move_LETOH(mp_digit_u *dst, mp_digit_u const *src, int32_t precision)
+void MPMath::Move_LETOH(mp_digit_u *dst, const mp_digit_u *src, int32_t precision)
 {
     for (int i = 0; i < precision; ++i) {
         dst[i] = lexmptoh(src[i]);
     }
 }
 
-void MPMath::Move_HTOBE(mp_digit_u *dst, mp_digit_u const *src, int32_t precision)
+void MPMath::Move_HTOBE(mp_digit_u *dst, const mp_digit_u *src, int32_t precision)
 {
     for (int i = 0; i < precision; ++i) {
         dst[i] = htobexmp(src[precision - i - 1]);
     }
 }
 
-void MPMath::Move_BETOH(mp_digit_u *dst, mp_digit_u const *src, int32_t precision)
+void MPMath::Move_BETOH(mp_digit_u *dst, const mp_digit_u *src, int32_t precision)
 {
     for (int i = 0; i < precision; ++i) {
         dst[i] = bexmptoh(src[precision - i - 1]);
@@ -3679,7 +3692,7 @@ int32_t MPMath::DER_Length_Encode(uint32_t length, uint8_t *output)
     return retval;
 }
 
-uint32_t MPMath::Encode(uint8_t *to, mp_digit_u const *from, int32_t precision)
+uint32_t MPMath::Encode(uint8_t *to, const mp_digit_u *from, int32_t precision)
 {
     DEBUG_ASSERT(to != nullptr);
     DEBUG_ASSERT(from != nullptr);
@@ -3729,7 +3742,7 @@ uint32_t MPMath::Encode(uint8_t *to, mp_digit_u const *from, int32_t precision)
     return putpos;
 }
 
-uint32_t MPMath::Encode_Bounded(uint8_t *to, uint32_t tobytes, mp_digit_u const *from, int32_t precision)
+uint32_t MPMath::Encode_Bounded(uint8_t *to, uint32_t tobytes, const mp_digit_u *from, int32_t precision)
 {
     DEBUG_ASSERT(to != nullptr);
     DEBUG_ASSERT(from != nullptr);
@@ -3757,7 +3770,7 @@ uint32_t MPMath::Encode_Bounded(uint8_t *to, uint32_t tobytes, mp_digit_u const 
     return tobytes;
 }
 
-int32_t MPMath::DER_Encode(mp_digit_u const *from, uint8_t *output, int32_t precision)
+int32_t MPMath::DER_Encode(const mp_digit_u *from, uint8_t *output, int32_t precision)
 {
     DEBUG_ASSERT(from != nullptr);
     DEBUG_ASSERT(output != nullptr);
@@ -4075,7 +4088,7 @@ mp_digit_u MPMath::Rotate_Right(mp_digit_u *number, mp_digit_u carry, int32_t pr
     return carry;
 }
 
-mp_digit_u MPMath::Test_Eq_Int(mp_digit_u const *number, int32_t i, int32_t precision)
+BOOL MPMath::Test_Eq_Int(const mp_digit_u *number, int32_t i, int32_t precision)
 {
     DEBUG_ASSERT(number != nullptr);
     DEBUG_ASSERT(precision > 0);
@@ -4091,7 +4104,7 @@ mp_digit_u MPMath::Test_Eq_Int(mp_digit_u const *number, int32_t i, int32_t prec
     return false;
 }
 
-int MPMath::Compare(mp_digit_u const *left_number, mp_digit_u const *right_number, int32_t precision)
+int MPMath::Compare(const mp_digit_u *left_number, const mp_digit_u *right_number, int32_t precision)
 {
     DEBUG_ASSERT(left_number != nullptr);
     DEBUG_ASSERT(right_number != nullptr);
@@ -4114,7 +4127,7 @@ int MPMath::Compare(mp_digit_u const *left_number, mp_digit_u const *right_numbe
     return 0;
 }
 
-mp_digit_u MPMath::Add(mp_digit_u *result, mp_digit_u *left_number, mp_digit_u *right_number, mp_digit_u carry, int32_t precision)
+mp_digit_u MPMath::Add(mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u carry, int32_t precision)
 {
     DEBUG_ASSERT(result != nullptr);
     DEBUG_ASSERT(left_number != nullptr);
@@ -4147,7 +4160,7 @@ mp_digit_u MPMath::Add_Int(mp_digit_u *result, mp_digit_u *left_number, mp_digit
     return carry;
 }
 
-mp_digit_u MPMath::Sub(mp_digit_u *result, mp_digit_u *left_number, mp_digit_u *right_number, mp_digit_u borrow, int32_t precision)
+mp_digit_u MPMath::Sub(mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u borrow, int32_t precision)
 {
     DEBUG_ASSERT(result != nullptr);
     DEBUG_ASSERT(left_number != nullptr);
@@ -4611,7 +4624,7 @@ void MPMath::Inverse_A_Mod_B(mp_digit_u *result, mp_digit_u *number, mp_digit_u 
     Move(result, v[idec], precision);
 }
 
-int32_t MPMath::Reciprocal(mp_digit_u *quotient, mp_digit_u const *divisor, int32_t precision)
+int32_t MPMath::Reciprocal(mp_digit_u *quotient, const mp_digit_u *divisor, int32_t precision)
 {
     DEBUG_ASSERT(quotient != nullptr);
     DEBUG_ASSERT(divisor != nullptr);
@@ -4675,7 +4688,7 @@ int32_t MPMath::Mod_Mul_Upton(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *
     return 0;
 }
 
-void MPMath::Prepare_Modulus_Upton(mp_digit_u const *modulus, int32_t precision)
+void MPMath::Prepare_Modulus_Upton(const mp_digit_u *modulus, int32_t precision)
 {
     Move(_scratch_modulus, modulus, precision);
     Reciprocal(_upton_reciprocal, modulus, precision);
@@ -4696,7 +4709,7 @@ void MPMath::Mod_Mult_Clear_Upton(int32_t precision)
 }
 
 int MPMath::Exponent_Mod(
-    mp_digit_u *expout, mp_digit_u *expin, mp_digit_u const *exponent_ptr, mp_digit_u const *modulus, int32_t precision)
+    mp_digit_u *expout, mp_digit_u *expin, const mp_digit_u *exponent_ptr, const mp_digit_u *modulus, int32_t precision)
 {
     mp_digit_u product[MAX_UNIT_PRECISION];
 
@@ -4784,49 +4797,87 @@ mp_digit_u MPMath::Rabin_Miller_Test(Straw *rng, const unsigned int *w, int roun
     return 0;
 }
 
-mp_digit_u MPMath::Fermat_Test(unsigned int const *candidate_prime, unsigned int rounds, int precision)
+BOOL MPMath::Fermat_Test(const mp_digit_u *candidate_prime, unsigned int rounds, int precision)
 {
-    // term
-    // small_prime
-    // result
-    //COMPILER_TODO("");
-    return 0;
+    mp_digit_u term[MAX_UNIT_PRECISION];
+    mp_digit_u small_prime[MAX_UNIT_PRECISION];
+    mp_digit_u result[MAX_UNIT_PRECISION];
+    
+    Move(term, candidate_prime, precision);
+    Dec(term, precision);
+
+    for (unsigned i = 0; i < rounds; ++rounds) {
+        Init(small_prime, mp_primeTable[i], precision);
+        Exponent_Mod(result, small_prime, term, candidate_prime, precision);
+
+        if (!Test_Eq_Int(result, 1, precision)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
-mp_digit_u MPMath::Is_Small_Prime(unsigned int const *candidate, int precision)
+BOOL MPMath::Is_Small_Prime(const mp_digit_u *candidate, int precision)
 {
-    //COMPILER_TODO("");
-    return 0;
+    if (Significance(candidate, precision) <= 1 && *candidate <= mp_primeTable[MAX_PRIME_TABLE_SIZE - 1]) {
+        return bsearch(candidate, mp_primeTable, MAX_PRIME_TABLE_SIZE, sizeof(mp_primeTable[0]), Prime_Compare_Func) != nullptr;
+    }
+    
+    return false;
 }
 
-mp_digit_u MPMath::Is_Prime(unsigned int const *prime, int precision)
+BOOL MPMath::Is_Prime(const mp_digit_u *prime, int precision)
 {
-    //COMPILER_TODO("");
-    return 0;
+    if (*prime & 1) {
+        if (Is_Small_Prime(prime, precision)) {
+            return true;
+        } else {
+            if (Small_Divisors_Test(prime, precision)) {
+                return Fermat_Test(prime, 2, precision);
+            }
+        }
+    }
+
+    return false;
 }
 
-void MPMath::Randomize_Bounded(
-    unsigned int *result, Straw *rng, unsigned int const *minval, unsigned int const *maxval, int precision)
+void MPMath::Randomize_Bounded(mp_digit_u *result, Straw *rng, const mp_digit_u *minval, const mp_digit_u *maxval, int precision)
 {
-    // range
-    //COMPILER_TODO("");
+    unsigned int range[MAX_UNIT_PRECISION];
+
+    Sub(range, maxval, minval, 0, precision);
+    int bits = Count_Bits(range, precision);
+
+    do
+    {
+        Randomize(result, rng, bits, precision);
+    } while (Compare(result, range, precision) > 0);
+
+    Add(result, result, minval, 0, precision);
 }
 
-void MPMath::Randomize(unsigned int *result, Straw *rng, int total_bits, int precision)
+void MPMath::Randomize(mp_digit_u *result, Straw *rng, int total_bits, int precision)
 {
-    //COMPILER_TODO("");
+    int bits = Min(total_bits, (int)DIGITSIZE * precision);
+    Init(result, 0, precision);
+    rng->Get(result, bits / 8 + 1);
+    reinterpret_cast<uint8_t *>(result)[bits / 8] &= ~(-1 << bits % 8);
 }
 
-mp_digit_u MPMath::Small_Divisors_Test(mp_digit_u const *candidate, int precision)
+BOOL MPMath::Small_Divisors_Test(const mp_digit_u *candidate, int precision)
 {
     mp_digit_u quotient[MAX_UNIT_PRECISION];
 
     int i = 0;
+
     while (Unsigned_Div_Int(quotient, (mp_digit_u *)candidate, mp_primeTable[i], precision)) {
         ++i;
-        if (i >= ARRAY_SIZE(mp_primeTable)) {
+
+        if (i >= MAX_PRIME_TABLE_SIZE) {
             return true;
         }
     }
+
     return false;
 }
