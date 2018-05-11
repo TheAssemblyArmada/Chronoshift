@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief RSA Encryption engine.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief RSA Encryption engine.
+ *
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef PK_H
@@ -29,7 +29,7 @@ public:
     PKey() : m_modulus(), m_exponent(), m_bitPrecision(0) {}
     PKey(const void *exponent, const void *modulus);
     PKey(PKey const &that) : m_modulus(that.m_modulus), m_exponent(that.m_exponent), m_bitPrecision(that.m_bitPrecision) {}
-    ~PKey() {};
+    ~PKey(){};
 
     PKey &operator=(PKey const &that);
 
@@ -41,9 +41,14 @@ public:
     int Decrypt(void *source, int slen, void *dest) const;
     int Get_Count_Bits() const;
     int Get_Key_Length() const { return m_bitPrecision; }
-    int Key_Bytes() const { return (m_bitPrecision - 1) / 8; }
-
+    int Clear_Text_Block_Size() { return Key_Bytes(); }
+    int Cipher_Text_Block_Size() { return Key_Bytes() + 1; }
     static void Generate(Straw &random, int bits, PKey &fastkey, PKey &slowkey);
+
+private:
+    int Key_Bytes() const { return (m_bitPrecision - 1) / 8; }
+    static int Public_Exponent() { return 65537; }
+    static Int<MAX_UNIT_PRECISION> Generate_Prime(Straw &random, int bits);
 
 private:
     Int<MAX_UNIT_PRECISION> m_modulus;

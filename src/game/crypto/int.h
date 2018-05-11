@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief C++ class wrapper around the C style API of MPMath.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief C++ class wrapper around the C style API of MPMath.
+ *
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef INT_H
@@ -25,49 +25,21 @@ template<int N>
 class Int
 {
 public:
-    Int() { MPMath::Init(m_number, 0, sizeof(N)); }
-    Int(int value) { MPMath::Init(m_number, value, N); }
-    Int(Int const &that) { MPMath::Move(m_number, that.m_number, N); }
+    Int() { MPMath::Init(m_number, 0, N); }
+    explicit Int(int value) { MPMath::Init(m_number, value, N); }
+    Int(const Int &that) { MPMath::Move(m_number, that.m_number, N); }
 
     operator mp_digit_u *() { return m_number; }
     operator mp_digit_u const *() const { return m_number; }
-    operator void const *()const { return m_number; }
+    operator void const *() const { return m_number; }
 
-    Int operator-(mp_digit_s value)
-    {
-        Int result;
-        Borrow = MPMath::Sub_Int(result.m_number, m_number, value, false, N);
-        return result;
-    }
-
-    Int operator+(mp_digit_s value)
-    {
-        Int result;
-        Carry = MPMath::Add_Int(result.m_number, m_number, value, false, N);
-        return result;
-    }
-
-    Int operator*(mp_digit_s value)
-    {
-        Int result;
-        Error = MPMath::Unsigned_Mul_Int(result.m_number, m_number, value, false, N);
-        return result;
-    }
-
-    Int operator/(mp_digit_s value)
-    {
-        Int result;
-        Error = MPMath::Unsigned_Div_Int(result.m_number, m_number, value, false, N);
-        return result;
-    }
-
-    Int &operator+=(Int const &number)
+    Int &operator+=(const Int &number)
     {
         Carry = MPMath::Add(m_number, m_number, number.m_number, false, N);
         return *this;
     }
 
-    Int &operator-=(Int const &number)
+    Int &operator-=(const Int &number)
     {
         Borrow = MPMath::Sub(m_number, m_number, number.m_number, false, N);
         return *this;
@@ -80,19 +52,23 @@ public:
         return result;
     }
 
-    bool operator>(Int const &number) { return MPMath::Compare(m_number, number.m_number, N) > 0; }
-    bool operator<(Int const &number) { return MPMath::Compare(m_number, number.m_number, N) < 0; }
+    bool operator>(const Int &number) { return MPMath::Compare(m_number, number.m_number, N) > 0; }
+    bool operator<(const Int &number) { return MPMath::Compare(m_number, number.m_number, N) < 0; }
 
-    Int Inverse(Int const &modulus)
+    Int Inverse(const Int &modulus)
     {
         Int result;
         MPMath::Inverse_A_Mod_B(result.m_number, m_number, modulus.m_number, N);
         return result;
     }
 
-    Int &operator=(Int &)
+    Int &operator=(const Int &that)
     {
-        return *this; // TEMP, TODO
+        if (this != &that) {
+            MPMath::Move(m_number, that.m_number, N);
+        }
+
+        return *this;
     }
 
     Int &operator<<=(int)
@@ -110,19 +86,11 @@ public:
         return *this; // TEMP, TODO
     }
 
-    Int operator*(Int &)
+    Int operator*(const Int &that) const
     {
-        return *this; // TEMP, TODO
-    }
-
-    Int operator/(uint16_t)
-    {
-        return *this; // TEMP, TODO
-    }
-
-    Int operator/(uint32_t)
-    {
-        return *this; // TEMP, TODO
+        Int result;
+        Error = MPMath::Signed_Mul(result.m_number, m_number, that.m_number, N);
+        return result;
     }
 
     Int operator/(Int &)
@@ -175,6 +143,34 @@ public:
         return *this; // TEMP, TODO
     }
 
+    friend Int operator-(const Int &lhs, const int &rhs)
+    {
+        Int result;
+        Borrow = MPMath::Sub_Int(result.m_number, lhs.m_number, rhs, false, N);
+        return result;
+    }
+
+    friend Int operator+(const Int &lhs, const int &rhs)
+    {
+        Int result;
+        Carry = MPMath::Add_Int(result.m_number, lhs.m_number, rhs, false, N);
+        return result;
+    }
+
+    friend Int operator*(const Int &lhs, const int &rhs)
+    {
+        Int result;
+        Error = MPMath::Unsigned_Mul_Int(result.m_number, lhs.m_number, rhs, N);
+        return result;
+    }
+
+    friend Int operator/(const Int &lhs, const int &rhs)
+    {
+        Int result;
+        Error = MPMath::Unsigned_Div_Int(result.m_number, lhs.m_number, rhs, N);
+        return result;
+    }
+
     void Negate()
     {
         // TODO
@@ -185,105 +181,39 @@ public:
         return *this; // TEMP, TODO
     }
 
-    Int Exp_B_Mod_C(Int &, Int &)
+    Int Exponential_Modulation(const Int &exponent, const Int &modulus)
     {
-        return *this; // TEMP, TODO
+        Int result;
+
+        MPMath::Exponent_Mod(result, *this, exponent, modulus, N);
+
+        return result;
     }
 
-    void Set_Bit(int)
-    {
-        // TODO
-    }
+    int DER_Encode(uint8_t *dst) const { return MPMath::DER_Encode(m_number, dst, N); }
 
-    int Encode(unsigned char *, unsigned int)
-    {
-        return 0; // TODO
-    }
+    void DER_Decode(const uint8_t *src) { MPMath::DER_Decode(m_number, src, N); }
 
-    int Encode(unsigned char *)
-    {
-        return 0; // TODO
-    }
-
-    void Signed_Decode(unsigned char *, int)
-    {
-        // TODO
-    }
-
-    void Unsigned_Decode(unsigned char *, int)
-    {
-        // TODO
-    }
-
-    int DER_Encode(uint8_t *dst) const
-    {
-        return MPMath::DER_Encode(m_number, dst, N);
-    }
-
-    void DER_Decode(const uint8_t *src)
-    {
-        MPMath::DER_Decode(m_number, src, N);
-    }
-
-    int Byte_Count()
-    {
-        return 0; // TODO
-    }
-
-    int Bit_Count()
-    {
-        return 0; // TODO
-    }
+    int Bit_Count() { return MPMath::Count_Bits(m_number, N); }
 
     bool Is_Negative()
     {
         return false; // TODO
     }
 
-    unsigned int Max_Bit_Precision()
+    BOOL Is_Prime() { return MPMath::Is_Prime(*this, N); }
+
+    void Randomize(Straw &rng, const Int &minval, const Int &maxval)
     {
-        return 0; // TODO
+        MPMath::Randomize_Bounded(*this, &rng, minval, maxval, N);
+        m_number[0] |= 1;
     }
 
-    bool Is_Small_Prime()
-    {
-        return false; // TODO
-    }
+    void Host_To_LE() { MPMath::Move_LETOH(m_number, m_number, N); }
+    void LE_To_Host() { MPMath::Move_HTOLE(m_number, m_number, N); }
 
-    bool Small_Divisors_Test()
-    {
-        return false; // TODO
-    }
-
-    bool Fermat_Test(unsigned int)
-    {
-        return false; // TODO
-    }
-
-    bool Is_Prime()
-    {
-        return false; // TODO
-    }
-
-    bool Rabin_Miller_Test(Straw &, unsigned int)
-    {
-        return false; // TODO
-    }
-
-    void Randomize(Straw &rng, Int const &minval, Int const &maxval)
-    {
-        // TODO
-    }
-
-    void Randomize(Straw &rng, int)
-    {
-        // TODO
-    }
-
-    static Int Unsigned_Mult(Int &, Int &);
-    static void Unsigned_Divide(Int &, Int &, Int &, Int &);
-    static void Signed_Divide(Int &, Int &, Int &, Int &);
     static Int Decode_ASCII(char *);
+    static int Precision() { return N; }
 
 private:
     mp_digit_u m_number[N];
@@ -293,20 +223,6 @@ public:
     static bool Borrow;
     static int Error;
     static Int Remainder;
-};
-
-template<class T>
-class RemainderTable
-{
-public:
-    RemainderTable(RemainderTable &p);
-    bool Has_Zero();
-    void Increment(RemainderTable &);
-    void Increment(uint16_t increment);
-
-protected:
-    bool m_hasZeroEntry;
-    uint16_t m_table[MAX_PRIME_TABLE_SIZE];
 };
 
 template<int T>
@@ -321,203 +237,53 @@ int Int<T>::Error = 0;
 template<int T>
 Int<T> Int<T>::Remainder = Int<T>();
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
-template<int N>
-Int<N> Int<N>::Unsigned_Mult(Int<N> &, Int<N> &)
-{
-    return Remainder; // TEMP, TODO
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
-template<int N>
-void Int<N>::Unsigned_Divide(Int<N> &, Int<N> &, Int<N> &, Int<N> &)
-{
-    // TODO
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
-template<int N>
-void Int<N>::Signed_Divide(Int<N> &, Int<N> &, Int<N> &, Int<N> &)
-{
-    // TODO
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
 template<int N>
 Int<N> Int<N>::Decode_ASCII(char *)
 {
     return Remainder; // TODO, TEMP
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
 template<class T>
-RemainderTable<T>::RemainderTable(RemainderTable<T> &p) : m_hasZeroEntry(false)
+class RemainderTable
 {
-    int v3 = MPMath::Fetch_Prime_Size();
-    uint16_t const *v5 = MPMath::Fetch_Prime_Table();
+public:
+    RemainderTable(const T &p);
+    BOOL Has_Zero() { return m_hasZeroEntry; }
+    void Increment(uint16_t increment);
 
-    if (v3 > 0) {
+protected:
+    BOOL m_hasZeroEntry;
+    uint16_t m_table[MAX_PRIME_TABLE_SIZE];
+};
 
+template<class T>
+RemainderTable<T>::RemainderTable(const T &p) : m_hasZeroEntry(false)
+{
+    int table_size = MPMath::Fetch_Prime_Size();
+    const uint16_t *table = MPMath::Fetch_Prime_Table();
+
+    for (int i = 0; i < table_size; ++i) {
+        m_table[i] = MPMath::Unsigned_Div_Int(T::Remainder, p, table[i], T::Precision());
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
-template<class T>
-bool RemainderTable<T>::Has_Zero()
-{
-    return false; // TODO, returns m_hasZeroEntry?
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
-template<class T>
-void RemainderTable<T>::Increment(RemainderTable &)
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  NAME:
-//    ()
-//
-//  DESCRIPTION:
-//    <function overview>
-//
-//  PARAMETERS:
-//    none
-//
-//  RETURN:
-//    none
-//
-//  WARNINGS:
-//    none
-//
-////////////////////////////////////////////////////////////////////////////////
 template<class T>
 void RemainderTable<T>::Increment(uint16_t increment)
 {
     m_hasZeroEntry = false;
 
-    int psize = MPMath::Fetch_Prime_Size();
-    uint16_t const *ptable = MPMath::Fetch_Prime_Table();
+    int table_size = MPMath::Fetch_Prime_Size();
+    const uint16_t *table = MPMath::Fetch_Prime_Table();
+
+    for (int i = 0; i < table_size; ++i) {
+        m_table[i + 1] += increment;
+
+        while (m_table[i + 1] >= table[i]) {
+            m_table[i + 1] -= table[i];
+        }
+
+        m_hasZeroEntry = m_hasZeroEntry || m_table[i + 1] == 0;
+    }
 }
 
 #endif // INT_H

@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief Multiple precision arithmetic library for cryptographic functions.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Multiple precision arithmetic library for cryptographic functions.
+ *
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef MPMATH_H
@@ -113,18 +113,19 @@ int32_t Compare(mp_digit_u const *num1, mp_digit_u const *num2, int32_t precisio
 //
 ///////////////////////////////////////////////////////////////////////////////
 mp_digit_u Add(mp_digit_u *result, const mp_digit_u *num1, const mp_digit_u *num2, mp_digit_u carry, int32_t precision);
-mp_digit_u Add_Int(mp_digit_u *result, mp_digit_u *num1, mp_digit_u num2, mp_digit_u carry, int32_t precision);
-mp_digit_u Sub(mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u borrow, int32_t precision);
-mp_digit_u Sub_Int(mp_digit_u *result, mp_digit_u *num1, mp_digit_u num2, mp_digit_u borrow, int32_t precision);
-int32_t Unsigned_Mul(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
-int32_t Unsigned_Mul_Int(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_s multiplier, int32_t precision);
+mp_digit_u Add_Int(mp_digit_u *result, const mp_digit_u *num1, mp_digit_u num2, mp_digit_u carry, int32_t precision);
+mp_digit_u Sub(
+    mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u borrow, int32_t precision);
+mp_digit_u Sub_Int(mp_digit_u *result, const mp_digit_u *num1, mp_digit_u num2, mp_digit_u borrow, int32_t precision);
+int32_t Unsigned_Mul(mp_digit_u *result, const mp_digit_u *num1, const mp_digit_u *num2, int32_t precision);
+int32_t Unsigned_Mul_Int(mp_digit_u *prod, const mp_digit_u *multiplicand, mp_digit_s multiplier, int32_t precision);
 int32_t Unsigned_Mul_Int16(mp_digit_u *result, mp_digit_u *num1, int16_t num2, int32_t precision);
-int32_t Signed_Mul(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
+int32_t Signed_Mul(mp_digit_u *result, const mp_digit_u *num1, const mp_digit_u *num2, int32_t precision);
 int32_t Signed_Mul_Int(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_u multiplier, int32_t precision);
 void Hybrid_Mul(mp_digit_u *result, mp_digit_u *num1, mp_digit_u num2, int32_t precision);
 void Double_Mul(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
-int32_t Unsigned_Div(mp_digit_u *remainder, mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
-uint32_t Unsigned_Div_Int(mp_digit_u *result, mp_digit_u *num1, mp_digit_u num2, int32_t precision);
+int32_t Unsigned_Div(mp_digit_u *remainder, mp_digit_u *result, const mp_digit_u *num1, const mp_digit_u *num2, int32_t precision);
+uint32_t Unsigned_Div_Int(mp_digit_u *result, const mp_digit_u *num1, mp_digit_u num2, int32_t precision);
 void Signed_Div(mp_digit_u *remainder, mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
 void Modulo(mp_digit_u *remainder, mp_digit_u *number, mp_digit_u *modulus, int32_t precision);
 
@@ -133,7 +134,7 @@ void Modulo(mp_digit_u *remainder, mp_digit_u *number, mp_digit_u *modulus, int3
 //  Number Theory stuff for RSA
 //
 ////////////////////////////////////////////////////////////////////////////////
-void Inverse_A_Mod_B(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
+void Inverse_A_Mod_B(mp_digit_u *result, const mp_digit_u *num1, const mp_digit_u *num2, int32_t precision);
 int32_t Reciprocal(mp_digit_u *result, mp_digit_u const *number, int32_t precision);
 int32_t Mod_Mul_Upton(mp_digit_u *result, mp_digit_u *num1, mp_digit_u *num2, int32_t precision);
 void Prepare_Modulus_Upton(mp_digit_u const *modulus, int32_t precision);
@@ -153,8 +154,7 @@ mp_digit_u Rabin_Miller_Test(Straw *rng, unsigned int const *w, int rounds, int 
 BOOL Fermat_Test(const mp_digit_u *candidate_prime, unsigned int rounds, int precision);
 BOOL Is_Small_Prime(const mp_digit_u *candidate, int precision);
 BOOL Is_Prime(const mp_digit_u *prime, int precision);
-void Randomize_Bounded(
-    mp_digit_u *result, Straw *rng, const mp_digit_u *minval, const mp_digit_u *maxval, int precision);
+void Randomize_Bounded(mp_digit_u *result, Straw *rng, const mp_digit_u *minval, const mp_digit_u *maxval, int precision);
 void Randomize(mp_digit_u *result, Straw *rng, int total_bits, int precision);
 BOOL Small_Divisors_Test(mp_digit_u const *candidate, int precision);
 
@@ -200,6 +200,6 @@ inline void Print(mp_digit_u *number, int precision)
     DEBUG_LOG("\n");
 }
 
-} // end of MPMath namespace
+} // namespace MPMath
 
 #endif // MPMATH_H

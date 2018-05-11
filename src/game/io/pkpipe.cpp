@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Pipe that processes the data with RSA and Blowfish as it writes it.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -118,10 +118,10 @@ void PKPipe::Key(PKey *key)
 /**
 * @brief Provides the length in bytes that the RSA key can encrypt in a single block.
 */
-int PKPipe::Encrypted_Key_Length(void) const
+int PKPipe::Encrypted_Key_Length() const
 {
     if (m_rsaKey) {
-        return (m_rsaKey->Key_Bytes() + 1) * (55 / (m_rsaKey->Key_Bytes() + 1));
+        return m_rsaKey->Cipher_Text_Block_Size() * (55 / m_rsaKey->Cipher_Text_Block_Size());
     }
 
     return 0;
@@ -130,10 +130,10 @@ int PKPipe::Encrypted_Key_Length(void) const
 /**
 * @brief Provides the length in bytes that the RSA key can decrypt a single block to.
 */
-int PKPipe::Plain_Key_Length(void) const
+int PKPipe::Plain_Key_Length() const
 {
     if (m_rsaKey) {
-        return m_rsaKey->Key_Bytes() * (55 / (m_rsaKey->Key_Bytes() + 1));
+        return m_rsaKey->Clear_Text_Block_Size() * (55 / m_rsaKey->Cipher_Text_Block_Size());
     }
 
     return 0;

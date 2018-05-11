@@ -1,22 +1,22 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief Multiple precision arithmetic library for cryptographic functions.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Multiple precision arithmetic library for cryptographic functions.
+ *
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "mpmath.h"
+#include "endiantype.h"
 #include "gamedebug.h"
 #include "minmax.h"
-#include "endiantype.h"
 
 #include <stdlib.h>
 
@@ -4127,7 +4127,8 @@ int MPMath::Compare(const mp_digit_u *left_number, const mp_digit_u *right_numbe
     return 0;
 }
 
-mp_digit_u MPMath::Add(mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u carry, int32_t precision)
+mp_digit_u MPMath::Add(
+    mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u carry, int32_t precision)
 {
     DEBUG_ASSERT(result != nullptr);
     DEBUG_ASSERT(left_number != nullptr);
@@ -4143,7 +4144,8 @@ mp_digit_u MPMath::Add(mp_digit_u *result, const mp_digit_u *left_number, const 
     return carry;
 }
 
-mp_digit_u MPMath::Add_Int(mp_digit_u *result, mp_digit_u *left_number, mp_digit_u right_number, mp_digit_u carry, int32_t precision)
+mp_digit_u MPMath::Add_Int(
+    mp_digit_u *result, const mp_digit_u *left_number, mp_digit_u right_number, mp_digit_u carry, int32_t precision)
 {
     DEBUG_ASSERT(result != nullptr);
     DEBUG_ASSERT(left_number != nullptr);
@@ -4160,7 +4162,8 @@ mp_digit_u MPMath::Add_Int(mp_digit_u *result, mp_digit_u *left_number, mp_digit
     return carry;
 }
 
-mp_digit_u MPMath::Sub(mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u borrow, int32_t precision)
+mp_digit_u MPMath::Sub(
+    mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u borrow, int32_t precision)
 {
     DEBUG_ASSERT(result != nullptr);
     DEBUG_ASSERT(left_number != nullptr);
@@ -4176,7 +4179,8 @@ mp_digit_u MPMath::Sub(mp_digit_u *result, const mp_digit_u *left_number, const 
     return borrow;
 }
 
-mp_digit_u MPMath::Sub_Int(mp_digit_u *result, mp_digit_u *left_number, mp_digit_u right_number, mp_digit_u borrow, int32_t precision)
+mp_digit_u MPMath::Sub_Int(
+    mp_digit_u *result, const mp_digit_u *left_number, mp_digit_u right_number, mp_digit_u borrow, int32_t precision)
 {
     DEBUG_ASSERT(result != nullptr);
     DEBUG_ASSERT(left_number != nullptr);
@@ -4193,7 +4197,7 @@ mp_digit_u MPMath::Sub_Int(mp_digit_u *result, mp_digit_u *left_number, mp_digit
     return borrow;
 }
 
-int32_t MPMath::Unsigned_Mul(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_u *multiplier, int32_t precision)
+int32_t MPMath::Unsigned_Mul(mp_digit_u *prod, const mp_digit_u *multiplicand, const mp_digit_u *multiplier, int32_t precision)
 {
     DEBUG_ASSERT(prod != nullptr);
     DEBUG_ASSERT(multiplicand != nullptr);
@@ -4213,7 +4217,7 @@ int32_t MPMath::Unsigned_Mul(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digi
 
     // Multiple using serial addition for each tested bit in multiplier.
     if (units != 0) {
-        mp_digit_u *num2_ptr = &multiplier[units - 1];
+        const mp_digit_u *num2_ptr = &multiplier[units - 1];
 
         for (int i = num2_bits - 1; i >= 0; --i) {
             Shift_Left_Bits(prod, 1, precision);
@@ -4234,7 +4238,7 @@ int32_t MPMath::Unsigned_Mul(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digi
     return 0;
 }
 
-int32_t MPMath::Unsigned_Mul_Int(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_s multiplier, int32_t precision)
+int32_t MPMath::Unsigned_Mul_Int(mp_digit_u *prod, const mp_digit_u *multiplicand, mp_digit_s multiplier, int32_t precision)
 {
     DEBUG_ASSERT(prod != nullptr);
     DEBUG_ASSERT(multiplicand != nullptr);
@@ -4289,7 +4293,7 @@ int32_t MPMath::Unsigned_Mul_Int16(mp_digit_u *prod, mp_digit_u *multiplicand, i
     return 0;
 }
 
-int32_t MPMath::Signed_Mul(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_u *multiplier, int32_t precision)
+int32_t MPMath::Signed_Mul(mp_digit_u *prod, const mp_digit_u *multiplicand, const mp_digit_u *multiplier, int32_t precision)
 {
     DEBUG_ASSERT(prod != nullptr);
     DEBUG_ASSERT(multiplicand != nullptr);
@@ -4396,7 +4400,7 @@ void MPMath::Double_Mul(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_u *
 }
 
 int32_t MPMath::Unsigned_Div(
-    mp_digit_u *remainder, mp_digit_u *quotient, mp_digit_u *dividend, mp_digit_u *divisor, int32_t precision)
+    mp_digit_u *remainder, mp_digit_u *quotient, const mp_digit_u *dividend, const mp_digit_u *divisor, int32_t precision)
 {
     DEBUG_ASSERT(remainder != nullptr);
     DEBUG_ASSERT(quotient != nullptr);
@@ -4418,7 +4422,7 @@ int32_t MPMath::Unsigned_Div(
     int32_t units = Bits_To_Units(num1_bits);
 
     if (units != 0) {
-        mp_digit_u *num1ptr = &dividend[units - 1];
+        const mp_digit_u *num1ptr = &dividend[units - 1];
         mp_digit_u *resptr = &quotient[units - 1];
         uint32_t high_bit_mask = num1_bits != 0 ? 1 << ((num1_bits - 1) % 32) : 0;
 
@@ -4448,7 +4452,7 @@ int32_t MPMath::Unsigned_Div(
     return 0;
 }
 
-uint32_t MPMath::Unsigned_Div_Int(mp_digit_u *quotient, mp_digit_u *dividend, mp_digit_u divisor, int32_t precision)
+uint32_t MPMath::Unsigned_Div_Int(mp_digit_u *quotient, const mp_digit_u *dividend, mp_digit_u divisor, int32_t precision)
 {
     DEBUG_ASSERT(quotient != nullptr);
     DEBUG_ASSERT(dividend != nullptr);
@@ -4467,7 +4471,7 @@ uint32_t MPMath::Unsigned_Div_Int(mp_digit_u *quotient, mp_digit_u *dividend, mp
     uint32_t remain = 0;
 
     if (units != 0) {
-        mp_digit_u *num1ptr = &dividend[units - 1];
+        const mp_digit_u *num1ptr = &dividend[units - 1];
         mp_digit_u *resptr = &quotient[units - 1];
         uint32_t high_bit_mask = num1_bits != 0 ? 1 << ((num1_bits - 1) % 32) : 0;
 
@@ -4584,7 +4588,7 @@ void MPMath::Modulo(mp_digit_u *remainder, mp_digit_u *num1, mp_digit_u *num2, i
     }
 }
 
-void MPMath::Inverse_A_Mod_B(mp_digit_u *result, mp_digit_u *number, mp_digit_u *modulus, int32_t precision)
+void MPMath::Inverse_A_Mod_B(mp_digit_u *result, const mp_digit_u *number, const mp_digit_u *modulus, int32_t precision)
 {
     DEBUG_ASSERT(result != nullptr);
     DEBUG_ASSERT(number != nullptr);
@@ -4788,7 +4792,7 @@ int MPMath::Fetch_Prime_Size(void)
 void MPMath::Decode_ASCII(char const *str, unsigned int *mpn, int precision)
 {
     // minus
-    //COMPILER_TODO("");
+    // COMPILER_TODO("");
 }
 
 mp_digit_u MPMath::Rabin_Miller_Test(Straw *rng, const unsigned int *w, int rounds, int precision)
@@ -4802,7 +4806,7 @@ BOOL MPMath::Fermat_Test(const mp_digit_u *candidate_prime, unsigned int rounds,
     mp_digit_u term[MAX_UNIT_PRECISION];
     mp_digit_u small_prime[MAX_UNIT_PRECISION];
     mp_digit_u result[MAX_UNIT_PRECISION];
-    
+
     Move(term, candidate_prime, precision);
     Dec(term, precision);
 
@@ -4821,9 +4825,10 @@ BOOL MPMath::Fermat_Test(const mp_digit_u *candidate_prime, unsigned int rounds,
 BOOL MPMath::Is_Small_Prime(const mp_digit_u *candidate, int precision)
 {
     if (Significance(candidate, precision) <= 1 && *candidate <= mp_primeTable[MAX_PRIME_TABLE_SIZE - 1]) {
-        return bsearch(candidate, mp_primeTable, MAX_PRIME_TABLE_SIZE, sizeof(mp_primeTable[0]), Prime_Compare_Func) != nullptr;
+        return bsearch(candidate, mp_primeTable, MAX_PRIME_TABLE_SIZE, sizeof(mp_primeTable[0]), Prime_Compare_Func)
+            != nullptr;
     }
-    
+
     return false;
 }
 
@@ -4842,15 +4847,15 @@ BOOL MPMath::Is_Prime(const mp_digit_u *prime, int precision)
     return false;
 }
 
-void MPMath::Randomize_Bounded(mp_digit_u *result, Straw *rng, const mp_digit_u *minval, const mp_digit_u *maxval, int precision)
+void MPMath::Randomize_Bounded(
+    mp_digit_u *result, Straw *rng, const mp_digit_u *minval, const mp_digit_u *maxval, int precision)
 {
     unsigned int range[MAX_UNIT_PRECISION];
 
     Sub(range, maxval, minval, 0, precision);
     int bits = Count_Bits(range, precision);
 
-    do
-    {
+    do {
         Randomize(result, rng, bits, precision);
     } while (Compare(result, range, precision) > 0);
 
