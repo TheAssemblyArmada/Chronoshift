@@ -46,7 +46,7 @@ public:
     virtual void Set_Default_Mouse(MouseType mouse, BOOL a2 = false) override;
     virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL a2 = false) override;
     virtual void Revert_Mouse_Shape() override;
-    virtual void Mouse_Small(BOOL a1) override;
+    virtual void Mouse_Small(BOOL use_small_frame) override;
     virtual MouseType Get_Mouse_Shape(void) const override;
     virtual BOOL Load(Straw &straw);
     virtual BOOL Save(Pipe &pipe) const;
@@ -79,7 +79,8 @@ private:
 #else
     static void *MouseShapes;
 #endif
-    TCountDownTimerClass<SystemTimerClass> Timer;
+    static MouseStruct MouseControl[MOUSE_COUNT];
+    static TCountDownTimerClass<SystemTimerClass> Timer;
 };
 
 #ifndef RAPP_STANALONE
