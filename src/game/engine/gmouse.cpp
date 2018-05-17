@@ -87,7 +87,7 @@ GameMouseClass::GameMouseClass()
 void GameMouseClass::One_Time()
 {
     TabClass::One_Time();
-    MouseShapes = MixFileClass<CCFileClass>::Retrieve("MOUSE.SHP");
+    MouseShapes = MixFileClass<CCFileClass>::Retrieve("mouse.shp");
 }
 
 void GameMouseClass::Init_Clear()

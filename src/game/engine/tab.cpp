@@ -15,6 +15,15 @@
  */
 
 #include "tab.h"
+#include "ccfileclass.h"
+#include "mixfile.h"
+
+
+#ifndef RAPP_STANDALONE
+void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
+#else
+void *TabClass::TabShape = nullptr;
+#endif
 
 TabClass::CreditClass::CreditClass(void) :
     Available(0),
@@ -60,10 +69,8 @@ TabClass::TabClass()
 
 void TabClass::One_Time()
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const TabClass *) = reinterpret_cast<void (*)(const TabClass *)>(0x005539D8);
-    func(this);
-#endif
+    SidebarClass::One_Time();
+    TabShape = MixFileClass<CCFileClass>::Retrieve("tabs.shp");
 }
 
 void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
