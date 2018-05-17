@@ -52,7 +52,7 @@ protected:
     int field_165D;		//0x165D		//is this a rate of sorts?
 
 private:
-static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;
+    static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;
 
 };
 

@@ -92,10 +92,9 @@ void GameMouseClass::One_Time()
 
 void GameMouseClass::Init_Clear()
 {
-#ifndef RAPP_STANDALONE
-    DEFINE_CALL(func, 0x005033FC, void, (GameMouseClass *));
-    func(this);
-#endif
+    HelpClass::Init_Clear();
+    MouseShape = MOUSE_POINTER;
+    MouseInRadar = false;
 }
 
 void GameMouseClass::AI(KeyNumType &key, int mouse_x, int mouse_y)

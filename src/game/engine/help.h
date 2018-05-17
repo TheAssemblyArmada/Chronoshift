@@ -65,8 +65,8 @@ protected:
     int32_t HelpXPos; // 0x163C
     int32_t HelpYPos; // 0x1640
     int HelpWidth; // 0x1644
-    TextEnum HelpTextID; // 0x1648
-    unsigned char HelpTextColor; // 0x164C
+    int HelpTextID; // 0x1648 //is but setting it offsets alignment TextEnum
+    int HelpTextColor; // 0x164C
     TCountDownTimerClass<SystemTimerClass> CountDownTimer; // 0x1650
 private:
     static int16_t OverlapList[60];
