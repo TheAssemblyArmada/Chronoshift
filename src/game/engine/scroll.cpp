@@ -22,12 +22,17 @@ ScrollClass::ScrollClass()
 void ScrollClass::Init_IO(void)
 {
     HelpClass::Init_IO();
-    ScrollingCounter = 0;
+    //ScrollingCounter = 0; //help
 
 }
 
 void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
-{}
+{
+#ifndef RAPP_STANDALONE
+    DEFINE_CALL(func,0x00547088, void, (const ScrollClass *, KeyNumType &, int, int));
+    func(this, key, mouse_x, mouse_y);
+#endif
+}
 
 BOOL ScrollClass::Set_Autoscroll(int a1)
 {

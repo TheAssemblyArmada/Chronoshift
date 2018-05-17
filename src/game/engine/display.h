@@ -297,19 +297,19 @@ inline void DisplayClass::Hook_Me()
     Hook_Function(0x004B0C78, *DisplayClass::Hook_Cell_Object); //seems to work
     Hook_Function(0x004B4E20, *DisplayClass::Center_Map); //seems to work
     Hook_Function(0x004AFD40, *DisplayClass::Set_Cursor_Pos); //seems to work
-    Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons); //seems to work
-    Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow); //seems to work
+    //Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons); // has previously uncatched shadow drawing issues
+    //Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow); //has previously uncatched shadow drawing issues
     Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View); //seems to work
-    Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel); //seems to work
-    Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);//seems to work
+    //Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel); //has previously uncatched shadow drawing issues
+    //Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);//has previously uncatched shadow drawing issues
 
     //*****************************************************//
     Hook_Function(0x0049FF98, *CellClass::Spot_Index); //seems to work
-    Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap); //seems to work
+    //Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap); //has previously uncatched shadow drawing issues
     Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell); //seems to work
     Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell); //seems to work
     Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot); //seems to work
-    Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow); //seems to work
+    //Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow); //has previously uncatched shadow drawing issues
 #endif
 }
 #endif

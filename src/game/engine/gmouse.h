@@ -19,6 +19,7 @@
 #define GMOUSE_H
 
 #include "always.h"
+#include "scroll.h"
 
 class GameMouseClass : public ScrollClass
 {
@@ -41,7 +42,6 @@ public:
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;
-    virtual void Init_IO() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Set_Default_Mouse(MouseType mouse, BOOL a2 = false) override;
     virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL a2 = false) override;

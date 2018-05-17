@@ -116,6 +116,25 @@ __forceinline T(__cdecl *Make_VA_Function_Ptr(const uintptr_t address))(Types...
 }
 #endif
 
+//Macro version of Call_Function function as Watcom doesn't support variadic template
+
+//If the called function returns you don't need to add return after CALL_FUNCTION as it will be handled automatically by the macro.
+//You can't have a "return CALL_FUNCTION" with this macro as that just then returns the function address, for using return value use DEFINE_CALL
+
+// unsigned int adr = address - needed because of a watcom bug making address a const which makes it create call dword ptr [eax]
+#define CALL_FUNCTION(address, pointer_type, ...)\
+    unsigned int adr = address; \
+    return reinterpret_cast<pointer_type>(adr)(##__VA_ARGS__)
+
+//DEFINE_CALL wraps our inital reinterpret_cast method of calling a function in a simpler package
+
+//to use it define DEFINE_CALL in function and call it, like so:
+//  DEFINE_CALL(MyFunction, 0xDEADBEEF, void*, (int, int));
+//  return MyFunction(integral, integral2);
+
+#define DEFINE_CALL(func_name, address, return_type, pointer_type) \
+    return_type (*func_name)pointer_type = reinterpret_cast<return_type(*)pointer_type>(address);
+
 // A nice struct to pack the assembly in for jumping into replacement code.
 // So long as the calling conventions and arguments for the replaced and
 // replacement functions are the same, everything should just work.

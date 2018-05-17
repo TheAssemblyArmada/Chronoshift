@@ -49,13 +49,13 @@ void TabClass::CreditClass::AI(bool a1)
 
 TabClass::TabClass()
 {
-    //help
-/*
-#ifndef RAPP_STANDALONE
-    void (*func)(const TabClass *) = reinterpret_cast<void (*)(const TabClass *)>(0x00553340);
-    func(this);
-#endif
-*/
+    // help
+    /*
+    #ifndef RAPP_STANDALONE
+        void (*func)(const TabClass *) = reinterpret_cast<void (*)(const TabClass *)>(0x00553340);
+        func(this);
+    #endif
+    */
 }
 
 void TabClass::One_Time()
@@ -109,8 +109,19 @@ void TabClass::Hilite_Tab(TabEnum tab)
 
 void TabClass::Set_Active(TabEnum tab)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const TabClass *, TabEnum) = reinterpret_cast<void (*)(const TabClass *, TabEnum)>(0x005539AC);
-    func(this, tab);
-#endif
+    //It seems it might be feed minus values too....
+    DEBUG_LOG("TabClass::Set_Active got %d\n", tab);
+    // rewrote into a switch, as its cleaner. see binary
+    switch (tab) {
+        case TAB_OPTIONS:
+            //Queue_Options();
+            break;
+
+        case TAB_SIDEBAR:
+            //Map.Activate(); // Toggles the sidebar.
+            break;
+
+        default:
+            break;
+    }
 }

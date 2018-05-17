@@ -61,7 +61,7 @@ BOOL HelpClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
     if ( redraw ) {
         Help_Text(TXT_NULL);
     }
-    return TabClass::Scroll_Map(dir, distance, redraw);
+    return DisplayClass::Scroll_Map(dir, distance, redraw);
 }
 
 void HelpClass::Set_Tactical_Position(uint32_t location)
@@ -69,7 +69,7 @@ void HelpClass::Set_Tactical_Position(uint32_t location)
     if ( DisplayPos != location ) {
         Help_Text(TXT_NULL);
     }
-    return TabClass::Set_Tactical_Position(location);
+    return RadarClass::Set_Tactical_Position(location);
 }
 
 int16_t *const HelpClass::Overlap_List(void) const
