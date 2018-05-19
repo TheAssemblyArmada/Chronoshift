@@ -48,6 +48,7 @@ void TabClass::CreditClass::Graphic_Logic(bool a1)
     func(this, a1);
 #endif
 }
+
 void TabClass::CreditClass::AI(bool a1)
 {
 #ifndef RAPP_STANDALONE

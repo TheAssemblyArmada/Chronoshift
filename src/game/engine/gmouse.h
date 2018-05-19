@@ -76,11 +76,12 @@ protected:
 private:
 #ifndef RAPP_STANDALONE
     static void *&MouseShapes;
+    static TCountDownTimerClass<SystemTimerClass> &AnimationTimer;
 #else
     static void *MouseShapes;
+    static TCountDownTimerClass<SystemTimerClass> AnimationTimer;
 #endif
     static MouseStruct MouseControl[MOUSE_COUNT];
-    static TCountDownTimerClass<SystemTimerClass> Timer;
 };
 
 #ifndef RAPP_STANALONE
