@@ -28,12 +28,6 @@ void *GameMouseClass::MouseShapes = nullptr;
 TCountDownTimerClass<SystemTimerClass> GameMouseClass::AnimationTimer;
 #endif
 
-#ifndef RAPP_STANDALONE
-TTimerClass<SystemTimerClass> &TickCountTimer = *reinterpret_cast<TTimerClass<SystemTimerClass> *>(0x00680870);
-#else
-TTimerClass<SystemTimerClass> TickCountTimer;
-#endif
-
 //
 //
 //
@@ -94,13 +88,13 @@ GameMouseClass::GameMouseClass()
 
 void GameMouseClass::One_Time()
 {
-    TabClass::One_Time();
+    ScrollClass::One_Time();
     MouseShapes = MixFileClass<CCFileClass>::Retrieve("mouse.shp");
 }
 
 void GameMouseClass::Init_Clear()
 {
-    HelpClass::Init_Clear();
+    ScrollClass::Init_Clear();
     MouseShape = MOUSE_POINTER;
     MouseInRadar = false;
 }
