@@ -43,9 +43,9 @@ public:
 #endif
 
 protected:
-    int field_1620; // 0x1620
-    int field_1624; // 0x1624
-    int field_1628; // 0x1628
+    int field_1620;
+    int field_1624;
+    int field_1628;
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
@@ -59,15 +59,15 @@ protected:
 #else
     bool HelpBit1;
 #endif
-    int HelpCost; // 0x1630
-    int HelpMouseXPos; // 0x1634
-    int HelpMouseYPos; // 0x1638
-    int32_t HelpXPos; // 0x163C
-    int32_t HelpYPos; // 0x1640
-    int HelpWidth; // 0x1644
-    int HelpTextID; // 0x1648 //is but setting it offsets alignment TextEnum
-    int HelpTextColor; // 0x164C
-    TCountDownTimerClass<SystemTimerClass> CountDownTimer; // 0x1650
+    int HelpCost;
+    int HelpMouseXPos;
+    int HelpMouseYPos;
+    int32_t HelpXPos;
+    int32_t HelpYPos;
+    int HelpWidth;
+    int HelpTextID; //TextEnum is but setting it offsets alignment
+    int HelpTextColor; //should just be unsigned chat but it offsets alignment
+    TCountDownTimerClass<SystemTimerClass> CountDownTimer;
 private:
     static int16_t OverlapList[60];
     static char *HelpText;

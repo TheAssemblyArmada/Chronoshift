@@ -66,7 +66,6 @@ private:
         {
             struct
             {
-                // bitfield 0x8
                 bool CreditToRedraw : 1;
                 bool CreditHasIncreased : 1;
                 bool CreditHasChanged : 1;
@@ -74,7 +73,6 @@ private:
             int Bitfield;
         };
 #else
-        // bitfield 0x8
         bool CreditToRedraw;
         bool CreditHasIncreased;
         bool CreditHasChanged;
@@ -100,8 +98,8 @@ public:
 #endif
 
 protected:
-    CreditClass CreditDisplay; // 0x15FA
-    TCountDownTimerClass<FrameTimerClass> TimerFlashTimer; // 0x160A
+    CreditClass CreditDisplay;
+    TCountDownTimerClass<FrameTimerClass> TimerFlashTimer;
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union

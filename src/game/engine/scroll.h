@@ -49,7 +49,7 @@ protected:
 #else
     bool Autoscroll;
 #endif
-    int field_165D;		//0x165D		//is this a rate of sorts?
+    int field_165D;	//is this a rate of sorts?
 
 private:
     static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;

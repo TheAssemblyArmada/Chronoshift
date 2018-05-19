@@ -69,9 +69,9 @@ protected:
 #else
     bool MouseInRadar;
 #endif
-    MouseType PreviousMouseShape; // 0x1665
-    MouseType MouseShape; // 0x1666
-    int MouseFrame; // 0x1667	//this is the current frame index for the animated mouse.
+    MouseType PreviousMouseShape;
+    MouseType MouseShape;
+    int MouseFrame; //this is the current frame index for the animated mouse.
 
 private:
 #ifndef RAPP_STANDALONE
