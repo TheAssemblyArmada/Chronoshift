@@ -174,6 +174,7 @@ void HelpClass::Set_Text(TextEnum string_id)
         memcpy(HelpClass::OverlapList, overlaplist, sizeof(HelpClass::OverlapList));
     }
 }
+
 void HelpClass::Set_Cost(int cost)
 {
     HelpCost = cost;
