@@ -18,6 +18,8 @@
 #include "ccfileclass.h"
 #include "mixfile.h"
 #include "drawshape.h"
+#include "globals.h"
+#include "gbuffer.h"
 
 #ifndef RAPP_STANDALONE
 void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
@@ -85,18 +87,14 @@ void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void TabClass::Draw_It(BOOL force_redraw)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const TabClass *, BOOL) = reinterpret_cast<void (*)(const TabClass *, BOOL)>(0x005533A0);
-    func(this, force_redraw);
-#else
     SidebarClass::Draw_It(force_redraw);
     if (g_inMapEditor) {
         if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
             g_logicPage->Fill_Rect(0, 0, g_seenBuff->Get_Width() - 1, 16 - 4, 12);
-            CC_Draw_Shape(TabShape, 1, 0, 0, 0, 0);
+            CC_Draw_Shape(TabShape, 1, 0, 0, WINDOW_0, SHAPE_NORMAL);
             TabClass::Draw_Credits_Tab();
-            TabClass::Draw_Passable_Tab(Map.ShowPassable);
-            TabClass::Draw_Map_Size_Tab(1, TabClass_Draw_Map_Size_Tab_defarg());
+            //TabClass::Draw_Passable_Tab(Map.ShowPassable);
+            //TabClass::Draw_Map_Size_Tab(1, TabClass_Draw_Map_Size_Tab_defarg());
             g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff->Get_Width() - 1, 16 - 2, 12);
             Fancy_Text_Print(
                 TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
@@ -111,19 +109,19 @@ void TabClass::Draw_It(BOOL force_redraw)
     } else { // from RA 2.00 dos so values could be wrong, but its the cleanest pseudo
         if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
             g_logicPage->Fill_Rect(0, 0, g_seenBuff->Get_Width() - 1, 16 - 4, 12);
-            CC_Draw_Shape(TabShape, 0, 0, 0, 0, 0);
+            CC_Draw_Shape(TabShape, 0, 0, 0, WINDOW_0, SHAPE_NORMAL);
             TabClass::Draw_Credits_Tab();
             g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff->Get_Width() - 1, 16 - 2, 12);
             Fancy_Text_Print(
                 TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
             if (SidebarIsDrawn) {
-                TabClass::Hilite_Tab(1);
+                TabClass::Hilite_Tab(TAB_SIDEBAR);
             } else {
-                CC_Draw_Shape(TabClass::TabShape, 0, SeenBuff.vp.Width - 80, 0, 0, 0);
+                CC_Draw_Shape(TabShape, 0, g_seenBuff->Get_Width() - 80, 0, WINDOW_0, SHAPE_NORMAL);
                 Fancy_Text_Print(TXT_TAB_SIDEBAR,
-                    SeenBuff.vp.Width - 40,
+                    g_seenBuff->Get_Width() - 40,
                     0,
-                    &RemapType_5,
+                    &ColorRemaps[REMAP_5],
                     0,
                     TPF_USE_BRIGHT | TPF_CENTER | TPF_NOSHADOW | TPF_12PT_METAL);
             }
@@ -136,7 +134,6 @@ void TabClass::Draw_It(BOOL force_redraw)
         }
         TabToRedraw = false;
     }
-#endif
 }
 
 void TabClass::Flash_Money(void)
