@@ -90,6 +90,7 @@ public:
 
     void Flash_Money(void);
     void Draw_Passable_Tab(BOOL state);
+    void Draw_Map_Size_Tab();
     void Draw_Credits_Tab(void);
     static void Hilite_Tab(TabEnum tab = TAB_NONE);
     void Set_Active(TabEnum tab = TAB_NONE);
