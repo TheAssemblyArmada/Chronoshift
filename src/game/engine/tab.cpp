@@ -17,6 +17,7 @@
 #include "tab.h"
 #include "ccfileclass.h"
 #include "mixfile.h"
+#include "drawshape.h"
 
 #ifndef RAPP_STANDALONE
 void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
@@ -88,10 +89,9 @@ void TabClass::Draw_It(BOOL force_redraw)
 
 void TabClass::Flash_Money(void)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const TabClass *) = reinterpret_cast<void (*)(const TabClass *)>(0x00553A4C);
-    func(this);
-#endif
+	TabToRedraw = true;
+	Flag_To_Redraw();
+	CreditsFlashTimer = 7;
 }
 
 void TabClass::Draw_Credits_Tab(void)
@@ -104,10 +104,18 @@ void TabClass::Draw_Credits_Tab(void)
 
 void TabClass::Hilite_Tab(TabEnum tab)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(TabEnum) = reinterpret_cast<void (*)(TabEnum)>(0x00553868);
-    func(tab);
-#endif
+    int v1; // ebx@1
+    char v2; // dl@3
+
+    v1 = 0;
+    if ( tab )
+    {
+        v1 = 480;
+    }
+    CC_Draw_Shape(TabShape, 1, v1, 0, WINDOW_0, SHAPE_NORMAL);
+    MetalScheme.MediumColor = 134;
+    Fancy_Text_Print(TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
+    MetalScheme.MediumColor = v2;
 }
 
 void TabClass::Set_Active(TabEnum tab)
