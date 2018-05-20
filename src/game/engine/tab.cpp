@@ -24,6 +24,7 @@ void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
 #else
 void *TabClass::TabShape = nullptr;
 #endif
+void *TabClass::PassableShape = nullptr;
 
 TabClass::CreditClass::CreditClass(void) :
     Available(0),
@@ -68,6 +69,9 @@ void TabClass::One_Time()
 {
     SidebarClass::One_Time();
     TabShape = MixFileClass<CCFileClass>::Retrieve("tabs.shp");
+    if (g_inMapEditor) {
+        PassableShape = MixFileClass<CCFileClass>::Retrieve("passable.shp");
+    }
 }
 
 void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
@@ -86,7 +90,7 @@ void TabClass::Draw_It(BOOL force_redraw)
     func(this, force_redraw);
 #else
     SidebarClass::Draw_It(force_redraw);
-    if (Debug_Map) {
+    if (g_inMapEditor) {
         if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
             g_logicPage->Fill_Rect(0, 0, g_seenBuff->Get_Width() - 1, 16 - 4, 12);
             CC_Draw_Shape(TabShape, 1, 0, 0, 0, 0);
@@ -94,7 +98,8 @@ void TabClass::Draw_It(BOOL force_redraw)
             TabClass::Draw_Passable_Tab(Map.ShowPassable);
             TabClass::Draw_Map_Size_Tab(1, TabClass_Draw_Map_Size_Tab_defarg());
             g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff->Get_Width() - 1, 16 - 2, 12);
-            Fancy_Text_Print(TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
+            Fancy_Text_Print(
+                TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
             g_logicPage->Unlock();
         }
         if (force_redraw || TabToRedraw) {
@@ -103,18 +108,24 @@ void TabClass::Draw_It(BOOL force_redraw)
             CreditDisplay.Graphic_Logic(0);
         }
         TabToRedraw = false;
-    } else { //from RA 2.00 dos so values could be wrong, but its the cleanest pseudo
+    } else { // from RA 2.00 dos so values could be wrong, but its the cleanest pseudo
         if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
             g_logicPage->Fill_Rect(0, 0, g_seenBuff->Get_Width() - 1, 16 - 4, 12);
             CC_Draw_Shape(TabShape, 0, 0, 0, 0, 0);
             TabClass::Draw_Credits_Tab();
             g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff->Get_Width() - 1, 16 - 2, 12);
-            Fancy_Text_Print(TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
+            Fancy_Text_Print(
+                TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
             if (SidebarIsDrawn) {
                 TabClass::Hilite_Tab(1);
             } else {
-                CC_Draw_Shape(TabClass::TabShape, 0, SeenBuff.vp.Width - 80, 0, 0, 0, 0, 0, 0, 256);
-                Fancy_Text_Print(TXT_TAB_SIDEBAR, SeenBuff.vp.Width - 40, 0, &RemapType_5, 0, 8472);
+                CC_Draw_Shape(TabClass::TabShape, 0, SeenBuff.vp.Width - 80, 0, 0, 0);
+                Fancy_Text_Print(TXT_TAB_SIDEBAR,
+                    SeenBuff.vp.Width - 40,
+                    0,
+                    &RemapType_5,
+                    0,
+                    TPF_USE_BRIGHT | TPF_CENTER | TPF_NOSHADOW | TPF_12PT_METAL);
             }
             g_logicPage->Unlock();
         }
@@ -133,6 +144,13 @@ void TabClass::Flash_Money(void)
     TabToRedraw = true;
     Flag_To_Redraw();
     CreditsFlashTimer = 7;
+}
+
+void TabClass::Draw_Passable_Tab(BOOL state)
+{
+    CC_Draw_Shape(PassableShape, state != 0, 160, 0, WINDOW_0, SHAPE_NORMAL);
+    Fancy_Text_Print(
+        TXT_EDITOR_PASSABLE, 240, 0, &MetalScheme, COLOR_TBLACK, TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL);
 }
 
 void TabClass::Draw_Credits_Tab(void)
