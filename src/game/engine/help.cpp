@@ -17,6 +17,11 @@
 #include "help.h"
 #include "tab.h"
 #include "globals.h"
+#include "textprint.h"
+#include "coord.h"
+
+int16_t HelpClass::OverlapList[60];
+char *HelpClass::HelpText = NULL;
 
 HelpClass::HelpClass() :
     field_1620(0),
@@ -93,12 +98,44 @@ int16_t *const HelpClass::Overlap_List(void) const
 
 void HelpClass::Set_Text(TextEnum string_id)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const HelpClass *, TextEnum) = reinterpret_cast<void (*)(const HelpClass *, TextEnum)>(0x004D293C);
-    func(this, string_id);
-#endif
+  if ( string_id )
+  {
+    HelpTextID = string_id;
+    Plain_Text_Print(0, 0, 0, 0, 0, TPF_SHADOW | TPF_3PT);
+    const char *string = Fetch_String(HelpTextID);
+    HelpWidth = String_Pixel_Width(string);
+    if ( HelpBit1 )
+    {
+      HelpXPos = HelpMouseXPos - HelpWidth;
+      HelpYPos = HelpMouseYPos;
+    }
+    else
+    {
+      int v10 = TacOffsetX + Lepton_To_Pixel(DisplayHeight) - 3;
+      int v9 = TacOffsetY + Lepton_To_Pixel(DisplayWidth) - 1;
+      HelpXPos = HelpMouseXPos + 10;
+      HelpYPos = HelpMouseYPos;
+      if ( HelpWidth + HelpXPos > v10 )
+      {
+        HelpXPos -= HelpWidth + HelpXPos - v10;
+      }
+      if ( HelpYPos + 10 > v9 )
+      {
+        HelpYPos -= HelpYPos + 10 - v9;
+      }
+      if ( TacOffsetX + 1 > HelpXPos )
+      {
+        HelpXPos = TacOffsetX + 1;
+      }
+      if ( TacOffsetY + 1 > HelpYPos )
+      {
+        HelpYPos = TacOffsetY + 1;
+      }
+    }
+    short const *overlaplist = Text_Overlap_List(string, HelpXPos - 1, HelpYPos);
+    memcpy(HelpClass::OverlapList, overlaplist, sizeof(HelpClass::OverlapList));
+  }
 }
-
 void HelpClass::Set_Cost(int cost)
 {
     HelpCost = cost;
