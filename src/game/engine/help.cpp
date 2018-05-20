@@ -19,6 +19,7 @@
 #include "globals.h"
 #include "textprint.h"
 #include "coord.h"
+#include "lists.h"
 
 int16_t HelpClass::OverlapList[60];
 char *HelpClass::HelpText = NULL;
@@ -90,51 +91,44 @@ void HelpClass::Set_Tactical_Position(uint32_t location)
 
 int16_t *const HelpClass::Overlap_List(void) const
 {
-#ifndef RAPP_STANDALONE
-    int16_t *(*func)(const HelpClass *) = reinterpret_cast<int16_t *(*)(const HelpClass *)>(0x004D2354);
-    return func(this);
-#endif
+    if (HelpTextID == TXT_NULL /*|| CountDownTimer.Time() > 0*/) { // Error! E419: col(40) cannot call non-const function for
+                                                                   // a constant object
+        OverlapList[0] = LIST_END;
+    }
+    return OverlapList;
 }
 
 void HelpClass::Set_Text(TextEnum string_id)
 {
-  if ( string_id )
-  {
-    HelpTextID = string_id;
-    Plain_Text_Print(0, 0, 0, 0, 0, TPF_SHADOW | TPF_3PT);
-    const char *string = Fetch_String(HelpTextID);
-    HelpWidth = String_Pixel_Width(string);
-    if ( HelpBit1 )
-    {
-      HelpXPos = HelpMouseXPos - HelpWidth;
-      HelpYPos = HelpMouseYPos;
+    if (string_id) {
+        HelpTextID = string_id;
+        Plain_Text_Print(0, 0, 0, 0, 0, TPF_SHADOW | TPF_3PT);
+        const char *string = Fetch_String(HelpTextID);
+        HelpWidth = String_Pixel_Width(string);
+        if (HelpBit1) {
+            HelpXPos = HelpMouseXPos - HelpWidth;
+            HelpYPos = HelpMouseYPos;
+        } else {
+            int v10 = TacOffsetX + Lepton_To_Pixel(DisplayHeight) - 3;
+            int v9 = TacOffsetY + Lepton_To_Pixel(DisplayWidth) - 1;
+            HelpXPos = HelpMouseXPos + 10;
+            HelpYPos = HelpMouseYPos;
+            if (HelpWidth + HelpXPos > v10) {
+                HelpXPos -= HelpWidth + HelpXPos - v10;
+            }
+            if (HelpYPos + 10 > v9) {
+                HelpYPos -= HelpYPos + 10 - v9;
+            }
+            if (TacOffsetX + 1 > HelpXPos) {
+                HelpXPos = TacOffsetX + 1;
+            }
+            if (TacOffsetY + 1 > HelpYPos) {
+                HelpYPos = TacOffsetY + 1;
+            }
+        }
+        short const *overlaplist = Text_Overlap_List(string, HelpXPos - 1, HelpYPos);
+        memcpy(HelpClass::OverlapList, overlaplist, sizeof(HelpClass::OverlapList));
     }
-    else
-    {
-      int v10 = TacOffsetX + Lepton_To_Pixel(DisplayHeight) - 3;
-      int v9 = TacOffsetY + Lepton_To_Pixel(DisplayWidth) - 1;
-      HelpXPos = HelpMouseXPos + 10;
-      HelpYPos = HelpMouseYPos;
-      if ( HelpWidth + HelpXPos > v10 )
-      {
-        HelpXPos -= HelpWidth + HelpXPos - v10;
-      }
-      if ( HelpYPos + 10 > v9 )
-      {
-        HelpYPos -= HelpYPos + 10 - v9;
-      }
-      if ( TacOffsetX + 1 > HelpXPos )
-      {
-        HelpXPos = TacOffsetX + 1;
-      }
-      if ( TacOffsetY + 1 > HelpYPos )
-      {
-        HelpYPos = TacOffsetY + 1;
-      }
-    }
-    short const *overlaplist = Text_Overlap_List(string, HelpXPos - 1, HelpYPos);
-    memcpy(HelpClass::OverlapList, overlaplist, sizeof(HelpClass::OverlapList));
-  }
 }
 void HelpClass::Set_Cost(int cost)
 {
