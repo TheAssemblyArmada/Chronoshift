@@ -94,7 +94,7 @@ inline uint32_t Pixels_To_Cells(int pixels)
 //#define BUTTON_
 //#define BUTTON_
 
-// Right click context menu id
+// Editor Viewport Control ID
 #define CONTROL_EDITOR_VIEWPORT_INPUT 515
 
 // Menu Button IDs
@@ -118,6 +118,10 @@ inline uint32_t Pixels_To_Cells(int pixels)
 
 // Fetch Difficulty IDs
 #define SLIDER_DIFFICULTY 1030
+
+// Right click context menu id
+#define CONTROL_CONTEXT_MENU 8000
+
 
 // needs to stay here for now.
 // inf death anims

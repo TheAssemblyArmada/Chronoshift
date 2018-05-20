@@ -35,6 +35,7 @@ class MapEditorClass : public GameMouseClass
     };
     MapEditorClass();
 
+public:
     virtual void One_Time() override;
     virtual void Init_IO() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
@@ -71,6 +72,11 @@ class MapEditorClass : public GameMouseClass
     };
 
     static MapEditorClassStruct MapEditor;
+
+    MapEditorClass *Hook_CTOR()
+    {
+        return new(this) MapEditorClass();
+    }
 };
 
 #endif // MAPEDIT_H

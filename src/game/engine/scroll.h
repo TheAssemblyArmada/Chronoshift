@@ -52,8 +52,11 @@ protected:
     int field_165D;	//is this a rate of sorts?
 
 private:
+#ifndef RAPP_STANDALONE
+    static TCountDownTimerClass<SystemTimerClass> &ScrollingCounter;
+#else
     static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;
-
+#endif
 };
 
 #ifndef RAPP_STANALONE

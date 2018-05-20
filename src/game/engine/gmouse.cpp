@@ -81,7 +81,7 @@ GameMouseClass::MouseStruct GameMouseClass::MouseControl[MOUSE_COUNT] = {
 GameMouseClass::GameMouseClass()
 {
 #ifndef RAPP_STANDALONE
-    void (*func)(const GameMouseClass *) = reinterpret_cast<void (*)(const GameMouseClass *)>(0x004D2270);
+    void (*func)(const GameMouseClass *) = reinterpret_cast<void (*)(const GameMouseClass *)>(0x0050301C);
     func(this);
 #endif
 }

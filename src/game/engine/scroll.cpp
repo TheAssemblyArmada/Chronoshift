@@ -16,14 +16,19 @@
 
 #include "scroll.h"
 
+#ifndef RAPP_STANDALONE
+TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter = *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x00687C08);
+#else
+TCountDownTimerClass<SystemTimerClass> ScrollClass::ScrollingCounter;
+#endif
+
 ScrollClass::ScrollClass()
 {}
 
 void ScrollClass::Init_IO(void)
 {
+    ScrollingCounter = 0;
     HelpClass::Init_IO();
-    //ScrollingCounter = 0; //help
-
 }
 
 void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
