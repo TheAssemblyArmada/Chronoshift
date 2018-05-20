@@ -51,57 +51,70 @@ void HelpClass::Init_Clear()
 
 void HelpClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-  if ( !CountDownTimer.Time() && !HelpBit1 && (mouse_x != HelpMouseXPos || mouse_y != HelpMouseYPos) )
-  {
-    HelpClass::Help_Text(TXT_NULL);
-  }
-  if ( CountDownTimer.Time() )
-  {
-    if ( HelpText == nullptr && HelpTextID != TXT_NULL )
-    {
-        if ( HelpBit1 || HelpMouseXPos == mouse_x && HelpMouseYPos == mouse_y )
-        {
-          HelpClass::Set_Text((TextEnum)HelpTextID);
-        }
-        else
-        {
-          HelpMouseXPos = mouse_x;
-          HelpMouseYPos = mouse_y;
-          CountDownTimer = 60;
-          HelpClass::Set_Text(TXT_NULL);
+    if (!CountDownTimer.Time() && !HelpBit1 && (mouse_x != HelpMouseXPos || mouse_y != HelpMouseYPos)) {
+        HelpClass::Help_Text(TXT_NULL);
+    }
+    if (CountDownTimer.Time()) {
+        if (HelpText == nullptr && HelpTextID != TXT_NULL) {
+            if (HelpBit1 || HelpMouseXPos == mouse_x && HelpMouseYPos == mouse_y) {
+                HelpClass::Set_Text((TextEnum)HelpTextID);
+            } else {
+                HelpMouseXPos = mouse_x;
+                HelpMouseYPos = mouse_y;
+                CountDownTimer = 60;
+                HelpClass::Set_Text(TXT_NULL);
+            }
         }
     }
-  }
-  TabClass::AI(key, mouse_x, mouse_y);
+    TabClass::AI(key, mouse_x, mouse_y);
 }
 
 void HelpClass::Draw_It(BOOL force_redraw)
 {
-  char str[4];
-  TabClass::Draw_It(force_redraw);
-  if ( HelpText && (force_redraw || !CountDownTimer.Time()) && g_logicPage->Lock() )
-  {
-    Plain_Text_Print(HelpText, HelpXPos, HelpYPos, HelpTextColor, 12, TPF_NOSHADOW | TPF_MAP);
-    g_logicPage->Draw_Rect(HelpXPos - 1, HelpYPos - 1, HelpWidth + HelpXPos + 1, g_fontHeight + HelpYPos, HelpTextColor);
-    if ( HelpCost )
-    {
-      sprintf(str, "$%d", HelpCost);
-      int stringwidth = String_Pixel_Width(str);
-      Plain_Text_Print(str, HelpXPos, HelpYPos + g_fontHeight, HelpTextColor, 12, TPF_NOSHADOW | TPF_MAP);
-      g_logicPage->Draw_Rect(HelpXPos - 1, HelpYPos + g_fontHeight, stringwidth + HelpXPos + 1, g_fontHeight + HelpYPos + g_fontHeight - 1, HelpTextColor);
-      g_logicPage->Draw_Line(HelpXPos, HelpYPos + g_fontHeight, HelpXPos + Min(stringwidth + 1, HelpWidth) - 1, HelpYPos + g_fontHeight, 12);
+    char str[4];
+    TabClass::Draw_It(force_redraw);
+    if (HelpText && (force_redraw || !CountDownTimer.Time()) && g_logicPage->Lock()) {
+        Plain_Text_Print(HelpText, HelpXPos, HelpYPos, HelpTextColor, 12, TPF_NOSHADOW | TPF_MAP);
+        g_logicPage->Draw_Rect(HelpXPos - 1, HelpYPos - 1, HelpWidth + HelpXPos + 1, g_fontHeight + HelpYPos, HelpTextColor);
+        if (HelpCost) {
+            sprintf(str, "$%d", HelpCost);
+            int stringwidth = String_Pixel_Width(str);
+            Plain_Text_Print(str, HelpXPos, HelpYPos + g_fontHeight, HelpTextColor, 12, TPF_NOSHADOW | TPF_MAP);
+            g_logicPage->Draw_Rect(HelpXPos - 1,
+                HelpYPos + g_fontHeight,
+                stringwidth + HelpXPos + 1,
+                g_fontHeight + HelpYPos + g_fontHeight - 1,
+                HelpTextColor);
+            g_logicPage->Draw_Line(HelpXPos,
+                HelpYPos + g_fontHeight,
+                HelpXPos + Min(stringwidth + 1, HelpWidth) - 1,
+                HelpYPos + g_fontHeight,
+                12);
+        }
+        g_logicPage->Unlock();
     }
-    g_logicPage->Unlock();
-  }
 }
 
-void HelpClass::Help_Text(int str_id, int x, int y, int color, BOOL on_wait)
+void HelpClass::Help_Text(int str_id, int x, int y, int color, BOOL no_wait)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const HelpClass *, int, int, int, int, BOOL) =
-        reinterpret_cast<void (*)(const HelpClass *, int, int, int, int, BOOL)>(0x004D2574);
-    func(this, str_id, x, y, color, on_wait);
-#endif
+    if (HelpTextID != str_id) {
+        if (HelpTextID != TXT_NULL) {
+            Refresh_Cells(Coord_To_Cell(DisplayPos), HelpClass::OverlapList);
+        }
+        HelpMouseXPos = (x == -1 ? g_mouse->Get_Mouse_X() : x);
+        HelpMouseYPos = (y == -1 ? g_mouse->Get_Mouse_Y() : y);
+
+        HelpBit1 = (x != -1 || y != -1);
+
+        if (no_wait) {
+            CountDownTimer = 1;
+        } else {
+            CountDownTimer = 60;
+        }
+        HelpTextColor = 80;
+        HelpTextID = str_id;
+        HelpCost = 0;
+    }
 }
 
 BOOL HelpClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)

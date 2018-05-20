@@ -29,7 +29,7 @@ public:
     virtual void Init_Clear() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Draw_It(BOOL force_redraw) override;
-    virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL on_wait = false) override;
+    virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) override;
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) override;
     virtual void Set_Tactical_Position(uint32_t location) override;
 
