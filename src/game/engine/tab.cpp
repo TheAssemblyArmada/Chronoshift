@@ -113,7 +113,7 @@ void TabClass::Draw_It(BOOL force_redraw)
         }
         TabToRedraw = false;
     } else { //from RA 2.00 dos so values could be wrong, but its the cleanest pseudo
-        if (force_redraw || TabToRedraw) {
+        if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
             g_logicPage->Fill_Rect(0, 0, SeenBuff.vp.Width - 1, 7, 12);
             CC_Draw_Shape(TabShape, 0, 0, 0, 0, 0, 0, 0, 0, 256);
             TabClass::Draw_Credits_Tab();
