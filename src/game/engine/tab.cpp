@@ -88,22 +88,13 @@ void TabClass::Draw_It(BOOL force_redraw)
     SidebarClass::Draw_It(force_redraw);
     if (Debug_Map) {
         if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
-            v13 = Is_HiRes();
-            x2 = g_seenBuff->Get_Width() - 1;
-            g_logicPage->Fill_Rect(0, 0, x2, (8 << v13) - (2 << v13), 12);
-            if (v13) {
-                CC_Draw_Shape(TabShape, 1, 0, 0, 0, 0);
-            } else {
-                CC_Draw_Shape(TabShape, 2, 0, 0, 0, 0);
-            }
+            g_logicPage->Fill_Rect(0, 0, g_seenBuff->Get_Width() - 1, 16 - 4, 12);
+            CC_Draw_Shape(TabShape, 1, 0, 0, 0, 0);
             TabClass::Draw_Credits_Tab();
             TabClass::Draw_Passable_Tab(Map.ShowPassable);
-            v10 = TabClass_Draw_Map_Size_Tab_defarg();
-            TabClass::Draw_Map_Size_Tab(1, v10);
-            g_logicPage->Draw_Line(0, (8 << v13) - (1 << v13), x2, (8 << v13) - (1 << v13), 0xCu);
-            v11 = operator_OR(8, 256);
-            v12 = operator_OR(v11, 0x4000);
-            Fancy_Text_Print(TXT_OPTIONS, 40 << v13, 0, &MetalScheme, 0, v12);
+            TabClass::Draw_Map_Size_Tab(1, TabClass_Draw_Map_Size_Tab_defarg());
+            g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff->Get_Width() - 1, 16 - 2, 12);
+            Fancy_Text_Print(TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
             g_logicPage->Unlock();
         }
         if (force_redraw || TabToRedraw) {
@@ -114,20 +105,24 @@ void TabClass::Draw_It(BOOL force_redraw)
         TabToRedraw = false;
     } else { //from RA 2.00 dos so values could be wrong, but its the cleanest pseudo
         if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
-            g_logicPage->Fill_Rect(0, 0, SeenBuff.vp.Width - 1, 7, 12);
-            CC_Draw_Shape(TabShape, 0, 0, 0, 0, 0, 0, 0, 0, 256);
+            g_logicPage->Fill_Rect(0, 0, g_seenBuff->Get_Width() - 1, 16 - 4, 12);
+            CC_Draw_Shape(TabShape, 0, 0, 0, 0, 0);
             TabClass::Draw_Credits_Tab();
-            g_logicPage->Draw_Line(0, 7, SeenBuff.vp.Width - 1, 7, 12);
-            Fancy_Text_Print(142, 0x50u, 0, &MetalScheme, 0, 16648);
+            g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff->Get_Width() - 1, 16 - 2, 12);
+            Fancy_Text_Print(TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
             if (SidebarIsDrawn) {
                 TabClass::Hilite_Tab(1);
             } else {
                 CC_Draw_Shape(TabClass::TabShape, 0, SeenBuff.vp.Width - 80, 0, 0, 0, 0, 0, 0, 256);
-                Fancy_Text_Print(141, SeenBuff.vp.Width - 40, 0, &RemapType_5, 0, 8472);
+                Fancy_Text_Print(TXT_TAB_SIDEBAR, SeenBuff.vp.Width - 40, 0, &RemapType_5, 0, 8472);
             }
             g_logicPage->Unlock();
         }
-        CreditDisplay.Graphic_Logic(force_redraw || TabToRedraw);
+        if (force_redraw || TabToRedraw) {
+            CreditDisplay.Graphic_Logic(1);
+        } else {
+            CreditDisplay.Graphic_Logic(0);
+        }
         TabToRedraw = false;
     }
 #endif
