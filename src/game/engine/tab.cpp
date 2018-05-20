@@ -117,7 +117,7 @@ void TabClass::Draw_It(BOOL force_redraw)
             g_logicPage->Fill_Rect(0, 0, SeenBuff.vp.Width - 1, 7, 12);
             CC_Draw_Shape(TabShape, 0, 0, 0, 0, 0, 0, 0, 0, 256);
             TabClass::Draw_Credits_Tab();
-            g_logicPage->(0, 7, SeenBuff.vp.Width - 1, 7, 12);
+            g_logicPage->Draw_Line(0, 7, SeenBuff.vp.Width - 1, 7, 12);
             Fancy_Text_Print(142, 0x50u, 0, &MetalScheme, 0, 16648);
             if (SidebarIsDrawn) {
                 TabClass::Hilite_Tab(1);
