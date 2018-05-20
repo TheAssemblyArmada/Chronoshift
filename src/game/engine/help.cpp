@@ -51,11 +51,28 @@ void HelpClass::Init_Clear()
 
 void HelpClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const HelpClass *, KeyNumType &, int, int) =
-        reinterpret_cast<void (*)(const HelpClass *, KeyNumType &, int, int)>(0x004D23C8);
-    func(this, key, mouse_x, mouse_y);
-#endif
+  if ( !CountDownTimer.Time() && !HelpBit1 && (mouse_x != HelpMouseXPos || mouse_y != HelpMouseYPos) )
+  {
+    HelpClass::Help_Text(TXT_NULL);
+  }
+  if ( CountDownTimer.Time() )
+  {
+    if ( HelpText == nullptr && HelpTextID != TXT_NULL )
+    {
+        if ( HelpBit1 || HelpMouseXPos == mouse_x && HelpMouseYPos == mouse_y )
+        {
+          HelpClass::Set_Text((TextEnum)HelpTextID);
+        }
+        else
+        {
+          HelpMouseXPos = mouse_x;
+          HelpMouseYPos = mouse_y;
+          CountDownTimer = 60;
+          HelpClass::Set_Text(TXT_NULL);
+        }
+    }
+  }
+  TabClass::AI(key, mouse_x, mouse_y);
 }
 
 void HelpClass::Draw_It(BOOL force_redraw)
@@ -77,6 +94,7 @@ void HelpClass::Draw_It(BOOL force_redraw)
     g_logicPage->Unlock();
   }
 }
+
 void HelpClass::Help_Text(int str_id, int x, int y, int color, BOOL on_wait)
 {
 #ifndef RAPP_STANDALONE
