@@ -18,12 +18,21 @@
 #include "tab.h"
 #include "globals.h"
 
-HelpClass::HelpClass()
+HelpClass::HelpClass() :
+    field_1620(0),
+    field_1624(0),
+    field_1628(0),
+    HelpBit1(false),
+    HelpCost(0),
+    HelpMouseXPos(0),
+    HelpMouseYPos(0),
+    HelpXPos(0),
+    HelpYPos(0),
+    HelpWidth(0),
+    HelpTextID(0),
+    HelpTextColor(14),
+    CountDownTimer()
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const HelpClass *) = reinterpret_cast<void (*)(const HelpClass *)>(0x004D2270);
-    func(this);
-#endif
 }
 
 void HelpClass::Init_Clear()
@@ -35,7 +44,8 @@ void HelpClass::Init_Clear()
 void HelpClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
 #ifndef RAPP_STANDALONE
-    void (*func)(const HelpClass *, KeyNumType &, int, int) = reinterpret_cast<void (*)(const HelpClass *, KeyNumType &, int, int)>(0x004D23C8);
+    void (*func)(const HelpClass *, KeyNumType &, int, int) =
+        reinterpret_cast<void (*)(const HelpClass *, KeyNumType &, int, int)>(0x004D23C8);
     func(this, key, mouse_x, mouse_y);
 #endif
 }
@@ -51,14 +61,15 @@ void HelpClass::Draw_It(BOOL force_redraw)
 void HelpClass::Help_Text(int str_id, int x, int y, int color, BOOL on_wait)
 {
 #ifndef RAPP_STANDALONE
-    void (*func)(const HelpClass *, int, int, int, int, BOOL) = reinterpret_cast<void (*)(const HelpClass *, int, int, int, int, BOOL)>(0x004D2574);
+    void (*func)(const HelpClass *, int, int, int, int, BOOL) =
+        reinterpret_cast<void (*)(const HelpClass *, int, int, int, int, BOOL)>(0x004D2574);
     func(this, str_id, x, y, color, on_wait);
 #endif
 }
 
 BOOL HelpClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
 {
-    if ( redraw ) {
+    if (redraw) {
         Help_Text(TXT_NULL);
     }
     return TabClass::Scroll_Map(dir, distance, redraw);
@@ -66,7 +77,7 @@ BOOL HelpClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
 
 void HelpClass::Set_Tactical_Position(uint32_t location)
 {
-    if ( DisplayPos != location ) {
+    if (DisplayPos != location) {
         Help_Text(TXT_NULL);
     }
     return TabClass::Set_Tactical_Position(location);
@@ -75,7 +86,7 @@ void HelpClass::Set_Tactical_Position(uint32_t location)
 int16_t *const HelpClass::Overlap_List(void) const
 {
 #ifndef RAPP_STANDALONE
-    int16_t* (*func)(const HelpClass *) = reinterpret_cast<int16_t* (*)(const HelpClass *)>(0x004D2354);
+    int16_t *(*func)(const HelpClass *) = reinterpret_cast<int16_t *(*)(const HelpClass *)>(0x004D2354);
     return func(this);
 #endif
 }

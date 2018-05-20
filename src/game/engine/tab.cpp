@@ -18,7 +18,6 @@
 #include "ccfileclass.h"
 #include "mixfile.h"
 
-
 #ifndef RAPP_STANDALONE
 void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
 #else
@@ -57,16 +56,12 @@ void TabClass::CreditClass::AI(bool a1)
 #endif
 }
 
-TabClass::TabClass()
-{
-    // help
-    /*
-    #ifndef RAPP_STANDALONE
-        void (*func)(const TabClass *) = reinterpret_cast<void (*)(const TabClass *)>(0x00553340);
-        func(this);
-    #endif
-    */
-}
+TabClass::TabClass():
+    CreditDisplay(),
+    TimerFlashTimer(),
+    TabToRedraw(false),
+    CreditsFlashTimer()
+{}
 
 void TabClass::One_Time()
 {
@@ -117,16 +112,16 @@ void TabClass::Hilite_Tab(TabEnum tab)
 
 void TabClass::Set_Active(TabEnum tab)
 {
-    //It seems it might be feed minus values too....
+    // It seems it might be feed minus values too....
     DEBUG_LOG("TabClass::Set_Active got %d\n", tab);
     // rewrote into a switch, as its cleaner. see binary
     switch (tab) {
         case TAB_OPTIONS:
-            //Queue_Options();
+            // Queue_Options();
             break;
 
         case TAB_SIDEBAR:
-            //Map.Activate(); // Toggles the sidebar.
+            // Map.Activate(); // Toggles the sidebar.
             break;
 
         default:

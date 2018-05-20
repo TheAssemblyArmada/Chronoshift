@@ -21,7 +21,6 @@
 #include "always.h"
 #include "sidebar.h"
 
-
 enum TabEnum
 {
     TAB_NONE = -1,
@@ -56,7 +55,7 @@ private:
 
         void Graphic_Logic(bool a1 = false);
         void AI(bool a1 = false);
-        void Set_Available(int avail){Available = avail;}
+        void Set_Available(int avail) { Available = avail; }
 
     protected:
         int Available;
@@ -121,8 +120,7 @@ private:
 #else
     static void *TabShape;
 #endif
-    static void *PassableShape; //Edwin tab for showing passablity of cells
-
+    static void *PassableShape; // Edwin tab for showing passablity of cells
 };
 
 #ifndef RAPP_STANALONE

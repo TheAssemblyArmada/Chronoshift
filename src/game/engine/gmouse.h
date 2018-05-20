@@ -71,7 +71,7 @@ protected:
 #endif
     MouseType PreviousMouseShape;
     MouseType MouseShape;
-    int MouseFrame; //this is the current frame index for the animated mouse.
+    int MouseFrame; // this is the current frame index for the animated mouse.
 
 private:
 #ifndef RAPP_STANDALONE

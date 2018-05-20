@@ -22,7 +22,8 @@
 
 #ifndef RAPP_STANDALONE
 void *&GameMouseClass::MouseShapes = Make_Global<void *>(0x00685160);
-TCountDownTimerClass<SystemTimerClass> &GameMouseClass::AnimationTimer = *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x00685169);
+TCountDownTimerClass<SystemTimerClass> &GameMouseClass::AnimationTimer =
+    *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x00685169);
 #else
 void *GameMouseClass::MouseShapes = nullptr;
 TCountDownTimerClass<SystemTimerClass> GameMouseClass::AnimationTimer;
@@ -78,12 +79,12 @@ GameMouseClass::MouseStruct GameMouseClass::MouseControl[MOUSE_COUNT] = {
     { 211, 1, 0, 80, 0, 0 } // 42	//EditorBrush
 };
 
-GameMouseClass::GameMouseClass()
+GameMouseClass::GameMouseClass() :
+    MouseInRadar(false),
+    PreviousMouseShape(MOUSE_POINTER),
+    MouseShape(MOUSE_POINTER),
+    MouseFrame(0)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const GameMouseClass *) = reinterpret_cast<void (*)(const GameMouseClass *)>(0x0050301C);
-    func(this);
-#endif
 }
 
 void GameMouseClass::One_Time()

@@ -17,13 +17,18 @@
 #include "scroll.h"
 
 #ifndef RAPP_STANDALONE
-TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter = *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x00687C08);
+TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter =
+    *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x00687C08);
 #else
 TCountDownTimerClass<SystemTimerClass> ScrollClass::ScrollingCounter;
 #endif
 
-ScrollClass::ScrollClass()
-{}
+ScrollClass::ScrollClass() :
+    Autoscroll(false),
+    field_165D(0)
+{
+    ScrollingCounter = 0;
+}
 
 void ScrollClass::Init_IO(void)
 {
@@ -43,7 +48,7 @@ BOOL ScrollClass::Set_Autoscroll(int a1)
 {
     BOOL old = Autoscroll;
 
-    if ( a1 == -1 ) {
+    if (a1 == -1) {
         Autoscroll = !Autoscroll;
     } else {
         Autoscroll = a1;

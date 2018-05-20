@@ -65,9 +65,10 @@ protected:
     int32_t HelpXPos;
     int32_t HelpYPos;
     int HelpWidth;
-    int HelpTextID; //TextEnum is but setting it offsets alignment
-    int HelpTextColor; //should just be unsigned chat but it offsets alignment
+    int HelpTextID; // TextEnum is but setting it offsets alignment
+    int HelpTextColor; // should just be unsigned chat but it offsets alignment
     TCountDownTimerClass<SystemTimerClass> CountDownTimer;
+
 private:
     static int16_t OverlapList[60];
     static char *HelpText;
@@ -78,7 +79,7 @@ private:
 inline void HelpClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    //Hook_Function(0x, *HelpClass::Init_Clear);
+    // Hook_Function(0x, *HelpClass::Init_Clear);
 #endif
 }
 #endif
