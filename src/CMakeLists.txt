@@ -108,6 +108,7 @@ set(GAMEENGINE_SRC
     game/engine/logic.cpp
     game/engine/infantrytype.cpp
     game/engine/map.cpp
+    game/engine/mapedit.cpp
     game/engine/mission.cpp
     game/engine/missioncontrol.cpp
     game/engine/movie.cpp

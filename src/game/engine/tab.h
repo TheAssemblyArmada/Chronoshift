@@ -56,6 +56,7 @@ private:
 
         void Graphic_Logic(bool a1 = false);
         void AI(bool a1 = false);
+        void Set_Available(int avail){Available = avail;}
 
     protected:
         int Available;
