@@ -20,6 +20,8 @@
 #include "textprint.h"
 #include "coord.h"
 #include "lists.h"
+#include "minmax.h"
+#include <stdio.h>
 
 int16_t HelpClass::OverlapList[60];
 char *HelpClass::HelpText = NULL;
@@ -58,12 +60,23 @@ void HelpClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void HelpClass::Draw_It(BOOL force_redraw)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const HelpClass *, BOOL) = reinterpret_cast<void (*)(const HelpClass *, BOOL)>(0x004D26B0);
-    func(this, force_redraw);
-#endif
+  char str[4];
+  TabClass::Draw_It(force_redraw);
+  if ( HelpText && (force_redraw || !CountDownTimer.Time()) && g_logicPage->Lock() )
+  {
+    Plain_Text_Print(HelpText, HelpXPos, HelpYPos, HelpTextColor, 12, TPF_NOSHADOW | TPF_MAP);
+    g_logicPage->Draw_Rect(HelpXPos - 1, HelpYPos - 1, HelpWidth + HelpXPos + 1, g_fontHeight + HelpYPos, HelpTextColor);
+    if ( HelpCost )
+    {
+      sprintf(str, "$%d", HelpCost);
+      int stringwidth = String_Pixel_Width(str);
+      Plain_Text_Print(str, HelpXPos, HelpYPos + g_fontHeight, HelpTextColor, 12, TPF_NOSHADOW | TPF_MAP);
+      g_logicPage->Draw_Rect(HelpXPos - 1, HelpYPos + g_fontHeight, stringwidth + HelpXPos + 1, g_fontHeight + HelpYPos + g_fontHeight - 1, HelpTextColor);
+      g_logicPage->Draw_Line(HelpXPos, HelpYPos + g_fontHeight, HelpXPos + Min(stringwidth + 1, HelpWidth) - 1, HelpYPos + g_fontHeight, 12);
+    }
+    g_logicPage->Unlock();
+  }
 }
-
 void HelpClass::Help_Text(int str_id, int x, int y, int color, BOOL on_wait)
 {
 #ifndef RAPP_STANDALONE
@@ -102,7 +115,7 @@ void HelpClass::Set_Text(TextEnum string_id)
 {
     if (string_id) {
         HelpTextID = string_id;
-        Plain_Text_Print(0, 0, 0, 0, 0, TPF_SHADOW | TPF_3PT);
+        Plain_Text_Print(0, 0, 0, 0, 0, TPF_NOSHADOW | TPF_MAP);
         const char *string = Fetch_String(HelpTextID);
         HelpWidth = String_Pixel_Width(string);
         if (HelpBit1) {
