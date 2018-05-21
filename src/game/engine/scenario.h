@@ -74,6 +74,8 @@ public:
     void Set_Theater(TheaterType theater) { Theater = theater; }
     int16_t Get_Waypoint(int waypoint_num) const { return Waypoints[waypoint_num]; }
     void Set_Waypoint(int waypoint_num, int16_t cell) { Waypoints[waypoint_num] = cell; }
+    int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
+    int Get_Global_Time() { return GlobalTimer.Time(); }
 
 private:
     RandomClass SyncRandom;
