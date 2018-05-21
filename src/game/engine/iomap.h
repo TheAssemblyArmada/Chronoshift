@@ -19,14 +19,14 @@
 #define IOMAP_H
 
 #include "always.h"
-#include "sidebar.h"
+#include "gmouse.h"
 
 // TODO Update this as additional layers of the hierachy are implemented.
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
-extern SidebarClass &Map;
+extern GameMouseClass &Map;
 #else
-extern SidebarClass Map;
+extern GameMouseClass Map;
 #endif
 
 #endif // IOMAP_H

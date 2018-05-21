@@ -18,7 +18,7 @@
 // TODO Update this as additional layers of the hierachy are implemented.
 #ifndef RAPP_STANDALONE
 #include "hooker.h"
-SidebarClass &Map = Make_Global<SidebarClass>(0x00668250);
+GameMouseClass &Map = Make_Global<GameMouseClass>(0x00668250);
 #else
-SidebarClass Map;
+GameMouseClass Map;
 #endif
