@@ -69,6 +69,7 @@ inline uint32_t Pixels_To_Cells(int pixels)
 #define BUTTON_ED_DEBRIS 108
 #define BUTTON_ED_PREV_ITEM 113
 #define BUTTON_ED_NEXT_ITEM 114
+#define BUTTON_ED_MX 115
 #define BUTTON_ED_START_FLAG 116
 #define CONTROL_ED_PREVIEW 117
 //#define BUTTON_

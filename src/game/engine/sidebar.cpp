@@ -61,6 +61,22 @@ void *SidebarClass::SidebarMiddleShape = nullptr;
 void *SidebarClass::SidebarBottomShape = nullptr;
 #endif;
 
+TextButtonClass SidebarClass::Shore;
+TextButtonClass SidebarClass::River;
+TextButtonClass SidebarClass::Road;
+TextButtonClass SidebarClass::Ridges;
+TextButtonClass SidebarClass::Trees;
+TextButtonClass SidebarClass::Debris;
+ShapeButtonClass SidebarClass::Terrain;
+ShapeButtonClass SidebarClass::Ore;
+ShapeButtonClass SidebarClass::Gems;
+ShapeButtonClass SidebarClass::Water;
+ShapeButtonClass SidebarClass::Left;
+ShapeButtonClass SidebarClass::Right;
+ShapeButtonClass SidebarClass::Maximize;
+ShapeButtonClass SidebarClass::StartPosition;
+ControlClass SidebarClass::SelectedObject(CONTROL_ED_PREVIEW, 0, 0, 0, 0, 1 | 4, 1);
+
 void *SidebarClass::SidebarAddonShape = nullptr;
 
 SidebarClass::SBGadgetClass::SBGadgetClass() : GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false) {}
@@ -430,15 +446,17 @@ void SidebarClass::Init_Clear()
 {
     PowerClass::Init_Clear();
     SidebarToRedraw = true;
-    SidebarBit4 = false;
-    SidebarBit8 = false;
-    SidebarBit16 = false;
+    if (!g_inMapEditor) {
+        SidebarBit4 = false;
+        SidebarBit8 = false;
+        SidebarBit16 = false;
 
-    for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-        Columns[column].Init_Clear();
+        for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+            Columns[column].Init_Clear();
+        }
+
+        Activate(0);
     }
-
-    Activate(0);
 }
 
 void SidebarClass::Init_IO()
@@ -447,7 +465,85 @@ void SidebarClass::Init_IO()
 
     if (g_inMapEditor) {
         if (SidebarIsDrawn) {
-            // TODO Map editor related things.
+            Shore.Set_ID(BUTTON_ED_SHORE);
+            Shore.Set_Style(TPF_6PT_GRAD | TPF_SHADOW | TPF_CENTER | TPF_USE_GRAD_PAL);
+            Shore.Set_Text(377, 1);
+            Shore.Set_Position(484, 196);
+            Shore.Set_Size(72, 18);
+            Shore.Set_Toggle_Disabled(true);
+            Shore.Set_Sticky(true);
+            
+            Shore.Turn_On();
+
+            River.Set_ID(BUTTON_ED_RIVER);
+            River.Set_Style(TPF_6PT_GRAD | TPF_SHADOW | TPF_CENTER | TPF_USE_GRAD_PAL);
+            River.Set_Text(34, 1);
+            River.Set_Position(484, 218);
+            River.Set_Size(72, 18);
+            River.Set_Toggle_Bool1(false);
+            River.Set_Toggle_Disabled(true);
+            River.Set_Sticky(true);
+
+            Road.Set_ID(BUTTON_ED_ROAD);
+            Road.Set_Style(TPF_6PT_GRAD | TPF_SHADOW | TPF_CENTER | TPF_USE_GRAD_PAL);
+            Road.Set_Text(31, 1);
+            Road.Set_Position(484, 240);
+            Road.Set_Size(72, 18);
+            Road.Set_Toggle_Bool1(false);
+            Road.Set_Toggle_Disabled(true);
+            Road.Set_Sticky(true);
+
+            Ridges.Set_ID(BUTTON_ED_RIDGES);
+            Ridges.Set_Style(TPF_6PT_GRAD | TPF_SHADOW | TPF_CENTER | TPF_UNK_COLOR);
+            Ridges.Set_Text(2015, 1);
+            Ridges.Set_Position(564, 196);
+            Ridges.Set_Size(72, 18);
+            Ridges.Set_Toggle_Bool1(false);
+            Ridges.Set_Toggle_Disabled(true);
+            Ridges.Set_Sticky(true);
+
+            Trees.Set_ID(BUTTON_ED_TREES);
+            Trees.Set_Style(TPF_6PT_GRAD | TPF_SHADOW | TPF_CENTER);
+            Trees.Set_Text(2016, 1);
+            Trees.Set_Position(564, 218);
+            Trees.Set_Size(72, 18);
+            Trees.Set_Toggle_Bool1(false);
+            Trees.Set_Toggle_Disabled(true);
+            Trees.Set_Sticky(true);
+
+            Debris.Set_ID(BUTTON_ED_DEBRIS);
+            Debris.Set_Style(TPF_6PT_GRAD | TPF_SHADOW | TPF_CENTER);
+            Debris.Set_Text(2017, 1);
+            Debris.Set_Position(564, 240);
+            Debris.Set_Size(72, 18);
+            Debris.Set_Toggle_Bool1(false);
+            Debris.Set_Toggle_Disabled(true);
+            Debris.Set_Sticky(true);
+
+            Left.Set_Sticky(true);
+            Left.Set_ID(BUTTON_ED_PREV_ITEM);
+            Left.Set_Position(482, 378);
+            Left.Set_Toggle_Bool1(false);
+            Left.Set_Shape(MixFileClass<CCFileClass>::Retrieve("edbtn_lt.shp"));
+
+            Right.Set_ID(BUTTON_ED_NEXT_ITEM);
+            Right.Set_Position(522, 378);
+            Right.Set_Toggle_Bool1(false);
+            Right.Set_Shape(MixFileClass<CCFileClass>::Retrieve("edbtn_rt.shp"));
+
+            Maximize.Set_ID(BUTTON_ED_MX);
+            Maximize.Set_Position(562, 378);
+            Maximize.Set_Toggle_Bool1(false);
+            Maximize.Set_Shape(MixFileClass<CCFileClass>::Retrieve("edbtn_mx.shp"));
+
+            StartPosition.Set_ID(BUTTON_ED_START_FLAG);
+            StartPosition.Set_Position(602, 378);
+            StartPosition.Set_Toggle_Bool1(false);
+            StartPosition.Set_Shape(MixFileClass<CCFileClass>::Retrieve("edbtn_sp.shp"));
+
+            SelectedObject.Set_Position(488, 268);
+            SelectedObject.Set_Size(144, 104);
+            SelectedObject.Set_Sticky(true);
         }
     } else {
         // TODO remove hard coded position constants.
@@ -495,7 +591,50 @@ void SidebarClass::Init_Theater(TheaterType theater)
     PowerClass::Init_Theater(theater);
 
     if (g_inMapEditor) {
-        // TODO MapEditor related things.
+        Terrain.Set_Sticky(true);
+        Terrain.Set_ID(109);
+        Terrain.Set_Position(486, 158);
+        Terrain.Set_Toggle_Bool1(false);
+        Terrain.Set_Toggle_Disabled(true);
+        Terrain.Set_Shape_Bool_One(true);
+        if (theater) {
+            Terrain.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_S.SHP"));
+        } else {
+            Terrain.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_C.SHP"));
+        }
+        Ore.Set_Sticky(true);
+        Ore.Set_ID(110);
+        Ore.Set_Position(524,158);
+        Ore.Set_Toggle_Bool1(false);
+        Ore.Set_Toggle_Disabled(true);
+        Ore.Set_Shape_Bool_One(true);
+        if (theater) {
+            Ore.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_SG.SHP"));
+        } else {
+            Ore.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_CG.SHP"));
+        }
+        Gems.Set_Sticky(true);
+        Gems.Set_ID(111);
+        Gems.Set_Position(562, 158);
+        Gems.Set_Toggle_Bool1(false);
+        Gems.Set_Toggle_Disabled(true);
+        Gems.Set_Shape_Bool_One(true);
+        if (theater) {
+            Gems.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_SM.SHP"));
+        } else {
+            Gems.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_CM.SHP"));
+        }
+        Water.Set_Sticky(true);
+        Water.Set_ID(112);
+        Water.Set_Position(600, 158);
+        Water.Set_Toggle_Bool1(false);
+        Water.Set_Toggle_Disabled(true);
+        Water.Set_Shape_Bool_One(true);
+        if (theater) {
+            Water.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_SW.SHP"));
+        } else {
+            Water.Set_Shape(MixFileClass<CCFileClass>::Retrieve("EDBTN_CW.SHP"));
+        }
     } else {
         Reload_Sidebar();
 
@@ -519,85 +658,110 @@ void SidebarClass::Draw_It(BOOL force_redraw)
 {
     PowerClass::Draw_It(force_redraw);
 
-    if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && !g_inMapEditor ) {
-        SidebarToRedraw = false;
-        if (g_logicPage->Lock()) {
-            if (SidebarShape != nullptr) {
-                CC_Draw_Shape(
-                    SidebarShape,
-                    0,
-                    480, // GVPC Width - Sidebar width
-                    16, // 16, Height of Tabs
-                    WINDOW_0,
-                    SHAPE_WIN_REL
-                );
+    if (g_inMapEditor) {
+        if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && g_logicPage->Lock()) {
+            if (force_redraw) {
+                CC_Draw_Shape(MixFileClass<CCFileClass>::Retrieve("METALPLT.SHP"), 1, 480, 152, WINDOW_0, SHAPE_NORMAL);
+                CC_Draw_Shape(MixFileClass<CCFileClass>::Retrieve("METALPLT.SHP"), 2, 480, 208, WINDOW_0, SHAPE_NORMAL);
+                // SidebarClass::Button_Mode_Control(this);
+                Shore.Draw_Me(true);
+                River.Draw_Me(true);
+                Road.Draw_Me(true);
+                Ridges.Draw_Me(true);
+                Trees.Draw_Me(true);
+                Debris.Draw_Me(true);
+                Terrain.Draw_Me(true);
+                Ore.Draw_Me(true);
+                Gems.Draw_Me(true);
+                Water.Draw_Me(true);
+                Left.Draw_Me(true);
+                Right.Draw_Me(true);
+                Maximize.Draw_Me(true);
+                StartPosition.Draw_Me(true);
             }
-
-            if (SidebarMiddleShape != nullptr) {
-                CC_Draw_Shape(
-                    SidebarMiddleShape,
-                    force_redraw ? 0 : 1,
-                    480,
-                    176,	//Height of tab + 160, height of the first sidebar piece
-                    WINDOW_0,
-                    SHAPE_WIN_REL
-                );
-            }
-
-            if (SidebarBottomShape != nullptr) {
-                CC_Draw_Shape(
-                    SidebarBottomShape,
-                    force_redraw ? 0 : 1,
-                    480,
-                    276,	//Height of tab + 160 + 100,, height of last piece added on
-                    WINDOW_0,
-                    SHAPE_WIN_REL
-                );
-            }
-
-            // Handles drawing extra bits for higher resolutions.
-            if (g_logicPage->Get_Height() > 400) {
-                if (SidebarAddonShape != nullptr) {
-                    int addonheight = Get_Build_Frame_Height(SidebarAddonShape);
-
-                    //TODO
-                    //new shape, draw this as the resolution requires the black underneath to be filled with a image.
-                    CC_Draw_Shape(
-                        SidebarAddonShape,
-                        0,
-                        480,
-                        400, // Draw after everything else... Sidebar height.
-                        WINDOW_0,
-                        SHAPE_WIN_REL
-                    );
-                }
-            }
-
-            RepairButton.Draw_Me(true);
-            SellButton.Draw_Me(true);
-            ZoomButton.Draw_Me(true);
-
-            //for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-            //    Columns[column].StripToRedraw = true;
+            // if (v20->rd.dp.PendingObjectTypePtr && v20->rd.dp.dword16B != 7) {
+            //    Draw_Box(487, 267, 146, 106, 11, true);
+            //} else {
+            //    Draw_Box(487, 267, 146, 106, 7, true);
             //}
-
+            // v18 = MapEditorClass::Draw_It_defarg(v16, v17, 146);
+            // MapEditorClass::Draw_Object_Preview_Box(&Map, 488, 268, 144, 104, MapEditorClass_Draw_It_defarg(), v18);
             g_logicPage->Unlock();
         }
-    }
+        SidebarToRedraw = false;
+    } else {
+        if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && !g_inMapEditor ) {
+            SidebarToRedraw = false;
+            if (g_logicPage->Lock()) {
+                if (SidebarShape != nullptr) {
+                    CC_Draw_Shape(SidebarShape,
+                        0,
+                        480, // GVPC Width - Sidebar width
+                        16, // 16, Height of Tabs
+                        WINDOW_0,
+                        SHAPE_WIN_REL);
+                }
 
-    if (SidebarIsDrawn) {
-        for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-            Columns[column].Draw_It(force_redraw);
+                if (SidebarMiddleShape != nullptr) {
+                    CC_Draw_Shape(SidebarMiddleShape,
+                        force_redraw ? 0 : 1,
+                        480,
+                        176, // Height of tab + 160, height of the first sidebar piece
+                        WINDOW_0,
+                        SHAPE_WIN_REL);
+                }
+
+                if (SidebarBottomShape != nullptr) {
+                    CC_Draw_Shape(SidebarBottomShape,
+                        force_redraw ? 0 : 1,
+                        480,
+                        276, // Height of tab + 160 + 100,, height of last piece added on
+                        WINDOW_0,
+                        SHAPE_WIN_REL);
+                }
+
+                // Handles drawing extra bits for higher resolutions.
+                if (g_logicPage->Get_Height() > 400) {
+                    if (SidebarAddonShape != nullptr) {
+                        int addonheight = Get_Build_Frame_Height(SidebarAddonShape);
+
+                        // TODO
+                        // new shape, draw this as the resolution requires the black underneath to be filled with a image.
+                        CC_Draw_Shape(SidebarAddonShape,
+                            0,
+                            480,
+                            400, // Draw after everything else... Sidebar height.
+                            WINDOW_0,
+                            SHAPE_WIN_REL);
+                    }
+                }
+
+                RepairButton.Draw_Me(true);
+                SellButton.Draw_Me(true);
+                ZoomButton.Draw_Me(true);
+
+                // for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+                //    Columns[column].StripToRedraw = true;
+                //}
+
+                g_logicPage->Unlock();
+            }
         }
 
-        if (SidebarToRedraw || force_redraw) {
-            RepairButton.Draw_Me(true);
-            SellButton.Draw_Me(true);
-            ZoomButton.Draw_Me(true);
-        }
-    }
+        if (SidebarIsDrawn) {
+            for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+                Columns[column].Draw_It(force_redraw);
+            }
 
-    SidebarToRedraw = false;
+            if (SidebarToRedraw || force_redraw) {
+                RepairButton.Draw_Me(true);
+                SellButton.Draw_Me(true);
+                ZoomButton.Draw_Me(true);
+            }
+        }
+
+        SidebarToRedraw = false;
+    }
 }
 
 void SidebarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
@@ -770,7 +934,7 @@ BOOL SidebarClass::Scroll(BOOL reverse, int column)
 
     if (column == COLUMN_NONE) {
         scroll_result = (Columns[COLUMN_LEFT].Scroll(reverse) || Columns[COLUMN_RIGHT].Scroll(reverse));
-        
+
         if (!scroll_result) {
             Sound_Effect(VOC_SCOLDY1, fixed::_1_1, 1, 0, HOUSES_NONE);
         }
@@ -819,53 +983,124 @@ BOOL SidebarClass::Activate(int mode)
 {
     bool prevvalue = SidebarIsDrawn;
 
-    if (!Session.Playback_Game()) {
-        SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? SidebarIsDrawn == false : mode == SIDEBAR_DEACTIVATE);
+    if (g_inMapEditor) {
+        if (!Session.Playback_Game()) {
+            SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? SidebarIsDrawn == false : mode == SIDEBAR_DEACTIVATE);
 
-        bool newvalue = SidebarIsDrawn;
+            bool newvalue = SidebarIsDrawn;
 
-        if (newvalue != prevvalue) {
-            if (newvalue) {
-                Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, 20, -1);
-                SidebarToRedraw = true;
-                Help_Text(TXT_NULL, -1, -1);
-                RepairButton.Unlink();
-                Add_A_Button(RepairButton);
-                SellButton.Unlink();
-                Add_A_Button(SellButton);
-                ZoomButton.Unlink();
-                Add_A_Button(ZoomButton);
-
-                for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                    Columns[column].Activate();
+            if (newvalue != prevvalue) {
+                if (newvalue) {
+                    Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, 20, -1);
+                    SidebarToRedraw = true;
+                    Help_Text(TXT_NULL, -1, -1);
+                    Shore.Unlink();
+                    Add_A_Button(Shore);
+                    River.Unlink();
+                    Add_A_Button(River);
+                    Road.Unlink();
+                    Add_A_Button(Road);
+                    Ridges.Unlink();
+                    Add_A_Button(Ridges);
+                    Trees.Unlink();
+                    Add_A_Button(Trees);
+                    Debris.Unlink();
+                    Add_A_Button(Debris);
+                    Terrain.Unlink();
+                    Add_A_Button(Terrain);
+                    Ore.Unlink();
+                    Add_A_Button(Ore);
+                    Gems.Unlink();
+                    Add_A_Button(Gems);
+                    Water.Unlink();
+                    Add_A_Button(Water);
+                    Left.Unlink();
+                    Add_A_Button(Left);
+                    Right.Unlink();
+                    Add_A_Button(Right);
+                    Maximize.Unlink();
+                    Add_A_Button(Maximize);
+                    StartPosition.Unlink();
+                    Add_A_Button(StartPosition);
+                    Background.Unlink();
+                    Add_A_Button(Background);
+                    SelectedObject.Unlink();
+                    Add_A_Button(SelectedObject);
+                    RadarButton.Unlink();
+                    Add_A_Button(RadarButton);
+                } else {
+                    Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, -1, -1);
+                    Help_Text(TXT_NULL, -1, -1);
+                    Remove_A_Button(Shore);
+                    Remove_A_Button(River);
+                    Remove_A_Button(Road);
+                    Remove_A_Button(Ridges);
+                    Remove_A_Button(Trees);
+                    Remove_A_Button(Debris);
+                    Remove_A_Button(Terrain);
+                    Remove_A_Button(Ore);
+                    Remove_A_Button(Gems);
+                    Remove_A_Button(Water);
+                    Remove_A_Button(Left);
+                    Remove_A_Button(Right);
+                    Remove_A_Button(Maximize);
+                    Remove_A_Button(StartPosition);
+                    Remove_A_Button(Background);
+                    Remove_A_Button(SelectedObject);
+                    Remove_A_Button(RadarButton);
                 }
 
-                Background.Unlink();
-                Add_A_Button(Background);
-                RadarButton.Unlink();
-                Add_A_Button(RadarButton);
-                PowerButton.Unlink();
-                Add_A_Button(PowerButton);
-            } else {
-                Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, -1, -1);
-                Help_Text(TXT_NULL, -1, -1);
-                Remove_A_Button(RepairButton);
-                Remove_A_Button(SellButton);
-                Remove_A_Button(ZoomButton);
-
-                for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                    Columns[column].Deactivate();
-                }
-
-                Remove_A_Button(Background);
-                Remove_A_Button(RadarButton);
-                Remove_A_Button(PowerButton);
+                Flag_To_Redraw(true);
             }
+        }
+    } else {
+        if (!Session.Playback_Game()) {
+            SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? SidebarIsDrawn == false : mode == SIDEBAR_DEACTIVATE);
 
-            Flag_To_Redraw(true);
+            bool newvalue = SidebarIsDrawn;
+
+            if (newvalue != prevvalue) {
+                if (newvalue) {
+                    Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, 20, -1);
+                    SidebarToRedraw = true;
+                    Help_Text(TXT_NULL, -1, -1);
+                    RepairButton.Unlink();
+                    Add_A_Button(RepairButton);
+                    SellButton.Unlink();
+                    Add_A_Button(SellButton);
+                    ZoomButton.Unlink();
+                    Add_A_Button(ZoomButton);
+
+                    for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+                        Columns[column].Activate();
+                    }
+
+                    Background.Unlink();
+                    Add_A_Button(Background);
+                    RadarButton.Unlink();
+                    Add_A_Button(RadarButton);
+                    PowerButton.Unlink();
+                    Add_A_Button(PowerButton);
+                } else {
+                    Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, -1, -1);
+                    Help_Text(TXT_NULL, -1, -1);
+                    Remove_A_Button(RepairButton);
+                    Remove_A_Button(SellButton);
+                    Remove_A_Button(ZoomButton);
+
+                    for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+                        Columns[column].Deactivate();
+                    }
+
+                    Remove_A_Button(Background);
+                    Remove_A_Button(RadarButton);
+                    Remove_A_Button(PowerButton);
+                }
+
+                Flag_To_Redraw(true);
+            }
         }
     }
-
     return prevvalue;
 }
 
