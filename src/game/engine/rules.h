@@ -67,7 +67,7 @@ public:
     BOOL Ore_Grows() const { return OreGrows; }
     BOOL Ore_Spreads() const { return OreSpreads; }
     BOOL Ally_Reveal() const { return AllyReveal; }
-    fixed Ore_Growth_Rate() const { return GrowthRate; }
+    const fixed &Ore_Growth_Rate() const { return GrowthRate; }
     int Get_Gap_Radius() const { return GapRadius; }
     int Get_Gold_Value() const { return GoldValue; }
     int Get_Gem_Value() const { return GemValue; }
@@ -76,6 +76,7 @@ public:
     const fixed &Get_Repair_Percent() const { return RepairPercent; }
     int Get_Unit_Repair_Step() const { return URepairStep; }
     const fixed &Get_Unit_Repair_Percent() const { return URepairPercent; }
+    const fixed &Get_Timer_Warning() const { return TimerWarning; }
 
 private:
     fixed TurboBoost;
