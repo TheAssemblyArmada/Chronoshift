@@ -21,15 +21,15 @@
 
 class MapEditorClass : public GameMouseClass
 {
-    class EditorViewportInputClass : public ControlClass
+    class TacticalClass : public ControlClass
     {
     public:
-        EditorViewportInputClass() :
+        TacticalClass() :
             ControlClass(CONTROL_EDITOR_VIEWPORT_INPUT, 0, 0, 0, 0,
                 MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
         {
         }
-        virtual ~EditorViewportInputClass() {}
+        virtual ~TacticalClass() {}
 
         virtual BOOL Action(unsigned flags, KeyNumType &key) override;
     };
@@ -45,8 +45,10 @@ public:
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) override;
 
     void Write_INI(CCINIClass &ini); // virtual in edwin
+    signed int Make_Selection();
+    BOOL Clicked_In_Selection(int16_t clicked_cell);
 
-    static EditorViewportInputClass EditorViewportInput; // this is the selection box input and rightclick menu input area
+    static TacticalClass EditorTacButton; // this is the selection box input and rightclick menu input area
 
     struct MapEditorClassStruct // for now
     {
