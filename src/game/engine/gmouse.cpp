@@ -137,6 +137,54 @@ BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL a2)
 #ifndef RAPP_STANDALONE
     DEFINE_CALL(func, 0x0050316C, BOOL, (GameMouseClass *, MouseType, BOOL));
     return func(this, mouse, a2);
+#else
+    int v3; // eax@3
+    CDTimerClass<SystemTimerClass> *v4; // eax@12
+    void *v5; // ebx@15
+    int v6; // edx@15
+    signed int v8; // [sp+0h] [bp-2Ch]@11
+    int v9; // [sp+8h] [bp-24h]@13
+    CountDownTimerClass v10; // [sp+Ch] [bp-20h]@12
+    MouseStruct *v11; // [sp+18h] [bp-14h]@4
+    int v12; // [sp+1Ch] [bp-10h]@2
+    const char *v14; // [sp+24h] [bp-8h]@1
+
+    v14 = a3;
+    if (mouse >= 0x27) {
+        Assert("(unsigned)mouse < MOUSE_COUNT", 172, "mouse.cpp");
+        v12 = v3;
+    } else {
+        v12 = 0;
+    }
+    v11 = &MouseClass::MouseControl[mouse];
+    if (v11->MiniFrame == -1) {
+        v14 = 0;
+    }
+    if (Override_Mouse_Shape::.0 ::startup
+        && (!MouseClass::MouseShapes || mouse == this->PreviousMouseShape && (*&this->MouseClass_Bitfield1 & 1) == v14)) {
+        v8 = 0;
+    } else {
+        Override_Mouse_Shape::.0 ::startup = 1;
+        AnimationTimer = v11->Rate;
+        this->CurrentMouseFrame = 0;
+        if (v14) {
+            v9 = v11->MiniFrame;
+        } else {
+            v9 = v11->Frame;
+        }
+        v5 = Extract_Shape(MouseClass::MouseShapes,
+            v9
+                + ((this->CurrentMouseFrame
+                       - (__CFSHL__(this->CurrentMouseFrame >> 32, 2) + 4 * (this->CurrentMouseFrame >> 32)))
+                      >> 2));
+        Set_Mouse_Cursor(v11->HotSpotX, v11->HotSpotY, v5);
+        this->PreviousMouseShape = mouse;
+        v6 = v14 & 1;
+        this->MouseClass_Bitfield1 &= 0xFEu;
+        *&this->MouseClass_Bitfield1 |= v6;
+        v8 = 1;
+    }
+    return v8;
 #endif
 }
 
