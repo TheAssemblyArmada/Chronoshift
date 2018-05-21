@@ -19,8 +19,10 @@
 RemapControlType *ColorRemaps = reinterpret_cast<RemapControlType *>(0x00666908);
 RemapControlType &MetalScheme = Make_Global<RemapControlType>(0x00667528);
 RemapControlType &GreyScheme = Make_Global<RemapControlType>(0x00667644);
+RemapControlType &SidebarScheme = Make_Global<RemapControlType>(0x00684CC0);
 #else
 RemapControlType ColorRemaps[REMAP_COUNT];
 RemapControlType MetalScheme;
 RemapControlType GreyScheme;
+RemapControlType SidebarScheme;
 #endif

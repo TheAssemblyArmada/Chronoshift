@@ -69,10 +69,12 @@ struct RemapControlType
 extern RemapControlType *ColorRemaps;
 extern RemapControlType &MetalScheme;
 extern RemapControlType &GreyScheme;
+extern RemapControlType &SidebarScheme;
 #else
 extern RemapControlType ColorRemaps[REMAP_COUNT];
 extern RemapControlType MetalScheme;
 extern RemapControlType GreyScheme;
+extern RemapControlType SidebarScheme;
 #endif
 
 #endif // REMAP_H
