@@ -34,6 +34,7 @@ OptionsClass::OptionsClass() :
     ScoreRepeats(false),
     ScoreShuffles(false),
     PaletteScroll(true),
+    AllowSidebarToggle(false),
     KeyForceMove1(KN_LALT),
     KeyForceMove2(KN_RALT),
     KeyForceAttack1(KN_LCTRL),
@@ -127,6 +128,7 @@ void OptionsClass::Save_Settings()
     ini.Put_Bool("Options", "IsScoreRepeat", ScoreRepeats);
     ini.Put_Bool("Options", "IsScoreShuffle", ScoreShuffles);
     ini.Put_Bool("Options", "PaletteScroll", PaletteScroll);
+    ini.Put_Bool("Options", "AllowSidebarToggle", AllowSidebarToggle);
     ini.Put_Int("Options", "KeyForceMove1", KeyForceMove1);
     ini.Put_Int("Options", "KeyForceMove2", KeyForceMove2);
     ini.Put_Int("Options", "KeyForceAttack1", KeyForceAttack1);
@@ -182,7 +184,7 @@ void OptionsClass::Save_Settings()
 /**
  * @brief Loads the options from the configuration file (redalert.ini in Red Alert for example).
  *
- * 0x005263A8
+ * 0x00525A24
  */
 void OptionsClass::Load_Settings()
 {
@@ -203,6 +205,7 @@ void OptionsClass::Load_Settings()
     ScoreRepeats = ini.Get_Bool("Options", "IsScoreRepeat", ScoreRepeats);
     ScoreShuffles = ini.Get_Bool("Options", "IsScoreShuffle", ScoreShuffles);
     PaletteScroll = ini.Get_Bool("Options", "PaletteScroll", PaletteScroll);
+    AllowSidebarToggle = ini.Get_Bool("Options", "AllowSidebarToggle", false); // TODO use variable as default when ctor used.
     KeyForceMove1 = ini.Get_Int("Options", "KeyForceMove1", KeyForceMove1) & 0xEFFF;
     KeyForceMove2 = ini.Get_Int("Options", "KeyForceMove2", KeyForceMove2) & 0xEFFF;
     KeyForceAttack1 = ini.Get_Int("Options", "KeyForceAttack1", KeyForceAttack1) & 0xEFFF;

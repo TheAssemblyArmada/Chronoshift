@@ -23,10 +23,10 @@
 #include "fixed.h"
 #include "gametypes.h"
 #include "housetype.h"
+#include "movie.h"
 #include "random.h"
 #include "theater.h"
 #include "theme.h"
-#include "movie.h"
 #include "ttimer.h"
 
 enum ScenarioPlayerEnum
@@ -60,6 +60,7 @@ class ScenarioClass
     {
         WAYPOINT_COUNT = 100,
     };
+
 public:
     ScenarioClass();
 
@@ -76,6 +77,7 @@ public:
     void Set_Waypoint(int waypoint_num, int16_t cell) { Waypoints[waypoint_num] = cell; }
     int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
     int Get_Global_Time() { return GlobalTimer.Time(); }
+    BOOL Global_Timer_Running() { return !GlobalTimer.Has_Expired(); }
 
 private:
     RandomClass SyncRandom;
@@ -131,13 +133,13 @@ private:
         int Bitfield;
     };
 #else
-    bool _DestroyBridges; //BridgeDestroyed?
-    bool _GlobalsChanged; //VariablesChanged?
+    bool _DestroyBridges; // BridgeDestroyed?
+    bool _GlobalsChanged; // VariablesChanged?
     bool ToCarryOver;
     bool ToInherit;
     bool CivEvac;
-    bool FadeOutBW; //looks like FadeToBW
-    bool FadeInBW; //and this looks like BWFadeReset
+    bool FadeOutBW; // looks like FadeToBW
+    bool FadeInBW; // and this looks like BWFadeReset
     bool EndOfGame;
     bool TimerInherit;
     bool NoSpyPlane;

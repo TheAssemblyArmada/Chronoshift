@@ -46,14 +46,18 @@ enum TabShapeEnum
 
 class TabClass : public SidebarClass
 {
-private:
+    enum
+    {
+        TAB_WIDTH = 160,
+    };
+
     class CreditClass
     {
     public:
-        CreditClass(void);
+        CreditClass();
 
-        void Graphic_Logic(bool a1 = false);
-        void AI(bool a1 = false);
+        void Graphic_Logic(BOOL a1 = false);
+        void AI(BOOL a1 = false);
         void Set_Available(int avail) { Available = avail; }
 
     protected:
@@ -87,16 +91,19 @@ public:
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Draw_It(BOOL force_redraw) override;
 
-    void Flash_Money(void);
+    void Flash_Money();
     void Draw_Passable_Tab(BOOL state);
     void Draw_Map_Size_Tab();
-    static void Draw_Credits_Tab(void);
-    static void Hilite_Tab(TabEnum tab = TAB_NONE);
-    void Set_Active(TabEnum tab = TAB_NONE);
+    void Set_Active(int tab);
 
+    static void Hilite_Tab(int tab);
+    
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
 #endif
+
+private:
+    static void Draw_Credits_Tab();
 
 protected:
     CreditClass CreditDisplay;
@@ -114,7 +121,8 @@ protected:
 #else
     bool TabToRedraw;
 #endif
-    TCountDownTimerClass<FrameTimerClass> CreditsFlashTimer; // 0x1617
+    TCountDownTimerClass<FrameTimerClass> CreditsFlashTimer;
+
 private:
 #ifndef RAPP_STANDALONE
     static void *&TabShape;
@@ -122,6 +130,7 @@ private:
     static void *TabShape;
 #endif
     static void *PassableShape; // Edwin tab for showing passablity of cells
+    static void *TabBackgroundShape; // name subject to change
 };
 
 #ifndef RAPP_STANALONE
@@ -129,7 +138,8 @@ private:
 inline void TabClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    // Hook_Function(0x, *TabClass::Init_Clear);
+    Hook_Function(0x005533A0, *TabClass::Draw_It);
+    Hook_Function(0x005539D8, *TabClass::One_Time);
 #endif
 }
 #endif

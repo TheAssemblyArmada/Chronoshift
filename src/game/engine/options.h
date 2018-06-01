@@ -70,6 +70,7 @@ public:
     fixed Get_Score_Volume() { return ScoreVolume; }
     BOOL Get_Repeat() { return ScoreRepeats; }
     BOOL Get_Shuffle() { return ScoreShuffles; }
+    BOOL Sidebar_Toggle_Allowed() { return AllowSidebarToggle; }
     fixed Get_Brightness() { return (Brightness - fixed::_1_4) / fixed::_1_2; }
     fixed Get_Saturation() { return Saturation; }
     fixed Get_Contrast() { return (Contrast - fixed::_1_4) / fixed::_1_2; }
@@ -100,6 +101,7 @@ private:
             bool ScoreRepeats : 1; // & 2
             bool ScoreShuffles : 1; // & 4
             bool PaletteScroll : 1; // & 8
+            bool AllowSidebarToggle : 1; // & 16 RA++ option.
         };
         int Bitfield;
     };
@@ -108,6 +110,7 @@ private:
     bool ScoreRepeats;
     bool ScoreShuffles;
     bool PaletteScroll;
+    bool AllowToggleSidebar; // RA++ option.
 #endif
     KeyType KeyForceMove1;
     KeyType KeyForceMove2;
@@ -167,6 +170,8 @@ inline void OptionsClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
     //Hook_Function(0x00525884, *OptionsClass::Adjust_Palette);
+    Hook_Function(0x00525A24, *OptionsClass::Load_Settings);
+    Hook_Function(0x005263A8, *OptionsClass::Save_Settings);
 #endif
 }
 #endif

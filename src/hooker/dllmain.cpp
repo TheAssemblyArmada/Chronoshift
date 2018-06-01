@@ -31,6 +31,7 @@
 #include "hooker.h"
 #include "ini.h"
 #include "interpolate.h"
+#include "iomap.h"
 #include "keyboard.h"
 #include "lcw.h"
 #include "list.h"
@@ -115,6 +116,7 @@ void Setup_Hooks()
     RadarClass::Hook_Me();
     PowerClass::Hook_Me();
     SidebarClass::Hook_Me();
+    TabClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);

@@ -14,15 +14,16 @@
  *            LICENSE
  */
 
-#include "tab.h"
 #include "ccfileclass.h"
-#include "mixfile.h"
 #include "drawshape.h"
-#include "globals.h"
+#include "gameoptions.h"
 #include "gbuffer.h"
+#include "globals.h"
 #include "iomap.h"
-#include "scenario.h"
+#include "mixfile.h"
 #include "rules.h"
+#include "scenario.h"
+#include "tab.h"
 
 #ifndef RAPP_STANDALONE
 void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
@@ -30,8 +31,9 @@ void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
 void *TabClass::TabShape = nullptr;
 #endif
 void *TabClass::PassableShape = nullptr;
+void *TabClass::TabBackgroundShape = nullptr;
 
-TabClass::CreditClass::CreditClass(void) :
+TabClass::CreditClass::CreditClass() :
     Available(0),
     Credits(0),
     CreditToRedraw(false),
@@ -42,10 +44,10 @@ TabClass::CreditClass::CreditClass(void) :
     return;
 }
 
-void TabClass::CreditClass::Graphic_Logic(bool a1)
+void TabClass::CreditClass::Graphic_Logic(BOOL a1)
 {
 #ifndef RAPP_STANDALONE
-    void (*func)(const CreditClass *, bool) = reinterpret_cast<void (*)(const CreditClass *, bool)>(0x004ACBB8);
+    void (*func)(const CreditClass *, BOOL) = reinterpret_cast<void (*)(const CreditClass *, BOOL)>(0x004ACBB8);
     func(this, a1);
 #else
     _WORD *v5; // edx@5
@@ -142,10 +144,10 @@ void TabClass::CreditClass::Graphic_Logic(bool a1)
 #endif
 }
 
-void TabClass::CreditClass::AI(bool a1)
+void TabClass::CreditClass::AI(BOOL a1)
 {
 #ifndef RAPP_STANDALONE
-    void (*func)(const CreditClass *, bool) = reinterpret_cast<void (*)(const CreditClass *, bool)>(0x004ACF04);
+    void (*func)(const CreditClass *, BOOL) = reinterpret_cast<void (*)(const CreditClass *, BOOL)>(0x004ACF04);
     func(this, a1);
 #else
     int v3; // eax@3
@@ -159,64 +161,51 @@ void TabClass::CreditClass::AI(bool a1)
     int v11; // edx@23
     char *v12; // edx@24
 
-    if ( a2 || Frame != AI::.0::_last )
-    {
-        AI::.0::_last = Frame;
+    if (a2 || Frame != AI::.0 ::_last) {
+        AI::.0 ::_last = Frame;
         v3 = HouseClass::Available_Money(PlayerPtr);
         v4->Available = v3;
-        if ( v3 <= 0 )
-        {
+        if (v3 <= 0) {
             v3 = 0;
         }
         v4->Available = v3;
-        if ( Scen.Has_Started() != -1 )
-        {
+        if (Scen.Has_Started() != -1) {
             goto LABEL_28;
         }
-        if ( Scen.Get_Global_Time() != 0 )
-        {
-LABEL_28:
+        if (Scen.Get_Global_Time() != 0) {
+        LABEL_28:
             v4->Boolean |= 1u;
             Flag_To_Redraw(0);
         }
-        if ( v4->Credits != v4->Available )
-        {
-            if ( a2 )
-            {
+        if (v4->Credits != v4->Available) {
+            if (a2) {
                 v6 = v4->Boolean & 0xFB;
                 v4->Credits = v4->Available;
                 v4->Boolean = v6;
-LABEL_25:
+            LABEL_25:
                 v4->Boolean |= 1u;
                 Flag_To_Redraw(0);
                 return;
             }
             v7 = v4->field_C;
-            if ( v7 )
-            {
+            if (v7) {
                 v4->field_C = v7 - 1;
             }
-            if ( !v4->field_C )
-            {
+            if (!v4->field_C) {
                 v8 = v4->Available - v4->Credits;
-                if ( v8 <= 0 )
-                {
+                if (v8 <= 0) {
                     v4->field_C = 3;
-                }
-                else
-                {
+                } else {
                     v4->field_C = 1;
                 }
                 v9 = ABS(v8);
                 v10 = Bound(v9 >> 3, 1, 143);
-                if ( v4->Credits > v4->Available )
-                {
+                if (v4->Credits > v4->Available) {
                     v10 = -v10;
                 }
                 v11 = v10 + v4->Credits;
                 v4->Credits = v11;
-                if ( v11 - v10 != v4->Credits )
-                {
+                if (v11 - v10 != v4->Credits) {
                     v4->Boolean |= 4u;
                     v12 = &v4->Boolean;
                     *v12 = v4->Boolean & 0xFD;
@@ -236,6 +225,7 @@ void TabClass::One_Time()
     SidebarClass::One_Time();
     TabShape = MixFileClass<CCFileClass>::Retrieve("tabs.shp");
     PassableShape = MixFileClass<CCFileClass>::Retrieve("passable.shp");
+    TabBackgroundShape = MixFileClass<CCFileClass>::Retrieve("tabback.shp");
 }
 
 void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
@@ -251,24 +241,18 @@ void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
     unsigned int v8; // edx@15
     unsigned int v9; // edx@17
 
-    if ( mouse_y >= 0 && mouse_y < 16 && g_seenBuff.Get_Width() - 1 > mouse_x && mouse_x > 0 )
-    {
+    if (mouse_y >= 0 && mouse_y < 16 && g_seenBuff.Get_Width() - 1 > mouse_x && mouse_x > 0) {
         v5 = 0;
-        if ( mouse_y > 0 )
-        {
+        if (mouse_y > 0) {
             v5 = 1;
         }
-        if ( v5 )
-        {
-            if ( *key == 1 )
-            {
+        if (v5) {
+            if (*key == 1) {
                 v6 = -1;
-                if ( mouse_x < 160 )
-                {
+                if (mouse_x < 160) {
                     v6 = 0;
                 }
-                if ( v6 >= 0 )
-                {
+                if (v6 >= 0) {
                     TabClass::Set_Active(v6);
                     *key = 0;
                 }
@@ -277,11 +261,9 @@ void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
         }
     }
     v7 = this->CreditsFlashTimer.Accumulated;
-    if ( this->CreditsFlashTimer.Started != -1 )
-    {
+    if (this->CreditsFlashTimer.Started != -1) {
         v8 = Frame - this->CreditsFlashTimer.Started;
-        if ( v8 >= v7 )
-        {
+        if (v8 >= v7) {
             v9 = 0;
             goto LABEL_19;
         }
@@ -289,8 +271,7 @@ void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
     }
     v9 = v7;
 LABEL_19:
-    if ( v9 == 1 )
-    {
+    if (v9 == 1) {
         TabToRedraw = true;
         Flag_To_Redraw(0);
     }
@@ -302,53 +283,59 @@ LABEL_19:
 void TabClass::Draw_It(BOOL force_redraw)
 {
     SidebarClass::Draw_It(force_redraw);
-    if (g_inMapEditor) {
-        if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
-            g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
-            CC_Draw_Shape(TabShape, 0, 0, 0, WINDOW_0, SHAPE_NORMAL);
-            TabClass::Draw_Credits_Tab();
-            TabClass::Draw_Passable_Tab(0); //(Map.ShowPassable);
-            TabClass::Draw_Map_Size_Tab();
-            g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff.Get_Width() - 1, 16 - 2, COLOR_BLACK);
-            Fancy_Text_Print(
-                TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, 0, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
-            g_logicPage->Unlock();
-        }
-        if (force_redraw || TabToRedraw) {
-            CreditDisplay.Graphic_Logic(1);
-        } else {
-            CreditDisplay.Graphic_Logic(0);
-        }
-        TabToRedraw = false;
-    } else { // from RA 2.00 dos so values could be wrong, but its the cleanest pseudo
-        if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
-            g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
-            CC_Draw_Shape(TabShape, 0, 0, 0, WINDOW_0, SHAPE_NORMAL);
-            TabClass::Draw_Credits_Tab();
-            g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff.Get_Width() - 1, 16 - 2, COLOR_BLACK);
-            Fancy_Text_Print(
-                TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
-            if (!SidebarIsDrawn) {
-                CC_Draw_Shape(TabShape, 0, g_seenBuff.Get_Width() - 160, 0, WINDOW_0, SHAPE_NORMAL);
-                Fancy_Text_Print(TXT_TAB_SIDEBAR,
-                    g_seenBuff.Get_Width() - 80,
-                    0,
-                    &ColorRemaps[REMAP_5],
-                    0,
-                    TPF_USE_BRIGHT | TPF_CENTER | TPF_NOSHADOW | TPF_12PT_METAL);
+
+    if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
+        // Draw the RA++ background if available, otherwise default to original behaviour.
+        if (TabBackgroundShape != nullptr) {
+            int distance = g_logicPage->Get_Width() / TAB_WIDTH;
+            int framecount = Get_Build_Frame_Count(TabBackgroundShape);
+            int xpos = 0;
+
+            if (framecount == 1) {
+                for (int i = 0; i <= distance; ++i) {
+                    CC_Draw_Shape(TabBackgroundShape, 0, xpos, g_logicPage->Get_YPos());
+                    xpos += TAB_WIDTH;
+                }
+            } else if (framecount >= 1) {
+                int frameindex = 0;
+
+                for (int i = 0; i <= distance && frameindex <= framecount; ++i) {
+                    CC_Draw_Shape(TabBackgroundShape, frameindex, xpos, g_logicPage->Get_YPos());
+                    xpos += TAB_WIDTH;
+                    ++frameindex;
+                }
             }
-            g_logicPage->Unlock();
-        }
-        if (force_redraw || TabToRedraw) {
-            CreditDisplay.Graphic_Logic(1);
         } else {
-            CreditDisplay.Graphic_Logic(0);
+            g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
         }
-        TabToRedraw = false;
+
+        // Draw options tab.
+        CC_Draw_Shape(TabShape, 0, 0, 0, WINDOW_0, SHAPE_NORMAL);
+        Fancy_Text_Print(
+            TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
+        TabClass::Draw_Credits_Tab();
+        g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff.Get_Width() - 1, 16 - 2, COLOR_BLACK);
+
+        // For when sidebar is allowed to be hidden ala C&C95 or the DOS versions.
+        if (Options.Sidebar_Toggle_Allowed()) {
+            CC_Draw_Shape(TabShape, 0, g_seenBuff.Get_Width() - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+            Fancy_Text_Print(TXT_TAB_SIDEBAR,
+                g_seenBuff.Get_Width() - 80,
+                0,
+                &ColorRemaps[REMAP_5],
+                0,
+                TPF_USE_BRIGHT | TPF_CENTER | TPF_NOSHADOW | TPF_12PT_METAL);
+        }
+
+        g_logicPage->Unlock();
     }
+
+    CreditDisplay.Graphic_Logic(force_redraw || TabToRedraw);
+
+    TabToRedraw = false;
 }
 
-void TabClass::Flash_Money(void)
+void TabClass::Flash_Money()
 {
     TabToRedraw = true;
     Flag_To_Redraw();
@@ -375,58 +362,66 @@ void TabClass::Draw_Map_Size_Tab()
         Map.Get_Map_Cell_Height());
 }
 
-void TabClass::Draw_Credits_Tab(void)
+void TabClass::Draw_Credits_Tab()
 {
-#ifndef RAPP_STANDALONE
-    void (*func)() = reinterpret_cast<void (*)()>(0x00553744);
-    func();
-#else
-    int credtabframe = 0;
-    int tabsate = 0;
-    int toggleabletabframe = 0;
-    if (Map.CreditsFlashTimer.Time() > 1) {
-        credtabframe = 8;
-    } else {
-        credtabframe = 6;
-    }
-    CC_Draw_Shape(TabShape, credtabframe, 480, 0, WINDOW_0, SHAPE_NORMAL);
+    int tabframe = 0;
+    int width = g_logicPage->Get_Width();
 
-    if (Scen.Get_Elapsed_Time() > (900 * Rule.Get_Timer_Warning())) {
-        tabsate = true;
-    }
+    if (Options.Sidebar_Toggle_Allowed()) {
+        if (Map.CreditsFlashTimer.Time() > 1) {
+            tabframe = 2;
+        } else {
+            tabframe = 4;
+        }
 
-    if (Map.CreditsFlashTimer.Time() != 0) {
-        tabsate = true;
+        CC_Draw_Shape(TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
     } else {
-        tabsate = false;
+        if (Map.CreditsFlashTimer.Time() > 1) {
+            tabframe = 8;
+        } else {
+            tabframe = 6;
+        }
+
+        CC_Draw_Shape(TabShape, tabframe, width - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
     }
 
-    if (tabsate) {
-        toggleabletabframe = 4;
-    } else {
-        toggleabletabframe = 2;
+    if (Scen.Global_Timer_Running()) {
+        if (Scen.Get_Global_Time() >= 900 * Rule.Get_Timer_Warning()) {
+            tabframe = Map.TimerFlashTimer.Time() > 0 ? 4 : 2;
+        } else {
+            tabframe = 4;
+        }
+
+        if (Options.Sidebar_Toggle_Allowed()) {
+            CC_Draw_Shape(TabShape, tabframe, width - 3 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+        } else {
+            CC_Draw_Shape(TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+        }
     }
-    CC_Draw_Shape(TabShape, toggleabletabframe, 480, 0, WINDOW_0, SHAPE_NORMAL);
-#endif
 }
 
-void TabClass::Hilite_Tab(TabEnum tab)
+void TabClass::Hilite_Tab(int tab)
 {
-    int v1; // ebx@1
-    char v2; // dl@3
+    int pos;
 
-    v1 = 0;
-    if (tab) {
-        v1 = 480;
+    switch (tab)
+    {
+        case 0:
+            pos = 0;
+            break;
+        default:
+            pos = g_seenBuff.Get_Width() - TAB_WIDTH;
+            break;
     }
-    CC_Draw_Shape(TabShape, 1, v1, 0, WINDOW_0, SHAPE_NORMAL);
+
+    CC_Draw_Shape(TabShape, 1, pos, 0, WINDOW_0, SHAPE_NORMAL);
     MetalScheme.MediumColor = 134;
     Fancy_Text_Print(
         TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
-    MetalScheme.MediumColor = v2;
+    MetalScheme.MediumColor = 128;
 }
 
-void TabClass::Set_Active(TabEnum tab)
+void TabClass::Set_Active(int tab)
 {
     // It seems it might be feed minus values too....
     DEBUG_LOG("TabClass::Set_Active got %d\n", tab);
