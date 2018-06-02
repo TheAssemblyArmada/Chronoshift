@@ -57,9 +57,21 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 
         // Print credit amount.
         if (Options.Sidebar_Toggle_Allowed()) {
-            Fancy_Text_Print("%d", g_seenBuff.Get_Width() - (TAB_WIDTH / 2) - TAB_WIDTH, 0, &MetalScheme, 0, TPF_12PT_METAL, Credits);
+            Fancy_Text_Print("%d",
+                g_seenBuff.Get_Width() - (TAB_WIDTH / 2) - TAB_WIDTH,
+                0,
+                &MetalScheme,
+                0,
+                TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
+                Credits);
         } else {
-            Fancy_Text_Print("%d", g_seenBuff.Get_Width() - (TAB_WIDTH / 2), 0, &MetalScheme, 0, TPF_12PT_METAL, Credits);
+            Fancy_Text_Print("%d",
+                g_seenBuff.Get_Width() - (TAB_WIDTH / 2),
+                0,
+                &MetalScheme,
+                0,
+                TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
+                Credits);
         }
 
         if (Scen.Global_Timer_Running()) {
@@ -347,7 +359,7 @@ void TabClass::Draw_It(BOOL force_redraw)
                 0,
                 &ColorRemaps[REMAP_5],
                 0,
-                TPF_USE_BRIGHT | TPF_CENTER | TPF_NOSHADOW | TPF_12PT_METAL);
+                TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL);
         }
 
         g_logicPage->Unlock();
@@ -392,9 +404,9 @@ void TabClass::Draw_Credits_Tab()
 
     if (Options.Sidebar_Toggle_Allowed()) {
         if (Map.CreditsFlashTimer.Time() > 1) {
-            tabframe = 2;
-        } else {
             tabframe = 4;
+        } else {
+            tabframe = 2;
         }
 
         CC_Draw_Shape(TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
