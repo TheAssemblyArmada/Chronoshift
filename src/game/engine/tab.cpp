@@ -14,7 +14,10 @@
  *            LICENSE
  */
 
+#include "tab.h"
+#include "audio.h"
 #include "ccfileclass.h"
+#include "dialog.h"
 #include "drawshape.h"
 #include "gameoptions.h"
 #include "gbuffer.h"
@@ -23,7 +26,6 @@
 #include "mixfile.h"
 #include "rules.h"
 #include "scenario.h"
-#include "tab.h"
 
 #ifndef RAPP_STANDALONE
 void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
@@ -44,104 +46,121 @@ TabClass::CreditClass::CreditClass() :
     return;
 }
 
-void TabClass::CreditClass::Graphic_Logic(BOOL a1)
+void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const CreditClass *, BOOL) = reinterpret_cast<void (*)(const CreditClass *, BOOL)>(0x004ACBB8);
-    func(this, a1);
-#else
-    _WORD *v5; // edx@5
-    VocType se_voc; // eax@5
-    unsigned int v7; // eax@9
-    signed int v8; // eax@13
-    signed int v9; // ebx@13
-    signed int v10; // ecx@13
-    unsigned __int64 v11; // rax@13
-    signed __int64 v12; // rtt@13
-    int v13; // ebx@13
-    int v15; // ecx@13
-    char se_houses; // [sp-4h] [bp-30h]@5
-    _BYTE v26[9]; // [sp+0h] [bp-2Ch]@0
-    unsigned int v27; // [sp+Ch] [bp-20h]@13
-    __int16 v29; // [sp+14h] [bp-18h]@6
-    __int16 resulta; // [sp+18h] [bp-14h]@5
-
-    if (a1 || CreditToRedraw) {
+    if (force_redraw || CreditToRedraw) {
         if (CreditHasChanged) {
-            if (CreditHasIncreased) {
-                se_houses = -1;
-                v5 = fixed::fixed(&resulta, 1, 2);
-                se_voc = VOC_MONEY_UP;
-            } else {
-                se_houses = -1;
-                v5 = fixed::fixed(&v29, 1, 2);
-                se_voc = VOC_MONEY_DOWN;
-            }
-            Sound_Effect(se_voc, v5, 1, 0, se_houses);
+            Sound_Effect(CreditHasIncreased ? VOC_MONEY_UP : VOC_MONEY_DOWN, fixed::_1_2, 1, 0, HOUSES_NONE);
         }
+
         TabClass::Draw_Credits_Tab();
-        Fancy_Text_Print("%ld", g_seenBuff.Get_Width() - 80, 0, &MetalScheme, 0, 8, Credits);
-        if (Scen_GlobalScenarioTimer.Started != -1) {
-            v7 = Scen_GlobalScenarioTimer.Accumulated;
-            if (Scen_GlobalScenarioTimer.Started != -1) {
-                if (Frame - Scen_GlobalScenarioTimer.Started >= Scen_GlobalScenarioTimer.Accumulated) {
-                    v7 = 0;
-                } else {
-                    v7 = Scen_GlobalScenarioTimer.Accumulated - (Frame - Scen_GlobalScenarioTimer.Started);
-                }
-            }
-            v8 = v7 / 0xF;
-            v9 = v8;
-            v8 /= 60;
-            v10 = v8;
-            v11 = __PAIR__(v9, v8 / 60);
-            v27 = v11;
-            LODWORD(v12) = v9;
-            HIDWORD(v12) = SHIDWORD(v11) >> 31;
-            v13 = v12 % 60;
+
+        // Print credit amount.
+        if (Options.Sidebar_Toggle_Allowed()) {
+            Fancy_Text_Print("%d", g_seenBuff.Get_Width() - (TAB_WIDTH / 2) - TAB_WIDTH, 0, &MetalScheme, 0, TPF_12PT_METAL, Credits);
+        } else {
+            Fancy_Text_Print("%d", g_seenBuff.Get_Width() - (TAB_WIDTH / 2), 0, &MetalScheme, 0, TPF_12PT_METAL, Credits);
+        }
+
+        if (Scen.Global_Timer_Running()) {
+            int frame_time = Scen.Get_Global_Time();
+            int total_seconds = frame_time / 15; // Game ticks at 15 frames per logical second (not actual seconds unless at 15 fps).
             VoxType voctospeak = VOX_NONE;
-            v15 = v10 % 60;
-            if (Scen.Get_Global_Time() == 900) {
+            int hours = (total_seconds / 60) / 60;
+            int minutes = (total_seconds / 60) % 60;
+            int seconds = total_seconds % 60;
+
+            // Speak timer warnings.
+            if (frame_time == 900) {
                 voctospeak = VOX_TIME_1;
             }
-            if (Scen.Get_Global_Time() == 1800) {
+
+            if (frame_time == 1800) {
                 voctospeak = VOX_TIME_2;
             }
-            if (Scen.Get_Global_Time() == 2700) {
+
+            if (frame_time == 2700) {
                 voctospeak = VOX_TIME_3;
             }
-            if (Scen.Get_Global_Time() == 3600) {
+
+            if (frame_time == 3600) {
                 voctospeak = VOX_TIME_4;
             }
-            if (Scen.Get_Global_Time() == 4500) {
+
+            if (frame_time == 4500) {
                 voctospeak = VOX_TIME_5;
             }
-            if (Scen.Get_Global_Time() == 9000) {
+
+            if (frame_time == 9000) {
                 voctospeak = VOX_TIME_10;
             }
-            if (Scen.Get_Global_Time() == 18000) {
+            
+            if (frame_time == 18000) {
                 voctospeak = VOX_TIME_20;
             }
-            if (Scen.Get_Global_Time() == 27000) {
+            
+            if (frame_time == 27000) {
                 voctospeak = VOX_TIME_30;
             }
-            if (Scen.Get_Global_Time() == 36000) {
-                vvoctospeak14 = VOX_TIME_40;
+            
+            if (frame_time == 36000) {
+                voctospeak = VOX_TIME_40;
             }
+
             if (voctospeak != VOX_NONE) {
                 Speak(voctospeak);
                 Map.TimerFlashTimer = 7;
             }
-            if (v27) {
-                Fancy_Text_Print(2, 400, 0, &MetalScheme, 0, 0x4108, v27, v15, v13);
+
+            // Print the time.
+            if (Options.Sidebar_Toggle_Allowed()) {
+                if (hours != 0) {
+                    Fancy_Text_Print(TXT_TIME_HMS_FORMAT,
+                        g_logicPage->Get_Width() - (2 * TAB_WIDTH) - (TAB_WIDTH / 2),
+                        0,
+                        &MetalScheme,
+                        0,
+                        TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
+                        hours,
+                        minutes,
+                        seconds);
+                } else {
+                    Fancy_Text_Print(TXT_TIME_MS_FORMAT,
+                        g_logicPage->Get_Width() - (2 * TAB_WIDTH) - (TAB_WIDTH / 2),
+                        0,
+                        &MetalScheme,
+                        0,
+                        TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
+                        minutes,
+                        seconds);
+                }
             } else {
-                Fancy_Text_Print(3, 400, 0, &MetalScheme, 0, 0x4108, v15, v13);
+                if (hours != 0) {
+                    Fancy_Text_Print(TXT_TIME_HMS_FORMAT,
+                        g_logicPage->Get_Width() - TAB_WIDTH - (TAB_WIDTH / 2),
+                        0,
+                        &MetalScheme,
+                        0,
+                        TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
+                        hours,
+                        minutes,
+                        seconds);
+                } else {
+                    Fancy_Text_Print(TXT_TIME_MS_FORMAT,
+                        g_logicPage->Get_Width() - TAB_WIDTH - (TAB_WIDTH / 2),
+                        0,
+                        &MetalScheme,
+                        0,
+                        TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
+                        minutes,
+                        seconds);
+                }
             }
         }
+
         CreditToRedraw = true;
         CreditHasChanged = true;
     }
-#endif
 }
 
 void TabClass::CreditClass::AI(BOOL a1)
@@ -313,7 +332,11 @@ void TabClass::Draw_It(BOOL force_redraw)
         CC_Draw_Shape(TabShape, 0, 0, 0, WINDOW_0, SHAPE_NORMAL);
         Fancy_Text_Print(
             TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
+
+        // Credits and timer tab.
         TabClass::Draw_Credits_Tab();
+
+        // Line underneath tab area to separate from tactical display.
         g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff.Get_Width() - 1, 16 - 2, COLOR_BLACK);
 
         // For when sidebar is allowed to be hidden ala C&C95 or the DOS versions.
@@ -404,8 +427,7 @@ void TabClass::Hilite_Tab(int tab)
 {
     int pos;
 
-    switch (tab)
-    {
+    switch (tab) {
         case 0:
             pos = 0;
             break;

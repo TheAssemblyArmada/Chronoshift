@@ -56,7 +56,7 @@ class TabClass : public SidebarClass
     public:
         CreditClass();
 
-        void Graphic_Logic(BOOL a1 = false);
+        void Graphic_Logic(BOOL force_redraw = false);
         void AI(BOOL a1 = false);
         void Set_Available(int avail) { Available = avail; }
 
@@ -69,9 +69,9 @@ class TabClass : public SidebarClass
         {
             struct
             {
-                bool CreditToRedraw : 1;
-                bool CreditHasIncreased : 1;
-                bool CreditHasChanged : 1;
+                bool CreditToRedraw : 1; // & 1
+                bool CreditHasIncreased : 1; // & 2
+                bool CreditHasChanged : 1; // & 4
             };
             int Bitfield;
         };

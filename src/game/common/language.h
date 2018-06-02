@@ -47,7 +47,7 @@ enum TextEnum
 
     TXT_CREDIT_FORMAT = 1, // %3d.%02d
     TXT_TIME_HMS_FORMAT = 2, // Time:%02d:%02d:%02d
-    TXT_TIME_HM_FORMAT = 3, // Time:%02d:%02d
+    TXT_TIME_MS_FORMAT = 3, // Time:%02d:%02d
     TXT_BUTTON_SELL = 4, // Sell
     TXT_SELL = 5, // Sell Structure
     TXT_REPAIR_BUTTON = 6, // Repair
