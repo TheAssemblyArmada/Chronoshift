@@ -24,6 +24,7 @@
 #include "globals.h"
 #include "iomap.h"
 #include "mixfile.h"
+#include "queue.h"
 #include "rules.h"
 #include "scenario.h"
 
@@ -261,54 +262,38 @@ void TabClass::One_Time()
 
 void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-#ifndef RAPP_STANDALONE
-    void (*func)(const TabClass *, KeyNumType &, int, int) =
-        reinterpret_cast<void (*)(const TabClass *, KeyNumType &, int, int)>(0x005538D0);
-    func(this, key, mouse_x, mouse_y);
-#else
-    signed int v5; // eax@5
-    int v6; // edx@9
-    unsigned int v7; // eax@14
-    unsigned int v8; // edx@15
-    unsigned int v9; // edx@17
+    if (mouse_y > 0 && mouse_y < 16 && mouse_x < g_seenBuff.Get_Width() && mouse_x > 0) {
+        // Handle a left click and set key to 0 to indicate handled to lower layers.
+        if (key == KN_LMOUSE) {
+            int tab_index = -1;
 
-    if (mouse_y >= 0 && mouse_y < 16 && g_seenBuff.Get_Width() - 1 > mouse_x && mouse_x > 0) {
-        v5 = 0;
-        if (mouse_y > 0) {
-            v5 = 1;
-        }
-        if (v5) {
-            if (*key == 1) {
-                v6 = -1;
-                if (mouse_x < 160) {
-                    v6 = 0;
-                }
-                if (v6 >= 0) {
-                    TabClass::Set_Active(v6);
-                    *key = 0;
-                }
+            // We are in the "Options" tab here.
+            if (mouse_x < TAB_WIDTH) {
+                tab_index = 0;
             }
-            Override_Mouse_Shape(0, 0);
+
+            // If Sidebar toggle allowed and we are in the Sidebar tab here.
+            if (Options.Sidebar_Toggle_Allowed() && mouse_x > g_seenBuff.Get_Width() - TAB_WIDTH) {
+                tab_index = 1;
+            }
+
+            // If we selected a tab mark it active and mark key as handled.
+            if (tab_index >= 0) {
+                TabClass::Set_Active(tab_index);
+                key = KN_NONE;
+            }
         }
+
+        Override_Mouse_Shape(MOUSE_POINTER, 0);
     }
-    v7 = this->CreditsFlashTimer.Accumulated;
-    if (this->CreditsFlashTimer.Started != -1) {
-        v8 = Frame - this->CreditsFlashTimer.Started;
-        if (v8 >= v7) {
-            v9 = 0;
-            goto LABEL_19;
-        }
-        v7 -= v8;
-    }
-    v9 = v7;
-LABEL_19:
-    if (v9 == 1) {
+
+    if (CreditsFlashTimer == 1) {
         TabToRedraw = true;
         Flag_To_Redraw(0);
     }
+
     CreditDisplay.AI(0);
     SidebarClass::AI(key, mouse_x, mouse_y);
-#endif
 }
 
 void TabClass::Draw_It(BOOL force_redraw)
@@ -353,13 +338,13 @@ void TabClass::Draw_It(BOOL force_redraw)
 
         // For when sidebar is allowed to be hidden ala C&C95 or the DOS versions.
         if (Options.Sidebar_Toggle_Allowed()) {
-            CC_Draw_Shape(TabShape, 0, g_seenBuff.Get_Width() - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+            CC_Draw_Shape(TabShape, 6, g_seenBuff.Get_Width() - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
             Fancy_Text_Print(TXT_TAB_SIDEBAR,
                 g_seenBuff.Get_Width() - 80,
                 0,
-                &ColorRemaps[REMAP_5],
-                0,
-                TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL);
+                &MetalScheme,
+                COLOR_TBLACK,
+                TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
         }
 
         g_logicPage->Unlock();
@@ -438,17 +423,24 @@ void TabClass::Draw_Credits_Tab()
 void TabClass::Hilite_Tab(int tab)
 {
     int pos;
+    int frame;
 
     switch (tab) {
         case 0:
             pos = 0;
+            frame = 1;
             break;
-        default:
+
+        case 1:
             pos = g_seenBuff.Get_Width() - TAB_WIDTH;
+            frame = 7;
+            break;
+
+        default:
             break;
     }
 
-    CC_Draw_Shape(TabShape, 1, pos, 0, WINDOW_0, SHAPE_NORMAL);
+    CC_Draw_Shape(TabShape, frame, pos, 0, WINDOW_0, SHAPE_NORMAL);
     MetalScheme.MediumColor = 134;
     Fancy_Text_Print(
         TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
@@ -457,16 +449,13 @@ void TabClass::Hilite_Tab(int tab)
 
 void TabClass::Set_Active(int tab)
 {
-    // It seems it might be feed minus values too....
-    DEBUG_LOG("TabClass::Set_Active got %d\n", tab);
-    // rewrote into a switch, as its cleaner. see binary
     switch (tab) {
         case TAB_OPTIONS:
-            // Queue_Options();
+            Queue_Options();
             break;
 
         case TAB_SIDEBAR:
-            // Map.Activate(); // Toggles the sidebar.
+            Activate(SIDEBAR_TOGGLE); // Toggles the sidebar.
             break;
 
         default:

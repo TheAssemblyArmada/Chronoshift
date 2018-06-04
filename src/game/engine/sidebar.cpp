@@ -985,7 +985,7 @@ BOOL SidebarClass::Activate(int mode)
 
     if (g_inMapEditor) {
         if (!Session.Playback_Game()) {
-            SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? SidebarIsDrawn == false : mode == SIDEBAR_DEACTIVATE);
+            SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? !SidebarIsDrawn : mode == SIDEBAR_ACTIVATE);
 
             bool newvalue = SidebarIsDrawn;
 
@@ -1055,7 +1055,7 @@ BOOL SidebarClass::Activate(int mode)
         }
     } else {
         if (!Session.Playback_Game()) {
-            SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? SidebarIsDrawn == false : mode == SIDEBAR_DEACTIVATE);
+            SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? !SidebarIsDrawn : mode == SIDEBAR_ACTIVATE);
 
             bool newvalue = SidebarIsDrawn;
 

@@ -40,8 +40,8 @@ DEFINE_ENUMERATION_OPERATORS(ColumnType);
 enum SidebarStateType
 {
     SIDEBAR_TOGGLE = -1,
-    SIDEBAR_ACTIVATE = 0,
-    SIDEBAR_DEACTIVATE = 1
+    SIDEBAR_DEACTIVATE = 0,
+    SIDEBAR_ACTIVATE = 1
 };
 
 #define MAX_BUTTONS_PER_COLUMN 75
@@ -300,7 +300,7 @@ inline void SidebarClass::Hook_Me()
     Hook_Function(0x0054E290, *SidebarClass::StripClass::Scroll); // seems to work
     Hook_Function(0x0054E2CC, *SidebarClass::StripClass::Flag_To_Redraw); // seems to work
     Hook_Function(0x0054F3B4, *SidebarClass::StripClass::Factory_Link); //works
-    Hook_Function(0x0054D07C,  *SidebarClass::One_Time); // seems to work
+    Hook_Function(0x0054D07C, *SidebarClass::One_Time); // seems to work
     Hook_Function(0x0054D0F8, *SidebarClass::Init_Clear); //works 
     Hook_Function(0x0054D144, *SidebarClass::Init_IO); //works 
     Hook_Function(0x0054D304, *SidebarClass::Init_Theater); //works
