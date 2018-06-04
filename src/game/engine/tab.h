@@ -92,10 +92,7 @@ public:
     virtual void Draw_It(BOOL force_redraw) override;
 
     void Flash_Money();
-    void Draw_Passable_Tab(BOOL state);
-    void Draw_Map_Size_Tab();
-    void Set_Active(int tab);
-
+     
     static void Hilite_Tab(int tab);
     
 #ifndef RAPP_STANDALONE
@@ -103,6 +100,7 @@ public:
 #endif
 
 private:
+    void Set_Active(int tab);
     static void Draw_Credits_Tab();
 
 protected:

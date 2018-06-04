@@ -36,6 +36,9 @@ void *TabClass::TabShape = nullptr;
 void *TabClass::PassableShape = nullptr;
 void *TabClass::TabBackgroundShape = nullptr;
 
+/**
+ * 0x004ACB90
+ */
 TabClass::CreditClass::CreditClass() :
     Available(0),
     Credits(0),
@@ -47,6 +50,11 @@ TabClass::CreditClass::CreditClass() :
     return;
 }
 
+/**
+ * @brief Drawing logic for credit and timer tabs.
+ *
+ * 0x004ACBB8
+ */
 void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 {
     if (force_redraw || CreditToRedraw) {
@@ -176,82 +184,27 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
     }
 }
 
+/**
+ * @brief Tick logic for credit and timer tabs.
+ *
+ * 0x004ACF04
+ */
 void TabClass::CreditClass::AI(BOOL a1)
 {
+    // TODO Needs HouseClass.
 #ifndef RAPP_STANDALONE
     void (*func)(const CreditClass *, BOOL) = reinterpret_cast<void (*)(const CreditClass *, BOOL)>(0x004ACF04);
     func(this, a1);
-#else
-    int v3; // eax@3
-    CreditClass *v4; // ecx@3
-    int v5; // eax@6
-    char v6; // bh@14
-    int v7; // eax@15
-    int v8; // eax@18
-    int v9; // eax@21
-    int v10; // eax@21
-    int v11; // edx@23
-    char *v12; // edx@24
-
-    if (a2 || Frame != AI::.0 ::_last) {
-        AI::.0 ::_last = Frame;
-        v3 = HouseClass::Available_Money(PlayerPtr);
-        v4->Available = v3;
-        if (v3 <= 0) {
-            v3 = 0;
-        }
-        v4->Available = v3;
-        if (Scen.Has_Started() != -1) {
-            goto LABEL_28;
-        }
-        if (Scen.Get_Global_Time() != 0) {
-        LABEL_28:
-            v4->Boolean |= 1u;
-            Flag_To_Redraw(0);
-        }
-        if (v4->Credits != v4->Available) {
-            if (a2) {
-                v6 = v4->Boolean & 0xFB;
-                v4->Credits = v4->Available;
-                v4->Boolean = v6;
-            LABEL_25:
-                v4->Boolean |= 1u;
-                Flag_To_Redraw(0);
-                return;
-            }
-            v7 = v4->field_C;
-            if (v7) {
-                v4->field_C = v7 - 1;
-            }
-            if (!v4->field_C) {
-                v8 = v4->Available - v4->Credits;
-                if (v8 <= 0) {
-                    v4->field_C = 3;
-                } else {
-                    v4->field_C = 1;
-                }
-                v9 = ABS(v8);
-                v10 = Bound(v9 >> 3, 1, 143);
-                if (v4->Credits > v4->Available) {
-                    v10 = -v10;
-                }
-                v11 = v10 + v4->Credits;
-                v4->Credits = v11;
-                if (v11 - v10 != v4->Credits) {
-                    v4->Boolean |= 4u;
-                    v12 = &v4->Boolean;
-                    *v12 = v4->Boolean & 0xFD;
-                    *v12 |= 2 * (v10 > 0);
-                }
-                goto LABEL_25;
-            }
-        }
-    }
 #endif
 }
 
 TabClass::TabClass() : CreditDisplay(), TimerFlashTimer(), TabToRedraw(false), CreditsFlashTimer() {}
 
+/**
+ * @brief One time load of tab related graphical assets.
+ *
+ * 0x005539D8
+ */
 void TabClass::One_Time()
 {
     SidebarClass::One_Time();
@@ -260,6 +213,11 @@ void TabClass::One_Time()
     TabBackgroundShape = MixFileClass<CCFileClass>::Retrieve("tabback.shp");
 }
 
+/**
+ * @brief Per tick logic for the tabs in the UI.
+ *
+ * 0x005538D0
+ */
 void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
     if (mouse_y > 0 && mouse_y < 16 && mouse_x < g_seenBuff.Get_Width() && mouse_x > 0) {
@@ -296,6 +254,11 @@ void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
     SidebarClass::AI(key, mouse_x, mouse_y);
 }
 
+/**
+ * @brief Draws the tabs.
+ *
+ * 0x005533A0
+ */
 void TabClass::Draw_It(BOOL force_redraw)
 {
     SidebarClass::Draw_It(force_redraw);
@@ -355,6 +318,11 @@ void TabClass::Draw_It(BOOL force_redraw)
     TabToRedraw = false;
 }
 
+/**
+ * @brief Sets the countdown for the credit tab flash.
+ *
+ * 0x00553A4C
+ */
 void TabClass::Flash_Money()
 {
     TabToRedraw = true;
@@ -362,26 +330,11 @@ void TabClass::Flash_Money()
     CreditsFlashTimer = 7;
 }
 
-void TabClass::Draw_Passable_Tab(BOOL state)
-{
-    CC_Draw_Shape(PassableShape, state != 0, 160, 0, WINDOW_0, SHAPE_NORMAL);
-    Fancy_Text_Print(
-        TXT_EDITOR_PASSABLE, 240, 0, &MetalScheme, COLOR_TBLACK, TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL);
-}
-
-void TabClass::Draw_Map_Size_Tab()
-{
-    CC_Draw_Shape(TabShape, 1, 320, 0, WINDOW_0, SHAPE_NORMAL);
-    Fancy_Text_Print("%d x %d",
-        400,
-        0,
-        &MetalScheme,
-        COLOR_TBLACK,
-        TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
-        Map.Get_Map_Cell_Width(),
-        Map.Get_Map_Cell_Height());
-}
-
+/**
+ * @brief Draws the credit and timer tabs.
+ *
+ * 0x005533A0
+ */
 void TabClass::Draw_Credits_Tab()
 {
     int tabframe = 0;
@@ -420,18 +373,23 @@ void TabClass::Draw_Credits_Tab()
     }
 }
 
+/**
+ * @brief Draw tab as though pressed, Options or Sidebar tab only.
+ *
+ * 0x00553868
+ */
 void TabClass::Hilite_Tab(int tab)
 {
     int pos;
     int frame;
 
     switch (tab) {
-        case 0:
+        case TAB_OPTIONS:
             pos = 0;
             frame = 1;
             break;
 
-        case 1:
+        case TAB_SIDEBAR:
             pos = g_seenBuff.Get_Width() - TAB_WIDTH;
             frame = 7;
             break;
@@ -447,6 +405,11 @@ void TabClass::Hilite_Tab(int tab)
     MetalScheme.MediumColor = 128;
 }
 
+/**
+ * @brief Activates logic behind either Options or Sidebar tab.
+ *
+ * 0x005539AC
+ */
 void TabClass::Set_Active(int tab)
 {
     switch (tab) {
