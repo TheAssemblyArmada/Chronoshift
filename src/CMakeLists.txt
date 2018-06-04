@@ -119,6 +119,7 @@ set(GAMEENGINE_SRC
     game/engine/options.cpp
     game/engine/overlaytype.cpp
     game/engine/power.cpp
+    game/engine/queue.cpp
     game/engine/radio.cpp
     game/engine/radar.cpp
     game/engine/rtti.cpp
