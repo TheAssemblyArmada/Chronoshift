@@ -23,6 +23,11 @@
 
 class HelpClass : public TabClass
 {
+    enum
+    {
+        HELP_OVERLAP_BUFFER = 60,
+    };
+
 public:
     HelpClass();
 
@@ -33,19 +38,21 @@ public:
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) override;
     virtual void Set_Tactical_Position(uint32_t location) override;
 
-    int16_t *const Overlap_List(void) const;
-    void Set_Text(TextEnum string_id);
-    void Set_Cost(int cost);
-    void Set_Text_Color(unsigned char color);
+    const int16_t *Overlap_List() const;
+    void Set_Cost(int cost) { HelpCost = cost; }
+    void Set_Text_Color(uint8_t color) { HelpTextColor = color; }
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
 #endif
 
+private:
+    void Set_Text(int string_id);   
+
 protected:
-    int field_1620;
-    int field_1624;
-    int field_1628;
+    int HelpUnkInt1;
+    int HelpUnkInt2;
+    int HelpUnkInt3;
 #ifndef RAPP_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
@@ -67,10 +74,10 @@ protected:
     int HelpWidth;
     int HelpTextID; // TextEnum is but setting it offsets alignment
     int HelpTextColor; // should just be unsigned chat but it offsets alignment
-    TCountDownTimerClass<SystemTimerClass> CountDownTimer;
+    mutable TCountDownTimerClass<SystemTimerClass> CountDownTimer;
 
 private:
-    static int16_t OverlapList[60];
+    static int16_t OverlapList[HELP_OVERLAP_BUFFER];
     static char *HelpText;
 };
 
