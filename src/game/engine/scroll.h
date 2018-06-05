@@ -21,6 +21,13 @@
 #include "always.h"
 #include "help.h"
 
+enum ScrollMode
+{
+    SCROLLMODE_TOGGLE = -1,
+    SCROLLMODE_MANUAL = 0,
+    SCROLLMODE_AUTO = 1,
+};
+
 class ScrollClass : public HelpClass
 {
 public:
@@ -29,7 +36,7 @@ public:
     virtual void Init_IO() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
 
-    BOOL Set_Autoscroll(int a1);
+    BOOL Set_Autoscroll(int mode);
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
@@ -49,7 +56,7 @@ protected:
 #else
     bool Autoscroll;
 #endif
-    int field_165D; // is this a rate of sorts?
+    int ScrollUnkInt; // is this a rate of sorts?
 
 private:
 #ifndef RAPP_STANDALONE

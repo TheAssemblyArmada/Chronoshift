@@ -67,14 +67,16 @@ public:
     void Set_Contrast(fixed contrast);
     void Set_Tint(fixed tint);
     void Set();
-    fixed Get_Score_Volume() { return ScoreVolume; }
-    BOOL Get_Repeat() { return ScoreRepeats; }
-    BOOL Get_Shuffle() { return ScoreShuffles; }
-    BOOL Sidebar_Toggle_Allowed() { return AllowSidebarToggle; }
-    fixed Get_Brightness() { return (Brightness - fixed::_1_4) / fixed::_1_2; }
-    fixed Get_Saturation() { return Saturation; }
-    fixed Get_Contrast() { return (Contrast - fixed::_1_4) / fixed::_1_2; }
-    fixed Get_Tint() { return Tint; }
+    int Get_Scroll_Rate() const { return ScrollRate; }
+    const fixed &Get_Score_Volume() const { return ScoreVolume; }
+    BOOL Get_Auto_Scroll() const { return AutoScroll; }
+    BOOL Get_Repeat() const { return ScoreRepeats; }
+    BOOL Get_Shuffle() const { return ScoreShuffles; }
+    BOOL Sidebar_Toggle_Allowed() const { return AllowSidebarToggle; }
+    fixed Get_Brightness() const { return (Brightness - fixed::_1_4) / fixed::_1_2; }
+    fixed Get_Saturation() const { return Saturation; }
+    fixed Get_Contrast() const { return (Contrast - fixed::_1_4) / fixed::_1_2; }
+    fixed Get_Tint() const { return Tint; }
 
 
 #ifndef RAPP_STANDALONE

@@ -38,6 +38,7 @@ enum RedrawEnum
 enum MouseType
 {
     MOUSE_NONE = -1,
+    MOUSE_FIRST = 0,
     MOUSE_POINTER = 0,
     MOUSE_SCROLL_N = 1,
     MOUSE_SCROLL_NE = 2,
@@ -80,9 +81,7 @@ enum MouseType
     MOUSE_CANT_GREPAIR = 39,
     MOUSE_CHRONOSPHERE = 40, // WarpIn
     MOUSE_CHRONO2 = 41, // WarpOut	//ACTION_CHRONOWARP
-    MOUSE_EDITOR_BRUSH = 42, // the frame id of this is the same as "NoDeploy", but this is to only be used.
-                             // when Debug_Map_Editor is true, as it used EDMOUSE.
-    MOUSE_LAST = 42,
+    MOUSE_EDITOR_BRUSH = 42, // frame is the same as "NoDeploy", only used for g_inMapEditor from EDMOUSE.SHP
     MOUSE_COUNT = 43
 };
 

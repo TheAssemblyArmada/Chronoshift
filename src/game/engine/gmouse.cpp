@@ -29,9 +29,6 @@ void *GameMouseClass::MouseShapes = nullptr;
 TCountDownTimerClass<SystemTimerClass> GameMouseClass::AnimationTimer;
 #endif
 
-//
-//
-//
 // Frame, Count, Rate, Small, HotSpotX, HotSpotY
 GameMouseClass::MouseStruct GameMouseClass::MouseControl[MOUSE_COUNT] = {
     { 0, 1, 0, 80, 0, 0 }, // 0		//Arrow
@@ -135,7 +132,7 @@ void GameMouseClass::Set_Default_Mouse(MouseType mouse, BOOL a2)
 BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL a2)
 {
 #ifndef RAPP_STANDALONE
-    DEFINE_CALL(func, 0x0050316C, BOOL, (GameMouseClass *, MouseType, BOOL));
+    DEFINE_CALL(func, 0x0050316C, BOOL, GameMouseClass *, MouseType, BOOL);
     return func(this, mouse, a2);
 #else
     int v3; // eax@3

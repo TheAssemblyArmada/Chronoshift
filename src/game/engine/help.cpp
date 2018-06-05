@@ -26,7 +26,7 @@
 using std::snprintf;
 
 int16_t HelpClass::OverlapList[60];
-char *HelpClass::HelpText = NULL;
+char *HelpClass::HelpText = nullptr;
 
 /**
  * 0x004D2270

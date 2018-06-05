@@ -132,8 +132,8 @@ __forceinline T(__cdecl *Make_VA_Function_Ptr(const uintptr_t address))(Types...
 //  DEFINE_CALL(MyFunction, 0xDEADBEEF, void*, (int, int));
 //  return MyFunction(integral, integral2);
 
-#define DEFINE_CALL(func_name, address, return_type, pointer_type) \
-    return_type (*func_name)pointer_type = reinterpret_cast<return_type(*)pointer_type>(address);
+#define DEFINE_CALL(func_name, address, return_type, ...) \
+    return_type (*func_name)(##__VA_ARGS__) = reinterpret_cast<return_type (*)(##__VA_ARGS__)>(address);
 
 // A nice struct to pack the assembly in for jumping into replacement code.
 // So long as the calling conventions and arguments for the replaced and

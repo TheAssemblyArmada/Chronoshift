@@ -15,6 +15,10 @@
  */
 
 #include "scroll.h"
+#include "gameoptions.h"
+#include "gametypes.h"
+#include "globals.h"
+#include "minmax.h"
 
 #ifndef RAPP_STANDALONE
 TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter =
@@ -23,122 +27,172 @@ TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter =
 TCountDownTimerClass<SystemTimerClass> ScrollClass::ScrollingCounter;
 #endif
 
+/**
+ * 0x00547018
+ */
 ScrollClass::ScrollClass() :
-    Autoscroll(false),
-    field_165D(0)
+    Autoscroll(true),
+    ScrollUnkInt(0)
 {
     ScrollingCounter = 0;
 }
 
-void ScrollClass::Init_IO(void)
+/**
+ * @brief Initialise the class for IO.
+ *
+ * 0x004F92E0
+ */
+void ScrollClass::Init_IO()
 {
     ScrollingCounter = 0;
     HelpClass::Init_IO();
 }
 
+/**
+ * @brief Initialise the class for IO.
+ *
+ * 0x00547088
+ */
 void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-#ifndef RAPP_STANDALONE
-    DEFINE_CALL(func, 0x00547088, void, (const ScrollClass *, KeyNumType &, int, int));
-    func(this, key, mouse_x, mouse_y);
-#else
-    int a1a; // [sp+34h] [bp-34h]@16
-    int v16; // [sp+38h] [bp-30h]@24
-    int ratetouse; // [sp+40h] [bp-28h]@38
-    int hires; // [sp+48h] [bp-20h]@2
-    int v21; // [sp+4Ch] [bp-1Ch]@2
-    int v22; // [sp+50h] [bp-18h]@1
-    int scrollrate; // [sp+54h] [bp-14h]@30
+    static const int _rate[] = { 448, 384, 320, 256, 192, 128, 64, 32, 16 };
 
-    v22 = 0;
+    static const MouseType _scroll_mouse[FACING_COUNT] = { MOUSE_SCROLL_N,
+        MOUSE_SCROLL_NE,
+        MOUSE_SCROLL_E,
+        MOUSE_SCROLL_SE,
+        MOUSE_SCROLL_S,
+        MOUSE_SCROLL_SW,
+        MOUSE_SCROLL_W,
+        MOUSE_SCROLL_NW };
+
+    static const MouseType _noscroll_mouse[FACING_COUNT] = { MOUSE_CANT_SCROLL_N,
+        MOUSE_CANT_SCROLL_NE,
+        MOUSE_CANT_SCROLL_E,
+        MOUSE_CANT_SCROLL_SE,
+        MOUSE_CANT_SCROLL_S,
+        MOUSE_CANT_SCROLL_SW,
+        MOUSE_CANT_SCROLL_W,
+        MOUSE_CANT_SCROLL_NW };
+
+    static DirType _direction = DIR_NONE;
+
     if (!DisplayBit8) {
-        hires = Is_HiRes();
-        v21 = 0;
-        if (field_165D || !mouse_y || !mouse_x || g_seenBuff->Get_Width() - 1 == mouse_x
-            || g_seenBuff->Get_Height() - 1 == mouse_y) {
-            if (!mouse_y || !mouse_x || g_seenBuff->Get_Width(&SeenBuff) - 1 == mouse_x
-                || g_seenBuff->Get_Height() - 1 == mouse_y) {
-                v22 = 1;
-                a1a = mouse_x;
-                if (50 << hires > mouse_x) {
-                    a1a -= (50 << hires) - a1a;
+        int vp_w = g_seenBuff.Get_Width();
+        int vp_h = g_seenBuff.Get_Height();
+
+        bool at_edge = (mouse_x <= 0 || mouse_y <= 0 || vp_w - 1 <= mouse_x || vp_h - 1 <= mouse_y);
+        bool edge_scrolling = false;
+
+        if (ScrollUnkInt > 0 || at_edge) {
+            if (at_edge) {
+                edge_scrolling = true;
+
+                int x_pos = mouse_x;
+                if (x_pos < 100) {
+                    x_pos -= x_pos - 100;
                 }
-                a1a = MAX(a1a, 0);
-                if (270 << hires < a1a) {
-                    a1a += a1a - (270 << hires);
+
+                x_pos = Max(0, x_pos);
+                if (x_pos > /*540*/ (vp_w - 100)) {
+                    x_pos += x_pos - /*540*/ (vp_w - 100);
                 }
-                a1a = MIN(a1a, 320 << hires);
-                if (50 << hires < a1a && 270 << hires > a1a) {
-                    a1a += ((160 << hires) - a1a) / 2;
+
+                int y_pos = mouse_y;
+
+                if (y_pos < 100) {
+                    y_pos -= y_pos - 100;
                 }
-                v16 = mouse_y;
-                if (50 << hires > mouse_y) {
-                    v16 -= (50 << hires) - v16;
+
+                y_pos = Max(0, y_pos);
+
+                if (y_pos > /*300*/ (vp_h - 100)) {
+                    y_pos += y_pos - /*300*/ (vp_h - 100);
                 }
-                v16 = MAX(v16, 0);
-                if (150 << hires < v16) {
-                    v16 += v16 - (150 << hires);
+
+                x_pos = Min(x_pos, vp_w);
+                y_pos = Min(y_pos, vp_h);
+
+                if (x_pos > 100 && x_pos < /*540*/ (vp_w - 100)) {
+                    x_pos += (x_pos - 320) / 2;
                 }
-                v16 = MIN(v16, 200 << hires);
-                AI::.0 ::direction[0] = Desired_Facing256(160 << hires, 100 << hires, a1a, v16);
+
+                _direction = Desired_Facing256(320, 200, x_pos, y_pos);
             }
-            v17 = Direction_To_Facing(AI::.0 ::direction[0]);
-            if (Debug_Map) {
-                scrollrate = Options.options.ScrollRate + 1;
-            } else {
-                scrollrate = 8 - field_165D;
+
+            FacingType scroll_facing = Direction_To_Facing(_direction);
+
+            int rate_index = (ScrollUnkInt - 8);
+
+            if (rate_index < (Options.Get_Scroll_Rate() + 1)) {
+                rate_index = (Options.Get_Scroll_Rate() + 1);
+                ScrollUnkInt = (Options.Get_Scroll_Rate() + 1) - 8;
             }
-            if (Options.options.ScrollRate + 1 > scrollrate) {
-                scrollrate = Options.options.ScrollRate + 1;
-                field_165D = 8 - (Options.options.ScrollRate + 1);
+
+            // if the right mouse button is down, the scroll speed halfs?
+            if (g_keyboard->Down(KN_RMOUSE)) {
+                rate_index = Clamp((rate_index + 1), 4, 8);
             }
-            if (KeyboardClass::Down(Keyboard, WWKN_RMOUSE)) {
-                scrollrate = Bound(scrollrate + 1, 4, 8);
+
+            if (!Options.Get_Auto_Scroll()) {
+                _direction = Facing_To_Direction(Direction_To_Facing(_direction));
             }
-            if (!(Options.options.Bitfield & 0x10)) {
-                v4 = Direction_To_Facing(AI::.0 ::direction[0]);
-                AI::.0 ::direction[0] = Facing_To_Dir(v4);
-            }
-            ratetouse = AI::.6 ::_rate[scrollrate] / 2;
-            if (Scroll_Map(AI::.0 ::direction[0], &ratetouse, 0)) {
-                Override_Mouse_Shape((v17 + 1), 0);
-                if (KeyboardClass::Down(Keyboard, WWKN_LMOUSE) || Autoscroll) {
-                    ratetouse = AI::.6 ::_rate[scrollrate];
-                    if (Debug_Map) {
-                        Scroll_Map(AI::.0 ::direction[0], &ratetouse, 1);
-                        Counter = 1;
+
+            int distance = _rate[rate_index] / 2;
+
+            if (Scroll_Map(_direction, distance, false)) {
+                MouseType mouse = _scroll_mouse[scroll_facing];
+                Override_Mouse_Shape(mouse);
+
+                if (g_keyboard->Down(KN_LMOUSE) || Autoscroll) {
+                    distance = _rate[rate_index];
+                    Scroll_Map(_direction, distance);
+
+                    if (g_inMapEditor) {
+                        ScrollingCounter = 1;
+
                     } else {
-                        ratetouse = AI::.6 ::_rate[scrollrate];
-                        Scroll_Map(AI::.0 ::direction[0], &ratetouse, 1);
-                        if (!Counter.Time() && v22) {
-                            Counter = 1;
-                            ++field_165D;
+                        if (edge_scrolling && ScrollingCounter > 0) {
+                            ScrollingCounter = 1;
+                            ++ScrollUnkInt;
                         }
                     }
                 }
+
             } else {
-                Override_Mouse_Shape((v17 + 9), 0);
+                MouseType mouse = _noscroll_mouse[scroll_facing];
+                Override_Mouse_Shape(mouse);
             }
         }
-        if (!Debug_Map && !v22 && !Counter.Time()) {
-            if (--field_165D < 0) {
-                ++field_165D;
+
+        if (!g_inMapEditor && !edge_scrolling && ScrollingCounter > 0) {
+            --ScrollUnkInt;
+
+            if (ScrollUnkInt < 0) {
+                ++ScrollUnkInt;
             }
-            Counter = 1;
+
+            ScrollingCounter = 1;
         }
     }
+
     HelpClass::AI(key, mouse_x, mouse_y);
-#endif
 }
 
-BOOL ScrollClass::Set_Autoscroll(int a1)
+/**
+ * @brief Set auto scrolling on or off.
+ *
+ * 0x00547464
+ */
+BOOL ScrollClass::Set_Autoscroll(int mode)
 {
     BOOL old = Autoscroll;
 
-    if (a1 == -1) {
+    if (mode == SCROLLMODE_TOGGLE) {
         Autoscroll = !Autoscroll;
     } else {
-        Autoscroll = a1;
+        Autoscroll = mode == SCROLLMODE_AUTO;
     }
+
     return old;
 }
