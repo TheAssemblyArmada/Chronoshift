@@ -25,8 +25,13 @@
 
 using std::snprintf;
 
+#ifndef RAPP_STANDALONE
+int16_t *const HelpClass::OverlapList = Make_Pointer<int16_t>(0x006018B8);
+char *&HelpClass::HelpText = Make_Global<char *>(0x006821B8);
+#else
 int16_t HelpClass::OverlapList[60];
 char *HelpClass::HelpText = nullptr;
+#endif
 
 /**
  * 0x004D2270
@@ -35,7 +40,7 @@ HelpClass::HelpClass() :
     HelpUnkInt1(0),
     HelpUnkInt2(0),
     HelpUnkInt3(0),
-    HelpBit1(false),
+    HelpForceDraw(false),
     HelpCost(0),
     HelpMouseXPos(0),
     HelpMouseYPos(0),
@@ -67,12 +72,12 @@ void HelpClass::Init_Clear()
 void HelpClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
     // Clear the text if the mouse has moved.
-    if (CountDownTimer == 0 && !HelpBit1 && (mouse_x != HelpMouseXPos || mouse_y != HelpMouseYPos)) {
+    if (CountDownTimer == 0 && !HelpForceDraw && (mouse_x != HelpMouseXPos || mouse_y != HelpMouseYPos)) {
         HelpClass::Help_Text(TXT_NULL);
     }
 
     if (CountDownTimer != 0 && HelpText == nullptr && HelpTextID != TXT_NULL) {
-        if (HelpBit1 || HelpMouseXPos == mouse_x && HelpMouseYPos == mouse_y) {
+        if (HelpForceDraw || (HelpMouseXPos == mouse_x && HelpMouseYPos == mouse_y)) {
             HelpClass::Set_Text(HelpTextID);
         } else {
             HelpMouseXPos = mouse_x;
@@ -133,14 +138,14 @@ void HelpClass::Draw_It(BOOL force_redraw)
 void HelpClass::Help_Text(int str_id, int x, int y, int color, BOOL no_wait)
 {
     if (HelpTextID != str_id) {
+        // If we are changing a displayed string, clear the cells it overlapped.
         if (HelpTextID != TXT_NULL) {
             Refresh_Cells(Coord_To_Cell(DisplayPos), HelpClass::OverlapList);
         }
 
         HelpMouseXPos = (x == -1 ? g_mouse->Get_Mouse_X() : x);
         HelpMouseYPos = (y == -1 ? g_mouse->Get_Mouse_Y() : y);
-
-        HelpBit1 = (x != -1 || y != -1);
+        HelpForceDraw = (x != -1 || y != -1);
 
         if (no_wait) {
             CountDownTimer = 1;
@@ -206,24 +211,27 @@ void HelpClass::Set_Text(int string_id)
     if (string_id) {
         HelpTextID = string_id;
         Plain_Text_Print(0, 0, 0, 0, 0, TPF_NOSHADOW | TPF_MAP); // Clears the formatting from previous calls.
-        const char *string = Fetch_String(HelpTextID);
-        HelpWidth = String_Pixel_Width(string);
+        HelpWidth = String_Pixel_Width(Fetch_String(HelpTextID));
 
-        if (HelpBit1) {
+        if (HelpForceDraw) {
             HelpXPos = HelpMouseXPos - HelpWidth;
             HelpYPos = HelpMouseYPos;
         } else {
-            int x_limit = TacOffsetX + Lepton_To_Pixel(DisplayHeight) - 3;
-            int y_limit = TacOffsetY + Lepton_To_Pixel(DisplayWidth) - 1;
-            HelpXPos = HelpMouseXPos + 10;
+            int x_limit = TacOffsetX + Lepton_To_Pixel(DisplayWidth) - 6;
+            int y_limit = TacOffsetY + Lepton_To_Pixel(DisplayHeight) - 2;
+            HelpXPos = HelpMouseXPos + 12;
             HelpYPos = HelpMouseYPos;
 
-            if (HelpWidth + HelpXPos > x_limit) {
-                HelpXPos -= HelpWidth + HelpXPos - x_limit;
+            int x_right = HelpWidth + HelpXPos;
+
+            if (x_right > x_limit) {
+                HelpXPos -= x_right - x_limit;
             }
             
-            if (HelpYPos + 10 > y_limit) {
-                HelpYPos -= HelpYPos + 10 - y_limit;
+            int y_bottom = HelpYPos + 20;
+
+            if (y_bottom > y_limit) {
+                HelpYPos -= y_bottom - y_limit;
             }
             
             if (TacOffsetX + 1 > HelpXPos) {
@@ -236,7 +244,13 @@ void HelpClass::Set_Text(int string_id)
         }
 
         // Copy list and mark final buffer position as end in case source list is longer than buffer.
-        memcpy(OverlapList, Text_Overlap_List(string, HelpXPos - 1, HelpYPos), sizeof(OverlapList));
+#ifndef RAPP_STANDALONE
+        memcpy(OverlapList,
+            Text_Overlap_List(Fetch_String(HelpTextID), HelpXPos - 1, HelpYPos),
+            HELP_OVERLAP_BUFFER * sizeof(int16_t));
+#else
+        memcpy(OverlapList, Text_Overlap_List(Fetch_String(HelpTextID), HelpXPos - 1, HelpYPos), sizeof(OverlapList));
+#endif
         OverlapList[HELP_OVERLAP_BUFFER - 1] = LIST_END;
     }
 }

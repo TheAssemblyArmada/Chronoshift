@@ -59,12 +59,12 @@ protected:
     {
         struct
         {
-            bool HelpBit1 : 1; // 1
+            bool HelpForceDraw : 1; // 1
         };
         int Bitfield;
     };
 #else
-    bool HelpBit1;
+    bool HelpForceDraw;
 #endif
     int HelpCost;
     int HelpMouseXPos;
@@ -77,8 +77,13 @@ protected:
     mutable TCountDownTimerClass<SystemTimerClass> CountDownTimer;
 
 private:
+#ifndef RAPP_STANDALONE
+    static int16_t *const OverlapList;
+    static char *&HelpText;
+#else
     static int16_t OverlapList[HELP_OVERLAP_BUFFER];
     static char *HelpText;
+#endif
 };
 
 #ifndef RAPP_STANALONE
@@ -86,7 +91,13 @@ private:
 inline void HelpClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    // Hook_Function(0x, *HelpClass::Init_Clear);
+    Hook_Function(0x004D2338, *HelpClass::Init_Clear);
+    Hook_Function(0x004D23C8, *HelpClass::AI);
+    Hook_Function(0x004D26B0, *HelpClass::Draw_It);
+    Hook_Function(0x004D2574, *HelpClass::Help_Text);
+    Hook_Function(0x004D2B6C, *HelpClass::Scroll_Map);
+    Hook_Function(0x004D2BC0, *HelpClass::Set_Tactical_Position);
+    Hook_Function(0x004D293C, *HelpClass::Set_Text);
 #endif
 }
 #endif

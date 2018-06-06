@@ -117,6 +117,7 @@ void Setup_Hooks()
     PowerClass::Hook_Me();
     SidebarClass::Hook_Me();
     TabClass::Hook_Me();
+    HelpClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
