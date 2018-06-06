@@ -179,8 +179,8 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
             }
         }
 
-        CreditToRedraw = true;
-        CreditHasChanged = true;
+        CreditToRedraw = false;
+        CreditHasChanged = false;
     }
 }
 
@@ -341,7 +341,7 @@ void TabClass::Draw_Credits_Tab()
     int width = g_logicPage->Get_Width();
 
     if (Options.Sidebar_Toggle_Allowed()) {
-        if (Map.CreditsFlashTimer.Time() > 1) {
+        if (Map.CreditsFlashTimer > 1) {
             tabframe = 4;
         } else {
             tabframe = 2;
@@ -349,7 +349,7 @@ void TabClass::Draw_Credits_Tab()
 
         CC_Draw_Shape(TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
     } else {
-        if (Map.CreditsFlashTimer.Time() > 1) {
+        if (Map.CreditsFlashTimer > 1) {
             tabframe = 8;
         } else {
             tabframe = 6;
@@ -360,7 +360,7 @@ void TabClass::Draw_Credits_Tab()
 
     if (Scen.Global_Timer_Running()) {
         if (Scen.Get_Global_Time() >= 900 * Rule.Get_Timer_Warning()) {
-            tabframe = Map.TimerFlashTimer.Time() > 0 ? 4 : 2;
+            tabframe = Map.TimerFlashTimer > 0 ? 4 : 2;
         } else {
             tabframe = 4;
         }
