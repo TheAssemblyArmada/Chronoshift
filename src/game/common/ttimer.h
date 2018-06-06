@@ -135,6 +135,9 @@ public:
     bool Has_Started() const { return m_started != -1; }
 
 private:
+    int Value() const { return m_timer() - m_started; }
+
+private:
     T m_timer;
     int m_started;
     int m_accumulated;
@@ -182,15 +185,17 @@ void TCountDownTimerClass<T>::Stop()
 template<typename T>
 int TCountDownTimerClass<T>::Time()
 {
-    if (Has_Started()) {
-        m_accumulated -= m_timer() - m_started;
+    int accum = m_accumulated;
 
-        if (m_accumulated < 0) {
-            m_accumulated = 0;
+    if (Has_Started()) {
+        accum -= Value();
+
+        if (accum < 0) {
+            accum = 0;
         }
     }
 
-    return m_accumulated;
+    return accum;
 }
 
 class NoInitClass;
