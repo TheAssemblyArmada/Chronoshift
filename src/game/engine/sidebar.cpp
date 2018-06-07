@@ -59,7 +59,7 @@ ShapeButtonClass SidebarClass::ZoomButton;
 void *SidebarClass::SidebarShape = nullptr;
 void *SidebarClass::SidebarMiddleShape = nullptr;
 void *SidebarClass::SidebarBottomShape = nullptr;
-#endif;
+#endif
 
 TextButtonClass SidebarClass::Shore;
 TextButtonClass SidebarClass::River;

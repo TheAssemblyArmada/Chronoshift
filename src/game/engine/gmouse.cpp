@@ -132,7 +132,8 @@ void GameMouseClass::Set_Default_Mouse(MouseType mouse, BOOL a2)
 BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL a2)
 {
 #ifndef RAPP_STANDALONE
-    DEFINE_CALL(func, 0x0050316C, BOOL, GameMouseClass *, MouseType, BOOL);
+    BOOL (*func)(const GameMouseClass *, MouseType, BOOL) =
+        reinterpret_cast<BOOL (*)(const GameMouseClass *, MouseType, BOOL)>(0x0050316C);
     return func(this, mouse, a2);
 #else
     int v3; // eax@3

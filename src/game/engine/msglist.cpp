@@ -483,7 +483,7 @@ BOOL MessageListClass::Manage()
 
     // Iterate through the message list and remove any messages that have past their delay.
     for (TextLabelClass *label = LabelList; label != nullptr;) {
-        if (label->Get_Delay() != 0 && TickCountTimer.Time() > label->Get_Delay()) {
+        if (label->Get_Delay() != 0 && TickCountTimer > label->Get_Delay()) {
             TextLabelClass *next = reinterpret_cast<TextLabelClass *>(label->Get_Next());
             LabelList = reinterpret_cast<TextLabelClass *>(label->Remove());
 

@@ -36,18 +36,18 @@ public:
     TextLabelClass &operator=(TextLabelClass &that);
     
     void Set_Style(TextPrintType style);
-    void Set_Delay(int delay) { Delay = delay; }
+    void Set_Delay(unsigned delay) { Delay = delay; }
     void Set_ID(int id) { ID = id; }
     void Set_Remap(RemapControlType *remap) { Remap = remap; }
     void Set_Max_Width(int max) { MaxWidth = max; }
     char *Get_Text() { return LabelText; }
     TextPrintType Get_Style() { return TextStyle; }
-    int Get_Delay() { return Delay; }
+    unsigned Get_Delay() { return Delay; }
     int Get_ID() { return ID; }
     RemapControlType *Get_Remap() { return Remap; }
 
 protected:
-    int Delay;
+    unsigned Delay;
     int ID;
     TextPrintType TextStyle;
     char *LabelText;
