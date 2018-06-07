@@ -94,14 +94,21 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                 }
 
                 x_pos = Max(0, x_pos);
+
                 if (x_pos > /*540*/ (vp_w - 100)) {
                     x_pos += x_pos - /*540*/ (vp_w - 100);
+                }
+
+                x_pos = Min(x_pos, vp_w);
+                
+                if (x_pos > 100 && x_pos < /*540*/ (vp_w - 100)) {
+                    x_pos += (320 - x_pos) / 2;
                 }
 
                 int y_pos = mouse_y;
 
                 if (y_pos < 100) {
-                    y_pos -= y_pos - 100;
+                    y_pos -= 100 - y_pos;
                 }
 
                 y_pos = Max(0, y_pos);
@@ -110,23 +117,18 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                     y_pos += y_pos - /*300*/ (vp_h - 100);
                 }
 
-                x_pos = Min(x_pos, vp_w);
                 y_pos = Min(y_pos, vp_h);
-
-                if (x_pos > 100 && x_pos < /*540*/ (vp_w - 100)) {
-                    x_pos += (x_pos - 320) / 2;
-                }
 
                 _direction = Desired_Facing256(320, 200, x_pos, y_pos);
             }
 
             FacingType scroll_facing = Direction_To_Facing(_direction);
 
-            int rate_index = (ScrollUnkInt - 8);
+            int rate_index = g_inMapEditor ? Options.Get_Scroll_Rate() + 1 : (8 - ScrollUnkInt);
 
             if (rate_index < (Options.Get_Scroll_Rate() + 1)) {
                 rate_index = (Options.Get_Scroll_Rate() + 1);
-                ScrollUnkInt = (Options.Get_Scroll_Rate() + 1) - 8;
+                ScrollUnkInt = 8 - (Options.Get_Scroll_Rate() + 1);
             }
 
             // if the right mouse button is down, the scroll speed halfs?
@@ -141,8 +143,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             int distance = _rate[rate_index] / 2;
 
             if (Scroll_Map(_direction, distance, false)) {
-                MouseType mouse = _scroll_mouse[scroll_facing];
-                Override_Mouse_Shape(mouse);
+                Override_Mouse_Shape(_scroll_mouse[scroll_facing]);
 
                 if (g_keyboard->Down(KN_LMOUSE) || Autoscroll) {
                     distance = _rate[rate_index];
@@ -150,18 +151,15 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
                     if (g_inMapEditor) {
                         ScrollingCounter = 1;
-
                     } else {
-                        if (edge_scrolling && ScrollingCounter > 0) {
+                        if (edge_scrolling && ScrollingCounter == 0) {
                             ScrollingCounter = 1;
                             ++ScrollUnkInt;
                         }
                     }
                 }
-
             } else {
-                MouseType mouse = _noscroll_mouse[scroll_facing];
-                Override_Mouse_Shape(mouse);
+                Override_Mouse_Shape(_noscroll_mouse[scroll_facing]);
             }
         }
 
