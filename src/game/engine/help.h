@@ -74,7 +74,7 @@ protected:
     int HelpWidth;
     int HelpTextID; // TextEnum is but setting it offsets alignment
     int HelpTextColor; // should just be unsigned chat but it offsets alignment
-    mutable TCountDownTimerClass<SystemTimerClass> CountDownTimer;
+    TCountDownTimerClass<SystemTimerClass> CountDownTimer;
 
 private:
 #ifndef RAPP_STANDALONE
