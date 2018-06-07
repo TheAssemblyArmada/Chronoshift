@@ -23,7 +23,7 @@ TTimerClass<SystemTimerClass> &TickCountTimer = *reinterpret_cast<TTimerClass<Sy
 TTimerClass<SystemTimerClass> TickCountTimer;
 #endif
 
-int SystemTimerClass::operator()() const
+uint32_t SystemTimerClass::operator()() const
 {
     if (PlatformTimer != nullptr) {
         return PlatformTimer->Get_System_Tick_Count();
@@ -32,7 +32,7 @@ int SystemTimerClass::operator()() const
     return 0;
 }
 
-int FrameTimerClass::operator()() const
+uint32_t FrameTimerClass::operator()() const
 {
     return g_frame;
 }

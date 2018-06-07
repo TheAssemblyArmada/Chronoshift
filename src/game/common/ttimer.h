@@ -26,14 +26,14 @@ class NoInitClass;
 class SystemTimerClass
 {
 public:
-    int operator()() const;
+    uint32_t operator()() const;
 };
 
 // Wrapper around game's logical frame count.
 class FrameTimerClass
 {
 public:
-    int operator()() const;
+    uint32_t operator()() const;
 };
 
 template<class T>
@@ -47,16 +47,16 @@ public:
 
     BasicTimerClass &operator=(const BasicTimerClass &that);
 
-    void Reset(int value = 0);
+    void Reset(uint32_t value = 0);
 
 protected:
-    int Value() const { return m_timer() - m_started; }
-    bool Has_Started() const { return m_started != -1; }
+    uint32_t Value() const { return m_timer() - m_started; }
+    bool Has_Started() const { return m_started != UINT32_MAX; }
 
 protected:
     T m_timer;
-    int m_started;
-    int m_accumulated;
+    uint32_t m_started;
+    uint32_t m_accumulated;
 };
 
 template<typename T>
@@ -71,7 +71,7 @@ BasicTimerClass<T> &BasicTimerClass<T>::operator=(const BasicTimerClass &that)
 }
 
 template<typename T>
-void BasicTimerClass<T>::Reset(int value)
+void BasicTimerClass<T>::Reset(uint32_t value)
 {
     m_started = m_timer();
     m_accumulated = value;
@@ -80,39 +80,47 @@ void BasicTimerClass<T>::Reset(int value)
 template<typename T>
 class TTimerClass : public BasicTimerClass<T>
 {
+#ifndef COMPILER_WATCOM
+    using BasicTimerClass<T>::m_timer;
+    using BasicTimerClass<T>::m_started;
+    using BasicTimerClass<T>::m_accumulated;
+    using BasicTimerClass<T>::Value;
+    using BasicTimerClass<T>::Has_Started;
+#endif
+
 public:
-    TTimerClass(int value = 0)
+    TTimerClass(uint32_t value = 0)
     {
         m_started = m_timer() - value;
         m_accumulated = value;
     }
 
-    TTimerClass(TTimerClass<T> const &that) : BasicTimerClass(that) {}
-    TTimerClass(NoInitClass const &noinit) : BasicTimerClass(noinit) {}
+    TTimerClass(TTimerClass<T> const &that) : BasicTimerClass<T>(that) {}
+    TTimerClass(NoInitClass const &noinit) : BasicTimerClass<T>(noinit) {}
 
     TTimerClass<T> &operator=(TTimerClass<T> &that);
-    TTimerClass<T> &operator=(int value);
+    TTimerClass<T> &operator=(uint32_t value);
 
-    operator int() const { return Time(); }
+    operator uint32_t() const { return Time(); }
 
     void Start();
     void Stop();
-    int Time() const;
+    uint32_t Time() const;
 
 private:
-    void Set(int value) { m_started = m_timer() - value; }
+    void Set(uint32_t value) { m_started = m_timer() - value; }
 };
 
 template<typename T>
 TTimerClass<T> &TTimerClass<T>::operator=(TTimerClass<T> &that)
 {
-    BasicTimerClass::operator=(that);
+    BasicTimerClass<T>::operator=(that);
 
     return *this;
 }
 
 template<typename T>
-TTimerClass<T> &TTimerClass<T>::operator=(int value)
+TTimerClass<T> &TTimerClass<T>::operator=(uint32_t value)
 {
     Set(value, true);
 
@@ -122,7 +130,7 @@ TTimerClass<T> &TTimerClass<T>::operator=(int value)
 template<typename T>
 void TTimerClass<T>::Start()
 {
-    if (m_started == -1) {
+    if (m_started == UINT32_MAX) {
         m_started = m_timer();
     }
 }
@@ -130,16 +138,16 @@ void TTimerClass<T>::Start()
 template<typename T>
 void TTimerClass<T>::Stop()
 {
-    if (m_started != -1) {
+    if (m_started != UINT32_MAX) {
         m_accumulated += Time();
-        m_started = -1;
+        m_started = UINT32_MAX;
     }
 }
 
 template<typename T>
-int TTimerClass<T>::Time() const
+uint32_t TTimerClass<T>::Time() const
 {
-    int ret = m_accumulated;
+    uint32_t ret = m_accumulated;
 
     if (Has_Started()) {
         ret += Value();
@@ -151,36 +159,44 @@ int TTimerClass<T>::Time() const
 template<typename T>
 class TCountDownTimerClass : public BasicTimerClass<T>
 {
+#ifndef COMPILER_WATCOM
+    using BasicTimerClass<T>::m_timer;
+    using BasicTimerClass<T>::m_started;
+    using BasicTimerClass<T>::m_accumulated;
+    using BasicTimerClass<T>::Value;
+    using BasicTimerClass<T>::Has_Started;
+#endif
+
 public:
-    TCountDownTimerClass(int value = 0)
+    TCountDownTimerClass(uint32_t value = 0)
     {
         m_started = m_timer();
         m_accumulated = value;
     }
 
-    TCountDownTimerClass(TCountDownTimerClass<T> const &that) : BasicTimerClass(that) {}
-    TCountDownTimerClass(NoInitClass const &noinit) : BasicTimerClass(noinit) {}
+    TCountDownTimerClass(TCountDownTimerClass<T> const &that) : BasicTimerClass<T>(that) {}
+    TCountDownTimerClass(NoInitClass const &noinit) : BasicTimerClass<T>(noinit) {}
 
     TCountDownTimerClass<T> &operator=(TCountDownTimerClass<T> &that);
-    TCountDownTimerClass<T> &operator=(int value);
+    TCountDownTimerClass<T> &operator=(uint32_t value);
 
-    operator int() const { return Time(); }
+    operator uint32_t() const { return Time(); }
 
     void Start();
     void Stop();
-    int Time() const;
+    uint32_t Time() const;
 };
 
 template<typename T>
 TCountDownTimerClass<T> &TCountDownTimerClass<T>::operator=(TCountDownTimerClass<T> &that)
 {
-    BasicTimerClass::operator=(that);
+    BasicTimerClass<T>::operator=(that);
 
     return *this;
 }
 
 template<typename T>
-TCountDownTimerClass<T> &TCountDownTimerClass<T>::operator=(int value)
+TCountDownTimerClass<T> &TCountDownTimerClass<T>::operator=(uint32_t value)
 {
     m_started = m_timer();
     m_accumulated = value;
@@ -201,19 +217,19 @@ void TCountDownTimerClass<T>::Stop()
 {
     if (Has_Started()) {
         m_accumulated = Time();
-        m_started = -1;
+        m_started = UINT32_MAX;
     }
 }
 
 template<typename T>
-int TCountDownTimerClass<T>::Time() const
+uint32_t TCountDownTimerClass<T>::Time() const
 {
-    int accum = m_accumulated;
+    uint32_t accum = m_accumulated;
 
     if (Has_Started()) {
-        accum -= Value();
-
-        if (accum < 0) {
+        if (Value() < m_accumulated) {
+            accum -= Value();
+        } else {
             accum = 0;
         }
     }
