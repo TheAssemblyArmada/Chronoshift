@@ -77,17 +77,17 @@ public:
     void Set_Waypoint(int waypoint_num, int16_t cell) { Waypoints[waypoint_num] = cell; }
     int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
     int Get_Global_Time() { return GlobalTimer.Time(); }
-    BOOL Global_Timer_Running() { return !GlobalTimer.Has_Expired(); }
+    BOOL Global_Timer_Running() { return GlobalTimer != 0; }
 
 private:
     RandomClass SyncRandom;
     DiffType HumanDifficulty;
     DiffType AIDifficulty;
-    BasicTimerClass<FrameTimerClass> ElapsedTimer;
+    TCountDownTimerClass<FrameTimerClass> ElapsedTimer;
     int16_t Waypoints[WAYPOINT_COUNT];
     int16_t UnkWaypoint;
-    BasicTimerClass<FrameTimerClass> GlobalTimer;
-    BasicTimerClass<FrameTimerClass> SomeTimer;
+    TCountDownTimerClass<FrameTimerClass> GlobalTimer;
+    TCountDownTimerClass<FrameTimerClass> SomeTimer;
     int ScenarioIndex;
     TheaterType Theater;
     char ScenarioName[512];
@@ -149,8 +149,8 @@ private:
     bool TruckCrate;
     bool FillSilos;
 #endif
-    BasicTimerClass<FrameTimerClass> FadeTimer;
-    BasicTimerClass<FrameTimerClass> AutoSonarTime;
+    TCountDownTimerClass<FrameTimerClass> FadeTimer;
+    TCountDownTimerClass<FrameTimerClass> AutoSonarTime;
     int field_7CF;
     int field_7D3;
 };

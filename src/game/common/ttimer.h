@@ -20,72 +20,93 @@
 
 #include "always.h"
 
+class NoInitClass;
+
+// Wrapper around the platform timer.
 class SystemTimerClass
 {
 public:
     int operator()() const;
 };
 
+// Wrapper around game's logical frame count.
 class FrameTimerClass
 {
 public:
     int operator()() const;
 };
 
-template<typename T>
-class TTimerClass
+template<class T>
+class BasicTimerClass
 {
 public:
-    TTimerClass(int value = 0) : m_started(m_timer()), m_accumulated(value) { Set(value); }
-    TTimerClass(TTimerClass<T> const &that) : m_started(that.m_started), m_accumulated(that.m_accumulated) {}
+    BasicTimerClass() {}
+    BasicTimerClass(const BasicTimerClass &that) : m_started(that.m_started), m_accumulated(that.m_accumulated) {}
+    BasicTimerClass(NoInitClass const &noinit) {}
+    ~BasicTimerClass() {}
 
-    TTimerClass<T> &operator=(TTimerClass<T> &that);
-    TTimerClass<T> &operator=(int value);
+    BasicTimerClass &operator=(const BasicTimerClass &that);
 
-    void Start();
-    void Stop();
+    void Reset(int value = 0);
 
-    void Set(int value) { m_started = m_timer() - value; }
+protected:
+    int Value() const { return m_timer() - m_started; }
+    bool Has_Started() const { return m_started != -1; }
 
-    void Reset(int value = 0)
-    {
-        m_started = m_timer();
-        m_accumulated = value;
-    }
-
-    int Time()
-    {
-        int ret = m_accumulated;
-
-        if (m_started != -1) {
-            ret += Get_Ticks();
-        }
-
-        return ret;
-    }
-
-private:
-    int Get_Ticks() { return m_timer() - m_started; }
-
-private:
+protected:
     T m_timer;
     int m_started;
     int m_accumulated;
 };
 
-#ifndef RAPP_STANDALONE
-extern TTimerClass<SystemTimerClass> &TickCountTimer;
-#else
-extern TTimerClass<SystemTimerClass> TickCountTimer;
-#endif
-
 template<typename T>
-TTimerClass<T> &TTimerClass<T>::operator=(TTimerClass<T> &that)
+BasicTimerClass<T> &BasicTimerClass<T>::operator=(const BasicTimerClass &that)
 {
     if (this != &that) {
         m_started = that.m_started;
         m_accumulated = that.m_accumulated;
     }
+
+    return *this;
+}
+
+template<typename T>
+void BasicTimerClass<T>::Reset(int value)
+{
+    m_started = m_timer();
+    m_accumulated = value;
+}
+
+template<typename T>
+class TTimerClass : public BasicTimerClass<T>
+{
+public:
+    TTimerClass(int value = 0)
+    {
+        m_started = m_timer() - value;
+        m_accumulated = value;
+    }
+
+    TTimerClass(TTimerClass<T> const &that) : BasicTimerClass(that) {}
+    TTimerClass(NoInitClass const &noinit) : BasicTimerClass(noinit) {}
+
+    TTimerClass<T> &operator=(TTimerClass<T> &that);
+    TTimerClass<T> &operator=(int value);
+
+    operator int() const { return Time(); }
+
+    void Start();
+    void Stop();
+    int Time() const;
+
+private:
+    void Set(int value) { m_started = m_timer() - value; }
+};
+
+template<typename T>
+TTimerClass<T> &TTimerClass<T>::operator=(TTimerClass<T> &that)
+{
+    BasicTimerClass::operator=(that);
 
     return *this;
 }
@@ -116,42 +137,44 @@ void TTimerClass<T>::Stop()
 }
 
 template<typename T>
-class TCountDownTimerClass
+int TTimerClass<T>::Time() const
+{
+    int ret = m_accumulated;
+
+    if (Has_Started()) {
+        ret += Value();
+    }
+
+    return ret;
+}
+
+template<typename T>
+class TCountDownTimerClass : public BasicTimerClass<T>
 {
 public:
-    TCountDownTimerClass(int value = 0) : m_started(m_timer()), m_accumulated(value) {}
-    TCountDownTimerClass(TCountDownTimerClass<T> const &that) : m_started(that.m_started), m_accumulated(that.m_accumulated)
+    TCountDownTimerClass(int value = 0)
     {
+        m_started = m_timer();
+        m_accumulated = value;
     }
+
+    TCountDownTimerClass(TCountDownTimerClass<T> const &that) : BasicTimerClass(that) {}
+    TCountDownTimerClass(NoInitClass const &noinit) : BasicTimerClass(noinit) {}
 
     TCountDownTimerClass<T> &operator=(TCountDownTimerClass<T> &that);
     TCountDownTimerClass<T> &operator=(int value);
 
-    operator int() { return Time(); }
+    operator int() const { return Time(); }
 
     void Start();
     void Stop();
-    int Time();
-    bool Has_Started() const { return m_started != -1; }
-
-private:
-    int Value() const { return m_timer() - m_started; }
-
-private:
-    T m_timer;
-    int m_started;
-    int m_accumulated;
+    int Time() const;
 };
-
-// extern TCountDownTimerClass<SystemTimerClass> CountDownTimer;
 
 template<typename T>
 TCountDownTimerClass<T> &TCountDownTimerClass<T>::operator=(TCountDownTimerClass<T> &that)
 {
-    if (this != &that) {
-        m_started = that.m_started;
-        m_accumulated = that.m_accumulated;
-    }
+    BasicTimerClass::operator=(that);
 
     return *this;
 }
@@ -183,7 +206,7 @@ void TCountDownTimerClass<T>::Stop()
 }
 
 template<typename T>
-int TCountDownTimerClass<T>::Time()
+int TCountDownTimerClass<T>::Time() const
 {
     int accum = m_accumulated;
 
@@ -198,97 +221,11 @@ int TCountDownTimerClass<T>::Time()
     return accum;
 }
 
-class NoInitClass;
-
-template<class T>
-class BasicTimerClass
-{
-public:
-    BasicTimerClass(unsigned int value = 0) : m_started(m_timer()), m_accumulated(value) {}
-    BasicTimerClass(BasicTimerClass const &that) : m_started(that.m_started), m_accumulated(that.m_accumulated) {}
-    BasicTimerClass(NoInitClass const &noinit) {}
-    ~BasicTimerClass() {}
-
-    BasicTimerClass &operator=(BasicTimerClass const &that)
-    {
-        if (this != &that) {
-            m_timer = that.m_timer;
-            m_started = that.m_started;
-            m_accumulated = that.m_accumulated;
-        }
-
-        return *this;
-    }
-
-    operator int() { return Time(); }
-
-    //BasicTimerClass &operator=(unsigned int value)
-    //{
-    //    Set(value);
-    //    return *this;
-    //}
-
-    bool Has_Started() { return m_started != -1; }
-
-    void Start()
-    {
-        if (!Has_Started()) {
-            m_started = m_timer();
-        }
-    }
-
-    void Stop()
-    {
-        if (Has_Started()) {
-            m_accumulated = Value();
-            m_started = -1;
-        }
-    }
-
-    bool Has_Expired() { return Time() <= 0; }
-    void Set(int value) { m_started = m_timer() - value; }
-
-    // Clear the accumulated time. The value to reset to is
-    // optional, otherwise it is reset to zero.
-    void Reset(unsigned int value = 0)
-    {
-        m_started = m_timer();
-        m_accumulated = value;
-    }
-
-    //
-    int Value() const { return m_timer() - m_started; }
-
-    // Get the time left until the countdown reaches 0.
-    int Time() // Advance?
-    {
-        int accum = m_accumulated;
-        if (Has_Started()) {
-            accum -= Value();
-
-            if (accum < 0) {
-                accum = 0;
-            }
-        }
-
-        return accum;
-    }
-
-    unsigned int const Func() // TODO, need to work out name.
-    {
-        unsigned int accum = m_accumulated;
-
-        if (Has_Started()) {
-            accum += Value();
-        }
-
-        return accum;
-    }
-
-private:
-    T m_timer;
-    int m_started;
-    int m_accumulated;
-};
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+extern TTimerClass<SystemTimerClass> &TickCountTimer;
+#else
+extern TTimerClass<SystemTimerClass> TickCountTimer;
+#endif
 
 #endif

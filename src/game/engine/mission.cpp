@@ -175,7 +175,7 @@ void MissionClass::AI()
         return;
     }
 
-    if (Is_Active() && MissionTimer.Has_Expired() && Health > 0) {
+    if (Is_Active() && MissionTimer == 0 && Health > 0) {
         switch (Get_Mission()) {
             case MISSION_SLEEP:
             case MISSION_HARMLESS:

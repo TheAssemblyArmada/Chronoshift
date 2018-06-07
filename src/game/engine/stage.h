@@ -36,7 +36,7 @@ public:
 
 private:
     int Stage; // Current stage we are at.
-    BasicTimerClass<FrameTimerClass> Timer; // Countdown timer, 0 indicates time to go to next stage.
+    TCountDownTimerClass<FrameTimerClass> Timer; // Countdown timer, 0 indicates time to go to next stage.
     int Delay; // Delay in frames to the next stage transition.
 };
 

@@ -77,7 +77,7 @@ protected:
     MissionType SuspendedMission;
     MissionType MissionQueue;
     int Status; //see MissionStatusType
-    BasicTimerClass<FrameTimerClass> MissionTimer; // C&CDOS calls this "Timer" might not be BTC, but TCountDownTimerClass<FrameTimerClass>
+    TCountDownTimerClass<FrameTimerClass> MissionTimer; // C&CDOS calls this "Timer" might not be BTC, but TCountDownTimerClass<FrameTimerClass>
 
     static const char *Missions[MISSION_COUNT];
 };
