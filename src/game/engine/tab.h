@@ -55,6 +55,7 @@ class TabClass : public SidebarClass
     {
     public:
         CreditClass();
+        CreditClass(const NoInitClass &noinit) {}
 
         void Graphic_Logic(BOOL force_redraw = false);
         void AI(BOOL a1 = false);
@@ -85,16 +86,16 @@ class TabClass : public SidebarClass
 
 public:
     TabClass();
-    TabClass(NoInitClass &noinit) : SidebarClass(noinit) {}
+    TabClass(const NoInitClass &noinit) : SidebarClass(noinit), CreditDisplay(noinit), TimerFlashTimer(noinit), CreditsFlashTimer(noinit) {}
 
     virtual void One_Time() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Draw_It(BOOL force_redraw) override;
 
     void Flash_Money();
-     
+
     static void Hilite_Tab(int tab);
-    
+
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
 #endif

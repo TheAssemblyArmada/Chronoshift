@@ -32,6 +32,7 @@ class ScrollClass : public HelpClass
 {
 public:
     ScrollClass();
+    ScrollClass(const NoInitClass &noinit) : HelpClass(noinit) {}
 
     virtual void Init_IO() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;

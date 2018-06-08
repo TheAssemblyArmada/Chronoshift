@@ -34,6 +34,8 @@ class BuildingClass;
 class VesselClass;
 class AircraftClass;
 class TerrainClass;
+class Straw;
+class Pipe;
 
 #define OVERLAPPER_COUNT 6
 
@@ -115,6 +117,9 @@ public:
     int Ore_Adjust(BOOL randomize);
     uint32_t Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const;
     BOOL Is_Spot_Free(int spotindex) const { return ((1 << spotindex) & OccupantBit) == 0; }
+    BOOL Should_Save() const;
+    BOOL Load(Straw &straw);
+    BOOL Save(Pipe &pipe) const;
 
     int Cell_Number() const { return CellNumber; }
     int8_t Get_Zone(MZoneType mzone) const { return Zones[mzone]; }

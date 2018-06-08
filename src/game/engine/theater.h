@@ -18,9 +18,14 @@
 #ifndef THEATER_H
 #define THEATER_H
 
-#include	"always.h"
+#include "always.h"
 
+// Type is saved and loaded as binary so needs fixed size.
+#ifdef COMPILER_WATCOM
 enum TheaterType
+#else
+enum TheaterType : int8_t
+#endif
 {
     THEATER_NONE = -1,
     THEATER_TEMPERATE,
@@ -30,7 +35,8 @@ enum TheaterType
     THEATER_DEFAULT = THEATER_TEMPERATE,
 };
 
-enum TheaterBitEnum {
+enum TheaterBitEnum
+{
     THEATER_BIT_NONE = 0,
     THEATER_BIT_TEMPERATE = 1 << THEATER_TEMPERATE,
     THEATER_BIT_SNOW = 1 << THEATER_SNOW,

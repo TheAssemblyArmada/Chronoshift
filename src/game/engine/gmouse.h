@@ -39,17 +39,18 @@ private:
 
 public:
     GameMouseClass();
+    GameMouseClass(NoInitClass &noinit) : ScrollClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
-    virtual void Set_Default_Mouse(MouseType mouse, BOOL a2 = false) override;
-    virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL a2 = false) override;
+    virtual void Set_Default_Mouse(MouseType mouse, BOOL in_radar = false) override;
+    virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL in_radar = false) override;
     virtual void Revert_Mouse_Shape() override;
     virtual void Mouse_Small(BOOL use_small_frame) override;
-    virtual MouseType Get_Mouse_Shape(void) const override;
-    virtual BOOL Load(Straw &straw);
-    virtual BOOL Save(Pipe &pipe) const;
+    virtual MouseType Get_Mouse_Shape() const override { return MouseShape; }
+    virtual BOOL Load(Straw &straw) override;
+    virtual BOOL Save(Pipe &pipe) const override;
 
 #ifndef RAPP_STANDALONE
     static void Hook_Me();
@@ -71,7 +72,7 @@ protected:
 #endif
     MouseType PreviousMouseShape;
     MouseType MouseShape;
-    int MouseFrame; // this is the current frame index for the animated mouse.
+    unsigned MouseFrame; // this is the current frame index for the animated mouse.
 
 private:
 #ifndef RAPP_STANDALONE

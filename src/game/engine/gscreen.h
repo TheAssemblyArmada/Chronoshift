@@ -90,12 +90,14 @@ class GraphicViewPortClass;
 class HouseClass;
 class ObjectClass;
 class TechnoClass;
+class Pipe;
+class Straw;
 
 class GameScreenClass
 {
 public:
     GameScreenClass();
-    GameScreenClass(NoInitClass &noinit) {}
+    GameScreenClass(const NoInitClass &noinit) {}
     ~GameScreenClass();
 
     // Base virtual methods.
@@ -134,7 +136,7 @@ public:
     virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) = 0;
     virtual int16_t Click_Cell_Calc(int x, int y) const = 0;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) = 0;
-    virtual MouseType Get_Mouse_Shape(void) const = 0;
+    virtual MouseType Get_Mouse_Shape() const = 0;
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) = 0;
     virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) = 0;
     virtual void Set_View_Dimensions(int x, int y, int w = -1, int h = -1) = 0;
@@ -151,6 +153,9 @@ public:
     virtual BOOL Jam_Cell(int16_t cellnum, HouseClass *house) = 0;
     virtual BOOL UnJam_Cell(int16_t cellnum, HouseClass *house) = 0;
 
+    // Additions for MouseClass
+    virtual BOOL Load(Straw &straw) = 0;
+    virtual BOOL Save(Pipe &pipe) const = 0;
 
 protected:
     int RedrawFlag;

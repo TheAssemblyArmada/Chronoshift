@@ -59,7 +59,7 @@ class RadarClass : public DisplayClass
 
 public:
     RadarClass();
-    RadarClass(NoInitClass &noinit) : DisplayClass(noinit) {}
+    RadarClass(const NoInitClass &noinit) : DisplayClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;

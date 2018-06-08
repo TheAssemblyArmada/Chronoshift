@@ -48,7 +48,7 @@ class DisplayClass : public MapClass
 
 public:
     DisplayClass();
-    DisplayClass(NoInitClass &noinit) : MapClass(noinit) {}
+    DisplayClass(const NoInitClass &noinit) : MapClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;

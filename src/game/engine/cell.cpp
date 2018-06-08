@@ -21,9 +21,11 @@
 #include "globals.h"
 #include "iomap.h"
 #include "mixfile.h"
+#include "pipe.h"
 #include "rules.h"
 #include "scenario.h"
 #include "session.h"
+#include "straw.h"
 #include "target.h"
 #include "theater.h"
 #include "tileset.h"
@@ -1338,4 +1340,38 @@ int CellClass::Spot_Index(uint32_t coord)
     }
 
     return 0;
+}
+
+/**
+ * @brief Checks if a cells state is not the default state.
+ *
+ * 0x004F8E08
+ */
+BOOL CellClass::Should_Save() const
+{
+    // Default constructed cell to compare other cells against.
+    static const CellClass _identity_cell;
+
+    return memcmp(&_identity_cell, this, sizeof(*this)) != 0;
+}
+
+/**
+ * @brief Load data for this class from a save file.
+ *
+ * 0x004F8E64
+ */
+BOOL CellClass::Load(Straw &straw)
+{
+    // TODO save/load members individually using fixed size data types for fully defined save format.
+    return straw.Get(this, sizeof(*this)) == sizeof(*this);
+}
+
+/**
+ * @brief Save data for this class to a save file.
+ *
+ * 0x004F8E88
+ */
+BOOL CellClass::Save(Pipe &pipe) const
+{
+    return pipe.Put(this, sizeof(*this)) == sizeof(*this);
 }

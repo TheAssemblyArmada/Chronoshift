@@ -191,7 +191,7 @@ class SidebarClass : public PowerClass
 
 public:
     SidebarClass();
-    SidebarClass(NoInitClass &noinit) : PowerClass(noinit) {}
+    SidebarClass(const NoInitClass &noinit) : PowerClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;
