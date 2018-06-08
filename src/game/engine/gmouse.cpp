@@ -153,11 +153,17 @@ BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
 
     static BOOL _startup = false;
 
+    MouseStruct &cursor = MouseControl[mouse];
+
+    if (cursor.Small == -1) {
+        in_radar = false;
+    }
+    
+    // No need to change it, we are already using the correct cursor.
     if (_startup && (MouseShapes == nullptr || (mouse == PreviousMouseShape && MouseInRadar == in_radar))) {
         return false;
     }
 
-    MouseStruct &cursor = MouseControl[mouse];
     _startup = true;
     MouseFrame = 0;
     int frame = in_radar ? (cursor.Small == -1 ? cursor.Frame : cursor.Small) : cursor.Frame;
@@ -166,11 +172,6 @@ BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
     MouseInRadar = in_radar;
 
     return true;
-}
-
-void GameMouseClass::Revert_Mouse_Shape()
-{
-    Override_Mouse_Shape(PreviousMouseShape);
 }
 
 void GameMouseClass::Mouse_Small(BOOL use_small_frame)

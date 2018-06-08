@@ -28,11 +28,8 @@ private:
     {
         int Frame;
         int Count;
-
-        // Rate of animation, value of -1 means that it does not
-        // animate and is expected to have only 1 frame.
-        int Rate;
-        int Small; //-1 means no mini frame
+        int Rate; // Rate of animation, value of -1 means that it does not animate and has only 1 frame.
+        int Small; // -1 means no mini frame
         int HotSpotX; // x pixel of image for the hotspot
         int HotSpotY; // y pixel of image for the hotspot
     };
@@ -46,7 +43,7 @@ public:
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Set_Default_Mouse(MouseType mouse, BOOL in_radar = false) override;
     virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL in_radar = false) override;
-    virtual void Revert_Mouse_Shape() override;
+    virtual void Revert_Mouse_Shape() override { Override_Mouse_Shape(PreviousMouseShape); }
     virtual void Mouse_Small(BOOL use_small_frame) override;
     virtual MouseType Get_Mouse_Shape() const override { return MouseShape; }
     virtual BOOL Load(Straw &straw) override;

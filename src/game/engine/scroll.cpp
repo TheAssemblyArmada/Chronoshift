@@ -163,7 +163,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             }
         }
 
-        if (!g_inMapEditor && !edge_scrolling && ScrollingCounter > 0) {
+        if (!g_inMapEditor && !edge_scrolling && ScrollingCounter == 0) {
             --ScrollUnkInt;
 
             if (ScrollUnkInt < 0) {
