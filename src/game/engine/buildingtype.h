@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "technotype.h"
+#include "theater.h"
 
 enum BuildingType
 {
@@ -143,6 +144,8 @@ DEFINE_ENUMERATION_BITWISE_OPERATORS(BuildingType);
 
 class BuildingTypeClass : public TechnoTypeClass
 {
+public:
+    static void Init(TheaterType theater);
 };
 
 #ifndef RAPP_STANDALONE

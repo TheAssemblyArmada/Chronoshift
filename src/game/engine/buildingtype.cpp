@@ -20,3 +20,12 @@
 #else
 //TFixedIHeapClass<BuildingTypeClass> BuildingTypes;
 #endif
+
+void BuildingTypeClass::Init(TheaterType theater)
+{
+    // TODO Doable, just wrapped to complete IOMap stack.
+#ifndef RAPP_STANDALONE
+    void (*func)(TheaterType) = reinterpret_cast<void (*)(TheaterType)>(0x004538F4);
+    func(theater);
+#endif
+}

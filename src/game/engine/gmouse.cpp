@@ -206,7 +206,7 @@ BOOL GameMouseClass::Load(Straw &straw)
         TerrainTypeClass::Init(theater);
         TemplateTypeClass::Init(theater);
         OverlayTypeClass::Init(theater);
-        // TODO BuildingTypeClass::Init(theater);
+        BuildingTypeClass::Init(theater);
         AnimTypeClass::Init(theater);
         SmudgeTypeClass::Init(theater);
         Free_Cells();
