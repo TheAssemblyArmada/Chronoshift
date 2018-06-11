@@ -86,7 +86,6 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
         if (ScrollUnkInt != 0 || at_edge) {
             if (at_edge) {
-                DEBUG_LOG("Edge scrolling dimensions are %d x %d.\n", vp_w, vp_h);
                 edge_scrolling = true;
 
                 int x_pos = mouse_x;
