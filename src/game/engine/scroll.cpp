@@ -84,8 +84,9 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
         bool at_edge = (mouse_x <= 0 || mouse_y <= 0 || vp_w - 1 <= mouse_x || vp_h - 1 <= mouse_y);
         bool edge_scrolling = false;
 
-        if (ScrollUnkInt > 0 || at_edge) {
+        if (ScrollUnkInt != 0 || at_edge) {
             if (at_edge) {
+                DEBUG_LOG("Edge scrolling dimensions are %d x %d.\n", vp_w, vp_h);
                 edge_scrolling = true;
 
                 int x_pos = mouse_x;
@@ -147,8 +148,8 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
                 if (g_keyboard->Down(KN_LMOUSE) || Autoscroll) {
                     distance = _rate[rate_index];
-                    Scroll_Map(_direction, distance);
-
+                    Scroll_Map(_direction, distance, true);
+                        
                     if (g_inMapEditor) {
                         ScrollingCounter = 1;
                     } else {

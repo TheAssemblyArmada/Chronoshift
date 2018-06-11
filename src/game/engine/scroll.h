@@ -72,7 +72,7 @@ private:
 inline void ScrollClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    // Hook_Function(0x, *ScrollClass::Init_Clear);
+    Hook_Function(0x00547088, *ScrollClass::AI);
 #endif
 }
 #endif
