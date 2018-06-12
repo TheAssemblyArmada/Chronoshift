@@ -264,7 +264,9 @@ void TabClass::Draw_It(BOOL force_redraw)
     SidebarClass::Draw_It(force_redraw);
 
     if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
-        // Draw the RA++ background if available, otherwise default to original behaviour.
+        g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
+
+        // Draw the RA++ background if available.
         if (TabBackgroundShape != nullptr) {
             int distance = g_logicPage->Get_Width() / TAB_WIDTH;
             int framecount = Get_Build_Frame_Count(TabBackgroundShape);
@@ -284,8 +286,6 @@ void TabClass::Draw_It(BOOL force_redraw)
                     ++frameindex;
                 }
             }
-        } else {
-            g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
         }
 
         // Draw options tab.
