@@ -33,7 +33,7 @@ extern "C" {
 
 #define DEBUG_ASSERT(exp) \
     if (!(exp)) { \
-        Debug_Log("%s %d Assert failed", __FILE__, __LINE__); \
+        Debug_Log("%s %d Assert failed\n", __FILE__, __LINE__); \
     }
 
 #define ASSERT_PRINT(exp, msg, ...) \
