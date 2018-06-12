@@ -106,9 +106,6 @@ public:
     void Start();
     void Stop();
     uint32_t Time() const;
-
-private:
-    void Set(uint32_t value) { m_started = m_timer() - value; }
 };
 
 template<typename T>
@@ -122,7 +119,7 @@ TTimerClass<T> &TTimerClass<T>::operator=(TTimerClass<T> &that)
 template<typename T>
 TTimerClass<T> &TTimerClass<T>::operator=(uint32_t value)
 {
-    Set(value, true);
+    m_started = m_timer() - value;
 
     return *this;
 }
