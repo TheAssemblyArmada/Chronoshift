@@ -87,7 +87,7 @@ private:
 inline void GameMouseClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    // Hook_Function(0x, *GameMouseClass::Init_Clear);
+    Hook_Function(0x0050316C, *GameMouseClass::Override_Mouse_Shape);
 #endif
 }
 #endif

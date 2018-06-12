@@ -36,7 +36,7 @@
 #ifndef RAPP_STANDALONE
 void *&GameMouseClass::MouseShapes = Make_Global<void *>(0x00685160);
 TCountDownTimerClass<SystemTimerClass> &GameMouseClass::AnimationTimer =
-    *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x00685169);
+    Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x00685164);
 #else
 void *GameMouseClass::MouseShapes = nullptr;
 TCountDownTimerClass<SystemTimerClass> GameMouseClass::AnimationTimer;
@@ -121,10 +121,10 @@ void GameMouseClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             AnimationTimer = cursor.Rate;
 
             // If we have a small cursor or we aren't in radar evaluate setting a new cursor.
-            if (!(MouseInRadar & 1) || cursor.Small != -1) {
+            if (!MouseInRadar || cursor.Small != -1) {
                 int frame = 0;
 
-                if (MouseInRadar & 1) {
+                if (MouseInRadar) {
                     frame = cursor.Small;
                 } else {
                     frame = cursor.Frame;
@@ -146,6 +146,11 @@ void GameMouseClass::Set_Default_Mouse(MouseType mouse, BOOL in_radar)
     }
 }
 
+/**
+ * @brief Forces the mouse sprite to the requested type.
+ *
+ * 0x0050316C
+ */
 BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
 {
     DEBUG_ASSERT_PRINT(mouse != MOUSE_NONE, "mouse = %d.", mouse);
@@ -165,10 +170,11 @@ BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
     }
 
     _startup = true;
+    AnimationTimer = cursor.Rate;
     MouseFrame = 0;
     int frame = in_radar ? (cursor.Small == -1 ? cursor.Frame : cursor.Small) : cursor.Frame;
     g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, Extract_Shape(MouseShapes, frame));
-    MouseShape = mouse;
+    PreviousMouseShape = mouse;
     MouseInRadar = in_radar;
 
     return true;
