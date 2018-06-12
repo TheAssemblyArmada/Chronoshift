@@ -49,25 +49,25 @@ CellClass::CellClass() :
     Bit32(false),
     HasFlag(false),
     Bit128(false),
-    field_A(HOUSES_COUNT),
-    CellTag(),
+    field_A(0),
+    CellTag(-1), // TODO, should be default CCPtr Ctor.
     Template(TEMPLATE_NONE),
     Icon(0),
     Overlay(OVERLAY_NONE),
-    OverlayFrame(-1),
+    OverlayFrame(0),
     Smudge(SMUDGE_NONE),
-    SmudgeFrame(-1),
+    SmudgeFrame(0),
     OwnerHouse(HOUSES_NONE),
     field_18(HOUSES_NONE),
     OccupierPtr(nullptr),
-    OccupantBit(0),
+    OccupantBit(OCCUPANT_NONE),
     Land(LAND_CLEAR)
 {
     for (int i = 0; i < MZONE_COUNT; ++i) {
         Zones[i] = 0;
     }
 
-    for (int i = 0; i < ARRAY_SIZE(Overlapper); ++i) {
+    for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
         Overlapper[i] = nullptr;
     }
 }
@@ -1350,9 +1350,21 @@ int CellClass::Spot_Index(uint32_t coord)
 BOOL CellClass::Should_Save() const
 {
     // Default constructed cell to compare other cells against.
+    // TODO, this test will always return true as each cell has its ID encoded so will never fully match. Bug in original.
     static const CellClass _identity_cell;
-
+    // static const uintptr_t _null_array[OVERLAPPER_COUNT] = { 0 };
     return memcmp(&_identity_cell, this, sizeof(*this)) != 0;
+
+    /* return Bit1 != false || PlacementCheck != false
+        || Visible != false || Revealed != false || Bit16 != false
+        || Bit32 != false || HasFlag != false || Bit128 != false
+        || field_A != 0 || CellTag != -1 || Template != TEMPLATE_NONE
+        || Icon != 0 || Overlay != OVERLAY_NONE || OverlayFrame != 0
+        || Smudge != SMUDGE_NONE || SmudgeFrame != 0
+        || OwnerHouse != HOUSES_NONE || field_18 != HOUSES_NONE
+        || OccupierPtr != nullptr || OccupantBit != 0
+        || Land != LAND_CLEAR || memcmp(Zones, _null_array, sizeof(Zones)) != 0
+        || memcmp(Overlapper, _null_array, sizeof(Overlapper)) != 0; */
 }
 
 /**

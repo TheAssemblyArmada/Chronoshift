@@ -48,11 +48,8 @@ enum CellOccupantEnum
     INFANTRY_SPOT_BOTTOM_LEFT = 0x4,
     INFANTRY_SPOT_BOTTOM_RIGHT = 0x8,
     INFANTRY_SPOT_CENTER = 0x10,
-    OCCUPANT_INFANTRY = INFANTRY_SPOT_TOP_LEFT
-    | INFANTRY_SPOT_TOP_RIGHT
-    | INFANTRY_SPOT_BOTTOM_LEFT
-    | INFANTRY_SPOT_BOTTOM_RIGHT
-    | INFANTRY_SPOT_CENTER,
+    OCCUPANT_INFANTRY = INFANTRY_SPOT_TOP_LEFT | INFANTRY_SPOT_TOP_RIGHT | INFANTRY_SPOT_BOTTOM_LEFT
+        | INFANTRY_SPOT_BOTTOM_RIGHT | INFANTRY_SPOT_CENTER,
     OCCUPANT_UNIT = 0x20, // unit, vessel or aircraft.
     OCCUPANT_TERRAIN = 0x40,
     OCCUPANT_BUILDING = 0x80,
@@ -70,14 +67,15 @@ class CellClass
         PLACEMENT_RED = 2,
         PLACEMENT_SOMETHING = 3,
     };
+
 public:
     CellClass();
     CellClass(CellClass const &that) {}
     CellClass(NoInitClass const &noinit) {}
-    ~CellClass() { OccupierPtr = nullptr; } //Null the pointer in memory, but object still exists
+    ~CellClass() { OccupierPtr = nullptr; } // Null the pointer in memory, but object still exists
 
-    BOOL operator==(CellClass const &that) const { return CellNumber == that.CellNumber; }
-    BOOL operator!=(CellClass const &that) const { return CellNumber != that.CellNumber; }
+    BOOL operator==(CellClass const &that) const;
+    BOOL operator!=(CellClass const &that) const { return !(*this == that); }
 
     int Cell_Color(BOOL none = false) const;
     ObjectClass *Cell_Find_Object(RTTIType type) const;
@@ -89,8 +87,8 @@ public:
     VesselClass *Cell_Vessel() const;
     AircraftClass *Cell_Aircraft() const;
     TerrainClass *Cell_Terrain() const;
-    //SmudgeClass *Cell_Smudge() const;
-    //OverlayClass *Cell_Overlay() const;
+    // SmudgeClass *Cell_Smudge() const;
+    // OverlayClass *Cell_Overlay() const;
     uint32_t Cell_Coord() const;
     void Recalc_Attributes();
     BOOL Can_Ore_Grow() const;
@@ -154,6 +152,10 @@ public:
 
     static int Spot_Index(uint32_t coord);
 
+#ifndef RAPP_STANDALONE
+    static void Hook_Me();
+    CellClass *Hook_Ctor() { return new (this) CellClass; }
+#endif
 private:
     int16_t CellNumber;
 
@@ -179,8 +181,8 @@ private:
     bool PlacementCheck;
     bool Visible; // Is this cell at least partly visible due ot being next to a revealed or visible cell.
     bool Revealed; // Is this cell fully revealed and thus has no shroud at all.
-    bool Bit16; //Could be HasWaypoint?  HasCellTag?
-    bool Bit32; //MarkedOnRadar?  appears to be IsWaypoint in C&C     //does the radar cursor cover this cell?
+    bool Bit16; // Could be HasWaypoint?  HasCellTag?
+    bool Bit32; // MarkedOnRadar?  appears to be IsWaypoint in C&C     //does the radar cursor cover this cell?
     bool HasFlag;
     bool Bit128; // HasFlag in C&C
 #endif
@@ -209,4 +211,24 @@ inline BOOL CellClass::Contains_Ore() const
         || Overlay == OVERLAY_GOLD_04;
 }
 
+inline BOOL CellClass::operator==(CellClass const &that) const
+{
+    return CellNumber == that.CellNumber && Bit1 == that.Bit1 && PlacementCheck == that.PlacementCheck
+        && Visible == that.Visible && Revealed == that.Revealed && Bit16 == that.Bit16 && Bit32 == that.Bit32
+        && HasFlag == that.HasFlag && Bit128 == that.Bit128 && field_A == that.field_A && CellTag == that.CellTag
+        && Template == that.Template && Icon == that.Icon && Overlay == that.Overlay && OverlayFrame == that.OverlayFrame
+        && Smudge == that.Smudge && SmudgeFrame == that.SmudgeFrame && OwnerHouse == that.OwnerHouse
+        && field_18 == that.field_18 && OccupierPtr == that.OccupierPtr && OccupantBit == that.OccupantBit
+        && Land == that.Land && memcmp(Zones, that.Zones, sizeof(Zones)) == 0
+        && memcmp(Overlapper, that.Overlapper, sizeof(Overlapper)) == 0;
+}
+
+#ifndef RAPP_STANDALONE
+inline void CellClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x0049EE70, *CellClass::Hook_Ctor);
+#endif
+}
+#endif
 #endif // CELL_H
