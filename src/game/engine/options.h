@@ -112,7 +112,7 @@ private:
     bool ScoreRepeats;
     bool ScoreShuffles;
     bool PaletteScroll;
-    bool AllowToggleSidebar; // RA++ option.
+    bool AllowSidebarToggle; // RA++ option.
 #endif
     KeyType KeyForceMove1;
     KeyType KeyForceMove2;
