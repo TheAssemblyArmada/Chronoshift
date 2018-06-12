@@ -36,7 +36,7 @@ class MapClass : public GameScreenClass
     };
 public:
     MapClass();
-    MapClass(const NoInitClass &noinit) : GameScreenClass(noinit) {}
+    MapClass(const NoInitClass &noinit) : GameScreenClass(noinit), Array(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;
