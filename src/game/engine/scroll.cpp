@@ -34,7 +34,7 @@ ScrollClass::ScrollClass() :
     Autoscroll(true),
     ScrollUnkInt(0)
 {
-    ScrollingCounter = 0;
+    ScrollingCounter = 1;
 }
 
 /**
@@ -136,10 +136,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                 rate_index = Clamp((rate_index + 1), 4, 8);
             }
 
-            if (!Options.Get_Auto_Scroll()) {
-                _direction = Facing_To_Direction(Direction_To_Facing(_direction));
-            }
-
+            _direction = Facing_To_Direction(Direction_To_Facing(_direction));
             int distance = _rate[rate_index] / 2;
 
             if (Scroll_Map(_direction, distance, false)) {
