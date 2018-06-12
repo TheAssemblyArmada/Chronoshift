@@ -32,7 +32,7 @@ class VectorClass
 {
 public:
     VectorClass(int size = 0, const T *array = 0);
-    VectorClass(NoInitClass const &){};
+    VectorClass(const NoInitClass &noinit) {};
     VectorClass(VectorClass<T> const &);
     virtual ~VectorClass();
 
@@ -152,7 +152,7 @@ BOOL VectorClass<T>::operator==(VectorClass<T> const &vector) const
 template<typename T>
 inline int VectorClass<T>::ID(const T *ptr)
 {
-    return ((uintptr_t)ptr - (uintptr_t) & (*this)[0]) / sizeof(T);
+    return ((uintptr_t)ptr - (uintptr_t)Vector) / sizeof(T);
 }
 
 template<typename T>
@@ -172,7 +172,7 @@ void VectorClass<T>::Clear()
 {
     if (Vector && IsAllocated) {
         delete[] Vector;
-        Vector = 0;
+        Vector = nullptr;
     }
 
     IsAllocated = false;
