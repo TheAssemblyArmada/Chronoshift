@@ -201,8 +201,16 @@ void GameMouseClass::Mouse_Small(BOOL use_small_frame)
     }
 }
 
+/**
+ * @brief Loads data from a Straw interface for save game purposes.
+ *
+ * 0x004F8F70
+ */
 BOOL GameMouseClass::Load(Straw &straw)
 {
+#ifdef COMPILER_WATCOM
+    DEBUG_ASSERT_PRINT(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
+#endif
     TheaterType theater = THEATER_NONE;
     NoInitClass noinit;
 
@@ -249,29 +257,42 @@ BOOL GameMouseClass::Load(Straw &straw)
     return false;
 }
 
+/**
+ * @brief Saves data to a Pipe interface for save game purposes.
+ *
+ * 0x004F90F8
+ */
 BOOL GameMouseClass::Save(Pipe &pipe) const
 {
+#ifdef COMPILER_WATCOM
+    DEBUG_ASSERT_PRINT(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
+#endif
+
     TheaterType theater = Scen.Get_Theater();
     pipe.Put(&theater, sizeof(theater));
     pipe.Put(this, sizeof(*this));
     uint32_t saved_cells = 0;
 
     // Count how many cells have state that needs saving.
-    for (int i = 0; i < MAP_MAX_AREA; ++i) {
+    for (int16_t i = 0; i < MAP_MAX_AREA; ++i) {
         if (Array[i].Should_Save()) {
             ++saved_cells;
         }
     }
 
+    DEBUG_LOG("Saving %d cells\n", saved_cells);
     pipe.Put(&saved_cells, sizeof(saved_cells));
 
     // Save the cells that need saving.
-    for (int i = 0; i < MAP_MAX_AREA; ++i) {
+    for (int16_t i = 0; i < MAP_MAX_AREA; ++i) {
         if (Array[i].Should_Save()) {
+            pipe.Put(&i, sizeof(i));
             Array[i].Save(pipe);
             --saved_cells;
         }
     }
+
+    DEBUG_ASSERT_PRINT(saved_cells == 0, "IOMap save failed to save %d cells that were counted to save.\n", saved_cells);
 
     return saved_cells == 0;
 }

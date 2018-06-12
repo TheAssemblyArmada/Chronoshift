@@ -16,6 +16,7 @@
 #include "alloc.h"
 #include "blitters.h"
 #include "ccfileclass.h"
+#include "cell.h"
 #include "controlc.h"
 #include "coord.h"
 #include "cpudetect.h"
@@ -120,6 +121,7 @@ void Setup_Hooks()
     HelpClass::Hook_Me();
     ScrollClass::Hook_Me();
     GameMouseClass::Hook_Me();
+    CellClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
