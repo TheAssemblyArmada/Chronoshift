@@ -31,17 +31,18 @@ template<typename T>
 class VectorClass
 {
 public:
-    VectorClass(int size = 0, const T *array = 0);
-    VectorClass(const NoInitClass &noinit) {};
-    VectorClass(VectorClass<T> const &);
+    VectorClass(int size = 0, const T *array = nullptr);
+    VectorClass(const NoInitClass &noinit){};
+    VectorClass(const VectorClass<T> &that);
     virtual ~VectorClass();
 
     T &operator[](int index);
     const T &operator[](int index) const;
-    virtual VectorClass<T> &operator=(VectorClass<T> const &);
-    virtual BOOL operator==(VectorClass<T> const &) const;
 
-    virtual BOOL Resize(int newsize, const T *array = 0);
+    virtual VectorClass<T> &operator=(VectorClass<T> const &that);
+    virtual BOOL operator==(const VectorClass<T> &that) const;
+
+    virtual BOOL Resize(int newsize, const T *array = nullptr);
     virtual void Clear();
     virtual int ID(const T *ptr);
     virtual int ID(const T &ptr);
@@ -81,7 +82,7 @@ const T &VectorClass<T>::operator[](int index) const
 }
 
 template<typename T>
-VectorClass<T>::VectorClass(int size, const T *array) : Vector(0), VectorMax(size), IsAllocated(false)
+VectorClass<T>::VectorClass(int size, const T *array) : Vector(nullptr), VectorMax(size), IsAllocated(false)
 {
     //	Allocate the vector. The default constructor will be called for every
     //	object in this vector.
@@ -102,7 +103,7 @@ VectorClass<T>::~VectorClass()
 }
 
 template<typename T>
-VectorClass<T>::VectorClass(VectorClass<T> const &vector) : Vector(0), VectorMax(0), IsAllocated(false)
+VectorClass<T>::VectorClass(VectorClass<T> const &vector) : Vector(nullptr), VectorMax(0), IsAllocated(false)
 {
     *this = vector;
 }
@@ -125,7 +126,7 @@ VectorClass<T> &VectorClass<T>::operator=(VectorClass<T> const &vector)
                 }
             }
         } else {
-            Vector = 0;
+            Vector = nullptr;
             IsAllocated = false;
         }
     }
@@ -232,13 +233,13 @@ protected:
 #endif
 
 public:
-    DynamicVectorClass(unsigned size = 0, const T *array = 0);
+    DynamicVectorClass(unsigned size = 0, const T *array = nullptr);
 
     BOOL operator==(const DynamicVectorClass &src) { return false; }
     BOOL operator!=(const DynamicVectorClass &src) { return true; }
     DynamicVectorClass<T> &operator=(DynamicVectorClass<T> const &rvalue);
 
-    virtual BOOL Resize(int newsize, const T *array = 0) override;
+    virtual BOOL Resize(int newsize, const T *array = nullptr) override;
     virtual void Clear() override;
     virtual int ID(const T *ptr) override { return VectorClass<T>::ID(ptr); };
     virtual int ID(const T &ptr) override;
@@ -289,10 +290,13 @@ template<typename T>
 BOOL DynamicVectorClass<T>::Resize(int newsize, const T *array)
 {
     if (VectorClass<T>::Resize(newsize, array)) {
-        if (VectorMax < ActiveCount)
+        if (VectorMax < ActiveCount) {
             ActiveCount = VectorMax;
+        }
+
         return true;
     }
+
     return false;
 }
 
@@ -351,10 +355,9 @@ BOOL DynamicVectorClass<T>::Add_Head(const T &object)
 template<typename T>
 BOOL DynamicVectorClass<T>::Insert(int index, const T &object)
 {
-    if (index < 0)
+    if (index < 0 || index > ActiveCount) {
         return false;
-    if (index > ActiveCount)
-        return false;
+    }
 
     if (ActiveCount >= VectorMax) {
         if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
@@ -431,7 +434,7 @@ T *DynamicVectorClass<T>::Uninitialized_Add()
 class BooleanVectorClass
 {
 public:
-    BooleanVectorClass(unsigned size = 0, uint8_t *array = 0);
+    BooleanVectorClass(unsigned size = 0, uint8_t *array = nullptr);
     BooleanVectorClass(BooleanVectorClass const &vector);
 
     BooleanVectorClass &operator=(BooleanVectorClass const &vector);
