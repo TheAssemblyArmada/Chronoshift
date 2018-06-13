@@ -188,8 +188,8 @@ AnimTypeClass const AnimMineExp1(
     ANIM_MINEEXP1, "VEH-HIT2", 21, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, fixed::_0_1, 1, 0, 0, -1, -1, 1, VOC_MINEBLO1, ANIM_NONE);
 AnimTypeClass const AnimAntDeath(
     ANIM_ANTDEATH, "ANTDIE", 28, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, fixed::_0_1, 4, 0, 0, -1, -1, 1, VOC_ANT_DIE, ANIM_NONE);
-AnimTypeClass const AnimWWCrate(ANIM_WWCRATE, "WWCRATE", 28, 2, true, true, 0, 0, 0, 0, 1, false, 0, fixed::_0_1, 4, 0, 0,
-    -1, -1, 1, VOC_NONE, ANIM_NONE);
+/*AnimTypeClass const AnimWWCrate(ANIM_WWCRATE, "WWCRATE", 28, 2, true, true, 0, 0, 0, 0, 1, false, 0, fixed::_0_1, 4, 0, 0,
+    -1, -1, 1, VOC_NONE, ANIM_NONE);*/
 
 /**
  * 0x00407388
@@ -394,7 +394,7 @@ void AnimTypeClass::Init_Heap(void)
     new AnimTypeClass(AnimParaBomb);
     new AnimTypeClass(AnimMineExp1);
     new AnimTypeClass(AnimAntDeath);
-    new AnimTypeClass(AnimWWCrate);
+    // new AnimTypeClass(AnimWWCrate);
 }
 
 /**

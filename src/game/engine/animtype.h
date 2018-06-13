@@ -111,7 +111,7 @@ enum AnimType
     ANIM_PARABOMB = 77, // "PARABOMB"
     ANIM_MINEEXP1 = 78, // "VEH-HIT2"
     ANIM_ANTDEATH = 79, // "ANTDIE"
-    ANIM_WWCRATE = 80, // "WWCRATE"
+    // ANIM_WWCRATE = 80, // "WWCRATE" RA++
     ANIM_COUNT,
 };
 
