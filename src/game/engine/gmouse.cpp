@@ -135,7 +135,7 @@ void GameMouseClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
         }
     }
 
-    ScrollClass::AI(key, mouse_y, mouse_y);
+    ScrollClass::AI(key, mouse_x, mouse_y);
 }
 
 void GameMouseClass::Set_Default_Mouse(MouseType mouse, BOOL in_radar)
