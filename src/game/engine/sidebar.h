@@ -265,21 +265,6 @@ protected:
     static void *SidebarBottomShape;
 #endif
     static void *SidebarAddonShape; // RAPP addition
-    static TextButtonClass Shore;
-    static TextButtonClass River;
-    static TextButtonClass Road;
-    static TextButtonClass Ridges;
-    static TextButtonClass Trees;
-    static TextButtonClass Debris;
-    static ShapeButtonClass Terrain;
-    static ShapeButtonClass Ore;
-    static ShapeButtonClass Gems;
-    static ShapeButtonClass Water;
-    static ShapeButtonClass Left;
-    static ShapeButtonClass Right;
-    static ShapeButtonClass Maximize;
-    static ShapeButtonClass StartPosition;
-    static ControlClass SelectedObject;
 };
 
 #ifndef RAPP_STANALONE

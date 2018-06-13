@@ -65,22 +65,6 @@ void *SidebarClass::SidebarMiddleShape = nullptr;
 void *SidebarClass::SidebarBottomShape = nullptr;
 #endif
 
-TextButtonClass SidebarClass::Shore;
-TextButtonClass SidebarClass::River;
-TextButtonClass SidebarClass::Road;
-TextButtonClass SidebarClass::Ridges;
-TextButtonClass SidebarClass::Trees;
-TextButtonClass SidebarClass::Debris;
-ShapeButtonClass SidebarClass::Terrain;
-ShapeButtonClass SidebarClass::Ore;
-ShapeButtonClass SidebarClass::Gems;
-ShapeButtonClass SidebarClass::Water;
-ShapeButtonClass SidebarClass::Left;
-ShapeButtonClass SidebarClass::Right;
-ShapeButtonClass SidebarClass::Maximize;
-ShapeButtonClass SidebarClass::StartPosition;
-ControlClass SidebarClass::SelectedObject(CONTROL_ED_PREVIEW, 0, 0, 0, 0, 1 | 4, 1);
-
 void *SidebarClass::SidebarAddonShape = nullptr;
 
 SidebarClass::SBGadgetClass::SBGadgetClass() : GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false) {}
