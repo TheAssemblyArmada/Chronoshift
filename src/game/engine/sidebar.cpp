@@ -23,8 +23,14 @@
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
+#include "noinit.h"
 #include "session.h"
 #include "vox.h"
+
+namespace
+{
+const NoInitClass noinit;
+}
 
 #ifndef RAPP_STANDALONE
 void *&SidebarClass::StripClass::LogoShapes = Make_Global<void *>(0x0068A464);
@@ -121,7 +127,7 @@ void SidebarClass::StripClass::SelectClass::Set_Owner(StripClass &strip, int row
     YPos = (48 * row) + strip.YPos;
 }
 
-SidebarClass::StripClass::StripClass()
+SidebarClass::StripClass::StripClass() : ProgressTimer(noinit)
 {
     // Such empty, this is effectively the "NoInitClass" ctor for this class.
 }

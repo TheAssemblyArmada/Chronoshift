@@ -236,6 +236,7 @@ BOOL GameMouseClass::Load(Straw &straw)
         uint32_t saved_cells = 0;
 
         if (straw.Get(&saved_cells, sizeof(saved_cells)) == sizeof(saved_cells)) {
+            DEBUG_LOG("Loading data for %u cells.\n", saved_cells);
             for (unsigned i = 0; i < saved_cells; ++i) {
                 int16_t cell_num;
 
@@ -280,7 +281,7 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
         }
     }
 
-    DEBUG_LOG("Saving %d cells\n", saved_cells);
+    DEBUG_LOG("Saving %u cells with none default state\n", saved_cells);
     pipe.Put(&saved_cells, sizeof(saved_cells));
 
     // Save the cells that need saving.

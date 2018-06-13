@@ -144,8 +144,7 @@ void MapClass::Init_Clear()
  */
 void MapClass::Alloc_Cells()
 {
-    // Clear all cells in the vector array, reconstruct the vector and then resize to total cell count.
-    Array.Clear();
+    // Reconstruct the vector (incase it has garbage in it from a save load) and then resize to total cell count.
     new(&Array) VectorClass<CellClass>;
     Array.Resize(TotalSize);
 }

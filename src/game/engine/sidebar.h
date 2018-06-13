@@ -142,8 +142,6 @@ class SidebarClass : public PowerClass
     private:
         struct SelectButtonType
         {
-            SelectButtonType() : ID(0), Type(RTTI_NONE), Factory(-1) {}
-            ~SelectButtonType() {}
             int ID;
             RTTIType Type;
             int Factory; // ID for a factory instance that is constructing this.
@@ -180,13 +178,13 @@ class SidebarClass : public PowerClass
         bool Strip_Boolean32; // 32
 #endif
 
-        int field_21; // 0x21		// Icon with build clock active?
-        int CurrentRow; // 0x25
-        int RowStartIndex; // 0x29		// scroll position, which row is topmost visible
-        int field_2D; // 0x2D
-        int field_31; // 0x31
-        int CameoCount; // 0x35
-        SelectButtonType Entries[MAX_BUTTONS_PER_COLUMN]; // 0x39	75 camoes per column
+        int field_21; // Icon with build clock active?
+        int CurrentRow;
+        int RowStartIndex; //  scroll position, which row is topmost visible
+        int field_2D;
+        int field_31;
+        int CameoCount;
+        SelectButtonType Entries[MAX_BUTTONS_PER_COLUMN]; // 75 camoes per column
     };
 
 public:

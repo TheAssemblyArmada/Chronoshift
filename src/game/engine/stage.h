@@ -26,7 +26,7 @@ class StageClass
 {
 public:
     StageClass() : Stage(0), Timer(0), Delay(0) {}
-    StageClass(NoInitClass &noinit) : Timer(noinit) {}
+    StageClass(const NoInitClass &noinit) : Timer(noinit) {}
     StageClass &operator=(StageClass &that);
 
     int Get_Stage() { return Stage; }
