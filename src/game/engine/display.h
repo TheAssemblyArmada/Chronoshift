@@ -265,51 +265,42 @@ inline int16_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
 inline void DisplayClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    // ** DisplayClass implamentation pass 1 ** //
-    Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear); //seems to work
-    Hook_Function(0x004AEFF4, *DisplayClass::Init_IO); //seems to work
-    Hook_Function(0x004AF02C, *DisplayClass::Init_Theater); //seems to work
-    Hook_Function(0x004B0140, *DisplayClass::AI); //seems to work
-    Hook_Function(0x004AEEF4, *DisplayClass::One_Time); //seems to work
-    Hook_Function(0x004AF700, *DisplayClass::Set_Cursor_Shape); //seems to work
-    Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc); //seems to work
-    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); //seems to work
-    Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells); //seems to work
-    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); //seems to work
-    Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position); //seems to work
-    Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);  //seems to work
-    Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press); //seems to work
-    Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press); //seems to work
-    Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held); //seems to work
-    //Hook_Function(0x004B2694, *DisplayClass::Pixel_To_Coord); //seems to work
-    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); //seems to work
-    Hook_Function(0x004B006C, *DisplayClass::Cursor_Mark); //seems to work
-    Hook_Function(0x004AFFA8, *DisplayClass::Hook_Get_Occupy_Dimensions); //seems to work
-    Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);//seems to work
-    //Hook_Function(0x005CC697, Confine_Rect); //seems to work
-    //Hook_Function(0x005CC890, Change_Window); //seems to work
-
-    // ** DisplayClass implamentation pass 2 ** //
-    //*****************************************************//
-    Hook_Function(0x004B25A4, *DisplayClass::Hook_Next_Object); //seems to work
-    Hook_Function(0x004B0214, *DisplayClass::Submit); //seems to work
-    Hook_Function(0x004B0248, *DisplayClass::Remove); //seems to work
-    Hook_Function(0x004B0C78, *DisplayClass::Hook_Cell_Object); //seems to work
-    Hook_Function(0x004B4E20, *DisplayClass::Center_Map); //seems to work
-    Hook_Function(0x004AFD40, *DisplayClass::Set_Cursor_Pos); //seems to work
-    //Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons); // has previously uncatched shadow drawing issues
-    //Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow); //has previously uncatched shadow drawing issues
-    Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View); //seems to work
-    //Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel); //has previously uncatched shadow drawing issues
-    //Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);//has previously uncatched shadow drawing issues
-
-    //*****************************************************//
-    Hook_Function(0x0049FF98, *CellClass::Spot_Index); //seems to work
-    //Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap); //has previously uncatched shadow drawing issues
-    Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell); //seems to work
-    Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell); //seems to work
-    Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot); //seems to work
-    //Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow); //has previously uncatched shadow drawing issues
+    Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear); 
+    Hook_Function(0x004AEFF4, *DisplayClass::Init_IO); 
+    Hook_Function(0x004AF02C, *DisplayClass::Init_Theater); 
+    Hook_Function(0x004B0140, *DisplayClass::AI); 
+    Hook_Function(0x004AEEF4, *DisplayClass::One_Time); 
+    Hook_Function(0x004AF700, *DisplayClass::Set_Cursor_Shape); 
+    Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc); 
+    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); 
+    Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells); 
+    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); 
+    Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position); 
+    Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);  
+    Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press); 
+    Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press); 
+    Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held);
+    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); 
+    Hook_Function(0x004B006C, *DisplayClass::Cursor_Mark); 
+    Hook_Function(0x004AFFA8, *DisplayClass::Hook_Get_Occupy_Dimensions); 
+    Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);
+    Hook_Function(0x004B25A4, *DisplayClass::Hook_Next_Object); 
+    Hook_Function(0x004B0214, *DisplayClass::Submit); 
+    Hook_Function(0x004B0248, *DisplayClass::Remove); 
+    Hook_Function(0x004B0C78, *DisplayClass::Hook_Cell_Object); 
+    Hook_Function(0x004B4E20, *DisplayClass::Center_Map); 
+    Hook_Function(0x004AFD40, *DisplayClass::Set_Cursor_Pos); 
+    Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons);
+    Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow);
+    Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View); 
+    Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel);
+    Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);
+    Hook_Function(0x0049FF98, *CellClass::Spot_Index); 
+    Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap);
+    Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell); 
+    Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell); 
+    Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot); 
+    Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow);
 #endif
 }
 #endif
