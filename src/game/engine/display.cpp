@@ -1788,18 +1788,16 @@ int __cdecl DisplayClass::Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, 
     int result = 0;
 
     // If we aren't drawing within bounds, return -1
-    if (xstart >= clip_w || ystart >= clip_h || xend <= 0 || yend <= 0) {
+    if (xstart >= clip_w || ystart >= clip_h || xend < 0 || yend < 0) {
         return -1;
     }
 
     if (xstart < 0) {
-        xend -= xstart; // start is -ve, makes it add ABS(xstart)
         xstart = 0;
         result = 1;
     }
 
     if (ystart < 0) {
-        yend -= ystart; // start is -ve, makes it add ABS(ystart)
         ystart = 0;
         result = 1;
     }
