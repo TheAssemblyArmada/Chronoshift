@@ -1526,7 +1526,7 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
     int ms_img_offset = 0;
 
     // If we aren't drawing within the viewport, return.
-    if (xstart >= viewport.Get_Width() || ystart >= viewport.Get_Height() || xend <= 0 || yend <= 0) {
+    if (xstart >= viewport.Get_Width() || ystart >= viewport.Get_Height() || xend < 0 || yend < 0) {
         return;
     }
 
