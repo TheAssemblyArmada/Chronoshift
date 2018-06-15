@@ -295,7 +295,6 @@ inline void DisplayClass::Hook_Me()
     Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View); 
     Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel);
     Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);
-    Hook_Function(0x0049FF98, *CellClass::Spot_Index); 
     Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap);
     Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell); 
     Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell); 
