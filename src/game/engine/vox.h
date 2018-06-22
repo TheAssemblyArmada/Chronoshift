@@ -154,6 +154,18 @@ enum VoxType {
 
 DEFINE_ENUMERATION_OPERATORS(VoxType);
 
+#define VOX_BUFFERS 2
+
+// Hook the original binary's globals until standalone or have implemented and hooked all references.
+#ifndef RAPP_STANDALONE
+#include "hooker.h"
+extern void **SpeechBuffer;
+extern VoxType *SpeechRecord;
+#else
+extern void *SpeechBuffer[VOX_BUFFERS];
+extern VoxType SpeechRecord[VOX_BUFFERS];
+#endif
+
 VoxType Vox_From_Name(char const *name);
 char const *Name_From_Vox(VoxType vox);
 
