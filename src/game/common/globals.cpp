@@ -43,6 +43,14 @@ BOOL &g_cancelCurrentMsgBox = Make_Global<BOOL>(0x00685170);
 #ifdef PLATFORM_WINDOWS
 HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 #endif
+char *&MainMix = Make_Global<char *>(0x00668180);
+char *&ConquerMix = Make_Global<char *>(0x00668184);
+char *&GeneralMix = Make_Global<char *>(0x00668178);
+char *&MoviesMix = Make_Global<char *>(0x00668174);
+char *&ScoreMix = Make_Global<char *>(0x0066817C);
+char **TutorialText = reinterpret_cast<char **>(0x00666304);
+BOOL &MouseInstalled = Make_Global<BOOL>(0x00680838);
+int &g_seed = Make_Global<BOOL>(0x00680654);
 #else
 int g_iniFormat;
 int g_frame;
@@ -69,4 +77,12 @@ BOOL g_cancelCurrentMsgBox
 #ifdef PLATFORM_WINDOWS
 HWND MainWindow;
 #endif
+char *MainMix;
+char *ConquerMix;
+char *GeneralMix;
+char *MoviesMix;
+char *ScoreMix;
+char *TutorialText;
+BOOL MouseInstalled;
+int g_seed;
 #endif
