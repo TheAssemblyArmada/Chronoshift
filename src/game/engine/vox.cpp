@@ -1,5 +1,14 @@
 #include	"vox.h"
 
+
+#ifndef RAPP_STANDALONE
+void **SpeechBuffer = reinterpret_cast<void **>(0x006680D8);
+VoxType *SpeechRecord = Make_Pointer<VoxType>(0x006680E0);
+#else
+void *SpeechBuffer[VOX_BUFFERS];
+VoxType SpeechRecord[VOX_BUFFERS];
+#endif
+
 // Update the VoxType enum in vox.h if you add additional EVA lines
 char const *VoxName[VOX_COUNT] = {
     "MISNWON1",	//0
