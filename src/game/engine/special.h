@@ -39,6 +39,8 @@ public:
     }
 
     BOOL Allow_Remixes() { return Remixes; }
+    BOOL In_Demo_Mode() { return DemoMode; }
+    BOOL Is_Spawned() { return Spawned; }
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
