@@ -1,4 +1,4 @@
-# Redalert++
+# Chronoshift
 
 An Open Source Re-Implementation of Command and Conquer: Red Alert
 
@@ -21,14 +21,14 @@ Make sure you add CMake to at least your users path when prompted to during the 
 Next, open a command prompt window and run the following commands:
 
 * `C:\WATCOM\owsetenv.bat` Sets the environment variables for OpenWatcom, assumes default install directory.
-* `git clone https://gitlab.com/OmniBlade/rappng.git` Clone the repository.
+* `git clone https://gitlab.com/chronoprojects/redalertpp.git` Clone the repository.
 * `cd rappng` Change to the cloned repository.
 * `mkdir build` Make a build directory.
 * `cd build` Change to the build directory.
 * `cmake -G "Watcom WMake" -DCMAKE_BUILD_TYPE="Release" ..` Configures the watcom build environment.
-* `wmake` Compiles both the launcher and the Redalert++ .dll file with Open Watcom.
+* `wmake` Compiles both the launcher and the Chronoshift .dll file with Open Watcom.
 
-Redalert++ will only work against the [english 3.03 beta patch](http://nyerguds.arsaneus-design.com/cncstuff/patches/ra1/ra303eng.zip).
+Chronoshift will only work against the [english 3.03 beta patch](http://nyerguds.arsaneus-design.com/cncstuff/patches/ra1/ra303eng.zip).
 Simply copy the launcher and .dll into your Red Alert directory and run the launcher.
 
 ### Linux and macOS
@@ -53,6 +53,8 @@ Below is a list of similar projects and their respective original games:
  * [OpenTTD](https://www.openttd.org/) - Transport Tycoon Deluxe
  * [OpenMC2](https://github.com/LRFLEW/OpenMC2) - Midnight Club 2
  * [OpenDUNE](https://github.com/OpenDUNE/OpenDUNE) - Dune 2
+ * [OpenFodder](https://github.com/OpenFodder/openfodder) - Cannon Fodder
+ * [Devilution](https://github.com/diasurgical/devilution) - Diablo
 
 There is also the [Wikipedia page for open source games](https://en.wikipedia.org/wiki/List_of_open-source_video_games).
 
