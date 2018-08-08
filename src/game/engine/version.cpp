@@ -97,7 +97,7 @@ const char *VersionClass::Version_String()
             strlcat(_buffer, "AM", sizeof(_buffer));
         }
 
-        strlcat(_buffer, "\r" RAPP_COMMIT_SHA1_SHORT, sizeof(_buffer));
+        strlcat(_buffer, "\r" CHRONOSHIFT_COMMIT_SHA1_SHORT, sizeof(_buffer));
 
         if (strlen(m_fileVersionName) > 0) {
             strlcat(_buffer, "\r", sizeof(_buffer));
@@ -156,12 +156,12 @@ int VersionClass::Clip_Version(unsigned min, unsigned max)
 
 int VersionClass::Min_Version()
 {
-    return (RAPP_MAJOR << 16) | RAPP_MINOR;
+    return (CHRONOSHIFT_MAJOR << 16) | CHRONOSHIFT_MINOR;
 }
 
 int VersionClass::Max_Version()
 {
-    return (RAPP_MAJOR << 16) | RAPP_MINOR;
+    return (CHRONOSHIFT_MAJOR << 16) | CHRONOSHIFT_MINOR;
 }
 
 void VersionClass::Read_Text_String()
@@ -188,7 +188,7 @@ int VersionClass::Minor_Version()
     }
 
     if (!m_minorSet) {
-        m_minorVersion = RAPP_MINOR;
+        m_minorVersion = CHRONOSHIFT_MINOR;
         m_minorSet = true;
     }
 
@@ -203,7 +203,7 @@ int VersionClass::Major_Version()
     }
 
     if (!m_majorSet) {
-        m_majorVersion = RAPP_MAJOR;
+        m_majorVersion = CHRONOSHIFT_MAJOR;
         m_majorSet = true;
     }
 
