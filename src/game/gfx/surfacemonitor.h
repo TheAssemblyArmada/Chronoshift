@@ -63,12 +63,14 @@ extern SurfaceMonitorClass &g_allSurfaces;
 
 inline void SurfaceMonitorClass::Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005CA1D0, &Hook_Add_Surface);
     Hook_Function(0x005CA230, &Hook_Remove_Surface);
     Hook_Function(0x005CA280, &Hook_Got_Surface_Already);
     Hook_Function(0x005CA2D0, &Hook_Restore_Surfaces);
     Hook_Function(0x005CA370, &Hook_Set_Surface_Focus);
     Hook_Function(0x005CA390, &Hook_Release);
+#endif
 }
 #else
 extern void (*Misc_Focus_Loss_Function)();

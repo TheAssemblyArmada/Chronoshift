@@ -232,6 +232,7 @@ inline void CellClass::Hook_Me()
 #ifdef COMPILER_WATCOM
     Hook_Function(0x0049EE70, *CellClass::Hook_Ctor);
     Hook_Function(0x0049FF98, *CellClass::Spot_Index);
+    Hook_Function(0x004F8E64, *CellClass::Load);
 #endif
 }
 #endif

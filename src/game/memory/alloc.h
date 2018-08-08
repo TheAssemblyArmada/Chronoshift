@@ -45,12 +45,14 @@ int Total_Ram_Free(MemoryFlagType flag);
 #ifndef CHRONOSHIFT_STANDALONE
 inline void Memory_Hook_Me(void)
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005C5965, &malloc);
     Hook_Function(0x005C3945, &free);
     Hook_Function(0x005DE4DE, &realloc);
     Hook_Function(0x005D5FC0, &Alloc);
     Hook_Function(0x005D6010, &Free);
     Hook_Function(0x005D6020, &Resize_Alloc);
+#endif
 }
 #endif
 

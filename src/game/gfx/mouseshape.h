@@ -62,9 +62,11 @@ namespace MouseShape {
 
 inline void Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005D8F5C, Mouse_Shadow_Buffer);
     Hook_Function(0x005D90A1, Mouse_Draw);
     Hook_Function(0x005D91CF, Mouse_Set_Cursor);
+#endif
 }
 
 }

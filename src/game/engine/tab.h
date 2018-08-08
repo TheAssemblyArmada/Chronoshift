@@ -140,6 +140,7 @@ inline void TabClass::Hook_Me()
     Hook_Function(0x005533A0, *TabClass::Draw_It);
     Hook_Function(0x005539D8, *TabClass::One_Time);
     Hook_Function(0x005538D0, *TabClass::AI);
+    Hook_Function(0x00553744, *TabClass::Draw_Credits_Tab);
 #endif
 }
 #endif

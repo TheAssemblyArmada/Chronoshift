@@ -45,6 +45,7 @@ public:
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
+    const int16_t *Hook_Text_Overlap_List(char const *string, int x, int y);
 #endif
 
 private:
@@ -89,6 +90,11 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
+inline const int16_t *HelpClass::Hook_Text_Overlap_List(char const *string, int x, int y)
+{
+    return HelpClass::Text_Overlap_List(string, x, y);
+}
+
 inline void HelpClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
@@ -98,6 +104,7 @@ inline void HelpClass::Hook_Me()
     Hook_Function(0x004D2574, *HelpClass::Help_Text);
     Hook_Function(0x004D2B6C, *HelpClass::Scroll_Map);
     Hook_Function(0x004D2BC0, *HelpClass::Set_Tactical_Position);
+    Hook_Function(0x004D2354, *HelpClass::Hook_Text_Overlap_List);
     Hook_Function(0x004D293C, *HelpClass::Set_Text);
 #endif
 }

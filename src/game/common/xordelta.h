@@ -39,8 +39,10 @@ namespace XorDelta {
 
 inline void Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005D6A50, Apply_XOR_Delta_To_Page_Or_Viewport);
     Hook_Function(0x005D69E0, Apply_XOR_Delta);
+#endif
 }
 
 }

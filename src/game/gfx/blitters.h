@@ -41,6 +41,7 @@ namespace Blitters
 {
 inline void Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005C53E4, Linear_Blit_To_Linear);
     Hook_Function(0x005C23F0, Buffer_Fill_Rect);
     Hook_Function(0x005C13E4, Buffer_Draw_Line);
@@ -51,6 +52,7 @@ inline void Hook_Me()
     Hook_Function(0x005D10B8, Buffer_To_Page);
     Hook_Function(0x005C4DE0, Buffer_Clear);
     Hook_Function(0x005D4338, Linear_Scale_To_Linear);
+#endif
 }
 }
 #endif
