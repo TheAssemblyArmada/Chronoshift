@@ -1,6 +1,6 @@
 #include	"triggertype.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<TriggerTypeClass> &TriggerTypes = *reinterpret_cast<TFixedIHeapClass<TriggerTypeClass> *>(0x0065DCD8);
 #else
 TFixedIHeapClass<TriggerTypeClass> TriggerTypes;
@@ -8,7 +8,7 @@ TFixedIHeapClass<TriggerTypeClass> TriggerTypes;
 
 void TriggerTypeClass::Code_Pointers()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(TriggerTypeClass *) =
         reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9448);
     return func(this);
@@ -23,7 +23,7 @@ void TriggerTypeClass::Code_Pointers()
 
 void TriggerTypeClass::Decode_Pointers()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(TriggerTypeClass *) =
         reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9464);
     return func(this);

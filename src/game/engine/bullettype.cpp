@@ -21,7 +21,7 @@
 
 using std::snprintf;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<BulletTypeClass> &BulletTypes = *reinterpret_cast<TFixedIHeapClass<BulletTypeClass> *>(0x0065DE54);
 #else
 TFixedIHeapClass<BulletTypeClass> BulletTypes;

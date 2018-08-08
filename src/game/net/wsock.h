@@ -131,7 +131,7 @@ protected:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern WinsockInterfaceClass *&g_packetTransport;
 #else

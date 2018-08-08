@@ -25,7 +25,7 @@
 
 using std::snprintf;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 int16_t *const HelpClass::OverlapList = Make_Pointer<int16_t>(0x006018B8);
 char *&HelpClass::HelpText = Make_Global<char *>(0x006821B8);
 #else
@@ -244,7 +244,7 @@ void HelpClass::Set_Text(int string_id)
         }
 
         // Copy list and mark final buffer position as end in case source list is longer than buffer.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
         memcpy(OverlapList,
             Text_Overlap_List(Fetch_String(HelpTextID), HelpXPos - 1, HelpYPos),
             HELP_OVERLAP_BUFFER * sizeof(int16_t));

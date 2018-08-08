@@ -49,7 +49,7 @@ public:
     virtual BOOL Load(Straw &straw) override;
     virtual BOOL Save(Pipe &pipe) const override;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     BOOL Hook_Save(Pipe &pipe) { return GameMouseClass::Save(pipe); }
 #endif
@@ -73,7 +73,7 @@ protected:
     unsigned MouseFrame; // this is the current frame index for the animated mouse.
 
 private:
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void *&MouseShapes;
     static TCountDownTimerClass<SystemTimerClass> &AnimationTimer;
 #else

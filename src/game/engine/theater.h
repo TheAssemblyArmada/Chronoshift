@@ -55,7 +55,7 @@ const char *Name_From_Theater(TheaterType theater);
 
 extern TheaterDataType g_theaters[THEATER_COUNT];
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TheaterType &g_lastTheater;
 #else

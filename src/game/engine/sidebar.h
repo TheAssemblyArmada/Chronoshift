@@ -108,7 +108,7 @@ class SidebarClass : public PowerClass
         int Abandon_Production(int unk1);
 
     private:
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
         static void *&LogoShapes;
         static void *&ClockShapes;
         static void **SpecialShapes;
@@ -216,7 +216,7 @@ public:
     void Disable_Zoom_Button() { ZoomButton.Disable(); }
     void Enable_Zoom_Button() { ZoomButton.Enable(); }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -245,7 +245,7 @@ protected:
     bool SidebarBit16; // demolish active
 #endif
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static SBGadgetClass &Background;
     static ShapeButtonClass &RepairButton;
     static ShapeButtonClass &SellButton;

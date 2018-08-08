@@ -22,7 +22,7 @@
 #include <time.h>
 #endif // PLATFORM_WINDOWS
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 PlatformTimerClass *&PlatformTimer = Make_Global<PlatformTimerClass *>(0x00665EB0);
 BOOL &PlatformTimerClass::s_timerSystemOn = Make_Global<BOOL>(0x006ABF68);
 BOOL &PlatformTimerClass::s_inCallback = Make_Global<BOOL>(0x006ABF8C);

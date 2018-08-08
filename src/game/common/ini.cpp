@@ -26,7 +26,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 
@@ -809,7 +809,7 @@ int32_t const INIClass::CRC(const char *string)
     return Calculate_CRC(string, strlen(string));
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 void INIClass::Hook_Me()
 {
     //Hook_Function((void*)0x004F2900, (void*)&Hook_Load);

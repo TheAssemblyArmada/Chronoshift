@@ -20,7 +20,7 @@
 PaletteClass WhitePalette(RGBClass::WhiteColor);
 PaletteClass BlackPalette(RGBClass::BlackColor);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 PaletteClass &GamePalette = Make_Global<PaletteClass>(0x00669C5C);
 PaletteClass &OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
 PaletteClass &CCPalette = Make_Global<PaletteClass>(0x0066995C);

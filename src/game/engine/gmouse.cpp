@@ -33,7 +33,7 @@
 #include "terraintype.h"
 #include <new>
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 void *&GameMouseClass::MouseShapes = Make_Global<void *>(0x00685160);
 TCountDownTimerClass<SystemTimerClass> &GameMouseClass::AnimationTimer =
     Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x00685164);

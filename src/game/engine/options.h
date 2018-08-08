@@ -79,7 +79,7 @@ public:
     fixed Get_Tint() const { return Tint; }
 
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -165,7 +165,7 @@ private:
     KeyType KeyTeam10;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void OptionsClass::Hook_Me()

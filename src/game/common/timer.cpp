@@ -16,7 +16,7 @@
 #include "timer.h"
 #include "ostimer.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TimerClass &TickCount = Make_Global<TimerClass>(0x006ABF6C);
 CountDownTimerClass &CountDown = Make_Global<CountDownTimerClass>(0x006ABF78);
 #else

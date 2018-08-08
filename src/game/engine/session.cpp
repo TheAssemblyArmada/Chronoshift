@@ -15,7 +15,7 @@
  */
 #include "session.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 SessionClass &Session = Make_Global<SessionClass>(0x0067F2B4);
 #else
 SessionClass Session;

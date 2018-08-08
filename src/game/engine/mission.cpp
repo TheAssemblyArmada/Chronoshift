@@ -253,7 +253,7 @@ void MissionClass::AI()
             case MISSION_MISSILE:
                 MissionTimer = Mission_Missile();
                 break;
-#ifdef RAPP_STANDALONE
+#ifdef CHRONOSHIFT_STANDALONE
             case MISSION_FIND_CRATE:
                 MissionTimer = Mission_Find_Crate();
                 break;

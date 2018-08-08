@@ -52,7 +52,7 @@ int SHAStraw::Result(void *data)
     return m_sha1.Result(data);
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 int SHAStraw::Hook_Result(SHAStraw *ptr, void *data)
 {
     char hash[41];

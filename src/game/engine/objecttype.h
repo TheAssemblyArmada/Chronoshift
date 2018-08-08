@@ -100,7 +100,7 @@ protected:
     int FrameDimensions;
     void *RadarIconData;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
     static void *&SelectShapes;
     static void *&PipShapes;

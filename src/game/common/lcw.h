@@ -31,7 +31,7 @@ inline int LCW_Worst_Case(int bytes)
 int __cdecl LCW_Uncomp(void const *src, void *dst, unsigned int bytes = 0);
 int __cdecl LCW_Comp(void const *src, void *dst, unsigned int bytes = 0);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 namespace Lcw {

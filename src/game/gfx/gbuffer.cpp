@@ -20,7 +20,7 @@
 #include "textprint.h"
 #include "tileset.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 // BOOL &GraphicViewPortClass::AllowHardwareBlitFills;
 // BOOL &GraphicViewPortClass::AllowStretchBlits;
 int &GraphicViewPortClass::ScreenWidth = Make_Global<int>(0x006016B0);
@@ -342,7 +342,7 @@ GraphicBufferClass::~GraphicBufferClass()
 
 void GraphicBufferClass::DD_Init(GBCEnum mode)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void (*call_ddinit)(GraphicBufferClass *, GBCEnum) =
         reinterpret_cast<void (*)(GraphicBufferClass *, GBCEnum)>(0x005C0AF4);
     call_ddinit(this, mode);
@@ -581,7 +581,7 @@ void GraphicBufferClass::Init(int width, int height, void *buffer, int size, GBC
 
 void GraphicBufferClass::Un_Init()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void (*call_uninit)(GraphicBufferClass *) = reinterpret_cast<void (*)(GraphicBufferClass *)>(0x005C0D0F);
     call_uninit(this);
 #else
@@ -592,7 +592,7 @@ void GraphicBufferClass::Un_Init()
 // Lock and Unlock need WWMouse and SurfaceMonitorClass classes.
 BOOL GraphicBufferClass::Lock()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static BOOL (*call_lock)(GraphicBufferClass *) = reinterpret_cast<BOOL (*)(GraphicBufferClass *)>(0x005C101A);
     return call_lock(this);
 #else
@@ -602,7 +602,7 @@ BOOL GraphicBufferClass::Lock()
 
 BOOL GraphicBufferClass::Unlock()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static BOOL (*call_unlock)(GraphicBufferClass *) = reinterpret_cast<BOOL (*)(GraphicBufferClass *)>(0x005C1191);
     return call_unlock(this);
 #else

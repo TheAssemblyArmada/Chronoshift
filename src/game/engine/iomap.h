@@ -22,7 +22,7 @@
 #include "gmouse.h"
 
 // TODO Update this as additional layers of the hierachy are implemented.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern GameMouseClass &Map;
 #else

@@ -45,7 +45,7 @@ public:
     virtual BOOL Bump(BOOL bump_up);
     virtual BOOL Step(BOOL step_up);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -90,7 +90,7 @@ inline SliderClass &SliderClass::operator=(SliderClass &that)
     return *this;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void SliderClass::Hook_Me()

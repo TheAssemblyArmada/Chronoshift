@@ -143,7 +143,7 @@ private:
     FileInfoStruct *m_fileIndex;
     uint8_t *m_fileCache;
 // A linked list of all currently indexed mix files for the program
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static List<MixFileClass<FC> *> &s_mixList;
 #else
     static List<MixFileClass<FC> *> s_mixList;

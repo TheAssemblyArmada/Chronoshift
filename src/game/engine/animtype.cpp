@@ -22,7 +22,7 @@
 
 using std::snprintf;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<AnimTypeClass> &AnimTypes = Make_Global<TFixedIHeapClass<AnimTypeClass> >(0x0065DEA0);
 #else
 TFixedIHeapClass<AnimTypeClass> AnimTypes;

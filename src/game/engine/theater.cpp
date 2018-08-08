@@ -15,7 +15,7 @@
  */
 #include "theater.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TheaterType &g_lastTheater = Make_Global<TheaterType>(0x006017CC);
 #else
 TheaterType g_lastTheater = THEATER_NONE;

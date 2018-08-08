@@ -161,7 +161,7 @@ protected:
     int RedrawFlag;
 
 private:
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static GadgetClass *&Buttons;
     static GraphicViewPortClass *&ShadowPage;
 #else

@@ -15,7 +15,7 @@
 #include "gameoptions.h"
 #include "gbuffer.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
 #else
 GameOptionsClass Options;
@@ -29,7 +29,7 @@ GameOptionsClass Options;
 void GameOptionsClass::Process()
 {
     // TODO
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*process)() = reinterpret_cast<void (*)()>(0x004C9EE0);
     process();
 #endif

@@ -62,7 +62,7 @@ public:
     virtual void Draw_Entry(int index, int x, int y, int x_max, BOOL redraw);
 
     ListClass &operator=(ListClass &that);
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 protected:
@@ -117,7 +117,7 @@ inline ListClass &ListClass::operator=(ListClass &that)
     return *this;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void ListClass::Hook_Me()

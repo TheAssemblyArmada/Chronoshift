@@ -38,7 +38,7 @@
 
 using std::snprintf;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 LayerClass *DisplayClass::Layers = Make_Pointer<LayerClass>(0x00656080);
 DisplayClass::TacticalClass &DisplayClass::TacticalButton = Make_Global<DisplayClass::TacticalClass>(0x00658804);
 char *DisplayClass::FadingBrighten = Make_Pointer<char>(0x006560E0);
@@ -91,7 +91,7 @@ DisplayClass::TacticalClass::TacticalClass() :
 BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
 {
     // TODO, needs HouseClass, TechnoClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const TacticalClass *, unsigned, KeyNumType &) = reinterpret_cast<BOOL(*)(const TacticalClass *, unsigned, KeyNumType &)>(0x004B3108);
     return func(this, flags, key);
 #else
@@ -272,7 +272,7 @@ void DisplayClass::Init_Theater(TheaterType theater)
     Conquer_Build_Fading_Table(GamePalette, FadingLight, 15, 85);
 
     // Special case where pointer and array of arrays don't behave the same for our purpose.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     Conquer_Build_Fading_Table(GamePalette, &SpecialGhost[256], 12, 100);
 #else
     Conquer_Build_Fading_Table(GamePalette, SpecialGhost[1], 12, 100);
@@ -305,7 +305,7 @@ void DisplayClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 void DisplayClass::Draw_It(BOOL force_redraw)
 {
     // TODO Requires ChronalVortexClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const DisplayClass *, BOOL) = reinterpret_cast<void (*)(const DisplayClass *, BOOL)>(0x004B0CA8);
     func(this, force_redraw);
 #endif
@@ -314,7 +314,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
 void DisplayClass::Code_Pointers()
 {
     // Requires target functions.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const DisplayClass *) = reinterpret_cast<void (*)(const DisplayClass *)>(0x004F91DC);
     func(this);
 #elif 0
@@ -330,7 +330,7 @@ void DisplayClass::Code_Pointers()
 void DisplayClass::Decode_Pointers()
 {
     // Requires target functions.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const DisplayClass *) = reinterpret_cast<void (*)(const DisplayClass *)>(0x004F9220);
     func(this);
 #elif 0
@@ -345,7 +345,7 @@ void DisplayClass::Decode_Pointers()
 void DisplayClass::Read_INI(CCINIClass &ini)
 {
     // Needs all type classes, celltriggerclass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const DisplayClass *, CCINIClass &) =
         reinterpret_cast<void (*)(const DisplayClass *, CCINIClass &)>(0x004B50F8);
     func(this, ini);
@@ -355,7 +355,7 @@ void DisplayClass::Read_INI(CCINIClass &ini)
 void DisplayClass::Write_INI(CCINIClass &ini)
 {
     // Needs celltriggerclass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const DisplayClass *, CCINIClass &) =
         reinterpret_cast<void (*)(const DisplayClass *, CCINIClass &)>(0x004B545C);
     func(this, ini);
@@ -365,7 +365,7 @@ void DisplayClass::Write_INI(CCINIClass &ini)
 BOOL DisplayClass::Map_Cell(int16_t cellnum, HouseClass *house)
 {
     // TODO requires HouseClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
     (const DisplayClass *, int16_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const DisplayClass *, int16_t, HouseClass *)>(0x004B0788);
@@ -643,7 +643,7 @@ void DisplayClass::Mouse_Left_Press(int mouse_x, int mouse_y)
 void DisplayClass::Mouse_Left_Up(
     int16_t cellnum, BOOL cell_shrouded, ObjectClass *object, ActionType action, BOOL mouse_in_radar)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const DisplayClass *, int16_t, BOOL, ObjectClass *, ActionType, BOOL) =
         reinterpret_cast<void (*)(const DisplayClass *, int16_t, BOOL, ObjectClass *, ActionType, BOOL)>(0x004B3780);
     func(this, cellnum, cell_shrouded, object, action, mouse_in_radar);
@@ -679,7 +679,7 @@ void DisplayClass::Mouse_Left_Held(int mouse_x, int mouse_y)
 void DisplayClass::Mouse_Left_Release(
     int16_t cellnum, int mouse_x, int mouse_y, ObjectClass *object, ActionType action, BOOL mouse_in_radar)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const DisplayClass *, int16_t, int, int, ObjectClass *, ActionType, BOOL) =
         reinterpret_cast<void (*)(const DisplayClass *, int16_t, int, int, ObjectClass *, ActionType, BOOL)>(0x004B3CA8);
     func(this, cellnum, mouse_x, mouse_y, object, action, mouse_in_radar);
@@ -967,7 +967,7 @@ ObjectClass *DisplayClass::Cell_Object(int16_t cellnum, int x, int y) const
 void DisplayClass::Select_These(uint32_t start, uint32_t finish)
 {
     // Needs HouseClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const DisplayClass *, uint32_t, uint32_t) = reinterpret_cast<void(*)(const DisplayClass *, uint32_t, uint32_t)>(0x004B2C50);
     func(this, start, finish);
 #endif
@@ -976,7 +976,7 @@ void DisplayClass::Select_These(uint32_t start, uint32_t finish)
 void DisplayClass::Sell_Mode_Control(int mode)
 {
     // Needs HouseClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const DisplayClass *, int) = reinterpret_cast<void(*)(const DisplayClass *, int)>(0x004B4B68);
     func(this, mode);
 #elif 0
@@ -1016,7 +1016,7 @@ void DisplayClass::Sell_Mode_Control(int mode)
 void DisplayClass::Repair_Mode_Control(int mode)
 {
     // Needs HouseClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const DisplayClass *, int) = reinterpret_cast<void(*)(const DisplayClass *, int)>(0x004B4C10);
     func(this, mode);
 #elif 0
@@ -1151,7 +1151,7 @@ int16_t DisplayClass::Set_Cursor_Pos(int16_t cell)
 BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, int16_t cell) const
 {
     // Needs HouseClass, BuildingTypeClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, int16_t) = reinterpret_cast<BOOL(*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, int16_t)>(0x004AF7DC);
     return func(this, object, house, list, cell);
 #else
@@ -1629,7 +1629,7 @@ uint32_t DisplayClass::Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) con
 void DisplayClass::All_To_Look(BOOL skip_buildings)
 {
     // Needs HouseClass, TechnoClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const DisplayClass *, BOOL) = reinterpret_cast<void(*)(const DisplayClass *, BOOL)>(0x004B5680);
     func(this, skip_buildings);
 #elif 0
@@ -1665,7 +1665,7 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
 void DisplayClass::Constrained_Look(uint32_t coord, int constraint)
 {
     // Needs HouseClass, TechnoClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const DisplayClass *, uint32_t, int) = reinterpret_cast<void(*)(const DisplayClass *, uint32_t, int)>(0x004B5788);
     func(this, coord, constraint);
 #elif 0
@@ -1745,7 +1745,7 @@ void DisplayClass::Encroach_Shadow()
 void DisplayClass::Shroud_Cell(int16_t cellnum)
 {
     // Needs HouseClass, TechnoClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const DisplayClass *, int16_t) = reinterpret_cast<void(*)(const DisplayClass *, int16_t)>(0x004B4FF4);
     func(this, cellnum);
 #elif 0

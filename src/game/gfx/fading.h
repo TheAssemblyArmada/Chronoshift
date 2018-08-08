@@ -39,7 +39,7 @@ void *Conquer_Build_Fading_Table(const PaletteClass &palette, void *fade_table, 
 void *Build_Translucent_Table(PaletteClass &palette, const TLucentType *type, int tab_count, void *table);
 void *Conquer_Build_Translucent_Table(PaletteClass &palette, const TLucentType *type, int tab_count, void *table);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 namespace Fading {

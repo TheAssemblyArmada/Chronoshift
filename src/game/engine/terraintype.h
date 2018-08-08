@@ -122,7 +122,7 @@ public:
     const int16_t *OverlapList;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<TerrainTypeClass> &TerrainTypes;
 #else

@@ -171,7 +171,7 @@ void RandomStraw<RNG>::Seed_Double_Word(int32_t value)
 }
 
 // Global instance of random straw to use as a source of random data.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern RandomStraw<RandomClass> &g_cryptRandom;
 #else
 extern RandomStraw<RandomClass> g_cryptRandom;

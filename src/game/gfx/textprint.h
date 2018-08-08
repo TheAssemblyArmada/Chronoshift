@@ -53,7 +53,7 @@ struct FontHeader
 #pragma pack(pop)
 
 // Global attributes for the current font.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern char *&g_fontPtr;
 extern int &g_fontYSpacing;
 extern int &g_fontXSpacing;

@@ -22,7 +22,7 @@
 #include "rules.h"
 #include "session.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 void *&TechnoTypeClass::WakeShapes = Make_Global<void *>(0x0068D2DC);
 void *&TechnoTypeClass::TurretShapes = Make_Global<void *>(0x0068D2E0);
 void *&TechnoTypeClass::SamShapes = Make_Global<void *>(0x0068D2E4);
@@ -181,7 +181,7 @@ TechnoTypeClass &TechnoTypeClass::operator=(TechnoTypeClass &that)
 BOOL TechnoTypeClass::Is_Two_Shooter() const
 {
     // TODO Requires WeaponTypeClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const TechnoTypeClass *) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *)>(0x005698E8);
     return func(this);
 #elif 0
@@ -310,7 +310,7 @@ int TechnoTypeClass::Repair_Step() const
 BOOL TechnoTypeClass::Read_INI(CCINIClass &ini)
 {
     // TODO Requires WeaponTypeClass and more functions in CCINIClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
     (const TechnoTypeClass *, CCINIClass &) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *, CCINIClass &)>(0x005698E8);
     return func(this, ini);

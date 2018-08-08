@@ -30,7 +30,7 @@
 #include "always.h"
 #include "sha.h"
 #include "straw.h"
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 
@@ -44,7 +44,7 @@ public:
 
     int Result(void *data);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static int Hook_Result(SHAStraw *ptr, void *data);
     static int Hook_Get(SHAStraw *ptr, void *source, int length);
     static void Hook_Me();
@@ -55,7 +55,7 @@ protected:
 
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 inline void SHAStraw::Hook_Me()
 {
     Hook_Function(0x005D5B04, &Hook_Result);

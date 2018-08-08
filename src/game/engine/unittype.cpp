@@ -15,7 +15,7 @@
  */
 #include "unittype.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
  //TFixedIHeapClass<UnitTypeClass> &UnitTypes = *reinterpret_cast<TFixedIHeapClass<UnitTypeClass> *>(0x);
 #else
  //TFixedIHeapClass<UnitTypeClass> UnitTypes;

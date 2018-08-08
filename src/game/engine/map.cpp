@@ -361,7 +361,7 @@ BOOL MapClass::In_Radar(int16_t cellnum) const
 void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4)
 {
     // TODO requires RadarClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const MapClass*, int16_t, int, HouseClass *, BOOL) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *, BOOL)>(0x004FE438);
     func(this, cellnum, radius, house, a4);
 #elif 0
@@ -417,7 +417,7 @@ void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a
 void MapClass::Shroud_From(int16_t cellnum, int radius)
 {
     // TODO requires RadarClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const MapClass*, int16_t, int) = reinterpret_cast<void(*)(const MapClass*, int16_t, int)>(0x004FE588);
     func(this, cellnum, radius);
 #elif 0
@@ -458,7 +458,7 @@ void MapClass::Shroud_From(int16_t cellnum, int radius)
 void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires HouseClass, RadarClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const MapClass*, int16_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *)>(0x004FE68C);
     func(this, cellnum, radius, house);
 #elif 0
@@ -502,7 +502,7 @@ void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
 void MapClass::UnJam_From(int16_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires RadarClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const MapClass*, int16_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *)>(0x004FE7C8);
     func(this, cellnum, radius, house);
 #elif 0
@@ -725,7 +725,7 @@ int MapClass::Cell_Region(int16_t cellnum)
 int MapClass::Cell_Threat(int16_t cellnum, HousesType house)
 {
     // TODO requires HouseClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     int(*func)(const MapClass*, int16_t, HousesType) = reinterpret_cast<int(*)(const MapClass*, int16_t, HousesType)>(0x004FF1BC);
     return func(this, cellnum, house);
 #elif 0
@@ -1010,7 +1010,7 @@ int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZ
 BOOL MapClass::Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) const
 {
     // TODO requires HouseClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const MapClass*, int16_t, HousesType&, ZoneType&) = reinterpret_cast<BOOL(*)(const MapClass*, int16_t, HousesType&, ZoneType&)>(0x004FFEAC);
     return func(this, cellnum, house, zone);
 #elif 0
@@ -1045,7 +1045,7 @@ BOOL MapClass::Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) c
 int MapClass::Destroy_Bridge_At(int16_t cellnum)
 {
     // TODO Needs TemplateClass, AnimClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     int(*func)(const MapClass*, int16_t) = reinterpret_cast<int(*)(const MapClass*, int16_t)>(0x004FFF1C);
     return func(this, cellnum);
 #else
@@ -1061,7 +1061,7 @@ int MapClass::Destroy_Bridge_At(int16_t cellnum)
 void MapClass::Detach(int32_t target, int a2)
 {
     // TODO Requires TriggerClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const MapClass*, int32_t, int) = reinterpret_cast<void(*)(const MapClass*, int32_t, int)>(0x0050078C);
     func(this, target, a2);
 #elif 0
@@ -1129,7 +1129,7 @@ int MapClass::Intact_Bridge_Count() const
 void MapClass::Shroud_The_Map()
 {
     // TODO Requires DisplayClass, TechnoClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const MapClass*) = reinterpret_cast<void(*)(const MapClass*)>(0x00500908);
     func(this);
 #elif 0
@@ -1407,7 +1407,7 @@ BOOL MapClass::Validate()
 ObjectClass *MapClass::Close_Object(uint32_t coord) const
 {
     // TODO Requires TechnoClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     ObjectClass *(*func)(const MapClass*, uint32_t) = reinterpret_cast<ObjectClass *(*)(const MapClass*, uint32_t)>(0x004FF554);
     return func(this, coord);
 #elif 0

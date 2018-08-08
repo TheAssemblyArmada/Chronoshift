@@ -36,7 +36,7 @@ enum DiskType
 int Get_CD_Index(int cd, int delay);
 int Force_CD_Available(int cd);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern int &g_requiredCD;
 #else
 extern int g_requiredCD;

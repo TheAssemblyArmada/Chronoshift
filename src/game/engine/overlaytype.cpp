@@ -24,7 +24,7 @@
 
 using std::snprintf;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<OverlayTypeClass> &OverlayTypes = Make_Global<TFixedIHeapClass<OverlayTypeClass> >(0x0065E01C);
 #else
 TFixedIHeapClass<OverlayTypeClass> OverlayTypes;
@@ -233,7 +233,7 @@ uint32_t OverlayTypeClass::Coord_Fixup(uint32_t coord) const
 BOOL OverlayTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
     // TODO requires OverlayClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const OverlayTypeClass*, int16_t, HousesType) = reinterpret_cast<BOOL(*)(const OverlayTypeClass*, int16_t, HousesType)>(0x00524A5C);
     return func(this, cellnum, house);
 #elif 0
@@ -248,7 +248,7 @@ BOOL OverlayTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 ObjectClass *OverlayTypeClass::Create_One_Of(HouseClass *house) const
 {
     // TODO requires OverlayClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     ObjectClass *(*func)(const OverlayTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const OverlayTypeClass*, HouseClass*)>(0x00524A98);
     return func(this, house);
 #elif 0
@@ -271,7 +271,7 @@ const int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
 void OverlayTypeClass::Draw_It(int x, int y, int frame) const
 {
     // TODO Needs DisplayClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(const OverlayTypeClass*, int, int, int) = reinterpret_cast<void(*)(const OverlayTypeClass*, int, int, int)>(0x00524ACC);
     func(this, x, y, frame);
 #elif 0

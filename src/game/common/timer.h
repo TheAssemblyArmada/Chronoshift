@@ -20,7 +20,7 @@
 
 #include "always.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 
@@ -85,7 +85,7 @@ private:
 };
 
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern TimerClass &TickCount;
 extern CountDownTimerClass &CountDown;
 #else

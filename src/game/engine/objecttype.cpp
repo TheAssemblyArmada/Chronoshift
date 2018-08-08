@@ -18,7 +18,7 @@
 #include "ccini.h"
 #include "mixfile.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 void *&ObjectTypeClass::SelectShapes = Make_Global<void *>(0x006857A8);
 void *&ObjectTypeClass::PipShapes = Make_Global<void *>(0x006857AC);
 #else
@@ -104,7 +104,7 @@ const int16_t *ObjectTypeClass::Overlap_List() const
 BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType house) const
 {
     // TODO Requires BuildingClass, BuildingTypeClass, HouseClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BuildingClass *(*func)(const ObjectTypeClass *, BOOL, BOOL, HousesType) =
         reinterpret_cast<BuildingClass *(*)(const ObjectTypeClass *, BOOL, BOOL, HousesType)>(0x0051E988);
     return func(this, a1, a2, house);
@@ -133,7 +133,7 @@ void ObjectTypeClass::One_Time()
 
 void *ObjectTypeClass::Get_Radar_Icon(void *shape, int frame, int frame_count, int size)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void *(*func)(void *, int, int, int) = reinterpret_cast<void *(*)(void *, int, int, int)>(0x004A9494);
     return func(shape, frame, frame_count, size);
 #else

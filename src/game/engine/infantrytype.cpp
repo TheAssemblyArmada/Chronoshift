@@ -15,7 +15,7 @@
 */
 #include "infantrytype.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 //TFixedIHeapClass<InfantryTypeClass> &InfantryTypes = *reinterpret_cast<TFixedIHeapClass<InfantryTypeClass> *>(0x);
 #else
 //TFixedIHeapClass<InfantryTypeClass> InfantryTypes;

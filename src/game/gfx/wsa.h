@@ -152,7 +152,7 @@ int __cdecl Get_Animation_Width(SysAnimHeaderType *header);
 int __cdecl Get_Animation_Height(SysAnimHeaderType *header);
 int __cdecl Get_Animation_Palette(SysAnimHeaderType *header);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 namespace WSAFile {

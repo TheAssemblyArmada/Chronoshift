@@ -20,11 +20,11 @@
 #include "always.h"
 #include "ddraw.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern void (*&Misc_Focus_Loss_Function)();
 extern void (*&Misc_Focus_Restore_Function)();
 #else
@@ -45,7 +45,7 @@ public:
     void Set_Surface_Focus(bool focus);
     void Release();
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -55,7 +55,7 @@ private:
     LPDIRECTDRAWSURFACE m_surface[20];
     BOOL m_inFocus;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Add_Surface(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE new_surface);
     static void Hook_Remove_Surface(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE old_surface);
     static bool Hook_Got_Surface_Already(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE test_surface);
@@ -65,7 +65,7 @@ private:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 inline void SurfaceMonitorClass::Hook_Me()
 {
     Hook_Function(0x005CA1D0, &Hook_Add_Surface);

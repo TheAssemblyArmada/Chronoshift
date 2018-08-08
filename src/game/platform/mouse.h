@@ -66,7 +66,7 @@ public:
     void Set_Hotspot_Y(int y_pos) { m_mouseHotY = y_pos; }
     void *Get_Frame_Pointer() { return m_prevCursor; }
     void Set_Frame_Pointer(void *frame) { m_prevCursor = frame; }
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     static void Hook_Low_Hide(WWMouseClass *ptr);
     static void Hook_Low_Show(WWMouseClass *ptr, int x, int y);
@@ -111,7 +111,7 @@ void __stdcall Process_Mouse(
 #endif
 
 // Global mouse instance.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void WWMouseClass::Hook_Me()

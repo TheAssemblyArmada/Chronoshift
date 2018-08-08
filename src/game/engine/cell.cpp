@@ -80,7 +80,7 @@ CellClass::CellClass() :
 int CellClass::Cell_Color(BOOL none) const
 {
     // TODO Needs BuildingClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     int (*func)(const CellClass *, BOOL) = reinterpret_cast<int (*)(const CellClass *, BOOL)>(0x0049EEF8);
     return func(this, none);
 #elif 0
@@ -314,7 +314,7 @@ BOOL CellClass::Can_Ore_Spread() const
 BOOL CellClass::Can_Ore_Germinate() const
 {
     // TODO Needs BuildingClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const CellClass *) = reinterpret_cast<BOOL (*)(const CellClass *)>(0x004A1E40);
     return func(this);
 #elif 0
@@ -373,7 +373,7 @@ BOOL CellClass::Grow_Ore()
 BOOL CellClass::Spread_Ore(BOOL force)
 {
     // TODO Requires OverlayClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const CellClass *, BOOL) = reinterpret_cast<BOOL (*)(const CellClass *, BOOL)>(0x004A1D7C);
     return func(this, force);
 #elif 0
@@ -477,7 +477,7 @@ BOOL CellClass::Is_Bridge_Here() const
 void CellClass::Redraw_Objects(BOOL force)
 {
     // TODO Requires DisplayClass and RadarClass layers of IOMap hierachy.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, BOOL) = reinterpret_cast<void (*)(const CellClass *, BOOL)>(0x0049F10C);
     func(this, force);
 #elif 0
@@ -560,7 +560,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
 void CellClass::Occupy_Down(ObjectClass *object)
 {
     // TODO Requires RadarClass layer of IOMap hierachy.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, ObjectClass *) =
         reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F394);
     func(this, object);
@@ -623,7 +623,7 @@ void CellClass::Occupy_Down(ObjectClass *object)
 void CellClass::Occupy_Up(ObjectClass *object)
 {
     // TODO Requires RadarClass layer of IOMap hierachy.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, ObjectClass *) =
         reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F450);
     func(this, object);
@@ -684,7 +684,7 @@ void CellClass::Occupy_Up(ObjectClass *object)
 void CellClass::Overlap_Down(ObjectClass *object)
 {
     // TODO Requires HouseClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, ObjectClass *) =
         reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F4E4);
     func(this, object);
@@ -740,7 +740,7 @@ void CellClass::Overlap_Down(ObjectClass *object)
 void CellClass::Overlap_Up(ObjectClass *object)
 {
     // TODO Requires RadarClass layer of IOMap hierachy.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, ObjectClass *) =
         reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F590);
     func(this, object);
@@ -780,7 +780,7 @@ int CellClass::Clear_Icon() const
 void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
 {
     // TODO Requires RadarClass layer of IOMap hierachy.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, int, int, BOOL) =
         reinterpret_cast<void (*)(const CellClass *, int, int, BOOL)>(0x0049F5F8);
     func(this, x, y, unk_bool);

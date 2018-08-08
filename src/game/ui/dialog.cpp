@@ -27,7 +27,7 @@
 #include "textprint.h"
 #include <stdio.h>
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 WindowType *WindowList = reinterpret_cast<WindowType*>(0x006016CC);
 unsigned &Window = Make_Global<unsigned>(0x006B1A08);
 int &WindowColumns = Make_Global<int>(0x0060CE6C);

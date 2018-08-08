@@ -480,7 +480,7 @@ private:
     int Height;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<TemplateTypeClass> &TemplateTypes;
 #else

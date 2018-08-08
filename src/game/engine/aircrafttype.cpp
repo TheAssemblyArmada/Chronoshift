@@ -15,7 +15,7 @@
  */
 #include "aircrafttype.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
  //TFixedIHeapClass<AircraftTypeClass> &AircraftTypes = *reinterpret_cast<TFixedIHeapClass<AircraftTypeClass> *>(0x);
 #else
  //TFixedIHeapClass<AircraftTypeClass> AircraftTypes;

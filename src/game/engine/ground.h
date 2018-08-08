@@ -94,7 +94,7 @@ public:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern GroundClass *Ground;
 #else

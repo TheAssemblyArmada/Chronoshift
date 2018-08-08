@@ -15,7 +15,7 @@
 */
 #include "random.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 RandomClass &g_nonCriticalRandom = *reinterpret_cast<RandomClass*>(0x00667760);
 #else
 RandomClass g_nonCriticalRandom;

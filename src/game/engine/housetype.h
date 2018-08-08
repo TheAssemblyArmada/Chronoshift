@@ -76,7 +76,7 @@ private:
     fixed BuildTime; // Multiplier to general object build time [larger means longer to build]
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<HouseTypeClass> &HouseTypes;
 #else

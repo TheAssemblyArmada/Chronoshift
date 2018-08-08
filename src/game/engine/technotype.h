@@ -121,7 +121,7 @@ protected:
     uint32_t SecondaryFireCoordB;
     int Points;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void *&WakeShapes;
     static void *&TurretShapes;
     static void *&SamShapes;
@@ -136,7 +136,7 @@ protected:
     static void *MissingCameoShape; // New with RA++
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 

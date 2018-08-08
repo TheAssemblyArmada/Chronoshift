@@ -20,7 +20,7 @@
 
 #include "always.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern uint8_t *const g_currentPalette;
 #else
 extern uint8_t g_currentPalette[];

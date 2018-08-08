@@ -21,7 +21,7 @@
 #include "stringex.h"
 #include "theme.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 fixed &RulesClass::EngineerDamage = Make_Global<fixed>(0x00665E02);
 fixed &RulesClass::EngineerCaptureLevel = Make_Global<fixed>(0x00665E04);
 fixed &RulesClass::ChronoTankDuration = Make_Global<fixed>(0x00665E00);
@@ -208,7 +208,7 @@ RulesClass::RulesClass(void) :
     ChronoTechLevel(1),
     OreNearScan(1536), //6 cells. leptons
     OreFarScan(8192) //32 cells. leptons
-#ifdef RAPP_STANDALONE
+#ifdef CHRONOSHIFT_STANDALONE
     ,
     ChronoTankDuration(fixed::_0_1),
     MTankDistance(30),
@@ -233,7 +233,7 @@ RulesClass::RulesClass(void) :
     IQControls.Harvester = 2;
     IQControls.SellBack = 2;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     ChronoTankDuration = fixed::_0_1;
     MTankDistance = 30;
     CarrierLaunchDelay = 60;
@@ -284,7 +284,7 @@ BOOL RulesClass::Aftermath(CCINIClass &ini)
         // i think they made these global so they didnt break save games...
         NewUnitsEnabled = ini.Get_Bool("Aftermath", "NewUnitsEnabled", false);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
         OrigNewUnitsEnabled = NewUnitsEnabled;
 #endif
 
@@ -313,7 +313,7 @@ BOOL RulesClass::Aftermath(CCINIClass &ini)
 BOOL RulesClass::General(CCINIClass &ini)
 {
     // TODO Requires CCINIClass::Get_UnitType, ChronalVortexClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x005342DC);
     return func(this, ini);
 #elif 0
@@ -477,7 +477,7 @@ BOOL RulesClass::Recharge(CCINIClass &ini)
 BOOL RulesClass::Heap_Maximums(CCINIClass &ini)
 {
     // TODO Requires WarheadTypeClass and WeaponTypeClass or those heap inits moving elsewhere.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00535F38);
     return func(this, ini);
 #elif 0
@@ -560,7 +560,7 @@ BOOL RulesClass::AI(CCINIClass &ini)
 BOOL RulesClass::Powerups(CCINIClass &ini)
 {
     // TODO Needs AnimTypeClass.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00536D3C);
     return func(this, ini);
 #elif 0
@@ -656,7 +656,7 @@ BOOL RulesClass::IQ(CCINIClass &ini)
 BOOL RulesClass::Objects(CCINIClass &ini)
 {
     // TODO Needs most *TypeClass classes.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x005373DC);
     return func(this, ini);
 #elif 0
@@ -718,7 +718,7 @@ BOOL RulesClass::Difficulty(CCINIClass &ini)
 BOOL RulesClass::Land_Types(CCINIClass &ini)
 {
     // TODO Needs most *TypeClass classes.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00536E8C);
     return func(this, ini);
 #elif 0

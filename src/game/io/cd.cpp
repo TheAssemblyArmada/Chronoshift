@@ -15,7 +15,7 @@
  */
 #include "cd.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 int &g_requiredCD = *reinterpret_cast<int*>(0x006017D0);
 #else 
 int g_requiredCD = DISK_NONE;

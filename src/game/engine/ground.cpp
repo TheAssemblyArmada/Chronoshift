@@ -2,7 +2,7 @@
 #include	"ccini.h"
 #include    "minmax.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 GroundClass *Ground = Make_Pointer<GroundClass>(0x00655DF0);
 #else
 GroundClass Ground[LAND_COUNT];

@@ -160,7 +160,7 @@ inline BOOL ObjectClass::Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *
     return object1->Sort_Y() > object2->Sort_Y();
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern DynamicVectorClass<ObjectClass*> &CurrentObjects;
 #else

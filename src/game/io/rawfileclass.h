@@ -21,7 +21,7 @@
 #include "always.h"
 #include "fileclass.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 
@@ -61,7 +61,7 @@ public:
     int Get_File_Handle() { return m_handle; }
 #endif
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -69,7 +69,7 @@ private:
     void Reset();
     off_t Raw_Seek(off_t offset, int whence = FS_SEEK_CURRENT);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static const char *Hook_File_Name(RawFileClass *ptr);
     static const char *Hook_Set_Name(RawFileClass *ptr, const char *filename);
     static BOOL Hook_Create(RawFileClass *ptr);
@@ -98,7 +98,7 @@ protected:
     BOOL m_isAllocated;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 inline void RawFileClass::Hook_Me()
 {
     Hook_Function(0x00426390, &Hook_File_Name);

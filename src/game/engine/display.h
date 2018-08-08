@@ -111,7 +111,7 @@ public:
 
     static BOOL Is_Cell_Flagged(int16_t cellnum) { return CellRedraw[cellnum]; }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     int16_t Hook_Click_Cell_Calc(int x, int y);
     const int16_t *Hook_Text_Overlap_List(char const *string, int x, int y);
@@ -205,7 +205,7 @@ protected:
     SpecialWeaponType PendingSuper; // Current superweapon selected to fire.
     TRect<int> BandBox; // Dimensions of the selection band box.
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static LayerClass *Layers;
     static TacticalClass &TacticalButton;
     static char *FadingBrighten;

@@ -20,7 +20,7 @@
 
 #include "always.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #include <malloc.h>
 #endif
@@ -42,7 +42,7 @@ int Ram_Free();
 int Heap_Size(MemoryFlagType flag);
 int Total_Ram_Free(MemoryFlagType flag);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 inline void Memory_Hook_Me(void)
 {
     Hook_Function(0x005C5965, &malloc);

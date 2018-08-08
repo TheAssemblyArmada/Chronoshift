@@ -110,7 +110,7 @@ private:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<SmudgeTypeClass> &SmudgeTypes;
 #else

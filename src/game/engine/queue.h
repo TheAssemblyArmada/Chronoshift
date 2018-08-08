@@ -22,7 +22,7 @@
 
 BOOL Queue_Options();
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 

@@ -20,7 +20,7 @@
 #include "stringex.h"
 #include <stdio.h>
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 VersionClass &g_version = Make_Global<VersionClass>(0x00667810);
 #else

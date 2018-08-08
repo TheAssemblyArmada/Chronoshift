@@ -17,7 +17,7 @@
 
 BOOL Queue_Options()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)() = reinterpret_cast<BOOL (*)()>(0x00528DCC);
     return func();
 #else

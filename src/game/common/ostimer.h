@@ -29,7 +29,7 @@
 #include <sys/time.h>
 #endif // PLATFORM_WINDOWS
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 
@@ -54,7 +54,7 @@ public:
 #endif // PLATFORM_WINDOWS || PLATFORM_UNIX || PLATFORM_OSX
     }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 private:
@@ -86,7 +86,7 @@ private:
     unsigned m_userRate;
 
 public:
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void *&s_threadHandle;
     static BOOL &s_inCallback;
     static BOOL &s_timerSystemOn;
@@ -97,7 +97,7 @@ public:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 inline void PlatformTimerClass::Hook_Me()
 {
     Hook_Function(0x005BBEB0, &Timer_Callback);
