@@ -54,7 +54,7 @@ protected:
     int HelpUnkInt1;
     int HelpUnkInt2;
     int HelpUnkInt3;
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {

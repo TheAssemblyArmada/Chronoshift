@@ -45,7 +45,7 @@ private:
     StageClass DoorTimer;
     int8_t Stage; // Number of stages between end states (open or closed).
     DoorState State; // Current processing state.
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {
