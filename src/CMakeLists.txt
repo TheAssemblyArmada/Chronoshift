@@ -218,11 +218,11 @@ set(GAMEENGINE_SRC
 )
 
 if(STANDALONE)
-    add_executable(CHRONOSHIFT ${GAMEENGINE_SRC})
-    target_include_directories(CHRONOSHIFT BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES})
+    add_executable(chronoshift ${GAMEENGINE_SRC})
+    target_include_directories(chronoshift BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES})
 else()
-    add_library(CHRONOSHIFT SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})
-    target_include_directories(CHRONOSHIFT BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES} hooker)
+    add_library(chronoshift SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})
+    target_include_directories(chronoshift BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES} hooker)
 endif()
 
-target_link_libraries(CHRONOSHIFT ${PLATFORM_LIBS})
+target_link_libraries(chronoshift ${PLATFORM_LIBS})
