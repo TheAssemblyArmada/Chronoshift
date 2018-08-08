@@ -97,7 +97,7 @@ public:
     virtual int Message_Handler(void *a1, unsigned a2, unsigned a3, int a4) { return 1; }
 
     // We return a copy of ReadSockets/WriteSockets that can be modified by select
-#ifdef RAPP_SOCKETS_API
+#ifdef CHRONOSHIFT_SOCKETS_API
     fd_set *Get_Readset()
     {
         memcpy(&ReadyReadSockets, &ReadSockets, sizeof(fd_set));
@@ -122,7 +122,7 @@ protected:
     char pad; // Line up struct as per original or buffer really is 1025 bytes rather than 1024.
 #endif
 // Some extra members for if we are using pure sockets api rather than windows sockets api
-#ifdef RAPP_SOCKETS_API
+#ifdef CHRONOSHIFT_SOCKETS_API
     fd_set ReadSockets;
     fd_set WriteSockets;
     fd_set ReadyReadSockets;

@@ -132,7 +132,7 @@ private:
     static void *TabBackgroundShape; // name subject to change
 };
 
-#ifndef RAPP_STANALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 inline void TabClass::Hook_Me()
 {

@@ -87,7 +87,7 @@ private:
 #endif
 };
 
-#ifndef RAPP_STANALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 inline void HelpClass::Hook_Me()
 {
