@@ -42,7 +42,7 @@ class InfantryClass;
 class BuildingClass;
 
 //TODO: It is possible that this struct is what TargetClass uses for its data type.
-struct TARGET_COMPOSITE
+struct TargetComposite
 {
 public:
     struct Sub
@@ -56,8 +56,8 @@ public:
     };
 
 public:
-    TARGET_COMPOSITE() {}
-    TARGET_COMPOSITE(TARGET_COMPOSITE &that) {}
+    TargetComposite() {}
+    TargetComposite(TargetComposite &that) {}
 
 protected:
     Sub field_0;
