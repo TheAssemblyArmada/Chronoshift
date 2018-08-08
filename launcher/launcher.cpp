@@ -29,7 +29,7 @@
 
 // Define the EXE to launch and the DLL to inject.
 #define EXE_NAME "ra95.dat" // RA acutual binary (English 3.03 version supported).
-#define DLL_NAME "rapp.dll" // Our reimplementation DLL.
+#define DLL_NAME "chronoshift.dll" // Our reimplementation DLL.
 
 char *Make_Args(const char *args)
 {
