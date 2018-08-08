@@ -152,7 +152,7 @@ class SidebarClass : public PowerClass
         int XPos; // 0x11 -658
         int YPos; // 0x15 -654
         int WhichColumn; // 0x19 -650
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
         // Union/Struct required to get correct packing when compiler packing set to 1.
         union
         {
@@ -222,7 +222,7 @@ public:
 
 protected:
     StripClass Columns[COLUMN_COUNT];
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {

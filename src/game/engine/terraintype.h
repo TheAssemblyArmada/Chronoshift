@@ -105,7 +105,7 @@ public:
     TerrainType Type; 
     uint32_t UnkInt; // Object bounds perhaps, packed coord?
     uint32_t Theater; // Bitfield of which theaters this terrain is allowed to appear in.
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {

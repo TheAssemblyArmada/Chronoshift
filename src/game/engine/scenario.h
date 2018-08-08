@@ -108,7 +108,7 @@ private:
     int16_t Views[4];
     int BridgeCount;
     int CarryOverTime;
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {

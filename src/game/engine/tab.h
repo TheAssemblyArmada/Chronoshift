@@ -64,7 +64,7 @@ class TabClass : public SidebarClass
     protected:
         int Available;
         int Credits;
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
         // Union/Struct required to get correct packing when compiler packing set to 1.
         union
         {
@@ -107,7 +107,7 @@ private:
 protected:
     CreditClass CreditDisplay;
     TCountDownTimerClass<FrameTimerClass> TimerFlashTimer;
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {

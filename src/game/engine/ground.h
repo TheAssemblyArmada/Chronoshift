@@ -79,7 +79,7 @@ public:
     // Percent of full speed for each speed type (0.0 means impassable) [def = 1.0]
     fixed Speeds[SPEED_COUNT];
         
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {

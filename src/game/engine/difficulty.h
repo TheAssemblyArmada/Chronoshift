@@ -45,7 +45,7 @@ struct DifficultyClass
     fixed BuildTime; // Multiplier to general object build time [larger means longer to build].
     fixed RepairDelay; // Average delay (minutes) between initiating building repair.
     fixed BuildDelay; // Average delay (minutes) between initiating construction.
-#ifndef RAPP_NO_BITFIELDS
+#ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {
