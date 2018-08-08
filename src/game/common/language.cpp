@@ -306,7 +306,7 @@ bool Init_Language(void)
     edstr_file.Close();
 
     // Load Debug string table
-#if defined(RAPP_DEBUG)
+#if defined(CHRONOSHIFT_DEBUG)
     DEBUG_LOG("Bootstrap() - Loading Debug Strings...\n");
     CCFileClass dbgstr_file;
     dbgstr_file.Set_Name(Language_Name("DEBUG"));
@@ -317,7 +317,7 @@ bool Init_Language(void)
         DebugStrings = nullptr;
     }
     dbgstr_file.Close();
-#endif // RAPP_DEBUG
+#endif // CHRONOSHIFT_DEBUG
 
     return GameStrings != nullptr;
 }
