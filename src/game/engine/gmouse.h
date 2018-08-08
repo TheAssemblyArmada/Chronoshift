@@ -83,7 +83,7 @@ private:
     static MouseStruct MouseControl[MOUSE_COUNT];
 };
 
-#ifndef RAPP_STANALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 inline void GameMouseClass::Hook_Me()
 {

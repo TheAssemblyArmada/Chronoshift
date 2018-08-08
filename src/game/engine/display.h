@@ -250,7 +250,7 @@ protected:
 #endif
 };
 
-#ifndef RAPP_STANALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 inline const int16_t *DisplayClass::Hook_Text_Overlap_List(char const *string, int x, int y)
 {

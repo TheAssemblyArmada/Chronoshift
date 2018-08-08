@@ -67,7 +67,7 @@ private:
 #endif
 };
 
-#ifndef RAPP_STANALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 inline void ScrollClass::Hook_Me()
 {

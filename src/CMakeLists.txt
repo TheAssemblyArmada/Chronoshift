@@ -25,7 +25,7 @@ else()
     add_library(minilzo STATIC EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/libs/minilzo/minilzo.c)
     set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${CMAKE_SOURCE_DIR}/libs)
     set(PLATFORM_LIBS ${PLATFORM_LIBS} minilzo)
-    add_definitions(-DRAPP_USE_MINILZO)
+    add_definitions(-DCHRONOSHIFT_USE_MINILZO)
 endif()
 
 # Build and link the DLL.

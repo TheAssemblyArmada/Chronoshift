@@ -267,7 +267,7 @@ protected:
     static void *SidebarAddonShape; // RAPP addition
 };
 
-#ifndef RAPP_STANALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 inline void SidebarClass::Hook_Me()
 {

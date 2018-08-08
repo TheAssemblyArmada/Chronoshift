@@ -90,7 +90,7 @@ protected:
 #endif
 };
 
-#ifndef RAPP_STANALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 inline void PowerClass::Hook_Me()
 {

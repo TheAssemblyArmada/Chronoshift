@@ -28,7 +28,7 @@ typedef int socklen_t;
 #define SOCKET_ERROR -1
 #endif
 
-#ifdef RAPP_SOCKETS_API
+#ifdef CHRONOSHIFT_SOCKETS_API
 int WinsockInterfaceClass::SocketsMax = 0;
 #endif // !PLATFORM_WINDOWS
 
@@ -202,7 +202,7 @@ void WinsockInterfaceClass::Discard_Out_Buffers()
 
 BOOL WinsockInterfaceClass::Start_Listening()
 {
-#ifdef RAPP_SOCKETS_API
+#ifdef CHRONOSHIFT_SOCKETS_API
     // Without the windows event loop, we have to fall back on non-blocking sockets and select from the look of things. This
     // sets up what sockets we want to listen for activity on.
     FD_SET(Socket, &ReadSockets);
@@ -225,7 +225,7 @@ BOOL WinsockInterfaceClass::Start_Listening()
 
 void WinsockInterfaceClass::Stop_Listening()
 {
-#ifdef RAPP_SOCKETS_API
+#ifdef CHRONOSHIFT_SOCKETS_API
     FD_CLR(Socket, &ReadSockets);
     FD_CLR(Socket, &WriteSockets);
 #elif defined(PLATFORM_WINDOWS)
