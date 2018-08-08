@@ -77,8 +77,8 @@ public:
     CellClass(NoInitClass const &noinit) {}
     ~CellClass() { OccupierPtr = nullptr; } // Null the pointer in memory, but object still exists
 
-    BOOL operator==(CellClass const &that) const { return CellNumber == that.CellNumber; }
-    BOOL operator!=(CellClass const &that) const { return CellNumber != that.CellNumber; }
+    BOOL operator==(CellClass const &that) const;
+    BOOL operator!=(CellClass const &that) const { return !(CellNumber == that.CellNumber); }
 
     int Cell_Color(BOOL none = false) const;
     ObjectClass *Cell_Find_Object(RTTIType type) const;
