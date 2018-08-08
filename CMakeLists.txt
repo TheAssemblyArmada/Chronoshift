@@ -9,7 +9,7 @@ if(MSVC)
     set(MSVC_INCREMENTAL_DEFAULT ON)
 endif()
 
-set(PROJECT rapp VERSION 3.3)
+set(PROJECT CHRONOSHIFT VERSION 3.3)
 
 project(${PROJECT})
 
@@ -77,7 +77,7 @@ endif()
 option(STANDALONE "Build a standalone version." OFF)
 option(NO_BITFIELDS "Use standard bool type in place of bitfields." OFF)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${rapp_SOURCE_DIR}/cmake/modules)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CHRONOSHIFT_SOURCE_DIR}/cmake/modules)
 
 # Go lean and mean on windows.
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
@@ -92,8 +92,8 @@ endif()
 # Prevent lib prefix when built with MinGW to target windows and move to own dir.
 if(MINGW)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${rapp_BINARY_DIR}/bin)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${rapp_BINARY_DIR}/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CHRONOSHIFT_BINARY_DIR}/bin)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CHRONOSHIFT_BINARY_DIR}/bin)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -std=gnu++0x -mabi=ms -Wno-invalid-offsetof")
 endif()
 
@@ -117,75 +117,75 @@ if(GIT_FOUND)
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE RAPP_BRANCH
+        OUTPUT_VARIABLE CHRONOSHIFT_BRANCH
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DRAPP_BRANCH="${RAPP_BRANCH}")
+    add_definitions(-DCHRONOSHIFT_BRANCH="${CHRONOSHIFT_BRANCH}")
 
     # Define commit hash.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE RAPP_COMMIT_SHA1
+        OUTPUT_VARIABLE CHRONOSHIFT_COMMIT_SHA1
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DRAPP_COMMIT_SHA1="${RAPP_COMMIT_SHA1}")
+    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1="${CHRONOSHIFT_COMMIT_SHA1}")
 
     # Define short commit hash.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE RAPP_COMMIT_SHA1_SHORT
+        OUTPUT_VARIABLE CHRONOSHIFT_COMMIT_SHA1_SHORT
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DRAPP_COMMIT_SHA1_SHORT="${RAPP_COMMIT_SHA1_SHORT}")
+    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1_SHORT="${CHRONOSHIFT_COMMIT_SHA1_SHORT}")
 
     # Define commit count.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-list HEAD --count
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE RAPP_COMMIT_COUNT
+        OUTPUT_VARIABLE CHRONOSHIFT_COMMIT_COUNT
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DRAPP_COMMIT_COUNT=${RAPP_COMMIT_COUNT})
+    add_definitions(-DCHRONOSHIFT_COMMIT_COUNT=${CHRONOSHIFT_COMMIT_COUNT})
     
     # Define commit date and time. Make builds more reproducible than using __DATE__ and __TIME__
     execute_process(
         COMMAND ${GIT_EXECUTABLE} log -1 --date=iso --pretty=format:%cd
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE RAPP_DATE_AND_TIME
+        OUTPUT_VARIABLE CHRONOSHIFT_DATE_AND_TIME
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    string(REPLACE " " ";" RAPP_DATE_AND_TIME ${RAPP_DATE_AND_TIME})
-    list(GET RAPP_DATE_AND_TIME 0 RAPP_DATE)
-    list(GET RAPP_DATE_AND_TIME 1 RAPP_TIME)
-    list(GET RAPP_DATE_AND_TIME 2 RAPP_TZONE)
-    add_definitions(-DRAPP_COMMIT_DATE="${RAPP_DATE}")
-    add_definitions(-DRAPP_COMMIT_TIME="${RAPP_TIME} ${RAPP_TZONE}")
+    string(REPLACE " " ";" CHRONOSHIFT_DATE_AND_TIME ${CHRONOSHIFT_DATE_AND_TIME})
+    list(GET CHRONOSHIFT_DATE_AND_TIME 0 CHRONOSHIFT_DATE)
+    list(GET CHRONOSHIFT_DATE_AND_TIME 1 CHRONOSHIFT_TIME)
+    list(GET CHRONOSHIFT_DATE_AND_TIME 2 CHRONOSHIFTTZONE)
+    add_definitions(-DCHRONOSHIFT_COMMIT_DATE="${CHRONOSHIFT_DATE}")
+    add_definitions(-DCHRONOSHIFT_COMMIT_TIME="${CHRONOSHIFT_TIME} ${CHRONOSHIFT_TZONE}")
 
 else()
-    add_definitions(-DRAPP_BRANCH="netherrealm")
-    add_definitions(-DRAPP_COMMIT_SHA1="DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF")
-    add_definitions(-DRAPP_COMMIT_SHA1_SHORT="DEADBEEF")
-    add_definitions(-DRAPP_COMMIT_COUNT=0)
-    add_definitions(-DRAPP_COMMIT_DATE="1955-11-12")
-    add_definitions(-DRAPP_COMMIT_TIME="22:04:00 +0000")
+    add_definitions(-DCHRONOSHIFT_BRANCH="netherrealm")
+    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1="DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF")
+    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1_SHORT="DEADBEEF")
+    add_definitions(-DCHRONOSHIFT_COMMIT_COUNT=0)
+    add_definitions(-DCHRONOSHIFT_COMMIT_DATE="1955-11-12")
+    add_definitions(-DCHRONOSHIFT_COMMIT_TIME="22:04:00 +0000")
 endif()
 
-add_definitions(-DRAPP_MAJOR=${rapp_VERSION_MAJOR})
-add_definitions(-DRAPP_MINOR=${rapp_VERSION_MINOR})
+add_definitions(-DCHRONOSHIFT_MAJOR=${CHRONOSHIFT_VERSION_MAJOR})
+add_definitions(-DCHRONOSHIFT_MINOR=${CHRONOSHIFT_VERSION_MINOR})
 
 if(STANDALONE)
-    add_definitions(-DRAPP_STANDALONE)
+    add_definitions(-DCHRONOSHIFT_STANDALONE)
 endif()
 
 if(NO_BITFIELDS)
-    add_definitions(-DRAPP_NO_BITFIELDS)
+    add_definitions(-DCHRONOSHIFT_NO_BITFIELDS)
 endif()
 
 # Set where the build results will end up
@@ -196,5 +196,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # Build the launcher
 add_subdirectory(launcher)
 
-# Build RAPP
+# Build Chronoshift
 add_subdirectory(src)
