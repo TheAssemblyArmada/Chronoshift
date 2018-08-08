@@ -123,7 +123,7 @@ public:
     BOOL Save(Pipe &pipe) const;
 
     cell_t Cell_Number() const { return CellNumber; }
-    int8_t Get_Zone(MZoneType mzone) { return Zones[mzone]; }
+    int8_t Get_Zone(MZoneType mzone) const { return Zones[mzone]; }
     void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
     BOOL Get_Placement_Check() const { return PlacementCheck; }
     void Set_Placement_Check(BOOL check) { PlacementCheck = check; }
@@ -131,11 +131,11 @@ public:
     void Set_Visible(BOOL bit) { Visible = bit; }
     BOOL Is_Revealed() const { return Revealed; }
     void Set_Revealed(BOOL bit) { Revealed = bit; }
-    BOOL Get_Bit1() { return Bit1; }
+    BOOL Get_Bit1() const { return Bit1; }
     void Set_Bit1(BOOL bit) { Bit1 = bit; }
-    BOOL Get_Bit32() { return Bit32; }
+    BOOL Get_Bit32() const { return Bit32; }
     void Set_Bit32(BOOL bit) { Bit32 = bit; }
-    BOOL Get_Bit128() { return Bit128; }
+    BOOL Get_Bit128() const { return Bit128; }
     void Set_Bit128(BOOL bit) { Bit128 = bit; }
     TemplateType Get_Template() const { return Template; }
     void Set_Template(TemplateType temp) { Template = temp; }
@@ -150,7 +150,7 @@ public:
     HousesType Owner() const { return OwnerHouse; }
     ObjectClass *Get_Overlapper(int index) { return Overlapper[index]; }
     ObjectClass *Get_Occupier() const { return OccupierPtr; }
-    LandType Get_Land() { return Land; }
+    LandType Get_Land() const { return Land; }
     void Set_Land(LandType land) { Land = land; }
 
     static int Spot_Index(uint32_t coord);
