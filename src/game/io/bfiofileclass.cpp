@@ -597,6 +597,7 @@ void BufferIOFileClass::Close()
 
 void BufferIOFileClass::Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005BD734, &Hook_Is_Available);
     Hook_Function(0x005BD754, &Hook_Is_Open);
     Hook_Function(0x005BD780, &Hook_Open_Name);
@@ -606,6 +607,7 @@ void BufferIOFileClass::Hook_Me()
     Hook_Function(0x005BDDF0, &Hook_Size);
     Hook_Function(0x005BD870, &Hook_Write);
     Hook_Function(0x005BDE14, &Hook_Close);
+#endif
 }
 
 BOOL BufferIOFileClass::Hook_Is_Available(BufferIOFileClass *ptr, BOOL forced)

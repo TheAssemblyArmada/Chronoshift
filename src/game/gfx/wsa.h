@@ -159,6 +159,7 @@ namespace WSAFile {
 
 inline void Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005D03C0, Open_Animation);
     Hook_Function(0x005D0820, Close_Animation);
     Hook_Function(0x005D0860, Animate_Frame);
@@ -172,6 +173,7 @@ inline void Hook_Me()
     Hook_Function(0x005D0B70, Get_Animation_Width);
     Hook_Function(0x005D0BA0, Get_Animation_Height);
     Hook_Function(0x005D0BD0, Get_Animation_Palette);
+#endif
 }
 
 }

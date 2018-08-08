@@ -101,6 +101,7 @@ protected:
 #ifndef CHRONOSHIFT_STANDALONE
 inline void RawFileClass::Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x00426390, &Hook_File_Name);
     Hook_Function(0x005C006C, &Hook_Set_Name);
     Hook_Function(0x005C05F8, &Hook_Create);
@@ -113,6 +114,7 @@ inline void RawFileClass::Hook_Me()
     Hook_Function(0x005C0430, &Hook_Write);
     Hook_Function(0x005C02C8, &Hook_Close);
     Hook_Function(0x005C07CC, &Hook_Raw_Seek);
+#endif
 }
 #endif
 

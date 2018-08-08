@@ -37,8 +37,10 @@ int __cdecl LCW_Comp(void const *src, void *dst, unsigned int bytes = 0);
 namespace Lcw {
 inline void Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005D6880, LCW_Uncomp);
     Hook_Function(0x005DD28C, LCW_Comp);
+#endif
 }
 }
 #endif

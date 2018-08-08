@@ -338,6 +338,7 @@ void *Load_Alloc_Data(FileClass &file)
 
 void CCFileClass::Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x00462A30, &Hook_Is_Available);
     Hook_Function(0x00462A80, &Hook_Is_Open);
     Hook_Function(0x00426400, &Hook_Open_Name);
@@ -350,6 +351,7 @@ void CCFileClass::Hook_Me()
     Hook_Function(0x00462BD8, &Hook_Get_Date_Time);
     Hook_Function(0x00462C50, &Hook_Set_Date_Time);
     Hook_Function(0x00462840, &Hook_Error);
+#endif
 }
 
 BOOL CCFileClass::Hook_Is_Available(CCFileClass *ptr, BOOL forced)

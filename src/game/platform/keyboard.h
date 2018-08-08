@@ -401,11 +401,13 @@ private:
 
 inline void KeyboardClass::Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005B82FC, Hook_Handler);
     //Hook_Function(0x005B7408, Hook_Fill);
     Hook_Function(0x005B7F30, Hook_Check);
     Hook_Function(0x005B7F5C, Hook_Get);
     Hook_Function(0x005B82CC, Hook_Clear);
+#endif
 }
 
 extern KeyboardClass *&g_keyboard;

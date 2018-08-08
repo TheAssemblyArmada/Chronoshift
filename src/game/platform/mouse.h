@@ -116,9 +116,11 @@ void __stdcall Process_Mouse(
 
 inline void WWMouseClass::Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     //Hook_Function(0x005C2180, ::Process_Mouse);
     Hook_Function(0x005C1B10, Hook_Low_Hide);
     Hook_Function(0x005C1BF0, Hook_Low_Show);
+#endif
 }
 
 extern WWMouseClass *&g_mouse;

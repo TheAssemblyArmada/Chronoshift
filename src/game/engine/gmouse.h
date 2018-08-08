@@ -88,7 +88,14 @@ private:
 inline void GameMouseClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
+    Hook_Function(0x005033E0, *GameMouseClass::One_Time);
+    Hook_Function(0x005033FC, *GameMouseClass::Init_Clear);
+    Hook_Function(0x0050329C, *GameMouseClass::AI);
+    Hook_Function(0x0050305C, *GameMouseClass::Set_Default_Mouse);
     Hook_Function(0x0050316C, *GameMouseClass::Override_Mouse_Shape);
+    Hook_Function(0x004F90F8, *GameMouseClass::Hook_Save);
+    Hook_Function(0x00503078, *GameMouseClass::Revert_Mouse_Shape);
+    Hook_Function(0x00503098, *GameMouseClass::Mouse_Small);
     Hook_Function(0x004F8F70, *GameMouseClass::Load);
     Hook_Function(0x004F90F8, *GameMouseClass::Hook_Save);
 #endif

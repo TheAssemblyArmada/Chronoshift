@@ -100,7 +100,9 @@ public:
 #ifndef CHRONOSHIFT_STANDALONE
 inline void PlatformTimerClass::Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x005BBEB0, &Timer_Callback);
+#endif
 }
 
 extern PlatformTimerClass *&PlatformTimer;
