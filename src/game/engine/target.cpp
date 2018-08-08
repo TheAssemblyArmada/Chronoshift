@@ -64,7 +64,7 @@ TargetClass::TargetClass(CellClass *cell)
 
 BOOL Target_Is_Techno(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // TODO: Inlined in RA
     return false;
 #else
@@ -96,7 +96,7 @@ target_t As_Target(CellClass *cell)
 
 TriggerClass *As_Trigger(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     TriggerClass *(*func)(target_t) = reinterpret_cast<TriggerClass *(*)(target_t)>(0x00554FFC);
     return func(target);
 #else
@@ -107,7 +107,7 @@ TriggerClass *As_Trigger(target_t target)
 
 TriggerTypeClass *As_TriggerType(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     TriggerTypeClass *(*func)(target_t) = reinterpret_cast<TriggerTypeClass *(*)(target_t)>(0x005559CC);
     return func(target);
 #else
@@ -118,7 +118,7 @@ TriggerTypeClass *As_TriggerType(target_t target)
 
 TeamClass *As_Team(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     TeamClass *(*func)(target_t) = reinterpret_cast<TeamClass *(*)(target_t)>(0x00555034);
     return func(target);
 #else
@@ -129,7 +129,7 @@ TeamClass *As_Team(target_t target)
 
 TeamTypeClass *As_TeamType(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     TeamTypeClass *(*func)(target_t) = reinterpret_cast<TeamTypeClass *(*)(target_t)>(0x0055506C);
     return func(target);
 #else
@@ -145,7 +145,7 @@ AbstractClass *As_Abstract(target_t target)
 
 ObjectClass *As_Object(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     ObjectClass *(*func)(target_t) = reinterpret_cast<ObjectClass *(*)(target_t)>(0x00555190);
     return func(target);
 #else
@@ -200,7 +200,7 @@ ObjectClass *As_Object(target_t target)
 
 AnimClass *As_Animation(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     AnimClass *(*func)(target_t) = reinterpret_cast<AnimClass *(*)(target_t)>(0x005550A4);
     return func(target);
 #else
@@ -211,7 +211,7 @@ AnimClass *As_Animation(target_t target)
 
 BulletClass *As_Bullet(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BulletClass *(*func)(target_t) = reinterpret_cast<BulletClass *(*)(target_t)>(0x005550DC);
     return func(target);
 #else
@@ -222,7 +222,7 @@ BulletClass *As_Bullet(target_t target)
 
 TerrainClass *As_Terrain(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // TODO: Inlined in RA
     return nullptr;
 #else
@@ -233,7 +233,7 @@ TerrainClass *As_Terrain(target_t target)
 
 TechnoClass *As_Techno(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     TechnoClass *(*func)(target_t) = reinterpret_cast<TechnoClass *(*)(target_t)>(0x0055514C);
     return func(target);
 #else
@@ -245,7 +245,7 @@ TechnoClass *As_Techno(target_t target)
 
 TechnoTypeClass *As_TechnoType(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     TechnoTypeClass *(*func)(target_t) = reinterpret_cast<TechnoTypeClass *(*)(target_t)>(0x00555964);
     return func(target);
 #else
@@ -256,7 +256,7 @@ TechnoTypeClass *As_TechnoType(target_t target)
 
 AircraftClass *As_Aircraft(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     AircraftClass *(*func)(target_t) = reinterpret_cast<AircraftClass *(*)(target_t)>(0x00555114);
     return func(target);
 #else
@@ -267,7 +267,7 @@ AircraftClass *As_Aircraft(target_t target)
 
 UnitClass *As_Unit(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     UnitClass *(*func)(target_t) = reinterpret_cast<UnitClass *(*)(target_t)>(0x00555290);
     return func(target);
 #else
@@ -278,7 +278,7 @@ UnitClass *As_Unit(target_t target)
 
 VesselClass *As_Vessel(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     VesselClass *(*func)(target_t) = reinterpret_cast<VesselClass *(*)(target_t)>(0x005552C8);
     return func(target);
 #else
@@ -289,7 +289,7 @@ VesselClass *As_Vessel(target_t target)
 
 InfantryClass *As_Infantry(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     InfantryClass *(*func)(target_t) = reinterpret_cast<InfantryClass *(*)(target_t)>(0x00555300);
     return func(target);
 #else
@@ -300,7 +300,7 @@ InfantryClass *As_Infantry(target_t target)
 
 BuildingClass *As_Building(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BuildingClass *(*func)(target_t) = reinterpret_cast<BuildingClass *(*)(target_t)>(0x00555338);
     return func(target);
 #else
@@ -316,7 +316,7 @@ cell_t As_Cell(target_t target)
 
 coord_t As_Coord(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     coord_t (*func)(target_t) = reinterpret_cast<coord_t (*)(target_t)>(0x00555384);
     return func(target);
 #else
@@ -335,7 +335,7 @@ coord_t As_Coord(target_t target)
 
 coord_t As_Movement_Coord(target_t target)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     coord_t(*func)(target_t) = reinterpret_cast<coord_t(*)(target_t)>(0x005553F8);
     return func(target);
 #else
