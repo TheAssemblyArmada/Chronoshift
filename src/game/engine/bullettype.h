@@ -138,7 +138,7 @@ private:
     int Frames; // Number of image frames for animation purposes.
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<BulletTypeClass> &BulletTypes;
 #else

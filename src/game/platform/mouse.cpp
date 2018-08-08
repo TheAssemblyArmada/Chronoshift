@@ -24,7 +24,7 @@
 // extern HWND MainWindow;
 #endif
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 WWMouseClass *&g_mouse = Make_Global<WWMouseClass *>(0x006AC284);
 
 void WWMouseClass::Hook_Low_Hide(WWMouseClass *ptr)
@@ -117,7 +117,7 @@ WWMouseClass::~WWMouseClass()
 
 int WWMouseClass::Get_Mouse_X()
 {
-#if !defined RAPP_STANDALONE
+#if !defined CHRONOSHIFT_STANDALONE
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
     // to allow windowed mode, so we can't use the one rapp.dll links to.
     typedef  BOOL(__stdcall *HookedGetCursorPos_t)(LPPOINT lpPoint);
@@ -134,7 +134,7 @@ int WWMouseClass::Get_Mouse_X()
 
 int WWMouseClass::Get_Mouse_Y()
 {
-#if !defined RAPP_STANDALONE
+#if !defined CHRONOSHIFT_STANDALONE
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
     // to allow windowed mode, so we can't use the one rapp.dll links to.
     typedef  BOOL(__stdcall *HookedGetCursorPos_t)(LPPOINT lpPoint);
@@ -151,7 +151,7 @@ int WWMouseClass::Get_Mouse_Y()
 
 void WWMouseClass::Get_Mouse_XY(int &x_pos, int &y_pos)
 {
-#if !defined RAPP_STANDALONE
+#if !defined CHRONOSHIFT_STANDALONE
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
     // to allow windowed mode, so we can't use the one rapp.dll links to.
     typedef  BOOL(__stdcall *HookedGetCursorPos_t)(LPPOINT lpPoint);

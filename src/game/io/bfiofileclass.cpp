@@ -593,7 +593,7 @@ void BufferIOFileClass::Close()
     }
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 
 void BufferIOFileClass::Hook_Me()
 {

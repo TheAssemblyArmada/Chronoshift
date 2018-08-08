@@ -15,7 +15,7 @@
 */
 #include "buildingtype.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 //TFixedIHeapClass<BuildingTypeClass> &BuildingTypes = *reinterpret_cast<TFixedIHeapClass<BuildingTypeClass> *>(0x);
 #else
 //TFixedIHeapClass<BuildingTypeClass> BuildingTypes;
@@ -24,7 +24,7 @@
 void BuildingTypeClass::Init(TheaterType theater)
 {
     // TODO Doable, just wrapped to complete IOMap stack.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(TheaterType) = reinterpret_cast<void (*)(TheaterType)>(0x004538F4);
     func(theater);
 #endif

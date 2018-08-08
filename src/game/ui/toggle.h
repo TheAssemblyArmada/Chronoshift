@@ -38,7 +38,7 @@ public:
     void Set_Toggle_Bool1(BOOL unk) { Toggle_Boolean1 = unk; }
     void Set_Toggle_Disabled(BOOL disabled) { ToggleDisabled = disabled; }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -74,7 +74,7 @@ inline ToggleClass &ToggleClass::operator=(ToggleClass &that)
     return *this;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void ToggleClass::Hook_Me()

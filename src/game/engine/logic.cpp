@@ -27,7 +27,7 @@
 //#include "anim.h"
 #include "target.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 LogicClass &Logic = Make_Global<LogicClass>(0x00668230);
 DynamicVectorClass<TriggerClass *> &LogicTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F270);
 #else
@@ -64,7 +64,7 @@ BOOL LogicClass::Submit(ObjectClass *object, BOOL sort)
 */
 void LogicClass::AI()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(LogicClass *) = reinterpret_cast<void(*)(LogicClass *)>(0x004FDD70);
     return func(this);
 #else
@@ -306,7 +306,7 @@ void LogicClass::AI()
 
 void LogicClass::Detach(target_t target, int a2)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(LogicClass *, target_t, int) = reinterpret_cast<void(*)(LogicClass *, target_t, int)>(0x004FE2BC);
     return func(this, target, a2);
 #else

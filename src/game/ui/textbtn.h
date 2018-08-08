@@ -41,7 +41,7 @@ public:
     virtual void Draw_Background();
     virtual void Draw_Text(const char *string);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -87,7 +87,7 @@ inline TextButtonClass &TextButtonClass::operator=(TextButtonClass &that)
     return *this;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void TextButtonClass::Hook_Me()

@@ -45,7 +45,7 @@ void __cdecl Interpolate_Interleave(void *src, void *dst, int src_height, int sr
 void __cdecl Interpolate_Line_Double(void *src, void *dst, int src_height, int src_width, int dst_pitch);
 void __cdecl Interpolate_Line_Interpolate(void *src, void *dst, int src_height, int src_width, int dst_pitch);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern uint8_t *g_paletteInterpolationTable;

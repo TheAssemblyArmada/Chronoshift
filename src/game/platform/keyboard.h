@@ -361,7 +361,7 @@ public:
     BOOL Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 #endif
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     static BOOL Hook_Handler(KeyboardClass *ptr, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static uint16_t Hook_Check(KeyboardClass *ptr);
@@ -396,7 +396,7 @@ private:
     BOOL m_initialised;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void KeyboardClass::Hook_Me()

@@ -40,7 +40,7 @@ class LogicClass : public LayerClass
 
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern LogicClass &Logic;
 extern DynamicVectorClass<TriggerClass*> &LogicTriggers;

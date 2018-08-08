@@ -51,7 +51,7 @@ private:
     static const int s_adder;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern RandomClass &g_nonCriticalRandom;
 #else
 extern RandomClass g_nonCriticalRandom;

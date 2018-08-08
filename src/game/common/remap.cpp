@@ -15,7 +15,7 @@
  */
 #include "remap.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 RemapControlType *ColorRemaps = reinterpret_cast<RemapControlType *>(0x00666908);
 RemapControlType &MetalScheme = Make_Global<RemapControlType>(0x00667528);
 RemapControlType &GreyScheme = Make_Global<RemapControlType>(0x00667644);

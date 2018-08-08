@@ -39,7 +39,7 @@ public:
 
     BOOL Set_Autoscroll(int mode);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -60,7 +60,7 @@ protected:
     int ScrollUnkInt; // is this a rate of sorts?
 
 private:
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static TCountDownTimerClass<SystemTimerClass> &ScrollingCounter;
 #else
     static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;

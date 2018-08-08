@@ -1,7 +1,7 @@
 #include "surfacemonitor.h"
 #include "pal.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 void (*&Misc_Focus_Loss_Function)() = Make_Global<void(*)()>(0x006B190C);
 void (*&Misc_Focus_Restore_Function)() = Make_Global<void(*)()>(0x006B1910);
 #else
@@ -89,7 +89,7 @@ void SurfaceMonitorClass::Release()
     }
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 void SurfaceMonitorClass::Hook_Add_Surface(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE new_surface)
 {
     return ptr->SurfaceMonitorClass::Add_Surface(new_surface);

@@ -26,7 +26,7 @@
 extern int g_mapBinaryVersion;
 
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern int &g_iniFormat;

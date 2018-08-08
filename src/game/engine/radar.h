@@ -100,7 +100,7 @@ public:
     int Radar_Activate(int mode = RADAR_M1);
     BOOL Spy_Next_House();
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     int16_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
     BOOL Hook_Is_Zoomable() { return Is_Zoomable(); }
@@ -181,7 +181,7 @@ protected:
     int16_t MiniMapCells[MINI_MAP_CELLS];
     static GraphicBufferClass IconStage;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static RTacticalClass &RadarButton;
     static void *&RadarAnim;
     static void *&RadarPulse;

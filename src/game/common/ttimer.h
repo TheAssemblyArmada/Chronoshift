@@ -234,7 +234,7 @@ uint32_t TCountDownTimerClass<T>::Time() const
     return accum;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TTimerClass<SystemTimerClass> &TickCountTimer;
 #else

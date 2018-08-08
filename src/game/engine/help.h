@@ -43,7 +43,7 @@ public:
     void Set_Cost(int cost) { HelpCost = cost; }
     void Set_Text_Color(uint8_t color) { HelpTextColor = color; }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -78,7 +78,7 @@ protected:
     TCountDownTimerClass<SystemTimerClass> CountDownTimer;
 
 private:
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static int16_t *const OverlapList;
     static char *&HelpText;
 #else

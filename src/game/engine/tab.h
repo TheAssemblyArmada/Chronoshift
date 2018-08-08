@@ -96,7 +96,7 @@ public:
 
     static void Hilite_Tab(int tab);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -123,7 +123,7 @@ protected:
     TCountDownTimerClass<FrameTimerClass> CreditsFlashTimer;
 
 private:
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void *&TabShape;
 #else
     static void *TabShape;

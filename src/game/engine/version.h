@@ -53,7 +53,7 @@ public:
     int Min_Version();
     int Max_Version();
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -93,7 +93,7 @@ private:
 
 const char *Version_Name();
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern VersionClass &g_version;
 

@@ -194,7 +194,7 @@ public:
     //void Duplicate_CRC_Error(const char *function_name, const char *section, const char *entry);
     //void Duplicate_CRC(const char *function_name, const char *section, const char *entry);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     static int Hook_Load(INIClass *ptr, Straw &straw);
 #endif

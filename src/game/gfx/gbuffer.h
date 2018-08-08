@@ -26,7 +26,7 @@
 #include "ddraw.h"
 #endif
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 
@@ -108,7 +108,7 @@ public:
     void Draw_Stamp(void *tileset, int icon, int x, int y, void const *remapper, int left, int top, int right, int bottom);
     // int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     // static BOOL &AllowHardwareBlitFills;
     // static BOOL &AllowStretchBlits;
@@ -181,7 +181,7 @@ void Wait_Blit();
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp);
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 inline void GraphicViewPortClass::Hook_Me() {}
 
 extern GraphicViewPortClass *&g_logicPage;

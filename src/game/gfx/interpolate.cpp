@@ -24,7 +24,7 @@
 #include <malloc.h>
 
 // PaletteClass *g_interpolationPalette = &PaletteClass::CurrentPalette;
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 uint8_t *g_paletteInterpolationTable = reinterpret_cast<uint8_t *>(0x00691734);
 BOOL &g_palettesRead = Make_Global<BOOL>(0x00655DA0);
 int &g_paletteCounter = Make_Global<int>(0x00655DA4);

@@ -48,7 +48,7 @@ public:
     void Flash_Power();
 
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -79,7 +79,7 @@ protected:
     int16_t OutputInc;
     int16_t DrainInc;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static PowerButtonClass &PowerButton;
     static void *&PowerShape;
     static void *&PowerBarShape;

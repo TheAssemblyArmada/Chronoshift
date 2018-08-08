@@ -149,7 +149,7 @@ private:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<OverlayTypeClass> &OverlayTypes;
 #else

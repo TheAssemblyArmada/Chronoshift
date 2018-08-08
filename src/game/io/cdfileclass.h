@@ -76,7 +76,7 @@ protected:
 
 private:
     static char s_rawPath[];
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static SearchDriveType *&s_first;
     static int &s_currentCDDrive;
     static int &s_lastCDDrive;

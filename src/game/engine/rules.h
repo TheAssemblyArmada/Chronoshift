@@ -297,7 +297,7 @@ private:
     int ChronoTechLevel;
     int16_t OreNearScan;
     int16_t OreFarScan;
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static fixed &EngineerDamage;
     static fixed &EngineerCaptureLevel;
     static fixed &ChronoTankDuration;
@@ -327,7 +327,7 @@ private:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern RulesClass &Rule;

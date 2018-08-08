@@ -30,7 +30,7 @@ public:
     virtual int Flush();
     virtual int Put(void const *source, int length);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -45,7 +45,7 @@ private:
     int16_t m_uncompressedBytes;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void LZOPipe::Hook_Me()

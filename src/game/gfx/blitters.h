@@ -34,7 +34,7 @@ void __cdecl Buffer_To_Page(int x, int y, int w, int h, void *buffer, GraphicVie
 void __cdecl Linear_Scale_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPortClass &dst_vp, int src_x, int src_y,
     int dst_x, int dst_y, int src_w, int src_h, int dst_w, int dst_h, bool use_keysrc, void *fade);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 namespace Blitters

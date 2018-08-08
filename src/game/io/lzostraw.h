@@ -29,7 +29,7 @@ public:
 
     virtual int Get(void *buffer, int length) override;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -44,7 +44,7 @@ private:
     int16_t m_uncompressedBytes;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void LZOStraw::Hook_Me()

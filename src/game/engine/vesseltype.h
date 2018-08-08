@@ -43,7 +43,7 @@ class VesselTypeClass : public TechnoTypeClass
 {
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 //extern TFixedIHeapClass<VesselTypeClass> &VesselTypes;
 #else

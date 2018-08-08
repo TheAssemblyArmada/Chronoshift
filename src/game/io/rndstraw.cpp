@@ -16,7 +16,7 @@
 #include "rndstraw.h"
 
 // Global instance of random straw to use as a source of random data.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 RandomStraw<RandomClass> &g_cryptRandom = *reinterpret_cast<RandomStraw<RandomClass> *>(0x00667764);
 #else
 RandomStraw<RandomClass> g_cryptRandom;

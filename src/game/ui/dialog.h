@@ -147,7 +147,7 @@ enum WindowNumberType
 };
 
 // TODO Refactor global naming after all locations implemented.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern WindowType *WindowList;
 extern unsigned &Window;

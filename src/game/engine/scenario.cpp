@@ -21,7 +21,7 @@
 
 using std::snprintf;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 ScenarioClass &Scen = Make_Global<ScenarioClass>(0x006678E8);
 #else
 ScenarioClass Scen;
@@ -309,7 +309,7 @@ void ScenarioClass::Do_Fade_AI()
 BOOL ScenarioClass::Set_Global_To(int global, BOOL value)
 {
     // TODO requires Trigger and TEvent classes.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*call_Set_Global_To)(int, BOOL) = reinterpret_cast<BOOL (*)(int, BOOL)>(0x00539EF4);
     return call_Set_Global_To(global, value);
 #else

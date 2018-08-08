@@ -16,7 +16,7 @@
 #include "missioncontrol.h"
 #include "mission.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 MissionControlClass *const MissionControlClass::MissionControl = reinterpret_cast<MissionControlClass *>(0x00666234);
 #else
 MissionControlClass MissionControlClass::MissionControl[MISSION_COUNT];

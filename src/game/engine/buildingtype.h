@@ -148,7 +148,7 @@ public:
     static void Init(TheaterType theater);
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 //extern TFixedIHeapClass<BuildingTypeClass> &BuildingTypes;
 #else

@@ -34,7 +34,7 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -64,7 +64,7 @@ inline void FlasherClass::Flash(int flash_frames, bool flash)
     Flashed = flash;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void FlasherClass::Hook_Me()

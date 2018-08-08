@@ -46,7 +46,7 @@ public:
     void Free();
     BOOL Commit();
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     static BOOL Hook_Is_Available(BufferIOFileClass *ptr, BOOL forced);
     static BOOL Hook_Is_Open(BufferIOFileClass *ptr);

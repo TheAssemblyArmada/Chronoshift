@@ -38,7 +38,7 @@ public:
 
     void Set_ID(unsigned id) { ID = id; }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -58,7 +58,7 @@ inline ControlClass &ControlClass::operator=(ControlClass &that)
     return *this;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void ControlClass::Hook_Me()

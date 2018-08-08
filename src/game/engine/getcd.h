@@ -42,7 +42,7 @@ private:
     int m_currentDrive;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern GetCDClass &g_cdList;
 #else

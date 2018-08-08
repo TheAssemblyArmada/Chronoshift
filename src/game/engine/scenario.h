@@ -155,7 +155,7 @@ private:
     int field_7D3;
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern ScenarioClass &Scen;

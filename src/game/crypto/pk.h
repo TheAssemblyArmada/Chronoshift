@@ -68,7 +68,7 @@ inline PKey &PKey::operator=(PKey const &that)
 }
 
 // RSA keys
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern PKey &g_publicKey;
 #else
 extern PKey g_publicKey;

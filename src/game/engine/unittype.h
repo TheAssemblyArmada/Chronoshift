@@ -58,7 +58,7 @@ class UnitTypeClass : public TechnoTypeClass
 {
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 //extern TFixedIHeapClass<UnitTypeClass> &UnitTypes;
 #else

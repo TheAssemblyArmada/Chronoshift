@@ -97,7 +97,7 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     RadioMessageType (*func)(RadioClass *, RadioMessageType, target_t &) =
         reinterpret_cast<RadioMessageType (*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
     return func(radio, message, target);
@@ -172,7 +172,7 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioCla
     // DEBUG_ASSERT(radio != nullptr);
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     RadioMessageType (*func)(RadioMessageType, RadioClass *) =
         reinterpret_cast<RadioMessageType (*)(RadioMessageType, RadioClass *)>(0x00532AF0);
     return func(message, radio);

@@ -138,14 +138,14 @@ private:
     int ThemeHandle;
     ThemeType CurrentTheme;
     ThemeType QueuedTheme;
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static ThemeControl *Themes;
 #else
     static ThemeControl Themes[];
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern ThemeClass &Theme;

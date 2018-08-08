@@ -20,7 +20,7 @@
 
 #include "always.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern char *&GameStrings;

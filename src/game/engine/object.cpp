@@ -19,7 +19,7 @@
 //#include "anim.h"
 #include "minmax.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClass<ObjectClass*> >(0x006677F8);
 #else
 DynamicVectorClass<ObjectClass*> CurrentObjects;
@@ -94,7 +94,7 @@ uint32_t ObjectClass::Target_Coord() const
 
 void ObjectClass::AI()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(ObjectClass *) = reinterpret_cast<void (*)(ObjectClass *)>(0x0051D7F0);
     func(this);
 #elif 0
@@ -140,7 +140,7 @@ void ObjectClass::AI()
 
 BOOL ObjectClass::Limbo()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(ObjectClass *) = reinterpret_cast<BOOL (*)(ObjectClass *)>(0x0051DDE8);
     return func(this);
 #elif 0
@@ -168,7 +168,7 @@ BOOL ObjectClass::Limbo()
 
 BOOL ObjectClass::Unlimbo(uint32_t coord, DirType dir)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
     (ObjectClass *, uint32_t, DirType) = reinterpret_cast<BOOL (*)(ObjectClass *, uint32_t, DirType)>(0x0051DE9C);
     return func(this, coord, dir);
@@ -205,7 +205,7 @@ BOOL ObjectClass::Unlimbo(uint32_t coord, DirType dir)
 
 void ObjectClass::Detach(int32_t target, int a2)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(ObjectClass *, int32_t, int) = reinterpret_cast<void(*)(ObjectClass *, int32_t, int)>(0x0051DF74);
     func(this, target, a2);
 #elif 0
@@ -223,7 +223,7 @@ void ObjectClass::Detach(int32_t target, int a2)
 
 void ObjectClass::Detach_All(int a1)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(ObjectClass *, int) = reinterpret_cast<void(*)(ObjectClass *, int)>(0x0051DFDC);
     func(this, a1);
 #elif 0
@@ -239,7 +239,7 @@ void ObjectClass::Detach_All(int a1)
 
 BOOL ObjectClass::Paradrop(uint32_t coord)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(ObjectClass *, uint32_t) = reinterpret_cast<BOOL(*)(ObjectClass *, uint32_t)>(0x0051E5C0);
     return func(this, coord);
 #else
@@ -268,7 +268,7 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
 
 BOOL ObjectClass::Render(BOOL force_render)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(ObjectClass *, BOOL) = reinterpret_cast<BOOL(*)(ObjectClass *, BOOL)>(0x0051DD34);
     return func(this, force_render);
 #elif 0
@@ -310,7 +310,7 @@ fixed ObjectClass::Health_Ratio() const
 
 BOOL ObjectClass::Mark(MarkType mark)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(ObjectClass *, MarkType) = reinterpret_cast<BOOL(*)(ObjectClass *, MarkType)>(0x0051E368);
     return func(this, mark);
 #elif 0
@@ -401,7 +401,7 @@ void ObjectClass::Mark_For_Redraw()
 
 BOOL ObjectClass::Select()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(ObjectClass *) = reinterpret_cast<BOOL(*)(ObjectClass *)>(0x0051DBB0);
     return func(this);
 #elif 0
@@ -478,7 +478,7 @@ void ObjectClass::Unselect()
 
 DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     DamageResultType (*func)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int) =
         reinterpret_cast<DamageResultType (*)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0051E07C);
     return func(this, damage, a2, warhead, object, a5);
@@ -607,7 +607,7 @@ BOOL ObjectClass::Revealed(HouseClass *house)
 
 void ObjectClass::Code_Pointers()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F98E0);
     func(this);
 #elif 0
@@ -621,7 +621,7 @@ void ObjectClass::Code_Pointers()
 
 void ObjectClass::Decode_Pointers()
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F9924);
     func(this);
 #elif 0

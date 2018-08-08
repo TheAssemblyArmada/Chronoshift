@@ -16,7 +16,7 @@
  */
 #include "special.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 SpecialClass &Special = Make_Global<SpecialClass>(0x00669908);
 #else
 SpecialClass Special;

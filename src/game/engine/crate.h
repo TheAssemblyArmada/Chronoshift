@@ -69,7 +69,7 @@ private:
 
 public:
     static const char *CrateNames[];
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static char *CrateAnims; // TODO should be AnimType *CrateAnims[CRATE_COUNT];
     static int *CrateShares;
     static int *CrateData;
@@ -80,7 +80,7 @@ public:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif
 

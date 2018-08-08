@@ -598,7 +598,7 @@ off_t RawFileClass::Raw_Seek(off_t offset, int whence)
     return retval;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 const char *RawFileClass::Hook_File_Name(RawFileClass *ptr)
 {
     return ptr->RawFileClass::File_Name();

@@ -16,7 +16,7 @@
 #include "keyboard.h"
 #include "gamedebug.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 KeyboardClass *&g_keyboard = Make_Global<KeyboardClass *>(0x00666904);
 #else
 KeyboardClass *g_keyboard = nullptr;
@@ -438,7 +438,7 @@ int KeyboardClass::Available_Buffer_Room() const
     return 0;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 BOOL KeyboardClass::Hook_Handler(KeyboardClass *ptr, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     return ptr->Message_Handler(hWnd, message, wParam, lParam);

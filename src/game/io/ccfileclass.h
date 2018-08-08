@@ -43,7 +43,7 @@ public:
 
     BOOL Is_Cached() const { return m_fileBuffer.Get_Buffer() != nullptr; }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     static BOOL Hook_Is_Available(CCFileClass *ptr, BOOL forced);
     static BOOL Hook_Is_Open(CCFileClass *ptr);

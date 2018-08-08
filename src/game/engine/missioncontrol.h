@@ -62,7 +62,7 @@ private:
     fixed Rate; // Delay between normal processing (larger = faster game, less responsiveness) (def = 0.016).
     fixed AARate; // Anti-aircraft delay rate (if not specifed it uses regular rate) (def = 0.016).
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static MissionControlClass *const MissionControl;
 #else
     static MissionControlClass MissionControl[MISSION_COUNT];

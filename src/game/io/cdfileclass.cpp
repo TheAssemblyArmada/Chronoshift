@@ -36,7 +36,7 @@
 #define CD_PATH_SEP "/"
 #endif
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 CDFileClass::SearchDriveType *&CDFileClass::s_first = *reinterpret_cast<CDFileClass::SearchDriveType **>(0x006AC060); // first entry in the search drive, each entry is linked.
 int &CDFileClass::s_currentCDDrive = *reinterpret_cast<int*>(0x006AC064);
 int &CDFileClass::s_lastCDDrive = *reinterpret_cast<int*>(0x006AC068);

@@ -18,7 +18,7 @@
 #include "ccini.h"
 #include "warheadtype.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<WeaponTypeClass> &WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x0069164C);
 #else
 TFixedIHeapClass<WeaponTypeClass> WeaponTypes;

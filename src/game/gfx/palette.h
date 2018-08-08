@@ -58,7 +58,7 @@ private:
 extern PaletteClass WhitePalette;
 extern PaletteClass BlackPalette;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern PaletteClass &GamePalette;

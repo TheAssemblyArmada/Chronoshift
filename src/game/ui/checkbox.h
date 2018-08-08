@@ -31,7 +31,7 @@ public:
 
     CheckBoxClass &operator=(CheckBoxClass &that);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 static void Hook_Me();
 #endif
 };
@@ -45,7 +45,7 @@ inline CheckBoxClass &CheckBoxClass::operator=(CheckBoxClass &that)
     return *this;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 inline void CheckBoxClass::Hook_Me()

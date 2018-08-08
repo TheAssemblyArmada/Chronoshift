@@ -66,7 +66,7 @@ struct ShapeBufferHeader
 };
 #pragma pack(pop)
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 extern BOOL &g_useBigShapeBuffer;
 extern BOOL &g_isTheaterShape;
 extern BOOL &g_originalUseBigShapeBuffer;
@@ -129,7 +129,7 @@ void Set_Shape_Buffer(void *buffer, int size);
 int Set_Shape_Height(void *shape, unsigned short new_height);
 void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, GraphicViewPortClass &viewport, int flags, ...);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 namespace Shape

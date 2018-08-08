@@ -152,7 +152,7 @@ public:
 
     static int Spot_Index(uint32_t coord);
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     CellClass *Hook_Ctor() { return new (this) CellClass; }
 #endif
@@ -223,7 +223,7 @@ inline BOOL CellClass::operator==(CellClass const &that) const
         && memcmp(Overlapper, that.Overlapper, sizeof(Overlapper)) == 0;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 inline void CellClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM

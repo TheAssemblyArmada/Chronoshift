@@ -24,7 +24,7 @@
 
 using std::snprintf;
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<TerrainTypeClass> &TerrainTypes = Make_Global<TFixedIHeapClass<TerrainTypeClass> >(0x0065DFD0);
 #else
 TFixedIHeapClass<TerrainTypeClass> TerrainTypes;
@@ -201,7 +201,7 @@ const int16_t *TerrainTypeClass::Overlap_List() const
 BOOL TerrainTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
     // TODO requires TerrainClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
     (const TerrainTypeClass *, int16_t, HousesType) =
         reinterpret_cast<BOOL (*)(const TerrainTypeClass *, int16_t, HousesType)>(0x0055B9E4);
@@ -221,7 +221,7 @@ BOOL TerrainTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 ObjectClass *TerrainTypeClass::Create_One_Of(HouseClass *house) const
 {
     // TODO requires TerrainClass
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     ObjectClass *(*func)(const TerrainTypeClass *, HouseClass *) =
         reinterpret_cast<ObjectClass *(*)(const TerrainTypeClass *, HouseClass *)>(0x0055BA1C);
     return func(this, house);

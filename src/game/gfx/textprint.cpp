@@ -19,7 +19,7 @@
 #include "gamedebug.h"
 #include "minmax.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 char *&g_fontPtr = Make_Global<char *>(0x006B1974);
 char *&g_fontWidthBlockPtr = Make_Global<char *>(0x006B1978);
 int &g_fontYSpacing = Make_Global<int>(0x006B1970);

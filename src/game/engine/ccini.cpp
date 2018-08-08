@@ -29,7 +29,7 @@ const lepton_t CCINIClass::Get_Lepton(const char *section, const char *entry, co
 
 BOOL CCINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(CCINIClass *, const char *, const char *, const lepton_t) =
         reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const lepton_t)>(0x004630FC);
     return func(this, section, entry, value);
@@ -48,7 +48,7 @@ const MPHType CCINIClass::Get_MPHType(const char *section, const char *entry, co
 
 BOOL CCINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(CCINIClass *, const char *, const char *, const MPHType) =
         reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const MPHType)>(0x004631A4);
     return func(this, section, entry, value);
@@ -108,7 +108,7 @@ BOOL CCINIClass::Put_TheaterType(const char *section, const char *entry, const T
 
 const TriggerTypeClass *CCINIClass::Get_TriggerType(const char *section, const char *entry) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     TriggerTypeClass *(*func)(CCINIClass *, const char *, const char *) =
         reinterpret_cast<TriggerTypeClass *(*)(CCINIClass *, const char *, const char *)>(0x004638BC);
     return func((CCINIClass *)this, section, entry);
@@ -126,7 +126,7 @@ const TriggerTypeClass *CCINIClass::Get_TriggerType(const char *section, const c
 
 BOOL CCINIClass::Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *trigger)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(CCINIClass *, const char *, const char *, const TriggerTypeClass *) =
         reinterpret_cast<BOOL(*)(CCINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
     return func(this, section, entry, trigger);
@@ -233,7 +233,7 @@ BOOL CCINIClass::Put_VocType(const char *section, const char *entry, const VocTy
 
 const VoxType CCINIClass::Get_VoxType(const char *section, const char *entry, const VoxType defvalue) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return VOX_NONE;
 #else
@@ -250,7 +250,7 @@ const VoxType CCINIClass::Get_VoxType(const char *section, const char *entry, co
 
 BOOL CCINIClass::Put_VoxType(const char *section, const char *entry, const VoxType value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return false;
 #else
@@ -277,7 +277,7 @@ BOOL CCINIClass::Put_AnimType(const char *section, const char *entry, const Anim
 
 const UnitType CCINIClass::Get_UnitType(const char *section, const char *entry, const UnitType defvalue) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     UnitType (*func)(CCINIClass *, const char *, const char *, const UnitType) =
         reinterpret_cast<UnitType (*)(CCINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
     return func((CCINIClass *)this, section, entry, defvalue);
@@ -295,7 +295,7 @@ const UnitType CCINIClass::Get_UnitType(const char *section, const char *entry, 
 
 BOOL CCINIClass::Put_UnitType(const char *section, const char *entry, const UnitType value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(CCINIClass *, const char *, const char *, const UnitType) =
         reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
     return func(this, section, entry, value);
@@ -307,7 +307,7 @@ BOOL CCINIClass::Put_UnitType(const char *section, const char *entry, const Unit
 
 const InfantryType CCINIClass::Get_InfantryType(const char *section, const char *entry, const InfantryType defvalue) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return INFANTRY_NONE;
 #else
@@ -323,7 +323,7 @@ const InfantryType CCINIClass::Get_InfantryType(const char *section, const char 
 
 BOOL CCINIClass::Put_InfantryType(const char *section, const char *entry, const InfantryType value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return false;
 #else
@@ -334,7 +334,7 @@ BOOL CCINIClass::Put_InfantryType(const char *section, const char *entry, const 
 
 const AircraftType CCINIClass::Get_AircraftType(const char *section, const char *entry, const AircraftType defvalue) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return AIRCRAFT_NONE;
 #else
@@ -350,7 +350,7 @@ const AircraftType CCINIClass::Get_AircraftType(const char *section, const char 
 
 BOOL CCINIClass::Put_AircraftType(const char *section, const char *entry, const AircraftType value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return false;
 #else
@@ -361,7 +361,7 @@ BOOL CCINIClass::Put_AircraftType(const char *section, const char *entry, const 
 
 const VesselType CCINIClass::Get_VesselType(const char *section, const char *entry, const VesselType defvalue) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return VESSEL_NONE;
 #else
@@ -377,7 +377,7 @@ const VesselType CCINIClass::Get_VesselType(const char *section, const char *ent
 
 BOOL CCINIClass::Put_VesselType(const char *section, const char *entry, const VesselType value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return false;
 #else
@@ -388,7 +388,7 @@ BOOL CCINIClass::Put_VesselType(const char *section, const char *entry, const Ve
 
 const BuildingType CCINIClass::Get_BuildingType(const char *section, const char *entry, const BuildingType defvalue) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return BUILDING_NONE;
 #else
@@ -404,7 +404,7 @@ const BuildingType CCINIClass::Get_BuildingType(const char *section, const char 
 
 BOOL CCINIClass::Put_BuildingType(const char *section, const char *entry, const BuildingType value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
     return false;
 #else
@@ -766,7 +766,7 @@ BOOL CCINIClass::Put_Vessels(char const *section, char const *entry, const int v
 
 const int CCINIClass::Get_Buildings(char const *section, char const *entry, const int defvalue) const
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     int (*func)(CCINIClass *, const char *, const char *, const int) =
         reinterpret_cast<int (*)(CCINIClass *, const char *, const char *, const int)>(0x00463A88);
     return func((CCINIClass *)this, section, entry, defvalue);
@@ -790,7 +790,7 @@ const int CCINIClass::Get_Buildings(char const *section, char const *entry, cons
 
 BOOL CCINIClass::Put_Buildings(char const *section, char const *entry, const int value)
 {
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(CCINIClass *, const char *, const char *, const int) =
         reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const int)>(0x00463AFC);
     return func(this, section, entry, value);

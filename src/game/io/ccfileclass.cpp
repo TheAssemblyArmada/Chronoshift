@@ -24,7 +24,7 @@
 
 #define CCFILE_HANDLE_COUNT 10
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 CCFileClass *g_handles = Make_Pointer<CCFileClass>(0x00635BE4);
 #else
 CCFileClass g_handles[CCFILE_HANDLE_COUNT];
@@ -343,7 +343,7 @@ void *Load_Alloc_Data(FileClass &file)
     return nullptr;
 }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 
 void CCFileClass::Hook_Me()
 {

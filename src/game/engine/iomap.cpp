@@ -16,7 +16,7 @@
 #include "iomap.h"
 
 // TODO Update this as additional layers of the hierachy are implemented.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 GameMouseClass &Map = Make_Global<GameMouseClass>(0x00668250);
 #else

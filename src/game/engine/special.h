@@ -40,7 +40,7 @@ public:
 
     BOOL Allow_Remixes() { return Remixes; }
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
@@ -78,7 +78,7 @@ private:
 #endif
 };
 
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern SpecialClass &Special;
 
