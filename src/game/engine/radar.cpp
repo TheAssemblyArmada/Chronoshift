@@ -13,7 +13,6 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "radar.h"
 #include "audio.h"
 #include "ccfileclass.h"
 #include "coord.h"
@@ -24,6 +23,7 @@
 #include "lists.h"
 #include "minmax.h"
 #include "mixfile.h"
+#include "radar.h"
 #include "session.h"
 #include "swap.h"
 #include "voc.h"
@@ -53,7 +53,7 @@ RadarClass::RTacticalClass::RTacticalClass() :
 
 BOOL RadarClass::RTacticalClass::Action(unsigned flags, KeyNumType &key)
 {
-    // TODO, needs HelpClass, MouseClass, TechnoClass.
+// TODO, needs HelpClass, MouseClass, TechnoClass.
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
     (const RTacticalClass *, unsigned, KeyNumType &) =
@@ -134,7 +134,7 @@ void RadarClass::Init_Clear()
 
 void RadarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    // TODO Needs SidebarClass.
+// TODO Needs SidebarClass.
 #ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const RadarClass *, KeyNumType &, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, KeyNumType &, int, int)>(0x00530E6C);
@@ -144,7 +144,7 @@ void RadarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void RadarClass::Draw_It(BOOL force_redraw)
 {
-    // TODO Needs HouseClass.
+// TODO Needs HouseClass.
 #ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const RadarClass *, BOOL) = reinterpret_cast<void (*)(const RadarClass *, BOOL)>(0x0052DA14);
     func(this, force_redraw);
@@ -213,36 +213,38 @@ void RadarClass::Flag_Cell(int16_t cellnum)
 
 BOOL RadarClass::Jam_Cell(int16_t cellnum, HouseClass *house)
 {
-    // TODO Needs HouseClass.
+// TODO Needs HouseClass.
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
     (const RadarClass *, int16_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const RadarClass *, int16_t, HouseClass *)>(0x005301F0);
     return func(this, cellnum, house);
-#endif
+#else
     return false;
+#endif
 }
 
 BOOL RadarClass::UnJam_Cell(int16_t cellnum, HouseClass *house)
 {
-    // TODO Needs HouseClass.
+// TODO Needs HouseClass.
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
     (const RadarClass *, int16_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const RadarClass *, int16_t, HouseClass *)>(0x00530274);
     return func(this, cellnum, house);
-#endif
+#else
     return false;
+#endif
 }
 
 // Renamed from Get_Jammed
 BOOL RadarClass::Is_Radar_Jammed()
 {
-    // TODO Requires HouseClass
+// TODO Requires HouseClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x005329C4);
     return func(this);
-#endif
+#else
     /*
     DEBUG_ASSERT(this != nullptr);
     if (PlayerPtr->GPSActive) {
@@ -250,32 +252,35 @@ BOOL RadarClass::Is_Radar_Jammed()
     }
     */
     return RadarJammed;
+#endif
 }
 
 BOOL RadarClass::Is_Radar_Active()
 {
-    // TODO Requires HouseClass
+// TODO Requires HouseClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x00532974);
     return func(this);
-#endif
+#else
     /*
     return RadarActive || PlayerPtr->GPSActive;
     */
     return false;
+#endif
 }
 
 BOOL RadarClass::Is_Radar_Existing()
 {
-    // TODO Requires HouseClass
+// TODO Requires HouseClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x0053299C);
     return func(this);
-#endif
+#else
     /*
     return RadarExists || PlayerPtr->GPSActive;
     */
     return 0;
+#endif
 }
 
 void RadarClass::Activate_Pulse()
@@ -300,13 +305,13 @@ void RadarClass::Radar_Pixel(int16_t cellnum)
 
 void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
 {
-    // TODO Needs TerrainClass
+// TODO Needs TerrainClass
 #ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const RadarClass *, int16_t, int, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, int16_t, int, int, int)>(0x0052E5BC);
     func(this, cellnum, x, y, scale);
 #else
-    //static TerrainClass const *terrains[3];	//not sure, but its there...
+    // static TerrainClass const *terrains[3];	//not sure, but its there...
     ObjectClass *objects[4];
     int objectcount = 0;
 
@@ -325,7 +330,6 @@ void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
     }
 
     if (objectcount > 0) {
-
         if (scale == 1) {
             g_logicPage->Put_Pixel(x, y, 21);
         } else {
@@ -368,10 +372,10 @@ void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
 
     if (cell.Get_Overlay() != OVERLAY_NONE) {
         OverlayTypeClass &optr = OverlayTypeClass::As_Reference(cell.Get_Overlay());
-        
+
         if (optr.Is_Radar_Visible()) {
             uint8_t *icondata = optr.Radar_Icon(cell.Get_Overlay_Frame());
-            
+
             if (icondata != nullptr) {
                 IconStage.From_Buffer(0, 0, 3, 3, icondata);
 
@@ -552,7 +556,6 @@ void RadarClass::Radar_Cursor(BOOL redraw)
 
         // Unmarks cells marked in the last frame if it changed.
         if (_last_pos != -1) {
-
             int last_x = Cell_Get_X(_last_pos);
             int last_y = Cell_Get_Y(_last_pos);
 
@@ -561,13 +564,8 @@ void RadarClass::Radar_Cursor(BOOL redraw)
             // Add 1 to the dimensions if the position lies more than half way into another cell.
             cell_w = last_x + Lepton_To_Cell_Coord(DisplayWidth) + (Lepton_Sub_Cell(DisplayWidth) < 128 ? 0 : 1);
             cell_h = last_y + Lepton_To_Cell_Coord(DisplayHeight) + (Lepton_Sub_Cell(DisplayHeight) < 128 ? 0 : 1);
-            
-            Cell_XY_To_Radar_Pixel(
-                cell_w,
-                cell_h,
-                pixel_right,
-                pixel_btm
-            );
+
+            Cell_XY_To_Radar_Pixel(cell_w, cell_h, pixel_right, pixel_btm);
 
             --pixel_right;
             --pixel_btm;
@@ -580,19 +578,15 @@ void RadarClass::Radar_Cursor(BOOL redraw)
             Mark_Radar(pixel_left, pixel_top, pixel_right, pixel_btm, false, RADAR_CURSOR_SIZE);
         }
 
-        // Get extents of the cursor and mark any cells where their pixel will be covered by the cursor and so shouldn't be redrawn.
+        // Get extents of the cursor and mark any cells where their pixel will be covered by the cursor and so shouldn't be
+        // redrawn.
         Cell_XY_To_Radar_Pixel(cell_x, cell_y, pixel_left, pixel_top);
 
         // Add 1 to the dimensions if the position lies more than half way into another cell.
         cell_w = cell_x + Lepton_To_Cell_Coord(DisplayWidth) + (Lepton_Sub_Cell(DisplayWidth) < 128 ? 0 : 1);
         cell_h = cell_y + Lepton_To_Cell_Coord(DisplayHeight) + (Lepton_Sub_Cell(DisplayHeight) < 128 ? 0 : 1);
 
-        Cell_XY_To_Radar_Pixel(
-            cell_w,
-            cell_h,
-            pixel_right,
-            pixel_btm
-        );
+        Cell_XY_To_Radar_Pixel(cell_w, cell_h, pixel_right, pixel_btm);
 
         --pixel_right;
         --pixel_btm;
@@ -606,13 +600,11 @@ void RadarClass::Radar_Cursor(BOOL redraw)
 
         GraphicViewPortClass *old = Set_Logic_Page(&g_hidPage);
 
-        GraphicViewPortClass gvp(
-            g_logicPage->Get_Graphic_Buffer(),
+        GraphicViewPortClass gvp(g_logicPage->Get_Graphic_Buffer(),
             g_logicPage->Get_XPos() + MinRadarX + RadarButtonXPos + MiniMap.m_left,
             g_logicPage->Get_YPos() + MinRadarY + RadarButtonYPos + MiniMap.m_top,
             MiniMap.m_right,
-            MiniMap.m_bottom
-        );
+            MiniMap.m_bottom);
 
         // Top left
         gvp.Draw_Line(pixel_left, pixel_top, pixel_left + RADAR_CURSOR_SIZE, pixel_top, COLOR_LTGREEN);
@@ -638,7 +630,7 @@ void RadarClass::Radar_Cursor(BOOL redraw)
         RadarCursorRedraw = false;
     }
 
-    // Undefine line length so not misused elsewhere.
+        // Undefine line length so not misused elsewhere.
 #undef RADAR_CURSOR_SIZE
 }
 
@@ -714,7 +706,7 @@ int RadarClass::Radar_Activate(int mode)
 
     switch (mode) {
         default:
-        case RADAR_M1:	//Toggle active and inactive
+        case RADAR_M1: // Toggle active and inactive
             if (RadarActive) {
                 Radar_Activate(RADAR_0);
                 DEBUG_LOG("Radar: TacticalMap availability is off\n");
@@ -725,7 +717,7 @@ int RadarClass::Radar_Activate(int mode)
 
             break;
 
-        case RADAR_0: //Turn radar off
+        case RADAR_0: // Turn radar off
             if (!Map.Is_Sidebar_Drawn()) {
                 Radar_Activate(RADAR_2);
 
@@ -751,7 +743,7 @@ int RadarClass::Radar_Activate(int mode)
 
             return is_active;
 
-        case RADAR_1: //Turn radar on
+        case RADAR_1: // Turn radar on
             if (!Map.Is_Sidebar_Drawn()) {
                 Radar_Activate(RADAR_3);
 
@@ -808,7 +800,6 @@ int RadarClass::Radar_Activate(int mode)
             RadarToRedraw = true;
 
             break;
-
     }
 
     if (is_active != RadarActive) {
@@ -823,11 +814,11 @@ int RadarClass::Radar_Activate(int mode)
 
 BOOL RadarClass::Spy_Next_House()
 {
-    // TODO Requires HouseClass
+// TODO Requires HouseClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x0053214C);
     return func(this);
-#endif
+#else
     /*
     DrawNames = false;
     RadarToRedraw = true;
@@ -868,4 +859,5 @@ BOOL RadarClass::Spy_Next_House()
     return have_spied;
     */
     return 0;
+#endif
 }

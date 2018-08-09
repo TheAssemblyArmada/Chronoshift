@@ -1421,8 +1421,8 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
     int current_frame;
     int pitch;
     uint8_t *dst;
-    int use_old_drawer;
-    ShapeBufferHeader *draw_header;
+    int use_old_drawer = 0;
+    ShapeBufferHeader *draw_header = nullptr;
     int src_pitch;
     int dst_pitch;
     int blit_style;

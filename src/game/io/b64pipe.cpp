@@ -21,10 +21,10 @@
 
 int Base64Pipe::Put(const void *source, int slen)
 {
-    char *srcbuffp;
-    char *destbuffp;
-    int outcount;
-    int incount;
+    char *srcbuffp = nullptr;
+    char *destbuffp = nullptr;
+    int outcount = 0;
+    int incount = 0;
     int b64len = 0;
 
     DEBUG_ASSERT(source != nullptr);
@@ -46,6 +46,9 @@ int Base64Pipe::Put(const void *source, int slen)
                 srcbuffp = m_cBuffer;
                 destbuffp = m_pBuffer;
                 outcount = sizeof(m_pBuffer);
+                break;
+
+            default:
                 break;
         }
 

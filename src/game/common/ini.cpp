@@ -109,7 +109,7 @@ BOOL INIClass::Clear(const char *section, const char *entry)
     if (section) {
         if ((sectionptr = Find_Section(section)) != nullptr) {
             if (entry) {
-                if (!(entryptr = sectionptr->Find_Entry(entry))) {
+                if ((entryptr = sectionptr->Find_Entry(entry)) == nullptr) {
                     return true;
                 }
 
@@ -309,7 +309,7 @@ INISection *INIClass::Find_Section(const char *section) const
 
     int crc;
 
-    if (section != nullptr && (crc = CRC(section)) && m_sectionIndex.Is_Present(crc)) {
+    if (section != nullptr && (crc = CRC(section)) != 0 && m_sectionIndex.Is_Present(crc)) {
         return m_sectionIndex.Fetch_Index(crc);
     }
 
@@ -558,8 +558,8 @@ int INIClass::Get_Int(const char *section, const char *entry, int defvalue) cons
     INIEntry *entryptr;
     const char *value;
 
-    if (section != nullptr && entry && (entryptr = Find_Entry(section, entry)) && entryptr->Get_Name()
-        && (value = entryptr->Get_Value())) {
+    if (section != nullptr && entry != nullptr && (entryptr = Find_Entry(section, entry)) != nullptr && entryptr->Get_Name()
+        && (value = entryptr->Get_Value()) != nullptr) {
         if (value[0] == '$') {
             sscanf(value, "$%x", &defvalue);
             return defvalue;
@@ -610,7 +610,7 @@ float INIClass::Get_Float(const char *section, const char *entry, float defvalue
 {
     INIEntry *entryptr;
 
-    if (section != nullptr && entry && (entryptr = Find_Entry(section, entry)) && *(entryptr->Get_Value())) {
+    if (section != nullptr && entry && (entryptr = Find_Entry(section, entry)) != nullptr && *(entryptr->Get_Value())) {
         sscanf(entryptr->Get_Value(), "%f", &defvalue);
 
         // Is this actually a percentage? if so, divide it by 100
@@ -635,7 +635,7 @@ double INIClass::Get_Double(const char *section, const char *entry, double defva
 {
     INIEntry *entryptr;
 
-    if (section && entry && (entryptr = Find_Entry(section, entry)) && *(entryptr->Get_Value())) {
+    if (section && entry && (entryptr = Find_Entry(section, entry)) != nullptr && *(entryptr->Get_Value())) {
         sscanf(entryptr->Get_Value(), "%lf", &defvalue);
 
         //
@@ -658,14 +658,14 @@ BOOL INIClass::Put_String(const char *section, const char *entry, const char *st
     INIEntry *entryptr;
 
     if (section != nullptr && entry != nullptr) {
-        if (!(sectionptr = Find_Section(section))) {
+        if ((sectionptr = Find_Section(section)) == nullptr) {
             DEBUG_LOG("INIClass::Put_String() Creating new section [%s]\n", section);
             sectionptr = new INISection(section);
             m_sectionList.Add_Tail(sectionptr);
             m_sectionIndex.Add_Index(CRC(sectionptr->Get_Name()), sectionptr);
         }
 
-        if ((entryptr = sectionptr->Find_Entry(entry))) {
+        if ((entryptr = sectionptr->Find_Entry(entry)) != nullptr) {
             // TODO needs rewriting, see BMFE or Ren
             if (strcmp(entryptr->Get_Name(), entry) == 0) {
                 // Duplicate_CRC_Error(__CURRENT_FUNCTION__, section, entry);
@@ -746,7 +746,7 @@ BOOL const INIClass::Get_Bool(const char *section, const char *entry, BOOL defva
     DEBUG_ASSERT(entry != nullptr);
 
     if (section != nullptr && entry != nullptr) {
-        if ((entryptr = Find_Entry(section, entry)) && entryptr->Get_Name() && (value = entryptr->Get_Value())) {
+        if ((entryptr = Find_Entry(section, entry)) != nullptr && entryptr->Get_Name() && (value = entryptr->Get_Value()) != nullptr) {
             switch (toupper(value[0])) {
                 // 1, true, yes...
                 case '1':

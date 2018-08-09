@@ -216,7 +216,7 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
 
     Wait_Blit();
 
-    if (!(src_locked = src.Lock())) {
+    if ((src_locked = src.Lock()) == false) {
         if (&dst == &g_seenBuff) {
             g_mouse->Show_Mouse();
         }
@@ -224,7 +224,7 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
         return;
     }
 
-    if (!(dst_locked = dst.Lock())) {
+    if ((dst_locked = dst.Lock()) == false) {
         if (src_locked) {
             src.Unlock();
         }

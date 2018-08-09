@@ -69,12 +69,11 @@ BOOL KeyboardClass::Put(KeyType keycode)
         //DEBUG_LOG("KeyboardClass::Put() buffer is full, unable to put key (%d) and returning %s.\n", keycode, "false");
 
         return false;
-    } else {
-        //DEBUG_LOG("KeyboardClass::Put() setting key (%d) and returning %s.\n", keycode, "true");
-        return Put_Element(keycode);
-
-        return true;
     }
+
+    //DEBUG_LOG("KeyboardClass::Put() setting key (%d) and returning %s.\n", keycode, "true");
+    Put_Element(keycode);
+    return true;
 }
 
 BOOL KeyboardClass::Put_Key_Message(KeyType keycode, BOOL release)

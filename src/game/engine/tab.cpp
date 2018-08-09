@@ -380,8 +380,8 @@ void TabClass::Draw_Credits_Tab()
  */
 void TabClass::Hilite_Tab(int tab)
 {
-    int pos;
-    int frame;
+    int pos = 0;
+    int frame = 0;
 
     switch (tab) {
         case TAB_OPTIONS:

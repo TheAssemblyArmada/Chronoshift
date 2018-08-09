@@ -43,7 +43,7 @@ void *Conquer_Build_Fading_Table(const PaletteClass &palette, void *fade_table, 
                 RGBClass tmp = palette[i];
                 tmp.Adjust(frac, *target_col);
 
-                int index;
+                int index = 0;
                 int prevdiff = -1;
 
                 for (int j = 240; j < 255; ++j) {

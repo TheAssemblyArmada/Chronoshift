@@ -374,10 +374,8 @@ const char *CPUDetectClass::Get_Processor_Manufacturer_Name()
 static uint32_t Calculate_Processor_Speed(int64_t &ticks_per_second)
 {
 #if defined PROCESSOR_X86 || defined PROCESSOR_X86_64
-    uint64_t timer0;
-    uint64_t timer1;
-
-    timer0 = __rdtsc();
+    uint64_t timer0 = __rdtsc();
+    uint64_t timer1 = 0;
 
 #ifdef PLATFORM_WINDOWS
     uint32_t start = timeGetTime();
