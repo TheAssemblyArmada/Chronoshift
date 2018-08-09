@@ -49,7 +49,7 @@ enum CompressionType : int16_t
 #pragma pack(push, 1)
 struct PictureHeader
 {
-    uint16_t Filesize;
+    //uint16_t Filesize;
     CompressionType CompMode; // use CompressionType cast on this
     uint32_t UncompressedSize;
     uint16_t PaletteSize;

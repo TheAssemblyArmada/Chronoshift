@@ -18,15 +18,19 @@
 #include "lcw.h"
 #include "palette.h"
 
+/**
+ * Load cps formatted image data from a FileClass object.
+ *
+ * 0x004FB60C
+ */
 int32_t Load_Uncompress(FileClass &file, BufferClass &uncomp_buff, BufferClass &dest_buff, void *palette)
 {
     int16_t bytesremaining;
     PictureHeader header;
-    int16_t palettesize;
-    uint8_t tmpbuff[(320 * 240) + sizeof(PictureHeader)];
+    //uint8_t tmpbuff[(320 * 240) + sizeof(PictureHeader)];
     bool opened = false; // File opened by this function?
     uint8_t *inbuffer = uncomp_buff.Get_Buffer();
-    uint8_t *outbuffer = uncomp_buff.Get_Buffer();
+    uint8_t *outbuffer = dest_buff.Get_Buffer();
 
     if (!file.Is_Open()) {
         if (!file.Open()) {
@@ -35,27 +39,28 @@ int32_t Load_Uncompress(FileClass &file, BufferClass &uncomp_buff, BufferClass &
         opened = true;
     }
 
+    file.Read(&bytesremaining, sizeof(bytesremaining));
     file.Read(&header, sizeof(header));
-    bytesremaining = le16toh(header.Filesize);
-    bytesremaining -= sizeof(header) - sizeof(header.Filesize);
-    palettesize = le16toh(header.PaletteSize);
+    bytesremaining = le16toh(bytesremaining);
+    bytesremaining -= sizeof(header);
+    header.PaletteSize = le16toh(header.PaletteSize);
 
     // test for palette?
-    if (palettesize > 0) {
-        bytesremaining -= palettesize;
+    if (header.PaletteSize > 0) {
+        bytesremaining -= header.PaletteSize;
 
         if (palette != nullptr) {
             // DEBUG_LOG("Pal size %d, remaining %d\n", palettesize, bytesremaining);
-            file.Read(palette, palettesize);
+            file.Read(palette, header.PaletteSize);
         } else {
-            file.Seek(palettesize, FS_SEEK_CURRENT);
+            file.Seek(header.PaletteSize, FS_SEEK_CURRENT);
         }
 
-        palettesize = 0;
+        header.PaletteSize = 0;
     }
 
     if (uncomp_buff.Get_Buffer() == dest_buff.Get_Buffer()) {
-        inbuffer = tmpbuff;
+        inbuffer = &inbuffer[uncomp_buff.Get_Size() - sizeof(PictureHeader)] - bytesremaining;
     }
 
     memmove(inbuffer, &header, sizeof(PictureHeader));
@@ -70,22 +75,26 @@ int32_t Load_Uncompress(FileClass &file, BufferClass &uncomp_buff, BufferClass &
     return bytesremaining;
 }
 
+/**
+ * Decompress cps formatted data after any palette has been removed.
+ *
+ * 0x005CF6B0
+ */
 uint32_t Uncompress_Data(void const *src, void *dst)
 {
     if (src != nullptr && dst != nullptr) {
-        uint32_t uncomp_size = le16toh(static_cast<const PictureHeader *>(src)->UncompressedSize);
-        CompressionType method = (CompressionType)le16toh((int16_t)static_cast<const PictureHeader *>(src)->CompMode);
-        uint8_t const *datap = static_cast<uint8_t const *>(src) + sizeof(PictureHeader);
+        const PictureHeader *head = static_cast<const PictureHeader *>(src);
+        uint32_t uncomp_size = le16toh(head->UncompressedSize);
+        CompressionType method = (CompressionType)le16toh((int16_t)head->CompMode);
+        uint8_t const *datap = static_cast<uint8_t const *>(src) + sizeof(PictureHeader) + head->PaletteSize;
 
         switch (method) {
             default:
             case COMP_NOCOMPRESS:
-                memcpy(dst, datap, uncomp_size);
-                break;
-
             case COMP_LZW12: // These 3 are possible formats for other games but unused in C&C games.
             case COMP_LZW14:
             case COMP_HORIZONTAL:
+                memcpy(dst, datap, uncomp_size);
                 break;
 
             case COMP_LCW:
@@ -99,12 +108,20 @@ uint32_t Uncompress_Data(void const *src, void *dst)
     return 0;
 }
 
-int Load_Picture(FileClass &file, BufferClass &buff1, BufferClass &buff2, void *palette, PicturePlaneType a5)
+/**
+ * Load a cps file from a FileClass instance.
+ */
+int Load_Picture(FileClass &file, BufferClass &buff1, BufferClass &buff2, void *palette, PicturePlaneType plane)
 {
     return Load_Uncompress(file, buff1, buff2, palette) / 8000;
 }
 
-int __cdecl Load_Picture(char const *filename, BufferClass &buff1, BufferClass &buff2, void *palette, PicturePlaneType a5)
+/**
+ * Load a cps file from a file name.
+ *
+ * 0x004FB724
+ */
+int __cdecl Load_Picture(char const *filename, BufferClass &buff1, BufferClass &buff2, void *palette, PicturePlaneType plane)
 {
     CCFileClass file(filename);
 
