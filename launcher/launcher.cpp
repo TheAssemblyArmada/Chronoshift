@@ -113,6 +113,7 @@ void Inject_Loader(const char *path, const char *dllname, char *args)
 
         // wait until the thread stuck at entry point
         CONTEXT context;
+        memset(&context, 0, sizeof(context));
 
         for (unsigned int i = 0; i < 50 && context.Eip != (DWORD)entry; ++i) {
             // patience.
@@ -125,7 +126,7 @@ void Inject_Loader(const char *path, const char *dllname, char *args)
 
         if (context.Eip != (DWORD)entry) {
             // wait timed out, we never got to the entry point :/
-            TerminateProcess(hProcess, -1);
+            TerminateProcess(hProcess, (UINT)-1);
             exit(1);
         }
 
@@ -162,7 +163,7 @@ void Inject_Loader(const char *path, const char *dllname, char *args)
     }
 }
 
-int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int __stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int)
 {
     Inject_Loader(EXE_NAME, DLL_NAME, Make_Args(lpCmdLine));
 

@@ -202,30 +202,28 @@ BOOL ListClass::Action(unsigned flags, KeyNumType &key)
         ControlClass::Action(flags & (~MOUSE_LEFT_RLSE), key);
 
         return true;
-    } else {
-        if (flags & KEYBOARD_INPUT) {
-            if (key == KN_UP) {
-                Step_Selected_Index(-1);
-                key = KN_NONE;
-            } else if (key == KN_DOWN) {
-                Step_Selected_Index(1);
-                key = KN_NONE;
-            } else {
-                flags &= ~KEYBOARD_INPUT;
-            }
-        } else {
-            CurrentIndex = ViewIndex + (g_mouse->Get_Mouse_Y() - YPos) / YSpacing;
-            CurrentIndex = Min(CurrentIndex, Entries.Count() - 1);
-
-            if (CurrentIndex == -1) {
-                CurrentIndex = 0;
-            }
-        }
-
-        return ControlClass::Action(flags, key);
     }
 
-    return false;
+    if (flags & KEYBOARD_INPUT) {
+        if (key == KN_UP) {
+            Step_Selected_Index(-1);
+            key = KN_NONE;
+        } else if (key == KN_DOWN) {
+            Step_Selected_Index(1);
+            key = KN_NONE;
+        } else {
+            flags &= ~KEYBOARD_INPUT;
+        }
+    } else {
+        CurrentIndex = ViewIndex + (g_mouse->Get_Mouse_Y() - YPos) / YSpacing;
+        CurrentIndex = Min(CurrentIndex, Entries.Count() - 1);
+
+        if (CurrentIndex == -1) {
+            CurrentIndex = 0;
+        }
+    }
+
+    return ControlClass::Action(flags, key);
 }
 
 int ListClass::Add_Item(int str_id)
@@ -499,7 +497,7 @@ void Clear_Listbox(ListClass *list)
 BOOL Is_Link_In_List(LinkClass *list, LinkClass *link)
 {
     for (LinkClass *l = list; l != nullptr; l = l->Get_Next()) {
-        if (l = link) {
+        if (l == link) {
             return true;
         }
     }

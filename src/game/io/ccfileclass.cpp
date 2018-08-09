@@ -123,14 +123,12 @@ off_t CCFileClass::Size()
     // if BufferIO is available, return Size().
     if (BufferIOFileClass::Is_Available()) {
         return BufferIOFileClass::Size();
-    } else {
-        int filesize = 0;
-        CCMixFileClass::Offset(File_Name(), nullptr, nullptr, nullptr, &filesize);
-
-        return filesize;
     }
 
-    return 0;
+    int filesize = 0;
+    CCMixFileClass::Offset(File_Name(), nullptr, nullptr, nullptr, &filesize);
+
+    return filesize;
 }
 
 BOOL CCFileClass::Is_Available(BOOL forced)
@@ -179,43 +177,36 @@ BOOL CCFileClass::Open(int mode)
     CCMixFileClass *mixfile = nullptr;
     void *cachedfile = nullptr;
 
-    if ((mode & FM_WRITE) || BufferIOFileClass::Is_Available()) {
+    if ((mode & FM_WRITE) || BufferIOFileClass::Is_Available()
+        || !CCMixFileClass::Offset(File_Name(), &cachedfile, &mixfile, &fileoffset, &filesize)) {
         return CDFileClass::Open(mode);
     }
 
-    if (CCMixFileClass::Offset(File_Name(), &cachedfile, &mixfile, &fileoffset, &filesize)) {
-        DEBUG_ASSERT(mixfile != nullptr);
+    DEBUG_ASSERT(mixfile != nullptr);
 
-        if (cachedfile == nullptr && mixfile != nullptr) {
-            char *tmpfilename = strdup(File_Name());
+    if (cachedfile == nullptr && mixfile != nullptr) {
+        char *tmpfilename = strdup(File_Name());
 
-            Open(mixfile->Get_Filename(), FM_READ);
+        Open(mixfile->Get_Filename(), FM_READ);
 
-            Disable_Search_Drives(false);
-            Set_Name(tmpfilename);
-            Disable_Search_Drives(true);
-            free((void *)tmpfilename);
+        Disable_Search_Drives(false);
+        Set_Name(tmpfilename);
+        Disable_Search_Drives(true);
+        free((void *)tmpfilename);
 
-            Bias(0);
-            Bias(fileoffset, filesize);
+        Bias(0);
+        Bias(fileoffset, filesize);
 
-            Seek(0, FS_SEEK_START);
-
-            return true;
-        } else {
-            if (m_fileBuffer.Get_Buffer() == nullptr) {
-                new(&m_fileBuffer) BufferClass(cachedfile, filesize);
-            }
-
-            m_cachePosition = 0;
-
-            return true;
+        Seek(0, FS_SEEK_START);
+    } else {
+        if (m_fileBuffer.Get_Buffer() == nullptr) {
+            new(&m_fileBuffer) BufferClass(cachedfile, filesize);
         }
 
-        return false;
+        m_cachePosition = 0;
     }
 
-    return CDFileClass::Open(mode);
+    return true;
 }
 
 time_t CCFileClass::Get_Date_Time()
@@ -236,7 +227,7 @@ BOOL CCFileClass::Set_Date_Time(time_t date_time)
     BOOL retval;
     CCMixFileClass *mixfile = nullptr;
 
-    if ((retval = (RawFileClass::Set_Date_Time(date_time) || !CCMixFileClass::Offset(File_Name(), nullptr, &mixfile)))) {
+    if (((retval = RawFileClass::Set_Date_Time(date_time)) != false || !CCMixFileClass::Offset(File_Name(), nullptr, &mixfile))) {
         return retval;
     }
 

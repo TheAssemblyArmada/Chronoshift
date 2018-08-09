@@ -288,9 +288,9 @@ BOOL BufferIOFileClass::Open(int rights)
 
 int BufferIOFileClass::Write(void const *buffer, int length)
 {
-    int readsize;
-    int movedsize;
-    int retval;
+    int readsize = 0;
+    int movedsize = 0;
+    int retval = 0;
     BOOL opened = false;
 
     if (!Is_Open()) {

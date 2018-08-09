@@ -19,10 +19,10 @@
 
 int Base64Straw::Get(void *source, int slen)
 {
-    char *from;
-    char *destbuffp;
-    int outcount;
-    int fromsize;
+    char *from = nullptr;
+    char *destbuffp = nullptr;
+    int outcount = 0;
+    int fromsize = 0;
     int total = 0;
 
     DEBUG_ASSERT(source != nullptr);
@@ -41,6 +41,8 @@ int Base64Straw::Get(void *source, int slen)
             fromsize = sizeof(m_pBuffer);
             destbuffp = m_cBuffer;
             outcount = sizeof(m_cBuffer);
+            break;
+        default:
             break;
     }
 
