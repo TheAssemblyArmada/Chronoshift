@@ -102,12 +102,13 @@ set(GAMEENGINE_SRC
     game/engine/heap.cpp
     game/engine/help.cpp
     game/engine/housetype.cpp
+    game/engine/infantrytype.cpp
+    game/engine/init.cpp
     game/engine/iomap.cpp
     game/engine/land.cpp
     game/engine/layer.cpp
     game/engine/lists.cpp
     game/engine/logic.cpp
-    game/engine/infantrytype.cpp
     game/engine/map.cpp
     game/engine/mission.cpp
     game/engine/missioncontrol.cpp

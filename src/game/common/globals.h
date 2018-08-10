@@ -54,11 +54,6 @@ extern BOOL &g_cancelCurrentMsgBox;
 #ifdef PLATFORM_WINDOWS
 extern HWND &MainWindow;
 #endif
-extern char *&MainMix;
-extern char *&ConquerMix;
-extern char *&GeneralMix;
-extern char *&MoviesMix;
-extern char *&ScoreMix;
 extern char **TutorialText;
 extern BOOL &MouseInstalled;
 extern int &g_seed;
@@ -88,11 +83,6 @@ extern BOOL g_cancelCurrentMsgBox;
 #ifdef PLATFORM_WINDOWS
 extern HWND MainWindow;
 #endif
-extern char *MainMix;
-extern char *ConquerMix;
-extern char *GeneralMix;
-extern char *MoviesMix;
-extern char *ScoreMix;
 extern char *TutorialText;
 extern BOOL MouseInstalled;
 extern int g_seed;
