@@ -57,6 +57,8 @@ extern HWND &MainWindow;
 extern char **TutorialText;
 extern BOOL &MouseInstalled;
 extern int &g_seed;
+extern int &CustomSeed;
+extern int &RandNumb;
 #else
 extern int g_iniFormat;
 extern int g_frame;
@@ -86,6 +88,8 @@ extern HWND MainWindow;
 extern char *TutorialText;
 extern BOOL MouseInstalled;
 extern int g_seed;
+extern int CustomSeed;
+extern int RandNumb;
 #endif
 
 #endif

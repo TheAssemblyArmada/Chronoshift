@@ -19,8 +19,12 @@
 #include "globals.h"
 #include "pk.h"
 #include "ramfile.h"
+#include "scenario.h"
+#include "session.h"
 #include "textprint.h"
 #include "theme.h"
+#include <cstdlib>
+#include <ctime>
 
 #ifndef PLATFORM_WINDOWS
 #include <dirent.h>
@@ -224,4 +228,66 @@ void Init_Fonts()
     VCRFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("vcr.fnt"));
     TypeFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("8point.fnt"));
     Set_Font(Font8Ptr);
+}
+
+void Init_Random()
+{
+#ifdef PLATFORM_WINDOWS
+    struct _SYSTEMTIME sys_time;
+    GetSystemTime(&sys_time);
+    g_cryptRandom.Seed_Byte(sys_time.wMilliseconds);
+    g_cryptRandom.Seed_Bit(sys_time.wSecond);
+    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 1);
+    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 2);
+    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 3);
+    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 4);
+    g_cryptRandom.Seed_Bit(sys_time.wMinute);
+    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 1);
+    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 2);
+    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 3);
+    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 4);
+    g_cryptRandom.Seed_Bit(sys_time.wHour);
+    g_cryptRandom.Seed_Bit(sys_time.wDay);
+    g_cryptRandom.Seed_Bit(sys_time.wDayOfWeek);
+    g_cryptRandom.Seed_Bit(sys_time.wMonth);
+    g_cryptRandom.Seed_Bit(sys_time.wYear);
+#else
+    struct tm *sys_time;
+    struct timeval curr_time;
+    gettimeofday(&curr_time, nullptr);
+    sys_time = localtime(&curr_time.tv_sec);
+
+    CryptRandom.Seed_Value(curr_time.tv_usec / 1000);
+    CryptRandom.Seed_Bit(sys_time->tm_sec);
+    CryptRandom.Seed_Bit(sys_time->tm_sec >> 1);
+    CryptRandom.Seed_Bit(sys_time->tm_sec >> 2);
+    CryptRandom.Seed_Bit(sys_time->tm_sec >> 3);
+    CryptRandom.Seed_Bit(sys_time->tm_sec >> 4);
+    CryptRandom.Seed_Bit(sys_time->tm_min);
+    CryptRandom.Seed_Bit(sys_time->tm_min >> 1);
+    CryptRandom.Seed_Bit(sys_time->tm_min >> 2);
+    CryptRandom.Seed_Bit(sys_time->tm_min >> 3);
+    CryptRandom.Seed_Bit(sys_time->tm_min >> 4);
+    CryptRandom.Seed_Bit(sys_time->tm_hour);
+    CryptRandom.Seed_Bit(sys_time->tm_mday);
+    CryptRandom.Seed_Bit(sys_time->tm_wday);
+    CryptRandom.Seed_Bit(sys_time->tm_mon);
+    CryptRandom.Seed_Bit(sys_time->tm_year);
+#endif
+
+    if (!Session.Loading_Game()) {
+        if (!Session.Playback_Game()) {
+            if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.Game_To_Play() == GAME_SKIRMISH) {
+                if (CustomSeed) {
+                    g_seed = CustomSeed;
+                } else {
+                    std::srand(std::time(nullptr));
+                    g_seed = std::rand();
+                }
+            }
+        }
+
+        RandNumb = g_seed;
+        Scen.Set_Random_Seed(g_seed);
+    }
 }

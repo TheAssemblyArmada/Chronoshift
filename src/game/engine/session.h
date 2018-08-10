@@ -98,6 +98,7 @@ public:
     BOOL MPlayer_Goodies_Allowed() const { return MPlayerGoodies; }
     BOOL MPlayer_Ore_Growth() const { return MPlayerOre; }
     BOOL Playback_Game() const { return PlaybackGame; }
+    BOOL Loading_Game() const { return LoadGame; }
 
 private:
     GameEnum GameToPlay;
