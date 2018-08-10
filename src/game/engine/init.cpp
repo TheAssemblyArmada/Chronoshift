@@ -19,6 +19,7 @@
 #include "globals.h"
 #include "pk.h"
 #include "ramfile.h"
+#include "textprint.h"
 #include "theme.h"
 
 #ifndef PLATFORM_WINDOWS
@@ -191,7 +192,7 @@ void Init_Secondary_Mixfiles()
  *
  * 0x004F8664
  */
-void Init_Keys(void)
+void Init_Keys()
 {
     // Hardcode keys and read from RAM file.
     static char Keys[] =
@@ -202,4 +203,25 @@ void Init_Keys(void)
     tempini.Load(mem_keys);
     g_publicKey = tempini.Get_PKey(true);
     g_privateKey = tempini.Get_PKey(false); // Private key is only used to write mix files.
+}
+
+/**
+ * Initialises pointers to bitmap font file data.
+ *
+ * 0x004F7948
+ */
+void Init_Fonts()
+{
+    Metal12FontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("12metfnt.fnt"));
+    MapFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("help.fnt"));
+    Font6Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("6point.fnt"));
+    GradFont6Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("grad6fnt.fnt"));
+    EditorFont = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("editfnt.fnt"));
+    Font8Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("8point.fnt"));
+    Font3Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("3point.fnt"));
+    ScoreFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("scorefnt.fnt"));
+    FontLEDPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("led.fnt"));
+    VCRFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("vcr.fnt"));
+    TypeFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("8point.fnt"));
+    Set_Font(Font8Ptr);
 }
