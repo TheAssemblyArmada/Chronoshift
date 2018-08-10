@@ -45,7 +45,9 @@ HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 #endif
 char **TutorialText = reinterpret_cast<char **>(0x00666304);
 BOOL &MouseInstalled = Make_Global<BOOL>(0x00680838);
-int &g_seed = Make_Global<BOOL>(0x00680654);
+int &g_seed = Make_Global<int>(0x00680654);
+int &CustomSeed = Make_Global<int>(0x00680658);
+int &RandNumb = Make_Global<int>(0x0060D61C);
 #else
 int g_iniFormat;
 int g_frame;
@@ -75,4 +77,6 @@ HWND MainWindow;
 char *TutorialText;
 BOOL MouseInstalled;
 int g_seed;
+int CustomSeed ;
+int RandNumb = 0x12349876;
 #endif
