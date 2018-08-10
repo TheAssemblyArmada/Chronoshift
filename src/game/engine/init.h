@@ -28,7 +28,7 @@ void Init_Bootstrap_Mixfiles();
 void Init_Secondary_Mixfiles();
 //void Init_Bulk_Data();
 void Init_Keys();
-
+void Init_Fonts();
 
 #ifndef CHRONOSHIFT_STANDALONE
 extern MixFileClass<CCFileClass> *&MainMix;
