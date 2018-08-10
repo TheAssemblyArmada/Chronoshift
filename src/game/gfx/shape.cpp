@@ -909,7 +909,7 @@ TRect<int> Shape_Dimensions(void *shape, int frame)
 
             for (int i = 0; i <= b; ++i) {
                 if (r >= 0) {
-                    uint8_t *sptr = static_cast<uint8_t *>(data) + i * h;
+                    uint8_t *sptr = static_cast<uint8_t *>(data) + i * w;
                     int tmp_l = 0;
 
                     while (*sptr++ == 0) {
@@ -969,7 +969,7 @@ TRect<int> Shape_Dimensions(void *shape, int frame)
                 }
             }
 
-            for (int i = w - 1; i > r; --i) {
+            for (int i = w - 1; i >= r; --i) {
                 if (rect.m_bottom + t > t) {
                     uint8_t *sptr = static_cast<uint8_t *>(data) + w * t + i;
                     int tmp_t = t;
