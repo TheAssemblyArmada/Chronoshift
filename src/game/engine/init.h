@@ -30,6 +30,7 @@ void Init_Secondary_Mixfiles();
 void Init_Keys();
 void Init_Fonts();
 void Init_Random();
+void Init_Color_Remaps();
 
 #ifndef CHRONOSHIFT_STANDALONE
 extern MixFileClass<CCFileClass> *&MainMix;

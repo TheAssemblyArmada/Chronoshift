@@ -31,6 +31,7 @@ GraphicViewPortClass &g_seenBuff = Make_Global<GraphicViewPortClass>(0x006807A4)
 GraphicViewPortClass &g_hidPage = Make_Global<GraphicViewPortClass>(0x006807CC);
 GraphicBufferClass &g_visiblePage = Make_Global<GraphicBufferClass>(0x0068065C);
 GraphicBufferClass &g_hiddenPage = Make_Global<GraphicBufferClass>(0x00680700);
+GraphicBufferClass &g_sysMemPage = Make_Global<GraphicBufferClass>(0x00665E0C);
 #else
 BOOL GraphicViewPortClass::AllowHardwareBlitFills;
 BOOL GraphicViewPortClass::AllowStretchBlits;
@@ -42,6 +43,7 @@ GraphicViewPortClass g_seenBuff;
 GraphicViewPortClass g_hidPage;
 GraphicBufferClass g_visiblePage;
 GraphicBufferClass g_hiddenPage;
+GraphicBufferClass g_sysMemPage;
 #endif
 
 void Wait_Blit()
