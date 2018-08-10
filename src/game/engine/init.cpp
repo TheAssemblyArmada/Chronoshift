@@ -17,6 +17,7 @@
 #include "init.h"
 #include "ccini.h"
 #include "globals.h"
+#include "picture.h"
 #include "pk.h"
 #include "ramfile.h"
 #include "scenario.h"
@@ -290,4 +291,96 @@ void Init_Random()
         RandNumb = g_seed;
         Scen.Set_Random_Seed(g_seed);
     }
+}
+
+void Init_Color_Remaps()
+{
+    g_sysMemPage.Clear();
+    Load_Picture("palette.cps", *g_sysMemPage.Get_GBuffer(), *g_sysMemPage.Get_GBuffer(), nullptr);
+
+    // General Remaps
+    for (int remap = REMAP_FIRST; remap < REMAP_COUNT; ++remap) {
+        // Set a default palette mapping
+        for (int j = 0; j < 256; ++j) {
+            ColorRemaps[remap].RemapPalette[j] = j;
+        }
+
+        // Replace remap region with remapped indexes
+        for (int j = 0; j < 16; ++j) {
+            ColorRemaps[remap].RemapPalette[g_sysMemPage.Get_Pixel(j, 0)] = g_sysMemPage.Get_Pixel(j, remap);
+        }
+
+        // Write small gradient
+        for (int j = 4; j < 10; ++j) {
+            ColorRemaps[remap].FontPalette[j] = g_sysMemPage.Get_Pixel(j, remap);
+        }
+
+        ColorRemaps[remap].BrightColor = COLOR_WHITE; // Index 15 is always white in the palette
+        ColorRemaps[remap].MediumColor = g_sysMemPage.Get_Pixel(4, remap);
+        ColorRemaps[remap].WindowPalette[0] = g_sysMemPage.Get_Pixel(10, remap);
+        ColorRemaps[remap].WindowPalette[1] = g_sysMemPage.Get_Pixel(9, remap);
+        ColorRemaps[remap].WindowPalette[2] = g_sysMemPage.Get_Pixel(7, remap);
+        ColorRemaps[remap].WindowPalette[3] = g_sysMemPage.Get_Pixel(4, remap);
+        ColorRemaps[remap].WindowPalette[4] = g_sysMemPage.Get_Pixel(4, remap + 1);
+        ColorRemaps[remap].WindowPalette[5] = g_sysMemPage.Get_Pixel(0, remap);
+        ColorRemaps[remap].WindowPalette[6] = g_sysMemPage.Get_Pixel(0, remap);
+        ColorRemaps[remap].WindowPalette[7] = g_sysMemPage.Get_Pixel(6, remap);
+    }
+
+    // Grey Scheme
+    // Set a default palette mapping for GreyScheme
+    for (int i = 0; i < 256; ++i) {
+        GreyScheme.RemapPalette[i] = i;
+    }
+
+    // Write small gradient
+    int p = 6;
+    for (int i = 4; i < 10; ++i) {
+        GreyScheme.FontPalette[i] = g_sysMemPage.Get_Pixel(p++, 5);
+    }
+
+    GreyScheme.BrightColor = g_sysMemPage.Get_Pixel(3, 5);
+    GreyScheme.MediumColor = g_sysMemPage.Get_Pixel(7, 5);
+    GreyScheme.WindowPalette[0] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(15, 5)];
+    GreyScheme.WindowPalette[1] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(14, 5)];
+    GreyScheme.WindowPalette[2] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(13, 5)];
+    GreyScheme.WindowPalette[3] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(9, 5)];
+    GreyScheme.WindowPalette[4] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(11, 5)];
+    GreyScheme.WindowPalette[5] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(5, 5)];
+    GreyScheme.WindowPalette[6] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(5, 5)];
+    GreyScheme.WindowPalette[7] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(11, 5)];
+
+    // Metal Scheme
+    memset(&MetalScheme, 4, sizeof(RemapControlType));
+
+    for (int i = 0; i < 16; ++i) {
+        MetalScheme.FontPalette[i] = i;
+    }
+
+    MetalScheme.FontPalette[1] = 128;
+    MetalScheme.FontPalette[2] = COLOR_BLACK;
+    MetalScheme.FontPalette[4] = COLOR_LTGREY;
+    MetalScheme.MediumColor = 128;
+    MetalScheme.WindowPalette[1] = COLOR_TBLACK;
+    MetalScheme.WindowPalette[6] = 128;
+    MetalScheme.FontPalette[3] = COLOR_GREY;
+
+    // REMAP_8 adjustments
+    for (int i = 0; i < 16; ++i) {
+        ColorRemaps[REMAP_8].FontPalette[i] = g_sysMemPage.Get_Pixel(i, 8);
+    }
+
+    ColorRemaps[REMAP_8].WindowPalette[0] = COLOR_BLUE;
+    ColorRemaps[REMAP_8].WindowPalette[3] = COLOR_LTCYAN;
+    ColorRemaps[REMAP_8].WindowPalette[5] = COLOR_WHITE;
+    ColorRemaps[REMAP_8].BrightColor = COLOR_WHITE;
+    ColorRemaps[REMAP_8].MediumColor = COLOR_LTCYAN;
+    ColorRemaps[REMAP_8].WindowPalette[1] = COLOR_LTBLUE;
+    ColorRemaps[REMAP_8].WindowPalette[2] = COLOR_LTBLUE;
+    ColorRemaps[REMAP_8].WindowPalette[6] = COLOR_BLUE;
+    ColorRemaps[REMAP_8].WindowPalette[7] = COLOR_BLUE;
+    ColorRemaps[REMAP_8].WindowPalette[4] = COLOR_LTBLUE;
+
+    // Set gadget remap type.
+    GadgetClass::Set_Color_Scheme(&ColorRemaps[REMAP_10]);
 }

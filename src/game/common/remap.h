@@ -40,7 +40,8 @@ enum PlayerColorType
 enum RemapType
 {
     REMAP_NONE = -1,
-    REMAP_0,
+    REMAP_FIRST,
+    REMAP_0 = 0,
     REMAP_1,
     REMAP_2,
     REMAP_3,
