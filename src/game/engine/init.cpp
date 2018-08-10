@@ -15,8 +15,10 @@
  *            LICENSE
  */
 #include "init.h"
+#include "ccini.h"
 #include "globals.h"
 #include "pk.h"
+#include "ramfile.h"
 #include "theme.h"
 
 #ifndef PLATFORM_WINDOWS
@@ -182,4 +184,22 @@ void Init_Secondary_Mixfiles()
     new MixFileClass<CCFileClass>("sounds.mix", &g_publicKey);
     new MixFileClass<CCFileClass>("russian.mix", &g_publicKey);
     new MixFileClass<CCFileClass>("allies.mix", &g_publicKey);
+}
+
+/**
+ * Initialises the RSA keys used to decrypt mix file headers.
+ *
+ * 0x004F8664
+ */
+void Init_Keys(void)
+{
+    // Hardcode keys and read from RAM file.
+    static char Keys[] =
+        "[PublicKey]\n1=AihRvNoIbTn85FZRYNZRcT+i6KpU+maCsEqr3Q5q+LDB5tH7Tz2qQ38V\n\n"
+        "[PrivateKey]\n1=AigKVje8mROcR8QixnxUEF5b29Curkq01DNDWCdOG99XBqH79OaCiTCB\n\n";
+    RAMFileClass mem_keys(Keys, strlen(Keys));
+    CCINIClass tempini;
+    tempini.Load(mem_keys);
+    g_publicKey = tempini.Get_PKey(true);
+    g_privateKey = tempini.Get_PKey(false); // Private key is only used to write mix files.
 }
