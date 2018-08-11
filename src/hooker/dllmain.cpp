@@ -31,6 +31,7 @@
 #include "heap.h"
 #include "hooker.h"
 #include "ini.h"
+#include "init.h"
 #include "interpolate.h"
 #include "iomap.h"
 #include "keyboard.h"
@@ -131,6 +132,7 @@ void Setup_Hooks()
     //Hook_Function(0x004AC798, Coord_Move);
     Hook_Function(0x004AC814, Move_Point);
     //Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
+    Init::Hook_Me();
 }
 
 StaticInitObject::StaticInitObject()

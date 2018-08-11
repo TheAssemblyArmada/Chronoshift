@@ -38,6 +38,27 @@ extern MixFileClass<CCFileClass> *&ConquerMix;
 extern MixFileClass<CCFileClass> *&GeneralMix;
 extern MixFileClass<CCFileClass> *&MoviesMix;
 extern MixFileClass<CCFileClass> *&ScoreMix;
+
+#include "hooker.h"
+
+namespace Init
+{
+
+inline void Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004F5EC4, Init_Random);
+    Hook_Function(0x004F6240, Init_Color_Remaps);
+    Hook_Function(0x004F781C, Init_Expansion_Files);
+    Hook_Function(0x004F7948, Init_Fonts);
+    Hook_Function(0x004F7DF0, Init_Bootstrap_Mixfiles);
+    Hook_Function(0x004F8018, Init_Secondary_Mixfiles);
+    Hook_Function(0x004F8664, Init_Keys);
+#endif
+}
+
+}
+
 #else
 extern MixFileClass<CCFileClass> *MainMix;
 extern MixFileClass<CCFileClass> *ConquerMix;
