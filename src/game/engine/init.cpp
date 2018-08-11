@@ -231,6 +231,11 @@ void Init_Fonts()
     Set_Font(Font8Ptr);
 }
 
+/**
+ * Initialises random data generator and random number generator that is synced between clients.
+ *
+ * 0x004F5EC4
+ */
 void Init_Random()
 {
 #ifdef PLATFORM_WINDOWS
@@ -293,6 +298,11 @@ void Init_Random()
     }
 }
 
+/**
+ * Initialises remap tables used for house colors and gadget drawing.
+ *
+ * 0x004F6240
+ */
 void Init_Color_Remaps()
 {
     g_sysMemPage.Clear();
