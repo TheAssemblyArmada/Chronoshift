@@ -74,7 +74,7 @@ public:
     ObjectClass *const As_Object() const;
 
 protected:
-    TARGET_COMPOSITE Data;
+    TargetComposite Data;
 };
 
 class TargetClass
@@ -87,7 +87,7 @@ public:
     ~TargetClass() {}
 
 protected:
-    TARGET_COMPOSITE Data;
+    TargetComposite Data;
 };
 
 inline target_t Make_Target(RTTIType type, int id)
