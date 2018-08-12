@@ -16,7 +16,11 @@
 #include "gamedebug.h"
 #include "minmax.h"
 
+#ifdef COMPILER_WATCOM
+enum EncodingFlags
+#else
 enum EncodingFlags : uint8_t
+#endif
 {
     RLE_FLAG = 0xC0,
     RLE_MAX_RUN = 63,
