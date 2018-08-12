@@ -62,6 +62,7 @@ set(GAMEENGINE_SRC
     game/common/language.cpp
     game/common/lcw.cpp
     game/common/ostimer.cpp
+    game/common/pcxrle.cpp
     game/common/random.cpp
     game/common/readline.cpp
     game/common/remap.cpp
@@ -165,6 +166,7 @@ set(GAMEENGINE_SRC
     game/gfx/mouseshape.cpp
     game/gfx/pal.cpp
     game/gfx/palette.cpp
+    game/gfx/pcx.cpp
     game/gfx/rgb.cpp
     game/gfx/shape.cpp
     game/gfx/surfacemonitor.cpp
@@ -190,6 +192,8 @@ set(GAMEENGINE_SRC
     game/io/lzostraw.cpp
     game/io/mixfile.cpp
     game/io/pipe.cpp
+    game/io/pcxpipe.cpp
+    game/io/pcxstraw.cpp
     game/io/pkpipe.cpp
     game/io/pkstraw.cpp
     game/io/rawfileclass.cpp
