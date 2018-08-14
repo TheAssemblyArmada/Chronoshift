@@ -46,8 +46,29 @@ public:
     int Process(const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text,
         BOOL shadow_seen = false);
 
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+    int Hook_Process(const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text,
+        BOOL shadow_seen = false)
+    {
+        return Process(body_text, button_1_text, button_2_text, button_3_text, shadow_seen);
+    }
+#endif
+
 private:
     int CaptionText;
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void MessageBoxClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x005043D0, *MessageBoxClass::Hook_Process);
+#endif
+}
+
+#endif
 
 #endif // MSGBOX_H
