@@ -107,7 +107,7 @@ int MessageBoxClass::Process(
 
     // Perform a full blit of contents of visible to shadow buffer to allow removal of message later.
     g_visiblePage.Blit(shadow_buffer, 0, 0, 0, 0, g_visiblePage.Get_Width(), g_visiblePage.Get_Height(), false);
-    TextButtonClass button1(1,
+    TextButtonClass button1(MSGBOX_IDOK,
         button_1_text,
         TPF_6PT_GRAD | TPF_NOSHADOW | TPF_CENTER,
         xpos + button_count == 1 ? (formatted_width - b_width) / 2 : 40,
@@ -116,7 +116,7 @@ int MessageBoxClass::Process(
         -1,
         false);
 
-    TextButtonClass button2(2,
+    TextButtonClass button2(MSGBOX_IDCANCEL,
         button_2_text,
         TPF_6PT_GRAD | TPF_NOSHADOW | TPF_CENTER,
         formatted_width + xpos - (b_width + 40),
@@ -125,7 +125,7 @@ int MessageBoxClass::Process(
         -1,
         false);
 
-    TextButtonClass button3(3,
+    TextButtonClass button3(MSGBOX_IDABORT,
         button_3_text,
         TPF_6PT_GRAD | TPF_NOSHADOW | TPF_CENTER,
         0,
@@ -134,33 +134,33 @@ int MessageBoxClass::Process(
         -1,
         false);
 
-    TextButtonClass *list_head = nullptr;
+    TextButtonClass *button_head = nullptr;
     TextButtonClass *buttons[3];
     unsigned button_idx[3];
     memset(buttons, 0, sizeof(buttons));
 
     // Sort out linking the active gadgets to each other.
     if (button_count > 0) {
-        list_head = &button1;
+        button_head = &button1;
         buttons[0] = &button1;
-        button_idx[0] = 1;
+        button_idx[0] = MSGBOX_IDOK;
 
         if (button_count <= 2) {
             if (button_count == 2) {
                 button2.Add(button1);
                 buttons[1] = &button2;
-                button_idx[1] = 2;
+                button_idx[1] = MSGBOX_IDCANCEL;
             }
         } else {
             button3.Add(button1);
             buttons[1] = &button3;
-            button_idx[1] = 3;
+            button_idx[1] = MSGBOX_IDABORT;
             button2.Add(button1);
             buttons[2] = &button2;
-            button_idx[2] = 2;
+            button_idx[2] = MSGBOX_IDCANCEL;
         }
 
-        list_head->Turn_On();
+        button_head->Turn_On();
     }
 
     g_mouse->Hide_Mouse();
@@ -177,20 +177,20 @@ int MessageBoxClass::Process(
     Draw_Caption(CaptionText, xpos, ypos, formatted_width);
     Fancy_Text_Print(buffer, adj_xpos, ypos + 30, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, style);
 
-    if (list_head) {
-        list_head->Draw_All(true);
+    if (button_head) {
+        button_head->Draw_All(true);
     }
 
     g_mouse->Show_Mouse();
 
-    if (list_head != nullptr) {
-        bool loop = true;
+    if (button_head != nullptr) {
+        bool process = true;
         bool redraw = false;
         bool process_action = false;
         int starting_button = button_count - 1;
         int current_button = starting_button;
 
-        while (loop) {
+        while (process) {
             if (g_allSurfaces.Surfaces_Restored()) {
                 g_allSurfaces.Clear_Surfaces_Restored();
                 shadow_buffer.Blit(g_visiblePage, 0, 0, 0, 0, shadow_buffer.Get_Width(), shadow_buffer.Get_Height(), false);
@@ -203,15 +203,15 @@ int MessageBoxClass::Process(
                 Draw_Caption(CaptionText, xpos, ypos, formatted_width);
                 Fancy_Text_Print(buffer, adj_xpos, ypos + 30, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, style);
 
-                if (list_head) {
-                    list_head->Draw_All(true);
+                if (button_head) {
+                    button_head->Draw_All(true);
                 }
 
                 g_mouse->Show_Mouse();
             }
 
             Call_Back();
-            KeyNumType input = list_head->Input();
+            KeyNumType input = button_head->Input();
             unsigned click_button = 0;
 
             if (g_cancelCurrentMsgBox) {
@@ -252,11 +252,11 @@ int MessageBoxClass::Process(
                         buttons[current_button]->Flag_To_Redraw();
                     }
                     break;
-                case KN_BUTTON | 1:
+                case KN_BUTTON | MSGBOX_IDOK:
                     click_button = button_idx[0];
                     process_action = true;
                     break;
-                case KN_BUTTON | 2:
+                case KN_BUTTON | MSGBOX_IDCANCEL:
                     if (button_count <= 2) {
                         click_button = button_idx[1];
                     } else {
@@ -265,7 +265,7 @@ int MessageBoxClass::Process(
 
                     process_action = true;
                     break;
-                case KN_BUTTON | 3:
+                case KN_BUTTON | MSGBOX_IDABORT:
                     click_button = button_idx[1];
                     process_action = true;
                     break;
@@ -274,29 +274,29 @@ int MessageBoxClass::Process(
             }
 
             if (process_action) {
-                TextButtonClass *extract = (TextButtonClass *)list_head->Extract_Gadget(1);
+                TextButtonClass *extract = (TextButtonClass *)button_head->Extract_Gadget(MSGBOX_IDOK);
 
                 if (extract != nullptr) {
                     extract->Turn_Off();
                     extract->Set_Toggle_Bool1(false);
                 }
 
-                extract = (TextButtonClass *)list_head->Extract_Gadget(2);
+                extract = (TextButtonClass *)button_head->Extract_Gadget(MSGBOX_IDCANCEL);
 
                 if (extract != nullptr) {
                     extract->Turn_Off();
                     extract->Set_Toggle_Bool1(false);
                 }
 
-                extract = (TextButtonClass *)list_head->Extract_Gadget(3);
+                extract = (TextButtonClass *)button_head->Extract_Gadget(MSGBOX_IDABORT);
 
                 if (extract != nullptr) {
                     extract->Turn_Off();
                     extract->Set_Toggle_Bool1(false);
                 }
 
-                if (click_button == 1 || click_button == 2 || click_button == 3) {
-                    extract = (TextButtonClass *)list_head->Extract_Gadget(click_button);
+                if (click_button == MSGBOX_IDOK || click_button == MSGBOX_IDCANCEL || click_button == MSGBOX_IDABORT) {
+                    extract = (TextButtonClass *)button_head->Extract_Gadget(click_button);
 
                     if (extract != nullptr) {
                         extract->Turn_On();
@@ -305,20 +305,20 @@ int MessageBoxClass::Process(
                 }
 
                 g_mouse->Hide_Mouse();
-                list_head->Draw_All(true);
+                button_head->Draw_All(true);
                 g_mouse->Show_Mouse();
 
                 switch (click_button) {
-                    case 1:
-                        loop = false;
+                    case MSGBOX_IDOK:
+                        process = false;
                         ret_val = 0;
                         break;
-                    case 2:
-                        loop = false;
+                    case MSGBOX_IDCANCEL:
+                        process = false;
                         ret_val = 1;
                         break;
-                    case 3:
-                        loop = false;
+                    case MSGBOX_IDABORT:
+                        process = false;
                         ret_val = 2;
                         break;
                     default:
