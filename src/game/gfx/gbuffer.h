@@ -188,11 +188,15 @@ extern GraphicViewPortClass *&g_logicPage;
 extern LPDIRECTDRAWSURFACE &g_paletteSurface;
 extern GraphicViewPortClass &g_seenBuff;
 extern GraphicViewPortClass &g_hidPage;
+extern GraphicBufferClass &g_visiblePage;
+extern GraphicBufferClass &g_hiddenPage;
 #else
 extern GraphicViewPortClass *g_logicPage;
 extern LPDIRECTDRAWSURFACE g_paletteSurface;
 extern GraphicViewPortClass g_seenBuff;
 extern GraphicViewPortClass g_hidPage;
+extern GraphicBufferClass g_visiblePage;
+extern GraphicBufferClass g_hiddenPage;
 #endif
 
 #endif // GBUFFER_H

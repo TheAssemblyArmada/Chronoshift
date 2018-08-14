@@ -29,6 +29,8 @@ GraphicViewPortClass *&g_logicPage = Make_Global<GraphicViewPortClass *>(0x006AC
 LPDIRECTDRAWSURFACE &g_paletteSurface = Make_Global<LPDIRECTDRAWSURFACE>(0x006B18A4);
 GraphicViewPortClass &g_seenBuff = Make_Global<GraphicViewPortClass>(0x006807A4);
 GraphicViewPortClass &g_hidPage = Make_Global<GraphicViewPortClass>(0x006807CC);
+GraphicBufferClass &g_visiblePage = Make_Global<GraphicBufferClass>(0x0068065C);
+GraphicBufferClass &g_hiddenPage = Make_Global<GraphicBufferClass>(0x00680700);
 #else
 BOOL GraphicViewPortClass::AllowHardwareBlitFills;
 BOOL GraphicViewPortClass::AllowStretchBlits;
@@ -38,6 +40,8 @@ GraphicViewPortClass *g_logicPage = nullptr;
 LPDIRECTDRAWSURFACE g_paletteSurface = nullptr;
 GraphicViewPortClass g_seenBuff;
 GraphicViewPortClass g_hidPage;
+GraphicBufferClass g_visiblePage;
+GraphicBufferClass g_hiddenPage;
 #endif
 
 void Wait_Blit()
