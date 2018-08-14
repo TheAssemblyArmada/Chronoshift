@@ -110,7 +110,7 @@ int MessageBoxClass::Process(
     TextButtonClass button1(MSGBOX_IDOK,
         button_1_text,
         TPF_6PT_GRAD | TPF_NOSHADOW | TPF_CENTER,
-        xpos + button_count == 1 ? (formatted_width - b_width) / 2 : 40,
+        xpos + (button_count == 1 ? (formatted_width - b_width) / 2 : 40),
         formatted_height + ypos - (b1_ypos + 30),
         b_width,
         -1,
@@ -133,6 +133,8 @@ int MessageBoxClass::Process(
         -1,
         -1,
         false);
+
+    button3.Set_XPos(xpos + (formatted_width - button3.Get_Width()) / 2);
 
     TextButtonClass *button_head = nullptr;
     TextButtonClass *buttons[3];
@@ -175,7 +177,7 @@ int MessageBoxClass::Process(
 
     Dialog_Box(xpos, ypos, formatted_width, formatted_height);
     Draw_Caption(CaptionText, xpos, ypos, formatted_width);
-    Fancy_Text_Print(buffer, adj_xpos, ypos + 30, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, style);
+    Fancy_Text_Print(buffer, adj_xpos, ypos + 40, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, style);
 
     if (button_head) {
         button_head->Draw_All(true);
