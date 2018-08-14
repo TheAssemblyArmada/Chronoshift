@@ -82,6 +82,7 @@ set(GAMEENGINE_SRC
     game/engine/armor.cpp
     game/engine/buildingtype.cpp
     game/engine/bullettype.cpp
+    game/engine/callback.cpp
     game/engine/ccini.cpp
     game/engine/cell.cpp
     game/engine/coord.cpp

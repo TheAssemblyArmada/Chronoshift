@@ -39,6 +39,7 @@ BOOL &DebugUnshroud = Make_Global<BOOL>(0x0065D7F0);
 BOOL &DebugQuiet = Make_Global<BOOL>(0x0065D7CC);
 BOOL &ScoresPresent = Make_Global<BOOL>(0x006680C0);
 BOOL &StreamLowImpact = Make_Global<BOOL>(0x006ABFCC);
+BOOL &g_cancelCurrentMsgBox = Make_Global<BOOL>(0x00685170);
 #ifdef PLATFORM_WINDOWS
 HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 #endif
@@ -64,6 +65,7 @@ BOOL DebugUnshroud;
 BOOL DebugQuiet;
 BOOL ScoresPresent;
 BOOL StreamLowImpact;
+BOOL g_cancelCurrentMsgBox
 #ifdef PLATFORM_WINDOWS
 HWND MainWindow;
 #endif

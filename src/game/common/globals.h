@@ -50,6 +50,7 @@ extern BOOL &DebugUnshroud;
 extern BOOL &DebugQuiet;
 extern BOOL &ScoresPresent;
 extern BOOL &StreamLowImpact;
+extern BOOL &g_cancelCurrentMsgBox;
 #ifdef PLATFORM_WINDOWS
 extern HWND &MainWindow;
 #endif
@@ -75,6 +76,7 @@ extern BOOL DebugUnshroud;
 extern BOOL DebugQuiet;
 extern BOOL ScoresPresent;
 extern BOOL StreamLowImpact;
+extern BOOL g_cancelCurrentMsgBox;
 #ifdef PLATFORM_WINDOWS
 extern HWND MainWindow;
 #endif

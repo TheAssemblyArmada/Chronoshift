@@ -20,18 +20,6 @@
 #include "always.h"
 #include "ddraw.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
-#include "hooker.h"
-#endif
-
-#ifndef CHRONOSHIFT_STANDALONE
-extern void (*&Misc_Focus_Loss_Function)();
-extern void (*&Misc_Focus_Restore_Function)();
-#else
-extern void (*Misc_Focus_Loss_Function)();
-extern void (*Misc_Focus_Restore_Function)();
-#endif
-
 class SurfaceMonitorClass
 {
 public:
@@ -44,14 +32,15 @@ public:
     void Restore_Surfaces();
     void Set_Surface_Focus(bool focus);
     void Release();
+    BOOL Surfaces_Restored() const { return m_surfacesRestored; }
+    void Clear_Surfaces_Restored() { m_surfacesRestored = false; }
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 
-    BOOL m_surfacesRestored;
-
 private:
+    BOOL m_surfacesRestored;
     LPDIRECTDRAWSURFACE m_surface[20];
     BOOL m_inFocus;
 
@@ -66,6 +55,12 @@ private:
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+extern void (*&Misc_Focus_Loss_Function)();
+extern void (*&Misc_Focus_Restore_Function)();
+extern SurfaceMonitorClass &g_allSurfaces;
+
 inline void SurfaceMonitorClass::Hook_Me()
 {
     Hook_Function(0x005CA1D0, &Hook_Add_Surface);
@@ -75,6 +70,10 @@ inline void SurfaceMonitorClass::Hook_Me()
     Hook_Function(0x005CA370, &Hook_Set_Surface_Focus);
     Hook_Function(0x005CA390, &Hook_Release);
 }
+#else
+extern void (*Misc_Focus_Loss_Function)();
+extern void (*Misc_Focus_Restore_Function)();
+extern SurfaceMonitorClass g_allSurfaces;
 #endif
 
 #endif // SURFACEMONITOR_H

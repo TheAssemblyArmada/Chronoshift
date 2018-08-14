@@ -2,8 +2,9 @@
  * @file
  *
  * @author CCHyper
+ * @author OmniBlade
  *
- * @brief <todo>
+ * @brief Message box class to elicit input from the user.
  *
  * @copyright RedAlert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -35,16 +36,17 @@ enum MessageBoxReturn
 class MessageBoxClass
 {
 public:
-    MessageBoxClass(int caption = TXT_NONE) : CaptionText(caption) {}
+    MessageBoxClass(int caption = TXT_NULL) : CaptionText(caption) {}
     ~MessageBoxClass() {}
 
-    int Process(const int body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NONE, const int button_3_text = TXT_NONE, BOOL a5 = false);
-    int Process(const char *body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NONE, const int button_3_text = TXT_NONE, BOOL a5 = false);
+    int Process(const int body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NONE,
+        const int button_3_text = TXT_NONE, BOOL shadow_seen = false);
+    int Process(const char *body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NONE,
+        const int button_3_text = TXT_NONE, BOOL shadow_seen = false);
+    int Process(const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text,
+        BOOL shadow_seen = false);
 
 private:
-    int Process(const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text, BOOL a5 = false);
-
-protected:
     int CaptionText;
 };
 
