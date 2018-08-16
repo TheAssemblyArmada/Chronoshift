@@ -26,6 +26,11 @@
 #include "textbtn.h"
 #include "textprint.h"
 
+/**
+ * Creates message box windows and retrieves all strings from the string table.
+ *
+ * 0x0050500C
+ */
 int MessageBoxClass::Process(
     const int body_text, const int button_1_text, const int button_2_text, const int button_3_text, BOOL shadow_seen)
 {
@@ -36,6 +41,11 @@ int MessageBoxClass::Process(
         shadow_seen);
 }
 
+/**
+ * Creates message box windows and retrieves all strings from the string table except for the message body.
+ *
+ * 0x0050507C
+ */
 int MessageBoxClass::Process(
     const char *body_text, const int button_1_text, const int button_2_text, const int button_3_text, BOOL shadow_seen)
 {
@@ -43,6 +53,11 @@ int MessageBoxClass::Process(
         body_text, Fetch_String(button_1_text), Fetch_String(button_2_text), Fetch_String(button_3_text), shadow_seen);
 }
 
+/**
+ * Creates message box windows where all strings are specified directly.
+ *
+ * 0x005043D0
+ */
 int MessageBoxClass::Process(
     const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text, BOOL shadow_seen)
 {
