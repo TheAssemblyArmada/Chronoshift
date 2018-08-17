@@ -37,6 +37,10 @@ GetCDClass::GetCDClass()
             m_drivelist[m_driveCount++] = driveletter - 'a';
         }
     }
+#else
+    Set_Drive_Count(0);
+    Set_Current_Drive(0);
+    memset(m_drivelist, INVALID_CD_DRIVE, sizeof(m_drivelist));
 #endif
 }
 
