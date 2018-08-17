@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @Author OmniBlade
+ * @author OmniBlade
  *
  * @brief  Disk change handling.
  *
@@ -9,28 +9,284 @@
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
 #include "cd.h"
+#include "ccfileclass.h"
+#include "gbuffer.h"
+#include "getcd.h"
+#include "globals.h"
+#include "keyboard.h"
+#include "language.h"
+//#include "init.h"
+#include "mixfile.h"
+#include "msgbox.h"
+#include "mouse.h"
+#include "palette.h"
+#include "textprint.h"
+#include "theme.h"
+#include "timer.h"
+#include <cstdio>
+
+using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
-int &g_requiredCD = *reinterpret_cast<int*>(0x006017D0);
-#else 
+int &g_requiredCD = *reinterpret_cast<int *>(0x006017D0);
+int &g_currentCD = Make_Global<int>(0x006017D4);
+#else
 int g_requiredCD = DISK_NONE;
+int g_currentCD = DISK_NONE;
 #endif
 
-int Get_CD_Index(int cd, int delay)
+/**
+ * Work out which game CD we have in the drive.
+ *
+ * 0x004AAB2C
+ */
+int Get_CD_Index(int drive, int delay)
 {
-    // TODO Requires CountdownTimer
-    static int (*_get_cd)(int, int) = reinterpret_cast<int (*)(int, int)>(0x004AAB2C);
-    return _get_cd(cd, delay);
+#ifdef PLATFORM_WINDOWS
+    // TODO we don't have nor will ever have a DVD version, can probably remove that entry.
+    static const char *_vol_labels[] = { "CD1", "CD2", "CD3", "CD4", "CD1" /*, "RADVD"*/ };
+    static const int _num_volumes = 5;
+    CountDownTimerClass timer;
+    timer.Set(delay);
+    char drive_letter = 'A' + drive;
+    char path_buff[128];
+    char vol_buff[128];
+    DWORD max_comp_length = 0;
+    DWORD filesys_flags = 0;
+    HANDLE fh = 0;
+    bool checked = false;
+
+    while (true) {
+    recheck_drive:
+        // Keep trying to check the CD file system until time out to give disc time to spin up.
+        while (true) {
+            snprintf(path_buff, sizeof(path_buff), "%c:\\", drive_letter);
+
+            if (GetVolumeInformationA(path_buff, vol_buff, 128, nullptr, &max_comp_length, &filesys_flags, nullptr, 0)) {
+                break;
+            }
+
+            if (timer.Time() == 0 || GetLastError() != 0x15) {
+                return -1;
+            }
+        }
+
+        // Check if we have a main.mix in the root of the CD.
+        snprintf(path_buff, sizeof(path_buff), "%c:\\main.mix", drive_letter);
+        fh = CreateFileA(path_buff, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+        if (fh != INVALID_HANDLE_VALUE) {
+            break;
+        }
+
+        if (checked) {
+            return -1;
+        }
+
+        checked = true;
+    }
+
+    CloseHandle(fh);
+
+    // Check if the drive has the correct label for a game disc.
+    for (int i = 0; i < _num_volumes; ++i) {
+        if (strcasecmp(vol_buff, _vol_labels[i]) == 0) {
+            return i;
+        }
+    }
+
+    goto recheck_drive;
+#else
+    // Don't even bother if its not windows.
+    return -1;
+#endif
 }
 
-int Force_CD_Available(int cd)
+static void Change_CD(int drive, int index, int &cd)
 {
-    // TODO Requires ThemeClass CCFileClass MixFileClass
-    static int (*_force_cd)(int) = reinterpret_cast<int (*)(int)>(0x004AAC58);
-    return _force_cd(cd);
+    static int _last = -1;
+    g_currentCD = index;
+    CDFileClass::Set_CD_Drive(drive);
+    CDFileClass::Refresh_Search_Drives();
+
+    if (cd == DISK_EXPANSION) {
+        cd = DISK_AFTERMATH;
+    }
+
+    // If disk needs to change then unload existing files that are present on CD and reload from new CD.
+    if (cd > DISK_NONE && cd != _last /*&& cd != DISK_DVD*/) {
+        _last = cd;
+        Theme.Stop();
+
+        // Needs init merging.
+    }
+}
+
+BOOL Force_CD_Available(int cd)
+{
+    static void *_font = nullptr;
+    //static int _last = -1;
+    static const char *_cd_name[] = {
+        // TODO hard coded strings need translating and adding to a string table
+        "RED ALERT DISK 1",
+        "RED ALERT DISK 2",
+        "CounterStrike CD",
+        "Aftermath CD" /*, "RED ALERT DVD"*/
+    };
+
+    if (cd == DISK_ANY) {
+        return true;
+    }
+
+    int cd_index = Get_CD_Index(CDFileClass::Current_Drive(), 60);
+    int drive = 0;
+
+    // 3.00 and above checks for DVD which was never released.
+    /*if (Using_DVD()) {
+        cd = DISK_DVD;
+    }*/
+
+    // Adjust cd based on index we got back for current drive.
+    if (cd_index >= 0) {
+        if (cd == DISK_EXPANSION && (cd_index == 2 || cd_index == 3)) {
+            cd = cd_index;
+        }
+
+        if (cd == cd_index || cd == DISK_NONE) {
+            drive = CDFileClass::Current_Drive();
+        }
+    }
+
+    Theme.Stop();
+
+    // If current drive didn't give use a valid CD index, try again with last drive.
+    if (drive == 0) {
+        if (CDFileClass::Last_Drive() != 0 && CDFileClass::Current_Drive() != CDFileClass::Last_Drive()) {
+            cd_index = Get_CD_Index(CDFileClass::Last_Drive(), 600);
+
+            if (cd_index >= 0) {
+                if (cd == DISK_EXPANSION && (cd_index == 2 || cd_index == 3)) {
+                    cd = cd_index;
+                }
+
+                if (cd == cd_index || cd == DISK_NONE) {
+                    drive = CDFileClass::Last_Drive();
+                }
+            }
+        }
+    }
+
+    // If we have a valid drive, check that its not the same as the one we already loaded and reload data.
+    if (drive != 0) {
+    //change_drive:
+        /*g_currentCD = cd_index;
+        CDFileClass::Set_CD_Drive(drive);
+        CDFileClass::Refresh_Search_Drives();
+
+        if (cd == DISK_EXPANSION) {
+            cd = DISK_AFTERMATH;
+        }
+
+        // If disk needs to change then unload existing files that are present on CD and reload from new CD.
+        if (cd > DISK_NONE && cd != _last && cd != DISK_DVD) {
+            _last = cd;
+            Theme.Stop();
+
+            // Needs init merging.
+        }*/
+        Change_CD(drive, cd_index, cd);
+
+        return true;
+    }
+
+    int scan_delay = 120;
+    char msg_buff[128];
+    int state = -1;
+
+    while (true) {
+        for (int i = 0; i < g_cdList.Get_Drive_Count(); ++i) {
+            int list_drive = g_cdList.Get_CD_Drive();
+            cd_index = Get_CD_Index(list_drive, scan_delay);
+
+            if (cd_index >= 0) {
+                if (cd == DISK_EXPANSION && (cd_index == 2 || cd_index == 3)) {
+                    cd = cd_index;
+                }
+
+                if (cd == cd_index || cd == DISK_NONE) {
+                    drive = list_drive;
+                    break;
+                }
+            }
+        }
+
+        if (drive != 0) {
+            //goto change_drive; // TODO make change_drive block a separate function.
+            Change_CD(drive, cd_index, cd);
+
+            return true;
+        }
+
+        scan_delay = 300;
+
+        if (cd == DISK_EXPANSION) {
+            cd = DISK_AFTERMATH;
+        }
+
+        /*if (cd == DISK_DVD) {
+            snprintf(msg_buff, sizeof(msg_buff), "Please insert the %s", "RED ALERT DVD");
+        } else */
+
+        // Compose string for insert disc message box.
+        if (cd != DISK_COUNTERSTRIKE && cd != DISK_AFTERMATH) {
+            if (cd == DISK_NONE) {
+                snprintf(msg_buff, sizeof(msg_buff), Fetch_String(TXT_CD_DIALOG_1));
+            } else {
+                snprintf(msg_buff, sizeof(msg_buff), Fetch_String(TXT_CD_DIALOG_2), cd + 1, _cd_name[cd]);
+            }
+        } else {
+            // TODO hardcoded string needs adding to string table.
+            snprintf(msg_buff, sizeof(msg_buff), "Please insert the %s", _cd_name[cd]);
+        }
+
+        GraphicViewPortClass *old = Set_Logic_Page(&g_seenBuff);
+        Theme.Stop();
+        state = g_mouse->Get_Mouse_State();
+        _font = g_fontPtr;
+
+        if ((((PaletteClass::CurrentPalette[1].Get_Blue() >> 6) | (PaletteClass::CurrentPalette[1].Get_Blue() << 2))
+                + ((PaletteClass::CurrentPalette[1].Get_Red() >> 6) | (PaletteClass::CurrentPalette[1].Get_Red() << 2))
+                + ((PaletteClass::CurrentPalette[1].Get_Green() >> 6) |(PaletteClass::CurrentPalette[1].Get_Green() << 2))) == 0) {
+            GamePalette.Set();
+        }
+
+        g_keyboard->Clear();
+
+        while (g_mouse->Get_Mouse_State()) {
+            g_mouse->Show_Mouse();
+        }
+
+        MessageBoxClass msg;
+
+        if (msg.Process(msg_buff, TXT_OK, TXT_CANCEL, TXT_NULL, true) == 1) {
+            break;
+        }
+
+        while (--state != -1) {
+            g_mouse->Hide_Mouse();
+        }
+
+        Set_Font(_font);
+        Set_Logic_Page(old);
+    }
+
+    while (--state != -1) {
+        g_mouse->Hide_Mouse();
+    }
+
+    return false;
 }

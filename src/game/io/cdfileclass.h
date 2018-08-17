@@ -58,6 +58,8 @@ public:
     static void Clear_Search_Drives();
     static BOOL Is_Disk_Inserted(int cd_drive);
     static BOOL Has_Paths() { return s_first != nullptr; }
+    static int Last_Drive() { return s_lastCDDrive; }
+    static int Current_Drive() { return s_currentCDDrive; }
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
