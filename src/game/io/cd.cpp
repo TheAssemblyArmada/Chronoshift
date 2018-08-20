@@ -118,8 +118,8 @@ static BOOL Change_Local_Dir(int cd)
     static bool _initialised = false;
     static unsigned _detected = 0;
     static const char *_vol_labels[] = { "cd1", "cd2", "cd3", "cd4" };
-
-    //DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
+    char vol_buff[16];
+    DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
 
     // Detect which if any of the discs have had their data copied to an appropriate local folder.
     if (!_initialised) {
@@ -127,12 +127,15 @@ static BOOL Change_Local_Dir(int cd)
             struct stat st;
 
             if (stat(_vol_labels[i], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
+                //DEBUG_LOG("Found '%s' folder, checking for main.mix.\n", _vol_labels[i]);
                 CDFileClass::Refresh_Search_Drives();
-                CDFileClass::Add_Search_Drive(_vol_labels[i]);
+                snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[i]);
+                CDFileClass::Add_Search_Drive(vol_buff);
                 CCFileClass fc("main.mix");
 
                 // Populate _detected as a bitfield for which discs we found a local copy of.
                 if (fc.Is_Available()) {
+                    //DEBUG_LOG("main.mix verified, adding.\n", _vol_labels[i]);
                     _detected |= 1 << i;
                 }
             }
@@ -183,7 +186,8 @@ static BOOL Change_Local_Dir(int cd)
         if (stat(_vol_labels[cd], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
             //DEBUG_LOG("Local directory '%s' found, adding to search path and checking for main.mix.\n", _vol_labels[cd]);
             CDFileClass::Refresh_Search_Drives();
-            CDFileClass::Add_Search_Drive(_vol_labels[cd]);
+            snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[cd]);
+            CDFileClass::Add_Search_Drive(vol_buff);
             CCFileClass fc("main.mix");
 
             if (fc.Is_Available()) {
