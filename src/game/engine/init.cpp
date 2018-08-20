@@ -172,7 +172,7 @@ void Init_Secondary_Mixfiles()
     MainMix = new MixFileClass<CCFileClass>("main.mix", &g_publicKey); // In RA main.mix contains the others.
     ConquerMix = new MixFileClass<CCFileClass>("conquer.mix", &g_publicKey);
 
-    if (GeneralMix != nullptr) {
+    if (GeneralMix == nullptr) {
         GeneralMix = new MixFileClass<CCFileClass>("general.mix", &g_publicKey);
     }
 
@@ -372,7 +372,7 @@ void Init_Color_Remaps()
         ColorRemaps[remap].WindowPalette[1] = g_sysMemPage.Get_Pixel(9, remap);
         ColorRemaps[remap].WindowPalette[2] = g_sysMemPage.Get_Pixel(7, remap);
         ColorRemaps[remap].WindowPalette[3] = g_sysMemPage.Get_Pixel(4, remap);
-        ColorRemaps[remap].WindowPalette[4] = g_sysMemPage.Get_Pixel(4, remap + 1);
+        ColorRemaps[remap].WindowPalette[4] = g_sysMemPage.Get_Pixel(4, remap);
         ColorRemaps[remap].WindowPalette[5] = g_sysMemPage.Get_Pixel(0, remap);
         ColorRemaps[remap].WindowPalette[6] = g_sysMemPage.Get_Pixel(0, remap);
         ColorRemaps[remap].WindowPalette[7] = g_sysMemPage.Get_Pixel(6, remap);
