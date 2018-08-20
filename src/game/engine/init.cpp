@@ -15,8 +15,10 @@
  *            LICENSE
  */
 #include "init.h"
+#include "ccfileclass.h"
 #include "ccini.h"
 #include "globals.h"
+#include "mixfile.h"
 #include "picture.h"
 #include "pk.h"
 #include "ramfile.h"
@@ -34,6 +36,8 @@
 #include <sys/types.h>
 #endif
 
+namespace {
+// These pointers are used only within this translation unit for reinitialisation after CD changes and such.
 #ifndef CHRONOSHIFT_STANDALONE
 MixFileClass<CCFileClass> *&MainMix = Make_Global<MixFileClass<CCFileClass> *>(0x00668180);
 MixFileClass<CCFileClass> *&ConquerMix = Make_Global<MixFileClass<CCFileClass> *>(0x00668184);
@@ -47,6 +51,7 @@ MixFileClass<CCFileClass> *GeneralMix;
 MixFileClass<CCFileClass> *MoviesMix;
 MixFileClass<CCFileClass> *ScoreMix;
 #endif
+} // namespace
 
 /**
  * Initialises mix files named using wildcard expansion scheme sc*.mix and ss*.mix.
@@ -190,6 +195,42 @@ void Init_Secondary_Mixfiles()
     new MixFileClass<CCFileClass>("sounds.mix", &g_publicKey);
     new MixFileClass<CCFileClass>("russian.mix", &g_publicKey);
     new MixFileClass<CCFileClass>("allies.mix", &g_publicKey);
+}
+
+/**
+ * Reinitialises secondary mix files that aren't cached, such as after a CD change has taken place.
+ */
+void Reinit_Secondary_Mixfiles()
+{
+    if (MoviesMix != nullptr) {
+        delete MoviesMix;
+    }
+
+    if (GeneralMix != nullptr) {
+        delete GeneralMix;
+    }
+
+    if (ScoreMix != nullptr) {
+        delete ScoreMix;
+    }
+
+    if (MainMix != nullptr) {
+        delete MainMix;
+    }
+
+    MainMix = new MixFileClass<CCFileClass>("main.mix", &g_publicKey); // In RA main.mix contains the others.
+
+    CCFileClass movies1("movies1.mix");
+
+    if (movies1.Is_Available()) {
+        MoviesMix = new MixFileClass<CCFileClass>("movies1.mix", &g_publicKey);
+    } else {
+        MoviesMix = new MixFileClass<CCFileClass>("movies2.mix", &g_publicKey);
+    }
+
+    GeneralMix = new MixFileClass<CCFileClass>("general.mix", &g_publicKey);
+    ScoreMix = new MixFileClass<CCFileClass>("scores.mix", &g_publicKey);
+    ThemeClass::Scan();
 }
 
 /**

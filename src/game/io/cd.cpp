@@ -17,17 +17,18 @@
 #include "gbuffer.h"
 #include "getcd.h"
 #include "globals.h"
+#include "init.h"
 #include "keyboard.h"
 #include "language.h"
-//#include "init.h"
 #include "mixfile.h"
-#include "msgbox.h"
 #include "mouse.h"
+#include "msgbox.h"
 #include "palette.h"
 #include "textprint.h"
 #include "theme.h"
 #include "timer.h"
 #include <cstdio>
+#include <sys/stat.h>
 
 using std::snprintf;
 
@@ -35,9 +36,12 @@ using std::snprintf;
 int &g_requiredCD = *reinterpret_cast<int *>(0x006017D0);
 int &g_currentCD = Make_Global<int>(0x006017D4);
 #else
-int g_requiredCD = DISK_NONE;
-int g_currentCD = DISK_NONE;
+int g_requiredCD = DISK_CDCHECK;
+int g_currentCD = DISK_CDCHECK;
 #endif
+
+// Was local to Force_CD_Present in orignal but now shared between split out functions.
+static int g_last = -1;
 
 /**
  * Work out which game CD we have in the drive.
@@ -106,9 +110,80 @@ int Get_CD_Index(int drive, int delay)
 #endif
 }
 
+/**
+ * Checks for local folders containing data from the various discs.
+ */
+static BOOL Change_Local_Dir(int cd)
+{
+    static bool _initialised = false;
+    static unsigned _detected = 0;
+    static const char *_vol_labels[] = { "cd1", "cd2", "cd3", "cd4" };
+
+    //DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
+
+    // Detect which if any of the discs have had their data copied to an appropriate local folder.
+    if (!_initialised) {
+        for (int i = 0; i < 4; ++i) {
+            struct stat st;
+
+            if (stat(_vol_labels[i], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
+                CDFileClass::Refresh_Search_Drives();
+                CDFileClass::Add_Search_Drive(_vol_labels[i]);
+                CCFileClass fc("main.mix");
+
+                // Populate _detected as a bitfield for which discs we found a local copy of.
+                if (fc.Is_Available()) {
+                    _detected |= 1 << i;
+                }
+            }
+        }
+    }
+
+    // This condition just does a CD check to make sure we have at least one disc available.
+    if ((cd == DISK_CDCHECK && _detected != 0) || g_last == cd) {
+        return true;
+    }
+
+    // This condition handles a request for either expansion disk, if we have one initialised already we are good to go.
+    // Otherwise initialise to most recent expansion, aftermath.
+    if (cd == DISK_EXPANSION) {
+        if (g_last == DISK_AFTERMATH || g_last == DISK_COUNTERSTRIKE) {
+            return true;
+        } else {
+            cd = DISK_AFTERMATH;
+        }
+    }
+
+    // If the data from the CD we want was detected, then double check it and change to it.
+    if (_detected & (1 << cd)) {
+        DEBUG_ASSERT_PRINT(cd >= 0 && cd < 4, "Requested CD is outside expected range.\n");
+        struct stat st;
+
+        // Verify that the file is still available and hasn't been deleted out from under us.
+        if (stat(_vol_labels[cd], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
+            //DEBUG_LOG("Local directory '%s' found, adding to search path and checking for main.mix.\n", _vol_labels[cd]);
+            CDFileClass::Refresh_Search_Drives();
+            CDFileClass::Add_Search_Drive(_vol_labels[cd]);
+            CCFileClass fc("main.mix");
+
+            if (fc.Is_Available()) {
+                //DEBUG_LOG("main.mix for '%s' found in search path, reloading secondary mix files.\n", _vol_labels[cd]);
+                g_last = cd;
+                Reinit_Secondary_Mixfiles();
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Changes the data loaded from the CD when the disk has been changed.
+ */
 static void Change_CD(int drive, int index, int &cd)
 {
-    static int _last = -1;
     g_currentCD = index;
     CDFileClass::Set_CD_Drive(drive);
     CDFileClass::Refresh_Search_Drives();
@@ -118,18 +193,22 @@ static void Change_CD(int drive, int index, int &cd)
     }
 
     // If disk needs to change then unload existing files that are present on CD and reload from new CD.
-    if (cd > DISK_NONE && cd != _last /*&& cd != DISK_DVD*/) {
-        _last = cd;
+    if (cd > DISK_CDCHECK && cd != g_last /*&& cd != DISK_DVD*/) {
+        g_last = cd;
         Theme.Stop();
-
-        // Needs init merging.
+        Reinit_Secondary_Mixfiles();
     }
 }
 
+/**
+ * Attempts to get a specific CD present and its data available to the game engine.
+ *
+ * 0x004AAC58
+ */
 BOOL Force_CD_Available(int cd)
 {
     static void *_font = nullptr;
-    //static int _last = -1;
+    // static int _last = -1;
     static const char *_cd_name[] = {
         // TODO hard coded strings need translating and adding to a string table
         "RED ALERT DISK 1",
@@ -138,7 +217,14 @@ BOOL Force_CD_Available(int cd)
         "Aftermath CD" /*, "RED ALERT DVD"*/
     };
 
+    //DEBUG_LOG("Force_CD_Available attempting to change to %d\n", cd);
+
     if (cd == DISK_ANY) {
+        return true;
+    }
+
+    if (Change_Local_Dir(cd)) {
+        //DEBUG_LOG("Force_CD_Available found data locally, returning success.\n");
         return true;
     }
 
@@ -156,7 +242,7 @@ BOOL Force_CD_Available(int cd)
             cd = cd_index;
         }
 
-        if (cd == cd_index || cd == DISK_NONE) {
+        if (cd == cd_index || cd == DISK_CDCHECK) {
             drive = CDFileClass::Current_Drive();
         }
     }
@@ -173,7 +259,7 @@ BOOL Force_CD_Available(int cd)
                     cd = cd_index;
                 }
 
-                if (cd == cd_index || cd == DISK_NONE) {
+                if (cd == cd_index || cd == DISK_CDCHECK) {
                     drive = CDFileClass::Last_Drive();
                 }
             }
@@ -182,7 +268,7 @@ BOOL Force_CD_Available(int cd)
 
     // If we have a valid drive, check that its not the same as the one we already loaded and reload data.
     if (drive != 0) {
-    //change_drive:
+        // change_drive:
         /*g_currentCD = cd_index;
         CDFileClass::Set_CD_Drive(drive);
         CDFileClass::Refresh_Search_Drives();
@@ -192,7 +278,7 @@ BOOL Force_CD_Available(int cd)
         }
 
         // If disk needs to change then unload existing files that are present on CD and reload from new CD.
-        if (cd > DISK_NONE && cd != _last && cd != DISK_DVD) {
+        if (cd > DISK_CDCHECK && cd != _last && cd != DISK_DVD) {
             _last = cd;
             Theme.Stop();
 
@@ -217,7 +303,7 @@ BOOL Force_CD_Available(int cd)
                     cd = cd_index;
                 }
 
-                if (cd == cd_index || cd == DISK_NONE) {
+                if (cd == cd_index || cd == DISK_CDCHECK) {
                     drive = list_drive;
                     break;
                 }
@@ -225,7 +311,6 @@ BOOL Force_CD_Available(int cd)
         }
 
         if (drive != 0) {
-            //goto change_drive; // TODO make change_drive block a separate function.
             Change_CD(drive, cd_index, cd);
 
             return true;
@@ -243,7 +328,7 @@ BOOL Force_CD_Available(int cd)
 
         // Compose string for insert disc message box.
         if (cd != DISK_COUNTERSTRIKE && cd != DISK_AFTERMATH) {
-            if (cd == DISK_NONE) {
+            if (cd == DISK_CDCHECK) {
                 snprintf(msg_buff, sizeof(msg_buff), Fetch_String(TXT_CD_DIALOG_1));
             } else {
                 snprintf(msg_buff, sizeof(msg_buff), Fetch_String(TXT_CD_DIALOG_2), cd + 1, _cd_name[cd]);
@@ -260,7 +345,8 @@ BOOL Force_CD_Available(int cd)
 
         if ((((PaletteClass::CurrentPalette[1].Get_Blue() >> 6) | (PaletteClass::CurrentPalette[1].Get_Blue() << 2))
                 + ((PaletteClass::CurrentPalette[1].Get_Red() >> 6) | (PaletteClass::CurrentPalette[1].Get_Red() << 2))
-                + ((PaletteClass::CurrentPalette[1].Get_Green() >> 6) |(PaletteClass::CurrentPalette[1].Get_Green() << 2))) == 0) {
+                + ((PaletteClass::CurrentPalette[1].Get_Green() >> 6) | (PaletteClass::CurrentPalette[1].Get_Green() << 2)))
+            == 0) {
             GamePalette.Set();
         }
 
