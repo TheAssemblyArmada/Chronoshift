@@ -139,9 +139,24 @@ static BOOL Change_Local_Dir(int cd)
         }
     }
 
+    // No local folders with cd data dectected so we can't load any.
+    if (_detected == 0) {
+        return false;
+    }
+
     // This condition just does a CD check to make sure we have at least one disc available.
-    if ((cd == DISK_CDCHECK && _detected != 0) || g_last == cd) {
-        return true;
+    if (cd == DISK_CDCHECK) {
+        if (g_last == cd) { // If g_last == DISK_CDCHECK, then we have to do a change.
+            // Find highest number CD we have detected.
+            for (int i = 3; i >= 0; --i) {
+                if (_detected & (1 << i)) {
+                    cd = i;
+                    break;
+                }
+            }
+        } else {
+            return true;
+        }
     }
 
     // This condition handles a request for either expansion disk, if we have one initialised already we are good to go.
@@ -152,6 +167,11 @@ static BOOL Change_Local_Dir(int cd)
         } else {
             cd = DISK_AFTERMATH;
         }
+    }
+
+    // Prevent unneeded changes.
+    if (g_last == cd) {
+        return true;
     }
 
     // If the data from the CD we want was detected, then double check it and change to it.
