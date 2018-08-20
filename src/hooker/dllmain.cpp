@@ -16,6 +16,7 @@
 #include "alloc.h"
 #include "blitters.h"
 #include "ccfileclass.h"
+#include "cd.h"
 #include "cell.h"
 #include "controlc.h"
 #include "coord.h"
@@ -133,6 +134,7 @@ void Setup_Hooks()
     Hook_Function(0x004AC814, Move_Point);
     //Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
     Init::Hook_Me();
+    Hook_Function(0x004AAC58, &Force_CD_Available);
 }
 
 StaticInitObject::StaticInitObject()

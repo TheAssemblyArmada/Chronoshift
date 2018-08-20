@@ -20,12 +20,11 @@
 #define INIT_H
 
 #include "always.h"
-#include "ccfileclass.h"
-#include "mixfile.h"
 
 void Init_Expansion_Files();
 void Init_Bootstrap_Mixfiles();
 void Init_Secondary_Mixfiles();
+void Reinit_Secondary_Mixfiles();
 //void Init_Bulk_Data();
 void Init_Keys();
 void Init_Fonts();
@@ -33,12 +32,6 @@ void Init_Random();
 void Init_Color_Remaps();
 
 #ifndef CHRONOSHIFT_STANDALONE
-extern MixFileClass<CCFileClass> *&MainMix;
-extern MixFileClass<CCFileClass> *&ConquerMix;
-extern MixFileClass<CCFileClass> *&GeneralMix;
-extern MixFileClass<CCFileClass> *&MoviesMix;
-extern MixFileClass<CCFileClass> *&ScoreMix;
-
 #include "hooker.h"
 
 namespace Init
@@ -58,13 +51,6 @@ inline void Hook_Me()
 }
 
 }
-
-#else
-extern MixFileClass<CCFileClass> *MainMix;
-extern MixFileClass<CCFileClass> *ConquerMix;
-extern MixFileClass<CCFileClass> *GeneralMix;
-extern MixFileClass<CCFileClass> *MoviesMix;
-extern MixFileClass<CCFileClass> *ScoreMix;
 #endif
 
 #endif // INIT_H
