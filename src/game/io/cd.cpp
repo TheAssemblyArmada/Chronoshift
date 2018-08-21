@@ -119,7 +119,7 @@ static BOOL Change_Local_Dir(int cd)
     static unsigned _detected = 0;
     static const char *_vol_labels[] = { "cd1", "cd2", "cd3", "cd4" };
     char vol_buff[16];
-    DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
+    //DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
 
     // Detect which if any of the discs have had their data copied to an appropriate local folder.
     if (!_initialised) {

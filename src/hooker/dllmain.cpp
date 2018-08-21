@@ -17,6 +17,7 @@
 #include "blitters.h"
 #include "ccfileclass.h"
 #include "cd.h"
+#include "cdfileclass.h"
 #include "cell.h"
 #include "controlc.h"
 #include "coord.h"
@@ -88,6 +89,7 @@ void Setup_Hooks()
     RawFileClass::Hook_Me();
     BufferIOFileClass::Hook_Me();
     CCFileClass::Hook_Me();
+    CDFileClass::Hook_Me();
     ControlClass::Hook_Me();
     GraphicViewPortClass::Hook_Me();
     INIClass::Hook_Me();
