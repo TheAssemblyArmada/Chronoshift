@@ -18,6 +18,7 @@
 // http://linux.die.net/man/3/getmntent
 
 #include "cdfileclass.h"
+#include "gamedebug.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -37,15 +38,17 @@
 #endif
 
 #ifndef CHRONOSHIFT_STANDALONE
-CDFileClass::SearchDriveType *&CDFileClass::s_first = *reinterpret_cast<CDFileClass::SearchDriveType **>(0x006AC060); // first entry in the search drive, each entry is linked.
+char *CDFileClass::s_rawPath = Make_Pointer<char>(0x006AC06C);
+CDFileClass::SearchDriveType *&CDFileClass::s_first =
+    *reinterpret_cast<CDFileClass::SearchDriveType **>(0x006AC060); // first entry in the search drive, each entry is linked.
 int &CDFileClass::s_currentCDDrive = *reinterpret_cast<int*>(0x006AC064);
 int &CDFileClass::s_lastCDDrive = *reinterpret_cast<int*>(0x006AC068);
 #else
+char CDFileClass::s_rawPath[PATH_MAX * 2]; // full raw path of the search drive set.
 CDFileClass::SearchDriveType *CDFileClass::s_first; // first entry in the search drive, each entry is linked.
 int CDFileClass::s_currentCDDrive;
 int CDFileClass::s_lastCDDrive;
 #endif
-char CDFileClass::s_rawPath[PATH_MAX * 2]; // full raw path of the search drive set.
 const char *CDFileClass::s_pathSeperator = ";";
 
 CDFileClass::CDFileClass() : m_disableSearchDrives(false) {}
@@ -143,11 +146,16 @@ int CDFileClass::Set_Search_Drives(const char *path)
         return 0;
     }
 
+    //DEBUG_LOG("Current search path is '%s', appending '%s'.\n", s_rawPath, path);
+
     // Append path to raw path list
     if (path != s_rawPath) {
+        //PATH_MAX * 2
         int current_len = (int)strlen(s_rawPath);
-        current_len += snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", s_pathSeperator);
-        snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", path);
+        //current_len += snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", s_pathSeperator);
+        //snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", path);
+        current_len += snprintf(&s_rawPath[current_len], PATH_MAX * 2 - current_len, "%s", s_pathSeperator);
+        snprintf(&s_rawPath[current_len], PATH_MAX * 2 - current_len, "%s", path);
     }
 
     // Scan through the path looking for semicolons to delimit seperate
@@ -166,17 +174,20 @@ int CDFileClass::Set_Search_Drives(const char *path)
 
             // Check if we have our "disk drive" prefix, if so we need to check which
             // disk we are dealing with.
+            //DEBUG_LOG("Checking if '%s' is a CD path.\n", path_buffer);
             if (strncmp(path_buffer, CD_DRIVE_PREFIX, CD_PREFIX_SIZE) == 0) {
 // Only windows uses the drive logic that this applies to
 #if defined(PLATFORM_WINDOWS)
-                if (s_currentCDDrive) {
+                if (s_currentCDDrive != 0) {
                     paths_set = true;
                     // Move Get_CD_Index and its static vars if any into CDFileClass?
                     // Need to decide what we are doing with this
+                    //DEBUG_LOG("Adding CD drive path as search drive.\n", path_buffer);
                     if (Get_CD_Index(s_currentCDDrive, 120) >= 0) {
                         path_buffer[0] = s_currentCDDrive + 'A';
                         // surely this is path buffer
                         // Add_Search_Drive((const char *)v13);
+                        DEBUG_LOG("Adding '%s as CD path.\n", path_buffer); 
                         Add_Search_Drive(path_buffer);
                     }
                 }

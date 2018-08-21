@@ -33,7 +33,7 @@ GetCDClass::GetCDClass()
     for (char driveletter = 'a'; driveletter <= 'z'; ++driveletter) {
         drive_name[0] = driveletter;
 
-        if(GetDriveType(drive_name) == DRIVE_CDROM) {
+        if(GetDriveTypeA(drive_name) == DRIVE_CDROM) {
             m_drivelist[m_driveCount++] = driveletter - 'a';
         }
     }

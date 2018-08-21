@@ -61,6 +61,10 @@ public:
     static int Last_Drive() { return s_lastCDDrive; }
     static int Current_Drive() { return s_currentCDDrive; }
 
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+#endif
+
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
@@ -77,17 +81,29 @@ protected:
 #endif
 
 private:
-    static char s_rawPath[];
 #ifndef CHRONOSHIFT_STANDALONE
+    static char *s_rawPath;
     static SearchDriveType *&s_first;
     static int &s_currentCDDrive;
     static int &s_lastCDDrive;
 #else
+    static char s_rawPath[];
     static SearchDriveType *s_first;
     static int s_currentCDDrive;
     static int s_lastCDDrive;
 #endif
     static const char *s_pathSeperator;
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void CDFileClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x005BFC60, &Set_Search_Drives);
+#endif
+}
+#endif
 
 #endif // CDFILECLASS_H
