@@ -361,9 +361,9 @@ void Init_Color_Remaps()
             ColorRemaps[remap].RemapPalette[g_sysMemPage.Get_Pixel(j, 0)] = g_sysMemPage.Get_Pixel(j, remap);
         }
 
-        // Write small gradient
-        for (int j = 4; j < 10; ++j) {
-            ColorRemaps[remap].FontPalette[j] = g_sysMemPage.Get_Pixel(j, remap);
+        // Write font gradient
+        for (int j = 0; j < 6; ++j) {
+            ColorRemaps[remap].FontPalette[j + 10] = g_sysMemPage.Get_Pixel(j + 2, remap);
         }
 
         ColorRemaps[remap].BrightColor = COLOR_WHITE; // Index 15 is always white in the palette
@@ -384,10 +384,9 @@ void Init_Color_Remaps()
         GreyScheme.RemapPalette[i] = i;
     }
 
-    // Write small gradient
-    int p = 6;
-    for (int i = 4; i < 10; ++i) {
-        GreyScheme.FontPalette[i] = g_sysMemPage.Get_Pixel(p++, 5);
+    // Write font gradient
+    for (int i = 0; i < 6; ++i) {
+        GreyScheme.FontPalette[i + 10] = g_sysMemPage.Get_Pixel(i + 9, 5);
     }
 
     GreyScheme.BrightColor = g_sysMemPage.Get_Pixel(3, 5);
