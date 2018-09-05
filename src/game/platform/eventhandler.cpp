@@ -21,7 +21,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     LRESULT(__stdcall *func)
-    (HWND, UINT, WPARAM, LPARAM) = Make_Global<LRESULT(__stdcall *)(HWND, UINT, WPARAM, LPARAM)>(0x005B373C);
+    (HWND, UINT, WPARAM, LPARAM) = reinterpret_cast<LRESULT(__stdcall *)(HWND, UINT, WPARAM, LPARAM)>(0x005B373C);
 
 	return func(hwnd, uMsg, wParam, lParam);
 #else
