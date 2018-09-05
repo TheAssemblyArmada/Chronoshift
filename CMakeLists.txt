@@ -153,6 +153,26 @@ if(GIT_FOUND)
         ERROR_QUIET
     )
     add_definitions(-DCHRONOSHIFT_COMMIT_COUNT=${CHRONOSHIFT_COMMIT_COUNT})
+
+	# Define commit time stamp.
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:%ct
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE CRONOSHIFT_COMMIT_TSTAMP
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+    add_definitions(-DCRONOSHIFT_COMMIT_TSTAMP=${CRONOSHIFT_COMMIT_TSTAMP})
+
+	# Define commit author.
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:'%an'
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE CHRONOSHIFT_COMMIT_AUTHOR
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+    add_definitions(-DCHRONOSHIFT_COMMIT_AUTHOR="${CHRONOSHIFT_COMMIT_AUTHOR}")
     
     # Define commit date and time. Make builds more reproducible than using __DATE__ and __TIME__
     execute_process(
@@ -174,8 +194,10 @@ else()
     add_definitions(-DCHRONOSHIFT_COMMIT_SHA1="DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF")
     add_definitions(-DCHRONOSHIFT_COMMIT_SHA1_SHORT="DEADBEEF")
     add_definitions(-DCHRONOSHIFT_COMMIT_COUNT=0)
+    add_definitions(-DCHRONOSHIFT_COMMIT_TSTAMP=0)
     add_definitions(-DCHRONOSHIFT_COMMIT_DATE="1955-11-12")
     add_definitions(-DCHRONOSHIFT_COMMIT_TIME="22:04:00 +0000")
+	add_definitions(-DCHRONOSHIFT_COMMIT_AUTHOR="Someone")
 endif()
 
 add_definitions(-DCHRONOSHIFT_MAJOR=${CHRONOSHIFT_VERSION_MAJOR})
