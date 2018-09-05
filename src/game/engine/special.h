@@ -28,7 +28,7 @@ public:
     {
         ShroudRegrows = false;
         BuildTimeAccelerated = false;
-        DemoMode = false;
+        FirstRun = false;
         CaptureTheFlag = false;
         NoDamage = false;
         ThreePointTurnLogic = false;
@@ -39,7 +39,6 @@ public:
     }
 
     BOOL Allow_Remixes() const { return Remixes; }
-    BOOL In_Demo_Mode() const { return DemoMode; }
     BOOL Is_Spawned() const { return Spawned; }
     BOOL Is_First_Run() const { return FirstRun; }
 	void Set_First_Run(BOOL first_run) { FirstRun = first_run; }
@@ -58,14 +57,14 @@ private:
             bool ShroudRegrows : 1; // & 1 Used in skirmish menu
             bool BuildTimeAccelerated : 1; // & 2 Used in special dialog
             bool FirstRun : 1; // & 4 Play intro followed by allied 1.
-            bool DemoMode : 1; // & 8 activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1.
-            bool CaptureTheFlag : 1; // & 16 Used in lan dialog, also checked in bridge destruction related code.
-            bool NoDamage : 1; // & 32 Used by Explosion_Damage code.
-            bool ThreePointTurnLogic : 1; // & 64 Used in hidden special dialog.
-            bool OreGrows : 1; // & 128 Set in skirmish menu
-            bool OreSpreads : 1; // & 1 Set in skirmish menu
-            bool Spawned : 1; // & 2 "About to initialise Winsock" string RA demo, ow only skips intro and fades in the menu.
-            bool Remixes : 1; // & 4 Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
+            //bool DemoMode : 1; // & 4 activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1.
+            bool CaptureTheFlag : 1; // & 8 Used in lan dialog, also checked in bridge destruction related code.
+            bool NoDamage : 1; // & 16 Used by Explosion_Damage code.
+            bool ThreePointTurnLogic : 1; // & 32 Used in hidden special dialog.
+            bool OreGrows : 1; // & 64 Set in skirmish menu
+            bool OreSpreads : 1; // & 128 Set in skirmish menu
+            bool Spawned : 1; // & 1 "About to initialise Winsock" string RA demo, ow only skips intro and fades in the menu.
+            bool Remixes : 1; // & 2 Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
         };
         int SpecialFlags;
     };
