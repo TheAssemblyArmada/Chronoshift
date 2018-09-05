@@ -41,6 +41,7 @@
 #include "list.h"
 #include "lzostraw.h"
 #include "lzopipe.h"
+#include "main.h"
 #include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
@@ -82,7 +83,7 @@ void Setup_Hooks()
     //
     // Hook WinMain
     //
-    // Hook_StdCall_Function((Make_StdCall_Ptr<int, HINSTANCE, HINSTANCE, LPSTR, int>(0x00401700)), Main_Func);
+    Hook_Function(0x00551A70, Main_Func);
 
     // Hooking memory allocation functions.
     Memory_Hook_Me();
@@ -142,15 +143,8 @@ void Setup_Hooks()
 StaticInitObject::StaticInitObject()
 {
     printf("Initialising DLL.\n");
-    DEBUG_INIT(DEBUG_LOG_TO_FILE);
     StartHooking();
     Setup_Hooks();
-
-    if (CPUDetectClass::Has_CPUID_Instruction()) {
-        DEBUG_LOG("%s", CPUDetectClass::Get_Processor_Log());
-    } else {
-        DEBUG_LOG("Doesn't look like CPUDetect is initialised yet.\n");
-    }
 }
 
 StaticInitObject::~StaticInitObject()
