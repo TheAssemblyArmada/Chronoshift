@@ -26,7 +26,7 @@ void Emergency_Exit(int exit_code)
 #ifndef CHRONOSHIFT_STANDALONE
     DEBUG_LOG("Calling emergency exit.\n");
     // TODO Requires GraphicBufferClass, PaletteClass, KeyboardClass
-    void(*hooked_exit)(int) = Make_Global<void(*)(int)>(0x00552714);
+    void (*hooked_exit)(int) = reinterpret_cast<void (*)(int)>(0x00552714);
     hooked_exit(exit_code);
 #endif
 }
@@ -34,7 +34,7 @@ void Emergency_Exit(int exit_code)
 BOOL InitDDraw()
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)() = Make_Global<BOOL (*)()>(0x00552368);
+    BOOL (*func)() = reinterpret_cast<BOOL (*)()>(0x00552368);
     return func();
 #else
     return false;
@@ -45,7 +45,7 @@ void Read_Setup_Options(FileClass *fc)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // TODO Requires GraphicBufferClass, PaletteClass, KeyboardClass
-    void (*func)(FileClass *) = Make_Global<void (*)(FileClass *)>(0x005528A8);
+    void (*func)(FileClass *) = reinterpret_cast<void (*)(FileClass *)>(0x005528A8);
     func(fc);
 #endif
 }
