@@ -26,6 +26,7 @@
 
 #ifndef CHRONOSHIFT_STANDALONE
 WWMouseClass *&g_mouse = Make_Global<WWMouseClass *>(0x006AC284);
+WWMouseClass *&g_wwmouse = Make_Global<WWMouseClass *>(0x00665E08);
 
 void WWMouseClass::Hook_Low_Hide(WWMouseClass *ptr)
 {
@@ -38,6 +39,7 @@ void WWMouseClass::Hook_Low_Show(WWMouseClass *ptr, int x, int y)
 }
 #else
 WWMouseClass *g_mouse = nullptr;
+WWMouseClass *g_wwmouse = nullptr;
 #endif
 //
 // Frequency to update the mouse in ms

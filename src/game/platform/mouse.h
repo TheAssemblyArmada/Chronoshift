@@ -124,8 +124,10 @@ inline void WWMouseClass::Hook_Me()
 }
 
 extern WWMouseClass *&g_mouse;
+extern WWMouseClass *&g_wwmouse;
 #else
 extern WWMouseClass *g_mouse;
+extern WWMouseClass *g_wwmouse;
 #endif
 
 #endif // MOUSE_H
