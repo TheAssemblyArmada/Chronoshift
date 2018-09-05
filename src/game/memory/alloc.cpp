@@ -1,24 +1,31 @@
 /**
-* @file
-*
-* @author tomsons26
-* @author OmniBlade
-*
-* @brief Memory allocation wrapper functions.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author tomsons26
+ * @author OmniBlade
+ *
+ * @brief Memory allocation wrapper functions.
+ *
+ * @copyright Redalert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "alloc.h"
 #include "gamedebug.h"
 #include <malloc.h>
 #include <stdlib.h>
 
-memerror_t g_memoryError = nullptr; // Memory error handler function pointer.
+#ifndef CHRONOSHIFT_STANDALONE
+memerrorhandler_t &g_memoryError = Make_Global<memerrorhandler_t>(0x006B1A2C); // Memory error handler function pointer.
+memexithandler_t &g_memoryErrorExit = Make_Global<memexithandler_t>(0x006B1A30);
+#else
+memerrorhandler_t g_memoryError = nullptr; // Memory error handler function pointer.
+memexithandler_t g_memoryErrorExit = nullptr;
+#endif
+
 static int g_memoryCalls;
 unsigned int g_totalRam;
 unsigned int g_minRam;
@@ -26,25 +33,25 @@ unsigned int g_maxRam;
 
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags)
 {
-    //DEBUG_LOG("Attempting to allocate memory of size %d with flags %d.\n", bytes_to_alloc, flags);
+    // DEBUG_LOG("Attempting to allocate memory of size %d with flags %d.\n", bytes_to_alloc, flags);
     void *ptr = malloc(bytes_to_alloc);
 
-    if ( ptr == nullptr && g_memoryError != nullptr ) {
+    if (ptr == nullptr && g_memoryError != nullptr) {
         g_memoryError();
     }
-    
-    if ( ptr != nullptr && (flags & MEM_CLEAR) != 0 ) {
+
+    if (ptr != nullptr && (flags & MEM_CLEAR) != 0) {
         memset(ptr, 0, bytes_to_alloc);
     }
-    
+
     ++g_memoryCalls;
-    
+
     return ptr;
 }
 
 void Free(void *ptr)
 {
-    if ( ptr != nullptr ) {
+    if (ptr != nullptr) {
         free(ptr);
         --g_memoryCalls;
     }
@@ -56,7 +63,7 @@ void *Resize_Alloc(void *original_ptr, unsigned int new_size_in_bytes)
 
     temp = realloc(original_ptr, new_size_in_bytes);
 
-    if ( temp == nullptr && g_memoryError != nullptr ) {
+    if (temp == nullptr && g_memoryError != nullptr) {
         g_memoryError();
     }
 
@@ -65,12 +72,20 @@ void *Resize_Alloc(void *original_ptr, unsigned int new_size_in_bytes)
 
 int Ram_Free()
 {
-    MEMORYSTATUSEX mem_struct;
+#if defined PLATFORM_WINDOWS
+    MEMORYSTATUSEX mem;
 
-    mem_struct.dwLength = sizeof(mem_struct);
-    GlobalMemoryStatusEx(&mem_struct);
+    mem.dwLength = sizeof(mem);
+    GlobalMemoryStatusEx(&mem);
 
-    return mem_struct.ullAvailPhys > 0x7FFFFFFF ? 0x7FFFFFFF : mem_struct.ullAvailPhys;
+    return mem.ullAvailPhys > INT32_MAX ? INT32_MAX : mem.ullAvailPhys;
+#elif defined PLATFORM_LINUX
+    struct sysinfo mem;
+    sysinfo(&mem);
+    return mem.freeram * mem.mem_unit > INT32_MAX ? INT32_MAX : mem.freeram * mem.mem_unit;
+#else
+#error Add code for this platform for detecting free memory in alloc.cpp.
+#endif
 }
 
 int Heap_Size(MemoryFlagType flag)
