@@ -20,11 +20,6 @@
 
 #include "always.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
-#include "hooker.h"
-#include <malloc.h>
-#endif
-
 enum MemoryFlagType
 {
     MEM_NORMAL = 0,
@@ -32,8 +27,8 @@ enum MemoryFlagType
     MEM_CLEAR = 2,
 };
 
-typedef int(*memerror_t)();
-extern memerror_t g_memoryError; // Memory error handler function pointer.
+typedef void(*memerrorhandler_t)();
+typedef void (*memexithandler_t)(const char *);
 
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags);
 void Free(void *pointer);
@@ -43,6 +38,12 @@ int Heap_Size(MemoryFlagType flag);
 int Total_Ram_Free(MemoryFlagType flag);
 
 #ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+#include <malloc.h>
+
+extern memerrorhandler_t &g_memoryError; // Memory error handler function pointer.
+extern memexithandler_t &g_memoryErrorExit;
+
 inline void Memory_Hook_Me(void)
 {
 #ifdef COMPILER_WATCOM
@@ -54,6 +55,10 @@ inline void Memory_Hook_Me(void)
     Hook_Function(0x005D6020, &Resize_Alloc);
 #endif
 }
+
+#else
+extern memerrorhandler_t g_memoryError; // Memory error handler function pointer.
+extern memexithandler_t g_memoryErrorExit;
 #endif
 
 #endif
