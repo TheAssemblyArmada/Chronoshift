@@ -119,7 +119,7 @@ static BOOL Change_Local_Dir(int cd)
     static unsigned _detected = 0;
     static const char *_vol_labels[] = { "cd1", "cd2", "cd3", "cd4" };
     char vol_buff[16];
-    //DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
+    // DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
 
     // Detect which if any of the discs have had their data copied to an appropriate local folder.
     if (!_initialised) {
@@ -127,7 +127,7 @@ static BOOL Change_Local_Dir(int cd)
             struct stat st;
 
             if (stat(_vol_labels[i], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
-                //DEBUG_LOG("Found '%s' folder, checking for main.mix.\n", _vol_labels[i]);
+                // DEBUG_LOG("Found '%s' folder, checking for main.mix.\n", _vol_labels[i]);
                 CDFileClass::Refresh_Search_Drives();
                 snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[i]);
                 CDFileClass::Add_Search_Drive(vol_buff);
@@ -135,11 +135,13 @@ static BOOL Change_Local_Dir(int cd)
 
                 // Populate _detected as a bitfield for which discs we found a local copy of.
                 if (fc.Is_Available()) {
-                    //DEBUG_LOG("main.mix verified, adding.\n", _vol_labels[i]);
+                    // DEBUG_LOG("main.mix verified, adding.\n", _vol_labels[i]);
                     _detected |= 1 << i;
                 }
             }
         }
+
+		_initialised = true;
     }
 
     // No local folders with cd data dectected so we can't load any.
@@ -184,14 +186,14 @@ static BOOL Change_Local_Dir(int cd)
 
         // Verify that the file is still available and hasn't been deleted out from under us.
         if (stat(_vol_labels[cd], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
-            //DEBUG_LOG("Local directory '%s' found, adding to search path and checking for main.mix.\n", _vol_labels[cd]);
+            // DEBUG_LOG("Local directory '%s' found, adding to search path and checking for main.mix.\n", _vol_labels[cd]);
             CDFileClass::Refresh_Search_Drives();
             snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[cd]);
             CDFileClass::Add_Search_Drive(vol_buff);
             CCFileClass fc("main.mix");
 
             if (fc.Is_Available()) {
-                //DEBUG_LOG("main.mix for '%s' found in search path, reloading secondary mix files.\n", _vol_labels[cd]);
+                // DEBUG_LOG("main.mix for '%s' found in search path, reloading secondary mix files.\n", _vol_labels[cd]);
                 g_last = cd;
                 Reinit_Secondary_Mixfiles();
 
