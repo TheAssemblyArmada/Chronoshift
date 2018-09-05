@@ -85,6 +85,7 @@ set(GAMEENGINE_SRC
     game/engine/callback.cpp
     game/engine/ccini.cpp
     game/engine/cell.cpp
+    game/engine/cmdline.cpp
     game/engine/coord.cpp
     game/engine/crate.cpp
     game/engine/difficulty.cpp
@@ -93,6 +94,7 @@ set(GAMEENGINE_SRC
     game/engine/expansion.cpp
     game/engine/facing.cpp
     game/engine/flasher.cpp
+    game/engine/focus.cpp
     game/engine/fuse.cpp
     game/engine/gameoptions.cpp
     game/engine/getcd.cpp
@@ -197,6 +199,7 @@ set(GAMEENGINE_SRC
     game/net/field.cpp
     game/net/ipxaddress.cpp
     game/net/wsock.cpp
+    game/platform/eventhandler.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
     game/ui/bigcheck.cpp
