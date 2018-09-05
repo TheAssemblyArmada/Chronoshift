@@ -40,14 +40,22 @@ BOOL &DebugQuiet = Make_Global<BOOL>(0x0065D7CC);
 BOOL &ScoresPresent = Make_Global<BOOL>(0x006680C0);
 BOOL &StreamLowImpact = Make_Global<BOOL>(0x006ABFCC);
 BOOL &g_cancelCurrentMsgBox = Make_Global<BOOL>(0x00685170);
-#ifdef PLATFORM_WINDOWS
+BOOL &VideoBackBufferAllowed = Make_Global<BOOL>(0x00604DE8);
+BOOL &AllowHardwareFilledBlits = Make_Global<BOOL>(0x0060BA70);
+BOOL &g_soundOn = Make_Global<BOOL>(0x006807F4);
+BOOL &g_slowPalette = Make_Global<BOOL>(0x006678E4);
+BOOL &g_breakoutAllowed = Make_Global<BOOL>(0x006016B8);
 HWND &MainWindow = Make_Global<HWND>(0x006B1498);
+#ifdef PLATFORM_WINDOWS
+HMODULE &ProgramInstance = Make_Global<HMODULE>(0x0068A4BC); // Only used in gameres packet, won't be needed in final
 #endif
 char **TutorialText = reinterpret_cast<char **>(0x00666304);
 BOOL &MouseInstalled = Make_Global<BOOL>(0x00680838);
 int &g_seed = Make_Global<int>(0x00680654);
 int &CustomSeed = Make_Global<int>(0x00680658);
 int &RandNumb = Make_Global<int>(0x0060D61C);
+int &g_readyToQuit = Make_Global<int>(0x00680880);
+HousesType &Whom = Make_Global<HousesType>(0x00669910);
 #else
 int g_iniFormat;
 int g_frame;
@@ -70,13 +78,16 @@ BOOL DebugUnshroud;
 BOOL DebugQuiet;
 BOOL ScoresPresent;
 BOOL StreamLowImpact;
-BOOL g_cancelCurrentMsgBox
-#ifdef PLATFORM_WINDOWS
-HWND MainWindow;
-#endif
+BOOL g_cancelCurrentMsgBox;
+BOOL g_soundOn;
+BOOL g_slowPalette;
+BOOL g_breakoutAllowed = true;
+void *MainWindow;
 char *TutorialText;
 BOOL MouseInstalled;
 int g_seed;
-int CustomSeed ;
+int CustomSeed;
 int RandNumb = 0x12349876;
+int g_readyToQuit;
+HousesType Whom;
 #endif

@@ -19,6 +19,7 @@
 #define GLOBALS_H
 
 #include "always.h"
+#include "gametypes.h"
 
 #define GAME_TICKS_PER_SECOND 15
 #define GAME_TICKS_PER_MINUTE GAME_TICKS_PER_SECOND * 60
@@ -51,14 +52,22 @@ extern BOOL &DebugQuiet;
 extern BOOL &ScoresPresent;
 extern BOOL &StreamLowImpact;
 extern BOOL &g_cancelCurrentMsgBox;
+extern BOOL &VideoBackBufferAllowed;
+extern BOOL &AllowHardwareFilledBlits;
+extern BOOL &g_soundOn;
+extern BOOL &g_slowPalette;
+extern BOOL &g_breakoutAllowed;
 #ifdef PLATFORM_WINDOWS
 extern HWND &MainWindow;
+extern HMODULE &ProgramInstance; // Only used in gameres packet, won't be needed in final
 #endif
 extern char **TutorialText;
 extern BOOL &MouseInstalled;
 extern int &g_seed;
 extern int &CustomSeed;
 extern int &RandNumb;
+extern int &g_readyToQuit;
+extern HousesType &Whom;
 #else
 extern int g_iniFormat;
 extern int g_frame;
@@ -82,14 +91,19 @@ extern BOOL DebugQuiet;
 extern BOOL ScoresPresent;
 extern BOOL StreamLowImpact;
 extern BOOL g_cancelCurrentMsgBox;
-#ifdef PLATFORM_WINDOWS
-extern HWND MainWindow;
-#endif
+extern BOOL VideoBackBufferAllowed;
+extern BOOL AllowHardwareFilledBlits;
+extern BOOL g_soundOn;
+extern BOOL g_slowPalette;
+extern BOOL g_breakoutAllowed;
+extern void *MainWindow;
 extern char *TutorialText;
 extern BOOL MouseInstalled;
 extern int g_seed;
 extern int CustomSeed;
 extern int RandNumb;
+extern int g_readyToQuit;
+extern HousesType Whom;
 #endif
 
 #endif
