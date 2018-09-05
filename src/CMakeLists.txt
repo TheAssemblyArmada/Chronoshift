@@ -47,6 +47,7 @@ set(GAMEENGINE_INCLUDES
 set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 
 set(GAMEENGINE_SRC
+    game/main.cpp
     game/startup.cpp
     game/common/base64.cpp
     game/common/bitarray.cpp
@@ -96,6 +97,7 @@ set(GAMEENGINE_SRC
     game/engine/flasher.cpp
     game/engine/focus.cpp
     game/engine/fuse.cpp
+    game/engine/gamemain.cpp
     game/engine/gameoptions.cpp
     game/engine/getcd.cpp
     game/engine/gmouse.cpp
