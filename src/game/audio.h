@@ -130,4 +130,30 @@ inline int File_Stream_Sample_Vol(const char *name, int vol, BOOL unk)
 #endif
 }
 
+inline void Stop_Primary_Sound_Buffer()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)() = reinterpret_cast<void (*)()>(0x005BFAE0);
+    func();
+#endif
+}
+
+inline void Start_Primary_Sound_Buffer(BOOL unk)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)(BOOL) = reinterpret_cast<void (*)(BOOL)>(0x005BFA70);
+    func(unk);
+#endif
+}
+
+inline BOOL Audio_Init(void *unk1, int unk2, int unk3, int unk4, int unk5)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*func)(void *, int, int, int, int) = reinterpret_cast<BOOL (*)(void *, int, int, int, int)>(0x005BE930);
+    return func(unk1, unk2, unk3, unk4, unk5);
+#else
+    return false;
+#endif
+}
+
 #endif // AUDIO_H
