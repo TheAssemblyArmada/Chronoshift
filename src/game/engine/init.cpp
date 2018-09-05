@@ -304,7 +304,7 @@ void Init_Random()
     gettimeofday(&curr_time, nullptr);
     sys_time = localtime(&curr_time.tv_sec);
 
-    CryptRandom.Seed_Value(curr_time.tv_usec / 1000);
+    CryptRandom.Seed_Byte(curr_time.tv_usec / 1000);
     CryptRandom.Seed_Bit(sys_time->tm_sec);
     CryptRandom.Seed_Bit(sys_time->tm_sec >> 1);
     CryptRandom.Seed_Bit(sys_time->tm_sec >> 2);
