@@ -149,6 +149,9 @@ void Set_Working_Directory()
 #endif // PLATFORM_WINDOWS
 }
 
+/**
+ * @brief Creates the main window for the game.
+ */
 void Create_Main_Window(void *unk1, int unk2, int unk3, int unk4)
 {
 #ifdef PLATFORM_WINDOWS
@@ -336,7 +339,7 @@ int main(int argc, char **argv)
     PostMessageA(MainWindow, WM_DESTROY, 0, 0);
 #endif
 
-	// Keep calling the event handler loop until ewverything in the queue has been processed.
+	// Keep calling the event handler loop until everything in the queue has been processed.
 	do {
         g_keyboard->Check();
 	} while (g_readyToQuit == 1);

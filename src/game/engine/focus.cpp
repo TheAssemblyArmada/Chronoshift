@@ -19,6 +19,11 @@
 #include "mouse.h"
 #include "theme.h"
 
+/**
+ * Handler for loss of application focus.
+ *
+ * 0x005B3488
+ */
 void Focus_Loss()
 {
     Theme.Suspend();
@@ -29,6 +34,11 @@ void Focus_Loss()
 	}
 }
 
+/**
+ * Handler for gain of application focus.
+ *
+ * 0x005B34B4
+ */
 void Focus_Restore()
 {
     Map.Flag_To_Redraw(true);
