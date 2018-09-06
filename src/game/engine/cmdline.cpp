@@ -16,6 +16,11 @@
 #include "globals.h"
 #include "special.h"
 
+/**
+ * Parses the command line for any arguments we act upon.
+ *
+ * 0x004F5880
+ */
 BOOL Parse_Command_Line(int argc, char **argv)
 {
     Special.Init();
