@@ -1,17 +1,17 @@
 /**
-* @file
-*
-* @author CCHyper
-*
-* @brief <todo>
-*
-* @copyright RedAlert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ *
+ * @brief Object communication layer of object class hierachy.
+ *
+ * @copyright RedAlert++ is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 
 #include "radio.h"
 //#include "techno.h"

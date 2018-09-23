@@ -3,7 +3,7 @@
  *
  * @author CCHyper
  *
- * @brief <todo>
+ * @brief Object communication layer of object class hierachy.
  *
  * @copyright RedAlert++ is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
