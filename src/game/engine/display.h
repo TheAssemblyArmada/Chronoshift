@@ -205,6 +205,7 @@ protected:
     SpecialWeaponType PendingSuper; // Current superweapon selected to fire.
     TRect<int> BandBox; // Dimensions of the selection band box.
 
+public:
 #ifndef CHRONOSHIFT_STANDALONE
     static LayerClass *Layers;
     static TacticalClass &TacticalButton;

@@ -39,7 +39,7 @@ ObjectTypeClass::ObjectTypeClass(RTTIType type, int id, BOOL unk1, BOOL radar_in
     Bit128(unk2),
     Armor(ARMOR_NONE),
     ImageData(nullptr),
-    FrameDimensions(0),
+    FrameDimensions(nullptr),
     RadarIconData(nullptr)
 {
 }
@@ -67,6 +67,10 @@ ObjectTypeClass::~ObjectTypeClass()
 {
     ImageData = nullptr;
     RadarIconData = nullptr;
+    
+    if (FrameDimensions != nullptr) {
+        delete[] FrameDimensions;
+    }
 }
 
 /**

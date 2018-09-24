@@ -592,7 +592,7 @@ enum WeaponSlotType
     WEAPON_SLOT_COUNT,
 };
 
-//TODO: To be moved to housetype.h when class is implimented.
+//TODO: To be moved to housetype.h when class is implimented?
 enum HousesType
 {
     HOUSES_NONE = -1,

@@ -19,15 +19,15 @@
 #define CARGO_H
 
 #include "always.h"
+#include "noinit.h"
 
 class FootClass;
-class NoInitClass;
 
 class CargoClass
 {
 public:
     CargoClass() : Count(0), Object(nullptr) {}
-    CargoClass(NoInitClass const &noinit) {}
+    CargoClass(const NoInitClass &noinit) {}
     ~CargoClass() { Object = nullptr; }
 
     void AI() {}
