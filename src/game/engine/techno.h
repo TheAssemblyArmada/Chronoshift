@@ -137,6 +137,9 @@ public:
     void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
 
 protected:
+    VisualType Visual_Character(BOOL flag) const;
+
+protected:
     FlasherClass m_Flasher;
     StageClass m_AnimStage;
     CargoClass m_Cargo;
