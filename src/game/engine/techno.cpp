@@ -17,6 +17,7 @@
 #include "coord.h"
 #include "display.h"
 #include "drawshape.h"
+#include "globals.h"
 
 TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     RadioClass(type, house),
@@ -502,4 +503,61 @@ void TechnoClass::Techno_Draw_It(
         }
     }*/
 #endif
+}
+
+VisualType TechnoClass::Visual_Character(BOOL flag) const
+{
+    DEBUG_ASSERT(IsActive);
+
+    if (reinterpret_cast<TechnoTypeClass &>(Class_Of()).Is_Invisible() && m_PlayerOwned) {
+        return VISUAL_NORMAL;
+    }
+
+    if (reinterpret_cast<TechnoTypeClass &>(Class_Of()).Is_Invisible() || m_PlayerOwned || g_inMapEditor) {
+        if (m_CloakState == CLOAK_UNCLOAKED || g_inMapEditor) {
+            return VISUAL_NORMAL;
+        }
+
+        if (m_CloakState == CLOAK_CLOAKED) {
+            if (!flag && m_PlayerOwned) {
+                return VISUAL_SHADOWY;
+            }
+        }
+
+        int32_t value = m_CloakingStage.Get_Stage();
+
+        if (m_CloakState == CLOAK_UNCLOAKING) {
+            value = (m_CloakingStage.Get_Stage() - 38);
+        }
+
+        if (m_CloakingStage.Get_Stage() <= 0) {
+            return VISUAL_NORMAL;
+        }
+
+        int stage = fixed(value, 38) * 256;
+
+        if (stage < 64) {
+            return VISUAL_INDISTINCT;
+        }
+
+        if (stage < 128) {
+            return VISUAL_DARKEN;
+        }
+
+        if (stage < 192) {
+            return VISUAL_SHADOWY;
+        }
+
+        if (!flag && m_PlayerOwned) {
+            return VISUAL_SHADOWY;
+        }
+
+        if (stage < 255) {
+            return VISUAL_RIPPLE;
+        }
+
+        return VISUAL_HIDDEN;
+    }
+
+    return VISUAL_NORMAL;
 }

@@ -29,7 +29,7 @@ public:
     StageClass(const NoInitClass &noinit) : Timer(noinit) {}
     StageClass &operator=(StageClass &that);
 
-    int Get_Stage() { return Stage; }
+    int Get_Stage() const { return Stage; }
     void Set_Stage(int stage) { Stage = stage; }
     void Set_Delay(int delay);
     BOOL Stage_Changed();
