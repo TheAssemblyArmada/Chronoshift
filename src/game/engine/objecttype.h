@@ -22,6 +22,7 @@
 #include "abstracttype.h"
 #include "armor.h"
 #include "gametypes.h"
+#include "shape.h"
 #include "trect.h"
 
 class ObjectClass;
