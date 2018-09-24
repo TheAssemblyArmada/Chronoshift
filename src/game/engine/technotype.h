@@ -55,6 +55,8 @@ public:
     BOOL Is_Two_Shooter() const;
     BOOL Legal_Placement(int16_t cellnum) const;
 
+    int Get_Risk() const {return Risk; }
+
     static void One_Time();
 
 protected:

@@ -140,6 +140,7 @@ set(GAMEENGINE_SRC
     game/engine/special.cpp
     game/engine/tab.cpp
     game/engine/target.cpp
+    game/engine/techno.cpp
     game/engine/technotype.cpp
     game/engine/templatetype.cpp
     game/engine/terraintype.cpp

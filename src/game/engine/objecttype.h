@@ -22,6 +22,7 @@
 #include "abstracttype.h"
 #include "armor.h"
 #include "gametypes.h"
+#include "trect.h"
 
 class ObjectClass;
 class BuildingClass;
@@ -58,7 +59,8 @@ public:
     int16_t Get_Strength() { return Strength; }
     void *Get_Image_Data() const { return ImageData; }
     const char *Get_Image_Name() const { return ImageName[0] != '\0' ? ImageName : Get_Name(); }
-
+    void Init_Frame_Dimensions(int frames) const { if (FrameDimensions != nullptr) FrameDimensions = new TRect<int>[frames]; }
+    void Set_Frame_Dimensions(void *shape, int frame) const;
     static void One_Time();
 
 protected:
@@ -97,7 +99,7 @@ protected:
     ArmorType Armor; // The armor type of this object, see ArmorType (def = ARMOR_NONE).
     int16_t Strength;
     void *ImageData;
-    int FrameDimensions;
+    mutable TRect<int> *FrameDimensions; // Mutable as only lazy caches information, not changeable state.
     void *RadarIconData;
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -109,5 +111,12 @@ protected:
     static void *PipShapes;
 #endif
 };
+
+inline void ObjectTypeClass::Set_Frame_Dimensions(void *shape, int frame) const
+{
+    if (FrameDimensions != nullptr && !FrameDimensions[frame].Is_Valid()) {
+        FrameDimensions[frame] = Shape_Dimensions(shape, frame);
+    }
+}
 
 #endif // OBJECTTYPE_H
