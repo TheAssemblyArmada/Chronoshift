@@ -509,11 +509,11 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
 {
     DEBUG_ASSERT(IsActive);
 
-    if (reinterpret_cast<TechnoTypeClass &>(Class_Of()).Is_Invisible() && m_PlayerOwned) {
+    if (Techno_Class_Of().Is_Invisible() && m_PlayerOwned) {
         return VISUAL_NORMAL;
     }
 
-    if (reinterpret_cast<TechnoTypeClass &>(Class_Of()).Is_Invisible() || m_PlayerOwned || g_inMapEditor) {
+    if (Techno_Class_Of().Is_Invisible() || m_PlayerOwned || g_inMapEditor) {
         if (m_CloakState == CLOAK_UNCLOAKED || g_inMapEditor) {
             return VISUAL_NORMAL;
         }

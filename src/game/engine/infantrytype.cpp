@@ -616,7 +616,7 @@ const InfantryTypeClass InfantryMedic(INFANTRY_MEDIC, TXT_MEDIC, "MEDI", 53, 16,
     PIP_YELLOW, MedicDoControls, 25, 25, nullptr);
 
 // General
-const InfantryTypeClass InfantryGeneral(INFANTRY_GENERAL, TXT_GNRL, "GNRL", 53, 16, false, true, false, false, false,
+const InfantryTypeClass InfantryGeneral(INFANTRY_GENERAL, TXT_GENERAL, "GNRL", 53, 16, false, true, false, false, false,
     false, PIP_YELLOW, GeneralDoControls, 2, 2, nullptr);
 
 // Civilian 1
