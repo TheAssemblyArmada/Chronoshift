@@ -77,10 +77,14 @@ public:
     // Assign
     TRect &operator=(const TRect &that)
     {
-        m_left = that.m_left;
-        m_top = that.m_top;
-        m_right = that.m_right;
-        m_bottom = that.m_bottom;
+        if (this != &that) {
+            m_left = that.m_left;
+            m_top = that.m_top;
+            m_right = that.m_right;
+            m_bottom = that.m_bottom;
+        }
+
+        return *this;
     }
 
     bool Contains(const TRect &that) const
