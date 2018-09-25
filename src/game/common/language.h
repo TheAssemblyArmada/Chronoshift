@@ -451,7 +451,7 @@ enum TextEnum
     TXT_FENC = 403, // Barbed Wire
     TXT_MEDIC = 404, // Field Medic
     TXT_SABOTEUR = 405, // Saboteur
-    TXT_GNRL = 406, // General
+    TXT_GENERAL = 406, // General
     TXT_E7 = 407, // Tanya
     TXT_PARABOMBS = 408, // Parabombs
     TXT_PARATROOPERS = 409, // Paratroopers

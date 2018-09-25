@@ -139,6 +139,9 @@ public:
 protected:
     VisualType Visual_Character(BOOL flag) const;
 
+private:
+    TechnoTypeClass &Techno_Class_Of() const { return reinterpret_cast<TechnoTypeClass &>(Class_Of()); }
+
 protected:
     FlasherClass m_Flasher;
     StageClass m_AnimStage;

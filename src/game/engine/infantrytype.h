@@ -89,9 +89,9 @@ DEFINE_ENUMERATION_OPERATORS(DoType);
 
 struct DoInfoStruct
 {
-    int starting_frames; // Where in the shape does it start.
-    uint8_t num_frames; // How many frames does the anim last.
-    uint8_t facing_multiplier; // How many frames to the next facing.
+    int m_StartingFrames; // Where in the shape does it start.
+    uint8_t m_NumFrames; // How many frames does the anim last.
+    uint8_t m_FacingMultiplier; // How many frames to the next facing.
 };
 
 class InfantryTypeClass : public TechnoTypeClass
@@ -133,8 +133,7 @@ private:
             bool m_IsInfiltrator : 1; // & 4 Can it enter a building like a spy or thief (def = false)?
             bool m_IsFraidycat : 1; // & 8 Is it inherently afraid and will panic easily (def = false)?
             bool m_IsCivilian : 1; // & 16 Counts a civilian for evac and kill tracking (def = false)?
-            bool m_HasC4 : 1; // & 32 Equipped with building sabotage explosives [presumes Infiltrate is also true] (def =
-                              // false)?
+            bool m_HasC4 : 1; // & 32 Equipped with explosives [presumes Infiltrate is also true] (def = false)?
             bool m_IsCanine : 1; // & 64 Should special case dog logic be applied to this (def = false)?
             bool m_HasAltRemap : 1; // & 128
         };
@@ -146,7 +145,7 @@ private:
     bool m_IsInfiltrator; // Can it enter a building like a spy or thief (def = false)?
     bool m_IsFraidycat; // Is it inherently afraid and will panic easily (def = false)?
     bool m_IsCivilian; // Counts a civilian for evac and kill tracking (def = false)?
-    bool m_HasC4; // Equipped with building sabotage explosives [presumes Infiltrate is also true] (def = false)?
+    bool m_HasC4; // Equipped with explosives [presumes Infiltrate is also true] (def = false)?
     bool m_IsCanine; // Should special case dog logic be applied to this (def = false)?
     bool m_HasAltRemap;
 #endif
