@@ -352,7 +352,7 @@ enum TextEnum
     TXT_CIVILIAN_BUILDING = 305, // Civilian Building
     TXT_TECHNICIAN = 306, // Technician
     TXT_NO_SAVELOAD = 307, // Save game options are not allowed during a multiplayer session.
-                           // TXT_ 	= 308,		// Special 1
+    TXT_DELPHI = 308, // Special 1 agent delphi
     TXT_TO_REPLAY = 309, // Would you like to replay this mission?
     TXT_RECONN_TO = 310, // Reconnecting to %s.
     TXT_PLEASE_WAIT = 311, // Please wait %02d seconds.
@@ -367,7 +367,7 @@ enum TextEnum
     TXT_PRESS_ESC = 320, // Press ESC to cancel.
     TXT_JUST_YOU_AND_ME = 321, // From Computer: It's just you and me now!
     TXT_CAPTURE_THE_FLAG_COLON = 322, // Capture the Flag:
-                                      // TXT_ 	= 323,		// Special 2
+    TXT_CHAN = 323, // Dr Chan from TD.
     TXT_HAS_ALLIED = 324, // %s has allied with %s
     TXT_AT_WAR = 325, // %s declares war on %s
     TXT_SEL_TARGET = 326, // Select a target
@@ -449,9 +449,9 @@ enum TextEnum
     TXT_MIG = 401, // Mig Attack Plane
     TXT_YAK = 402, // Yak Attack Plane
     TXT_FENC = 403, // Barbed Wire
-                    // TXT_ 	= 404,		// Field Medic
-                    // TXT_ 	= 405,		// Saboteur
-                    // TXT_ 	= 406,		// General
+    TXT_MEDIC = 404, // Field Medic
+    TXT_SABOTEUR = 405, // Saboteur
+    TXT_GNRL = 406, // General
     TXT_E7 = 407, // Tanya
     TXT_PARABOMBS = 408, // Parabombs
     TXT_PARATROOPERS = 409, // Paratroopers
