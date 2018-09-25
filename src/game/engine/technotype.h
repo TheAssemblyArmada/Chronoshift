@@ -54,7 +54,7 @@ public:
     BOOL Write_INI(CCINIClass &ini) const;
     BOOL Is_Two_Shooter() const;
     BOOL Legal_Placement(int16_t cellnum) const;
-
+    BOOL Is_Nominal() const { return IsNominal; } 
     int Get_Risk() const { return Risk; }
     BOOL Is_Invisible() const { return IsInvisible; }
     static void One_Time();

@@ -612,11 +612,11 @@ const InfantryTypeClass InfantryE7(
     INFANTRY_TANYA, TXT_E7, "E7", 53, 16, false, true, false, false, false, false, PIP_RED, E7DoControls, 2, 2, nullptr);
 
 // Medic
-const InfantryTypeClass InfantryMedic(INFANTRY_MEDIC, (TextEnum)404, "MEDI", 53, 16, false, true, false, false, false, false,
+const InfantryTypeClass InfantryMedic(INFANTRY_MEDIC, TXT_MEDIC, "MEDI", 53, 16, false, true, false, false, false, false,
     PIP_YELLOW, MedicDoControls, 25, 25, nullptr);
 
 // General
-const InfantryTypeClass InfantryGeneral(INFANTRY_GENERAL, (TextEnum)406, "GNRL", 53, 16, false, true, false, false, false,
+const InfantryTypeClass InfantryGeneral(INFANTRY_GENERAL, TXT_GNRL, "GNRL", 53, 16, false, true, false, false, false,
     false, PIP_YELLOW, GeneralDoControls, 2, 2, nullptr);
 
 // Civilian 1
@@ -664,11 +664,11 @@ const InfantryTypeClass InfantryEinstein(INFANTRY_EINSTEIN, TXT_EINSTEIN, "EINST
     true, false, PIP_YELLOW, EinsteinDoControls, 0, 0, nullptr);
 
 // Delphi
-const InfantryTypeClass InfantryDelphi(INFANTRY_DELPHI, (TextEnum)308, "DELPHI", 53, 16, false, false, true, false, true,
+const InfantryTypeClass InfantryDelphi(INFANTRY_DELPHI, TXT_DELPHI, "DELPHI", 53, 16, false, false, true, false, true,
     false, PIP_YELLOW, CivilianDoControls, 2, 0, nullptr);
 
 // Dr Chan
-const InfantryTypeClass InfantryDrChan(INFANTRY_CHAN, (TextEnum)323, "CHAN", 53, 16, false, false, true, false, true, false,
+const InfantryTypeClass InfantryDrChan(INFANTRY_CHAN, TXT_CHAN, "CHAN", 53, 16, false, false, true, false, true, false,
     PIP_YELLOW, EinsteinDoControls, 2, 0, nullptr);
 
 // Shock Trooper
@@ -679,6 +679,9 @@ const InfantryTypeClass InfantryShockTrooper(INFANTRY_SHOCK_TROOPER, TXT_SHOK, "
 const InfantryTypeClass InfantryMechanic(INFANTRY_MECHANIC, TXT_MECH, "MECH", 53, 16, false, true, false, false, false,
     false, PIP_YELLOW, MechanicDoControls, 25, 25, nullptr);
 
+/**
+ * 0x004DF5E0
+ */
 InfantryTypeClass::InfantryTypeClass(InfantryType type, int uiname, const char *name, int def_fire_coord, int rot_count,
     BOOL female, BOOL crawls, BOOL civilian, BOOL alt_remap, BOOL nominal, BOOL theater, PipEnum pip, DoInfoStruct *sequence,
     int fire_up, int fire_prone, const uint8_t *remap) :
@@ -706,6 +709,9 @@ InfantryTypeClass::InfantryTypeClass(InfantryType type, int uiname, const char *
     IsRepairable = false;
 }
 
+/**
+ * 0x004EB2F0
+ */
 InfantryTypeClass::InfantryTypeClass(InfantryTypeClass const &that) :
     TechnoTypeClass(that),
     m_FemaleVoice(that.m_FemaleVoice),
@@ -725,33 +731,55 @@ InfantryTypeClass::InfantryTypeClass(InfantryTypeClass const &that) :
 {
 }
 
+/**
+ * 0x004DF728
+ */
 void *InfantryTypeClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(InfantryTypeClass) && size == g_InfantryTypes.Heap_Size());
     return g_InfantryTypes.Allocate();
 }
 
+/**
+ * 0x004DF73C
+ */
 void InfantryTypeClass::operator delete(void *ptr)
 {
     DEBUG_ASSERT(ptr != nullptr);
     g_InfantryTypes.Free(ptr);
 }
 
+/**
+ * Fetches the name of the object for display purposes.
+ *
+ * 0x004EB16C
+ */
 int InfantryTypeClass::Full_Name() const
 {
-    if (g_inMapEditor || Rule.Named_Civilians()) {
+    if (g_inMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type == INFANTRY_C10 || m_Type == INFANTRY_EINSTEIN
+        || m_Type == INFANTRY_DELPHI) {
         return AbstractTypeClass::Full_Name();
     }
 
-    return 0;
+    return TXT_CIVILIAN;
 }
 
+/**
+ * Fetches the width and height of the object.
+ *
+ * 0x004EB2DC
+ */
 void InfantryTypeClass::Dimensions(int &w, int &h) const
 {
     w = 14;
     h = 20;
 }
 
+/**
+ * Creates an InfantyClass instance for the specified house and places it at the specified cell.
+ *
+ * 0x004EAF74
+ */
 BOOL InfantryTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -773,6 +801,11 @@ BOOL InfantryTypeClass::Create_And_Place(int16_t cellnum, HousesType house) cons
 #endif
 }
 
+/**
+ * Creates an InfantyClass for the specified house.
+ *
+ * 0x004EAF20
+ */
 ObjectClass *InfantryTypeClass::Create_One_Of(HouseClass *house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -787,13 +820,24 @@ ObjectClass *InfantryTypeClass::Create_One_Of(HouseClass *house) const
 #endif
 }
 
+/**
+ * Fetches the occupy list for this type.
+ *
+ * 0x004EB01C
+ */
 const int16_t *InfantryTypeClass::Occupy_List(BOOL a1) const
 {
+    // Infantry always occupy only the one cell
     static int16_t _list[] = { 0, LIST_END };
 
     return _list;
 }
 
+/**
+ * Reads an object of this type from an ini file.
+ *
+ * 0x004EB1D0
+ */
 BOOL InfantryTypeClass::Read_INI(CCINIClass &ini)
 {
     if (TechnoTypeClass::Read_INI(ini)) {
