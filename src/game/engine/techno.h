@@ -151,19 +151,19 @@ protected:
     {
         struct
         {
-            bool m_IsUseless; // & 1
-            bool m_IsTickedOff; // & 2 Has this object been attacked and pissed off?
-            bool m_Cloakable; // & 4
-            bool m_IsPrimary; // & 8
-            bool m_IsALoaner; // & 16
-            bool m_LockedOnMap; // & 32
-            bool m_IsRecoiling; // & 64
-            bool m_Tethered; // & 128 Is this in radio chit chat with something (on repair bay, helipad etc)
-            bool m_PlayerOwned; // & 1
-            bool m_PlayerAware; // & 2 C&CDOS has this as "Discovered"
-            bool m_AIAware; // & 4 maybe this is Discovered in C&C95?
-            bool m_Lemon; // & 8"degrades" in OpenDUNE, seems to imply some decaying logic
-            bool m_TechnoBit2_16; // & 16
+            bool m_IsUseless : 1; // & 1
+            bool m_IsTickedOff : 1; // & 2 Has this object been attacked and pissed off?
+            bool m_Cloakable : 1; // & 4
+            bool m_IsPrimary : 1; // & 8
+            bool m_IsALoaner : 1; // & 16
+            bool m_LockedOnMap : 1; // & 32
+            bool m_IsRecoiling : 1; // & 64
+            bool m_Tethered : 1; // & 128 Is this in radio chit chat with something (on repair bay, helipad etc)
+            bool m_PlayerOwned : 1; // & 1
+            bool m_PlayerAware : 1; // & 2 C&CDOS has this as "Discovered"
+            bool m_AIAware : 1; // & 4 maybe this is Discovered in C&C95?
+            bool m_Lemon : 1; // & 8"degrades" in OpenDUNE, seems to imply some decaying logic
+            bool m_TechnoBit2_16 : 1; // & 16
         };
         int m_Bitfield;
     };
