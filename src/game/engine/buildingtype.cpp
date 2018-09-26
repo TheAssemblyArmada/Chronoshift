@@ -30,6 +30,9 @@ TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes = Make_Global<TFixedIHeapCl
 TFixedIHeapClass<BuildingTypeClass> g_BuildingTypes;
 #endif
 
+/**
+ * 0x00429CEC
+ */
 BuildingTypeClass::BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, uint32_t exit_coord,
     RemapType altremap, int primaryf, int primaryl, int primaryh, BOOL fake, BOOL normalized, BOOL nominal, BOOL wall, BOOL simple_damage,
     BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL theater, BOOL turret, BOOL remapable,
@@ -82,6 +85,9 @@ BuildingTypeClass::BuildingTypeClass(BuildingType type, int uiname, const char *
     m_Anims[BSTATE_5].m_Rate = 0;
 }
 
+/**
+ * 0x00454070
+ */
 BuildingTypeClass::BuildingTypeClass(const BuildingTypeClass &that) :
     TechnoTypeClass(that),
     m_BaseNormal(that.m_BaseNormal),
@@ -111,23 +117,39 @@ BuildingTypeClass::BuildingTypeClass(const BuildingTypeClass &that) :
     memcpy(m_Anims, that.m_Anims, sizeof(m_Anims));
 }
 
+/**
+ * 0x00429F0C
+ */
 void *BuildingTypeClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(BuildingTypeClass) && size == g_BuildingTypes.Heap_Size());
     return g_BuildingTypes.Allocate();
 }
 
+/**
+ * 0x00429F20
+ */
 void BuildingTypeClass::operator delete(void *ptr)
 {
     DEBUG_ASSERT(ptr != nullptr);
     g_BuildingTypes.Free(ptr);
 }
 
+/**
+ * Fixes up a coord.
+ *
+ * 0x00454004
+ */
 uint32_t BuildingTypeClass::Coord_Fixup(uint32_t coord) const
 {
     return Coord_Top_Left(coord);
 }
 
+/**
+ * Fetches the name of the object for display purposes.
+ *
+ * 0x0045401C
+ */
 int BuildingTypeClass::Full_Name() const
 {
     if (g_inMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type < BUILDING_V01 || m_Type > BUILDING_V37) {
@@ -137,11 +159,21 @@ int BuildingTypeClass::Full_Name() const
     return TXT_CIVILIAN_BUILDING;
 }
 
+/**
+ * Calculate the maximum number of pips at could be displayed over the object.
+ *
+ * 0x00453C24
+ */
 int BuildingTypeClass::Max_Pips() const
 {
     return Clamp((m_Storage / 100), 0, (24 * Width() / 4));
 }
 
+/**
+ * Fetches the width and height of the object.
+ *
+ * 0x00453A18
+ */
 void BuildingTypeClass::Dimensions(int &w, int &h) const
 {
     w = CELL_PIXELS * Width();
@@ -150,6 +182,11 @@ void BuildingTypeClass::Dimensions(int &w, int &h) const
     h -= (CELL_PIXELS * Height() / 5);
 }
 
+/**
+ * Creates a BuildingClass instance for the specified house and places it at the specified cell.
+ *
+ * 0x00453804
+ */
 BOOL BuildingTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -168,6 +205,11 @@ BOOL BuildingTypeClass::Create_And_Place(int16_t cellnum, HousesType house) cons
 #endif
 }
 
+/**
+ * Fetches the cost of the object.
+ *
+ * 0x00453CF4
+ */
 int BuildingTypeClass::Cost_Of() const
 {
     if (Rule.Separate_Aircraft() && m_Type == BUILDING_HELIPAD) {
@@ -177,6 +219,11 @@ int BuildingTypeClass::Cost_Of() const
     return TechnoTypeClass::Cost_Of();
 }
 
+/**
+ * Creates a BuildingClass for the specified house.
+ *
+ * 0x00453868
+ */
 ObjectClass *BuildingTypeClass::Create_One_Of(HouseClass *house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -191,6 +238,11 @@ ObjectClass *BuildingTypeClass::Create_One_Of(HouseClass *house) const
 #endif
 }
 
+/**
+ * Returns a list of relative cell offsets this object occupies.
+ *
+ * 0x00453A84
+ */
 const int16_t *BuildingTypeClass::Occupy_List(BOOL recalc) const
 {
     static const int16_t _templap[] = { LIST_END };
@@ -229,6 +281,11 @@ const int16_t *BuildingTypeClass::Occupy_List(BOOL recalc) const
     return m_OccupyList;
 }
 
+/**
+ * Returns a list of relative cell offsets this object overlaps.
+ *
+ * 0x00453B4C
+ */
 const int16_t *BuildingTypeClass::Overlap_List() const
 {
     static const int16_t _templap[] = { LIST_END };
@@ -240,6 +297,12 @@ const int16_t *BuildingTypeClass::Overlap_List() const
     return m_OverlapList;
 }
 
+/**
+ * Fetches the raw cost of the object, minus the cost of any other objects included in the build.
+ * Specifically this affects refineries and helipads when their purchase includes a unit as well.
+ *
+ * 0x00453C70
+ */
 int BuildingTypeClass::Raw_Cost() const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -270,6 +333,11 @@ int BuildingTypeClass::Raw_Cost() const
 #endif
 }
 
+/**
+ * Reads an object of this type from an ini file.
+ *
+ * 0x00453E48
+ */
 BOOL BuildingTypeClass::Read_INI(CCINIClass &ini)
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -282,6 +350,11 @@ BOOL BuildingTypeClass::Read_INI(CCINIClass &ini)
 #endif
 }
 
+/**
+ * Returns the buildings width in cells.
+ *
+ * 0x00453B6C
+ */
 int BuildingTypeClass::Width() const
 {
     static int _width[BSIZE_COUNT] = {
@@ -302,6 +375,11 @@ int BuildingTypeClass::Width() const
     return _width[m_BuildingSize];
 }
 
+/**
+ * Returns the buildings height in cells, can optionally request height including bib.
+ *
+ * 0x00453B84
+ */
 int BuildingTypeClass::Height(BOOL check_bib) const
 {
     static int _height[BSIZE_COUNT] = {
@@ -323,6 +401,11 @@ int BuildingTypeClass::Height(BOOL check_bib) const
     return _height[m_BuildingSize] + (check_bib && m_Bib);
 }
 
+/**
+ * Fetches the smudge type for the bib and its offset on the building.
+ *
+ * 0x00453BB4
+ */
 BOOL BuildingTypeClass::Bib_And_Offset(SmudgeType &smudge, int16_t &cellnum) const
 {
     smudge = SMUDGE_NONE;
@@ -356,6 +439,11 @@ BOOL BuildingTypeClass::Bib_And_Offset(SmudgeType &smudge, int16_t &cellnum) con
     return (smudge != SMUDGE_NONE && smudge < SMUDGE_COUNT);
 }
 
+/**
+ * Initialises theater specific data on theater change.
+ *
+ * 0x004538F4
+ */
 void BuildingTypeClass::Init(TheaterType theater)
 {
     // TODO Doable, just wrapped to complete IOMap stack.
@@ -365,6 +453,12 @@ void BuildingTypeClass::Init(TheaterType theater)
 #endif
 }
 
+/**
+ * Fetches a reference to the actual object from a type enum value.
+ *
+ * 0x00453A6C
+ * @warning Heap allocation order MUST match the enum order in Init_Heap for this to work.
+ */
 BuildingTypeClass &BuildingTypeClass::As_Reference(BuildingType building)
 {
     DEBUG_ASSERT(building != BUILDING_NONE);
@@ -373,6 +467,11 @@ BuildingTypeClass &BuildingTypeClass::As_Reference(BuildingType building)
     return g_BuildingTypes[building];
 }
 
+/**
+ * Fetches the type enum value from a name string.
+ *
+ * 0x004537B4
+ */
 BuildingType BuildingTypeClass::From_Name(const char *name)
 {
     if (name != nullptr) {
