@@ -312,7 +312,7 @@ BOOL TechnoTypeClass::Read_INI(CCINIClass &ini)
     // TODO Requires WeaponTypeClass and more functions in CCINIClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
-    (const TechnoTypeClass *, CCINIClass &) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *, CCINIClass &)>(0x005698E8);
+    (const TechnoTypeClass *, CCINIClass &) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *, CCINIClass &)>(0x00569914);
     return func(this, ini);
 #elif 0
     if (ObjectTypeClass::Read_INI(ini)) {
