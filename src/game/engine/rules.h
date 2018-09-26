@@ -68,6 +68,7 @@ public:
     BOOL Ore_Spreads() const { return OreSpreads; }
     BOOL Ally_Reveal() const { return AllyReveal; }
     BOOL Named_Civilians() const { return NamedCivilians; }
+    BOOL Separate_Aircraft() const { return SeparateAircraft; }
     const fixed &Ore_Growth_Rate() const { return GrowthRate; }
     int Get_Gap_Radius() const { return GapRadius; }
     int Get_Gold_Value() const { return GoldValue; }
