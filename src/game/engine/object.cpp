@@ -590,7 +590,7 @@ BuildingClass *ObjectClass::Who_Can_Build_Me(BOOL a1, BOOL a2) const
 RadioMessageType ObjectClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
     switch (message) {
-        case RADIO_13:
+        case RADIO_WE_BUMPED:
             Mark(MARK_REDRAW);
             return RADIO_ROGER;
         default:
