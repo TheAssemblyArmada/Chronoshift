@@ -1,72 +1,71 @@
 /**
-* @file
-*
-* @author CCHyper
-* @author OmniBlade
-*
-* @brief <todo>
-*
-* @copyright RedAlert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Class holding static info on building objects.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef BUILDINGTYPE_H
 #define BUILDINGTYPE_H
 
 #include "always.h"
+#include "facing.h"
+#include "heap.h"
+#include "smudgetype.h"
 #include "technotype.h"
 #include "theater.h"
 
 enum BuildingType
 {
     BUILDING_NONE = -1,
-
     BUILDING_FIRST = 0,
 
-    // The follow right hand comments are the bit index (uint32) for storing
-    // which buildings are set, ie, HouseClas storing the buildings the house
-    // has constructed, or CCINIClass writing an entry.
-    BUILDING_ATEK = 0,				// 1 - 1
-    BUILDING_IRON_CURTAIN = 1,		// 1 - 2
-    BUILDING_WEAP = 2,				// 1 - 4
-    BUILDING_PDOX = 3,				// 1 - 8
-    BUILDING_PBOX = 4,				// 1 - 16
-    BUILDING_HBOX = 5,				// 1 - 32
-    BUILDING_DOME = 6,				// 1 - 64
-    BUILDING_GAP_GENERATOR = 7,		// 1 - 128
-    BUILDING_GUN = 8,				// 2 - 1
-    BUILDING_AGUN = 9,				// 2 - 2
-    BUILDING_FTUR = 10,				// 2 - 4
-    BUILDING_FACT = 11,				// 2 - 8
-    BUILDING_PROC = 12,				// 2 - 16
-    BUILDING_SILO = 13,				// 2 - 32
-    BUILDING_HELIPAD = 14,		    // 2 - 64
-    BUILDING_SAM = 15,				// 2 - 128
-    BUILDING_AIRFIELD = 16,			// 3 - 1
-    BUILDING_POWR = 17,				// 3 - 2
-    BUILDING_APWR = 18,				// 3 - 4
-    BUILDING_STEK = 19,				// 3 - 8
-    BUILDING_HOSPITAL = 20,			// 3 - 16
-    BUILDING_BARR = 21,				// 3 - 32
-    BUILDING_TENT = 22,				// 3 - 64
-    BUILDING_KENN = 23,				// 3 - 128
-    BUILDING_FIX = 24,				// 4 - 1
-    BUILDING_BIO = 25,				// 4 - 2
-    BUILDING_MISS = 26,				// 4 - 4
-    BUILDING_SYRD = 27,				// 4 - 8
-    BUILDING_SPEN = 28,				// 4 - 16
-    BUILDING_MSLO = 29,				// 4 - 32
-    BUILDING_FCOM = 30,				// 4 - 64
-    BUILDING_TESLA_COIL = 31,		// 4 - 128
+    // The first 32 buildings here can be stored in an unsigned 32bit bit field. For example, in HouseClass to determine
+    // which structures the house has. To decide which bit is set, the formula is (1 << value)
+    BUILDING_ATEK = 0,
+    BUILDING_IRON_CURTAIN = 1,
+    BUILDING_WEAP = 2,
+    BUILDING_PDOX = 3,
+    BUILDING_PBOX = 4,
+    BUILDING_HBOX = 5,
+    BUILDING_DOME = 6,
+    BUILDING_GAP_GENERATOR = 7,
+    BUILDING_GUN = 8,
+    BUILDING_AGUN = 9,
+    BUILDING_FTUR = 10,
+    BUILDING_FACT = 11,
+    BUILDING_PROC = 12,
+    BUILDING_SILO = 13,
+    BUILDING_HELIPAD = 14,
+    BUILDING_SAM = 15,
+    BUILDING_AIRFIELD = 16,
+    BUILDING_POWR = 17,
+    BUILDING_APWR = 18,
+    BUILDING_STEK = 19,
+    BUILDING_HOSPITAL = 20,
+    BUILDING_BARR = 21,
+    BUILDING_TENT = 22,
+    BUILDING_KENN = 23,
+    BUILDING_FIX = 24,
+    BUILDING_BIO = 25,
+    BUILDING_MISS = 26,
+    BUILDING_SYRD = 27,
+    BUILDING_SPEN = 28,
+    BUILDING_MSLO = 29,
+    BUILDING_FCOM = 30,
+    BUILDING_TESLA_COIL = 31,
 
-    // Only the first 32 entries of BuildingType are valid within a 32 integer.
-    BUILDING_VALID_COUNT = 32,      // TOOD: Rename this.
-
+    // For buildings beyond this to count in the check for what exists, the bitfield will need extending.
     // Fakes
     BUILDING_WEAF = 32,
     BUILDING_FACF = 33,
@@ -134,25 +133,143 @@ enum BuildingType
     BUILDING_LAR1 = 85,
     BUILDING_LAR2 = 86,
 
-    BUILDING_LAST = 86,
-
     BUILDING_COUNT = 87
 };
 
 DEFINE_ENUMERATION_OPERATORS(BuildingType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(BuildingType);
+
+enum BSizeType
+{
+    BSIZE_NONE = -1,
+    BSIZE_FIRST = 0,
+    BSIZE_1BY1 = 0,
+    BSIZE_2BY1 = 1,
+    BSIZE_1BY2 = 2,
+    BSIZE_2BY2 = 3,
+    BSIZE_2BY3 = 4,
+    BSIZE_3BY2 = 5,
+    BSIZE_3BY3 = 6,
+    BSIZE_4BY2 = 7,
+    BSIZE_5BY5 = 8,
+    BSIZE_COUNT
+};
+
+enum BStateType
+{
+    BSTATE_NONE = -1,
+    BSTATE_0 = 0, // this could be ActiveAnimOne			//CONSTRUCTION
+    BSTATE_1 = 1, // i think this is Idle or ActiveAnimTwo
+    BSTATE_2 = 2, // attacking?                //ATTACKING
+    BSTATE_3 = 3,
+    BSTATE_4 = 4,
+    BSTATE_5 = 5,
+    BSTATE_COUNT
+};
 
 class BuildingTypeClass : public TechnoTypeClass
 {
+    struct AnimControlType
+    {
+        int m_Start; 
+        int m_FrameCount;
+        int m_Rate;
+    };
+
 public:
+    BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, uint32_t exit_coord,
+        RemapType altremap, int primaryf, int primaryl, int primaryh, BOOL fake, BOOL unk1, BOOL nominal, BOOL wall,
+        BOOL unk2, BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL theater, BOOL turret,
+        BOOL remapable, RTTIType factory, DirType dir, BSizeType size, const int16_t *exit_list, const int16_t *occupy_list,
+        const int16_t *overlap_list);
+    BuildingTypeClass(const BuildingTypeClass &that);
+    BuildingTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
+    ~BuildingTypeClass() {}
+
+    void *operator new(size_t size);
+    void *operator new(size_t size, void *ptr) { return ptr; }
+    void operator delete(void *ptr);
+#ifndef COMPILER_WATCOM // Watcom doesn't like this, MSVC/GCC does.
+    void operator delete(void *ptr, void *place) {}
+#endif
+
+    // AbstractTypeClass virtuals.
+    virtual uint32_t Coord_Fixup(uint32_t coord) const override;
+    virtual int Full_Name() const override;
+    // ObjectTypeClass virtuals
+    virtual int Max_Pips() const override;
+    virtual void Dimensions(int &w, int &h) const override;
+    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
+    virtual int Cost_Of() const override;
+    virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
+    virtual const int16_t *Occupy_List(BOOL recalc = false) const override;
+    virtual const int16_t *Overlap_List() const override;
+    // TechnoTypeClass virtuals
+    virtual int Raw_Cost() const override;
+    virtual BOOL Read_INI(CCINIClass &ini) override;
+
+    int Width() const;
+    int Height(BOOL check_bib = false) const;
+    BOOL Bib_And_Offset(SmudgeType &smudge, int16_t &cellnum) const;
+
+    void Code_Pointers() {}
+    void Decode_Pointers() {}
+
+    static BuildingTypeClass &As_Reference(BuildingType building);
+    static BuildingType From_Name(const char *name);
     static void Init(TheaterType theater);
+
+private:
+#ifndef CHRONOSHIFT_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool m_BaseNormal : 1; // & 1Considered for building adjacency checks (def = true)?
+            bool m_Fake : 1; // & 2 Is this a fake structure (def = false)?
+            bool m_Bib : 1; // & 4 Does the building have a bib built in (def = false)?
+            bool m_Wall : 1; // & 8 Is this a wall type structure [special rules apply] (def = false)?
+            bool m_SimpleDamage : 1; // & 16 Does building have simple damage imagery (def = true)?
+            bool m_Capturable : 1; // & 32 Can this building be infiltrated by a spy/thief/engineer (def = false)?
+            bool m_Normalized : 1; // & 64 Is nimation speed adjusted for a consistent speed (def = false)?
+            bool m_Powered : 1; // & 128 Does it require power to function (def = false)?
+            bool m_Unsellable : 1; // & 1 Cannot sell this building (even if it can be built) (def = false)?
+        };
+        int Bitfield;
+    };
+#else
+    bool m_BaseNormal; // Considered for building adjacency checks (def = true)?
+    bool m_Fake; // Is this a fake structure (def = false)?
+    bool m_Bib; // Does the building have a bib built in (def = false)?
+    bool m_Wall; // Is this a wall type structure [special rules apply] (def = false)?
+    bool m_SimpleDamage; // Does building have simple damage imagery (def = true)?
+    bool m_Capturable; // Can this building be infiltrated by a spy/thief/engineer (def = false)?
+    bool m_Normalized;  // Is nimation speed adjusted for a consistent speed (def = false)?
+    bool m_Powered;// Does it require power to function (def = false)?
+    bool m_Unsellable; // Cannot sell this building (even if it can be built) (def = false)?
+#endif
+    FacingType m_Facing;
+    int m_Adjacency;
+    RTTIType m_FactoryType; // Type of object this building can produce.
+    uint32_t m_ExitCoord;
+    const int16_t *m_ExitList;
+    BuildingType m_Type;
+    DirType m_StartFacing;
+    int m_Storage; // Number of bails stored
+    int m_Power;
+    int m_Drain;
+    BSizeType m_BuildingSize; // The size/foundation this building occupies (def = BSIZE_NONE).
+    AnimControlType m_Anims[BSTATE_COUNT];
+    const int16_t *m_OccupyList;
+    const int16_t *m_OverlapList;
+    void *m_BuildupData;
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-//extern TFixedIHeapClass<BuildingTypeClass> &BuildingTypes;
+extern TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes;
 #else
-//extern TFixedIHeapClass<BuildingTypeClass> BuildingTypes;
+extern TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes;
 #endif
 
 #endif // BUILDINGTYPE_H
