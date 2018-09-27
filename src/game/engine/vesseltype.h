@@ -4,9 +4,9 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief <todo>
+ * @brief Class holding static info on vessel objects.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -19,6 +19,8 @@
 #define VESSELTYPE_H
 
 #include "always.h"
+#include "animtype.h"
+#include "heap.h"
 #include "technotype.h"
 
 enum VesselType
@@ -32,22 +34,62 @@ enum VesselType
     VESSEL_PT_BOAT = 4,
     VESSEL_MISSILE_SUB = 5,
     VESSEL_CARRIER = 6,
-    VESSEL_LAST = 6,
     VESSEL_COUNT
 };
 
 DEFINE_ENUMERATION_OPERATORS(VesselType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(VesselType);
 
 class VesselTypeClass : public TechnoTypeClass
 {
+public:
+    VesselTypeClass(VesselType type, int uiname, const char *name, AnimType death_anim, int a5, int a6, int a7, int a8,
+        int a9, BOOL a10, BOOL a11, BOOL has_turret, BOOL twin_turrets, int facings, MissionType mission);
+    VesselTypeClass(const VesselTypeClass &that);
+    VesselTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
+    ~VesselTypeClass() {}
+
+    void *operator new(size_t size);
+    void *operator new(size_t size, void *ptr) { return ptr; }
+    void operator delete(void *ptr);
+#ifndef COMPILER_WATCOM // Watcom doesn't like this, MSVC/GCC does.
+    void operator delete(void *ptr, void *place) {}
+#endif
+
+    virtual int Max_Pips() const override;
+    virtual void Dimensions(int &w, int &h) const override;
+    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
+    virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
+    virtual const int16_t *Overlap_List() const override;
+
+    void Code_Pointers() {}
+    void Decode_Pointers() {}
+
+private:
+#ifndef CHRONOSHIFT_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool m_UnkBool : 1; // & 1 Unknown, may relate to TS ini entry "Rotates".
+        };
+        int Bitfield;
+    };
+#else
+    bool m_UnkBool; // Unknown, may relate to TS ini entry "Rotates".
+#endif
+    VesselType m_Type;
+    MissionType m_UnkMissionA; // Gets set to 14 or 0 by argument in ctor, never used. 14 is MISSION_HUNT.
+    MissionType m_UnkMissionB; // Gets set to 5 in ctor, never used
+    AnimType m_DeathAnim;
+    int m_UnkInt; // Gets set to 26 in One_Time(), never used
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-//extern TFixedIHeapClass<VesselTypeClass> &VesselTypes;
+extern TFixedIHeapClass<VesselTypeClass> &g_VesselTypes;
 #else
-//extern TFixedIHeapClass<VesselTypeClass> VesselTypes;
+extern TFixedIHeapClass<VesselTypeClass> g_VesselTypes;
 #endif
 
 #endif // VESSELTYPE_H

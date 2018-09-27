@@ -53,6 +53,7 @@ enum DirType
 enum DirType : uint8_t
 #endif
 {
+    DIR_FIRST = 0,
     DIR_NORTH = 0, // 0 degrees
     DIR_NORTH_NORTH_EAST = 16,
     DIR_NORTH_EAST = 32, // 45 degrees
