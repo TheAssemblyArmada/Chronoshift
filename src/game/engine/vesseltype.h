@@ -42,8 +42,9 @@ DEFINE_ENUMERATION_OPERATORS(VesselType);
 class VesselTypeClass : public TechnoTypeClass
 {
 public:
-    VesselTypeClass(VesselType type, int uiname, const char *name, AnimType death_anim, int a5, int a6, int a7, int a8,
-        int a9, BOOL a10, BOOL a11, BOOL has_turret, BOOL twin_turrets, int facings, MissionType mission);
+    VesselTypeClass(VesselType type, int uiname, const char *name, AnimType death_anim, int def_fire_coord,
+        int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL a10, BOOL nominal,
+        BOOL has_turret, BOOL twin_turrets, int facings, MissionType mission);
     VesselTypeClass(const VesselTypeClass &that);
     VesselTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
     ~VesselTypeClass() {}
@@ -63,6 +64,10 @@ public:
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
+
+    static VesselTypeClass &As_Reference(VesselType vessel);
+    static VesselType From_Name(const char *name);
+    static void One_Time();
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
