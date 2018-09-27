@@ -14,10 +14,16 @@
  *            LICENSE
  */
 #include "vesseltype.h"
+#include "ccfileclass.h"
 #include "coord.h"
 #include "facing.h"
 #include "lists.h"
+#include "minmax.h"
+#include "mixfile.h"
 #include "scenario.h"
+#include <cstdio>
+
+using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<VesselTypeClass> &g_VesselTypes = Make_Global<TFixedIHeapClass<VesselTypeClass> >(0x0065DF38);
@@ -25,9 +31,28 @@ TFixedIHeapClass<VesselTypeClass> &g_VesselTypes = Make_Global<TFixedIHeapClass<
 TFixedIHeapClass<VesselTypeClass> g_VesselTypes;
 #endif
 
-VesselTypeClass::VesselTypeClass(VesselType type, int uiname, const char *name, AnimType death_anim, int a5, int a6, int a7,
-    int a8, int a9, BOOL a10, BOOL nominal, BOOL has_turret, BOOL twin_turrets, int facings, MissionType mission):
-    TechnoTypeClass(RTTI_VESSELTYPE, type, uiname, name, REMAP_1, a5, a6, a7, a8, a9, nominal, false, true, true, false,
+VesselTypeClass const VesselSubmarine(
+    VESSEL_SUBMARINE, TXT_SS, "SS", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false, false, FACING_COUNT_16, MISSION_HUNT);
+VesselTypeClass const VesselDestroyer(
+    VESSEL_DESTROYER, TXT_DD, "DD", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, false, FACING_COUNT_16, MISSION_HUNT);
+VesselTypeClass const VesselCruiser(
+    VESSEL_CRUISER, TXT_CA, "CA", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, true, FACING_COUNT_16, MISSION_HUNT);
+VesselTypeClass const VesselTransport(VESSEL_TRANSPORT, TXT_LST, "LST", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false,
+    false, FACING_COUNT_NONE, MISSION_SLEEP);
+VesselTypeClass const VesselPTBoat(
+    VESSEL_PT_BOAT, TXT_PT, "PT", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, false, FACING_COUNT_16, MISSION_HUNT);
+VesselTypeClass const VesselMissileSubmarine(VESSEL_MISSILE_SUB, TXT_MS, "MSUB", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true,
+    false, false, FACING_COUNT_16, MISSION_HUNT);
+VesselTypeClass const VesselHeliCarrier(VESSEL_CARRIER, TXT_CARR, "CARR", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false,
+    false, FACING_COUNT_NONE, MISSION_SLEEP);
+
+
+/**
+ * 0x00581F0C
+ */
+VesselTypeClass::VesselTypeClass(VesselType type, int uiname, const char *name, AnimType death_anim, int def_fire_coord, int pri_fire_coord_a, int pri_fire_coord_b,
+    int sec_fire_coord_a, int sec_fire_coord_b, BOOL a10, BOOL nominal, BOOL has_turret, BOOL twin_turrets, int facings, MissionType mission):
+    TechnoTypeClass(RTTI_VESSELTYPE, type, uiname, name, REMAP_1, def_fire_coord, pri_fire_coord_a, pri_fire_coord_b, sec_fire_coord_a, sec_fire_coord_b, nominal, false, true, true, false,
         false, false, has_turret, true, true, facings, SPEED_FLOAT),
     m_Type(type),
     m_UnkBool(a10),
@@ -40,6 +65,9 @@ VesselTypeClass::VesselTypeClass(VesselType type, int uiname, const char *name, 
     IsCrewed = false;
 }
 
+/**
+ * 0x00584B90
+ */
 VesselTypeClass::VesselTypeClass(const VesselTypeClass &that) :
     TechnoTypeClass(that),
     m_Type(that.m_Type),
@@ -51,29 +79,50 @@ VesselTypeClass::VesselTypeClass(const VesselTypeClass &that) :
 {
 }
 
+/**
+ * 0x00581FEC
+ */
 void *VesselTypeClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(VesselTypeClass) && size == g_VesselTypes.Heap_Size());
     return g_VesselTypes.Allocate();
 }
 
+/**
+ * 0x00582000
+ */
 void VesselTypeClass::operator delete(void *ptr)
 {
     DEBUG_ASSERT(ptr != nullptr);
     g_VesselTypes.Free(ptr);
 }
 
+/**
+ * Calculate the maximum number of pips at could be displayed over the object.
+ *
+ * 0x00584B7C
+ */
 int VesselTypeClass::Max_Pips() const
 {
     return Max_Passengers();
 }
 
+/**
+ * Fetches the width and height of the object.
+ *
+ * 0x00584954
+ */
 void VesselTypeClass::Dimensions(int &w, int &h) const
 {
     w = 48;
     h = 48;
 }
 
+/**
+ * Creates a VesselClass instance for the specified house and places it at the specified cell.
+ *
+ * 0x005848C4
+ */
 BOOL VesselTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -92,6 +141,11 @@ BOOL VesselTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 #endif
 }
 
+/**
+ * Creates a VesselClass for the specified house.
+ *
+ * 0x00584870
+ */
 ObjectClass *VesselTypeClass::Create_One_Of(HouseClass *house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -106,9 +160,72 @@ ObjectClass *VesselTypeClass::Create_One_Of(HouseClass *house) const
 #endif
 }
 
+/**
+ * Returns a list of relative cell offsets this object overlaps.
+ *
+ * 0x00584B20
+ */
 const int16_t *VesselTypeClass::Overlap_List() const
 {
     static const int16_t _list[] = { -3, -2, -1, 1, 2, 3, -128, -129, -127, -130, -126, 128, 129, 127, 130, 126, LIST_END };
 
     return _list;
+}
+
+/**
+ * Fetches a reference to the actual object from a type enum value.
+ *
+ * 0x00584858
+ * @warning Heap allocation order MUST match the enum order in Init_Heap for this to work.
+ */
+VesselTypeClass &VesselTypeClass::As_Reference(VesselType vessel)
+{
+    DEBUG_ASSERT(vessel != VESSEL_NONE);
+    DEBUG_ASSERT(vessel < VESSEL_COUNT);
+
+    return g_VesselTypes[vessel];
+}
+
+/**
+ * Fetches the type enum value from a name string.
+ *
+ * 0x00584B2C
+ */
+VesselType VesselTypeClass::From_Name(const char *name)
+{
+    if (name != nullptr) {
+        for (VesselType vessel = VESSEL_FIRST; vessel < VESSEL_COUNT; ++vessel) {
+            if (strcasecmp(name, As_Reference(vessel).Name) == 0) {
+                return vessel;
+            }
+        }
+    }
+
+    return VESSEL_NONE;
+}
+
+/**
+ * Initialises data that requires a one time load.
+ *
+ * 0x00584968
+ */
+void VesselTypeClass::One_Time()
+{
+    char filename[512];
+
+    for (VesselType i = VESSEL_FIRST; i < VESSEL_COUNT; ++i) {
+        VesselTypeClass &vessel = As_Reference(i);
+        char const *name = vessel.ImageName[0] != '\0' ? vessel.ImageName : vessel.Name;
+
+        // Original has a special case where icon is always loaded for helicarrier?
+        // Possibly intended for the "Secret Units" enabling code that was never in any released build.
+        if (vessel.TechLevel != -1 /*|| i == VESSEL_CARRIER*/) {
+            snprintf(filename, sizeof(filename), "%.4sICON.SHP", name);
+            vessel.CameoData = MixFileClass<CCFileClass>::Retrieve(filename);
+        }
+
+        snprintf(filename, sizeof(filename), "%s.SHP", name);
+        vessel.ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
+        vessel.m_UnkInt = 26;
+    }
 }
