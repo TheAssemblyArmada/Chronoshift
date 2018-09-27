@@ -17,11 +17,165 @@
 #include "lists.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<AircraftTypeClass> &g_AircraftTypes = *reinterpret_cast<TFixedIHeapClass<AircraftTypeClass> *>(0x0065DDBC);
+TFixedIHeapClass<AircraftTypeClass> &g_AircraftTypes = Make_Global<TFixedIHeapClass<AircraftTypeClass> >(0x0065DDBC);
+void *&AircraftTypeClass::LeftRotorData = Make_Global<void *>(0x00623010);
+void *&AircraftTypeClass::RightRotorData = Make_Global<void *>(0x00623014);
 #else
 TFixedIHeapClass<AircraftTypeClass> g_AircraftTypes;
+void *AircraftTypeClass::LeftRotorData = nullptr;
+void *AircraftTypeClass::RightRotorData = nullptr;
 #endif
 
+AircraftTypeClass const AircraftBadgerPlane(AIRCRAFT_BADGER, // AircraftType
+    TXT_BADGER,
+    "BADR", // BaseName
+    0, // def_fire_coord
+    0, // fire_coord_a
+    0, // fire_coord_b
+    true, //
+    false, // HasRotors
+    false, //
+    false, //
+    true, // RadarInvisible
+    false, // Selectable
+    true, // LegalTarget
+    false, // Insignificant
+    false, // Immune
+    BUILDING_NONE, // Dock
+    255, //
+    FACING_COUNT_16, // Facings
+    MISSION_UNLOAD //
+);
+
+AircraftTypeClass const AircraftU2Plane(AIRCRAFT_U2, // AircraftType
+    TXT_U2,
+    "U2", // BaseName
+    0, //
+    0, //
+    0, //
+    true, //
+    false, // HasRotors
+    false, //
+    false, //
+    true, // RadarInvisible
+    false, // Selectable
+    true, // LegalTarget
+    false, // Insignificant
+    false, // Immune
+    BUILDING_NONE, // Dock
+    255, //
+    FACING_COUNT_16, // Facings
+    MISSION_UNLOAD //
+);
+
+AircraftTypeClass const AircraftMigPlane(AIRCRAFT_MIG, // AircraftType
+    TXT_MIG,
+    "MIG", // BaseName
+    0, //
+    32, //
+    32, //
+    true, //
+    false, // HasRotors
+    false, //
+    false, //
+    true, // RadarInvisible
+    true, // Selectable
+    true, // LegalTarget
+    false, // Insignificant
+    false, // Immune
+    BUILDING_AIRFIELD, // Dock
+    192, //
+    FACING_COUNT_16, // Facings
+    MISSION_UNLOAD //
+);
+
+AircraftTypeClass const AircraftYakPlane(AIRCRAFT_YAK, // AircraftType
+    TXT_YAK,
+    "YAK", // BaseName
+    0, //
+    32, //
+    32, //
+    true, //
+    false, // HasRotors
+    false, //
+    false, //
+    true, // RadarInvisible
+    true, // Selectable
+    true, // LegalTarget
+    false, // Insignificant
+    false, // Immune
+    BUILDING_AIRFIELD, // Dock
+    255, //
+    FACING_COUNT_16, // Facings
+    MISSION_UNLOAD //
+);
+
+AircraftTypeClass const AircraftTransportHeli(AIRCRAFT_TRANSPORT, // AircraftType
+    TXT_TRANS,
+    "TRAN", // BaseName
+    0, //
+    0, //
+    0, //
+    false, // bool4
+    true, // bool3
+    true, // bool2
+    true, // bool1
+    true, // RadarInvisible
+    true, // Selectable
+    true, // LegalTarget
+    false, // Insignificant
+    false, // Immune
+    BUILDING_NONE, // Dock
+    255, //
+    FACING_COUNT_32, // Facings
+    MISSION_UNLOAD //
+);
+
+AircraftTypeClass const AircraftAttackHeli(AIRCRAFT_HELI, // AircraftType
+    TXT_HELI,
+    "HELI", // BaseName
+    0, //
+    64, //
+    0, //
+    false, //
+    true, //
+    false, //
+    false, //
+    true, // RadarInvisible
+    true, // Selectable
+    true, // LegalTarget
+    false, // Insignificant
+    false, // Immune
+    BUILDING_HELIPAD, // Dock
+    255, //
+    FACING_COUNT_32, // Facings
+    MISSION_UNLOAD //
+);
+
+AircraftTypeClass const AircraftHindHeli(AIRCRAFT_HIND, // AircraftType
+    TXT_HIND,
+    "HIND", // BaseName
+    0, //
+    64, //
+    0, //
+    false, //
+    true, //
+    false, //
+    false, //
+    true, // RadarInvisible
+    true, // Selectable
+    true, // LegalTarget
+    false, // Insignificant
+    false, // Immune
+    BUILDING_HELIPAD, // Dock
+    255, //
+    FACING_COUNT_32, // Facings
+    MISSION_UNLOAD //
+);
+
+/**
+ * 0x00401210
+ */
 AircraftTypeClass::AircraftTypeClass(AircraftType type, int uiname, const char *name, int def_fire_coord, int a5, int a6,
     BOOL airplane, BOOL rotors, BOOL transport, BOOL custom_rotors, BOOL a11, BOOL a12, BOOL a13, BOOL a14, BOOL a15,
     BuildingType dock, int landing_dist, int a18, MissionType mission) :
@@ -39,6 +193,9 @@ AircraftTypeClass::AircraftTypeClass(AircraftType type, int uiname, const char *
 
 }
 
+/**
+ * 0x00404E80
+ */
 AircraftTypeClass::AircraftTypeClass(AircraftTypeClass const &that) :
     TechnoTypeClass(that),
     m_Type(that.m_Type),
@@ -52,23 +209,39 @@ AircraftTypeClass::AircraftTypeClass(AircraftTypeClass const &that) :
 {
 }
 
+/**
+ * 0x00401324
+ */
 void *AircraftTypeClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(AircraftTypeClass) && size == g_AircraftTypes.Heap_Size());
     return g_AircraftTypes.Allocate();
 }
 
+/**
+ * 0x00401338
+ */
 void AircraftTypeClass::operator delete(void *ptr)
 {
     DEBUG_ASSERT(ptr != nullptr);
     g_AircraftTypes.Free(ptr);
 }
 
+/**
+ * Maximum number of pips that can be drawn on this object.
+ *
+ * 0x00404090
+ */
 int AircraftTypeClass::Max_Pips() const
 {
     return Primary != nullptr ? 5 : Max_Passengers();
 }
 
+/**
+ * Fetches the width and height of the object.
+ *
+ * 0x004040BC
+ */
 void AircraftTypeClass::Dimensions(int &w, int &h) const
 {
     switch (m_Type) {
@@ -90,12 +263,22 @@ void AircraftTypeClass::Dimensions(int &w, int &h) const
     };
 }
 
+/**
+ * Creates an AircraftClass instance for the specified house and places it at the specified cell.
+ *
+ * 0x004040B8
+ */
 BOOL AircraftTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
     // TODO, could this be why you can't pre place aircraft on a map correctly.
     return false;
 }
 
+/**
+ * Creates an AircraftClass for the specified house.
+ *
+ * 0x00404024
+ */
 ObjectClass *AircraftTypeClass::Create_One_Of(HouseClass *house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
@@ -110,6 +293,11 @@ ObjectClass *AircraftTypeClass::Create_One_Of(HouseClass *house) const
 #endif
 }
 
+/**
+ * Fetches the occupy list for this type.
+ *
+ * 0x00404078
+ */
 const int16_t *AircraftTypeClass::Occupy_List(BOOL recalc) const
 {
     static const int16_t _list[] = { 0, LIST_END };
@@ -117,6 +305,11 @@ const int16_t *AircraftTypeClass::Occupy_List(BOOL recalc) const
     return _list;
 }
 
+/**
+ * Fetches the overlap list for this type.
+ *
+ * 0x00404084
+ */
 const int16_t *AircraftTypeClass::Overlap_List() const
 {
     static const int16_t _list[] = {

@@ -91,6 +91,15 @@ private:
     MissionType m_UnkMission; // Possibly unused?
     BuildingType m_DockingBay; // Buiding type this docks at, planes explode if player doesn't have one.
     int m_LandingDistance;
+
+public:
+#ifndef CHRONOSHIFT_STANDALONE
+    static void *&LeftRotorData;
+    static void *&RightRotorData;
+#else
+    static void *LeftRotorData;
+    static void *RightRotorData;
+#endif
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
