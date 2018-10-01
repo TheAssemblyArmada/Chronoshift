@@ -1,12 +1,12 @@
 /**
  * @file
  *
- * @author OmniBlade
  * @author CCHyper
+ * @author OmniBlade
  *
- * @brief Class containing information about unit types.
+ * @brief Class holding static info on unit objects.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -19,6 +19,8 @@
 #define UNITTYPE_H
 
 #include "always.h"
+#include "animtype.h"
+#include "heap.h"
 #include "technotype.h"
 
 enum UnitType
@@ -47,22 +49,103 @@ enum UnitType
     UNIT_MAD_TANK = 19,
     UNIT_DEMO_TRUCK = 20,
     UNIT_PHASE = 21,
-    UNIT_LAST = 21,
     UNIT_COUNT,
 };
 
 DEFINE_ENUMERATION_OPERATORS(UnitType);
-DEFINE_ENUMERATION_BITWISE_OPERATORS(UnitType);
 
 class UnitTypeClass : public TechnoTypeClass
 {
+public:
+    UnitTypeClass(UnitType type, int uiname, const char *name, AnimType death_anim, RemapType remap, int def_fire_coord,
+        int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL crate_goodie,
+        BOOL nominal, BOOL crusher, BOOL harvester, BOOL radar_invisible, BOOL insignificant, BOOL turret, BOOL turret_spins,
+        BOOL unk3, BOOL unk4, BOOL largeimage, BOOL is_viceroid, BOOL radarjammer, BOOL mgapgen, int facings, MissionType mission,
+        MissionType alt_mission);
+    UnitTypeClass(UnitTypeClass const &that);
+    UnitTypeClass(NoInitClass const &noinit) : TechnoTypeClass(noinit) {}
+    ~UnitTypeClass() {}
+
+    void *operator new(size_t size);
+    void *operator new(size_t size, void *ptr) { return ptr; }
+    void operator delete(void *ptr);
+#ifndef COMPILER_WATCOM // Watcom doesn't like this, MSVC/GCC does.
+    void operator delete(void *ptr, void *place) {}
+#endif
+
+    virtual int Max_Pips() const override;
+    virtual void Dimensions(int &w, int &h) const override;
+    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
+    virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
+    virtual BOOL Read_INI(CCINIClass &ini) override;
+
+    void Code_Pointers() {}
+    void Decode_Pointers() {}
+
+private:
+#ifndef CHRONOSHIFT_NO_BITFIELDS
+    // Union/Struct required to get correct packing when compiler packing set to 1.
+    union
+    {
+        struct
+        {
+            bool m_CrateGoodie : 1;
+            bool m_Crusher : 1; // Is this vehicle able to crush infantry (def = false)?
+            bool m_Harvester : 1; // Does the special Ore harvesting rules apply (def = false)?
+            bool m_TurretSpins : 1; // Does the turret just sit and spin [only if turret equipped] (def = false)?
+            bool m_Bit16 : 1; // Causes the unit to start firing on itself if it has to drive to the location?
+            bool m_Bit32 : 1;
+            /*
+            00:27 < tomscncnet> started the game
+            00:29 < tomscncnet> aha
+            00:29 < tomscncnet> yea, so when it aquires a target on its own it turns the entire body to face it
+            00:29 < tomscncnet> with U on
+            00:30 < tomscncnet> but only when it does it itself
+            00:30 < tomscncnet> if i force fire it still turns the turret
+            00:30 < tomscncnet> heh its like a opposite of OmniFire
+            */
+            bool m_IsLarge : 1; // Is large unit for refresh purposes (refresh 48x48)
+            bool m_IsViceroid : 1; // Cycle through graphics viceroid style?
+            bool m_IsRadarJammer : 1;
+            bool m_IsMobileGapGen : 1;
+            bool m_NoMovingFire : 1; // The vehicle must stop before it can fire (def = false)?
+        };
+        int Bitfield;
+    };
+#else
+    bool m_CrateGoodie;
+    bool m_Crusher; // Is this vehicle able to crush infantry (def = false)?
+    bool m_Harvester; // Does the special Ore harvesting rules apply (def = false)?
+    bool m_TurretSpins; // Does the turret just sit and spin [only if turret equipped] (def = false)?
+    bool m_Bit16; // Causes the unit to start firing on itself if it has to drive to the location?
+    bool m_Bit32;
+    /*
+    00:27 < tomscncnet> started the game
+    00:29 < tomscncnet> aha
+    00:29 < tomscncnet> yea, so when it aquires a target on its own it turns the entire body to face it
+    00:29 < tomscncnet> with U on
+    00:30 < tomscncnet> but only when it does it itself
+    00:30 < tomscncnet> if i force fire it still turns the turret
+    00:30 < tomscncnet> heh its like a opposite of OmniFire
+    */
+    bool m_IsLarge; // /IsLarge? Is large unit for refresh purposes (refresh 48x48)
+    bool m_IsViceroid; // Cycle through graphics viceroid style?
+    bool m_IsRadarJammer;
+    bool m_IsMobileGapGen;
+    bool m_NoMovingFire; // The vehicle must stop before it can fire (def = false)?
+#endif
+    UnitType m_Type;
+    MissionType m_UnkMissionA; // Gets set to 14 or 0 by argument in ctor, never used. 14 is MISSION_HUNT.
+    MissionType m_UnkMissionB;
+    AnimType m_ExplosionAnim;
+    int m_UnkInt; // Gets set to 8 or above in One_Time(), used for calulating dimensions.
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-//extern TFixedIHeapClass<UnitTypeClass> &UnitTypes;
+extern TFixedIHeapClass<UnitTypeClass> &g_UnitTypes;
 #else
-//extern TFixedIHeapClass<UnitTypeClass> UnitTypes;
+extern TFixedIHeapClass<UnitTypeClass> g_UnitTypes;
 #endif
 
 #endif
