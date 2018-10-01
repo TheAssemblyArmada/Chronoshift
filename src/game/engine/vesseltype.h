@@ -86,7 +86,7 @@ private:
     VesselType m_Type;
     MissionType m_UnkMissionA; // Gets set to 14 or 0 by argument in ctor, never used. 14 is MISSION_HUNT.
     MissionType m_UnkMissionB; // Gets set to 5 in ctor, never used
-    AnimType m_DeathAnim;
+    AnimType m_ExplosionAnim;
     int m_UnkInt; // Gets set to 26 in One_Time(), never used
 };
 
