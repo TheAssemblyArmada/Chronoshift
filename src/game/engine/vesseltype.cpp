@@ -46,7 +46,6 @@ VesselTypeClass const VesselMissileSubmarine(VESSEL_MISSILE_SUB, TXT_MS, "MSUB",
 VesselTypeClass const VesselHeliCarrier(VESSEL_CARRIER, TXT_CARR, "CARR", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false,
     false, FACING_COUNT_NONE, MISSION_SLEEP);
 
-
 /**
  * 0x00581F0C
  */
@@ -58,7 +57,7 @@ VesselTypeClass::VesselTypeClass(VesselType type, int uiname, const char *name, 
     m_UnkBool(a10),
     m_UnkMissionA(mission),
     m_UnkMissionB(MISSION_GUARD),
-    m_DeathAnim(death_anim),
+    m_ExplosionAnim(death_anim),
     m_UnkInt(0)
 {
     IsScanner = true;
@@ -74,7 +73,7 @@ VesselTypeClass::VesselTypeClass(const VesselTypeClass &that) :
     m_UnkBool(that.m_UnkBool),
     m_UnkMissionA(that.m_UnkMissionA),
     m_UnkMissionB(that.m_UnkMissionB),
-    m_DeathAnim(that.m_DeathAnim),
+    m_ExplosionAnim(that.m_ExplosionAnim),
     m_UnkInt(that.m_UnkInt)
 {
 }
