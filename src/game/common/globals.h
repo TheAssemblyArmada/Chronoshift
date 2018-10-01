@@ -68,6 +68,10 @@ extern int &CustomSeed;
 extern int &RandNumb;
 extern int &g_readyToQuit;
 extern HousesType &Whom;
+extern void *&g_WakeShapes;
+extern void *&g_TurretShapes;
+extern void *&g_SamShapes;
+extern void *&g_MGunShapes;
 #else
 extern int g_iniFormat;
 extern int g_frame;
@@ -104,6 +108,10 @@ extern int CustomSeed;
 extern int RandNumb;
 extern int g_readyToQuit;
 extern HousesType Whom;
+extern void *g_WakeShapes;
+extern void *g_TurretShapes;
+extern void *g_SamShapes;
+extern void *g_MGunShapes;
 #endif
 
 #endif

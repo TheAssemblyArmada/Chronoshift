@@ -56,6 +56,10 @@ int &CustomSeed = Make_Global<int>(0x00680658);
 int &RandNumb = Make_Global<int>(0x0060D61C);
 int &g_readyToQuit = Make_Global<int>(0x00680880);
 HousesType &Whom = Make_Global<HousesType>(0x00669910);
+void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
+void *&g_TurretShapes = Make_Global<void *>(0x0068D2E0);
+void *&g_SamShapes = Make_Global<void *>(0x0068D2E4);
+void *&g_MGunShapes = Make_Global<void *>(0x0068D2E8);
 #else
 int g_iniFormat;
 int g_frame;
@@ -90,4 +94,8 @@ int CustomSeed;
 int RandNumb = 0x12349876;
 int g_readyToQuit;
 HousesType Whom;
+void *g_WakeShapes;
+void *g_TurretShapes;
+void *g_SamShapes;
+void *g_MGunShapes;
 #endif

@@ -82,6 +82,10 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    static UnitTypeClass &As_Reference(UnitType unit);
+    static UnitType From_Name(const char *name);
+    static void One_Time();
+
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
