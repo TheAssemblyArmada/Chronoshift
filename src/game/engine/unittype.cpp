@@ -14,9 +14,16 @@
  *            LICENSE
  */
 #include "unittype.h"
+#include "ccfileclass.h"
 #include "ccini.h"
 #include "coord.h"
+#include "globals.h"
 #include "minmax.h"
+#include "mixfile.h"
+#include "shape.h"
+#include <cstdio>
+
+using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<UnitTypeClass> &g_UnitTypes = Make_Global<TFixedIHeapClass<UnitTypeClass> >(0x0065DEEC);
@@ -254,4 +261,81 @@ BOOL UnitTypeClass::Read_INI(CCINIClass &ini)
     }
 
     return false;
+}
+
+/**
+ * Fetches a reference to the actual object from a type enum value.
+ *
+ * 0x00578C24
+ * @warning Heap allocation order MUST match the enum order in Init_Heap for this to work.
+ */
+UnitTypeClass &UnitTypeClass::As_Reference(UnitType unit)
+{
+    DEBUG_ASSERT(unit != UNIT_NONE);
+    DEBUG_ASSERT(unit < UNIT_COUNT);
+
+    return g_UnitTypes[unit];
+}
+
+/**
+ * Fetches the type enum value from a name string.
+ *
+ * 0x0057895C
+ */
+UnitType UnitTypeClass::From_Name(const char *name)
+{
+    if (name != nullptr) {
+        for (UnitType unit = UNIT_FIRST; unit < UNIT_COUNT; ++unit) {
+            if (strcasecmp(name, As_Reference(unit).Name) == 0) {
+                return unit;
+            }
+        }
+    }
+
+    return UNIT_NONE;
+}
+
+/**
+ * Initialises data that requires a one time load.
+ *
+ * 0x005789AC
+ */
+void UnitTypeClass::One_Time()
+{
+    char buffer[256];
+
+    for (UnitType i = UNIT_FIRST; i < UNIT_COUNT; ++i) {
+        UnitTypeClass &unit = As_Reference(i);
+        char const *name = unit.ImageName[0] != '\0' ? unit.ImageName : unit.Get_Name();
+
+        snprintf(buffer, sizeof(buffer), "%.4sicon.shp", name);
+        unit.CameoData = MixFileClass<CCFileClass>::Retrieve(buffer);
+        snprintf(buffer, sizeof(buffer), "%s.shp", name);
+        unit.ImageData = MixFileClass<CCFileClass>::Retrieve(buffer);
+
+        int big_dimension = 0;
+
+        if (unit.ImageData != nullptr) {
+            big_dimension = Max(Max(0, (int)Get_Build_Frame_Width(unit.ImageData)), (int)Get_Build_Frame_Height(unit.ImageData));
+        }
+
+        unit.m_UnkInt = Max(big_dimension, 8);
+    }
+
+    // TODO original initialises these here, move them somewhere more appropriate when possible.
+    if (g_WakeShapes == nullptr) {
+        g_WakeShapes = MixFileClass<CCFileClass>::Retrieve("wake.shp");
+    }
+
+    if (g_TurretShapes == nullptr) {
+        g_TurretShapes = MixFileClass<CCFileClass>::Retrieve("turr.shp");
+    }
+
+    if (g_SamShapes == nullptr) {
+        g_SamShapes = MixFileClass<CCFileClass>::Retrieve("ssam.shp");
+    }
+
+    if (g_MGunShapes == nullptr) {
+        g_MGunShapes = MixFileClass<CCFileClass>::Retrieve("mgun.shp");
+    }
 }
