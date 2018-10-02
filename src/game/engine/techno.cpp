@@ -526,10 +526,10 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
             int32_t value = m_CloakingStage.Get_Stage();
 
             if (m_CloakState == CLOAK_UNCLOAKING) {
-                value = (m_CloakingStage.Get_Stage() - 38);
+                value = 38 - m_CloakingStage.Get_Stage();
             }
 
-            if (m_CloakingStage.Get_Stage() <= 0) {
+            if (value <= 0) {
                 return VISUAL_NORMAL;
             }
 
