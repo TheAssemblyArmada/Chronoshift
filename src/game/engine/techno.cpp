@@ -522,42 +522,40 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
             if (!flag && m_PlayerOwned) {
                 return VISUAL_SHADOWY;
             }
+        } else {
+            int32_t value = m_CloakingStage.Get_Stage();
+
+            if (m_CloakState == CLOAK_UNCLOAKING) {
+                value = (m_CloakingStage.Get_Stage() - 38);
+            }
+
+            if (m_CloakingStage.Get_Stage() <= 0) {
+                return VISUAL_NORMAL;
+            }
+
+            int stage = fixed(value, 38) * 256;
+
+            if (stage < 64) {
+                return VISUAL_INDISTINCT;
+            }
+
+            if (stage < 128) {
+                return VISUAL_DARKEN;
+            }
+
+            if (stage < 192) {
+                return VISUAL_SHADOWY;
+            }
+
+            if (!flag && m_PlayerOwned) {
+                return VISUAL_SHADOWY;
+            }
+
+            if (stage < 255) {
+                return VISUAL_RIPPLE;
+            }
         }
-
-        int32_t value = m_CloakingStage.Get_Stage();
-
-        if (m_CloakState == CLOAK_UNCLOAKING) {
-            value = (m_CloakingStage.Get_Stage() - 38);
-        }
-
-        if (m_CloakingStage.Get_Stage() <= 0) {
-            return VISUAL_NORMAL;
-        }
-
-        int stage = fixed(value, 38) * 256;
-
-        if (stage < 64) {
-            return VISUAL_INDISTINCT;
-        }
-
-        if (stage < 128) {
-            return VISUAL_DARKEN;
-        }
-
-        if (stage < 192) {
-            return VISUAL_SHADOWY;
-        }
-
-        if (!flag && m_PlayerOwned) {
-            return VISUAL_SHADOWY;
-        }
-
-        if (stage < 255) {
-            return VISUAL_RIPPLE;
-        }
-
-        return VISUAL_HIDDEN;
     }
 
-    return VISUAL_NORMAL;
+    return VISUAL_HIDDEN;
 }
