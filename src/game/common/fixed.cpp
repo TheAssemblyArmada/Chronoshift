@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Fixed point math class.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -19,13 +19,13 @@
 #include <ctype.h>
 #include <stdio.h>
 
-fixed const fixed::_0_1(0, 1);
-fixed const fixed::_1_1(1, 1);
-fixed const fixed::_1_2(1, 2);
-fixed const fixed::_1_3(1, 3);
-fixed const fixed::_1_4(1, 4);
-fixed const fixed::_3_4(3, 4);
-fixed const fixed::_2_3(2, 3);
+const fixed fixed::_0_1(0, 1);
+const fixed fixed::_1_1(1, 1);
+const fixed fixed::_1_2(1, 2);
+const fixed fixed::_1_3(1, 3);
+const fixed fixed::_1_4(1, 4);
+const fixed fixed::_3_4(3, 4);
+const fixed fixed::_2_3(2, 3);
 
 fixed::fixed(int a, int b)
 {
@@ -36,9 +36,9 @@ fixed::fixed(int a, int b)
     }
 }
 
-fixed::fixed(char const *string)
+fixed::fixed(const char *string)
 {
-    char const *str_read = string;
+    const char *str_read = string;
 
     if (string) {
         // this while loop finds first number while for loop finds
@@ -48,7 +48,7 @@ fixed::fixed(char const *string)
         }
 
         // Find something that isn't a number?
-        char const *i;
+        const char *i;
 
         for (i = str_read; isdigit(*i) != 0; ++i) {
             ;
@@ -100,7 +100,7 @@ fixed::fixed(char const *string)
     }
 }
 
-int const fixed::To_ASCII(char *string, int size) const
+int fixed::To_ASCII(char *string, int size) const
 {
     char char_buff[32];
 
@@ -134,7 +134,7 @@ int const fixed::To_ASCII(char *string, int size) const
     return Min((int)strlen(char_buff), (size - 1));
 }
 
-char *const fixed::As_ASCII(void) const
+char *const fixed::As_ASCII() const
 {
     static char _buffer[32];
 

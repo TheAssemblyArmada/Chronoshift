@@ -6,7 +6,7 @@
  *
  * @brief FileClass pure virtual base class providing the file io interface.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -53,7 +53,7 @@ public:
     virtual int Read(void *buffer, int length) = 0;
     virtual off_t Seek(off_t offset, int whence = FS_SEEK_CURRENT) = 0;
     virtual off_t Size() = 0;
-    virtual int Write(void const *buffer, int size) = 0;
+    virtual int Write(const void *buffer, int size) = 0;
     virtual void Close() = 0;
     virtual time_t Get_Date_Time();
     virtual BOOL Set_Date_Time(time_t date_time);

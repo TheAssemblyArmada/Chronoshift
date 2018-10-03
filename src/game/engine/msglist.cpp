@@ -6,7 +6,7 @@
  *
  * @brief Class for handling in game messages.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -138,7 +138,7 @@ void MessageListClass::Reset()
  * @brief Adds a message to be displayed.
  */
 TextLabelClass *MessageListClass::Add_Message(
-    char const *player, int id, char const *message, PlayerColorType color, TextPrintType style, int delay)
+    const char *player, int id, const char *message, PlayerColorType color, TextPrintType style, int delay)
 {
     char msgbuff[152];
 

@@ -6,7 +6,7 @@
  *
  * @brief Multiple precision arithmetic library for cryptographic functions.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -4779,17 +4779,17 @@ int MPMath::Exponent_Mod(
     return 0;
 }
 
-uint16_t const *MPMath::Fetch_Prime_Table(void)
+uint16_t const *MPMath::Fetch_Prime_Table()
 {
     return mp_primeTable;
 }
 
-int MPMath::Fetch_Prime_Size(void)
+int MPMath::Fetch_Prime_Size()
 {
     return MAX_PRIME_TABLE_SIZE;
 }
 
-void MPMath::Decode_ASCII(char const *str, unsigned int *mpn, int precision)
+void MPMath::Decode_ASCII(const char *str, unsigned int *mpn, int precision)
 {
     // minus
     // COMPILER_TODO("");

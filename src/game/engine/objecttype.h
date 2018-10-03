@@ -6,7 +6,7 @@
  *
  * @brief Base class for most ingame object types.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -34,7 +34,7 @@ class ObjectTypeClass : public AbstractTypeClass
 {
 public:
     ObjectTypeClass(RTTIType type, int id, BOOL animates, BOOL radar_invisible, BOOL selectable, BOOL legal_target,
-        BOOL insignificant, BOOL is_immune, BOOL logical, int uiname, char const *name);
+        BOOL insignificant, BOOL is_immune, BOOL logical, int uiname, const char *name);
     ObjectTypeClass(ObjectTypeClass const &that);
     ObjectTypeClass(NoInitClass const &noinit) : AbstractTypeClass(noinit) {}
     ~ObjectTypeClass();

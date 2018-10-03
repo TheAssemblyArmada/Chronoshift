@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief Performs detection of CPU, memory and platform details.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Performs detection of CPU, memory and platform details.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "always.h"
 #include "cpudetect.h"
 #include "gamedebug.h"
@@ -27,6 +27,8 @@
 #elif defined COMPILER_CLANG || defined COMPILER_GNUC
 #include <x86intrin.h>
 #include <cpuid.h>
+#elif defined COMPILER_WATCOM
+#include "watcomintrin.h"
 #endif
 #else
 #error cpudetect.cpp needs work for this platform

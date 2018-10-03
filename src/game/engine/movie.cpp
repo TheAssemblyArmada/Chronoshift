@@ -1,4 +1,18 @@
-#include	"movie.h"
+/**
+ * @file
+ *
+ * @author CCHyper
+ *
+ * @brief Movies enum and code for parsing the name to type and vice versa.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
+#include "movie.h"
 
 MovieInfoStruct MovieTypes[MOVIE_COUNT] = {
     { "AAGUN", false },
@@ -99,57 +113,57 @@ MovieInfoStruct MovieTypes[MOVIE_COUNT] = {
     { "BEACHEAD", false },
     { "SOVIET14", false },
 
-    //Sizzle/Trailers
+    // Sizzle/Trailers
     { "SIZZLE", false },
     { "SIZZLE2", false },
 
-    //Aftermath Ant Missions
+    // Aftermath Ant Missions
     { "ANTEND", false },
-    { "ANTINTRO", false }/*,
+    { "ANTINTRO", false } /*,
 
-    //Retaliation
-    { "R_ANTS", false },
-    { "R_INTRO", false },
+     //Retaliation
+     { "R_ANTS", false },
+     { "R_INTRO", false },
 
-    //Retaliation Allies Campaign
-    { "R_ALLIED1", false },
-    { "R_ALLIED2", false },
-    { "R_ALLIED3", false },
-    { "R_ALLIED4", false },
-    { "R_ALLIED5", false },
-    { "R_ALLIED6", false },
-    { "R_ALLIED7", false },
-    { "R_ALLIED8", false },
-    { "R_ALLIED9", false },
-    { "R_WINA", false },
+     //Retaliation Allies Campaign
+     { "R_ALLIED1", false },
+     { "R_ALLIED2", false },
+     { "R_ALLIED3", false },
+     { "R_ALLIED4", false },
+     { "R_ALLIED5", false },
+     { "R_ALLIED6", false },
+     { "R_ALLIED7", false },
+     { "R_ALLIED8", false },
+     { "R_ALLIED9", false },
+     { "R_WINA", false },
 
-    { "R_CHRONTNK", false },
-    { "R_GPSLNCH", false },
-    { "R_NUKETRUK", false },
-    { "R_SNOWFILD", false },
+     { "R_CHRONTNK", false },
+     { "R_GPSLNCH", false },
+     { "R_NUKETRUK", false },
+     { "R_SNOWFILD", false },
 
-    //Retaliation Soviet Campaign
-    { "R_SOVIET1", false },
-    { "R_SOVIET2", false },
-    { "R_SOVIET3", false },
-    { "R_SOVIET4", false },
-    { "R_SOVIET5", false },
-    { "R_SOVIET6", false },
-    { "R_SOVIET7", false },
-    { "R_SOVIET8", false },
-    { "R_SOVIET9", false },
-    { "R_WINS", false },
+     //Retaliation Soviet Campaign
+     { "R_SOVIET1", false },
+     { "R_SOVIET2", false },
+     { "R_SOVIET3", false },
+     { "R_SOVIET4", false },
+     { "R_SOVIET5", false },
+     { "R_SOVIET6", false },
+     { "R_SOVIET7", false },
+     { "R_SOVIET8", false },
+     { "R_SOVIET9", false },
+     { "R_WINS", false },
 
-    { "R_TANESCP", false },
-    { "R_TESLATNK", false },
+     { "R_TANESCP", false },
+     { "R_TESLATNK", false },
 
-    //Sizzle/Trailers
-    { "SIZZLE3", false },
-    { "SIZZLE4", false }
-    */
+     //Sizzle/Trailers
+     { "SIZZLE3", false },
+     { "SIZZLE4", false }
+     */
 };
 
-MovieType Movie_From_Name(char const *name)
+MovieType Movie_From_Name(const char *name)
 {
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return MOVIE_NONE;
@@ -166,9 +180,9 @@ MovieType Movie_From_Name(char const *name)
     return MOVIE_NONE;
 }
 
-char const *Name_From_Movie(MovieType movie)
+const char *Name_From_Movie(MovieType movie)
 {
-    if ( movie != MOVIE_NONE && movie < MOVIE_COUNT ) {
+    if (movie != MOVIE_NONE && movie < MOVIE_COUNT) {
         return MovieTypes[movie].Name;
     }
     return "<none>";
@@ -176,7 +190,7 @@ char const *Name_From_Movie(MovieType movie)
 
 MovieInfoStruct *MovieInfo_From_Movie(MovieType movie)
 {
-    if ( movie != MOVIE_NONE && movie < MOVIE_COUNT ) {
+    if (movie != MOVIE_NONE && movie < MOVIE_COUNT) {
         return &MovieTypes[movie];
     }
     return nullptr;

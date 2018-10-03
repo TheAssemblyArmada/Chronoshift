@@ -6,7 +6,7 @@
  *
  * @brief INI file parsing for game specific objects/types.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -168,10 +168,10 @@ public:
     const PKey Get_PKey(BOOL fast) const;
     BOOL Put_PKey(PKey &key);
 
-    void Calculate_Message_Digest(void);
-    void Invalidate_Message_Digest(void);
+    void Calculate_Message_Digest();
+    void Invalidate_Message_Digest();
 
-    int32_t const Get_Unique_ID(void);
+    int32_t const Get_Unique_ID();
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

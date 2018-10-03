@@ -62,9 +62,9 @@ public:
     void Code_Pointers();
     void Decode_Pointers();
 
-    static TriggerTypeClass *From_Name(char const *name);
-    static char const *Name_From(TriggerType trigger);
-    static char const *Name_From(TriggerTypeClass *trigger);
+    static TriggerTypeClass *From_Name(const char *name);
+    static const char *Name_From(TriggerType trigger);
+    static const char *Name_From(TriggerTypeClass *trigger);
 
     static TriggerTypeClass &As_Reference(TriggerType trigger);
     static TriggerTypeClass *As_Pointer(TriggerType trigger);

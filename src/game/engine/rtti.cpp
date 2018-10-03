@@ -6,7 +6,7 @@
  *
  * @brief ID Values for the various types of objects derived from AbstractClass or AbstractTypeClass.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -55,7 +55,7 @@ RTTITypeStruct RTTIName[RTTI_COUNT] = {
     //    { "SuperWeaponType", RTTI_SUPERWEAPONTYPE, "SuperWeaponType object" }
 };
 
-RTTIType RTTI_From_Name(char const *name)
+RTTIType RTTI_From_Name(const char *name)
 {
     DEBUG_ASSERT(name != nullptr);
 
@@ -74,7 +74,7 @@ RTTIType RTTI_From_Name(char const *name)
     return RTTI_NONE;
 }
 
-char const *Name_From_RTTI(RTTIType rtti)
+const char *Name_From_RTTI(RTTIType rtti)
 {
     if (rtti < RTTI_COUNT) {
         return RTTIName[rtti].Name;
@@ -83,7 +83,7 @@ char const *Name_From_RTTI(RTTIType rtti)
     return "<none>";
 }
 
-char const *Description_From_RTTI(RTTIType rtti)
+const char *Description_From_RTTI(RTTIType rtti)
 {
     if (rtti < RTTI_COUNT) {
         return RTTIName[rtti].Description;

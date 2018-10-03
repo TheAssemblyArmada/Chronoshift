@@ -306,7 +306,7 @@ void UnitTypeClass::One_Time()
 
     for (UnitType i = UNIT_FIRST; i < UNIT_COUNT; ++i) {
         UnitTypeClass &unit = As_Reference(i);
-        char const *name = unit.ImageName[0] != '\0' ? unit.ImageName : unit.Get_Name();
+        const char *name = unit.ImageName[0] != '\0' ? unit.ImageName : unit.Get_Name();
 
         snprintf(buffer, sizeof(buffer), "%.4sicon.shp", name);
         unit.CameoData = MixFileClass<CCFileClass>::Retrieve(buffer);

@@ -6,7 +6,7 @@
  *
  * @brief Functions for handling string tables and name overrides.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -270,13 +270,14 @@ const char *MissionStr[] = { "Coastal Influence (Med)",
     "Warlord's Lake (Sm 4 players)",
     "Zama (Sm 4 players)" };
 
+// TODO Create new Chronoshift specific string table to hold these hard coded strings.
 const char TXT_CS_MISSIONS[] = { "Counterstrike Missions" };
 const char TXT_AM_MISSIONS[] = { "Aftermath Missions" };
 const char TXT_MORE_1[] = { "--More--" };
 const char TXT_MORE_2[] = { "<MORE>" };
-const char TXT_CONFIRM_QUIT[] = { "Are you sure you want to quit RedAlert++?" };
+const char TXT_CONFIRM_QUIT[] = { "Are you sure you want to quit Chronoshift?" };
 
-bool Init_Language(void)
+bool Init_Language()
 {
     // Load System string table
     DEBUG_LOG("Bootstrap() - Loading Game Strings...\n");
@@ -357,7 +358,7 @@ const char *Language_Name(const char *filename)
     return nullptr;
 }
 
-const char *Get_Language_Char(void)
+const char *Get_Language_Char()
 {
     static char _char[2];
 

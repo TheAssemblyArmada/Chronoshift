@@ -36,7 +36,7 @@ void TriggerTypeClass::Decode_Pointers()
 #endif
 }
 
-TriggerTypeClass *TriggerTypeClass::From_Name(char const *name)
+TriggerTypeClass *TriggerTypeClass::From_Name(const char *name)
 {
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return nullptr;
@@ -53,12 +53,12 @@ TriggerTypeClass *TriggerTypeClass::From_Name(char const *name)
     return nullptr;
 }
 
-char const *TriggerTypeClass::Name_From(TriggerType trigger)
+const char *TriggerTypeClass::Name_From(TriggerType trigger)
 {
     return (trigger != TRIGGER_NONE) && (trigger < TriggerTypes.Count()) ? As_Reference(trigger).Get_Name() : "<none>";
 }
 
-char const *TriggerTypeClass::Name_From(TriggerTypeClass *trigger)
+const char *TriggerTypeClass::Name_From(TriggerTypeClass *trigger)
 {
     if (trigger != nullptr) {
         return TriggerTypes[TriggerTypes.ID(trigger)].Get_Name();

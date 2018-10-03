@@ -1,23 +1,23 @@
 /**
-* @file
-*
-* @author CCHyper
-*
-* @brief <todo>
-*
-* @copyright RedAlert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ *
+ * @brief Movies enum and code for parsing the name to type and vice versa.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef MOVIE_H
 #define MOVIE_H
 
-#include	"always.h"
+#include "always.h"
 
 enum MovieType
 {
@@ -131,12 +131,12 @@ DEFINE_ENUMERATION_OPERATORS(MovieType);
 
 struct MovieInfoStruct
 {
-    char const *Name;
+    const char *Name;
     bool IsMovie640;
 };
 
-MovieType Movie_From_Name(char const *name);
-char const *Name_From_Movie(MovieType movie);
+MovieType Movie_From_Name(const char *name);
+const char *Name_From_Movie(MovieType movie);
 
 MovieInfoStruct *MovieInfo_From_Movie(MovieType movie);
 

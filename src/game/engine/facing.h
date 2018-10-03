@@ -6,7 +6,7 @@
  *
  * @brief Classes, types and functions related to managing the facings and directions of objects.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -96,12 +96,12 @@ DirType Round_Direction_To_128(DirType dir);
 
 FacingType KN_To_Facing(KeyNumType kn);
 
-char const *Name_From_Facing(FacingType facing, BOOL abbreviated = false);
-FacingType Facing_From_Name(char const *name);
+const char *Name_From_Facing(FacingType facing, BOOL abbreviated = false);
+FacingType Facing_From_Name(const char *name);
 
-char const *Facing_Name_From_Direction(DirType dir);
+const char *Facing_Name_From_Direction(DirType dir);
 
-char const *Name_From_Direction(DirType dir);
+const char *Name_From_Direction(DirType dir);
 
 class FacingClass
 {

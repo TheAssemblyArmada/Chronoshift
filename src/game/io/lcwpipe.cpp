@@ -6,11 +6,10 @@
  *
  * @brief Pipe interface for writing LCW encoded data.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -34,7 +33,7 @@ LCWPipe::LCWPipe(PipeControl mode, int size) :
     m_compressedBytes = -1;
 }
 
-LCWPipe::~LCWPipe(void)
+LCWPipe::~LCWPipe()
 {
     delete[] m_inBuffer;
     m_inBuffer = nullptr;
@@ -46,7 +45,7 @@ LCWPipe::~LCWPipe(void)
 /**
  * @brief Writes data from the buffer to the next pipe in the chain, processing it with LCW.
  */
-int LCWPipe::Put(void const *buffer, int length)
+int LCWPipe::Put(const void *buffer, int length)
 {
     DEBUG_ASSERT(buffer != nullptr);
     DEBUG_ASSERT(length > 0);
@@ -146,7 +145,7 @@ int LCWPipe::Put(void const *buffer, int length)
 /**
  * @brief Flushes any remaining data that is waiting to be compressed.
  */
-int LCWPipe::Flush(void)
+int LCWPipe::Flush()
 {
     DEBUG_ASSERT(m_inBuffer != nullptr);
 

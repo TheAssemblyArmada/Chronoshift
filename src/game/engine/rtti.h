@@ -6,7 +6,7 @@
  *
  * @brief ID Values for the various types of objects derived from AbstractClass or AbstractTypeClass.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -67,15 +67,15 @@ DEFINE_ENUMERATION_OPERATORS(RTTIType)
 
 struct RTTITypeStruct
 {
-    char const *Name;
+    const char *Name;
     RTTIType ID;
-    char const *Description;
+    const char *Description;
 };
 
 extern RTTITypeStruct RTTIName[RTTI_COUNT];
 
-RTTIType RTTI_From_Name(char const *name);
-char const *Name_From_RTTI(RTTIType rtti);
-char const *Description_From_RTTI(RTTIType rtti);
+RTTIType RTTI_From_Name(const char *name);
+const char *Name_From_RTTI(RTTIType rtti);
+const char *Description_From_RTTI(RTTIType rtti);
 
 #endif // RTTI_H

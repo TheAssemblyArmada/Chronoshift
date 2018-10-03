@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Low level bitmap font string blitter.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -73,8 +73,8 @@ extern uint8_t byte_608988[];
 
 void __cdecl Set_Font_Palette_Range(uint8_t *colors, uint8_t first, uint8_t last);
 void *__cdecl Set_Font(void *font);
-uint16_t __cdecl String_Pixel_Width(char const *string);
+uint16_t __cdecl String_Pixel_Width(const char *string);
 int __cdecl Char_Pixel_Width(char letter);
-int __cdecl Buffer_Print(GraphicViewPortClass &vp, char const *string, int x, int y, uint8_t fground, uint8_t bground);
+int __cdecl Buffer_Print(GraphicViewPortClass &vp, const char *string, int x, int y, uint8_t fground, uint8_t bground);
 
 #endif // TEXTPRINT_H

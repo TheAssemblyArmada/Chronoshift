@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief  FileClass layer for providing file buffering services.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief FileClass layer for providing file buffering services.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef BFIOFILECLASS_H
@@ -27,19 +27,19 @@ class BufferIOFileClass : public RawFileClass
 {
 public:
     BufferIOFileClass();
-    BufferIOFileClass(char const *filename);
+    BufferIOFileClass(const char *filename);
 
     virtual ~BufferIOFileClass() { Free(); }
 
-    virtual char const *Set_Name(char const *filename) override;
+    virtual const char *Set_Name(const char *filename) override;
     virtual BOOL Is_Available(BOOL forced = false) override;
     virtual BOOL Is_Open() const override;
-    virtual BOOL Open(char const *filename, int rights = FM_READ) override;
+    virtual BOOL Open(const char *filename, int rights = FM_READ) override;
     virtual BOOL Open(int rights = FM_READ) override;
     virtual int Read(void *buffer, int size) override;
     virtual off_t Seek(off_t offset = 0, int whence = FS_SEEK_CURRENT) override;
     virtual off_t Size() override;
-    virtual int Write(void const *buffer, int length) override;
+    virtual int Write(const void *buffer, int length) override;
     virtual void Close() override;
 
     BOOL Cache(int size = 0, void *buffer = nullptr);
@@ -55,7 +55,7 @@ public:
     static int Hook_Read(BufferIOFileClass *ptr, void *buffer, int length);
     static off_t Hook_Seek(BufferIOFileClass *ptr, off_t offset, int whence);
     static off_t Hook_Size(BufferIOFileClass *ptr);
-    static int Hook_Write(BufferIOFileClass *ptr, void const *buffer, int length);
+    static int Hook_Write(BufferIOFileClass *ptr, const void *buffer, int length);
     static void Hook_Close(BufferIOFileClass *ptr);
 #endif
 protected:

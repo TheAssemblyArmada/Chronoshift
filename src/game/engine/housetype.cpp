@@ -6,7 +6,7 @@
  *
  * @brief Class holding information on house types.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -97,7 +97,7 @@ BOOL HouseTypeClass::Read_INI(CCINIClass &ini)
     return true;
 }
 
-void HouseTypeClass::Init_Heap(void)
+void HouseTypeClass::Init_Heap()
 {
     // The order of allocation must follow the order of HouseType enum
     new HouseTypeClass(HouseSpain);

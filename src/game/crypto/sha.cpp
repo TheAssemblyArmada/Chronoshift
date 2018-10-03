@@ -1,26 +1,18 @@
-////////////////////////////////////////////////////////////////////////////////
-//                            --  REDALERT++ --                               //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Redalert++
-//
-//          File:: SHA.CPP
-//
-//        Author:: CCHyper
-//
-//  Contributors:: OmniBlade
-//
-//   Description:: SHA1 Hashing engine.
-//
-//       License:: Redalert++ is free software: you can redistribute it and/or
-//                 modify it under the terms of the GNU General Public License
-//                 as published by the Free Software Foundation, either version
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief SHA1 Hashing engine.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #include "sha.h"
 #include "endiantype.h"
 #include "gamedebug.h"
@@ -68,7 +60,7 @@ void SHAEngine::Process_Partial(const void *&data, int &length)
             }
 
             memcpy(m_messageBlock + m_unprocessedBytes, data, bytestoprocess);
-            data = static_cast<char const *>(data) + bytestoprocess;
+            data = static_cast<const char *>(data) + bytestoprocess;
             m_unprocessedBytes += bytestoprocess;
             length -= bytestoprocess;
 
@@ -95,7 +87,7 @@ void SHAEngine::Hash(const void *data, int length)
 
             for (int i = 0; i < datablocks; ++i) {
                 SHAEngine::Process_Block(data, m_digest);
-                data = static_cast<char const *>(data) + SHA_BLOCK_LENGTH;
+                data = static_cast<const char *>(data) + SHA_BLOCK_LENGTH;
                 m_processedBytes += SHA_BLOCK_LENGTH;
                 length -= SHA_BLOCK_LENGTH;
             }

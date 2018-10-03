@@ -6,7 +6,7 @@
  *
  * @brief Low level functions for loading and rendering C&C terrain tilesets.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -63,9 +63,9 @@ struct IconControlType
 #pragma pack(pop)
 
 void __cdecl Buffer_Draw_Stamp(
-    GraphicViewPortClass &viewport, IconControlType *tileset, int icon, int x, int y, void const *remapper);
+    GraphicViewPortClass &viewport, IconControlType *tileset, int icon, int x, int y, const void *remapper);
 void __cdecl Buffer_Draw_Stamp_Clip(GraphicViewPortClass &viewport, IconControlType *tileset, int icon, int x, int y,
-    void const *remapper, int left, int top, int right, int bottom);
+    const void *remapper, int left, int top, int right, int bottom);
 uint8_t *Get_Icon_Set_Map(void *temp);
 
 #endif // TILESET_H

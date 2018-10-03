@@ -1,11 +1,25 @@
-#include	"voc.h"
+/**
+ * @file
+ *
+ * @author CCHyper
+ *
+ * @brief Voc enum and conversion to and from a string.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
+#include "voc.h"
 
 SoundEffectType SoundEffectName[] = {
     { "GIRLOKAY", 20, 0 },
     { "GIRLYEAH", 20, 0 },
     { "GUYOKAY1", 20, 0 },
     { "GUYYEAH1", 20, 0 },
-    { "MINELAY1", 5, 0 },		// Changed from 1 to 0 as it doesnt have a variation.
+    { "MINELAY1", 5, 0 }, // Changed from 1 to 0 as it doesnt have a variation.
     { "ACKNO", 20, 1 },
     { "AFFIRM1", 20, 1 },
     { "AWAIT1", 20, 1 },
@@ -105,11 +119,11 @@ SoundEffectType SoundEffectName[] = {
     { "ONIT1", 20, 0 },
     { "LEFTY1", 20, 0 },
     { "YEAH1", 20, 0 },
-    { "YES1",  20, 0 },
-    { "YO1",  20, 0 },
+    { "YES1", 20, 0 },
+    { "YO1", 20, 0 },
     { "WALLKIL2", 5, 0 },
-    { "<NONE>",  10, 0 },
-    { "GUN5",  5, 0 },
+    { "<NONE>", 10, 0 },
+    { "GUN5", 5, 0 },
     { "SUBSHOW1", 5, 0 },
     { "EINAH1", 20, 0 },
     { "EINOK1", 20, 0 },
@@ -130,7 +144,7 @@ SoundEffectType SoundEffectName[] = {
     { "ANTBITE", 20, 0 },
     { "SMOUT1", 20, 0 },
     { "SOKAY1", 20, 0 },
-    { "<NONE>",  20, 0 },
+    { "<NONE>", 20, 0 },
     { "SWHAT1", 20, 0 },
     { "SAFFIRM1", 20, 0 },
     { "STAVCMDR", 20, 0 },
@@ -160,23 +174,22 @@ SoundEffectType SoundEffectName[] = {
     { "JLIGHT1", 20, 0 },
     { "JPOWER1", 20, 0 },
     { "JSHOCK1", 20, 0 },
-    { "JYES1",  20, 0 },
+    { "JYES1", 20, 0 },
     { "CHROTNK1", 20, 0 },
-    { "FIXIT1",  20, 0 },
+    { "FIXIT1", 20, 0 },
     { "MADCHRG2", 20, 0 },
     { "MADEXPLO", 20, 0 },
-    { "SHKTROP1", 20, 0 }
-};
+    { "SHKTROP1", 20, 0 } };
 
-VocType Voc_From_Name(char const *name)
-{    
+VocType Voc_From_Name(const char *name)
+{
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return VOC_NONE;
     }
 
     if (name != nullptr) {
         for (VocType voc = VOC_FIRST; voc < VOC_COUNT; ++voc) {
-            if (strcasecmp(name, SoundEffectName[voc].BaseName) ) {
+            if (strcasecmp(name, SoundEffectName[voc].BaseName)) {
                 return voc;
             }
         }
@@ -184,7 +197,7 @@ VocType Voc_From_Name(char const *name)
     return VOC_NONE;
 }
 
-char const *Name_From_Voc(VocType voc)
+const char *Name_From_Voc(VocType voc)
 {
     if (voc >= VOC_FIRST && voc < VOC_COUNT) {
         return SoundEffectName[voc].BaseName;

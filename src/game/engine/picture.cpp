@@ -5,7 +5,7 @@
  *
  * @brief Implements a cps format picture loader.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -80,7 +80,7 @@ int32_t Load_Uncompress(FileClass &file, BufferClass &uncomp_buff, BufferClass &
  *
  * 0x005CF6B0
  */
-uint32_t Uncompress_Data(void const *src, void *dst)
+uint32_t Uncompress_Data(const void *src, void *dst)
 {
     if (src != nullptr && dst != nullptr) {
         const PictureHeader *head = static_cast<const PictureHeader *>(src);
@@ -121,7 +121,7 @@ int Load_Picture(FileClass &file, BufferClass &buff1, BufferClass &buff2, void *
  *
  * 0x004FB724
  */
-int __cdecl Load_Picture(char const *filename, BufferClass &buff1, BufferClass &buff2, void *palette, PicturePlaneType plane)
+int __cdecl Load_Picture(const char *filename, BufferClass &buff1, BufferClass &buff2, void *palette, PicturePlaneType plane)
 {
     CCFileClass file(filename);
 

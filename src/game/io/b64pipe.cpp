@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Pipe interface for writing Base64 encoded data.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -65,7 +65,7 @@ int Base64Pipe::Put(const void *source, int slen)
                     b64len = Base64_Encode(srcbuffp, incount, destbuffp, outcount);
                 }
 
-                source = static_cast<char const *>(source) + cpylen;
+                source = static_cast<const char *>(source) + cpylen;
                 result += Pipe::Put(destbuffp, b64len);
                 m_counter = 0;
             }
@@ -75,7 +75,7 @@ int Base64Pipe::Put(const void *source, int slen)
             b64len = m_mode == PIPE_DECODE ? Base64_Decode(source, incount, destbuffp, outcount) :
                                              Base64_Encode(source, incount, destbuffp, outcount);
 
-            source = static_cast<char const *>(source) + incount;
+            source = static_cast<const char *>(source) + incount;
             result += Pipe::Put(destbuffp, b64len);
         }
 

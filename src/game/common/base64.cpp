@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Functions for base64 encoding and decoding.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -50,7 +50,7 @@ static const uint8_t _decoder[256] = {
 /**
  * @brief Encode data to Base64 format.
  */
-int Base64_Encode(void const *src, int slen, void *dst, int dlen)
+int Base64_Encode(const void *src, int slen, void *dst, int dlen)
 {
     char *putp = static_cast<char *>(dst);
     const uint8_t *getp = static_cast<const uint8_t *>(src);
@@ -105,7 +105,7 @@ int Base64_Encode(void const *src, int slen, void *dst, int dlen)
 /**
  * @brief Decode data from Base64 format.
  */
-int Base64_Decode(void const *src, int slen, void *dst, int dlen)
+int Base64_Decode(const void *src, int slen, void *dst, int dlen)
 {
     const uint8_t *getp = static_cast<const uint8_t *>(src);
     uint8_t *putp = static_cast<uint8_t *>(dst);

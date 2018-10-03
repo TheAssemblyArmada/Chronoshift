@@ -6,7 +6,7 @@
  *
  * @brief Wrapper class for platform drawing engine.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -105,7 +105,7 @@ public:
     void Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h, int dst_w,
         int dst_h, bool use_keysrc, void *fade);
     int Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
-    void Draw_Stamp(void *tileset, int icon, int x, int y, void const *remapper, int left, int top, int right, int bottom);
+    void Draw_Stamp(void *tileset, int icon, int x, int y, const void *remapper, int left, int top, int right, int bottom);
     // int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
 #ifndef CHRONOSHIFT_STANDALONE

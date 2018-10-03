@@ -6,7 +6,7 @@
  *
  * @brief Pipe that processes the data with RSA and Blowfish as it writes it.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -31,7 +31,7 @@ PKPipe::PKPipe(PipeControl mode, Straw &rstraw) :
 /**
  * @brief Writes data from the provided buffer to chained pipes, processing it with RSA and Blowfish.
  */
-int PKPipe::Put(void const *buffer, int length)
+int PKPipe::Put(const void *buffer, int length)
 {
     // If we don't have a valid RSA key, just pass the data through to the next
     // pipe unchanged.
@@ -39,7 +39,7 @@ int PKPipe::Put(void const *buffer, int length)
         return Pipe::Put(buffer, length);
     }
 
-    char const *inbuff = static_cast<char const *>(buffer);
+    const char *inbuff = static_cast<const char *>(buffer);
     int putcount = 0;
     char byte_buff[256];
 

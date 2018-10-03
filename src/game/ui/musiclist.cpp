@@ -6,7 +6,7 @@
  *
  * @brief Class specialised for the list of music tracks.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -31,7 +31,7 @@ void MusicListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL selecte
 {
     TextPrintType style = TextStyle;
     RemapControlType *remapper = Get_Color_Scheme();
-    char const *entry = Entries[index] + 1;
+    const char *entry = Entries[index] + 1;
 
     if (style & TPF_6PT_GRAD) {
         if (selected) {

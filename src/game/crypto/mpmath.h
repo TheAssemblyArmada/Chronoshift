@@ -6,7 +6,7 @@
  *
  * @brief Multiple precision arithmetic library for cryptographic functions.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -147,9 +147,9 @@ int Exponent_Mod(
 //  Number Theory stuff for prime generation
 //
 ////////////////////////////////////////////////////////////////////////////////
-uint16_t const *Fetch_Prime_Table(void);
-int Fetch_Prime_Size(void);
-void Decode_ASCII(char const *str, unsigned int *mpn, int precision);
+uint16_t const *Fetch_Prime_Table();
+int Fetch_Prime_Size();
+void Decode_ASCII(const char *str, unsigned int *mpn, int precision);
 mp_digit_u Rabin_Miller_Test(Straw *rng, unsigned int const *w, int rounds, int precision);
 BOOL Fermat_Test(const mp_digit_u *candidate_prime, unsigned int rounds, int precision);
 BOOL Is_Small_Prime(const mp_digit_u *candidate, int precision);

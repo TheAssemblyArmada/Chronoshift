@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief  FileClass layer for reading files in mix archives.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -35,7 +35,7 @@ public:
     virtual int Read(void *buffer, int length) override;
     virtual off_t Seek(off_t offset, int whence) override;
     virtual off_t Size() override;
-    virtual int Write(void const *buffer, int length) override;
+    virtual int Write(const void *buffer, int length) override;
     virtual void Close() override;
     virtual time_t Get_Date_Time() override;
     virtual BOOL Set_Date_Time(time_t date_time) override;
@@ -52,7 +52,7 @@ public:
     static int Hook_Read(CCFileClass *ptr, void *buffer, int length);
     static off_t Hook_Seek(CCFileClass *ptr, off_t offset, int whence);
     static off_t Hook_Size(CCFileClass *ptr);
-    static int Hook_Write(CCFileClass *ptr, void const *buffer, int length);
+    static int Hook_Write(CCFileClass *ptr, const void *buffer, int length);
     static void Hook_Close(CCFileClass *ptr);
     static time_t Hook_Get_Date_Time(CCFileClass *ptr);
     static BOOL Hook_Set_Date_Time(CCFileClass *ptr, time_t date_time);

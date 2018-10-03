@@ -1,36 +1,23 @@
-////////////////////////////////////////////////////////////////////////////////
-//                               --  THYME  --                                //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Thyme
-//
-//          File:: ALWAYS.H
-//
-//        Author:: CCHyper & OmniBlade
-//
-//  Contributors::
-//
-//   Description:: Basic header files and defines that are always needed.
-//
-//       License:: Thyme is free software: you can redistribute it and/or
-//                 modify it under the terms of the GNU General Public License
-//                 as published by the Free Software Foundation, either version
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Basic header files and defines that are always needed.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef BASE_ALWAYS_H
 #define BASE_ALWAYS_H
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Includes
-//
-////////////////////////////////////////////////////////////////////////////////
 #include "bittype.h"
 #include "config.h"
 #include "macros.h"
@@ -39,11 +26,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//  External Library Includes
-//
-////////////////////////////////////////////////////////////////////////////////
 #if defined(PLATFORM_WINDOWS)
 #include <windows.h>
 #define NAME_MAX FILENAME_MAX
@@ -53,23 +35,14 @@
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-//
 //  Define nullptr when standard is less than C++x0
-//
-////////////////////////////////////////////////////////////////////////////////
 #if __cplusplus <= 199711L && !defined COMPILER_MSVC
 #define nullptr NULL
 #define override
 #define static_assert(x, ...)
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-//
 //  General compiler specific
-//    <todo>
-//
-////////////////////////////////////////////////////////////////////////////////
 #if defined(COMPILER_MSVC)
 // Allow inline recursive functions within inline recursive functions.
 #pragma inline_recursion(on)

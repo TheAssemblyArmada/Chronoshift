@@ -6,7 +6,7 @@
  *
  * @brief Class containing information about terrain templates.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -504,7 +504,7 @@ void TemplateTypeClass::operator delete(void *ptr)
     TemplateTypes.Free(ptr);
 }
 
-void TemplateTypeClass::Init_Heap(void)
+void TemplateTypeClass::Init_Heap()
 {
     // Order of creation must match order of TemplateType enum
     new TemplateTypeClass(TemplateClear);
@@ -1138,7 +1138,7 @@ uint32_t TemplateTypeClass::Coord_Fixup(uint32_t coord) const
     return Coord_Top_Left(coord);
 }
 
-void TemplateTypeClass::MapEditor_418A1C(void)
+void TemplateTypeClass::MapEditor_418A1C()
 {
 #if 0 // TODO Requires MapEditor layer of IOMap stack
     for (TemplateType tem = TEMPLATE_FIRST; tem < TEMPLATE_COUNT; ++tem) {

@@ -1,40 +1,23 @@
-////////////////////////////////////////////////////////////////////////////////
-//                               --  THYME  --                                //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Thyme
-//
-//			File:: TARGETVER.H
-//
-//        Author:: CCHyper
-//
-//  Contributors:: 
-//
-//   Description:: This is used to define the Windows API macros that target the 
-//			       version of the Windows operating system you wish to support.
-//
-//       License:: Thyme is free software: you can redistribute it and/or 
-//                 modify it under the terms of the GNU General Public License 
-//                 as published by the Free Software Foundation, either version 
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @author CCHyper
+ *
+ * @brief This is used to define the Windows API macros for the supported version of the Windows operating system.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef BASE_TARGETVER_H
 #define BASE_TARGETVER_H
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Includes
-//
-////////////////////////////////////////////////////////////////////////////////
-#include	"platform.h"
-
+#include "platform.h"
 
 #if defined(COMPILER_MSVC)
 
@@ -84,11 +67,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows XP
 ////////////////////////////////////////////////////////////////////////////////
-#define WINVER				0x0501
-#define _WIN32_WINNT		0x0501
-#define _WIN32_IE			0x0501
-#define NTDDI_VERSION		0x05010000
-#define TARGET_VERSION		"Windows XP"
+#define WINVER 0x0501
+#define _WIN32_WINNT 0x0501
+#define _WIN32_IE 0x0501
+#define NTDDI_VERSION 0x05010000
+#define TARGET_VERSION "Windows XP"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows Vista
