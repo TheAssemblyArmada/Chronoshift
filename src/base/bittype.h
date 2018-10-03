@@ -13,12 +13,10 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#if defined(COMPILER_MSVC) && (COMPILER_VERSION >= 1000) // MSVC++ 4.0
 #pragma once
-#endif // COMPILER_MSVC && COMPILER_VERSION >= 1000
 
-#if !defined(_BITTYPE_H_)
-#define _BITTYPE_H_
+#ifndef BITTYPE_H
+#define BITTYPE_H
 
 //We aren't supporting MSVC versions earlier than 2010
 #if defined(__GNUC__) || defined(__clang__) || defined(__WATCOMC__) || _MSC_VER >= 1600 // GNU C++ or clang
@@ -29,9 +27,7 @@
     #error Unknown compiler. Please specify fixed-size integer types in 'bittype.h'.
 #endif // _MSC_VER || (__GNUC__ || __clang__ || __WATCOM__)
     
-    //
     // Use these as pointers to do type punning.
-    //
 #if defined(COMPILER_GNUC) || defined(COMPILER_CLANG)
     typedef float __attribute__((__may_alias__)) float_a;
     typedef int32_t __attribute__((__may_alias__)) int32_a;
@@ -51,4 +47,4 @@
     typedef wchar_t wchar_a;
 #endif
     
-#endif //_BITTYPE_H_
+#endif // BITTYPE_H

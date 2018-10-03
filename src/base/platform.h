@@ -14,8 +14,9 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  *
- * This is a heavily modified version of the EACOMPLIER.H file from the EASTL (Electronic Arts Standard Type Library),
- * written by Paul Pedriana of Maxis. Source: http://gpl.ea.com/
+ * This is a heavily modified version of the EACOMPLIER.H file from the EASTL
+ * (Electronic Arts Standard Type Library), written by Paul Pedriana of Maxis.
+ * Source: http://gpl.ea.com/
  */
 #pragma once
 
