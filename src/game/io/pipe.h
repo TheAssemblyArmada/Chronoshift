@@ -1,26 +1,18 @@
-////////////////////////////////////////////////////////////////////////////////
-//                            --  REDALERT++ --                               //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Redalert++
-//
-//          File:: PIPE.H
-//
-//        Author:: CCHyper
-//
-//  Contributors:: OmniBlade
-//
-//   Description:: Base putting stream class.
-//
-//       License:: Redalert++ is free software: you can redistribute it and/or
-//                 modify it under the terms of the GNU General Public License
-//                 as published by the Free Software Foundation, either version
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Base class for output stream classes.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef PIPE_H
@@ -50,7 +42,7 @@ public:
     virtual int Flush();
     virtual int End();
     virtual void Put_To(Pipe *pipe);
-    virtual int Put(void const *source, int length);
+    virtual int Put(const void *source, int length);
 
 protected:
     Pipe *m_chainTo;

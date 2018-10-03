@@ -6,7 +6,7 @@
  *
  * @brief Class for handling in game messages.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -38,7 +38,7 @@ public:
     void Init(int x, int y, int max_lines, int max_chars, int max_msg, int edit_x, int edit_y, BOOL a8, int a9, int a10,
         int width = MaxMessageWidth);
     void Reset();
-    TextLabelClass *Add_Message(char const *player, int id, char const *message, PlayerColorType color,
+    TextLabelClass *Add_Message(const char *player, int id, const char *message, PlayerColorType color,
         TextPrintType style = TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL /*4046h*/, int delay = -1);
     char *Get_Message(int id);
     TextLabelClass *Get_Label(int id);

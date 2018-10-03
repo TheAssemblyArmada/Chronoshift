@@ -6,7 +6,7 @@
  *
  * @brief Contains static data for anim objects.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -120,7 +120,7 @@ DEFINE_ENUMERATION_OPERATORS(AnimType);
 class AnimTypeClass : public ObjectTypeClass
 {
 public:
-    AnimTypeClass(AnimType anim, char const *name, int a3, int mid_point, BOOL theater, BOOL normalized, BOOL a7,
+    AnimTypeClass(AnimType anim, const char *name, int a3, int mid_point, BOOL theater, BOOL normalized, BOOL a7,
         BOOL scorch, BOOL crater, BOOL sticky, BOOL surface, BOOL translucent, BOOL flamer, fixed damage, int rate,
         int start, int loop_start, int loop_end, int end, int loop_count, VocType report, AnimType next);
     AnimTypeClass(AnimTypeClass const &that);
@@ -143,8 +143,8 @@ public:
     static void Init_Heap();
     static void One_Time();
     static void Init(TheaterType theater);
-    static AnimType From_Name(char const *name);
-    static char const *Name_From(AnimType anim);
+    static AnimType From_Name(const char *name);
+    static const char *Name_From(AnimType anim);
     static AnimTypeClass &As_Reference(AnimType anim);
     static AnimTypeClass *As_Pointer(AnimType anim);
 

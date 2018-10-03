@@ -5,11 +5,10 @@
  *
  * @brief Implementation of LCW, a custom compression format used in many Westwood games.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -28,8 +27,8 @@ inline int LCW_Worst_Case(int bytes)
     return bytes + (bytes / 128) + 1;
 }
 
-int __cdecl LCW_Uncomp(void const *src, void *dst, unsigned int bytes = 0);
-int __cdecl LCW_Comp(void const *src, void *dst, unsigned int bytes = 0);
+int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes = 0);
+int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes = 0);
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"

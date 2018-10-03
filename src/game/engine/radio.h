@@ -5,7 +5,7 @@
  *
  * @brief Object communication layer of object class hierachy.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -34,20 +34,20 @@ public:
     RadioClass(RTTIType type, int id);
     RadioClass(RadioClass const &that);
     RadioClass(NoInitClass const &noinit) : MissionClass(noinit) {}
-    virtual ~RadioClass(void);
+    virtual ~RadioClass();
 
-    virtual BOOL Limbo(void) override;
+    virtual BOOL Limbo() override;
     virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target) override;
-    virtual void Code_Pointers(void) override;
-    virtual void Decode_Pointers(void) override;
+    virtual void Code_Pointers() override;
+    virtual void Decode_Pointers() override;
     virtual RadioMessageType Transmit_Message(
         RadioMessageType message, target_t &target = NullRadioTarget, RadioClass *radio = nullptr);
     virtual RadioMessageType Transmit_Message(RadioMessageType message, RadioClass *radio);
 
     // TODO, rename!
-    bool const Radio_Valid(void) const { return Radio != nullptr; }
+    bool const Radio_Valid() const { return Radio != nullptr; }
 
-    TechnoClass *Radio_As_Techno(void) const
+    TechnoClass *Radio_As_Techno() const
     {
         if (Radio_Valid()) {
             return (TechnoClass *)&Radio;
@@ -55,7 +55,7 @@ public:
         return nullptr;
     }
 
-    FootClass *Radio_As_Foot(void) const
+    FootClass *Radio_As_Foot() const
     {
         if (Radio_Valid()) {
             return (FootClass *)&Radio;
@@ -63,11 +63,11 @@ public:
         return nullptr;
     }
 
-    static char const *Message_From(RadioMessageType message);
-    static RadioMessageType From_Message(char const *message);
+    static const char *Message_From(RadioMessageType message);
+    static RadioMessageType From_Message(const char *message);
 
 private:
-    static char const *Messages[RADIO_COUNT];
+    static const char *Messages[RADIO_COUNT];
 
 public:
     RadioMessageType ReceivedMessage; // 0x37	//name subject to change!

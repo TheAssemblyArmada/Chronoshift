@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @author CCHyper
-* @author OmniBlade
-*
-* @brief Pipe that processes the data with RSA and Blowfish as it writes it.
-*
-* @copyright RedAlert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Pipe that processes the data with RSA and Blowfish as it writes it.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef PKPIPE_H
@@ -28,9 +28,9 @@ class PKPipe : public Pipe
 {
 public:
     PKPipe(PipeControl mode, Straw &rstraw);
-    virtual ~PKPipe() {};
+    virtual ~PKPipe(){};
 
-    virtual int Put(void const *buffer, int length) override;
+    virtual int Put(const void *buffer, int length) override;
     virtual void Put_To(Pipe *pipe) override;
 
     void Key(PKey *key);

@@ -6,7 +6,7 @@
  *
  * @brief INI file parsing for game specific objects/types.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -730,7 +730,7 @@ BOOL CCINIClass::Put_Aircrafts(const char *section, const char *entry, const int
     return Put_String(section, entry, buffer);
 }
 
-const int CCINIClass::Get_Vessels(char const *section, char const *entry, const int defvalue) const
+const int CCINIClass::Get_Vessels(const char *section, const char *entry, const int defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -748,7 +748,7 @@ const int CCINIClass::Get_Vessels(char const *section, char const *entry, const 
     return defvalue;
 }
 
-BOOL CCINIClass::Put_Vessels(char const *section, char const *entry, const int value)
+BOOL CCINIClass::Put_Vessels(const char *section, const char *entry, const int value)
 {
     char buffer[MAX_LINE_LENGTH];
 
@@ -764,7 +764,7 @@ BOOL CCINIClass::Put_Vessels(char const *section, char const *entry, const int v
     return Put_String(section, entry, buffer);
 }
 
-const int CCINIClass::Get_Buildings(char const *section, char const *entry, const int defvalue) const
+const int CCINIClass::Get_Buildings(const char *section, const char *entry, const int defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     int (*func)(CCINIClass *, const char *, const char *, const int) =
@@ -788,7 +788,7 @@ const int CCINIClass::Get_Buildings(char const *section, char const *entry, cons
 #endif
 }
 
-BOOL CCINIClass::Put_Buildings(char const *section, char const *entry, const int value)
+BOOL CCINIClass::Put_Buildings(const char *section, const char *entry, const int value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(CCINIClass *, const char *, const char *, const int) =
@@ -860,7 +860,7 @@ BOOL CCINIClass::Put_PKey(PKey &key)
     return true;
 }
 
-void CCINIClass::Calculate_Message_Digest(void)
+void CCINIClass::Calculate_Message_Digest()
 {
     if ( !DigestValid ) {
         SHAPipe pipe;
@@ -870,13 +870,13 @@ void CCINIClass::Calculate_Message_Digest(void)
     }
 }
 
-void CCINIClass::Invalidate_Message_Digest(void)
+void CCINIClass::Invalidate_Message_Digest()
 {
     memset(&Digest, 0, sizeof(Digest));
     DigestValid = false;
 }
 
-int32_t const CCINIClass::Get_Unique_ID(void)
+int32_t const CCINIClass::Get_Unique_ID()
 {
     if ( !DigestValid ) {
         Calculate_Message_Digest();

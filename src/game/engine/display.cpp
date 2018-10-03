@@ -6,7 +6,7 @@
  *
  * @brief Part of IOMap stack handling tactical display (main action pane when in game).
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -858,7 +858,7 @@ void DisplayClass::Get_Occupy_Dimensions(int &w, int &h, int16_t *list) const
  *
  * 0x004AF2D8
  */
-const int16_t *DisplayClass::Text_Overlap_List(char const *string, int x, int y) const
+const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y) const
 {
     static int16_t _list[60];
     int16_t *w_list = _list;

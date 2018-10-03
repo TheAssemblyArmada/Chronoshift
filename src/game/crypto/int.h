@@ -6,7 +6,7 @@
  *
  * @brief C++ class wrapper around the C style API of MPMath.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -31,7 +31,7 @@ public:
 
     operator mp_digit_u *() { return m_number; }
     operator mp_digit_u const *() const { return m_number; }
-    operator void const *() const { return m_number; }
+    operator const void *() const { return m_number; }
 
     Int &operator+=(const Int &number)
     {

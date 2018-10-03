@@ -1,8 +1,22 @@
-#include	"source.h"
+/**
+ * @file
+ *
+ * @author CCHyper
+ *
+ * @brief Source type enum and conversion to and from strings.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
+#include "source.h"
 
-char const *SourceName[SOURCE_COUNT] = { "North", "East", "South", "West", "Air" };
+const char *SourceName[SOURCE_COUNT] = { "North", "East", "South", "West", "Air" };
 
-SourceType Source_From_Name(char const *name)
+SourceType Source_From_Name(const char *name)
 {
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return SOURCE_NONE;
@@ -19,7 +33,7 @@ SourceType Source_From_Name(char const *name)
     return SOURCE_NONE;
 }
 
-char const *Name_From_Source(SourceType source)
+const char *Name_From_Source(SourceType source)
 {
     if (source < SOURCE_COUNT && source != SOURCE_NONE) {
         return SourceName[source];

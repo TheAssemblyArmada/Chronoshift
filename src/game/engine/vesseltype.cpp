@@ -214,7 +214,7 @@ void VesselTypeClass::One_Time()
 
     for (VesselType i = VESSEL_FIRST; i < VESSEL_COUNT; ++i) {
         VesselTypeClass &vessel = As_Reference(i);
-        char const *name = vessel.ImageName[0] != '\0' ? vessel.ImageName : vessel.Name;
+        const char *name = vessel.ImageName[0] != '\0' ? vessel.ImageName : vessel.Name;
 
         // Original has a special case where icon is always loaded for helicarrier?
         // Possibly intended for the "Secret Units" enabling code that was never in any released build.

@@ -1,21 +1,21 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Straw stream class implementation reading data from a file.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
 #include "filestraw.h"
 
-FileStraw::~FileStraw(void)
+FileStraw::~FileStraw()
 {
     if (Valid_File() && m_hasOpened) {
         m_file->Close();

@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
  * @brief Class for creating a searchable index of objects on a key/value pair basis
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -69,7 +69,7 @@ public:
 
 private:
     // Comparator function for qsort to sort an array and bsearch to search it.
-    static int Search_Compare(void const *a, void const *b);
+    static int Search_Compare(const void *a, const void *b);
 
 private:
     NodeElement *m_indexTable;
@@ -247,7 +247,7 @@ typename IndexClass<KeyType, ValueType>::NodeElement *IndexClass<KeyType, ValueT
 }
 
 template<typename KeyType, class ValueType>
-int IndexClass<KeyType, ValueType>::Search_Compare(void const *ptr1, void const *ptr2)
+int IndexClass<KeyType, ValueType>::Search_Compare(const void *ptr1, const void *ptr2)
 {
     if (static_cast<const NodeElement *>(ptr1)->m_id < static_cast<const NodeElement *>(ptr2)->m_id) {
         return -1;

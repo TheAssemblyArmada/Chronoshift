@@ -6,7 +6,7 @@
  *
  * @brief Pipe interface for writing LZO encoded data.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -28,7 +28,7 @@ public:
     virtual ~LZOPipe();
 
     virtual int Flush();
-    virtual int Put(void const *source, int length);
+    virtual int Put(const void *source, int length);
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();

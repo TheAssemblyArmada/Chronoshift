@@ -1,15 +1,14 @@
 /**
  * @file
  *
- * @Author OmniBlade
+ * @author OmniBlade
  *
  * @brief Debug logging interface.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -79,7 +78,7 @@ void Debug_Init(int flags)
     }
 }
 
-char *Get_Time_String(void)
+char *Get_Time_String()
 {
     time_t aclock;
 
@@ -127,7 +126,7 @@ const char *Prep_Buffer(const char *format, char *buffer)
     return format;
 }
 
-char *Get_Tick_String(void)
+char *Get_Tick_String()
 {
     static char tick_string[32];
     unsigned long ticks;
@@ -222,7 +221,7 @@ void Debug_Crash(const char *format, ...)
     //    if ( TheKeyboard )
     //        Keyboard::resetKeys(TheKeyboard);
     //    if ( TheMouse )
-    //        ((void(*)(void))TheMouse->vfptr->reset)();
+    //        ((void(*)())TheMouse->vfptr->reset)();
     //}
 }
 
@@ -231,7 +230,7 @@ int Debug_Crash_Box(const char *buffer, int log_result)
     return 0;
 }
 
-void Debug_Shutdown(void)
+void Debug_Shutdown()
 {
     if (DebugLogFile) {
         Debug_Log("Log closed: %s\n", Get_Time_String());
@@ -242,7 +241,7 @@ void Debug_Shutdown(void)
     DebugFlags = 0;
 }
 
-int Debug_Get_Flags(void)
+int Debug_Get_Flags()
 {
     return DebugFlags;
 }

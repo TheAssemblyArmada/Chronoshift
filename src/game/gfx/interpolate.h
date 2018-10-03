@@ -5,7 +5,7 @@
  *
  * @brief Interpolation tables and functions for scaling up 320 x 200 image content.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -33,14 +33,14 @@ enum CopyEnum
 #define INTERPOL_PAL_SIZE 256 * 256 //256x256 = 65536 pixels
 
 void Create_Palette_Interpolation_Table();
-void Read_Interpolation_Palette(char const *filename);
-void Write_Interpolation_Palette(char const *filename);
+void Read_Interpolation_Palette(const char *filename);
+void Write_Interpolation_Palette(const char *filename);
 void Rebuild_Interpolated_Palette(void *ipalette);
-int Load_Interpolated_Palettes(char const *filename, BOOL append);
+int Load_Interpolated_Palettes(const char *filename, BOOL append);
 void Free_Interpolated_Palettes();
 
 void Interpolate_2X_Scale(
-    GraphicBufferClass &src, GraphicViewPortClass &dst, char const *filename);
+    GraphicBufferClass &src, GraphicViewPortClass &dst, const char *filename);
 void __cdecl Interpolate_Interleave(void *src, void *dst, int src_height, int src_width, int dst_pitch);
 void __cdecl Interpolate_Line_Double(void *src, void *dst, int src_height, int src_width, int dst_pitch);
 void __cdecl Interpolate_Line_Interpolate(void *src, void *dst, int src_height, int src_width, int dst_pitch);

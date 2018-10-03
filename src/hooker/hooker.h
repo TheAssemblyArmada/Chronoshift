@@ -1,38 +1,30 @@
-////////////////////////////////////////////////////////////////////////////////
-//                            --  REDALERT++ --                               //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: Redalert++
-//
-//          File:: HOOKER.H
-//
-//        Author:: OmniBlade
-//
-//  Contributors:: CCHyper, Saberhawk, jonwil, LRFLEW
-//
-//   Description:: Originally based on work by the Tiberian Technologies team
-//                 to hook Renegade, rewritten based on work by LRFLEW for
-//                 OpenMC2. Provides methods for accessing data and functions in
-//                 an existing binary and replacing functions with new
-//                 implementations from an injected DLL.
-//
-//       License:: Redalert++ is free software: you can redistribute it and/or
-//                 modify it under the terms of the GNU General Public License
-//                 as published by the Free Software Foundation, either version
-//                 2 of the License, or (at your option) any later version.
-//
-//                 A full copy of the GNU General Public License can be found in
-//                 LICENSE
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author jonwil
+ * @author LRFLEW
+ * @author OmniBlade
+ * @author SaberHawk
+ *
+ * @brief Code for injecting code into the original and calling code from the original.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ *
+ * Originally based on work by the Tiberian Technologies team to hook Renegade, rewritten based on work by LRFLEW for
+ * OpenMC2. Provides methods for accessing data and functions in an existing binary and replacing functions with new
+ * implementations from an injected DLL.
+ */
 #pragma once
 
 #ifndef HOOK_SUPPORT_H
 #define HOOK_SUPPORT_H
 
-////////////////////////////////////////////////////////////////////////////////
-//  Includes
-////////////////////////////////////////////////////////////////////////////////
 #include "always.h"
 
 template<typename T, const int size>
@@ -72,49 +64,6 @@ inline T *Make_Pointer(const uintptr_t address)
 {
     return reinterpret_cast<T *>(address);
 }
-
-#if 0
-// Call_Function and Call_Method can be used to call functions from the original
-// binary where they are required and a replacement hasn't been written yet.
-template<typename T, typename... Types>
-__forceinline T Call_Function(const uintptr_t address, Types... args) {
-    return reinterpret_cast<T(__cdecl *)(Types...)>(address)(args...);
-}
-
-template<typename T, typename... Types>
-__forceinline T Call__StdCall_Function(const uintptr_t address, Types... args) {
-    return reinterpret_cast<T(__stdcall *)(Types...)>(address)(args...);
-}
-
-template<typename T, typename X, typename... Types>
-__forceinline T Call_Method(const uintptr_t address, X *const self, Types... args) {
-    return reinterpret_cast<T(__thiscall *)(X *, Types...)>(address)(self, args...);
-}
-
-// These create pointers to various types of function where the return,
-// parameters and calling convention are known.
-template<typename T, typename... Types>
-__forceinline T(__cdecl *Make_Function_Ptr(const uintptr_t address))(Types...) {
-    return reinterpret_cast<T(__cdecl *)(Types...)>(address);
-}
-
-template<typename T, typename... Types>
-__forceinline T(__stdcall *Make_StdCall_Ptr(const uintptr_t address))(Types...)
-{
-    return reinterpret_cast<T(__stdcall *)(Types...)>(address);
-}
-
-template<typename T, typename C, typename... Types>
-__forceinline T(__thiscall *Make_Method_Ptr(const uintptr_t address))(C *, Types...)
-{
-    return reinterpret_cast<T(__thiscall *)(C *, Types...)>(address);
-}
-
-template<typename T, typename... Types>
-__forceinline T(__cdecl *Make_VA_Function_Ptr(const uintptr_t address))(Types..., ...) {
-    return reinterpret_cast<T(__cdecl *)(Types..., ...)>(address);
-}
-#endif
 
 //Macro version of Call_Function function as Watcom doesn't support variadic template
 

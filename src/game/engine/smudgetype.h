@@ -6,7 +6,7 @@
  *
  * @brief Class containing information about terrain smudges.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -57,7 +57,7 @@ DEFINE_ENUMERATION_OPERATORS(SmudgeType);
 class SmudgeTypeClass : public ObjectTypeClass
 {
 public:
-    SmudgeTypeClass(SmudgeType smudge, char const *name, int uiname, int width = 1, int height = 1, BOOL crater = false, BOOL burn = false);
+    SmudgeTypeClass(SmudgeType smudge, const char *name, int uiname, int width = 1, int height = 1, BOOL crater = false, BOOL burn = false);
     SmudgeTypeClass(SmudgeTypeClass const &that);
     SmudgeTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
     ~SmudgeTypeClass() {}
@@ -81,8 +81,8 @@ public:
     BOOL Is_Crater() { return Crater; }
     BOOL Is_Bib() { return Bib; }
 
-    static SmudgeType From_Name(char const *name);
-    static char const *Name_From(SmudgeType smudge);
+    static SmudgeType From_Name(const char *name);
+    static const char *Name_From(SmudgeType smudge);
     static void Init_Heap();
     static void One_Time() {}
     static void Init(TheaterType theater);

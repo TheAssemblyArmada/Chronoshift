@@ -6,7 +6,7 @@
  *
  * @brief Contains static data for anim objects.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -194,7 +194,7 @@ AnimTypeClass const AnimAntDeath(
 /**
  * 0x00407388
  */
-AnimTypeClass::AnimTypeClass(AnimType anim, char const *name, int a3, int mid_point, BOOL theater,
+AnimTypeClass::AnimTypeClass(AnimType anim, const char *name, int a3, int mid_point, BOOL theater,
     BOOL normalized, BOOL a7, BOOL scorch, BOOL crater, BOOL sticky, BOOL surface,
     BOOL translucent, BOOL flamer, fixed damage, int rate, int start, int loop_start,
     int loop_end, int end, int loop_count, VocType report, AnimType next) :
@@ -311,7 +311,7 @@ ObjectClass *AnimTypeClass::Create_One_Of(HouseClass *house) const
  *
  * 0x00407590
  */
-void AnimTypeClass::Init_Heap(void)
+void AnimTypeClass::Init_Heap()
 {
     // The order of heap initialisation MUST match the AnimType enum in animtype.h
     new AnimTypeClass(AnimFBall1);
@@ -402,13 +402,13 @@ void AnimTypeClass::Init_Heap(void)
  *
  * 0x0041C5E4
  */
-void AnimTypeClass::One_Time(void)
+void AnimTypeClass::One_Time()
 {
     char filename[512];
 
     for (AnimType anim = ANIM_FIRST; anim < ANIM_COUNT; ++anim) {
         AnimTypeClass *aptr = As_Pointer(anim);
-        char const *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
+        const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
         snprintf(filename, sizeof(filename), "%s.shp", name);
         aptr->ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
 
@@ -430,9 +430,9 @@ void AnimTypeClass::Init(TheaterType theater)
     if (theater != g_lastTheater) {
         for (AnimType anim = ANIM_FIRST; anim < ANIM_COUNT; ++anim) {
             AnimTypeClass *aptr = As_Pointer(anim);
-            char const *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
+            const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
             // TODO change the theater info to lower case and standardise on that?
-            char const *ext = aptr->Theater ? g_theaters[theater].ext : "shp";
+            const char *ext = aptr->Theater ? g_theaters[theater].ext : "shp";
             snprintf(filename, sizeof(filename), "%s.%s", name, ext);
             aptr->ImageData = MixFileClass<CCFileClass>::Retrieve(filename);
         }
@@ -443,7 +443,7 @@ void AnimTypeClass::Init(TheaterType theater)
 /**
  * @brief Gets appropriate enum value from provided string.
  */
-AnimType AnimTypeClass::From_Name(char const *name)
+AnimType AnimTypeClass::From_Name(const char *name)
 {
     DEBUG_ASSERT(name != nullptr);
 
@@ -465,7 +465,7 @@ AnimType AnimTypeClass::From_Name(char const *name)
 /**
  * @brief Gets appropriate enum value from provided string.
  */
-char const *AnimTypeClass::Name_From(AnimType anim)
+const char *AnimTypeClass::Name_From(AnimType anim)
 {
     return anim != ANIM_NONE && anim < ANIM_COUNT ? As_Reference(anim).Get_Name() : "<none>";
 }

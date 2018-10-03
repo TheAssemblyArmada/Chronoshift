@@ -5,7 +5,7 @@
  *
  * @brief Object communication layer of object class hierachy.
  *
- * @copyright RedAlert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -19,7 +19,7 @@
 // A invalid target instance parsed into Transmit_Message() as a default param.
 target_t NullRadioTarget = 0;
 
-char const *RadioClass::Messages[RADIO_COUNT] = {
+const char *RadioClass::Messages[RADIO_COUNT] = {
     "static (no message)",
     "Roger.",
     "Come in.",
@@ -74,12 +74,12 @@ RadioClass::RadioClass(RadioClass const &that) :
 {
 }
 
-RadioClass::~RadioClass(void)
+RadioClass::~RadioClass()
 {
     Radio = nullptr;
 }
 
-BOOL RadioClass::Limbo(void)
+BOOL RadioClass::Limbo()
 {
     DEBUG_ASSERT(this != nullptr);
 
@@ -181,19 +181,19 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioCla
 #endif
 }
 
-void RadioClass::Code_Pointers(void)
+void RadioClass::Code_Pointers()
 {
     DEBUG_ASSERT(this != nullptr);
     MissionClass::Code_Pointers();
 }
 
-void RadioClass::Decode_Pointers(void)
+void RadioClass::Decode_Pointers()
 {
     DEBUG_ASSERT(this != nullptr);
     MissionClass::Decode_Pointers();
 }
 
-char const *RadioClass::Message_From(RadioMessageType message)
+const char *RadioClass::Message_From(RadioMessageType message)
 {
     // DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
@@ -204,7 +204,7 @@ char const *RadioClass::Message_From(RadioMessageType message)
     return "Invalid message";
 }
 
-RadioMessageType RadioClass::From_Message(char const *message)
+RadioMessageType RadioClass::From_Message(const char *message)
 {
     DEBUG_ASSERT(message != nullptr);
 

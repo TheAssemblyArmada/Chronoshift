@@ -6,7 +6,7 @@
  *
  * @brief Part of IOMap stack handling tactical display (main action pane when in game).
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -114,7 +114,7 @@ public:
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     int16_t Hook_Click_Cell_Calc(int x, int y);
-    const int16_t *Hook_Text_Overlap_List(char const *string, int x, int y);
+    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
 #endif
 
 private:
@@ -253,7 +253,7 @@ public:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-inline const int16_t *DisplayClass::Hook_Text_Overlap_List(char const *string, int x, int y)
+inline const int16_t *DisplayClass::Hook_Text_Overlap_List(const char *string, int x, int y)
 {
     return DisplayClass::Text_Overlap_List(string, x, y);
 }

@@ -6,7 +6,7 @@
  *
  * @brief Mission layer of the object class hierachy.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -69,7 +69,7 @@ public:
 
     static BOOL Is_Recruitable_Mission(MissionType mission);
 
-    static MissionType From_Name(char const *name);
+    static MissionType From_Name(const char *name);
     static const char *Name_From(MissionType mission);
 
 protected:

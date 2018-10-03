@@ -6,7 +6,7 @@
  *
  * @brief Class containing information about projectile behaviour.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -113,7 +113,7 @@ BulletTypeClass::BulletTypeClass(BulletTypeClass const &that) :
  *
  * 0x00426ADC
  */
-void BulletTypeClass::Init_Heap(void)
+void BulletTypeClass::Init_Heap()
 {
     // In the original binary, these where created with just names. this has been changed so all Bullets are created globaly
     // and initialised like all other game objects.
@@ -143,7 +143,7 @@ void BulletTypeClass::Init_Heap(void)
  *
  * 0x00426C98
  */
-void BulletTypeClass::One_Time(void)
+void BulletTypeClass::One_Time()
 {
     char filename[512];
 

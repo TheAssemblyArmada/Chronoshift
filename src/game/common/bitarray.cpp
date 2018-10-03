@@ -6,7 +6,7 @@
  *
  * @brief Functions for getting and setting bits in an array of bytes.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -38,7 +38,7 @@ void Set_Bit(void *array, int bit, BOOL value)
 /**
  * @brief Tests the value of a given bit in an array.
  */
-BOOL Get_Bit(void const *array, int bit)
+BOOL Get_Bit(const void *array, int bit)
 {
     // If negative it is out of range so can't be set
     if (bit < 0) {
@@ -53,7 +53,7 @@ BOOL Get_Bit(void const *array, int bit)
 /**
  * @brief Scans through the data and returns the position of the first set bit found.
  */
-int First_True_Bit(void const *array, int size)
+int First_True_Bit(const void *array, int size)
 {
     const uint8_t *byte_array = (const uint8_t *)array;
 
@@ -84,7 +84,7 @@ int First_True_Bit(void const *array, int size)
 /**
  * @brief Scans through the data and returns the position of the first clear bit found.
  */
-int First_False_Bit(void const *array, int size)
+int First_False_Bit(const void *array, int size)
 {
     const uint8_t *byte_array = (const uint8_t *)array;
 

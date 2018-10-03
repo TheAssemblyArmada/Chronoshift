@@ -6,7 +6,7 @@
  *
  * @brief Class holding various game settings that can be loaded from rules.ini.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -40,7 +40,7 @@ fixed RulesClass::CloakDelay;
 RulesClass Rule;
 #endif
 
-RulesClass::RulesClass(void) :
+RulesClass::RulesClass() :
     TurboBoost("1.5"),
     AttackInterval("3.0"),
     AttackDelay("5.0"),
@@ -609,7 +609,7 @@ BOOL RulesClass::Themes(CCINIClass &ini)
 
     if (ini.Find_Section("ThemeControl") != nullptr) {
         for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
-            char const *theme_name = Theme.Base_Name(theme);
+            const char *theme_name = Theme.Base_Name(theme);
             // Already found section, so we know it exists
             // if ( theme_name ? ini.Find_Entry("ThemeControl", theme_name) != nullptr : ini.Find_Section("ThemeControl") !=
             // nullptr ) {

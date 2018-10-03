@@ -6,7 +6,7 @@
  *
  * @brief Part of IOMap stack handling power bar.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -45,7 +45,7 @@ BOOL PowerClass::PowerButtonClass::Action(unsigned flags, KeyNumType &key)
 #endif
 }
 
-PowerClass::PowerClass(void) :
+PowerClass::PowerClass() :
     RadarClass(),
     FlashTimer(),
     Drain(-1),
@@ -62,7 +62,7 @@ PowerClass::PowerClass(void) :
     return;
 }
 
-void PowerClass::One_Time(void)
+void PowerClass::One_Time()
 {
     RadarClass::One_Time();
     PowerShape = MixFileClass<CCFileClass>::Retrieve("power.shp");
@@ -75,7 +75,7 @@ void PowerClass::One_Time(void)
     PowerButton.Set_Size(15, 220);
 }
 
-void PowerClass::Init_Clear(void)
+void PowerClass::Init_Clear()
 {
     RadarClass::Init_Clear();
 
@@ -280,7 +280,7 @@ int PowerClass::Power_Height(int power)
     return Clamp(height, 0, POWER_MAX_HEIGHT);
 }
 
-void PowerClass::Flash_Power(void)
+void PowerClass::Flash_Power()
 {
     FlashTimer.Reset(15);
     PowerToRedraw = true;

@@ -1,15 +1,15 @@
 /**
  * @file
  *
- * @Author CCHyper, OmniBlade
+ * @author CCHyper
+ * @author OmniBlade
  *
- * @brief  FileClass layer for providing file buffering services.
+ * @brief FileClass layer for providing file buffering services.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
- *
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
@@ -37,7 +37,7 @@ BufferIOFileClass::BufferIOFileClass() :
 {
 }
 
-BufferIOFileClass::BufferIOFileClass(char const *filename) :
+BufferIOFileClass::BufferIOFileClass(const char *filename) :
     m_bufferAllocated(false),
     m_bufferedFileAvailable(false),
     m_bufferedFileOpen(false),
@@ -200,7 +200,7 @@ BOOL BufferIOFileClass::Commit()
     return false;
 }
 
-char const *BufferIOFileClass::Set_Name(char const *filename)
+const char *BufferIOFileClass::Set_Name(const char *filename)
 {
     if (File_Name() != nullptr && m_buffered) {
         if (strcmp(filename, File_Name()) == 0) {
@@ -234,7 +234,7 @@ BOOL BufferIOFileClass::Is_Open() const
     return RawFileClass::Is_Open();
 }
 
-BOOL BufferIOFileClass::Open(char const *filename, int rights)
+BOOL BufferIOFileClass::Open(const char *filename, int rights)
 {
     Set_Name(filename);
 
@@ -286,7 +286,7 @@ BOOL BufferIOFileClass::Open(int rights)
     return RawFileClass::Open(rights);
 }
 
-int BufferIOFileClass::Write(void const *buffer, int length)
+int BufferIOFileClass::Write(const void *buffer, int length)
 {
     int readsize = 0;
     int movedsize = 0;
@@ -339,7 +339,7 @@ int BufferIOFileClass::Write(void const *buffer, int length)
                 }
 
                 memmove(static_cast<char *>(m_buffer) + m_bufferPosition,
-                    static_cast<char const *>(buffer) + totalwrite,
+                    static_cast<const char *>(buffer) + totalwrite,
                     movedsize);
 
                 m_uncommited = true;
@@ -645,7 +645,7 @@ off_t BufferIOFileClass::Hook_Size(BufferIOFileClass *ptr)
     return ptr->BufferIOFileClass::Size();
 }
 
-int BufferIOFileClass::Hook_Write(BufferIOFileClass *ptr, void const *buffer, int length)
+int BufferIOFileClass::Hook_Write(BufferIOFileClass *ptr, const void *buffer, int length)
 {
     return ptr->BufferIOFileClass::Write(buffer, length);
 }

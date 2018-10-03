@@ -6,7 +6,7 @@
  *
  * @brief Techno layer of type classes, basis for all player unit type classes.
  *
- * @copyright Redalert++ is free software: you can redistribute it and/or
+ * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
  *            as published by the Free Software Foundation, either version
  *            2 of the License, or (at your option) any later version.
@@ -39,7 +39,7 @@ void *TechnoTypeClass::MissingCameoShape = nullptr;
 /**
  * 0x00569564
  */
-TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, char const *name, RemapType altremap, int def_fire_coord,
+TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *name, RemapType altremap, int def_fire_coord,
     int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL nominal,
     BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL theater, BOOL turret,
     BOOL remapable, BOOL logical, int facings, SpeedType speed) :

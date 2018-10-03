@@ -1,28 +1,29 @@
 /**
-* @file
-*
-* @author CCHyper
-*
-* @brief <todo>
-*
-* @copyright RedAlert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ *
+ * @brief Class for handling ground types.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef GROUND_H
 #define GROUND_H
 
 #include "always.h"
+#include "fixed.h"
 #include "gametypes.h"
 #include "land.h"
-#include "fixed.h"
 
-enum GroundType {
+enum GroundType
+{
     GROUND_NONE = -1,
 
     GROUND_FIRST = 0,
@@ -43,42 +44,32 @@ class CCINIClass;
 class GroundClass
 {
 public:
-    GroundClass(void) : Buildable(false)
-    {
-        memcpy(Speeds, 0, sizeof(Speeds));
-    }
+    GroundClass() : Buildable(false) { memcpy(Speeds, 0, sizeof(Speeds)); }
 
-    GroundClass(GroundClass const &that) :
-        Buildable(that.Buildable)
-    {
-        memcpy(Speeds, that.Speeds, sizeof(Speeds));
-    }
+    GroundClass(GroundClass const &that) : Buildable(that.Buildable) { memcpy(Speeds, that.Speeds, sizeof(Speeds)); }
 
-    //~GroundClass(void) {}
+    //~GroundClass() {}
 
     bool operator==(GroundClass const &that) const
     {
         return memcmp(Speeds, that.Speeds, sizeof(Speeds)) == 0 && Buildable == that.Buildable;
     }
 
-    bool operator!=(GroundClass const &that) const
-    {
-        return !(this == &that); 
-    }
+    bool operator!=(GroundClass const &that) const { return !(this == &that); }
 
     BOOL Read_INI(CCINIClass &ini, const LandType land);
     BOOL Write_INI(CCINIClass &ini, const LandType land) const;
 
-    BOOL const Is_Buildable(void) { return Buildable; }
+    BOOL const Is_Buildable() { return Buildable; }
     fixed const Get_Speed(SpeedType speed) { return Speeds[speed]; }
 
-    static GroundType From_Name(char const *name);
-    static char const *Name_From(GroundType ground);
+    static GroundType From_Name(const char *name);
+    static const char *Name_From(GroundType ground);
 
 public:
     // Percent of full speed for each speed type (0.0 means impassable) [def = 1.0]
     fixed Speeds[SPEED_COUNT];
-        
+
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
@@ -90,7 +81,7 @@ public:
         int Bitfield;
     };
 #else
-    bool Buildable;     // Can buildings be built upon this terrain [def = false]?
+    bool Buildable; // Can buildings be built upon this terrain [def = false]?
 #endif
 };
 
@@ -101,6 +92,6 @@ extern GroundClass *Ground;
 extern GroundClass Ground[LAND_COUNT];
 #endif
 
-extern char const *GroundTypes[GROUND_COUNT];
+extern const char *GroundTypes[GROUND_COUNT];
 
 #endif // GROUND_H

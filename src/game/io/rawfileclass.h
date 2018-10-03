@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @Author CCHyper, OmniBlade
-*
-* @brief FileClass for reading files with raw OS API calls.
-*
-* @copyright Redalert++ is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief FileClass for reading files with raw OS API calls.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef RAWFILECLASS_H
@@ -47,7 +47,7 @@ public:
     virtual int Read(void *buffer, int length);
     virtual off_t Seek(off_t offset, int whence = FS_SEEK_CURRENT);
     virtual off_t Size();
-    virtual int Write(void const *buffer, int length);
+    virtual int Write(const void *buffer, int length);
     virtual void Close();
     virtual time_t Get_Date_Time();
     virtual BOOL Set_Date_Time(time_t date_time);
@@ -79,7 +79,7 @@ private:
     static int Hook_Read(RawFileClass *ptr, void *buffer, int length);
     static off_t Hook_Seek(RawFileClass *ptr, off_t offset, int whence = FS_SEEK_CURRENT);
     static off_t Hook_Size(RawFileClass *ptr);
-    static int Hook_Write(RawFileClass *ptr, void const *buffer, int length);
+    static int Hook_Write(RawFileClass *ptr, const void *buffer, int length);
     static void Hook_Close(RawFileClass *ptr);
     static off_t Hook_Raw_Seek(RawFileClass *ptr, off_t offset, int whence = FS_SEEK_CURRENT);
 #endif
