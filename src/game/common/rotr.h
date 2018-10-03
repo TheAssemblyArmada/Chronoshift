@@ -1,56 +1,29 @@
-////////////////////////////////////////////////////////////////////////////////
-//                        --  C H R O N O  S T L --                           //
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Project Name:: ChronoSTL
-//
-//			File:: ROTR.H
-//
-//        Author:: CCHyper
-//
-//  Contributors:: 
-//
-//   Description:: <TODO>
-//
-//       License:: Distributed under the GNU License, Version 2.0.
-//			       (See accompanying file LICENSE.TXT)
-//
-////////////////////////////////////////////////////////////////////////////////
-#if defined(COMPILER_MSVC) && (COMPILER_VERSION >= 1000) // MSVC++ 4.0
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief Rotate right function.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
-#endif // COMPILER_MSVC && COMPILER_VERSION >= 1000
 
-#if !defined(_ROTR_H_)
-#define _ROTR_H_
+#ifndef ROTR_H
+#define ROTR_H
 
-#include	"always.h"
+#include "always.h"
 
-
-////////////////////////////////////////////////////////////////////////////////
-///
-/// <!-- RotateRight() -->
-///
-/// \brief
-///     this function rotates the value specified, as determined
-///     by 'x', to the right by the number of bits specified in 'n'.
-///
-/// \param
-///     x           The value to rotate.
-///
-/// \param
-///     n           Rotate by this number of bits.
-///
-/// \return
-///     value       TODO
-///
-/// \warning
-///     None
-///
-////////////////////////////////////////////////////////////////////////////////
 template<class T>
 T RotateRight(T x, int n)
 {
-    return ( x << ((sizeof(T) * 8) - n) ) | ( x >> n );
+    return (x << ((sizeof(T) * 8) - n)) | (x >> n);
 }
 
-#endif // _ROTR_H_
+#endif // ROTR_H
