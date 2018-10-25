@@ -196,7 +196,7 @@ set(GAMEENGINE_SRC
     game/io/pcxstraw.cpp
     game/io/pkpipe.cpp
     game/io/pkstraw.cpp
-    game/io/rawfileclass.cpp
+    game/io/rawfile.cpp
     game/io/ramfile.cpp
     game/io/rndstraw.cpp
     game/io/shapipe.cpp

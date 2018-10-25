@@ -21,7 +21,7 @@
 //#include "cstraw.h"
 #include "filepipe.h"
 #include "filestraw.h"
-#include "rawfileclass.h"
+#include "rawfile.h"
 #include "readline.h"
 #include <ctype.h>
 #include <stdio.h>

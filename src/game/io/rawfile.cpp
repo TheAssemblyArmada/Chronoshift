@@ -13,7 +13,7 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "rawfileclass.h"
+#include "rawfile.h"
 #include "gamedebug.h"
 #include "stringex.h"
 #include <cstdlib>
