@@ -281,11 +281,11 @@ bool Init_Language()
 {
     // Load System string table
     DEBUG_LOG("Bootstrap() - Loading Game Strings...\n");
-    CCFileClass gamestr_file;
+    GameFileClass gamestr_file;
     gamestr_file.Set_Name(Language_Name("CONQUER"));
 
     if (gamestr_file.Is_Available()) {
-        GameStrings = (char *)MixFileClass<CCFileClass>::Retrieve(Language_Name("CONQUER"));
+        GameStrings = (char *)MixFileClass<GameFileClass>::Retrieve(Language_Name("CONQUER"));
     } else {
         DEBUG_LOG("Failed to find string file %s.\n", Language_Name("CONQUER"));
         GameStrings = nullptr;
@@ -295,11 +295,11 @@ bool Init_Language()
 
     // Load Editor string table
     DEBUG_LOG("Bootstrap() - Loading Editor Strings...\n");
-    CCFileClass edstr_file;
+    GameFileClass edstr_file;
     edstr_file.Set_Name(Language_Name("EDITOR"));
 
     if (edstr_file.Is_Available()) {
-        EditorStrings = (char *)MixFileClass<CCFileClass>::Retrieve(Language_Name("EDITOR"));
+        EditorStrings = (char *)MixFileClass<GameFileClass>::Retrieve(Language_Name("EDITOR"));
     } else {
         DEBUG_LOG("Failed to find string file %s.\n", Language_Name("EDITOR"));
         EditorStrings = nullptr;
@@ -309,10 +309,10 @@ bool Init_Language()
     // Load Debug string table
 #if defined(CHRONOSHIFT_DEBUG)
     DEBUG_LOG("Bootstrap() - Loading Debug Strings...\n");
-    CCFileClass dbgstr_file;
+    GameFileClass dbgstr_file;
     dbgstr_file.Set_Name(Language_Name("DEBUG"));
     if (dbgstr_file.Is_Available()) {
-        DebugStrings = (char *)MixFileClass<CCFileClass>::Retrieve(Language_Name("DEBUG"));
+        DebugStrings = (char *)MixFileClass<GameFileClass>::Retrieve(Language_Name("DEBUG"));
     } else {
         DEBUG_LOG("Failed to find string file %s.\n", Language_Name("DEBUG"));
         DebugStrings = nullptr;

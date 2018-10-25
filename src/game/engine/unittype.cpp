@@ -309,9 +309,9 @@ void UnitTypeClass::One_Time()
         const char *name = unit.ImageName[0] != '\0' ? unit.ImageName : unit.Get_Name();
 
         snprintf(buffer, sizeof(buffer), "%.4sicon.shp", name);
-        unit.CameoData = MixFileClass<CCFileClass>::Retrieve(buffer);
+        unit.CameoData = MixFileClass<GameFileClass>::Retrieve(buffer);
         snprintf(buffer, sizeof(buffer), "%s.shp", name);
-        unit.ImageData = MixFileClass<CCFileClass>::Retrieve(buffer);
+        unit.ImageData = MixFileClass<GameFileClass>::Retrieve(buffer);
 
         int big_dimension = 0;
 
@@ -324,18 +324,18 @@ void UnitTypeClass::One_Time()
 
     // TODO original initialises these here, move them somewhere more appropriate when possible.
     if (g_WakeShapes == nullptr) {
-        g_WakeShapes = MixFileClass<CCFileClass>::Retrieve("wake.shp");
+        g_WakeShapes = MixFileClass<GameFileClass>::Retrieve("wake.shp");
     }
 
     if (g_TurretShapes == nullptr) {
-        g_TurretShapes = MixFileClass<CCFileClass>::Retrieve("turr.shp");
+        g_TurretShapes = MixFileClass<GameFileClass>::Retrieve("turr.shp");
     }
 
     if (g_SamShapes == nullptr) {
-        g_SamShapes = MixFileClass<CCFileClass>::Retrieve("ssam.shp");
+        g_SamShapes = MixFileClass<GameFileClass>::Retrieve("ssam.shp");
     }
 
     if (g_MGunShapes == nullptr) {
-        g_MGunShapes = MixFileClass<CCFileClass>::Retrieve("mgun.shp");
+        g_MGunShapes = MixFileClass<GameFileClass>::Retrieve("mgun.shp");
     }
 }

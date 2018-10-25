@@ -34,7 +34,7 @@ GraphicBufferClass *Read_PCX_File(const char *filename, PaletteClass *pal, void 
     PCX_HEADER header;
     GraphicBufferClass *gbuff;
 
-    CCFileClass file(filename);
+    GameFileClass file(filename);
 
     if (file.Is_Available()) {
         file.Open(FM_READ);

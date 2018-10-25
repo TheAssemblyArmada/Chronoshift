@@ -25,19 +25,19 @@
 #define CCFILE_HANDLE_COUNT 10
 
 #ifndef CHRONOSHIFT_STANDALONE
-CCFileClass *g_handles = Make_Pointer<CCFileClass>(0x00635BE4);
+GameFileClass *g_handles = Make_Pointer<GameFileClass>(0x00635BE4);
 #else
-CCFileClass g_handles[CCFILE_HANDLE_COUNT];
+GameFileClass g_handles[CCFILE_HANDLE_COUNT];
 #endif
 
-typedef MixFileClass<CCFileClass> CCMixFileClass;
+typedef MixFileClass<GameFileClass> CCMixFileClass;
 
-CCFileClass::CCFileClass(const char *filename) : m_fileBuffer()
+GameFileClass::GameFileClass(const char *filename) : m_fileBuffer()
 {
     CDFileClass::Set_Name(filename);
 }
 
-void CCFileClass::Error(int error, BOOL can_retry, const char *filename)
+void GameFileClass::Error(int error, BOOL can_retry, const char *filename)
 {
     RawFileClass::Error(error, can_retry, filename);
 
@@ -46,7 +46,7 @@ void CCFileClass::Error(int error, BOOL can_retry, const char *filename)
     }
 }
 
-int CCFileClass::Write(const void *buffer, int length)
+int GameFileClass::Write(const void *buffer, int length)
 {
     // if the buffer pointer is null, raise an error.
     if (Is_Cached()) {
@@ -57,7 +57,7 @@ int CCFileClass::Write(const void *buffer, int length)
     return BufferIOFileClass::Write(buffer, length);
 }
 
-int CCFileClass::Read(void *buffer, int length)
+int GameFileClass::Read(void *buffer, int length)
 {
     BOOL opened = false;
 
@@ -89,7 +89,7 @@ int CCFileClass::Read(void *buffer, int length)
     return length;
 }
 
-off_t CCFileClass::Seek(off_t offset, int whence)
+off_t GameFileClass::Seek(off_t offset, int whence)
 {
     if (Is_Cached()) {
         switch (whence) {
@@ -113,7 +113,7 @@ off_t CCFileClass::Seek(off_t offset, int whence)
     return BufferIOFileClass::Seek(offset, whence);
 }
 
-off_t CCFileClass::Size()
+off_t GameFileClass::Size()
 {
     // if Buffer is valid, return buffer Size.
     if (Is_Cached()) {
@@ -131,7 +131,7 @@ off_t CCFileClass::Size()
     return filesize;
 }
 
-BOOL CCFileClass::Is_Available(BOOL forced)
+BOOL GameFileClass::Is_Available(BOOL forced)
 {
     if (Is_Open()) {
         return true;
@@ -144,7 +144,7 @@ BOOL CCFileClass::Is_Available(BOOL forced)
     return BufferIOFileClass::Is_Available(forced);
 }
 
-BOOL CCFileClass::Is_Open() const
+BOOL GameFileClass::Is_Open() const
 {
     // if the buffer pointer is set, return true.
     if (Is_Cached()) {
@@ -154,7 +154,7 @@ BOOL CCFileClass::Is_Open() const
     return BufferIOFileClass::Is_Open();
 }
 
-void CCFileClass::Close()
+void GameFileClass::Close()
 {
     m_fileBuffer.Reset();
     m_cachePosition = 0;
@@ -162,13 +162,13 @@ void CCFileClass::Close()
     return BufferIOFileClass::Close();
 }
 
-BOOL CCFileClass::Open(const char *filename, int rights)
+BOOL GameFileClass::Open(const char *filename, int rights)
 {
     Set_Name(filename);
     return Open(rights);
 }
 
-BOOL CCFileClass::Open(int mode)
+BOOL GameFileClass::Open(int mode)
 {
     Close();
 
@@ -209,7 +209,7 @@ BOOL CCFileClass::Open(int mode)
     return true;
 }
 
-time_t CCFileClass::Get_Date_Time()
+time_t GameFileClass::Get_Date_Time()
 {
     CCMixFileClass *mixfile = nullptr;
 
@@ -217,12 +217,12 @@ time_t CCFileClass::Get_Date_Time()
         return RawFileClass::Get_Date_Time();
     }
 
-    CCFileClass tmpfile(mixfile->Get_Filename());
+    GameFileClass tmpfile(mixfile->Get_Filename());
 
     return tmpfile.Get_Date_Time();
 }
 
-BOOL CCFileClass::Set_Date_Time(time_t date_time)
+BOOL GameFileClass::Set_Date_Time(time_t date_time)
 {
     BOOL retval;
     CCMixFileClass *mixfile = nullptr;
@@ -231,7 +231,7 @@ BOOL CCFileClass::Set_Date_Time(time_t date_time)
         return retval;
     }
 
-    CCFileClass tmpfile(mixfile->Get_Filename());
+    GameFileClass tmpfile(mixfile->Get_Filename());
 
     return tmpfile.Set_Date_Time(date_time);
 }
@@ -300,7 +300,7 @@ unsigned Seek_File(int handle, off_t offset, int whence)
 
 int Find_File(const char *filename)
 {
-    CCFileClass fc(filename);
+    GameFileClass fc(filename);
 
     return fc.Is_Available();
 }
@@ -310,14 +310,14 @@ void *Hires_Load(const char *filename)
     static char _hires_filename[32];
     snprintf(_hires_filename, sizeof(_hires_filename), "H%s", filename);
 
-    CCFileClass file(_hires_filename);
+    GameFileClass file(_hires_filename);
 
     return Load_Alloc_Data(file);
 }
 
 void *Load_Alloc_Data(const char *filename, int mode)
 {
-    CCFileClass file(filename);
+    GameFileClass file(filename);
 
     return Load_Alloc_Data(file);
 }
@@ -336,7 +336,7 @@ void *Load_Alloc_Data(FileClass &file)
 
 #ifndef CHRONOSHIFT_STANDALONE
 
-void CCFileClass::Hook_Me()
+void GameFileClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
     Hook_Function(0x00462A30, &Hook_Is_Available);
@@ -354,63 +354,63 @@ void CCFileClass::Hook_Me()
 #endif
 }
 
-BOOL CCFileClass::Hook_Is_Available(CCFileClass *ptr, BOOL forced)
+BOOL GameFileClass::Hook_Is_Available(GameFileClass *ptr, BOOL forced)
 {
-    return ptr->CCFileClass::Is_Available(forced);
+    return ptr->GameFileClass::Is_Available(forced);
 }
 
-BOOL CCFileClass::Hook_Is_Open(CCFileClass *ptr)
+BOOL GameFileClass::Hook_Is_Open(GameFileClass *ptr)
 {
-    return ptr->CCFileClass::Is_Open();
+    return ptr->GameFileClass::Is_Open();
 }
 
-BOOL CCFileClass::Hook_Open_Name(CCFileClass *ptr, const char *filename, int rights)
+BOOL GameFileClass::Hook_Open_Name(GameFileClass *ptr, const char *filename, int rights)
 {
-    return ptr->CCFileClass::Open(filename, rights);
+    return ptr->GameFileClass::Open(filename, rights);
 }
 
-BOOL CCFileClass::Hook_Open(CCFileClass *ptr, int rights)
+BOOL GameFileClass::Hook_Open(GameFileClass *ptr, int rights)
 {
-    return ptr->CCFileClass::Open(rights);
+    return ptr->GameFileClass::Open(rights);
 }
 
-int CCFileClass::Hook_Read(CCFileClass *ptr, void *buffer, int length)
+int GameFileClass::Hook_Read(GameFileClass *ptr, void *buffer, int length)
 {
-    return ptr->CCFileClass::Read(buffer, length);
+    return ptr->GameFileClass::Read(buffer, length);
 }
 
-off_t CCFileClass::Hook_Seek(CCFileClass *ptr, off_t offset, int whence)
+off_t GameFileClass::Hook_Seek(GameFileClass *ptr, off_t offset, int whence)
 {
-    return ptr->CCFileClass::Seek(offset, whence);
+    return ptr->GameFileClass::Seek(offset, whence);
 }
 
-off_t CCFileClass::Hook_Size(CCFileClass *ptr)
+off_t GameFileClass::Hook_Size(GameFileClass *ptr)
 {
-    return ptr->CCFileClass::Size();
+    return ptr->GameFileClass::Size();
 }
 
-int CCFileClass::Hook_Write(CCFileClass *ptr, const void *buffer, int length)
+int GameFileClass::Hook_Write(GameFileClass *ptr, const void *buffer, int length)
 {
-    return ptr->CCFileClass::Write(buffer, length);
+    return ptr->GameFileClass::Write(buffer, length);
 }
 
-void CCFileClass::Hook_Close(CCFileClass *ptr)
+void GameFileClass::Hook_Close(GameFileClass *ptr)
 {
-    ptr->CCFileClass::Close();
+    ptr->GameFileClass::Close();
 }
 
-time_t CCFileClass::Hook_Get_Date_Time(CCFileClass *ptr)
+time_t GameFileClass::Hook_Get_Date_Time(GameFileClass *ptr)
 {
-    return ptr->CCFileClass::Get_Date_Time();
+    return ptr->GameFileClass::Get_Date_Time();
 }
 
-BOOL CCFileClass::Hook_Set_Date_Time(CCFileClass *ptr, time_t date_time)
+BOOL GameFileClass::Hook_Set_Date_Time(GameFileClass *ptr, time_t date_time)
 {
-    return ptr->CCFileClass::Set_Date_Time(date_time);
+    return ptr->GameFileClass::Set_Date_Time(date_time);
 }
 
-void CCFileClass::Hook_Error(CCFileClass *ptr, int error, BOOL can_retry, const char *filename)
+void GameFileClass::Hook_Error(GameFileClass *ptr, int error, BOOL can_retry, const char *filename)
 {
-    ptr->CCFileClass::Error(error, can_retry, filename);
+    ptr->GameFileClass::Error(error, can_retry, filename);
 }
 #endif

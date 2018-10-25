@@ -60,7 +60,7 @@ BOOL BigCheckBoxClass::Draw_Me(BOOL redraw)
             }
         }
 
-        void *bigcheckboxshape = MixFileClass<CCFileClass>::Retrieve("bigcheck.shp");
+        void *bigcheckboxshape = MixFileClass<GameFileClass>::Retrieve("bigcheck.shp");
         CC_Draw_Shape(bigcheckboxshape, shape_frame, XPos, YPos);
         Conquer_Clip_Text_Print(
             TextString, XPos + 20, YPos, GadgetClass::Get_Color_Scheme(), 0, TextStyle, Width, nullptr);

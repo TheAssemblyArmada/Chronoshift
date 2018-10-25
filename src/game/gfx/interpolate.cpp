@@ -69,7 +69,7 @@ void Create_Palette_Interpolation_Table()
  */
 void Read_Interpolation_Palette(const char *filename)
 {
-    CCFileClass fc(filename);
+    GameFileClass fc(filename);
 
     if (fc.Is_Available()) {
         fc.Open(FM_READ);
@@ -84,7 +84,7 @@ void Read_Interpolation_Palette(const char *filename)
  */
 void Write_Interpolation_Palette(const char *filename)
 {
-    CCFileClass fc(filename);
+    GameFileClass fc(filename);
     if (!fc.Is_Available()) {
         fc.Open(FM_WRITE);
         fc.Write(g_paletteInterpolationTable, sizeof(g_paletteInterpolationTable));
@@ -125,7 +125,7 @@ int Load_Interpolated_Palettes(const char *filename, BOOL append)
     int palette_count = 0;
     int next_free = 0;
     g_palettesRead = false;
-    CCFileClass fc(filename);
+    GameFileClass fc(filename);
 
     // Do we want to append additional tables or just start fresh?
     if (append) {

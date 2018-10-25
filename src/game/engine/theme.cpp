@@ -242,7 +242,7 @@ const char *ThemeClass::Theme_File_Name(ThemeType theme)
         // From C&C/Sole, allow remix versions of tracks if available.
         if (Special.Allow_Remixes()) {
             snprintf(_name, sizeof(_name), "%s.var", base_name);
-            CCFileClass varfile(_name);
+            GameFileClass varfile(_name);
 
             if (varfile.Is_Available()) {
                 return _name;
@@ -397,7 +397,7 @@ const char *ThemeClass::Name_From(ThemeType theme)
 void ThemeClass::Scan()
 {
     for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
-        CCFileClass file(Theme_File_Name(theme));
+        GameFileClass file(Theme_File_Name(theme));
         Themes[theme].IsAvailable = file.Is_Available();
     }
 }

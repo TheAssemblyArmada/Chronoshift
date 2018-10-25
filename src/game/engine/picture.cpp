@@ -123,7 +123,7 @@ int Load_Picture(FileClass &file, BufferClass &buff1, BufferClass &buff2, void *
  */
 int __cdecl Load_Picture(const char *filename, BufferClass &buff1, BufferClass &buff2, void *palette, PicturePlaneType plane)
 {
-    CCFileClass file(filename);
+    GameFileClass file(filename);
 
     return Load_Uncompress(file, buff1, buff2, palette) / 8000;
 }

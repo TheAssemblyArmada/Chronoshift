@@ -89,7 +89,7 @@ void Setup_Hooks()
     Memory_Hook_Me();
     RawFileClass::Hook_Me();
     BufferIOFileClass::Hook_Me();
-    CCFileClass::Hook_Me();
+    GameFileClass::Hook_Me();
     CDFileClass::Hook_Me();
     ControlClass::Hook_Me();
     GraphicViewPortClass::Hook_Me();
@@ -130,8 +130,8 @@ void Setup_Hooks()
     CellClass::Hook_Me();
     MessageBoxClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
-    Hook_Function(0x005B96F0, &MixFileClass<CCFileClass>::Offset);
-    Hook_Function(0x005B9330, &MixFileClass<CCFileClass>::Retrieve);
+    Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
+    Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
     Hook_Function(0x004AD670, Dialog_Box);
     //Hook_Function(0x004AC798, Coord_Move);
     Hook_Function(0x004AC814, Move_Point);

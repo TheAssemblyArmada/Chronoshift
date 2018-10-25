@@ -131,8 +131,8 @@ BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType ho
  */
 void ObjectTypeClass::One_Time()
 {
-    SelectShapes = MixFileClass<CCFileClass>::Retrieve("select.shp");
-    PipShapes = MixFileClass<CCFileClass>::Retrieve("pips.shp");
+    SelectShapes = MixFileClass<GameFileClass>::Retrieve("select.shp");
+    PipShapes = MixFileClass<GameFileClass>::Retrieve("pips.shp");
 }
 
 void *ObjectTypeClass::Get_Radar_Icon(void *shape, int frame, int frame_count, int size)

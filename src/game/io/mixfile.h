@@ -150,7 +150,7 @@ private:
 #endif
 };
 
-// Initialised for CCFileClass in mixfile.cpp
+// Initialised for GameFileClass in mixfile.cpp
 // template<class FC>
 // List<MixFileClass<FC> *> MixFileClass<FC>::s_mixList;
 

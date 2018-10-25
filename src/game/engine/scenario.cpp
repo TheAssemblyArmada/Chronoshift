@@ -186,7 +186,7 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
                     tolower(dirvalue),
                     tolower('A' + i));
 
-                CCFileClass file(filename);
+                GameFileClass file(filename);
 
                 if (!file.Is_Available()) {
                     break;

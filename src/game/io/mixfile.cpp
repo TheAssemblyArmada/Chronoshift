@@ -17,11 +17,11 @@
 #include "ccfileclass.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
-template<> List<MixFileClass<CCFileClass> *> &MixFileClass<CCFileClass>::s_mixList =
-    *reinterpret_cast<List<MixFileClass<CCFileClass> *> *>(0x006ECE30);
+template<> List<MixFileClass<GameFileClass> *> &MixFileClass<GameFileClass>::s_mixList =
+    *reinterpret_cast<List<MixFileClass<GameFileClass> *> *>(0x006ECE30);
 #else
-template<> List<MixFileClass<CCFileClass> *> MixFileClass<CCFileClass>::s_mixList;
+template<> List<MixFileClass<GameFileClass> *> MixFileClass<GameFileClass>::s_mixList;
 #endif
 
 // Explicit template instantiation.
-template class MixFileClass<CCFileClass>;
+template class MixFileClass<GameFileClass>;
