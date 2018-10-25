@@ -75,7 +75,7 @@ enum WeaponType {
 
 DEFINE_ENUMERATION_OPERATORS(WeaponType);
 
-class CCINIClass;
+class GameINIClass;
 class WarheadTypeClass;
 class BulletTypeClass;
 
@@ -98,7 +98,7 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    BOOL Read_INI(CCINIClass &ini);
+    BOOL Read_INI(GameINIClass &ini);
     ThreatType Allowed_Threats() const;
     BOOL Is_Wall_Destroyer() const;
     WarheadTypeClass *Get_Warhead() const;

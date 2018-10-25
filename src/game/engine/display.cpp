@@ -342,22 +342,22 @@ void DisplayClass::Decode_Pointers()
 #endif
 }
 
-void DisplayClass::Read_INI(CCINIClass &ini)
+void DisplayClass::Read_INI(GameINIClass &ini)
 {
     // Needs all type classes, celltriggerclass
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const DisplayClass *, CCINIClass &) =
-        reinterpret_cast<void (*)(const DisplayClass *, CCINIClass &)>(0x004B50F8);
+    void (*func)(const DisplayClass *, GameINIClass &) =
+        reinterpret_cast<void (*)(const DisplayClass *, GameINIClass &)>(0x004B50F8);
     func(this, ini);
 #endif
 }
 
-void DisplayClass::Write_INI(CCINIClass &ini)
+void DisplayClass::Write_INI(GameINIClass &ini)
 {
     // Needs celltriggerclass
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const DisplayClass *, CCINIClass &) =
-        reinterpret_cast<void (*)(const DisplayClass *, CCINIClass &)>(0x004B545C);
+    void (*func)(const DisplayClass *, GameINIClass &) =
+        reinterpret_cast<void (*)(const DisplayClass *, GameINIClass &)>(0x004B545C);
     func(this, ini);
 #endif
 }

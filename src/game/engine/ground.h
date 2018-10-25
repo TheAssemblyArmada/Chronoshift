@@ -39,7 +39,7 @@ enum GroundType
 
 DEFINE_ENUMERATION_OPERATORS(GroundType);
 
-class CCINIClass;
+class GameINIClass;
 
 class GroundClass
 {
@@ -57,8 +57,8 @@ public:
 
     bool operator!=(GroundClass const &that) const { return !(this == &that); }
 
-    BOOL Read_INI(CCINIClass &ini, const LandType land);
-    BOOL Write_INI(CCINIClass &ini, const LandType land) const;
+    BOOL Read_INI(GameINIClass &ini, const LandType land);
+    BOOL Write_INI(GameINIClass &ini, const LandType land) const;
 
     BOOL const Is_Buildable() { return Buildable; }
     fixed const Get_Speed(SpeedType speed) { return Speeds[speed]; }

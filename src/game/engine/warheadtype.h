@@ -41,7 +41,7 @@ enum WarheadType
 
 DEFINE_ENUMERATION_OPERATORS(WarheadType);
 
-class CCINIClass;
+class GameINIClass;
 
 class WarheadTypeClass
 {
@@ -60,7 +60,7 @@ public:
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
-    BOOL Read_INI(CCINIClass &ini);
+    BOOL Read_INI(GameINIClass &ini);
     const char *Get_Name() const { return Name; }
     int Get_Type() const { return Type; }
     BOOL Is_Wall_Destroyer() const { return Wall; }

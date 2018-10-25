@@ -22,7 +22,7 @@
 #include "fixed.h"
 #include "gametypes.h"
 
-class CCINIClass;
+class GameINIClass;
 
 enum LandType
 {

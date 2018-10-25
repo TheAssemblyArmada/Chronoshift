@@ -338,12 +338,12 @@ int BuildingTypeClass::Raw_Cost() const
  *
  * 0x00453E48
  */
-BOOL BuildingTypeClass::Read_INI(CCINIClass &ini)
+BOOL BuildingTypeClass::Read_INI(GameINIClass &ini)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
-    (const BuildingTypeClass *, CCINIClass &) =
-        reinterpret_cast<BOOL (*)(const BuildingTypeClass *, CCINIClass &)>(0x00453E48);
+    (const BuildingTypeClass *, GameINIClass &) =
+        reinterpret_cast<BOOL (*)(const BuildingTypeClass *, GameINIClass &)>(0x00453E48);
     return func(this, ini);
 #else
     return false;

@@ -21,7 +21,7 @@
 #include "always.h"
 #include "fixed.h"
 
-class CCINIClass;
+class GameINIClass;
 
 enum DiffType
 {
@@ -64,7 +64,7 @@ struct DifficultyClass
 #endif
 };
 
-void Difficulty_Get(CCINIClass &ini, DifficultyClass &diff, const char *section);
+void Difficulty_Get(GameINIClass &ini, DifficultyClass &diff, const char *section);
 int Fetch_Difficulty_Dialog(BOOL one_time_mission = false);
 
 #endif // DIFFICULTY_H

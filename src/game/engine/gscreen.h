@@ -85,7 +85,7 @@ enum MouseType
     MOUSE_COUNT = 43
 };
 
-class CCINIClass;
+class GameINIClass;
 class GraphicViewPortClass;
 class HouseClass;
 class ObjectClass;
@@ -131,8 +131,8 @@ public:
     virtual void Decode_Pointers() = 0;
 
     // Additions for DisplayClass
-    virtual void Read_INI(CCINIClass &ini) = 0;
-    // virtual void Write_INI(CCINIClass &ini) = 0; // Not virtual in RA.
+    virtual void Read_INI(GameINIClass &ini) = 0;
+    // virtual void Write_INI(GameINIClass &ini) = 0; // Not virtual in RA.
     virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) = 0;
     virtual int16_t Click_Cell_Calc(int x, int y) const = 0;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) = 0;

@@ -25,7 +25,7 @@
 #include "objecttype.h"
 #include "remap.h"
 
-class CCINIClass;
+class GameINIClass;
 
 class TechnoTypeClass : public ObjectTypeClass
 {
@@ -49,9 +49,9 @@ public:
     virtual int Max_Passengers() const { return Passengers; }
     virtual int Repair_Cost() const;
     virtual int Repair_Step() const;
-    virtual BOOL Read_INI(CCINIClass &ini);
+    virtual BOOL Read_INI(GameINIClass &ini);
 
-    BOOL Write_INI(CCINIClass &ini) const;
+    BOOL Write_INI(GameINIClass &ini) const;
     BOOL Is_Two_Shooter() const;
     BOOL Legal_Placement(int16_t cellnum) const;
     BOOL Is_Nominal() const { return IsNominal; } 

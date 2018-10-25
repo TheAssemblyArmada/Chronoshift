@@ -26,7 +26,7 @@
 #include "noinit.h"
 #include "remap.h"
 
-class CCINIClass;
+class GameINIClass;
 
 class HouseTypeClass : public AbstractTypeClass
 {
@@ -37,7 +37,7 @@ public:
     HouseTypeClass(NoInitClass const &noinit) : AbstractTypeClass(noinit) {}
     virtual ~HouseTypeClass() {}
 
-    virtual BOOL Read_INI(CCINIClass &ini);
+    virtual BOOL Read_INI(GameINIClass &ini);
 
     uint8_t *Remap_Table();
     void Code_Pointers() {}

@@ -16,7 +16,7 @@
  */
 #include "init.h"
 #include "ccfileclass.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "globals.h"
 #include "mixfile.h"
 #include "picture.h"
@@ -245,7 +245,7 @@ void Init_Keys()
         "[PublicKey]\n1=AihRvNoIbTn85FZRYNZRcT+i6KpU+maCsEqr3Q5q+LDB5tH7Tz2qQ38V\n\n"
         "[PrivateKey]\n1=AigKVje8mROcR8QixnxUEF5b29Curkq01DNDWCdOG99XBqH79OaCiTCB\n\n";
     RAMFileClass mem_keys(Keys, strlen(Keys));
-    CCINIClass tempini;
+    GameINIClass tempini;
     tempini.Load(mem_keys);
     g_publicKey = tempini.Get_PKey(true);
     g_privateKey = tempini.Get_PKey(false); // Private key is only used to write mix files.

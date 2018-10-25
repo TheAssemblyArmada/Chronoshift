@@ -15,7 +15,7 @@
  */
 #include "objecttype.h"
 #include "ccfileclass.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "mixfile.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -117,7 +117,7 @@ BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType ho
 #endif
 }
 
- BOOL ObjectTypeClass::Read_INI(CCINIClass &ini)
+ BOOL ObjectTypeClass::Read_INI(GameINIClass &ini)
  {
      if (ini.Find_Section(Get_Name())) {
          ini.Get_String(Get_Name(), "Image", "none", ImageName, sizeof(ImageName));

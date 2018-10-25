@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "infantrytype.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "facing.h"
 #include "globals.h"
 #include "lists.h"
@@ -838,7 +838,7 @@ const int16_t *InfantryTypeClass::Occupy_List(BOOL a1) const
  *
  * 0x004EB1D0
  */
-BOOL InfantryTypeClass::Read_INI(CCINIClass &ini)
+BOOL InfantryTypeClass::Read_INI(GameINIClass &ini)
 {
     if (TechnoTypeClass::Read_INI(ini)) {
         m_IsFraidycat = ini.Get_Bool(Get_Name(), "Fraidycat", m_IsFraidycat);

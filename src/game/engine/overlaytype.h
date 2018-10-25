@@ -74,7 +74,7 @@ enum OverlayType
 
 DEFINE_ENUMERATION_OPERATORS(OverlayType);
 
-class CCINIClass;
+class GameINIClass;
 
 class OverlayTypeClass : public ObjectTypeClass
 {

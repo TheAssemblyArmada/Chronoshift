@@ -25,7 +25,7 @@
 #include "gametypes.h"
 #include "unittype.h"
 
-class CCINIClass;
+class GameINIClass;
 
 struct IQStruct
 {
@@ -48,21 +48,21 @@ public:
     RulesClass();
     ~RulesClass() {}
 
-    BOOL Process(CCINIClass &ini);
-    void Addition(CCINIClass &ini);
+    BOOL Process(GameINIClass &ini);
+    void Addition(GameINIClass &ini);
 
-    BOOL Aftermath(CCINIClass &ini);
-    BOOL General(CCINIClass &ini);
-    BOOL MPlayer(CCINIClass &ini);
-    BOOL Recharge(CCINIClass &ini);
-    BOOL Heap_Maximums(CCINIClass &ini);
-    BOOL AI(CCINIClass &ini);
-    BOOL Powerups(CCINIClass &ini);
-    BOOL Land_Types(CCINIClass &ini);
-    BOOL Themes(CCINIClass &ini);
-    BOOL IQ(CCINIClass &ini);
-    BOOL Objects(CCINIClass &ini);
-    BOOL Difficulty(CCINIClass &ini);
+    BOOL Aftermath(GameINIClass &ini);
+    BOOL General(GameINIClass &ini);
+    BOOL MPlayer(GameINIClass &ini);
+    BOOL Recharge(GameINIClass &ini);
+    BOOL Heap_Maximums(GameINIClass &ini);
+    BOOL AI(GameINIClass &ini);
+    BOOL Powerups(GameINIClass &ini);
+    BOOL Land_Types(GameINIClass &ini);
+    BOOL Themes(GameINIClass &ini);
+    BOOL IQ(GameINIClass &ini);
+    BOOL Objects(GameINIClass &ini);
+    BOOL Difficulty(GameINIClass &ini);
 
     BOOL Ore_Grows() const { return OreGrows; }
     BOOL Ore_Spreads() const { return OreSpreads; }

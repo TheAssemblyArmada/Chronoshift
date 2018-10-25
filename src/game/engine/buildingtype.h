@@ -205,7 +205,7 @@ public:
     virtual const int16_t *Overlap_List() const override;
     // TechnoTypeClass virtuals
     virtual int Raw_Cost() const override;
-    virtual BOOL Read_INI(CCINIClass &ini) override;
+    virtual BOOL Read_INI(GameINIClass &ini) override;
 
     int Width() const;
     int Height(BOOL check_bib = false) const;

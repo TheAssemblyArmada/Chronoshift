@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "ground.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "minmax.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -46,7 +46,7 @@ const char *GroundClass::Name_From(GroundType ground)
     return ground != GROUND_NONE && ground < GROUND_COUNT ? GroundTypes[ground] : "<none>";
 }
 
-BOOL GroundClass::Read_INI(CCINIClass &ini, LandType const land)
+BOOL GroundClass::Read_INI(GameINIClass &ini, LandType const land)
 {
     DEBUG_ASSERT(land != LAND_NONE);
     DEBUG_ASSERT(land < LAND_COUNT);
@@ -66,7 +66,7 @@ BOOL GroundClass::Read_INI(CCINIClass &ini, LandType const land)
     return false;
 }
 
-BOOL GroundClass::Write_INI(CCINIClass &ini, LandType const land) const
+BOOL GroundClass::Write_INI(GameINIClass &ini, LandType const land) const
 {
     // TODO
     return 0;

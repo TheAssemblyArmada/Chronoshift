@@ -15,7 +15,7 @@
  */
 #include "difficulty.h"
 //#include "callback.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "controlc.h"
 #include "dialog.h"
 #include "language.h"
@@ -26,7 +26,7 @@
 #include "textbtn.h"
 #include "vector.h"
 
-void Difficulty_Get(CCINIClass &ini, DifficultyClass &diff, const char *section)
+void Difficulty_Get(GameINIClass &ini, DifficultyClass &diff, const char *section)
 {
     if (ini.Find_Section(section) != nullptr) {
         diff.Firepower = ini.Get_Fixed(section, "FirePower", "1.0");

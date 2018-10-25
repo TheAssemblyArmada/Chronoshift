@@ -307,12 +307,12 @@ int TechnoTypeClass::Repair_Step() const
  *
  * 0x00569914
  */
-BOOL TechnoTypeClass::Read_INI(CCINIClass &ini)
+BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
 {
-    // TODO Requires WeaponTypeClass and more functions in CCINIClass
+    // TODO Requires WeaponTypeClass and more functions in GameINIClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
-    (const TechnoTypeClass *, CCINIClass &) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *, CCINIClass &)>(0x00569914);
+    (const TechnoTypeClass *, GameINIClass &) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *, GameINIClass &)>(0x00569914);
     return func(this, ini);
 #elif 0
     if (ObjectTypeClass::Read_INI(ini)) {
@@ -384,7 +384,7 @@ BOOL TechnoTypeClass::Read_INI(CCINIClass &ini)
 /**
  * @brief Writes the information to the objects ini entry that pertains to the TechnoType layer.
  */
-BOOL TechnoTypeClass::Write_INI(CCINIClass &ini) const
+BOOL TechnoTypeClass::Write_INI(GameINIClass &ini) const
 {
     // TODO
     return false;

@@ -86,7 +86,6 @@ set(GAMEENGINE_SRC
     game/engine/bullettype.cpp
     game/engine/callback.cpp
     game/engine/cargo.cpp
-    game/engine/ccini.cpp
     game/engine/cell.cpp
     game/engine/cmdline.cpp
     game/engine/coord.cpp
@@ -99,6 +98,7 @@ set(GAMEENGINE_SRC
     game/engine/flasher.cpp
     game/engine/focus.cpp
     game/engine/fuse.cpp
+    game/engine/gameini.cpp
     game/engine/gamemain.cpp
     game/engine/gameoptions.cpp
     game/engine/getcd.cpp
