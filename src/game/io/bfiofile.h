@@ -19,7 +19,7 @@
 #define BFIOFILECLASS_H
 
 #include "always.h"
-#include "rawfileclass.h"
+#include "rawfile.h"
 
 #define MIN_CACHE_SIZE 1024
 

@@ -16,7 +16,7 @@
 #include "version.h"
 #include "expansion.h"
 #include "minmax.h"
-#include "rawfileclass.h"
+#include "rawfile.h"
 #include "stringex.h"
 #include <stdio.h>
 

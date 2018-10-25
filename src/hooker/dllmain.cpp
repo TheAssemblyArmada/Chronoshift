@@ -50,7 +50,7 @@
 #include "ostimer.h"
 #include "power.h"
 #include "radar.h"
-#include "rawfileclass.h"
+#include "rawfile.h"
 #include "rgb.h"
 #include "shape.h"
 #include "sidebar.h"
