@@ -175,7 +175,7 @@ set(GAMEENGINE_SRC
     game/gfx/wsa.cpp
     game/io/b64pipe.cpp
     game/io/b64straw.cpp
-    game/io/bfiofileclass.cpp
+    game/io/bfiofile.cpp
     game/io/blowpipe.cpp
     game/io/blowstraw.cpp
     game/io/buffpipe.cpp

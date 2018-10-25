@@ -19,7 +19,7 @@
 #define CDFILECLASS_H
 
 #include "always.h"
-#include "bfiofileclass.h"
+#include "bfiofile.h"
 #include "cd.h"
 #include <malloc.h>
 

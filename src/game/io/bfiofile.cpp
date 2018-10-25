@@ -13,7 +13,7 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "bfiofileclass.h"
+#include "bfiofile.h"
 #include "gamedebug.h"
 #include "minmax.h"
 
