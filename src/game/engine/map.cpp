@@ -714,7 +714,7 @@ int MapClass::Cell_Region(int16_t cellnum)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
-    return 34 * (Cell_Get_Y(cellnum) / 4 + 1) + (Cell_Get_Y(cellnum) / 4 + 1);
+    return 34 * (Cell_Get_X(cellnum) / 4 + 1) + (Cell_Get_Y(cellnum) / 4 + 1);
 }
 
 /**
