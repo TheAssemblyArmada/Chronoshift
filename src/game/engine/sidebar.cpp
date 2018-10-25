@@ -15,7 +15,7 @@
  */
 #include "sidebar.h"
 #include "audio.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"

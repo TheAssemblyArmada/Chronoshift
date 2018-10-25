@@ -15,7 +15,7 @@
  */
 #include "dialog.h"
 #include "abs.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "drawshape.h"
 #include "gadget.h"
 #include "gamedebug.h"

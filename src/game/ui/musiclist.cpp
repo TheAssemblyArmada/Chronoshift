@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "musiclist.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "mixfile.h"

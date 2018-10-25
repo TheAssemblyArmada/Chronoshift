@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "vesseltype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "facing.h"
 #include "lists.h"

@@ -16,7 +16,7 @@
 
 #include "tab.h"
 #include "audio.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "dialog.h"
 #include "drawshape.h"
 #include "gameoptions.h"

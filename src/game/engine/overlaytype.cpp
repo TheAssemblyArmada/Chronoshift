@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "overlaytype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "globals.h"

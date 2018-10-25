@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "scenario.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "gameoptions.h"
 #include "stringex.h"
 #include <cstdio>

@@ -15,7 +15,7 @@
  */
 #include "alloc.h"
 #include "blitters.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "cd.h"
 #include "cdfileclass.h"
 #include "cell.h"

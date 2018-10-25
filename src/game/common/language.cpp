@@ -15,7 +15,7 @@
  */
 #include "language.h"
 #include "abs.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "dipthong.h"
 #include "gamedebug.h"
 #include "minmax.h"

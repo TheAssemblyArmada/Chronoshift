@@ -17,7 +17,7 @@
 #include "abs.h"
 #include "alloc.h"
 #include "blitters.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "gbuffer.h"

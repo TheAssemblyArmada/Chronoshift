@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "animtype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "mixfile.h"
 #include "voc.h"

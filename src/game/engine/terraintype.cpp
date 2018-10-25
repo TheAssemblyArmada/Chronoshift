@@ -15,7 +15,7 @@
  *            LICENSE
  */
 #include "terraintype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "lists.h"
 #include "mixfile.h"

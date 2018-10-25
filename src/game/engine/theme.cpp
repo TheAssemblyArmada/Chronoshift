@@ -15,7 +15,7 @@
  */
 #include "theme.h"
 #include "audio.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "gamedebug.h"
 #include "gameoptions.h"
 #include "gametypes.h"

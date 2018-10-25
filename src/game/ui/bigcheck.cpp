@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "bigcheck.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "drawshape.h"
 #include "mixfile.h"
 #include "mouse.h"

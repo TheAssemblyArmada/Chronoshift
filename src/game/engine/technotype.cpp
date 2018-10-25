@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "technotype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "cell.h"
 #include "iomap.h"
 #include "lists.h"

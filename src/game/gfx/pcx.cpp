@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "pcx.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "endiantype.h"
 #include "filepipe.h"
 #include "filestraw.h"

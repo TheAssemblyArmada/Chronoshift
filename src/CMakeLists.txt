@@ -180,12 +180,12 @@ set(GAMEENGINE_SRC
     game/io/blowstraw.cpp
     game/io/buffpipe.cpp
     game/io/buffstraw.cpp
-    game/io/ccfileclass.cpp
     game/io/cd.cpp
     game/io/cdfileclass.cpp
     game/io/fileclass.cpp
     game/io/filepipe.cpp
     game/io/filestraw.cpp
+    game/io/gamefile.cpp
     game/io/lcwpipe.cpp
     game/io/lcwstraw.cpp
     game/io/lzopipe.cpp

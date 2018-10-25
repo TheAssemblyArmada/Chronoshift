@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "slider.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "dialog.h"
 #include "fixed.h"
 #include "mixfile.h"
