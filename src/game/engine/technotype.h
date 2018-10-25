@@ -112,7 +112,7 @@ protected:
     int Ammo; // Number of rounds carried between reloads [-1 means unlimited] (def = -1)
     uint32_t Owner; // bitfield of who can build objects of this type.
     void *CameoData; // Shape data for the side bar icon.
-    int FacingsCount; // Number of facing stages (def = 32)?
+    int ROTCount; // Number of facing stages (def = 32)?
     int ROT; // Rate Of Turn for body (if present) and turret (if present) (def = 0)
     void *Primary; // TODO Should be WeaponTypeClass *// Primary weapon equipped with (def = none)
     void *Secondary; // TODO Should be WeaponTypeClass *// Secondary weapon equipped with (def = none)
