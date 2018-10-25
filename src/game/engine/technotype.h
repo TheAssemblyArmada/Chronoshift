@@ -55,7 +55,7 @@ public:
     BOOL Is_Two_Shooter() const;
     BOOL Legal_Placement(int16_t cellnum) const;
     BOOL Is_Nominal() const { return IsNominal; } 
-    int Get_Risk() const { return Risk; }
+    int Get_ThreatPosed() const { return ThreatPosed; }
     BOOL Is_Invisible() const { return IsInvisible; }
     static void One_Time();
 
@@ -105,7 +105,7 @@ protected:
     int Cost; // Cost to build object (in credits) (def = 0)
     int TechLevel; // Tech level required to build this [-1 means can't build] (def = -1)
     uint32_t Prerequisite; // List of buildings needed before this can be manufactured (def = no requirement)
-    int Risk; // ThreatPosed in TS?
+    int ThreatPosed;
     int Value; // this is a copy of 'Points', see value being added to other values at 00567512, name guessed.
     MPHType MPH; // Speed of the unit, value relates to rules.ini value but is a transformed value.
     SpeedType Speed; // Movement speed type for purposes of adjustments.

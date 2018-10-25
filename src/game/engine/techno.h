@@ -108,7 +108,7 @@ public:
     virtual int Pip_Count() const { return 0; }
     virtual int Rearm_Delay(int a1, int a2) const;
     virtual int Refund_Amount() const;
-    virtual int Risk() const { return reinterpret_cast<TechnoTypeClass &>(Class_Of()).Get_Risk(); }
+    virtual int Risk() const { return reinterpret_cast<TechnoTypeClass &>(Class_Of()).Get_ThreatPosed(); }
     virtual int Threat_Range(int a1) const;
     virtual void Response_Select();
     virtual void Response_Move();

@@ -65,7 +65,7 @@ TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *
     Cost(0),
     TechLevel(0),
     Prerequisite(0),
-    Risk(0),
+    ThreatPosed(0),
     Value(0),
     MPH((MPHType)0),
     Speed(speed),
@@ -108,7 +108,7 @@ TechnoTypeClass::TechnoTypeClass(const TechnoTypeClass &that) :
     Cost(that.Cost),
     TechLevel(that.TechLevel),
     Prerequisite(that.Prerequisite),
-    Risk(that.Risk),
+    ThreatPosed(that.ThreatPosed),
     Value(that.Value),
     MPH(that.MPH),
     Speed(that.Speed),
@@ -152,7 +152,7 @@ TechnoTypeClass &TechnoTypeClass::operator=(TechnoTypeClass &that)
         Cost = that.Cost;
         TechLevel = that.TechLevel;
         Prerequisite = that.Prerequisite;
-        Risk = that.Risk;
+        ThreatPosed = that.ThreatPosed;
         Value = that.Value;
         MPH = that.MPH;
         Speed = that.Speed;
