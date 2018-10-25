@@ -15,7 +15,7 @@
  */
 #include "unittype.h"
 #include "ccfileclass.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "coord.h"
 #include "globals.h"
 #include "minmax.h"
@@ -238,7 +238,7 @@ ObjectClass *UnitTypeClass::Create_One_Of(HouseClass *house) const
  *
  * 0x00578D34
  */
-BOOL UnitTypeClass::Read_INI(CCINIClass &ini)
+BOOL UnitTypeClass::Read_INI(GameINIClass &ini)
 {
     if (TechnoTypeClass::Read_INI(ini)) {
         // TODO Allow setting additional unit parameters, will need some conditional code for units to get correct

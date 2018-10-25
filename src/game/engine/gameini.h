@@ -15,8 +15,8 @@
  */
 #pragma once
 
-#ifndef CCINI_H
-#define CCINI_H
+#ifndef GAMEINI_H
+#define GAMEINI_H
 
 #include "always.h"
 #include "gametypes.h"
@@ -48,11 +48,11 @@
 #include "vox.h"
 #include "pk.h"
 
-class CCINIClass : public INIClass
+class GameINIClass : public INIClass
 {
 public:
-    CCINIClass();
-    ~CCINIClass();
+    GameINIClass();
+    ~GameINIClass();
 
     const lepton_t Get_Lepton(const char *section, const char *entry, const lepton_t defvalue = 0) const;
     BOOL Put_Lepton(const char *section, const char *entry, const lepton_t value);
@@ -190,4 +190,4 @@ private:
     SHAEngine::SHADigest Digest;
 };
 
-#endif // CCINI_H
+#endif // GAMEINI_H

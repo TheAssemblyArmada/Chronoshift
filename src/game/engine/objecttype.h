@@ -28,7 +28,7 @@
 class ObjectClass;
 class BuildingClass;
 class HouseClass;
-class CCINIClass;
+class GameINIClass;
 
 class ObjectTypeClass : public AbstractTypeClass
 {
@@ -50,7 +50,7 @@ public:
     virtual BuildingClass *Who_Can_Build_Me(BOOL a1 = false, BOOL a2 = false, HousesType house = HOUSES_NONE) const;
     virtual void *Get_Cameo_Data() const { return nullptr; };
 
-    BOOL Read_INI(CCINIClass &ini);
+    BOOL Read_INI(GameINIClass &ini);
 
     BOOL Is_Crushable() { return Crushable; }
     BOOL Is_Selectable() { return Selectable; }

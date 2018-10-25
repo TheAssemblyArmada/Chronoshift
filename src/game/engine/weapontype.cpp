@@ -15,7 +15,7 @@
  */
 #include "weapontype.h"
 #include "bullettype.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "warheadtype.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -243,7 +243,7 @@ WeaponTypeClass *WeaponTypeClass::As_Pointer(WeaponType weapon)
  *
  * 0x0058FE64
  */
-BOOL WeaponTypeClass::Read_INI(CCINIClass &ini)
+BOOL WeaponTypeClass::Read_INI(GameINIClass &ini)
 {
     if (ini.Find_Section(Get_Name()) != nullptr) {
         Supress = ini.Get_Bool(Get_Name(), "Supress", false);

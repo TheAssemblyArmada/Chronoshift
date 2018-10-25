@@ -58,7 +58,7 @@ const char *MissionControlClass::Name() const
  *
  * 0x00502DD8
  */
-BOOL MissionControlClass::Read_INI(CCINIClass &ini)
+BOOL MissionControlClass::Read_INI(GameINIClass &ini)
 {
     if (ini.Find_Section(Name()) != nullptr) {
         NoThreat = ini.Get_Bool(Name(), "NoThreat", NoThreat);
@@ -84,7 +84,7 @@ BOOL MissionControlClass::Read_INI(CCINIClass &ini)
 /**
  * @brief Writes this missions data out to an ini file.
  */
-void MissionControlClass::Write_INI(CCINIClass &ini)
+void MissionControlClass::Write_INI(GameINIClass &ini)
 {
     ini.Clear(Name());
     ini.Put_Bool(Name(), "NoThreat", NoThreat);

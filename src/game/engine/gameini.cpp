@@ -13,25 +13,25 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "ccini.h"
+#include "gameini.h"
 #include "minmax.h"
 #include "shapipe.h"
 #include "crc.h"
 
-CCINIClass::CCINIClass() : DigestValid(false) {}
+GameINIClass::GameINIClass() : DigestValid(false) {}
 
-CCINIClass::~CCINIClass() {}
+GameINIClass::~GameINIClass() {}
 
-const lepton_t CCINIClass::Get_Lepton(const char *section, const char *entry, const lepton_t defvalue) const
+const lepton_t GameINIClass::Get_Lepton(const char *section, const char *entry, const lepton_t defvalue) const
 {
     return Get_Fixed(section, entry, fixed(defvalue, 256)) * 256;
 }
 
-BOOL CCINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)
+BOOL GameINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(CCINIClass *, const char *, const char *, const lepton_t) =
-        reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const lepton_t)>(0x004630FC);
+    BOOL (*func)(GameINIClass *, const char *, const char *, const lepton_t) =
+        reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const lepton_t)>(0x004630FC);
     return func(this, section, entry, value);
 #else
     //TODO: OmniBlade, please implement.
@@ -39,18 +39,18 @@ BOOL CCINIClass::Put_Lepton(const char *section, const char *entry, const lepton
 #endif
 }
 
-const MPHType CCINIClass::Get_MPHType(const char *section, const char *entry, const MPHType defvalue) const
+const MPHType GameINIClass::Get_MPHType(const char *section, const char *entry, const MPHType defvalue) const
 {
     int value = Clamp(Get_Int(section, entry, (100 * defvalue) / 256), 0, 100);
 
     return (MPHType)Min((value * 256) / 100, 255);
 }
 
-BOOL CCINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)
+BOOL GameINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(CCINIClass *, const char *, const char *, const MPHType) =
-        reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const MPHType)>(0x004631A4);
+    BOOL (*func)(GameINIClass *, const char *, const char *, const MPHType) =
+        reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const MPHType)>(0x004631A4);
     return func(this, section, entry, value);
 #else
     //TODO: OmniBlade, please implement.
@@ -58,7 +58,7 @@ BOOL CCINIClass::Put_MPHType(const char *section, const char *entry, const MPHTy
 #endif
 }
 
-HousesType CCINIClass::Get_HousesType(const char *section, const char *entry, const HousesType defvalue) const
+HousesType GameINIClass::Get_HousesType(const char *section, const char *entry, const HousesType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -69,12 +69,12 @@ HousesType CCINIClass::Get_HousesType(const char *section, const char *entry, co
     return defvalue;
 }
 
-BOOL CCINIClass::Put_HousesType(const char *section, const char *entry, const HousesType value)
+BOOL GameINIClass::Put_HousesType(const char *section, const char *entry, const HousesType value)
 {
     return Put_String(section, entry, HouseTypeClass::Name_From(value));
 }
 
-const MovieType CCINIClass::Get_MovieType(const char *section, const char *entry, const MovieType defvalue)
+const MovieType GameINIClass::Get_MovieType(const char *section, const char *entry, const MovieType defvalue)
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -85,12 +85,12 @@ const MovieType CCINIClass::Get_MovieType(const char *section, const char *entry
     return defvalue;
 }
 
-BOOL CCINIClass::Put_MovieType(const char *section, const char *entry, const MovieType value)
+BOOL GameINIClass::Put_MovieType(const char *section, const char *entry, const MovieType value)
 {
     return Put_String(section, entry, Name_From_Movie(value));
 }
 
-const TheaterType CCINIClass::Get_TheaterType(const char *section, const char *entry, const TheaterType defvalue)
+const TheaterType GameINIClass::Get_TheaterType(const char *section, const char *entry, const TheaterType defvalue)
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -101,17 +101,17 @@ const TheaterType CCINIClass::Get_TheaterType(const char *section, const char *e
     return defvalue;
 }
 
-BOOL CCINIClass::Put_TheaterType(const char *section, const char *entry, const TheaterType value)
+BOOL GameINIClass::Put_TheaterType(const char *section, const char *entry, const TheaterType value)
 {
     return Put_String(section, entry, Name_From_Theater(value));
 }
 
-const TriggerTypeClass *CCINIClass::Get_TriggerType(const char *section, const char *entry) const
+const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const char *entry) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    TriggerTypeClass *(*func)(CCINIClass *, const char *, const char *) =
-        reinterpret_cast<TriggerTypeClass *(*)(CCINIClass *, const char *, const char *)>(0x004638BC);
-    return func((CCINIClass *)this, section, entry);
+    TriggerTypeClass *(*func)(GameINIClass *, const char *, const char *) =
+        reinterpret_cast<TriggerTypeClass *(*)(GameINIClass *, const char *, const char *)>(0x004638BC);
+    return func((GameINIClass *)this, section, entry);
 #else
     //TODO: Requires TriggerTypeClass interface to be complete
     char valuebuf[MAX_LINE_LENGTH];
@@ -124,18 +124,18 @@ const TriggerTypeClass *CCINIClass::Get_TriggerType(const char *section, const c
 #endif
 }
 
-BOOL CCINIClass::Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *trigger)
+BOOL GameINIClass::Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *trigger)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(CCINIClass *, const char *, const char *, const TriggerTypeClass *) =
-        reinterpret_cast<BOOL(*)(CCINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
+    BOOL(*func)(GameINIClass *, const char *, const char *, const TriggerTypeClass *) =
+        reinterpret_cast<BOOL(*)(GameINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
     return func(this, section, entry, trigger);
 #else
     return Put_String(section, entry, trigger != nullptr ? trigger->Get_Name() : "<none>");
 #endif
 }
 
-const ThemeType CCINIClass::Get_ThemeType(const char *section, const char *entry, const ThemeType defvalue) const
+const ThemeType GameINIClass::Get_ThemeType(const char *section, const char *entry, const ThemeType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -146,12 +146,12 @@ const ThemeType CCINIClass::Get_ThemeType(const char *section, const char *entry
     return defvalue;
 }
 
-BOOL CCINIClass::Put_ThemeType(const char *section, const char *entry, const ThemeType value)
+BOOL GameINIClass::Put_ThemeType(const char *section, const char *entry, const ThemeType value)
 {
     return Put_String(section, entry, Theme.Base_Name(value));
 }
 
-const SourceType CCINIClass::Get_SourceType(const char *section, const char *entry, const SourceType defvalue) const
+const SourceType GameINIClass::Get_SourceType(const char *section, const char *entry, const SourceType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -162,12 +162,12 @@ const SourceType CCINIClass::Get_SourceType(const char *section, const char *ent
     return defvalue;
 }
 
-BOOL CCINIClass::Put_SourceType(const char *section, const char *entry, const SourceType value)
+BOOL GameINIClass::Put_SourceType(const char *section, const char *entry, const SourceType value)
 {
     return Put_String(section, entry, Name_From_Source(value));
 }
 
-const CrateType CCINIClass::Get_CrateType(const char *section, const char *entry, const CrateType defvalue) const
+const CrateType GameINIClass::Get_CrateType(const char *section, const char *entry, const CrateType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -178,12 +178,12 @@ const CrateType CCINIClass::Get_CrateType(const char *section, const char *entry
     return defvalue;
 }
 
-BOOL CCINIClass::Put_CrateType(const char *section, const char *entry, const CrateType value)
+BOOL GameINIClass::Put_CrateType(const char *section, const char *entry, const CrateType value)
 {
     return Put_String(section, entry, CrateClass::Name_From(value));
 }
 
-const MissionType CCINIClass::Get_MissionType(const char *section, const char *entry, const MissionType defvalue) const
+const MissionType GameINIClass::Get_MissionType(const char *section, const char *entry, const MissionType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -194,12 +194,12 @@ const MissionType CCINIClass::Get_MissionType(const char *section, const char *e
     return defvalue;
 }
 
-BOOL CCINIClass::Put_MissionType(const char *section, const char *entry, const MissionType value)
+BOOL GameINIClass::Put_MissionType(const char *section, const char *entry, const MissionType value)
 {
     return Put_String(section, entry, MissionClass::Name_From(value));
 }
 
-const ArmorType CCINIClass::Get_ArmorType(const char *section, const char *entry, const ArmorType defvalue) const
+const ArmorType GameINIClass::Get_ArmorType(const char *section, const char *entry, const ArmorType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -210,12 +210,12 @@ const ArmorType CCINIClass::Get_ArmorType(const char *section, const char *entry
     return defvalue;
 }
 
-BOOL CCINIClass::Put_ArmorType(const char *section, const char *entry, const ArmorType value)
+BOOL GameINIClass::Put_ArmorType(const char *section, const char *entry, const ArmorType value)
 {
     return Put_String(section, entry, Name_From_Armor(value));
 }
 
-const VocType CCINIClass::Get_VocType(const char *section, const char *entry, const VocType defvalue) const
+const VocType GameINIClass::Get_VocType(const char *section, const char *entry, const VocType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -226,12 +226,12 @@ const VocType CCINIClass::Get_VocType(const char *section, const char *entry, co
     return defvalue;
 }
 
-BOOL CCINIClass::Put_VocType(const char *section, const char *entry, const VocType value)
+BOOL GameINIClass::Put_VocType(const char *section, const char *entry, const VocType value)
 {
     return Put_String(section, entry, Name_From_Voc(value));
 }
 
-const VoxType CCINIClass::Get_VoxType(const char *section, const char *entry, const VoxType defvalue) const
+const VoxType GameINIClass::Get_VoxType(const char *section, const char *entry, const VoxType defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -248,7 +248,7 @@ const VoxType CCINIClass::Get_VoxType(const char *section, const char *entry, co
 #endif
 }
 
-BOOL CCINIClass::Put_VoxType(const char *section, const char *entry, const VoxType value)
+BOOL GameINIClass::Put_VoxType(const char *section, const char *entry, const VoxType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -259,7 +259,7 @@ BOOL CCINIClass::Put_VoxType(const char *section, const char *entry, const VoxTy
 #endif
 }
 
-const AnimType CCINIClass::Get_AnimType(const char *section, const char *entry, const AnimType defvalue) const
+const AnimType GameINIClass::Get_AnimType(const char *section, const char *entry, const AnimType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -270,17 +270,17 @@ const AnimType CCINIClass::Get_AnimType(const char *section, const char *entry, 
     return defvalue;
 }
 
-BOOL CCINIClass::Put_AnimType(const char *section, const char *entry, const AnimType value)
+BOOL GameINIClass::Put_AnimType(const char *section, const char *entry, const AnimType value)
 {
     return Put_String(section, entry, AnimTypeClass::Name_From(value));
 }
 
-const UnitType CCINIClass::Get_UnitType(const char *section, const char *entry, const UnitType defvalue) const
+const UnitType GameINIClass::Get_UnitType(const char *section, const char *entry, const UnitType defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    UnitType (*func)(CCINIClass *, const char *, const char *, const UnitType) =
-        reinterpret_cast<UnitType (*)(CCINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
-    return func((CCINIClass *)this, section, entry, defvalue);
+    UnitType (*func)(GameINIClass *, const char *, const char *, const UnitType) =
+        reinterpret_cast<UnitType (*)(GameINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
+    return func((GameINIClass *)this, section, entry, defvalue);
 #else
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -293,11 +293,11 @@ const UnitType CCINIClass::Get_UnitType(const char *section, const char *entry, 
 #endif
 }
 
-BOOL CCINIClass::Put_UnitType(const char *section, const char *entry, const UnitType value)
+BOOL GameINIClass::Put_UnitType(const char *section, const char *entry, const UnitType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(CCINIClass *, const char *, const char *, const UnitType) =
-        reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
+    BOOL (*func)(GameINIClass *, const char *, const char *, const UnitType) =
+        reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
     return func(this, section, entry, value);
 #else
     //TODO: Requires UnitTypeClass to be complete
@@ -305,7 +305,7 @@ BOOL CCINIClass::Put_UnitType(const char *section, const char *entry, const Unit
 #endif
 }
 
-const InfantryType CCINIClass::Get_InfantryType(const char *section, const char *entry, const InfantryType defvalue) const
+const InfantryType GameINIClass::Get_InfantryType(const char *section, const char *entry, const InfantryType defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -321,7 +321,7 @@ const InfantryType CCINIClass::Get_InfantryType(const char *section, const char 
 #endif
 }
 
-BOOL CCINIClass::Put_InfantryType(const char *section, const char *entry, const InfantryType value)
+BOOL GameINIClass::Put_InfantryType(const char *section, const char *entry, const InfantryType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -332,7 +332,7 @@ BOOL CCINIClass::Put_InfantryType(const char *section, const char *entry, const 
 #endif
 }
 
-const AircraftType CCINIClass::Get_AircraftType(const char *section, const char *entry, const AircraftType defvalue) const
+const AircraftType GameINIClass::Get_AircraftType(const char *section, const char *entry, const AircraftType defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -348,7 +348,7 @@ const AircraftType CCINIClass::Get_AircraftType(const char *section, const char 
 #endif
 }
 
-BOOL CCINIClass::Put_AircraftType(const char *section, const char *entry, const AircraftType value)
+BOOL GameINIClass::Put_AircraftType(const char *section, const char *entry, const AircraftType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -359,7 +359,7 @@ BOOL CCINIClass::Put_AircraftType(const char *section, const char *entry, const 
 #endif
 }
 
-const VesselType CCINIClass::Get_VesselType(const char *section, const char *entry, const VesselType defvalue) const
+const VesselType GameINIClass::Get_VesselType(const char *section, const char *entry, const VesselType defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -375,7 +375,7 @@ const VesselType CCINIClass::Get_VesselType(const char *section, const char *ent
 #endif
 }
 
-BOOL CCINIClass::Put_VesselType(const char *section, const char *entry, const VesselType value)
+BOOL GameINIClass::Put_VesselType(const char *section, const char *entry, const VesselType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -386,7 +386,7 @@ BOOL CCINIClass::Put_VesselType(const char *section, const char *entry, const Ve
 #endif
 }
 
-const BuildingType CCINIClass::Get_BuildingType(const char *section, const char *entry, const BuildingType defvalue) const
+const BuildingType GameINIClass::Get_BuildingType(const char *section, const char *entry, const BuildingType defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -402,7 +402,7 @@ const BuildingType CCINIClass::Get_BuildingType(const char *section, const char 
 #endif
 }
 
-BOOL CCINIClass::Put_BuildingType(const char *section, const char *entry, const BuildingType value)
+BOOL GameINIClass::Put_BuildingType(const char *section, const char *entry, const BuildingType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     // Inlined in RA
@@ -413,7 +413,7 @@ BOOL CCINIClass::Put_BuildingType(const char *section, const char *entry, const 
 #endif
 }
 
-const WeaponType CCINIClass::Get_WeaponType(const char *section, const char *entry, const WeaponType defvalue) const
+const WeaponType GameINIClass::Get_WeaponType(const char *section, const char *entry, const WeaponType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -424,12 +424,12 @@ const WeaponType CCINIClass::Get_WeaponType(const char *section, const char *ent
     return defvalue;
 }
 
-BOOL CCINIClass::Put_WeaponType(const char *section, const char *entry, const WeaponType value)
+BOOL GameINIClass::Put_WeaponType(const char *section, const char *entry, const WeaponType value)
 {
     return Put_String(section, entry, WeaponTypeClass::Name_From(value));
 }
 
-const WarheadType CCINIClass::Get_WarheadType(const char *section, const char *entry, const WarheadType defvalue) const
+const WarheadType GameINIClass::Get_WarheadType(const char *section, const char *entry, const WarheadType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -440,12 +440,12 @@ const WarheadType CCINIClass::Get_WarheadType(const char *section, const char *e
     return defvalue;
 }
 
-BOOL CCINIClass::Put_WarheadType(const char *section, const char *entry, const WarheadType value)
+BOOL GameINIClass::Put_WarheadType(const char *section, const char *entry, const WarheadType value)
 {
     return Put_String(section, entry, WarheadTypeClass::Name_From(value));
 }
 
-const OverlayType CCINIClass::Get_OverlayType(const char *section, const char *entry, const OverlayType defvalue) const
+const OverlayType GameINIClass::Get_OverlayType(const char *section, const char *entry, const OverlayType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -456,12 +456,12 @@ const OverlayType CCINIClass::Get_OverlayType(const char *section, const char *e
     return defvalue;
 }
 
-BOOL CCINIClass::Put_OverlayType(const char *section, const char *entry, const OverlayType value)
+BOOL GameINIClass::Put_OverlayType(const char *section, const char *entry, const OverlayType value)
 {
     return Put_String(section, entry, OverlayTypeClass::Name_From(value));
 }
 
-const SmudgeType CCINIClass::Get_SmudgeType(const char *section, const char *entry, const SmudgeType defvalue) const
+const SmudgeType GameINIClass::Get_SmudgeType(const char *section, const char *entry, const SmudgeType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -472,12 +472,12 @@ const SmudgeType CCINIClass::Get_SmudgeType(const char *section, const char *ent
     return defvalue;
 }
 
-BOOL CCINIClass::Put_SmudgeType(const char *section, const char *entry, const SmudgeType value)
+BOOL GameINIClass::Put_SmudgeType(const char *section, const char *entry, const SmudgeType value)
 {
     return Put_String(section, entry, SmudgeTypeClass::Name_From(value));
 }
 
-const BulletType CCINIClass::Get_BulletType(const char *section, const char *entry, const BulletType defvalue) const
+const BulletType GameINIClass::Get_BulletType(const char *section, const char *entry, const BulletType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -488,12 +488,12 @@ const BulletType CCINIClass::Get_BulletType(const char *section, const char *ent
     return defvalue;
 }
 
-BOOL CCINIClass::Put_BulletType(const char *section, const char *entry, const BulletType value)
+BOOL GameINIClass::Put_BulletType(const char *section, const char *entry, const BulletType value)
 {
     return Put_String(section, entry, BulletTypeClass::Name_From(value));
 }
 
-const LandType CCINIClass::Get_LandType(const char *section, const char *entry, const LandType defvalue) const
+const LandType GameINIClass::Get_LandType(const char *section, const char *entry, const LandType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -504,12 +504,12 @@ const LandType CCINIClass::Get_LandType(const char *section, const char *entry, 
     return defvalue;
 }
 
-BOOL CCINIClass::Put_LandType(const char *section, const char *entry, const LandType value)
+BOOL GameINIClass::Put_LandType(const char *section, const char *entry, const LandType value)
 {
     return Put_String(section, entry, Name_From_Land(value));
 }
 
-const MZoneType CCINIClass::Get_MZoneType(const char *section, const char *entry, const MZoneType defvalue) const
+const MZoneType GameINIClass::Get_MZoneType(const char *section, const char *entry, const MZoneType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -520,22 +520,22 @@ const MZoneType CCINIClass::Get_MZoneType(const char *section, const char *entry
     return defvalue;
 }
 
-BOOL CCINIClass::Put_MZoneType(const char *section, const char *entry, const MZoneType value)
+BOOL GameINIClass::Put_MZoneType(const char *section, const char *entry, const MZoneType value)
 {
     return Put_String(section, entry, Name_From_MZone(value));
 }
 
-const GroundType CCINIClass::Get_GroundType(const char *section, const char *entry, const GroundType defvalue) const
+const GroundType GameINIClass::Get_GroundType(const char *section, const char *entry, const GroundType defvalue) const
 {
     return GroundType();
 }
 
-BOOL CCINIClass::Put_GroundType(const char *section, const char *entry, const GroundType value)
+BOOL GameINIClass::Put_GroundType(const char *section, const char *entry, const GroundType value)
 {
     return 0;
 }
 
-const TerrainType CCINIClass::Get_TerrainType(const char *section, const char *entry, const TerrainType defvalue) const
+const TerrainType GameINIClass::Get_TerrainType(const char *section, const char *entry, const TerrainType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -546,12 +546,12 @@ const TerrainType CCINIClass::Get_TerrainType(const char *section, const char *e
     return defvalue;
 }
 
-BOOL CCINIClass::Put_TerrainType(const char *section, const char *entry, const TerrainType value)
+BOOL GameINIClass::Put_TerrainType(const char *section, const char *entry, const TerrainType value)
 {
     return Put_String(section, entry, TerrainTypeClass::Name_From(value));
 }
 
-const RTTIType CCINIClass::Get_RTTIType(const char *section, const char *entry, const RTTIType defvalue) const
+const RTTIType GameINIClass::Get_RTTIType(const char *section, const char *entry, const RTTIType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -562,12 +562,12 @@ const RTTIType CCINIClass::Get_RTTIType(const char *section, const char *entry, 
     return defvalue;
 }
 
-BOOL CCINIClass::Put_RTTIType(const char *section, const char *entry, const RTTIType value)
+BOOL GameINIClass::Put_RTTIType(const char *section, const char *entry, const RTTIType value)
 {
     return Put_String(section, entry, Name_From_RTTI(value));
 }
 
-const ActionType CCINIClass::Get_ActionType(const char *section, const char *entry, const ActionType defvalue) const
+const ActionType GameINIClass::Get_ActionType(const char *section, const char *entry, const ActionType defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -578,12 +578,12 @@ const ActionType CCINIClass::Get_ActionType(const char *section, const char *ent
     return defvalue;
 }
 
-BOOL CCINIClass::Put_ActionType(const char *section, const char *entry, const ActionType value)
+BOOL GameINIClass::Put_ActionType(const char *section, const char *entry, const ActionType value)
 {
     return Put_String(section, entry, Name_From_Action(value));
 }
 
-const int CCINIClass::Get_Owners(const char *section, const char *entry, const int defvalue) const
+const int GameINIClass::Get_Owners(const char *section, const char *entry, const int defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -597,7 +597,7 @@ const int CCINIClass::Get_Owners(const char *section, const char *entry, const i
     return defvalue;
 }
 
-BOOL CCINIClass::Put_Owners(const char *section, const char *entry, const int value)
+BOOL GameINIClass::Put_Owners(const char *section, const char *entry, const int value)
 {
     char buffer[MAX_LINE_LENGTH];
 
@@ -628,7 +628,7 @@ BOOL CCINIClass::Put_Owners(const char *section, const char *entry, const int va
     return buffer[0] != '\0' ? Put_String(section, entry, buffer) : true;
 }
 
-const int CCINIClass::Get_Units(const char *section, const char *entry, const int defvalue) const
+const int GameINIClass::Get_Units(const char *section, const char *entry, const int defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -646,7 +646,7 @@ const int CCINIClass::Get_Units(const char *section, const char *entry, const in
     return defvalue;
 }
 
-BOOL CCINIClass::Put_Units(const char *section, const char *entry, const int value)
+BOOL GameINIClass::Put_Units(const char *section, const char *entry, const int value)
 {
     char buffer[MAX_LINE_LENGTH];
 
@@ -662,7 +662,7 @@ BOOL CCINIClass::Put_Units(const char *section, const char *entry, const int val
     return Put_String(section, entry, buffer);
 }
 
-const int CCINIClass::Get_Infantry(const char *section, const char *entry, const int defvalue) const
+const int GameINIClass::Get_Infantry(const char *section, const char *entry, const int defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -680,7 +680,7 @@ const int CCINIClass::Get_Infantry(const char *section, const char *entry, const
     return defvalue;
 }
 
-BOOL CCINIClass::Put_Infantry(const char *section, const char *entry, const int value)
+BOOL GameINIClass::Put_Infantry(const char *section, const char *entry, const int value)
 {
     char buffer[MAX_LINE_LENGTH];
 
@@ -696,7 +696,7 @@ BOOL CCINIClass::Put_Infantry(const char *section, const char *entry, const int 
     return Put_String(section, entry, buffer);
 }
 
-const int CCINIClass::Get_Aircrafts(const char *section, const char *entry, const int defvalue) const
+const int GameINIClass::Get_Aircrafts(const char *section, const char *entry, const int defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -714,7 +714,7 @@ const int CCINIClass::Get_Aircrafts(const char *section, const char *entry, cons
     return defvalue;
 }
 
-BOOL CCINIClass::Put_Aircrafts(const char *section, const char *entry, const int value)
+BOOL GameINIClass::Put_Aircrafts(const char *section, const char *entry, const int value)
 {
     char buffer[MAX_LINE_LENGTH];
 
@@ -730,7 +730,7 @@ BOOL CCINIClass::Put_Aircrafts(const char *section, const char *entry, const int
     return Put_String(section, entry, buffer);
 }
 
-const int CCINIClass::Get_Vessels(const char *section, const char *entry, const int defvalue) const
+const int GameINIClass::Get_Vessels(const char *section, const char *entry, const int defvalue) const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -748,7 +748,7 @@ const int CCINIClass::Get_Vessels(const char *section, const char *entry, const 
     return defvalue;
 }
 
-BOOL CCINIClass::Put_Vessels(const char *section, const char *entry, const int value)
+BOOL GameINIClass::Put_Vessels(const char *section, const char *entry, const int value)
 {
     char buffer[MAX_LINE_LENGTH];
 
@@ -764,12 +764,12 @@ BOOL CCINIClass::Put_Vessels(const char *section, const char *entry, const int v
     return Put_String(section, entry, buffer);
 }
 
-const int CCINIClass::Get_Buildings(const char *section, const char *entry, const int defvalue) const
+const int GameINIClass::Get_Buildings(const char *section, const char *entry, const int defvalue) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(CCINIClass *, const char *, const char *, const int) =
-        reinterpret_cast<int (*)(CCINIClass *, const char *, const char *, const int)>(0x00463A88);
-    return func((CCINIClass *)this, section, entry, defvalue);
+    int (*func)(GameINIClass *, const char *, const char *, const int) =
+        reinterpret_cast<int (*)(GameINIClass *, const char *, const char *, const int)>(0x00463A88);
+    return func((GameINIClass *)this, section, entry, defvalue);
 #else
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -788,11 +788,11 @@ const int CCINIClass::Get_Buildings(const char *section, const char *entry, cons
 #endif
 }
 
-BOOL CCINIClass::Put_Buildings(const char *section, const char *entry, const int value)
+BOOL GameINIClass::Put_Buildings(const char *section, const char *entry, const int value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(CCINIClass *, const char *, const char *, const int) =
-        reinterpret_cast<BOOL (*)(CCINIClass *, const char *, const char *, const int)>(0x00463AFC);
+    BOOL (*func)(GameINIClass *, const char *, const char *, const int) =
+        reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const int)>(0x00463AFC);
     return func(this, section, entry, value);
 #else
     char buffer[MAX_LINE_LENGTH];
@@ -810,44 +810,44 @@ BOOL CCINIClass::Put_Buildings(const char *section, const char *entry, const int
 #endif
 }
 
-const KeyNumType CCINIClass::Get_KeyNumType(const char *section, const char *entry, const KeyNumType defvalue) const
+const KeyNumType GameINIClass::Get_KeyNumType(const char *section, const char *entry, const KeyNumType defvalue) const
 {
     return (KeyNumType)(Get_Int(section, entry, defvalue) & 0xEFFF);
 }
 
-BOOL CCINIClass::Put_KeyNumType(const char *section, const char *entry, const KeyNumType value)
+BOOL GameINIClass::Put_KeyNumType(const char *section, const char *entry, const KeyNumType value)
 {
     return (KeyNumType)(Put_Int(section, entry, value));
 }
 
-const PKey CCINIClass::Get_PKey(BOOL fast) const
+const PKey GameINIClass::Get_PKey(BOOL fast) const
 {
     PKey key;
     uint8_t buffer[512];
 
     if (fast) {
-        DEBUG_LOG("CCINIClass::Get_PKey() - Preparing PublicKey...\n");
+        DEBUG_LOG("GameINIClass::Get_PKey() - Preparing PublicKey...\n");
         Int<MAX_UNIT_PRECISION> exp(0x10001);
         MPMath::DER_Encode(exp, buffer, MAX_UNIT_PRECISION);
     } else {
-        DEBUG_LOG("CCINIClass::Get_PKey() - Loading PrivateKey\n");
+        DEBUG_LOG("GameINIClass::Get_PKey() - Loading PrivateKey\n");
         Get_UUBlock("PrivateKey", buffer, sizeof(buffer));
     }
 
-    DEBUG_LOG("CCINIClass::Get_PKey() - Decoding Exponent\n");
+    DEBUG_LOG("GameINIClass::Get_PKey() - Decoding Exponent\n");
     key.Decode_Exponent(buffer);
 
-    DEBUG_LOG("CCINIClass::Get_PKey() - Loading PublicKey\n");
+    DEBUG_LOG("GameINIClass::Get_PKey() - Loading PublicKey\n");
 
     Get_UUBlock("PublicKey", buffer, sizeof(buffer));
 
-    DEBUG_LOG("CCINIClass::Get_PKey() - Decoding Modulus\n");
+    DEBUG_LOG("GameINIClass::Get_PKey() - Decoding Modulus\n");
     key.Decode_Modulus(buffer);
 
     return key;
 }
 
-BOOL CCINIClass::Put_PKey(PKey &key)
+BOOL GameINIClass::Put_PKey(PKey &key)
 {
     char buffer[sizeof(PKey)];
 
@@ -860,7 +860,7 @@ BOOL CCINIClass::Put_PKey(PKey &key)
     return true;
 }
 
-void CCINIClass::Calculate_Message_Digest()
+void GameINIClass::Calculate_Message_Digest()
 {
     if ( !DigestValid ) {
         SHAPipe pipe;
@@ -870,13 +870,13 @@ void CCINIClass::Calculate_Message_Digest()
     }
 }
 
-void CCINIClass::Invalidate_Message_Digest()
+void GameINIClass::Invalidate_Message_Digest()
 {
     memset(&Digest, 0, sizeof(Digest));
     DigestValid = false;
 }
 
-int32_t const CCINIClass::Get_Unique_ID()
+int32_t const GameINIClass::Get_Unique_ID()
 {
     if ( !DigestValid ) {
         Calculate_Message_Digest();

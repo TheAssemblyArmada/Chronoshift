@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "warheadtype.h"
-#include "ccini.h"
+#include "gameini.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<WarheadTypeClass> &WarheadTypes = Make_Global<TFixedIHeapClass<WarheadTypeClass> >(0x00691600);
@@ -162,7 +162,7 @@ WarheadTypeClass *WarheadTypeClass::As_Pointer(WarheadType warhead)
  *
  * 0x0058FAB0
  */
-BOOL WarheadTypeClass::Read_INI(CCINIClass &ini)
+BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
 {
     char verses_buffer[128];
 

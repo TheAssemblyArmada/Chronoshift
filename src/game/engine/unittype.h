@@ -77,7 +77,7 @@ public:
     virtual void Dimensions(int &w, int &h) const override;
     virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
-    virtual BOOL Read_INI(CCINIClass &ini) override;
+    virtual BOOL Read_INI(GameINIClass &ini) override;
 
     void Code_Pointers() {}
     void Decode_Pointers() {}

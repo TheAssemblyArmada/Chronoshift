@@ -15,7 +15,7 @@
  */
 #include "bullettype.h"
 #include "ccfileclass.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "mixfile.h"
 #include <cstdio>
 
@@ -226,7 +226,7 @@ BulletTypeClass *BulletTypeClass::As_Pointer(BulletType bullet)
  *
  * 0x00426D1C
  */
-BOOL BulletTypeClass::Read_INI(CCINIClass &ini)
+BOOL BulletTypeClass::Read_INI(GameINIClass &ini)
 {
     if (ObjectTypeClass::Read_INI(ini)) {
         Arm = ini.Get_Int(Get_Name(), "Arm", 0);

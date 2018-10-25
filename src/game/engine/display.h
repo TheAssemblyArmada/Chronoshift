@@ -59,8 +59,8 @@ public:
     virtual void Code_Pointers() override;
     virtual void Decode_Pointers() override;
 
-    virtual void Read_INI(CCINIClass &ini) override;
-    void Write_INI(CCINIClass &ini); // Not virtual in RA.
+    virtual void Read_INI(GameINIClass &ini) override;
+    void Write_INI(GameINIClass &ini); // Not virtual in RA.
     virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) override;
     virtual int16_t Click_Cell_Calc(int x, int y) const override;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) override {}

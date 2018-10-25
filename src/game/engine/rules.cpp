@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "rules.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "globals.h"
 #include "housetype.h"
 #include "land.h"
@@ -246,7 +246,7 @@ RulesClass::RulesClass() :
 #endif
 }
 
-BOOL RulesClass::Process(CCINIClass &ini)
+BOOL RulesClass::Process(GameINIClass &ini)
 {
     //Aftermath(ini); // General is called standalone from other places in code.
     General(ini);
@@ -264,7 +264,7 @@ BOOL RulesClass::Process(CCINIClass &ini)
     return true;
 }
 
-void RulesClass::Addition(CCINIClass &ini)
+void RulesClass::Addition(GameINIClass &ini)
 {
     //Aftermath(ini); // General is called standalone from other places in code.
     General(ini);
@@ -278,7 +278,7 @@ void RulesClass::Addition(CCINIClass &ini)
     Difficulty(ini);
 }
 
-BOOL RulesClass::Aftermath(CCINIClass &ini)
+BOOL RulesClass::Aftermath(GameINIClass &ini)
 {
     if (ini.Find_Section("Aftermath") != nullptr) {
         // i think they made these global so they didnt break save games...
@@ -310,11 +310,11 @@ BOOL RulesClass::Aftermath(CCINIClass &ini)
     return false;
 }
 
-BOOL RulesClass::General(CCINIClass &ini)
+BOOL RulesClass::General(GameINIClass &ini)
 {
-    // TODO Requires CCINIClass::Get_UnitType, ChronalVortexClass
+    // TODO Requires GameINIClass::Get_UnitType, ChronalVortexClass
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x005342DC);
+    BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x005342DC);
     return func(this, ini);
 #elif 0
     Aftermath(ini);
@@ -437,7 +437,7 @@ BOOL RulesClass::General(CCINIClass &ini)
 #endif
 }
 
-BOOL RulesClass::MPlayer(CCINIClass &ini)
+BOOL RulesClass::MPlayer(GameINIClass &ini)
 {
     if (ini.Find_Section("MultiplayerDefaults") != nullptr) {
         MPlayerMoney = ini.Get_Int("MultiplayerDefaults", "Money", MPlayerMoney);
@@ -455,7 +455,7 @@ BOOL RulesClass::MPlayer(CCINIClass &ini)
     return false;
 }
 
-BOOL RulesClass::Recharge(CCINIClass &ini)
+BOOL RulesClass::Recharge(GameINIClass &ini)
 {
     if (ini.Find_Section("Recharge") != nullptr) {
         RechargeSonar = ini.Get_Fixed("Recharge", "Sonar", RechargeSonar);
@@ -474,11 +474,11 @@ BOOL RulesClass::Recharge(CCINIClass &ini)
     return false;
 }
 
-BOOL RulesClass::Heap_Maximums(CCINIClass &ini)
+BOOL RulesClass::Heap_Maximums(GameINIClass &ini)
 {
     // TODO Requires WarheadTypeClass and WeaponTypeClass or those heap inits moving elsewhere.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00535F38);
+    BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x00535F38);
     return func(this, ini);
 #elif 0
     if (ini.Find_Section("Maximums") != nullptr) {
@@ -518,7 +518,7 @@ BOOL RulesClass::Heap_Maximums(CCINIClass &ini)
 #endif
 }
 
-BOOL RulesClass::AI(CCINIClass &ini)
+BOOL RulesClass::AI(GameINIClass &ini)
 {
     if (ini.Find_Section("AI") != nullptr) {
         AttackInterval = ini.Get_Fixed("AI", "AttackInterval", AttackInterval);
@@ -557,11 +557,11 @@ BOOL RulesClass::AI(CCINIClass &ini)
     return false;
 }
 
-BOOL RulesClass::Powerups(CCINIClass &ini)
+BOOL RulesClass::Powerups(GameINIClass &ini)
 {
     // TODO Needs AnimTypeClass.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00536D3C);
+    BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x00536D3C);
     return func(this, ini);
 #elif 0
     if (ini.Find_Section("Powerups") != nullptr) {
@@ -603,7 +603,7 @@ BOOL RulesClass::Powerups(CCINIClass &ini)
 #endif
 }
 
-BOOL RulesClass::Themes(CCINIClass &ini)
+BOOL RulesClass::Themes(GameINIClass &ini)
 {
     char entry[INIClass::MAX_LINE_LENGTH];
 
@@ -632,7 +632,7 @@ BOOL RulesClass::Themes(CCINIClass &ini)
     return false;
 }
 
-BOOL RulesClass::IQ(CCINIClass &ini)
+BOOL RulesClass::IQ(GameINIClass &ini)
 {
     if (ini.Find_Section("IQ") != nullptr) {
         IQControls.MaxIQLevels = ini.Get_Int("IQ", "MaxIQLevels", IQControls.MaxIQLevels);
@@ -653,11 +653,11 @@ BOOL RulesClass::IQ(CCINIClass &ini)
     return false;
 }
 
-BOOL RulesClass::Objects(CCINIClass &ini)
+BOOL RulesClass::Objects(GameINIClass &ini)
 {
     // TODO Needs most *TypeClass classes.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x005373DC);
+    BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x005373DC);
     return func(this, ini);
 #elif 0
     for (WarheadType warhead = WARHEAD_FIRST; warhead < WARHEAD_COUNT; ++warhead) {
@@ -706,7 +706,7 @@ BOOL RulesClass::Objects(CCINIClass &ini)
 #endif
 }
 
-BOOL RulesClass::Difficulty(CCINIClass &ini)
+BOOL RulesClass::Difficulty(GameINIClass &ini)
 {
     Difficulty_Get(ini, Difficulties[0], "Easy");
     Difficulty_Get(ini, Difficulties[1], "Normal");
@@ -715,11 +715,11 @@ BOOL RulesClass::Difficulty(CCINIClass &ini)
     return true;
 }
 
-BOOL RulesClass::Land_Types(CCINIClass &ini)
+BOOL RulesClass::Land_Types(GameINIClass &ini)
 {
     // TODO Needs most *TypeClass classes.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const RulesClass *, CCINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, CCINIClass &)>(0x00536E8C);
+    BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x00536E8C);
     return func(this, ini);
 #elif 0
     for (LandType land = LAND_FIRST; land < LAND_COUNT; ++land) {

@@ -19,7 +19,7 @@
 #define MISSIONCONTROL_H
 
 #include "always.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "gametypes.h"
 
 class MissionControlClass
@@ -31,8 +31,8 @@ public:
     ~MissionControlClass() {}
 
     const char *Name() const;
-    BOOL Read_INI(CCINIClass &ini);
-    void Write_INI(CCINIClass &ini);
+    BOOL Read_INI(GameINIClass &ini);
+    void Write_INI(GameINIClass &ini);
 
 private:
     MissionType Mission; // The mission we control (def = MISSION_NONE).

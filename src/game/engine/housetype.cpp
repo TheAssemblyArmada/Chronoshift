@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "housetype.h"
-#include "ccini.h"
+#include "gameini.h"
 #include "language.h"
 #include "stringex.h"
 
@@ -80,7 +80,7 @@ HouseTypeClass::HouseTypeClass(HouseTypeClass const &that) :
 {
 }
 
-BOOL HouseTypeClass::Read_INI(CCINIClass &ini)
+BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
 {
     if (ini.Find_Section(Name) == nullptr) {
         return false;

@@ -22,7 +22,7 @@
 #include "heap.h"
 #include "objecttype.h"
 
-class CCINIClass;
+class GameINIClass;
 
 // If you add an entry here, add matching entries to bullettype.cpp globals and Init_Heap.
 enum BulletType
@@ -69,7 +69,7 @@ public:
 
     virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override { return false; };
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override { return nullptr; }
-    virtual BOOL Read_INI(CCINIClass &ini);
+    virtual BOOL Read_INI(GameINIClass &ini);
 
     int Get_Type() const { return Type; }
     BOOL Is_Anti_Air() const { return AntiAir; }

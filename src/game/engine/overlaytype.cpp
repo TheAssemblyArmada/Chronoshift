@@ -303,7 +303,7 @@ uint8_t *OverlayTypeClass::Radar_Icon(int frame) const
 }
 
 #if 0
-BOOL OverlayTypeClass::Read_INI(CCINIClass &ini)
+BOOL OverlayTypeClass::Read_INI(GameINIClass &ini)
 {
     //
     //
