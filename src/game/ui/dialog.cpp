@@ -653,7 +653,7 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
     GraphicViewPortClass *saved = Set_Logic_Page(g_hidPage);
 
     // Draw dialog background.
-    void *bkgndshape = MixFileClass<CCFileClass>::Retrieve("DD-BKGND.SHP");
+    void *bkgndshape = MixFileClass<GameFileClass>::Retrieve("DD-BKGND.SHP");
     CC_Draw_Shape(bkgndshape,
         0,
         width / 2 - Get_Build_Frame_Width(bkgndshape),
@@ -665,19 +665,19 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
     CC_Draw_Shape(bkgndshape, 3, width / 2, height / 2, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog inner edges.
-    void *edgeshape = MixFileClass<CCFileClass>::Retrieve("DD-EDGE.SHP");
+    void *edgeshape = MixFileClass<GameFileClass>::Retrieve("DD-EDGE.SHP");
     for (int i = 0; i < height; i += Get_Build_Frame_Height(edgeshape)) {
         CC_Draw_Shape(edgeshape, 0, 14, i, WINDOW_6, SHAPE_VIEWPORT_REL);
         CC_Draw_Shape(edgeshape, 1, width - 30, i, WINDOW_6, SHAPE_VIEWPORT_REL);
     }
 
     // Draw dialog left border.
-    void *leftshape = MixFileClass<CCFileClass>::Retrieve("DD-LEFT.SHP");
+    void *leftshape = MixFileClass<GameFileClass>::Retrieve("DD-LEFT.SHP");
     CC_Draw_Shape(leftshape, 0, 0, height / 2 - Get_Build_Frame_Height(leftshape), WINDOW_6, SHAPE_VIEWPORT_REL);
     CC_Draw_Shape(leftshape, 0, 0, height / 2, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog right border.
-    void *rightshape = MixFileClass<CCFileClass>::Retrieve("DD-RIGHT.SHP");
+    void *rightshape = MixFileClass<GameFileClass>::Retrieve("DD-RIGHT.SHP");
     CC_Draw_Shape(rightshape,
         0,
         width - Get_Build_Frame_Width(rightshape),
@@ -687,17 +687,17 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
     CC_Draw_Shape(rightshape, 0, width - Get_Build_Frame_Width(rightshape), height / 2, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog bottom border.
-    void *botmshape = MixFileClass<CCFileClass>::Retrieve("DD-BOTM.SHP");
+    void *botmshape = MixFileClass<GameFileClass>::Retrieve("DD-BOTM.SHP");
     CC_Draw_Shape(botmshape, 0, width / 2 - 320, height - 16, WINDOW_6, SHAPE_VIEWPORT_REL);
     CC_Draw_Shape(botmshape, 0, width / 2, height - 16, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog top border.
-    void *topshape = MixFileClass<CCFileClass>::Retrieve("DD-TOP.SHP");
+    void *topshape = MixFileClass<GameFileClass>::Retrieve("DD-TOP.SHP");
     CC_Draw_Shape(topshape, 0, width / 2 - 320, 0, WINDOW_6, SHAPE_VIEWPORT_REL);
     CC_Draw_Shape(topshape, 0, width / 2, 0, WINDOW_6, SHAPE_VIEWPORT_REL);
 
     // Draw dialog corners.
-    void *cornershape = MixFileClass<CCFileClass>::Retrieve("DD-CRNR.SHP");
+    void *cornershape = MixFileClass<GameFileClass>::Retrieve("DD-CRNR.SHP");
     CC_Draw_Shape(cornershape, 0, 0, 0, WINDOW_6, SHAPE_VIEWPORT_REL);
     CC_Draw_Shape(cornershape, 1, width - Get_Build_Frame_Width(cornershape), 0, WINDOW_6, SHAPE_VIEWPORT_REL);
     CC_Draw_Shape(cornershape, 2, 0, height - Get_Build_Frame_Height(cornershape), WINDOW_6, SHAPE_VIEWPORT_REL);

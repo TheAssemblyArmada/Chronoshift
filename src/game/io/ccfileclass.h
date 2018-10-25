@@ -15,18 +15,18 @@
  */
 #pragma once
 
-#ifndef CCFILECLASS_H
-#define CCFILECLASS_H
+#ifndef GAMEFILECLASS_H
+#define GAMEFILECLASS_H
 
 #include "buffer.h"
 #include "cdfileclass.h"
 
-class CCFileClass : public CDFileClass
+class GameFileClass : public CDFileClass
 {
 public:
-    CCFileClass() : m_fileBuffer() {}
-    CCFileClass(const char *filename);
-    virtual ~CCFileClass() {};
+    GameFileClass() : m_fileBuffer() {}
+    GameFileClass(const char *filename);
+    virtual ~GameFileClass() {};
 
     virtual BOOL Is_Available(BOOL forced = false) override;
     virtual BOOL Is_Open() const override;
@@ -45,18 +45,18 @@ public:
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
-    static BOOL Hook_Is_Available(CCFileClass *ptr, BOOL forced);
-    static BOOL Hook_Is_Open(CCFileClass *ptr);
-    static BOOL Hook_Open_Name(CCFileClass *ptr, const char *filename, int rights);
-    static BOOL Hook_Open(CCFileClass *ptr, int rights);
-    static int Hook_Read(CCFileClass *ptr, void *buffer, int length);
-    static off_t Hook_Seek(CCFileClass *ptr, off_t offset, int whence);
-    static off_t Hook_Size(CCFileClass *ptr);
-    static int Hook_Write(CCFileClass *ptr, const void *buffer, int length);
-    static void Hook_Close(CCFileClass *ptr);
-    static time_t Hook_Get_Date_Time(CCFileClass *ptr);
-    static BOOL Hook_Set_Date_Time(CCFileClass *ptr, time_t date_time);
-    static void Hook_Error(CCFileClass *ptr, int error, BOOL can_retry, const char *filename);
+    static BOOL Hook_Is_Available(GameFileClass *ptr, BOOL forced);
+    static BOOL Hook_Is_Open(GameFileClass *ptr);
+    static BOOL Hook_Open_Name(GameFileClass *ptr, const char *filename, int rights);
+    static BOOL Hook_Open(GameFileClass *ptr, int rights);
+    static int Hook_Read(GameFileClass *ptr, void *buffer, int length);
+    static off_t Hook_Seek(GameFileClass *ptr, off_t offset, int whence);
+    static off_t Hook_Size(GameFileClass *ptr);
+    static int Hook_Write(GameFileClass *ptr, const void *buffer, int length);
+    static void Hook_Close(GameFileClass *ptr);
+    static time_t Hook_Get_Date_Time(GameFileClass *ptr);
+    static BOOL Hook_Set_Date_Time(GameFileClass *ptr, time_t date_time);
+    static void Hook_Error(GameFileClass *ptr, int error, BOOL can_retry, const char *filename);
 #endif
 private:
     BufferClass m_fileBuffer;
@@ -75,4 +75,4 @@ void *Hires_Load(const char *filename);
 void *Load_Alloc_Data(FileClass &file);
 void *Load_Alloc_Data(const char *filename, int mode);
 
-#endif // CCFILECLASS_H
+#endif // GAMEFILECLASS_H

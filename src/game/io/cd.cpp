@@ -131,7 +131,7 @@ static BOOL Change_Local_Dir(int cd)
                 CDFileClass::Refresh_Search_Drives();
                 snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[i]);
                 CDFileClass::Add_Search_Drive(vol_buff);
-                CCFileClass fc("main.mix");
+                GameFileClass fc("main.mix");
 
                 // Populate _detected as a bitfield for which discs we found a local copy of.
                 if (fc.Is_Available()) {
@@ -190,7 +190,7 @@ static BOOL Change_Local_Dir(int cd)
             CDFileClass::Refresh_Search_Drives();
             snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[cd]);
             CDFileClass::Add_Search_Drive(vol_buff);
-            CCFileClass fc("main.mix");
+            GameFileClass fc("main.mix");
 
             if (fc.Is_Available()) {
                 // DEBUG_LOG("main.mix for '%s' found in search path, reloading secondary mix files.\n", _vol_labels[cd]);

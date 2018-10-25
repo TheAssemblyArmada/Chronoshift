@@ -167,10 +167,10 @@ void DisplayClass::One_Time() {
         Layers[layer].One_Time();
     }
 
-    TransIconset = MixFileClass<CCFileClass>::Retrieve("trans.icn");
+    TransIconset = MixFileClass<GameFileClass>::Retrieve("trans.icn");
     DEBUG_ASSERT(TransIconset != nullptr);
 
-    ShadowShapes = MixFileClass<CCFileClass>::Retrieve("shadow.shp");
+    ShadowShapes = MixFileClass<GameFileClass>::Retrieve("shadow.shp");
     DEBUG_ASSERT(ShadowShapes != nullptr);
 
     Set_View_Dimensions(0, 16);
@@ -198,7 +198,7 @@ void DisplayClass::Init_IO()
  */
 void DisplayClass::Init_Theater(TheaterType theater)
 {
-    static MixFileClass<CCFileClass> *_theater_data = nullptr;
+    static MixFileClass<GameFileClass> *_theater_data = nullptr;
 
     static const TLucentType _mouse_cols[] = {
         { 12, 12, 110, 0 }, { 15, 15, 110, 0 }, { 14, 14, 110, 0 }, { 13, 13, 110, 0 }
@@ -242,14 +242,14 @@ void DisplayClass::Init_Theater(TheaterType theater)
             delete _theater_data;
         }
         
-        _theater_data = new MixFileClass<CCFileClass>(mix_name, &g_publicKey);
+        _theater_data = new MixFileClass<GameFileClass>(mix_name, &g_publicKey);
         _theater_data->Cache(TheaterBuffer);
     }
 
     char pal_name[32];
     snprintf(pal_name, sizeof(pal_name), "%s.pal", g_theaters[theater].data);
     
-    GamePalette = *static_cast<PaletteClass *>(MixFileClass<CCFileClass>::Retrieve(pal_name));
+    GamePalette = *static_cast<PaletteClass *>(MixFileClass<GameFileClass>::Retrieve(pal_name));
     OriginalPalette = GamePalette;
 
     Build_Fading_Table(GamePalette, FadingGreen, 3, 110);

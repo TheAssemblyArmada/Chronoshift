@@ -145,11 +145,11 @@ void SidebarClass::StripClass::One_Time(int column)
     func(this, column);
 #else
     char icon_fname[16];
-    // ClockShapes = MixFileClass<CCFileClass>::Retrieve("clock.shp");
+    // ClockShapes = MixFileClass<GameFileClass>::Retrieve("clock.shp");
 
     // for ( SpecialWeaponType super = SPECIAL_FIRST; super < SPECIAL_COUNT; ++super ) {
     //    snprintf(icon_fname, sizeof(icon_fname), "%.4sicon.shp", SuperWeaponClass::Get_Special_Icon(super));
-    //    SpecialShapes[super] = MixFileClass<CCFileClass>::Retrieve(icon_fname);
+    //    SpecialShapes[super] = MixFileClass<GameFileClass>::Retrieve(icon_fname);
     //}
 #endif
 }
@@ -188,13 +188,13 @@ void SidebarClass::StripClass::Init_IO(int column)
         UpButton[WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_LEFT);
         UpButton[WhichColumn].Set_XPos(XPos + 4);
         UpButton[WhichColumn].Set_YPos(YPos + 194);
-        UpButton[WhichColumn].Set_Shape(MixFileClass<CCFileClass>::Retrieve("stripup.shp"));
+        UpButton[WhichColumn].Set_Shape(MixFileClass<GameFileClass>::Retrieve("stripup.shp"));
         UpButton[WhichColumn].Set_Sticky(true);
 
         DownButton[WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_RIGHT);
         DownButton[WhichColumn].Set_XPos(XPos + 36);
         DownButton[WhichColumn].Set_YPos(YPos + 194);
-        DownButton[WhichColumn].Set_Shape(MixFileClass<CCFileClass>::Retrieve("stripdn.shp"));
+        DownButton[WhichColumn].Set_Shape(MixFileClass<GameFileClass>::Retrieve("stripdn.shp"));
         DownButton[WhichColumn].Set_Sticky(true);
 
         for (int index = 0; index < ROW_COUNT; ++index) {
@@ -422,11 +422,11 @@ void SidebarClass::One_Time()
     }
 
     if (SidebarShape == nullptr) {
-        SidebarShape = MixFileClass<CCFileClass>::Retrieve("sidebar.shp");
+        SidebarShape = MixFileClass<GameFileClass>::Retrieve("sidebar.shp");
     }
 
     if (SidebarAddonShape == nullptr) {
-        SidebarAddonShape = MixFileClass<CCFileClass>::Retrieve("addon.shp");
+        SidebarAddonShape = MixFileClass<GameFileClass>::Retrieve("addon.shp");
     }
 }
 
@@ -459,7 +459,7 @@ void SidebarClass::Init_IO()
         RepairButton.Set_Toggle_Bool1(false);
         RepairButton.Set_Toggle_Disabled(true);
         RepairButton.Set_Shape_Bool_One(true);
-        RepairButton.Set_Shape(MixFileClass<CCFileClass>::Retrieve("repair.shp"));
+        RepairButton.Set_Shape(MixFileClass<GameFileClass>::Retrieve("repair.shp"));
 
         SellButton.Set_ID(BUTTON_SELL);
         SellButton.Set_Position(543, 150);
@@ -467,13 +467,13 @@ void SidebarClass::Init_IO()
         SellButton.Set_Toggle_Bool1(false);
         SellButton.Set_Toggle_Disabled(true);
         SellButton.Set_Shape_Bool_One(true);
-        SellButton.Set_Shape(MixFileClass<CCFileClass>::Retrieve("sell.shp"));
+        SellButton.Set_Shape(MixFileClass<GameFileClass>::Retrieve("sell.shp"));
 
         ZoomButton.Set_ID(BUTTON_ZOOM);
         ZoomButton.Set_Position(588, 150);
         ZoomButton.Set_Sticky(true);
         ZoomButton.Set_Toggle_Bool1(false);
-        ZoomButton.Set_Shape(MixFileClass<CCFileClass>::Retrieve("map.shp"));
+        ZoomButton.Set_Shape(MixFileClass<GameFileClass>::Retrieve("map.shp"));
 
         if ((RadarActive && Is_Zoomable()) || Session.Game_To_Play() != GAME_CAMPAIGN) {
             ZoomButton.Enable();
@@ -640,11 +640,11 @@ void SidebarClass::Reload_Sidebar()
 
     // this basicly replaces the '?' in the filenames above with a number.
     sidebarnames[side_index][4] = '1';
-    SidebarShape = MixFileClass<CCFileClass>::Retrieve(sidebarnames[side_index]);
+    SidebarShape = MixFileClass<GameFileClass>::Retrieve(sidebarnames[side_index]);
     sidebarnames[side_index][4] = '2';
-    SidebarMiddleShape = MixFileClass<CCFileClass>::Retrieve(sidebarnames[side_index]);
+    SidebarMiddleShape = MixFileClass<GameFileClass>::Retrieve(sidebarnames[side_index]);
     sidebarnames[side_index][4] = '3';
-    SidebarBottomShape = MixFileClass<CCFileClass>::Retrieve(sidebarnames[side_index]);
+    SidebarBottomShape = MixFileClass<GameFileClass>::Retrieve(sidebarnames[side_index]);
 
     // reload the side specific stip backgrounds.
     Strips[COLUMN_LEFT].Reload_LogoShapes();

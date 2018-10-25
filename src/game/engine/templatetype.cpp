@@ -954,7 +954,7 @@ void TemplateTypeClass::Init(TheaterType theater)
             const char *name = tem.ImageName[0] != '\0' ? tem.ImageName : tem.Get_Name();
 
             sprintf(buffer, "%s.%s", name, TheaterTypeClass::As_Reference(theater).FileExt);
-            tem.ImageData = MixFileClass<CCFileClass>::Retrieve(buffer);
+            tem.ImageData = MixFileClass<GameFileClass>::Retrieve(buffer);
 
             IconSetClass::Register_Icon_Set(tem.ImageData, true);
 

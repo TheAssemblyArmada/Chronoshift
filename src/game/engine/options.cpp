@@ -106,7 +106,7 @@ void OptionsClass::One_Time()
 void OptionsClass::Save_Settings()
 {
     // TODO Some global to handle if the game is TD or RA for later TD support.
-    CCFileClass fc("redalert.ini");
+    GameFileClass fc("redalert.ini");
     INIClass ini;
 
     if (fc.Is_Available()) {
@@ -189,7 +189,7 @@ void OptionsClass::Save_Settings()
  */
 void OptionsClass::Load_Settings()
 {
-    CCFileClass fc("redalert.ini");
+    GameFileClass fc("redalert.ini");
     INIClass ini;
 
     ini.Load(fc);

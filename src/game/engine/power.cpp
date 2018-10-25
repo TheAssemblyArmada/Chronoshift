@@ -65,10 +65,10 @@ PowerClass::PowerClass() :
 void PowerClass::One_Time()
 {
     RadarClass::One_Time();
-    PowerShape = MixFileClass<CCFileClass>::Retrieve("power.shp");
+    PowerShape = MixFileClass<GameFileClass>::Retrieve("power.shp");
     DEBUG_ASSERT(PowerShape != nullptr);
 
-    PowerBarShape = MixFileClass<CCFileClass>::Retrieve("powerbar.shp");
+    PowerBarShape = MixFileClass<GameFileClass>::Retrieve("powerbar.shp");
     DEBUG_ASSERT(PowerBarShape != nullptr);
 
     PowerButton.Set_Position(480, 180);

@@ -39,17 +39,17 @@
 namespace {
 // These pointers are used only within this translation unit for reinitialisation after CD changes and such.
 #ifndef CHRONOSHIFT_STANDALONE
-MixFileClass<CCFileClass> *&MainMix = Make_Global<MixFileClass<CCFileClass> *>(0x00668180);
-MixFileClass<CCFileClass> *&ConquerMix = Make_Global<MixFileClass<CCFileClass> *>(0x00668184);
-MixFileClass<CCFileClass> *&GeneralMix = Make_Global<MixFileClass<CCFileClass> *>(0x00668178);
-MixFileClass<CCFileClass> *&MoviesMix = Make_Global<MixFileClass<CCFileClass> *>(0x00668174);
-MixFileClass<CCFileClass> *&ScoreMix = Make_Global<MixFileClass<CCFileClass> *>(0x0066817C);
+MixFileClass<GameFileClass> *&MainMix = Make_Global<MixFileClass<GameFileClass> *>(0x00668180);
+MixFileClass<GameFileClass> *&ConquerMix = Make_Global<MixFileClass<GameFileClass> *>(0x00668184);
+MixFileClass<GameFileClass> *&GeneralMix = Make_Global<MixFileClass<GameFileClass> *>(0x00668178);
+MixFileClass<GameFileClass> *&MoviesMix = Make_Global<MixFileClass<GameFileClass> *>(0x00668174);
+MixFileClass<GameFileClass> *&ScoreMix = Make_Global<MixFileClass<GameFileClass> *>(0x0066817C);
 #else
-MixFileClass<CCFileClass> *MainMix;
-MixFileClass<CCFileClass> *ConquerMix;
-MixFileClass<CCFileClass> *GeneralMix;
-MixFileClass<CCFileClass> *MoviesMix;
-MixFileClass<CCFileClass> *ScoreMix;
+MixFileClass<GameFileClass> *MainMix;
+MixFileClass<GameFileClass> *ConquerMix;
+MixFileClass<GameFileClass> *GeneralMix;
+MixFileClass<GameFileClass> *MoviesMix;
+MixFileClass<GameFileClass> *ScoreMix;
 #endif
 } // namespace
 
@@ -68,8 +68,8 @@ void Init_Expansion_Files()
     if (hndl != INVALID_HANDLE_VALUE) {
         do {
             if (strcasecmp(find.cFileName, "scores.mix") != 0) {
-                new MixFileClass<CCFileClass>(find.cFileName, &g_publicKey);
-                MixFileClass<CCFileClass>::Cache(find.cFileName);
+                new MixFileClass<GameFileClass>(find.cFileName, &g_publicKey);
+                MixFileClass<GameFileClass>::Cache(find.cFileName);
             }
         } while (FindNextFileA(hndl, &find));
     }
@@ -79,7 +79,7 @@ void Init_Expansion_Files()
     // Find mix files starting with sc and do not cache them. Largely only useful for wsa and vqa files.
     if (hndl != INVALID_HANDLE_VALUE) {
         do {
-            new MixFileClass<CCFileClass>(find.cFileName, &g_publicKey);
+            new MixFileClass<GameFileClass>(find.cFileName, &g_publicKey);
         } while (FindNextFileA(hndl, &find));
     }
 #else // Assuming posix dirent here
@@ -95,8 +95,8 @@ void Init_Expansion_Files()
             // Make sure we don't have a folder and name matches
             if (!S_ISDIR(st.st_mode) && fnmatch("sc*.mix", dirp->d_name, FNM_PATHNAME | FNM_CASEFOLD) == 0
                 && strcasecmp(dirp->d_name, "scores.mix") != 0) {
-                fileptr = new MixFileClass<CCFileClass>(dirp->d_name, &PublicKey);
-                MixFileClass<CCFileClass>::Cache(dirp->d_name);
+                fileptr = new MixFileClass<GameFileClass>(dirp->d_name, &PublicKey);
+                MixFileClass<GameFileClass>::Cache(dirp->d_name);
             }
         }
     }
@@ -109,7 +109,7 @@ void Init_Expansion_Files()
 
             // Make sure we don't have a folder and name matches
             if (!S_ISDIR(st.st_mode) && !fnmatch("ss*.mix", dirp->d_name, FNM_PATHNAME | FNM_CASEFOLD)) {
-                new MixFileClass<CCFileClass>(dirp->d_name, &PublicKey);
+                new MixFileClass<GameFileClass>(dirp->d_name, &PublicKey);
             }
         }
     }
@@ -128,36 +128,36 @@ void Init_Bootstrap_Mixfiles()
     // We are currently reading local files
     g_requiredCD = -2;
 
-    CCFileClass wolapi("wolapi.mix");
+    GameFileClass wolapi("wolapi.mix");
     if (wolapi.Is_Available()) {
-        new MixFileClass<CCFileClass>("wolapi.mix", &g_publicKey);
-        MixFileClass<CCFileClass>::Cache("wolapi.mix");
+        new MixFileClass<GameFileClass>("wolapi.mix", &g_publicKey);
+        MixFileClass<GameFileClass>::Cache("wolapi.mix");
     }
 
-    CCFileClass expand2("expand2.mix");
+    GameFileClass expand2("expand2.mix");
     if (expand2.Is_Available()) {
-        new MixFileClass<CCFileClass>("expand2.mix", &g_publicKey);
-        MixFileClass<CCFileClass>::Cache("expand2.mix");
+        new MixFileClass<GameFileClass>("expand2.mix", &g_publicKey);
+        MixFileClass<GameFileClass>::Cache("expand2.mix");
     }
 
-    new MixFileClass<CCFileClass>("hires1.mix", &g_publicKey);
-    MixFileClass<CCFileClass>::Cache("hires1.mix");
+    new MixFileClass<GameFileClass>("hires1.mix", &g_publicKey);
+    MixFileClass<GameFileClass>::Cache("hires1.mix");
 
-    CCFileClass expand("expand.mix");
+    GameFileClass expand("expand.mix");
     if (expand.Is_Available()) {
-        new MixFileClass<CCFileClass>("expand.mix", &g_publicKey);
-        MixFileClass<CCFileClass>::Cache("expand.mix");
+        new MixFileClass<GameFileClass>("expand.mix", &g_publicKey);
+        MixFileClass<GameFileClass>::Cache("expand.mix");
     }
 
-    new MixFileClass<CCFileClass>("redalert.mix", &g_publicKey);
+    new MixFileClass<GameFileClass>("redalert.mix", &g_publicKey);
 
-    new MixFileClass<CCFileClass>("local.mix", &g_publicKey);
-    MixFileClass<CCFileClass>::Cache("local.mix");
+    new MixFileClass<GameFileClass>("local.mix", &g_publicKey);
+    MixFileClass<GameFileClass>::Cache("local.mix");
 
-    new MixFileClass<CCFileClass>("hires.mix", &g_publicKey);
-    MixFileClass<CCFileClass>::Cache("hires.mix");
+    new MixFileClass<GameFileClass>("hires.mix", &g_publicKey);
+    MixFileClass<GameFileClass>::Cache("hires.mix");
 
-    new MixFileClass<CCFileClass>("nchires.mix", &g_publicKey);
+    new MixFileClass<GameFileClass>("nchires.mix", &g_publicKey);
 
     g_requiredCD = reqcd;
 }
@@ -169,32 +169,32 @@ void Init_Bootstrap_Mixfiles()
  */
 void Init_Secondary_Mixfiles()
 {
-    MainMix = new MixFileClass<CCFileClass>("main.mix", &g_publicKey); // In RA main.mix contains the others.
-    ConquerMix = new MixFileClass<CCFileClass>("conquer.mix", &g_publicKey);
+    MainMix = new MixFileClass<GameFileClass>("main.mix", &g_publicKey); // In RA main.mix contains the others.
+    ConquerMix = new MixFileClass<GameFileClass>("conquer.mix", &g_publicKey);
 
     if (GeneralMix == nullptr) {
-        GeneralMix = new MixFileClass<CCFileClass>("general.mix", &g_publicKey);
+        GeneralMix = new MixFileClass<GameFileClass>("general.mix", &g_publicKey);
     }
 
-    CCFileClass movies1("movies1.mix");
+    GameFileClass movies1("movies1.mix");
 
     if (movies1.Is_Available()) {
-        MoviesMix = new MixFileClass<CCFileClass>("movies1.mix", &g_publicKey);
+        MoviesMix = new MixFileClass<GameFileClass>("movies1.mix", &g_publicKey);
     } else {
-        MoviesMix = new MixFileClass<CCFileClass>("movies2.mix", &g_publicKey);
+        MoviesMix = new MixFileClass<GameFileClass>("movies2.mix", &g_publicKey);
     }
 
-    ScoreMix = new MixFileClass<CCFileClass>("scores.mix", &g_publicKey);
+    ScoreMix = new MixFileClass<GameFileClass>("scores.mix", &g_publicKey);
 
     if (ScoreMix != nullptr) {
         ScoresPresent = true;
         ThemeClass::Scan();
     }
 
-    new MixFileClass<CCFileClass>("speech.mix", &g_publicKey);
-    new MixFileClass<CCFileClass>("sounds.mix", &g_publicKey);
-    new MixFileClass<CCFileClass>("russian.mix", &g_publicKey);
-    new MixFileClass<CCFileClass>("allies.mix", &g_publicKey);
+    new MixFileClass<GameFileClass>("speech.mix", &g_publicKey);
+    new MixFileClass<GameFileClass>("sounds.mix", &g_publicKey);
+    new MixFileClass<GameFileClass>("russian.mix", &g_publicKey);
+    new MixFileClass<GameFileClass>("allies.mix", &g_publicKey);
 }
 
 /**
@@ -218,18 +218,18 @@ void Reinit_Secondary_Mixfiles()
         delete MainMix;
     }
 
-    MainMix = new MixFileClass<CCFileClass>("main.mix", &g_publicKey); // In RA main.mix contains the others.
+    MainMix = new MixFileClass<GameFileClass>("main.mix", &g_publicKey); // In RA main.mix contains the others.
 
-    CCFileClass movies1("movies1.mix");
+    GameFileClass movies1("movies1.mix");
 
     if (movies1.Is_Available()) {
-        MoviesMix = new MixFileClass<CCFileClass>("movies1.mix", &g_publicKey);
+        MoviesMix = new MixFileClass<GameFileClass>("movies1.mix", &g_publicKey);
     } else {
-        MoviesMix = new MixFileClass<CCFileClass>("movies2.mix", &g_publicKey);
+        MoviesMix = new MixFileClass<GameFileClass>("movies2.mix", &g_publicKey);
     }
 
-    GeneralMix = new MixFileClass<CCFileClass>("general.mix", &g_publicKey);
-    ScoreMix = new MixFileClass<CCFileClass>("scores.mix", &g_publicKey);
+    GeneralMix = new MixFileClass<GameFileClass>("general.mix", &g_publicKey);
+    ScoreMix = new MixFileClass<GameFileClass>("scores.mix", &g_publicKey);
     ThemeClass::Scan();
 }
 
@@ -258,17 +258,17 @@ void Init_Keys()
  */
 void Init_Fonts()
 {
-    Metal12FontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("12metfnt.fnt"));
-    MapFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("help.fnt"));
-    Font6Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("6point.fnt"));
-    GradFont6Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("grad6fnt.fnt"));
-    EditorFont = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("editfnt.fnt"));
-    Font8Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("8point.fnt"));
-    Font3Ptr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("3point.fnt"));
-    ScoreFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("scorefnt.fnt"));
-    FontLEDPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("led.fnt"));
-    VCRFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("vcr.fnt"));
-    TypeFontPtr = static_cast<char *>(MixFileClass<CCFileClass>::Retrieve("8point.fnt"));
+    Metal12FontPtr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("12metfnt.fnt"));
+    MapFontPtr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("help.fnt"));
+    Font6Ptr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("6point.fnt"));
+    GradFont6Ptr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("grad6fnt.fnt"));
+    EditorFont = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("editfnt.fnt"));
+    Font8Ptr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("8point.fnt"));
+    Font3Ptr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("3point.fnt"));
+    ScoreFontPtr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("scorefnt.fnt"));
+    FontLEDPtr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("led.fnt"));
+    VCRFontPtr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("vcr.fnt"));
+    TypeFontPtr = static_cast<char *>(MixFileClass<GameFileClass>::Retrieve("8point.fnt"));
     Set_Font(Font8Ptr);
 }
 
