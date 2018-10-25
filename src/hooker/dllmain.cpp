@@ -17,7 +17,7 @@
 #include "blitters.h"
 #include "gamefile.h"
 #include "cd.h"
-#include "cdfileclass.h"
+#include "cdfile.h"
 #include "cell.h"
 #include "controlc.h"
 #include "coord.h"

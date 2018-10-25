@@ -19,7 +19,7 @@
 #define GAMEFILECLASS_H
 
 #include "buffer.h"
-#include "cdfileclass.h"
+#include "cdfile.h"
 
 class GameFileClass : public CDFileClass
 {

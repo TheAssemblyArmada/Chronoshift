@@ -15,7 +15,7 @@
 #include "main.h"
 #include "alloc.h"
 #include "audio.h"
-#include "cdfileclass.h"
+#include "cdfile.h"
 #include "cmdline.h"
 #include "cpudetect.h"
 #include "dialog.h"
