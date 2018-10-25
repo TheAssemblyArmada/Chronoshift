@@ -66,7 +66,7 @@ TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *
     TechLevel(0),
     Prerequisite(0),
     ThreatPosed(0),
-    Value(0),
+    ThreatPoints(0),
     MPH((MPHType)0),
     Speed(speed),
     Ammo(-1),
@@ -109,7 +109,7 @@ TechnoTypeClass::TechnoTypeClass(const TechnoTypeClass &that) :
     TechLevel(that.TechLevel),
     Prerequisite(that.Prerequisite),
     ThreatPosed(that.ThreatPosed),
-    Value(that.Value),
+    ThreatPoints(that.ThreatPoints),
     MPH(that.MPH),
     Speed(that.Speed),
     Owner(that.Owner),
@@ -153,7 +153,7 @@ TechnoTypeClass &TechnoTypeClass::operator=(TechnoTypeClass &that)
         TechLevel = that.TechLevel;
         Prerequisite = that.Prerequisite;
         ThreatPosed = that.ThreatPosed;
-        Value = that.Value;
+        ThreatPoints = that.ThreatPoints;
         MPH = that.MPH;
         Speed = that.Speed;
         Owner = that.Owner;
@@ -356,7 +356,8 @@ BOOL TechnoTypeClass::Read_INI(CCINIClass &ini)
         IsSelfHealing = ini.Get_Bool(Get_Name(), "SelfHealing", IsSelfHealing);
         ROT = ini.Get_Int(Get_Name(), "ROT", ROT);
         Passengers = ini.Get_Int(Get_Name(), "Passengers", Passengers);
-        Value = Points;
+        
+        ThreatPoints = Points;
 
         if (Primary != nullptr && Primary->Damage > 0) {
             IsLeader = true;
