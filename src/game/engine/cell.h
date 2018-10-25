@@ -192,7 +192,7 @@ private:
 
     int8_t Zones[MZONE_COUNT]; // field_6
     uint16_t field_A;
-    int CellTag; // CCPtr<TriggerClass> CellTag; // Needs TriggerClass
+    int CellTag; // GamePtr<TriggerClass> CellTag; // Needs TriggerClass
     TemplateType Template;
     uint8_t Icon;
     OverlayType Overlay;

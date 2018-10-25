@@ -15,8 +15,8 @@
  */
 #pragma once
 
-#ifndef CCPTR_H
-#define CCPTR_H
+#ifndef GAMEPTR_H
+#define GAMEPTR_H
 
 #include "always.h"
 #include "gamedebug.h"
@@ -25,19 +25,19 @@
 class NoInitClass;
 
 template<class T>
-class CCPtr
+class GamePtr
 {
 public:
-    CCPtr() : ID(-1) {}
-    CCPtr(T *ptr) : ID(-1)
+    GamePtr() : ID(-1) {}
+    GamePtr(T *ptr) : ID(-1)
     {
-        if (ptr) {
+        if (ptr != nullptr) {
             ID = ptr->Get_Heap_ID();
         }
     }
-    CCPtr(CCPtr<T> const &that) {}
-    CCPtr(NoInitClass const &noinit) {}
-    ~CCPtr() { ID = -1; }
+    GamePtr(const GamePtr &that) {}
+    GamePtr(const NoInitClass &noinit) {}
+    ~GamePtr() { ID = -1; }
 
     //<RA_TODO>, these two might be the wrong way around.  code in TEventClass::Build_INI_Entry() is not correct
     T *operator->() const
@@ -60,27 +60,32 @@ public:
         return !Is_Valid() ? nullptr : (T *)(&(*Heap)[ID]);
     }
 
-    CCPtr &operator=(CCPtr const &that)
+    GamePtr &operator=(const GamePtr &that)
     {
         if (this != &that) {
             ID = that.ID;
         }
-
         return *this;
     }
 
-    CCPtr &operator=(T const *that)
+    GamePtr &operator=(const T *that)
     {
         ID = -1;
-
-        if (that) {
+        if (that != nullptr) {
             ID = Heap->ID(that);
         }
-
         return *this;
     }
 
-    bool operator==(T const &that) const { return strcasecmp((*this).Get_Name(), that.Get_Name()) > 0; }
+    bool operator==(const T &that) const
+	{
+        return strcasecmp((*this).Get_Name(), that.Get_Name()) == 0;
+	}
+    
+    bool operator!=(const T &that) const
+	{
+        return strcasecmp((*this).Get_Name(), that.Get_Name()) != 0;
+	}
 
     bool Is_Valid() const { return Heap != nullptr && ID != -1; }
     bool Has_Valid_ID() const { return ID != -1; }
@@ -91,15 +96,27 @@ private:
 };
 
 template<class T1, class T2>
-bool operator==(CCPtr<T1> &a, T2 *b)
+bool operator==(const GamePtr<T1> &a, const T2 *b)
 {
     return static_cast<T1*>(a) == b;
 }
 
 template<class T1, class T2>
-bool operator==(T1 *a, CCPtr<T2> &b)
+bool operator==(const T1 *a, const GamePtr<T2> &b)
 {
     return static_cast<T2*>(b) == a;
 }
 
-#endif // CCPTR_H
+template<class T1, class T2>
+bool operator!=(const GamePtr<T1> &a, const T2 *b)
+{
+    return static_cast<T1*>(a) == b;
+}
+
+template<class T1, class T2>
+bool operator!=(const T1 *a, const GamePtr<T2> &b)
+{
+    return static_cast<T2*>(b) == a;
+}
+
+#endif // GAMEPTR_H

@@ -21,7 +21,7 @@
 #include "always.h"
 #include "buildingtype.h"
 #include "cargo.h"
-#include "ccptr.h"
+#include "gameptr.h"
 #include "door.h"
 #include "flasher.h"
 #include "gametypes.h"
@@ -193,8 +193,8 @@ protected:
     TCountDownTimerClass<FrameTimerClass> m_InvulnerabilityTimer;
     int m_SpiedBits;
     int m_Archive;
-    //int m_OwnerHouse; // Should be CCPtr<HouseClass> m_OwnerHouse; when HouseClass is done.
-    CCPtr<HouseClass> m_OwnerHouse;
+    //int m_OwnerHouse; // Should be GamePtr<HouseClass> m_OwnerHouse; when HouseClass is done.
+    GamePtr<HouseClass> m_OwnerHouse;
     CloakState m_CloakState;
     StageClass m_CloakingStage;
     TCountDownTimerClass<FrameTimerClass> m_CloakDelayTimer;
