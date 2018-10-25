@@ -106,7 +106,7 @@ protected:
     int TechLevel; // Tech level required to build this [-1 means can't build] (def = -1)
     uint32_t Prerequisite; // List of buildings needed before this can be manufactured (def = no requirement)
     int ThreatPosed;
-    int Value; // this is a copy of 'Points', see value being added to other values at 00567512, name guessed.
+    int ThreatPoints;
     MPHType MPH; // Speed of the unit, value relates to rules.ini value but is a transformed value.
     SpeedType Speed; // Movement speed type for purposes of adjustments.
     int Ammo; // Number of rounds carried between reloads [-1 means unlimited] (def = -1)
