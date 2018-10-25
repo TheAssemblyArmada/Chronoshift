@@ -409,7 +409,7 @@ BOOL ObjectClass::Select()
     DEBUG_ASSERT(IsActive);
 
     if ((g_inMapEditor || !Selected) && Class_Of().Is_Selectable()) {
-        if (!g_inMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->IsALoaner) {
+        if (!g_inMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->m_IsALoner) {
             return false;
         }
 

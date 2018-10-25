@@ -160,7 +160,7 @@ protected:
             bool m_IsTickedOff : 1; // & 2 Has this object been attacked and pissed off?
             bool m_Cloakable : 1; // & 4
             bool m_IsPrimary : 1; // & 8
-            bool m_IsALoaner : 1; // & 16
+            bool m_IsALoner : 1; // & 16
             bool m_LockedOnMap : 1; // & 32
             bool m_IsRecoiling : 1; // & 64
             bool m_Tethered : 1; // & 128 Is this in radio chit chat with something (on repair bay, helipad etc)
@@ -177,7 +177,7 @@ protected:
     bool m_IsTickedOff; // Has this object been attacked and pissed off?
     bool m_Cloakable; 
     bool m_IsPrimary; 
-    bool m_IsALoaner; 
+    bool m_IsALoner; 
     bool m_LockedOnMap; 
     bool m_IsRecoiling; 
     bool m_Tethered; // Is this in radio chit chat with something (on repair bay, helipad etc)
