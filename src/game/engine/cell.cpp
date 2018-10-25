@@ -50,7 +50,7 @@ CellClass::CellClass() :
     HasFlag(false),
     Bit128(false),
     field_A(0),
-    CellTag(-1), // TODO, should be default CCPtr Ctor.
+    CellTag(-1), // TODO, should be default GamePtr Ctor.
     Template(TEMPLATE_NONE),
     Icon(0),
     Overlay(OVERLAY_NONE),

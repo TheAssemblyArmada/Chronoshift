@@ -142,7 +142,7 @@ protected:
 #endif
     int FallingHeight;
     SmartPtr<ObjectClass> Next;
-    int AttachedTrigger; // CCPtr<TriggerClass> once triggerclass is implemented.
+    int AttachedTrigger; // GamePtr<TriggerClass> once triggerclass is implemented.
     int16_t Health;
 };
 
