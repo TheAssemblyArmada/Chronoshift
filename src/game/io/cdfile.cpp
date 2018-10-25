@@ -17,7 +17,7 @@
 // for OS X, it should be okay to just assume anything under /Volumes is a mounted drive
 // http://linux.die.net/man/3/getmntent
 
-#include "cdfileclass.h"
+#include "cdfile.h"
 #include "gamedebug.h"
 #include <stdio.h>
 #include <string.h>

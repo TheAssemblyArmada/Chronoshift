@@ -181,7 +181,7 @@ set(GAMEENGINE_SRC
     game/io/buffpipe.cpp
     game/io/buffstraw.cpp
     game/io/cd.cpp
-    game/io/cdfileclass.cpp
+    game/io/cdfile.cpp
     game/io/fileclass.cpp
     game/io/filepipe.cpp
     game/io/filestraw.cpp
