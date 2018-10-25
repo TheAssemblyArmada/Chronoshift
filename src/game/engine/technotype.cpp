@@ -42,7 +42,7 @@ void *TechnoTypeClass::MissingCameoShape = nullptr;
 TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *name, RemapType altremap, int def_fire_coord,
     int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL nominal,
     BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL theater, BOOL turret,
-    BOOL remapable, BOOL logical, int facings, SpeedType speed) :
+    BOOL remapable, BOOL logical, int rot_count, SpeedType speed) :
     ObjectTypeClass(
         type, id, nominal, radar_invisible, selectable, legal_target, insignificant, is_immune, logical, uiname, name),
     Remap(altremap),
@@ -72,7 +72,7 @@ TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *
     Ammo(-1),
     Owner(OWNER_NONE),
     CameoData(nullptr),
-    FacingsCount(facings),
+    ROTCount(rot_count),
     ROT(0),
     Primary(nullptr),
     Secondary(nullptr),
@@ -114,7 +114,7 @@ TechnoTypeClass::TechnoTypeClass(const TechnoTypeClass &that) :
     Speed(that.Speed),
     Owner(that.Owner),
     CameoData(that.CameoData),
-    FacingsCount(that.FacingsCount),
+    ROTCount(that.ROTCount),
     ROT(that.ROT),
     Primary(that.Primary),
     Secondary(that.Secondary),
@@ -158,7 +158,7 @@ TechnoTypeClass &TechnoTypeClass::operator=(TechnoTypeClass &that)
         Speed = that.Speed;
         Owner = that.Owner;
         CameoData = that.CameoData;
-        FacingsCount = that.FacingsCount;
+        ROTCount = that.ROTCount;
         ROT = that.ROT;
         Primary = that.Primary;
         Secondary = that.Secondary;
