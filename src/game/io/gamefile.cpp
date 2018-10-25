@@ -22,15 +22,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#define CCFILE_HANDLE_COUNT 10
+#define FILE_HANDLE_COUNT 10
 
 #ifndef CHRONOSHIFT_STANDALONE
 GameFileClass *g_handles = Make_Pointer<GameFileClass>(0x00635BE4);
 #else
-GameFileClass g_handles[CCFILE_HANDLE_COUNT];
+GameFileClass g_handles[FILE_HANDLE_COUNT];
 #endif
-
-typedef MixFileClass<GameFileClass> CCMixFileClass;
 
 GameFileClass::GameFileClass(const char *filename) : m_fileBuffer()
 {
@@ -126,7 +124,7 @@ off_t GameFileClass::Size()
     }
 
     int filesize = 0;
-    CCMixFileClass::Offset(File_Name(), nullptr, nullptr, nullptr, &filesize);
+    GameMixFile::Offset(File_Name(), nullptr, nullptr, nullptr, &filesize);
 
     return filesize;
 }
@@ -137,7 +135,7 @@ BOOL GameFileClass::Is_Available(BOOL forced)
         return true;
     }
 
-    if (CCMixFileClass::Offset(File_Name())) {
+    if (GameMixFile::Offset(File_Name())) {
         return true;
     }
 
@@ -174,11 +172,11 @@ BOOL GameFileClass::Open(int mode)
 
     int filesize = 0;
     int fileoffset = 0;
-    CCMixFileClass *mixfile = nullptr;
+    GameMixFile *mixfile = nullptr;
     void *cachedfile = nullptr;
 
     if ((mode & FM_WRITE) || BufferIOFileClass::Is_Available()
-        || !CCMixFileClass::Offset(File_Name(), &cachedfile, &mixfile, &fileoffset, &filesize)) {
+        || !GameMixFile::Offset(File_Name(), &cachedfile, &mixfile, &fileoffset, &filesize)) {
         return CDFileClass::Open(mode);
     }
 
@@ -211,9 +209,9 @@ BOOL GameFileClass::Open(int mode)
 
 time_t GameFileClass::Get_Date_Time()
 {
-    CCMixFileClass *mixfile = nullptr;
+    GameMixFile *mixfile = nullptr;
 
-    if (!CCMixFileClass::Offset(File_Name(), nullptr, &mixfile)) {
+    if (!GameMixFile::Offset(File_Name(), nullptr, &mixfile)) {
         return RawFileClass::Get_Date_Time();
     }
 
@@ -225,15 +223,77 @@ time_t GameFileClass::Get_Date_Time()
 BOOL GameFileClass::Set_Date_Time(time_t date_time)
 {
     BOOL retval;
-    CCMixFileClass *mixfile = nullptr;
+    GameMixFile *mixfile = nullptr;
 
-    if (((retval = RawFileClass::Set_Date_Time(date_time)) != false || !CCMixFileClass::Offset(File_Name(), nullptr, &mixfile))) {
+    if (((retval = RawFileClass::Set_Date_Time(date_time)) != false || !GameMixFile::Offset(File_Name(), nullptr, &mixfile))) {
         return retval;
     }
 
     GameFileClass tmpfile(mixfile->Get_Filename());
 
     return tmpfile.Set_Date_Time(date_time);
+}
+
+void *GameFileClass::Retrieve_File(char const *filename)
+{
+    DEBUG_ASSERT(filename != nullptr);
+
+    void *fileptr = GameMixFile::Retrieve(filename);
+
+    // DEBUG_ERROR_CONDITIONAL(fileptr == nullptr, "Unable to find file %s!", strupr(filename));
+    // DEBUG_ASSERT(fileptr != nullptr);
+
+    return fileptr;
+}
+
+int GameFileClass::Retrieve_File_Size(char const *filename)
+{
+    DEBUG_ASSERT(filename != nullptr);
+
+    // Size of the file in bytes.
+    int filesize = 0;
+
+    GameMixFile::Offset(filename, nullptr, nullptr, nullptr, &filesize);
+
+    // DEBUG_ERROR_CONDITIONAL(mixfile == nullptr, "Unable to find file %s!", std::strupr(filename));
+    // DEBUG_ASSERT(mixfile != nullptr);
+
+    return filesize;
+}
+
+GameMixFile *GameFileClass::Retrieve_Mix_File(char const *mix_filename)
+{
+    DEBUG_ASSERT(mix_filename != nullptr);
+
+    // Pointer to the mix file that contains the file we want.
+    GameMixFile *mixfile = nullptr;
+
+    mixfile = GameMixFile::Finder(mix_filename);
+
+    // DEBUG_ERROR_CONDITIONAL(mixfile == nullptr, "Unable to find file %s!", std::strupr(filename));
+    // DEBUG_ASSERT(mixfile != nullptr);
+
+    return mixfile;
+}
+
+bool GameFileClass::File_Available(char const *filename)
+{
+    GameFileClass file(filename);
+    return file.Is_Available();
+}
+
+GameMixFile *GameFileClass::Allocate_Mix_File(char const *filename)
+{
+    GameMixFile *mixfile = new GameMixFile(filename);
+    DEBUG_ASSERT(mixfile != nullptr);
+    return mixfile;
+}
+
+bool GameFileClass::Cache_Mix_File(char const *filename)
+{
+    bool cached = GameMixFile::Cache(filename);
+    DEBUG_ASSERT(cached);
+    return cached;
 }
 
 int Open_File(const char *filename, int mode)
@@ -243,7 +303,7 @@ int Open_File(const char *filename, int mode)
     while (g_handles[handle].Is_Open()) {
         ++handle;
 
-        if (handle >= CCFILE_HANDLE_COUNT) {
+        if (handle >= ARRAY_SIZE(g_handles)) {
             return -1;
         }
     }
