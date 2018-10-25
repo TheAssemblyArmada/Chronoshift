@@ -17,7 +17,7 @@
 #include "gmouse.h"
 #include "animtype.h"
 #include "buildingtype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "mixfile.h"
 #include "mouseshape.h"

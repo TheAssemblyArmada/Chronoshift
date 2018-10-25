@@ -15,7 +15,7 @@
  */
 #include "display.h"
 #include "abs.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"

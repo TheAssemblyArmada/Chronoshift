@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "templatetype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "gamedebug.h"
 #include "minmax.h"

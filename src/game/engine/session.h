@@ -20,7 +20,7 @@
 
 #include "always.h"
 #include "abstract.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "ipxaddress.h"
 #include "msglist.h"
 #include "remap.h"

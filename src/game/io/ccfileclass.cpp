@@ -13,7 +13,7 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "cd.h"
 #include "minmax.h"
 #include "mixfile.h"

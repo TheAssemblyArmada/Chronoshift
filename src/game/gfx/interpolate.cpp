@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "interpolate.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "gbuffer.h"

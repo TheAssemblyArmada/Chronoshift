@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "objecttype.h"
-#include "ccfileclass.h"
 #include "gameini.h"
+#include "gamefile.h"
 #include "mixfile.h"
 
 #ifndef CHRONOSHIFT_STANDALONE

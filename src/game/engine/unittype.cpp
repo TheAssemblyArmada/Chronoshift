@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "unittype.h"
-#include "ccfileclass.h"
 #include "gameini.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "globals.h"
 #include "minmax.h"

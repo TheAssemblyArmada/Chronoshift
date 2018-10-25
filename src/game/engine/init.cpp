@@ -15,8 +15,8 @@
  *            LICENSE
  */
 #include "init.h"
-#include "ccfileclass.h"
 #include "gameini.h"
+#include "gamefile.h"
 #include "globals.h"
 #include "mixfile.h"
 #include "picture.h"

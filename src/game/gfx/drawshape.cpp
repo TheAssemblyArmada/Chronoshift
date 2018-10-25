@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "drawshape.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"

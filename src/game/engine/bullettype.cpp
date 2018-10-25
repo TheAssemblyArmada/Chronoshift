@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "bullettype.h"
-#include "ccfileclass.h"
 #include "gameini.h"
+#include "gamefile.h"
 #include "mixfile.h"
 #include <cstdio>
 

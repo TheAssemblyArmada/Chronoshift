@@ -15,7 +15,7 @@
  */
 #include "options.h"
 #include "audio.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "hsv.h"
 #include "ini.h"
 #include "rgb.h"

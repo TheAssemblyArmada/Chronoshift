@@ -13,7 +13,7 @@
  *            LICENSE
  */ 
 #include "picture.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "endiantype.h"
 #include "lcw.h"
 #include "palette.h"

@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "cd.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "gbuffer.h"
 #include "getcd.h"
 #include "globals.h"

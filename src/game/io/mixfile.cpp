@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "mixfile.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 template<> List<MixFileClass<GameFileClass> *> &MixFileClass<GameFileClass>::s_mixList =

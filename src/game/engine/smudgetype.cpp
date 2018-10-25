@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "smudgetype.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "drawshape.h"
 #include "lists.h"
 #include "mixfile.h"

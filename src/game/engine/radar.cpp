@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "audio.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "display.h"
 #include "drawshape.h"

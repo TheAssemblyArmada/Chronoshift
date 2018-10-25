@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "power.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "iomap.h"

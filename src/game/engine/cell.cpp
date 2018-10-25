@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "cell.h"
-#include "ccfileclass.h"
+#include "gamefile.h"
 #include "coord.h"
 #include "ground.h"
 #include "drawshape.h"
