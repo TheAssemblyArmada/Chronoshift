@@ -30,7 +30,7 @@ TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     m_IsTickedOff(false),
     m_Cloakable(false),
     m_IsPrimary(false),
-    m_IsALoaner(false),
+    m_IsALoner(false),
     m_LockedOnMap(false),
     m_IsRecoiling(false),
     m_Tethered(false),
