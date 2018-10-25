@@ -179,6 +179,8 @@ public:
 
     operator uint32_t() const { return Time(); }
 
+    bool Expired() const { return Time() == 0; }
+
     void Start();
     void Stop();
     uint32_t Time() const;
