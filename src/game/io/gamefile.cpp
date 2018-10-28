@@ -303,7 +303,7 @@ int Open_File(const char *filename, int mode)
     while (g_handles[handle].Is_Open()) {
         ++handle;
 
-        if (handle >= ARRAY_SIZE(g_handles)) {
+        if (handle >= FILE_HANDLE_COUNT) {
             return -1;
         }
     }
