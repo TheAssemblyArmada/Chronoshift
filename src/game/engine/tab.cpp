@@ -208,9 +208,9 @@ TabClass::TabClass() : CreditDisplay(), TimerFlashTimer(), TabToRedraw(false), C
 void TabClass::One_Time()
 {
     SidebarClass::One_Time();
-    TabShape = MixFileClass<GameFileClass>::Retrieve("tabs.shp");
-    PassableShape = MixFileClass<GameFileClass>::Retrieve("passable.shp");
-    TabBackgroundShape = MixFileClass<GameFileClass>::Retrieve("tabback.shp");
+    TabShape = GameFileClass::Retrieve_File("tabs.shp");
+    PassableShape = GameFileClass::Retrieve_File("passable.shp");
+    TabBackgroundShape = GameFileClass::Retrieve_File("tabback.shp");
 }
 
 /**

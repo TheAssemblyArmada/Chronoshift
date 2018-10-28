@@ -87,7 +87,7 @@ class MixFileClass : public Node<MixFileClass<FC> *>
     using Node<MixFileClass<FC> *>::Unlink;
 #endif
 public:
-    MixFileClass(const char *filename, PKey *key);
+    MixFileClass(const char *filename, PKey *key = nullptr);
     MixFileClass(FC &file, PKey *key);
     ~MixFileClass();
 
@@ -233,6 +233,7 @@ void MixFileClass<FC>::Load_File(FC &file, PKey *key)
             // If encrypted, set the PKStraw key and set it as the Straw we are
             // using.
             if (m_isEncrypted) {
+                DEBUG_ASSERT(key != nullptr);
                 pkstrw.Key(key);
                 pkstrw.Get_From(&filestrw);
                 straw_to_use = &pkstrw;

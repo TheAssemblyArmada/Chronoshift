@@ -319,7 +319,7 @@ void TerrainTypeClass::Init(TheaterType theater)
                     "%s.%s",
                     /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.Get_Name(),
                     /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_theaters[theater].ext);
-                terrain.ImageData = MixFileClass<GameFileClass>::Retrieve(filename);
+                terrain.ImageData = GameFileClass::Retrieve_File(filename);
                 g_isTheaterShape = true;
 
                 if (terrain.RadarIconData != nullptr) {

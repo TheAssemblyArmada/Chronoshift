@@ -220,11 +220,11 @@ void VesselTypeClass::One_Time()
         // Possibly intended for the "Secret Units" enabling code that was never in any released build.
         if (vessel.TechLevel != -1 /*|| i == VESSEL_CARRIER*/) {
             snprintf(filename, sizeof(filename), "%.4sICON.SHP", name);
-            vessel.CameoData = MixFileClass<GameFileClass>::Retrieve(filename);
+            vessel.CameoData = GameFileClass::Retrieve_File(filename);
         }
 
         snprintf(filename, sizeof(filename), "%s.SHP", name);
-        vessel.ImageData = MixFileClass<GameFileClass>::Retrieve(filename);
+        vessel.ImageData = GameFileClass::Retrieve_File(filename);
         vessel.m_UnkInt = 26;
     }
 }

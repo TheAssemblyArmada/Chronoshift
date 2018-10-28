@@ -21,8 +21,8 @@
 #include "remap.h"
 
 MusicListClass::MusicListClass(int id, int x, int y, int w, int h, TextPrintType style) :
-    ListClass(id, x, y, w, h, style | TPF_6PT_GRAD | TPF_NOSHADOW, MixFileClass<GameFileClass>::Retrieve("BTN-DN.SHP"),
-        MixFileClass<GameFileClass>::Retrieve("BTN-UP.SHP"))
+    ListClass(id, x, y, w, h, style | TPF_6PT_GRAD | TPF_NOSHADOW, GameFileClass::Retrieve_File("BTN-DN.SHP"),
+        GameFileClass::Retrieve_File("BTN-UP.SHP"))
 {
     // empty
 }
