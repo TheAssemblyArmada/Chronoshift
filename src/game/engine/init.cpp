@@ -69,7 +69,7 @@ void Init_Expansion_Files()
         do {
             if (strcasecmp(find.cFileName, "scores.mix") != 0) {
                 new GameMixFile(find.cFileName, &g_publicKey);
-                GameFileClass::Cache_Mix_File(find.cFileName);
+                GameFileClass::Cache_Mix(find.cFileName);
             }
         } while (FindNextFileA(hndl, &find));
     }
@@ -96,7 +96,7 @@ void Init_Expansion_Files()
             if (!S_ISDIR(st.st_mode) && fnmatch("sc*.mix", dirp->d_name, FNM_PATHNAME | FNM_CASEFOLD) == 0
                 && strcasecmp(dirp->d_name, "scores.mix") != 0) {
                 fileptr = new GameMixFile(dirp->d_name, &PublicKey);
-                GameFileClass::Cache_Mix_File(dirp->d_name);
+                GameFileClass::Cache_Mix(dirp->d_name);
             }
         }
     }
@@ -131,31 +131,31 @@ void Init_Bootstrap_Mixfiles()
     GameFileClass wolapi("wolapi.mix");
     if (wolapi.Is_Available()) {
         new GameMixFile("wolapi.mix", &g_publicKey);
-        GameFileClass::Cache_Mix_File("wolapi.mix");
+        GameFileClass::Cache_Mix("wolapi.mix");
     }
 
     GameFileClass expand2("expand2.mix");
     if (expand2.Is_Available()) {
         new GameMixFile("expand2.mix", &g_publicKey);
-        GameFileClass::Cache_Mix_File("expand2.mix");
+        GameFileClass::Cache_Mix("expand2.mix");
     }
 
     new GameMixFile("hires1.mix", &g_publicKey);
-    GameFileClass::Cache_Mix_File("hires1.mix");
+    GameFileClass::Cache_Mix("hires1.mix");
 
     GameFileClass expand("expand.mix");
     if (expand.Is_Available()) {
         new GameMixFile("expand.mix", &g_publicKey);
-        GameFileClass::Cache_Mix_File("expand.mix");
+        GameFileClass::Cache_Mix("expand.mix");
     }
 
     new GameMixFile("redalert.mix", &g_publicKey);
 
     new GameMixFile("local.mix", &g_publicKey);
-    GameFileClass::Cache_Mix_File("local.mix");
+    GameFileClass::Cache_Mix("local.mix");
 
     new GameMixFile("hires.mix", &g_publicKey);
-    GameFileClass::Cache_Mix_File("hires.mix");
+    GameFileClass::Cache_Mix("hires.mix");
 
     new GameMixFile("nchires.mix", &g_publicKey);
 
@@ -258,17 +258,17 @@ void Init_Keys()
  */
 void Init_Fonts()
 {
-    Metal12FontPtr = static_cast<char *>(GameFileClass::Retrieve_File("12metfnt.fnt"));
-    MapFontPtr = static_cast<char *>(GameFileClass::Retrieve_File("help.fnt"));
-    Font6Ptr = static_cast<char *>(GameFileClass::Retrieve_File("6point.fnt"));
-    GradFont6Ptr = static_cast<char *>(GameFileClass::Retrieve_File("grad6fnt.fnt"));
-    EditorFont = static_cast<char *>(GameFileClass::Retrieve_File("editfnt.fnt"));
-    Font8Ptr = static_cast<char *>(GameFileClass::Retrieve_File("8point.fnt"));
-    Font3Ptr = static_cast<char *>(GameFileClass::Retrieve_File("3point.fnt"));
-    ScoreFontPtr = static_cast<char *>(GameFileClass::Retrieve_File("scorefnt.fnt"));
-    FontLEDPtr = static_cast<char *>(GameFileClass::Retrieve_File("led.fnt"));
-    VCRFontPtr = static_cast<char *>(GameFileClass::Retrieve_File("vcr.fnt"));
-    TypeFontPtr = static_cast<char *>(GameFileClass::Retrieve_File("8point.fnt"));
+    Metal12FontPtr = static_cast<char *>(GameFileClass::Retrieve("12metfnt.fnt"));
+    MapFontPtr = static_cast<char *>(GameFileClass::Retrieve("help.fnt"));
+    Font6Ptr = static_cast<char *>(GameFileClass::Retrieve("6point.fnt"));
+    GradFont6Ptr = static_cast<char *>(GameFileClass::Retrieve("grad6fnt.fnt"));
+    EditorFont = static_cast<char *>(GameFileClass::Retrieve("editfnt.fnt"));
+    Font8Ptr = static_cast<char *>(GameFileClass::Retrieve("8point.fnt"));
+    Font3Ptr = static_cast<char *>(GameFileClass::Retrieve("3point.fnt"));
+    ScoreFontPtr = static_cast<char *>(GameFileClass::Retrieve("scorefnt.fnt"));
+    FontLEDPtr = static_cast<char *>(GameFileClass::Retrieve("led.fnt"));
+    VCRFontPtr = static_cast<char *>(GameFileClass::Retrieve("vcr.fnt"));
+    TypeFontPtr = static_cast<char *>(GameFileClass::Retrieve("8point.fnt"));
     Set_Font(Font8Ptr);
 }
 

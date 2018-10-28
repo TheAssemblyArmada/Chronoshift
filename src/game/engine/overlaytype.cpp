@@ -200,7 +200,7 @@ void OverlayTypeClass::Init(TheaterType theater)
                 "%s.%s",
                 overlay.Get_Name(),
                 overlay.Theater ? g_theaters[theater].ext : "shp");
-            overlay.ImageData = GameFileClass::Retrieve_File(filename);
+            overlay.ImageData = GameFileClass::Retrieve(filename);
 
             g_isTheaterShape = overlay.Theater;
             overlay.RadarIconData = Get_Radar_Icon(overlay.ImageData, 0, -1, 3);

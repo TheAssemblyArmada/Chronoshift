@@ -50,12 +50,12 @@ public:
     BOOL Is_Cached() const { return m_fileBuffer.Get_Buffer() != nullptr; }
     void Reset_Cache_Buffer() { m_fileBuffer.Reset(); m_cachePosition = 0; }
 
-    static void *Retrieve_File(char const *filename);
-    static int Retrieve_File_Size(char const *filename);
-    static GameMixFile *Retrieve_Mix_File(char const *mix_filename);
+    static void *Retrieve(char const *filename);
+    static int Retrieve_Size(char const *filename);
+    static GameMixFile *Retrieve_Mix(char const *mix_filename);
     static bool File_Available(char const *filename);
-    static GameMixFile *Allocate_Mix_File(char const *filename);
-    static bool Cache_Mix_File(char const *filename);
+    static GameMixFile *Allocate_Mix(char const *filename);
+    static bool Cache_Mix(char const *filename);
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();

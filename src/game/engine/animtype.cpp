@@ -410,7 +410,7 @@ void AnimTypeClass::One_Time()
         AnimTypeClass *aptr = As_Pointer(anim);
         const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
         snprintf(filename, sizeof(filename), "%s.shp", name);
-        aptr->ImageData = GameFileClass::Retrieve_File(filename);
+        aptr->ImageData = GameFileClass::Retrieve(filename);
 
     }
 }
@@ -434,7 +434,7 @@ void AnimTypeClass::Init(TheaterType theater)
             // TODO change the theater info to lower case and standardise on that?
             const char *ext = aptr->Theater ? g_theaters[theater].ext : "shp";
             snprintf(filename, sizeof(filename), "%s.%s", name, ext);
-            aptr->ImageData = GameFileClass::Retrieve_File(filename);
+            aptr->ImageData = GameFileClass::Retrieve(filename);
         }
 
     }

@@ -920,7 +920,7 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
             int flag_frame;
             void *flag_shape;
 
-            flag_shape = GameFileClass::Retrieve_File("FLAGFLY.SHP");
+            flag_shape = GameFileClass::Retrieve("FLAGFLY.SHP");
 
             // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
             // game is on, wrapped so it goes 0 to 13. So when game frame is 14 it will return 0, 15 will return 1 and so
@@ -933,7 +933,7 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
             flag_y = y + (Get_Build_Frame_Height(flag_shape) / 2) + 1;
 
             CC_Draw_Shape(
-                flag_shape, // GameFileClass::Retrieve_File("FLAGFLY.SHP"), //no point called retrieve again.
+                flag_shape, // GameFileClass::Retrieve("FLAGFLY.SHP"), //no point called retrieve again.
                 flag_frame,
                 flag_x,
                 flag_y,
