@@ -110,7 +110,7 @@ void RadarClass::One_Time()
     RadarButton.Set_Size(RadarButtonHeight, RadarButtonWidth);
 
     // Moved from Draw_It as its the same no matter what.
-    RadarPulse = MixFileClass<GameFileClass>::Retrieve("pulse.shp");
+    RadarPulse = GameFileClass::Retrieve_File("pulse.shp");
 }
 
 void RadarClass::Init_Clear()
