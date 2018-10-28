@@ -153,7 +153,7 @@ void BulletTypeClass::One_Time()
         if (!bptr->Inviso) {
             const char *name = bptr->ImageName[0] != '\0' ? bptr->ImageName : bptr->Get_Name();
             snprintf(filename, sizeof(filename), "%s.shp", name);
-            bptr->ImageData = GameFileClass::Retrieve_File(filename);
+            bptr->ImageData = GameFileClass::Retrieve(filename);
         }
     }
 }

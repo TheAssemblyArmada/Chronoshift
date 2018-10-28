@@ -167,10 +167,10 @@ void DisplayClass::One_Time() {
         Layers[layer].One_Time();
     }
 
-    TransIconset = GameFileClass::Retrieve_File("trans.icn");
+    TransIconset = GameFileClass::Retrieve("trans.icn");
     DEBUG_ASSERT(TransIconset != nullptr);
 
-    ShadowShapes = GameFileClass::Retrieve_File("shadow.shp");
+    ShadowShapes = GameFileClass::Retrieve("shadow.shp");
     DEBUG_ASSERT(ShadowShapes != nullptr);
 
     Set_View_Dimensions(0, 16);
@@ -249,7 +249,7 @@ void DisplayClass::Init_Theater(TheaterType theater)
     char pal_name[32];
     snprintf(pal_name, sizeof(pal_name), "%s.pal", g_theaters[theater].data);
     
-    GamePalette = *static_cast<PaletteClass *>(GameFileClass::Retrieve_File(pal_name));
+    GamePalette = *static_cast<PaletteClass *>(GameFileClass::Retrieve(pal_name));
     OriginalPalette = GamePalette;
 
     Build_Fading_Table(GamePalette, FadingGreen, 3, 110);

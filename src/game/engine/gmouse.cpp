@@ -100,7 +100,7 @@ GameMouseClass::GameMouseClass() :
 void GameMouseClass::One_Time()
 {
     ScrollClass::One_Time();
-    MouseShapes = GameFileClass::Retrieve_File("mouse.shp");
+    MouseShapes = GameFileClass::Retrieve("mouse.shp");
 }
 
 void GameMouseClass::Init_Clear()

@@ -285,7 +285,7 @@ bool Init_Language()
     gamestr_file.Set_Name(Language_Name("CONQUER"));
 
     if (gamestr_file.Is_Available()) {
-        GameStrings = (char *)GameFileClass::Retrieve_File(Language_Name("CONQUER"));
+        GameStrings = (char *)GameFileClass::Retrieve(Language_Name("CONQUER"));
     } else {
         DEBUG_LOG("Failed to find string file %s.\n", Language_Name("CONQUER"));
         GameStrings = nullptr;
@@ -299,7 +299,7 @@ bool Init_Language()
     edstr_file.Set_Name(Language_Name("EDITOR"));
 
     if (edstr_file.Is_Available()) {
-        EditorStrings = (char *)GameFileClass::Retrieve_File(Language_Name("EDITOR"));
+        EditorStrings = (char *)GameFileClass::Retrieve(Language_Name("EDITOR"));
     } else {
         DEBUG_LOG("Failed to find string file %s.\n", Language_Name("EDITOR"));
         EditorStrings = nullptr;
@@ -312,7 +312,7 @@ bool Init_Language()
     GameFileClass dbgstr_file;
     dbgstr_file.Set_Name(Language_Name("DEBUG"));
     if (dbgstr_file.Is_Available()) {
-        DebugStrings = (char *)GameFileClass::Retrieve_File(Language_Name("DEBUG"));
+        DebugStrings = (char *)GameFileClass::Retrieve(Language_Name("DEBUG"));
     } else {
         DEBUG_LOG("Failed to find string file %s.\n", Language_Name("DEBUG"));
         DebugStrings = nullptr;

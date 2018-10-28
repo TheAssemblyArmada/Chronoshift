@@ -205,7 +205,7 @@ void SmudgeTypeClass::Init(TheaterType theater)
             SmudgeTypeClass &smudge = As_Reference(i);
             const char *name = smudge.ImageName[0] != '\0' ? smudge.ImageName : smudge.Get_Name();
             snprintf(filename, sizeof(filename), "%s.%s", name, g_theaters[theater].ext);
-            smudge.ImageData = GameFileClass::Retrieve_File(filename);
+            smudge.ImageData = GameFileClass::Retrieve(filename);
         }
     }
 }

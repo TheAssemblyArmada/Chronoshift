@@ -234,7 +234,7 @@ BOOL GameFileClass::Set_Date_Time(time_t date_time)
     return tmpfile.Set_Date_Time(date_time);
 }
 
-void *GameFileClass::Retrieve_File(char const *filename)
+void *GameFileClass::Retrieve(char const *filename)
 {
     DEBUG_ASSERT(filename != nullptr);
 
@@ -246,7 +246,7 @@ void *GameFileClass::Retrieve_File(char const *filename)
     return fileptr;
 }
 
-int GameFileClass::Retrieve_File_Size(char const *filename)
+int GameFileClass::Retrieve_Size(char const *filename)
 {
     DEBUG_ASSERT(filename != nullptr);
 
@@ -261,7 +261,7 @@ int GameFileClass::Retrieve_File_Size(char const *filename)
     return filesize;
 }
 
-GameMixFile *GameFileClass::Retrieve_Mix_File(char const *mix_filename)
+GameMixFile *GameFileClass::Retrieve_Mix(char const *mix_filename)
 {
     DEBUG_ASSERT(mix_filename != nullptr);
 
@@ -282,14 +282,14 @@ bool GameFileClass::File_Available(char const *filename)
     return file.Is_Available();
 }
 
-GameMixFile *GameFileClass::Allocate_Mix_File(char const *filename)
+GameMixFile *GameFileClass::Allocate_Mix(char const *filename)
 {
     GameMixFile *mixfile = new GameMixFile(filename);
     DEBUG_ASSERT(mixfile != nullptr);
     return mixfile;
 }
 
-bool GameFileClass::Cache_Mix_File(char const *filename)
+bool GameFileClass::Cache_Mix(char const *filename)
 {
     bool cached = GameMixFile::Cache(filename);
     DEBUG_ASSERT(cached);
