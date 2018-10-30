@@ -18,7 +18,7 @@
 #ifndef CPUDETECT_H
 #define CPUDETECT_H
 
-#include "wwstring.h"
+#include "always.h"
 
 class CPUDetectInitClass;
 
@@ -205,8 +205,8 @@ private:
 
     friend class CPUDetectInitClass;
 
-    static StringClass ProcessorLog;
-    static StringClass CompactLog;
+    static char ProcessorLog[1024];
+    static char CompactLog[1024];
 
     static int32_t ProcessorType;
     static int32_t ProcessorFamily;
