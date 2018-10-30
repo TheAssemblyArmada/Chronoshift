@@ -41,9 +41,9 @@ is currently untested.
 ## Licence
 
 The source code provided in this repository for
-Thyme is licenced under the [GNU General Public License version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+Chronoshift is licenced under the [GNU General Public License version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 or later with an exception allowing the resulting code to be linked against a closed source
-binary which will be in place until Thyme no longer relies on the original.
+binary which will be in place until Chronoshift no longer relies on the original.
 
 ## Other Open-Game Projects
 
@@ -55,11 +55,16 @@ Below is a list of similar projects and their respective original games:
  * [OpenDUNE](https://github.com/OpenDUNE/OpenDUNE) - Dune 2
  * [OpenFodder](https://github.com/OpenFodder/openfodder) - Cannon Fodder
  * [Devilution](https://github.com/diasurgical/devilution) - Diablo
+ * [Thyme](https://github.com/TheAssemblyArmada/Thyme) - C&C Generals: Zero Hour
 
 There is also the [Wikipedia page for open source games](https://en.wikipedia.org/wiki/List_of_open-source_video_games).
 
 ## Contributing
 
+If you are interested in contributing to Chronoshift, you will need some knowledge of C++ as a minimum requirement. Join the developer chat listed below for more information on what else you will need such as the idc file for the current map of the binary.
+
+You can also check the wiki for more information.
+
 ## Contact
 
-You can discuss development of this project on freenode in the #raplusplus channel.
+You can discuss development of this project on our [Discord server](https://discord.gg/UnWK2Tw).
