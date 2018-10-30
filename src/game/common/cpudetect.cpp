@@ -289,8 +289,8 @@ void Get_OS_Info(
 
 } // namespace
 
-StringClass CPUDetectClass::ProcessorLog;
-StringClass CPUDetectClass::CompactLog;
+char CPUDetectClass::ProcessorLog[1024];
+char CPUDetectClass::CompactLog[1024];
 
 int32_t CPUDetectClass::ProcessorType;
 int32_t CPUDetectClass::ProcessorFamily;
@@ -1398,8 +1398,13 @@ bool CPUDetectClass::CPUID_Count(uint32_t &u_eax_, uint32_t &u_ebx_, uint32_t &u
 
 void CPUDetectClass::Init_Processor_Log()
 {
-#define CPU_LOG(n, ...) do { work.Format(n, ##__VA_ARGS__); CPUDetectClass::ProcessorLog += work; } while (false)
-    StringClass work;
+#define CPU_LOG(n, ...) \
+    do { \
+        snprintf(work, sizeof(work), n, ##__VA_ARGS__); \
+        strlcat(ProcessorLog, work, sizeof(ProcessorLog)); \
+    } while (false)
+
+    char work[256];
 
     CPU_LOG("Operating system: ");
 
@@ -1435,26 +1440,6 @@ void CPUDetectClass::Init_Processor_Log()
 
     CPU_LOG("Processor: %s\n", CPUDetectClass::Get_Processor_String());
     CPU_LOG("Clock speed: ~%dMHz\n", CPUDetectClass::Get_Processor_Speed());
-
-    StringClass cpu_type;
-    switch ( CPUDetectClass::Get_Processor_Type() ) {
-        case 0: 
-            cpu_type = "Original OEM";
-            break;
-        case 1:
-            cpu_type = "Overdrive";
-            break;
-        case 2:
-            cpu_type = "Dual";
-            break;
-        case 3:
-            cpu_type = "*Intel Reserved*";
-            break;
-        default:
-            break;
-    }
-
-    //CPU_LOG("Processor type: %s\n", cpu_type);
 
     CPU_LOG("\n");
 
@@ -1541,8 +1526,13 @@ void CPUDetectClass::Init_Processor_Log()
 
 void CPUDetectClass::Init_Compact_Log()
 {
-#define COMPACT_LOG(n, ...) do { work.Format(n, ##__VA_ARGS__); CPUDetectClass::CompactLog += work; } while (false)
-    StringClass work;
+#define COMPACT_LOG(n, ...) \
+    do { \
+        snprintf(work, sizeof(work), n, ##__VA_ARGS__); \
+        strlcat(CompactLog, work, sizeof(CompactLog)); \
+    } while (false)
+
+    char work[256];
 
     TIME_ZONE_INFORMATION time_zone;
     GetTimeZoneInformation(&time_zone);

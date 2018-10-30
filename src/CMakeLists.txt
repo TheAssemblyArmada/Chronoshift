@@ -69,7 +69,6 @@ set(GAMEENGINE_SRC
     game/common/timer.cpp
     game/common/ttimer.cpp
     game/common/vector.cpp
-    game/common/wwstring.cpp
     game/common/xordelta.cpp
     game/crypto/blowfish.cpp
     game/crypto/mpmath.cpp
