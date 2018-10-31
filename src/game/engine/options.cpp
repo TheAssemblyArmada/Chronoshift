@@ -17,7 +17,7 @@
 #include "audio.h"
 #include "gamefile.h"
 #include "hsv.h"
-#include "ini.h"
+#include "gameini.h"
 #include "rgb.h"
 #include "session.h"
 #include "expansion.h"
@@ -110,7 +110,7 @@ void OptionsClass::Save_Settings()
 {
     // TODO Some global to handle if the game is TD or RA for later TD support.
     GameFileClass fc("redalert.ini");
-    INIClass ini;
+    GameINIClass ini;
 
     if (fc.Is_Available()) {
         ini.Load(fc);
@@ -137,55 +137,55 @@ void OptionsClass::Save_Settings()
     ini.Put_Bool("Expansions", "CounterstrikeEnabled", CounterstrikeEnabled);
     ini.Put_Bool("Expansions", "AftermathEnabled", AftermathEnabled);
 
-    ini.Put_Int("WinHotkeys", "KeyForceMove1", KeyForceMove1);
-    ini.Put_Int("WinHotkeys", "KeyForceMove2", KeyForceMove2);
-    ini.Put_Int("WinHotkeys", "KeyForceAttack1", KeyForceAttack1);
-    ini.Put_Int("WinHotkeys", "KeyForceAttack2", KeyForceAttack2);
-    ini.Put_Int("WinHotkeys", "KeySelect1", KeySelect1);
-    ini.Put_Int("WinHotkeys", "KeySelect2", KeySelect2);
-    ini.Put_Int("WinHotkeys", "KeyScatter", KeyScatter);
-    ini.Put_Int("WinHotkeys", "KeyStop", KeyStop);
-    ini.Put_Int("WinHotkeys", "KeyGuard", KeyGuard);
-    ini.Put_Int("WinHotkeys", "KeyNext", KeyNext);
-    ini.Put_Int("WinHotkeys", "KeyPrevious", KeyPrevious);
-    ini.Put_Int("WinHotkeys", "KeyFormation", KeyFormation);
-    ini.Put_Int("WinHotkeys", "KeyHome1", KeyHome1);
-    ini.Put_Int("WinHotkeys", "KeyHome2", KeyHome2);
-    ini.Put_Int("WinHotkeys", "KeyBase", KeyBase);
-    ini.Put_Int("WinHotkeys", "KeyResign", KeyResign);
-    ini.Put_Int("WinHotkeys", "KeyAlliance", KeyAlliance);
-    ini.Put_Int("WinHotkeys", "KeyBookmark1", KeyBookmark1);
-    ini.Put_Int("WinHotkeys", "KeyBookmark2", KeyBookmark2);
-    ini.Put_Int("WinHotkeys", "KeyBookmark3", KeyBookmark3);
-    ini.Put_Int("WinHotkeys", "KeyBookmark4", KeyBookmark4);
-    ini.Put_Int("WinHotkeys", "KeySelectView", KeySelectView);
-    ini.Put_Int("WinHotkeys", "KeyRepairToggle", KeyRepairToggle);
-    ini.Put_Int("WinHotkeys", "KeyRepairOn", KeyRepairOn);
-    ini.Put_Int("WinHotkeys", "KeyRepairOff", KeyRepairOff);
-    ini.Put_Int("WinHotkeys", "KeySellToggle", KeySellToggle);
-    ini.Put_Int("WinHotkeys", "KeySellOn", KeySellOn);
-    ini.Put_Int("WinHotkeys", "KeySellOff", KeySellOff);
-    ini.Put_Int("WinHotkeys", "KeyMapToggle", KeyMapToggle);
-    ini.Put_Int("WinHotkeys", "KeySidebarUp", KeySidebarUp);
-    ini.Put_Int("WinHotkeys", "KeySidebarDown", KeySidebarDown);
-    ini.Put_Int("WinHotkeys", "KeyOption1", KeyOption1);
-    ini.Put_Int("WinHotkeys", "KeyOption2", KeyOption2);
-    ini.Put_Int("WinHotkeys", "KeyScrollLeft", KeyScrollLeft);
-    ini.Put_Int("WinHotkeys", "KeyScrollRight", KeyScrollRight);
-    ini.Put_Int("WinHotkeys", "KeyScrollUp", KeyScrollUp);
-    ini.Put_Int("WinHotkeys", "KeyScrollDown", KeyScrollDown);
-    ini.Put_Int("WinHotkeys", "KeyQueueMove1", KeyQueueMove1);
-    ini.Put_Int("WinHotkeys", "KeyQueueMove2", KeyQueueMove2);
-    ini.Put_Int("WinHotkeys", "KeyTeam1", KeyTeam1);
-    ini.Put_Int("WinHotkeys", "KeyTeam2", KeyTeam2);
-    ini.Put_Int("WinHotkeys", "KeyTeam3", KeyTeam3);
-    ini.Put_Int("WinHotkeys", "KeyTeam4", KeyTeam4);
-    ini.Put_Int("WinHotkeys", "KeyTeam5", KeyTeam5);
-    ini.Put_Int("WinHotkeys", "KeyTeam6", KeyTeam6);
-    ini.Put_Int("WinHotkeys", "KeyTeam7", KeyTeam7);
-    ini.Put_Int("WinHotkeys", "KeyTeam8", KeyTeam8);
-    ini.Put_Int("WinHotkeys", "KeyTeam9", KeyTeam9);
-    ini.Put_Int("WinHotkeys", "KeyTeam10", KeyTeam10);
+    ini.Put_KeyNumType("WinHotkeys", "KeyForceMove1", KeyForceMove1);
+    ini.Put_KeyNumType("WinHotkeys", "KeyForceMove2", KeyForceMove2);
+    ini.Put_KeyNumType("WinHotkeys", "KeyForceAttack1", KeyForceAttack1);
+    ini.Put_KeyNumType("WinHotkeys", "KeyForceAttack2", KeyForceAttack2);
+    ini.Put_KeyNumType("WinHotkeys", "KeySelect1", KeySelect1);
+    ini.Put_KeyNumType("WinHotkeys", "KeySelect2", KeySelect2);
+    ini.Put_KeyNumType("WinHotkeys", "KeyScatter", KeyScatter);
+    ini.Put_KeyNumType("WinHotkeys", "KeyStop", KeyStop);
+    ini.Put_KeyNumType("WinHotkeys", "KeyGuard", KeyGuard);
+    ini.Put_KeyNumType("WinHotkeys", "KeyNext", KeyNext);
+    ini.Put_KeyNumType("WinHotkeys", "KeyPrevious", KeyPrevious);
+    ini.Put_KeyNumType("WinHotkeys", "KeyFormation", KeyFormation);
+    ini.Put_KeyNumType("WinHotkeys", "KeyHome1", KeyHome1);
+    ini.Put_KeyNumType("WinHotkeys", "KeyHome2", KeyHome2);
+    ini.Put_KeyNumType("WinHotkeys", "KeyBase", KeyBase);
+    ini.Put_KeyNumType("WinHotkeys", "KeyResign", KeyResign);
+    ini.Put_KeyNumType("WinHotkeys", "KeyAlliance", KeyAlliance);
+    ini.Put_KeyNumType("WinHotkeys", "KeyBookmark1", KeyBookmark1);
+    ini.Put_KeyNumType("WinHotkeys", "KeyBookmark2", KeyBookmark2);
+    ini.Put_KeyNumType("WinHotkeys", "KeyBookmark3", KeyBookmark3);
+    ini.Put_KeyNumType("WinHotkeys", "KeyBookmark4", KeyBookmark4);
+    ini.Put_KeyNumType("WinHotkeys", "KeySelectView", KeySelectView);
+    ini.Put_KeyNumType("WinHotkeys", "KeyRepairToggle", KeyRepairToggle);
+    ini.Put_KeyNumType("WinHotkeys", "KeyRepairOn", KeyRepairOn);
+    ini.Put_KeyNumType("WinHotkeys", "KeyRepairOff", KeyRepairOff);
+    ini.Put_KeyNumType("WinHotkeys", "KeySellToggle", KeySellToggle);
+    ini.Put_KeyNumType("WinHotkeys", "KeySellOn", KeySellOn);
+    ini.Put_KeyNumType("WinHotkeys", "KeySellOff", KeySellOff);
+    ini.Put_KeyNumType("WinHotkeys", "KeyMapToggle", KeyMapToggle);
+    ini.Put_KeyNumType("WinHotkeys", "KeySidebarUp", KeySidebarUp);
+    ini.Put_KeyNumType("WinHotkeys", "KeySidebarDown", KeySidebarDown);
+    ini.Put_KeyNumType("WinHotkeys", "KeyOption1", KeyOption1);
+    ini.Put_KeyNumType("WinHotkeys", "KeyOption2", KeyOption2);
+    ini.Put_KeyNumType("WinHotkeys", "KeyScrollLeft", KeyScrollLeft);
+    ini.Put_KeyNumType("WinHotkeys", "KeyScrollRight", KeyScrollRight);
+    ini.Put_KeyNumType("WinHotkeys", "KeyScrollUp", KeyScrollUp);
+    ini.Put_KeyNumType("WinHotkeys", "KeyScrollDown", KeyScrollDown);
+    ini.Put_KeyNumType("WinHotkeys", "KeyQueueMove1", KeyQueueMove1);
+    ini.Put_KeyNumType("WinHotkeys", "KeyQueueMove2", KeyQueueMove2);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam1", KeyTeam1);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam2", KeyTeam2);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam3", KeyTeam3);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam4", KeyTeam4);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam5", KeyTeam5);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam6", KeyTeam6);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam7", KeyTeam7);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam8", KeyTeam8);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam9", KeyTeam9);
+    ini.Put_KeyNumType("WinHotkeys", "KeyTeam10", KeyTeam10);
 
     ini.Save(fc);
 }
@@ -199,7 +199,7 @@ void OptionsClass::Load_Settings()
 {
     GameFileClass fc("redalert.ini");
 
-    INIClass ini;
+    GameINIClass ini;
     ini.Load(fc);
 
     GameSpeed = ini.Get_Int("Options", "GameSpeed", GameSpeed);
@@ -220,55 +220,55 @@ void OptionsClass::Load_Settings()
     CounterstrikeEnabled = ini.Get_Bool("Expansions", "CounterstrikeEnabled", false); // TODO use variable as default when ctor used.
     AftermathEnabled = ini.Get_Bool("Expansions", "AftermathEnabled", false); // TODO use variable as default when ctor used.
 
-    KeyForceMove1 = ini.Get_Int("WinHotkeys", "KeyForceMove1", KeyForceMove1) & 0xEFFF;
-    KeyForceMove2 = ini.Get_Int("WinHotkeys", "KeyForceMove2", KeyForceMove2) & 0xEFFF;
-    KeyForceAttack1 = ini.Get_Int("WinHotkeys", "KeyForceAttack1", KeyForceAttack1) & 0xEFFF;
-    KeyForceAttack2 = ini.Get_Int("WinHotkeys", "KeyForceAttack2", KeyForceAttack2) & 0xEFFF;
-    KeySelect1 = ini.Get_Int("WinHotkeys", "KeySelect1", KeySelect1) & 0xEFFF;
-    KeySelect2 = ini.Get_Int("WinHotkeys", "KeySelect2", KeySelect2) & 0xEFFF;
-    KeyScatter = ini.Get_Int("WinHotkeys", "KeyScatter", KeyScatter) & 0xEFFF;
-    KeyStop = ini.Get_Int("WinHotkeys", "KeyStop", KeyStop) & 0xEFFF;
-    KeyGuard = ini.Get_Int("WinHotkeys", "KeyGuard", KeyGuard) & 0xEFFF;
-    KeyNext = ini.Get_Int("WinHotkeys", "KeyNext", KeyNext) & 0xEFFF;
-    KeyPrevious = ini.Get_Int("WinHotkeys", "KeyPrevious", KeyPrevious) & 0xEFFF;
-    KeyFormation = ini.Get_Int("WinHotkeys", "KeyFormation", KeyFormation) & 0xEFFF;
-    KeyHome1 = ini.Get_Int("WinHotkeys", "KeyHome1", KeyHome1) & 0xEFFF;
-    KeyHome2 = ini.Get_Int("WinHotkeys", "KeyHome2", KeyHome2) & 0xEFFF;
-    KeyBase = ini.Get_Int("WinHotkeys", "KeyBase", KeyBase) & 0xEFFF;
-    KeyResign = ini.Get_Int("WinHotkeys", "KeyResign", KeyResign) & 0xEFFF;
-    KeyAlliance = ini.Get_Int("WinHotkeys", "KeyAlliance", KeyAlliance) & 0xEFFF;
-    KeyBookmark1 = ini.Get_Int("WinHotkeys", "KeyBookmark1", KeyBookmark1) & 0xEFFF;
-    KeyBookmark2 = ini.Get_Int("WinHotkeys", "KeyBookmark2", KeyBookmark2) & 0xEFFF;
-    KeyBookmark3 = ini.Get_Int("WinHotkeys", "KeyBookmark3", KeyBookmark3) & 0xEFFF;
-    KeyBookmark4 = ini.Get_Int("WinHotkeys", "KeyBookmark4", KeyBookmark4) & 0xEFFF;
-    KeySelectView = ini.Get_Int("WinHotkeys", "KeySelectView", KeySelectView) & 0xEFFF;
-    KeyRepairToggle = ini.Get_Int("WinHotkeys", "KeyRepairToggle", KeyRepairToggle) & 0xEFFF;
-    KeyRepairOn = ini.Get_Int("WinHotkeys", "KeyRepairOn", KeyRepairOn) & 0xEFFF;
-    KeyRepairOff = ini.Get_Int("WinHotkeys", "KeyRepairOff", KeyRepairOff) & 0xEFFF;
-    KeySellToggle = ini.Get_Int("WinHotkeys", "KeySellToggle", KeySellToggle) & 0xEFFF;
-    KeySellOn = ini.Get_Int("WinHotkeys", "KeySellOn", KeySellOn) & 0xEFFF;
-    KeySellOff = ini.Get_Int("WinHotkeys", "KeySellOff", KeySellOff) & 0xEFFF;
-    KeyMapToggle = ini.Get_Int("WinHotkeys", "KeyMapToggle", KeyMapToggle) & 0xEFFF;
-    KeySidebarUp = ini.Get_Int("WinHotkeys", "KeySidebarUp", KeySidebarUp) & 0xEFFF;
-    KeySidebarDown = ini.Get_Int("WinHotkeys", "KeySidebarDown", KeySidebarDown) & 0xEFFF;
-    KeyOption1 = ini.Get_Int("WinHotkeys", "KeyOption1", KeyOption1) & 0xEFFF;
-    KeyOption2 = ini.Get_Int("WinHotkeys", "KeyOption2", KeyOption2) & 0xEFFF;
-    KeyScrollLeft = ini.Get_Int("WinHotkeys", "KeyScrollLeft", KeyScrollLeft) & 0xEFFF;
-    KeyScrollRight = ini.Get_Int("WinHotkeys", "KeyScrollRight", KeyScrollRight) & 0xEFFF;
-    KeyScrollUp = ini.Get_Int("WinHotkeys", "KeyScrollUp", KeyScrollUp) & 0xEFFF;
-    KeyScrollDown = ini.Get_Int("WinHotkeys", "KeyScrollDown", KeyScrollDown) & 0xEFFF;
-    KeyQueueMove1 = ini.Get_Int("WinHotkeys", "KeyQueueMove1", KeyQueueMove1) & 0xEFFF;
-    KeyQueueMove2 = ini.Get_Int("WinHotkeys", "KeyQueueMove2", KeyQueueMove2) & 0xEFFF;
-    KeyTeam1 = ini.Get_Int("WinHotkeys", "KeyTeam1", KeyTeam1) & 0xEFFF;
-    KeyTeam2 = ini.Get_Int("WinHotkeys", "KeyTeam2", KeyTeam2) & 0xEFFF;
-    KeyTeam3 = ini.Get_Int("WinHotkeys", "KeyTeam3", KeyTeam3) & 0xEFFF;
-    KeyTeam4 = ini.Get_Int("WinHotkeys", "KeyTeam4", KeyTeam4) & 0xEFFF;
-    KeyTeam5 = ini.Get_Int("WinHotkeys", "KeyTeam5", KeyTeam5) & 0xEFFF;
-    KeyTeam6 = ini.Get_Int("WinHotkeys", "KeyTeam6", KeyTeam6) & 0xEFFF;
-    KeyTeam7 = ini.Get_Int("WinHotkeys", "KeyTeam7", KeyTeam7) & 0xEFFF;
-    KeyTeam8 = ini.Get_Int("WinHotkeys", "KeyTeam8", KeyTeam8) & 0xEFFF;
-    KeyTeam9 = ini.Get_Int("WinHotkeys", "KeyTeam9", KeyTeam9) & 0xEFFF;
-    KeyTeam10 = ini.Get_Int("WinHotkeys", "KeyTeam10", KeyTeam10) & 0xEFFF;
+    KeyForceMove1 = ini.Get_KeyNumType("WinHotkeys", "KeyForceMove1", KeyForceMove1);
+    KeyForceMove2 = ini.Get_KeyNumType("WinHotkeys", "KeyForceMove2", KeyForceMove2);
+    KeyForceAttack1 = ini.Get_KeyNumType("WinHotkeys", "KeyForceAttack1", KeyForceAttack1);
+    KeyForceAttack2 = ini.Get_KeyNumType("WinHotkeys", "KeyForceAttack2", KeyForceAttack2);
+    KeySelect1 = ini.Get_KeyNumType("WinHotkeys", "KeySelect1", KeySelect1);
+    KeySelect2 = ini.Get_KeyNumType("WinHotkeys", "KeySelect2", KeySelect2);
+    KeyScatter = ini.Get_KeyNumType("WinHotkeys", "KeyScatter", KeyScatter);
+    KeyStop = ini.Get_KeyNumType("WinHotkeys", "KeyStop", KeyStop);
+    KeyGuard = ini.Get_KeyNumType("WinHotkeys", "KeyGuard", KeyGuard);
+    KeyNext = ini.Get_KeyNumType("WinHotkeys", "KeyNext", KeyNext);
+    KeyPrevious = ini.Get_KeyNumType("WinHotkeys", "KeyPrevious", KeyPrevious);
+    KeyFormation = ini.Get_KeyNumType("WinHotkeys", "KeyFormation", KeyFormation);
+    KeyHome1 = ini.Get_KeyNumType("WinHotkeys", "KeyHome1", KeyHome1);
+    KeyHome2 = ini.Get_KeyNumType("WinHotkeys", "KeyHome2", KeyHome2);
+    KeyBase = ini.Get_KeyNumType("WinHotkeys", "KeyBase", KeyBase);
+    KeyResign = ini.Get_KeyNumType("WinHotkeys", "KeyResign", KeyResign);
+    KeyAlliance = ini.Get_KeyNumType("WinHotkeys", "KeyAlliance", KeyAlliance);
+    KeyBookmark1 = ini.Get_KeyNumType("WinHotkeys", "KeyBookmark1", KeyBookmark1);
+    KeyBookmark2 = ini.Get_KeyNumType("WinHotkeys", "KeyBookmark2", KeyBookmark2);
+    KeyBookmark3 = ini.Get_KeyNumType("WinHotkeys", "KeyBookmark3", KeyBookmark3);
+    KeyBookmark4 = ini.Get_KeyNumType("WinHotkeys", "KeyBookmark4", KeyBookmark4);
+    KeySelectView = ini.Get_KeyNumType("WinHotkeys", "KeySelectView", KeySelectView);
+    KeyRepairToggle = ini.Get_KeyNumType("WinHotkeys", "KeyRepairToggle", KeyRepairToggle);
+    KeyRepairOn = ini.Get_KeyNumType("WinHotkeys", "KeyRepairOn", KeyRepairOn);
+    KeyRepairOff = ini.Get_KeyNumType("WinHotkeys", "KeyRepairOff", KeyRepairOff);
+    KeySellToggle = ini.Get_KeyNumType("WinHotkeys", "KeySellToggle", KeySellToggle);
+    KeySellOn = ini.Get_KeyNumType("WinHotkeys", "KeySellOn", KeySellOn);
+    KeySellOff = ini.Get_KeyNumType("WinHotkeys", "KeySellOff", KeySellOff);
+    KeyMapToggle = ini.Get_KeyNumType("WinHotkeys", "KeyMapToggle", KeyMapToggle);
+    KeySidebarUp = ini.Get_KeyNumType("WinHotkeys", "KeySidebarUp", KeySidebarUp);
+    KeySidebarDown = ini.Get_KeyNumType("WinHotkeys", "KeySidebarDown", KeySidebarDown);
+    KeyOption1 = ini.Get_KeyNumType("WinHotkeys", "KeyOption1", KeyOption1);
+    KeyOption2 = ini.Get_KeyNumType("WinHotkeys", "KeyOption2", KeyOption2);
+    KeyScrollLeft = ini.Get_KeyNumType("WinHotkeys", "KeyScrollLeft", KeyScrollLeft);
+    KeyScrollRight = ini.Get_KeyNumType("WinHotkeys", "KeyScrollRight", KeyScrollRight);
+    KeyScrollUp = ini.Get_KeyNumType("WinHotkeys", "KeyScrollUp", KeyScrollUp);
+    KeyScrollDown = ini.Get_KeyNumType("WinHotkeys", "KeyScrollDown", KeyScrollDown);
+    KeyQueueMove1 = ini.Get_KeyNumType("WinHotkeys", "KeyQueueMove1", KeyQueueMove1);
+    KeyQueueMove2 = ini.Get_KeyNumType("WinHotkeys", "KeyQueueMove2", KeyQueueMove2);
+    KeyTeam1 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam1", KeyTeam1);
+    KeyTeam2 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam2", KeyTeam2);
+    KeyTeam3 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam3", KeyTeam3);
+    KeyTeam4 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam4", KeyTeam4);
+    KeyTeam5 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam5", KeyTeam5);
+    KeyTeam6 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam6", KeyTeam6);
+    KeyTeam7 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam7", KeyTeam7);
+    KeyTeam8 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam8", KeyTeam8);
+    KeyTeam9 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam9", KeyTeam9);
+    KeyTeam10 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam10", KeyTeam10);
 }
 
 /**
