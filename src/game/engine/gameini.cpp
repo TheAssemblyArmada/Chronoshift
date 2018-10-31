@@ -812,7 +812,7 @@ BOOL GameINIClass::Put_Buildings(const char *section, const char *entry, const i
 
 const KeyNumType GameINIClass::Get_KeyNumType(const char *section, const char *entry, const KeyNumType defvalue) const
 {
-    return (KeyNumType)(Get_Int(section, entry, defvalue) & 0xEFFF);
+    return (KeyNumType)(Get_Int(section, entry, defvalue) & (~0x1000));
 }
 
 BOOL GameINIClass::Put_KeyNumType(const char *section, const char *entry, const KeyNumType value)
