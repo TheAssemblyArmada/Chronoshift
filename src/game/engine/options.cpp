@@ -20,6 +20,7 @@
 #include "ini.h"
 #include "rgb.h"
 #include "session.h"
+#include "expansion.h"
 
 OptionsClass::OptionsClass() :
     GameSpeed(GAMESPEED_3),
@@ -36,6 +37,8 @@ OptionsClass::OptionsClass() :
     ScoreShuffles(false),
     PaletteScroll(true),
     AllowSidebarToggle(false),
+    CounterstrikeEnabled(false),
+    AftermathEnabled(false),
     KeyForceMove1(KN_LALT),
     KeyForceMove2(KN_RALT),
     KeyForceAttack1(KN_LCTRL),
@@ -130,6 +133,10 @@ void OptionsClass::Save_Settings()
     ini.Put_Bool("Options", "IsScoreShuffle", ScoreShuffles);
     ini.Put_Bool("Options", "PaletteScroll", PaletteScroll);
     ini.Put_Bool("Options", "AllowSidebarToggle", AllowSidebarToggle);
+
+    ini.Put_Bool("Expansions", "CounterstrikeEnabled", CounterstrikeEnabled);
+    ini.Put_Bool("Expansions", "AftermathEnabled", AftermathEnabled);
+
     ini.Put_Int("WinHotkeys", "KeyForceMove1", KeyForceMove1);
     ini.Put_Int("WinHotkeys", "KeyForceMove2", KeyForceMove2);
     ini.Put_Int("WinHotkeys", "KeyForceAttack1", KeyForceAttack1);
@@ -179,6 +186,7 @@ void OptionsClass::Save_Settings()
     ini.Put_Int("WinHotkeys", "KeyTeam8", KeyTeam8);
     ini.Put_Int("WinHotkeys", "KeyTeam9", KeyTeam9);
     ini.Put_Int("WinHotkeys", "KeyTeam10", KeyTeam10);
+
     ini.Save(fc);
 }
 
@@ -190,9 +198,10 @@ void OptionsClass::Save_Settings()
 void OptionsClass::Load_Settings()
 {
     GameFileClass fc("redalert.ini");
-    INIClass ini;
 
+    INIClass ini;
     ini.Load(fc);
+
     GameSpeed = ini.Get_Int("Options", "GameSpeed", GameSpeed);
     ScrollRate = ini.Get_Int("Options", "ScrollRate", ScrollRate);
     Set_Sound_Volume(ini.Get_Fixed("Options", "Volume", Volume));
@@ -207,6 +216,10 @@ void OptionsClass::Load_Settings()
     ScoreShuffles = ini.Get_Bool("Options", "IsScoreShuffle", ScoreShuffles);
     PaletteScroll = ini.Get_Bool("Options", "PaletteScroll", PaletteScroll);
     AllowSidebarToggle = ini.Get_Bool("Options", "AllowSidebarToggle", false); // TODO use variable as default when ctor used.
+
+    CounterstrikeEnabled = ini.Get_Bool("Expansions", "CounterstrikeEnabled", false); // TODO use variable as default when ctor used.
+    AftermathEnabled = ini.Get_Bool("Expansions", "AftermathEnabled", false); // TODO use variable as default when ctor used.
+
     KeyForceMove1 = ini.Get_Int("WinHotkeys", "KeyForceMove1", KeyForceMove1) & 0xEFFF;
     KeyForceMove2 = ini.Get_Int("WinHotkeys", "KeyForceMove2", KeyForceMove2) & 0xEFFF;
     KeyForceAttack1 = ini.Get_Int("WinHotkeys", "KeyForceAttack1", KeyForceAttack1) & 0xEFFF;

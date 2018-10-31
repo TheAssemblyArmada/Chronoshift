@@ -14,9 +14,13 @@
  *            LICENSE
  */
 #include "expansion.h"
+#include "gameoptions.h"
 
 BOOL Is_Counterstrike_Installed()
 {
+    if (Options.Is_Counterstrike_Enabled()) {
+        return true;
+    }
 #ifdef PLATFORM_WINDOWS
     static BOOL _checked;
     static BOOL _installed;
@@ -42,12 +46,15 @@ BOOL Is_Counterstrike_Installed()
 
     return _installed;
 #else
-    return true;
+    return false;
 #endif
 }
 
 BOOL Is_Aftermath_Installed()
 {
+    if (Options.Is_Aftermath_Enabled()) {
+        return true;
+    }
 #ifdef PLATFORM_WINDOWS
     static BOOL _checked;
     static BOOL _installed;
@@ -73,6 +80,6 @@ BOOL Is_Aftermath_Installed()
 
     return _installed;
 #else
-    return true;
+    return false;
 #endif
 }

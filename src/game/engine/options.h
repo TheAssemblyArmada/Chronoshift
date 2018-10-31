@@ -74,11 +74,12 @@ public:
     BOOL Get_Repeat() const { return ScoreRepeats; }
     BOOL Get_Shuffle() const { return ScoreShuffles; }
     BOOL Sidebar_Toggle_Allowed() const { return AllowSidebarToggle; }
+    BOOL Is_Counterstrike_Enabled() const { return CounterstrikeEnabled; }
+    BOOL Is_Aftermath_Enabled() const { return AftermathEnabled; }
     fixed Get_Brightness() const { return (Brightness - fixed::_1_4) / fixed::_1_2; }
     fixed Get_Saturation() const { return Saturation; }
     fixed Get_Contrast() const { return (Contrast - fixed::_1_4) / fixed::_1_2; }
     fixed Get_Tint() const { return Tint; }
-
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
@@ -104,7 +105,9 @@ private:
             bool ScoreRepeats : 1; // & 2
             bool ScoreShuffles : 1; // & 4
             bool PaletteScroll : 1; // & 8
-            bool AllowSidebarToggle : 1; // & 16 RA++ option.
+            bool AllowSidebarToggle : 1; // & 16 Chronoshift option.
+            bool CounterstrikeEnabled : 1; // & 32 Chronoshift option.
+            bool AftermathEnabled : 1; // & 64 Chronoshift option.
         };
         int Bitfield;
     };
@@ -113,7 +116,9 @@ private:
     bool ScoreRepeats;
     bool ScoreShuffles;
     bool PaletteScroll;
-    bool AllowSidebarToggle; // RA++ option.
+    bool AllowSidebarToggle; // Chronoshift option.
+    bool CounterstrikeEnabled; // Chronoshift option.
+    bool AftermathEnabled; // Chronoshift option.
 #endif
     KeyType KeyForceMove1;
     KeyType KeyForceMove2;
