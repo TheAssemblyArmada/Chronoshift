@@ -31,7 +31,11 @@
 // https://code.google.com/p/chromium/codesearch#chromium/src/ui/events/keycodes/keyboard_codes_posix.h
 // http://thecodeforyou.blogspot.com/2013/01/vb-keyascii-values.html
 
+#ifdef COMPILER_WATCOM
 enum KeyType
+#else
+enum KeyType : int16_t
+#endif
 {
     KEY_SHIFT_BIT = 0x100,
     KEY_CTRL_BIT = 0x200,
@@ -56,7 +60,11 @@ enum KeyModifierType
     KEY_WINKEY = 0x8
 };
 
+#ifdef COMPILER_WATCOM
 enum KeyNumType
+#else
+enum KeyNumType : int16_t
+#endif
 {
     KN_NONE = 0x0,
 
@@ -176,7 +184,11 @@ enum KeyNumType
     KN_BUTTON = 0x8000,
 };
 
+#ifdef COMPILER_WATCOM
 enum KeyASCIIType
+#else
+enum KeyASCIIType : int16_t
+#endif
 {
     KA_NONE = 0x0,
 
@@ -399,7 +411,7 @@ inline void KeyboardClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
     Hook_Function(0x005B82FC, Hook_Handler);
-    //Hook_Function(0x005B7408, Hook_Fill);
+    // Hook_Function(0x005B7408, Hook_Fill);
     Hook_Function(0x005B7F30, Hook_Check);
     Hook_Function(0x005B7F5C, Hook_Get);
     Hook_Function(0x005B82CC, Hook_Clear);
