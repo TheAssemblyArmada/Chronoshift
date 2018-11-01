@@ -531,9 +531,9 @@ int MessageListClass::Input(KeyNumType &key)
 
     char ascii = g_keyboard->To_ASCII(key);
 
-    if (key & 0x1000 && isdigit(ascii)) {
-        key = (KeyNumType)(key & ~0x1000);
-    } else if (key & 0x1000 || key & KN_BUTTON || !isprint(ascii)) {
+    if (key & KEY_VK_BIT && isdigit(ascii)) {
+        key = (KeyNumType)(key & ~KEY_VK_BIT);
+    } else if (key & KEY_VK_BIT || key & KN_BUTTON || !isprint(ascii)) {
         int raw_key = key & 0xFF;
 
         if (raw_key != KN_KEYPAD_RETURN && raw_key != KN_BACKSPACE && raw_key != KN_ESC) {
