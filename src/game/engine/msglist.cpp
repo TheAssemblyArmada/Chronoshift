@@ -529,11 +529,12 @@ int MessageListClass::Input(KeyNumType &key)
         return 0;
     }
 
-    char ascii = g_keyboard->To_ASCII(key);
+    KeyASCIIType ascii_char = g_keyboard->To_ASCII(key);
+    char raw_char = ascii_char & 0xFF;
 
-    if (key & KEY_VK_BIT && isdigit(ascii)) {
+    if (key & KEY_VK_BIT && isdigit(raw_char)) {
         key = (KeyNumType)(key & ~KEY_VK_BIT);
-    } else if (key & KEY_VK_BIT || key & KN_BUTTON || !isprint(ascii)) {
+    } else if (key & KEY_VK_BIT || key & KN_BUTTON || !isprint(raw_char)) {
         int raw_key = key & 0xFF;
 
         if (raw_key != KN_KEYPAD_RETURN && raw_key != KN_BACKSPACE && raw_key != KN_ESC) {
@@ -545,7 +546,7 @@ int MessageListClass::Input(KeyNumType &key)
 
     int ret_val = 0;
 
-    switch (ascii) {
+    switch (ascii_char) {
         case KA_BACKSPACE:
             if (EditPos > EditStart) {
                 EditBuffer[--EditPos] = '\0';
@@ -582,13 +583,13 @@ int MessageListClass::Input(KeyNumType &key)
         default:
             EditingLabel->Set_Focus();
 
-            if (isprint(ascii)) {
+            if (isprint(raw_char)) {
                 bool too_long = false;
 
                 if (EditPos - EditStart >= MaxChars - 1) {
                     too_long = true;
                 } else {
-                    EditBuffer[EditPos++] = ascii;
+                    EditBuffer[EditPos++] = raw_char;
                     EditBuffer[EditPos] = '\0';
                     Fancy_Text_Print(nullptr, 0, 0, EditingLabel->Get_Remap(), COLOR_TBLACK, EditingLabel->Get_Style());
                     ret_val = 1;
@@ -601,7 +602,7 @@ int MessageListClass::Input(KeyNumType &key)
 
                     if (too_long) {
                         EditPos -= Trim_Message(ReserveBuffer, &EditBuffer[EditStart], EditTrimStart, EditTrimEnd, true);
-                        EditBuffer[EditPos++] = ascii;
+                        EditBuffer[EditPos++] = raw_char;
                         EditBuffer[EditPos] = '\0';
                         ret_val = 4;
                     }
