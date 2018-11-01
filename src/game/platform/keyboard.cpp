@@ -22,18 +22,21 @@ KeyboardClass *&g_keyboard = Make_Global<KeyboardClass *>(0x00666904);
 KeyboardClass *g_keyboard = nullptr;
 #endif
 
-KeyboardClass::KeyboardClass()
+KeyboardClass::KeyboardClass() : 
+    m_MouseQX(0),
+    m_MouseQY(0),
+    m_ElementGetPos(0),
+    m_ElementPutPos(0),
+    m_Initialised(false)
 {
-    m_mouseQX = 0;
-    m_mouseQY = 0;
-    m_elementGetPos = 0;
-    m_elementPutPos = 0;
-    memset(m_keyboardState, 0, sizeof(m_keyboardState));
+    memset(m_KeyboardState, 0, sizeof(m_KeyboardState));
+    memset(m_Elements, 0, sizeof(m_Elements));
 }
 
-BOOL KeyboardClass::Is_Mouse_Key(KeyType keycode)
+BOOL KeyboardClass::Is_Mouse_Key(uint16_t keycode)
 {
-    keycode = keycode & 0xFF; // Strip off any flags.
+    // Strip off any flags.
+    keycode = keycode & 0xFF;
 
     return keycode == VK_LBUTTON || keycode == VK_MBUTTON || keycode == VK_RBUTTON;
 }
@@ -56,68 +59,68 @@ uint16_t KeyboardClass::Check()
 
 uint16_t KeyboardClass::Get()
 {
-    while (Check() == 0) {
-        //empty
-    }
-
     return Buff_Get();
 }
 
-BOOL KeyboardClass::Put(KeyType keycode)
+BOOL KeyboardClass::Put(uint16_t keycode)
 {
     if (Is_Buffer_Full()) {
         //DEBUG_LOG("KeyboardClass::Put() buffer is full, unable to put key (%d) and returning %s.\n", keycode, "false");
-
         return false;
     }
 
     //DEBUG_LOG("KeyboardClass::Put() setting key (%d) and returning %s.\n", keycode, "true");
     Put_Element(keycode);
+
     return true;
 }
 
-BOOL KeyboardClass::Put_Key_Message(KeyType keycode, BOOL release)
+BOOL KeyboardClass::Put_Key_Message(uint16_t keycode, BOOL release)
 {
-    // as we are putting a keyboard message, check that the input keycode is not a mouse key
+    // As we are putting a keyboard message, check that the input keycode is not a mouse key.
     if (!Is_Mouse_Key(keycode)) {
+
         // Is the shift key pressed?
         if ((GetKeyState(VK_SHIFT) >> 8) & 0x80 || GetKeyState(VK_CAPITAL) & 8 || GetKeyState(VK_NUMLOCK) & 8) {
-            keycode |= SHIFT_KEY_PRESSED;
-            //DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_SHIFT is held down\n");
+            keycode |= KN_SHIFT_BIT;
+            //DEBUG_LOG("KeyboardClass::Put_Key_Message() SHIFT is held down\n");
         }
 
         // Is the ctrl key pressed?
         if ((GetKeyState(VK_CONTROL) >> 8) & 0x80) {
-            keycode |= CTRL_KEY_PRESSED;
-            //DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_CONTROL is held down\n");
+            keycode |= KN_CTRL_BIT;
+            //DEBUG_LOG("KeyboardClass::Put_Key_Message() CONTROL is held down\n");
         }
 
         // Is the alt key pressed?
         if ((GetKeyState(VK_MENU) >> 8) & 0x80) {
-            keycode |= ALT_KEY_PRESSED;
-            //DEBUG_LOG("KeyboardClass::Put_Key_Message() VK_MENU is held down\n");
+            keycode |= KN_ALT_BIT;
+            //DEBUG_LOG("KeyboardClass::Put_Key_Message() MENU is held down\n");
         }
+
     }
 
     // Mark if this is a keyup event rather than a key down event.
     if (release) {
-        keycode |= 0x800;
+        keycode |= KN_RLSE_BIT;
     }
 
     return Put(keycode);
 }
 
-BOOL KeyboardClass::Put_Mouse_Message(KeyType keycode, int x, int y, BOOL release)
+BOOL KeyboardClass::Put_Mouse_Message(uint16_t keycode, int mouse_x, int mouse_y, BOOL release)
 {
     if (Available_Buffer_Room() >= 3 && Is_Mouse_Key(keycode)) {
         /*DEBUG_LOG("KeyboardClass::Put_Mouse_Message() - key = %d, mouse_x = %d, mouse_y = %d, release = %d.\n",
             keycode,
-            x,
-            y,
+            mouse_x,
+            mouse_y,
             release);*/
+
         Put_Key_Message(keycode, release);
-        Put(x);
-        Put(y);
+
+        Put(mouse_x);
+        Put(mouse_y);
 
         return true;
     }
@@ -125,51 +128,50 @@ BOOL KeyboardClass::Put_Mouse_Message(KeyType keycode, int x, int y, BOOL releas
     return false;
 }
 
-char KeyboardClass::To_ASCII(KeyType keycode)
+char KeyboardClass::To_ASCII(uint16_t keycode)
 {
 #if defined PLATFORM_WINDOWS
-    int ascii_out;
     uint16_t charbuff[2];
 
-    if (keycode & 0x800) {
+    if (keycode & KN_RLSE_BIT) {
         return 0;
-    } else {
-        if (keycode & 0x100) {
-            m_keyboardState[16] = 0x80;
-        }
+    }
 
-        if (keycode & 0x200) {
-            m_keyboardState[17] = 0x80;
-        }
+    if (keycode & KN_SHIFT_BIT) {
+        m_KeyboardState[VK_SHIFT] = 0x80;
+    }
 
-        if (keycode & 0x400) {
-            m_keyboardState[18] = 0x80;
-        }
+    if (keycode & KN_CTRL_BIT) {
+        m_KeyboardState[VK_CONTROL] = 0x80;
+    }
 
-        ascii_out = ToAscii(keycode, MapVirtualKeyA(keycode, MAPVK_VK_TO_VSC), m_keyboardState, charbuff, 0);
+    if (keycode & KN_ALT_BIT) {
+        m_KeyboardState[VK_MENU] = 0x80;
+    }
 
-        if (keycode & 0x100) {
-            m_keyboardState[16] = 0;
-        }
+    int ascii_out = ToAscii(keycode, MapVirtualKeyA(keycode, MAPVK_VK_TO_VSC), m_KeyboardState, charbuff, 0);
 
-        if (keycode & 0x200) {
-            m_keyboardState[17] = 0;
-        }
+    if (keycode & KN_SHIFT_BIT) {
+        m_KeyboardState[VK_SHIFT] = 0;
+    }
 
-        if (keycode & 0x400) {
-            m_keyboardState[18] = 0;
-        }
+    if (keycode & KN_CTRL_BIT) {
+        m_KeyboardState[VK_CONTROL] = 0;
+    }
 
-        if (ascii_out != 1) {
-            return 0;
-        }
+    if (keycode & KN_ALT_BIT) {
+        m_KeyboardState[VK_MENU] = 0;
+    }
+
+    if (ascii_out != 1) {
+        return 0;
     }
 
     return *charbuff;
 #endif
 }
 
-BOOL KeyboardClass::Down(KeyType keycode)
+BOOL KeyboardClass::Down(uint16_t keycode)
 {
 #if defined PLATFORM_WINDOWS
     if (keycode == VK_LBUTTON || keycode == VK_RBUTTON) {
@@ -183,16 +185,16 @@ BOOL KeyboardClass::Down(KeyType keycode)
 #endif
 }
 
-BOOL KeyboardClass::Up(KeyType keycode)
+BOOL KeyboardClass::Up(uint16_t keycode)
 {
     return !Down(keycode);
 }
 
 uint16_t KeyboardClass::Fetch_Element()
 {
-    if (m_elementGetPos != m_elementPutPos) {
-        uint16_t val = m_elements[m_elementGetPos];
-        m_elementGetPos = (m_elementGetPos + 1) % ARRAY_SIZE(m_elements);
+    if (m_ElementGetPos != m_ElementPutPos) {
+        uint16_t val = m_Elements[m_ElementGetPos];
+        m_ElementGetPos = (m_ElementGetPos + 1) % ARRAY_SIZE(m_Elements);
 
         return val;
     }
@@ -203,7 +205,7 @@ uint16_t KeyboardClass::Fetch_Element()
 uint16_t KeyboardClass::Peek_Element() const
 {
     if (!Is_Buffer_Empty()) {
-        return m_elements[m_elementGetPos];
+        return m_Elements[m_ElementGetPos];
     }
 
     return 0;
@@ -211,18 +213,18 @@ uint16_t KeyboardClass::Peek_Element() const
 
 uint16_t KeyboardClass::Peek_Element_Ahead(int steps)
 {
-    if (steps < 0 || steps >= ARRAY_SIZE(m_elements) || Is_Buffer_Empty()) {
+    if (steps < 0 || steps >= ARRAY_SIZE(m_Elements) || Is_Buffer_Empty()) {
         return steps;
     }
 
-    return m_elements[steps + m_elementGetPos];
+    return m_Elements[steps + m_ElementGetPos];
 }
 
-BOOL KeyboardClass::Put_Element(KeyType key)
+BOOL KeyboardClass::Put_Element(uint16_t key)
 {
     if (!Is_Buffer_Full()) {
-        m_elements[m_elementPutPos] = key;
-        m_elementPutPos = (m_elementPutPos + 1) % ARRAY_SIZE(m_elements);
+        m_Elements[m_ElementPutPos] = key;
+        m_ElementPutPos = (m_ElementPutPos + 1) % ARRAY_SIZE(m_Elements);
 
         return true;
     }
@@ -233,19 +235,20 @@ BOOL KeyboardClass::Put_Element(KeyType key)
 #if defined PLATFORM_WINDOWS
 BOOL KeyboardClass::Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    // Has the message been handled?
     BOOL handled = false;
 
+    // Get two shorts from lParam.
+    // This gets mouse pos (for mouse events) relative to window.
     POINT point;
-
-    // get two shorts from lParam.
-    // This gets mouse pos (for mouse events) relative to window
     point.x = lParam & 0xFFFF;
     point.y = (lParam >> 16) & 0xFFFF;
 
-    // this converts relative window pos to absolute screen pos
+    // This converts relative window pos to absolute screen pos.
     // ClientToScreen(hWnd, &point);
 
     switch (message) {
+
         case WM_LBUTTONDOWN:
             // DEBUG_LOG("KeyboardClass::Message_Handler(WM_LBUTTONDOWN), %d, %d.\n", point.x, point.y);
             Put_Mouse_Message(VK_LBUTTON, point.x, point.y, false);
@@ -362,18 +365,18 @@ BOOL KeyboardClass::Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
 uint16_t KeyboardClass::Buff_Get()
 {
-    // Busy wait for input?
-    while (Check() == 0) {
+    // Wait until there is a valid key pressed.
+    while (Check() == KN_NONE) {
         // empty
     }
 
     uint16_t key_val = Fetch_Element();
 
     if (Is_Mouse_Key(key_val)) {
-        m_mouseQX = Fetch_Element();
-        m_mouseQY = Fetch_Element();
+        m_MouseQX = Fetch_Element();
+        m_MouseQY = Fetch_Element();
 
-        // DEBUG_LOG("Getting Mouse button event at %d, %d.\n", m_mouseQX, m_mouseQY);
+        // DEBUG_LOG("Getting Mouse button event at %d, %d.\n", m_MouseQX, m_MouseQY);
     }
 
     return key_val;
@@ -381,21 +384,21 @@ uint16_t KeyboardClass::Buff_Get()
 
 BOOL KeyboardClass::Is_Buffer_Full() const
 {
-    return (m_elementPutPos + 1) % KBD_BUFFER_SIZE == m_elementGetPos;
+    return (m_ElementPutPos + 1) % KEYBOARD_BUFFER_SIZE == m_ElementGetPos;
 }
 
 BOOL KeyboardClass::Is_Buffer_Empty() const
 {
-    return m_elementGetPos == m_elementPutPos;
+    return m_ElementGetPos == m_ElementPutPos;
 }
 
 void KeyboardClass::Clear()
 {
     Fill_Buffer_From_System();
-    m_elementGetPos = m_elementPutPos;
+    m_ElementGetPos = m_ElementPutPos;
 
     Fill_Buffer_From_System();
-    m_elementGetPos = m_elementPutPos;
+    m_ElementGetPos = m_ElementPutPos;
 }
 
 void KeyboardClass::Fill_Buffer_From_System()
@@ -422,16 +425,16 @@ void KeyboardClass::Fill_Buffer_From_System()
 
 int KeyboardClass::Available_Buffer_Room() const
 {
-    if (m_elementGetPos == m_elementPutPos) {
-        return KBD_BUFFER_SIZE; // ARRAY_SIZE(m_elements)
+    if (m_ElementGetPos == m_ElementPutPos) {
+        return KEYBOARD_BUFFER_SIZE;
     }
 
-    if (m_elementGetPos < m_elementPutPos) {
-        return m_elementPutPos - m_elementGetPos;
+    if (m_ElementGetPos < m_ElementPutPos) {
+        return m_ElementPutPos - m_ElementGetPos;
     }
 
-    if (m_elementGetPos > m_elementPutPos) {
-        return KBD_BUFFER_SIZE - (m_elementPutPos - m_elementGetPos); // ARRAY_SIZE(m_elements)
+    if (m_ElementGetPos > m_ElementPutPos) {
+        return KEYBOARD_BUFFER_SIZE - (m_ElementPutPos - m_ElementGetPos);
     }
 
     return 0;

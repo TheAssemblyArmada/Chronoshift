@@ -168,7 +168,7 @@ void EditClass::Draw_Text(const char *text)
 int EditClass::Handle_Key(KeyASCIIType character)
 {
     if (character < KA_BACKSPACE) {
-        if (character == KA_NULL) {
+        if (character == KA_NONE) {
             return true;
         }
     } else {

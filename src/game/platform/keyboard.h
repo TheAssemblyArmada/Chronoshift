@@ -24,32 +24,22 @@
 #include <winuser.h>
 #endif
 
-#define KBD_BUFFER_SIZE 256
-
 // Keycode info
 // http://codebreak.com/git/azuki/Odilon/commit/d2119a90d807d09f90b3364199e672dc678a4e80/raw/?path=Odilon%2FGKeyFook.cs
 // https://opensource.apple.com/source/WebCore/WebCore-1298/platform/WindowsKeyboardCodes.h
 // http://www.opensource.apple.com/source/WebCore/WebCore-4A93/platform/gdk/KeyboardCodes.h
 // https://code.google.com/p/chromium/codesearch#chromium/src/ui/events/keycodes/keyboard_codes_posix.h
+// http://thecodeforyou.blogspot.com/2013/01/vb-keyascii-values.html
 
-#define SHIFT_KEY_PRESSED 0x100
-#define CTRL_KEY_PRESSED 0x200
-#define ALT_KEY_PRESSED 0x400
-#define WIN_KEY_PRESSED 0x800 // can't be 0x800, that is used to flag a key released
-#define NUMLOCK_KEY_PRESSED 0x200 // needs checking!
-#define SCROLL_KEY_PRESSED 0x200 // needs checking!
-
-typedef uint16_t KeyType;
-
-enum WWKeyType
+enum KeyType
 {
-    WWKEY_SHIFT_BIT = 0x1000,
-    WWKEY_CTRL_BIT = 0x1000,
-    WWKEY_ALT_BIT = 0x1000,
-    WWKEY_RLS_BIT = 0x1000,
-    WWKEY_VK_BIT = 0x1000,
-    WWKEY_DBL_BIT = 0x1000,
-    WWKEY_BTN_BIT = 0x00401000
+    KEY_SHIFT_BIT = 0x100,
+    KEY_CTRL_BIT = 0x200,
+    KEY_ALT_BIT = 0x400,
+    KEY_RLS_BIT = 0x800,
+    KEY_VK_BIT = 0x1000,
+    KEY_DBL_BIT = 0x2000,
+    KEY_BTN_BIT = 0x8000
 };
 
 enum KeyMWheelType
@@ -66,158 +56,10 @@ enum KeyModifierType
     KEY_WINKEY = 0x8
 };
 
-// ftp://ftp.westwood.com/pub/redalert/info/remap.txt
-// this is the VK codes?
-// looking at ra3.00 dissembly, the code at 0051D4A2 shows KeyNumType checking for 0x1B (ESC) and then for 0x8064, and aslo
-// looking at the  To_ASCII code, what makes me think that this is like a strage VK num and bitfield mix? could it be
-// including some modifer?
-#if 0 //DOS Version
 enum KeyNumType
 {
     KN_NONE = 0x0,
-    KN_GRAVE = 0x01,
-    KN_1 = 0x02,
-    KN_2 = 0x03,
-    KN_3 = 0x04,
-    KN_4 = 0x05,
-    KN_5 = 0x06,
-    KN_6 = 0x07,
-    KN_7 = 0x08,
-    KN_8 = 0x09,
-    KN_9 = 0x0A,
-    KN_0 = 0x0B,
-    KN_MINUS = 0x0C,
-    KN_EQUAL = 0x0D,
-    KN_RESERVED1 = 0x0E,
-    KN_BACKSPACE = 0x0F,
-    KN_TAB = 0x10,
-    KN_Q = 0x11,
-    KN_W = 0x12,
-    KN_E = 0x13,
-    KN_R = 0x14,
-    KN_T = 0x15,
-    KN_Y = 0x16,
-    KN_U = 0x17,
-    KN_I = 0x18,
-    KN_O = 0x19,
-    KN_P = 0x1A,
-    KN_LBRACKET = 0x1B,
-    KN_RBRACKET = 0x1C,
-    KN_BACKSLASH = 0x1D,
-    KN_CAPSLOCK = 0x1E,
-    KN_A = 0x1F,
-    KN_S = 0x20,
-    KN_D = 0x21,
-    KN_F = 0x22,
-    KN_G = 0x23,
-    KN_H = 0x24,
-    KN_J = 0x25,
-    KN_K = 0x26,
-    KN_L = 0x27,
-    KN_SEMICOLON = 0x28,
-    KN_SQUOTE = 0x29,
-    KN_BACKSLASH2 = 0x2A,
-    KN_RETURN = 0x2B,
-    KN_LSHIFT = 0x2C,
-    KN_MOUSE_MOVE = 0x2D,
-    KN_Z = 0x2E,
-    KN_X = 0x2F,
-    KN_C = 0x30,
-    KN_V = 0x31,
-    KN_B = 0x32,
-    KN_N = 0x33,
-    KN_M = 0x34,
-    KN_COMMA = 0x35,
-    KN_PERIOD = 0x36,
-    KN_SLASH = 0x37,
-    KN_RESERVED3 = 0x38,
-    KN_RSHIFT = 0x39,
-    KN_LCTRL = 0x3A,
-    KN_LCOMM = 0x3B, // todo KN_WINKEY
-    KN_LALT = 0x3C,
-    KN_SPACE = 0x3D,
-    KN_RALT = 0x3E,
-    KN_RCOMM = 0x3F, // todo KN_WINKEY
-    KN_RCTRL = 0x40,
-    KN_LMOUSE = 0x41,
-    KN_RMOUSE = 0x42,
-    KN_JBUTTON1 = 0x43,
-    KN_JBUTTON2 = 0x44,
-    KN_J_UP = 0x45,
-    KN_J_RIGHT = 0x46,
-    KN_J_DOWN = 0x47,
-    KN_J_LEFT = 0x48,
-    KN_SPECIAL9 = 0x49,
-    KN_SPECIAL10 = 0x4A,
-    KN_E_INSERT = 0x4B,
-    KN_E_DELETE = 0x4C,
-    KN_RESERVED4 = 0x4D,
-    KN_RESERVED5 = 0x4E,
-    KN_E_LEFT = 0x4F,
-    KN_E_HOME = 0x50,
-    KN_E_END = 0x51,
-    KN_RESERVED6 = 0x52,
-    KN_E_UP = 0x53,
-    KN_E_DOWN = 0x54,
-    KN_E_PGUP = 0x55,
-    KN_E_PGDN = 0x56,
-    KN_K_LPAREN = 0x57,
-    KN_K_RPAREN = 0x58,
-    KN_E_RIGHT = 0x59,
-    KN_NUMLOCK = 0x5A,
-    KN_HOME = 0x5B,
-    KN_UPLEFT = 0x5B,
-    KN_LEFT = 0x5C,
-    KN_END = 0x5D,
-    KN_DOWNLEFT = 0x5D,
-    KN_RESERVED7 = 0x5E,
-    KN_KEYPAD_SLASH = 0x5F,
-    KN_UP = 0x60,
-    KN_CENTER = 0x61,
-    KN_DOWN = 0x62,
-    KN_INSERT = 0x63,
-    KN_KEYPAD_ASTERISK = 0x64,
-    KN_PGUP = 0x65,
-    KN_UPRIGHT = 0x65,
-    KN_RIGHT = 0x66,
-    KN_PGDN = 0x67,
-    KN_DOWNRIGHT = 0x67,
-    KN_DELETE = 0x68,
-    KN_KEYPAD_MINUS = 0x69,
-    KN_KEYPAD_PLUS = 0x6A,
-    KN_RESERVED8 = 0x6B,
-    KN_KEYPAD_RETURN = 0x6C,
-    KN_RESERVED9 = 0x6D,
-    KN_ESC = 0x6E,
-    KN_HELP = 0x6F,
-    KN_F1 = 0x70,
-    KN_F2 = 0x71,
-    KN_F3 = 0x72,
-    KN_F4 = 0x73,
-    KN_F5 = 0x74,
-    KN_F6 = 0x75,
-    KN_F7 = 0x76,
-    KN_F8 = 0x77,
-    KN_F9 = 0x78,
-    KN_F10 = 0x79,
-    KN_F11 = 0x7A,
-    KN_F12 = 0x7B,
-    KN_PRNTSCRN = 0x7C,
-    KN_SCROLLLOCK = 0x7D,
-    KN_PAUSE = 0x7E,
-    KN_SHIFT_BIT = 0x1000,
-    KN_CTRL_BIT = 0x1000,
-    KN_ALT_BIT = 0x1000,
-    KN_RLSE_BIT = 0x1000,
-    KN_LCOMM_BIT = 0x1000,
-    KN_RCOMM_BIT = 0x1000,
-    KN_BUTTON = 0x00401000
-};
-#endif
-// Windows verson (virtual keys)
-enum KeyNumType
-{
-    KN_NONE = 0x0,
+
     KN_0 = 0x30,
     KN_1 = 0x31,
     KN_2 = 0x32,
@@ -325,21 +167,161 @@ enum KeyNumType
     KN_X = 0x58,
     KN_Y = 0x59,
     KN_Z = 0x5A,
+
     KN_SHIFT_BIT = 0x100,
     KN_CTRL_BIT = 0x200,
     KN_ALT_BIT = 0x400,
     KN_RLSE_BIT = 0x800,
+
     KN_BUTTON = 0x8000,
 };
 
 enum KeyASCIIType
 {
-    KA_NULL = 0,
-    KA_BACKSPACE = 8,
-    KA_RETURN = 13,
-    KA_ESC = 27,
-    KA_SPACE = 32,
-    KEY_MAX = 0x7FFF,
+    KA_NONE = 0x0,
+
+    KA_MORE = 0x1,
+    KA_SETBKGDCOL = 0x2,
+    KA_SETFORECOL = 0x6,
+    KA_FORMFEED = 0xC,
+    KA_SPCTAB = 0x14,
+    KA_SETX = 0x19,
+    KA_SETY = 0x1A,
+    KA_SPACE = 0x20,
+    KA_EXCLAMATION = 0x21,
+    KA_DQUOTE = 0x22,
+    KA_POUND = 0x23,
+    KA_DOLLAR = 0x24,
+    KA_PERCENT = 0x25,
+    KA_AMPER = 0x26,
+    KA_SQUOTE = 0x27,
+    KA_LPAREN = 0x28,
+    KA_RPAREN = 0x29,
+    KA_ASTERISK = 0x2A,
+    KA_PLUS = 0x2B,
+    KA_COMMA = 0x2C,
+    KA_MINUS = 0x2D,
+    KA_PERIOD = 0x2E,
+    KA_SLASH = 0x2F,
+    KA_0 = 0x30,
+    KA_1 = 0x31,
+    KA_2 = 0x32,
+    KA_3 = 0x33,
+    KA_4 = 0x34,
+    KA_5 = 0x35,
+    KA_6 = 0x36,
+    KA_7 = 0x37,
+    KA_8 = 0x38,
+    KA_9 = 0x39,
+    KA_COLON = 0x3A,
+    KA_SEMICOLON = 0x3B,
+    KA_LESS_THAN = 0x3C,
+    KA_EQUAL = 0x3D,
+    KA_GREATER_THAN = 0x3E,
+    KA_QUESTION = 0x3F,
+    KA_AT = 0x40,
+    KA_A = 0x41,
+    KA_B = 0x42,
+    KA_C = 0x43,
+    KA_D = 0x44,
+    KA_E = 0x45,
+    KA_F = 0x46,
+    KA_G = 0x47,
+    KA_H = 0x48,
+    KA_I = 0x49,
+    KA_J = 0x4A,
+    KA_K = 0x4B,
+    KA_L = 0x4C,
+    KA_M = 0x4D,
+    KA_N = 0x4E,
+    KA_O = 0x4F,
+    KA_P = 0x50,
+    KA_Q = 0x51,
+    KA_R = 0x52,
+    KA_S = 0x53,
+    KA_T = 0x54,
+    KA_U = 0x55,
+    KA_V = 0x56,
+    KA_W = 0x57,
+    KA_X = 0x58,
+    KA_Y = 0x59,
+    KA_Z = 0x5A,
+    KA_LBRACKET = 0x5B,
+    KA_BACKSLASH = 0x5C,
+    KA_RBRACKET = 0x5D,
+    KA_CARROT = 0x5E,
+    KA_UNDERLINE = 0x5F,
+    KA_GRAVE = 0x60,
+    KA_a = 0x61,
+    KA_b = 0x62,
+    KA_c = 0x63,
+    KA_d = 0x64,
+    KA_e = 0x65,
+    KA_f = 0x66,
+    KA_g = 0x67,
+    KA_h = 0x68,
+    KA_i = 0x69,
+    KA_j = 0x6A,
+    KA_k = 0x6B,
+    KA_l = 0x6C,
+    KA_m = 0x6D,
+    KA_n = 0x6E,
+    KA_o = 0x6F,
+    KA_p = 0x70,
+    KA_q = 0x71,
+    KA_r = 0x72,
+    KA_s = 0x73,
+    KA_t = 0x74,
+    KA_u = 0x75,
+    KA_v = 0x76,
+    KA_w = 0x77,
+    KA_x = 0x78,
+    KA_y = 0x79,
+    KA_z = 0x7A,
+    KA_LBRACE = 0x7B,
+    KA_BAR = 0x7C,
+    KA_RBRACE = 0x7D,
+    KA_TILDA = 0x7E,
+    KA_ESC = 0x1B,
+    KA_EXTEND = 0x1B,
+    KA_RETURN = 0xD,
+    KA_BACKSPACE = 0x8,
+    KA_TAB = 0x9,
+    KA_DELETE = 0x2E,
+    KA_INSERT = 0x2D,
+    KA_PGDN = 0x22,
+    KA_DOWNRIGHT = 0x22,
+    KA_DOWN = 0x28,
+    KA_END = 0x23,
+    KA_DOWNLEFT = 0x23,
+    KA_RIGHT = 0x27,
+    KA_KEYPAD5 = 0x29,
+    KA_LEFT = 0x25,
+    KA_PGUP = 0x21,
+    KA_UPRIGHT = 0x21,
+    KA_UP = 0x26,
+    KA_HOME = 0x24,
+    KA_UPLEFT = 0x24,
+    KA_F12 = 0x7B,
+    KA_F11 = 0x7A,
+    KA_F10 = 0x79,
+    KA_F9 = 0x78,
+    KA_F8 = 0x77,
+    KA_F7 = 0x76,
+    KA_F6 = 0x75,
+    KA_F5 = 0x74,
+    KA_F4 = 0x73,
+    KA_F3 = 0x72,
+    KA_F2 = 0x71,
+    KA_F1 = 0x70,
+    KA_LMOUSE = 0x1,
+    KA_RMOUSE = 0x2,
+    KA_SHIFT_BIT = 0x100,
+    KA_CTRL_BIT = 0x200,
+    KA_ALT_BIT = 0x400,
+    KA_RLSE_BIT = 0x800,
+
+    KEY_MAX = 0x7FFF, // Force enum size.
 };
 
 class KeyboardClass
@@ -347,39 +329,30 @@ class KeyboardClass
 public:
     KeyboardClass();
     ~KeyboardClass() {}
-
-    int Get_MouseQX() { return m_mouseQX; }
-    int Get_MouseQY() { return m_mouseQY; }
     uint16_t Check();
     uint16_t Get();
-    char To_ASCII(KeyType keycode);
-    BOOL Down(KeyType keycode);
-    BOOL Up(KeyType keycode);
+    char To_ASCII(uint16_t keycode);
+    BOOL Down(uint16_t keycode);
+    BOOL Up(uint16_t keycode);
     void Clear();
-    void Set_Initialised(BOOL initialised) { m_initialised = initialised; }
+    void Set_Initialised(BOOL initialised) { m_Initialised = initialised; }
+    int Get_MouseQX() { return m_MouseQX; }
+    int Get_MouseQY() { return m_MouseQY; }
+
 #if defined PLATFORM_WINDOWS
     BOOL Message_Handler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
-    static void Hook_Me();
-    static BOOL Hook_Handler(KeyboardClass *ptr, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    static uint16_t Hook_Check(KeyboardClass *ptr);
-    static uint16_t Hook_Get(KeyboardClass *ptr);
-    static void Hook_Clear(KeyboardClass *ptr);
-    static void Hook_Fill(KeyboardClass *ptr);
-#endif
-
 private:
-    BOOL Is_Mouse_Key(KeyType keycode);
+    BOOL Is_Mouse_Key(uint16_t keycode);
     BOOL Mouse_Buttons_Swapped();
-    BOOL Put(KeyType keycode);
-    BOOL Put_Key_Message(KeyType keycode, BOOL release);
-    BOOL Put_Mouse_Message(KeyType keycode, int x, int y, BOOL release);
+    BOOL Put(uint16_t keycode);
+    BOOL Put_Key_Message(uint16_t keycode, BOOL release = false);
+    BOOL Put_Mouse_Message(uint16_t keycode, int mouse_x, int mouse_y, BOOL release = false);
     uint16_t Fetch_Element();
     uint16_t Peek_Element() const;
     uint16_t Peek_Element_Ahead(int steps);
-    BOOL Put_Element(KeyType keycode);
+    BOOL Put_Element(uint16_t keycode);
     BOOL Is_Buffer_Full() const;
     BOOL Is_Buffer_Empty() const;
     void Fill_Buffer_From_System();
@@ -387,13 +360,36 @@ private:
     uint16_t Buff_Get();
 
 private:
-    int m_mouseQX;
-    int m_mouseQY;
-    uint8_t m_keyboardState[KBD_BUFFER_SIZE];
-    KeyType m_elements[KBD_BUFFER_SIZE]; // Buffer area for circular buffer.
-    int m_elementGetPos; // Position of the next retrievable entry.
-    int m_elementPutPos; // Position of the next free space in the buffer.
-    BOOL m_initialised;
+    enum {
+        KEYBOARD_BUFFER_SIZE = 256
+    };
+
+    int m_MouseQX;
+    int m_MouseQY;
+
+    // 256-byte array that has the status data for each key using the same
+    // format as the windows virtual key state array.
+    // Values 0 to 31 are non - printable and values 128 - 255 are
+    // considered "Extended". These "extended" codes may vary in appearance
+    // from computer to computer(and from font to font), so use with caution.
+    uint8_t m_KeyboardState[256];
+
+    uint16_t m_Elements[KEYBOARD_BUFFER_SIZE]; // Buffer area for circular buffer.
+    int m_ElementGetPos; // Position of the next retrievable entry.
+    int m_ElementPutPos; // Position of the next free space in the buffer.
+    BOOL m_Initialised;
+
+#ifndef CHRONOSHIFT_STANDALONE
+public:
+    static void Hook_Me();
+
+private:
+    static BOOL Hook_Handler(KeyboardClass *ptr, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static uint16_t Hook_Check(KeyboardClass *ptr);
+    static uint16_t Hook_Get(KeyboardClass *ptr);
+    static void Hook_Clear(KeyboardClass *ptr);
+    static void Hook_Fill(KeyboardClass *ptr);
+#endif
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
