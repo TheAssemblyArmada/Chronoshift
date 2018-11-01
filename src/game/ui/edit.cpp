@@ -115,7 +115,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
             flags = INPUT_NONE;
         } else {
             character = g_keyboard->To_ASCII(key);
-            if (key & KEY_VK_BIT && character >= '0' && character <= '9') {
+            if (key & KEY_VK_BIT && character >= KA_0 && character <= KA_9) {
                 key = (KeyNumType)(key & (~KEY_VK_BIT));
 
                 if (!(flags & MOUSE_LEFT_RLSE) && !(flags & MOUSE_RIGHT_RLSE) && Handle_Key((KeyASCIIType)character)) {
@@ -124,7 +124,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
 
                     return ControlClass::Action(flags, key);
                 }
-            } else if ((key & KEY_VK_BIT || character < ' ' || character > '\xFF') && key != KN_RETURN && key != KN_BACKSPACE) {
+            } else if ((key & KEY_VK_BIT || character < KA_SPACE || character > '\xFF') && key != KN_RETURN && key != KN_BACKSPACE) {
                 key = KN_NONE;
                 flags &= ~KEYBOARD_INPUT;
             } else if (!(flags & MOUSE_LEFT_RLSE) && !(flags & MOUSE_RIGHT_RLSE)) {
