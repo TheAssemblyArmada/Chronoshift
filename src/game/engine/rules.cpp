@@ -26,16 +26,16 @@ fixed &RulesClass::EngineerDamage = Make_Global<fixed>(0x00665E02);
 fixed &RulesClass::EngineerCaptureLevel = Make_Global<fixed>(0x00665E04);
 fixed &RulesClass::ChronoTankDuration = Make_Global<fixed>(0x00665E00);
 int &RulesClass::MTankDistance = Make_Global<int>(0x006016A4);
-int RulesClass::CarrierLaunchDelay;
+int &RulesClass::CarrierLaunchDelay = Make_Global<int>(0x006016A8);
 fixed &RulesClass::QuakeUnitDamage = Make_Global<fixed>(0x00665DF8);
-fixed RulesClass::QuakeVesselDamage;
+fixed RulesClass::QuakeVesselDamage = (fixed)0;
 fixed &RulesClass::QuakeBuildingDamage = Make_Global<fixed>(0x00665DFA);
 int &RulesClass::QuakeInfantryDamage = Make_Global<int>(0x006016AC);
 int &RulesClass::QuakeDelay = Make_Global<int>(0x00665DFC);
 BOOL &RulesClass::OrigNewUnitsEnabled = Make_Global<BOOL>(0x00665DE0);
 BOOL &RulesClass::OrigSecretUnitsEnabled = Make_Global<BOOL>(0x00665DE4);
-RulesClass &Rule = Make_Global<RulesClass>(0x00666704);
 fixed RulesClass::CloakDelay;
+RulesClass &Rule = Make_Global<RulesClass>(0x00666704);
 #else
 RulesClass Rule;
 #endif
@@ -65,7 +65,7 @@ RulesClass::RulesClass() :
     BaseSizeAdd(3),
     PowerSurplus(50),
     InfantryReserve(2000),
-    InfantryBaseMult(1),
+    InfantryBaseMult(2),
     ChronoDuration("3.0"),
     WaterCrateChance("0.2"),
     SoloCrateMoney(2000),
@@ -73,11 +73,11 @@ RulesClass::RulesClass() :
     UnitCrateType(UNIT_NONE),
     PatrolScan("0.016"),
     TeamDelay("0.6"),
-    SubmergeDelay("0.02"),
+    SubmergeDelay("0.00"),
     GameSpeedBias("1.0"),
     BaseBias("1.0"),
     VortexRange(2560), // 10 cells in leptons
-    VortexSpeed((MPHType)10),
+    VortexSpeed(MPHType(10)),
     VortexDamage(200),
     VortexChance("0.2"),
     ExpSpread("0.5"),
@@ -85,9 +85,9 @@ RulesClass::RulesClass() :
     ParaTech(10),
     SpyPlaneTech(10),
     ParabombTech(10),
-    SilverCrate(CRATE_NONE),
-    WoodCrate(CRATE_NONE),
-    WaterCrate(CRATE_NONE),
+    SilverCrate(CRATE_HEAL_BASE),
+    WoodCrate(CRATE_MONEY),
+    WaterCrate(CRATE_MONEY),
     CrateMinimum(1),
     CrateMaximum(255),
     LZScanRadius(4096),		//16 cells in leptons
@@ -97,7 +97,7 @@ RulesClass::RulesClass() :
     MPlayerBases(true),
     MPlayerOreGrows(true),
     MPlayerCrates(true),
-    MPlayerBit16(false),
+    MPlayerAIPlayers(false),
     MPlayerCaptureTheFlag(false),
     DropZoneRadius(1024), // 4 cells in leptons
     MessageDelay("0.6"),
@@ -157,7 +157,7 @@ RulesClass::RulesClass() :
     GapRadius(10),
     GapRegenInterval("0.1"),
     RadarJamRadius(2560), // 10 cells in leptons
-    Incoming((MPHType)0),
+    Incoming(MPHType(0)),
     MinDamage(1),
     MaxDamage(1000),
     RepairStep(5),
@@ -190,13 +190,13 @@ RulesClass::RulesClass() :
     MaxProjectile(20),
     MaxWeapon(20),
     MaxWarhead(20),
-    MaxTrigType(60),
+    MaxTrigType(80),
     CloseEnough(640), // 2.5 cells in leptons
     Stray(512),// 2 cells in leptons
     Crush(384), // .5 cells in leptons
-    CrateRadius(640), // 2.5 cells. leptons
-    HomingScatter(512), //2 cells. leptons
-    BallisticScatter(256), //1 cells. leptons
+    CrateRadius(640), // 2.5 cells in leptons
+    HomingScatter(512), //2 cells in leptons
+    BallisticScatter(256), //1 cells in leptons
     RefundPercent("0.5"),
     IronCurtain("0.5"),
     BridgeStrength(1000),
@@ -206,16 +206,16 @@ RulesClass::RulesClass() :
     PathDelay("0.016"),
     MovieTime("0.25"),
     ChronoTechLevel(1),
-    OreNearScan(1536), //6 cells. leptons
-    OreFarScan(8192) //32 cells. leptons
+    OreNearScan(1536), //6 cells in leptons
+    OreFarScan(8192) //32 cells in leptons
 #ifdef CHRONOSHIFT_STANDALONE
     ,
-    ChronoTankDuration(fixed::_0_1),
+    ChronoTankDuration("0.0"),
     MTankDistance(30),
     CarrierLaunchDelay(60),
-    QuakeUnitDamage(fixed::_1_2),
-    QuakeVesselDamage(fixed::_1_2),
-    QuakeBuildingDamage(fixed::_1_4),
+    QuakeUnitDamage("0.5"),
+    QuakeVesselDamage("0.5"),
+    QuakeBuildingDamage("0.25"),
     QuakeInfantryDamage(0),
     QuakeDelay(120),
     CloakDelay("0.02"))
@@ -225,21 +225,21 @@ RulesClass::RulesClass() :
     IQControls.SuperWeapons = 4;
     IQControls.Production = 5;
     IQControls.GuardArea = 4;
-    IQControls.RepairSell = 1;
+    IQControls.RepairSell = 3;
     IQControls.AutoCrush = 2;
     IQControls.Scatter = 3;
     IQControls.ContentScan = 4;
     IQControls.Aircraft = 4;
-    IQControls.Harvester = 2;
+    IQControls.Harvester = 3;
     IQControls.SellBack = 2;
 
 #ifndef CHRONOSHIFT_STANDALONE
-    ChronoTankDuration = fixed::_0_1;
+    ChronoTankDuration = "0.0";
     MTankDistance = 30;
     CarrierLaunchDelay = 60;
-    QuakeUnitDamage = fixed::_1_2;
-    QuakeVesselDamage = fixed::_1_2;
-    QuakeBuildingDamage = fixed::_1_4;
+    QuakeUnitDamage = "0.5";
+    QuakeVesselDamage = "0.5";
+    QuakeBuildingDamage = "0.25";
     QuakeInfantryDamage = 0;
     QuakeDelay = 120;
     CloakDelay = "0.02";
@@ -419,7 +419,7 @@ BOOL RulesClass::General(GameINIClass &ini)
         ChronoTechLevel = ini.Get_Int("General", "ChronoTechLevel", ChronoTechLevel);
         CrateRegen = ini.Get_Fixed("General", "CrateRegen", CrateRegen);
         VortexRange = ini.Get_Lepton("General", "VortexRange", VortexRange);
-        VortexSpeed = ini.Get_MPHType("General", "VortexSpeed", VortexSpeed); // The original code for this is odd.
+        VortexSpeed = ini.Get_MPHType("General", "VortexSpeed", VortexSpeed);
         VortexDamage = ini.Get_Int("General", "VortexDamage", VortexDamage);
         VortexChance = ini.Get_Fixed("General", "VortexChance", VortexChance);
 
@@ -446,7 +446,7 @@ BOOL RulesClass::MPlayer(GameINIClass &ini)
         MPlayerBases = ini.Get_Bool("MultiplayerDefaults", "Bases", MPlayerBases);
         MPlayerOreGrows = ini.Get_Bool("MultiplayerDefaults", "OreGrows", MPlayerOreGrows);
         MPlayerCrates = ini.Get_Bool("MultiplayerDefaults", "Crates", MPlayerCrates);
-        MPlayerBit16 = ini.Get_Bool("MultiplayerDefaults", "Bit16", MPlayerBit16);
+        MPlayerAIPlayers = ini.Get_Bool("MultiplayerDefaults", "AIPlayers", MPlayerAIPlayers);
         MPlayerCaptureTheFlag = ini.Get_Bool("MultiplayerDefaults", "CaptureTheFlag", MPlayerCaptureTheFlag);
 
         return true;
