@@ -97,7 +97,7 @@ BOOL EditClass::Draw_Me(BOOL redraw)
 
 BOOL EditClass::Action(unsigned flags, KeyNumType &key)
 {
-    char character;
+    KeyASCIIType character;
 
     if (IgnoreInput) {
         return false;
@@ -118,7 +118,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
             if (key & KEY_VK_BIT && character >= KA_0 && character <= KA_9) {
                 key = (KeyNumType)(key & (~KEY_VK_BIT));
 
-                if (!(flags & MOUSE_LEFT_RLSE) && !(flags & MOUSE_RIGHT_RLSE) && Handle_Key((KeyASCIIType)character)) {
+                if (!(flags & MOUSE_LEFT_RLSE) && !(flags & MOUSE_RIGHT_RLSE) && Handle_Key(character)) {
                     key = KN_NONE;
                     flags &= ~KEYBOARD_INPUT;
 
@@ -128,7 +128,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
                 key = KN_NONE;
                 flags &= ~KEYBOARD_INPUT;
             } else if (!(flags & MOUSE_LEFT_RLSE) && !(flags & MOUSE_RIGHT_RLSE)) {
-                if (Handle_Key((KeyASCIIType)g_keyboard->To_ASCII(key))) {
+                if (Handle_Key(g_keyboard->To_ASCII(key))) {
                     key = KN_NONE;
                     flags &= ~KEYBOARD_INPUT;
 

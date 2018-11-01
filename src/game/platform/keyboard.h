@@ -331,7 +331,7 @@ public:
     ~KeyboardClass() {}
     uint16_t Check();
     uint16_t Get();
-    char To_ASCII(uint16_t keycode);
+    KeyASCIIType To_ASCII(uint16_t keycode);
     BOOL Down(uint16_t keycode);
     BOOL Up(uint16_t keycode);
     void Clear();

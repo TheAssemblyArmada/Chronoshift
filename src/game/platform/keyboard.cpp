@@ -128,13 +128,13 @@ BOOL KeyboardClass::Put_Mouse_Message(uint16_t keycode, int mouse_x, int mouse_y
     return false;
 }
 
-char KeyboardClass::To_ASCII(uint16_t keycode)
+KeyASCIIType KeyboardClass::To_ASCII(uint16_t keycode)
 {
 #if defined PLATFORM_WINDOWS
-    uint16_t charbuff[2];
+    KeyASCIIType character[2];
 
     if (keycode & KN_RLSE_BIT) {
-        return 0;
+        return KA_NONE;
     }
 
     if (keycode & KN_SHIFT_BIT) {
@@ -149,7 +149,7 @@ char KeyboardClass::To_ASCII(uint16_t keycode)
         m_KeyboardState[VK_MENU] = 0x80;
     }
 
-    int ascii_out = ToAscii(keycode, MapVirtualKeyA(keycode, MAPVK_VK_TO_VSC), m_KeyboardState, charbuff, 0);
+    int ascii_out = ToAscii(keycode, MapVirtualKeyA(keycode, MAPVK_VK_TO_VSC), m_KeyboardState, LPWORD(character), 0);
 
     if (keycode & KN_SHIFT_BIT) {
         m_KeyboardState[VK_SHIFT] = 0;
@@ -164,10 +164,10 @@ char KeyboardClass::To_ASCII(uint16_t keycode)
     }
 
     if (ascii_out != 1) {
-        return 0;
+        return KA_NONE;
     }
 
-    return *charbuff;
+    return character[0];
 #endif
 }
 
