@@ -34,7 +34,7 @@
 #ifdef COMPILER_WATCOM
 enum KeyType
 #else
-enum KeyType : int16_t
+enum KeyType : uint16_t
 #endif
 {
     KEY_SHIFT_BIT = 0x100,
@@ -63,7 +63,7 @@ enum KeyModifierType
 #ifdef COMPILER_WATCOM
 enum KeyNumType
 #else
-enum KeyNumType : int16_t
+enum KeyNumType : uint16_t
 #endif
 {
     KN_NONE = 0x0,
@@ -187,7 +187,7 @@ enum KeyNumType : int16_t
 #ifdef COMPILER_WATCOM
 enum KeyASCIIType
 #else
-enum KeyASCIIType : int16_t
+enum KeyASCIIType : uint16_t
 #endif
 {
     KA_NONE = 0x0,
