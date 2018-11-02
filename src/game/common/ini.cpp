@@ -303,6 +303,21 @@ int INIClass::Load(Straw &straw)
     return INI_LOAD_OVERWRITE;
 }
 
+bool INIClass::Is_Present(const char *section, const char *entry)
+{
+    DEBUG_ASSERT(section != nullptr);
+    //DEBUG_ASSERT(entry != nullptr);
+
+    if (section != nullptr && entry != nullptr) {
+        return Find_Entry(section, entry) != nullptr;
+
+    } else if (section != nullptr) {
+        return Find_Section(section) != nullptr;
+    }
+
+    return false;
+}
+
 INISection *INIClass::Find_Section(const char *section) const
 {
     DEBUG_ASSERT(section != nullptr);
