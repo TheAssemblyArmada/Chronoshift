@@ -158,8 +158,11 @@ public:
     List<INISection *> &Get_Section_List() { return m_sectionList; }
     IndexClass<int, INISection *> &Get_Section_Index() { return m_sectionIndex; }
 
+    bool Is_Present(const char *section, const char *entry = nullptr);
+
     // Returns the section object if it exists.
     INISection *Find_Section(const char *section) const;
+    bool Section_Present(const char *section) const { return Find_Section(section) != nullptr; }
     int Section_Count() { return m_sectionIndex.Count(); }
 
     // Returns the entry object if it exists.
