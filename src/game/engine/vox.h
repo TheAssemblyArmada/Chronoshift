@@ -158,7 +158,7 @@ DEFINE_ENUMERATION_OPERATORS(VoxType);
 #define VOX_BUFFERS 2
 
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
-#ifndef RAPP_STANDALONE
+#ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern void **SpeechBuffer;
 extern VoxType *SpeechRecord;

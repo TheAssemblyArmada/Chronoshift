@@ -44,7 +44,7 @@ class GameINIClass;
 class GroundClass
 {
 public:
-    GroundClass() : Buildable(false) { memcpy(Speeds, 0, sizeof(Speeds)); }
+    GroundClass() : Buildable(false) { memset(Speeds, 0, sizeof(Speeds)); }
 
     GroundClass(GroundClass const &that) : Buildable(that.Buildable) { memcpy(Speeds, that.Speeds, sizeof(Speeds)); }
 

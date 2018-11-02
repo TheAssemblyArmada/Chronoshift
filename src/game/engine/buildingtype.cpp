@@ -308,18 +308,18 @@ int BuildingTypeClass::Raw_Cost() const
 #ifndef CHRONOSHIFT_STANDALONE
     int (*func)(const BuildingTypeClass *) = reinterpret_cast<int (*)(const BuildingTypeClass *)>(0x00453C70);
     return func(this);
-#else
+#elif 0
     int cost = TechnoTypeClass::Raw_Cost();
 
     switch (m_Type) {
         case BUILDING_PROC:
-            cost -= UnitTypeClass::As_Reference(UNIT_HARVESTER).Cost;
+            cost -= UnitTypeClass::As_Reference(UNIT_HARVESTER).Get_Cost();
             break;
 
         case BUILDING_HELIPAD:
             if (Rule.Separate_Aircraft()) {
-                cost -= (AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Cost
-                            + AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Cost)
+                cost -= (AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Get_Cost()
+                            + AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Get_Cost())
                     / 2;
             }
 
@@ -330,6 +330,8 @@ int BuildingTypeClass::Raw_Cost() const
     };
 
     return cost;
+#else 
+	return 0;
 #endif
 }
 

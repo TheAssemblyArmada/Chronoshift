@@ -35,6 +35,7 @@ enum ModeControl {
 
 class DisplayClass : public MapClass
 {
+protected:
     // Internal gadget class for handling input to the tactical area of the game screen.
     class TacticalClass : public GadgetClass
     {

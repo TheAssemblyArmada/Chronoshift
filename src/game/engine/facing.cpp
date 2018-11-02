@@ -19,6 +19,10 @@
 #include "minmax.h"
 #include "swap.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 uint8_t const FacingClass::Facing8[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -358,13 +362,13 @@ FacingType Facing_From_Name(const char *name)
 {
     DEBUG_ASSERT(name != nullptr);
 
-    if (stricmp(name, "<none>") == 0 || stricmp(name, "none") == 0) {
+    if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return FACING_NONE;
     }
 
     if (name != nullptr) {
         for (FacingType facing = FACING_NORTH; facing < FACING_COUNT; ++facing) {
-            if (stricmp(name, FacingName[facing]) == 0) {
+            if (strcasecmp(name, FacingName[facing]) == 0) {
                 return facing;
             }
         }

@@ -18,6 +18,9 @@
 #include "stringex.h"
 #include <ctype.h>
 #include <stdio.h>
+#include <cstdlib>
+
+using std::atoi;
 
 const fixed fixed::_0_1(0, 1);
 const fixed fixed::_1_1(1, 1);

@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "int.h"
+#include <cstring>
 
 class Straw;
 
@@ -59,8 +60,8 @@ private:
 inline PKey &PKey::operator=(PKey const &that)
 {
     if (this != &that) {
-        memcpy(&m_modulus, &that.m_modulus, sizeof(m_modulus));
-        memcpy(&m_exponent, &that.m_exponent, sizeof(m_exponent));
+        std::memcpy(&m_modulus, &that.m_modulus, sizeof(m_modulus));
+        std::memcpy(&m_exponent, &that.m_exponent, sizeof(m_exponent));
         m_bitPrecision = that.m_bitPrecision;
     }
 

@@ -23,10 +23,13 @@
 
 #if defined(PLATFORM_WINDOWS)
 #include <mmsystem.h>
-#elif defined(PLATFORM_OSX)
+#else
+#include <unistd.h>
+#if defined(PLATFORM_OSX)
 #include <dispatch/dispatch.h>
 #elif defined(PLATFORM_UNIX)
 #include <sys/time.h>
+#endif
 #endif // PLATFORM_WINDOWS
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -53,7 +56,18 @@ public:
         usleep(1000 * interval);
 #endif // PLATFORM_WINDOWS || PLATFORM_UNIX || PLATFORM_OSX
     }
-
+    
+    static unsigned Get_Time()
+    {
+#ifdef PLATFORM_WINDOWS
+        return timeGetTime();
+#else
+        struct timeval now;
+        gettimeofday(&now, nullptr);
+        return now.tv_usec / 1000;
+#endif
+    }
+    
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif

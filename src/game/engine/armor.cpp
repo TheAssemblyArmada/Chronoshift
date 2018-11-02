@@ -16,6 +16,10 @@
 #include "armor.h"
 #include "gamedebug.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 const char *ArmorName[ARMOR_COUNT] = { "none", "wood", "light", "heavy", "concrete" };
 
 ArmorType Armor_From_Name(const char *name)

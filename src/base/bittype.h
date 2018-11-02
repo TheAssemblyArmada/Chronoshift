@@ -28,7 +28,7 @@
 #endif // _MSC_VER || (__GNUC__ || __clang__ || __WATCOM__)
     
     // Use these as pointers to do type punning.
-#if defined(COMPILER_GNUC) || defined(COMPILER_CLANG)
+#if defined(__GNUC__) || defined(__clang__)
     typedef float __attribute__((__may_alias__)) float_a;
     typedef int32_t __attribute__((__may_alias__)) int32_a;
     typedef uint32_t __attribute__((__may_alias__)) uint32_a;
@@ -36,6 +36,7 @@
     typedef int64_t __attribute__((__may_alias__)) int64_a;
     typedef uint64_t __attribute__((__may_alias__)) uint64_a;
     typedef wchar_t __attribute__((__may_alias__)) wchar_a;
+    typedef int BOOL; // Temp.
 #else   
     // MSVC doesn't currently enforce strict aliasing.
     typedef float float_a;

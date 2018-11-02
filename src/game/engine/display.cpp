@@ -61,7 +61,7 @@ BufferClass *&DisplayClass::TheaterBuffer = Make_Global<BufferClass *>(0x006680E
 BooleanVectorClass &DisplayClass::CellRedraw = Make_Global<BooleanVectorClass>(0x006587E8);
 #else
 LayerClass DisplayClass::Layers[LAYER_COUNT];
-TacticalClass DisplayClass::TacticalButton;
+DisplayClass::TacticalClass DisplayClass::TacticalButton;
 char DisplayClass::FadingBrighten[256];
 char DisplayClass::FadingShade[256];
 char DisplayClass::FadingWayDark[256];
