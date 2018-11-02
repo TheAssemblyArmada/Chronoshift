@@ -1,0 +1,90 @@
+environment:
+    matrix:
+        - CMAKE_GENERATOR:             "Watcom WMake"
+          USE_WATCOM:                  "1"
+          APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2017"
+        - CMAKE_GENERATOR:             "Visual Studio 15 2017"
+          USE_MSVC:                    "1"
+          APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2017"
+
+configuration:
+    - Release
+    - Debug
+
+clone_folder: c:\projects\chronoshift
+
+cache:
+    - c:\projects\open-watcom-c-win32-1.9.exe
+
+# scripts that are called at very beginning, before repo cloning
+init:
+  - cmd: cmake --version
+  - cmd: msbuild /version
+  - git config --global core.autocrlf input
+
+install:
+    - ps: >-
+        $CLONE_DIR = "c:\projects\chronoshift";
+        
+        Set-Location $CLONE_DIR | Out-Null;
+        & git submodule update --init --recursive;
+        
+        If ($env:USE_WATCOM -eq "1") {
+            $WATCOM_BASE      = "open-watcom-c-win32-1.9";
+            $WATCOM_INSTALLER = "$WATCOM_BASE.exe";
+            $WATCOM_URL       = "https://sourceforge.net/projects/openwatcom/files/open-watcom-1.9/$WATCOM_INSTALLER/download";
+
+            Set-Location c:\projects | Out-Null;
+
+            If (-Not (Test-Path "$WATCOM_INSTALLER")) {
+                    & appveyor DownloadFile "$WATCOM_URL" -FileName "$WATCOM_INSTALLER";
+            }
+
+            New-Item -ItemType directory -Path "$WATCOM_BASE" | Out-Null;
+            Copy-Item "$WATCOM_INSTALLER" "$WATCOM_BASE";
+
+            Set-Location "$WATCOM_BASE" | Out-Null;
+            & 7z x -y "$WATCOM_INSTALLER";
+
+            $CUR_LOCATION = "c:\projects\$WATCOM_BASE";
+
+            $env:PATH    = "$CUR_LOCATION\binw;$env:PATH";
+            $env:PATH    = "$CUR_LOCATION\binnt;$env:PATH";
+            $env:INCLUDE = "$CUR_LOCATION\h\nt;$env:INCLUDE";
+            $env:INCLUDE = "$env:INCLUDE;$CUR_LOCATION\h\nt\directx";
+            $env:INCLUDE = "$env:INCLUDE;$CUR_LOCATION\h\nt\ddk";
+            $env:INCLUDE = "$CUR_LOCATION\h;$env:INCLUDE";
+            $env:WATCOM  = "$CUR_LOCATION";
+            $env:EDPATH  = "$CUR_LOCATION\eddat";
+        }
+
+build_script:
+    - ps: >-
+        $BUILD_DIR = "c:\projects\chronoshift\build";
+
+        New-Item -ItemType directory -Path $BUILD_DIR | Out-Null;
+        Set-Location $BUILD_DIR | Out-Null;
+
+        If ($env:USE_WATCOM -eq "1") {
+                $BUILD_COMMAND = "wmake";
+        } Else {
+                If ($env:USE_OLD_MSBUILD -eq "1") {
+                        $env:PATH = "C:\Windows\Microsoft.NET\Framework\v3.5;$env:PATH";
+                }
+
+                $BUILD_COMMAND = "msbuild";
+                $BUILD_PARAMS  = @("/verbosity:normal", "$BUILD_DIR\CHRONOSHIFT.sln", "/p:Configuration=$env:configuration", "/m");
+        }
+
+        & cmake -G"$env:CMAKE_GENERATOR" $BUILD_TYPE $CMAKE_C_COMPILER $CMAKE_CXX_COMPILER ..;
+        & $BUILD_COMMAND $BUILD_PARAMS;
+        
+        If ($env:USE_MSVC -eq "1") {
+            & 7z a chronoshift.zip .\$env:configuration\chronoshift.dll .\$env:configuration\launch_chronoshift.exe -tzip;
+        } Else {
+            & 7z a chronoshift.zip .\chronoshift.dll .\launch_chronoshift.exe -tzip;
+        }
+
+artifacts:
+  - path: build/chronoshift.zip
+    name: zip-archive
