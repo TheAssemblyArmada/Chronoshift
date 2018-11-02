@@ -92,7 +92,7 @@ public:
         return that.m_left >= m_left && that.m_right <= m_right && that.m_top >= m_top && that.m_bottom <= m_bottom;
     }
 
-    TRect const Intersect(const TRect &that, T *xposthing = NULL, T *yposthing = NULL) const;
+    TRect const Intersect(const TRect &that, T *xposthing = nullptr, T *yposthing = nullptr) const;
     TRect const Union(TRect &that) const;
 
     void Add_Pos(TRect &that)

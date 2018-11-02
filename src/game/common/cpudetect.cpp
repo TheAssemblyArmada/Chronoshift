@@ -16,7 +16,7 @@
 #include "always.h"
 #include "cpudetect.h"
 #include "gamedebug.h"
-//#include "systimer.h"
+#include "ostimer.h"
 #include "stringex.h"
 #include <inttypes.h>   // For printf formatting macros
 #include <stdio.h>
@@ -379,16 +379,13 @@ static uint32_t Calculate_Processor_Speed(int64_t &ticks_per_second)
     uint64_t timer0 = __rdtsc();
     uint64_t timer1 = 0;
 
-#ifdef PLATFORM_WINDOWS
-    uint32_t start = timeGetTime();
+    uint32_t start = PlatformTimerClass::Get_Time();
     uint32_t elapsed;
 
-    while ( (elapsed = timeGetTime() - start) < 200 ) {
+    while ( (elapsed = PlatformTimerClass::Get_Time() - start) < 200 ) {
         timer1 = __rdtsc();
     }
-#else
-#error Implement appropriate timeGetTime replacements
-#endif
+
     int64_t t = timer1 - timer0;
 
     ticks_per_second = (1000 / 200) * t;	// Ticks per second
@@ -1534,9 +1531,11 @@ void CPUDetectClass::Init_Compact_Log()
 
     char work[256];
 
+#ifdef PLATFORM_WINDOWS
     TIME_ZONE_INFORMATION time_zone;
     GetTimeZoneInformation(&time_zone);
     COMPACT_LOG("%d\t", time_zone.Bias);
+#endif
 
     OSInfoStruct os_info;
     Get_OS_Info(os_info, OSVersionPlatformId, OSVersionNumberMajor, OSVersionNumberMinor, OSVersionBuildNumber);

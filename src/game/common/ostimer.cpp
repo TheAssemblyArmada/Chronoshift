@@ -30,7 +30,7 @@ void *&PlatformTimerClass::s_threadHandle = Make_Global<void *>(0x006ABF88);
 #else
 PlatformTimerClass *PlatformTimer = nullptr;
 BOOL PlatformTimerClass::s_timerSystemOn = false;
-BOOL P1latformTimerClass::s_inCallback = false;
+BOOL PlatformTimerClass::s_inCallback = false;
 void *PlatformTimerClass::s_threadHandle = nullptr;
 #endif
 

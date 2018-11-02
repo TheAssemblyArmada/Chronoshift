@@ -202,6 +202,7 @@ void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, B
 void Window_Box(WindowNumberType type, BoxStyleEnum style);
 unsigned Change_Window(unsigned window);
 
+#ifndef CHRONOSHIFT_STANDALONE
 namespace Dialog
 {
 
@@ -222,5 +223,7 @@ inline void Hook_Me()
     Hook_Function(0x004AE350, &Window_Box);
 }
 }
+
+#endif
 
 #endif // DIALOG_H

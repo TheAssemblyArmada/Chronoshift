@@ -14,8 +14,6 @@ inline void Sound_Effect(VocType voc, unsigned long int1, int int2, HousesType h
     void (*call_Sound_Effect)(VocType, unsigned long, int, HousesType) =
         reinterpret_cast<void (*)(VocType, unsigned long, int, HousesType)>(0x00425D1C);
     call_Sound_Effect(voc, int1, int2, house);
-#else
-    return 0;
 #endif
 }
 
@@ -35,8 +33,6 @@ inline void Speak(VoxType vox)
 #ifndef CHRONOSHIFT_STANDALONE
     void (*call_Speak)(VoxType) = reinterpret_cast<void (*)(VoxType)>(0x00426158);
     call_Speak(vox);
-#else
-    return 0;
 #endif
 }
 
@@ -45,8 +41,6 @@ inline void Speak_AI()
 #ifndef CHRONOSHIFT_STANDALONE
     void (*call_Speak_AI)() = reinterpret_cast<void (*)()>(0x004261B4);
     call_Speak_AI();
-#else
-    return 0;
 #endif
 }
 
@@ -55,8 +49,6 @@ inline void Stop_Speaking()
 #ifndef CHRONOSHIFT_STANDALONE
     void (*call_Stop_Speaking)() = reinterpret_cast<void (*)()>(0x0042632C);
     call_Stop_Speaking();
-#else
-    return 0;
 #endif
 }
 
@@ -65,8 +57,6 @@ inline void Sound_Callback()
 #ifndef CHRONOSHIFT_STANDALONE
     void(*call_Sound_Callback)() = reinterpret_cast<void(*)()>(0x005BE560);
     call_Sound_Callback();
-#else
-    return 0;
 #endif
 }
 
@@ -85,8 +75,6 @@ inline void Set_Score_Vol(int vol)
 #ifndef CHRONOSHIFT_STANDALONE
     void(*call_set_Score)(int) = reinterpret_cast<void(*)(int)>(0x005BF940);
     call_set_Score(vol);
-#else
-    return 0;
 #endif
 }
 
@@ -95,8 +83,6 @@ inline void Stop_Sample(int sample)
 #ifndef CHRONOSHIFT_STANDALONE
     void(*call_Stop_Sample)(int) = reinterpret_cast<void(*)(int)>(0x005BEEA0);
     call_Stop_Sample(sample);
-#else
-    return 0;
 #endif
 }
 
@@ -105,8 +91,6 @@ inline void Fade_Sample(int sample, int fade)
 #ifndef CHRONOSHIFT_STANDALONE
     void(*call_Fade_Sample)(int, int) = reinterpret_cast<void(*)(int, int)>(0x005BF9B0);
     call_Fade_Sample(sample, fade);
-#else
-    return 0;
 #endif
 }
 

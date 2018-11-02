@@ -17,8 +17,11 @@
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "minmax.h"
-
 #include <stdlib.h>
+#include <cstring>
+
+using std::memcpy;
+using std::memset;
 
 static mp_digit_u _scratch_modulus[MAX_UNIT_PRECISION];
 static mp_digit_u _double_staging_number[MAX_UNIT_PRECISION * 2 + 2];

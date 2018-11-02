@@ -14,8 +14,10 @@
  */
 #include "gamedebug.h"
 #include "critsection.h"
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #ifdef PLATFORM_WINDOWS
 #include <direct.h>

@@ -16,6 +16,10 @@
 #include "action.h"
 #include "gamedebug.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 const char *ActionName[ACTION_COUNT] = { 
     "None",
     "Move",

@@ -185,7 +185,9 @@ GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp);
 inline void GraphicViewPortClass::Hook_Me() {}
 
 extern GraphicViewPortClass *&g_logicPage;
+#ifdef PLATFORM_WINDOWS
 extern LPDIRECTDRAWSURFACE &g_paletteSurface;
+#endif
 extern GraphicViewPortClass &g_seenBuff;
 extern GraphicViewPortClass &g_hidPage;
 extern GraphicBufferClass &g_visiblePage;
@@ -193,7 +195,9 @@ extern GraphicBufferClass &g_hiddenPage;
 extern GraphicBufferClass &g_sysMemPage;
 #else
 extern GraphicViewPortClass *g_logicPage;
+#ifdef PLATFORM_WINDOWS
 extern LPDIRECTDRAWSURFACE g_paletteSurface;
+#endif
 extern GraphicViewPortClass g_seenBuff;
 extern GraphicViewPortClass g_hidPage;
 extern GraphicBufferClass g_visiblePage;

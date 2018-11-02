@@ -14,6 +14,13 @@
  *            LICENSE
  */
 #include "critsection.h"
+#include <cstdlib>
+
+#ifndef PLATFORM_WINDOWS
+#include <unistd.h>
+#endif
+
+using std::atoi;
 
 CriticalSectionClass::CriticalSectionClass() : Handle(), Locked(0)
 {

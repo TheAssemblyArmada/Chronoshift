@@ -17,6 +17,7 @@
 #ifndef STRINGEX_H
 #define STRINGEX_H
 
+#include <ctype.h>
 #include <string.h>
 
 #ifdef __cplusplus

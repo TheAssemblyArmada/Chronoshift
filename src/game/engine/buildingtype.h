@@ -269,7 +269,7 @@ private:
 #include "hooker.h"
 extern TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes;
 #else
-extern TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes;
+extern TFixedIHeapClass<BuildingTypeClass> g_BuildingTypes;
 #endif
 
 #endif // BUILDINGTYPE_H

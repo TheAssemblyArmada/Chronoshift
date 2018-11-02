@@ -57,6 +57,7 @@ public:
     BOOL Is_Nominal() const { return IsNominal; } 
     int Get_ThreatPosed() const { return ThreatPosed; }
     BOOL Is_Invisible() const { return IsInvisible; }
+    int Get_Cost() const { return Cost; }
     static void One_Time();
 
 protected:
