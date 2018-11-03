@@ -15,6 +15,9 @@
  */
 #include "tileset.h"
 #include "endiantype.h"
+#include <cstring>
+
+using std::memcpy;
 
 static int IconEntry;
 static void *IconData;

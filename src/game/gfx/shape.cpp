@@ -20,6 +20,14 @@
 #include "lcw.h"
 #include "minmax.h"
 #include "xordelta.h"
+#include <cstdarg>
+#include <cstring>
+
+#ifndef PLATFORM_WINDOWS
+#include <unistd.h>
+#endif
+
+using std::memcpy;
 
 #define SHP_HAS_PAL 0x0001
 #define SHP_LCW_FRAME 0x80
@@ -1084,12 +1092,14 @@ void Check_Use_Compressed_Shapes()
         g_useBigShapeBuffer = false;
         g_originalUseBigShapeBuffer = false;
     }
-#else // Posix version?
+#elif defined PLATFORM_LINUX // Posix version?
     // This should be sufficient on both Linux and OS X
     size_t totalmem = (size_t)sysconf(_SC_PHYS_PAGES) * (size_t)sysconf(_SC_PAGESIZE);
 
     g_useBigShapeBuffer = totalmem > 0x1000000;
     g_originalUseBigShapeBuffer = totalmem > 0x1000000;
+#else
+#error Implement physical memory check for this platform in shape.cpp
 #endif
 }
 

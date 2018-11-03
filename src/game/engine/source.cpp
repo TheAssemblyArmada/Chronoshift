@@ -14,6 +14,10 @@
  */
 #include "source.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 const char *SourceName[SOURCE_COUNT] = { "North", "East", "South", "West", "Air" };
 
 SourceType Source_From_Name(const char *name)

@@ -18,6 +18,10 @@
 #include "base64.h"
 #include "gamedebug.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memcpy;
+using std::memmove;
 
 int Base64Pipe::Put(const void *source, int slen)
 {

@@ -17,7 +17,10 @@
 #include "gamedebug.h"
 #include "minmax.h"
 #include "pcxrle.h"
-#include <limits.h>
+#include <climits>
+#include <cstring>
+
+using std::memcpy;
 
 PCXPipe::PCXPipe(PipeControl mode, int size) :
     Pipe(),

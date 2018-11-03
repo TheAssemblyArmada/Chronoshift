@@ -9,6 +9,8 @@ if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     endif()
     
     set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm wsock32)
+elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    set(PLATFORM_LIBS ${PLATFORM_LIBS} rt)
 else()
     #No other platforms yet.
 endif()
@@ -27,6 +29,10 @@ else()
     set(PLATFORM_LIBS ${PLATFORM_LIBS} minilzo)
     add_definitions(-DCHRONOSHIFT_USE_MINILZO)
 endif()
+
+# Find threading libraries if any.
+find_package(Threads)
+set(PLATFORM_LIBS ${PLATFORM_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
 # Build and link the DLL.
 set(GAMEENGINE_INCLUDES
@@ -240,3 +246,7 @@ else()
 endif()
 
 target_link_libraries(chronoshift ${PLATFORM_LIBS})
+
+if(THREADS_HAVE_PTHREAD_ARG)
+  target_compile_options(chronoshift PUBLIC "-pthread")
+endif()

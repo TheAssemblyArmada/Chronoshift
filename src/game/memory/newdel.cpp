@@ -16,12 +16,12 @@
 #include "newdel.h"
 #include "alloc.h"
 
-void* operator new(unsigned int size)
+void* operator new(size_t size)
 {
     return Alloc(size, MEM_NEW);
 }
 
-void* operator new[](unsigned int size)
+void* operator new[](size_t size)
 {
     return Alloc(size, MEM_NEW);
 }

@@ -24,6 +24,7 @@
 #include <winsock.h>
 #else
 #include <sys/types.h>
+#include <unistd.h>
 
 #ifndef SOCKET
 #define SOCKET int

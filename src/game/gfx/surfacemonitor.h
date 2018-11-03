@@ -17,17 +17,21 @@
 #ifndef SURFACEMONITOR_H
 #define SURFACEMONITOR_H
 #include "always.h"
+
+#ifdef PLATFORM_WINDOWS
 #include "ddraw.h"
+#endif
 
 class SurfaceMonitorClass
 {
 public:
     SurfaceMonitorClass();
     ~SurfaceMonitorClass();
-
+#ifdef PLATFORM_WINDOWS
     void Add_Surface(LPDIRECTDRAWSURFACE new_surface);
     void Remove_Surface(LPDIRECTDRAWSURFACE old_surface);
     bool Got_Surface_Already(LPDIRECTDRAWSURFACE test_surface);
+#endif
     void Restore_Surfaces();
     void Set_Surface_Focus(bool focus);
     void Release();
@@ -40,7 +44,9 @@ public:
 
 private:
     BOOL m_surfacesRestored;
+#ifdef PLATFORM_WINDOWS
     LPDIRECTDRAWSURFACE m_surface[20];
+#endif
     BOOL m_inFocus;
 
 #ifndef CHRONOSHIFT_STANDALONE

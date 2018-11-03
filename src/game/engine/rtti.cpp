@@ -16,6 +16,10 @@
 #include "rtti.h"
 #include "gamedebug.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 RTTITypeStruct RTTIName[RTTI_COUNT] = {
     { "<none>", RTTI_NONE, "Invalid object" },
     { "Aircraft", RTTI_AIRCRAFT, "Aircraft object" },

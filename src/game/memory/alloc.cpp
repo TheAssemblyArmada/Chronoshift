@@ -16,7 +16,14 @@
 #include "alloc.h"
 #include "gamedebug.h"
 #include <malloc.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
+
+#ifndef PLATFORM_WINDOWS
+#include <sys/sysinfo.h>
+#endif
+
+using std::memset;
 
 #ifndef CHRONOSHIFT_STANDALONE
 memerrorhandler_t &g_memoryError = Make_Global<memerrorhandler_t>(0x006B1A2C); // Memory error handler function pointer.

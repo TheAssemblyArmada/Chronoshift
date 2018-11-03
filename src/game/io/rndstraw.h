@@ -23,6 +23,7 @@
 #include "random.h"
 #include "sha.h"
 #include "straw.h"
+#include <cstring>
 #include <new> // for placement new
 
 template<class RNG>
@@ -133,7 +134,7 @@ void RandomStraw<RNG>::Scramble_Seed()
             sz = ARRAY_SIZE(buff);
         }
 
-        memmove(arrayp++, buff, sz);
+        std::memmove(arrayp++, buff, sz);
     }
 }
 

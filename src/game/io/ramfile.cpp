@@ -16,6 +16,9 @@
 #include "ramfile.h"
 #include "gamedebug.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memmove;
 
 RAMFileClass::RAMFileClass() :
     Buffer(nullptr),

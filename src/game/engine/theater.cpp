@@ -15,6 +15,10 @@
  */
 #include "theater.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 #ifndef CHRONOSHIFT_STANDALONE
 TheaterType &g_lastTheater = Make_Global<TheaterType>(0x006017CC);
 #else
@@ -31,7 +35,7 @@ TheaterType Theater_From_Name(const char *name)
 {
     if (name != nullptr) {
         for (int i = 0; i < THEATER_COUNT; ++i) {
-            if (stricmp(name, g_theaters[i].name) == 0) {
+            if (strcasecmp(name, g_theaters[i].name) == 0) {
                 return TheaterType(i);
             }
         }

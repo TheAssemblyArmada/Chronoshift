@@ -38,7 +38,9 @@ BOOL GraphicViewPortClass::AllowStretchBlits;
 int GraphicViewPortClass::ScreenWidth = 640;
 int GraphicViewPortClass::ScreenHeight = 400;
 GraphicViewPortClass *g_logicPage = nullptr;
+#ifdef PLATFORM_WINDOWS
 LPDIRECTDRAWSURFACE g_paletteSurface = nullptr;
+#endif
 GraphicViewPortClass g_seenBuff;
 GraphicViewPortClass g_hidPage;
 GraphicBufferClass g_visiblePage;
@@ -48,10 +50,12 @@ GraphicBufferClass g_sysMemPage;
 
 void Wait_Blit()
 {
+#ifdef PLATFORM_WINDOWS
     DWORD result;
     do {
         result = g_paletteSurface->GetBltStatus(DDGBS_ISBLTDONE);
     } while (result != 0 && result != DDERR_SURFACELOST);
+#endif
 }
 
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp)
@@ -321,9 +325,14 @@ unsigned GraphicViewPortClass::Print(const char *string, int x, int y, int fgrou
     return ret;
 }
 
-GraphicBufferClass::GraphicBufferClass() : m_videoSurface(nullptr)
+GraphicBufferClass::GraphicBufferClass()
+#ifdef PLATFORM_WINDOWS
+	: m_videoSurface(nullptr)
+#endif
 {
+#ifdef PLATFORM_WINDOWS
     memset(&m_surfaceInfo, 0, sizeof(m_surfaceInfo));
+#endif
 }
 
 GraphicBufferClass::GraphicBufferClass(int w, int h, void *buffer, int size)
@@ -352,14 +361,14 @@ void GraphicBufferClass::DD_Init(GBCEnum mode)
     static void (*call_ddinit)(GraphicBufferClass *, GBCEnum) =
         reinterpret_cast<void (*)(GraphicBufferClass *, GBCEnum)>(0x005C0AF4);
     call_ddinit(this, mode);
-#else
-    return 0;
 #endif
 }
 
 void GraphicBufferClass::Attach_DD_Surface(GraphicBufferClass *buffer)
 {
+#ifdef PLATFORM_WINDOWS
     m_videoSurface->AddAttachedSurface(buffer->m_videoSurface);
+#endif
 }
 
 void GraphicBufferClass::Scale_Rotate(BitmapClass & bitmap, TPoint2D<int>& pivot, int scale, uint8_t angle)
@@ -590,8 +599,6 @@ void GraphicBufferClass::Un_Init()
 #ifndef CHRONOSHIFT_STANDALONE
     static void (*call_uninit)(GraphicBufferClass *) = reinterpret_cast<void (*)(GraphicBufferClass *)>(0x005C0D0F);
     call_uninit(this);
-#else
-    return 0;
 #endif
 }
 

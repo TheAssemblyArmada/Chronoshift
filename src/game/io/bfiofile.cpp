@@ -16,6 +16,9 @@
 #include "bfiofile.h"
 #include "gamedebug.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::strcmp;
 
 BufferIOFileClass::BufferIOFileClass() :
     m_bufferAllocated(false),

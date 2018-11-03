@@ -16,6 +16,14 @@
 #include "edit.h"
 #include "mouse.h"
 #include "textprint.h"
+#include <cctype>
+#include <cstring>
+
+using std::isalpha;
+using std::isalnum;
+using std::isprint;
+using std::toupper;
+using std::strlen;
 
 EditClass::EditClass(int id, char *textbuffer, int bufferlength, TextPrintType text_style, int x, int y, int w, int h,
     EditStyleType edit_style) :

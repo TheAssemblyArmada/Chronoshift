@@ -14,6 +14,9 @@
  */
 #include "utracker.h"
 #include "endiantype.h"
+#include <cstring>
+
+using std::memset;
 
 UnitTrackerClass::UnitTrackerClass(int count)
 {

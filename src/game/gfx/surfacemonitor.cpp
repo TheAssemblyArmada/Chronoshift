@@ -27,9 +27,11 @@ SurfaceMonitorClass g_allSurfaces;
 
 SurfaceMonitorClass::SurfaceMonitorClass()
 {
+#ifdef PLATFORM_WINDOWS
     for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
         m_surface[i] = nullptr;
     }
+#endif
     m_inFocus = false;
     m_surfacesRestored = false;
 }
@@ -39,6 +41,7 @@ SurfaceMonitorClass::~SurfaceMonitorClass()
     Release();
 }
 
+#ifdef PLATFORM_WINDOWS
 void SurfaceMonitorClass::Add_Surface(LPDIRECTDRAWSURFACE new_surface)
 {
     if (!Got_Surface_Already(new_surface)) {
@@ -70,10 +73,12 @@ bool SurfaceMonitorClass::Got_Surface_Already(LPDIRECTDRAWSURFACE test_surface)
     }
     return false;
 }
+#endif
 
 void SurfaceMonitorClass::Restore_Surfaces()
 {
     if (m_inFocus) {
+#ifdef PLATFORM_WINDOWS
         for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
             if (m_surface[i] && m_surface[i]->Restore()) {
                 if (Misc_Focus_Loss_Function) {
@@ -82,6 +87,7 @@ void SurfaceMonitorClass::Restore_Surfaces()
                 return;
             }
         }
+#endif
         if (Misc_Focus_Restore_Function) {
             Misc_Focus_Restore_Function();
         }
@@ -97,12 +103,14 @@ void SurfaceMonitorClass::Set_Surface_Focus(bool in_focus)
 
 void SurfaceMonitorClass::Release()
 {
+#ifdef PLATFORM_WINDOWS
     for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
         if (m_surface[i]) {
             m_surface[i]->Release();
             m_surface[i] = nullptr;
         }
     }
+#endif
 }
 
 #ifndef CHRONOSHIFT_STANDALONE

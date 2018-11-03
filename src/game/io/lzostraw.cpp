@@ -17,6 +17,9 @@
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memcpy;
 
 #ifdef CHRONOSHIFT_USE_MINILZO
 #include <minilzo/minilzo.h>

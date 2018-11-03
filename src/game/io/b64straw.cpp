@@ -16,6 +16,10 @@
 #include "b64straw.h"
 #include "base64.h"
 #include "gamedebug.h"
+#include <cstring>
+
+using std::memcpy;
+using std::memmove;
 
 int Base64Straw::Get(void *source, int slen)
 {

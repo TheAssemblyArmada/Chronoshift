@@ -20,6 +20,10 @@
 #include "mouse.h"
 #include "textprint.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 ListClass::ListClass(
     int id, int x, int y, int w, int h, TextPrintType text_style, void *up_btn_shape, void *down_btn_shape) :
     ControlClass(id, x, y, w, h, MOUSE_LEFT_PRESS | MOUSE_LEFT_RLSE | KEYBOARD_INPUT /*261*/, false),
@@ -411,7 +415,7 @@ void ListClass::Set_Selected_Index(const char *string)
 {
     if (string && Count() > 0) {
         for (int index = 0; index < Count(); ++index) {
-            if (stricmp(Entries[index], string) == 0) {
+            if (strcasecmp(Entries[index], string) == 0) {
                 Set_Selected_Index(index);
             }
         }

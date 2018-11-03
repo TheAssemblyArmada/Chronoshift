@@ -15,6 +15,10 @@
 #include "fading.h"
 #include "gamedebug.h"
 #include "rgb.h"
+#include <cstring>
+
+using std::memset;
+using std::memcpy;
 
 void *Make_Fading_Table(const PaletteClass &palette, void *fade_table, int color, int frac)
 {
