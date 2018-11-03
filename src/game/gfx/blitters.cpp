@@ -16,6 +16,10 @@
 #include "blitters.h"
 #include "gamedebug.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memset;
+using std::memcpy;
 
 namespace
 {

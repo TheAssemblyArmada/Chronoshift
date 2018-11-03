@@ -13,6 +13,9 @@
  *            LICENSE
  */
 #include "pal.h"
+#include <cstring>
+
+using std::memcpy;
 
 #ifndef CHRONOSHIFT_STANDALONE
 uint8_t *const g_currentPalette = reinterpret_cast<uint8_t *>(0x0060CE90);

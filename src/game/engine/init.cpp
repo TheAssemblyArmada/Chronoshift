@@ -33,6 +33,7 @@
 #include <dirent.h>
 #include <fnmatch.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #endif
 
@@ -95,7 +96,7 @@ void Init_Expansion_Files()
             // Make sure we don't have a folder and name matches
             if (!S_ISDIR(st.st_mode) && fnmatch("sc*.mix", dirp->d_name, FNM_PATHNAME | FNM_CASEFOLD) == 0
                 && strcasecmp(dirp->d_name, "scores.mix") != 0) {
-                fileptr = new GameMixFile(dirp->d_name, &PublicKey);
+                new GameMixFile(dirp->d_name, &g_publicKey);
                 GameFileClass::Cache_Mix(dirp->d_name);
             }
         }
@@ -109,7 +110,7 @@ void Init_Expansion_Files()
 
             // Make sure we don't have a folder and name matches
             if (!S_ISDIR(st.st_mode) && !fnmatch("ss*.mix", dirp->d_name, FNM_PATHNAME | FNM_CASEFOLD)) {
-                new GameMixFile(dirp->d_name, &PublicKey);
+                new GameMixFile(dirp->d_name, &g_publicKey);
             }
         }
     }
@@ -304,22 +305,22 @@ void Init_Random()
     gettimeofday(&curr_time, nullptr);
     sys_time = localtime(&curr_time.tv_sec);
 
-    CryptRandom.Seed_Byte(curr_time.tv_usec / 1000);
-    CryptRandom.Seed_Bit(sys_time->tm_sec);
-    CryptRandom.Seed_Bit(sys_time->tm_sec >> 1);
-    CryptRandom.Seed_Bit(sys_time->tm_sec >> 2);
-    CryptRandom.Seed_Bit(sys_time->tm_sec >> 3);
-    CryptRandom.Seed_Bit(sys_time->tm_sec >> 4);
-    CryptRandom.Seed_Bit(sys_time->tm_min);
-    CryptRandom.Seed_Bit(sys_time->tm_min >> 1);
-    CryptRandom.Seed_Bit(sys_time->tm_min >> 2);
-    CryptRandom.Seed_Bit(sys_time->tm_min >> 3);
-    CryptRandom.Seed_Bit(sys_time->tm_min >> 4);
-    CryptRandom.Seed_Bit(sys_time->tm_hour);
-    CryptRandom.Seed_Bit(sys_time->tm_mday);
-    CryptRandom.Seed_Bit(sys_time->tm_wday);
-    CryptRandom.Seed_Bit(sys_time->tm_mon);
-    CryptRandom.Seed_Bit(sys_time->tm_year);
+    g_cryptRandom.Seed_Byte(curr_time.tv_usec / 1000);
+    g_cryptRandom.Seed_Bit(sys_time->tm_sec);
+    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 1);
+    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 2);
+    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 3);
+    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 4);
+    g_cryptRandom.Seed_Bit(sys_time->tm_min);
+    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 1);
+    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 2);
+    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 3);
+    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 4);
+    g_cryptRandom.Seed_Bit(sys_time->tm_hour);
+    g_cryptRandom.Seed_Bit(sys_time->tm_mday);
+    g_cryptRandom.Seed_Bit(sys_time->tm_wday);
+    g_cryptRandom.Seed_Bit(sys_time->tm_mon);
+    g_cryptRandom.Seed_Bit(sys_time->tm_year);
 #endif
 
     if (!Session.Loading_Game()) {

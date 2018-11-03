@@ -165,7 +165,7 @@ void Log_Output(const char *buffer)
 #ifdef PLATFORM_WINDOWS
         OutputDebugStringA(buffer);
 #else
-        printf(buffer);
+        printf("%s", buffer);
 #endif
     }
 }

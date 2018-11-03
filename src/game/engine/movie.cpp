@@ -14,6 +14,10 @@
  */
 #include "movie.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 MovieInfoStruct MovieTypes[MOVIE_COUNT] = {
     { "AAGUN", false },
     { "MIG", false },

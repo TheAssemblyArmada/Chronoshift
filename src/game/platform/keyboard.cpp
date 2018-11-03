@@ -15,6 +15,9 @@
  */
 #include "keyboard.h"
 #include "gamedebug.h"
+#include <cstring>
+
+using std::memset;
 
 #ifndef CHRONOSHIFT_STANDALONE
 KeyboardClass *&g_keyboard = Make_Global<KeyboardClass *>(0x00666904);
@@ -38,12 +41,20 @@ BOOL KeyboardClass::Is_Mouse_Key(uint16_t keycode)
     // Strip off any flags.
     keycode = keycode & 0xFF;
 
+#ifdef PLATFORM_WINDOWS
     return keycode == VK_LBUTTON || keycode == VK_MBUTTON || keycode == VK_RBUTTON;
+#else
+	return false;
+#endif
 }
 
 BOOL KeyboardClass::Mouse_Buttons_Swapped()
 {
+#ifdef PLATFORM_WINDOWS
     return GetSystemMetrics(SM_SWAPBUTTON) != 0;
+#else
+	return false;
+#endif
 }
 
 uint16_t KeyboardClass::Check()
@@ -79,7 +90,7 @@ BOOL KeyboardClass::Put_Key_Message(uint16_t keycode, BOOL release)
 {
     // As we are putting a keyboard message, check that the input keycode is not a mouse key.
     if (!Is_Mouse_Key(keycode)) {
-
+#ifdef PLATFORM_WINDOWS
         // Is the shift key pressed?
         if ((GetKeyState(VK_SHIFT) >> 8) & 0x80 || GetKeyState(VK_CAPITAL) & 8 || GetKeyState(VK_NUMLOCK) & 8) {
             keycode |= KN_SHIFT_BIT;
@@ -97,7 +108,7 @@ BOOL KeyboardClass::Put_Key_Message(uint16_t keycode, BOOL release)
             keycode |= KN_ALT_BIT;
             //DEBUG_LOG("KeyboardClass::Put_Key_Message() MENU is held down\n");
         }
-
+#endif
     }
 
     // Mark if this is a keyup event rather than a key down event.

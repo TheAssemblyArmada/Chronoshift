@@ -23,6 +23,7 @@
 typedef int socklen_t;
 #else
 #include <arpa/inet.h>
+#include <cerrno>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #define SOCKET_ERROR -1

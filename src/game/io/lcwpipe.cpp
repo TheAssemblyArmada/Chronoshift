@@ -18,6 +18,10 @@
 #include "gamedebug.h"
 #include "lcw.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memcpy;
+using std::memmove;
 
 LCWPipe::LCWPipe(PipeControl mode, int size) :
     m_mode(mode),

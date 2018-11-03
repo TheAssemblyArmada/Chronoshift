@@ -18,8 +18,10 @@
 #ifndef NEWDEL_H
 #define NEWDEL_H
 
-void* operator new(unsigned int size);
-void* operator new[](unsigned int size);
+#include "always.h"
+
+void* operator new(size_t size);
+void* operator new[](size_t size);
 void operator delete(void* ptr);
 
 #endif

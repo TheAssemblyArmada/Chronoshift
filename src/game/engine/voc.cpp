@@ -14,6 +14,10 @@
  */
 #include "voc.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 SoundEffectType SoundEffectName[] = {
     { "GIRLOKAY", 20, 0 },
     { "GIRLYEAH", 20, 0 },

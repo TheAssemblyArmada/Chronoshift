@@ -19,6 +19,9 @@
 #include "globals.h"
 #include "minmax.h"
 #include "mouseshape.h"
+#include <cstring>
+
+using std::memcpy;
 
 #ifdef PLATFORM_WINDOWS
 // extern HWND MainWindow;
@@ -52,7 +55,6 @@ static int const MOUSE_UPDATE_FREQ = 16;
 #ifdef PLATFORM_WINDOWS
 void __stdcall Process_Mouse(
     unsigned int uDelay, unsigned int uResolution, unsigned long fptc, unsigned long dwUser, unsigned long fuEvent)
-#endif
 {
     static bool InMouseCallback;
 
@@ -62,6 +64,7 @@ void __stdcall Process_Mouse(
         InMouseCallback = false;
     }
 }
+#endif
 
 WWMouseClass::WWMouseClass(GraphicViewPortClass *scr, int width, int height) :
     m_mouseCursor(new uint8_t[width * height]),

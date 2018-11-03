@@ -18,6 +18,10 @@
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memcpy;
+using std::memset;
 
 #ifndef CHRONOSHIFT_STANDALONE
 char *&g_fontPtr = Make_Global<char *>(0x006B1974);

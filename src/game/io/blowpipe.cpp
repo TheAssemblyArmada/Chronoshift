@@ -15,6 +15,9 @@
  */
 #include "blowpipe.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memset;
 
 BlowPipe::~BlowPipe()
 {

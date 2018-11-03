@@ -18,6 +18,9 @@
 #include "gamedebug.h"
 #include "lcw.h"
 #include "minmax.h"
+#include <cstring>
+
+using std::memcpy;
 
 LCWStraw::LCWStraw(StrawControl mode, int size) :
     m_mode(mode),

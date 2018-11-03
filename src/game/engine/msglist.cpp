@@ -333,7 +333,7 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int de
 
             for (int i = width_diff + String_Pixel_Width(new_str); i < Width - 8;
                  i = width_diff + String_Pixel_Width(new_str)) {
-                int sub_st_len = Min(strlen(label_sub_str), 10u);
+                int sub_st_len = Min(strlen(label_sub_str), (size_t)10u);
                 Trim_Message(nullptr, label_sub_str, 10, sub_st_len, 0);
                 strcpy(new_str, label_sub_str);
                 strcpy(&new_str[strlen(new_str)], to_concat);
@@ -704,7 +704,7 @@ int MessageListClass::Trim_Message(char *reserve, char *msg, int trim_start, int
         return 0;
     }
 
-    trim_end = Min(strlen(msg), (unsigned)trim_end);
+    trim_end = Min(strlen(msg), (size_t)trim_end);
 
     bool trim_adjusted = true;
     int trim_pos;

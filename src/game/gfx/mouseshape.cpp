@@ -18,6 +18,9 @@
 #include "gbuffer.h"
 #include "minmax.h"
 #include "lcw.h"
+#include <cstring>
+
+using std::memcpy;
 
 uint8_t g_mouseShapeBuffer[65000]; // Original code shares the global ShapeBuffer with other sprite drawing.
 

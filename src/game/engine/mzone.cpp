@@ -16,6 +16,10 @@
 #include "mzone.h"
 #include "gamedebug.h"
 
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
 const char *MZoneName[MZONE_COUNT] = { "Normal", "Crusher", "Destroyer", "AmphibiousDestroyer" };
 
 MZoneType MZone_From_Name(const char *name)

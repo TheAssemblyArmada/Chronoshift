@@ -25,7 +25,8 @@
 #include "mixfile.h"
 #include "mouse.h"
 #include "textprint.h"
-#include <stdio.h>
+#include <cstdarg>
+#include <cstdio>
 
 #ifndef CHRONOSHIFT_STANDALONE
 WindowType *WindowList = reinterpret_cast<WindowType*>(0x006016CC);

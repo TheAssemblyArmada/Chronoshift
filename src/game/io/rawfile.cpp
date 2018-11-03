@@ -16,10 +16,13 @@
 #include "rawfile.h"
 #include "gamedebug.h"
 #include "stringex.h"
+#include <cerrno>
 #include <cstdlib>
+#include <cstdio>
 #include <fcntl.h>
 #include <malloc.h>
-#include <stdio.h>
+
+using std::remove;
 
 // Headers needed for posix open, close, read... etc.
 #ifdef PLATFORM_WINDOWS
@@ -38,8 +41,11 @@
 //#define lseek _lseeki64
 // typedef __int64 off_t;
 #else
+#include <sys/types.h>
+#include <utime.h>
 #include <unistd.h>
 #endif
+
 RawFileClass::RawFileClass() :
     m_rights(FM_CLOSED),
     m_biasStart(0),
