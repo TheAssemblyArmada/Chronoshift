@@ -120,6 +120,10 @@ public:
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
+    
+    static InfantryTypeClass &As_Reference(InfantryType type);
+    static InfantryType From_Name(const char *name);
+    static const char *Name_From(InfantryType type) { return As_Reference(type).Name; }
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

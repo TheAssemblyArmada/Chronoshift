@@ -66,7 +66,11 @@ public:
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
-
+    
+    static AircraftTypeClass &As_Reference(AircraftType type);
+    static AircraftType From_Name(const char *name);
+    static const char *Name_From(AircraftType type) { return As_Reference(type).Name; }
+    
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.

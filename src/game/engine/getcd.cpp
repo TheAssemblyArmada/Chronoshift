@@ -13,6 +13,9 @@
  *            LICENSE
  */
 #include "getcd.h"
+#include <cstring>
+
+using std::memset;
 
 #ifndef CHRONOSHIFT_STANDALONE
 GetCDClass &g_cdList = Make_Global<GetCDClass>(0x00680884);

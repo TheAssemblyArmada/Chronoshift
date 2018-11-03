@@ -101,7 +101,7 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
     RadioMessageType (*func)(RadioClass *, RadioMessageType, target_t &) =
         reinterpret_cast<RadioMessageType (*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
     return func(radio, message, target);
-#else
+#elif 0 // TODO Needs HouseClass.
     if (message != ReceivedMessage) {
         LastMessage = TransmittedMessage;
         TransmittedMessage = ReceivedMessage;
@@ -133,6 +133,8 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
     Radio = nullptr;
 
     return RADIO_ROGER;
+#else
+	return RADIO_ROGER;
 #endif
 }
 

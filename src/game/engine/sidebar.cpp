@@ -617,7 +617,7 @@ void SidebarClass::Reload_Sidebar()
 #ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D340);
     func(this);
-#else
+#elif 0
     // in order of the houses.
     static char sidebarnames[HOUSES_COUNT][12] = { "SIDE?NA.SHP",
         "SIDE?NA.SHP",

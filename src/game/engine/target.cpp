@@ -67,10 +67,12 @@ BOOL Target_Is_Techno(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     // TODO: Inlined in RA
     return false;
-#else
+#elif 0
     // TODO: Requires TechnoClass implementation.
     TechnoClass *ptr = As_Techno(target);
     return ptr != nullptr ? ptr->Is_Techno() : false;
+#else
+	return false;
 #endif
 }
 
@@ -99,9 +101,11 @@ TriggerClass *As_Trigger(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     TriggerClass *(*func)(target_t) = reinterpret_cast<TriggerClass *(*)(target_t)>(0x00554FFC);
     return func(target);
-#else
+#elif 0
     // TODO: Requires TriggerClass implementation.
     return Target_Get_RTTI(target) == RTTI_TRIGGER ? &Triggers[Target_Get_ID(target)] : nullptr;
+#else
+	return nullptr;
 #endif
 }
 
@@ -110,9 +114,11 @@ TriggerTypeClass *As_TriggerType(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     TriggerTypeClass *(*func)(target_t) = reinterpret_cast<TriggerTypeClass *(*)(target_t)>(0x005559CC);
     return func(target);
-#else
+#elif 0
     // TODO: Requires TriggerTypeClass implementation.
     return Target_Get_RTTI(target) == RTTI_TRIGGERTYPE ? &TriggerTypes[Target_Get_ID(target)] : nullptr;
+#else
+	return nullptr;
 #endif
 }
 
@@ -121,9 +127,11 @@ TeamClass *As_Team(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     TeamClass *(*func)(target_t) = reinterpret_cast<TeamClass *(*)(target_t)>(0x00555034);
     return func(target);
-#else
+#elif 0
     // TODO: Requires TeamClass implementation.
     return Target_Get_RTTI(target) == RTTI_TEAM ? &Teams[Target_Get_ID(target)] : nullptr;
+#else
+	return nullptr;
 #endif
 }
 
@@ -132,9 +140,11 @@ TeamTypeClass *As_TeamType(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     TeamTypeClass *(*func)(target_t) = reinterpret_cast<TeamTypeClass *(*)(target_t)>(0x0055506C);
     return func(target);
-#else
+#elif 0
     // TODO: Requires TeamTypeClass implementation.
     return Target_Get_RTTI(target) == RTTI_TEAMTYPE ? &TeamTypes[Target_Get_ID(target)] : nullptr;
+#else
+	return nullptr;
 #endif
 }
 
@@ -148,7 +158,7 @@ ObjectClass *As_Object(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     ObjectClass *(*func)(target_t) = reinterpret_cast<ObjectClass *(*)(target_t)>(0x00555190);
     return func(target);
-#else
+#elif 0
     ObjectClass *objptr = nullptr;
 
     switch (Target_Get_RTTI(target)) {
@@ -195,6 +205,8 @@ ObjectClass *As_Object(target_t target)
     }
 
     return nullptr;
+#else
+	return nullptr;
 #endif
 }
 
@@ -203,9 +215,11 @@ AnimClass *As_Animation(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     AnimClass *(*func)(target_t) = reinterpret_cast<AnimClass *(*)(target_t)>(0x005550A4);
     return func(target);
-#else
+#elif 0
     // TODO: Requires AnimClass implementation.
     return Target_Get_RTTI(target) == RTTI_ANIM ? &Anims[Target_Get_ID(target)] : nullptr;
+#else
+	return nullptr;
 #endif
 }
 
@@ -214,9 +228,11 @@ BulletClass *As_Bullet(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     BulletClass *(*func)(target_t) = reinterpret_cast<BulletClass *(*)(target_t)>(0x005550DC);
     return func(target);
-#else
+#elif 0
     // TODO: Requires BulletClass implementation.
     return Target_Get_RTTI(target) == RTTI_BULLET ? &Bullets[Target_Get_ID(target)] : nullptr;
+#else
+	return nullptr;
 #endif
 }
 
@@ -225,9 +241,11 @@ TerrainClass *As_Terrain(target_t target)
 #ifndef CHRONOSHIFT_STANDALONE
     // TODO: Inlined in RA
     return nullptr;
-#else
+#elif 0
     // TODO: Requires TerrainClass implementation.
     return Target_Get_RTTI(target) == RTTI_TERRAIN ? &Terrains[Target_Get_ID(target)] : nullptr;
+#else
+	return nullptr;
 #endif
 }
 

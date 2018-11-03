@@ -218,7 +218,7 @@ RulesClass::RulesClass() :
     QuakeBuildingDamage("0.25"),
     QuakeInfantryDamage(0),
     QuakeDelay(120),
-    CloakDelay("0.02"))
+    CloakDelay("0.02")
 #endif
 {
     IQControls.MaxIQLevels = 5;

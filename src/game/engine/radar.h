@@ -189,7 +189,7 @@ protected:
     static BOOL &FullRedraw;
     static GraphicBufferClass &TileStage;
 #else
-    static TacticalClass RadarButton;
+    static RTacticalClass RadarButton;
     static void *RadarAnim;
     static void *RadarPulse;
     static void *RadarFrame;

@@ -269,12 +269,12 @@ BOOL UnitTypeClass::Read_INI(GameINIClass &ini)
  * 0x00578C24
  * @warning Heap allocation order MUST match the enum order in Init_Heap for this to work.
  */
-UnitTypeClass &UnitTypeClass::As_Reference(UnitType unit)
+UnitTypeClass &UnitTypeClass::As_Reference(UnitType type)
 {
-    DEBUG_ASSERT(unit != UNIT_NONE);
-    DEBUG_ASSERT(unit < UNIT_COUNT);
+    DEBUG_ASSERT(type != UNIT_NONE);
+    DEBUG_ASSERT(type < UNIT_COUNT);
 
-    return g_UnitTypes[unit];
+    return g_UnitTypes[type];
 }
 
 /**

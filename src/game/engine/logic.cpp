@@ -67,7 +67,7 @@ void LogicClass::AI()
 #ifndef CHRONOSHIFT_STANDALONE
     void (*func)(LogicClass *) = reinterpret_cast<void (*)(LogicClass *)>(0x004FDD70);
     return func(this);
-#else
+#elif 0
 
     // TODO: This function requires a lot of classes.
 
@@ -269,7 +269,7 @@ void LogicClass::Detach(target_t target, int a2)
 #ifndef CHRONOSHIFT_STANDALONE
     void (*func)(LogicClass *, target_t, int) = reinterpret_cast<void (*)(LogicClass *, target_t, int)>(0x004FE2BC);
     return func(this, target, a2);
-#else
+#elif 0
 
     // TODO: This function requires TriggerClass implimentation.
 

@@ -461,12 +461,12 @@ void BuildingTypeClass::Init(TheaterType theater)
  * 0x00453A6C
  * @warning Heap allocation order MUST match the enum order in Init_Heap for this to work.
  */
-BuildingTypeClass &BuildingTypeClass::As_Reference(BuildingType building)
+BuildingTypeClass &BuildingTypeClass::As_Reference(BuildingType type)
 {
-    DEBUG_ASSERT(building != BUILDING_NONE);
-    DEBUG_ASSERT(building < BUILDING_COUNT);
+    DEBUG_ASSERT(type != BUILDING_NONE);
+    DEBUG_ASSERT(type < BUILDING_COUNT);
 
-    return g_BuildingTypes[building];
+    return g_BuildingTypes[type];
 }
 
 /**

@@ -253,15 +253,6 @@ void MissionClass::AI()
             case MISSION_MISSILE:
                 MissionTimer = Mission_Missile();
                 break;
-#ifdef CHRONOSHIFT_STANDALONE
-            case MISSION_FIND_CRATE:
-                MissionTimer = Mission_Find_Crate();
-                break;
-
-            case MISSION_TIMED_HUNT:
-                MissionTimer = Mission_Timed_Hunt();
-                break;
-#endif
             default:
                 DEBUG_LOG("Unhandled MissionType in MissionClass::AI()! (%d)", Mission);
                 break;

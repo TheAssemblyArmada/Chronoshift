@@ -36,7 +36,7 @@ void *&RadarClass::RadarFrame = Make_Global<void *>(0x00687910);
 BOOL &RadarClass::FullRedraw = Make_Global<BOOL>(0x00687914);
 GraphicBufferClass &RadarClass::TileStage = Make_Global<GraphicBufferClass>(0x006879BC);
 #else
-RadarClass::RTacticalClass &RadarClass::RadarButton;
+RadarClass::RTacticalClass RadarClass::RadarButton;
 void *RadarClass::RadarAnim = nullptr;
 void *RadarClass::RadarPulse = nullptr;
 void *RadarClass::RadarFrame = nullptr;
@@ -310,7 +310,7 @@ void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
     void (*func)(const RadarClass *, int16_t, int, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, int16_t, int, int, int)>(0x0052E5BC);
     func(this, cellnum, x, y, scale);
-#else
+#elif 0
     // static TerrainClass const *terrains[3];	//not sure, but its there...
     ObjectClass *objects[4];
     int objectcount = 0;

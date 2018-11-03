@@ -216,8 +216,6 @@ void ObjectClass::Detach(int32_t target, int a2)
             Attach_Trigger(nullptr);
         }
     }
-#else
-    return 0;
 #endif
 }
 
@@ -232,8 +230,6 @@ void ObjectClass::Detach_All(int a1)
     }
 
     Detach_This_From_All(As_Target(this), damage);
-#else
-    return 0;
 #endif
 }
 
@@ -242,7 +238,7 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(ObjectClass *, uint32_t) = reinterpret_cast<BOOL(*)(ObjectClass *, uint32_t)>(0x0051E5C0);
     return func(this, coord);
-#else
+#elif 0
     // Needs AnimClass and Coord_Move
     DEBUG_ASSERT(IsActive);
 
@@ -263,6 +259,8 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
     }
 
     return false;
+#else
+	return false;
 #endif
 }
 

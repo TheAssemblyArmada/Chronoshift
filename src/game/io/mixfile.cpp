@@ -19,8 +19,6 @@
 #ifndef CHRONOSHIFT_STANDALONE
 template<> List<MixFileClass<GameFileClass> *> &MixFileClass<GameFileClass>::s_mixList =
     *reinterpret_cast<List<MixFileClass<GameFileClass> *> *>(0x006ECE30);
-#else
-template<> List<MixFileClass<GameFileClass> *> MixFileClass<GameFileClass>::s_mixList;
 #endif
 
 // Explicit template instantiation.

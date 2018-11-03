@@ -19,6 +19,7 @@
 #define STARTUP_H
 
 #include "always.h"
+
 class FileClass;
 
 void Emergency_Exit(int exit_code);
