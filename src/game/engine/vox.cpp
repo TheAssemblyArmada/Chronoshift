@@ -14,7 +14,11 @@
  */
 #include "vox.h"
 
-#ifndef RAPP_STANDALONE
+#ifndef PLATFORM_WINDOWS
+#include <strings.h>
+#endif
+
+#ifndef CHRONOSHIFT_STANDALONE
 void **SpeechBuffer = reinterpret_cast<void **>(0x006680D8);
 VoxType *SpeechRecord = Make_Pointer<VoxType>(0x006680E0);
 #else

@@ -21,6 +21,7 @@
 #include "fixed.h"
 #include "gametypes.h"
 #include "land.h"
+#include <cstring>
 
 enum GroundType
 {
@@ -44,15 +45,15 @@ class GameINIClass;
 class GroundClass
 {
 public:
-    GroundClass() : Buildable(false) { memset(Speeds, 0, sizeof(Speeds)); }
+    GroundClass() : Buildable(false) { std::memset(Speeds, 0, sizeof(Speeds)); }
 
-    GroundClass(GroundClass const &that) : Buildable(that.Buildable) { memcpy(Speeds, that.Speeds, sizeof(Speeds)); }
+    GroundClass(GroundClass const &that) : Buildable(that.Buildable) { std::memcpy(Speeds, that.Speeds, sizeof(Speeds)); }
 
     //~GroundClass() {}
 
     bool operator==(GroundClass const &that) const
     {
-        return memcmp(Speeds, that.Speeds, sizeof(Speeds)) == 0 && Buildable == that.Buildable;
+        return std::memcmp(Speeds, that.Speeds, sizeof(Speeds)) == 0 && Buildable == that.Buildable;
     }
 
     bool operator!=(GroundClass const &that) const { return !(this == &that); }

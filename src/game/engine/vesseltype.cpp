@@ -177,12 +177,12 @@ const int16_t *VesselTypeClass::Overlap_List() const
  * 0x00584858
  * @warning Heap allocation order MUST match the enum order in Init_Heap for this to work.
  */
-VesselTypeClass &VesselTypeClass::As_Reference(VesselType vessel)
+VesselTypeClass &VesselTypeClass::As_Reference(VesselType type)
 {
-    DEBUG_ASSERT(vessel != VESSEL_NONE);
-    DEBUG_ASSERT(vessel < VESSEL_COUNT);
+    DEBUG_ASSERT(type != VESSEL_NONE);
+    DEBUG_ASSERT(type < VESSEL_COUNT);
 
-    return g_VesselTypes[vessel];
+    return g_VesselTypes[type];
 }
 
 /**

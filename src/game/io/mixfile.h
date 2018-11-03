@@ -150,9 +150,11 @@ private:
 #endif
 };
 
-// Initialised for GameFileClass in mixfile.cpp
-// template<class FC>
-// List<MixFileClass<FC> *> MixFileClass<FC>::s_mixList;
+#ifdef CHRONOSHIFT_STANDALONE
+// Initialised for GameFileClass for dll in mixfile.cpp
+template<class FC>
+List<MixFileClass<FC> *> MixFileClass<FC>::s_mixList;
+#endif
 
 template<class FC>
 MixFileClass<FC>::MixFileClass(const char *filename, PKey *key) :

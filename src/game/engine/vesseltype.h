@@ -65,9 +65,10 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    static VesselTypeClass &As_Reference(VesselType vessel);
+    static VesselTypeClass &As_Reference(VesselType type);
     static VesselType From_Name(const char *name);
     static void One_Time();
+    static const char *Name_From(VesselType type) { return As_Reference(type).Name; }
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

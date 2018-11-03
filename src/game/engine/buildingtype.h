@@ -66,6 +66,8 @@ enum BuildingType
     BUILDING_TESLA_COIL = 31,
 
     // For buildings beyond this to count in the check for what exists, the bitfield will need extending.
+    BUILDING_VALID_COUNT = 32,
+    
     // Fakes
     BUILDING_WEAF = 32,
     BUILDING_FACF = 33,
@@ -214,10 +216,11 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    static BuildingTypeClass &As_Reference(BuildingType building);
+    static BuildingTypeClass &As_Reference(BuildingType type);
     static BuildingType From_Name(const char *name);
     static void Init(TheaterType theater);
-
+    static const char *Name_From(BuildingType type) { return As_Reference(type).Name; }
+    
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.

@@ -112,7 +112,7 @@ const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const
     TriggerTypeClass *(*func)(GameINIClass *, const char *, const char *) =
         reinterpret_cast<TriggerTypeClass *(*)(GameINIClass *, const char *, const char *)>(0x004638BC);
     return func((GameINIClass *)this, section, entry);
-#else
+#elif 0
     //TODO: Requires TriggerTypeClass interface to be complete
     char valuebuf[MAX_LINE_LENGTH];
 
@@ -121,6 +121,8 @@ const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const
     }
 
     return defvalue;
+#else
+	return nullptr;
 #endif
 }
 
@@ -284,7 +286,6 @@ const UnitType GameINIClass::Get_UnitType(const char *section, const char *entry
 #else
     char valuebuf[MAX_LINE_LENGTH];
 
-    //TODO: Requires UnitTypeClass to be complete
     if (Get_String(section, entry, UnitTypeClass::Name_From(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
         return UnitTypeClass::From_Name(valuebuf);
     }
@@ -300,7 +301,6 @@ BOOL GameINIClass::Put_UnitType(const char *section, const char *entry, const Un
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
     return func(this, section, entry, value);
 #else
-    //TODO: Requires UnitTypeClass to be complete
     return Put_String(section, entry, UnitTypeClass::Name_From(value));
 #endif
 }
@@ -656,7 +656,7 @@ BOOL GameINIClass::Put_Units(const char *section, const char *entry, const int v
                 strcat(&buffer[strlen(buffer)], ",");
             }
             //TODO: Requires UnitTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], nullptr /*UnitTypeClass::As_Reference(type).Get_Name()*/);
+            strcat(&buffer[strlen(buffer)], UnitTypeClass::Name_From(type));
         }
     }
     return Put_String(section, entry, buffer);
@@ -670,7 +670,7 @@ const int GameINIClass::Get_Infantry(const char *section, const char *entry, con
         int value = 0;
         for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
             //TODO: Requires InfantryTypeClass to be complete
-            InfantryType type = INFANTRY_NONE; //InfantryTypeClass::From_Name(token);
+            InfantryType type = InfantryTypeClass::From_Name(token);
             if (type != INFANTRY_NONE && type < INFANTRY_COUNT) {
                 value |= (1 << type);
             }
@@ -689,8 +689,8 @@ BOOL GameINIClass::Put_Infantry(const char *section, const char *entry, const in
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            //TODO: Requires InfantryTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], nullptr /*InfantryTypeClass::As_Reference(type).Get_Name()*/);
+            
+            strcat(&buffer[strlen(buffer)], InfantryTypeClass::Name_From(type));
         }
     }
     return Put_String(section, entry, buffer);
@@ -703,8 +703,8 @@ const int GameINIClass::Get_Aircrafts(const char *section, const char *entry, co
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
         int value = 0;
         for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            //TODO: Requires AircraftTypeClass to be complete
-            AircraftType type = AIRCRAFT_NONE; //AircraftTypeClass::From_Name(token);
+            
+            AircraftType type = AircraftTypeClass::From_Name(token);
             if (type != AIRCRAFT_NONE && type < AIRCRAFT_COUNT) {
                 value |= (1 << type);
             }
@@ -723,8 +723,8 @@ BOOL GameINIClass::Put_Aircrafts(const char *section, const char *entry, const i
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            //TODO: Requires AircraftTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], nullptr /*AircraftTypeClass::As_Reference(type).Get_Name()*/);
+            
+            strcat(&buffer[strlen(buffer)], AircraftTypeClass::Name_From(type));
         }
     }
     return Put_String(section, entry, buffer);
@@ -737,8 +737,8 @@ const int GameINIClass::Get_Vessels(const char *section, const char *entry, cons
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
         int value = 0;
         for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            //TODO: Requires VesselTypeClass to be complete
-            VesselType type = VESSEL_NONE; //VesselTypeClass::From_Name(token);
+            
+            VesselType type = VesselTypeClass::From_Name(token);
             if (type != VESSEL_NONE && type < VESSEL_COUNT) {
                 value |= (1 << type);
             }
@@ -757,8 +757,8 @@ BOOL GameINIClass::Put_Vessels(const char *section, const char *entry, const int
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            //TODO: Requires VesselTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], nullptr /*VesselTypeClass::As_Reference(type).Get_Name()*/);
+            
+            strcat(&buffer[strlen(buffer)], VesselTypeClass::Name_From(type));
         }
     }
     return Put_String(section, entry, buffer);
@@ -776,7 +776,7 @@ const int GameINIClass::Get_Buildings(const char *section, const char *entry, co
     if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
         int value = 0;
         for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            //TODO: Requires BuildingTypeClass to be complete
+            
             BuildingType type = BuildingTypeClass::From_Name(token);
             if (type != BUILDING_NONE && type < BUILDING_COUNT) {
                 value |= (1 << type);
@@ -802,8 +802,8 @@ BOOL GameINIClass::Put_Buildings(const char *section, const char *entry, const i
             if ( buffer[0] != '\0' ) {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            //TODO: Requires BuildingTypeClass to be complete
-            strcat(&buffer[strlen(buffer)], BuildingTypeClass::As_Reference(type).Get_Name());
+            
+            strcat(&buffer[strlen(buffer)], BuildingTypeClass::Name_From(type));
         }
     }
     return Put_String(section, entry, buffer);

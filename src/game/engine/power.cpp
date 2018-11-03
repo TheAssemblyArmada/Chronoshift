@@ -23,9 +23,15 @@
 
 #define POWER_MAX_HEIGHT 108
 
+#ifndef CHRONOSHIFT_STANDALONE
 PowerClass::PowerButtonClass &PowerClass::PowerButton = Make_Global<PowerClass::PowerButtonClass>(0x006877C0);
 void *&PowerClass::PowerShape = Make_Global<void *>(0x006877B8);
 void *&PowerClass::PowerBarShape = Make_Global<void *>(0x006877BC);
+#else
+PowerClass::PowerButtonClass PowerClass::PowerButton;
+void *PowerClass::PowerShape = nullptr;
+void *PowerClass::PowerBarShape = nullptr;
+#endif
 
 PowerClass::PowerButtonClass::PowerButtonClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)

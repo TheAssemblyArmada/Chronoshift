@@ -318,3 +318,32 @@ const int16_t *AircraftTypeClass::Overlap_List() const
 
     return _list;
 }
+
+/**
+ * Fetches a reference to the actual object from a type enum value.
+ *
+ * @warning Heap allocation order MUST match the enum order in Init_Heap for this to work.
+ */
+AircraftTypeClass &AircraftTypeClass::As_Reference(AircraftType type)
+{
+    DEBUG_ASSERT(type != AIRCRAFT_NONE);
+    DEBUG_ASSERT(type < AIRCRAFT_COUNT);
+
+    return g_AircraftTypes[type];
+}
+
+/**
+ * Fetches the type enum value from a name string.
+ */
+AircraftType AircraftTypeClass::From_Name(const char *name)
+{
+    if (name != nullptr) {
+        for (AircraftType type = AIRCRAFT_FIRST; type < AIRCRAFT_COUNT; ++type) {
+            if (strcasecmp(name, As_Reference(type).Name) == 0) {
+                return type;
+            }
+        }
+    }
+
+    return AIRCRAFT_NONE;
+}

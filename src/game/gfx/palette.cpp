@@ -16,6 +16,10 @@
 #include "palette.h"
 #include "pal.h"
 #include "ttimer.h"
+#include <cstring>
+
+using std::memcpy;
+using std::memcmp;
 
 PaletteClass WhitePalette(RGBClass::WhiteColor);
 PaletteClass BlackPalette(RGBClass::BlackColor);
@@ -27,7 +31,7 @@ PaletteClass &CCPalette = Make_Global<PaletteClass>(0x0066995C);
 #else
 PaletteClass GamePalette;
 PaletteClass OriginalPalette;
-PaletteClass &CCPalette;
+PaletteClass CCPalette;
 #endif
 
 PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g_currentPalette);
