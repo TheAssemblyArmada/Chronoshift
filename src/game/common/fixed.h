@@ -232,4 +232,6 @@ inline bool operator<=(const int &a, const fixed &b)
     return b >= a;
 }
 
+typedef fixed fixed_t;
+
 #endif // FIXED_H
