@@ -1,5 +1,8 @@
 # Chronoshift
 
+[![Build status](https://ci.appveyor.com/api/projects/status/7pkmbx9gbpet8s9a?svg=true)](https://ci.appveyor.com/project/AdamMondez/chronoshift-k6j75)
+[![Build Status](https://travis-ci.org/TheAssemblyArmada/Chronoshift.svg?branch=develop)](https://travis-ci.org/TheAssemblyArmada/Chronoshift)
+
 An Open Source Re-Implementation of Command and Conquer: Red Alert
 
 This project is a bottom-up rewrite of Command and Conquer: Red Alert, a real time
