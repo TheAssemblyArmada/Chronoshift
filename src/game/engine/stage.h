@@ -31,8 +31,10 @@ public:
 
     int Get_Stage() const { return Stage; }
     void Set_Stage(int stage) { Stage = stage; }
+    int Get_Delay() const { return Delay; }
     void Set_Delay(int delay);
     BOOL Stage_Changed();
+    void Reset();
 
 private:
     int Stage; // Current stage we are at.
@@ -62,6 +64,16 @@ inline BOOL StageClass::Stage_Changed()
     }
 
     return false;
+}
+
+/**
+ * @brief Reset all members.
+ */
+inline void StageClass::Reset()
+{
+    Stage = 0;
+    Timer = 0;
+    Delay = 0;
 }
 
 inline StageClass &StageClass::operator=(StageClass &that)
