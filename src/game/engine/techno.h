@@ -93,7 +93,7 @@ public:
     virtual void Decode_Pointers() override;
     // MissionClass virtuals.
     virtual void Override_Mission(MissionType mission, int target1 = -1, int target2 = -1) override;
-    virtual BOOL Restore_Mission() override; 
+    virtual BOOL Restore_Mission() override;
     // TechnoClass virtuals
     virtual int How_Many_Survivors() const;
     virtual DirType Turret_Facing() const;
@@ -138,6 +138,10 @@ public:
 
     void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
 
+    const GamePtr<HouseClass> Get_Owner_House() const { return m_OwnerHouse; }
+    int Get_Price() const { return m_Price; }
+    void Set_Price(int price) { m_Price = price; }
+
 protected:
     VisualType Visual_Character(BOOL flag) const;
 
@@ -175,11 +179,11 @@ protected:
 #else
     bool m_IsUseless;
     bool m_IsTickedOff; // Has this object been attacked and pissed off?
-    bool m_Cloakable; 
-    bool m_IsPrimary; 
-    bool m_IsALoner; 
-    bool m_LockedOnMap; 
-    bool m_IsRecoiling; 
+    bool m_Cloakable;
+    bool m_IsPrimary;
+    bool m_IsALoner;
+    bool m_LockedOnMap;
+    bool m_IsRecoiling;
     bool m_Tethered; // Is this in radio chit chat with something (on repair bay, helipad etc)
     bool m_PlayerOwned;
     bool m_PlayerAware; // C&CDOS has this as "Discovered"
@@ -193,7 +197,6 @@ protected:
     TCountDownTimerClass<FrameTimerClass> m_InvulnerabilityTimer;
     int m_SpiedBits;
     int m_Archive;
-    //int m_OwnerHouse; // Should be GamePtr<HouseClass> m_OwnerHouse; when HouseClass is done.
     GamePtr<HouseClass> m_OwnerHouse;
     CloakState m_CloakState;
     StageClass m_CloakingStage;
