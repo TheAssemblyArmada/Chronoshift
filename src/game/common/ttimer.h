@@ -49,9 +49,11 @@ public:
 
     void Reset(uint32_t value = 0);
 
+    bool Started() const { return m_started != UINT32_MAX; }
+    bool Stopped() const { return m_started == UINT32_MAX; }
+
 protected:
     uint32_t Value() const { return m_timer() - m_started; }
-    bool Has_Started() const { return m_started != UINT32_MAX; }
 
 protected:
     T m_timer;
@@ -81,11 +83,12 @@ template<typename T>
 class TTimerClass : public BasicTimerClass<T>
 {
 #ifndef COMPILER_WATCOM
+public:
     using BasicTimerClass<T>::m_timer;
     using BasicTimerClass<T>::m_started;
     using BasicTimerClass<T>::m_accumulated;
     using BasicTimerClass<T>::Value;
-    using BasicTimerClass<T>::Has_Started;
+    using BasicTimerClass<T>::Started;
 #endif
 
 public:
@@ -146,7 +149,7 @@ uint32_t TTimerClass<T>::Time() const
 {
     uint32_t ret = m_accumulated;
 
-    if (Has_Started()) {
+    if (Started()) {
         ret += Value();
     }
 
@@ -157,11 +160,12 @@ template<typename T>
 class TCountDownTimerClass : public BasicTimerClass<T>
 {
 #ifndef COMPILER_WATCOM
+public:
     using BasicTimerClass<T>::m_timer;
     using BasicTimerClass<T>::m_started;
     using BasicTimerClass<T>::m_accumulated;
     using BasicTimerClass<T>::Value;
-    using BasicTimerClass<T>::Has_Started;
+    using BasicTimerClass<T>::Started;
 #endif
 
 public:
@@ -176,6 +180,8 @@ public:
 
     TCountDownTimerClass<T> &operator=(TCountDownTimerClass<T> &that);
     TCountDownTimerClass<T> &operator=(uint32_t value);
+
+    void Set(uint32_t value);
 
     operator uint32_t() const { return Time(); }
 
@@ -204,9 +210,16 @@ TCountDownTimerClass<T> &TCountDownTimerClass<T>::operator=(uint32_t value)
 }
 
 template<typename T>
+void TCountDownTimerClass<T>::Set(uint32_t value)
+{
+    m_started = m_timer();
+    m_accumulated = value;
+}
+
+template<typename T>
 void TCountDownTimerClass<T>::Start()
 {
-    if (!Has_Started()) {
+    if (!Started()) {
         m_started = m_timer();
     }
 }
@@ -214,7 +227,7 @@ void TCountDownTimerClass<T>::Start()
 template<typename T>
 void TCountDownTimerClass<T>::Stop()
 {
-    if (Has_Started()) {
+    if (Started()) {
         m_accumulated = Time();
         m_started = UINT32_MAX;
     }
@@ -225,7 +238,7 @@ uint32_t TCountDownTimerClass<T>::Time() const
 {
     uint32_t accum = m_accumulated;
 
-    if (Has_Started()) {
+    if (Started()) {
         if (Value() < m_accumulated) {
             accum -= Value();
         } else {
