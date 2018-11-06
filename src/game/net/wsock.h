@@ -18,33 +18,8 @@
 #define WSOCK_H
 
 #include "always.h"
+#include "sockets.h"
 #include "vector.h"
-
-#if defined(PLATFORM_WINDOWS) && !defined(_WINSOCKAPI_)
-#include <winsock.h>
-#else
-#include <sys/types.h>
-#include <unistd.h>
-
-#ifndef SOCKET
-#define SOCKET int
-#endif
-
-#ifndef HANDLE
-#define HANDLE int
-#endif
-
-#ifndef INVALID_SOCKET
-#define INVALID_SOCKET -1
-#endif
-
-#ifndef INVALID_HANDLE_VALUE
-#define INVALID_HANDLE_VALUE -1
-#endif
-
-#define closesocket close
-
-#endif
 
 // http://www.techpowerup.com/forums/threads/c-c-sockets-faq-and-how-to-win-linux.56901/
 // http://stackoverflow.com/questions/2284428/in-c-networking-using-select-do-i-first-have-to-listen-and-accept
@@ -64,14 +39,24 @@ class WinsockInterfaceClass
     {
         SOCKET_BUFFER_SIZE = 0x20000,
     };
+
 protected:
     struct WinsockBufferType
     {
     public:
-        char Header[64];
-        int32_t Length;
-        int32_t Broadcast;
-        char Data[1024];
+        char m_Header[64];
+        int32_t m_Length;
+        BOOL m_Broadcast;
+        char m_Data[1024];
+    };
+
+    enum
+    {
+        NULL_MESSAGE = 0,
+        SOCKET_READ = 1,
+        SOCKET_WRITE = 2,
+        IPX_MESSAGE = 1139,
+        UDP_MESSAGE = 1140,
     };
 
 public:
@@ -93,9 +78,9 @@ public:
     virtual BOOL Set_Socket_Options();
     virtual void Set_Broadcast_Address(void *address) {}
     virtual ProtocolEnum Get_Protocol() { return PROTOCOL_NONE; }
-    virtual int Protocol_Event_Message() { return 0; }
+    virtual int Protocol_Event_Message() { return NULL_MESSAGE; }
     virtual int Open_Socket(unsigned port) { return 0; }
-    virtual int Message_Handler(void *a1, unsigned a2, unsigned a3, int a4) { return 1; }
+    virtual int Message_Handler(void *hwnd, uint32_t msg, uint32_t wparam, int32_t lparam) { return 1; }
 
     // We return a copy of ReadSockets/WriteSockets that can be modified by select
 #ifdef CHRONOSHIFT_SOCKETS_API
@@ -113,12 +98,14 @@ public:
 #endif
 
 protected:
-    DynamicVectorClass<WinsockBufferType *> InBuffers;
-    DynamicVectorClass<WinsockBufferType *> OutBuffers;
-    BOOL IsOpen;
-    SOCKET Socket;
-    HANDLE TaskHandle;
-    char RecvBuffer[COMM_BUFFER_SIZE];
+    DynamicVectorClass<WinsockBufferType *> m_InBuffers;
+    DynamicVectorClass<WinsockBufferType *> m_OutBuffers;
+    BOOL m_IsOpen;
+    SOCKET m_Socket;
+#if defined PLATFORM_WINDOWS && !defined CHRONOSHIFT_SOCKETS_API
+    HANDLE m_TaskHandle;
+#endif
+    char m_RecvBuffer[COMM_BUFFER_SIZE];
 #ifdef COMPILER_WATCOM
     char pad; // Line up struct as per original or buffer really is 1025 bytes rather than 1024.
 #endif

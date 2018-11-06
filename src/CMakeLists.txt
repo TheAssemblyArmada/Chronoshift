@@ -8,7 +8,11 @@ if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
         set(PLATFORM_LIBS ${PLATFORM_LIBS} ${DirectX_DDRAW_LIBRARY})
     endif()
     
-    set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm wsock32)
+    if(STANDALONE)
+        set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm ws2_32)
+    else()
+        set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm wsock32) # Original links wsock32, not ws2_32
+    endif()
 elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     set(PLATFORM_LIBS ${PLATFORM_LIBS} rt)
 else()
@@ -210,7 +214,9 @@ set(GAMEENGINE_SRC
     game/memory/alloc.cpp
     game/memory/newdel.cpp
     game/net/field.cpp
+    game/net/ipx.cpp
     game/net/ipxaddress.cpp
+    game/net/udp.cpp
     game/net/wsock.cpp
     game/platform/eventhandler.cpp
     game/platform/keyboard.cpp

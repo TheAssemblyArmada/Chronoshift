@@ -40,31 +40,45 @@ WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>
 WinsockInterfaceClass *g_packetTransport = nullptr;
 #endif
 
+/**
+ * 0x005A7FB0
+ */
 WinsockInterfaceClass::WinsockInterfaceClass() :
-    InBuffers(),
-    OutBuffers(),
-    IsOpen(false),
-    Socket(INVALID_SOCKET),
-    TaskHandle(INVALID_HANDLE_VALUE)
+    m_InBuffers(),
+    m_OutBuffers(),
+    m_IsOpen(false),
+    m_Socket(INVALID_SOCKET)
+#ifdef PLATFORM_WINDOWS
+    ,
+    m_TaskHandle(INVALID_HANDLE_VALUE)
+#endif
 {
 }
 
+/**
+ * 0x005A7FF4
+ */
 WinsockInterfaceClass::~WinsockInterfaceClass()
 {
     Close();
 }
 
+/**
+ * Initialises the sockets interface if required and clears existing data.
+ *
+ * 0x005A7FF4
+ */
 BOOL WinsockInterfaceClass::Init()
 {
-    if (!IsOpen) {
-        Socket = INVALID_SOCKET;
-        TaskHandle = INVALID_HANDLE_VALUE;
+    if (!m_IsOpen) {
+        m_Socket = INVALID_SOCKET;
         Discard_In_Buffers();
         Discard_Out_Buffers();
 
 // WSAStartup is only required on windows.
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms742213%28v=vs.85%29.aspx
 #ifdef PLATFORM_WINDOWS
+        m_TaskHandle = INVALID_HANDLE_VALUE;
         WORD wVersionRequested;
         WSADATA wsaData;
 
@@ -86,15 +100,20 @@ BOOL WinsockInterfaceClass::Init()
         }
 #endif // PLATFORM_WINDOWS
 
-        IsOpen = true;
+        m_IsOpen = true;
     }
 
     return true;
 }
 
+/**
+ * Stops listening for new connections and closes the socket as well as the socket interface.
+ *
+ * 0x005A804C
+ */
 void WinsockInterfaceClass::Close()
 {
-    if (IsOpen) {
+    if (m_IsOpen) {
         Stop_Listening();
         Close_Socket();
 
@@ -102,33 +121,42 @@ void WinsockInterfaceClass::Close()
         WSACleanup(); // Again only needed on windows to close the winsock stuff
 #endif // PLATFORM_WINDOWS
 
-        IsOpen = false;
+        m_IsOpen = false;
     }
 }
 
+/**
+ * Closes the socket if open.
+ *
+ * 0x005A8084
+ */
 void WinsockInterfaceClass::Close_Socket()
 {
-    if (Socket != INVALID_SOCKET) {
-        closesocket(Socket);
-        Socket = INVALID_SOCKET;
+    if (m_Socket != INVALID_SOCKET) {
+        closesocket(m_Socket);
+        m_Socket = INVALID_SOCKET;
     }
 }
 
+/**
+ * Reads data from the sockets interface.
+ *
+ * 0x005A8260
+ */
 int WinsockInterfaceClass::Read(void *dst, int &dst_read, void *dst_head, int &head_size)
 {
     // Do we have any data in our in buffer?
-    if (InBuffers.Count()) {
+    if (m_InBuffers.Count()) {
         // Get our data packet
-        WinsockBufferType *in = InBuffers[0];
+        WinsockBufferType *in = m_InBuffers[0];
 
-        // copy the data to the dst pointer, header to header pointer and
-        // set the amount of data we had in this packet
-        memcpy(dst, in->Data, in->Length);
-        memcpy(dst_head, in->Header, 64);
-        dst_read = in->Length;
+        // copy the data to the dst pointer, header to header pointer and set the amount of data we had in this packet
+        memcpy(dst, in->m_Data, in->m_Length);
+        memcpy(dst_head, in->m_Header, sizeof(in->m_Header));
+        dst_read = in->m_Length;
 
-        // delete the retrieved buffer form our queue.
-        InBuffers.Delete(0);
+        // Dequeue and delete the retrieved buffer.
+        m_InBuffers.Delete(0);
         delete in;
 
         // return how much data we read.
@@ -139,30 +167,41 @@ int WinsockInterfaceClass::Read(void *dst, int &dst_read, void *dst_head, int &h
     return 0;
 }
 
+/**
+ * Writes data to the sockets interface for a specific destination.
+ *
+ * 0x005A82E4
+ */
 void WinsockInterfaceClass::Write_To(void *src, int src_len, void *src_head)
 {
     // Create a new buffer to hold our data until a free send socket comes up
     WinsockBufferType *out = new WinsockBufferType;
 
     // Copy data, length and header into our buffer struct
-    memcpy(out->Data, src, src_len);
-    out->Length = src_len;
-    out->Broadcast = 0;
-    memcpy(out->Header, src_head, 10);
+    memcpy(out->m_Data, src, src_len);
+    out->m_Length = src_len;
+    out->m_Broadcast = false;
+    // Original does this as an 8byte copy then a two byte copy... header struct perhaps?
+    memcpy(out->m_Header, src_head, 10);
 
     // Add it to the outgoing buffer queue
-    OutBuffers.Add(out);
+    m_OutBuffers.Add(out);
 
 #ifdef PLATFORM_WINDOWS
     // Send a message to our event queue that sent data is pending. 
     // TODO Will need to change this when we port to SDL or other cross platform event model.
-    SendMessageA(MainWindow, Protocol_Event_Message(), 0, 2);
+    SendMessageA(MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
 #endif
 
-    // Hnadle events.
+    // Handle events.
     g_keyboard->Check();
 }
 
+/**
+ * Writes data to the sockets interface for broadcast.
+ *
+ * 0x005A8384
+ */
 void WinsockInterfaceClass::Broadcast(void *src, int src_len)
 {
     // Create a new buffer to hold our data until a free send socket comes up
@@ -170,53 +209,68 @@ void WinsockInterfaceClass::Broadcast(void *src, int src_len)
 
     // Copy data and length into our buffer struct, going to all destinations
     // so no header needed?
-    memcpy(wsockbuffer->Data, src, src_len);
-    wsockbuffer->Length = src_len;
-    wsockbuffer->Broadcast = 1;
+    memcpy(wsockbuffer->m_Data, src, src_len);
+    wsockbuffer->m_Length = src_len;
+    wsockbuffer->m_Broadcast = true;
 
-    OutBuffers.Add(wsockbuffer);
+    m_OutBuffers.Add(wsockbuffer);
 
 #ifdef PLATFORM_WINDOWS
     // Send a message to our event queue that sent data is pending.
     // TODO Will need to change this when we port to SDL or other cross platform event model.
-    SendMessageA(MainWindow, Protocol_Event_Message(), 0, 2);
+    SendMessageA(MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
 #endif
 
     g_keyboard->Check();
 }
 
+/**
+ * Discards buffers for incoming data.
+ *
+ * 0x005A812C
+ */
 void WinsockInterfaceClass::Discard_In_Buffers()
 {
-    for (int index = InBuffers.Count() - 1; index >= 0; --index) {
-        delete InBuffers[index];
-        InBuffers.Delete(index);
+    for (int index = m_InBuffers.Count() - 1; index >= 0; --index) {
+        delete m_InBuffers[index];
+        m_InBuffers.Delete(index);
     }
 }
 
+/**
+ * Discards buffers for outgoing data.
+ *
+ * 0x005A8154
+ */
 void WinsockInterfaceClass::Discard_Out_Buffers()
 {
-    for (int index = OutBuffers.Count() - 1; index >= 0; --index) {
-        delete OutBuffers[index];
-        OutBuffers.Delete(index);
+    for (int index = m_OutBuffers.Count() - 1; index >= 0; --index) {
+        delete m_OutBuffers[index];
+        m_OutBuffers.Delete(index);
     }
 }
 
+/**
+ * Starts listening for connections.
+ *
+ * 0x005A80AC
+ */
 BOOL WinsockInterfaceClass::Start_Listening()
 {
 #ifdef CHRONOSHIFT_SOCKETS_API
     // Without the windows event loop, we have to fall back on non-blocking sockets and select from the look of things. This
     // sets up what sockets we want to listen for activity on.
-    FD_SET(Socket, &ReadSockets);
-    FD_SET(Socket, &WriteSockets);
+    FD_SET(m_Socket, &ReadSockets);
+    FD_SET(m_Socket, &WriteSockets);
 
-    if (SocketsMax < Socket) {
-        ++SocketsMax;
+    if (SocketsMax < m_Socket) {
+        SocketsMax = m_Socket;
     }
-#elif defined(PLATFORM_WINDOWS)
-    if (WSAAsyncSelect(Socket, MainWindow, Protocol_Event_Message(), FD_READ | FD_WRITE) == -1) {
+#elif defined PLATFORM_WINDOWS
+    if (WSAAsyncSelect(m_Socket, MainWindow, Protocol_Event_Message(), FD_READ | FD_WRITE) == -1) {
         DEBUG_LOG("WinsockInterface: Async select failed.\n");
-        WSACancelAsyncRequest(TaskHandle);
-        TaskHandle = INVALID_HANDLE_VALUE;
+        WSACancelAsyncRequest(m_TaskHandle);
+        m_TaskHandle = INVALID_HANDLE_VALUE;
 
         return false;
     }
@@ -224,50 +278,57 @@ BOOL WinsockInterfaceClass::Start_Listening()
     return true;
 }
 
+/**
+ * Stops listening for connections.
+ *
+ * 0x005A8104
+ */
 void WinsockInterfaceClass::Stop_Listening()
 {
 #ifdef CHRONOSHIFT_SOCKETS_API
-    FD_CLR(Socket, &ReadSockets);
-    FD_CLR(Socket, &WriteSockets);
-#elif defined(PLATFORM_WINDOWS)
-    if (TaskHandle != INVALID_HANDLE_VALUE) {
-        WSACancelAsyncRequest(TaskHandle);
-        TaskHandle = INVALID_HANDLE_VALUE;
+    FD_CLR(m_Socket, &ReadSockets);
+    FD_CLR(m_Socket, &WriteSockets);
+#elif defined PLATFORM_WINDOWS
+    if (m_TaskHandle != INVALID_HANDLE_VALUE) {
+        WSACancelAsyncRequest(m_TaskHandle);
+        m_TaskHandle = INVALID_HANDLE_VALUE;
     }
 #endif // PLATFORM_WINDOWS
 }
 
+/**
+ * Clears any errors on the socket.
+ *
+ * 0x005A8408
+ */
 void WinsockInterfaceClass::Clear_Socket_Error(unsigned socket)
 {
     char optval[4];
-    socklen_t optlen = 4;
+    socklen_t optlen = sizeof(optval);
 
     getsockopt(socket, SOL_SOCKET, SO_ERROR, optval, &optlen);
     *reinterpret_cast<uint32_t *>(optval) = 0;
     setsockopt(socket, SOL_SOCKET, SO_ERROR, optval, optlen);
 }
 
+/**
+ * Sets standard Chronoshift socket options.
+ *
+ * 0x005A8458
+ */
 BOOL WinsockInterfaceClass::Set_Socket_Options()
 {
-    static int socket_recv_buffer_size = SOCKET_BUFFER_SIZE;
-    static int socket_tran_buffer_size = SOCKET_BUFFER_SIZE;
+    static int32_t socket_recv_buffer_size = SOCKET_BUFFER_SIZE;
+    static int32_t socket_tran_buffer_size = SOCKET_BUFFER_SIZE;
 
-    if (setsockopt(Socket, SOL_SOCKET, SO_RCVBUF, (char *)&socket_recv_buffer_size, sizeof(int)) == SOCKET_ERROR) {
-#if defined(PLATFORM_WINDOWS)
-        int error = WSAGetLastError();
-#else // !PLATFORM_WINDOWS
-        int error = errno;
-#endif // PLATFORM_WINDOWS
-        DEBUG_LOG("WinsockInterface: Failed to set socket option SO_RCVBUF - error code %d.\n", error);
+    if (setsockopt(m_Socket, SOL_SOCKET, SO_RCVBUF, (char *)&socket_recv_buffer_size, sizeof(socket_recv_buffer_size))
+        == SOCKET_ERROR) {
+        DEBUG_LOG("WinsockInterface: Failed to set SOL_SOCKET option SO_RCVBUF - error code %d.\n", LastSocketError);
     }
 
-    if (setsockopt(Socket, SOL_SOCKET, SO_SNDBUF, (char *)&socket_tran_buffer_size, sizeof(int)) == SOCKET_ERROR) {
-#if defined(PLATFORM_WINDOWS)
-        int error = WSAGetLastError();
-#else // !PLATFORM_WINDOWS
-        int error = errno;
-#endif // PLATFORM_WINDOWS
-        DEBUG_LOG("WinsockInterface: Failed to set socket option SO_SNDBUF - error code %d.\n", error);
+    if (setsockopt(m_Socket, SOL_SOCKET, SO_SNDBUF, (char *)&socket_tran_buffer_size, sizeof(socket_tran_buffer_size))
+        == SOCKET_ERROR) {
+        DEBUG_LOG("WinsockInterface: Failed to set SOL_SOCKET option SO_SNDBUF - error code %d.\n", LastSocketError);
     }
     return true;
 }
