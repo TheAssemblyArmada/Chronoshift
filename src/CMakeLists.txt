@@ -104,6 +104,7 @@ set(GAMEENGINE_SRC
     game/engine/door.cpp
     game/engine/expansion.cpp
     game/engine/facing.cpp
+    game/engine/factory.cpp
     game/engine/flasher.cpp
     game/engine/focus.cpp
     game/engine/fuse.cpp
@@ -117,6 +118,8 @@ set(GAMEENGINE_SRC
     game/engine/gscreen.cpp
     game/engine/heap.cpp
     game/engine/help.cpp
+    game/engine/house.cpp
+    game/engine/housestatic.cpp
     game/engine/housetype.cpp
     game/engine/infantrytype.cpp
     game/engine/init.cpp
@@ -149,6 +152,7 @@ set(GAMEENGINE_SRC
     game/engine/source.cpp
     game/engine/sidebar.cpp
     game/engine/special.cpp
+    game/engine/super.cpp
     game/engine/tab.cpp
     game/engine/target.cpp
     game/engine/techno.cpp
