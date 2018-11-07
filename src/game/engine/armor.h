@@ -18,7 +18,7 @@
 #ifndef ARMOR_H
 #define ARMOR_H
 
-#include	"always.h"
+#include "always.h"
 
 enum ArmorType {
     ARMOR_INVALID = -1,

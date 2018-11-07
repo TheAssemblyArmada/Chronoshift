@@ -89,8 +89,8 @@ public:
     int Get_Word() const { return m_number.word; }
     void Set_Word(uint16_t word) { m_number.word = word; }
 
-    static const fixed _0_1; // 0.0	0
-    static const fixed _1_1; // 1.0	256
+    static const fixed _0_1; // 0.0    0
+    static const fixed _1_1; // 1.0    256
     static const fixed _1_2; // 0.5
     static const fixed _1_3; // 0.33 ish
     static const fixed _1_4; // 0.25

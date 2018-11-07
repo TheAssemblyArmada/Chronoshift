@@ -150,9 +150,9 @@ void GameScreenClass::Render()
                 //
                 //
                 // if ( Get_Lepton_X(Loc2) < 128 ) {
-                //	v4 = Get_Lepton_X(Loc2);
+                //    v4 = Get_Lepton_X(Loc2);
                 //} else {
-                //	v4 = Get_Lepton_X(Loc2) + 1;
+                //    v4 = Get_Lepton_X(Loc2) + 1;
                 //}
 
                 //

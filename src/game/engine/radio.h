@@ -70,8 +70,8 @@ private:
     static const char *Messages[RADIO_COUNT];
 
 public:
-    RadioMessageType ReceivedMessage; // 0x37	//name subject to change!
-    RadioMessageType TransmittedMessage; // 0x38	//name subject to change!
+    RadioMessageType ReceivedMessage; // 0x37    //name subject to change!
+    RadioMessageType TransmittedMessage; // 0x38    //name subject to change!
     RadioMessageType LastMessage; // 0x39
     SmartPtr<ObjectClass> Radio; // 0x3A
 };

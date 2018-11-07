@@ -42,9 +42,9 @@ enum AnimType
     ANIM_NAPALM2 = 8, // "NAPALM2"
     ANIM_NAPALM3 = 9, // "NAPALM3"
     ANIM_SMOKE_PUFF = 10, // "SMOKEY"
-    ANIM_PIFF = 11, // "PIFF"			//small arms fire piff (single shot)
-    ANIM_PIFFPIFF = 12, // "PIFFPIFF"		//small arms fire piff (multiple shots)
-    ANIM_FIRE3 = 13, // "FIRE3"			//small flames
+    ANIM_PIFF = 11, // "PIFF"            //small arms fire piff (single shot)
+    ANIM_PIFFPIFF = 12, // "PIFFPIFF"        //small arms fire piff (multiple shots)
+    ANIM_FIRE3 = 13, // "FIRE3"            //small flames
     ANIM_FIRE2 = 14, // "FIRE2"
     ANIM_FIRE1 = 15, // "FIRE1"
     ANIM_FIRE4 = 16, // "FIRE4"
@@ -74,7 +74,7 @@ enum AnimType
     ANIM_GUN_NW = 40, // "MINIGUN"
     ANIM_LZ_SMOKE = 41, // "SMOKLAND"
     ANIM_CRATE_DEVIATOR = 42, // "DEVIATOR"
-    ANIM_CRATE_DOLLAR = 43, // "DOLLAR"			//Money bonus
+    ANIM_CRATE_DOLLAR = 43, // "DOLLAR"            //Money bonus
     ANIM_CRATE_EARTH = 44, // "EARTH"
     ANIM_CRATE_EMPULSE = 45, // "EMPULSE"
     ANIM_CRATE_INVUN = 46, // "INVUN"
@@ -97,16 +97,16 @@ enum AnimType
     ANIM_INVULBOX = 63, // "INVULBOX"
     ANIM_PARABOX = 64, // "PARABOX"
     ANIM_SONARBOX = 65, // "SONARBOX"
-    ANIM_TWINKLE1 = 66, // "TWINKLE1"			//ore twinkle animation
-    ANIM_TWINKLE2 = 67, // "TWINKLE2"			//ore twinkle animation
-    ANIM_TWINKLE3 = 68, // "TWINKLE3"			//ore twinkle animation
+    ANIM_TWINKLE1 = 66, // "TWINKLE1"            //ore twinkle animation
+    ANIM_TWINKLE2 = 67, // "TWINKLE2"            //ore twinkle animation
+    ANIM_TWINKLE3 = 68, // "TWINKLE3"            //ore twinkle animation
     ANIM_FLAK = 69, // "FLAK"
     ANIM_WATER_EXP1 = 70, // "H2O_EXP1"
     ANIM_WATER_EXP2 = 71, // "H2O_EXP2"
     ANIM_WATER_EXP3 = 72, // "H2O_EXP3"
-    ANIM_CRATE_ARMOR = 73, // "ARMOR"			//Armor bonus
+    ANIM_CRATE_ARMOR = 73, // "ARMOR"            //Armor bonus
     ANIM_CRATE_SPEED = 74, // "SPEED"
-    ANIM_CRATE_FPOWER = 75, // "FPOWER"			//Firepower bonus crate animation
+    ANIM_CRATE_FPOWER = 75, // "FPOWER"            //Firepower bonus crate animation
     ANIM_CRATE_TQUAKE = 76, // "TQUAKE"
     ANIM_PARABOMB = 77, // "PARABOMB"
     ANIM_MINEEXP1 = 78, // "VEH-HIT2"
@@ -180,7 +180,7 @@ private:
 #endif
     AnimType Type;
     int field_13D; // coord offset?
-    int MidPoint; // middle frame, for logic purposes	//DamageFrame? //LogicFrame?
+    int MidPoint; // middle frame, for logic purposes    //DamageFrame? //LogicFrame?
     fixed Damage;
     int Rate; // Desired animation frames per minute (def = 900) default is 1 frame per logic tick.
     int Start; // Frame to start this animation from.

@@ -52,7 +52,7 @@
 //
 //    Example usage:
 //        int array[95];
-//        size_t arrayCount = ARRAY_SIZE(array); 	// arrayCount is 95.
+//        size_t arrayCount = ARRAY_SIZE(array);     // arrayCount is 95.
 //
 ////////////////////////////////////////////////////////////////////////////////
 #if !defined(ARRAY_SIZE)
@@ -111,7 +111,7 @@
 //    enable these operators on ENUMTYPE.
 //
 //    Example usage:
-//	      typedef enum MyEnum {
+//          typedef enum MyEnum {
 //            ENUM_A = 0,
 //            ENUM_B = 1,
 //            ENUM_C = 2,
@@ -154,7 +154,7 @@
 //    to enable these operators on ENUMTYPE.
 //
 //    Example usage:
-//	      typedef enum MyEnum {
+//          typedef enum MyEnum {
 //            ENUM_A = 0,
 //            ENUM_B = 1,
 //            ENUM_C = 2,

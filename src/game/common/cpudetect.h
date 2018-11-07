@@ -142,8 +142,8 @@ public:
     // Speed is calculated once during static initialisation, depending on CPU model
     // speed state of CPU could affect this.
     static int32_t Get_Processor_Speed() { return ProcessorSpeed; }
-    static int64_t Get_Processor_Ticks_Per_Second() { return ProcessorTicksPerSecond; }	// Ticks per second
-    static double Get_Inv_Processor_Ticks_Per_Second() { return InvProcessorTicksPerSecond; }	// 1.0 / Ticks per second
+    static int64_t Get_Processor_Ticks_Per_Second() { return ProcessorTicksPerSecond; }    // Ticks per second
+    static double Get_Inv_Processor_Ticks_Per_Second() { return InvProcessorTicksPerSecond; }    // 1.0 / Ticks per second
 
     static uint32_t Get_Feature_Bits() { return FeatureBits; }
     static uint32_t Get_Extended_Feature_Bits() { return ExtendedFeatureBits; }
@@ -213,8 +213,8 @@ private:
     static int32_t ProcessorModel;
     static int32_t ProcessorRevision;
     static int32_t ProcessorSpeed;
-    static int64_t ProcessorTicksPerSecond;	// Ticks per second
-    static double InvProcessorTicksPerSecond;	// 1.0 / Ticks per second
+    static int64_t ProcessorTicksPerSecond;    // Ticks per second
+    static double InvProcessorTicksPerSecond;    // 1.0 / Ticks per second
 
     static ProcessorManufacturerType ProcessorManufacturer;
     static IntelProcessorType IntelProcessor;

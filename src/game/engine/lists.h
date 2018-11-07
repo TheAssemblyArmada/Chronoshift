@@ -18,10 +18,10 @@
 #ifndef LISTS_H
 #define LISTS_H
 
-#include	"always.h"
+#include "always.h"
 
-#define	LIST_START	INT16_MAX - 1
-#define	LIST_END	INT16_MAX
+#define    LIST_START    INT16_MAX - 1
+#define    LIST_END    INT16_MAX
 
 //http://nyerguds.arsaneus-design.com/cnc95upd/inirules/grids.ini
 

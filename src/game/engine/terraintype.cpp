@@ -119,7 +119,7 @@ TerrainTypeClass::TerrainTypeClass(TerrainType type, int theater, uint32_t a3, B
 {
     Strength = 800;
     Armor = ARMOR_WOOD;
-    // Bit64 = true;	//TS shows what classes set this to true, needs debuging once logics are up and running.
+    // Bit64 = true;    //TS shows what classes set this to true, needs debuging once logics are up and running.
 }
 
 /**

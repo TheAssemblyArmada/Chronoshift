@@ -29,9 +29,9 @@ void Focus_Loss()
     Theme.Suspend();
     Stop_Primary_Sound_Buffer();
 
-	if (g_mouse != nullptr) {
+    if (g_mouse != nullptr) {
         g_mouse->Clear_Cursor_Clip();
-	}
+    }
 }
 
 /**
@@ -44,10 +44,10 @@ void Focus_Restore()
     Map.Flag_To_Redraw(true);
     Start_Primary_Sound_Buffer(true);
 
-	if (g_mouse != nullptr) {
+    if (g_mouse != nullptr) {
         g_mouse->Set_Cursor_Clip();
     }
 
-	g_visiblePage.Clear();
+    g_visiblePage.Clear();
     g_hiddenPage.Clear();
 }

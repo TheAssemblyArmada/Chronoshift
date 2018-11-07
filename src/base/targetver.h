@@ -24,45 +24,45 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows 95
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0400
-//#define _WIN32_WINDOWS	0x0400
-//#define _WIN32_IE			0x0300
-//#define TARGET_VERSION		"Windows 95"
+//#define WINVER                0x0400
+//#define _WIN32_WINDOWS    0x0400
+//#define _WIN32_IE            0x0300
+//#define TARGET_VERSION        "Windows 95"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows 98
 ////////////////////////////////////////////////////////////////////////////////
 // For Windows 98
-//#define WINVER				0x0410
-//#define _WIN32_WINDOWS	0x0410
-//#define _WIN32_IE			0x0401
-//#define TARGET_VERSION		"Windows 98"
+//#define WINVER                0x0410
+//#define _WIN32_WINDOWS    0x0410
+//#define _WIN32_IE            0x0401
+//#define TARGET_VERSION        "Windows 98"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows NT4
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0400
-//#define _WIN32_WINNT		0x0400
-//#define _WIN32_IE			0x0200
-//#define NTDDI_VERSION		0x05000000
-//#define TARGET_VERSION		"Windows NT4"
+//#define WINVER                0x0400
+//#define _WIN32_WINNT        0x0400
+//#define _WIN32_IE            0x0200
+//#define NTDDI_VERSION        0x05000000
+//#define TARGET_VERSION        "Windows NT4"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows ME
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0500
-//#define _WIN32_WINNT		0x0500
-//#define _WIN32_IE			0x0500
-//#define TARGET_VERSION		"Windows ME"
+//#define WINVER                0x0500
+//#define _WIN32_WINNT        0x0500
+//#define _WIN32_IE            0x0500
+//#define TARGET_VERSION        "Windows ME"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows 2000
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0500
-//#define _WIN32_WINNT		0x0500
-//#define _WIN32_IE			0x0500
-//#define NTDDI_VERSION		0x05000000
-//#define TARGET_VERSION		"Windows 2000"
+//#define WINVER                0x0500
+//#define _WIN32_WINNT        0x0500
+//#define _WIN32_IE            0x0500
+//#define NTDDI_VERSION        0x05000000
+//#define TARGET_VERSION        "Windows 2000"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows XP
@@ -76,41 +76,41 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows Vista
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0600
-//#define _WIN32_WINNT		0x0600
-//#define _WIN32_IE			0x0600
-//#define NTDDI_VERSION		0x06000000
-//#define TARGET_VERSION		"Windows Vista"
+//#define WINVER                0x0600
+//#define _WIN32_WINNT        0x0600
+//#define _WIN32_IE            0x0600
+//#define NTDDI_VERSION        0x06000000
+//#define TARGET_VERSION        "Windows Vista"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows 7
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0601
-//#define _WIN32_WINNT		0x0601
-//#define _WIN32_IE			0x0601
-//#define NTDDI_VERSION		0x06010000
-//#define TARGET_VERSION		"Windows 7"
+//#define WINVER                0x0601
+//#define _WIN32_WINNT        0x0601
+//#define _WIN32_IE            0x0601
+//#define NTDDI_VERSION        0x06010000
+//#define TARGET_VERSION        "Windows 7"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows 8
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0602
-//#define _WIN32_WINNT		0x0602
-//#define _WIN32_IE			0x0602
-//#define NTDDI_VERSION		0x06020000
-//#define TARGET_VERSION		"Windows 8"
+//#define WINVER                0x0602
+//#define _WIN32_WINNT        0x0602
+//#define _WIN32_IE            0x0602
+//#define NTDDI_VERSION        0x06020000
+//#define TARGET_VERSION        "Windows 8"
 
 ////////////////////////////////////////////////////////////////////////////////
 //  For Windows 10
 ////////////////////////////////////////////////////////////////////////////////
-//#define WINVER				0x0A00
-//#define _WIN32_WINNT		0x0A00
-//#define _WIN32_IE			0x0A00
-//#define NTDDI_VERSION		0x0A000000
-//#define TARGET_VERSION		"Windows 10"
+//#define WINVER                0x0A00
+//#define _WIN32_WINNT        0x0A00
+//#define _WIN32_IE            0x0A00
+//#define NTDDI_VERSION        0x0A000000
+//#define TARGET_VERSION        "Windows 10"
 
 // Users of Visual Studio 10 can do this instead
-//#include    "SDKDDKver.h"
+//#include "SDKDDKver.h"
 
 #endif // PLATFORM_WINDOWS
 

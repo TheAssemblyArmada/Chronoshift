@@ -24,12 +24,12 @@ BOOL CheckBoxClass::Draw_Me(BOOL redraw)
         Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_0, false);
         // This appears to be how it was originally
         // LogicPage->Fill_Rect(XPos + 1, YPos + 1,
-        //					 XPos + Width - 2, YPos + Height - 2,
-        //					 13);
+        //                     XPos + Width - 2, YPos + Height - 2,
+        //                     13);
         // if ( ToggleState ) {
-        //	LogicPage->Fill_Rect(XPos + 1, YPos + 1,
-        //						 XPos + Width - 2, YPos + Height - 2,
-        //						 4);
+        //    LogicPage->Fill_Rect(XPos + 1, YPos + 1,
+        //                         XPos + Width - 2, YPos + Height - 2,
+        //                         4);
         //}
 
         // This way only calls Fill_Rect once.

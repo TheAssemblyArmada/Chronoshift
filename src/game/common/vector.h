@@ -84,8 +84,8 @@ const T &VectorClass<T>::operator[](int index) const
 template<typename T>
 VectorClass<T>::VectorClass(int size, const T *array) : Vector(nullptr), VectorMax(size), IsAllocated(false)
 {
-    //	Allocate the vector. The default constructor will be called for every
-    //	object in this vector.
+    //    Allocate the vector. The default constructor will be called for every
+    //    object in this vector.
     if (size > 0) {
         if (array != nullptr) {
             Vector = new ((void *)array) T[size];

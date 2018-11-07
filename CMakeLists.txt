@@ -94,7 +94,7 @@ if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 4 AND NOT STANDALONE)
-        add_definitions(-D_USE_32BIT_TIME_T)	#This is for ABI compatibility with a few functions, remove when original binary no longer required.
+        add_definitions(-D_USE_32BIT_TIME_T)    #This is for ABI compatibility with a few functions, remove when original binary no longer required.
     endif()
 endif()
 
@@ -162,7 +162,7 @@ if(GIT_FOUND)
     )
     add_definitions(-DCHRONOSHIFT_COMMIT_COUNT=${CHRONOSHIFT_COMMIT_COUNT})
 
-	# Define commit time stamp.
+    # Define commit time stamp.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:%ct
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -172,7 +172,7 @@ if(GIT_FOUND)
     )
     add_definitions(-DCHRONOSHIFT_COMMIT_TSTAMP=${CHRONOSHIFT_COMMIT_TSTAMP})
 
-	# Define commit author.
+    # Define commit author.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:'%an'
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -205,7 +205,7 @@ else()
     add_definitions(-DCHRONOSHIFT_COMMIT_TSTAMP=0)
     add_definitions(-DCHRONOSHIFT_COMMIT_DATE="1955-11-12")
     add_definitions(-DCHRONOSHIFT_COMMIT_TIME="22:04:00 +0000")
-	add_definitions(-DCHRONOSHIFT_COMMIT_AUTHOR="Someone")
+    add_definitions(-DCHRONOSHIFT_COMMIT_AUTHOR="Someone")
 endif()
 
 add_definitions(-DCHRONOSHIFT_MAJOR=${CHRONOSHIFT_VERSION_MAJOR})

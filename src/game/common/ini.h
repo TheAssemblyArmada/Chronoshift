@@ -52,7 +52,7 @@ public:
     INIEntry(const char *name, const char *value) : m_key(strdup(name)), m_value(strdup(value)) {}
     ~INIEntry();
 
-    // int Index_ID();	//what could this be returning?
+    // int Index_ID();    //what could this be returning?
 
     const char *Get_Name() { return m_key; }
     void Set_Name(const char *name);
@@ -73,7 +73,7 @@ public:
     INISection(const char *name) : m_sectionName(strdup(name)){}
     ~INISection();
 
-    // int Index_ID();	//what could this be returning? 
+    // int Index_ID();    //what could this be returning? 
 
     INIEntry *Find_Entry(const char *entry) const;
 

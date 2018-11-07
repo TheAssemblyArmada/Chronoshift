@@ -331,7 +331,7 @@ int BuildingTypeClass::Raw_Cost() const
 
     return cost;
 #else 
-	return 0;
+    return 0;
 #endif
 }
 

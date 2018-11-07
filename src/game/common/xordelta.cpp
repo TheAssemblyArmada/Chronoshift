@@ -354,7 +354,7 @@ int Generate_XOR_Delta(void *dst, void *src, void *base, int size)
     uint8_t *getsp = static_cast<uint8_t *>(src); // This is the image we go to
     uint8_t *getbp = static_cast<uint8_t *>(base); // This is image we come from
     uint8_t *getsendp = getsp + size;
-    // uint8_t *getsstartp = getsp;				//This is only needed for the //DEBUG_LOG calls
+    // uint8_t *getsstartp = getsp;                //This is only needed for the //DEBUG_LOG calls
 
     // only check getsp. Both source and base should be same size and both pointers
     // should be incremented at the same time.

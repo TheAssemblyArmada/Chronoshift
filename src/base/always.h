@@ -49,7 +49,7 @@
 
 // Compilers don't necessarily inline code with inline keyword, especially in debug builds.
 // Use FORCE_INLINE to force them to where it is possible.
-//#define FORCE_INLINE	__forceinline
+//#define FORCE_INLINE    __forceinline
 #define __noinline __declspec(noinline)
 #define __unused __pragma(warning(suppress : 4100 4101))
 // When including windows, lets just bump the warning level back to 3...

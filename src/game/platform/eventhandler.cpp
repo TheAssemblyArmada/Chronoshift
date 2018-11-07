@@ -37,7 +37,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     LRESULT(__stdcall *func)
     (HWND, UINT, WPARAM, LPARAM) = reinterpret_cast<LRESULT(__stdcall *)(HWND, UINT, WPARAM, LPARAM)>(0x005B373C);
 
-	return func(hwnd, uMsg, wParam, lParam);
+    return func(hwnd, uMsg, wParam, lParam);
 #else
     return 0;
 #endif

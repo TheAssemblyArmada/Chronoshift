@@ -77,7 +77,7 @@ BulletTypeClass::BulletTypeClass(BulletType bullet, const char *name) :
     Arm(0),
     Frames(0)
 {
-    // Bit64 = true;	//TS shows what classes set this to true, needs debuging once logics are up and running.
+    // Bit64 = true;    //TS shows what classes set this to true, needs debuging once logics are up and running.
     // Bit128 = false;
 }
 

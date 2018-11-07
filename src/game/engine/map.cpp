@@ -1102,7 +1102,7 @@ int MapClass::Intact_Bridge_Count() const
         const CellClass &cell = Array[cellnum];
 
         switch (cell.Get_Template()) {
-            case TEMPLATE_BRIDGE1:	//Fall through on intact bridge templates
+            case TEMPLATE_BRIDGE1:    //Fall through on intact bridge templates
             case TEMPLATE_BRIDGE2:
             case TEMPLATE_BRIDGE1H:
             case TEMPLATE_BRIDGE2H:
@@ -1204,7 +1204,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
     lcw.Get_From(&straw);
 
     switch (g_iniFormat) {
-        case INIFORMAT_0:	//Covers both TD and SS maps, .BIN files
+        case INIFORMAT_0:    //Covers both TD and SS maps, .BIN files
             // TD and SS both "blank" the map cell array first.
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
                 CellClass &cell = Array[cellnum];
@@ -1259,8 +1259,8 @@ BOOL MapClass::Read_Binary(Straw &straw)
 
             break;
 
-        case INIFORMAT_1:	// Handles old MapPack data layout, similar to TD layout
-        case INIFORMAT_2:	// Fall through
+        case INIFORMAT_1:    // Handles old MapPack data layout, similar to TD layout
+        case INIFORMAT_2:    // Fall through
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
                 CellClass &cell = Array[cellnum];
 

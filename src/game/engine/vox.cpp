@@ -43,7 +43,7 @@ const char *VoxName[VOX_COUNT] = {
     "CANCLD1", // 12
     "ABLDGIN1", // 13
     "LOPOWER1", // 14
-    "NOFUNDS1", // 15	//duplicate?!
+    "NOFUNDS1", // 15    //duplicate?!
     "BASEATK1", // 16
     "NOBUILD1", // 17
     "PRIBLDG1", // 18
@@ -141,7 +141,7 @@ const char *VoxName[VOX_COUNT] = {
     "ATLNCH1", // 110
     "AFALLEN1", // 111
     "AAVAIL1", // 112
-    "AARRIVE1", // 113	//duplicate with 32?
+    "AARRIVE1", // 113    //duplicate with 32?
     "SAVE1", // 114
     "LOAD1" // 115
 };

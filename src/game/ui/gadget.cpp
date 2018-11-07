@@ -148,11 +148,11 @@ KeyNumType GadgetClass::Input()
     }
 
     if (key_press) {
-        if (key_press == KN_LMOUSE) { // left mouse key?	//EDWIN: 0x1001
+        if (key_press == KN_LMOUSE) { // left mouse key?    //EDWIN: 0x1001
             press_flags |= MOUSE_LEFT_PRESS;
         }
 
-        if (key_press == KN_RMOUSE) { // right mouse key?	//EDWIN: 0x1002
+        if (key_press == KN_RMOUSE) { // right mouse key?    //EDWIN: 0x1002
             press_flags |= MOUSE_RIGHT_PRESS;
         }
 

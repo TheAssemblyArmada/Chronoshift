@@ -18,7 +18,7 @@
 #ifndef BITARRAY_H
 #define BITARRAY_H
 
-#include	"always.h"
+#include "always.h"
 
 void Set_Bit(void *array, int bit, BOOL value);
 BOOL Get_Bit(const void *array, int bit);

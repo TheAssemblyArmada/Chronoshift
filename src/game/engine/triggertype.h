@@ -79,13 +79,13 @@ protected:
         struct
         {
             bool IsActive : 1; // & 1
-            //bool TrigTypeBit2;	// 2
-            //bool TrigTypeBit4;	// 4
-            //bool TrigTypeBit8;	// 8
-            //bool TrigTypeBit16;	// 16
-            //bool TrigTypeBit32;	// 32
-            //bool TrigTypeBit64;	// 64
-            //bool TrigTypeBit128;	// 128
+            //bool TrigTypeBit2;    // 2
+            //bool TrigTypeBit4;    // 4
+            //bool TrigTypeBit8;    // 8
+            //bool TrigTypeBit16;    // 16
+            //bool TrigTypeBit32;    // 32
+            //bool TrigTypeBit64;    // 64
+            //bool TrigTypeBit128;    // 128
         };
         int Bitfield;
     };
@@ -93,13 +93,13 @@ protected:
     bool IsActive;
 #endif
 
-    TriggerStateType RepetitionState;			//0x29
-    HousesType House;			//0x2A
+    TriggerStateType RepetitionState;            //0x29
+    HousesType House;            //0x2A
 
     //TODO: Requires TEventClass
-    char EventOne[9]; //TEventClass EventOne;		//0x2B
-    char EventTwo[9]; //TEventClass EventTwo;		//0x34
-    char TrigEventWhen;		//0x3D		//could be a enum.
+    char EventOne[9]; //TEventClass EventOne;        //0x2B
+    char EventTwo[9]; //TEventClass EventTwo;        //0x34
+    char TrigEventWhen;        //0x3D        //could be a enum.
             /*
             When 0, only the first trigger event (part 5) must be true for the trigger to be activated.
             When 1, the first (part 5) and second (part 8) must both be true for the trigger to be activated.
@@ -108,9 +108,9 @@ protected:
             */
 
     //TODO: Requires TActionClass
-    char ActionOne[13]; //TActionClass ActionOne;	//0x3E
-    char ActionTwo[13]; //TActionClass ActionTwo;	//0x4B
-    char TrigActionWhen;	//0x58		//could be a enum.
+    char ActionOne[13]; //TActionClass ActionOne;    //0x3E
+    char ActionTwo[13]; //TActionClass ActionTwo;    //0x4B
+    char TrigActionWhen;    //0x58        //could be a enum.
             /*
             When 0, only one trigger action is activated when the event is triggered. See the summary (next) for which trigger action is activated, and when.
             When 1, both trigger actions are activated when the event is triggered.
