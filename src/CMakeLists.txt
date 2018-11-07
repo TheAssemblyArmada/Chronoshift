@@ -106,6 +106,7 @@ set(GAMEENGINE_SRC
     game/engine/gameini.cpp
     game/engine/gamemain.cpp
     game/engine/gameoptions.cpp
+    game/engine/gameptr.cpp
     game/engine/getcd.cpp
     game/engine/gmouse.cpp
     game/engine/ground.cpp
