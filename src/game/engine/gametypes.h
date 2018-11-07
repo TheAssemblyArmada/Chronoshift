@@ -180,6 +180,27 @@ enum TeamEventType
     TEAM_EVENT_COUNT = 4
 };
 
+enum QuarryType
+{
+    QUARRY_NONE = -1,
+    QUARRY_FIRST = 0,
+    QUARRY_NA = 0,
+    QUARRY_ANYTHING,
+    QUARRY_ANY_BUILDING,
+    QUARRY_HARVESTERS,
+    QUARRY_INFANTRY,
+    QUARRY_ANY_VEHICLES,
+    QUARRY_ANY_VESSEL,
+    QUARRY_FACTORIES,
+    QUARRY_BASE_DEFENSES,
+    QUARRY_BASE_THREATS,
+    QUARRY_POWER_FACILITIES,
+    QUARRY_FAKE_BUILDINGS,
+    QUARRY_COUNT
+};
+
+DEFINE_ENUMERATION_BITWISE_OPERATORS(QuarryType);
+
 // threat type is in fact linked to Quarry, these all do not seems right...
 enum ThreatType
 {
@@ -204,6 +225,19 @@ enum ThreatType
 };
 
 DEFINE_ENUMERATION_BITWISE_OPERATORS(ThreatType);
+
+enum UrgencyType
+{
+    URGENCY_FIRST = 0,
+    URGENCY_NOTHING = 0,
+    URGENCY_LOW_MONEY, // Low on money.
+    URGENCY_LOW_POWER, // Low on power.
+    URGENCY_ATTACKED, // House was attacked.
+    URGENCY_FIRE_SALE, // TODO, used for Fire_Sale and setting the whole house to Hunt (last resort attack?)
+    URGENCY_COUNT
+};
+
+DEFINE_ENUMERATION_BITWISE_OPERATORS(UrgencyType);
 
 enum SpeedType
 {
@@ -690,7 +724,6 @@ enum SpecialWeaponType {
     SPECIAL_SPY_PLANE,
     SPECIAL_IRON_CURTAIN,
     SPECIAL_GPS,
-    SPECIAL_WARP_TELEPORT,
     SPECIAL_COUNT,
 };
 
