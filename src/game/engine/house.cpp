@@ -15,9 +15,9 @@
 #include "house.h"
 #include "globals.h"
 #include "heap.h"
+#include "rules.h"
 #include "scenario.h"
 #include "session.h"
-#include "rules.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<HouseClass> &g_Houses = Make_Global<TFixedIHeapClass<HouseClass> >(0x0065D994);
@@ -203,11 +203,11 @@ HouseClass::HouseClass(HousesType type) :
     // HouseTriggers
 
     // Make_Ally(house);
-    BOOL (*make_ally)(HouseClass *, HousesType) = reinterpret_cast<BOOL(*)(HouseClass *, HousesType)>(0x004D6060);
+    BOOL (*make_ally)(HouseClass *, HousesType) = reinterpret_cast<BOOL (*)(HouseClass *, HousesType)>(0x004D6060);
     make_ally(this, type);
 
     // Assign_Handicap(Scen.Get_AI_Difficulty());
-    DiffType (*assign_handicap)(HouseClass *, DiffType) = reinterpret_cast<DiffType(*)(HouseClass *, DiffType)>(0x004D2D48);
+    DiffType (*assign_handicap)(HouseClass *, DiffType) = reinterpret_cast<DiffType (*)(HouseClass *, DiffType)>(0x004D2D48);
     assign_handicap(this, Scen.Get_AI_Difficulty());
 }
 
@@ -398,4 +398,28 @@ void HouseClass::operator delete(void *ptr)
         this_ptr->IsActive = false;
     }
     g_Houses.Free(this_ptr);
+}
+
+void HouseClass::Spend_Money(unsigned int amount)
+{
+    if (amount <= Ore) {
+        Ore -= amount;
+    } else {
+        amount -= Ore;
+        Ore = 0;
+        Credits -= amount;
+    }
+    Silo_Redraw_Check(amount, Capacity);
+    Spent += amount;
+}
+
+void HouseClass::Silo_Redraw_Check(unsigned int a1, unsigned int a2)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)(HouseClass *, unsigned int, unsigned int) =
+        reinterpret_cast<void (*)(HouseClass *, unsigned int, unsigned int)>(0x004D5EF4);
+    func(this, a1, a2);
+#else
+    return 0;
+#endif
 }
