@@ -80,10 +80,6 @@ void FactoryClass::Init()
 
 void FactoryClass::AI()
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(FactoryClass *) = reinterpret_cast<void (*)(FactoryClass *)>(0x004BECE8);
-    func(this);
-#else
     if (!IsSuspended && (Object != nullptr || SpecialItem != -1)) {
         if (!Has_Completed()) {
             if (ProductionTime.Stage_Changed()) {
@@ -109,7 +105,6 @@ void FactoryClass::AI()
             }
         }
     }
-#endif
 }
 
 BOOL FactoryClass::Has_Changed()
@@ -121,10 +116,6 @@ BOOL FactoryClass::Has_Changed()
 
 BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(FactoryClass *, TechnoTypeClass &, HouseClass &) = reinterpret_cast<int (*)(FactoryClass *, TechnoTypeClass &, HouseClass &)>(0x004BEE30);
-    return func(this, objecttype, house);
-#else
     Abandon();
 
     IsDifferent = true;
@@ -145,7 +136,6 @@ BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
     ProductionTime.Set_Delay(0);
 
     return Object != nullptr;
-#endif
 }
 
 BOOL FactoryClass::Set(int &special, HouseClass &house)
@@ -167,10 +157,6 @@ BOOL FactoryClass::Set(int &special, HouseClass &house)
 
 void FactoryClass::Set(TechnoClass &object)
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(FactoryClass *, TechnoClass &) = reinterpret_cast<void (*)(FactoryClass *, TechnoClass &)>(0x004BEF04);
-    func(this, object);
-#else
     Abandon();
 
     IsDifferent = true;
@@ -182,22 +168,16 @@ void FactoryClass::Set(TechnoClass &object)
 
     ProductionTime.Set_Stage(0);
     ProductionTime.Set_Delay(0);
-#endif
 }
 
 BOOL FactoryClass::Suspend()
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(FactoryClass *) = reinterpret_cast<BOOL (*)(FactoryClass *)>(0x004BEF80);
-    return func(this);
-#else
     if (!IsSuspended) {
         IsSuspended = true;
         ProductionTime.Set_Delay(0);
         return true;
     }
     return false;
-#endif
 }
 
 BOOL FactoryClass::Start()
@@ -212,10 +192,6 @@ BOOL FactoryClass::Start()
 
 BOOL FactoryClass::Abandon()
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(FactoryClass *) = reinterpret_cast<BOOL (*)(FactoryClass *)>(0x004BF228);
-    return func(this);
-#else
     if (Object != nullptr) {
         DEBUG_LOG("Abandoning production of %s\n", Object->Name());
 
@@ -248,25 +224,15 @@ BOOL FactoryClass::Abandon()
     }
 
     return false;
-#endif
 }
 
 BOOL FactoryClass::Has_Completed() const
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(const FactoryClass *) = reinterpret_cast<BOOL (*)(const FactoryClass *)>(0x004BF330);
-    return func(this);
-#else
     return (Object != nullptr || SpecialItem != -1) && ProductionTime.Get_Stage() == MAX_CLOCK_STAGES;
-#endif
 }
 
 int FactoryClass::Cost_Per_Tick() const
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(const FactoryClass *) = reinterpret_cast<int (*)(const FactoryClass *)>(0x004BF380);
-    return func(this);
-#else
     int cost_per_tick = 0;
 
     if (Object == nullptr) {
@@ -281,15 +247,10 @@ int FactoryClass::Cost_Per_Tick() const
     }
 
     return cost_per_tick;
-#endif
 }
 
 BOOL FactoryClass::Completed()
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(FactoryClass *) = reinterpret_cast<BOOL (*)(FactoryClass *)>(0x004BF3B4);
-    return func(this);
-#else
     if (Object != nullptr && ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
         Object = nullptr;
         IsSuspended = true;
@@ -307,7 +268,6 @@ BOOL FactoryClass::Completed()
         return true;
     }
     return false;
-#endif
 }
 
 void FactoryClass::Code_Pointers()

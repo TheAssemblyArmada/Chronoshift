@@ -86,6 +86,12 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
+    void Stole(unsigned int amount) { Stolen += amount; }
+    unsigned int Available_Money() const { return Credits + Ore; }
+    void Spend_Money(unsigned int amount);
+    void Refund_Money(unsigned int amount) { Credits += amount; }
+    void Silo_Redraw_Check(unsigned int a1, unsigned int a2);
+
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
