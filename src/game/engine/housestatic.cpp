@@ -21,11 +21,11 @@ HouseStaticClass::HouseStaticClass() :
     IQ(0),
     TechLevel(1),
     Allies(0),
-    MaxUnit(Rule.Max_Unit() / Rule.Max_Players()),
-    MaxBuilding(Rule.Max_Building() / Rule.Max_Players()),
-    MaxInfantry(Rule.Max_Infantry() / Rule.Max_Players()),
-    MaxVessel(Rule.Max_Vessel() / Rule.Max_Players()),
-    MaxAircraft(Rule.Max_Unit() / Rule.Max_Players()),
+    MaxUnit(Rule.Max_Unit() / 6),
+    MaxBuilding(Rule.Max_Building() / 6),
+    MaxInfantry(Rule.Max_Infantry() / 6),
+    MaxVessel(Rule.Max_Vessel() / 6),
+    MaxAircraft(Rule.Max_Unit() / 6),
     Credits(0),
     Edge(SOURCE_NORTH)
 {

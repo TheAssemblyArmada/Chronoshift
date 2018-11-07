@@ -45,6 +45,10 @@ public:
 
     static void Init();
 
+    int Get_Heap_ID() const { return HeapID; }
+    BOOL Is_Active() const { return IsActive; }
+    RTTIType What_Am_I() const { return RTTI; }
+
     void AI();
     BOOL Has_Changed();
     BOOL Set(TechnoTypeClass &objecttype, HouseClass &house);
@@ -67,7 +71,7 @@ public:
 private:
     StageClass ProductionTime;
     RTTIType RTTI;
-    int ID;
+    int HeapID;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
