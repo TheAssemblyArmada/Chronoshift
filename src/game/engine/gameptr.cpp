@@ -20,6 +20,8 @@
 #include "animtype.h"
 #include "buildingtype.h"
 #include "bullettype.h"
+#include "factory.h"
+#include "house.h"
 #include "housetype.h"
 #include "infantrytype.h"
 #include "overlaytype.h"
@@ -37,6 +39,8 @@ template<> FixedIHeapClass *GamePtr<AircraftTypeClass>::Heap = &g_AircraftTypes;
 template<> FixedIHeapClass *GamePtr<AnimTypeClass>::Heap = &AnimTypes;
 template<> FixedIHeapClass *GamePtr<BuildingTypeClass>::Heap = &g_BuildingTypes;
 template<> FixedIHeapClass *GamePtr<BulletTypeClass>::Heap = &BulletTypes;
+template<> FixedIHeapClass *GamePtr<FactoryClass>::Heap = &g_Factories;
+template<> FixedIHeapClass *GamePtr<HouseClass>::Heap = &g_Houses;
 template<> FixedIHeapClass *GamePtr<HouseTypeClass>::Heap = &HouseTypes;
 template<> FixedIHeapClass *GamePtr<InfantryTypeClass>::Heap = &g_InfantryTypes;
 template<> FixedIHeapClass *GamePtr<OverlayTypeClass>::Heap = &OverlayTypes;
