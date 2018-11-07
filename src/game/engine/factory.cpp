@@ -19,6 +19,7 @@
 #include "target.h"
 #include "techno.h"
 #include "technotype.h"
+#include "house.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<FactoryClass> &g_Factories = Make_Global<TFixedIHeapClass<FactoryClass> >(0x0065D948);
@@ -31,7 +32,7 @@ TFixedIHeapClass<FactoryClass> g_Factories;
 FactoryClass::FactoryClass() :
     ProductionTime(),
     RTTI(RTTI_FACTORY),
-    ID(g_Factories.ID(this)),
+    HeapID(g_Factories.ID(this)),
     IsActive(false),
     IsSuspended(false),
     IsDifferent(false),

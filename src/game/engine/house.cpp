@@ -37,11 +37,10 @@ HouseClass::HouseClass(HousesType type) :
     ROFMult("1.0"),
     CostMult("1.0"),
     BuildTimerMult("1.0"),
-    RepairDelay("0.0"),
-    BuildDelay("0.0"),
+    RepairDelay("0.02"),
+    BuildDelay("0.03"),
     Static(),
-    ActsLike(HOUSES_NONE),
-    IsActive(false),
+    ActsLike(Type->Get_Type()),
     IsHuman(false),
     PlayerControl(false),
     Production(false),
@@ -66,7 +65,7 @@ HouseClass::HouseClass(HousesType type) :
     GaveUp(false),
     Paranoid(false),
     AllToLook(true),
-    CurrentIQ(Static.Get_TechLevel()),
+    CurrentIQ(Static.Get_IQ()),
     Smarties(URGENCY_NOTHING),
     JustBuilding(BUILDING_NONE),
     JustInfantry(INFANTRY_NONE),
@@ -122,11 +121,11 @@ HouseClass::HouseClass(HousesType type) :
     BuildingFactoryCount(0),
     Power(0),
     Drain(0),
-    AircraftFactory(),
-    InfantryFactory(),
-    UnitFactory(),
-    VesselFactory(),
-    BuildingFactory(),
+    AircraftFactory(nullptr),
+    InfantryFactory(nullptr),
+    UnitFactory(nullptr),
+    VesselFactory(nullptr),
+    BuildingFactory(nullptr),
     FlagHolder(0),
     FlagLocation(0),
     UnitsLost(0),
@@ -141,7 +140,7 @@ HouseClass::HouseClass(HousesType type) :
     field_2F9(0),
     field_2FD(0),
     Score(0),
-    PreferredTarget(QUARRY_NA),
+    PreferredTarget(QUARRY_ANYTHING),
     AttackTime(Rule.Attack_Delay() * Scen.Get_Random_Value(450, 1800)),
     field_527(HOUSES_NONE),
     AITime(0),
@@ -155,7 +154,7 @@ HouseClass::HouseClass(HousesType type) :
     Allies(0),
     DamageTime(Rule.Get_Damage_Delay() * 900),
     TeamTime(Rule.Team_Delay() * 900),
-    TriggerTime(1),
+    TriggerTime(0),
     AttackedSpeechTime(1),
     LowPowerSpeechTime(1),
     field_177D(1),
@@ -174,16 +173,16 @@ HouseClass::HouseClass(HousesType type) :
 
     memset(ThreatRegions, 0, sizeof(ThreatRegions));
 
-    new (&Specials[SPECIAL_SONAR_PULSE]) SuperClass(Rule.Get_Recharge_Sonar() * 900, false);
-    new (&Specials[SPECIAL_ATOM_BOMB]) SuperClass(Rule.Get_Recharge_Nuke() * 900, true);
-    new (&Specials[SPECIAL_WARP_SPHERE]) SuperClass(Rule.Get_Recharge_Chrono() * 900, true);
-    new (&Specials[SPECIAL_PARA_BOMB]) SuperClass(Rule.Get_Recharge_ParaBomb() * 900, false);
-    new (&Specials[SPECIAL_PARA_INFANTRY]) SuperClass(Rule.Get_Recharge_Paratrooper() * 900, false);
-    new (&Specials[SPECIAL_SPY_PLANE]) SuperClass(Rule.Get_Recharge_SpyPlane() * 900, false);
-    new (&Specials[SPECIAL_IRON_CURTAIN]) SuperClass(Rule.Get_Recharge_IronCurtain() * 900, false);
-    new (&Specials[SPECIAL_GPS]) SuperClass(Rule.Get_Recharge_GPS() * 900, false);
+    new (&Specials[SPECIAL_SONAR_PULSE]) SuperClass(Rule.Get_Recharge_Sonar() * 900, false, VOX_NONE, VOX_SONAR_PULSE_AVAILABLE, VOX_NONE, VOX_NONE);
+    new (&Specials[SPECIAL_ATOM_BOMB]) SuperClass(Rule.Get_Recharge_Nuke() * 900, true, VOX_ABOMB_PREPING, VOX_ABOMB_READY, VOX_NONE, VOX_NO_POWER);
+    new (&Specials[SPECIAL_WARP_SPHERE]) SuperClass(Rule.Get_Recharge_Chrono() * 900, true, VOX_CHROCHR1, VOX_CHRORDY1, VOX_NONE, VOX_NO_POWER);
+    new (&Specials[SPECIAL_PARA_BOMB]) SuperClass(Rule.Get_Recharge_ParaBomb() * 900, false, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NONE);
+    new (&Specials[SPECIAL_PARA_INFANTRY]) SuperClass(Rule.Get_Recharge_Paratrooper() * 900, false, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NONE);
+    new (&Specials[SPECIAL_SPY_PLANE]) SuperClass(Rule.Get_Recharge_SpyPlane() * 900, false, VOX_NONE, VOX_SPY_PLANE, VOX_NONE, VOX_NONE);
+    new (&Specials[SPECIAL_IRON_CURTAIN]) SuperClass(Rule.Get_Recharge_IronCurtain() * 900, true, VOX_IRON_CHARGING, VOX_IRON_READY, VOX_NONE, VOX_NO_POWER);
+    new (&Specials[SPECIAL_GPS]) SuperClass(Rule.Get_Recharge_GPS() * 900, true, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NO_POWER);
 
-    memset(field_1790, 0, sizeof(field_1790));
+    strncpy(field_1790, Fetch_String(TXT_COMPUTER), sizeof(field_1790));
     memset(PlayerHandle, 0, sizeof(PlayerHandle));
 
     if (Session.Game_To_Play() == GAME_INTERNET) {
@@ -201,8 +200,15 @@ HouseClass::HouseClass(HousesType type) :
         CratesFound = new UnitTrackerClass(CRATE_COUNT);
     }
 
-    // Make_Ally();
-    // Assign_Handicap();
+    // HouseTriggers
+
+    // Make_Ally(house);
+    BOOL (*make_ally)(HouseClass *, HousesType) = reinterpret_cast<BOOL(*)(HouseClass *, HousesType)>(0x004D6060);
+    make_ally(this, type);
+
+    // Assign_Handicap(Scen.Get_AI_Difficulty());
+    DiffType (*assign_handicap)(HouseClass *, DiffType) = reinterpret_cast<DiffType(*)(HouseClass *, DiffType)>(0x004D2D48);
+    assign_handicap(this, Scen.Get_AI_Difficulty());
 }
 
 HouseClass::HouseClass(const HouseClass &that) :
