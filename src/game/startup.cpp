@@ -58,24 +58,24 @@ uint64_t Disk_Space_Available()
 #ifdef PLATFORM_WINDOWS
     ULARGE_INTEGER free_space;
 
-	if (!GetDiskFreeSpaceExA(nullptr, &free_space, nullptr, nullptr)) {
+    if (!GetDiskFreeSpaceExA(nullptr, &free_space, nullptr, nullptr)) {
         return 0;
-	}
+    }
 
-	// Original abi used 32bit values for this.
+    // Original abi used 32bit values for this.
     return free_space.QuadPart;
 #else
     char path[PATH_MAX];
     struct statvfs free_space;
 
-	if (getcwd(path, sizeof(path)) == nullptr) {
+    if (getcwd(path, sizeof(path)) == nullptr) {
         DEBUG_ASSERT_PRINT(false, "Couldn't get current working directory.\n");
-		return 0;
-	}
-
-	if (statvfs(path, &free_space) != 0) {
         return 0;
-	}
+    }
+
+    if (statvfs(path, &free_space) != 0) {
+        return 0;
+    }
 
     return free_space.f_bsize * free_space.f_bavail;
 #endif

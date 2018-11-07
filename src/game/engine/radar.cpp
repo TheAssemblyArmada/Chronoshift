@@ -311,7 +311,7 @@ void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
         reinterpret_cast<void (*)(const RadarClass *, int16_t, int, int, int)>(0x0052E5BC);
     func(this, cellnum, x, y, scale);
 #elif 0
-    // static TerrainClass const *terrains[3];	//not sure, but its there...
+    // static TerrainClass const *terrains[3];    //not sure, but its there...
     ObjectClass *objects[4];
     int objectcount = 0;
 

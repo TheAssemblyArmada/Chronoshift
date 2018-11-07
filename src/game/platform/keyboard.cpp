@@ -44,7 +44,7 @@ BOOL KeyboardClass::Is_Mouse_Key(uint16_t keycode)
 #ifdef PLATFORM_WINDOWS
     return keycode == VK_LBUTTON || keycode == VK_MBUTTON || keycode == VK_RBUTTON;
 #else
-	return false;
+    return false;
 #endif
 }
 
@@ -53,7 +53,7 @@ BOOL KeyboardClass::Mouse_Buttons_Swapped()
 #ifdef PLATFORM_WINDOWS
     return GetSystemMetrics(SM_SWAPBUTTON) != 0;
 #else
-	return false;
+    return false;
 #endif
 }
 

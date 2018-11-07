@@ -161,8 +161,8 @@ class SidebarClass : public PowerClass
                 // bitfield 0x1D
                 bool StripToRedraw : 1; // 1
                 bool Strip_Boolean2 : 1; // 2
-                bool Strip_Boolean4 : 1; // 4	//related to some direction?
-                bool Strip_Boolean8 : 1; // 8	//Flags if the icons are scrolling?
+                bool Strip_Boolean4 : 1; // 4    //related to some direction?
+                bool Strip_Boolean8 : 1; // 8    //Flags if the icons are scrolling?
                 bool Strip_Boolean16 : 1; // 16
                 bool Strip_Boolean32 : 1; // 32
             };
@@ -172,8 +172,8 @@ class SidebarClass : public PowerClass
         // bitfield 0x1D
         bool StripToRedraw; // 1
         bool Strip_Boolean2; // 2
-        bool Strip_Boolean4; // 4	//related to some direction?
-        bool Strip_Boolean8; // 8	//Flags if the icons are scrolling?
+        bool Strip_Boolean4; // 4    //related to some direction?
+        bool Strip_Boolean8; // 8    //Flags if the icons are scrolling?
         bool Strip_Boolean16; // 16
         bool Strip_Boolean32; // 32
 #endif

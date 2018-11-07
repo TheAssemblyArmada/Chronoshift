@@ -72,7 +72,7 @@ BOOL Target_Is_Techno(target_t target)
     TechnoClass *ptr = As_Techno(target);
     return ptr != nullptr ? ptr->Is_Techno() : false;
 #else
-	return false;
+    return false;
 #endif
 }
 
@@ -105,7 +105,7 @@ TriggerClass *As_Trigger(target_t target)
     // TODO: Requires TriggerClass implementation.
     return Target_Get_RTTI(target) == RTTI_TRIGGER ? &Triggers[Target_Get_ID(target)] : nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -118,7 +118,7 @@ TriggerTypeClass *As_TriggerType(target_t target)
     // TODO: Requires TriggerTypeClass implementation.
     return Target_Get_RTTI(target) == RTTI_TRIGGERTYPE ? &TriggerTypes[Target_Get_ID(target)] : nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -131,7 +131,7 @@ TeamClass *As_Team(target_t target)
     // TODO: Requires TeamClass implementation.
     return Target_Get_RTTI(target) == RTTI_TEAM ? &Teams[Target_Get_ID(target)] : nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -144,7 +144,7 @@ TeamTypeClass *As_TeamType(target_t target)
     // TODO: Requires TeamTypeClass implementation.
     return Target_Get_RTTI(target) == RTTI_TEAMTYPE ? &TeamTypes[Target_Get_ID(target)] : nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -206,7 +206,7 @@ ObjectClass *As_Object(target_t target)
 
     return nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -219,7 +219,7 @@ AnimClass *As_Animation(target_t target)
     // TODO: Requires AnimClass implementation.
     return Target_Get_RTTI(target) == RTTI_ANIM ? &Anims[Target_Get_ID(target)] : nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -232,7 +232,7 @@ BulletClass *As_Bullet(target_t target)
     // TODO: Requires BulletClass implementation.
     return Target_Get_RTTI(target) == RTTI_BULLET ? &Bullets[Target_Get_ID(target)] : nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -245,7 +245,7 @@ TerrainClass *As_Terrain(target_t target)
     // TODO: Requires TerrainClass implementation.
     return Target_Get_RTTI(target) == RTTI_TERRAIN ? &Terrains[Target_Get_ID(target)] : nullptr;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 

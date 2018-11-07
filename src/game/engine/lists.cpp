@@ -104,29 +104,29 @@ const int16_t List1[] = {
 
 //X-
 const int16_t List10[] = {
-    0,			//X-
+    0,            //X-
     LIST_END
 };
 
 //XX
 const int16_t List11[] = {
-    0, 1,		//XX
+    0, 1,        //XX
     LIST_END
 };
 
 //XX
 //XX
 const int16_t List1111[] = {
-    0, 1,		//XX
-    128, 129,	//XX
+    0, 1,        //XX
+    128, 129,    //XX
     LIST_END
 };
 
 //X-
 //X-
 const int16_t List1010[] = {
-    0,			//X-
-    128,		//X-
+    0,            //X-
+    128,        //X-
     LIST_END
 };
 
@@ -134,7 +134,7 @@ const int16_t List1010[] = {
 //X-
 const int16_t List0010[] = {
     //--
-    128,		//X-
+    128,        //X-
     LIST_END
 };
 
@@ -142,7 +142,7 @@ const int16_t List0010[] = {
 //XX
 const int16_t List0011[] = {
     //--
-    128, 129,	//XX
+    128, 129,    //XX
     LIST_END
 };
 
@@ -164,7 +164,7 @@ const int16_t List1101[] = {
 //X--
 const int16_t List000110[] = {
     //---
-    128, 129,	//X--
+    128, 129,    //X--
     LIST_END
 };
 
@@ -176,16 +176,16 @@ const int16_t List111111[] = {
 //-X-
 //XX-
 const int16_t List010110[] = {
-    1,			//-X-
-    128, 129,	//XX-
+    1,            //-X-
+    128, 129,    //XX-
     LIST_END
 };
 
 //XX-
 //XX-
 const int16_t List110110[] = {
-    0, 1,		//XX-
-    128, 129,	//XX-
+    0, 1,        //XX-
+    128, 129,    //XX-
     LIST_END
 };
 
@@ -209,9 +209,9 @@ const int16_t List010111100[] = {
 //XXX-
 //-XX-
 const int16_t List001011100110[] = {
-    2,				//--X-
-    128, 129, 130,	//XXX-
-    257, 258,		//-XX-
+    2,                //--X-
+    128, 129, 130,    //XXX-
+    257, 258,        //-XX-
     LIST_END
 };
 
@@ -220,8 +220,8 @@ const int16_t List001011100110[] = {
 //X---
 const int16_t List000011101000[] = {
     //----
-    128, 129, 130,	//XXX-
-    256,			//X---
+    128, 129, 130,    //XXX-
+    256,            //X---
     LIST_END
 };
 
@@ -286,14 +286,14 @@ const int16_t OList12[] = {
 
 //-X
 const int16_t OList01[] = {
-    1,			//-X
+    1,            //-X
     LIST_END
 };
 
 //--X
 //---
 const int16_t OList001[] = {
-    2,			//--X
+    2,            //--X
                 //---
     LIST_END
 };
@@ -301,15 +301,15 @@ const int16_t OList001[] = {
 //X-
 //-X
 const int16_t OList1001[] = {
-    0,			//X-
-    129,		//-X
+    0,            //X-
+    129,        //-X
     LIST_END
 };
 
 //XX
 //--
 const int16_t OList1100[] = {
-    0, 1,		//XX
+    0, 1,        //XX
                 //--
     LIST_END
 };
@@ -317,8 +317,8 @@ const int16_t OList1100[] = {
 //XX
 //-X
 const int16_t OList1101[] = {
-    0, 1,		//XX
-    129,		//-X
+    0, 1,        //XX
+    129,        //-X
     LIST_END
 };
 
@@ -326,7 +326,7 @@ const int16_t OList1101[] = {
 //X-
 const int16_t OList0010[] = {
     //--
-    128,		//X-
+    128,        //X-
     LIST_END
 };
 
@@ -341,16 +341,16 @@ const int16_t OList1000[] = {
 //X-X
 //--X
 const int16_t OList101001[] = {
-    0, 2,		//X-X
-    130,		//--X
+    0, 2,        //X-X
+    130,        //--X
     LIST_END
 };
 
 //XX-
 //--X
 const int16_t OList110001[] = {
-    0, 1,		//XX-
-    130,		//--X
+    0, 1,        //XX-
+    130,        //--X
     LIST_END
 };
 
@@ -368,9 +368,9 @@ const int16_t OList101000011[] = {
 //---X
 //X--X
 const int16_t OList110000011001[] = {
-    0, 1,		//XX--
-    131,		//---X
-    256, 259,	//X--X
+    0, 1,        //XX--
+    131,        //---X
+    256, 259,    //X--X
     LIST_END
 };
 
@@ -378,9 +378,9 @@ const int16_t OList110000011001[] = {
 //---X
 //-XX-
 const int16_t OList111000010110[] = {
-    0, 1, 2,	//XXX-
-    131,		//---X
-    257, 258,	//-XX-
+    0, 1, 2,    //XXX-
+    131,        //---X
+    257, 258,    //-XX-
     LIST_END
 };
 

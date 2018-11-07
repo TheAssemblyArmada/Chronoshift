@@ -272,7 +272,7 @@ void BF_Predator(int width, int height, uint8_t *dst, uint8_t *src, int dst_pitc
             g_predatorAccumulated += g_predatorIncrement;
 
             // if ( g_predatorAccumulated & 0xFF00 ) {
-            //	g_predatorAccumulated &= 0xFFFF00FF;
+            //    g_predatorAccumulated &= 0xFFFF00FF;
             if (g_predatorAccumulated >= 256) {
                 g_predatorAccumulated %= 256;
                 *dst = dst[g_predatorShiftTab[g_predatorFrame]];

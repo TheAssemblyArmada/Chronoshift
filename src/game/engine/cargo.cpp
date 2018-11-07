@@ -15,7 +15,7 @@
  */
 #include "cargo.h"
 #include "gamedebug.h"
-//#include	"foot.h"
+//#include "foot.h"
 
 void CargoClass::Attach(FootClass *object)
 {

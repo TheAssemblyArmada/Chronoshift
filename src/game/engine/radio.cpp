@@ -134,7 +134,7 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
 
     return RADIO_ROGER;
 #else
-	return RADIO_ROGER;
+    return RADIO_ROGER;
 #endif
 }
 

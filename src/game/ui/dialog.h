@@ -111,14 +111,14 @@ DEFINE_ENUMERATION_BITWISE_OPERATORS(TextPrintType);
 
 struct WindowType
 {
-    int X;		//window x
-    int Y;		//window y
-    int W;		//window width
-    int H;		//window height
-    int C;	//window foreground color
-    int B;	//window background color
-    int Cx;		//window cursor x
-    int Cy;		//window cursor y
+    int X;        //window x
+    int Y;        //window y
+    int W;        //window width
+    int H;        //window height
+    int C;    //window foreground color
+    int B;    //window background color
+    int Cx;        //window cursor x
+    int Cy;        //window cursor y
 };
 
 enum WindowIndexType

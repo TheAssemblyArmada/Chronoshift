@@ -465,13 +465,13 @@ const TemplateTypeClass TemplateAntHill(TEMPLATE_ANTHILL, TEM_THR_TEMPERAT, "HIL
 TemplateTypeClass::TemplateTypeClass(TemplateType type, int theater, const char *name, int uiname) :
     ObjectTypeClass(RTTI_TEMPLATETYPE,
     type,
-    false,	//
-    true,	//RadarInvisible
-    false,	//Selectable
-    false,	//LegalTarget
-    true,	//Insignificant
-    true,	//Immune
-    false,	//
+    false,    //
+    true,    //RadarInvisible
+    false,    //Selectable
+    false,    //LegalTarget
+    true,    //Insignificant
+    true,    //Immune
+    false,    //
     uiname,
     name),
     Type(type),
@@ -1026,13 +1026,13 @@ LandType TemplateTypeClass::Land_Type(int sub_icon) const
         TLAND_NONE = LAND_NONE,
         TLAND_FIRST = 0,
         TLAND_0 = 0,
-        TLAND_1 = 1,		//used for the ant hill.
+        TLAND_1 = 1,        //used for the ant hill.
         TLAND_2 = 2,
-        TLAND_3 = 3,		//used for roads, water, shores...
-        TLAND_4 = 4,		//used for what i think are interior tiles.
+        TLAND_3 = 3,        //used for roads, water, shores...
+        TLAND_4 = 4,        //used for what i think are interior tiles.
         TLAND_5 = 5,
         TLAND_6 = 6,
-        TLAND_7 = 7,		//used for clear.
+        TLAND_7 = 7,        //used for clear.
         TLAND_8 = 8,
         TLAND_9 = 9,
         TLAND_10 = 10,

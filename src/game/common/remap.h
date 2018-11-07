@@ -31,8 +31,8 @@ enum PlayerColorType
     PLAYER_COLOR_GREY,
     PLAYER_COLOR_BLUE,
     PLAYER_COLOR_BROWN,
-    PLAYER_COLOR_8,			//TODO, no name, red??
-    PLAYER_COLOR_9,			//TODO, no name, light cyan??
+    PLAYER_COLOR_8,            //TODO, no name, red??
+    PLAYER_COLOR_9,            //TODO, no name, light cyan??
     PLAYER_COLOR_10,
     PLAYER_COLOR_COUNT,
 };

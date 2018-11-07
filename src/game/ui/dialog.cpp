@@ -100,7 +100,7 @@ void Simple_Text_Print(
 
     // DEBUG_SAY("Using RemapControlType:\n");
     // for ( int i = 0; i < sizeof(RemapControlType); ++i ) {
-    //	DEBUG_SAY("%03u ", mapper[i]);
+    //    DEBUG_SAY("%03u ", mapper[i]);
     //}
 
     // DEBUG_SAY("\n");

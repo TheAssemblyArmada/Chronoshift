@@ -260,7 +260,7 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
 
     return false;
 #else
-	return false;
+    return false;
 #endif
 }
 

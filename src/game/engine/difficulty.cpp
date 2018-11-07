@@ -84,7 +84,7 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
 
     if (Rule.FineDiffControl) {
         diffsli.Set_Maximum(DIFF_COUNT);
-        diffsli.Set_Value((diffsli.Get_Maximum() / 2) - 1); // set initial value.	//2
+        diffsli.Set_Value((diffsli.Get_Maximum() / 2) - 1); // set initial value.    //2
     } else {
         diffsli.Set_Maximum(3);
         diffsli.Set_Value((diffsli.Get_Maximum() / 2) - 1); // set initial value.

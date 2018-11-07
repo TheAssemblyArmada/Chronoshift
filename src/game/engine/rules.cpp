@@ -90,7 +90,7 @@ RulesClass::RulesClass() :
     WaterCrate(CRATE_MONEY),
     CrateMinimum(1),
     CrateMaximum(255),
-    LZScanRadius(4096),		//16 cells in leptons
+    LZScanRadius(4096),        //16 cells in leptons
     MPlayerMoney(3000),
     MPlayerMaxMoney(10000),
     MPlayerShadowGrow(true),
@@ -149,7 +149,7 @@ RulesClass::RulesClass() :
     RechargeParaSaboteur("14.0"),
     RechargeSpyPlane("2.0"),
     RechargeIronCurtain("14.0"),
-    RechargeGPS("1.0"),	
+    RechargeGPS("1.0"),    
     RechargeNuke("14.0"),
     SpeakDelay("2.0"),
     DamageDelay("1.0"),

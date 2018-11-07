@@ -41,7 +41,7 @@ public:
     BOOL Allow_Remixes() const { return Remixes; }
     BOOL Is_Spawned() const { return Spawned; }
     BOOL Is_First_Run() const { return FirstRun; }
-	void Set_First_Run(BOOL first_run) { FirstRun = first_run; }
+    void Set_First_Run(BOOL first_run) { FirstRun = first_run; }
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();

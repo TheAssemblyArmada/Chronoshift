@@ -28,7 +28,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
     g_inMapEditor = false;
     DebugUnshroud = false;
 
-	// TODO decide what command line options we need to parse, original stuff might not make sense anymore.
+    // TODO decide what command line options we need to parse, original stuff might not make sense anymore.
 
     return true;
 }

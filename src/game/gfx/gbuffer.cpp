@@ -327,7 +327,7 @@ unsigned GraphicViewPortClass::Print(const char *string, int x, int y, int fgrou
 
 GraphicBufferClass::GraphicBufferClass()
 #ifdef PLATFORM_WINDOWS
-	: m_videoSurface(nullptr)
+    : m_videoSurface(nullptr)
 #endif
 {
 #ifdef PLATFORM_WINDOWS

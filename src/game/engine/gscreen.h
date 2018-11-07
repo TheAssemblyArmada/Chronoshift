@@ -80,7 +80,7 @@ enum MouseType
     MOUSE_CANT_ENTER = 38,
     MOUSE_CANT_GREPAIR = 39,
     MOUSE_CHRONOSPHERE = 40, // WarpIn
-    MOUSE_CHRONO2 = 41, // WarpOut	//ACTION_CHRONOWARP
+    MOUSE_CHRONO2 = 41, // WarpOut    //ACTION_CHRONOWARP
     MOUSE_EDITOR_BRUSH = 42, // frame is the same as "NoDeploy", only used for g_inMapEditor from EDMOUSE.SHP
     MOUSE_COUNT = 43
 };

@@ -122,7 +122,7 @@ const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const
 
     return defvalue;
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 

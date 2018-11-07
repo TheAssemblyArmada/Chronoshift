@@ -159,7 +159,7 @@ enum BSizeType
 enum BStateType
 {
     BSTATE_NONE = -1,
-    BSTATE_0 = 0, // this could be ActiveAnimOne			//CONSTRUCTION
+    BSTATE_0 = 0, // this could be ActiveAnimOne            //CONSTRUCTION
     BSTATE_1 = 1, // i think this is Idle or ActiveAnimTwo
     BSTATE_2 = 2, // attacking?                //ATTACKING
     BSTATE_3 = 3,

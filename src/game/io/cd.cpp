@@ -141,7 +141,7 @@ static BOOL Change_Local_Dir(int cd)
             }
         }
 
-		_initialised = true;
+        _initialised = true;
     }
 
     // No local folders with cd data dectected so we can't load any.

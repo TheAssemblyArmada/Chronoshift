@@ -56,7 +56,7 @@ enum OverlayType
     OVERLAY_V17 = 18,
     OVERLAY_V18 = 19,
 
-    // CTF flag base/spot	//Flag Pedestal?
+    // CTF flag base/spot    //Flag Pedestal?
     OVERLAY_FPLS = 20,
 
     // Crates
@@ -132,7 +132,7 @@ private:
             bool Wall : 1; // 2
             bool High : 1; // 4
             bool Ore : 1; // 8
-            bool Boolean16 : 1; // 16		//this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
+            bool Boolean16 : 1; // 16        //this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
             bool Crate : 1; // 32
             bool RadarVisible : 1; // 64
         };
@@ -143,7 +143,7 @@ private:
     bool Wall; // 2
     bool High; // 4
     bool Ore; // 8
-    bool Boolean16; // 16		//this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
+    bool Boolean16; // 16        //this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
     bool Crate; // 32
     bool RadarVisible; // 64
 #endif

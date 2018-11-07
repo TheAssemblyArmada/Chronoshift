@@ -307,7 +307,7 @@ int main(int argc, char **argv)
     WindowList[WINDOW_0].H = g_seenBuff.Get_Height();
     WindowList[WINDOW_5].W = g_seenBuff.Get_Width();
     WindowList[WINDOW_5].H = g_seenBuff.Get_Height();
-	// TODO Won't need both of these once standalone.
+    // TODO Won't need both of these once standalone.
     g_mouse = g_wwmouse = new WWMouseClass(&g_seenBuff, 48, 48);
     MouseInstalled = true;
     int cd_drive = g_cdList.Reset_And_Get_CD_Drive();
@@ -316,21 +316,21 @@ int main(int argc, char **argv)
     INIClass ini;
     ini.Load(opt_fc);
 
-	if (!Special.Is_First_Run() && Session.Game_To_Play() != GAME_6 && Session.Game_To_Play() != GAME_7) {
+    if (!Special.Is_First_Run() && Session.Game_To_Play() != GAME_6 && Session.Game_To_Play() != GAME_7) {
         Special.Set_First_Run(ini.Get_Bool("Intro", "PlayIntro", true));
-	}
+    }
 
-	g_slowPalette = ini.Get_Bool("Options", "SlowPalette", true);
+    g_slowPalette = ini.Get_Bool("Options", "SlowPalette", true);
 
-	if (Special.Is_First_Run()) {
+    if (Special.Is_First_Run()) {
         g_breakoutAllowed = true;
         ini.Put_Bool("Intro", "PlayIntro", false);
         ini.Save(opt_fc);
-	}
+    }
     
-	// TODO set Memory_Error_Exit handler here.
+    // TODO set Memory_Error_Exit handler here.
     Game_Main(argc, argv);
-	g_visiblePage.Clear();
+    g_visiblePage.Clear();
     g_hiddenPage.Clear();
     // TODO set Memory_Error_Exit handler here.
     g_readyToQuit = 1;
@@ -339,10 +339,10 @@ int main(int argc, char **argv)
     PostMessageA(MainWindow, WM_DESTROY, 0, 0);
 #endif
 
-	// Keep calling the event handler loop until everything in the queue has been processed.
-	do {
+    // Keep calling the event handler loop until everything in the queue has been processed.
+    do {
         g_keyboard->Check();
-	} while (g_readyToQuit == 1);
+    } while (g_readyToQuit == 1);
 
     return 0;
 }

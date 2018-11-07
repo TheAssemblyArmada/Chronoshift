@@ -1,4 +1,4 @@
-#include	"triggertype.h"
+#include "triggertype.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<TriggerTypeClass> &TriggerTypes = *reinterpret_cast<TFixedIHeapClass<TriggerTypeClass> *>(0x0065DCD8);

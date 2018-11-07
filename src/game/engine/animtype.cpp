@@ -221,7 +221,7 @@ AnimTypeClass::AnimTypeClass(AnimType anim, const char *name, int a3, int mid_po
     Report(report),
     Next(next)
 {
-    //Bit64 = true;	//TS shows what classes set this to true, needs debuging once logics are up and running.
+    //Bit64 = true;    //TS shows what classes set this to true, needs debuging once logics are up and running.
     //Bit128 = false;
     return;
 }

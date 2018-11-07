@@ -172,7 +172,7 @@ private:
             bool PlacementCheck : 1; // 2
             bool Visible : 1; // 4 // Is this cell at least partly visible due ot being next to a revealed or visible cell.
             bool Revealed : 1; // 8 // Is this cell fully revealed and thus has no shroud at all.
-            bool Bit16 : 1; // 16	//Could be HasWaypoint?  HasCellTag?
+            bool Bit16 : 1; // 16    //Could be HasWaypoint?  HasCellTag?
             bool Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
             bool HasFlag : 1; // 64
             bool Bit128 : 1; // 128 // HasFlag in C&C relates to Region here. Look like it marks a cell to advance shroud.
