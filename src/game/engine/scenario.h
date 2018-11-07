@@ -71,6 +71,8 @@ public:
     BOOL Set_Global_To(int global, BOOL value);
     int Get_Random_Value(int min, int max) { return SyncRandom(min, max); }
     void Set_Random_Seed(int seed) { SyncRandom = seed; }
+    DiffType Get_Human_Difficulty() const { return HumanDifficulty; }
+    DiffType Get_AI_Difficulty() const { return AIDifficulty; }
     int Get_Scenario_Index() const { return ScenarioIndex; }
     TheaterType Get_Theater() const { return Theater; }
     void Set_Theater(TheaterType theater) { Theater = theater; }

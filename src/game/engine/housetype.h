@@ -43,7 +43,9 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    char Get_Prefix() { return Prefix; }
+    HousesType Get_Type() const { return Type; }
+    PlayerColorType Get_Color() const { return Color; }
+    char Get_Prefix() const { return Prefix; }
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
