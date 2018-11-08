@@ -51,10 +51,6 @@ SuperClass::SuperClass(const SuperClass &that) :
 
 BOOL SuperClass::Suspend(BOOL suspend)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(SuperClass *, BOOL) = reinterpret_cast<BOOL (*)(SuperClass *, BOOL)>(0x00552FE8);
-    return func(this, suspend);
-#else*/
     if (!m_IsEnabled || m_OneTime || m_FullyCharged || suspend != m_ChargeTime.Started()) {
         return false;
     }
@@ -64,15 +60,10 @@ BOOL SuperClass::Suspend(BOOL suspend)
         m_ChargeTime.Start();
     }
     return true;
-//#endif
 }
 
 BOOL SuperClass::Enable(BOOL one_time, BOOL feedback, BOOL suspend)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(SuperClass *, BOOL, BOOL, BOOL) = reinterpret_cast<BOOL (*)(SuperClass *, BOOL, BOOL, BOOL)>(0x00553034);
-    return func(this, one_time, feedback, suspend);
-#else*/
     if (m_IsEnabled) {
         return false;
     }
@@ -87,30 +78,20 @@ BOOL SuperClass::Enable(BOOL one_time, BOOL feedback, BOOL suspend)
     }
 
     return recharging;
-//#endif
 }
 
 BOOL SuperClass::Remove()
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(SuperClass *) = reinterpret_cast<BOOL (*)(SuperClass *)>(0x0055308C);
-    return func(this);
-#else*/
     if (!m_IsEnabled || m_OneTime) {
         return false;
     }
     m_IsEnabled = false;
     m_FullyCharged = false;
     return true;
-//#endif
 }
 
 BOOL SuperClass::Recharge(BOOL feedback)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(SuperClass *, BOOL) = reinterpret_cast<BOOL (*)(SuperClass *, BOOL)>(0x005530B4);
-    return func(this, feedback);
-#else*/
     if (m_IsEnabled && !m_FullyCharged) {
         m_ClockAnimStage = -1;
         m_ChargeTime.Start();
@@ -123,15 +104,10 @@ BOOL SuperClass::Recharge(BOOL feedback)
         return true;
     }
     return false;
-//#endif
 }
 
 BOOL SuperClass::Discharged(BOOL feedback)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(SuperClass *, BOOL) = reinterpret_cast<int (*)(SuperClass *, BOOL)>(0x00553110);
-    return func(this, feedback);
-#else*/
     if (m_ChargeTime.Stopped() || !m_IsEnabled || !m_FullyCharged) {
         return false;
     }
@@ -142,15 +118,10 @@ BOOL SuperClass::Discharged(BOOL feedback)
     }
     Recharge(feedback);
     return false;
-//#endif
 }
 
 BOOL SuperClass::AI(BOOL feedback)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(SuperClass *, BOOL) = reinterpret_cast<BOOL (*)(SuperClass *, BOOL)>(0x0055315C);
-    return func(this, feedback);
-#else*/
     if (!m_IsEnabled || m_FullyCharged) {
         return false;
     }
@@ -175,15 +146,10 @@ BOOL SuperClass::AI(BOOL feedback)
         }
     }
     return true;
-//#endif
 }
 
 int SuperClass::Anim_Stage() const
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(const SuperClass *) = reinterpret_cast<int (*)(const SuperClass *)>(0x00553224);
-    return func(this);
-#else*/
     int anim_stage = 0;
     if (m_IsEnabled) {
         if (m_FullyCharged) {
@@ -196,15 +162,10 @@ int SuperClass::Anim_Stage() const
         }
     }
     return anim_stage;
-//#endif
 }
 
 void SuperClass::Impatient_Click() const
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const SuperClass *) = reinterpret_cast<void (*)(const SuperClass *)>(0x005532BC);
-    func(this);
-#else*/
     if (m_ChargeTime.Stopped()) {
         if (m_SuspendVoice != VOX_NONE) {
             Speak(m_SuspendVoice);
@@ -214,15 +175,10 @@ void SuperClass::Impatient_Click() const
             Speak(m_ImpatientVoice);
         }
     }
-//#endif
 }
 
 void SuperClass::Forced_Charge(BOOL feedback)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(SuperClass *, BOOL) = reinterpret_cast<void (*)(SuperClass *, BOOL)>(0x005532E8);
-    func(this, feedback);
-#else*/
     if (m_IsEnabled) {
         m_FullyCharged = true;
         m_ChargeTime.Start();
@@ -233,5 +189,4 @@ void SuperClass::Forced_Charge(BOOL feedback)
             }
         }
     }
-//#endif
 }
