@@ -35,8 +35,8 @@ class ObjectTypeClass : public AbstractTypeClass
 public:
     ObjectTypeClass(RTTIType type, int id, BOOL animates, BOOL radar_invisible, BOOL selectable, BOOL legal_target,
         BOOL insignificant, BOOL is_immune, BOOL logical, int uiname, const char *name);
-    ObjectTypeClass(ObjectTypeClass const &that);
-    ObjectTypeClass(NoInitClass const &noinit) : AbstractTypeClass(noinit) {}
+    ObjectTypeClass(const ObjectTypeClass &that);
+    ObjectTypeClass(const NoInitClass &noinit) : AbstractTypeClass(noinit) {}
     ~ObjectTypeClass();
 
     virtual int Max_Pips() const { return 0; }

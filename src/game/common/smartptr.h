@@ -34,9 +34,9 @@ public:
 
     SmartPtr(T *realptr) : Pointer(realptr) {}
 
-    SmartPtr(SmartPtr const &that) : Pointer(that.Pointer) {}
+    SmartPtr(const SmartPtr &that) : Pointer(that.Pointer) {}
 
-    SmartPtr(NoInitClass const &noinit) {}
+    SmartPtr(const NoInitClass &noinit) {}
 
     ~SmartPtr() { Release_Pointer(); }
 

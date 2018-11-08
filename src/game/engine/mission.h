@@ -30,7 +30,7 @@ class MissionClass : public ObjectClass
 
 public:
     MissionClass(RTTIType type, int id);
-    MissionClass(NoInitClass const &noinit) : ObjectClass(noinit) {}
+    MissionClass(const NoInitClass &noinit) : ObjectClass(noinit), MissionTimer(noinit) {}
     virtual ~MissionClass() {}
 
     // ObjectClass virtual functions

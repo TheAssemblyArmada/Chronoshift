@@ -56,8 +56,8 @@ class BulletTypeClass : public ObjectTypeClass
 {
 public:
     BulletTypeClass(BulletType bullet, const char *name);
-    BulletTypeClass(BulletTypeClass const &that);
-    BulletTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
+    BulletTypeClass(const BulletTypeClass &that);
+    BulletTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
     ~BulletTypeClass() {}
 
     void *operator new(size_t size);

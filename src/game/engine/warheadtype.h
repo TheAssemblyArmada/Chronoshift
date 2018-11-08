@@ -47,8 +47,8 @@ class WarheadTypeClass
 {
 public:
     WarheadTypeClass(WarheadType warhead, const char *name);
-    WarheadTypeClass(WarheadTypeClass const &that);
-    WarheadTypeClass(NoInitClass const &noinit) {}
+    WarheadTypeClass(const WarheadTypeClass &that);
+    WarheadTypeClass(const NoInitClass &noinit) {}
     ~WarheadTypeClass() {}
 
     void *operator new(size_t size);

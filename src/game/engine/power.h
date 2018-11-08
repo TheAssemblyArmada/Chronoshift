@@ -36,7 +36,7 @@ class PowerClass : public RadarClass
 
 public:
     PowerClass();
-    PowerClass(const NoInitClass &noinit) : RadarClass(noinit) {}
+    PowerClass(const NoInitClass &noinit) : RadarClass(noinit), FlashTimer(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;

@@ -32,8 +32,8 @@ class RadioClass : public MissionClass
 {
 public:
     RadioClass(RTTIType type, int id);
-    RadioClass(RadioClass const &that);
-    RadioClass(NoInitClass const &noinit) : MissionClass(noinit) {}
+    RadioClass(const RadioClass &that);
+    RadioClass(const NoInitClass &noinit) : MissionClass(noinit) {}
     virtual ~RadioClass();
 
     virtual BOOL Limbo() override;

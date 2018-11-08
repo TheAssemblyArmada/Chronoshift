@@ -62,8 +62,8 @@ public:
         BOOL nominal, BOOL crusher, BOOL harvester, BOOL radar_invisible, BOOL insignificant, BOOL turret, BOOL turret_spins,
         BOOL unk3, BOOL unk4, BOOL largeimage, BOOL is_viceroid, BOOL radarjammer, BOOL mgapgen, int facings, MissionType mission,
         MissionType alt_mission);
-    UnitTypeClass(UnitTypeClass const &that);
-    UnitTypeClass(NoInitClass const &noinit) : TechnoTypeClass(noinit) {}
+    UnitTypeClass(const UnitTypeClass &that);
+    UnitTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
     ~UnitTypeClass() {}
 
     void *operator new(size_t size);

@@ -41,8 +41,8 @@ class ObjectClass : public AbstractClass
 public:
     ObjectClass();
     ObjectClass(RTTIType type, int id);
-    ObjectClass(ObjectClass const &that);
-    ObjectClass(NoInitClass const &noinit) : AbstractClass(noinit) {}
+    ObjectClass(const ObjectClass &that);
+    ObjectClass(const NoInitClass &noinit) : AbstractClass(noinit) {}
     virtual ~ObjectClass();
 
     virtual const char *Name() const override;

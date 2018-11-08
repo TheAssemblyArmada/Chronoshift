@@ -36,7 +36,7 @@ private:
 
 public:
     GameMouseClass();
-    GameMouseClass(NoInitClass &noinit) : ScrollClass(noinit) {}
+    GameMouseClass(const NoInitClass &noinit) : ScrollClass(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;

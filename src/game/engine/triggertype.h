@@ -57,7 +57,7 @@ enum TriggerStateType
 class TriggerTypeClass : public AbstractTypeClass
 {
 public:
-    TriggerTypeClass(NoInitClass const &noinit) : AbstractTypeClass(noinit) {}
+    TriggerTypeClass(const NoInitClass &noinit) : AbstractTypeClass(noinit) {}
 
     void Code_Pointers();
     void Decode_Pointers();

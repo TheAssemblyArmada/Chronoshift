@@ -80,8 +80,8 @@ class OverlayTypeClass : public ObjectTypeClass
 {
 public:
     OverlayTypeClass(OverlayType overlay, const char *name, int uiname, LandType land, int damage_levels, int strength, BOOL a7, BOOL a8, BOOL legal_target, BOOL crushable, BOOL a11, BOOL a12, BOOL a13, BOOL wall, BOOL crate);
-    OverlayTypeClass(OverlayTypeClass const &that);
-    OverlayTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
+    OverlayTypeClass(const OverlayTypeClass &that);
+    OverlayTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
     ~OverlayTypeClass() {}
 
     void *operator new(size_t size);

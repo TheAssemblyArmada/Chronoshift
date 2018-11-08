@@ -30,8 +30,8 @@ class AbstractClass
 {
 public:
     AbstractClass(RTTIType type = RTTI_NONE, int id = -1);
-    AbstractClass(AbstractClass const &that);
-    AbstractClass(NoInitClass const &noinit) {}
+    AbstractClass(const AbstractClass &that);
+    AbstractClass(const NoInitClass &noinit) {}
     virtual ~AbstractClass() {}
 
     virtual const char *Name() const { return ""; }

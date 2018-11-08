@@ -25,8 +25,8 @@ class FlasherClass
 {
 public:
     FlasherClass() : Frames(0), Flashed(false) {}
-    FlasherClass(FlasherClass const &that) : Frames(that.Frames), Flashed(that.Flashed) {}
-    FlasherClass(NoInitClass const &noinit) {}
+    FlasherClass(const FlasherClass &that) : Frames(that.Frames), Flashed(that.Flashed) {}
+    FlasherClass(const NoInitClass &noinit) {}
 
     void Flash(int flash_frames, bool flash);
     BOOL Get_Flashed() { return Flashed; }

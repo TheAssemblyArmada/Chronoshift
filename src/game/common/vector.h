@@ -32,7 +32,7 @@ class VectorClass
 {
 public:
     VectorClass(int size = 0, const T *array = nullptr);
-    VectorClass(const NoInitClass &noinit){};
+    VectorClass(const NoInitClass &noinit) {}
     VectorClass(const VectorClass<T> &that);
     virtual ~VectorClass();
 
