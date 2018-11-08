@@ -527,13 +527,11 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
         return false;
     }
 
-    if (!g_inMapEditor
-        || Overlay != OVERLAY_NONE && OverlayFrame != -1
-            && (Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(Overlay).Is_Wall())) {
+    if ((Overlay != OVERLAY_NONE && OverlayFrame != -1) && (!g_inMapEditor || Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(Overlay).Is_Wall())) {
         return false;
     }
 
-    if (Smudge != SMUDGE_NONE && SmudgeFrame != -1 && SmudgeTypeClass::As_Reference(Smudge).Is_Bib()) {
+    if ((Smudge != SMUDGE_NONE && SmudgeFrame != -1) && SmudgeTypeClass::As_Reference(Smudge).Is_Bib()) {
         return false;
     }
 
