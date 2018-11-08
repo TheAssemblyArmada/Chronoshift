@@ -121,7 +121,10 @@ BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
     IsDifferent = true;
     IsSuspended = true;
 
-    Object = reinterpret_cast<TechnoClass *>(objecttype.Create_One_Of(&house));
+    ProductionTime.Set_Stage(0);
+    ProductionTime.Set_Delay(0);
+
+    Object = objecttype.Techno_Create_One_Of(&house);
 
     Balance = 0;
 
@@ -131,9 +134,6 @@ BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
         Object->Set_Price(cost);
         Owner = Object->Get_Owner_House();
     }
-
-    ProductionTime.Set_Stage(0);
-    ProductionTime.Set_Delay(0);
 
     return Object != nullptr;
 }
