@@ -477,9 +477,9 @@ const char *AnimTypeClass::Name_From(AnimType anim)
  */
 AnimTypeClass &AnimTypeClass::As_Reference(AnimType anim)
 {
-    DEBUG_ASSERT(&AnimTypes[anim] != nullptr);
-
-    return AnimTypes[anim];
+    AnimTypeClass *ptr = &AnimTypes[anim];
+    DEBUG_ASSERT(ptr != nullptr);
+    return *ptr;
 }
 
 /**

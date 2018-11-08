@@ -420,6 +420,5 @@ void HouseClass::Silo_Redraw_Check(unsigned int a1, unsigned int a2)
         reinterpret_cast<void (*)(HouseClass *, unsigned int, unsigned int)>(0x004D5EF4);
     func(this, a1, a2);
 #else
-    return 0;
 #endif
 }
