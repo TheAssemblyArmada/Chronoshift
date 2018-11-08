@@ -45,9 +45,9 @@ public:
 
     static void Init();
 
-    int Get_Heap_ID() const { return HeapID; }
-    BOOL Is_Active() const { return IsActive; }
-    RTTIType What_Am_I() const { return RTTI; }
+    int Get_Heap_ID() const { return m_HeapID; }
+    BOOL Is_Active() const { return m_IsActive; }
+    RTTIType What_Am_I() const { return m_RTTI; }
 
     void AI();
     BOOL Has_Changed();
@@ -57,11 +57,11 @@ public:
     BOOL Suspend();
     BOOL Start();
     BOOL Abandon();
-    int Completion() const { return ProductionTime.Get_Stage(); }
+    int Completion() const { return m_ProductionTime.Get_Stage(); }
     BOOL Has_Completed() const;
-    BOOL Is_Building() const { return ProductionTime.Get_Delay() != 0; }
-    TechnoClass *const Get_Object() const { return Object; }
-    int Get_Special_Item() const { return SpecialItem; }
+    BOOL Is_Building() const { return m_ProductionTime.Get_Delay() != 0; }
+    TechnoClass *const Get_Object() const { return m_Object; }
+    int Get_Special_Item() const { return m_SpecialItem; }
     int Cost_Per_Tick() const;
     BOOL Completed();
 
@@ -69,31 +69,31 @@ public:
     void Decode_Pointers();
 
 private:
-    StageClass ProductionTime;
-    RTTIType RTTI;
-    int HeapID;
+    StageClass m_ProductionTime;
+    RTTIType m_RTTI;
+    int m_HeapID;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {
         struct
         {
-            bool IsActive : 1; // 1
-            bool IsSuspended : 1; // 2
-            bool IsDifferent : 1; // 4
+            bool m_IsActive : 1; // 1
+            bool m_IsSuspended : 1; // 2
+            bool m_IsDifferent : 1; // 4
         };
         int m_Bitfield;
     };
 #else
-    bool IsActive;
-    bool IsSuspended;
-    bool IsDifferent;
+    bool m_IsActive;
+    bool m_IsSuspended;
+    bool m_IsDifferent;
 #endif
-    int Balance;
-    int OriginalBalance;
-    TechnoClass *Object; // The techno object we are to produce.
-    int SpecialItem;
-    HouseClass *Owner; // The house that owns the object.
+    int m_Balance;
+    int m_OriginalBalance;
+    TechnoClass *m_Object; // The techno object we are to produce.
+    int m_SpecialItem;
+    HouseClass *m_Owner; // The house that owns the object.
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"

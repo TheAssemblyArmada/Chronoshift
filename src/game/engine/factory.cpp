@@ -30,17 +30,17 @@ TFixedIHeapClass<FactoryClass> g_Factories;
 #define MAX_CLOCK_STAGES 54
 
 FactoryClass::FactoryClass() :
-    ProductionTime(),
-    RTTI(RTTI_FACTORY),
-    HeapID(g_Factories.ID(this)),
-    IsActive(false),
-    IsSuspended(false),
-    IsDifferent(false),
-    Balance(0),
-    OriginalBalance(0),
-    Object(nullptr),
-    SpecialItem(-1),
-    Owner(nullptr)
+    m_ProductionTime(),
+    m_RTTI(RTTI_FACTORY),
+    m_HeapID(g_Factories.ID(this)),
+    m_IsActive(false),
+    m_IsSuspended(false),
+    m_IsDifferent(false),
+    m_Balance(0),
+    m_OriginalBalance(0),
+    m_Object(nullptr),
+    m_SpecialItem(-1),
+    m_Owner(nullptr)
 {
 }
 
@@ -51,14 +51,16 @@ FactoryClass::~FactoryClass()
     }
 }
 
-FactoryClass::FactoryClass(const FactoryClass &that) {}
+FactoryClass::FactoryClass(const FactoryClass &that)
+{
+}
 
 void *FactoryClass::operator new(size_t size)
 {
     FactoryClass *this_ptr = g_Factories.Alloc();
     DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
-        this_ptr->IsActive = true;
+        this_ptr->m_IsActive = true;
     }
     return this_ptr;
 }
@@ -68,7 +70,7 @@ void FactoryClass::operator delete(void *ptr)
     FactoryClass *this_ptr = static_cast<FactoryClass *>(ptr);
     DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
-        this_ptr->IsActive = false;
+        this_ptr->m_IsActive = false;
     }
     g_Factories.Free(this_ptr);
 }
@@ -80,27 +82,27 @@ void FactoryClass::Init()
 
 void FactoryClass::AI()
 {
-    if (!IsSuspended && (Object != nullptr || SpecialItem != -1)) {
+    if (!m_IsSuspended && (m_Object != nullptr || m_SpecialItem != -1)) {
         if (!Has_Completed()) {
-            if (ProductionTime.Stage_Changed()) {
-                IsDifferent = true;
-                int tick_cost = Min(Cost_Per_Tick(), Balance);
-                if (Owner->Available_Money() >= tick_cost) {
-                    Owner->Spend_Money(tick_cost);
-                    Balance -= tick_cost;
+            if (m_ProductionTime.Stage_Changed()) {
+                m_IsDifferent = true;
+                int tick_cost = Min(Cost_Per_Tick(), m_Balance);
+                if (m_Owner->Available_Money() >= tick_cost) {
+                    m_Owner->Spend_Money(tick_cost);
+                    m_Balance -= tick_cost;
                 } else {
-                    ProductionTime.Set_Stage(ProductionTime.Get_Stage() - 1);
+                    m_ProductionTime.Set_Stage(m_ProductionTime.Get_Stage() - 1);
                 }
             #ifdef CHRONOSHIFT_DEBUG
                 if ( g_Debug_Instant_Build ) {
-                    ProductionTime.Set_Stage(MAX_CLOCK_STAGES);
+                    m_ProductionTime.Set_Stage(MAX_CLOCK_STAGES);
                 }
             #endif
-                if (ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
-                    IsSuspended = true;
-                    ProductionTime.Set_Delay(0);
-                    Owner->Spend_Money(Balance);
-                    Balance = 0;
+                if (m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
+                    m_IsSuspended = true;
+                    m_ProductionTime.Set_Delay(0);
+                    m_Owner->Spend_Money(m_Balance);
+                    m_Balance = 0;
                 }
             }
         }
@@ -109,8 +111,8 @@ void FactoryClass::AI()
 
 BOOL FactoryClass::Has_Changed()
 {
-    bool prev = IsDifferent;
-    IsDifferent = false;
+    bool prev = m_IsDifferent;
+    m_IsDifferent = false;
     return prev;
 }
 
@@ -122,33 +124,33 @@ BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
 #else
     Abandon();
 
-    IsDifferent = true;
-    IsSuspended = true;
+    m_IsDifferent = true;
+    m_IsSuspended = true;
 
-    ProductionTime.Set_Stage(0);
-    ProductionTime.Set_Delay(0);
+    m_ProductionTime.Set_Stage(0);
+    m_ProductionTime.Set_Delay(0);
 
-    Balance = 0;
+    m_Balance = 0;
 
-    Object = objecttype.Techno_Create_One_Of(&house);
+    m_Object = objecttype.Techno_Create_One_Of(&house);
 
     if (!house.Is_Human()) {
-        if (Object != nullptr) {
-            if (Object->What_Am_I() == RTTI_BUILDING) {
+        if (m_Object != nullptr) {
+            if (m_Object->What_Am_I() == RTTI_BUILDING) {
                 //TODO: Requires BuildingClass.
-                // reinterpret_cast<BuildingClass *>(Object)->Set_To_Rebuild(True);
+                // reinterpret_cast<BuildingClass *>(m_Object)->Set_To_Rebuild(True);
             }
         }
     }
 
-    if (Object != nullptr) {
-        Owner = Object->Get_Owner_House();
-        int cost = objecttype.Cost_Of() * Owner->Cost_Multiplier();
-        Balance = cost;
-        Object->Set_Price(cost);
+    if (m_Object != nullptr) {
+        m_Owner = m_Object->Get_Owner_House();
+        int cost = objecttype.Cost_Of() * m_Owner->Cost_Multiplier();
+        m_Balance = cost;
+        m_Object->Set_Price(cost);
     }
 
-    return Object != nullptr;
+    return m_Object != nullptr;
 #endif
 }
 
@@ -156,39 +158,39 @@ BOOL FactoryClass::Set(int &special, HouseClass &house)
 {
     Abandon();
 
-    IsDifferent = true;
-    IsSuspended = true;
+    m_IsDifferent = true;
+    m_IsSuspended = true;
 
-    SpecialItem = special;
-    Owner = &house;
-    Balance = 0;
+    m_SpecialItem = special;
+    m_Owner = &house;
+    m_Balance = 0;
 
-    ProductionTime.Set_Stage(0);
-    ProductionTime.Set_Delay(0);
+    m_ProductionTime.Set_Stage(0);
+    m_ProductionTime.Set_Delay(0);
 
-    return SpecialItem != -1;
+    return m_SpecialItem != -1;
 }
 
 void FactoryClass::Set(TechnoClass &object)
 {
     Abandon();
 
-    IsDifferent = true;
-    IsSuspended = true;
+    m_IsDifferent = true;
+    m_IsSuspended = true;
 
-    Object = &object;
-    Owner = Object->Get_Owner_House();
-    Balance = 0;
+    m_Object = &object;
+    m_Owner = m_Object->Get_Owner_House();
+    m_Balance = 0;
 
-    ProductionTime.Set_Stage(0);
-    ProductionTime.Set_Delay(0);
+    m_ProductionTime.Set_Stage(0);
+    m_ProductionTime.Set_Delay(0);
 }
 
 BOOL FactoryClass::Suspend()
 {
-    if (!IsSuspended) {
-        IsSuspended = true;
-        ProductionTime.Set_Delay(0);
+    if (!m_IsSuspended) {
+        m_IsSuspended = true;
+        m_ProductionTime.Set_Delay(0);
         return true;
     }
     return false;
@@ -206,30 +208,30 @@ BOOL FactoryClass::Start()
 
 BOOL FactoryClass::Abandon()
 {
-    if (Object != nullptr) {
-        DEBUG_LOG("Abandoning production of %s\n", Object->Name());
+    if (m_Object != nullptr) {
+        DEBUG_LOG("Abandoning production of %s\n", m_Object->Name());
 
-        if (Owner != nullptr) {
-            Owner->Refund_Money(Object->Class_Of().Cost_Of() - Balance);
+        if (m_Owner != nullptr) {
+            m_Owner->Refund_Money(m_Object->Class_Of().Cost_Of() - m_Balance);
         }
 
-        Balance = 0;
+        m_Balance = 0;
 
-        IsSuspended = true;
-        IsDifferent = true;
+        m_IsSuspended = true;
+        m_IsDifferent = true;
 
-        ProductionTime.Set_Stage(0);
-        ProductionTime.Set_Delay(0);
+        m_ProductionTime.Set_Stage(0);
+        m_ProductionTime.Set_Delay(0);
 
         ++ScenarioInit;
 
-        if (SpecialItem != -1) {
-            SpecialItem = -1;
+        if (m_SpecialItem != -1) {
+            m_SpecialItem = -1;
         }
 
-        if (Object != nullptr) {
-            delete Object;
-            Object = nullptr;
+        if (m_Object != nullptr) {
+            delete m_Object;
+            m_Object = nullptr;
         }
 
         --ScenarioInit;
@@ -242,43 +244,40 @@ BOOL FactoryClass::Abandon()
 
 BOOL FactoryClass::Has_Completed() const
 {
-    return (Object != nullptr || SpecialItem != -1) && ProductionTime.Get_Stage() == MAX_CLOCK_STAGES;
+    return (m_Object != nullptr || m_SpecialItem != -1) && m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES;
 }
 
 int FactoryClass::Cost_Per_Tick() const
 {
     int cost_per_tick = 0;
 
-    if (Object == nullptr) {
-        return cost_per_tick;
+    if (m_Object != nullptr) {
+        int v2 = MAX_CLOCK_STAGES - m_ProductionTime.Get_Stage();
+        if (v2 > 0) {
+            cost_per_tick = m_Balance / v2;
+        } else {
+            cost_per_tick = m_Balance;
+        }
     }
-
-    int v2 = MAX_CLOCK_STAGES - ProductionTime.Get_Stage();
-    if (v2 > 0) {
-        cost_per_tick = Balance / v2;
-    } else {
-        cost_per_tick = Balance;
-    }
-
     return cost_per_tick;
 }
 
 BOOL FactoryClass::Completed()
 {
-    if (Object != nullptr && ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
-        Object = nullptr;
-        IsSuspended = true;
-        IsDifferent = true;
-        ProductionTime.Set_Stage(0);
-        ProductionTime.Set_Delay(0);
+    if (m_Object != nullptr && m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
+        m_Object = nullptr;
+        m_IsSuspended = true;
+        m_IsDifferent = true;
+        m_ProductionTime.Set_Stage(0);
+        m_ProductionTime.Set_Delay(0);
         return true;
     }
-    if (SpecialItem != -1 && ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
-        SpecialItem = -1;
-        IsSuspended = true;
-        IsDifferent = true;
-        ProductionTime.Set_Stage(0);
-        ProductionTime.Set_Delay(0);
+    if (m_SpecialItem != -1 && m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
+        m_SpecialItem = -1;
+        m_IsSuspended = true;
+        m_IsDifferent = true;
+        m_ProductionTime.Set_Stage(0);
+        m_ProductionTime.Set_Delay(0);
         return true;
     }
     return false;
@@ -286,32 +285,32 @@ BOOL FactoryClass::Completed()
 
 void FactoryClass::Code_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+//#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(FactoryClass *) = reinterpret_cast<void (*)(FactoryClass *)>(0x004F94E8);
     return func(this);
-#else
+/*#else
     // TODO: Requires HouseClass.
-    if (Object != nullptr) {
-        Object = (TechnoClass *)As_Target(Object);
+    if (m_Object != nullptr) {
+        m_Object = (TechnoClass *)As_Target(m_Object);
     }
-    if (Owner != nullptr) {
-        Owner = Owner->Get_Type();
+    if (m_Owner != nullptr) {
+        m_Owner = m_Owner->Get_Type();
     }
-#endif
+#endif*/
 }
 
 void FactoryClass::Decode_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+//#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(FactoryClass *) = reinterpret_cast<void (*)(FactoryClass *)>(0x004F9550);
     return func(this);
-#else
+/*#else
     // TODO: Requires HouseClass.
-    if (Target_Legal(Object)) {
-        Object = As_Techno(Object);
+    if (Target_Legal(m_Object)) {
+        m_Object = As_Techno(m_Object);
     }
-    if (Owner != HOUSES_NONE) {
-        Owner = HouseClass::As_Pointer(Owner);
+    if (m_Owner != HOUSES_NONE) {
+        m_Owner = HouseClass::As_Pointer(m_Owner);
     }
-#endif
+#endif*/
 }
