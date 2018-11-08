@@ -92,6 +92,11 @@ public:
     void Refund_Money(unsigned int amount) { Credits += amount; }
     void Silo_Redraw_Check(unsigned int a1, unsigned int a2);
 
+    DiffType Assign_Handicap(DiffType diff);
+
+    void Make_Ally(HousesType type);
+    void Make_Enemy(HousesType type);
+
     fixed_t Cost_Multiplier() const { return CostMult; }
 
     BOOL Is_Human() const { return IsHuman; }
