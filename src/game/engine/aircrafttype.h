@@ -45,8 +45,8 @@ public:
     AircraftTypeClass(AircraftType type, int uiname, const char *name, int a4, int a5, int a6, BOOL airplane, BOOL rotors,
         BOOL transport, BOOL custom_rotors, BOOL a11, BOOL a12, BOOL a13, BOOL a14, BOOL a15, BuildingType dock,
         int landing_dist, int a18, MissionType mission);
-    AircraftTypeClass(AircraftTypeClass const &that);
-    AircraftTypeClass(NoInitClass const &noinit) : TechnoTypeClass(noinit) {}
+    AircraftTypeClass(const AircraftTypeClass &that);
+    AircraftTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
     ~AircraftTypeClass() {}
 
     void *operator new(size_t size);

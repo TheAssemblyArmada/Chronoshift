@@ -57,8 +57,9 @@ class TechnoClass : public RadioClass
 {
 public:
     TechnoClass(RTTIType type, int id, HousesType house);
-    TechnoClass(NoInitClass &init);
-    virtual ~TechnoClass();
+    TechnoClass(const TechnoClass &that);
+    TechnoClass(const NoInitClass &init);
+    virtual ~TechnoClass() {}
 
     virtual HousesType Owner() const override;
     virtual void AI() override;
@@ -195,7 +196,7 @@ protected:
     fixed m_FirepowerMult;
     TCountDownTimerClass<FrameTimerClass> m_IdleActionTimer;
     TCountDownTimerClass<FrameTimerClass> m_InvulnerabilityTimer;
-    int m_SpiedBits;
+    int m_Spied;
     int m_Archive;
     GamePtr<HouseClass> m_OwnerHouse;
     CloakState m_CloakState;

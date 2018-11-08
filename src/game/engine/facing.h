@@ -107,13 +107,13 @@ class FacingClass
 {
 public:
     FacingClass() : Current(DIR_NORTH), Desired(DIR_NORTH) {}
-    FacingClass(DirType dir) : Current(dir), Desired(dir) {}
-    FacingClass(DirType current, DirType desired) : Current(current), Desired(desired) {}
-    FacingClass(FacingClass const &that) : Current(that.Current), Desired(that.Desired) {}
-    FacingClass(NoInitClass const &noinit) {}
+    FacingClass(const DirType dir) : Current(dir), Desired(dir) {}
+    FacingClass(const DirType current, DirType desired) : Current(current), Desired(desired) {}
+    FacingClass(const FacingClass &that) : Current(that.Current), Desired(that.Desired) {}
+    FacingClass(const NoInitClass &noinit) {}
     ~FacingClass() {}
 
-    FacingClass &operator=(FacingClass const &that)
+    FacingClass &operator=(const FacingClass &that)
     {
         if (this != &that) {
             Current = that.Current;
@@ -122,20 +122,20 @@ public:
         return *this;
     }
 
-    void operator=(DirType const dir)
+    void operator=(const DirType dir)
     {
         Current = dir;
         Desired = dir;
     }
 
-    void operator=(FacingType const facing)
+    void operator=(const FacingType facing)
     {
         Current = Facing_To_Direction(facing);
         Desired = Facing_To_Direction(facing);
     }
 
-    BOOL Set_Current(DirType const dir);
-    BOOL Set_Desired(DirType const dir);
+    BOOL Set_Current(const DirType dir);
+    BOOL Set_Desired(const DirType dir);
     DirType Get_Current() const { return Current; }
     DirType Get_Desired() const { return Desired; }
     BOOL Rotation_Adjust(int adjust);

@@ -29,8 +29,8 @@ class AbstractTypeClass
 {
 public:
     AbstractTypeClass(RTTIType type, int id = -1, int uiname = TXT_NULL, const char *name = nullptr);
-    AbstractTypeClass(AbstractTypeClass const &that);
-    AbstractTypeClass(NoInitClass const &noinit) {}
+    AbstractTypeClass(const AbstractTypeClass &that);
+    AbstractTypeClass(const NoInitClass &noinit) {}
     ~AbstractTypeClass() {}
 
     virtual uint32_t Coord_Fixup(uint32_t coord) const { return coord; }

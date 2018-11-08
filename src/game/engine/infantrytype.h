@@ -100,8 +100,8 @@ public:
     InfantryTypeClass(InfantryType type, int uiname, const char *name, int def_fire_coord, int rot_count, BOOL female,
         BOOL crawls, BOOL civilian, BOOL alt_remap, BOOL nominal, BOOL theater, PipEnum pip, DoInfoStruct *sequence,
         int fire_up, int fire_prone, const uint8_t *remap);
-    InfantryTypeClass(InfantryTypeClass const &that);
-    InfantryTypeClass(NoInitClass const &noinit) : TechnoTypeClass(noinit) {}
+    InfantryTypeClass(const InfantryTypeClass &that);
+    InfantryTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
     ~InfantryTypeClass() {}
 
     void *operator new(size_t size);

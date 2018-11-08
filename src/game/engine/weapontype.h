@@ -84,8 +84,8 @@ class WeaponTypeClass
 public:
     WeaponTypeClass(const char *name);
     WeaponTypeClass(WeaponType weapon, const char *name);
-    WeaponTypeClass(WeaponTypeClass const &that);
-    WeaponTypeClass(NoInitClass const &noinit) {}
+    WeaponTypeClass(const WeaponTypeClass &that);
+    WeaponTypeClass(const NoInitClass &noinit) {}
     ~WeaponTypeClass();
 
     void *operator new(size_t size);

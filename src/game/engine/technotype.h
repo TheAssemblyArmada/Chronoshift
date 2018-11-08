@@ -36,9 +36,9 @@ public:
         BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL theater,
         BOOL turret, BOOL remapable, BOOL logical, int facings, SpeedType speed);
 
-    TechnoTypeClass(TechnoTypeClass const &that);
-    TechnoTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
-    ~TechnoTypeClass() {} // TODO not virtual in original binary, consider making it so after standalone?
+    TechnoTypeClass(const TechnoTypeClass &that);
+    TechnoTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
+    ~TechnoTypeClass() {}
 
     TechnoTypeClass &operator=(TechnoTypeClass &that);
 

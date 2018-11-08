@@ -42,7 +42,7 @@ class BasicTimerClass
 public:
     BasicTimerClass() {}
     BasicTimerClass(const BasicTimerClass &that) : m_started(that.m_started), m_accumulated(that.m_accumulated) {}
-    BasicTimerClass(NoInitClass const &noinit) {}
+    BasicTimerClass(const NoInitClass &noinit) {}
     ~BasicTimerClass() {}
 
     BasicTimerClass &operator=(const BasicTimerClass &that);
@@ -98,8 +98,8 @@ public:
         m_accumulated = value;
     }
 
-    TTimerClass(TTimerClass<T> const &that) : BasicTimerClass<T>(that) {}
-    TTimerClass(NoInitClass const &noinit) : BasicTimerClass<T>(noinit) {}
+    TTimerClass(const TTimerClass<T> &that) : BasicTimerClass<T>(that) {}
+    TTimerClass(const NoInitClass &noinit) : BasicTimerClass<T>(noinit) {}
 
     TTimerClass<T> &operator=(TTimerClass<T> &that);
     TTimerClass<T> &operator=(uint32_t value);
@@ -175,8 +175,8 @@ public:
         m_accumulated = value;
     }
 
-    TCountDownTimerClass(TCountDownTimerClass<T> const &that) : BasicTimerClass<T>(that) {}
-    TCountDownTimerClass(NoInitClass const &noinit) : BasicTimerClass<T>(noinit) {}
+    TCountDownTimerClass(const TCountDownTimerClass<T> &that) : BasicTimerClass<T>(that) {}
+    TCountDownTimerClass(const NoInitClass &noinit) : BasicTimerClass<T>(noinit) {}
 
     TCountDownTimerClass<T> &operator=(TCountDownTimerClass<T> &that);
     TCountDownTimerClass<T> &operator=(uint32_t value);

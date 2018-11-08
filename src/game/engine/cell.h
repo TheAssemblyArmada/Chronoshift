@@ -73,12 +73,12 @@ class CellClass
 
 public:
     CellClass();
-    CellClass(CellClass const &that) {}
-    CellClass(NoInitClass const &noinit) {}
+    CellClass(const CellClass &that) {}
+    CellClass(const NoInitClass &noinit) {}
     ~CellClass() { OccupierPtr = nullptr; } // Null the pointer in memory, but object still exists
 
-    BOOL operator==(CellClass const &that) const;
-    BOOL operator!=(CellClass const &that) const { return !(CellNumber == that.CellNumber); }
+    BOOL operator==(const CellClass &that) const;
+    BOOL operator!=(const CellClass &that) const { return !(CellNumber == that.CellNumber); }
 
     int Cell_Color(BOOL none = false) const;
     ObjectClass *Cell_Find_Object(RTTIType type) const;

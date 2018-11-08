@@ -73,8 +73,8 @@ class TerrainTypeClass : public ObjectTypeClass
 {
 public:
     TerrainTypeClass(TerrainType type, int theater, uint32_t a3, BOOL immune, BOOL waterbound, const char *name, int uiname, const int16_t *occupy_list, const int16_t *overlap_list);
-    TerrainTypeClass(TerrainTypeClass const &that);
-    TerrainTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
+    TerrainTypeClass(const TerrainTypeClass &that);
+    TerrainTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
     ~TerrainTypeClass();
 
     void *operator new(size_t size);

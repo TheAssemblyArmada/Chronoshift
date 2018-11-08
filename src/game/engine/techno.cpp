@@ -43,7 +43,7 @@ TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     m_FirepowerMult(),
     m_IdleActionTimer(),
     m_InvulnerabilityTimer(),
-    m_SpiedBits(0),
+    m_Spied(0),
     m_Archive(0),
     m_OwnerHouse(/*HouseClass::As_Pointer(house)*/),
     m_CloakState(CLOAK_UNCLOAKED),
@@ -58,30 +58,68 @@ TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
 {
 }
 
-TechnoClass::TechnoClass(NoInitClass &init) : 
-    RadioClass(init),
-    m_Flasher(init),
-    m_AnimStage(init),
-    m_Cargo(init),
-    m_Door(init),
-    m_IdleActionTimer(init),
-    m_InvulnerabilityTimer(init),
-    m_CloakingStage(init),
-    m_CloakDelayTimer(init),
-    m_Facing(init),
-    m_RearmTimer(init)
+TechnoClass::TechnoClass(const TechnoClass &that) :
+    RadioClass(that),
+    m_Flasher(that.m_Flasher),
+    m_AnimStage(that.m_AnimStage),
+    m_Cargo(that.m_Cargo),
+    m_Door(that.m_Door),
+    m_KillCount(that.m_KillCount),
+    m_IsUseless(that.m_IsUseless),
+    m_IsTickedOff(that.m_IsTickedOff),
+    m_Cloakable(that.m_Cloakable),
+    m_IsPrimary(that.m_IsPrimary),
+    m_IsALoner(that.m_IsALoner),
+    m_LockedOnMap(that.m_LockedOnMap),
+    m_IsRecoiling(that.m_IsRecoiling),
+    m_Tethered(that.m_Tethered),
+    m_PlayerOwned(that.m_PlayerOwned),
+    m_PlayerAware(that.m_PlayerAware),
+    m_AIAware(that.m_AIAware),
+    m_Lemon(that.m_Lemon),
+    m_TechnoBit2_16(that.m_TechnoBit2_16),
+    m_ArmorMult(that.m_ArmorMult),
+    m_FirepowerMult(that.m_FirepowerMult),
+    m_IdleActionTimer(that.m_IdleActionTimer),
+    m_InvulnerabilityTimer(that.m_InvulnerabilityTimer),
+    m_Spied(that.m_Spied),
+    m_Archive(that.m_Archive),
+    m_OwnerHouse(that.m_OwnerHouse),
+    m_CloakState(that.m_CloakState),
+    m_CloakingStage(that.m_CloakingStage),
+    m_CloakDelayTimer(that.m_CloakDelayTimer),
+    m_TarCom(that.m_TarCom),
+    m_SuspendedTarCom(that.m_SuspendedTarCom),
+    m_Facing(that.m_Facing),
+    m_RearmTimer(that.m_RearmTimer),
+    m_Ammo(that.m_Ammo),
+    m_Price(that.m_Price)
 {
-    
 }
 
-TechnoClass::~TechnoClass() {}
+TechnoClass::TechnoClass(const NoInitClass &noinit) : 
+    RadioClass(noinit),
+    m_Flasher(noinit),
+    m_AnimStage(noinit),
+    m_Cargo(noinit),
+    m_Door(noinit),
+    m_IdleActionTimer(noinit),
+    m_InvulnerabilityTimer(noinit),
+    m_CloakingStage(noinit),
+    m_CloakDelayTimer(noinit),
+    m_Facing(noinit),
+    m_RearmTimer(noinit)
+{
+}
 
 HousesType TechnoClass::Owner() const
 {
     return HousesType();
 }
 
-void TechnoClass::AI() {}
+void TechnoClass::AI()
+{
+}
 
 BOOL TechnoClass::Is_Player_Army() const
 {
@@ -128,29 +166,43 @@ BOOL TechnoClass::Unlimbo(uint32_t coord, DirType dir)
     return 0;
 }
 
-void TechnoClass::Detach(int32_t target, int a2) {}
+void TechnoClass::Detach(int32_t target, int a2)
+{
+}
 
-void TechnoClass::Record_The_Kill(TechnoClass *object) {}
+void TechnoClass::Record_The_Kill(TechnoClass *object)
+{
+}
 
-void TechnoClass::Do_Shimmer() {}
+void TechnoClass::Do_Shimmer()
+{
+}
 
 int TechnoClass::Exit_Object(TechnoClass *object)
 {
     return 0;
 }
 
-void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const {}
+void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
+{
+}
 
-void TechnoClass::Hidden() {}
+void TechnoClass::Hidden()
+{
+}
 
-void TechnoClass::Look(BOOL a1) {}
+void TechnoClass::Look(BOOL a1)
+{
+}
 
 BOOL TechnoClass::Mark(MarkType mark)
 {
     return 0;
 }
 
-void TechnoClass::Clicked_As_Target(int a1) {}
+void TechnoClass::Clicked_As_Target(int a1)
+{
+}
 
 BOOL TechnoClass::Select()
 {
@@ -177,7 +229,9 @@ int TechnoClass::Value() const
     return 0;
 }
 
-void TechnoClass::Per_Cell_Process(PCPType pcp) {}
+void TechnoClass::Per_Cell_Process(PCPType pcp)
+{
+}
 
 RadioMessageType TechnoClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
@@ -189,11 +243,17 @@ BOOL TechnoClass::Revealed(HouseClass *house)
     return 0;
 }
 
-void TechnoClass::Code_Pointers() {}
+void TechnoClass::Code_Pointers()
+{
+}
 
-void TechnoClass::Decode_Pointers() {}
+void TechnoClass::Decode_Pointers()
+{
+}
 
-void TechnoClass::Override_Mission(MissionType mission, int target1, int target2) {}
+void TechnoClass::Override_Mission(MissionType mission, int target1, int target2)
+{
+}
 
 BOOL TechnoClass::Restore_Mission()
 {
@@ -272,13 +332,21 @@ int TechnoClass::Threat_Range(int a1) const
     return 0;
 }
 
-void TechnoClass::Response_Select() {}
+void TechnoClass::Response_Select()
+{
+}
 
-void TechnoClass::Response_Move() {}
+void TechnoClass::Response_Move()
+{
+}
 
-void TechnoClass::Response_Attack() {}
+void TechnoClass::Response_Attack()
+{
+}
 
-void TechnoClass::Player_Assign_Mission(MissionType mission, int32_t target, int32_t dest) {}
+void TechnoClass::Player_Assign_Mission(MissionType mission, int32_t target, int32_t dest)
+{
+}
 
 int TechnoClass::Made_A_Kill()
 {
@@ -290,7 +358,9 @@ BOOL TechnoClass::Target_Something_Nearby(ThreatType threat)
     return 0;
 }
 
-void TechnoClass::Stun() {}
+void TechnoClass::Stun()
+{
+}
 
 BOOL TechnoClass::In_Range(int32_t target, int weapon) const
 {
@@ -312,7 +382,9 @@ int32_t TechnoClass::Greatest_Threat(ThreatType threat)
     return int32_t();
 }
 
-void TechnoClass::Assign_Target(int32_t target) {}
+void TechnoClass::Assign_Target(int32_t target)
+{
+}
 
 BulletClass *TechnoClass::Fire_At(int32_t target, int weapon)
 {
@@ -329,18 +401,26 @@ BOOL TechnoClass::Electric_Zap(int32_t target, BOOL a2, uint32_t a3, uint8_t *a4
     return 0;
 }
 
-void TechnoClass::Renovate() {}
+void TechnoClass::Renovate()
+{
+}
 
 uint8_t *TechnoClass::Remap_Table() const
 {
     return nullptr;
 }
 
-void TechnoClass::Draw_Pips(int x, int y, WindowNumberType window) const {}
+void TechnoClass::Draw_Pips(int x, int y, WindowNumberType window) const
+{
+}
 
-void TechnoClass::Do_Uncloak() {}
+void TechnoClass::Do_Uncloak()
+{
+}
 
-void TechnoClass::Do_Cloak() {}
+void TechnoClass::Do_Cloak()
+{
+}
 
 bool TechnoClass::Is_Ready_To_Random_Animate() const
 {
@@ -352,9 +432,13 @@ bool TechnoClass::Random_Animate()
     return false;
 }
 
-void TechnoClass::Assign_Destination(int32_t target) {}
+void TechnoClass::Assign_Destination(int32_t target)
+{
+}
 
-void TechnoClass::Enter_Idle_Mode(BOOL a1) {}
+void TechnoClass::Enter_Idle_Mode(BOOL a1)
+{
+}
 
 void TechnoClass::Techno_Draw_It(
     const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const

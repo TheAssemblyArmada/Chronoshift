@@ -30,7 +30,7 @@ class HelpClass : public TabClass
 
 public:
     HelpClass();
-    HelpClass(const NoInitClass &noinit) : TabClass(noinit)/*, CountDownTimer(noinit)*/ {}
+    HelpClass(const NoInitClass &noinit) : TabClass(noinit), CountDownTimer(noinit) {}
 
     virtual void Init_Clear() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;

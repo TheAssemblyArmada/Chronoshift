@@ -441,7 +441,7 @@ class TemplateTypeClass : public ObjectTypeClass
 {
 public:
     TemplateTypeClass(TemplateType type, int theater, const char *name, int uiname);
-    TemplateTypeClass(TemplateTypeClass const &that);
+    TemplateTypeClass(const TemplateTypeClass &that);
     TemplateTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
     ~TemplateTypeClass() {}
 

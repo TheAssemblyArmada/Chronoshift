@@ -33,8 +33,8 @@ class HouseTypeClass : public AbstractTypeClass
 public:
     HouseTypeClass(HousesType type, const char *name, int uiname, const char *suffix, int lemon_factor,
         PlayerColorType color, char prefix);
-    HouseTypeClass(HouseTypeClass const &that);
-    HouseTypeClass(NoInitClass const &noinit) : AbstractTypeClass(noinit) {}
+    HouseTypeClass(const HouseTypeClass &that);
+    HouseTypeClass(const NoInitClass &noinit) : AbstractTypeClass(noinit) {}
     virtual ~HouseTypeClass() {}
 
     virtual BOOL Read_INI(GameINIClass &ini);

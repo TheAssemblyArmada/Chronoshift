@@ -33,7 +33,7 @@ class DoorClass
     };
 public:
     DoorClass() : DoorTimer(), Stage(0), State(DOOR_CLOSED), StageComplete(false) {}
-    DoorClass(NoInitClass &noinit) : DoorTimer(noinit) {}
+    DoorClass(const NoInitClass &noinit) : DoorTimer(noinit) {}
 
     void AI();
     BOOL Open_Door(int delay, int stages);

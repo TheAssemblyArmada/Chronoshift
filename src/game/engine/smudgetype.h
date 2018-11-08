@@ -58,8 +58,8 @@ class SmudgeTypeClass : public ObjectTypeClass
 {
 public:
     SmudgeTypeClass(SmudgeType smudge, const char *name, int uiname, int width = 1, int height = 1, BOOL crater = false, BOOL burn = false);
-    SmudgeTypeClass(SmudgeTypeClass const &that);
-    SmudgeTypeClass(NoInitClass const &noinit) : ObjectTypeClass(noinit) {}
+    SmudgeTypeClass(const SmudgeTypeClass &that);
+    SmudgeTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
     ~SmudgeTypeClass() {}
 
     void *operator new(size_t size);
