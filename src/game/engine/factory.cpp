@@ -116,6 +116,10 @@ BOOL FactoryClass::Has_Changed()
 
 BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
 {
+#ifndef CHRONOSHIFT_STANDALONE
+    int (*func)(FactoryClass *, TechnoTypeClass &, HouseClass &) = reinterpret_cast<int (*)(FactoryClass *, TechnoTypeClass &, HouseClass &)>(0x004BEE30);
+    return func(this, objecttype, house);
+#else
     Abandon();
 
     IsDifferent = true;
@@ -124,18 +128,28 @@ BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
     ProductionTime.Set_Stage(0);
     ProductionTime.Set_Delay(0);
 
-    Object = objecttype.Techno_Create_One_Of(&house);
-
     Balance = 0;
 
+    Object = objecttype.Techno_Create_One_Of(&house);
+
+    if (!house.Is_Human()) {
+        if (Object != nullptr) {
+            if (Object->What_Am_I() == RTTI_BUILDING) {
+                //TODO: Requires BuildingClass.
+                // reinterpret_cast<BuildingClass *>(Object)->Set_To_Rebuild(True);
+            }
+        }
+    }
+
     if (Object != nullptr) {
-        int cost = objecttype.Cost_Of();
+        Owner = Object->Get_Owner_House();
+        int cost = objecttype.Cost_Of() * Owner->Cost_Multiplier();
         Balance = cost;
         Object->Set_Price(cost);
-        Owner = Object->Get_Owner_House();
     }
 
     return Object != nullptr;
+#endif
 }
 
 BOOL FactoryClass::Set(int &special, HouseClass &house)

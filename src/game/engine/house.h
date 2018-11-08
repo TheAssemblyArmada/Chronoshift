@@ -92,6 +92,10 @@ public:
     void Refund_Money(unsigned int amount) { Credits += amount; }
     void Silo_Redraw_Check(unsigned int a1, unsigned int a2);
 
+    fixed_t Cost_Multiplier() const { return CostMult; }
+
+    BOOL Is_Human() const { return IsHuman; }
+
     void Code_Pointers() {}
     void Decode_Pointers() {}
 

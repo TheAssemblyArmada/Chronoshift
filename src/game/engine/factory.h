@@ -106,11 +106,19 @@ public:
         Hook_Function(0x004BF330, *FactoryClass::Hooked_Has_Completed);
         Hook_Function(0x004BF380, *FactoryClass::Hooked_Cost_Per_Tick);
         Hook_Function(0x004BF3B4, *FactoryClass::Completed);
+        Hook_Function(0x004BF228, *FactoryClass::Abandon);
+        //Hook_Function(0x004BEE30, *FactoryClass::Hooked_Set1);
+        Hook_Function(0x004BEF04, *FactoryClass::Hooked_Set2);
+        Hook_Function(0x004BECE8, *FactoryClass::AI);
+        //Hook_Function(0x004F9550, *FactoryClass::Decode_Pointers);
+        //Hook_Function(0x004F94E8, *FactoryClass::Code_Pointers);
     #endif
     }
 
     BOOL Hooked_Has_Completed() { return FactoryClass::Has_Completed(); }
     int Hooked_Cost_Per_Tick() { return FactoryClass::Cost_Per_Tick(); }
+    BOOL Hooked_Set1(TechnoTypeClass &objecttype, HouseClass &house) { return FactoryClass::Set(objecttype, house); }
+    void Hooked_Set2(TechnoClass &object) { FactoryClass::Set(object); }
 #endif
 };
 
