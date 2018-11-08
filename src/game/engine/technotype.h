@@ -25,6 +25,7 @@
 #include "objecttype.h"
 #include "remap.h"
 
+class TechnoClass;
 class GameINIClass;
 
 class TechnoTypeClass : public ObjectTypeClass
@@ -58,6 +59,9 @@ public:
     int Get_ThreatPosed() const { return ThreatPosed; }
     BOOL Is_Invisible() const { return IsInvisible; }
     int Get_Cost() const { return Cost; }
+
+    TechnoClass *Techno_Create_One_Of(HouseClass *house) const { return reinterpret_cast<TechnoClass *>(Create_One_Of(house)); }
+
     static void One_Time();
 
 protected:
