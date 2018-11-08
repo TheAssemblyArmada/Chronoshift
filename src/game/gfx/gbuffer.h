@@ -38,7 +38,7 @@ enum GBCEnum
     GBC_VISIBLE = 2,
 };
 
-#define BLIT_GET_PITCH(vp) (vp.Get_Full_Pitch())
+#define BLIT_GET_PITCH(view) (view.Get_Full_Pitch())
 
 class GraphicBufferClass;
 
@@ -92,21 +92,22 @@ public:
         m_yPos = y;
     }
     void Put_Pixel(int x, int y, unsigned char value);
+    void Put_Fat_Pixel(int x, int y, int size, unsigned char value);
     unsigned Get_Pixel(int x, int y);
     void Remap(int x, int y, int w, int h, unsigned char *fading_table);
     void Draw_Rect(int x, int y, int w, int h, unsigned char color = 0);
     void Draw_Line(int x1, int y1, int x2, int y2, unsigned char color = 0);
     void Fill_Rect(int x, int y, int w, int h, unsigned char color);
-    // void Overlay_Fill_Rect(int x_pos, int y_pos, int width, int height, unsigned char color);
     unsigned Print(const char *string, int x, int y, int fground, int bground);
     void Clear(unsigned char color = 0);
     void From_Buffer(int x, int y, int w, int h, void *buffer);
     void To_Buffer(int x, int y, int w, int h, void *buffer, int size);
-    void Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h, int dst_w,
-        int dst_h, bool use_keysrc, void *fade);
-    int Blit(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
+    void Scale(GraphicViewPortClass &view, BOOL use_keysrc = false, void *fade = nullptr);
+    void Scale(GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h, int dst_w,
+        int dst_h, BOOL use_keysrc = false, void *fade = nullptr);
+    int Blit(GraphicViewPortClass &view, BOOL use_keysrc = false);
+    int Blit(GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
     void Draw_Stamp(void *tileset, int icon, int x, int y, const void *remapper, int left, int top, int right, int bottom);
-    // int Full_Blit(GraphicViewPortClass &viewport, BOOL use_keysrc = false);
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
@@ -122,9 +123,8 @@ public:
 #endif
 
 private:
-    // This one should only be called from Blit or Full_Blit and should probably be a protected function
     int DD_Linear_Blit_To_Linear(
-        GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
+        GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
 
 protected:
     void *m_offset;
@@ -178,8 +178,8 @@ private:
 
 void Wait_Blit();
 
-GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp);
-GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp);
+GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *view);
+GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &view);
 
 #ifndef CHRONOSHIFT_STANDALONE
 inline void GraphicViewPortClass::Hook_Me() {}
