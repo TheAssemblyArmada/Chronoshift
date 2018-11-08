@@ -58,18 +58,18 @@ void Wait_Blit()
 #endif
 }
 
-GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *vp)
+GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *view)
 {
     GraphicViewPortClass *old = g_logicPage;
-    g_logicPage = vp;
+    g_logicPage = view;
 
     return old;
 }
 
-GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &vp)
+GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &view)
 {
     GraphicViewPortClass *old = g_logicPage;
-    g_logicPage = &vp;
+    g_logicPage = &view;
 
     return old;
 }
@@ -121,6 +121,7 @@ void GraphicViewPortClass::Attach(GraphicBufferClass *buffer, int x, int y, int 
 BOOL GraphicViewPortClass::Change(int x, int y, int w, int h)
 {
     if (Get_Graphic_Buffer() == this) {
+        DEBUG_LOG("GraphicBuff == this in GraphicViewPortClass::Change()!\n");
         return false;
     }
 
@@ -159,6 +160,25 @@ void GraphicViewPortClass::Put_Pixel(int x, int y, unsigned char value)
 {
     if (Lock()) {
         Buffer_Put_Pixel(*this, x, y, value);
+    }
+
+    Unlock();
+}
+
+void GraphicViewPortClass::Put_Fat_Pixel(int x, int y, int size, unsigned char value)
+{
+    if (Lock()) {
+        if (size > 1) {
+            int w = x + size;
+            int h = y + size;
+            for (size_t i = x; i < w; ++i) {
+                for (size_t j = y; j < h; ++j) {
+                    Buffer_Put_Pixel(*this, i, j, value);
+                }
+            }
+        } else {
+            Buffer_Put_Pixel(*this, x, y, value);
+        }
     }
 
     Unlock();
@@ -225,17 +245,46 @@ void GraphicViewPortClass::Clear(unsigned char color)
     Unlock();
 }
 
-int GraphicViewPortClass::Blit(
-    GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc)
+int GraphicViewPortClass::Blit(GraphicViewPortClass &view, BOOL use_keysrc)
 {
-    if (Lock()) {
-        if (vp.Lock()) {
-            Linear_Blit_To_Linear(*this, vp, src_x, src_y, dst_x, dst_y, w, h, use_keysrc);
-        }
-
-        vp.Unlock();
+#ifdef PLATFORM_WINDOWS
+    if (In_Video_Memory() && view.In_Video_Memory()) {
+        return DD_Linear_Blit_To_Linear(
+            view, Get_XPos(), Get_YPos(), view.Get_XPos(), view.Get_YPos(), view.Get_Width(), view.Get_Height(), use_keysrc);
     }
+#endif
+    if (Lock()) {
+        if (view.Lock()) {
+            Linear_Blit_To_Linear(*this, view, 0, 0, 0, 0, Get_Width(), Get_Height(), use_keysrc);
+        }
+        view.Unlock();
+    }
+    Unlock();
 
+    return 0;
+}
+
+int GraphicViewPortClass::Blit(
+    GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc)
+{
+#ifdef PLATFORM_WINDOWS
+    if (In_Video_Memory() && view.In_Video_Memory()) {
+        return DD_Linear_Blit_To_Linear(view,
+            src_x + Get_XPos(),
+            src_y + Get_YPos(),
+            dst_x + view.Get_XPos(),
+            dst_y + view.Get_YPos(),
+            view.Get_Width(),
+            view.Get_Height(),
+            use_keysrc);
+    }
+#endif
+    if (Lock()) {
+        if (view.Lock()) {
+            Linear_Blit_To_Linear(*this, view, src_x, src_y, dst_x, dst_y, Get_Width(), Get_Height(), use_keysrc);
+        }
+        view.Unlock();
+    }
     Unlock();
 
     return 0;
@@ -250,22 +299,37 @@ void GraphicViewPortClass::Draw_Stamp(void *tileset, int icon, int x, int y, con
     Unlock();
 }
 
-void GraphicViewPortClass::Scale(GraphicViewPortClass &vp, int src_x, int src_y, int dst_x, int dst_y, int src_w, int src_h,
-    int dst_w, int dst_h, bool use_keysrc, void *fade)
+void GraphicViewPortClass::Scale(GraphicViewPortClass &view, BOOL use_keysrc, void *fade)
+{
+    Scale(view,
+        Get_XPos(),
+        Get_YPos(),
+        view.Get_XPos(),
+        view.Get_YPos(),
+        Get_Width(),
+        Get_Height(),
+        view.Get_Width(),
+        view.Get_Height(),
+        use_keysrc,
+        fade);
+}
+
+void GraphicViewPortClass::Scale(GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int src_w,
+    int src_h, int dst_w, int dst_h, BOOL use_keysrc, void *fade)
 {
     if (Lock()) {
-        if (vp.Lock()) {
-            Linear_Scale_To_Linear(*this, vp, src_x, src_y, dst_x, dst_y, src_w, src_h, dst_w, dst_h, use_keysrc, fade);
+        if (view.Lock()) {
+            Linear_Scale_To_Linear(*this, view, src_x, src_y, dst_x, dst_y, src_w, src_h, dst_w, dst_h, use_keysrc, fade);
         }
 
-        vp.Unlock();
+        view.Unlock();
     }
 
     Unlock();
 }
 
 int GraphicViewPortClass::DD_Linear_Blit_To_Linear(
-    GraphicViewPortClass &viewport, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc)
+    GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc)
 {
 #ifdef PLATFORM_WINDOWS
     int keysrcflag = 0;
@@ -287,7 +351,7 @@ int GraphicViewPortClass::DD_Linear_Blit_To_Linear(
     drect.right = dst_x + w;
     drect.bottom = dst_y + h;
 
-    return viewport.Get_Graphic_Buffer()->Get_DD_Surface()->Blt(
+    return view.Get_Graphic_Buffer()->Get_DD_Surface()->Blt(
         &drect, Get_Graphic_Buffer()->Get_DD_Surface(), &srect, keysrcflag | DDBLT_WAIT | DDCKEY_DESTBLT, nullptr);
 #else
     return 0;
