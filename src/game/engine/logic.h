@@ -26,7 +26,7 @@ class TriggerClass;
 class LogicClass : public LayerClass
 {
 public:
-    LogicClass();
+    LogicClass() : LayerClass() {}
     virtual ~LogicClass();
 
     void AI();
@@ -42,10 +42,14 @@ public:
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern LogicClass &Logic;
-extern DynamicVectorClass<TriggerClass *> &LogicTriggers;
+extern DynamicVectorClass<TriggerClass *> &g_LogicTriggers;
+extern DynamicVectorClass<TriggerClass *> &g_MapTriggers;
+extern DynamicVectorClass<TriggerClass *> *g_HouseTriggers;
 #else
 extern LogicClass Logic;
-extern DynamicVectorClass<TriggerClass *> LogicTriggers;
+extern DynamicVectorClass<TriggerClass *> g_LogicTriggers;
+extern DynamicVectorClass<TriggerClass *> g_MapTriggers;
+extern DynamicVectorClass<TriggerClass *> g_HouseTriggers[HOUSES_COUNT];
 #endif
 
 #endif // LOGIC_H
