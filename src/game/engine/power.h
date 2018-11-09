@@ -64,10 +64,9 @@ protected:
         int Bitfield;
     };
 #else
-    bool PowerToRedraw; // 1
+    bool PowerToRedraw;
 #endif
-    //might not be BTC, but TCountDownTimerClass<FrameTimerClass>
-    BasicTimerClass<FrameTimerClass> FlashTimer;
+    TCountDownTimerClass<FrameTimerClass> FlashTimer;
     int Drain;
     int Output;
     int NewDrainHeight;
