@@ -18,6 +18,7 @@
 #include "rules.h"
 #include "scenario.h"
 #include "session.h"
+#include "logic.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<HouseClass> &g_Houses = Make_Global<TFixedIHeapClass<HouseClass> >(0x0065D994);
@@ -200,8 +201,7 @@ HouseClass::HouseClass(HousesType type) :
         CratesFound = new UnitTrackerClass(CRATE_COUNT);
     }
 
-    //TODO
-    // HouseTriggers
+    g_HouseTriggers[type].Clear();
 
     Make_Ally(type);
     Assign_Handicap(Scen.Get_AI_Difficulty());

@@ -86,7 +86,7 @@ void FactoryClass::AI()
         if (!Has_Completed()) {
             if (m_ProductionTime.Stage_Changed()) {
                 m_IsDifferent = true;
-                int tick_cost = Min(Cost_Per_Tick(), m_Balance);
+                unsigned int tick_cost = Min(Cost_Per_Tick(), m_Balance);
                 if (m_Owner->Available_Money() >= tick_cost) {
                     m_Owner->Spend_Money(tick_cost);
                     m_Balance -= tick_cost;
@@ -247,7 +247,7 @@ BOOL FactoryClass::Has_Completed() const
     return (m_Object != nullptr || m_SpecialItem != -1) && m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES;
 }
 
-int FactoryClass::Cost_Per_Tick() const
+unsigned int FactoryClass::Cost_Per_Tick() const
 {
     int cost_per_tick = 0;
 

@@ -226,9 +226,9 @@ private:
     int CurrentInfantryCount;
     int CurrentVesselCount;
     int CurrentAircraftCount;
-    int Ore;
-    int Credits;
-    int Capacity;
+    unsigned int Ore;
+    unsigned int Credits;
+    unsigned int Capacity;
     UnitTrackerClass *AircraftBought;
     UnitTrackerClass *InfantryBought;
     UnitTrackerClass *UnitsBought;

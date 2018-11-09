@@ -62,7 +62,7 @@ public:
     BOOL Is_Building() const { return m_ProductionTime.Get_Delay() != 0; }
     TechnoClass *const Get_Object() const { return m_Object; }
     int Get_Special_Item() const { return m_SpecialItem; }
-    int Cost_Per_Tick() const;
+    unsigned int Cost_Per_Tick() const;
     BOOL Completed();
 
     void Code_Pointers();
@@ -89,8 +89,8 @@ private:
     bool m_IsSuspended;
     bool m_IsDifferent;
 #endif
-    int m_Balance;
-    int m_OriginalBalance;
+    unsigned int m_Balance;
+    unsigned int m_OriginalBalance;
     TechnoClass *m_Object; // The techno object we are to produce.
     int m_SpecialItem;
     HouseClass *m_Owner; // The house that owns the object.
