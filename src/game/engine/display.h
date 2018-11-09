@@ -62,59 +62,63 @@ public:
 
     virtual void Read_INI(GameINIClass &ini) override;
     void Write_INI(GameINIClass &ini); // Not virtual in RA.
-    virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) override;
-    virtual int16_t Click_Cell_Calc(int x, int y) const override;
+    virtual BOOL Map_Cell(cell_t cellnum, HouseClass *house) override;
+    virtual cell_t Click_Cell_Calc(int x, int y) const override;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) override {}
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) override;
-    virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) override;
+    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) override;
     virtual void Set_View_Dimensions(int x, int y, int w = -1, int h = -1) override;
     virtual void Put_Place_Back(TechnoClass *obj) override {}
-    virtual void Set_Tactical_Position(uint32_t location) override;
-    virtual void Flag_Cell(int16_t cellnum) override;
+    virtual void Set_Tactical_Position(coord_t location) override;
+    virtual void Flag_Cell(cell_t cellnum) override;
     virtual void Mouse_Right_Press() override;
     virtual void Mouse_Left_Press(int mouse_x, int mouse_y) override;
-    virtual void Mouse_Left_Up(int16_t cellnum, BOOL cell_shrouded = false, ObjectClass *object = nullptr,
+    virtual void Mouse_Left_Up(cell_t cellnum, BOOL cell_shrouded = false, ObjectClass *object = nullptr,
         ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) override;
     virtual void Mouse_Left_Held(int mouse_x, int mouse_y) override;
-    virtual void Mouse_Left_Release(int16_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr,
+    virtual void Mouse_Left_Release(cell_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr,
         ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) override;
 
-    uint32_t Pixel_To_Coord(int x, int y);
+    coord_t Pixel_To_Coord(int x, int y);
     void Set_Cursor_Shape(int16_t *list = nullptr);
     void Refresh_Band();
-    void Cursor_Mark(int16_t cellnum, BOOL flag);
+    void Cursor_Mark(cell_t cellnum, BOOL flag);
     void Get_Occupy_Dimensions(int &w, int &h, int16_t *list) const;
     const int16_t *Text_Overlap_List(const char *string, int x, int y) const;
+    ObjectClass *Prev_Object(ObjectClass *object) const;
     ObjectClass *Next_Object(ObjectClass *object) const;
     void Submit(ObjectClass *object, LayerType layer);
     void Remove(ObjectClass *object, LayerType layer);
-    ObjectClass *Cell_Object(int16_t cellnum, int x, int y) const;
-    void Select_These(uint32_t start, uint32_t finish);
+    ObjectClass *Cell_Object(cell_t cellnum, int x, int y) const;
+    void Select_These(coord_t start, coord_t finish);
     void Sell_Mode_Control(int mode);
     void Repair_Mode_Control(int mode);
-    void Center_Map(uint32_t coord);
-    int16_t Set_Cursor_Pos(int16_t cell);
-    BOOL Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, int16_t cell) const;
+    void Center_Map(coord_t coord);
+    cell_t Set_Cursor_Pos(cell_t cell);
+    BOOL Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, cell_t cell) const;
     void Redraw_Icons();
     void Redraw_Shadow();
-    BOOL In_View(int16_t cellnum) const;
-    BOOL Coord_To_Pixel(uint32_t coord, int &x, int &y) const;
-    uint32_t Pixel_To_Coord(int x, int y) const;
-    int Cell_Shadow(int16_t cellnum) const;
-    BOOL Push_Onto_TacMap(uint32_t &coord1, uint32_t &coord2);
-    int16_t Calculated_Cell(SourceType source, int waypoint, int16_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const;
-    BOOL Good_Reinforcement_Cell(int16_t cell1, int16_t cell2, SpeedType speed, int zone, MZoneType mzone) const;
-    uint32_t Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const;
+    BOOL In_View(cell_t cellnum) const;
+    BOOL Coord_To_Pixel(coord_t coord, int &x, int &y) const;
+    coord_t Pixel_To_Coord(int x, int y) const;
+    int Cell_Shadow(cell_t cellnum) const;
+    BOOL Push_Onto_TacMap(coord_t &coord1, coord_t &coord2);
+    cell_t Calculated_Cell(SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const;
+    BOOL Good_Reinforcement_Cell(cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone) const;
+    coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const;
     void All_To_Look(BOOL skip_buildings);
-    void Constrained_Look(uint32_t coord, int constraint);
+    void Constrained_Look(coord_t coord, int constraint);
     void Encroach_Shadow();
-    void Shroud_Cell(int16_t cellnum);
+    void Shroud_Cell(cell_t cellnum);
 
-    static BOOL Is_Cell_Flagged(int16_t cellnum) { return CellRedraw[cellnum]; }
+    static BOOL Is_Cell_Flagged(cell_t cellnum) { return CellRedraw[cellnum]; }
+
+    lepton_t Get_DisplayWidth() { return DisplayWidth; }
+    lepton_t Get_DisplayHeight() { return DisplayHeight; }
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
-    int16_t Hook_Click_Cell_Calc(int x, int y);
+    cell_t Hook_Click_Cell_Calc(int x, int y);
     const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
 #endif
 
@@ -126,7 +130,7 @@ private:
         ptr->Get_Occupy_Dimensions(w, h, list);
     }
 
-    static ObjectClass *Hook_Cell_Object(DisplayClass* ptr, int16_t cellnum, int x, int y)
+    static ObjectClass *Hook_Cell_Object(DisplayClass* ptr, cell_t cellnum, int x, int y)
     {
         return ptr->Cell_Object(cellnum, x, y);
     }
@@ -136,42 +140,42 @@ private:
         return ptr->Next_Object(object);
     }
 
-    static BOOL Hook_In_View(DisplayClass* ptr, int16_t cellnum)
+    static BOOL Hook_In_View(DisplayClass* ptr, cell_t cellnum)
     {
         return ptr->In_View(cellnum);
     }
     
-    static BOOL Hook_Coord_To_Pixel(DisplayClass* ptr, uint32_t coord, int &x, int &y)
+    static BOOL Hook_Coord_To_Pixel(DisplayClass* ptr, coord_t coord, int &x, int &y)
     {
         return ptr->Coord_To_Pixel(coord, x, y);
     }
 
-    static int Hook_Cell_Shadow(DisplayClass* ptr, int16_t cellnum)
+    static int Hook_Cell_Shadow(DisplayClass* ptr, cell_t cellnum)
     {
         return ptr->Cell_Shadow(cellnum);
     }
 
-    static uint32_t Hook_Closest_Free_Spot(DisplayClass* ptr, uint32_t coord, BOOL skip_occupied)
+    static coord_t Hook_Closest_Free_Spot(DisplayClass* ptr, coord_t coord, BOOL skip_occupied)
     {
         return ptr->Closest_Free_Spot(coord, skip_occupied);
     }
 
-    static int16_t Hook_Calculated_Cell(DisplayClass* ptr, SourceType source, int waypoint, int16_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
+    static cell_t Hook_Calculated_Cell(DisplayClass* ptr, SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
     {
         return ptr->Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
     }
 
-    static BOOL Hook_Good_Reinforcement_Cell(DisplayClass* ptr, int16_t cell1, int16_t cell2, SpeedType speed, int zone, MZoneType mzone)
+    static BOOL Hook_Good_Reinforcement_Cell(DisplayClass* ptr, cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone)
     {
         return ptr->Good_Reinforcement_Cell(cell1, cell2, speed, zone, mzone);
     }
 
 protected:
-    uint32_t DisplayPos; // Coord of top left of tactical display within the map.
-    int16_t DisplayWidth; // Width of display in leptons.
-    int16_t DisplayHeight; // Height of display in leptons.
-    int16_t DisplayCursorStart;
-    int16_t DisplayCursorEnd;
+    coord_t DisplayPos; // Coord of top left of tactical display within the map.
+    lepton_t DisplayWidth; // Width of display in leptons.
+    lepton_t DisplayHeight; // Height of display in leptons.
+    cell_t DisplayCursorStart;
+    cell_t DisplayCursorEnd;
     int16_t *DisplayCursorOccupy;
     BOOL PassedProximityCheck;
     ObjectClass *PendingObjectPtr;
@@ -259,7 +263,7 @@ inline const int16_t *DisplayClass::Hook_Text_Overlap_List(const char *string, i
     return DisplayClass::Text_Overlap_List(string, x, y);
 }
 
-inline int16_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
+inline cell_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
 {
     return DisplayClass::Click_Cell_Calc(x, y);
 }

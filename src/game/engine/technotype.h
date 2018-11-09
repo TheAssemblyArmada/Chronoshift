@@ -54,7 +54,7 @@ public:
 
     BOOL Write_INI(GameINIClass &ini) const;
     BOOL Is_Two_Shooter() const;
-    BOOL Legal_Placement(int16_t cellnum) const;
+    BOOL Legal_Placement(cell_t cellnum) const;
     BOOL Is_Nominal() const { return IsNominal; } 
     int Get_ThreatPosed() const { return ThreatPosed; }
     BOOL Is_Invisible() const { return IsInvisible; }
@@ -104,7 +104,7 @@ protected:
     bool Explodes; // Does it explode violently when destroyed [i.e., does it do collateral damage] (def = false)?
 #endif
     MZoneType MovementZone;
-    int16_t GuardRange; // Distance to scan for enemies to attack in leptons (def = use weapon range)
+    lepton_t GuardRange; // Distance to scan for enemies to attack in leptons (def = use weapon range)
     int Passengers; // Number of passengers it may carry (def = 0)
     int Sight; // Sight range, in cells (def=1)
     int Cost; // Cost to build object (in credits) (def = 0)

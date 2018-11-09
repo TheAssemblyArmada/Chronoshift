@@ -276,10 +276,10 @@ void AnimTypeClass::operator delete(void *ptr)
  *
  * 0x0041C730
  */
-BOOL AnimTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL AnimTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
 #if 0
-    uint32_t coord = Cell_To_Coord(cellnum);
+    coord_t coord = Cell_To_Coord(cellnum);
     AnimClass *aptr = new AnimClass(Type, coord);
     DEBUG_ASSERT(aptr != nullptr);
 

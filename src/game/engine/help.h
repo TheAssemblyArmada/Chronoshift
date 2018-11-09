@@ -37,7 +37,7 @@ public:
     virtual void Draw_It(BOOL force_redraw) override;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) override;
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) override;
-    virtual void Set_Tactical_Position(uint32_t location) override;
+    virtual void Set_Tactical_Position(coord_t location) override;
 
     const int16_t *Overlap_List() const;
     void Set_Cost(int cost) { HelpCost = cost; }

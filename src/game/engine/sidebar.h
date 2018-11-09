@@ -197,7 +197,7 @@ public:
     virtual void Init_Theater(TheaterType theater) override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Draw_It(BOOL force_redraw) override;
-    virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) override;
+    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) override;
 
     void Reload_Sidebar();
     int Which_Column(RTTIType type);
@@ -210,7 +210,7 @@ public:
     void Recalc();
     BOOL Activate(int mode = SIDEBAR_TOGGLE);
     int Abandon_Production(RTTIType, int);
-    void Zoom_Mode_Control(ModeControl mode);
+    void Zoom_Mode_Control();
 
     BOOL Is_Sidebar_Drawn() const { return SidebarIsDrawn; }
     void Disable_Zoom_Button() { ZoomButton.Disable(); }

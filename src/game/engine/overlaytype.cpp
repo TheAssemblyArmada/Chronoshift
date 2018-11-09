@@ -225,16 +225,16 @@ OverlayTypeClass *OverlayTypeClass::As_Pointer(OverlayType overlay)
     return overlay < OVERLAY_COUNT && overlay != OVERLAY_NONE ? &OverlayTypes[overlay] : nullptr;
 }
 
-uint32_t OverlayTypeClass::Coord_Fixup(uint32_t coord) const
+coord_t OverlayTypeClass::Coord_Fixup(coord_t coord) const
 {
     return Coord_Top_Left(coord);
 }
 
-BOOL OverlayTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL OverlayTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
     // TODO requires OverlayClass
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const OverlayTypeClass*, int16_t, HousesType) = reinterpret_cast<BOOL(*)(const OverlayTypeClass*, int16_t, HousesType)>(0x00524A5C);
+    BOOL(*func)(const OverlayTypeClass*, cell_t, HousesType) = reinterpret_cast<BOOL(*)(const OverlayTypeClass*, cell_t, HousesType)>(0x00524A5C);
     return func(this, cellnum, house);
 #elif 0
     DEBUG_ASSERT(this != nullptr);

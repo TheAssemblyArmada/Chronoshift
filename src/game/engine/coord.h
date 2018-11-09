@@ -38,22 +38,22 @@
 extern const coord_t AdjacentCoord[FACING_COUNT];
 extern const cell_t AdjacentCell[FACING_COUNT];
 
-inline uint16_t Coord_Lepton_X(coord_t coord)
+inline lepton_t Coord_Lepton_X(coord_t coord)
 {
     return coord & 0x0000FFFF;
 }
 
-inline uint16_t Coord_Lepton_Y(coord_t coord)
+inline lepton_t Coord_Lepton_Y(coord_t coord)
 {
     return (coord & 0xFFFF0000) >> 16;
 }
 
-inline int16_t Coord_Sub_Cell_X(uint32_t coord)
+inline int16_t Coord_Sub_Cell_X(coord_t coord)
 {
     return coord & 0xFF;
 }
 
-inline int16_t Coord_Sub_Cell_Y(uint32_t coord)
+inline int16_t Coord_Sub_Cell_Y(coord_t coord)
 {
     return (coord >> 16) & 0xFF;
 }
@@ -65,8 +65,8 @@ inline coord_t Coord_From_Lepton_XY(int16_t x, int16_t y)
 
 inline coord_t Coord_Add(coord_t coord1, coord_t coord2)
 {
-    uint16_t lx = Coord_Lepton_X(coord1) + Coord_Lepton_X(coord2);
-    uint16_t ly = Coord_Lepton_Y(coord1) + Coord_Lepton_Y(coord2);
+    lepton_t lx = Coord_Lepton_X(coord1) + Coord_Lepton_X(coord2);
+    lepton_t ly = Coord_Lepton_Y(coord1) + Coord_Lepton_Y(coord2);
 
     return Coord_From_Lepton_XY(lx, ly);
 }
@@ -96,7 +96,7 @@ inline uint8_t Coord_Cell_Y(coord_t coord)
     return (coord & 0x7F000000) >> 24;
 }
 
-inline BOOL Coord_Is_Negative(uint32_t coord)
+inline BOOL Coord_Is_Negative(coord_t coord)
 {
     return (coord & 0x80008000) != 0;
 }
@@ -151,19 +151,19 @@ inline coord_t Coord_From_Pixel_XY(int x, int y)
     return Coord_From_Lepton_XY(Pixel_To_Lepton(x), Pixel_To_Lepton(y));
 }
 
-inline uint8_t Lepton_To_Cell_Coord(int16_t lepton)
+inline uint8_t Lepton_To_Cell_Coord(lepton_t lepton)
 {
-    return ((uint16_t)lepton >> 8) & 0xFF;
+    return ((lepton_t)lepton >> 8) & 0xFF;
 }
 
-inline uint8_t Lepton_Sub_Cell(int16_t lepton)
+inline uint8_t Lepton_Sub_Cell(lepton_t lepton)
 {
     return lepton & 0xFF;
 }
 
-int Distance(uint32_t coord1, uint32_t coord2);
+int Distance(coord_t coord1, coord_t coord2);
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
-uint32_t Coord_Move(uint32_t coord, DirType dir, uint16_t distance);
+coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance);
 BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h);
 
 int Distance(coord_t coord1, coord_t coord2);

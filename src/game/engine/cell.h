@@ -92,7 +92,7 @@ public:
     TerrainClass *Cell_Terrain() const;
     //SmudgeClass *Cell_Smudge() const;
     //OverlayClass *Cell_Overlay() const;
-    uint32_t Cell_Coord() const;
+    coord_t Cell_Coord() const;
     void Recalc_Attributes();
     BOOL Can_Ore_Grow() const;
     BOOL Can_Ore_Spread() const;
@@ -116,7 +116,7 @@ public:
     BOOL Reduce_Wall(int damage);
     BOOL Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const;
     int Ore_Adjust(BOOL randomize);
-    uint32_t Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const;
+    coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const;
     BOOL Is_Spot_Free(int spotindex) const { return ((1 << spotindex) & OccupantBit) == 0; }
     BOOL Should_Save() const;
     BOOL Load(Straw &straw);
@@ -153,7 +153,7 @@ public:
     LandType Get_Land() const { return Land; }
     void Set_Land(LandType land) { Land = land; }
 
-    static int Spot_Index(uint32_t coord);
+    static int Spot_Index(coord_t coord);
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
@@ -205,7 +205,7 @@ private:
     ObjectClass *Overlapper[OVERLAPPER_COUNT];
     uint32_t OccupantBit;
     LandType Land;
-    static const uint32_t StoppingCoordAbs[CELL_SPOT_COUNT];
+    static const coord_t StoppingCoordAbs[CELL_SPOT_COUNT];
 };
 
 inline BOOL CellClass::Contains_Ore() const

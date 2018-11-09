@@ -268,7 +268,7 @@ void AircraftTypeClass::Dimensions(int &w, int &h) const
  *
  * 0x004040B8
  */
-BOOL AircraftTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL AircraftTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
     // TODO, could this be why you can't pre place aircraft on a map correctly.
     return false;

@@ -31,7 +31,7 @@
 #include "tileset.h"
 #include "tracker.h"
 
-const uint32_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
+const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
     0x00800080,     // abs center of cell                       //INFANTRY_SPOT_CENTER
     0x00400040,     // center of top left quadrant of cell      //INFANTRY_SPOT_TOP_LEFT
     0x004000C0,     // center of top right quadrant of cell     //INFANTRY_SPOT_TOP_RIGHT
@@ -125,14 +125,14 @@ TechnoClass *CellClass::Cell_Techno(int x, int y) const
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
-    uint32_t coord = Coord_From_Pixel_XY(x, y);
+    coord_t coord = Coord_From_Pixel_XY(x, y);
     ObjectClass *object = nullptr;
 
     for (ObjectClass *obj = OccupierPtr; obj != nullptr; obj = obj->Get_Next()) {
         uint32_t sdistance = 0;
 
         if (obj->Is_Techno()) {
-            uint32_t obj_coord = obj->Center_Coord();
+            coord_t obj_coord = obj->Center_Coord();
             uint32_t distance = Distance(obj_coord &= 0x00FF00FF,
                 coord); // TODO what is going on with obj_coord?!  is it fetching sub cell or cell xy?
 
@@ -412,7 +412,7 @@ CellClass &CellClass::Adjacent_Cell(FacingType facing)
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
     DEBUG_ASSERT(facing < FACING_COUNT);
 
-    static const int16_t AdjacentCell[FACING_COUNT] = {
+    static const cell_t AdjacentCell[FACING_COUNT] = {
         (-MAP_MAX_WIDTH), // NORTH
         (-MAP_MAX_WIDTH + 1), // NORTH EAST
         (1), // EAST
@@ -1042,7 +1042,7 @@ void CellClass::Wall_Update()
  *
  * 0x0049FDE0
  */
-uint32_t CellClass::Cell_Coord() const
+coord_t CellClass::Cell_Coord() const
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
@@ -1263,7 +1263,7 @@ int CellClass::Ore_Adjust(BOOL randomize)
 /**
  * 0x004B4D80
  */
-uint32_t CellClass::Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const
+coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
@@ -1317,9 +1317,9 @@ uint32_t CellClass::Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const
 /**
  * 0x0049FF98
  */
-int CellClass::Spot_Index(uint32_t coord)
+int CellClass::Spot_Index(coord_t coord)
 {
-    uint32_t spot = coord & 0x00FF00FF;
+    coord_t spot = coord & 0x00FF00FF;
 
     // Looks like it checks the lepton distance and then does some math on the X and Y lepton dimensions to decide which spot
     // the passed packed coords are in.

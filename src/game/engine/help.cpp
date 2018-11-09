@@ -178,7 +178,7 @@ BOOL HelpClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
  *
  * 0x004D2BC0
  */
-void HelpClass::Set_Tactical_Position(uint32_t location)
+void HelpClass::Set_Tactical_Position(coord_t location)
 {
     if (DisplayPos != location) {
         Help_Text(TXT_NULL);

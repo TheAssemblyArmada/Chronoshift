@@ -137,7 +137,7 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
+    virtual BOOL Create_And_Place(cell_t cellnum, HousesType house = HOUSES_NONE) const override;
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
 
     static void Init_Heap();

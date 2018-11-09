@@ -60,11 +60,11 @@ BOOL CrateClass::Remove_It()
     return true;
 }
 
-BOOL CrateClass::Create_Crate(int16_t cell)
+BOOL CrateClass::Create_Crate(cell_t cell)
 {
     // TODO Requires ScenarioClass and RuleClass to actuall implement the functions.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(const CrateClass *, int16_t) = reinterpret_cast<BOOL (*)(const CrateClass *, int16_t)>(0x004AC91C);
+    BOOL (*func)(const CrateClass *, cell_t) = reinterpret_cast<BOOL (*)(const CrateClass *, cell_t)>(0x004AC91C);
     return func(this, cell);
 #elif 0
     Remove_It();
@@ -79,11 +79,11 @@ BOOL CrateClass::Create_Crate(int16_t cell)
 #endif
 }
 
-BOOL CrateClass::Put_Crate(int16_t &cell)
+BOOL CrateClass::Put_Crate(cell_t &cell)
 {
     // TODO Requires MapClass, CellClass and ScenarioClass to actuall implement the functions.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(int16_t &) = reinterpret_cast<BOOL (*)(int16_t &)>(0x004AC9B4);
+    BOOL (*func)(cell_t &) = reinterpret_cast<BOOL (*)(cell_t &)>(0x004AC9B4);
     return func(cell);
 #else
     DEBUG_ASSERT_PRINT(false, "Unimplemented function called.\n");
@@ -91,11 +91,11 @@ BOOL CrateClass::Put_Crate(int16_t &cell)
 #endif
 }
 
-BOOL CrateClass::Get_Crate(int16_t cell)
+BOOL CrateClass::Get_Crate(cell_t cell)
 {
     // TODO Requires MapClass, CellClass and ScenarioClass to actuall implement the functions.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(int16_t) = reinterpret_cast<BOOL (*)(int16_t)>(0x004ACB1C);
+    BOOL (*func)(cell_t) = reinterpret_cast<BOOL (*)(cell_t)>(0x004ACB1C);
     return func(cell);
 #else
     DEBUG_ASSERT_PRINT(false, "Unimplemented function called.\n");

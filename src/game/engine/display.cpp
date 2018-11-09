@@ -362,23 +362,23 @@ void DisplayClass::Write_INI(GameINIClass &ini)
 #endif
 }
 
-BOOL DisplayClass::Map_Cell(int16_t cellnum, HouseClass *house)
+BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
 {
     // TODO requires HouseClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
-    (const DisplayClass *, int16_t, HouseClass *) =
-        reinterpret_cast<BOOL (*)(const DisplayClass *, int16_t, HouseClass *)>(0x004B0788);
+    (const DisplayClass *, cell_t, HouseClass *) =
+        reinterpret_cast<BOOL (*)(const DisplayClass *, cell_t, HouseClass *)>(0x004B0788);
     return func(this, cellnum, house);
 #else
     return false;
 #endif
 }
 
-int16_t DisplayClass::Click_Cell_Calc(int x, int y) const
+cell_t DisplayClass::Click_Cell_Calc(int x, int y) const
 {
-    int xpos = (uint16_t)Pixel_To_Lepton(x - TacOffsetX);
-    int ypos = (uint16_t)Pixel_To_Lepton(y - TacOffsetY);
+    int xpos = (lepton_t)Pixel_To_Lepton(x - TacOffsetX);
+    int ypos = (lepton_t)Pixel_To_Lepton(y - TacOffsetY);
 
     if (xpos < DisplayWidth && ypos < DisplayHeight) {
         return Coord_To_Cell(Coord_From_Lepton_XY(xpos + Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos)), ypos + Lepton_Round_To_Pixel(Coord_Lepton_Y(DisplayPos))));
@@ -443,7 +443,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             }
         }
 
-        uint32_t new_pos = Coord_Move(DisplayPos, dir, distance);
+        coord_t new_pos = Coord_Move(DisplayPos, dir, distance);
         int x_pos = Coord_Lepton_X(new_pos) - Coord_Cell_To_Lepton(MapCellX);
         int y_pos = Coord_Lepton_Y(new_pos) - Coord_Cell_To_Lepton(MapCellY);
 
@@ -464,7 +464,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             confined = true;
         }
 
-        uint32_t pos_coord =
+        coord_t pos_coord =
             Coord_From_Lepton_XY(x_pos + Coord_Cell_To_Lepton(MapCellX), y_pos + Coord_Cell_To_Lepton(MapCellY));
 
         // Update distance if the move was constrained.
@@ -494,7 +494,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
  *
  * 0x004B0628
  */
-void DisplayClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
+void DisplayClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
 {
     int16_t tmp_list[60];
 
@@ -510,7 +510,7 @@ void DisplayClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
                 break;
             }
 
-            int16_t refresh_cell = cellnum + tmp_list[i];
+            cell_t refresh_cell = cellnum + tmp_list[i];
 
             if (In_Radar(refresh_cell)) {
                 Array[refresh_cell].Redraw_Objects();
@@ -543,7 +543,7 @@ void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
 
     Confine_Rect(x_pos, y_pos, DisplayWidth, DisplayHeight, MapCellWidth * 256, MapCellHeight * 256);
 
-    uint32_t tacpos_coord = Coord_From_Lepton_XY(x_pos + (MapCellX * 256), y_pos + (MapCellY * 256));
+    coord_t tacpos_coord = Coord_From_Lepton_XY(x_pos + (MapCellX * 256), y_pos + (MapCellY * 256));
 
     Set_Tactical_Position(tacpos_coord);
     TacOffsetX = x;
@@ -573,7 +573,7 @@ void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
  *
  * 0x004B4860
  */
-void DisplayClass::Set_Tactical_Position(uint32_t location)
+void DisplayClass::Set_Tactical_Position(coord_t location)
 {
     // TODO This function will probably need adjustment to handle tactical view bigger than map for small maps.
     int x_pos = Coord_Lepton_X(location) - Coord_Cell_To_Lepton(MapCellX);
@@ -602,7 +602,7 @@ void DisplayClass::Set_Tactical_Position(uint32_t location)
  *
  * 0x004B5908
  */
-void DisplayClass::Flag_Cell(int16_t cellnum)
+void DisplayClass::Flag_Cell(cell_t cellnum)
 {
     CellRedraw[cellnum] = true;
     DisplayToRedraw = true;
@@ -641,11 +641,11 @@ void DisplayClass::Mouse_Left_Press(int mouse_x, int mouse_y)
 }
 
 void DisplayClass::Mouse_Left_Up(
-    int16_t cellnum, BOOL cell_shrouded, ObjectClass *object, ActionType action, BOOL mouse_in_radar)
+    cell_t cellnum, BOOL cell_shrouded, ObjectClass *object, ActionType action, BOOL mouse_in_radar)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const DisplayClass *, int16_t, BOOL, ObjectClass *, ActionType, BOOL) =
-        reinterpret_cast<void (*)(const DisplayClass *, int16_t, BOOL, ObjectClass *, ActionType, BOOL)>(0x004B3780);
+    void (*func)(const DisplayClass *, cell_t, BOOL, ObjectClass *, ActionType, BOOL) =
+        reinterpret_cast<void (*)(const DisplayClass *, cell_t, BOOL, ObjectClass *, ActionType, BOOL)>(0x004B3780);
     func(this, cellnum, cell_shrouded, object, action, mouse_in_radar);
 #endif
 }
@@ -677,11 +677,11 @@ void DisplayClass::Mouse_Left_Held(int mouse_x, int mouse_y)
 }
 
 void DisplayClass::Mouse_Left_Release(
-    int16_t cellnum, int mouse_x, int mouse_y, ObjectClass *object, ActionType action, BOOL mouse_in_radar)
+    cell_t cellnum, int mouse_x, int mouse_y, ObjectClass *object, ActionType action, BOOL mouse_in_radar)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const DisplayClass *, int16_t, int, int, ObjectClass *, ActionType, BOOL) =
-        reinterpret_cast<void (*)(const DisplayClass *, int16_t, int, int, ObjectClass *, ActionType, BOOL)>(0x004B3CA8);
+    void (*func)(const DisplayClass *, cell_t, int, int, ObjectClass *, ActionType, BOOL) =
+        reinterpret_cast<void (*)(const DisplayClass *, cell_t, int, int, ObjectClass *, ActionType, BOOL)>(0x004B3CA8);
     func(this, cellnum, mouse_x, mouse_y, object, action, mouse_in_radar);
 #endif
 }
@@ -691,7 +691,7 @@ void DisplayClass::Mouse_Left_Release(
  *
  * 0x004B2694
  */
-uint32_t DisplayClass::Pixel_To_Coord(int x, int y)
+coord_t DisplayClass::Pixel_To_Coord(int x, int y)
 {
     int x_pos = Pixel_To_Lepton(x - TacOffsetX);
     int y_pos = Pixel_To_Lepton(y - TacOffsetY);
@@ -756,7 +756,7 @@ void DisplayClass::Refresh_Band()
         // This loop should redraw the left and right side of the selection band.
         for (int i = box_y; i <= (box_h + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayHeight) + TacOffsetY;
-            int16_t click_cell = Click_Cell_Calc(box_x, Clamp(i, 0, b_pxl));
+            cell_t click_cell = Click_Cell_Calc(box_x, Clamp(i, 0, b_pxl));
             
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
@@ -772,7 +772,7 @@ void DisplayClass::Refresh_Band()
         // This loop should redraw the top and bottom side of the selection band.
         for (int i = box_x; i < (box_w + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayWidth) + TacOffsetX;
-            int16_t click_cell = Click_Cell_Calc(Clamp(i, 0, b_pxl), box_y);
+            cell_t click_cell = Click_Cell_Calc(Clamp(i, 0, b_pxl), box_y);
             
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
@@ -790,7 +790,7 @@ void DisplayClass::Refresh_Band()
     }
 }
 
-void DisplayClass::Cursor_Mark(int16_t cellnum, BOOL flag)
+void DisplayClass::Cursor_Mark(cell_t cellnum, BOOL flag)
 {
     // Check we have a valid cellnum
     if (cellnum == -1) {
@@ -798,7 +798,7 @@ void DisplayClass::Cursor_Mark(int16_t cellnum, BOOL flag)
     }
 
     for (int16_t *offsets = DisplayCursorOccupy; *offsets != LIST_END; ++offsets) {
-        int16_t offset_cell = cellnum + *offsets;
+        cell_t offset_cell = cellnum + *offsets;
 
         if (MapClass::In_Radar(offset_cell)) {
             CellClass &cell_ref = Map[offset_cell];
@@ -876,9 +876,9 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
         }
 
         if (width >= x) {
-            int16_t click_cell = Click_Cell_Calc(x, y - 1);
+            cell_t click_cell = Click_Cell_Calc(x, y - 1);
             int height = Clamp(y + 24, TacOffsetY, TacOffsetY + (Lepton_To_Pixel(DisplayHeight) - 1));
-            int16_t offset_click = Click_Cell_Calc(str_width + x - 1, height);
+            cell_t offset_click = Click_Cell_Calc(str_width + x - 1, height);
 
             if (click_cell == -1) {
                 click_cell = Click_Cell_Calc(x, y);
@@ -888,7 +888,7 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
                 // If we have two valid cells locations, iterate through the cells between them.
                 for (int i = Cell_Get_Y(click_cell); i <= Cell_Get_Y(offset_click); ++i) {
                     for (int j = Cell_Get_X(click_cell); j <= Cell_Get_X(offset_click); ++j) {
-                        int16_t current_cell = Coord_To_Cell(DisplayPos);
+                        cell_t current_cell = Coord_To_Cell(DisplayPos);
                         *w_list = Cell_From_XY(j, i) - current_cell;
                         --count;
                         ++w_list;
@@ -910,6 +910,16 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
     }
 
     return _list;
+}
+
+ObjectClass *DisplayClass::Prev_Object(ObjectClass *object) const
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    ObjectClass *(*func)(const DisplayClass *, ObjectClass *) = reinterpret_cast<ObjectClass*(*)(const DisplayClass *, ObjectClass *)>(0x004B2618);
+    return func(this, object);
+#else
+    return 0;
+#endif
 }
 
 ObjectClass *DisplayClass::Next_Object(ObjectClass *object) const
@@ -959,16 +969,16 @@ void DisplayClass::Remove(ObjectClass *object, LayerType layer)
     }
 }
 
-ObjectClass *DisplayClass::Cell_Object(int16_t cellnum, int x, int y) const
+ObjectClass *DisplayClass::Cell_Object(cell_t cellnum, int x, int y) const
 {
     return Array[cellnum].Cell_Object(x, y);
 }
 
-void DisplayClass::Select_These(uint32_t start, uint32_t finish)
+void DisplayClass::Select_These(coord_t start, coord_t finish)
 {
     // Needs HouseClass.
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const DisplayClass *, uint32_t, uint32_t) = reinterpret_cast<void(*)(const DisplayClass *, uint32_t, uint32_t)>(0x004B2C50);
+    void(*func)(const DisplayClass *, coord_t, coord_t) = reinterpret_cast<void(*)(const DisplayClass *, coord_t, coord_t)>(0x004B2C50);
     func(this, start, finish);
 #endif
 }
@@ -1067,7 +1077,7 @@ void DisplayClass::Center_Map(uint32_t coord)
     // Calculate a position based on units selected, used if no coord is passed.
     if (CurrentObjects.Count() > 0) {
         for (int i = 0; i < CurrentObjects.Count(); ++i) {
-            uint32_t center = CurrentObjects[i]->Center_Coord();
+            coord_t center = CurrentObjects[i]->Center_Coord();
             x += Coord_Lepton_X(center);
             y += Coord_Lepton_Y(center);
         }
@@ -1097,9 +1107,9 @@ void DisplayClass::Center_Map(uint32_t coord)
  *
  * 0x004AFD40
  */
-int16_t DisplayClass::Set_Cursor_Pos(int16_t cell)
+cell_t DisplayClass::Set_Cursor_Pos(cell_t cell)
 {
-    int16_t retval;
+    cell_t retval;
 
     if (cell == -1) {
         cell = Click_Cell_Calc(g_mouse->Get_Mouse_X(), g_mouse->Get_Mouse_Y());
@@ -1148,11 +1158,11 @@ int16_t DisplayClass::Set_Cursor_Pos(int16_t cell)
     return retval;
 }
 
-BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, int16_t cell) const
+BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, cell_t cell) const
 {
     // Needs HouseClass, BuildingTypeClass.
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, int16_t) = reinterpret_cast<BOOL(*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, int16_t)>(0x004AF7DC);
+    BOOL(*func)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t) = reinterpret_cast<BOOL(*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t)>(0x004AF7DC);
     return func(this, object, house, list, cell);
 #else
     return false;
@@ -1171,8 +1181,8 @@ void DisplayClass::Redraw_Icons()
     // Iterate over all cells currently in view and check if it needs to be redrawn.
     for (int16_t y = -Coord_Sub_Cell_Y(DisplayPos); y <= DisplayHeight; y += 256) {
         for (int16_t x = -Coord_Sub_Cell_X(DisplayPos); x <= DisplayWidth; x += 256) {
-            int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(x, y)));
-            uint32_t coord = Cell_To_Coord(cellnum) & 0xFF00FF00;
+            cell_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(x, y)));
+            coord_t coord = Cell_To_Coord(cellnum) & 0xFF00FF00;
             int draw_x = 0;
             int draw_y = 0;
 
@@ -1203,8 +1213,8 @@ void DisplayClass::Redraw_Shadow()
         // Iterate over every position within the tactical view and evaluate for a shadow redraw.
         for (int16_t y = -Coord_Sub_Cell_Y(DisplayPos); y <= DisplayHeight; y += 256) {
             for (int16_t x = -Coord_Sub_Cell_X(DisplayPos); x <= DisplayWidth; x += 256) {
-                int16_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(x, y)));
-                uint32_t coord = Coord_Top_Left(Cell_To_Coord(cellnum));
+                cell_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(x, y)));
+                coord_t coord = Coord_Top_Left(Cell_To_Coord(cellnum));
                 int draw_x = 0;
                 int draw_y = 0;
 
@@ -1248,7 +1258,7 @@ void DisplayClass::Redraw_Shadow()
  *
  * 0x004B4CB8
  */
-BOOL DisplayClass::In_View(int16_t cellnum) const
+BOOL DisplayClass::In_View(cell_t cellnum) const
 {
     // Check high bits aren't set, ensures not negative and is within range of 128 * 128 map.
     if ((cellnum & 0xC000) != 0) {
@@ -1273,7 +1283,7 @@ BOOL DisplayClass::In_View(int16_t cellnum) const
  *
  * 0x004B0968
  */
-BOOL DisplayClass::Coord_To_Pixel(uint32_t coord, int &x, int &y) const
+BOOL DisplayClass::Coord_To_Pixel(coord_t coord, int &x, int &y) const
 {
     if (coord != 0) {
         int16_t view_x = Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos));
@@ -1297,7 +1307,7 @@ BOOL DisplayClass::Coord_To_Pixel(uint32_t coord, int &x, int &y) const
  *
  * 0x004B2694
  */
-uint32_t DisplayClass::Pixel_To_Coord(int x, int y) const
+coord_t DisplayClass::Pixel_To_Coord(int x, int y) const
 {
     int x_pos = Pixel_To_Lepton(x - TacOffsetX);
     int y_pos = Pixel_To_Lepton(y - TacOffsetY);
@@ -1314,7 +1324,7 @@ uint32_t DisplayClass::Pixel_To_Coord(int x, int y) const
  *
  * 0x004B0698
  */
-int DisplayClass::Cell_Shadow(int16_t cellnum) const
+int DisplayClass::Cell_Shadow(cell_t cellnum) const
 {
     static const int8_t _shadow[] = {
         -1, 33, 2, 2, 34, 37, 2, 2,
@@ -1424,7 +1434,7 @@ int DisplayClass::Cell_Shadow(int16_t cellnum) const
  *
  * 0x004B0B10
  */
-BOOL DisplayClass::Push_Onto_TacMap(uint32_t &coord1, uint32_t &coord2)
+BOOL DisplayClass::Push_Onto_TacMap(coord_t &coord1, coord_t &coord2)
 {
     // Check trivial case that a coord is 0
     if (coord1 == 0 || coord2 == 0) {
@@ -1456,9 +1466,9 @@ BOOL DisplayClass::Push_Onto_TacMap(uint32_t &coord1, uint32_t &coord2)
 /**
  * 0x004B274C
  */
-int16_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, int16_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const
+cell_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const
 {
-    int16_t cell_num = -1;
+    cell_t cell_num = -1;
     int zone = -1;
 
     if (waypoint != -1) {
@@ -1544,7 +1554,7 @@ int16_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, int16_t c
         int ny = y;
 
         for (int i = 0; i < MapCellHeight; ++i) {
-            int16_t test_cell = Cell_From_XY(MapCellX + x, MapCellY + (ny % MapCellHeight));
+            cell_t test_cell = Cell_From_XY(MapCellX + x, MapCellY + (ny % MapCellHeight));
 
             if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
                 return test_cell;
@@ -1558,7 +1568,7 @@ int16_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, int16_t c
             int nx = x;
 
             for (int i = 0; i < MapCellWidth; ++i) {
-                int16_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
+                cell_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
 
                 if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
                     return test_cell;
@@ -1572,7 +1582,7 @@ int16_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, int16_t c
         int nx = x;
 
         for (int i = 0; i < MapCellWidth; ++i) {
-            int16_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
+            cell_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
 
             if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
                 return test_cell;
@@ -1590,7 +1600,7 @@ int16_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, int16_t c
  *
  * 0x004B2B90
  */
-BOOL DisplayClass::Good_Reinforcement_Cell(int16_t cell1, int16_t cell2, SpeedType speed, int zone, MZoneType mzone) const
+BOOL DisplayClass::Good_Reinforcement_Cell(cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone) const
 {
     if (Array[cell1].Is_Clear_To_Move(speed, false, false, zone, mzone)
         && Array[cell2].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
@@ -1609,13 +1619,13 @@ BOOL DisplayClass::Good_Reinforcement_Cell(int16_t cell1, int16_t cell2, SpeedTy
  *
  * 0x004B4D80
  */
-uint32_t DisplayClass::Closest_Free_Spot(uint32_t coord, BOOL skip_occupied) const
+coord_t DisplayClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 {
     if (!Coord_Is_Negative(coord)) {
         return 0x800080; // Middle of cell 0, the top left cell off the edge of visible map.
     }
 
-    int16_t cellnum = Coord_To_Cell(coord);
+    cell_t cellnum = Coord_To_Cell(coord);
 
     return Array[cellnum].Closest_Free_Spot(coord, skip_occupied);
 
@@ -1662,11 +1672,11 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
  *
  * 0x004B5788
  */
-void DisplayClass::Constrained_Look(uint32_t coord, int constraint)
+void DisplayClass::Constrained_Look(coord_t coord, int constraint)
 {
     // Needs HouseClass, TechnoClass.
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const DisplayClass *, uint32_t, int) = reinterpret_cast<void(*)(const DisplayClass *, uint32_t, int)>(0x004B5788);
+    void(*func)(const DisplayClass *, coord_t, int) = reinterpret_cast<void(*)(const DisplayClass *, coord_t, int)>(0x004B5788);
     func(this, coord, constraint);
 #elif 0
     for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {
@@ -1742,11 +1752,11 @@ void DisplayClass::Encroach_Shadow()
  *
  * 0x004B4FF4
  */
-void DisplayClass::Shroud_Cell(int16_t cellnum)
+void DisplayClass::Shroud_Cell(cell_t cellnum)
 {
     // Needs HouseClass, TechnoClass.
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const DisplayClass *, int16_t) = reinterpret_cast<void(*)(const DisplayClass *, int16_t)>(0x004B4FF4);
+    void(*func)(const DisplayClass *, cell_t) = reinterpret_cast<void(*)(const DisplayClass *, cell_t)>(0x004B4FF4);
     func(this, cellnum);
 #elif 0
     // If player has GPS or has units in the cell, then don't do anything.
@@ -1760,7 +1770,7 @@ void DisplayClass::Shroud_Cell(int16_t cellnum)
                 cell.Redraw_Objects();
 
                 for (FacingType facing = FACING_FIRST; facing < FACING_COUNT; ++facing) {
-                    int16_t adjcell = cellnum + AdjacentCell[facing];
+                    cell_t adjcell = cellnum + AdjacentCell[facing];
 
                     if (adjcell != cellnum) {
                         Array[adjcell].Revealed = false;

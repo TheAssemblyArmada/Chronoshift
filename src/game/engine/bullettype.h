@@ -67,7 +67,7 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
-    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override { return false; };
+    virtual BOOL Create_And_Place(cell_t cellnum, HousesType house = HOUSES_NONE) const override { return false; };
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override { return nullptr; }
     virtual BOOL Read_INI(GameINIClass &ini);
 

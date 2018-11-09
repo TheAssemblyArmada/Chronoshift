@@ -33,7 +33,7 @@ public:
     AbstractTypeClass(const NoInitClass &noinit) {}
     ~AbstractTypeClass() {}
 
-    virtual uint32_t Coord_Fixup(uint32_t coord) const { return coord; }
+    virtual coord_t Coord_Fixup(coord_t coord) const { return coord; }
     virtual int Full_Name() const;
     virtual int Get_Ownable() const { return OWNER_ALL; }
 

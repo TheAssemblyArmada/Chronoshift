@@ -66,28 +66,28 @@ public:
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Draw_It(BOOL force_redraw) override;
     virtual void Set_Map_Dimensions(int x, int y, int w, int h) override;
-    virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) override;
-    virtual int16_t Click_Cell_Calc(int x, int y) const override;
-    virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) override;
-    virtual void Set_Tactical_Position(uint32_t location) override;
-    virtual void Flag_Cell(int16_t cellnum) override;
-    virtual BOOL Jam_Cell(int16_t cellnum, HouseClass *house) override;
-    virtual BOOL UnJam_Cell(int16_t cellnum, HouseClass *house) override;
+    virtual BOOL Map_Cell(cell_t cellnum, HouseClass *house) override;
+    virtual cell_t Click_Cell_Calc(int x, int y) const override;
+    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) override;
+    virtual void Set_Tactical_Position(coord_t location) override;
+    virtual void Flag_Cell(cell_t cellnum) override;
+    virtual BOOL Jam_Cell(cell_t cellnum, HouseClass *house) override;
+    virtual BOOL UnJam_Cell(cell_t cellnum, HouseClass *house) override;
 
     BOOL Is_Radar_Jammed();
     BOOL Is_Radar_Active();
     BOOL Is_Radar_Existing();
     void Activate_Pulse();
-    void Radar_Pixel(int16_t cellnum);
-    void Render_Terrain(int16_t cellnum, int x, int y, int scale);
-    void Render_Infantry(int16_t cellnum, int x, int y, int scale);
-    void Render_Overlay(int16_t cellnum, int x, int y, int scale);
-    void Zoom_Mode(int16_t cellnum);
+    void Radar_Pixel(cell_t cellnum);
+    void Render_Terrain(cell_t cellnum, int x, int y, int scale);
+    void Render_Infantry(cell_t cellnum, int x, int y, int scale);
+    void Render_Overlay(cell_t cellnum, int x, int y, int scale);
+    void Zoom_Mode(cell_t cellnum);
     BOOL Is_Zoomable() const;
     int Click_In_Radar(int &x, int &y, BOOL set_coords = false) const;
-    BOOL Cell_On_Radar(int16_t cellnum);
-    void Set_Radar_Position(int16_t cellnum);
-    int16_t Radar_Position();
+    BOOL Cell_On_Radar(cell_t cellnum);
+    void Set_Radar_Position(cell_t cellnum);
+    cell_t Radar_Position();
     void Cell_XY_To_Radar_Pixel(int cell_x, int cell_y, int &x, int &y);
     void Radar_Anim();
     void Radar_Cursor(BOOL redraw);
@@ -95,16 +95,16 @@ public:
     BOOL Draw_House_Info();
     void Draw_Names();
     void Mark_Radar(int left, int top, int right, int bottom, BOOL mark, int size);
-    void Cursor_Cell(int16_t cellnum, BOOL mark);
-    void Plot_Radar_Pixel(int16_t cellnum);
+    void Cursor_Cell(cell_t cellnum, BOOL mark);
+    void Plot_Radar_Pixel(cell_t cellnum);
     int Radar_Activate(int mode = RADAR_M1);
     BOOL Spy_Next_House();
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
-    int16_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
+    cell_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
     BOOL Hook_Is_Zoomable() { return Is_Zoomable(); }
-    BOOL Hook_Cell_On_Radar(int16_t cellnum) { return Cell_On_Radar(cellnum); }
+    BOOL Hook_Cell_On_Radar(cell_t cellnum) { return Cell_On_Radar(cellnum); }
     int Hook_Click_In_Radar(int &x, int &y, BOOL set_coords = false) { return RadarClass::Click_In_Radar(x, y, set_coords); }
 
 #endif
@@ -172,13 +172,13 @@ protected:
     int MiniMapYOffset;
     int MiniMapCellWidth;
     int MiniMapCellHeight;
-    int16_t MiniMapCell;
+    cell_t MiniMapCell;
     char padding[2]; // needed cause someone made MiniMapCell a int but Radar_Position returns it, its a short
     TRect<int> MiniMap;
     int MiniMapScale;
     HousesType SpiedHouse;
     int MiniMapCellCount;
-    int16_t MiniMapCells[MINI_MAP_CELLS];
+    cell_t MiniMapCells[MINI_MAP_CELLS];
     static GraphicBufferClass IconStage;
 
 #ifndef CHRONOSHIFT_STANDALONE

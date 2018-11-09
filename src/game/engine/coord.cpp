@@ -117,7 +117,7 @@ void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance)
  *
  * 0x004AC798
  */
-uint32_t Coord_Move(uint32_t coord, DirType dir, uint16_t distance)
+coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance)
 {
     int16_t x = Coord_Lepton_X(coord);
     int16_t y = Coord_Lepton_Y(coord);

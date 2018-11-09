@@ -33,7 +33,7 @@ TFixedIHeapClass<BuildingTypeClass> g_BuildingTypes;
 /**
  * 0x00429CEC
  */
-BuildingTypeClass::BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, uint32_t exit_coord,
+BuildingTypeClass::BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, coord_t exit_coord,
     RemapType altremap, int primaryf, int primaryl, int primaryh, BOOL fake, BOOL normalized, BOOL nominal, BOOL wall, BOOL simple_damage,
     BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL theater, BOOL turret, BOOL remapable,
     RTTIType factory, DirType dir, BSizeType size, const int16_t *exit_list, const int16_t *occupy_list,
@@ -140,7 +140,7 @@ void BuildingTypeClass::operator delete(void *ptr)
  *
  * 0x00454004
  */
-uint32_t BuildingTypeClass::Coord_Fixup(uint32_t coord) const
+coord_t BuildingTypeClass::Coord_Fixup(coord_t coord) const
 {
     return Coord_Top_Left(coord);
 }
@@ -187,12 +187,12 @@ void BuildingTypeClass::Dimensions(int &w, int &h) const
  *
  * 0x00453804
  */
-BOOL BuildingTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL BuildingTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
-    (const BuildingTypeClass *, int16_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const BuildingTypeClass *, int16_t, HousesType)>(0x00453804);
+    (const BuildingTypeClass *, cell_t, HousesType) =
+        reinterpret_cast<BOOL (*)(const BuildingTypeClass *, cell_t, HousesType)>(0x00453804);
     return func(this, cellnum, house);
 #else
     /*BuildingClass *bptr = new BuildingClass(Type, house);
@@ -249,7 +249,7 @@ const int16_t *BuildingTypeClass::Occupy_List(BOOL recalc) const
     static int16_t _occupy[32] = {0};
 
     SmudgeType bib_smudge = SMUDGE_NONE;
-    int16_t bibcell = 0;
+    cell_t bibcell = 0;
 
     if (recalc && Bib_And_Offset(bib_smudge, bibcell)) {
         if (bib_smudge != SMUDGE_NONE && bib_smudge < SMUDGE_COUNT) {
@@ -408,7 +408,7 @@ int BuildingTypeClass::Height(BOOL check_bib) const
  *
  * 0x00453BB4
  */
-BOOL BuildingTypeClass::Bib_And_Offset(SmudgeType &smudge, int16_t &cellnum) const
+BOOL BuildingTypeClass::Bib_And_Offset(SmudgeType &smudge, cell_t &cellnum) const
 {
     smudge = SMUDGE_NONE;
 

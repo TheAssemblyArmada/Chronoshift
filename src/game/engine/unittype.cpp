@@ -195,12 +195,12 @@ void UnitTypeClass::Dimensions(int &w, int &h) const
  *
  * 0x00578B50
  */
-BOOL UnitTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL UnitTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
-    (const UnitTypeClass *, int16_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const UnitTypeClass *, int16_t, HousesType)>(0x00578B50);
+    (const UnitTypeClass *, cell_t, HousesType) =
+        reinterpret_cast<BOOL (*)(const UnitTypeClass *, cell_t, HousesType)>(0x00578B50);
     return func(this, cellnum, house);
 #else
     /*UnitClass *vptr = new UnitClass(m_Type, HOUSES_NONE);

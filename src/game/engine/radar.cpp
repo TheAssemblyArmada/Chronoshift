@@ -157,7 +157,7 @@ void RadarClass::Set_Map_Dimensions(int x, int y, int w, int h)
     MapClass::Set_Map_Dimensions(x, y, w, h);
 }
 
-BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
+BOOL RadarClass::Map_Cell(cell_t cellnum, HouseClass *house)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
@@ -170,7 +170,7 @@ BOOL RadarClass::Map_Cell(int16_t cellnum, HouseClass *house)
     return false;
 }
 
-int16_t RadarClass::Click_Cell_Calc(int x, int y) const
+cell_t RadarClass::Click_Cell_Calc(int x, int y) const
 {
     switch (Click_In_Radar(x, y, true)) {
         case RADAR_CLICK_M1:
@@ -185,7 +185,7 @@ int16_t RadarClass::Click_Cell_Calc(int x, int y) const
     }
 }
 
-void RadarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
+void RadarClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
@@ -199,38 +199,38 @@ void RadarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
     DisplayClass::Refresh_Cells(cellnum, overlap_list);
 }
 
-void RadarClass::Set_Tactical_Position(uint32_t location)
+void RadarClass::Set_Tactical_Position(coord_t location)
 {
     DisplayClass::Set_Tactical_Position(location);
     Set_Radar_Position(Coord_To_Cell(DisplayPos));
 }
 
-void RadarClass::Flag_Cell(int16_t cellnum)
+void RadarClass::Flag_Cell(cell_t cellnum)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DisplayClass::Flag_Cell(cellnum);
 }
 
-BOOL RadarClass::Jam_Cell(int16_t cellnum, HouseClass *house)
+BOOL RadarClass::Jam_Cell(cell_t cellnum, HouseClass *house)
 {
 // TODO Needs HouseClass.
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
-    (const RadarClass *, int16_t, HouseClass *) =
-        reinterpret_cast<BOOL (*)(const RadarClass *, int16_t, HouseClass *)>(0x005301F0);
+    (const RadarClass *, cell_t, HouseClass *) =
+        reinterpret_cast<BOOL (*)(const RadarClass *, cell_t, HouseClass *)>(0x005301F0);
     return func(this, cellnum, house);
 #else
     return false;
 #endif
 }
 
-BOOL RadarClass::UnJam_Cell(int16_t cellnum, HouseClass *house)
+BOOL RadarClass::UnJam_Cell(cell_t cellnum, HouseClass *house)
 {
 // TODO Needs HouseClass.
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
-    (const RadarClass *, int16_t, HouseClass *) =
-        reinterpret_cast<BOOL (*)(const RadarClass *, int16_t, HouseClass *)>(0x00530274);
+    (const RadarClass *, cell_t, HouseClass *) =
+        reinterpret_cast<BOOL (*)(const RadarClass *, cell_t, HouseClass *)>(0x00530274);
     return func(this, cellnum, house);
 #else
     return false;
@@ -291,7 +291,7 @@ void RadarClass::Activate_Pulse()
     }
 }
 
-void RadarClass::Radar_Pixel(int16_t cellnum)
+void RadarClass::Radar_Pixel(cell_t cellnum)
 {
     if (RadarActive && Map.Is_Sidebar_Drawn() && Cell_On_Radar(cellnum)) {
         RadarToRedraw = true;
@@ -303,12 +303,12 @@ void RadarClass::Radar_Pixel(int16_t cellnum)
     }
 }
 
-void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
+void RadarClass::Render_Terrain(cell_t cellnum, int x, int y, int scale)
 {
 // TODO Needs TerrainClass
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const RadarClass *, int16_t, int, int, int) =
-        reinterpret_cast<void (*)(const RadarClass *, int16_t, int, int, int)>(0x0052E5BC);
+    void (*func)(const RadarClass *, cell_t, int, int, int) =
+        reinterpret_cast<void (*)(const RadarClass *, cell_t, int, int, int)>(0x0052E5BC);
     func(this, cellnum, x, y, scale);
 #elif 0
     // static TerrainClass const *terrains[3];    //not sure, but its there...
@@ -356,16 +356,16 @@ void RadarClass::Render_Terrain(int16_t cellnum, int x, int y, int scale)
 #endif
 }
 
-void RadarClass::Render_Infantry(int16_t cellnum, int x, int y, int scale)
+void RadarClass::Render_Infantry(cell_t cellnum, int x, int y, int scale)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const RadarClass *, int16_t, int, int, int) =
-        reinterpret_cast<void (*)(const RadarClass *, int16_t, int, int, int)>(0x0052E9E8);
+    void (*func)(const RadarClass *, cell_t, int, int, int) =
+        reinterpret_cast<void (*)(const RadarClass *, cell_t, int, int, int)>(0x0052E9E8);
     func(this, cellnum, x, y, scale);
 #endif
 }
 
-void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
+void RadarClass::Render_Overlay(cell_t cellnum, int x, int y, int scale)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     CellClass &cell = Array[cellnum];
@@ -391,7 +391,7 @@ void RadarClass::Render_Overlay(int16_t cellnum, int x, int y, int scale)
     }
 }
 
-void RadarClass::Zoom_Mode(int16_t cellnum)
+void RadarClass::Zoom_Mode(cell_t cellnum)
 {
     if (Is_Zoomable()) {
         RadarZoomed = !RadarZoomed;
@@ -474,7 +474,7 @@ int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
     return 0;
 }
 
-BOOL RadarClass::Cell_On_Radar(int16_t cellnum)
+BOOL RadarClass::Cell_On_Radar(cell_t cellnum)
 {
     if (cellnum > MAP_MAX_AREA) {
         return false;
@@ -492,14 +492,14 @@ BOOL RadarClass::Cell_On_Radar(int16_t cellnum)
     return true;
 }
 
-void RadarClass::Set_Radar_Position(int16_t cellnum)
+void RadarClass::Set_Radar_Position(cell_t cellnum)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const RadarClass *, int16_t) = reinterpret_cast<void (*)(const RadarClass *, int16_t)>(0x005314B4);
+    void (*func)(const RadarClass *, cell_t) = reinterpret_cast<void (*)(const RadarClass *, cell_t)>(0x005314B4);
     func(this, cellnum);
 #endif
 }
-int16_t RadarClass::Radar_Position()
+cell_t RadarClass::Radar_Position()
 {
     return MiniMapCell;
 }
@@ -539,10 +539,10 @@ void RadarClass::Radar_Anim()
 void RadarClass::Radar_Cursor(BOOL redraw)
 {
 #define RADAR_CURSOR_SIZE 6
-    static int16_t _last_pos = -1;
+    static cell_t _last_pos = -1;
     static int _last_frame = -1;
 
-    int16_t cell = Coord_To_Cell(DisplayPos);
+    cell_t cell = Coord_To_Cell(DisplayPos);
     int cell_x = Cell_Get_X(cell);
     int cell_y = Cell_Get_Y(cell);
     int cell_w = 0;
@@ -676,7 +676,7 @@ void RadarClass::Mark_Radar(int left, int top, int right, int bottom, BOOL mark,
     }
 }
 
-void RadarClass::Cursor_Cell(int16_t cellnum, BOOL mark)
+void RadarClass::Cursor_Cell(cell_t cellnum, BOOL mark)
 {
     if (Cell_On_Radar(cellnum)) {
         CellClass &cell = Array[cellnum];
@@ -692,10 +692,10 @@ void RadarClass::Cursor_Cell(int16_t cellnum, BOOL mark)
     }
 }
 
-void RadarClass::Plot_Radar_Pixel(int16_t cellnum)
+void RadarClass::Plot_Radar_Pixel(cell_t cellnum)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const RadarClass *, int16_t) = reinterpret_cast<void (*)(const RadarClass *, int16_t)>(0x0052F4C4);
+    void (*func)(const RadarClass *, cell_t) = reinterpret_cast<void (*)(const RadarClass *, cell_t)>(0x0052F4C4);
     func(this, cellnum);
 #endif
 }

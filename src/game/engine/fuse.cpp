@@ -20,7 +20,7 @@
 /**
  * @brief Sets the fuse countdown running.
  */
-void FuseClass::Arm_Fuse(uint32_t pos, uint32_t arm_pos, int duration, int arm_time)
+void FuseClass::Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_time)
 {
     if (duration <= arm_time) {
         duration = arm_time;
@@ -44,7 +44,7 @@ void FuseClass::Arm_Fuse(uint32_t pos, uint32_t arm_pos, int duration, int arm_t
 /**
  * @brief Checks the state of the fuse.
  */
-int FuseClass::Fuse_Checkup(uint32_t pos)
+int FuseClass::Fuse_Checkup(coord_t pos)
 {
     if (Duration > 0) {
         --Duration;

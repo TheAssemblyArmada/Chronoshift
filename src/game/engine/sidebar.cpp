@@ -594,7 +594,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
     }
 }
 
-void SidebarClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
+void SidebarClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     if (overlap_list != nullptr) {
@@ -888,7 +888,7 @@ int SidebarClass::Abandon_Production(RTTIType type, int unk2)
     return Columns[Which_Column(type)].Abandon_Production(unk2);
 }
 
-void SidebarClass::Zoom_Mode_Control(ModeControl mode)
+void SidebarClass::Zoom_Mode_Control()
 {
     if (!RadarActive) {
         if (Session.Game_To_Play() != GAME_CAMPAIGN) {

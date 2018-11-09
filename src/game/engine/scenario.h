@@ -76,8 +76,8 @@ public:
     int Get_Scenario_Index() const { return ScenarioIndex; }
     TheaterType Get_Theater() const { return Theater; }
     void Set_Theater(TheaterType theater) { Theater = theater; }
-    int16_t Get_Waypoint(int waypoint_num) const { return Waypoints[waypoint_num]; }
-    void Set_Waypoint(int waypoint_num, int16_t cell) { Waypoints[waypoint_num] = cell; }
+    cell_t Get_Waypoint(int waypoint_num) const { return Waypoints[waypoint_num]; }
+    void Set_Waypoint(int waypoint_num, cell_t cell) { Waypoints[waypoint_num] = cell; }
     int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
     int Get_Global_Time() { return GlobalTimer.Time(); }
     BOOL Global_Timer_Running() { return GlobalTimer != 0; }
@@ -87,8 +87,8 @@ private:
     DiffType HumanDifficulty;
     DiffType AIDifficulty;
     TCountDownTimerClass<FrameTimerClass> ElapsedTimer;
-    int16_t Waypoints[WAYPOINT_COUNT];
-    int16_t UnkWaypoint;
+    cell_t Waypoints[WAYPOINT_COUNT];
+    cell_t UnkWaypoint;
     TCountDownTimerClass<FrameTimerClass> GlobalTimer;
     TCountDownTimerClass<FrameTimerClass> SomeTimer;
     int ScenarioIndex;
@@ -108,7 +108,7 @@ private:
     int CarryOverCap;
     int CarryOverPercent;
     int GlobalVariables[30];
-    int16_t Views[4];
+    cell_t Views[4];
     int BridgeCount;
     int CarryOverTime;
 #ifndef CHRONOSHIFT_NO_BITFIELDS

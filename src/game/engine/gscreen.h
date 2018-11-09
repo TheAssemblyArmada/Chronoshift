@@ -133,25 +133,25 @@ public:
     // Additions for DisplayClass
     virtual void Read_INI(GameINIClass &ini) = 0;
     // virtual void Write_INI(GameINIClass &ini) = 0; // Not virtual in RA.
-    virtual BOOL Map_Cell(int16_t cellnum, HouseClass *house) = 0;
-    virtual int16_t Click_Cell_Calc(int x, int y) const = 0;
+    virtual BOOL Map_Cell(cell_t cellnum, HouseClass *house) = 0;
+    virtual cell_t Click_Cell_Calc(int x, int y) const = 0;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) = 0;
     virtual MouseType Get_Mouse_Shape() const = 0;
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) = 0;
-    virtual void Refresh_Cells(int16_t cellnum, int16_t *overlap_list) = 0;
+    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) = 0;
     virtual void Set_View_Dimensions(int x, int y, int w = -1, int h = -1) = 0;
     virtual void Put_Place_Back(TechnoClass *) = 0;
-    virtual void Set_Tactical_Position(uint32_t location) = 0;
-    virtual void Flag_Cell(int16_t cellnum) = 0;
+    virtual void Set_Tactical_Position(coord_t location) = 0;
+    virtual void Flag_Cell(cell_t cellnum) = 0;
     virtual void Mouse_Right_Press() = 0;
     virtual void Mouse_Left_Press(int mouse_x, int mouse_y) = 0;
-    virtual void Mouse_Left_Up(int16_t cellnum, BOOL cell_shrouded = false, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
+    virtual void Mouse_Left_Up(cell_t cellnum, BOOL cell_shrouded = false, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
     virtual void Mouse_Left_Held(int mouse_x, int mouse_y) = 0;
-    virtual void Mouse_Left_Release(int16_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
+    virtual void Mouse_Left_Release(cell_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr, ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) = 0;
 
     // Additions for RadarClass
-    virtual BOOL Jam_Cell(int16_t cellnum, HouseClass *house) = 0;
-    virtual BOOL UnJam_Cell(int16_t cellnum, HouseClass *house) = 0;
+    virtual BOOL Jam_Cell(cell_t cellnum, HouseClass *house) = 0;
+    virtual BOOL UnJam_Cell(cell_t cellnum, HouseClass *house) = 0;
 
     // Additions for MouseClass
     virtual BOOL Load(Straw &straw) = 0;

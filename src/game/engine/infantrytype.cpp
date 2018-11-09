@@ -780,18 +780,18 @@ void InfantryTypeClass::Dimensions(int &w, int &h) const
  *
  * 0x004EAF74
  */
-BOOL InfantryTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL InfantryTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
-    (const InfantryTypeClass *, int16_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const InfantryTypeClass *, int16_t, HousesType)>(0x004EAF74);
+    (const InfantryTypeClass *, cell_t, HousesType) =
+        reinterpret_cast<BOOL (*)(const InfantryTypeClass *, cell_t, HousesType)>(0x004EAF74);
     return func(this, cellnum, house);
 #else
     /*InfantryClass *iptr = new InfantryClass(Type, house);
 
     if (iptr != nullptr) {
-        uint32_t spot = Map[cellnum].Closest_Free_Spot(Cell_To_Coord(cellnum));
+        coord_t spot = Map[cellnum].Closest_Free_Spot(Cell_To_Coord(cellnum));
         if (spot != 0) {
             return iptr->Unlimbo(spot, DIR_EAST);
         }

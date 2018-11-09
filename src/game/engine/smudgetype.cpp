@@ -77,11 +77,11 @@ void SmudgeTypeClass::operator delete(void *ptr)
     SmudgeTypes.Free(ptr);
 }
 
-BOOL SmudgeTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL SmudgeTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
     // TODO requires SmudgeClass
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const SmudgeTypeClass*, int16_t, HousesType) = reinterpret_cast<BOOL(*)(const SmudgeTypeClass*, int16_t, HousesType)>(0x00549E50);
+    BOOL(*func)(const SmudgeTypeClass*, cell_t, HousesType) = reinterpret_cast<BOOL(*)(const SmudgeTypeClass*, cell_t, HousesType)>(0x00549E50);
     return func(this, cellnum, house);
 #elif 0
     DEBUG_ASSERT(this != nullptr);

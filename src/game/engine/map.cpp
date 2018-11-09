@@ -297,7 +297,7 @@ BOOL MapClass::Place_Random_Crate()
  *
  * 0x004FF2A0
  */
-BOOL MapClass::Remove_Crate(int16_t cellnum)
+BOOL MapClass::Remove_Crate(cell_t cellnum)
 {
     if (Session.Game_To_Play() != GAME_CAMPAIGN) {
         for (int index = 0; index < ARRAY_SIZE(Crates); ++index) {
@@ -327,7 +327,7 @@ BOOL MapClass::Remove_Crate(int16_t cellnum)
  *
  * 0x005008A4
  */
-int16_t MapClass::Pick_Random_Location() const
+cell_t MapClass::Pick_Random_Location() const
 {
     return Cell_From_XY(MapCellX + Scen.Get_Random_Value(0, MapCellWidth - 1), MapCellY + Scen.Get_Random_Value(0, MapCellHeight - 1));
 }
@@ -337,7 +337,7 @@ int16_t MapClass::Pick_Random_Location() const
  *
  * 0x004FE8AC
  */
-BOOL MapClass::In_Radar(int16_t cellnum) const
+BOOL MapClass::In_Radar(cell_t cellnum) const
 {
     if (cellnum <= MAP_MAX_AREA) {
 
@@ -358,11 +358,11 @@ BOOL MapClass::In_Radar(int16_t cellnum) const
  *
  * 0x004FE438
  */
-void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4)
+void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4)
 {
     // TODO requires RadarClass
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const MapClass*, int16_t, int, HouseClass *, BOOL) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *, BOOL)>(0x004FE438);
+    void(*func)(const MapClass*, cell_t, int, HouseClass *, BOOL) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *, BOOL)>(0x004FE438);
     func(this, cellnum, radius, house, a4);
 #elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -388,7 +388,7 @@ void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a
             DEBUG_ASSERT(cell != nullptr);
 
             while (--radius_count != -1) {
-                int16_t offset_cellnum = *offset_ptr + cellnum;
+                cell_t offset_cellnum = *offset_ptr + cellnum;
                 ++offset_ptr;
 
                 // If the cell we are considering is within the map and the distance in the X axis is less than radius, calc actual distance.
@@ -414,11 +414,11 @@ void MapClass::Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a
  *
  * 0x004FE588
  */
-void MapClass::Shroud_From(int16_t cellnum, int radius)
+void MapClass::Shroud_From(cell_t cellnum, int radius)
 {
     // TODO requires RadarClass
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const MapClass*, int16_t, int) = reinterpret_cast<void(*)(const MapClass*, int16_t, int)>(0x004FE588);
+    void(*func)(const MapClass*, cell_t, int) = reinterpret_cast<void(*)(const MapClass*, cell_t, int)>(0x004FE588);
     func(this, cellnum, radius);
 #elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -431,7 +431,7 @@ void MapClass::Shroud_From(int16_t cellnum, int radius)
             int32_t radius_count = RadiusCount[radius];
 
             while (radius_count-- >= 0) {
-                int16_t offset_cellnum = offset_ptr[cellnum];
+                cell_t offset_cellnum = offset_ptr[cellnum];
                 ++offset_ptr;
 
                 // TODO, same loop as above pretty much...
@@ -455,11 +455,11 @@ void MapClass::Shroud_From(int16_t cellnum, int radius)
  *
  * 0x004FE68C
  */
-void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
+void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires HouseClass, RadarClass
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const MapClass*, int16_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *)>(0x004FE68C);
+    void(*func)(const MapClass*, cell_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *)>(0x004FE68C);
     func(this, cellnum, radius, house);
 #elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -474,7 +474,7 @@ void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
             int32_t radius_count = RadiusCount[radius];
 
             while (radius_count-- >= 0) {
-                int16_t offset_cellnum = *offset_ptr + cellnum;
+                cell_t offset_cellnum = *offset_ptr + cellnum;
                 ++offset_ptr;
 
                 if (offset_cellnum < MAP_MAX_AREA &&
@@ -499,11 +499,11 @@ void MapClass::Jam_From(int16_t cellnum, int radius, HouseClass *house)
  *
  * 0x004FE7C8
  */
-void MapClass::UnJam_From(int16_t cellnum, int radius, HouseClass *house)
+void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires RadarClass
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const MapClass*, int16_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, int16_t, int, HouseClass *)>(0x004FE7C8);
+    void(*func)(const MapClass*, cell_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *)>(0x004FE7C8);
     func(this, cellnum, radius, house);
 #elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
@@ -518,7 +518,7 @@ void MapClass::UnJam_From(int16_t cellnum, int radius, HouseClass *house)
             int32_t radius_count = RadiusCount[radius];
 
             while (radius_count-- >= 0) {
-                int16_t offset_cellnum = *offset_ptr + cellnum;
+                cell_t offset_cellnum = *offset_ptr + cellnum;
                 ++offset_ptr;
 
                 if (offset_cellnum < MAP_MAX_AREA &&
@@ -539,7 +539,7 @@ void MapClass::UnJam_From(int16_t cellnum, int radius, HouseClass *house)
  *
  * 0x004FE918
  */
-void MapClass::Place_Down(int16_t cellnum, ObjectClass *object)
+void MapClass::Place_Down(cell_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(object != nullptr);
@@ -552,7 +552,7 @@ void MapClass::Place_Down(int16_t cellnum, ObjectClass *object)
             int16_t *list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                int16_t occupy_cell = cellnum + *list_ptr++;
+                cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
                     CellClass &cell = Array[occupy_cell];
@@ -566,7 +566,7 @@ void MapClass::Place_Down(int16_t cellnum, ObjectClass *object)
             list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                int16_t occupy_cell = cellnum + *list_ptr++;
+                cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
                     CellClass &cell = Array[occupy_cell];
@@ -583,7 +583,7 @@ void MapClass::Place_Down(int16_t cellnum, ObjectClass *object)
  *
  * 0x004FEA28
  */
-void MapClass::Pick_Up(int16_t cellnum, ObjectClass *object)
+void MapClass::Pick_Up(cell_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(object != nullptr);
@@ -596,7 +596,7 @@ void MapClass::Pick_Up(int16_t cellnum, ObjectClass *object)
             int16_t *list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                int16_t occupy_cell = cellnum + *list_ptr++;
+                cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
                     CellClass &cell = Array[occupy_cell];
@@ -610,7 +610,7 @@ void MapClass::Pick_Up(int16_t cellnum, ObjectClass *object)
             list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                int16_t occupy_cell = cellnum + *list_ptr++;
+                cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
                     CellClass &cell = Array[occupy_cell];
@@ -627,7 +627,7 @@ void MapClass::Pick_Up(int16_t cellnum, ObjectClass *object)
  *
  * 0x004FEB38
  */
-void MapClass::Overlap_Down(int16_t cellnum, ObjectClass *object)
+void MapClass::Overlap_Down(cell_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(object != nullptr);
@@ -640,7 +640,7 @@ void MapClass::Overlap_Down(int16_t cellnum, ObjectClass *object)
             int16_t *list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                int16_t occupy_cell = cellnum + *list_ptr++;
+                cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
                     CellClass &cell = Array[occupy_cell];
@@ -657,7 +657,7 @@ void MapClass::Overlap_Down(int16_t cellnum, ObjectClass *object)
  *
  * 0x004FEBD8
  */
-void MapClass::Overlap_Up(int16_t cellnum, ObjectClass *object)
+void MapClass::Overlap_Up(cell_t cellnum, ObjectClass *object)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(object != nullptr);
@@ -670,7 +670,7 @@ void MapClass::Overlap_Up(int16_t cellnum, ObjectClass *object)
             int16_t *list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                int16_t occupy_cell = cellnum + *list_ptr++;
+                cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
                     CellClass &cell = Array[occupy_cell];
@@ -694,7 +694,7 @@ int MapClass::Overpass()
     if (MapCellHeight > 0) {
         for (int y = 0; y < MapCellHeight; ++y) {
             for (int x = 0; x < MapCellWidth; ++x) {
-                int16_t cellnum = Cell_From_XY(MapCellX + x, MapCellY + y);
+                cell_t cellnum = Cell_From_XY(MapCellX + x, MapCellY + y);
                 CellClass &cell = Array[cellnum];
                 retval += cell.Ore_Adjust(true);
                 cell.Recalc_Attributes();
@@ -710,7 +710,7 @@ int MapClass::Overpass()
  *
  * 0x004FF168
  */
-int MapClass::Cell_Region(int16_t cellnum)
+int MapClass::Cell_Region(cell_t cellnum)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
@@ -722,11 +722,11 @@ int MapClass::Cell_Region(int16_t cellnum)
  *
  * 0x004FF1BC
  */
-int MapClass::Cell_Threat(int16_t cellnum, HousesType house)
+int MapClass::Cell_Threat(cell_t cellnum, HousesType house)
 {
     // TODO requires HouseClass
 #ifndef CHRONOSHIFT_STANDALONE
-    int(*func)(const MapClass*, int16_t, HousesType) = reinterpret_cast<int(*)(const MapClass*, int16_t, HousesType)>(0x004FF1BC);
+    int(*func)(const MapClass*, cell_t, HousesType) = reinterpret_cast<int(*)(const MapClass*, cell_t, HousesType)>(0x004FF1BC);
     return func(this, cellnum, house);
 #elif 0
     DEBUG_ASSERT(this != nullptr);
@@ -833,28 +833,28 @@ int MapClass::Zone_Reset(int zones)
  *
  * 0x004FF7D8
  */
-int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
+int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
 {
-    int16_t coord_x = Cell_Get_X(cell);
-    int16_t coord_y = Cell_Get_Y(cell);
+    int16_t cell_x = Cell_Get_X(cell);
+    int16_t cell_y = Cell_Get_Y(cell);
 
     // Amphibious Destroyer is Vessels and other floaty things?
     SpeedType speed = (mzone == MZONE_AMPHIBIOUS_DESTROYER ? SPEED_FLOAT : SPEED_TRACK);
 
-    // Check the coords are within the visible part of the map
-    if (coord_y >= MapCellY && coord_y < (MapCellHeight + MapCellY) && coord_x >= MapCellX
-        && coord_x < (MapCellWidth + MapCellX)) {
+    // Check the cell coords are within the visible part of the map
+    if (cell_y >= MapCellY && cell_y < (MapCellHeight + MapCellY) && cell_x >= MapCellX
+        && cell_x < (MapCellWidth + MapCellX)) {
         int retval = 0;
         int left_pos;
 
-        // Scan backwards from coord to edge of map until we find a cell that is already marked for this zone or can't be
+        // Scan backwards from cell coord to edge of map until we find a cell that is already marked for this zone or can't be
         // moved to and record the pos.
-        for (left_pos = coord_x; left_pos >= MapCellX; --left_pos) {
-            CellClass &cell = Array[Cell_From_XY(left_pos, coord_y)];
+        for (left_pos = cell_x; left_pos >= MapCellX; --left_pos) {
+            CellClass &cell = Array[Cell_From_XY(left_pos, cell_y)];
 
             // Check if clear to move, ignoring units, buildings and infantry.
             if (cell.Get_Zone(mzone) != 0 || !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
-                if (left_pos == coord_x) {
+                if (left_pos == cell_x) {
                     return 0;
                 }
 
@@ -869,8 +869,8 @@ int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
         int right_pos;
 
         // Scan forward to other edge of the map doing the same.
-        for (right_pos = coord_x; right_pos < MapCellWidth + MapCellX; ++right_pos) {
-            CellClass &cell = Array[Cell_From_XY(right_pos, coord_y)];
+        for (right_pos = cell_x; right_pos < MapCellWidth + MapCellX; ++right_pos) {
+            CellClass &cell = Array[Cell_From_XY(right_pos, cell_y)];
 
             // Check if clear to move, ignoring units, buildings and infantry.
             if (cell.Get_Zone(mzone) != 0 ||
@@ -884,15 +884,15 @@ int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
 
         // Set all the cells between the two positions to our zone value for this movement zone.
         for (int i = left_pos; i <= right_pos; ++i) {
-            Array[Cell_From_XY(i, coord_y)].Set_Zone(mzone, zone);
+            Array[Cell_From_XY(i, cell_y)].Set_Zone(mzone, zone);
             ++retval;
         }
 
         // If we have at least one cell, repeat the process above and below, sweet sweet recursion...
         if ((left_pos - 1) <= right_pos) {
             for (int i = left_pos - 1; i <= right_pos; ++i) {
-                retval += Zone_Span(Cell_From_XY(i, coord_y - 1), zone, mzone);
-                retval += Zone_Span(Cell_From_XY(i, coord_y + 1), zone, mzone);
+                retval += Zone_Span(Cell_From_XY(i, cell_y - 1), zone, mzone);
+                retval += Zone_Span(Cell_From_XY(i, cell_y + 1), zone, mzone);
             }
         }
 
@@ -908,12 +908,11 @@ int MapClass::Zone_Span(int16_t cell, int zone, MZoneType mzone)
  *
  * 0x004FFAC4
  */
-int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZoneType mzone) const
+cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZoneType mzone) const
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
-    int16_t near_cells[10];
-    int16_t near_cellnum;
+    cell_t near_cells[10];
 
     int near_cell_index = 0;
     int cell_x = Cell_Get_X(cellnum);
@@ -928,7 +927,7 @@ int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZ
     for (int i = 0; i < 64; ++i) {
         for (int j = -i; j <= i; ++j) {
             if (j >= -left && i <= top) {
-                near_cellnum = Cell_From_XY(j + cell_x, cell_y - i);
+                cell_t near_cellnum = Cell_From_XY(j + cell_x, cell_y - i);
 
                 if (Map.In_Radar(near_cellnum)) {
                     if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
@@ -942,7 +941,7 @@ int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZ
             }
 
             if (j <= right && i <= bottom) {
-                near_cellnum = Cell_From_XY(cell_x + j, i + cell_y);
+                cell_t near_cellnum = Cell_From_XY(cell_x + j, i + cell_y);
 
                 if (Map.In_Radar(near_cellnum)) {
                     if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
@@ -962,7 +961,7 @@ int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZ
 
         for (int k = -(i - 1); k <= i - 1; ++k) {
             if (k >= -top && i <= left) {
-                near_cellnum = Cell_From_XY(cell_x - i, k + cell_y);
+                cell_t near_cellnum = Cell_From_XY(cell_x - i, k + cell_y);
 
                 if (Map.In_Radar(near_cellnum)) {
                     if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
@@ -976,7 +975,7 @@ int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZ
             }
 
             if (k <= bottom && i <= right) {
-                near_cellnum = Cell_From_XY(cell_x + i, cell_y + k);
+                cell_t near_cellnum = Cell_From_XY(cell_x + i, cell_y + k);
 
                 if (Map.In_Radar(near_cellnum)) {
                     if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
@@ -1007,11 +1006,11 @@ int16_t MapClass::Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZ
  *
  * 0x004FFEAC
  */
-BOOL MapClass::Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) const
+BOOL MapClass::Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) const
 {
     // TODO requires HouseClass
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(const MapClass*, int16_t, HousesType&, ZoneType&) = reinterpret_cast<BOOL(*)(const MapClass*, int16_t, HousesType&, ZoneType&)>(0x004FFEAC);
+    BOOL(*func)(const MapClass*, cell_t, HousesType&, ZoneType&) = reinterpret_cast<BOOL(*)(const MapClass*, cell_t, HousesType&, ZoneType&)>(0x004FFEAC);
     return func(this, cellnum, house, zone);
 #elif 0
     if (cellnum < MAP_MAX_AREA && In_Radar(cellnum)) {
@@ -1042,11 +1041,11 @@ BOOL MapClass::Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) c
  *
  * 0x004FFF1C
  */
-int MapClass::Destroy_Bridge_At(int16_t cellnum)
+int MapClass::Destroy_Bridge_At(cell_t cellnum)
 {
     // TODO Needs TemplateClass, AnimClass
 #ifndef CHRONOSHIFT_STANDALONE
-    int(*func)(const MapClass*, int16_t) = reinterpret_cast<int(*)(const MapClass*, int16_t)>(0x004FFF1C);
+    int(*func)(const MapClass*, cell_t) = reinterpret_cast<int(*)(const MapClass*, cell_t)>(0x004FFF1C);
     return func(this, cellnum);
 #else
     return 0;
@@ -1404,11 +1403,11 @@ BOOL MapClass::Validate()
  *
  * 0x004FF554
  */
-ObjectClass *MapClass::Close_Object(uint32_t coord) const
+ObjectClass *MapClass::Close_Object(coord_t coord) const
 {
     // TODO Requires TechnoClass
 #ifndef CHRONOSHIFT_STANDALONE
-    ObjectClass *(*func)(const MapClass*, uint32_t) = reinterpret_cast<ObjectClass *(*)(const MapClass*, uint32_t)>(0x004FF554);
+    ObjectClass *(*func)(const MapClass*, coord_t) = reinterpret_cast<ObjectClass *(*)(const MapClass*, coord_t)>(0x004FF554);
     return func(this, coord);
 #elif 0
     static const int _offsets[9] = { 0, -1, 1, -128, 128, 127, 129, -127, -129 };
@@ -1417,7 +1416,7 @@ ObjectClass *MapClass::Close_Object(uint32_t coord) const
     int nearest = 0;
 
     for (int i = 0; i < ARRAY_SIZE(_offsets); ++i) {
-        int16_t offset_cell = _offsets[i] + Coord_To_Cell(coord);
+        cell_t offset_cell = _offsets[i] + Coord_To_Cell(coord);
 
         if (In_Radar(offset_cell)) {
             const CellClass &cell = Array[offset_cell];

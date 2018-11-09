@@ -131,7 +131,7 @@ ActionType TechnoClass::What_Action(ObjectClass *object) const
     return ActionType();
 }
 
-ActionType TechnoClass::What_Action(int16_t cellnum) const
+ActionType TechnoClass::What_Action(cell_t cellnum) const
 {
     return ActionType();
 }
@@ -156,12 +156,12 @@ BOOL TechnoClass::Can_Player_Move() const
     return 0;
 }
 
-uint32_t TechnoClass::Fire_Coord(int weapon) const
+coord_t TechnoClass::Fire_Coord(int weapon) const
 {
-    return uint32_t();
+    return coord_t();
 }
 
-BOOL TechnoClass::Unlimbo(uint32_t coord, DirType dir)
+BOOL TechnoClass::Unlimbo(coord_t coord, DirType dir)
 {
     return 0;
 }
@@ -209,7 +209,7 @@ BOOL TechnoClass::Select()
     return 0;
 }
 
-BOOL TechnoClass::In_Range(uint32_t a1, int weapon) const
+BOOL TechnoClass::In_Range(coord_t a1, int weapon) const
 {
     return 0;
 }
@@ -275,9 +275,9 @@ BuildingClass *TechnoClass::Find_Docking_Bay(BuildingType building, int a2) cons
     return nullptr;
 }
 
-int16_t TechnoClass::Find_Exit_Cell(TechnoClass *object) const
+cell_t TechnoClass::Find_Exit_Cell(TechnoClass *object) const
 {
-    return int16_t();
+    return cell_t();
 }
 
 /**
@@ -285,7 +285,7 @@ int16_t TechnoClass::Find_Exit_Cell(TechnoClass *object) const
  *
  * 0x005685C4
  */
-DirType TechnoClass::Desired_Load_Dir(ObjectClass *object, int16_t &cellnum) const
+DirType TechnoClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) const
 {
     cellnum = 0;
 
@@ -396,7 +396,7 @@ BOOL TechnoClass::Captured(HouseClass *house)
     return 0;
 }
 
-BOOL TechnoClass::Electric_Zap(int32_t target, BOOL a2, uint32_t a3, uint8_t *a4)
+BOOL TechnoClass::Electric_Zap(int32_t target, BOOL a2, coord_t a3, uint8_t *a4)
 {
     return 0;
 }
@@ -591,7 +591,7 @@ void TechnoClass::Techno_Draw_It(
 
 VisualType TechnoClass::Visual_Character(BOOL flag) const
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     if (Techno_Class_Of().Is_Invisible() && m_PlayerOwned) {
         return VISUAL_NORMAL;
