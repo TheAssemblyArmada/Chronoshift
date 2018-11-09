@@ -113,12 +113,12 @@ public:
     const fixed &Submerge_Delay() const { return SubmergeDelay; }
     const fixed &GameSpeed_Bias() const { return GameSpeedBias; }
     const fixed &Base_Bias() const { return BaseBias; }
-    int16_t Vortex_Range() const { return VortexRange; }
+    lepton_t Vortex_Range() const { return VortexRange; }
     MPHType Vortex_Speed() const { return VortexSpeed; }
     int Vortex_Damage() const { return VortexDamage; }
     const fixed &Vortex_Chance() const { return VortexChance; }
     const fixed &Exp_Spread() const { return ExpSpread; }
-    int16_t Fire_Supress() const { return FireSupress; }
+    lepton_t Fire_Supress() const { return FireSupress; }
     int Para_Tech() const { return ParaTech; }
     int Spy_Plane_Tech() const { return SpyPlaneTech; }
     int Parabomb_Tech() const { return ParabombTech; }
@@ -128,7 +128,7 @@ public:
     CrateType Water_Crate() const { return WaterCrate; }
     int Crate_Minimum() const { return CrateMinimum; }
     int Crate_Maximum() const { return CrateMaximum; }
-    int16_t LZ_Scan_Radius() const { return LZScanRadius; }
+    lepton_t LZ_Scan_Radius() const { return LZScanRadius; }
     int MPlayer_Money() const { return MPlayerMoney; }
     int MPlayer_Max_Money() const { return MPlayerMaxMoney; }
     bool MPlayer_ShadowGrow() const { return MPlayerShadowGrow; }
@@ -137,7 +137,7 @@ public:
     bool MPlayer_Crates() const { return MPlayerCrates; }
     bool MPlayer_AIPlayers() const { return MPlayerAIPlayers; }
     bool MPlayer_Capture_The_Flag() const { return MPlayerCaptureTheFlag; }
-    int16_t Drop_Zone_Radius() const { return DropZoneRadius; }
+    lepton_t Drop_Zone_Radius() const { return DropZoneRadius; }
     const fixed &Message_Delay() const { return MessageDelay; }
     const fixed &Savour_Delay() const { return SavourDelay; }
     int AV_Mine_Damage() const { return AVMineDamage; }
@@ -195,7 +195,7 @@ public:
     int Get_Gravity() const { return Gravity; }
     int Gap_Radius() const { return GapRadius; }
     const fixed &Gap_Regen_Interval() const { return GapRegenInterval; }
-    int16_t Radar_Jam_Radius() const { return RadarJamRadius; }
+    lepton_t Radar_Jam_Radius() const { return RadarJamRadius; }
     MPHType Get_Incoming() const { return Incoming; }
     int Min_Damage() const { return MinDamage; }
     int Max_Damage() const { return MaxDamage; }
@@ -230,12 +230,12 @@ public:
     int Max_Weapon() const { return MaxWeapon; }
     int Max_Warhead() const { return MaxWarhead; }
     int Max_TrigType() const { return MaxTrigType; }
-    int16_t Close_Enough_Distance() const { return CloseEnough; }
-    int16_t Stray_Distance() const { return Stray; }
-    int16_t Crush_Distance() const { return Crush; }
-    int16_t Crate_Radius() const { return CrateRadius; }
-    int16_t Homing_Scatter_Distance() const { return HomingScatter; }
-    int16_t Ballistic_Scatter_Distance() const { return BallisticScatter; }
+    lepton_t Close_Enough_Distance() const { return CloseEnough; }
+    lepton_t Stray_Distance() const { return Stray; }
+    lepton_t Crush_Distance() const { return Crush; }
+    lepton_t Crate_Radius() const { return CrateRadius; }
+    lepton_t Homing_Scatter_Distance() const { return HomingScatter; }
+    lepton_t Ballistic_Scatter_Distance() const { return BallisticScatter; }
     const fixed &Refund_Percent() const { return RefundPercent; }
     const fixed &Get_Iron_Curtain() const { return IronCurtain; }
     int Bridge_Strength() const { return BridgeStrength; }
@@ -245,8 +245,8 @@ public:
     const fixed &Path_Delay() const { return PathDelay; }
     const fixed &Movie_Time() const { return MovieTime; }
     int Chrono_Tech_Level() const { return ChronoTechLevel; }
-    int16_t Ore_Near_Scan() const { return OreNearScan; }
-    int16_t Ore_Far_Scan() const { return OreFarScan; }
+    lepton_t Ore_Near_Scan() const { return OreNearScan; }
+    lepton_t Ore_Far_Scan() const { return OreFarScan; }
     const fixed &Engineer_Damage() const { return EngineerDamage; }
     const fixed &Engineer_Capture_Level() const { return EngineerCaptureLevel; }
     const fixed &Chrono_Tank_Duration() const { return ChronoTankDuration; }

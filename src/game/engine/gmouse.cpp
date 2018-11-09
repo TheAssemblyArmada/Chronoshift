@@ -238,7 +238,7 @@ BOOL GameMouseClass::Load(Straw &straw)
         if (straw.Get(&saved_cells, sizeof(saved_cells)) == sizeof(saved_cells)) {
             DEBUG_LOG("Loading data for %u cells.\n", saved_cells);
             for (unsigned i = 0; i < saved_cells; ++i) {
-                int16_t cell_num;
+                cell_t cell_num;
 
                 if (straw.Get(&cell_num, sizeof(cell_num)) != sizeof(cell_num)) {
                     return false;
@@ -275,7 +275,7 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
     uint32_t saved_cells = 0;
 
     // Count how many cells have state that needs saving.
-    for (int16_t i = 0; i < MAP_MAX_AREA; ++i) {
+    for (cell_t i = 0; i < MAP_MAX_AREA; ++i) {
         if (Array[i].Should_Save()) {
             ++saved_cells;
         }
@@ -285,7 +285,7 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
     pipe.Put(&saved_cells, sizeof(saved_cells));
 
     // Save the cells that need saving.
-    for (int16_t i = 0; i < MAP_MAX_AREA; ++i) {
+    for (cell_t i = 0; i < MAP_MAX_AREA; ++i) {
         if (Array[i].Should_Save()) {
             pipe.Put(&i, sizeof(i));
             Array[i].Save(pipe);

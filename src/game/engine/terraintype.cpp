@@ -198,13 +198,13 @@ const int16_t *TerrainTypeClass::Overlap_List() const
  *
  * 0x0055B9E4
  */
-BOOL TerrainTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL TerrainTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
     // TODO requires TerrainClass
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)
-    (const TerrainTypeClass *, int16_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const TerrainTypeClass *, int16_t, HousesType)>(0x0055B9E4);
+    (const TerrainTypeClass *, cell_t, HousesType) =
+        reinterpret_cast<BOOL (*)(const TerrainTypeClass *, cell_t, HousesType)>(0x0055B9E4);
     return func(this, cellnum, house);
 #elif 0
     return new TerrainClass(Type, Cell_To_Coord(cellnum)) != nullptr;
@@ -239,7 +239,7 @@ ObjectClass *TerrainTypeClass::Create_One_Of(HouseClass *house) const
  *
  * 0x0055BAA0
  */
-uint32_t TerrainTypeClass::Coord_Fixup(uint32_t coord) const
+coord_t TerrainTypeClass::Coord_Fixup(coord_t coord) const
 {
     return Coord_Top_Left(coord);
 }

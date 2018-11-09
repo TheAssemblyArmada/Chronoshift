@@ -75,7 +75,7 @@ public:
 
     virtual int Max_Pips() const override;
     virtual void Dimensions(int &w, int &h) const override;
-    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
+    virtual BOOL Create_And_Place(cell_t cellnum, HousesType house = HOUSES_NONE) const override;
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
     virtual BOOL Read_INI(GameINIClass &ini) override;
 

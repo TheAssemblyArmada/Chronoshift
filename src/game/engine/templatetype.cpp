@@ -1131,7 +1131,7 @@ TemplateTypeClass &TemplateTypeClass::As_Reference(TemplateType tem)
     return *ttypeptr;
 }
 
-uint32_t TemplateTypeClass::Coord_Fixup(uint32_t coord) const
+coord_t TemplateTypeClass::Coord_Fixup(coord_t coord) const
 {
     DEBUG_ASSERT(this != nullptr);
 

@@ -65,13 +65,13 @@ public:
     virtual void AI() override;
     virtual BOOL Is_Player_Army() const override;
     virtual ActionType What_Action(ObjectClass *object) const override;
-    virtual ActionType What_Action(int16_t cellnum) const override;
+    virtual ActionType What_Action(cell_t cellnum) const override;
     virtual int Get_Ownable() const override;
     virtual BOOL Can_Repair() const override;
     virtual BOOL Can_Player_Fire() const override;
     virtual BOOL Can_Player_Move() const override;
-    virtual uint32_t Fire_Coord(int weapon = WEAPON_SLOT_PRIMARY) const override;
-    virtual BOOL Unlimbo(uint32_t coord, DirType dir = DIR_NORTH) override;
+    virtual coord_t Fire_Coord(int weapon = WEAPON_SLOT_PRIMARY) const override;
+    virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH) override;
     virtual void Detach(int32_t target, int a2) override;
     virtual void Record_The_Kill(TechnoClass *object = nullptr) override;
     virtual void Do_Shimmer() override;
@@ -82,7 +82,7 @@ public:
     virtual BOOL Mark(MarkType mark) override;
     virtual void Clicked_As_Target(int a1) override;
     virtual BOOL Select() override;
-    virtual BOOL In_Range(uint32_t a1, int weapon = 0) const override;
+    virtual BOOL In_Range(coord_t a1, int weapon = 0) const override;
     virtual int Weapon_Range(int weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual DamageResultType Take_Damage(
         int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) override;
@@ -99,8 +99,8 @@ public:
     virtual int How_Many_Survivors() const;
     virtual DirType Turret_Facing() const;
     virtual BuildingClass *Find_Docking_Bay(BuildingType building, int a2 = 0) const;
-    virtual int16_t Find_Exit_Cell(TechnoClass *object) const;
-    virtual DirType Desired_Load_Dir(ObjectClass *object, int16_t &cellnum) const;
+    virtual cell_t Find_Exit_Cell(TechnoClass *object) const;
+    virtual DirType Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) const;
     virtual DirType Fire_Direction() const;
     virtual InfantryType Crew_Type() const;
     virtual BOOL Is_Allowed_To_Recloak() const;
@@ -126,7 +126,7 @@ public:
     virtual void Assign_Target(int32_t target);
     virtual BulletClass *Fire_At(int32_t target, int weapon = WEAPON_SLOT_PRIMARY);
     virtual BOOL Captured(HouseClass *house);
-    virtual BOOL Electric_Zap(int32_t target, BOOL a2, uint32_t a3 = 0, uint8_t *a4 = nullptr);
+    virtual BOOL Electric_Zap(int32_t target, BOOL a2, coord_t a3 = 0, uint8_t *a4 = nullptr);
     virtual void Renovate();
     virtual uint8_t *Remap_Table() const;
     virtual void Draw_Pips(int x, int y, WindowNumberType window) const;

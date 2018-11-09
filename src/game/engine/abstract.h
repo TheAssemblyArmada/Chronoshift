@@ -36,48 +36,58 @@ public:
 
     virtual const char *Name() const { return ""; }
     virtual HousesType Owner() const { return HOUSES_NONE; }
-    virtual uint32_t Center_Coord() const { return Coord; }
-    virtual uint32_t Target_Coord() const { return Coord; }
-    virtual MoveType Can_Enter_Cell(int16_t cellnum, FacingType facing = FACING_NONE) const { return MOVE_OK; }
+    virtual coord_t Center_Coord() const { return m_Coord; }
+    virtual coord_t Target_Coord() const { return m_Coord; }
+    virtual MoveType Can_Enter_Cell(cell_t cellnum, FacingType facing = FACING_NONE) const { return MOVE_OK; }
     virtual void AI() {}
 
     BOOL Is_Techno() const;
     BOOL Is_Foot() const;
-    int Get_Heap_ID() const { return HeapID; }
-    BOOL Is_Active() const { return IsActive; }
-    RTTIType What_Am_I() const { return RTTI; }
-    uint32_t Get_Coord() const { return Coord; }
-    int Get_Height() const { return Height; }
+    BOOL Is_Ground_Foot() const;
 
-protected:
-    RTTIType RTTI; // ID for this object type, set from derived type constructors.
-    int HeapID;
-    uint32_t Coord;
-    int Height;
+    int Get_Heap_ID() const { return m_HeapID; }
+    BOOL Is_Active() const { return m_IsActive; }
+    RTTIType What_Am_I() const { return m_RTTI; }
+    coord_t Get_Coord() const { return m_Coord; }
+    cell_t Get_Cell() const;
+    void Set_Coord(coord_t coord) { m_Coord = coord; }
+    int Get_Height() const { return m_Height; }
+    void Set_Height(int height) { m_Height = height; }
+
+private:
+    RTTIType m_RTTI; // ID for this object type, set from derived type constructors.
+    int m_HeapID;
+    coord_t m_Coord;
+    int m_Height;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union
     {
         struct
         {
-            bool IsActive : 1; // & 1
+            bool m_IsActive : 1; // 1
         };
         int Bitfield;
     };
 #else
-    bool IsActive;
+    bool m_IsActive;
 #endif
 };
 
 inline BOOL AbstractClass::Is_Techno() const
 {
-    return RTTI == RTTI_BUILDING || RTTI == RTTI_UNIT || RTTI == RTTI_INFANTRY || RTTI == RTTI_VESSEL
-        || RTTI == RTTI_AIRCRAFT;
+    return m_RTTI == RTTI_BUILDING || m_RTTI == RTTI_UNIT || m_RTTI == RTTI_INFANTRY || m_RTTI == RTTI_VESSEL
+        || m_RTTI == RTTI_AIRCRAFT;
 }
 
 inline BOOL AbstractClass::Is_Foot() const
 {
-    return RTTI == RTTI_UNIT || RTTI == RTTI_INFANTRY || RTTI == RTTI_VESSEL || RTTI == RTTI_AIRCRAFT;
+    return m_RTTI == RTTI_UNIT || m_RTTI == RTTI_INFANTRY || m_RTTI == RTTI_VESSEL || m_RTTI == RTTI_AIRCRAFT;
+}
+
+inline BOOL AbstractClass::Is_Ground_Foot() const
+{
+    return m_RTTI == RTTI_UNIT || m_RTTI == RTTI_INFANTRY || m_RTTI == RTTI_VESSEL;
 }
 
 #endif // ABSTRACT_H

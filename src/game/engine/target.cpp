@@ -345,8 +345,8 @@ coord_t As_Coord(target_t target)
         ObjectClass *objptr = As_Object(target);
         return (objptr != nullptr ? objptr->Target_Coord() : 0);
     }
-    int16_t lx = 16 * (Target_Get_ID(target) & 0xFFF) + 8;
-    int16_t ly = 16 * ((Target_Get_ID(target) >> 12) & 0xFFF) + 8;
+    lepton_t lx = 16 * (Target_Get_ID(target) & 0xFFF) + 8;
+    lepton_t ly = 16 * ((Target_Get_ID(target) >> 12) & 0xFFF) + 8;
     return Coord_From_Lepton_XY(lx, ly);
 #endif
 }

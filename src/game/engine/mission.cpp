@@ -62,7 +62,7 @@ MissionClass::MissionClass(RTTIType type, int id) :
  */
 MissionType MissionClass::Get_Mission() const
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     if (Mission != MISSION_NONE) {
         return Mission;
@@ -78,7 +78,7 @@ MissionType MissionClass::Get_Mission() const
  */
 void MissionClass::Assign_Mission(MissionType mission)
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     if (mission == MISSION_QMOVE) {
         mission = MISSION_MOVE;
@@ -96,7 +96,7 @@ void MissionClass::Assign_Mission(MissionType mission)
  */
 BOOL MissionClass::Commence()
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     if (MissionQueue != MISSION_NONE) {
         MissionTimer.Reset();
@@ -117,7 +117,7 @@ BOOL MissionClass::Commence()
  */
 void MissionClass::Set_Mission(MissionType mission)
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     MissionQueue = MISSION_NONE;
     Mission = mission;
@@ -130,7 +130,7 @@ void MissionClass::Set_Mission(MissionType mission)
  */
 void MissionClass::Override_Mission(MissionType mission, int target1, int target2)
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     if (MissionQueue == MISSION_NONE) {
         SuspendedMission = MissionQueue;
@@ -148,7 +148,7 @@ void MissionClass::Override_Mission(MissionType mission, int target1, int target
  */
 BOOL MissionClass::Restore_Mission()
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     if (SuspendedMission != MISSION_NONE) {
         Assign_Mission(SuspendedMission);
@@ -167,7 +167,7 @@ BOOL MissionClass::Restore_Mission()
  */
 void MissionClass::AI()
 {
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
     ObjectClass::AI();
 
@@ -175,7 +175,7 @@ void MissionClass::AI()
         return;
     }
 
-    if (Is_Active() && MissionTimer == 0 && Health > 0) {
+    if (Is_Active() && MissionTimer == 0 && Get_Health() > 0) {
         switch (Get_Mission()) {
             case MISSION_SLEEP:
             case MISSION_HARMLESS:

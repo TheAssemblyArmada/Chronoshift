@@ -122,11 +122,11 @@ void VesselTypeClass::Dimensions(int &w, int &h) const
  *
  * 0x005848C4
  */
-BOOL VesselTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
+BOOL VesselTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(const VesselTypeClass *, int16_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const VesselTypeClass *, int16_t, HousesType)>(0x005848C4);
+    BOOL (*func)(const VesselTypeClass *, cell_t, HousesType) =
+        reinterpret_cast<BOOL (*)(const VesselTypeClass *, cell_t, HousesType)>(0x005848C4);
     return func(this, cellnum, house);
 #else
     /*VesselClass *vptr = new VesselClass(m_Type, HOUSES_NONE);

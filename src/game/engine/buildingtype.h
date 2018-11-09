@@ -178,7 +178,7 @@ class BuildingTypeClass : public TechnoTypeClass
     };
 
 public:
-    BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, uint32_t exit_coord,
+    BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, coord_t exit_coord,
         RemapType altremap, int primaryf, int primaryl, int primaryh, BOOL fake, BOOL unk1, BOOL nominal, BOOL wall,
         BOOL unk2, BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL theater, BOOL turret,
         BOOL remapable, RTTIType factory, DirType dir, BSizeType size, const int16_t *exit_list, const int16_t *occupy_list,
@@ -195,12 +195,12 @@ public:
 #endif
 
     // AbstractTypeClass virtuals.
-    virtual uint32_t Coord_Fixup(uint32_t coord) const override;
+    virtual coord_t Coord_Fixup(coord_t coord) const override;
     virtual int Full_Name() const override;
     // ObjectTypeClass virtuals
     virtual int Max_Pips() const override;
     virtual void Dimensions(int &w, int &h) const override;
-    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const override;
+    virtual BOOL Create_And_Place(cell_t cellnum, HousesType house = HOUSES_NONE) const override;
     virtual int Cost_Of() const override;
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override;
     virtual const int16_t *Occupy_List(BOOL recalc = false) const override;
@@ -254,7 +254,7 @@ private:
     FacingType m_Facing;
     int m_Adjacency;
     RTTIType m_FactoryType; // Type of object this building can produce.
-    uint32_t m_ExitCoord;
+    coord_t m_ExitCoord;
     const int16_t *m_ExitList;
     BuildingType m_Type;
     DirType m_StartFacing;

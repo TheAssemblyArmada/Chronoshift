@@ -139,7 +139,7 @@ private:
     MPHType Speed; // Speed of projectile to target (100 is maximum)
     WarheadTypeClass *Warhead;    // Warhead to attach to projectile
     int ROF; // Delay between shots in ticks [15 = 1 second at middle speed setting]
-    int16_t Range;    // Maximum cell range in leptons
+    lepton_t Range;    // Maximum cell range in leptons
     VocType Report; // Sound to play when firing
     AnimType Anim; // Animation to display as a firing effect
 };

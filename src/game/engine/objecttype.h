@@ -41,7 +41,7 @@ public:
 
     virtual int Max_Pips() const { return 0; }
     virtual void Dimensions(int &w, int &h) const;
-    virtual BOOL Create_And_Place(int16_t cellnum, HousesType house = HOUSES_NONE) const = 0;
+    virtual BOOL Create_And_Place(cell_t cellnum, HousesType house = HOUSES_NONE) const = 0;
     virtual int Cost_Of() const { return 0; }
     virtual int Time_To_Build() const { return 0; }
     virtual ObjectClass *Create_One_Of(HouseClass *house) const = 0;
@@ -52,16 +52,18 @@ public:
 
     BOOL Read_INI(GameINIClass &ini);
 
-    BOOL Is_Crushable() { return Crushable; }
-    BOOL Is_Selectable() { return Selectable; }
-    BOOL Is_Immune() { return Immune; }
-    BOOL Get_Bit64() { return Bit64; }
-    BOOL Get_Bit128() { return Bit128; }
-    int16_t Get_Strength() { return Strength; }
+    BOOL Is_Crushable() const { return Crushable; }
+    BOOL Is_Selectable() const { return Selectable; }
+    BOOL Is_Immune() const { return Immune; }
+    BOOL Get_Bit64() const { return Bit64; }
+    BOOL Get_Bit128() const { return Bit128; }
+    int16_t Get_Strength() const { return Strength; }
+    ArmorType Get_Armor() const { return Armor; }
     void *Get_Image_Data() const { return ImageData; }
     const char *Get_Image_Name() const { return ImageName[0] != '\0' ? ImageName : Get_Name(); }
     void Init_Frame_Dimensions(int frames) const { if (FrameDimensions != nullptr) FrameDimensions = new TRect<int>[frames]; }
     void Set_Frame_Dimensions(void *shape, int frame) const;
+
     static void One_Time();
 
 protected:

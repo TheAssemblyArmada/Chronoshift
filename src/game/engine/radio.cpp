@@ -83,7 +83,7 @@ BOOL RadioClass::Limbo()
 {
     DEBUG_ASSERT(this != nullptr);
 
-    if (!InLimbo) {
+    if (!In_Limbo()) {
         Transmit_Message(RADIO_OVER_AND_OUT);
     }
 

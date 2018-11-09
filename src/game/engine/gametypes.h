@@ -29,12 +29,12 @@ typedef int16_t cell_t;
 typedef int32_t target_t;
 typedef uint16_t lepton_t;
 
-inline int Cells_To_Pixels(uint32_t cells)
+inline int Cells_To_Pixels(coord_t cells)
 {
     return (cells * 24);
 }
 
-inline uint32_t Pixels_To_Cells(int pixels)
+inline coord_t Pixels_To_Cells(int pixels)
 {
     return (pixels / 24);
 }

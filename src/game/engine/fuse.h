@@ -19,6 +19,7 @@
 #define FUSE_H
 
 #include "always.h"
+#include "gametypes.h"
 
 // forward decs
 class FileClass;
@@ -35,8 +36,8 @@ class FuseClass
 public:
     FuseClass() : Duration(0), ArmTimer(0), Position(0), ArmDistance(0) {}
 
-    void Arm_Fuse(uint32_t pos, uint32_t arm_pos, int duration, int arm_time);
-    int Fuse_Checkup(uint32_t a1);
+    void Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_time);
+    int Fuse_Checkup(coord_t a1);
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
@@ -47,7 +48,7 @@ public:
 private:
     uint8_t Duration;
     uint8_t ArmTimer;
-    uint32_t Position;
+    coord_t Position;
     int16_t ArmDistance;
 };
 

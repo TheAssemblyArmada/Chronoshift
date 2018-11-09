@@ -52,34 +52,34 @@ public:
     CellClass &operator[](int index) { return Array[index]; }
 
     BOOL Place_Random_Crate();
-    BOOL Remove_Crate(int16_t cellnum);
-    int16_t Pick_Random_Location() const;
-    BOOL In_Radar(int16_t cellnum) const;
-    void Sight_From(int16_t cellnum, int radius, HouseClass *house, BOOL a4);
-    void Shroud_From(int16_t cellnum, int radius);
-    void Jam_From(int16_t cellnum, int radius, HouseClass *house);
-    void UnJam_From(int16_t cellnum, int radius, HouseClass *house);
-    void Place_Down(int16_t cellnum, ObjectClass *object);
-    void Pick_Up(int16_t cellnum, ObjectClass *object);
-    void Overlap_Down(int16_t cellnum, ObjectClass *object);
-    void Overlap_Up(int16_t cellnum, ObjectClass *object);
+    BOOL Remove_Crate(cell_t cellnum);
+    cell_t Pick_Random_Location() const;
+    BOOL In_Radar(cell_t cellnum) const;
+    void Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4);
+    void Shroud_From(cell_t cellnum, int radius);
+    void Jam_From(cell_t cellnum, int radius, HouseClass *house);
+    void UnJam_From(cell_t cellnum, int radius, HouseClass *house);
+    void Place_Down(cell_t cellnum, ObjectClass *object);
+    void Pick_Up(cell_t cellnum, ObjectClass *object);
+    void Overlap_Down(cell_t cellnum, ObjectClass *object);
+    void Overlap_Up(cell_t cellnum, ObjectClass *object);
     int Overpass();
-    int32_t Cell_Region(int16_t cellnum);
-    int Cell_Threat(int16_t cellnum, HousesType house);
+    int32_t Cell_Region(cell_t cellnum);
+    int Cell_Threat(cell_t cellnum, HousesType house);
     int Zone_Reset(int zones);
-    int Zone_Span(int16_t cell, int zone, MZoneType mzone);
-    int16_t Nearby_Location(int16_t cellnum, SpeedType speed, int zone, MZoneType mzone) const;
-    BOOL Base_Region(int16_t cellnum, HousesType &house, ZoneType &zone) const;
-    int Destroy_Bridge_At(int16_t cellnum);
+    int Zone_Span(cell_t cell, int zone, MZoneType mzone);
+    cell_t Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZoneType mzone) const;
+    BOOL Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) const;
+    int Destroy_Bridge_At(cell_t cellnum);
     void Detach(int32_t target, int a2);
     int Intact_Bridge_Count() const;
     void Shroud_The_Map();
     int Write_Binary(Pipe &pipe);
     BOOL Read_Binary(Straw &straw);
     BOOL Validate();
-    ObjectClass *Close_Object(uint32_t coord) const;
+    ObjectClass *Close_Object(coord_t coord) const;
 
-    int16_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
+    cell_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
     int Get_Map_Cell_Width() const {return MapCellWidth;}
     int Get_Map_Cell_Height() const {return MapCellHeight;}
 

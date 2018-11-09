@@ -46,14 +46,14 @@ public:
     virtual ~ObjectClass();
 
     virtual const char *Name() const override;
-    virtual uint32_t Center_Coord() const override { return Coord; }
-    virtual uint32_t Target_Coord() const override;
+    virtual coord_t Center_Coord() const override { return Get_Coord(); }
+    virtual coord_t Target_Coord() const override;
     virtual void AI() override;
     virtual BOOL Is_Player_Army() const { return false; }
     virtual void *Get_Image_Data() const { return Class_Of().Get_Image_Data(); }
     virtual ActionType What_Action(ObjectClass *object) const { return ACTION_NONE; }
-    virtual ActionType What_Action(int16_t cellnum) const { return ACTION_NONE; }
-    virtual LayerType In_Which_Layer() const { return Height > 171 ? LAYER_TOP : LAYER_GROUND; }
+    virtual ActionType What_Action(cell_t cellnum) const { return ACTION_NONE; }
+    virtual LayerType In_Which_Layer() const { return Get_Height() > 171 ? LAYER_TOP : LAYER_GROUND; }
     virtual int Get_Ownable() const { return OWNER_ALL; }
     virtual ObjectTypeClass &Class_Of() const = 0;
     virtual int Full_Name() const { return Class_Of().Full_Name(); }
@@ -61,17 +61,17 @@ public:
     virtual BOOL Can_Demolish() const { return false; }
     virtual BOOL Can_Player_Fire() const { return false; }
     virtual BOOL Can_Player_Move() const { return false; }
-    virtual uint32_t Docking_Coord() const { return Center_Coord(); }
-    virtual uint32_t Render_Coord() const { return Center_Coord(); }
-    virtual uint32_t Sort_Y() const { return Coord; }
-    virtual uint32_t Fire_Coord(int weapon = WEAPON_SLOT_PRIMARY) const { return Coord; }
-    virtual uint32_t Exit_Coord() const { return Center_Coord(); }
+    virtual coord_t Docking_Coord() const { return Center_Coord(); }
+    virtual coord_t Render_Coord() const { return Center_Coord(); }
+    virtual coord_t Sort_Y() const { return Get_Coord(); }
+    virtual coord_t Fire_Coord(int weapon = WEAPON_SLOT_PRIMARY) const { return Get_Coord(); }
+    virtual coord_t Exit_Coord() const { return Center_Coord(); }
     virtual BOOL Limbo();
-    virtual BOOL Unlimbo(uint32_t coord, DirType dir = DIR_NORTH);
-    virtual void Detach(int32_t target, int a2);
+    virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH);
+    virtual void Detach(target_t target, int a2);
     virtual void Detach_All(int a1 = 1);
     virtual void Record_The_Kill(TechnoClass *object = nullptr) {}
-    virtual BOOL Paradrop(uint32_t coord);
+    virtual BOOL Paradrop(coord_t coord);
     virtual void Do_Shimmer() {}
     virtual int Exit_Object(TechnoClass *object) { return 0; }
     virtual BOOL Render(BOOL force_render = false);
@@ -84,14 +84,14 @@ public:
     virtual BOOL Mark(MarkType mark);
     virtual void Mark_For_Redraw();
     virtual void Active_Click_With(ActionType action, ObjectClass *object) {}
-    virtual void Active_Click_With(ActionType action, int16_t cellnum) {}
+    virtual void Active_Click_With(ActionType action, cell_t cellnum) {}
     virtual void Clicked_As_Target(int a1) {}
     virtual BOOL Select();
     virtual void Unselect();
-    virtual BOOL In_Range(uint32_t a1, int weapon = 0) const { return 0; }
+    virtual BOOL In_Range(coord_t a1, int weapon = 0) const { return 0; }
     virtual int Weapon_Range(int weapon = WEAPON_SLOT_PRIMARY) const { return 0; }
     virtual DamageResultType Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false);
-    virtual void Scatter(uint32_t coord = 0, int a2 = 0, BOOL a3 = false) {}
+    virtual void Scatter(coord_t coord = 0, int a2 = 0, BOOL a3 = false) {}
     virtual BOOL Catch_Fire() { return 0; }
     virtual void Fire_Out() {}
     virtual int Value() const { return 0; }
@@ -106,11 +106,15 @@ public:
     virtual void Decode_Pointers();
     virtual void Move(FacingType facing);
 
-    SmartPtr<ObjectClass> &Get_Next() { return Next; }
-    BOOL In_Limbo() const { return InLimbo; }
+    SmartPtr<ObjectClass> &Get_Next() { return m_Next; }
+    BOOL In_Limbo() const { return m_InLimbo; }
+    int16_t Get_Health() const { return m_Health; }
 
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);
+
+    // This function was a global, but only ObjectClass derived classes use it.
+    void Shorten_Attached_Anims();
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -119,31 +123,31 @@ protected:
     {
         struct
         {
-            bool IsDown : 1; // & 1
-            bool ToDamage : 1; // & 2
-            bool ToDisplay : 1; // & 4
-            bool InLimbo : 1; // & 8 Is this object in limbo [state of nothing, thus not processed per frame tick]?
-            bool Selected : 1; // & 16 Has this object been selected by the player?
-            bool AnimAttached : 1; // & 32
-            bool IsFalling : 1; // & 64 Is this object falling from a height [as a paradropped object]?
-            bool OBit1_128 : 1; // & 128
+            bool m_IsDown : 1; // 1
+            bool m_ToDamage : 1; // 2
+            bool m_ToDisplay : 1; // 4
+            bool m_InLimbo : 1; // 8 Is this object in limbo [state of nothing, thus not processed per frame tick]?
+            bool m_Selected : 1; // 16 Has this object been selected by the player?
+            bool m_AnimAttached : 1; // 32
+            bool m_IsFalling : 1; // 64 Is this object falling from a height [as a paradropped object]?
+            bool m_OBit1_128 : 1; // 128
         };
-        int Bitfield;
+        int m_Bitfield;
     };
 #else
-    bool IsDown;
-    bool ToDamage;
-    bool ToDisplay;
-    bool InLimbo; // Is this object in limbo [state of nothing, thus not processed per frame tick]?
-    bool Selected; // Has this object been selected by the player?
-    bool AnimAttached;
-    bool IsFalling; // Is this object falling from a height [as a paradropped object]?
-    bool OBit1_128;
+    bool m_IsDown;
+    bool m_ToDamage;
+    bool m_ToDisplay;
+    bool m_InLimbo; // Is this object in limbo [state of nothing, thus not processed per frame tick]?
+    bool m_Selected; // Has this object been selected by the player?
+    bool m_AnimAttached;
+    bool m_IsFalling; // Is this object falling from a height [as a paradropped object]?
+    bool m_OBit1_128;
 #endif
-    int FallingHeight;
-    SmartPtr<ObjectClass> Next;
-    int AttachedTrigger; // GamePtr<TriggerClass> once triggerclass is implemented.
-    int16_t Health;
+    int m_FallingHeight;
+    SmartPtr<ObjectClass> m_Next;
+    int m_AttachedTrigger; // GamePtr<TriggerClass> once triggerclass is implemented.
+    int16_t m_Health;
 };
 
 void Unselect_All();

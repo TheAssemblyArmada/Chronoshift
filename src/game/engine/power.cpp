@@ -253,7 +253,7 @@ void PowerClass::Draw_It(BOOL force_redraw)
     */
 }
 
-void PowerClass::Refresh_Cells(int16_t cellnum, int16_t *overlap_list)
+void PowerClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 

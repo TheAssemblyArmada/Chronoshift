@@ -16,8 +16,15 @@
 #include "object.h"
 #include "coord.h"
 #include "iomap.h"
+#include "rules.h"
+#include "logic.h"
+#include "techno.h"
+#include "house.h"
+#include "globals.h"
+#include "session.h"
 //#include "anim.h"
 #include "minmax.h"
+#include "tracker.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClass<ObjectClass*> >(0x006677F8);
@@ -25,59 +32,61 @@ DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClas
 DynamicVectorClass<ObjectClass*> CurrentObjects;
 #endif
 
+#define CHRONOSHIFT_STANDALONE 1
+
 ObjectClass::ObjectClass() :
-    IsDown(false),
-    ToDamage(false),
-    ToDisplay(false),
-    InLimbo(true),
-    Selected(false),
-    AnimAttached(false),
-    IsFalling(false),
-    OBit1_128(false),
-    FallingHeight(0),
-    Next(nullptr),
-    AttachedTrigger(-1),
-    Health(255)
+    m_IsDown(false),
+    m_ToDamage(false),
+    m_ToDisplay(false),
+    m_InLimbo(true),
+    m_Selected(false),
+    m_AnimAttached(false),
+    m_IsFalling(false),
+    m_OBit1_128(false),
+    m_FallingHeight(0),
+    m_Next(nullptr),
+    m_AttachedTrigger(-1),
+    m_Health(255)
 {
 }
 
 ObjectClass::ObjectClass(RTTIType type, int id) :
     AbstractClass(type, id),
-    IsDown(false),
-    ToDamage(false),
-    ToDisplay(false),
-    InLimbo(true),
-    Selected(false),
-    AnimAttached(false),
-    IsFalling(false),
-    OBit1_128(false),
-    FallingHeight(0),
-    Next(nullptr),
-    AttachedTrigger(-1),
-    Health(255)
+    m_IsDown(false),
+    m_ToDamage(false),
+    m_ToDisplay(false),
+    m_InLimbo(true),
+    m_Selected(false),
+    m_AnimAttached(false),
+    m_IsFalling(false),
+    m_OBit1_128(false),
+    m_FallingHeight(0),
+    m_Next(nullptr),
+    m_AttachedTrigger(-1),
+    m_Health(255)
 {
 }
 
 ObjectClass::ObjectClass(ObjectClass const &that) :
     AbstractClass(that),
-    IsDown(that.IsDown),
-    ToDamage(that.ToDamage),
-    ToDisplay(that.ToDisplay),
-    InLimbo(that.InLimbo),
-    Selected(that.Selected),
-    AnimAttached(that.AnimAttached),
-    IsFalling(that.IsFalling),
-    OBit1_128(that.OBit1_128),
-    FallingHeight(that.FallingHeight),
-    Health(that.Health),
-    Next(that.Next),
-    AttachedTrigger(that.AttachedTrigger)
+    m_IsDown(that.m_IsDown),
+    m_ToDamage(that.m_ToDamage),
+    m_ToDisplay(that.m_ToDisplay),
+    m_InLimbo(that.m_InLimbo),
+    m_Selected(that.m_Selected),
+    m_AnimAttached(that.m_AnimAttached),
+    m_IsFalling(that.m_IsFalling),
+    m_OBit1_128(that.m_OBit1_128),
+    m_FallingHeight(that.m_FallingHeight),
+    m_Health(that.m_Health),
+    m_Next(that.m_Next),
+    m_AttachedTrigger(that.m_AttachedTrigger)
 {
 }
 
 ObjectClass::~ObjectClass()
 {
-    Next = nullptr;
+    m_Next = nullptr;
 }
 
 const char *ObjectClass::Name() const
@@ -85,11 +94,11 @@ const char *ObjectClass::Name() const
     return Class_Of().Get_Name();
 }
 
-uint32_t ObjectClass::Target_Coord() const
+coord_t ObjectClass::Target_Coord() const
 {
-    uint32_t coord = Center_Coord();
+    coord_t coord = Center_Coord();
 
-    return Coord_From_Lepton_XY(Coord_Lepton_X(coord), Coord_Lepton_Y(coord) - Height);
+    return Coord_From_Lepton_XY(Coord_Lepton_X(coord), Coord_Lepton_Y(coord) - Get_Height());
 }
 
 void ObjectClass::AI()
@@ -97,29 +106,29 @@ void ObjectClass::AI()
 #ifndef CHRONOSHIFT_STANDALONE
     void (*func)(ObjectClass *) = reinterpret_cast<void (*)(ObjectClass *)>(0x0051D7F0);
     func(this);
-#elif 0
-    DEBUG_ASSERT(IsActive);
+#else
+    DEBUG_ASSERT(Is_Active());
 
     AbstractClass::AI();
 
-    if (IsFalling) {
+    if (m_IsFalling) {
         LayerType layer = In_Which_Layer();
 
-        Height = FallingHeight + Height;
+        Set_Height(m_FallingHeight + Get_Height());
 
-        if (Height <= 0) {
-            Height = 0;
-            IsFalling = false;
+        if (Get_Height() <= 0) {
+            Set_Height(0);
+            m_IsFalling = false;
             Per_Cell_Process(PCP_2);
             Shorten_Attached_Anims();
         }
 
-        if (AnimAttached) {
-            --FallingHeight;
-            FallingHeight = Max(-3, FallingHeight);
+        if (m_AnimAttached) {
+            --m_FallingHeight;
+            m_FallingHeight = Max(-3, m_FallingHeight);
         } else {
-            FallingHeight = FallingHeight - Rule.Gravity;
-            FallingHeight = Max(-100, FallingHeight);
+            m_FallingHeight = m_FallingHeight - Rule.Get_Gravity();
+            m_FallingHeight = Max(-100, m_FallingHeight);
         }
 
         if (layer != In_Which_Layer()) {
@@ -143,47 +152,46 @@ BOOL ObjectClass::Limbo()
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(ObjectClass *) = reinterpret_cast<BOOL (*)(ObjectClass *)>(0x0051DDE8);
     return func(this);
-#elif 0
-    if (GameActive && !InLimbo) {
+#else
+    if (GameActive && !m_InLimbo) {
         Unselect();
         Detach_All();
         Mark(MARK_REMOVE);
         Map.Remove(this, In_Which_Layer());
 
-        if (Class_Of().OT_Bit64) {
+        if (Class_Of().Get_Bit64()) {
             Logic.Remove(this);
         }
 
         Hidden();
-        InLimbo = true;
+        m_InLimbo = true;
 
         return true;
     }
 
     return false;
-#else
-    return 0;
 #endif
 }
 
-BOOL ObjectClass::Unlimbo(uint32_t coord, DirType dir)
+BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)
-    (ObjectClass *, uint32_t, DirType) = reinterpret_cast<BOOL (*)(ObjectClass *, uint32_t, DirType)>(0x0051DE9C);
+    (ObjectClass *, coord_t, DirType) = reinterpret_cast<BOOL (*)(ObjectClass *, coord_t, DirType)>(0x0051DE9C);
     return func(this, coord, dir);
-#elif 0
+#else
     // Needs IOMapClass and Logic
-    int16_t cell = Coord_To_Cell(coord);
+    cell_t cell = Coord_To_Cell(coord);
 
-    if (GameActive && InLimbo && !IsDown && (ScenarioInit || Can_Enter_Cell(cell) == MOVE_OK)) {
-        InLimbo = false;
-        ToDisplay = false;
-        uint32_t tmp = Class_Of().Coord_Fixup(coord);
-        Coord = tmp;
+    if (GameActive && m_InLimbo && !m_IsDown && (ScenarioInit || Can_Enter_Cell(cell) == MOVE_OK)) {
+
+        m_InLimbo = false;
+        m_ToDisplay = false;
+
+        Set_Coord(Class_Of().Coord_Fixup(coord));
 
         if (Mark(MARK_PUT)) {
-            if (IsActive) {
+            if (Is_Active()) {
                 if (In_Which_Layer() != LAYER_NONE) {
                     Map.Submit(this, In_Which_Layer());
                 }
@@ -198,24 +206,23 @@ BOOL ObjectClass::Unlimbo(uint32_t coord, DirType dir)
     }
 
     return false;
-#else
-    return 0;
 #endif
 }
 
-void ObjectClass::Detach(int32_t target, int a2)
+void ObjectClass::Detach(target_t target, int a2)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(ObjectClass *, int32_t, int) = reinterpret_cast<void(*)(ObjectClass *, int32_t, int)>(0x0051DF74);
+    void(*func)(ObjectClass *, target_t, int) = reinterpret_cast<void(*)(ObjectClass *, target_t, int)>(0x0051DF74);
     func(this, target, a2);
-#elif 0
-    DEBUG_ASSERT(IsActive);
+#else
+    DEBUG_ASSERT(Is_Active());
 
-    if (AttachedTrigger != nullptr && Target_Get_RTTI(target) == RTTI_TRIGGER) {
+    //TODO: Requires TriggerClass.
+    /*if (AttachedTrigger != nullptr && Target_Get_RTTI(target) == RTTI_TRIGGER) {
         if (AttachedTrigger->As_Target() == target) {
             Attach_Trigger(nullptr);
         }
-    }
+    }*/
 #endif
 }
 
@@ -225,31 +232,31 @@ void ObjectClass::Detach_All(int a1)
     void(*func)(ObjectClass *, int) = reinterpret_cast<void(*)(ObjectClass *, int)>(0x0051DFDC);
     func(this, a1);
 #elif 0
-    if (damage || Owner() != PlayerPtr->What_Type()) {
+    if (a1 || Owner() != PlayerPtr->What_Type()) {
         Unselect();
     }
 
-    Detach_This_From_All(As_Target(this), damage);
+    Detach_This_From_All(As_Target(this), a1);
 #endif
 }
 
-BOOL ObjectClass::Paradrop(uint32_t coord)
+BOOL ObjectClass::Paradrop(coord_t coord)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(ObjectClass *, uint32_t) = reinterpret_cast<BOOL(*)(ObjectClass *, uint32_t)>(0x0051E5C0);
+    BOOL(*func)(ObjectClass *, coord_t) = reinterpret_cast<BOOL(*)(ObjectClass *, coord_t)>(0x0051E5C0);
     return func(this, coord);
 #elif 0
     // Needs AnimClass and Coord_Move
-    DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(Is_Active());
 
-    FallingHeight = 256;
-    IsFalling = true;
+    m_FallingHeight = 256;
+    m_IsFalling = true;
 
     if (Unlimbo(coord, DIR_SOUTH)) {
         AnimClass *anim = nullptr;
-        uint32_t coord = Coord_Move(Center_Coord(), DIR_NORTH, Height + 48);
+        coord_t coord = Coord_Move(Center_Coord(), DIR_NORTH, Get_Height() + 48);
 
-        if (RTTI == RTTI_BULLET) {
+        if (What_Am_I() == RTTI_BULLET) {
             anim = new AnimClass(ANIM_PARABOMB, coord, 0, 1, true);   //args needs checking
         } else {
             anim = new AnimClass(ANIM_PARACHUTE, coord, 0, 1, true);   //args needs checking
@@ -257,7 +264,6 @@ BOOL ObjectClass::Paradrop(uint32_t coord)
 
         anim->Attach_To(this);
     }
-
     return false;
 #else
     return false;
@@ -269,12 +275,13 @@ BOOL ObjectClass::Render(BOOL force_render)
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL(*func)(ObjectClass *, BOOL) = reinterpret_cast<BOOL(*)(ObjectClass *, BOOL)>(0x0051DD34);
     return func(this, force_render);
-#elif 0
-    // Needs IOMap DisplayClass
-    DEBUG_ASSERT(IsActive);
+#else
+    // Needs IOMap, DisplayClass
+    DEBUG_ASSERT(Is_Active());
 
-    if ((g_inMapEditor || DebugUnshroud || (force_render || ToDisplay)) && IsDown && !InLimbo) {
-        ToDisplay = false;
+    if ((g_inMapEditor || DebugUnshroud || (force_render || m_ToDisplay)) && m_IsDown && !m_InLimbo) {
+        m_ToDisplay = false;
+
         int x_pos;
         int y_pos;
 
@@ -286,8 +293,6 @@ BOOL ObjectClass::Render(BOOL force_render)
     }
 
     return false;
-#else
-    return 0;
 #endif
 }
 
@@ -303,7 +308,7 @@ const int16_t *ObjectClass::Overlap_List(BOOL a1) const
 
 fixed ObjectClass::Health_Ratio() const
 {
-    return fixed(Health, Class_Of().Get_Strength());
+    return fixed(m_Health, Class_Of().Get_Strength());
 }
 
 BOOL ObjectClass::Mark(MarkType mark)
@@ -312,13 +317,13 @@ BOOL ObjectClass::Mark(MarkType mark)
     BOOL(*func)(ObjectClass *, MarkType) = reinterpret_cast<BOOL(*)(ObjectClass *, MarkType)>(0x0051E368);
     return func(this, mark);
 #elif 0
-    // Needs IOMap DisplayClass
-    if (!IsActive || InLimbo) {
+    // Needs IOMap, DisplayClass
+    if (!Is_Active() || m_InLimbo) {
         return false;
     }
 
     if (mark == MARK_REDRAW || mark == MARK_3) {
-        if ((!ToDisplay || mark == MARK_3) && IsDown) {
+        if ((!m_ToDisplay || mark == MARK_3) && m_IsDown) {
             Mark_For_Redraw();
             return true;
         }
@@ -326,9 +331,9 @@ BOOL ObjectClass::Mark(MarkType mark)
         return false;
     }
 
-    if (mark == MARK_5 && IsDown) {
+    if (mark == MARK_5 && m_IsDown) {
         if (Class_Of().Get_Bit128()) {
-            Map.Overlap_Up(Coord_To_Cell(Coord), this);
+            Map.Overlap_Up(Coord_To_Cell(Get_Coord()), this);
         }
 
         Mark_For_Redraw();
@@ -336,9 +341,9 @@ BOOL ObjectClass::Mark(MarkType mark)
         return true;
     }
 
-    if (mark == MARK_4 && IsDown) {
+    if (mark == MARK_4 && m_IsDown) {
         if (Class_Of().Get_Bit128()) {
-            Map.Overlap_Down(Coord_To_Cell(Coord), this);
+            Map.Overlap_Down(Coord_To_Cell(Get_Coord()), this);
         }
 
         Mark_For_Redraw();
@@ -350,9 +355,9 @@ BOOL ObjectClass::Mark(MarkType mark)
         int risk = 0;
         HousesType house = HOUSES_NONE;
 
-        int16_t cellnum = NullCell;
+        cell_t cellnum = 0;
 
-        bool is_techno = false
+        bool is_techno = false;
 
         if (Is_Techno()) {
             risk = reinterpret_cast<TechnoClass *>(this)->Risk();
@@ -361,38 +366,38 @@ BOOL ObjectClass::Mark(MarkType mark)
             cellnum = Coord_To_Cell(Get_Coord());
         }
 
-        if (mark == MARK_PUT && !IsDown) {
-            if (is_techno && Session.GameToPlay == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
+        if (mark == MARK_PUT && !m_IsDown) {
+            if (is_techno && Session.Game_To_Play() == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
                 Map[cellnum].Adjust_Threat(house, risk);
             }
 
-            IsDown = true;
+            m_IsDown = true;
             Mark_For_Redraw();
 
             return true;
         }
 
-        if (mark != MARK_REMOVE || !IsDown) {
+        if (mark != MARK_REMOVE || !m_IsDown) {
             return false;
         }
 
-        if (is_techno && Session.GameToPlay == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
+        if (is_techno && Session.Game_To_Play() == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
             Map[cellnum].Adjust_Threat(house, risk);
         }
     }
 
-    IsDown = false;
+    m_IsDown = false;
 
     return true;
 #else
-    return 0;
+    return false;
 #endif
 }
 
 void ObjectClass::Mark_For_Redraw()
 {
-    if (!ToDisplay) {
-        ToDisplay = true;
+    if (!m_ToDisplay) {
+        m_ToDisplay = true;
         Map.Flag_To_Redraw();
     }
 }
@@ -403,10 +408,10 @@ BOOL ObjectClass::Select()
     BOOL(*func)(ObjectClass *) = reinterpret_cast<BOOL(*)(ObjectClass *)>(0x0051DBB0);
     return func(this);
 #elif 0
-    // TODO Needs TechnoClass HouseClass DisplayClass
-    DEBUG_ASSERT(IsActive);
+    // TODO Needs TechnoClass, HouseClass, DisplayClass
+    DEBUG_ASSERT(Is_Active());
 
-    if ((g_inMapEditor || !Selected) && Class_Of().Is_Selectable()) {
+    if ((g_inMapEditor || !m_Selected) && Class_Of().Is_Selectable()) {
         if (!g_inMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->m_IsALoner) {
             return false;
         }
@@ -437,7 +442,7 @@ BOOL ObjectClass::Select()
                     Mark(MARK_5);
                 }
 
-                Selected = true;
+                m_Selected = true;
 
                 if (In_Which_Layer() == LAYER_GROUND) {
                     Mark(MARK_4);
@@ -450,14 +455,14 @@ BOOL ObjectClass::Select()
 
     return false;
 #else
-    return 0;
+    return false;
 #endif
 }
 
 void ObjectClass::Unselect()
 {
     // If selected, process unselection.
-    if (Selected) {
+    if (m_Selected) {
         // Remove this object from the currently selected objects array.
         CurrentObjects.Delete(this);
 
@@ -470,7 +475,7 @@ void ObjectClass::Unselect()
         }
 
         // Set this object to unselected now we have performed the necessary tasks.
-        Selected = false;
+        m_Selected = false;
     }
 }
 
@@ -481,19 +486,19 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
         reinterpret_cast<DamageResultType (*)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0051E07C);
     return func(this, damage, a2, warhead, object, a5);
 #elif 0
-    // Needs IOMap DisplayClass
+    // Needs IOMap DisplayClass, Damage
     DamageResultType result = DAMAGE_UNAFFECTED;
 
-    int health = Health;
+    int health = m_Health;
 
     if (health <= 0 || !damage || (!a5 && Class_Of().Is_Immune())) {
         return DAMAGE_UNAFFECTED;
     }
 
-    int strength = Class_Of().Strength;
+    int strength = Class_Of().Get_Strength();
 
     if (!a5) {
-        damage = Modify_Damage(damage, warhead, Class_Of().Armor, a2); // needs confirming
+        damage = Modify_Damage(damage, warhead, Class_Of().Get_Armor(), a2); // needs confirming
 
         if (object != nullptr) {
             if (object->RTTI == RTTI_INFANTRY) {
@@ -501,7 +506,7 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
                 
                 if (iptr->Class_Of().IsCanine) {
                     if (As_Target(this) == object->TarCom) {
-                        damage = Health;
+                        damage = m_Health;
                     } else {
                         damage = 0;
                     }
@@ -523,21 +528,21 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
             result = DAMAGE_YELLOW;
         }
 
-        Health -= damage;
+        m_Health -= damage;
 
         if (health == damage) {
             if (object != nullptr) {
                 Record_The_Kill(object);
 
                 if (Is_Techno()) {
-                    TechnoClass *tptr = reiterpret_cast<TechnoClass *>(object);
+                    TechnoClass *tptr = reinterpret_cast<TechnoClass *>(object);
                     
                     if (tptr != nullptr) {
                         ObjectClass *v99 = As_Object(tptr->OwnerHouse->field_531);
                         DEBUG_ASSERT(v99 != nullptr);
                         if (v99 != nullptr) {
                             if (this != v99) {
-                                tptr->OwnerHouse->field_531 = NullTarget;
+                                tptr->OwnerHouse->field_531 = 0;
                             }
                         }
                     }
@@ -546,17 +551,17 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
                 Detach_All(1);
             }
 
-        } else if (Health == 1) {
+        } else if (m_Health == 1) {
             result = DAMAGE_RED;
         }
 
         if (object != nullptr) {
-            if (AttachedTrigger != nullptr && result != DAMAGE_DEAD) {
-                AttachedTrigger->Spring(TEVENT_ATTACKED, this);
+            if (m_AttachedTrigger != nullptr && result != DAMAGE_DEAD) {
+                m_AttachedTrigger->Spring(TEVENT_ATTACKED, this);
             }
         }
 
-        if (result != DAMAGE_UNAFFECTED && Selected) {
+        if (result != DAMAGE_UNAFFECTED && m_Selected) {
             Mark(MARK_REDRAW);
         }
         
@@ -564,13 +569,13 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
     }
 
     // TODO, check why not vessel?
-    if (RTTI == RTTI_INFANTRY || RTTI == RTTI_UNIT || RTTI == RTTI_AIRCRAFT) {
+    if (What_Am_I() == RTTI_INFANTRY || What_Am_I() == RTTI_UNIT || What_Am_I() == RTTI_AIRCRAFT) {
         Clicked_As_Target(7);
 
-        Health -= damage;
+        m_Health -= damage;
 
-        if (Health > strength) {
-            Health = strength;
+        if (m_Health > strength) {
+            m_Health = strength;
         }
     }
 
@@ -608,12 +613,12 @@ void ObjectClass::Code_Pointers()
 #ifndef CHRONOSHIFT_STANDALONE
     void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F98E0);
     func(this);
-#elif 0
-    if (Next != nullptr) {
+#else
+    /*if (Next != nullptr) {
         Next = (ObjectClass *)As_Target((ObjectClass *)Next);
     }
 
-    AbstractClass::Code_Pointers();
+    AbstractClass::Code_Pointers();*/
 #endif
 }
 
@@ -622,12 +627,12 @@ void ObjectClass::Decode_Pointers()
 #ifndef CHRONOSHIFT_STANDALONE
     void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F9924);
     func(this);
-#elif 0
-    if (Next != nullptr) {
+#else
+    /*if (Next != nullptr) {
         Next = As_Object((uintptr_t)Next);
     }
 
-    AbstractClass::Code_Pointers();
+    AbstractClass::Code_Pointers();*/
 #endif
 }
 
@@ -635,10 +640,10 @@ void ObjectClass::Move(FacingType facing)
 {
     Mark(MARK_REMOVE);
 
-    uint32_t adj = Coord_Get_Adjacent(Coord, facing);
+    coord_t adj = Coord_Get_Adjacent(Get_Coord(), facing);
 
     if (!Can_Enter_Cell(Coord_To_Cell(adj))) {
-        Coord = adj;
+        Set_Coord(adj);
     }
 
     Mark(MARK_PUT);
@@ -651,4 +656,14 @@ void Unselect_All()
     }
 
     CurrentObjects.Clear();
+}
+
+void ObjectClass::Shorten_Attached_Anims()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x00423F20);
+    func(this);
+#else
+    // TODO: Requires AnimClass.
+#endif
 }

@@ -30,6 +30,8 @@
 
 #define     MAX_PROCESSING_TICKS     1000
 
+class CellClass;
+
 enum GameEnum
 {
     GAME_NONE = -1,
@@ -188,9 +190,9 @@ private:
     int TrapFrame;
     RTTIType TrapType; // Suspect this is RTTIType but needs confirming.
     int TrapTrappedObject;
-    uint32_t TrapCoord;
-    uint32_t TrapTarget;
-    uint32_t TrapCell;
+    coord_t TrapCoord;
+    target_t TrapTarget;
+    CellClass *TrapCell;
     BOOL TrapCheckHeap;
     BOOL TrapPrintCRC;
 };
