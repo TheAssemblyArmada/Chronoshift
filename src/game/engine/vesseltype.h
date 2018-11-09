@@ -44,7 +44,7 @@ class VesselTypeClass : public TechnoTypeClass
 public:
     VesselTypeClass(VesselType type, int uiname, const char *name, AnimType death_anim, int def_fire_coord,
         int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL a10, BOOL nominal,
-        BOOL has_turret, BOOL twin_turrets, int facings, MissionType mission);
+        BOOL has_turret, int facings, MissionType mission);
     VesselTypeClass(const VesselTypeClass &that);
     VesselTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
     ~VesselTypeClass() {}
