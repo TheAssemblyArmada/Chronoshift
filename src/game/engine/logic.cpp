@@ -16,12 +16,11 @@
 #include "gamedebug.h"
 #include "iomap.h"
 //#include "voc.h"
-//#include "anim.h"
 //#include "trigger.h"
-//#include "house.h"
+#include "house.h"
 #include "scenario.h"
 #include "session.h"
-//#include "factory.h"
+#include "factory.h"
 //#include "tevent.h"
 #include "object.h"
 //#include "anim.h"
@@ -29,17 +28,19 @@
 
 #ifndef CHRONOSHIFT_STANDALONE
 LogicClass &Logic = Make_Global<LogicClass>(0x00668230);
-DynamicVectorClass<TriggerClass *> &LogicTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F270);
+DynamicVectorClass<TriggerClass *> &g_LogicTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F270);
+DynamicVectorClass<TriggerClass *> &g_MapTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F254);
+DynamicVectorClass<TriggerClass *> *g_HouseTriggers = Make_Pointer<DynamicVectorClass<TriggerClass *> >(0x0067F074);
 #else
 LogicClass Logic;
-DynamicVectorClass<TriggerClass *> LogicTriggers;
+DynamicVectorClass<TriggerClass *> g_LogicTriggers;
+DynamicVectorClass<TriggerClass *> g_MapTriggers;
+DynamicVectorClass<TriggerClass *> g_HouseTriggers[HOUSES_COUNT];
 #endif
-
-LogicClass::LogicClass() {}
 
 LogicClass::~LogicClass()
 {
-    LogicTriggers.Clear();
+    g_LogicTriggers.Clear();
 }
 
 void LogicClass::Init()
