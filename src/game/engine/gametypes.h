@@ -746,4 +746,96 @@ enum SpecialWeaponType {
 
 DEFINE_ENUMERATION_OPERATORS(SpecialWeaponType);
 
+// If you want to add extra animations, you will also need to add a anim type
+// class instance in animtype.cpp and add it to the Init_Heap function.
+enum AnimType
+{
+    ANIM_NONE = -1,
+    ANIM_FIRST = 0,
+    ANIM_FBALL1 = 0, // "FBALL1"
+    ANIM_FIREBALLFADE = 1, // "FB2
+    ANIM_FRAG1 = 2, // "FRAG1"
+    ANIM_VEH_HIT1 = 3, // "VEH-HIT1"
+    ANIM_VEH_HIT2 = 4, // "VEH-HIT2"
+    ANIM_VEH_HIT3 = 5, // "VEH-HIT3"
+    ANIM_ART_EXP1 = 6, // "ART-EXP1"
+    ANIM_NAPALM1 = 7, // "NAPALM1"
+    ANIM_NAPALM2 = 8, // "NAPALM2"
+    ANIM_NAPALM3 = 9, // "NAPALM3"
+    ANIM_SMOKE_PUFF = 10, // "SMOKEY"
+    ANIM_PIFF = 11, // "PIFF"            //small arms fire piff (single shot)
+    ANIM_PIFFPIFF = 12, // "PIFFPIFF"        //small arms fire piff (multiple shots)
+    ANIM_FIRE3 = 13, // "FIRE3"            //small flames
+    ANIM_FIRE2 = 14, // "FIRE2"
+    ANIM_FIRE1 = 15, // "FIRE1"
+    ANIM_FIRE4 = 16, // "FIRE4"
+    ANIM_MUZZLE_FLASH = 17, // "GUNFIRE"
+    ANIM_SMOKE_M = 18, // "SMOKE_M"
+    ANIM_BURN_SMALL = 19, // "BURN-S"
+    ANIM_BURN_MED = 20, // "BURN-M"
+    ANIM_BURN_BIG = 21, // "BURN-L"
+    ANIM_ON_FIRE_SMALL = 22, // "BURN-S"
+    ANIM_ON_FIRE_MED = 23, // "BURN-M"
+    ANIM_ON_FIRE_BIG = 24, // "BURN-L"
+    ANIM_SAM_N = 25, // "SAMFIRE"
+    ANIM_SAM_NE = 26, // "SAMFIRE"
+    ANIM_SAM_E = 27, // "SAMFIRE"
+    ANIM_SAM_SE = 28, // "SAMFIRE"
+    ANIM_SAM_S = 29, // "SAMFIRE"
+    ANIM_SAM_SW = 30, // "SAMFIRE"
+    ANIM_SAM_W = 31, // "SAMFIRE"
+    ANIM_SAM_NW = 32, // "SAMFIRE"
+    ANIM_GUN_N = 33, // "MINIGUN"
+    ANIM_GUN_NE = 34, // "MINIGUN"
+    ANIM_GUN_E = 35, // "MINIGUN"
+    ANIM_GUN_SE = 36, // "MINIGUN"
+    ANIM_GUN_S = 37, // "MINIGUN"
+    ANIM_GUN_SW = 38, // "MINIGUN"
+    ANIM_GUN_W = 39, // "MINIGUN"
+    ANIM_GUN_NW = 40, // "MINIGUN"
+    ANIM_LZ_SMOKE = 41, // "SMOKLAND"
+    ANIM_CRATE_DEVIATOR = 42, // "DEVIATOR"
+    ANIM_CRATE_DOLLAR = 43, // "DOLLAR"            //Money bonus
+    ANIM_CRATE_EARTH = 44, // "EARTH"
+    ANIM_CRATE_EMPULSE = 45, // "EMPULSE"
+    ANIM_CRATE_INVUN = 46, // "INVUN"
+    ANIM_CRATE_MINE = 47, // "MINE"
+    ANIM_CRATE_RAPID = 48, // "RAPID"
+    ANIM_CRATE_STEALTH = 49, // "STEALTH2"
+    ANIM_CRATE_MISSILE = 50, // "MISSILE2"
+    ANIM_MOVEFLASH = 51, // "MOVEFLSH"
+    ANIM_OILFIELD_BURN = 52, // "FLMSPT"
+    ANIM_ELECTRO = 53, // "ELECTRO"
+    ANIM_PARACHUTE = 54, // "PARACH"
+    ANIM_ELECTDOG = 55, // "ELECTDOG"
+    ANIM_CORPSE1 = 56, // "CORPSE1"
+    ANIM_CORPSE2 = 57, // "CORPSE2"
+    ANIM_CORPSE3 = 58, // "CORPSE3"
+    ANIM_SPUTDOOR = 59, // "SPUTDOOR"
+    ANIM_ATOMSFX = 60, // "ATOMSFX"
+    ANIM_CHRONOBOX = 61, // "CHRONBOX"
+    ANIM_GPSBOX = 62, // "GPSBOX"
+    ANIM_INVULBOX = 63, // "INVULBOX"
+    ANIM_PARABOX = 64, // "PARABOX"
+    ANIM_SONARBOX = 65, // "SONARBOX"
+    ANIM_TWINKLE1 = 66, // "TWINKLE1"            //ore twinkle animation
+    ANIM_TWINKLE2 = 67, // "TWINKLE2"            //ore twinkle animation
+    ANIM_TWINKLE3 = 68, // "TWINKLE3"            //ore twinkle animation
+    ANIM_FLAK = 69, // "FLAK"
+    ANIM_WATER_EXP1 = 70, // "H2O_EXP1"
+    ANIM_WATER_EXP2 = 71, // "H2O_EXP2"
+    ANIM_WATER_EXP3 = 72, // "H2O_EXP3"
+    ANIM_CRATE_ARMOR = 73, // "ARMOR"            //Armor bonus
+    ANIM_CRATE_SPEED = 74, // "SPEED"
+    ANIM_CRATE_FPOWER = 75, // "FPOWER"            //Firepower bonus crate animation
+    ANIM_CRATE_TQUAKE = 76, // "TQUAKE"
+    ANIM_PARABOMB = 77, // "PARABOMB"
+    ANIM_MINEEXP1 = 78, // "VEH-HIT2"
+    ANIM_ANTDEATH = 79, // "ANTDIE"
+    // ANIM_WWCRATE = 80, // "WWCRATE" - Chronoshift
+    ANIM_COUNT,
+};
+
+DEFINE_ENUMERATION_OPERATORS(AnimType);
+
 #endif // GAMETYPES_H
