@@ -225,8 +225,8 @@ class DynamicVectorClass : public VectorClass<T>
 {
 protected:
 #ifndef COMPILER_WATCOM
-    // Looks like watcom doesn't like these declarations, newer compilers need them for standards compliance related to
-    // template lookup.
+    // Looks like watcom doesn't like these declarations, newer compilers
+    // need them for standards compliance related to template lookup.
     using VectorClass<T>::Vector;
     using VectorClass<T>::VectorMax;
     using VectorClass<T>::IsAllocated;
@@ -249,6 +249,7 @@ public:
     int Count() const { return (ActiveCount); }
     BOOL Add(const T &object);
     BOOL Add_Head(const T &object);
+    const T &Fetch_Head() const { return (*this)[0]; }
     BOOL Insert(int index, const T &object);
     BOOL Delete(const T &object);
     BOOL Delete(int index);
