@@ -13,8 +13,10 @@
  *            LICENSE
  */
 #include "house.h"
+#include "display.h"
 #include "globals.h"
 #include "heap.h"
+#include "remap.h"
 #include "rules.h"
 #include "scenario.h"
 #include "session.h"
@@ -22,8 +24,10 @@
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<HouseClass> &g_Houses = Make_Global<TFixedIHeapClass<HouseClass> >(0x0065D994);
+HouseClass *&g_PlayerPtr = Make_Global<HouseClass *>(0x00669958);
 #else
 TFixedIHeapClass<HouseClass> g_Houses;
+HouseClass *g_PlayerPtr = nullptr;
 #endif
 
 HouseClass::HouseClass(HousesType type) :
@@ -451,4 +455,18 @@ void HouseClass::Make_Enemy(HousesType type)
 #else
     //TODO
 #endif
+}
+
+const uint8_t *HouseClass::Remap_Table(BOOL unk1, RemapType type)
+{
+    if (unk1) {
+        // TODO Make fading table types consistent across project.
+        return (const uint8_t *)DisplayClass::FadingLight;
+    }
+
+    if (type != REMAP_0) {
+        return ColorRemaps[Color].RemapPalette;
+    }
+
+    return nullptr;
 }

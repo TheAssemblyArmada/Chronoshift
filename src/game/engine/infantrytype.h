@@ -120,7 +120,11 @@ public:
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
-    
+
+    InfantryType Get_Type() const { return m_Type; }
+    BOOL Has_Alt_Remap() const { return m_HasAltRemap; }
+    const uint8_t *Alt_Remap_Table() { return m_Remap; }
+
     static InfantryTypeClass &As_Reference(InfantryType type);
     static InfantryType From_Name(const char *name);
     static const char *Name_From(InfantryType type) { return As_Reference(type).Name; }

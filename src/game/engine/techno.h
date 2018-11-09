@@ -21,9 +21,9 @@
 #include "always.h"
 #include "buildingtype.h"
 #include "cargo.h"
-#include "gameptr.h"
 #include "door.h"
 #include "flasher.h"
+#include "gameptr.h"
 #include "gametypes.h"
 #include "infantrytype.h"
 #include "noinit.h"
@@ -44,7 +44,7 @@ enum CloakState
 
 enum VisualType
 {
-    //VISUAL_NONE = -1,
+    // VISUAL_NONE = -1,
     VISUAL_NORMAL,
     VISUAL_INDISTINCT,
     VISUAL_DARKEN,
@@ -143,6 +143,14 @@ public:
     int Get_Price() const { return m_Price; }
     void Set_Price(int price) { m_Price = price; }
 
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+    void Wrap_Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
+    {
+        TechnoClass::Techno_Draw_It(shape, frame, x, y, window, dir, scale);
+    }
+#endif
+
 protected:
     VisualType Visual_Character(BOOL flag) const;
 
@@ -209,5 +217,16 @@ protected:
     int m_Ammo;
     int m_Price;
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void TechnoClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x0056706C, *TechnoClass::Wrap_Techno_Draw_It);
+#endif
+}
+#endif
 
 #endif // TECHNO_H
