@@ -68,6 +68,7 @@ public:
     void Set_Contrast(fixed contrast);
     void Set_Tint(fixed tint);
     void Set();
+
     int Get_Scroll_Rate() const { return ScrollRate; }
     const fixed &Get_Score_Volume() const { return ScoreVolume; }
     BOOL Get_Auto_Scroll() const { return AutoScroll; }
@@ -80,6 +81,43 @@ public:
     fixed Get_Saturation() const { return Saturation; }
     fixed Get_Contrast() const { return (Contrast - fixed::_1_4) / fixed::_1_2; }
     fixed Get_Tint() const { return Tint; }
+
+    KeyNumType Get_KeySelectView() const { return KeySelectView; }
+    KeyNumType Get_KeyRepairToggle() const { return KeyRepairToggle; }
+    KeyNumType Get_KeySellToggle() const { return KeySellToggle; }
+    KeyNumType Get_KeyMapToggle() const { return KeyMapToggle; }
+    KeyNumType Get_KeySidebarUp() const { return KeySidebarUp; }
+    KeyNumType Get_KeySidebarDown() const { return KeySidebarDown; }
+    KeyNumType Get_KeyOption1() const { return KeyOption1; }
+    KeyNumType Get_KeyOption2() const { return KeyOption2; }
+    KeyNumType Get_KeyScrollLeft() const { return KeyScrollLeft; }
+    KeyNumType Get_KeyScrollRight() const { return KeyScrollRight; }
+    KeyNumType Get_KeyScrollUp() const { return KeyScrollUp; }
+    KeyNumType Get_KeyScrollDown() const { return KeyScrollDown; }
+    KeyNumType Get_KeyTeam1() const { return KeyTeam1; }
+    KeyNumType Get_KeyTeam2() const { return KeyTeam2; }
+    KeyNumType Get_KeyTeam3() const { return KeyTeam3; }
+    KeyNumType Get_KeyTeam4() const { return KeyTeam4; }
+    KeyNumType Get_KeyTeam5() const { return KeyTeam5; }
+    KeyNumType Get_KeyTeam6() const { return KeyTeam6; }
+    KeyNumType Get_KeyTeam7() const { return KeyTeam7; }
+    KeyNumType Get_KeyTeam8() const { return KeyTeam8; }
+    KeyNumType Get_KeyTeam9() const { return KeyTeam9; }
+    KeyNumType Get_KeyTeam10() const { return KeyTeam10; }
+    KeyNumType Get_KeyBookmark1() const { return KeyBookmark1; }
+    KeyNumType Get_KeyBookmark2() const { return KeyBookmark2; }
+    KeyNumType Get_KeyBookmark3() const { return KeyBookmark3; }
+    KeyNumType Get_KeyBookmark4() const { return KeyBookmark4; }
+    KeyNumType Get_KeyNext() const { return KeyNext; }
+    KeyNumType Get_KeyPrevious() const { return KeyPrevious; }
+    KeyNumType Get_KeyAlliance() const { return KeyAlliance; }
+    KeyNumType Get_KeyFormation() const { return KeyFormation; }
+    KeyNumType Get_KeyBase() const { return KeyBase; }
+    KeyNumType Get_KeyHome1() const { return KeyHome1; }
+    KeyNumType Get_KeyHome2() const { return KeyHome2; }
+    KeyNumType Get_KeyStop() const { return KeyStop; }
+    KeyNumType Get_KeyGuard() const { return KeyGuard; }
+    KeyNumType Get_KeyScatter() const { return KeyScatter; }
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
