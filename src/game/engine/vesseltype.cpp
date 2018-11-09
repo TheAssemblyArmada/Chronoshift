@@ -32,25 +32,25 @@ TFixedIHeapClass<VesselTypeClass> g_VesselTypes;
 #endif
 
 VesselTypeClass const VesselSubmarine(
-    VESSEL_SUBMARINE, TXT_SS, "SS", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false, false, FACING_COUNT_16, MISSION_HUNT);
+    VESSEL_SUBMARINE, TXT_SS, "SS", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false, FACING_COUNT_8, MISSION_HUNT);
 VesselTypeClass const VesselDestroyer(
-    VESSEL_DESTROYER, TXT_DD, "DD", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, false, FACING_COUNT_16, MISSION_HUNT);
+    VESSEL_DESTROYER, TXT_DD, "DD", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, FACING_COUNT_8, MISSION_HUNT);
 VesselTypeClass const VesselCruiser(
-    VESSEL_CRUISER, TXT_CA, "CA", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, true, FACING_COUNT_16, MISSION_HUNT);
+    VESSEL_CRUISER, TXT_CA, "CA", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, FACING_COUNT_8, MISSION_HUNT);
 VesselTypeClass const VesselTransport(VESSEL_TRANSPORT, TXT_LST, "LST", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false,
-    false, FACING_COUNT_NONE, MISSION_SLEEP);
+    FACING_COUNT_NONE, MISSION_SLEEP);
 VesselTypeClass const VesselPTBoat(
-    VESSEL_PT_BOAT, TXT_PT, "PT", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, false, FACING_COUNT_16, MISSION_HUNT);
+    VESSEL_PT_BOAT, TXT_PT, "PT", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, FACING_COUNT_8, MISSION_HUNT);
 VesselTypeClass const VesselMissileSubmarine(VESSEL_MISSILE_SUB, TXT_MS, "MSUB", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true,
-    false, false, FACING_COUNT_16, MISSION_HUNT);
+    false, FACING_COUNT_8, MISSION_HUNT);
 VesselTypeClass const VesselHeliCarrier(VESSEL_CARRIER, TXT_CARR, "CARR", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false,
-    false, FACING_COUNT_NONE, MISSION_SLEEP);
+    FACING_COUNT_NONE, MISSION_SLEEP);
 
 /**
  * 0x00581F0C
  */
 VesselTypeClass::VesselTypeClass(VesselType type, int uiname, const char *name, AnimType death_anim, int def_fire_coord, int pri_fire_coord_a, int pri_fire_coord_b,
-    int sec_fire_coord_a, int sec_fire_coord_b, BOOL a10, BOOL nominal, BOOL has_turret, BOOL twin_turrets, int facings, MissionType mission):
+    int sec_fire_coord_a, int sec_fire_coord_b, BOOL a10, BOOL nominal, BOOL has_turret, int facings, MissionType mission):
     TechnoTypeClass(RTTI_VESSELTYPE, type, uiname, name, REMAP_1, def_fire_coord, pri_fire_coord_a, pri_fire_coord_b, sec_fire_coord_a, sec_fire_coord_b, nominal, false, true, true, false,
         false, false, has_turret, true, true, facings, SPEED_FLOAT),
     m_Type(type),

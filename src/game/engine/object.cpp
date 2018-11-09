@@ -32,8 +32,6 @@ DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClas
 DynamicVectorClass<ObjectClass*> CurrentObjects;
 #endif
 
-#define CHRONOSHIFT_STANDALONE 1
-
 ObjectClass::ObjectClass() :
     m_IsDown(false),
     m_ToDamage(false),
