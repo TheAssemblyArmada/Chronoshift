@@ -98,6 +98,7 @@ public:
     void Make_Enemy(HousesType type);
 
     fixed_t Cost_Multiplier() const { return CostMult; }
+    const uint8_t *Remap_Table(BOOL unk1, RemapType type);
 
     BOOL Is_Human() const { return IsHuman; }
 
@@ -306,8 +307,10 @@ private:
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<HouseClass> &g_Houses;
+extern HouseClass *&g_PlayerPtr;
 #else
 extern TFixedIHeapClass<HouseClass> g_Houses;
+extern HouseClass *g_PlayerPtr;
 #endif
 
 #endif // HOUSE_H

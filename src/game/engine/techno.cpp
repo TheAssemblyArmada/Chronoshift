@@ -18,6 +18,8 @@
 #include "display.h"
 #include "drawshape.h"
 #include "globals.h"
+#include "house.h"
+#include "remap.h"
 
 TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     RadioClass(type, house),
@@ -443,16 +445,10 @@ void TechnoClass::Enter_Idle_Mode(BOOL a1)
 void TechnoClass::Techno_Draw_It(
     const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const
 {
-    // TODO needs InfantryTypeClass, HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(const void *, int, int, int, WindowNumberType, DirType, int) =
-        reinterpret_cast<void (*)(const void *, int, int, int, WindowNumberType, DirType, int)>(0x0056706C);
-    func(shape, frame, x, y, window, dir, scale);
-#else
-    /*DEBUG_ASSERT(IsActive);
+    DEBUG_ASSERT(m_IsActive);
 
     if (shape != nullptr) {
-        VisualType visual = Visual_Character();
+        VisualType visual = Visual_Character(false);
         void *fading_table = Remap_Table();
         void *ghost_table = DisplayClass::UnitShadow;
 
@@ -473,13 +469,13 @@ void TechnoClass::Techno_Draw_It(
 
         if (What_Am_I() == RTTI_INFANTRY) {
             if (!m_PlayerOwned) {
-                if (reinterpret_cast<InfantryTypeClass &>(Class_Of()).Type == INFANTRY_SPY) {
-                    fading_table = (void *)PlayerPtr->Remap_Table(false, REMAP_1);
+                if (reinterpret_cast<InfantryTypeClass &>(Class_Of()).Get_Type() == INFANTRY_SPY) {
+                    fading_table = (void *)g_PlayerPtr->Remap_Table(false, REMAP_1);
                 }
             }
 
-            if (reinterpret_cast<InfantryTypeClass &>(Class_Of()).HasAltRemap) {
-                fading_table = (void *)reinterpret_cast<TechnoTypeClass &>(Class_Of()).Remap;
+            if (reinterpret_cast<InfantryTypeClass &>(Class_Of()).Has_Alt_Remap()) {
+                fading_table = (void *)reinterpret_cast<InfantryTypeClass &>(Class_Of()).Alt_Remap_Table();
             }
         }
 
@@ -539,6 +535,8 @@ void TechnoClass::Techno_Draw_It(
                     default:
                         break;
                 }
+
+                break;
             default:
                 if (visual != VISUAL_HIDDEN && visual != VISUAL_RIPPLE) {
                     if (visual == VISUAL_SHADOWY) {
@@ -585,8 +583,7 @@ void TechnoClass::Techno_Draw_It(
 
                 break;
         }
-    }*/
-#endif
+    }
 }
 
 VisualType TechnoClass::Visual_Character(BOOL flag) const
@@ -597,7 +594,7 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
         return VISUAL_NORMAL;
     }
 
-    if (Techno_Class_Of().Is_Invisible() || m_PlayerOwned || g_inMapEditor) {
+    if (!Techno_Class_Of().Is_Invisible() || m_PlayerOwned || g_inMapEditor) {
         if (m_CloakState == CLOAK_UNCLOAKED || g_inMapEditor) {
             return VISUAL_NORMAL;
         }

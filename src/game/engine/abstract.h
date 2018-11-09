@@ -54,7 +54,7 @@ public:
     int Get_Height() const { return m_Height; }
     void Set_Height(int height) { m_Height = height; }
 
-private:
+protected:
     RTTIType m_RTTI; // ID for this object type, set from derived type constructors.
     int m_HeapID;
     coord_t m_Coord;
