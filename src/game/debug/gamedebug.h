@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#ifdef GAME_DEBUG_LOG
+#ifdef CHRONOSHIFT_DEBUG
 
 #define DEBUG_LOG(message, ...) Debug_Log(message, ##__VA_ARGS__)
 #define DEBUG_LINE_LOG(message, ...) Debug_Log("%s %d " message, __FILE__, __LINE__, ##__VA_ARGS__)
@@ -66,7 +66,7 @@ void Debug_Shutdown();
 int Debug_Get_Flags();
 void Debug_Set_Flags(int flags);
 
-#else // GAME_DEBUG_LOG
+#else // !CHRONOSHIFT_DEBUG
 
 #define DEBUG_LOG(message, ...) ((void)0)
 #define DEBUG_LINE_LOG(message, ...) ((void)0)
@@ -78,7 +78,7 @@ void Debug_Set_Flags(int flags);
     }
 #define DEBUG_ASSERT_PRINT(exp, msg, ...) ((void)0)
 
-#endif // GAME_DEBUG_LOG
+#endif // CHRONOSHIFT_DEBUG
 
 #ifdef __cplusplus
 } // extern "C"

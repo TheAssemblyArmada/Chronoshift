@@ -106,16 +106,15 @@ if(MINGW)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -mabi=ms -Wno-invalid-offsetof -Wall")
 endif()
 
-# Enable debug features in MSVC Debug configs.
-if(MSVC)
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /DGAME_DEBUG_LOG")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /DGAME_DEBUG_LOG")
-else()
-    add_definitions(-DGAME_DEBUG_LOG)
+# Enable Chronoshift debug features in Debug configs.
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
+endif()
+
+# Define __STDC_FORMAT_MACROS so #include <inttypes.h> works as expected.
+if(WATCOM)
     add_definitions(-D__STDC_FORMAT_MACROS)
-    #if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    #    add_definitions(-DGAME_DEBUG_LOG)
-    #endif() 
 endif()
 
 # Locate git binary to provide information to the build environment
