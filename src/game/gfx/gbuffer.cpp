@@ -171,8 +171,8 @@ void GraphicViewPortClass::Put_Fat_Pixel(int x, int y, int size, unsigned char v
         if (size > 1) {
             int w = x + size;
             int h = y + size;
-            for (size_t i = x; i < w; ++i) {
-                for (size_t j = y; j < h; ++j) {
+            for (int i = x; i < w; ++i) {
+                for (int j = y; j < h; ++j) {
                     Buffer_Put_Pixel(*this, i, j, value);
                 }
             }
