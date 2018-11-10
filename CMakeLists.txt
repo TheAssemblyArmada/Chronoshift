@@ -82,8 +82,14 @@ if (CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
     message(FATAL_ERROR "Building in-source is not supported! Create a build dir and remove ${CMAKE_SOURCE_DIR}/CMakeCache.txt")
 endif()
 
-# This doesn't really work yet, work ongoing to make it usable
-option(STANDALONE "Build a standalone version." OFF)
+if (WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
+    set(DEFAULT_STANDALONE OFF)
+else ()
+    set(DEFAULT_STANDALONE ON)
+endif ()
+# This doesn't really work yet, work ongoing to make it usable.
+# It should still compile fine.
+option(STANDALONE "Build a standalone version." ${DEFAULT_STANDALONE})
 option(NO_BITFIELDS "Use standard bool type in place of bitfields." OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CHRONOSHIFT_SOURCE_DIR}/cmake/modules)
