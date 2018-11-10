@@ -93,7 +93,7 @@ public:
     void Select_These(coord_t start, coord_t finish);
     void Sell_Mode_Control(int mode);
     void Repair_Mode_Control(int mode);
-    void Center_Map(coord_t coord);
+    void Center_Map(coord_t coord = 0);
     cell_t Set_Cursor_Pos(cell_t cell);
     BOOL Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, cell_t cell) const;
     void Redraw_Icons();
