@@ -52,6 +52,7 @@ public:
     CellClass &operator[](int index) { return Array[index]; }
 
     BOOL Place_Random_Crate();
+    BOOL Place_Random_Crate_At_Cell(cell_t cellnum);
     BOOL Remove_Crate(cell_t cellnum);
     cell_t Pick_Random_Location() const;
     BOOL In_Radar(cell_t cellnum) const;
