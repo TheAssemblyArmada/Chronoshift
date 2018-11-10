@@ -53,8 +53,7 @@ static int const MOUSE_UPDATE_FREQ = 16;
 // it causes the mouse instance Process_Mouse() function to be called provided
 // it isn't already in the middle of it.
 #ifdef PLATFORM_WINDOWS
-void __stdcall Process_Mouse(
-    unsigned int uDelay, unsigned int uResolution, unsigned long fptc, unsigned long dwUser, unsigned long fuEvent)
+void CALLBACK Process_Mouse(UINT uDelay, UINT uResolution, DWORD_PTR fptc, DWORD_PTR dwUser, DWORD_PTR fuEvent)
 {
     static bool InMouseCallback;
 
