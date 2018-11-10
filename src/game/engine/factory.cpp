@@ -94,9 +94,9 @@ void FactoryClass::AI()
                     m_ProductionTime.Set_Stage(m_ProductionTime.Get_Stage() - 1);
                 }
             #ifdef CHRONOSHIFT_DEBUG
-                if ( g_Debug_Instant_Build ) {
+                /*if ( g_Debug_Instant_Build ) {
                     m_ProductionTime.Set_Stage(MAX_CLOCK_STAGES);
-                }
+                }*/
             #endif
                 if (m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
                     m_IsSuspended = true;

@@ -25,7 +25,7 @@
 #include <sys/stat.h>
 #endif
 
-#ifdef GAME_DEBUG_LOG
+#ifdef CHRONOSHIFT_DEBUG
 int DebugFlags;
 FILE *DebugLogFile;
 char DebugBuffer[DEBUG_BUFFER_SIZE];
