@@ -98,6 +98,10 @@ public:
     void Make_Ally(HousesType type);
     void Make_Enemy(HousesType type);
 
+    BOOL Flag_To_Die();
+    BOOL Flag_To_Win();
+    BOOL Flag_To_Lose();
+
     const uint8_t *Remap_Table(BOOL unk1, RemapType type);
 
     int Get_Heap_ID() const { return HeapID; }
@@ -105,6 +109,8 @@ public:
     HousesType What_Type() const { return Type->What_Type(); }
 
     fixed_t Cost_Multiplier() const { return CostMult; }
+
+    SuperClass &Special_Weapons(SpecialWeaponType type) { return Specials[type]; }
 
     BOOL Is_Human() const { return IsHuman; }
     BOOL Is_Player() const { return this == g_PlayerPtr; }

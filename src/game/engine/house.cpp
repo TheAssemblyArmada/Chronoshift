@@ -420,6 +420,7 @@ void HouseClass::Silo_Redraw_Check(unsigned int a1, unsigned int a2)
         reinterpret_cast<void (*)(HouseClass *, unsigned int, unsigned int)>(0x004D5EF4);
     func(this, a1, a2);
 #else
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -430,7 +431,7 @@ DiffType HouseClass::Assign_Handicap(DiffType diff)
         reinterpret_cast<DiffType (*)(HouseClass *, DiffType)>(0x004D2D48);
     return func(this, Scen.Get_AI_Difficulty());
 #else
-    //TODO
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return DIFF_NONE;
 #endif
 }
@@ -442,7 +443,7 @@ void HouseClass::Make_Ally(HousesType type)
         reinterpret_cast<void (*)(HouseClass *, HousesType)>(0x004D6060);
     func(this, type);
 #else
-    //TODO
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -453,7 +454,40 @@ void HouseClass::Make_Enemy(HousesType type)
         reinterpret_cast<void (*)(HouseClass *, HousesType)>(0x004D6370);
     func(this, type);
 #else
-    //TODO
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+#endif
+}
+
+BOOL HouseClass::Flag_To_Die()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*func)(HouseClass *) = reinterpret_cast<BOOL (*)(HouseClass *)>(0x004D8B40);
+    return func(this);
+#else
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    return false;
+#endif
+}
+
+BOOL HouseClass::Flag_To_Win()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*func)(HouseClass *) = reinterpret_cast<BOOL (*)(HouseClass *)>(0x004D8BB8);
+    return func(this);
+#else
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    return false;
+#endif
+}
+
+BOOL HouseClass::Flag_To_Lose()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*func)(HouseClass *) = reinterpret_cast<BOOL (*)(HouseClass *)>(0x004D8C30);
+    return func(this);
+#else
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    return false;
 #endif
 }
 
