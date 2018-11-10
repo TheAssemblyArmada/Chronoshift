@@ -134,6 +134,8 @@ int WWMouseClass::Get_Mouse_X()
     POINT pos;
     GetCursorPos(&pos);
     return pos.x;
+#else
+    return 0;
 #endif
 }
 
@@ -151,6 +153,8 @@ int WWMouseClass::Get_Mouse_Y()
     POINT pos;
     GetCursorPos(&pos);
     return pos.y;
+#else
+    return 0;
 #endif
 }
 
@@ -191,6 +195,8 @@ BOOL WWMouseClass::Set_Mouse_XY(int x_pos, int y_pos)
 {
 #ifdef PLATFORM_WINDOWS
     return SetCursorPos(x_pos, y_pos);
+#else
+    return true;
 #endif
 }
 

@@ -90,7 +90,7 @@ public:
     bool Is_Valid() const { return Heap != nullptr && ID != -1; }
     bool Has_Valid_ID() const { return ID != -1; }
 
-    bool Invalidate() { ID = -1; }
+    void Invalidate() { ID = -1; }
 
 private:
     int32_t ID;

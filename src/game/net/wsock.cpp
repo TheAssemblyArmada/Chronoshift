@@ -26,7 +26,6 @@ typedef int socklen_t;
 #include <cerrno>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#define SOCKET_ERROR -1
 #endif
 
 #ifdef CHRONOSHIFT_SOCKETS_API

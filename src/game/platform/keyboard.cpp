@@ -179,6 +179,8 @@ KeyASCIIType KeyboardClass::To_ASCII(uint16_t keycode)
     }
 
     return character[0];
+#else
+    return KA_NONE;
 #endif
 }
 
@@ -193,6 +195,8 @@ BOOL KeyboardClass::Down(uint16_t keycode)
     }
 
     return GetAsyncKeyState(keycode) != 0;
+#else
+    return true;
 #endif
 }
 
