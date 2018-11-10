@@ -6,6 +6,14 @@ environment:
         - CMAKE_GENERATOR:             "Visual Studio 15 2017"
           USE_MSVC:                    "1"
           APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2017"
+        - CMAKE_GENERATOR:             "Visual Studio 15 2017"
+          USE_MSVC:                    "1"
+          STANDALONE:                   "ON"
+          APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2017"
+        - CMAKE_GENERATOR:             "Visual Studio 15 2017 Win64"
+          USE_MSVC:                    "1"
+          STANDALONE:                   "ON"
+          APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2017"
 
 configuration:
     - Release
@@ -75,12 +83,19 @@ build_script:
                 $BUILD_COMMAND = "msbuild";
                 $BUILD_PARAMS  = @("/verbosity:normal", "$BUILD_DIR\CHRONOSHIFT.sln", "/p:Configuration=$env:configuration", "/m");
         }
-
-        & cmake -G"$env:CMAKE_GENERATOR" $BUILD_TYPE $CMAKE_C_COMPILER $CMAKE_CXX_COMPILER ..;
+        If ($env:STANDALONE -eq "ON") {
+            & cmake -G"$env:CMAKE_GENERATOR" -DSTANDALONE=ON $BUILD_TYPE $CMAKE_C_COMPILER $CMAKE_CXX_COMPILER ..;
+        } else {
+            & cmake -G"$env:CMAKE_GENERATOR" $BUILD_TYPE $CMAKE_C_COMPILER $CMAKE_CXX_COMPILER ..;
+        }
         & $BUILD_COMMAND $BUILD_PARAMS;
         
         If ($env:USE_MSVC -eq "1") {
-            & 7z a chronoshift.zip .\$env:configuration\chronoshift.dll .\$env:configuration\launch_chronoshift.exe -tzip;
+            If ($env:STANDALONE -eq "ON") {
+                & 7z a chronoshift.zip .\$env:configuration\chronoshift.exe -tzip;
+            } Else {
+                & 7z a chronoshift.zip .\$env:configuration\chronoshift.dll .\$env:configuration\launch_chronoshift.exe -tzip;
+            }
         } Else {
             & 7z a chronoshift.zip .\chronoshift.dll .\launch_chronoshift.exe -tzip;
         }
