@@ -1829,3 +1829,19 @@ int __cdecl DisplayClass::Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, 
 
     return result;
 }
+
+void DisplayClass::All_Layers_To_Redraw()
+{
+    for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
+        Layers[layer].Render_All(true);
+    }
+}
+
+void DisplayClass::Flag_All_Cells_To_Redraw()
+{
+    for (cell_t cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
+        if (!Is_Cell_Flagged(cellnum)) {
+            CellRedraw[cellnum] = true;
+        }
+    }
+}

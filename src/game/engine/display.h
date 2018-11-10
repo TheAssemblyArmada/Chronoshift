@@ -111,6 +111,8 @@ public:
     void Encroach_Shadow();
     void Shroud_Cell(cell_t cellnum);
 
+    void All_Layers_To_Redraw();
+    void Flag_All_Cells_To_Redraw();
     static BOOL Is_Cell_Flagged(cell_t cellnum) { return CellRedraw[cellnum]; }
 
     lepton_t Get_DisplayWidth() { return DisplayWidth; }
