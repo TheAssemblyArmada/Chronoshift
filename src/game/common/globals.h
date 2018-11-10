@@ -21,6 +21,8 @@
 #include "always.h"
 #include "gametypes.h"
 
+class HouseClass;
+
 #define GAME_TICKS_PER_SECOND 15
 #define GAME_TICKS_PER_MINUTE GAME_TICKS_PER_SECOND * 60
 
@@ -72,6 +74,8 @@ extern void *&g_WakeShapes;
 extern void *&g_TurretShapes;
 extern void *&g_SamShapes;
 extern void *&g_MGunShapes;
+
+extern BOOL &g_Debug_Flag;
 #else
 extern int g_iniFormat;
 extern int g_frame;
@@ -114,6 +118,8 @@ extern void *g_WakeShapes;
 extern void *g_TurretShapes;
 extern void *g_SamShapes;
 extern void *g_MGunShapes;
+
+extern BOOL g_Debug_Flag;
 #endif
 
 #endif

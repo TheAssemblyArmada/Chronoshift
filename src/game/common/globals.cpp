@@ -60,6 +60,7 @@ void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
 void *&g_TurretShapes = Make_Global<void *>(0x0068D2E0);
 void *&g_SamShapes = Make_Global<void *>(0x0068D2E4);
 void *&g_MGunShapes = Make_Global<void *>(0x0068D2E8);
+BOOL &g_Debug_Flag = Make_Global<BOOL>(0x0065D7DC);
 #else
 int g_iniFormat;
 int g_frame;
@@ -100,4 +101,6 @@ void *g_WakeShapes;
 void *g_TurretShapes;
 void *g_SamShapes;
 void *g_MGunShapes;
+
+BOOL g_Debug_Flag = false;;
 #endif
