@@ -348,6 +348,8 @@ BOOL SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
     (const StripClass *, KeyNumType &, int, int) =
         reinterpret_cast<BOOL (*)(const StripClass *, KeyNumType &, int, int)>(0x0054E2E8);
     return func(this, key, mouse_x, mouse_y);
+#else
+    return true;
 #endif
 }
 
@@ -366,6 +368,8 @@ BOOL SidebarClass::StripClass::Recalc()
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const StripClass *) = reinterpret_cast<BOOL (*)(const StripClass *)>(0x0054EB1C);
     return func(this);
+#else
+    return true;
 #endif
 }
 
@@ -390,6 +394,8 @@ int SidebarClass::StripClass::Abandon_Production(int unk1)
 #ifndef CHRONOSHIFT_STANDALONE
     int (*func)(const StripClass *, int) = reinterpret_cast<int (*)(const StripClass *, int)>(0x0054F434);
     return func(this, unk1);
+#else
+    return 0;
 #endif
 }
 

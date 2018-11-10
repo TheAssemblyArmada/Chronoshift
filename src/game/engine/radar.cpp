@@ -645,6 +645,8 @@ BOOL RadarClass::Draw_House_Info()
 #ifndef CHRONOSHIFT_STANDALONE
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x00532268);
     return func(this);
+#else
+    return true;
 #endif
 }
 
