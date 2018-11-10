@@ -23,6 +23,7 @@
 #include "difficulty.h"
 #include "factory.h"
 #include "fixed.h"
+#include "globals.h"
 #include "gameptr.h"
 #include "gametypes.h"
 #include "housestatic.h"
@@ -106,6 +107,7 @@ public:
     fixed_t Cost_Multiplier() const { return CostMult; }
 
     BOOL Is_Human() const { return IsHuman; }
+    BOOL Is_Player() const { return this == g_PlayerPtr; }
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
