@@ -100,7 +100,9 @@ extern BOOL AllowHardwareFilledBlits;
 extern BOOL g_soundOn;
 extern BOOL g_slowPalette;
 extern BOOL g_breakoutAllowed;
-extern void *MainWindow;
+#ifdef PLATFORM_WINDOWS
+extern HWND MainWindow;
+#endif
 extern char *TutorialText;
 extern BOOL MouseInstalled;
 extern int g_seed;

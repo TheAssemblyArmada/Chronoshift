@@ -273,12 +273,12 @@ int main(int argc, char **argv)
     
     Check_Use_Compressed_Shapes();
 
-    // Commented out, we dont need to worry about disk space these days...
-    /*if (Disk_Space_Available() < 0x800000) {
+    // Check if we have reasonable enough space for saves and such.
+    if (Disk_Space_Available() < 0x800000) {
         DEBUG_LOG("Disk space is critically low during init.\n");
 
         // TODO, original pops up windows message box informing of low space and asking to continue.
-    }*/
+    }
 
     // TODO search for this in a user home folder then in game folder as fallback.
     RawFileClass opt_fc("redalert.ini");
@@ -299,8 +299,13 @@ int main(int argc, char **argv)
     // NOTE: Original passed in screen dimentions etc, but we handle these
     // inside Create_Main_Window() itself now.
     Create_Main_Window(nullptr, 0, 0, 0);
-    
+
+    //TODO when Audio_Init is reimplemented, remove need for HWND parameter.
+#ifdef PLATFORM_WINDOWS
     g_soundOn = Audio_Init(MainWindow, 16, 0, 22050, 0);
+#else
+    g_soundOn = Audio_Init(nullptr, 16, 0, 22050, 0);
+#endif
 
     if (!InitDDraw()) {
         delete PlatformTimer;
@@ -345,6 +350,7 @@ int main(int argc, char **argv)
     
     Game_Main(argc, argv);
 
+    // Start tidying up before quit.
     g_visiblePage.Clear();
     g_hiddenPage.Clear();
     

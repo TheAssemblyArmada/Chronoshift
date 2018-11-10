@@ -86,7 +86,9 @@ BOOL g_cancelCurrentMsgBox;
 BOOL g_soundOn;
 BOOL g_slowPalette;
 BOOL g_breakoutAllowed = true;
-void *MainWindow;
+#ifdef PLATFORM_WINDOWS
+HWND MainWindow;
+#endif
 char *TutorialText;
 BOOL MouseInstalled;
 int g_seed;
