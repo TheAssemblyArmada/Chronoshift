@@ -22,9 +22,14 @@
 #include "config.h"
 #include "macros.h"
 #include "targetver.h"
-#include "watcomintrin.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#if defined(COMPILER_WATCOM)
+#include "watcomintrin.h"
+#include <stdio.h> // For PATH_MAX
+#undef PATH_MAX // Undefine as this causes a define error through the codebase.
+#endif
 
 #if defined(PLATFORM_WINDOWS)
 #include <windows.h>
@@ -133,14 +138,12 @@ typedef struct stat stat_t;
 // various compilers to a common behavior such that the engine will compile without
 // error or warning.
 
-// TODO: Evaluate the value of some of these.
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Watcom
 //
 ////////////////////////////////////////////////////////////////////////////////
-#if defined COMPILER_WATCOM
+#if defined(COMPILER_WATCOM)
 
 // Turns off stack checking.
 #pragma off(check_stack)
@@ -152,7 +155,7 @@ typedef struct stat stat_t;
 #pragma warning 14 9
 
 // Disables warning when "sizeof" is used on an object with virtual functions.
-//#pragma warning 549 9
+#pragma warning 549 9
 
 // Disable the "Integral value may be truncated during assignment or initialization".
 //#pragma warning 389 9
@@ -182,7 +185,7 @@ typedef struct stat stat_t;
 //#pragma warning 657 9
 
 // No virtual destructor is not an error.
-//#pragma warning 004 9
+#pragma warning 004 9
 
 // Integral constant will be truncated warning is usually ok when dealing with bitfields.
 //#pragma warning 388 9
@@ -194,17 +197,13 @@ typedef struct stat stat_t;
 //  Microsoft / Visual Studio
 //
 ////////////////////////////////////////////////////////////////////////////////
-#if defined COMPILER_MSVC
+#if defined(COMPILER_MSVC)
 
 // "conversion from 'double' to 'float', possible loss of data".
 #pragma warning(disable : 4244)
 
 // warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
 #pragma warning(disable : 4800)
-
-//
-// Turn off some unneeded warnings.
-//
 
 // It is safe to ignore the following warning from MSVC 7.1 or higher:
 #if (COMPILER_VERSION >= 1310)
