@@ -292,6 +292,25 @@ BOOL MapClass::Place_Random_Crate()
     return false;
 }
 
+BOOL MapClass::Place_Random_Crate_At_Cell(cell_t cellnum)
+{
+    for (int i = 0; i < ARRAY_SIZE(Crates); ++i) {
+        // Check if current crate cell is invalid and thus instance can be used for new crate.
+        if (Crates[i].Get_Cell() == -1) {
+            // Try to place crate up to 1000 times, return result of final attempt if all others fail.
+            for (int i = 0; i < 1000; ++i) {
+                if (Crates[i].Create_Crate(cellnum)) {
+                    return true;
+                }
+            }
+
+            return Crates[i].Create_Crate(cellnum);
+        }
+    }
+
+    return false;
+}
+
 /**
  * @brief Remove a crate from a given location.
  *
