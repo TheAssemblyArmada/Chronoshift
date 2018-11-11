@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "options.h"
-#include "audio.h"
+#include "voc.h"
 #include "gamefile.h"
 #include "hsv.h"
 #include "gameini.h"
