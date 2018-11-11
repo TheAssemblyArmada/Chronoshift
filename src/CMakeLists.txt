@@ -52,6 +52,7 @@ set(GAMEENGINE_INCLUDES
     game/net
     game/platform
     game/ui
+    game/util
 )
 
 set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
