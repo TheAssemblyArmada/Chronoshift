@@ -785,7 +785,7 @@ BOOL SidebarClass::Scroll(BOOL reverse, int column)
         scroll_result = (Columns[COLUMN_LEFT].Scroll(reverse) || Columns[COLUMN_RIGHT].Scroll(reverse));
 
         if (!scroll_result) {
-            Sound_Effect(VOC_SCOLDY1, fixed::_1_1, 1, 0, HOUSES_NONE);
+            Sound_Effect(VOC_SCOLDY1);
         }
 
         if (!scroll_result) {

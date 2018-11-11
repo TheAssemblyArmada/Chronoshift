@@ -728,7 +728,7 @@ int RadarClass::Radar_Activate(int mode)
                 return is_active;
             }
 
-            Sound_Effect(VOC_RADAR_OFF, fixed::_1_1, 1, 0, HOUSES_NONE);
+            Sound_Effect(VOC_RADAR_OFF);
 
             DEBUG_LOG("Radar: DEACTIVING\n");
 
@@ -754,7 +754,7 @@ int RadarClass::Radar_Activate(int mode)
                 return is_active;
             }
 
-            Sound_Effect(VOC_RADAR_ON, fixed::_1_1, 1, 0, HOUSES_NONE);
+            Sound_Effect(VOC_RADAR_ON);
 
             DEBUG_LOG("Radar: ACTIVATING\n");
 
