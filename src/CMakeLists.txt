@@ -42,6 +42,7 @@ set(PLATFORM_LIBS ${PLATFORM_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 set(GAMEENGINE_INCLUDES
     base
     game
+    game/audio
     game/common
     game/crypto
     game/debug
