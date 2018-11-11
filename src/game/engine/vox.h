@@ -170,4 +170,38 @@ extern VoxType SpeechRecord[VOX_BUFFERS];
 VoxType Vox_From_Name(const char *name);
 const char *Name_From_Vox(VoxType vox);
 
+inline void Speak(VoxType vox)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*call_Speak)(VoxType) = reinterpret_cast<void (*)(VoxType)>(0x00426158);
+    call_Speak(vox);
+#endif
+}
+
+inline void Speak_AI()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*call_Speak_AI)() = reinterpret_cast<void (*)()>(0x004261B4);
+    call_Speak_AI();
+#endif
+}
+
+inline void Stop_Speaking()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*call_Stop_Speaking)() = reinterpret_cast<void (*)()>(0x0042632C);
+    call_Stop_Speaking();
+#endif
+}
+
+inline BOOL Is_Speaking()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*call_Is_Speaking)() = reinterpret_cast<BOOL (*)()>(0x00426344);
+    return call_Is_Speaking();
+#else
+    return 0;
+#endif
+}
+
 #endif // VOX_H

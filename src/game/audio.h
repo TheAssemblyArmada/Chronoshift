@@ -28,45 +28,11 @@ inline int Sound_Effect(VocType voc, fixed fix, int int1, short short1, HousesTy
 #endif
 }
 
-inline void Speak(VoxType vox)
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*call_Speak)(VoxType) = reinterpret_cast<void (*)(VoxType)>(0x00426158);
-    call_Speak(vox);
-#endif
-}
-
-inline void Speak_AI()
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*call_Speak_AI)() = reinterpret_cast<void (*)()>(0x004261B4);
-    call_Speak_AI();
-#endif
-}
-
-inline void Stop_Speaking()
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*call_Stop_Speaking)() = reinterpret_cast<void (*)()>(0x0042632C);
-    call_Stop_Speaking();
-#endif
-}
-
 inline void Sound_Callback()
 {
 #ifndef CHRONOSHIFT_STANDALONE
     void(*call_Sound_Callback)() = reinterpret_cast<void(*)()>(0x005BE560);
     call_Sound_Callback();
-#endif
-}
-
-inline int Is_Speaking()
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    int (*call_Is_Speaking)() = reinterpret_cast<int (*)()>(0x00426344);
-    return call_Is_Speaking();
-#else
-    return 0;
 #endif
 }
 
