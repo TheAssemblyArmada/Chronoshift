@@ -152,7 +152,7 @@ void Set_Working_Directory()
 /**
  * @brief Creates the main window for the game.
  */
-void Create_Main_Window(void *unk1, int unk2, int unk3, int unk4)
+void Create_Main_Window(void *hInstance, int nCmdShow, int width, int height)
 {
 #ifdef PLATFORM_WINDOWS
     WNDCLASSA WndClass;
@@ -177,14 +177,14 @@ void Create_Main_Window(void *unk1, int unk2, int unk3, int unk4)
     WndClass.hIcon = LoadIconA(app_hinstance, (LPCSTR)1);
     WndClass.hCursor = 0;
     WndClass.hbrBackground = 0;
-    WndClass.lpszMenuName = "Red Alert";
-    WndClass.lpszClassName = "Red Alert";
+    WndClass.lpszMenuName = "Chronoshift";
+    WndClass.lpszClassName = "Chronoshift";
 
     RegisterClassA(&WndClass);
 
     HWND app_hwnd = CreateWindowExA(WS_EX_TOPMOST,
-        "Red Alert",
-        "Red Alert",
+        "Chronoshift",
+        "Chronoshift",
         WS_POPUP,
         GetSystemMetrics(SM_CXSCREEN),
         GetSystemMetrics(SM_CYSCREEN),
@@ -198,8 +198,9 @@ void Create_Main_Window(void *unk1, int unk2, int unk3, int unk4)
     ShowWindow(app_hwnd, show_cmd);
     UpdateWindow(app_hwnd);
     SetFocus(app_hwnd);
+    
     MainWindow = app_hwnd;
-    CCFocusMessage = RegisterWindowMessageA("CC_GOT_FOCUS");
+    CCFocusMessage = RegisterWindowMessageA("CHRONOSHIFT_GOT_FOCUS");
     AudioFocusLoss = Focus_Loss;
     MiscFocusLoss = Focus_Loss;
     MiscFocusRestore = Focus_Restore;
@@ -234,10 +235,11 @@ int main(int argc, char **argv)
     DEBUG_LOG(CPUDetectClass::Get_Processor_Log());
     DEBUG_LOG("================================================================================\n");
 
-    if (Ram_Free() < 7000000) {
+    // Commented out, we dont need to worry about memory these days...
+    /*if (Ram_Free() < 7000000) {
         DEBUG_LOG("Insufficient free memory, only have %d KB free.\n", Ram_Free() / 1024);
         return 255;
-    }
+    }*/
 
 #ifndef CHRONOSHIFT_STANDALONE
     // Remove this once Send_Statistics_Packet is implemented as its only used there.
@@ -268,13 +270,15 @@ int main(int argc, char **argv)
     }
 
     g_keyboard = new KeyboardClass;
+    
     Check_Use_Compressed_Shapes();
 
-    if (Disk_Space_Available() < 0x800000) {
+    // Commented out, we dont need to worry about disk space these days...
+    /*if (Disk_Space_Available() < 0x800000) {
         DEBUG_LOG("Disk space is critically low during init.\n");
 
         // TODO, original pops up windows message box informing of low space and asking to continue.
-    }
+    }*/
 
     // TODO search for this in a user home folder then in game folder as fallback.
     RawFileClass opt_fc("redalert.ini");
@@ -291,8 +295,12 @@ int main(int argc, char **argv)
     }
 
     Read_Setup_Options(&opt_fc);
+    
+    // NOTE: Original passed in screen dimentions etc, but we handle these
+    // inside Create_Main_Window() itself now.
     Create_Main_Window(nullptr, 0, 0, 0);
-    g_soundOn = Audio_Init(MainWindow, 0x10, 0, 0x5622, 0);
+    
+    g_soundOn = Audio_Init(MainWindow, 16, 0, 22050, 0);
 
     if (!InitDDraw()) {
         delete PlatformTimer;
@@ -302,17 +310,22 @@ int main(int argc, char **argv)
     }
 
     Options.Adjust_Vars_For_Resolution();
+    
     // TODO set memory error handler here.
+    
     WindowList[WINDOW_0].W = g_seenBuff.Get_Width();
     WindowList[WINDOW_0].H = g_seenBuff.Get_Height();
     WindowList[WINDOW_5].W = g_seenBuff.Get_Width();
     WindowList[WINDOW_5].H = g_seenBuff.Get_Height();
+    
     // TODO Won't need both of these once standalone.
     g_mouse = g_wwmouse = new WWMouseClass(&g_seenBuff, 48, 48);
     MouseInstalled = true;
+    
     int cd_drive = g_cdList.Reset_And_Get_CD_Drive();
     CDFileClass::Set_CD_Drive(cd_drive);
     // CDFileClass::Set_CD_Drive(g_cdList.Reset_And_Get_CD_Drive());
+    
     INIClass ini;
     ini.Load(opt_fc);
 
@@ -320,19 +333,23 @@ int main(int argc, char **argv)
         Special.Set_First_Run(ini.Get_Bool("Intro", "PlayIntro", true));
     }
 
-    g_slowPalette = ini.Get_Bool("Options", "SlowPalette", true);
-
     if (Special.Is_First_Run()) {
         g_breakoutAllowed = true;
         ini.Put_Bool("Intro", "PlayIntro", false);
         ini.Save(opt_fc);
     }
+
+    g_slowPalette = ini.Get_Bool("Options", "SlowPalette", true);
     
     // TODO set Memory_Error_Exit handler here.
+    
     Game_Main(argc, argv);
+
     g_visiblePage.Clear();
     g_hiddenPage.Clear();
+    
     // TODO set Memory_Error_Exit handler here.
+    
     g_readyToQuit = 1;
 
 #ifdef PLATFORM_WINDOWS
