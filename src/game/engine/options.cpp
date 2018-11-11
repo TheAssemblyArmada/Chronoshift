@@ -366,7 +366,7 @@ void OptionsClass::Set_Sound_Volume(fixed volume, BOOL beep)
     Volume = volume;
 
     if (beep) {
-        Sound_Effect(VOC_RABEEP1, fixed::_1_1, 1, 0, HOUSES_NONE);
+        Sound_Effect(VOC_RABEEP1);
     }
 }
 

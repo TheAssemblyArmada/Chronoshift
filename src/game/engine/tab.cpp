@@ -59,7 +59,7 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 {
     if (force_redraw || CreditToRedraw) {
         if (CreditHasChanged) {
-            Sound_Effect(CreditHasIncreased ? VOC_MONEY_UP : VOC_MONEY_DOWN, fixed::_1_2, 1, 0, HOUSES_NONE);
+            Sound_Effect(CreditHasIncreased ? VOC_MONEY_UP : VOC_MONEY_DOWN, fixed::_1_2);
         }
 
         TabClass::Draw_Credits_Tab();
