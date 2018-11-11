@@ -19,7 +19,7 @@
 #define ANIMTYPE_H
 
 #include "always.h"
-#include "audio.h"
+#include "voc.h"
 #include "fixed.h"
 #include "heap.h"
 #include "objecttype.h"

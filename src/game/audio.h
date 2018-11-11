@@ -3,30 +3,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include "fixed.h"
-#include "housetype.h"
-#include "voc.h"
-#include "vox.h"
-
-inline void Sound_Effect(VocType voc, unsigned long int1, int int2, HousesType house)
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*call_Sound_Effect)(VocType, unsigned long, int, HousesType) =
-        reinterpret_cast<void (*)(VocType, unsigned long, int, HousesType)>(0x00425D1C);
-    call_Sound_Effect(voc, int1, int2, house);
-#endif
-}
-
-inline int Sound_Effect(VocType voc, fixed fix, int int1, short short1, HousesType house)
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    int (*call_Sound_Effect)(VocType, fixed, int, short, HousesType) =
-        reinterpret_cast<int (*)(VocType, fixed, int, short, HousesType)>(0x00425F24);
-    return call_Sound_Effect(voc, fix, int1, short1, house);
-#else
-    return 0;
-#endif
-}
+#include "always.h"
 
 inline void Sound_Callback()
 {

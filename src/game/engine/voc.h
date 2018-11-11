@@ -18,6 +18,7 @@
 #define VOC_H
 
 #include "always.h"
+#include "housetype.h"
 
 enum VocType
 {
@@ -255,5 +256,27 @@ VocType Voc_From_Name(const char *name);
 const char *Name_From_Voc(VocType voc);
 
 extern SoundEffectType SoundEffectName[];
+
+
+inline void Sound_Effect(VocType voc, coord_t location, int int2 = 1, HousesType house = HOUSES_NONE)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*call_Sound_Effect)(VocType, coord_t, int, HousesType) =
+        reinterpret_cast<void (*)(VocType, coord_t, int, HousesType)>(0x00425D1C);
+    call_Sound_Effect(voc, location, int2, house);
+#endif
+}
+
+inline int Sound_Effect(VocType voc, fixed_t volume = fixed::_1_1, int int1 = 1, short pan = 0, HousesType house = HOUSES_NONE)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    int (*call_Sound_Effect)(VocType, fixed_t, int, short, HousesType) =
+        reinterpret_cast<int (*)(VocType, fixed_t, int, short, HousesType)>(0x00425F24);
+    return call_Sound_Effect(voc, volume, int1, pan, house);
+#else
+    return 0;
+#endif
+}
+
 
 #endif // VOC_H

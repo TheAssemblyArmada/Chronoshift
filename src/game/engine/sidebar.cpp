@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "sidebar.h"
-#include "audio.h"
+#include "voc.h"
 #include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"

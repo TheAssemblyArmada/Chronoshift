@@ -15,7 +15,7 @@
  */
 
 #include "tab.h"
-#include "audio.h"
+#include "vox.h"
 #include "gamefile.h"
 #include "dialog.h"
 #include "drawshape.h"
