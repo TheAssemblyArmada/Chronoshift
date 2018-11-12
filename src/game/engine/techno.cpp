@@ -461,13 +461,13 @@ void TechnoClass::Techno_Draw_It(
             type.Set_Frame_Dimensions((void *)shape, frame);
         }
 
-        if (Get_Height() > 0) {
+        if (m_Height > 0) {
             ghost_table = DisplayClass::UnitShadowAir;
         }
 
         y -= Lepton_To_Pixel(Get_Height());
 
-        if (What_Am_I() == RTTI_INFANTRY) {
+        if (m_RTTI == RTTI_INFANTRY) {
             if (!m_PlayerOwned) {
                 if (reinterpret_cast<InfantryTypeClass &>(Class_Of()).Get_Type() == INFANTRY_SPY) {
                     fading_table = (void *)g_PlayerPtr->Remap_Table(false, REMAP_1);
@@ -545,7 +545,7 @@ void TechnoClass::Techno_Draw_It(
                             x,
                             y,
                             window,
-                            flags | SHAPE_FADING,
+                            flags | SHAPE_FADING | SHAPE_PREDATOR,
                             nullptr,
                             DisplayClass::FadingShade,
                             dir);
@@ -558,7 +558,7 @@ void TechnoClass::Techno_Draw_It(
                             window,
                             flags | SHAPE_GHOST | SHAPE_FADING,
                             fading_table,
-                            DisplayClass::UnitShadow,
+                            ghost_table,
                             dir);
                     }
 
