@@ -17,31 +17,31 @@
 #include "cell.h"
 #include "coord.h"
 #include "object.h"
-//#include "techno.h"
+#include "techno.h"
 #include "technotype.h"
 //#include "triggertype.h"
 
-CellClass *const xTargetClass::As_Cell() const
+CellClass *const TargetClass::As_Cell() const
 {
     return nullptr;
 }
 
-AbstractClass *const xTargetClass::As_Abstract() const
+AbstractClass *const TargetClass::As_Abstract() const
 {
     return nullptr;
 }
 
-AbstractTypeClass *const xTargetClass::As_TypeClass() const
+AbstractTypeClass *const TargetClass::As_TypeClass() const
 {
     return nullptr;
 }
 
-TechnoClass *const xTargetClass::As_Techno() const
+TechnoClass *const TargetClass::As_Techno() const
 {
     return nullptr;
 }
 
-ObjectClass *const xTargetClass::As_Object() const
+ObjectClass *const TargetClass::As_Object() const
 {
     return nullptr;
 }
@@ -64,16 +64,9 @@ TargetClass::TargetClass(CellClass *cell)
 
 BOOL Target_Is_Techno(target_t target)
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    // TODO: Inlined in RA
-    return false;
-#elif 0
     // TODO: Requires TechnoClass implementation.
     TechnoClass *ptr = As_Techno(target);
     return ptr != nullptr ? ptr->Is_Techno() : false;
-#else
-    return false;
-#endif
 }
 
 BOOL Target_Legal(target_t target)
