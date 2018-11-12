@@ -46,6 +46,7 @@ public:
     HousesType Get_Type() const { return Type; }
     PlayerColorType Get_Color() const { return Color; }
     char Get_Prefix() const { return Prefix; }
+    HousesType What_Type() const { return Type; }
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
