@@ -84,7 +84,7 @@ int g_shapeLength;
 // with the value g_predatorShiftTab[g_predatorFrame] pixels away if g_predatorAccumulated
 // is greater than or equal to 256. After every pixel, it is increased by
 // g_predatorIncrement and reset to % 256 after reaching 256 or greater.
-static const int16_t g_predatorShiftTab[8] = { 1, 3, 2, 5, 4, 3, 2, 1 };
+static const int16_t g_predatorShiftTab[8] = { 1, 3, 2, 5, 2, 3, 4, 1 };
 static uint32_t g_predatorFrame;
 static uint32_t g_predatorAccumulated;
 static uint32_t g_predatorIncrement;
@@ -281,7 +281,7 @@ void BF_Predator(int width, int height, uint8_t *dst, uint8_t *src, int dst_pitc
                     *dst = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
 
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             ++dst;
@@ -308,7 +308,7 @@ void BF_Predator_Trans(int width, int height, uint8_t *dst, uint8_t *src, int ds
                         sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                     }
 
-                    g_predatorFrame = (g_predatorFrame + 1) % 8;
+                    g_predatorFrame = (g_predatorFrame + 2) % 8;
                 }
 
                 *dst = sbyte;
@@ -337,7 +337,7 @@ void BF_Predator_Ghost(int width, int height, uint8_t *dst, uint8_t *src, int ds
                     sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
 
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
@@ -370,7 +370,7 @@ void BF_Predator_Ghost_Trans(int width, int height, uint8_t *dst, uint8_t *src, 
                         sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                     }
 
-                    g_predatorFrame = (g_predatorFrame + 1) % 8;
+                    g_predatorFrame = (g_predatorFrame + 2) % 8;
                 }
 
                 uint8_t fbyte = ghost_lookup[sbyte];
@@ -405,7 +405,7 @@ void BF_Predator_Fading(int width, int height, uint8_t *dst, uint8_t *src, int d
                     sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
                 
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             for (int i = 0; i < count; ++i) {
@@ -433,7 +433,7 @@ void BF_Predator_Fading_Trans(int width, int height, uint8_t *dst, uint8_t *src,
                         sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                     }
                     
-                    g_predatorFrame = (g_predatorFrame + 1) % 8;
+                    g_predatorFrame = (g_predatorFrame + 2) % 8;
                 }
 
                 for (int i = 0; i < count; ++i) {
@@ -467,7 +467,7 @@ void BF_Predator_Ghost_Fading(int width, int height, uint8_t *dst, uint8_t *src,
                     sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
                 
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
@@ -505,7 +505,7 @@ void BF_Predator_Ghost_Fading_Trans(int width, int height, uint8_t *dst, uint8_t
                         sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                     }
                     
-                    g_predatorFrame = (g_predatorFrame + 1) % 8;
+                    g_predatorFrame = (g_predatorFrame + 2) % 8;
                 }
 
                 uint8_t fbyte = ghost_lookup[sbyte];
@@ -718,7 +718,7 @@ void Single_Line_Predator(
                 *dst = dst[g_predatorShiftTab[g_predatorFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 1) % 8;
+            g_predatorFrame = (g_predatorFrame + 2) % 8;
         }
 
         ++dst;
@@ -742,7 +742,7 @@ void Single_Line_Predator_Trans(
                     sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             *dst = sbyte;
@@ -766,7 +766,7 @@ void Single_Line_Predator_Ghost(
                 sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 1) % 8;
+            g_predatorFrame = (g_predatorFrame + 2) % 8;
         }
 
         uint8_t fbyte = ghost_lookup[sbyte];
@@ -794,7 +794,7 @@ void Single_Line_Predator_Ghost_Trans(
                     sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
@@ -824,7 +824,7 @@ void Single_Line_Predator_Fading(
                 sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 1) % 8;
+            g_predatorFrame = (g_predatorFrame + 2) % 8;
         }
 
         for (int i = 0; i < count; ++i) {
@@ -850,7 +850,7 @@ void Single_Line_Predator_Fading_Trans(
                     sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             for (int i = 0; i < count; ++i) {
@@ -879,7 +879,7 @@ void Single_Line_Predator_Ghost_Fading(
                 sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 1) % 8;
+            g_predatorFrame = (g_predatorFrame + 2) % 8;
         }
 
         uint8_t fbyte = ghost_lookup[sbyte];
@@ -912,7 +912,7 @@ void Single_Line_Predator_Ghost_Fading_Trans(
                     sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 1) % 8;
+                g_predatorFrame = (g_predatorFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
