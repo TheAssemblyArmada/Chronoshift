@@ -43,6 +43,8 @@ public:
     BOOL Is_First_Run() const { return FirstRun; }
     void Set_First_Run(BOOL first_run) { FirstRun = first_run; }
 
+    uint32_t Pack() const { return SpecialFlags; }
+
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
