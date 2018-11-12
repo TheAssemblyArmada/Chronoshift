@@ -41,42 +41,6 @@ class VesselClass;
 class InfantryClass;
 class BuildingClass;
 
-//TODO: It is possible that this struct is what TargetClass uses for its data type.
-struct TargetComposite
-{
-public:
-    struct Sub
-    {
-    public:
-        Sub() {}
-        Sub(Sub &that) {}
-
-    protected:
-        target_t field_0;
-    };
-
-public:
-    TargetComposite() {}
-    TargetComposite(TargetComposite &that) {}
-
-protected:
-    Sub field_0;
-
-};
-
-class xTargetClass
-{
-public:
-    CellClass * const As_Cell() const;
-    AbstractClass *const As_Abstract() const;
-    AbstractTypeClass *const As_TypeClass() const;
-    TechnoClass *const As_Techno() const;
-    ObjectClass *const As_Object() const;
-
-protected:
-    TargetComposite Data;
-};
-
 class TargetClass
 {
 public:
@@ -86,8 +50,16 @@ public:
     TargetClass(CellClass *cell);
     ~TargetClass() {}
 
+    operator target_t() { return Target; }
+
+    CellClass * const As_Cell() const;
+    AbstractClass *const As_Abstract() const;
+    AbstractTypeClass *const As_TypeClass() const;
+    TechnoClass *const As_Techno() const;
+    ObjectClass *const As_Object() const;
+
 protected:
-    TargetComposite Data;
+    target_t Target;
 };
 
 inline target_t Make_Target(RTTIType type, int id)
