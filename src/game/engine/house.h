@@ -99,6 +99,8 @@ public:
 
     const uint8_t *Remap_Table(BOOL unk1, RemapType type);
 
+    int Get_Heap_ID() const { return HeapID; }
+
     HousesType What_Type() const { return Type->What_Type(); }
 
     fixed_t Cost_Multiplier() const { return CostMult; }
