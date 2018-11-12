@@ -1230,7 +1230,7 @@ void DisplayClass::Redraw_Shadow()
 
                         if (frame >= 0) { // If we have a valid frame, draw the shroud frame.
                             CC_Draw_Shape(
-                                ShadowShapes, frame, draw_x, draw_y, WINDOW_TACTICAL, SHAPE_SHADOW, nullptr, ShadowTrans);
+                                ShadowShapes, frame, draw_x, draw_y, WINDOW_TACTICAL, SHAPE_GHOST, nullptr, ShadowTrans);
                         } else if (frame != -1) { // Otherwise, if we don't have -1 fill black
                             int w = CELL_PIXELS;
                             int h = CELL_PIXELS;

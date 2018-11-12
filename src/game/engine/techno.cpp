@@ -497,7 +497,7 @@ void TechnoClass::Techno_Draw_It(
                             x,
                             y,
                             window,
-                            flags | SHAPE_SHADOW | SHAPE_FADING,
+                            flags | SHAPE_GHOST | SHAPE_FADING,
                             fading_table,
                             ghost_table,
                             dir);
@@ -556,7 +556,7 @@ void TechnoClass::Techno_Draw_It(
                             x,
                             y,
                             window,
-                            flags | SHAPE_SHADOW | SHAPE_FADING,
+                            flags | SHAPE_GHOST | SHAPE_FADING,
                             fading_table,
                             ghost_table,
                             dir);
