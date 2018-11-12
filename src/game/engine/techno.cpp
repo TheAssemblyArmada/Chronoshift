@@ -558,7 +558,7 @@ void TechnoClass::Techno_Draw_It(
                             window,
                             flags | SHAPE_GHOST | SHAPE_FADING,
                             fading_table,
-                            ghost_table,
+                            DisplayClass::UnitShadow,
                             dir);
                     }
 
