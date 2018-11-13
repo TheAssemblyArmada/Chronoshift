@@ -18,7 +18,7 @@
 
 TextLabelClass::TextLabelClass(char *text, int x, int y, RemapControlType *remap, TextPrintType style) :
     GadgetClass(x, y, 1, 1, INPUT_NONE, false),
-    Delay(0),
+    Lifetime(0),
     ID(0),
     TextStyle(style),
     LabelText(text),
@@ -29,7 +29,7 @@ TextLabelClass::TextLabelClass(char *text, int x, int y, RemapControlType *remap
 
 TextLabelClass::TextLabelClass(TextLabelClass &that) :
     GadgetClass(that),
-    Delay(that.Delay),
+    Lifetime(that.Lifetime),
     ID(that.ID),
     TextStyle(that.TextStyle),
     LabelText(that.LabelText),

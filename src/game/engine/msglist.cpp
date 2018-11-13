@@ -21,6 +21,7 @@
 #include "textprint.h"
 #include "ttimer.h"
 #include "txtlabel.h"
+#include "rules.h"
 #include <stdio.h>
 
 int MessageListClass::MaxMessageWidth = 640;
@@ -138,7 +139,7 @@ void MessageListClass::Reset()
  * @brief Adds a message to be displayed.
  */
 TextLabelClass *MessageListClass::Add_Message(
-    const char *player, int id, const char *message, PlayerColorType color, TextPrintType style, int delay)
+    const char *player, int id, const char *message, PlayerColorType color, TextPrintType style, int lifetime)
 {
     char msgbuff[152];
 
@@ -207,10 +208,10 @@ TextLabelClass *MessageListClass::Add_Message(
 
     TextLabelClass *msglabel = new TextLabelClass(msgbuff, XPos, YPos, &ColorRemaps[color], style);
 
-    if (delay == -1) {
-        msglabel->Set_Delay(0);
+    if (lifetime == -1) {
+        msglabel->Set_Lifetime(0);
     } else {
-        msglabel->Set_Delay(TickCountTimer.Time() + delay);
+        msglabel->Set_Lifetime(TickCountTimer.Time() + lifetime);
     }
 
     msglabel->Set_ID(id);
@@ -241,7 +242,7 @@ TextLabelClass *MessageListClass::Add_Message(
 
         if (saved_char != '\0') {
             msgbuff[break_pos] = saved_char;
-            Add_Message(player, id, &msgbuff[break_pos], color, style, delay);
+            Add_Message(player, id, &msgbuff[break_pos], color, style, lifetime);
         }
     } else {
         delete msglabel;
@@ -250,6 +251,14 @@ TextLabelClass *MessageListClass::Add_Message(
     }
 
     return msglabel;
+}
+
+/**
+* @brief Adds a simple message to be displayed.
+*/
+TextLabelClass *MessageListClass::Add_Simple_Message(const char *player, const char *message, PlayerColorType color)
+{
+    return Add_Message(player, 0, message, color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, Rule.Message_Delay() * 900);
 }
 
 /**
@@ -299,7 +308,7 @@ TextLabelClass *MessageListClass::Get_Label(int id)
 /**
  * @brief Concatenate two messages.
  */
-BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int delay)
+BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int lifetime)
 {
     if (msg == nullptr || !Concatenate) {
         return false;
@@ -344,10 +353,10 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int de
 
         strcpy(&label_sub_str[strlen(label_sub_str)], to_concat);
 
-        if (delay == -1) {
-            label->Set_Delay(0);
+        if (lifetime == -1) {
+            label->Set_Lifetime(0);
         } else {
-            label->Set_Delay(TickCountTimer.Time() + delay);
+            label->Set_Lifetime(TickCountTimer.Time() + lifetime);
         }
 
         return true;
@@ -483,7 +492,7 @@ BOOL MessageListClass::Manage()
 
     // Iterate through the message list and remove any messages that have past their delay.
     for (TextLabelClass *label = LabelList; label != nullptr;) {
-        if (label->Get_Delay() != 0 && TickCountTimer > label->Get_Delay()) {
+        if (label->Get_Lifetime() != 0 && TickCountTimer > label->Get_Lifetime()) {
             TextLabelClass *next = reinterpret_cast<TextLabelClass *>(label->Get_Next());
             LabelList = reinterpret_cast<TextLabelClass *>(label->Remove());
 
