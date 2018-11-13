@@ -35,20 +35,20 @@
 #include "weapontype.h"
 
 // Template specialisation to initialise the heaps required for GamePtr.
-template<> FixedIHeapClass *GamePtr<AircraftTypeClass>::Heap = &g_AircraftTypes;
-template<> FixedIHeapClass *GamePtr<AnimTypeClass>::Heap = &AnimTypes;
-template<> FixedIHeapClass *GamePtr<BuildingTypeClass>::Heap = &g_BuildingTypes;
-template<> FixedIHeapClass *GamePtr<BulletTypeClass>::Heap = &BulletTypes;
-template<> FixedIHeapClass *GamePtr<FactoryClass>::Heap = &g_Factories;
-template<> FixedIHeapClass *GamePtr<HouseClass>::Heap = &g_Houses;
-template<> FixedIHeapClass *GamePtr<HouseTypeClass>::Heap = &HouseTypes;
-template<> FixedIHeapClass *GamePtr<InfantryTypeClass>::Heap = &g_InfantryTypes;
-template<> FixedIHeapClass *GamePtr<OverlayTypeClass>::Heap = &OverlayTypes;
-template<> FixedIHeapClass *GamePtr<SmudgeTypeClass>::Heap = &SmudgeTypes;
-template<> FixedIHeapClass *GamePtr<TemplateTypeClass>::Heap = &TemplateTypes;
-template<> FixedIHeapClass *GamePtr<TerrainTypeClass>::Heap = &TerrainTypes;
-template<> FixedIHeapClass *GamePtr<TriggerTypeClass>::Heap = &TriggerTypes;
-template<> FixedIHeapClass *GamePtr<UnitTypeClass>::Heap = &g_UnitTypes;
-template<> FixedIHeapClass *GamePtr<VesselTypeClass>::Heap = &g_VesselTypes;
-template<> FixedIHeapClass *GamePtr<WarheadTypeClass>::Heap = &WarheadTypes;
-template<> FixedIHeapClass *GamePtr<WeaponTypeClass>::Heap = &WeaponTypes;
+template<> FixedIHeapClass *GamePtr<AircraftTypeClass>::g_Heap = &g_AircraftTypes;
+template<> FixedIHeapClass *GamePtr<AnimTypeClass>::g_Heap = &AnimTypes;
+template<> FixedIHeapClass *GamePtr<BuildingTypeClass>::g_Heap = &g_BuildingTypes;
+template<> FixedIHeapClass *GamePtr<BulletTypeClass>::g_Heap = &BulletTypes;
+template<> FixedIHeapClass *GamePtr<FactoryClass>::g_Heap = &g_Factories;
+template<> FixedIHeapClass *GamePtr<HouseClass>::g_Heap = &g_Houses;
+template<> FixedIHeapClass *GamePtr<HouseTypeClass>::g_Heap = &HouseTypes;
+template<> FixedIHeapClass *GamePtr<InfantryTypeClass>::g_Heap = &g_InfantryTypes;
+template<> FixedIHeapClass *GamePtr<OverlayTypeClass>::g_Heap = &OverlayTypes;
+template<> FixedIHeapClass *GamePtr<SmudgeTypeClass>::g_Heap = &SmudgeTypes;
+template<> FixedIHeapClass *GamePtr<TemplateTypeClass>::g_Heap = &TemplateTypes;
+template<> FixedIHeapClass *GamePtr<TerrainTypeClass>::g_Heap = &TerrainTypes;
+template<> FixedIHeapClass *GamePtr<TriggerTypeClass>::g_Heap = &TriggerTypes;
+template<> FixedIHeapClass *GamePtr<UnitTypeClass>::g_Heap = &g_UnitTypes;
+template<> FixedIHeapClass *GamePtr<VesselTypeClass>::g_Heap = &g_VesselTypes;
+template<> FixedIHeapClass *GamePtr<WarheadTypeClass>::g_Heap = &WarheadTypes;
+template<> FixedIHeapClass *GamePtr<WeaponTypeClass>::g_Heap = &WeaponTypes;

@@ -28,51 +28,51 @@ template<class T>
 class GamePtr
 {
 public:
-    GamePtr() : ID(-1) {}
-    GamePtr(T *ptr) : ID(-1)
+    GamePtr() : m_ID(-1) {}
+    GamePtr(T *ptr) : m_ID(-1)
     {
         if (ptr != nullptr) {
-            ID = ptr->Get_Heap_ID();
+            m_ID = ptr->Get_Heap_ID();
         }
     }
     GamePtr(const GamePtr &that) {}
     GamePtr(const NoInitClass &noinit) {}
-    ~GamePtr() { ID = -1; }
+    ~GamePtr() { m_ID = -1; }
 
     //<RA_TODO>, these two might be the wrong way around.  code in TEventClass::Build_INI_Entry() is not correct
     T *operator->() const
     {
-        DEBUG_ASSERT(Heap != nullptr && ID < Heap->Length());
-        return !Is_Valid() ? nullptr : (T *)(&(*Heap)[ID]);
+        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        return !Is_Valid() ? nullptr : (T *)(&(*g_Heap)[m_ID]);
     }
 
     //<RA_TODO>, this might not be reference? code in TEventClass::Build_INI_Entry() is not correct
     T &operator*() const
     {
-        DEBUG_ASSERT(Heap != nullptr && ID < Heap->Length());
-        return *(T *)(&(*Heap)[ID]);
+        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        return *(T *)(&(*g_Heap)[m_ID]);
     }
 
     // Fairly certain this works the same way as operator->
     operator T *() const
     {
-        DEBUG_ASSERT(Heap != nullptr && ID < Heap->Length());
-        return !Is_Valid() ? nullptr : (T *)(&(*Heap)[ID]);
+        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        return !Is_Valid() ? nullptr : (T *)(&(*g_Heap)[m_ID]);
     }
 
     GamePtr &operator=(const GamePtr &that)
     {
         if (this != &that) {
-            ID = that.ID;
+            m_ID = that.m_ID;
         }
         return *this;
     }
 
     GamePtr &operator=(const T *that)
     {
-        ID = -1;
+        m_ID = -1;
         if (that != nullptr) {
-            ID = Heap->ID(that);
+            m_ID = g_Heap->ID(that);
         }
         return *this;
     }
@@ -87,14 +87,13 @@ public:
         return strcasecmp((*this).Get_Name(), that.Get_Name()) != 0;
     }
 
-    bool Is_Valid() const { return Heap != nullptr && ID != -1; }
-    bool Has_Valid_ID() const { return ID != -1; }
-
-    void Invalidate() { ID = -1; }
+    bool Is_Valid() const { return g_Heap != nullptr && m_ID != -1; }
+    bool Has_Valid_ID() const { return m_ID != -1; }
+    void Invalidate() { m_ID = -1; }
 
 private:
-    int32_t ID;
-    static FixedIHeapClass *Heap;
+    int32_t m_ID;
+    static FixedIHeapClass *g_Heap;
 };
 
 template<class T1, class T2>
