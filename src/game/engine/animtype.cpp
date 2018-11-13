@@ -188,8 +188,6 @@ AnimTypeClass const AnimMineExp1(
     ANIM_MINEEXP1, "VEH-HIT2", 21, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, fixed::_0_1, 1, 0, 0, -1, -1, 1, VOC_MINEBLO1, ANIM_NONE);
 AnimTypeClass const AnimAntDeath(
     ANIM_ANTDEATH, "ANTDIE", 28, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, fixed::_0_1, 4, 0, 0, -1, -1, 1, VOC_ANT_DIE, ANIM_NONE);
-/*AnimTypeClass const AnimWWCrate(ANIM_WWCRATE, "WWCRATE", 28, 2, true, true, 0, 0, 0, 0, 1, false, 0, fixed::_0_1, 4, 0, 0,
-    -1, -1, 1, VOC_NONE, ANIM_NONE);*/
 
 /**
  * 0x00407388
@@ -199,59 +197,56 @@ AnimTypeClass::AnimTypeClass(AnimType anim, const char *name, int a3, int mid_po
     BOOL translucent, BOOL flamer, fixed damage, int rate, int start, int loop_start,
     int loop_end, int end, int loop_count, VocType report, AnimType next) :
     ObjectTypeClass(RTTI_ANIMTYPE, 0, 0, 0, 0, 0, 0, 0, 0, TXT_NULL, name),
-    Normalized(normalized),
-    Surface(surface),
-    Translucent(translucent),
-    ATBit1_8(a7),
-    Flamer(flamer),
-    Scorch(scorch),
-    Crater(crater),
-    Sticky(sticky),
-    Theater(theater),
-    Type(anim),
-    field_13D(a3),
-    MidPoint(mid_point),
-    Damage(damage),
-    Rate(rate),
-    Start(start),
-    LoopStart(loop_start),
-    LoopEnd(loop_end),
-    End(end),
-    LoopCount(loop_count),
-    Report(report),
-    Next(next)
+    m_Normalized(normalized),
+    m_Surface(surface),
+    m_Translucent(translucent),
+    m_Bit_8(a7),
+    m_Flamer(flamer),
+    m_Scorch(scorch),
+    m_Crater(crater),
+    m_Sticky(sticky),
+    m_Theater(theater),
+    m_Type(anim),
+    m_field_13D(a3),
+    m_MidPoint(mid_point),
+    m_Damage(damage),
+    m_Rate(rate),
+    m_Start(start),
+    m_LoopStart(loop_start),
+    m_LoopEnd(loop_end),
+    m_End(end),
+    m_LoopCount(loop_count),
+    m_Report(report),
+    m_Next(next)
 {
-    //Bit64 = true;    //TS shows what classes set this to true, needs debuging once logics are up and running.
-    //Bit128 = false;
-    return;
 }
 
 /**
  * 0x0041C750
  */
-AnimTypeClass::AnimTypeClass(AnimTypeClass const &that) :
+AnimTypeClass::AnimTypeClass(const AnimTypeClass &that) :
     ObjectTypeClass(that),
-    Normalized(that.Normalized),
-    Surface(that.Surface),
-    Translucent(that.Translucent),
-    ATBit1_8(that.ATBit1_8),
-    Flamer(that.Flamer),
-    Scorch(that.Scorch),
-    Crater(that.Crater),
-    Sticky(that.Sticky),
-    Theater(that.Theater),
-    Type(that.Type),
-    field_13D(that.field_13D),
-    MidPoint(that.MidPoint),
-    Damage(that.Damage),
-    Rate(that.Rate),
-    Start(that.Start),
-    LoopStart(that.LoopStart),
-    LoopEnd(that.LoopEnd),
-    End(that.End),
-    LoopCount(that.LoopCount),
-    Report(that.Report),
-    Next(that.Next)
+    m_Normalized(that.m_Normalized),
+    m_Surface(that.m_Surface),
+    m_Translucent(that.m_Translucent),
+    m_Bit_8(that.m_Bit_8),
+    m_Flamer(that.m_Flamer),
+    m_Scorch(that.m_Scorch),
+    m_Crater(that.m_Crater),
+    m_Sticky(that.m_Sticky),
+    m_Theater(that.m_Theater),
+    m_Type(that.m_Type),
+    m_field_13D(that.m_field_13D),
+    m_MidPoint(that.m_MidPoint),
+    m_Damage(that.m_Damage),
+    m_Rate(that.m_Rate),
+    m_Start(that.m_Start),
+    m_LoopStart(that.m_LoopStart),
+    m_LoopEnd(that.m_LoopEnd),
+    m_End(that.m_End),
+    m_LoopCount(that.m_LoopCount),
+    m_Report(that.m_Report),
+    m_Next(that.m_Next)
 {
 }
 
@@ -394,7 +389,6 @@ void AnimTypeClass::Init_Heap()
     new AnimTypeClass(AnimParaBomb);
     new AnimTypeClass(AnimMineExp1);
     new AnimTypeClass(AnimAntDeath);
-    // new AnimTypeClass(AnimWWCrate);
 }
 
 /**
@@ -406,8 +400,8 @@ void AnimTypeClass::One_Time()
 {
     char filename[512];
 
-    for (AnimType anim = ANIM_FIRST; anim < ANIM_COUNT; ++anim) {
-        AnimTypeClass *aptr = As_Pointer(anim);
+    for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
+        AnimTypeClass *aptr = As_Pointer(type);
         const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
         snprintf(filename, sizeof(filename), "%s.shp", name);
         aptr->ImageData = GameFileClass::Retrieve(filename);
@@ -428,13 +422,13 @@ void AnimTypeClass::Init(TheaterType theater)
     char filename[512];
 
     if (theater != g_lastTheater) {
-        for (AnimType anim = ANIM_FIRST; anim < ANIM_COUNT; ++anim) {
-            AnimTypeClass *aptr = As_Pointer(anim);
-            const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
-            // TODO change the theater info to lower case and standardise on that?
-            const char *ext = aptr->Theater ? g_theaters[theater].ext : "shp";
+        for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
+            AnimTypeClass *atptr = As_Pointer(type);
+            const char *name = atptr->ImageName[0] != '\0' ? atptr->ImageName : atptr->Get_Name();
+            // TODO: Change the theater info to lower case and standardise on that?
+            const char *ext = atptr->m_Theater ? g_theaters[theater].ext : "shp";
             snprintf(filename, sizeof(filename), "%s.%s", name, ext);
-            aptr->ImageData = GameFileClass::Retrieve(filename);
+            atptr->ImageData = GameFileClass::Retrieve(filename);
         }
 
     }
@@ -452,9 +446,9 @@ AnimType AnimTypeClass::From_Name(const char *name)
     }
 
     if (name != nullptr) {
-        for (AnimType anim = ANIM_FIRST; anim < ANIM_COUNT; ++anim) {
-            if (strcasecmp(name, Name_From(anim)) == 0) {
-                return anim;
+        for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
+            if (strcasecmp(name, Name_From(type)) == 0) {
+                return type;
             }
         }
     }
@@ -465,9 +459,9 @@ AnimType AnimTypeClass::From_Name(const char *name)
 /**
  * @brief Gets appropriate enum value from provided string.
  */
-const char *AnimTypeClass::Name_From(AnimType anim)
+const char *AnimTypeClass::Name_From(AnimType type)
 {
-    return anim != ANIM_NONE && anim < ANIM_COUNT ? As_Reference(anim).Get_Name() : "<none>";
+    return type != ANIM_NONE && type < ANIM_COUNT ? As_Reference(type).Get_Name() : "<none>";
 }
 
 /**
@@ -475,9 +469,9 @@ const char *AnimTypeClass::Name_From(AnimType anim)
  *
  * 0x0041C714
  */
-AnimTypeClass &AnimTypeClass::As_Reference(AnimType anim)
+AnimTypeClass &AnimTypeClass::As_Reference(AnimType type)
 {
-    AnimTypeClass *ptr = &AnimTypes[anim];
+    AnimTypeClass *ptr = &AnimTypes[type];
     DEBUG_ASSERT(ptr != nullptr);
     return *ptr;
 }
@@ -485,7 +479,7 @@ AnimTypeClass &AnimTypeClass::As_Reference(AnimType anim)
 /**
  * @brief Gets a pointer to an AnimTypeClass object from an AnimType enum value.
  */
-AnimTypeClass *AnimTypeClass::As_Pointer(AnimType anim)
+AnimTypeClass *AnimTypeClass::As_Pointer(AnimType type)
 {
-    return anim != ANIM_NONE && anim < ANIM_COUNT ? &AnimTypes[anim] : nullptr;
+    return type != ANIM_NONE && type < ANIM_COUNT ? &AnimTypes[type] : nullptr;
 }
