@@ -683,8 +683,8 @@ const InfantryTypeClass InfantryMechanic(INFANTRY_MECHANIC, TXT_MECH, "MECH", 53
  * 0x004DF5E0
  */
 InfantryTypeClass::InfantryTypeClass(InfantryType type, int uiname, const char *name, int def_fire_coord, int rot_count,
-    BOOL female, BOOL crawls, BOOL civilian, BOOL alt_remap, BOOL nominal, BOOL theater, PipEnum pip, DoInfoStruct *sequence,
-    int fire_up, int fire_prone, const uint8_t *remap) :
+    BOOL female, BOOL crawls, BOOL civilian, BOOL has_alt_remap, BOOL nominal, BOOL theater, PipEnum pip, DoInfoStruct *sequence,
+    int fire_up, int fire_prone, const uint8_t *alt_remap) :
     TechnoTypeClass(RTTI_INFANTRYTYPE, type, uiname, name, REMAP_1, def_fire_coord, rot_count, 0, 0, 0, nominal, true, true,
         true, false, false, theater, false, true, true, FACING_COUNT_8, SPEED_FOOT),
 
@@ -695,13 +695,13 @@ InfantryTypeClass::InfantryTypeClass(InfantryType type, int uiname, const char *
     m_IsCivilian(civilian),
     m_HasC4(false),
     m_IsCanine(false),
-    m_HasAltRemap(alt_remap),
+    m_HasAltRemap(has_alt_remap),
     m_Type(type),
     m_Pip(pip),
     m_DoControl(sequence),
     m_FireUp(fire_up),
     m_FireProne(fire_prone),
-    m_Remap(remap)
+    m_AltRemap(alt_remap)
 {
     // Set techno flags that don't get set correctly by the TechnoTypeClass ctor.
     Crushable = true;
@@ -727,7 +727,7 @@ InfantryTypeClass::InfantryTypeClass(InfantryTypeClass const &that) :
     m_DoControl(that.m_DoControl),
     m_FireUp(that.m_FireUp),
     m_FireProne(that.m_FireProne),
-    m_Remap(that.m_Remap)
+    m_AltRemap(that.m_AltRemap)
 {
 }
 

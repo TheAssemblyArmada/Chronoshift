@@ -53,9 +53,9 @@ public:
     virtual void *Get_Image_Data() const { return Class_Of().Get_Image_Data(); }
     virtual ActionType What_Action(ObjectClass *object) const { return ACTION_NONE; }
     virtual ActionType What_Action(cell_t cellnum) const { return ACTION_NONE; }
-    virtual LayerType In_Which_Layer() const { return Get_Height() > 171 ? LAYER_TOP : LAYER_GROUND; }
+    virtual LayerType In_Which_Layer() const { return Get_Height() >= 171 ? LAYER_TOP : LAYER_GROUND; }
     virtual int Get_Ownable() const { return OWNER_ALL; }
-    virtual ObjectTypeClass &Class_Of() const = 0;
+    virtual const ObjectTypeClass &Class_Of() const = 0;
     virtual int Full_Name() const { return Class_Of().Full_Name(); }
     virtual BOOL Can_Repair() const { return false; }
     virtual BOOL Can_Demolish() const { return false; }
