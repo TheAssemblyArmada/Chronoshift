@@ -91,6 +91,7 @@ set(GAMEENGINE_SRC
     game/engine/abstracttype.cpp
     game/engine/action.cpp
     game/engine/aircrafttype.cpp
+    game/engine/anim.cpp
     game/engine/animtype.cpp
     game/engine/armor.cpp
     game/engine/buildingtype.cpp

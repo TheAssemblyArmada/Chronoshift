@@ -17,6 +17,7 @@
 
 // Classes required for initialisation below.
 #include "aircrafttype.h"
+#include "anim.h"
 #include "animtype.h"
 #include "buildingtype.h"
 #include "bullettype.h"
@@ -36,6 +37,7 @@
 
 // Template specialisation to initialise the heaps required for GamePtr.
 template<> FixedIHeapClass *GamePtr<AircraftTypeClass>::g_Heap = &g_AircraftTypes;
+template<> FixedIHeapClass *GamePtr<AnimClass>::g_Heap = &g_Anims;
 template<> FixedIHeapClass *GamePtr<AnimTypeClass>::g_Heap = &AnimTypes;
 template<> FixedIHeapClass *GamePtr<BuildingTypeClass>::g_Heap = &g_BuildingTypes;
 template<> FixedIHeapClass *GamePtr<BulletTypeClass>::g_Heap = &BulletTypes;
