@@ -60,7 +60,30 @@ void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
 void *&g_TurretShapes = Make_Global<void *>(0x0068D2E0);
 void *&g_SamShapes = Make_Global<void *>(0x0068D2E4);
 void *&g_MGunShapes = Make_Global<void *>(0x0068D2E8);
+
+BOOL &g_Debug_MotionCapture = Make_Global<BOOL>(0x0065D7C4);
+BOOL &g_Debug_Rotate = Make_Global<BOOL>(0x0065D7C8);
+BOOL &g_Debug_Quiet = Make_Global<BOOL>(0x0065D7CC);
+BOOL &g_Debug_Cheat = Make_Global<BOOL>(0x0065D7D0);
+BOOL &g_Debug_Remap = Make_Global<BOOL>(0x0065D7D4);
+BOOL &g_Debug_Icon = Make_Global<BOOL>(0x0065D7D8);
 BOOL &g_Debug_Flag = Make_Global<BOOL>(0x0065D7DC);
+BOOL &g_Debug_Lose = Make_Global<BOOL>(0x0065D7E0);
+BOOL &g_Debug_Win = Make_Global<BOOL>(0x0065D7E4);
+BOOL &g_Debug_Map = Make_Global<BOOL>(0x0065D7E8);
+BOOL &g_Debug_Passable = Make_Global<BOOL>(0x0065D7EC);
+BOOL &g_Debug_Unshroud = Make_Global<BOOL>(0x0065D7F0);
+BOOL &g_Debug_Threat = Make_Global<BOOL>(0x0065D7F4);
+BOOL &g_Debug_Find_Path = Make_Global<BOOL>(0x0065D7F8);
+BOOL &g_Debug_Check_Map = Make_Global<BOOL>(0x0065D7FC);
+BOOL &g_Debug_Playtest = Make_Global<BOOL>(0x0065D800);
+BOOL &g_Debug_Heap_Dump = Make_Global<BOOL>(0x0065D804);
+BOOL &g_Debug_Smart_Print = Make_Global<BOOL>(0x0065D808);
+BOOL &g_Debug_Trap_Check_Heap = Make_Global<BOOL>(0x0065D80C);
+BOOL &g_Debug_Modem_Dump = Make_Global<BOOL>(0x0065D810);
+BOOL &g_Debug_Print_Events = Make_Global<BOOL>(0x0065D814);
+
+BOOL &g_MonoEnabled = Make_Global<BOOL>(0x006AC288); // Actually a part of MonoClass.
 #else
 int g_iniFormat;
 int g_frame;
@@ -102,5 +125,35 @@ void *g_TurretShapes;
 void *g_SamShapes;
 void *g_MGunShapes;
 
-BOOL g_Debug_Flag = false;;
+BOOL g_Debug_MotionCapture = false;
+BOOL g_Debug_Rotate = false;
+BOOL g_Debug_Quiet = false;
+BOOL g_Debug_Cheat = false;
+BOOL g_Debug_Remap = false;
+BOOL g_Debug_Icon = false;
+BOOL g_Debug_Flag = false;
+BOOL g_Debug_Lose = false;
+BOOL g_Debug_Win = false;
+BOOL g_Debug_Map = false;
+BOOL g_Debug_Passable = false;
+BOOL g_Debug_Unshroud = false;
+BOOL g_Debug_Threat = false;
+BOOL g_Debug_Find_Path = false;
+BOOL g_Debug_Check_Map = false;
+BOOL g_Debug_Playtest = false;
+BOOL g_Debug_Heap_Dump = false;
+BOOL g_Debug_Smart_Print = false;
+BOOL g_Debug_Trap_Check_Heap = false;
+BOOL g_Debug_Modem_Dump = false;
+BOOL g_Debug_Print_Events = false;
+BOOL g_MonoEnabled = false; // Actually a part of MonoClass.
 #endif
+
+BOOL g_Debug_Sight_Range = false;
+BOOL g_Debug_Guard_Range = false;
+BOOL g_Debug_Weapon_Range = false;
+BOOL g_Debug_Attack_Friendlies = false;
+BOOL g_Debug_Nav_List = false;
+BOOL g_Debug_Damage = false;
+BOOL g_Debug_AIControl = false;
+BOOL g_Debug_Instant_Build = false;

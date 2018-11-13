@@ -75,7 +75,29 @@ extern void *&g_TurretShapes;
 extern void *&g_SamShapes;
 extern void *&g_MGunShapes;
 
+extern BOOL &g_Debug_MotionCapture;
+extern BOOL &g_Debug_Rotate;
+extern BOOL &g_Debug_Quiet;
+extern BOOL &g_Debug_Cheat;
+extern BOOL &g_Debug_Remap;
+extern BOOL &g_Debug_Icon;
 extern BOOL &g_Debug_Flag;
+extern BOOL &g_Debug_Lose;
+extern BOOL &g_Debug_Win;
+extern BOOL &g_Debug_Map;
+extern BOOL &g_Debug_Passable;
+extern BOOL &g_Debug_Unshroud;
+extern BOOL &g_Debug_Threat;
+extern BOOL &g_Debug_Find_Path;
+extern BOOL &g_Debug_Check_Map;
+extern BOOL &g_Debug_Playtest;
+extern BOOL &g_Debug_Heap_Dump;
+extern BOOL &g_Debug_Smart_Print;
+extern BOOL &g_Debug_Trap_Check_Heap;
+extern BOOL &g_Debug_Modem_Dump;
+extern BOOL &g_Debug_Print_Events;
+
+extern BOOL &g_MonoEnabled;
 #else
 extern int g_iniFormat;
 extern int g_frame;
@@ -119,7 +141,38 @@ extern void *g_TurretShapes;
 extern void *g_SamShapes;
 extern void *g_MGunShapes;
 
+extern BOOL g_Debug_MotionCapture;
+extern BOOL g_Debug_Rotate;
+extern BOOL g_Debug_Quiet;
+extern BOOL g_Debug_Cheat;
+extern BOOL g_Debug_Remap;
+extern BOOL g_Debug_Icon;
 extern BOOL g_Debug_Flag;
+extern BOOL g_Debug_Lose;
+extern BOOL g_Debug_Win;
+extern BOOL g_Debug_Map;
+extern BOOL g_Debug_Passable;
+extern BOOL g_Debug_Unshroud;
+extern BOOL g_Debug_Threat;
+extern BOOL g_Debug_Find_Path;
+extern BOOL g_Debug_Check_Map;
+extern BOOL g_Debug_Playtest;
+extern BOOL g_Debug_Heap_Dump;
+extern BOOL g_Debug_Smart_Print;
+extern BOOL g_Debug_Trap_Check_Heap;
+extern BOOL g_Debug_Modem_Dump;
+extern BOOL g_Debug_Print_Events;
+
+extern BOOL g_MonoEnabled;
 #endif
 
-#endif
+extern BOOL g_Debug_Sight_Range;
+extern BOOL g_Debug_Guard_Range;
+extern BOOL g_Debug_Weapon_Range;
+extern BOOL g_Debug_Attack_Friendlies;
+extern BOOL g_Debug_Nav_List;
+extern BOOL g_Debug_Damage;
+extern BOOL g_Debug_AIControl;
+extern BOOL g_Debug_Instant_Build;
+
+#endif // GLOBALS_H
