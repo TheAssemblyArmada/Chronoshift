@@ -22,6 +22,54 @@
 #include "session.h"
 #include "expansion.h"
 
+#if !defined(CHRONOSHIFT_STANDALONE) && defined(CHRONOSHIFT_DEBUG)
+KeyNumType OptionsClass::DebugKeyToggleDebug = KN_NONE;
+KeyNumType OptionsClass::DebugKeyToggleVortex = KN_NONE;
+KeyNumType OptionsClass::DebugKeyForceRedraw = KN_NONE;
+KeyNumType OptionsClass::DebugKeyRandomCrate = KN_NONE;
+KeyNumType OptionsClass::DebugKeyRandomCrateAtMouse = KN_NONE;
+KeyNumType OptionsClass::DebugKeyFreeMoney = KN_NONE;
+KeyNumType OptionsClass::DebugKeyForceWin = KN_NONE;
+KeyNumType OptionsClass::DebugKeyForceLose = KN_NONE;
+KeyNumType OptionsClass::DebugKeyForceDie = KN_NONE;
+KeyNumType OptionsClass::DebugKeyBailOut = KN_NONE;
+KeyNumType OptionsClass::DebugKeyCellIcon = KN_NONE;
+KeyNumType OptionsClass::DebugKeyUnshroud = KN_NONE;
+KeyNumType OptionsClass::DebugKeySightRange = KN_NONE;
+KeyNumType OptionsClass::DebugKeyGuardRange = KN_NONE;
+KeyNumType OptionsClass::DebugKeyWeaponRange = KN_NONE;
+KeyNumType OptionsClass::DebugKeyAttackFriendlies = KN_NONE;
+KeyNumType OptionsClass::DebugKeyFindPath = KN_NONE;
+KeyNumType OptionsClass::DebugKeyNavList = KN_NONE;
+KeyNumType OptionsClass::DebugKeyToggleMono = KN_NONE;
+KeyNumType OptionsClass::DebugKeyPrevMonoPage = KN_NONE;
+KeyNumType OptionsClass::DebugKeyNextMonoPage = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpawnMCV = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpawnHarvester = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpawnHeli = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpawnHind = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpawnTransport = KN_NONE;
+KeyNumType OptionsClass::DebugKeyAtomExplosion = KN_NONE;
+KeyNumType OptionsClass::DebugKeySuperExplosion = KN_NONE;
+KeyNumType OptionsClass::DebugKeyExplosion = KN_NONE;
+KeyNumType OptionsClass::DebugKeyDeleteObject = KN_NONE;
+KeyNumType OptionsClass::DebugKeyScreenshot = KN_NONE;
+KeyNumType OptionsClass::DebugKeyMotionCapture = KN_NONE;
+KeyNumType OptionsClass::DebugKeyThemeNext = KN_NONE;
+KeyNumType OptionsClass::DebugKeyThemePrev = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialSonarPulse = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialAtomBomb = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialWarpSphere = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialParaBomb = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialParaInfantry = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialSpyPlane = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialIronCurtain = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialGPS = KN_NONE;
+KeyNumType OptionsClass::DebugKeyAIControl = KN_NONE;
+KeyNumType OptionsClass::DebugKeyStealObject = KN_NONE;
+KeyNumType OptionsClass::DebugKeyToggleDamage = KN_NONE;
+#endif
+
 OptionsClass::OptionsClass() :
     GameSpeed(GAMESPEED_3),
     ScrollRate(SCROLLSPEED_3),
@@ -88,6 +136,54 @@ OptionsClass::OptionsClass() :
     KeyTeam8(KN_8),
     KeyTeam9(KN_9),
     KeyTeam10(KN_0)
+#if defined(CHRONOSHIFT_STANDALONE) && defined(CHRONOSHIFT_DEBUG)
+    ,
+    DebugKeyToggleDebug(KN_NONE),
+    DebugKeyToggleVortex(KN_NONE),
+    DebugKeyForceRedraw(KN_NONE),
+    DebugKeyRandomCrate(KN_NONE),
+    DebugKeyRandomCrateAtMouse(KN_NONE),
+    DebugKeyFreeMoney(KN_NONE),
+    DebugKeyForceWin(KN_NONE),
+    DebugKeyForceLose(KN_NONE),
+    DebugKeyForceDie(KN_NONE),
+    DebugKeyBailOut(KN_NONE),
+    DebugKeyCellIcon(KN_NONE),
+    DebugKeyUnshroud(KN_NONE),
+    DebugKeySightRange(KN_NONE),
+    DebugKeyGuardRange(KN_NONE),
+    DebugKeyWeaponRange(KN_NONE),
+    DebugKeyAttackFriendlies(KN_NONE),
+    DebugKeyFindPath(KN_NONE),
+    DebugKeyNavList(KN_NONE),
+    DebugKeyToggleMono(KN_NONE),
+    DebugKeyPrevMonoPage(KN_NONE),
+    DebugKeyNextMonoPage(KN_NONE),
+    DebugKeySpawnMCV(KN_NONE),
+    DebugKeySpawnHarvester(KN_NONE),
+    DebugKeySpawnHeli(KN_NONE),
+    DebugKeySpawnHind(KN_NONE),
+    DebugKeySpawnTransport(KN_NONE),
+    DebugKeyAtomExplosion(KN_NONE),
+    DebugKeySuperExplosion(KN_NONE),
+    DebugKeyExplosion(KN_NONE),
+    DebugKeyDeleteObject(KN_NONE),
+    DebugKeyScreenshot(KN_NONE),
+    DebugKeyMotionCapture(KN_NONE),
+    DebugKeyThemeNext(KN_NONE),
+    DebugKeyThemePrev(KN_NONE),
+    DebugKeySpecialSonarPulse(KN_NONE),
+    DebugKeySpecialAtomBomb(KN_NONE),
+    DebugKeySpecialWarpSphere(KN_NONE),
+    DebugKeySpecialParaBomb(KN_NONE),
+    DebugKeySpecialParaInfantry(KN_NONE),
+    DebugKeySpecialSpyPlane(KN_NONE),
+    DebugKeySpecialIronCurtain(KN_NONE),
+    DebugKeySpecialGPS(KN_NONE),
+    DebugKeyAIControl(KN_NONE),
+    DebugKeyStealObject(KN_NONE),
+    DebugKeyToggleDamage(KN_NONE)
+#endif // CHRONOSHIFT_STANDALONE && CHRONOSHIFT_DEBUG
 {
 }
 
@@ -269,6 +365,54 @@ void OptionsClass::Load_Settings()
     KeyTeam8 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam8", KeyTeam8);
     KeyTeam9 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam9", KeyTeam9);
     KeyTeam10 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam10", KeyTeam10);
+
+#if defined(CHRONOSHIFT_DEBUG)
+    DebugKeyToggleDebug = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleDebug", DebugKeyToggleDebug);
+    DebugKeyToggleVortex = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleVortex", DebugKeyToggleVortex);
+    DebugKeyForceRedraw = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyForceRedraw", DebugKeyForceRedraw);
+    DebugKeyRandomCrate = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyRandomCrate", DebugKeyRandomCrate);
+    DebugKeyRandomCrateAtMouse = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyRandomCrateAtMouse", DebugKeyRandomCrateAtMouse);
+    DebugKeyFreeMoney = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyFreeMoney", DebugKeyFreeMoney);
+    DebugKeyForceWin = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyForceWin", DebugKeyForceWin);
+    DebugKeyForceLose = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyForceLose", DebugKeyForceLose);
+    DebugKeyForceDie = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyForceDie", DebugKeyForceDie);
+    DebugKeyBailOut = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyBailOut", DebugKeyBailOut);
+    DebugKeyCellIcon = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyCellIcon", DebugKeyCellIcon);
+    DebugKeyUnshroud = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyUnshroud", DebugKeyUnshroud);
+    DebugKeySightRange = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySightRange", DebugKeySightRange);
+    DebugKeyGuardRange = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyGuardRange", DebugKeyGuardRange);
+    DebugKeyWeaponRange = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyWeaponRange", DebugKeyWeaponRange);
+    DebugKeyAttackFriendlies = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyAttackFriendlies", DebugKeyAttackFriendlies);
+    DebugKeyFindPath = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyFindPath", DebugKeyFindPath);
+    DebugKeyNavList = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyNavList", DebugKeyNavList);
+    DebugKeyToggleMono = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleMono", DebugKeyToggleMono);
+    DebugKeyPrevMonoPage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyPrevMonoPage", DebugKeyPrevMonoPage);
+    DebugKeyNextMonoPage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyNextMonoPage", DebugKeyNextMonoPage);
+    DebugKeySpawnMCV = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnMCV", DebugKeySpawnMCV);
+    DebugKeySpawnHarvester = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnHarvester", DebugKeySpawnHarvester);
+    DebugKeySpawnHeli = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnHeli", DebugKeySpawnHeli);
+    DebugKeySpawnHind = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnHind", DebugKeySpawnHind);
+    DebugKeySpawnTransport = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnTransport", DebugKeySpawnTransport);
+    DebugKeyAtomExplosion = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyAtomExplosion", DebugKeyAtomExplosion);
+    DebugKeySuperExplosion = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySuperExplosion", DebugKeySuperExplosion);
+    DebugKeyExplosion = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyExplosion", DebugKeyExplosion);
+    DebugKeyDeleteObject = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyDeleteObject", DebugKeyDeleteObject);
+    DebugKeyScreenshot = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyScreenshot", DebugKeyScreenshot);
+    DebugKeyMotionCapture = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyMotionCapture", DebugKeyMotionCapture);
+    DebugKeyThemeNext = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyThemeNext", DebugKeyThemeNext);
+    DebugKeyThemePrev = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyThemePrev", DebugKeyThemePrev);
+    DebugKeySpecialSonarPulse = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialSonarPulse", DebugKeySpecialSonarPulse);
+    DebugKeySpecialAtomBomb = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialAtomBomb", DebugKeySpecialAtomBomb);
+    DebugKeySpecialWarpSphere = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialWarpSphere", DebugKeySpecialWarpSphere);
+    DebugKeySpecialParaBomb = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialParaBomb", DebugKeySpecialParaBomb);
+    DebugKeySpecialParaInfantry = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialParaInfantry", DebugKeySpecialParaInfantry);
+    DebugKeySpecialSpyPlane = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialSpyPlane", DebugKeySpecialSpyPlane);
+    DebugKeySpecialIronCurtain = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialIronCurtain", DebugKeySpecialIronCurtain);
+    DebugKeySpecialGPS = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialGPS", DebugKeySpecialGPS);
+    DebugKeyAIControl = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyAIControl", DebugKeyAIControl);
+    DebugKeyStealObject = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyStealObject", DebugKeyStealObject);
+    DebugKeyToggleDamage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleDamage", DebugKeyToggleDamage);
+#endif // CHRONOSHIFT_DEBUG
 }
 
 /**

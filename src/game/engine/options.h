@@ -119,6 +119,54 @@ public:
     KeyNumType Get_KeyGuard() const { return KeyGuard; }
     KeyNumType Get_KeyScatter() const { return KeyScatter; }
 
+#if defined(CHRONOSHIFT_DEBUG)
+    KeyNumType Get_DebugKeyToggleDebug() const { return DebugKeyToggleDebug; }
+    KeyNumType Get_DebugKeyToggleVortex() const { return DebugKeyToggleVortex; }
+    KeyNumType Get_DebugKeyForceRedraw() const { return DebugKeyForceRedraw; }
+    KeyNumType Get_DebugKeyRandomCrate() const { return DebugKeyRandomCrate; }
+    KeyNumType Get_DebugKeyRandomCrateAtMouse() const { return DebugKeyRandomCrateAtMouse; }
+    KeyNumType Get_DebugKeyFreeMoney() const { return DebugKeyFreeMoney; }
+    KeyNumType Get_DebugKeyForceWin() const { return DebugKeyForceWin; }
+    KeyNumType Get_DebugKeyForceLose() const { return DebugKeyForceLose; }
+    KeyNumType Get_DebugKeyForceDie() const { return DebugKeyForceDie; }
+    KeyNumType Get_DebugKeyBailOut() const { return DebugKeyBailOut; }
+    KeyNumType Get_DebugKeyCellIcon() const { return DebugKeyCellIcon; }
+    KeyNumType Get_DebugKeyUnshroud() const { return DebugKeyUnshroud; }
+    KeyNumType Get_DebugKeySightRange() const { return DebugKeySightRange; }
+    KeyNumType Get_DebugKeyGuardRange() const { return DebugKeyGuardRange; }
+    KeyNumType Get_DebugKeyWeaponRange() const { return DebugKeyWeaponRange; }
+    KeyNumType Get_DebugKeyAttackFriendlies() const { return DebugKeyAttackFriendlies; }
+    KeyNumType Get_DebugKeyFindPath() const { return DebugKeyFindPath; }
+    KeyNumType Get_DebugKeyNavList() const { return DebugKeyNavList; }
+    KeyNumType Get_DebugKeyToggleMono() const { return DebugKeyToggleMono; }
+    KeyNumType Get_DebugKeyPrevMonoPage() const { return DebugKeyPrevMonoPage; }
+    KeyNumType Get_DebugKeyNextMonoPage() const { return DebugKeyNextMonoPage; }
+    KeyNumType Get_DebugKeySpawnMCV() const { return DebugKeySpawnMCV; }
+    KeyNumType Get_DebugKeySpawnHarvester() const { return DebugKeySpawnHarvester; }
+    KeyNumType Get_DebugKeySpawnHeli() const { return DebugKeySpawnHeli; }
+    KeyNumType Get_DebugKeySpawnHind() const { return DebugKeySpawnHind; }
+    KeyNumType Get_DebugKeySpawnTransport() const { return DebugKeySpawnTransport; }
+    KeyNumType Get_DebugKeyAtomExplosion() const { return DebugKeyAtomExplosion; }
+    KeyNumType Get_DebugKeySuperExplosion() const { return DebugKeySuperExplosion; }
+    KeyNumType Get_DebugKeyExplosion() const { return DebugKeyExplosion; }
+    KeyNumType Get_DebugKeyDeleteObject() const { return DebugKeyDeleteObject; }
+    KeyNumType Get_DebugKeyScreenshot() const { return DebugKeyScreenshot; }
+    KeyNumType Get_DebugKeyMotionCapture() const { return DebugKeyMotionCapture; }
+    KeyNumType Get_DebugKeyThemeNext() const { return DebugKeyThemeNext; }
+    KeyNumType Get_DebugKeyThemePrev() const { return DebugKeyThemePrev; }
+    KeyNumType Get_DebugKeySpecialSonarPulse() const { return DebugKeySpecialSonarPulse; }
+    KeyNumType Get_DebugKeySpecialAtomBomb() const { return DebugKeySpecialAtomBomb; }
+    KeyNumType Get_DebugKeySpecialWarpSphere() const { return DebugKeySpecialWarpSphere; }
+    KeyNumType Get_DebugKeySpecialParaBomb() const { return DebugKeySpecialParaBomb; }
+    KeyNumType Get_DebugKeySpecialParaInfantry() const { return DebugKeySpecialParaInfantry; }
+    KeyNumType Get_DebugKeySpecialSpyPlane() const { return DebugKeySpecialSpyPlane; }
+    KeyNumType Get_DebugKeySpecialIronCurtain() const { return DebugKeySpecialIronCurtain; }
+    KeyNumType Get_DebugKeySpecialGPS() const { return DebugKeySpecialGPS; }
+    KeyNumType Get_DebugKeyAIControl() const { return DebugKeyAIControl; }
+    KeyNumType Get_DebugKeyStealObject() const { return DebugKeyStealObject; }
+    KeyNumType Get_DebugKeyToggleDamage() const { return DebugKeyToggleDamage; }
+#endif
+
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
@@ -207,6 +255,103 @@ private:
     KeyNumType KeyTeam8;
     KeyNumType KeyTeam9;
     KeyNumType KeyTeam10;
+
+#if defined(CHRONOSHIFT_DEBUG)
+#if !defined(CHRONOSHIFT_STANDALONE)
+    // For now, these need to be static as they will increase the size of the class.
+    static KeyNumType DebugKeyToggleDebug;
+    static KeyNumType DebugKeyToggleVortex;
+    static KeyNumType DebugKeyForceRedraw;
+    static KeyNumType DebugKeyRandomCrate;
+    static KeyNumType DebugKeyRandomCrateAtMouse;
+    static KeyNumType DebugKeyFreeMoney;
+    static KeyNumType DebugKeyForceWin;
+    static KeyNumType DebugKeyForceLose;
+    static KeyNumType DebugKeyForceDie;
+    static KeyNumType DebugKeyBailOut;
+    static KeyNumType DebugKeyCellIcon;
+    static KeyNumType DebugKeyUnshroud;
+    static KeyNumType DebugKeySightRange;
+    static KeyNumType DebugKeyGuardRange;
+    static KeyNumType DebugKeyWeaponRange;
+    static KeyNumType DebugKeyAttackFriendlies;
+    static KeyNumType DebugKeyFindPath;
+    static KeyNumType DebugKeyNavList;
+    static KeyNumType DebugKeyToggleMono;
+    static KeyNumType DebugKeyPrevMonoPage;
+    static KeyNumType DebugKeyNextMonoPage;
+    static KeyNumType DebugKeySpawnMCV;
+    static KeyNumType DebugKeySpawnHarvester;
+    static KeyNumType DebugKeySpawnHeli;
+    static KeyNumType DebugKeySpawnHind;
+    static KeyNumType DebugKeySpawnTransport;
+    static KeyNumType DebugKeyAtomExplosion;
+    static KeyNumType DebugKeySuperExplosion;
+    static KeyNumType DebugKeyExplosion;
+    static KeyNumType DebugKeyDeleteObject;
+    static KeyNumType DebugKeyScreenshot;
+    static KeyNumType DebugKeyMotionCapture;
+    static KeyNumType DebugKeyThemeNext;
+    static KeyNumType DebugKeyThemePrev;
+    static KeyNumType DebugKeySpecialSonarPulse;
+    static KeyNumType DebugKeySpecialAtomBomb;
+    static KeyNumType DebugKeySpecialWarpSphere;
+    static KeyNumType DebugKeySpecialParaBomb;
+    static KeyNumType DebugKeySpecialParaInfantry;
+    static KeyNumType DebugKeySpecialSpyPlane;
+    static KeyNumType DebugKeySpecialIronCurtain;
+    static KeyNumType DebugKeySpecialGPS;
+    static KeyNumType DebugKeyAIControl;
+    static KeyNumType DebugKeyStealObject;
+    static KeyNumType DebugKeyToggleDamage;
+#else // CHRONOSHIFT_STANDALONE
+    KeyNumType DebugKeyToggleDebug;
+    KeyNumType DebugKeyToggleVortex;
+    KeyNumType DebugKeyForceRedraw;
+    KeyNumType DebugKeyRandomCrate;
+    KeyNumType DebugKeyRandomCrateAtMouse;
+    KeyNumType DebugKeyFreeMoney;
+    KeyNumType DebugKeyForceWin;
+    KeyNumType DebugKeyForceLose;
+    KeyNumType DebugKeyForceDie;
+    KeyNumType DebugKeyBailOut;
+    KeyNumType DebugKeyCellIcon;
+    KeyNumType DebugKeyUnshroud;
+    KeyNumType DebugKeySightRange;
+    KeyNumType DebugKeyGuardRange;
+    KeyNumType DebugKeyWeaponRange;
+    KeyNumType DebugKeyAttackFriendlies;
+    KeyNumType DebugKeyFindPath;
+    KeyNumType DebugKeyNavList;
+    KeyNumType DebugKeyToggleMono;
+    KeyNumType DebugKeyPrevMonoPage;
+    KeyNumType DebugKeyNextMonoPage;
+    KeyNumType DebugKeySpawnMCV;
+    KeyNumType DebugKeySpawnHarvester;
+    KeyNumType DebugKeySpawnHeli;
+    KeyNumType DebugKeySpawnHind;
+    KeyNumType DebugKeySpawnTransport;
+    KeyNumType DebugKeyAtomExplosion;
+    KeyNumType DebugKeySuperExplosion;
+    KeyNumType DebugKeyExplosion;
+    KeyNumType DebugKeyDeleteObject;
+    KeyNumType DebugKeyScreenshot;
+    KeyNumType DebugKeyMotionCapture;
+    KeyNumType DebugKeyThemeNext;
+    KeyNumType DebugKeyThemePrev;
+    KeyNumType DebugKeySpecialSonarPulse;
+    KeyNumType DebugKeySpecialAtomBomb;
+    KeyNumType DebugKeySpecialWarpSphere;
+    KeyNumType DebugKeySpecialParaBomb;
+    KeyNumType DebugKeySpecialParaInfantry;
+    KeyNumType DebugKeySpecialSpyPlane;
+    KeyNumType DebugKeySpecialIronCurtain;
+    KeyNumType DebugKeySpecialGPS;
+    KeyNumType DebugKeyAIControl;
+    KeyNumType DebugKeyStealObject;
+    KeyNumType DebugKeyToggleDamage;
+#endif // !CHRONOSHIFT_STANDALONE
+#endif // CHRONOSHIFT_DEBUG
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
