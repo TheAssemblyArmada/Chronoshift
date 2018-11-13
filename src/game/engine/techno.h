@@ -109,7 +109,7 @@ public:
     virtual int Pip_Count() const { return 0; }
     virtual int Rearm_Delay(int a1, int a2) const;
     virtual int Refund_Amount() const;
-    virtual int Risk() const { return reinterpret_cast<TechnoTypeClass &>(Class_Of()).Get_ThreatPosed(); }
+    virtual int Risk() const { return Techno_Class_Of().Get_ThreatPosed(); }
     virtual int Threat_Range(int a1) const;
     virtual void Response_Select();
     virtual void Response_Move();
@@ -155,7 +155,7 @@ protected:
     VisualType Visual_Character(BOOL flag) const;
 
 private:
-    TechnoTypeClass &Techno_Class_Of() const { return reinterpret_cast<TechnoTypeClass &>(Class_Of()); }
+    const TechnoTypeClass &Techno_Class_Of() const { return reinterpret_cast<const TechnoTypeClass &>(Class_Of()); }
 
 protected:
     FlasherClass m_Flasher;

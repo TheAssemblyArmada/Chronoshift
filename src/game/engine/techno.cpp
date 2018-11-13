@@ -469,17 +469,17 @@ void TechnoClass::Techno_Draw_It(
 
         if (m_RTTI == RTTI_INFANTRY) {
             if (!m_PlayerOwned) {
-                if (reinterpret_cast<InfantryTypeClass &>(Class_Of()).Get_Type() == INFANTRY_SPY) {
+                if (reinterpret_cast<const InfantryTypeClass &>(Class_Of()).Get_Type() == INFANTRY_SPY) {
                     fading_table = (void *)g_PlayerPtr->Remap_Table(false, REMAP_1);
                 }
             }
 
-            if (reinterpret_cast<InfantryTypeClass &>(Class_Of()).Has_Alt_Remap()) {
-                fading_table = (void *)reinterpret_cast<InfantryTypeClass &>(Class_Of()).Alt_Remap_Table();
+            if (reinterpret_cast<const InfantryTypeClass &>(Class_Of()).Has_Alt_Remap()) {
+                fading_table = (void *)reinterpret_cast<const InfantryTypeClass &>(Class_Of()).Alt_Remap_Table();
             }
         }
 
-        if (!m_InvulnerabilityTimer == 0) {
+        if (!m_InvulnerabilityTimer.Expired()) {
             fading_table = DisplayClass::FadingRed;
         }
 

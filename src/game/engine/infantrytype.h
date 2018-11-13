@@ -98,8 +98,8 @@ class InfantryTypeClass : public TechnoTypeClass
 {
 public:
     InfantryTypeClass(InfantryType type, int uiname, const char *name, int def_fire_coord, int rot_count, BOOL female,
-        BOOL crawls, BOOL civilian, BOOL alt_remap, BOOL nominal, BOOL theater, PipEnum pip, DoInfoStruct *sequence,
-        int fire_up, int fire_prone, const uint8_t *remap);
+        BOOL crawls, BOOL civilian, BOOL has_alt_remap, BOOL nominal, BOOL theater, PipEnum pip, DoInfoStruct *sequence,
+        int fire_up, int fire_prone, const uint8_t *alt_remap);
     InfantryTypeClass(const InfantryTypeClass &that);
     InfantryTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
     ~InfantryTypeClass() {}
@@ -123,7 +123,7 @@ public:
 
     InfantryType Get_Type() const { return m_Type; }
     BOOL Has_Alt_Remap() const { return m_HasAltRemap; }
-    const uint8_t *Alt_Remap_Table() { return m_Remap; }
+    const uint8_t *Alt_Remap_Table() const { return m_AltRemap; }
 
     static InfantryTypeClass &As_Reference(InfantryType type);
     static InfantryType From_Name(const char *name);
@@ -162,7 +162,7 @@ private:
     DoInfoStruct *m_DoControl;
     uint8_t m_FireUp;
     uint8_t m_FireProne;
-    const uint8_t *m_Remap;
+    const uint8_t *m_AltRemap;
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
