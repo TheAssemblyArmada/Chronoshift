@@ -36,18 +36,18 @@ public:
     TextLabelClass &operator=(TextLabelClass &that);
     
     void Set_Style(TextPrintType style);
-    void Set_Delay(unsigned delay) { Delay = delay; }
+    void Set_Lifetime(unsigned lifetime) { Lifetime = lifetime; }
     void Set_ID(int id) { ID = id; }
     void Set_Remap(RemapControlType *remap) { Remap = remap; }
     void Set_Max_Width(int max) { MaxWidth = max; }
     char *Get_Text() { return LabelText; }
     TextPrintType Get_Style() { return TextStyle; }
-    unsigned Get_Delay() { return Delay; }
+    unsigned Get_Lifetime() { return Lifetime; }
     int Get_ID() { return ID; }
     RemapControlType *Get_Remap() { return Remap; }
 
 protected:
-    unsigned Delay;
+    unsigned Lifetime;
     int ID;
     TextPrintType TextStyle;
     char *LabelText;
@@ -59,7 +59,7 @@ inline TextLabelClass &TextLabelClass::operator=(TextLabelClass &that)
 {
     if (this != &that) {
         GadgetClass::operator=(that);
-        Delay = that.Delay;
+        Lifetime = that.Lifetime;
         ID = that.ID;
         TextStyle = that.TextStyle;
         LabelText = that.LabelText;

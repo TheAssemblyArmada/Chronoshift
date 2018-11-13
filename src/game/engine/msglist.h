@@ -39,10 +39,11 @@ public:
         int width = MaxMessageWidth);
     void Reset();
     TextLabelClass *Add_Message(const char *player, int id, const char *message, PlayerColorType color,
-        TextPrintType style = TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL /*4046h*/, int delay = -1);
+        TextPrintType style = TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL /*4046h*/, int lifetime = -1);
+    TextLabelClass *Add_Simple_Message(const char *player, const char *message, PlayerColorType color);
     char *Get_Message(int id);
     TextLabelClass *Get_Label(int id);
-    BOOL Concat_Message(char *msg, int id, char *to_concat, int delay);
+    BOOL Concat_Message(char *msg, int id, char *to_concat, int lifetime = -1);
     void Set_Edit_Focus();
     bool Has_Edit_Focus();
     TextLabelClass *Add_Edit(PlayerColorType player, TextPrintType style, char *string, char cursor, int width);
