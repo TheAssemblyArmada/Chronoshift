@@ -22,6 +22,7 @@
 #include "gametypes.h"
 #include "rtti.h"
 
+class NoInitClass;
 class CellClass;
 class TriggerClass;
 class TriggerTypeClass;
@@ -44,22 +45,29 @@ class BuildingClass;
 class TargetClass
 {
 public:
-    TargetClass(target_t target);
+    TargetClass(target_t target) : m_Target(target) {}
     TargetClass(AbstractClass *abstract);
     TargetClass(AbstractTypeClass *abstractype);
     TargetClass(CellClass *cell);
+    TargetClass(const TargetClass &that) : m_Target(that.m_Target) {}
+    TargetClass(const NoInitClass &noinit) {}
     ~TargetClass() {}
 
-    operator target_t() { return Target; }
+    operator target_t() { return m_Target; }
 
-    CellClass * const As_Cell() const;
-    AbstractClass *const As_Abstract() const;
-    AbstractTypeClass *const As_TypeClass() const;
-    TechnoClass *const As_Techno() const;
-    ObjectClass *const As_Object() const;
+    CellClass *As_Cell() const;
+    AbstractClass *As_Abstract() const;
+    AbstractTypeClass *As_TypeClass() const;
+    TechnoClass *As_Techno() const;
+    ObjectClass *As_Object() const;
 
-protected:
-    target_t Target;
+private:
+    union {
+        struct {
+            unsigned int m_ID : 24;
+            unsigned int m_RTTI : 8;
+        }; target_t m_Target;
+    };
 };
 
 inline target_t Make_Target(RTTIType type, int id)
