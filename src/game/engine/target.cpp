@@ -21,50 +21,62 @@
 #include "technotype.h"
 //#include "triggertype.h"
 
-CellClass *const TargetClass::As_Cell() const
+CellClass *TargetClass::As_Cell() const
 {
     return nullptr;
+    //return ::As_Cell(m_Target);
 }
 
-AbstractClass *const TargetClass::As_Abstract() const
+AbstractClass *TargetClass::As_Abstract() const
+{
+    return ::As_Abstract(m_Target);
+}
+
+AbstractTypeClass *TargetClass::As_TypeClass() const
 {
     return nullptr;
+    //return ::As_TypeClass(m_Target);
 }
 
-AbstractTypeClass *const TargetClass::As_TypeClass() const
+TechnoClass *TargetClass::As_Techno() const
 {
-    return nullptr;
+    return ::As_Techno(m_Target);
 }
 
-TechnoClass *const TargetClass::As_Techno() const
+ObjectClass *TargetClass::As_Object() const
 {
-    return nullptr;
-}
-
-ObjectClass *const TargetClass::As_Object() const
-{
-    return nullptr;
-}
-
-TargetClass::TargetClass(target_t target)
-{
+    return ::As_Object(m_Target);
 }
 
 TargetClass::TargetClass(AbstractClass *abstract)
 {
+    if (abstract != nullptr){
+        m_Target = abstract->What_Am_I() << 24 | abstract->Get_Heap_ID() & 0xFFFFFF;
+    } else {
+        m_RTTI = RTTI_NONE;
+    }
 }
 
 TargetClass::TargetClass(AbstractTypeClass *abstractype)
 {
+    if (abstractype != nullptr){
+        m_Target = abstractype->What_Am_I() << 24 | abstractype->Get_Heap_ID() & 0xFFFFFF;
+    } else {
+        m_RTTI = RTTI_NONE;
+    }
 }
 
 TargetClass::TargetClass(CellClass *cell)
 {
+    if (cell != nullptr){
+        m_Target = RTTI_CELL << 24 | cell->Cell_Number() & 0xFFFFFF;
+    } else {
+        m_RTTI = RTTI_NONE;
+    }
 }
 
 BOOL Target_Is_Techno(target_t target)
 {
-    // TODO: Requires TechnoClass implementation.
     TechnoClass *ptr = As_Techno(target);
     return ptr != nullptr ? ptr->Is_Techno() : false;
 }
