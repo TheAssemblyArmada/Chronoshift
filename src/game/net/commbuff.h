@@ -31,20 +31,20 @@ public:
         uint32_t m_Flags;
         uint32_t m_InitialSendTime; // first send time perhaps when field_c is 0?
         uint32_t m_LastSendTime; // last send attempt time?
-        uint32_t m_Retries; // some count? send retry count perhaps?
-        int32_t m_Buff1DataLen;
-        uint8_t *m_Buff1;
-        int32_t m_Buff2DataLen;
-        uint8_t *m_Buff2;
+        uint32_t m_AckToConnection; // some count? send retry count perhaps?
+        int32_t m_DataLength;
+        uint8_t *m_DataBuffer;
+        int32_t m_AckToConnectionLength;
+        uint8_t *m_AckToConnectionBuffer;
     };
 
     struct ReceiveQueueType
     {
         uint32_t m_Flags;
-        int32_t m_Buff1DataLen;
-        uint8_t *m_Buff1;
-        int32_t m_Buff2DataLen;
-        uint8_t *m_Buff2;
+        int32_t m_DataLength;
+        uint8_t *m_DataBuffer;
+        int32_t m_AckToConnectionLength;
+        uint8_t *m_AckToConnectionBuffer;
     };
 
 public:
@@ -76,8 +76,8 @@ public:
 protected:
     int m_SendQueueLength; // How many send queue objects does this buffer instance supports
     int m_RecvQueueLength; // How many recv queue objects does this buffer instance supports
-    int m_QueueTypeBuff1Len; // Length of the first buffer in the Queue types
-    int m_QueueTypeBuff2Len; // Length of the second buffer in the Queue types
+    int m_MaxPacketSize; // Length of the first buffer in the Queue types
+    int m_MaxAckPacketSize; // Length of the second buffer in the Queue types
     int m_Delay; // Related to delay somehow?
     int m_ResponseCount; // Used in calculating average response?
     uint32_t m_AvgResponse;
