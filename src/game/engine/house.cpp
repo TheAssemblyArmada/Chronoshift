@@ -33,7 +33,7 @@ HouseClass *g_PlayerPtr = nullptr;
 HouseClass::HouseClass(HousesType type) :
     m_RTTI(RTTI_HOUSE),
     m_HeapID(g_Houses.ID(this)),
-    m_Type(HouseTypes.Ptr(type)),
+    m_Type(g_HouseTypes.Ptr(type)),
     m_AIDifficulty(Scen.Get_AI_Difficulty()),
     m_FirepowerMult("1.0"),
     m_GroundspeedMult("1.0"),

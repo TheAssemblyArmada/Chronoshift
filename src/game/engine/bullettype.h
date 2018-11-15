@@ -140,9 +140,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<BulletTypeClass> &BulletTypes;
+extern TFixedIHeapClass<BulletTypeClass> &g_BulletTypes;
 #else
-extern TFixedIHeapClass<BulletTypeClass> BulletTypes;
+extern TFixedIHeapClass<BulletTypeClass> g_BulletTypes;
 #endif
 
 #endif // BULLETTYPE_H

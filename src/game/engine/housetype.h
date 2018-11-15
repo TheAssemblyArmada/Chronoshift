@@ -81,9 +81,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<HouseTypeClass> &HouseTypes;
+extern TFixedIHeapClass<HouseTypeClass> &g_HouseTypes;
 #else
-extern TFixedIHeapClass<HouseTypeClass> HouseTypes;
+extern TFixedIHeapClass<HouseTypeClass> g_HouseTypes;
 #endif
 
 #endif // HOUSETYPE_H

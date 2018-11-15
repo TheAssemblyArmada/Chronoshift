@@ -21,9 +21,9 @@
 #include "mixfile.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<TemplateTypeClass> &TemplateTypes = Make_Global<TFixedIHeapClass<TemplateTypeClass> >(0x0065DF84);
+TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes = Make_Global<TFixedIHeapClass<TemplateTypeClass> >(0x0065DF84);
 #else
-TFixedIHeapClass<TemplateTypeClass> TemplateTypes;
+TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;
 #endif
 
 enum TemplateTheater
@@ -495,13 +495,13 @@ TemplateTypeClass::TemplateTypeClass(const TemplateTypeClass &that) :
 void *TemplateTypeClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(TemplateTypeClass));
-    return TemplateTypes.Allocate();
+    return g_TemplateTypes.Allocate();
 }
 
 void TemplateTypeClass::operator delete(void *ptr)
 {
     DEBUG_ASSERT(ptr != nullptr);
-    TemplateTypes.Free(ptr);
+    g_TemplateTypes.Free(ptr);
 }
 
 void TemplateTypeClass::Init_Heap()
@@ -1112,7 +1112,7 @@ const int16_t *TemplateTypeClass::Occupy_List(BOOL a1) const
 TemplateTypeClass *TemplateTypeClass::As_Pointer(TemplateType tem)
 {
     if (tem != TEMPLATE_NONE && tem < TEMPLATE_COUNT) {
-        TemplateTypeClass *ptr = &TemplateTypes[tem];
+        TemplateTypeClass *ptr = &g_TemplateTypes[tem];
         DEBUG_ASSERT(ptr != nullptr);
         return ptr;
     }
@@ -1125,7 +1125,7 @@ TemplateTypeClass &TemplateTypeClass::As_Reference(TemplateType tem)
     DEBUG_ASSERT(tem != TEMPLATE_NONE);
     DEBUG_ASSERT(tem < TEMPLATE_COUNT);
 
-    TemplateTypeClass *ttypeptr = &TemplateTypes[tem];
+    TemplateTypeClass *ttypeptr = &g_TemplateTypes[tem];
     DEBUG_ASSERT(ttypeptr != nullptr);
 
     return *ttypeptr;

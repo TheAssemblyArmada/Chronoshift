@@ -19,9 +19,9 @@
 #include "warheadtype.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<WeaponTypeClass> &WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x0069164C);
+TFixedIHeapClass<WeaponTypeClass> &g_WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x0069164C);
 #else
-TFixedIHeapClass<WeaponTypeClass> WeaponTypes;
+TFixedIHeapClass<WeaponTypeClass> g_WeaponTypes;
 #endif
 
 const WeaponTypeClass WeaponColt45(WEAPON_COLT45, "Colt45");
@@ -123,7 +123,7 @@ WeaponTypeClass::WeaponTypeClass(WeaponTypeClass const &that) :
  */
 void *WeaponTypeClass::operator new(size_t size)
 {
-    return WeaponTypes.Alloc();
+    return g_WeaponTypes.Alloc();
 }
 
 /**
@@ -131,7 +131,7 @@ void *WeaponTypeClass::operator new(size_t size)
  */
 void WeaponTypeClass::operator delete(void *ptr)
 {
-    WeaponTypes.Free(ptr);
+    g_WeaponTypes.Free(ptr);
 }
 
 /**
@@ -221,7 +221,7 @@ const char *WeaponTypeClass::Name_From(WeaponType weapon)
  */
 WeaponTypeClass &WeaponTypeClass::As_Reference(WeaponType weapon)
 {
-    return WeaponTypes[weapon];
+    return g_WeaponTypes[weapon];
 }
 
 /**
@@ -232,7 +232,7 @@ WeaponTypeClass &WeaponTypeClass::As_Reference(WeaponType weapon)
 WeaponTypeClass *WeaponTypeClass::As_Pointer(WeaponType weapon)
 {
     if (weapon != WEAPON_NONE && weapon < WEAPON_COUNT) {
-        return &WeaponTypes[weapon];
+        return &g_WeaponTypes[weapon];
     }
 
     return nullptr;

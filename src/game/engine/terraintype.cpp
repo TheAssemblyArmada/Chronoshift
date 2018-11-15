@@ -25,9 +25,9 @@
 using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<TerrainTypeClass> &TerrainTypes = Make_Global<TFixedIHeapClass<TerrainTypeClass> >(0x0065DFD0);
+TFixedIHeapClass<TerrainTypeClass> &g_TerrainTypes = Make_Global<TFixedIHeapClass<TerrainTypeClass> >(0x0065DFD0);
 #else
-TFixedIHeapClass<TerrainTypeClass> TerrainTypes;
+TFixedIHeapClass<TerrainTypeClass> g_TerrainTypes;
 #endif
 
 // Added fix by AlexB (changed MINE from Coord_From_Pixel_XY(12, 24) to Coord_From_Pixel_XY(12, 12)).
@@ -150,7 +150,7 @@ TerrainTypeClass::~TerrainTypeClass()
  */
 void *TerrainTypeClass::operator new(size_t size)
 {
-    return TerrainTypes.Allocate();
+    return g_TerrainTypes.Allocate();
 }
 
 /**
@@ -158,7 +158,7 @@ void *TerrainTypeClass::operator new(size_t size)
  */
 void TerrainTypeClass::operator delete(void *ptr)
 {
-    TerrainTypes.Free(ptr);
+    g_TerrainTypes.Free(ptr);
 }
 
 /**
@@ -375,7 +375,7 @@ const char *TerrainTypeClass::Name_From(TerrainType terrain)
  */
 TerrainTypeClass &TerrainTypeClass::As_Reference(TerrainType terrain)
 {
-    return TerrainTypes[terrain];
+    return g_TerrainTypes[terrain];
 }
 
 /**
@@ -384,7 +384,7 @@ TerrainTypeClass &TerrainTypeClass::As_Reference(TerrainType terrain)
 TerrainTypeClass *TerrainTypeClass::As_Pointer(TerrainType terrain)
 {
     if (terrain != TERRAIN_NONE && terrain < TERRAIN_COUNT) {
-        TerrainTypeClass *ptr = &TerrainTypes[terrain];
+        TerrainTypeClass *ptr = &g_TerrainTypes[terrain];
         DEBUG_ASSERT(ptr != nullptr);
         return ptr;
     }

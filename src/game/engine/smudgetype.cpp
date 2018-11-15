@@ -23,9 +23,9 @@
 using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<SmudgeTypeClass> &SmudgeTypes = Make_Global<TFixedIHeapClass<SmudgeTypeClass> >(0x0065E068);
+TFixedIHeapClass<SmudgeTypeClass> &g_SmudgeTypes = Make_Global<TFixedIHeapClass<SmudgeTypeClass> >(0x0065E068);
 #else
-TFixedIHeapClass<SmudgeTypeClass> SmudgeTypes;
+TFixedIHeapClass<SmudgeTypeClass> g_SmudgeTypes;
 #endif
 
 const SmudgeTypeClass SmudgeCrater1(SMUDGE_CR1, "CR1", TXT_CRATER, 1, 1, false, true);
@@ -68,13 +68,13 @@ SmudgeTypeClass::SmudgeTypeClass(SmudgeTypeClass const &that) :
 void *SmudgeTypeClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(SmudgeTypeClass));
-    return SmudgeTypes.Allocate();
+    return g_SmudgeTypes.Allocate();
 }
 
 void SmudgeTypeClass::operator delete(void *ptr)
 {
     DEBUG_ASSERT(ptr != nullptr);
-    SmudgeTypes.Free(ptr);
+    g_SmudgeTypes.Free(ptr);
 }
 
 BOOL SmudgeTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
@@ -214,9 +214,9 @@ SmudgeTypeClass &SmudgeTypeClass::As_Reference(SmudgeType smudge)
 {
     DEBUG_ASSERT(smudge != SMUDGE_NONE);
     DEBUG_ASSERT(smudge < SMUDGE_COUNT);
-    DEBUG_ASSERT(&SmudgeTypes[smudge] != nullptr);
+    DEBUG_ASSERT(&g_SmudgeTypes[smudge] != nullptr);
 
-    return SmudgeTypes[smudge];
+    return g_SmudgeTypes[smudge];
 }
 
 SmudgeTypeClass *SmudgeTypeClass::As_Pointer(SmudgeType smudge)
@@ -224,5 +224,5 @@ SmudgeTypeClass *SmudgeTypeClass::As_Pointer(SmudgeType smudge)
     DEBUG_ASSERT(smudge != SMUDGE_NONE);
     DEBUG_ASSERT(smudge < SMUDGE_COUNT);
 
-    return (smudge < SMUDGE_COUNT) && (smudge != SMUDGE_NONE) ? &SmudgeTypes[smudge] : nullptr;
+    return (smudge < SMUDGE_COUNT) && (smudge != SMUDGE_NONE) ? &g_SmudgeTypes[smudge] : nullptr;
 }

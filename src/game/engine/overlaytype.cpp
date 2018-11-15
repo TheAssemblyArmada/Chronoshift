@@ -25,9 +25,9 @@
 using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<OverlayTypeClass> &OverlayTypes = Make_Global<TFixedIHeapClass<OverlayTypeClass> >(0x0065E01C);
+TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes = Make_Global<TFixedIHeapClass<OverlayTypeClass> >(0x0065E01C);
 #else
-TFixedIHeapClass<OverlayTypeClass> OverlayTypes;
+TFixedIHeapClass<OverlayTypeClass> g_OverlayTypes;
 #endif
 
 const OverlayTypeClass OverlaySandbag(
@@ -118,13 +118,13 @@ OverlayTypeClass::OverlayTypeClass(const OverlayTypeClass &that) :
 void *OverlayTypeClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(OverlayTypeClass));
-    return OverlayTypes.Allocate();
+    return g_OverlayTypes.Allocate();
 }
 
 void OverlayTypeClass::operator delete(void *ptr)
 {
     DEBUG_ASSERT(ptr != nullptr);
-    OverlayTypes.Free(ptr);
+    g_OverlayTypes.Free(ptr);
 }
 
 void OverlayTypeClass::Init_Heap()
@@ -212,9 +212,9 @@ void OverlayTypeClass::Init(TheaterType theater)
 OverlayTypeClass &OverlayTypeClass::As_Reference(OverlayType overlay)
 {
     DEBUG_ASSERT(overlay < OVERLAY_COUNT);
-    DEBUG_ASSERT(&OverlayTypes[overlay] != nullptr);
+    DEBUG_ASSERT(&g_OverlayTypes[overlay] != nullptr);
 
-    return OverlayTypes[overlay];
+    return g_OverlayTypes[overlay];
 }
 
 OverlayTypeClass *OverlayTypeClass::As_Pointer(OverlayType overlay)
@@ -222,7 +222,7 @@ OverlayTypeClass *OverlayTypeClass::As_Pointer(OverlayType overlay)
     DEBUG_ASSERT(overlay != OVERLAY_NONE);
     DEBUG_ASSERT(overlay < OVERLAY_COUNT);
 
-    return overlay < OVERLAY_COUNT && overlay != OVERLAY_NONE ? &OverlayTypes[overlay] : nullptr;
+    return overlay < OVERLAY_COUNT && overlay != OVERLAY_NONE ? &g_OverlayTypes[overlay] : nullptr;
 }
 
 coord_t OverlayTypeClass::Coord_Fixup(coord_t coord) const

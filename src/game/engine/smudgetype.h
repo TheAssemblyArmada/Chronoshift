@@ -112,9 +112,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<SmudgeTypeClass> &SmudgeTypes;
+extern TFixedIHeapClass<SmudgeTypeClass> &g_SmudgeTypes;
 #else
-extern TFixedIHeapClass<SmudgeTypeClass> SmudgeTypes;
+extern TFixedIHeapClass<SmudgeTypeClass> g_SmudgeTypes;
 #endif
 
 #endif // SMUDGETYPE_H

@@ -22,9 +22,9 @@
 using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<BulletTypeClass> &BulletTypes = *reinterpret_cast<TFixedIHeapClass<BulletTypeClass> *>(0x0065DE54);
+TFixedIHeapClass<BulletTypeClass> &g_BulletTypes = Make_Global<TFixedIHeapClass<BulletTypeClass> >(0x0065DE54);
 #else
-TFixedIHeapClass<BulletTypeClass> BulletTypes;
+TFixedIHeapClass<BulletTypeClass> g_BulletTypes;
 #endif
 
 // If you want to add a bullet type, add it hear, to the enum in bullettype.h and Init_Heap further down. Order must match.
@@ -163,7 +163,7 @@ void BulletTypeClass::One_Time()
  */
 void *BulletTypeClass::operator new(size_t size)
 {
-    return BulletTypes.Allocate();
+    return g_BulletTypes.Allocate();
 }
 
 /**
@@ -171,7 +171,7 @@ void *BulletTypeClass::operator new(size_t size)
  */
 void BulletTypeClass::operator delete(void *ptr)
 {
-    BulletTypes.Free(ptr);
+    g_BulletTypes.Free(ptr);
 }
 
 /**
@@ -210,7 +210,7 @@ const char *BulletTypeClass::Name_From(BulletType bullet)
  */
 BulletTypeClass &BulletTypeClass::As_Reference(BulletType bullet)
 {
-    return BulletTypes[bullet];
+    return g_BulletTypes[bullet];
 }
 
 /**
@@ -218,7 +218,7 @@ BulletTypeClass &BulletTypeClass::As_Reference(BulletType bullet)
  */
 BulletTypeClass *BulletTypeClass::As_Pointer(BulletType bullet)
 {
-    return bullet < BULLET_COUNT && bullet != BULLET_NONE ? &BulletTypes[bullet] : nullptr;
+    return bullet < BULLET_COUNT && bullet != BULLET_NONE ? &g_BulletTypes[bullet] : nullptr;
 }
 
 /**

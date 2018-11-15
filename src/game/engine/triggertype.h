@@ -119,9 +119,9 @@ protected:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<TriggerTypeClass> &TriggerTypes;
+extern TFixedIHeapClass<TriggerTypeClass> &g_TriggerTypes;
 #else
-extern TFixedIHeapClass<TriggerTypeClass> TriggerTypes;
+extern TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
 #endif
 
 #endif // TRIGGERTYPE_H

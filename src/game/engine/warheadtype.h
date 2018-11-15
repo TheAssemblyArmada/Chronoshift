@@ -101,9 +101,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<WarheadTypeClass> &WarheadTypes;
+extern TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes;
 #else
-extern TFixedIHeapClass<WarheadTypeClass> WarheadTypes;
+extern TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;
 #endif
 
 #endif // WARHEADTYPE_H
