@@ -13,6 +13,7 @@
  *            LICENSE
  */
 #include "commbuff.h"
+#include "gamedebug.h"
 #include <cstring>
 
 using std::memcpy;
@@ -23,30 +24,30 @@ using std::memcpy;
 CommBufferClass::CommBufferClass(int snd_buff_size, int rcv_buff_size, int buff1_size, int buff2_size) :
     m_SendQueueLength(snd_buff_size),
     m_RecvQueueLength(rcv_buff_size),
-    m_QueueTypeBuff1Len(buff1_size),
-    m_QueueTypeBuff2Len(buff2_size),
+    m_MaxPacketSize(buff1_size),
+    m_MaxAckPacketSize(buff2_size),
     m_SendQueue(new SendQueueType[snd_buff_size]),
     m_SendIndex(new uint32_t[snd_buff_size]),
     m_RecvQueue(new ReceiveQueueType[rcv_buff_size]),
     m_RecvIndex(new uint32_t[rcv_buff_size])
 {
     for (int i = 0; i < m_SendQueueLength; ++i) {
-        m_SendQueue[i].m_Buff1 = new uint8_t[buff1_size];
+        m_SendQueue[i].m_DataBuffer = new uint8_t[buff1_size];
 
-        if (m_QueueTypeBuff2Len <= 0) {
-            m_SendQueue[i].m_Buff2 = nullptr;
+        if (m_MaxAckPacketSize <= 0) {
+            m_SendQueue[i].m_AckToConnectionBuffer = nullptr;
         } else {
-            m_SendQueue[i].m_Buff2 = new uint8_t[buff2_size];
+            m_SendQueue[i].m_AckToConnectionBuffer = new uint8_t[buff2_size];
         }
     }
 
     for (int i = 0; i < m_RecvQueueLength; ++i) {
-        m_RecvQueue[i].m_Buff1 = new uint8_t[buff1_size];
+        m_RecvQueue[i].m_DataBuffer = new uint8_t[buff1_size];
 
-        if (m_QueueTypeBuff2Len <= 0) {
-            m_RecvQueue[i].m_Buff2 = nullptr;
+        if (m_MaxAckPacketSize <= 0) {
+            m_RecvQueue[i].m_AckToConnectionBuffer = nullptr;
         } else {
-            m_RecvQueue[i].m_Buff2 = new uint8_t[buff2_size];
+            m_RecvQueue[i].m_AckToConnectionBuffer = new uint8_t[buff2_size];
         }
     }
 
@@ -59,18 +60,18 @@ CommBufferClass::CommBufferClass(int snd_buff_size, int rcv_buff_size, int buff1
 CommBufferClass::~CommBufferClass()
 {
     for (int i = 0; i < m_SendQueueLength; ++i) {
-        delete[] m_SendQueue[i].m_Buff1;
+        delete[] m_SendQueue[i].m_DataBuffer;
 
-        if (m_SendQueue[i].m_Buff2) {
-            delete[] m_SendQueue[i].m_Buff2;
+        if (m_SendQueue[i].m_AckToConnectionBuffer) {
+            delete[] m_SendQueue[i].m_AckToConnectionBuffer;
         }
     }
 
     for (int i = 0; i < m_RecvQueueLength; ++i) {
-        delete[] m_RecvQueue[i].m_Buff1;
+        delete[] m_RecvQueue[i].m_DataBuffer;
 
-        if (m_RecvQueue[i].m_Buff2) {
-            delete[] m_RecvQueue[i].m_Buff2;
+        if (m_RecvQueue[i].m_AckToConnectionBuffer) {
+            delete[] m_RecvQueue[i].m_AckToConnectionBuffer;
         }
     }
 
@@ -103,9 +104,9 @@ void CommBufferClass::Init()
         m_SendQueue[i].m_Flags &= ~(COMM_FLAG_INUSE | COMM_FLAG_SNDACK); // clear bits 1 and 2
         m_SendQueue[i].m_InitialSendTime = 0;
         m_SendQueue[i].m_LastSendTime = 0;
-        m_SendQueue[i].m_Retries = 0;
-        m_SendQueue[i].m_Buff1DataLen = 0;
-        m_SendQueue[i].m_Buff2DataLen = 0;
+        m_SendQueue[i].m_AckToConnection = 0;
+        m_SendQueue[i].m_DataLength = 0;
+        m_SendQueue[i].m_AckToConnectionLength = 0;
         m_SendIndex[i] = 0;
     }
 
@@ -115,8 +116,8 @@ void CommBufferClass::Init()
         // GETBYTE32(m_RecvQueue[i].m_Flags) &= 0xFBu;
         // Do same as above with one AND, probably macros originally or enum
         m_RecvQueue[i].m_Flags &= ~(COMM_FLAG_INUSE | COMM_FLAG_SNDACK | COMM_FLAG_RECACK); // clear bits 1, 2 and 3
-        m_RecvQueue[i].m_Buff1DataLen = 0;
-        m_RecvQueue[i].m_Buff2DataLen = 0;
+        m_RecvQueue[i].m_DataLength = 0;
+        m_RecvQueue[i].m_AckToConnectionLength = 0;
         m_RecvIndex[i] = 0;
     }
 
@@ -141,9 +142,9 @@ void CommBufferClass::Init_Send_Queue()
         m_SendQueue[i].m_Flags &= ~(COMM_FLAG_INUSE | COMM_FLAG_SNDACK); // clear bits 1 and 2
         m_SendQueue[i].m_InitialSendTime = 0;
         m_SendQueue[i].m_LastSendTime = 0;
-        m_SendQueue[i].m_Retries = 0;
-        m_SendQueue[i].m_Buff1DataLen = 0;
-        m_SendQueue[i].m_Buff2DataLen = 0;
+        m_SendQueue[i].m_AckToConnection = 0;
+        m_SendQueue[i].m_DataLength = 0;
+        m_SendQueue[i].m_AckToConnectionLength = 0;
         m_SendIndex[i] = 0;
     }
 }
@@ -155,7 +156,10 @@ void CommBufferClass::Init_Send_Queue()
  */
 int CommBufferClass::Queue_Send(void *src, int src_len, void *buff2, int buff2_len)
 {
-    if (m_SendQueuePos != m_SendQueueLength && src_len <= m_QueueTypeBuff1Len) {
+    DEBUG_ASSERT_PRINT(m_SendQueuePos != m_SendQueueLength, "No room in send queue.\n");
+    DEBUG_ASSERT_PRINT(src_len <= m_MaxPacketSize, "Input length greater than m_MaxPacketSize.\n");
+
+    if (m_SendQueuePos != m_SendQueueLength && src_len <= m_MaxPacketSize) {
         int free_index = -1;
         for (int i = 0; i < m_SendQueueLength; ++i) {
             if ((m_SendQueue[i].m_Flags & COMM_FLAG_INUSE) == 0) {
@@ -171,17 +175,17 @@ int CommBufferClass::Queue_Send(void *src, int src_len, void *buff2, int buff2_l
             m_SendQueue[free_index].m_Flags &= ~(COMM_FLAG_SNDACK); // clear bit 2
             m_SendQueue[free_index].m_InitialSendTime = 0;
             m_SendQueue[free_index].m_LastSendTime = 0;
-            m_SendQueue[free_index].m_Retries = 0;
-            m_SendQueue[free_index].m_Buff1DataLen = src_len;
-            memcpy(m_SendQueue[free_index].m_Buff1, src, src_len);
+            m_SendQueue[free_index].m_AckToConnection = 0;
+            m_SendQueue[free_index].m_DataLength = src_len;
+            memcpy(m_SendQueue[free_index].m_DataBuffer, src, src_len);
 
             // If we have a second buffer (possibly a header or meta data) and
             // it will fit in the queue object second buffer, copy it in.
-            if (buff2 && buff2_len > 0 && buff2_len <= m_QueueTypeBuff2Len) {
-                memcpy(m_SendQueue[free_index].m_Buff2, buff2, buff2_len);
-                m_SendQueue[free_index].m_Buff2DataLen = buff2_len;
+            if (buff2 && buff2_len > 0 && buff2_len <= m_MaxAckPacketSize) {
+                memcpy(m_SendQueue[free_index].m_AckToConnectionBuffer, buff2, buff2_len);
+                m_SendQueue[free_index].m_AckToConnectionLength = buff2_len;
             } else {
-                m_SendQueue[free_index].m_Buff2DataLen = 0;
+                m_SendQueue[free_index].m_AckToConnectionLength = 0;
             }
 
             m_SendIndex[m_SendQueuePos] = free_index;
@@ -206,13 +210,13 @@ int CommBufferClass::UnQueue_Send(void *dst, int *dst_len, int index, void *buff
 
     if (m_SendQueuePos && (entry = &m_SendQueue[m_SendIndex[index]], entry->m_Flags & 1)) {
         if (dst) {
-            memcpy(dst, entry->m_Buff1, entry->m_Buff1DataLen);
-            *dst_len = entry->m_Buff1DataLen;
+            memcpy(dst, entry->m_DataBuffer, entry->m_DataLength);
+            *dst_len = entry->m_DataLength;
         }
 
         if (buff2 && buff2_len) {
-            memcpy(buff2, entry->m_Buff2, entry->m_Buff2DataLen);
-            *buff2_len = entry->m_Buff2DataLen;
+            memcpy(buff2, entry->m_AckToConnectionBuffer, entry->m_AckToConnectionLength);
+            *buff2_len = entry->m_AckToConnectionLength;
         }
 
         // GETBYTE32(m_SendQueue[i].m_Flags, 0) &= 0xFEu;
@@ -221,9 +225,9 @@ int CommBufferClass::UnQueue_Send(void *dst, int *dst_len, int index, void *buff
         entry->m_Flags &= ~(COMM_FLAG_INUSE | COMM_FLAG_SNDACK); // clear bits 1 and 2
         entry->m_InitialSendTime = 0;
         entry->m_LastSendTime = 0;
-        entry->m_Retries = 0;
-        entry->m_Buff1DataLen = 0;
-        entry->m_Buff2DataLen = 0;
+        entry->m_AckToConnection = 0;
+        entry->m_DataLength = 0;
+        entry->m_AckToConnectionLength = 0;
         --m_SendQueuePos;
 
         while (index < m_SendQueuePos) {
@@ -272,12 +276,12 @@ void CommBufferClass::Grow_Send(int amount)
     }
 
     for (int j = m_SendQueueLength; j < newlength; ++j) {
-        newqueue[j].m_Buff1 = new uint8_t[m_QueueTypeBuff1Len];
+        newqueue[j].m_DataBuffer = new uint8_t[m_MaxPacketSize];
 
-        if (m_QueueTypeBuff2Len <= 0) {
-            newqueue[j].m_Buff2 = nullptr;
+        if (m_MaxAckPacketSize <= 0) {
+            newqueue[j].m_AckToConnectionBuffer = nullptr;
         } else {
-            newqueue[j].m_Buff2 = new uint8_t[m_QueueTypeBuff2Len];
+            newqueue[j].m_AckToConnectionBuffer = new uint8_t[m_MaxAckPacketSize];
         }
 
         // GETBYTE32(m_SendQueue[i].m_Flags, 0) &= 0xFEu;
@@ -286,9 +290,9 @@ void CommBufferClass::Grow_Send(int amount)
         newqueue[j].m_Flags &= ~(COMM_FLAG_INUSE | COMM_FLAG_SNDACK); // clear bits 1 and 2
         newqueue[j].m_InitialSendTime = 0;
         newqueue[j].m_LastSendTime = 0;
-        newqueue[j].m_Retries = 0;
-        newqueue[j].m_Buff1DataLen = 0;
-        newqueue[j].m_Buff2DataLen = 0;
+        newqueue[j].m_AckToConnection = 0;
+        newqueue[j].m_DataLength = 0;
+        newqueue[j].m_AckToConnectionLength = 0;
         newindex[j] = 0;
     }
 
@@ -306,8 +310,12 @@ void CommBufferClass::Grow_Send(int amount)
  */
 int CommBufferClass::Queue_Receive(void *src, int src_len, void *buff2, int buff2_len)
 {
-    if (m_RecvQueuePos != m_RecvQueueLength && src_len <= m_QueueTypeBuff1Len) {
+    DEBUG_ASSERT_PRINT(m_RecvQueuePos != m_RecvQueueLength, "No room in recieve queue.\n");
+    DEBUG_ASSERT_PRINT(src_len <= m_MaxPacketSize, "Incoming packet larger than m_MaxPacketSize.\n");
+
+    if (m_RecvQueuePos != m_RecvQueueLength && src_len <= m_MaxPacketSize) {
         int free_index = -1;
+
         for (int i = 0; i < m_RecvQueueLength; ++i) {
             if ((m_RecvQueue[i].m_Flags & COMM_FLAG_INUSE) == 0) {
                 free_index = i;
@@ -316,22 +324,24 @@ int CommBufferClass::Queue_Receive(void *src, int src_len, void *buff2, int buff
         }
 
         if (free_index == -1) {
+            DEBUG_ASSERT_PRINT(false, "Can't queue incoming packet - Unable to find free slot in array.\n");
+
             return 0;
         } else {
             m_RecvQueue[free_index].m_Flags |= COMM_FLAG_INUSE; // set bit 1
             // GETBYTE32(m_RecvQueue[free_index].m_Flags, 0) &= 0xFDu; //clear bit 2
             // GETBYTE32(m_RecvQueue[free_index].m_Flags, 0) &= 0xFBu; //clear bit 3
             m_RecvQueue[free_index].m_Flags &= ~(COMM_FLAG_SNDACK | COMM_FLAG_RECACK); // clear bit 2 and 3
-            m_RecvQueue[free_index].m_Buff1DataLen = src_len;
-            memcpy(m_RecvQueue[free_index].m_Buff1, src, src_len);
+            m_RecvQueue[free_index].m_DataLength = src_len;
+            memcpy(m_RecvQueue[free_index].m_DataBuffer, src, src_len);
 
             // If we have a second buffer (possible a header or meta data) and
             // it will fit in the queue object second buffer, copy it in.
-            if (buff2 && buff2_len > 0 && buff2_len <= m_QueueTypeBuff2Len) {
-                memcpy(m_RecvQueue[free_index].m_Buff2, buff2, buff2_len);
-                m_RecvQueue[free_index].m_Buff2DataLen = buff2_len;
+            if (buff2 && buff2_len > 0 && buff2_len <= m_MaxAckPacketSize) {
+                memcpy(m_RecvQueue[free_index].m_AckToConnectionBuffer, buff2, buff2_len);
+                m_RecvQueue[free_index].m_AckToConnectionLength = buff2_len;
             } else {
-                m_RecvQueue[free_index].m_Buff2DataLen = 0;
+                m_RecvQueue[free_index].m_AckToConnectionLength = 0;
             }
 
             m_RecvIndex[m_RecvQueuePos] = free_index;
@@ -356,13 +366,13 @@ int CommBufferClass::UnQueue_Receive(void *dst, int *dst_len, int index, void *b
 
     if (m_RecvQueuePos && (entry = &m_RecvQueue[m_RecvIndex[index]], entry->m_Flags & COMM_FLAG_INUSE)) {
         if (dst) {
-            memcpy(dst, entry->m_Buff1, entry->m_Buff1DataLen);
-            *dst_len = entry->m_Buff1DataLen;
+            memcpy(dst, entry->m_DataBuffer, entry->m_DataLength);
+            *dst_len = entry->m_DataLength;
         }
 
         if (buff2 && buff2_len) {
-            memcpy(buff2, entry->m_Buff2, entry->m_Buff2DataLen);
-            *buff2_len = entry->m_Buff2DataLen;
+            memcpy(buff2, entry->m_AckToConnectionBuffer, entry->m_AckToConnectionLength);
+            *buff2_len = entry->m_AckToConnectionLength;
         }
 
         // GETBYTE32(m_RecvQueue[i].m_Flags, 0) &= 0xFEu;
@@ -370,8 +380,8 @@ int CommBufferClass::UnQueue_Receive(void *dst, int *dst_len, int index, void *b
         // GETBYTE32(m_RecvQueue[i].m_Flags, 0) &= 0xFBu;
         // Do same as above with one AND, probably macros originally or enum
         entry->m_Flags &= ~(COMM_FLAG_INUSE | COMM_FLAG_SNDACK | COMM_FLAG_RECACK); // clear bits 1, 2 and 3
-        entry->m_Buff1DataLen = 0;
-        entry->m_Buff2DataLen = 0;
+        entry->m_DataLength = 0;
+        entry->m_AckToConnectionLength = 0;
         --m_RecvQueuePos;
 
         while (index < m_RecvQueuePos) {
@@ -420,20 +430,20 @@ void CommBufferClass::Grow_Receive(int amount)
     }
 
     for (int j = m_RecvQueueLength; j < newlength; ++j) {
-        newqueue[j].m_Buff1 = new uint8_t[m_QueueTypeBuff1Len];
+        newqueue[j].m_DataBuffer = new uint8_t[m_MaxPacketSize];
 
-        if (m_QueueTypeBuff2Len <= 0) {
-            newqueue[j].m_Buff2 = nullptr;
+        if (m_MaxAckPacketSize <= 0) {
+            newqueue[j].m_AckToConnectionBuffer = nullptr;
         } else {
-            newqueue[j].m_Buff2 = new uint8_t[m_QueueTypeBuff2Len];
+            newqueue[j].m_AckToConnectionBuffer = new uint8_t[m_MaxAckPacketSize];
         }
 
         // GETBYTE32(m_RecvQueue[i].m_Flags, 0) &= 0xFEu;
         // GETBYTE32(m_RecvQueue[i].m_Flags, 0) &= 0xFDu;
         // Do same as above with one AND, probably macros originally or enum
         newqueue[j].m_Flags &= ~(COMM_FLAG_INUSE | COMM_FLAG_SNDACK); // clear bits 1 and 2
-        newqueue[j].m_Buff1DataLen = 0;
-        newqueue[j].m_Buff2DataLen = 0;
+        newqueue[j].m_DataLength = 0;
+        newqueue[j].m_AckToConnectionLength = 0;
         newindex[j] = 0;
     }
 
