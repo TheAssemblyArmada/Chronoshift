@@ -14,13 +14,165 @@
  *            LICENSE
  */
 #include "queue.h"
+#include "gameevent.h"
+#include "target.h"
+#include "globals.h"
+#include "house.h"
+#include "session.h"
+
+#ifndef CHRONOSHIFT_STANDALONE
+TEventQueueClass<GameEventClass, OUTGOING_SIZE> &OutgoingEvents = Make_Global<TEventQueueClass<GameEventClass, OUTGOING_SIZE> >(0x0066AB5C);
+TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &ScheduledEvents = Make_Global<TEventQueueClass<GameEventClass, SCHEDULED_SIZE> >(0x0066B068);
+#else
+TEventQueueClass<GameEventClass, OUTGOING_SIZE> OutgoingEvents;
+TEventQueueClass<GameEventClass, SCHEDULED_SIZE> ScheduledEvents;
+#endif
 
 BOOL Queue_Options()
 {
+    GameEventClass ev(GameEventClass::EVENT_OPTIONS);
+    return OutgoingEvents.Add(ev);
+}
+
+BOOL Queue_Exit()
+{
+    GameEventClass ev(GameEventClass::EVENT_EXIT);
+    return OutgoingEvents.Add(ev);
+}
+
+void Queue_Record()
+{
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)() = reinterpret_cast<BOOL (*)()>(0x00528DCC);
+    void (*func)() = reinterpret_cast<void (*)()>(0x0052BD20);
     return func();
 #else
+    int event_index = 0;
+    for (int index = 0; index < ScheduledEvents.Get_Count(); ++index) {
+        GameEventClass ev = ScheduledEvents[index];
+        if (ev.Get_Event_Frame() == g_frame && !ev.Is_Executed()) {
+            ++event_index;
+        }
+    }
+    //Session.RecordFile.Write(&event_index, sizeof(event_index));
+
+    for (int index = 0; index < ScheduledEvents.Get_Count(); ++index) {
+        GameEventClass ev = ScheduledEvents.Fetch_From_Tail(index);
+        if (ev.Get_Event_Frame() == g_frame && !ev.Is_Executed()) {
+            //Session.RecordFile.Write(&ev, sizeof(ev));
+            --event_index;
+        }
+    }
+#endif
+}
+
+void Queue_Playback()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)() = reinterpret_cast<void (*)()>(0x0052BDEC);
+    return func();
+#else
+    // TODO
+#endif
+}
+
+void Queue_AI()
+{
+    if (Session.Playback_Game()) {
+        Queue_Playback();
+    } else {
+        switch (Session.Game_To_Play()) {
+            case GAME_CAMPAIGN:
+            case GAME_SKIRMISH:
+                Queue_AI_Normal();
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case GAME_INTERNET:
+            case 6:
+            case 7:
+                Queue_AI_Multiplayer();
+                break;
+            default:
+                break;
+        };
+    }
+}
+
+void Queue_AI_Normal()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)() = reinterpret_cast<void (*)()>(0x00528F20);
+    return func();
+#else
+    while (ScheduledEvents.Get_Count() > 0) {
+        GameEventClass ev = ScheduledEvents.Fetch_Head();
+    }
+    /*if (Session.Record_Game()) {
+        bool executed = Execute_ScheduledEvents(1, g_PlayerPtr->What_Type());
+        //DEBUG_LOG_CONDITIONAL(!executed, "Execute_ScheduledEvents() returned false in Queue_AI_Normal()!\n");
+        if (executed) {
+            Clean_ScheduledEvents();
+        } else {
+            DEBUG_LOG("Queue_AI_Normal() - Execute_ScheduledEvents() failed, setting GameActive to false\n");
+            GameActive = false;
+        }
+    }*/
+#endif
+}
+
+void Queue_AI_Network()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+#else
+#endif
+}
+
+void Queue_AI_Multiplayer()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)() = reinterpret_cast<void (*)()>(0x00529020);
+    return func();
+#else
+#endif
+}
+
+BOOL Queue_Mission(TargetClass whom, MissionType mission, target_t target, target_t dest)
+{
+    GameEventClass ev(whom, mission, target, dest);
+    return OutgoingEvents.Add(ev);
+}
+
+BOOL Queue_Mission_Formation(TargetClass whom, MissionType mission, target_t target, target_t dest, SpeedType form_speed, MPHType form_max_speed)
+{
+    GameEventClass ev(whom, mission, target, dest, form_speed, form_max_speed);
+    return OutgoingEvents.Add(ev);
+}
+
+BOOL Execute_ScheduledEvents(int house_count, HousesType houses, ConnectionManagerClass *conn_mgr, TCountDownTimerClass<FrameTimerClass> *a4, signed int *a5, unsigned short *a6, unsigned short *a7)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*func)(int, HousesType, ConnectionManagerClass *, TCountDownTimerClass<FrameTimerClass> *, signed int *, unsigned short *, unsigned short *) = reinterpret_cast<BOOL (*)(int, HousesType, ConnectionManagerClass *, TCountDownTimerClass<FrameTimerClass> *, signed int *, unsigned short *, unsigned short *)>(0x0052B69C);
+    return func(house_count, houses, conn_mgr, a4, a5, a6, a7);
+#else
     return false;
+#endif
+}
+
+void Clean_ScheduledEvents(ConnectionManagerClass *conn_mgr)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)(ConnectionManagerClass *) = reinterpret_cast<void (*)(ConnectionManagerClass *)>(0x0052BC94);
+    return func(conn_mgr);
+#else
+    while (ScheduledEvents.Get_Count() > 0) {
+        GameEventClass ev = ScheduledEvents.Fetch_Tail();
+        if (!ev.Is_Executed()) {
+            if (ev.Get_Event_Frame() >= g_frame) {
+                break;
+            }
+        }
+        ScheduledEvents.Remove_Tail();
+    }
 #endif
 }

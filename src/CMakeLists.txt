@@ -111,6 +111,7 @@ set(GAMEENGINE_SRC
     game/engine/flasher.cpp
     game/engine/focus.cpp
     game/engine/fuse.cpp
+    game/engine/gameevent.cpp
     game/engine/gameini.cpp
     game/engine/gamemain.cpp
     game/engine/gameoptions.cpp
