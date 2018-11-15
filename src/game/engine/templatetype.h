@@ -482,9 +482,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<TemplateTypeClass> &TemplateTypes;
+extern TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes;
 #else
-extern TFixedIHeapClass<TemplateTypeClass> TemplateTypes;
+extern TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;
 #endif
 
 #endif // TEMPLATETYPE_H

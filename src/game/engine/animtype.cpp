@@ -23,9 +23,9 @@
 using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<AnimTypeClass> &AnimTypes = Make_Global<TFixedIHeapClass<AnimTypeClass> >(0x0065DEA0);
+TFixedIHeapClass<AnimTypeClass> &g_AnimTypes = Make_Global<TFixedIHeapClass<AnimTypeClass> >(0x0065DEA0);
 #else
-TFixedIHeapClass<AnimTypeClass> AnimTypes;
+TFixedIHeapClass<AnimTypeClass> g_AnimTypes;
 #endif
 
 AnimTypeClass const AnimAtomBomb(ANIM_ATOMSFX, "ATOMSFX", 72, 3, false, false, false, true, true, false, false, false, false,
@@ -255,7 +255,7 @@ AnimTypeClass::AnimTypeClass(const AnimTypeClass &that) :
  */
 void *AnimTypeClass::operator new(size_t size)
 {
-    return AnimTypes.Allocate();
+    return g_AnimTypes.Allocate();
 }
 
 /**
@@ -263,7 +263,7 @@ void *AnimTypeClass::operator new(size_t size)
  */
 void AnimTypeClass::operator delete(void *ptr)
 {
-    AnimTypes.Free(ptr);
+    g_AnimTypes.Free(ptr);
 }
 
 /**
@@ -471,7 +471,7 @@ const char *AnimTypeClass::Name_From(AnimType type)
  */
 AnimTypeClass &AnimTypeClass::As_Reference(AnimType type)
 {
-    AnimTypeClass *ptr = &AnimTypes[type];
+    AnimTypeClass *ptr = &g_AnimTypes[anim];
     DEBUG_ASSERT(ptr != nullptr);
     return *ptr;
 }
@@ -481,5 +481,5 @@ AnimTypeClass &AnimTypeClass::As_Reference(AnimType type)
  */
 AnimTypeClass *AnimTypeClass::As_Pointer(AnimType type)
 {
-    return type != ANIM_NONE && type < ANIM_COUNT ? &AnimTypes[type] : nullptr;
+    return anim != ANIM_NONE && anim < ANIM_COUNT ? &g_AnimTypes[anim] : nullptr;
 }

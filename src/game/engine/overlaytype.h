@@ -151,9 +151,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<OverlayTypeClass> &OverlayTypes;
+extern TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes;
 #else
-extern TFixedIHeapClass<OverlayTypeClass> OverlayTypes;
+extern TFixedIHeapClass<OverlayTypeClass> g_OverlayTypes;
 #endif
 
 #endif // OVERLAYTYPE_H

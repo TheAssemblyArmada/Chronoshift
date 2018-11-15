@@ -1,9 +1,9 @@
 #include "triggertype.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<TriggerTypeClass> &TriggerTypes = *reinterpret_cast<TFixedIHeapClass<TriggerTypeClass> *>(0x0065DCD8);
+TFixedIHeapClass<TriggerTypeClass> &g_TriggerTypes = *reinterpret_cast<TFixedIHeapClass<TriggerTypeClass> *>(0x0065DCD8);
 #else
-TFixedIHeapClass<TriggerTypeClass> TriggerTypes;
+TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
 #endif
 
 void TriggerTypeClass::Code_Pointers()
@@ -43,9 +43,9 @@ TriggerTypeClass *TriggerTypeClass::From_Name(const char *name)
     }
 
     if (name != nullptr) {
-        for (int index = 0; index < TriggerTypes.Count(); ++index) {
+        for (int index = 0; index < g_TriggerTypes.Count(); ++index) {
             if (strcasecmp(name, Name_From((TriggerType)index)) == 0) {
-                return &TriggerTypes[index];
+                return &g_TriggerTypes[index];
             }
         }
     }
@@ -55,23 +55,23 @@ TriggerTypeClass *TriggerTypeClass::From_Name(const char *name)
 
 const char *TriggerTypeClass::Name_From(TriggerType trigger)
 {
-    return (trigger != TRIGGER_NONE) && (trigger < TriggerTypes.Count()) ? As_Reference(trigger).Get_Name() : "<none>";
+    return (trigger != TRIGGER_NONE) && (trigger < g_TriggerTypes.Count()) ? As_Reference(trigger).Get_Name() : "<none>";
 }
 
 const char *TriggerTypeClass::Name_From(TriggerTypeClass *trigger)
 {
     if (trigger != nullptr) {
-        return TriggerTypes[TriggerTypes.ID(trigger)].Get_Name();
+        return g_TriggerTypes[g_TriggerTypes.ID(trigger)].Get_Name();
     }
     return nullptr;
 }
 
 TriggerTypeClass &TriggerTypeClass::As_Reference(TriggerType trigger)
 {
-    return TriggerTypes[trigger];
+    return g_TriggerTypes[trigger];
 }
 
 TriggerTypeClass *TriggerTypeClass::As_Pointer(TriggerType trigger)
 {
-    return trigger != TRIGGER_NONE && trigger < TriggerTypes.Count() ? &TriggerTypes[trigger] : nullptr;
+    return trigger != TRIGGER_NONE && trigger < g_TriggerTypes.Count() ? &g_TriggerTypes[trigger] : nullptr;
 }

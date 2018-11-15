@@ -18,6 +18,12 @@
 #include "language.h"
 #include "stringex.h"
 
+#ifndef CHRONOSHIFT_STANDALONE
+TFixedIHeapClass<HouseTypeClass> &g_HouseTypes = Make_Global<TFixedIHeapClass<HouseTypeClass> >(0x0065DD24);
+#else
+TFixedIHeapClass<HouseTypeClass> g_HouseTypes;
+#endif
+
 // These global objects are used to initialise the heap
 HouseTypeClass const HouseEngland(HOUSES_ENGLAND, "England", TXT_ENGLAND, "ENG", 0, PLAYER_COLOR_GREEN, 'E');
 HouseTypeClass const HouseGermany(HOUSES_GERMANY, "Germany", TXT_GERMANY, "GER", 0, PLAYER_COLOR_GREY, 'G');
@@ -39,12 +45,6 @@ HouseTypeClass const HouseMulti5(HOUSES_MULTI_5, "Multi5", TXT_CIVILIAN, "MP5", 
 HouseTypeClass const HouseMulti6(HOUSES_MULTI_6, "Multi6", TXT_CIVILIAN, "MP6", 0, PLAYER_COLOR_GREY, 'M');
 HouseTypeClass const HouseMulti7(HOUSES_MULTI_7, "Multi7", TXT_CIVILIAN, "MP7", 0, PLAYER_COLOR_BLUE, 'M');
 HouseTypeClass const HouseMulti8(HOUSES_MULTI_8, "Multi8", TXT_CIVILIAN, "MP8", 0, PLAYER_COLOR_BROWN, 'M');
-
-#ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<HouseTypeClass> &HouseTypes = Make_Global<TFixedIHeapClass<HouseTypeClass> >(0x0065DD24);
-#else
-TFixedIHeapClass<HouseTypeClass> HouseTypes;
-#endif
 
 HouseTypeClass::HouseTypeClass(HousesType type, const char *name, int uiname, const char *suffix, int lemon_factor,
     PlayerColorType color, char prefix) :
@@ -78,6 +78,16 @@ HouseTypeClass::HouseTypeClass(HouseTypeClass const &that) :
     Cost(that.Cost),
     BuildTime(that.BuildTime)
 {
+}
+
+void *HouseTypeClass::operator new(size_t size)
+{
+    return g_HouseTypes.Allocate();
+}
+
+void HouseTypeClass::operator delete(void *ptr)
+{
+    g_HouseTypes.Free(ptr);
 }
 
 BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
@@ -146,7 +156,7 @@ HousesType HouseTypeClass::From_Name(const char *name)
 
 HouseTypeClass &HouseTypeClass::As_Reference(HousesType type)
 {
-    return HouseTypes[type];
+    return g_HouseTypes[type];
 }
 
 const char * HouseTypeClass::Name_From_Owner(int owner)
@@ -176,14 +186,4 @@ int HouseTypeClass::Owner_From_Name(const char *name)
 BOOL HouseTypeClass::Is_Multiplayer_House(HousesType type)
 {
     return (type >= HOUSES_MULTI_FIRST && type <= HOUSES_MULTI_LAST);
-}
-
-void *HouseTypeClass::operator new(size_t size)
-{
-    return HouseTypes.Allocate();
-}
-
-void HouseTypeClass::operator delete(void *ptr)
-{
-    HouseTypes.Free(ptr);
 }

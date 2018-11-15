@@ -124,9 +124,9 @@ public:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<TerrainTypeClass> &TerrainTypes;
+extern TFixedIHeapClass<TerrainTypeClass> &g_TerrainTypes;
 #else
-extern TFixedIHeapClass<TerrainTypeClass> TerrainTypes;
+extern TFixedIHeapClass<TerrainTypeClass> g_TerrainTypes;
 #endif
 
 #endif // TERRAINTYPE_H

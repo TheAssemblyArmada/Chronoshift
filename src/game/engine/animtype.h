@@ -127,9 +127,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<AnimTypeClass> &AnimTypes;
+extern TFixedIHeapClass<AnimTypeClass> &g_AnimTypes;
 #else
-extern TFixedIHeapClass<AnimTypeClass> AnimTypes;
+extern TFixedIHeapClass<AnimTypeClass> g_AnimTypes;
 #endif
 
 #endif // ANIMTYPE_H

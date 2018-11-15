@@ -17,9 +17,9 @@
 #include "gameini.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
-TFixedIHeapClass<WarheadTypeClass> &WarheadTypes = Make_Global<TFixedIHeapClass<WarheadTypeClass> >(0x00691600);
+TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClass<WarheadTypeClass> >(0x00691600);
 #else
-TFixedIHeapClass<WarheadTypeClass> WarheadTypes;
+TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;
 #endif
 
 const WarheadTypeClass WarheadSA(WARHEAD_SA, "SA");
@@ -72,7 +72,7 @@ WarheadTypeClass::WarheadTypeClass(WarheadTypeClass const &that) :
  */
 void *WarheadTypeClass::operator new(size_t size)
 {
-    return WarheadTypes.Alloc();
+    return g_WarheadTypes.Alloc();
 }
 
 /**
@@ -80,7 +80,7 @@ void *WarheadTypeClass::operator new(size_t size)
  */
 void WarheadTypeClass::operator delete(void *ptr)
 {
-    WarheadTypes.Free(ptr);
+    g_WarheadTypes.Free(ptr);
 }
 
 /**
@@ -136,9 +136,9 @@ const char *WarheadTypeClass::Name_From(WarheadType warhead)
  */
 WarheadTypeClass &WarheadTypeClass::As_Reference(WarheadType warhead)
 {
-    DEBUG_ASSERT(&WarheadTypes[warhead] != nullptr);
+    DEBUG_ASSERT(&g_WarheadTypes[warhead] != nullptr);
 
-    return WarheadTypes[warhead];
+    return g_WarheadTypes[warhead];
 }
 
 /**
@@ -148,10 +148,10 @@ WarheadTypeClass &WarheadTypeClass::As_Reference(WarheadType warhead)
  */
 WarheadTypeClass *WarheadTypeClass::As_Pointer(WarheadType warhead)
 {
-    DEBUG_ASSERT(&WarheadTypes[warhead] != nullptr);
+    DEBUG_ASSERT(&g_WarheadTypes[warhead] != nullptr);
 
     if (warhead != WARHEAD_NONE && warhead < WARHEAD_COUNT) {
-        return &WarheadTypes[warhead];
+        return &g_WarheadTypes[warhead];
     }
 
     return nullptr;

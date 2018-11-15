@@ -146,9 +146,9 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern TFixedIHeapClass<WeaponTypeClass> &WeaponTypes;
+extern TFixedIHeapClass<WeaponTypeClass> &g_WeaponTypes;
 #else
-extern TFixedIHeapClass<WeaponTypeClass> WeaponTypes;
+extern TFixedIHeapClass<WeaponTypeClass> g_WeaponTypes;
 #endif
 
 #endif // WEAPONTYPE_H
