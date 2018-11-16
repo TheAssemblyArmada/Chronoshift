@@ -275,7 +275,7 @@ void MapClass::Set_Map_Dimensions(int x, int y, int w, int h)
  */
 BOOL MapClass::Place_Random_Crate()
 {
-    for (int i = 0; i < ARRAY_SIZE(Crates); ++i) {
+    for (int i = 0; i < MAP_MAX_CRATES; ++i) {
         // Check if current crate cell is invalid and thus instance can be used for new crate.
         if (Crates[i].Get_Cell() == -1) {
             // Try to place crate up to 1000 times, return result of final attempt if all others fail.
@@ -294,7 +294,7 @@ BOOL MapClass::Place_Random_Crate()
 
 BOOL MapClass::Place_Random_Crate_At_Cell(cell_t cellnum)
 {
-    for (int i = 0; i < ARRAY_SIZE(Crates); ++i) {
+    for (int i = 0; i < MAP_MAX_CRATES; ++i) {
         // Check if current crate cell is invalid and thus instance can be used for new crate.
         if (Crates[i].Get_Cell() == -1) {
             // Try to place crate up to 1000 times, return result of final attempt if all others fail.
@@ -319,7 +319,7 @@ BOOL MapClass::Place_Random_Crate_At_Cell(cell_t cellnum)
 BOOL MapClass::Remove_Crate(cell_t cellnum)
 {
     if (Session.Game_To_Play() != GAME_CAMPAIGN) {
-        for (int index = 0; index < ARRAY_SIZE(Crates); ++index) {
+        for (int index = 0; index < MAP_MAX_CRATES; ++index) {
             if (Crates[index].Get_Cell() != -1 && Crates[index].Get_Cell() == cellnum) {
                 return Crates[index].Remove_It();
             }
