@@ -42,6 +42,13 @@ class CCINIClass;
 template<class T>
 class TFixedIHeapClass;
 
+class HouseClass;
+#ifndef CHRONOSHIFT_STANDALONE
+extern HouseClass *&g_PlayerPtr;
+#else
+extern HouseClass *g_PlayerPtr;
+#endif
+
 struct ZoneInfo
 {
     int Air;
@@ -87,10 +94,10 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
-    void Stole(unsigned int amount) { Stolen += amount; }
-    unsigned int Available_Money() const { return Credits + Ore; }
+    void Stole(unsigned int amount) { m_Stolen += amount; }
+    unsigned int Available_Money() const { return m_Credits + m_Ore; }
     void Spend_Money(unsigned int amount);
-    void Refund_Money(unsigned int amount) { Credits += amount; }
+    void Refund_Money(unsigned int amount) { m_Credits += amount; }
     void Silo_Redraw_Check(unsigned int a1, unsigned int a2);
 
     DiffType Assign_Handicap(DiffType diff);
@@ -104,36 +111,51 @@ public:
 
     const uint8_t *Remap_Table(BOOL unk1, RemapType type);
 
-    int Get_Heap_ID() const { return HeapID; }
+    int Get_Heap_ID() const { return m_HeapID; }
 
-    HousesType What_Type() const { return Type->What_Type(); }
+    HousesType What_Type() const { return m_Type->What_Type(); }
 
-    fixed_t Cost_Multiplier() const { return CostMult; }
-
-    SuperClass &Special_Weapons(SpecialWeaponType type) { return Specials[type]; }
-
-    BOOL Is_Human() const { return IsHuman; }
     BOOL Is_Player() const { return this == g_PlayerPtr; }
+    DiffType Get_AI_Difficulty() const { return m_AIDifficulty; }
+
+    fixed_t Cost_Multiplier() const { return m_CostMult; }
+    HousesType Acts_Like() const { return m_ActsLike; }
+
+    void Set_AI_Difficulty(DiffType value) { m_AIDifficulty = value; }
+    BOOL Is_Human() const { return m_IsHuman; }
+    void Set_Human(BOOL value) { m_IsHuman = value; }
+    BOOL Player_Has_Control() const { return m_PlayerControl; }
+    void Set_Player_Control(BOOL value) { m_PlayerControl = value; }
+    BOOL Production_Started() const { return m_Production; }
+    void Set_Production(BOOL value) { m_Production = value; }
+    BOOL Autocreate_Teams() const { return m_Autocreate; }
+    void Set_Autocreate(BOOL value) { m_Autocreate = value; }
+    BOOL Is_Defeated() const { return m_Defeated; }
+    void Set_Defeated(BOOL value) { m_Defeated = value; }
+    int Get_Current_IQ() const { return m_CurrentIQ; }
+    void Set_IQ_Level(int value) { m_CurrentIQ = value; }
+
+    SuperClass &Special_Weapons(SpecialWeaponType type) { return m_Specials[type]; }
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
 private:
-    RTTIType RTTI;
-    int HeapID;
-    GamePtr<HouseTypeClass> Type;
-    DiffType AIDifficulty;
-    fixed_t FirepowerMult;
-    fixed_t GroundspeedMult;
-    fixed_t AirspeedMult;
-    fixed_t ArmorMult;
-    fixed_t ROFMult;
-    fixed_t CostMult;
-    fixed_t BuildTimerMult;
-    fixed_t RepairDelay;
-    fixed_t BuildDelay;
-    HouseStaticClass Static;
-    HousesType ActsLike;
+    RTTIType m_RTTI;
+    int m_HeapID;
+    GamePtr<HouseTypeClass> m_Type;
+    DiffType m_AIDifficulty;
+    fixed_t m_FirepowerMult;
+    fixed_t m_GroundspeedMult;
+    fixed_t m_AirspeedMult;
+    fixed_t m_ArmorMult;
+    fixed_t m_ROFMult;
+    fixed_t m_CostMult;
+    fixed_t m_BuildTimerMult;
+    fixed_t m_RepairDelay;
+    fixed_t m_BuildDelay;
+    HouseStaticClass m_Static;
+    HousesType m_ActsLike;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
@@ -141,177 +163,177 @@ private:
     {
         struct
         {
-            bool IsActive : 1; // 1
-            bool IsHuman : 1; // 2
-            bool PlayerControl : 1; // 4
-            bool Production : 1; // 8
-            bool Autocreate : 1; // 16
-            bool AutoBaseAI : 1; // 32
-            bool Discovered : 1; // 64
-            bool MaxCapacity : 1; // 128
+            bool m_IsActive : 1; // 1
+            bool m_IsHuman : 1; // 2
+            bool m_PlayerControl : 1; // 4
+            bool m_Production : 1; // 8
+            bool m_Autocreate : 1; // 16
+            bool m_AutoBaseAI : 1; // 32
+            bool m_Discovered : 1; // 64
+            bool m_MaxCapacity : 1; // 128
 
-            bool Defeated : 1; // 1
-            bool ToDie : 1; // 2
-            bool ToWin : 1; // 4
-            bool ToLose : 1; // 8
-            bool CivEvac : 1; // 16
-            bool RecalcNeeded : 1; // 32
-            bool Visionary : 1; // 64
-            bool OreShort : 1; // 128
+            bool m_Defeated : 1; // 1
+            bool m_ToDie : 1; // 2
+            bool m_ToWin : 1; // 4
+            bool m_ToLose : 1; // 8
+            bool m_CivEvac : 1; // 16
+            bool m_RecalcNeeded : 1; // 32
+            bool m_Visionary : 1; // 64
+            bool m_OreShort : 1; // 128
 
-            bool Bit3_1 : 1; // 1
-            bool Bit3_2 : 1; // 2
-            bool Repairing : 1; // 4
-            bool MapIsClear : 1; // 8
-            bool BuiltSomething : 1; // 16
-            bool Resigned : 1; // 32
-            bool GaveUp : 1; // 64
-            bool Paranoid : 1; // 128
+            bool m_Bit3_1 : 1; // 1
+            bool m_Bit3_2 : 1; // 2
+            bool m_Repairing : 1; // 4
+            bool m_MapIsClear : 1; // 8
+            bool m_BuiltSomething : 1; // 16
+            bool m_Resigned : 1; // 32
+            bool m_GaveUp : 1; // 64
+            bool m_Paranoid : 1; // 128
 
-            bool AllToLook : 1; // 1
+            bool m_AllToLook : 1; // 1
         };
         int m_Bitfield;
     };
 #else
-    bool IsActive; // Is this object allocated and active for use? (def = false)
+    bool m_IsActive; // Is this object allocated and active for use? (def = false)
                    // NOTE: This should be set to true on class creation.
-    bool IsHuman; // Is this house controlled by a human player rather than an AI [local or otherwise]?
-    bool PlayerControl; // Is this house controlled by the human player [the house set to PlayerPtr]?
-    bool Production;
-    bool Autocreate; // Initiates autocreate for the house. This will cause the
+    bool m_IsHuman; // Is this house controlled by a human player rather than an AI [local or otherwise]?
+    bool m_PlayerControl; // Is this house controlled by the human player [the house set to PlayerPtr]?
+    bool m_Production;
+    bool m_Autocreate; // Initiates autocreate for the house. This will cause the
                      // computer's house to build autocreate teams as it sees fit.
-    bool AutoBaseAI; // Initialize the computer skirmish mode build control to
+    bool m_AutoBaseAI; // Initialize the computer skirmish mode build control to
                      // either 'on' or 'off' state. When 'on, the computer takes
                      // over as if it were in skirmish mode.
                      // (NOTE, make sure he has at least a con yard).
-    bool Discovered;
-    bool MaxCapacity;
-    bool Defeated;
-    bool ToDie;
-    bool ToWin;
-    bool ToLose;
-    bool CivEvac;
-    bool RecalcNeeded;
-    bool Visionary;
-    bool OreShort;
-    bool Bit3_1; // TODO: Alerted?
-    bool Bit3_2; // TODO: Thieved / Infiltrated / Spied?
-    bool Repairing;
-    bool MapIsClear;
-    bool BuiltSomething;
-    bool Resigned;
-    bool GaveUp;
-    bool Paranoid;
-    bool AllToLook;
+    bool m_Discovered;
+    bool m_MaxCapacity;
+    bool m_Defeated;
+    bool m_ToDie;
+    bool m_ToWin;
+    bool m_ToLose;
+    bool m_CivEvac;
+    bool m_RecalcNeeded;
+    bool m_Visionary;
+    bool m_OreShort;
+    bool m_Bit3_1; // TODO: Alerted?
+    bool m_Bit3_2; // TODO: Thieved / Infiltrated / Spied?
+    bool m_Repairing;
+    bool m_MapIsClear;
+    bool m_BuiltSomething;
+    bool m_Resigned;
+    bool m_GaveUp;
+    bool m_Paranoid;
+    bool m_AllToLook;
 #endif
 
-    int CurrentIQ;
-    UrgencyType Smarties;
-    SuperClass Specials[SPECIAL_COUNT];
-    BuildingType JustBuilding;
-    InfantryType JustInfantry;
-    UnitType JustUnit;
-    AircraftType JustAircraft;
-    VesselType JustVessel;
-    int WinBlocks;
-    TCountDownTimerClass<FrameTimerClass> RepairTime;
-    TCountDownTimerClass<FrameTimerClass> AlertTime;
-    TCountDownTimerClass<FrameTimerClass> BorrowedTime;
-    int field_137; // BuildingType's
-    int field_13B; // BuildingType's
-    int field_13F; // BuildingType's       // BScan in EDWIN?
-    int field_143; // UnitType's
-    int field_147; // UnitType's
-    int field_14B; // UnitType's           // UScan in EDWIN?
-    int field_14F; // InfantryType's
-    int field_153; // InfantryType's
-    int field_157; // InfantryType's       // IScan in EDWIN?
-    int field_15B; // AircraftType's
-    int field_15F; // AircraftType's
-    int field_163; // AircraftType's       // AScan in EDWIN?
-    int field_167; // VesselType's
-    int field_16B; // VesselType's
-    int field_16F; // VesselType's         // VScan in EDWIN?
-    int Spent;
-    int Harvested;
-    int Stolen;
-    int CurrentUnitCount;
-    int CurrentBuildingCount;
-    int CurrentInfantryCount;
-    int CurrentVesselCount;
-    int CurrentAircraftCount;
-    unsigned int Ore;
-    unsigned int Credits;
-    unsigned int Capacity;
-    UnitTrackerClass *AircraftBought;
-    UnitTrackerClass *InfantryBought;
-    UnitTrackerClass *UnitsBought;
-    UnitTrackerClass *BuildingsBought;
-    UnitTrackerClass *VesselsBought;
-    UnitTrackerClass *AircraftKilled;
-    UnitTrackerClass *InfantryKilled;
-    UnitTrackerClass *UnitsKilled;
-    UnitTrackerClass *BuildingsKilled;
-    UnitTrackerClass *VesselsKilled;
-    UnitTrackerClass *BuildingsCaptured;
-    UnitTrackerClass *CratesFound;
-    int AircraftFactoryCount;
-    int InfantryFactoryCount;
-    int UnitFactoryCount;
-    int VesselFactoryCount;
-    int BuildingFactoryCount;
-    int Power;
-    int Drain;
-    GamePtr<FactoryClass> AircraftFactory;
-    GamePtr<FactoryClass> InfantryFactory;
-    GamePtr<FactoryClass> UnitFactory;
-    GamePtr<FactoryClass> VesselFactory;
-    GamePtr<FactoryClass> BuildingFactory;
-    target_t FlagHolder;
-    cell_t FlagLocation;
-    int UnitsDestroyed[HOUSES_COUNT];
-    int UnitsLost;
-    int BuildingsDestroyed[HOUSES_COUNT];
-    int BuildingsLost;
-    HousesType field_2AD;
-    coord_t BaseCenter;
-    int Radius;
-    ZoneInfo Zones[ZONE_COUNT];
-    int LastAttackFrame;
-    RTTIType LastAttackType;
-    ZoneType LastAttackZone;
-    HousesType LastAttackHouse;
-    target_t field_2F9; // coord of some sorts, last captured building coord? see Building::Captured().
-    int field_2FD; // spied house bit?
-    int Score;
-    QuarryType PreferredTarget;
-    int BuildingQuantity[84 /*BUILDING_COUNT*/]; //TODO: replace with enum for pre-expansion count.
-    int UnitQuantity[14 /*UNIT_COUNT*/]; // TODO: replace with enum for pre-expansion count.
-    int InfantryQuantity[24 /*INFANTRY_COUNT*/]; // TODO: replace with enum for pre-expansion count.
-    int AircraftQuantity[AIRCRAFT_COUNT];
-    int VesselQuantity[5 /*VESSEL_COUNT*/]; // TODO: replace with enum for pre-expansion count.
-    TCountDownTimerClass<FrameTimerClass> AttackTime;
-    HousesType field_527; //"favourite enemy", the HousesType of the one house considered the current main enemy?
-    TCountDownTimerClass<FrameTimerClass> AITime;
-    target_t ChronoObject;
-    BuildingType ChosenBuilding;
-    UnitType ChosenUnit;
-    InfantryType ChosenInfantry;
-    AircraftType ChosenAircraft;
-    VesselType ChosenVessel;
-    RegionClass ThreatRegions[34 * 34];
-    cell_t MissileTargetCell;
-    int Allies;
-    TCountDownTimerClass<FrameTimerClass> DamageTime;
-    TCountDownTimerClass<FrameTimerClass> TeamTime;
-    TCountDownTimerClass<FrameTimerClass> TriggerTime;
-    TCountDownTimerClass<FrameTimerClass> AttackedSpeechTime;
-    TCountDownTimerClass<FrameTimerClass> LowPowerSpeechTime;
-    TCountDownTimerClass<FrameTimerClass> field_177D;
-    TCountDownTimerClass<FrameTimerClass> LowCreditsSpeechTime;
-    PlayerColorType Color;
-    char field_1790[12];
-    char PlayerHandle[12];
+    int m_CurrentIQ;
+    UrgencyType m_Smarties;
+    SuperClass m_Specials[SPECIAL_COUNT];
+    BuildingType m_JustBuilding;
+    InfantryType m_JustInfantry;
+    UnitType m_JustUnit;
+    AircraftType m_JustAircraft;
+    VesselType m_JustVessel;
+    int m_WinBlocks;
+    TCountDownTimerClass<FrameTimerClass> m_RepairTime;
+    TCountDownTimerClass<FrameTimerClass> m_AlertTime;
+    TCountDownTimerClass<FrameTimerClass> m_BorrowedTime;
+    int m_field_137; // BuildingType's
+    int m_field_13B; // BuildingType's
+    int m_field_13F; // BuildingType's       // BScan in EDWIN?
+    int m_field_143; // UnitType's
+    int m_field_147; // UnitType's
+    int m_field_14B; // UnitType's           // UScan in EDWIN?
+    int m_field_14F; // InfantryType's
+    int m_field_153; // InfantryType's
+    int m_field_157; // InfantryType's       // IScan in EDWIN?
+    int m_field_15B; // AircraftType's
+    int m_field_15F; // AircraftType's
+    int m_field_163; // AircraftType's       // AScan in EDWIN?
+    int m_field_167; // VesselType's
+    int m_field_16B; // VesselType's
+    int m_field_16F; // VesselType's         // VScan in EDWIN?
+    int m_Spent;
+    int m_Harvested;
+    int m_Stolen;
+    int m_CurrentUnitCount;
+    int m_CurrentBuildingCount;
+    int m_CurrentInfantryCount;
+    int m_CurrentVesselCount;
+    int m_CurrentAircraftCount;
+    unsigned int m_Ore;
+    unsigned int m_Credits;
+    unsigned int m_Capacity;
+    UnitTrackerClass *m_AircraftBought;
+    UnitTrackerClass *m_InfantryBought;
+    UnitTrackerClass *m_UnitsBought;
+    UnitTrackerClass *m_BuildingsBought;
+    UnitTrackerClass *m_VesselsBought;
+    UnitTrackerClass *m_AircraftKilled;
+    UnitTrackerClass *m_InfantryKilled;
+    UnitTrackerClass *m_UnitsKilled;
+    UnitTrackerClass *m_BuildingsKilled;
+    UnitTrackerClass *m_VesselsKilled;
+    UnitTrackerClass *m_BuildingsCaptured;
+    UnitTrackerClass *m_CratesFound;
+    int m_AircraftFactoryCount;
+    int m_InfantryFactoryCount;
+    int m_UnitFactoryCount;
+    int m_VesselFactoryCount;
+    int m_BuildingFactoryCount;
+    int m_Power;
+    int m_Drain;
+    GamePtr<FactoryClass> m_AircraftFactory;
+    GamePtr<FactoryClass> m_InfantryFactory;
+    GamePtr<FactoryClass> m_UnitFactory;
+    GamePtr<FactoryClass> m_VesselFactory;
+    GamePtr<FactoryClass> m_BuildingFactory;
+    target_t m_FlagHolder;
+    cell_t m_FlagLocation;
+    int m_UnitsDestroyed[HOUSES_COUNT];
+    int m_UnitsLost;
+    int m_BuildingsDestroyed[HOUSES_COUNT];
+    int m_BuildingsLost;
+    HousesType m_field_2AD;
+    coord_t m_BaseCenter;
+    int m_Radius;
+    ZoneInfo m_Zones[ZONE_COUNT];
+    int m_LastAttackFrame;
+    RTTIType m_LastAttackType;
+    ZoneType m_LastAttackZone;
+    HousesType m_LastAttackHouse;
+    target_t m_field_2F9; // coord of some sorts, last captured building coord? see Building::Captured().
+    int m_field_2FD; // spied house bit?
+    int m_Score;
+    QuarryType m_PreferredTarget;
+    int m_BuildingQuantity[84 /*BUILDING_COUNT*/]; //TODO: replace with enum for pre-expansion count.
+    int m_UnitQuantity[14 /*UNIT_COUNT*/]; // TODO: replace with enum for pre-expansion count.
+    int m_InfantryQuantity[24 /*INFANTRY_COUNT*/]; // TODO: replace with enum for pre-expansion count.
+    int m_AircraftQuantity[AIRCRAFT_COUNT];
+    int m_VesselQuantity[5 /*VESSEL_COUNT*/]; // TODO: replace with enum for pre-expansion count.
+    TCountDownTimerClass<FrameTimerClass> m_AttackTime;
+    HousesType m_field_527; //"favourite enemy", the HousesType of the one house considered the current main enemy?
+    TCountDownTimerClass<FrameTimerClass> m_AITime;
+    target_t m_ChronoObject;
+    BuildingType m_ChosenBuilding;
+    UnitType m_ChosenUnit;
+    InfantryType m_ChosenInfantry;
+    AircraftType m_ChosenAircraft;
+    VesselType m_ChosenVessel;
+    RegionClass m_ThreatRegions[34 * 34];
+    cell_t m_MissileTargetCell;
+    int m_Allies;
+    TCountDownTimerClass<FrameTimerClass> m_DamageTime;
+    TCountDownTimerClass<FrameTimerClass> m_TeamTime;
+    TCountDownTimerClass<FrameTimerClass> m_TriggerTime;
+    TCountDownTimerClass<FrameTimerClass> m_AttackedSpeechTime;
+    TCountDownTimerClass<FrameTimerClass> m_LowPowerSpeechTime;
+    TCountDownTimerClass<FrameTimerClass> m_field_177D;
+    TCountDownTimerClass<FrameTimerClass> m_LowCreditsSpeechTime;
+    PlayerColorType m_Color;
+    char m_field_1790[12];
+    char m_PlayerHandle[12];
 
 private:
     static TFixedIHeapClass<BuildChoiceClass> g_BuildChoice;
@@ -320,10 +342,8 @@ private:
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<HouseClass> &g_Houses;
-extern HouseClass *&g_PlayerPtr;
 #else
 extern TFixedIHeapClass<HouseClass> g_Houses;
-extern HouseClass *g_PlayerPtr;
 #endif
 
 #endif // HOUSE_H

@@ -21,8 +21,6 @@
 #include "always.h"
 #include "gametypes.h"
 
-class HouseClass;
-
 #define GAME_TICKS_PER_SECOND 15
 #define GAME_TICKS_PER_MINUTE GAME_TICKS_PER_SECOND * 60
 
