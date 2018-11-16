@@ -415,3 +415,37 @@ void ThemeClass::Set_Theme_Data(ThemeType theme, int scenario, int side)
         Themes[theme].Side = side;
     }
 }
+
+void ThemeClass::Play_Prev()
+{
+    ThemeType theme = CurrentTheme;
+    while (theme >= THEME_FIRST) {
+        --theme;
+
+        if (theme < THEME_FIRST) {
+            theme = THEME_LAST;
+        }
+
+        if (Is_Allowed(theme)) {
+            break;
+        }
+    }
+    Queue_Song(theme);
+}
+
+void ThemeClass::Play_Next()
+{
+    ThemeType theme = CurrentTheme;
+    while (theme < THEME_COUNT) {
+        ++theme;
+
+        if (theme == THEME_COUNT) {
+            theme = THEME_FIRST;
+        }
+
+        if (Is_Allowed(theme)) {
+            break;
+        }
+    }
+    Queue_Song(theme);
+}
