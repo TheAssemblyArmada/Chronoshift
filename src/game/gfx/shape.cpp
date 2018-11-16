@@ -81,17 +81,16 @@ int g_shapeLength;
 #endif
 
 // The predator effect basically just takes a destination pixel and replaces it
-// with the value g_predatorShiftTab[g_predatorFrame] pixels away if g_predatorAccumulated
+// with the value g_PredTable[g_PredFrame] pixels away if g_PartialCount
 // is greater than or equal to 256. After every pixel, it is increased by
-// g_predatorIncrement and reset to % 256 after reaching 256 or greater.
-static const int16_t g_predatorShiftTab[8] = { 1, 3, 2, 5, 2, 3, 4, 1 };
-static uint32_t g_predatorFrame;
-static uint32_t g_predatorAccumulated;
-static uint32_t g_predatorIncrement;
+// g_PartialPred and reset to % 256 after reaching 256 or greater.
+static const int16_t g_PredTable[8] = { 1, 3, 2, 5, 2, 3, 4, 1 };
+static uint32_t g_PredFrame;
+static uint32_t g_PartialCount;
+static uint32_t g_PartialPred;
 static uint8_t *g_PredatorLimit = nullptr;
 
 // Buffer Frame to Page function pointer type defs
-
 typedef void (*BF_Function)(int, int, uint8_t *, uint8_t *, int, int, uint8_t *, uint8_t *, uint8_t *, int);
 typedef void (*Single_Line_Function)(int, uint8_t *, uint8_t *, uint8_t *, uint8_t *, uint8_t *, int);
 
@@ -270,18 +269,18 @@ void BF_Predator(int width, int height, uint8_t *dst, uint8_t *src, int dst_pitc
 {
     while (height--) {
         for (int i = width; i > 0; --i) {
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            // if ( g_predatorAccumulated & 0xFF00 ) {
-            //    g_predatorAccumulated &= 0xFFFF00FF;
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            // if ( g_PartialCount & 0xFF00 ) {
+            //    g_PartialCount &= 0xFFFF00FF;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    *dst = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    *dst = dst[g_PredTable[g_PredFrame]];
                 }
 
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             ++dst;
@@ -299,16 +298,16 @@ void BF_Predator_Trans(int width, int height, uint8_t *dst, uint8_t *src, int ds
         for (int i = width; i > 0; --i) {
             uint8_t sbyte = *src++;
             if (sbyte) {
-                g_predatorAccumulated += g_predatorIncrement;
+                g_PartialCount += g_PartialPred;
 
-                if (g_predatorAccumulated >= 256) {
-                    g_predatorAccumulated %= 256;
+                if (g_PartialCount >= 256) {
+                    g_PartialCount %= 256;
 
-                    if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                        sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                    if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                        sbyte = dst[g_PredTable[g_PredFrame]];
                     }
 
-                    g_predatorFrame = (g_predatorFrame + 2) % 8;
+                    g_PredFrame = (g_PredFrame + 2) % 8;
                 }
 
                 *dst = sbyte;
@@ -328,16 +327,16 @@ void BF_Predator_Ghost(int width, int height, uint8_t *dst, uint8_t *src, int ds
     while (height--) {
         for (int i = width; i > 0; --i) {
             uint8_t sbyte = *src++;
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    sbyte = dst[g_PredTable[g_PredFrame]];
                 }
 
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
@@ -361,16 +360,16 @@ void BF_Predator_Ghost_Trans(int width, int height, uint8_t *dst, uint8_t *src, 
         for (int i = width; i > 0; --i) {
             uint8_t sbyte = *src++;
             if (sbyte) {
-                g_predatorAccumulated += g_predatorIncrement;
+                g_PartialCount += g_PartialPred;
 
-                if (g_predatorAccumulated >= 256) {
-                    g_predatorAccumulated %= 256;
+                if (g_PartialCount >= 256) {
+                    g_PartialCount %= 256;
 
-                    if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                        sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                    if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                        sbyte = dst[g_PredTable[g_PredFrame]];
                     }
 
-                    g_predatorFrame = (g_predatorFrame + 2) % 8;
+                    g_PredFrame = (g_PredFrame + 2) % 8;
                 }
 
                 uint8_t fbyte = ghost_lookup[sbyte];
@@ -396,16 +395,16 @@ void BF_Predator_Fading(int width, int height, uint8_t *dst, uint8_t *src, int d
     while (height--) {
         for (int i = width; i > 0; --i) {
             uint8_t sbyte = *src++;
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    sbyte = dst[g_PredTable[g_PredFrame]];
                 }
                 
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             for (int i = 0; i < count; ++i) {
@@ -424,16 +423,16 @@ void BF_Predator_Fading_Trans(int width, int height, uint8_t *dst, uint8_t *src,
         for (int i = width; i > 0; --i) {
             uint8_t sbyte = *src++;
             if (sbyte) {
-                g_predatorAccumulated += g_predatorIncrement;
+                g_PartialCount += g_PartialPred;
 
-                if (g_predatorAccumulated >= 256) {
-                    g_predatorAccumulated %= 256;
+                if (g_PartialCount >= 256) {
+                    g_PartialCount %= 256;
 
-                    if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                        sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                    if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                        sbyte = dst[g_PredTable[g_PredFrame]];
                     }
                     
-                    g_predatorFrame = (g_predatorFrame + 2) % 8;
+                    g_PredFrame = (g_PredFrame + 2) % 8;
                 }
 
                 for (int i = 0; i < count; ++i) {
@@ -458,16 +457,16 @@ void BF_Predator_Ghost_Fading(int width, int height, uint8_t *dst, uint8_t *src,
         for (int i = width; i > 0; --i) {
             uint8_t sbyte = *src++;
 
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    sbyte = dst[g_PredTable[g_PredFrame]];
                 }
                 
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
@@ -496,16 +495,16 @@ void BF_Predator_Ghost_Fading_Trans(int width, int height, uint8_t *dst, uint8_t
             uint8_t sbyte = *src++;
 
             if (sbyte) {
-                g_predatorAccumulated += g_predatorIncrement;
+                g_PartialCount += g_PartialPred;
 
-                if (g_predatorAccumulated >= 256) {
-                    g_predatorAccumulated %= 256;
+                if (g_PartialCount >= 256) {
+                    g_PartialCount %= 256;
 
-                    if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                        sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                    if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                        sbyte = dst[g_PredTable[g_PredFrame]];
                     }
                     
-                    g_predatorFrame = (g_predatorFrame + 2) % 8;
+                    g_PredFrame = (g_PredFrame + 2) % 8;
                 }
 
                 uint8_t fbyte = ghost_lookup[sbyte];
@@ -707,18 +706,18 @@ void Single_Line_Predator(
     int width, uint8_t *dst, uint8_t *src, uint8_t *ghost_lookup, uint8_t *ghost_tab, uint8_t *fade_tab, int count)
 {
     for (int i = width; i > 0; --i) {
-        g_predatorAccumulated += g_predatorIncrement;
+        g_PartialCount += g_PartialPred;
 
-        DEBUG_ASSERT_PRINT(g_predatorFrame < 8, "Predator frame %u.\n", g_predatorFrame);
+        DEBUG_ASSERT_PRINT(g_PredFrame < 8, "Predator frame %u.\n", g_PredFrame);
 
-        if (g_predatorAccumulated >= 256) {
-            g_predatorAccumulated %= 256;
+        if (g_PartialCount >= 256) {
+            g_PartialCount %= 256;
 
-            if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                *dst = dst[g_predatorShiftTab[g_predatorFrame]];
+            if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                *dst = dst[g_PredTable[g_PredFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 2) % 8;
+            g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
         ++dst;
@@ -731,18 +730,18 @@ void Single_Line_Predator_Trans(
     for (int i = width; i > 0; --i) {
         uint8_t sbyte = *src++;
         if (sbyte) {
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            DEBUG_ASSERT_PRINT(g_predatorFrame < 8, "Predator frame %u.\n", g_predatorFrame);
+            DEBUG_ASSERT_PRINT(g_PredFrame < 8, "Predator frame %u.\n", g_PredFrame);
 
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    sbyte = dst[g_PredTable[g_PredFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             *dst = sbyte;
@@ -757,16 +756,16 @@ void Single_Line_Predator_Ghost(
 {
     for (int i = width; i > 0; --i) {
         uint8_t sbyte = *src++;
-        g_predatorAccumulated += g_predatorIncrement;
+        g_PartialCount += g_PartialPred;
 
-        if (g_predatorAccumulated >= 256) {
-            g_predatorAccumulated %= 256;
+        if (g_PartialCount >= 256) {
+            g_PartialCount %= 256;
 
-            if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+            if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                sbyte = dst[g_PredTable[g_PredFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 2) % 8;
+            g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
         uint8_t fbyte = ghost_lookup[sbyte];
@@ -785,16 +784,16 @@ void Single_Line_Predator_Ghost_Trans(
     for (int i = width; i > 0; --i) {
         uint8_t sbyte = *src++;
         if (sbyte) {
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    sbyte = dst[g_PredTable[g_PredFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
@@ -815,16 +814,16 @@ void Single_Line_Predator_Fading(
 {
     for (int i = width; i > 0; --i) {
         uint8_t sbyte = *src++;
-        g_predatorAccumulated += g_predatorIncrement;
+        g_PartialCount += g_PartialPred;
 
-        if (g_predatorAccumulated >= 256) {
-            g_predatorAccumulated %= 256;
+        if (g_PartialCount >= 256) {
+            g_PartialCount %= 256;
 
-            if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+            if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                sbyte = dst[g_PredTable[g_PredFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 2) % 8;
+            g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
         for (int i = 0; i < count; ++i) {
@@ -841,16 +840,16 @@ void Single_Line_Predator_Fading_Trans(
     for (int i = width; i > 0; --i) {
         uint8_t sbyte = *src++;
         if (sbyte) {
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    sbyte = dst[g_PredTable[g_PredFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             for (int i = 0; i < count; ++i) {
@@ -870,16 +869,16 @@ void Single_Line_Predator_Ghost_Fading(
     for (int i = width; i > 0; --i) {
         uint8_t sbyte = *src++;
 
-        g_predatorAccumulated += g_predatorIncrement;
+        g_PartialCount += g_PartialPred;
 
-        if (g_predatorAccumulated >= 256) {
-            g_predatorAccumulated %= 256;
+        if (g_PartialCount >= 256) {
+            g_PartialCount %= 256;
 
-            if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+            if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                sbyte = dst[g_PredTable[g_PredFrame]];
             }
                 
-            g_predatorFrame = (g_predatorFrame + 2) % 8;
+            g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
         uint8_t fbyte = ghost_lookup[sbyte];
@@ -903,16 +902,16 @@ void Single_Line_Predator_Ghost_Fading_Trans(
         uint8_t sbyte = *src++;
 
         if (sbyte) {
-            g_predatorAccumulated += g_predatorIncrement;
+            g_PartialCount += g_PartialPred;
 
-            if (g_predatorAccumulated >= 256) {
-                g_predatorAccumulated %= 256;
+            if (g_PartialCount >= 256) {
+                g_PartialCount %= 256;
 
-                if (&dst[g_predatorShiftTab[g_predatorFrame]] < g_PredatorLimit) {
-                    sbyte = dst[g_predatorShiftTab[g_predatorFrame]];
+                if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
+                    sbyte = dst[g_PredTable[g_PredFrame]];
                 }
                     
-                g_predatorFrame = (g_predatorFrame + 2) % 8;
+                g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
             uint8_t fbyte = ghost_lookup[sbyte];
@@ -1241,7 +1240,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         uint8_t *frame_data = &shape_data[le32toh(offset_buff[0]) & 0xFFFFFF];
 
         // Amazingly it seems that shp files actually do support having a pal, just none do.
-        if (header->flags & 1) {
+        if (header->flags & SHP_HAS_PAL) {
             frame_data = &shape_data[(le32toh(offset_buff[0]) & 0xFFFFFF) + 768];
         }
 
@@ -1260,7 +1259,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         int xor_data_offset = (le32toh(offset_buff[0]) & 0xFFFFFF) - (le32toh(offset_buff[1]) & 0xFFFFFF);
         uint8_t *lcw_data = &shape_data[le32toh(offset_buff[1]) & 0xFFFFFF];
 
-        if (header->flags & 1) {
+        if (header->flags & SHP_HAS_PAL) {
             lcw_data = &shape_data[(le32toh(offset_buff[1]) & 0xFFFFFF) + 768];
         }
 
@@ -1464,7 +1463,7 @@ static void Single_Line_Flagger(
         for (int j = width; j > 0; --j) {
             current_byte = *shape_src++;
 
-            if (current_byte || !(flags & 0x40)) {
+            if (current_byte || !(flags & SHAPE_TRANSPARENT)) {
                 if (flags & SHAPE_PREDATOR) {
                     tmp_flags |= 8;
                 }
@@ -1496,16 +1495,9 @@ static void Single_Line_Flagger(
 
 void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, GraphicViewPortClass &viewport, int flags, ...)
 {
-    uint8_t *shape_buff;
-    int current_frame;
-    int pitch;
-    uint8_t *dst;
-    int use_old_drawer = 0;
-    ShapeBufferHeader *draw_header = nullptr;
-    int src_pitch;
-    int dst_pitch;
-    int blit_style;
+    BOOL use_old_drawer = false;
     int fade_count = 0;
+    ShapeBufferHeader *draw_header = nullptr;
     uint8_t *fade_table = nullptr;
     uint8_t *ghost_table = nullptr;
     uint8_t *ghost_lookup = nullptr;
@@ -1517,26 +1509,27 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
     uint8_t *frame_data = static_cast<uint8_t *>(shape);
 
     if (g_useOldShapeDraw) {
-        use_old_drawer = 1;
+        use_old_drawer = true;
     } else if (g_useBigShapeBuffer) {
         draw_header = static_cast<ShapeBufferHeader *>(shape);
-        shape_buff = reinterpret_cast<uint8_t *>(g_bigShapeBufferStart);
+        uint8_t *shape_buff = reinterpret_cast<uint8_t *>(g_bigShapeBufferStart);
 
         if (draw_header->is_theater_shape) {
             shape_buff = reinterpret_cast<uint8_t *>(g_theaterShapeBufferStart);
         }
 
         frame_data = shape_buff + draw_header->frame_offset;
-        use_old_drawer = 0;
+        use_old_drawer = false;
     }
 
     va_list ap;
     va_start(ap, flags);
 
-    blit_style = 0;
+    int blit_style = 0;
+
     if (flags & SHAPE_CENTER) {
-        x -= width >> 1;
-        y -= height >> 1;
+        x -= width / 2;
+        y -= height / 2;
     }
 
     // Sets for BF_Trans functions
@@ -1552,10 +1545,10 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
     }
 
     if (!g_useBigShapeBuffer || g_useOldShapeDraw) {
-        use_old_drawer = 1;
+        use_old_drawer = true;
     }
 
-    if (use_old_drawer != 1 && (draw_header->draw_flags == 0xFFFFFFFF || draw_header->draw_flags != (flags & 0x1340))) {
+    if (use_old_drawer != true && (draw_header->draw_flags == 0xFFFFFFFF || draw_header->draw_flags != (flags & 0x1340))) {
         Single_Line_Flagger(width, height, frame_data, draw_header, flags, ghost_table, ghost_lookup);
     }
 
@@ -1581,20 +1574,20 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
 
     // Sets for BF_Predator functions
     if (flags & SHAPE_PREDATOR) {
-        current_frame = va_arg(ap, uint32_t);
+        int current_frame = va_arg(ap, uint32_t);
         blit_style |= 8;
 
-        g_predatorFrame = ((unsigned)current_frame) % 8;
-        g_predatorAccumulated = 0;
-        g_predatorIncrement = 256;
+        g_PredFrame = ((unsigned)current_frame) % 8;
+        g_PartialCount = 0;
+        g_PartialPred = 256;
 
         // Calculates the end of the visible display buffer, hopefully prevent crashes from predator effect.
         // Unused by default in RA, but would be nice on the phase tank in Aftermath.
         g_PredatorLimit = static_cast<uint8_t *>(viewport.Get_Offset()) + viewport.Get_Full_Pitch() * viewport.Get_Height();
     }
 
-    if (flags & 0x4000) {
-        g_predatorIncrement = va_arg(ap, int) & 0xFF;
+    if (flags & SHAPE_PARTIAL) {
+        g_PartialPred = va_arg(ap, int) & 0xFF;
     }
 
     va_end(ap);
@@ -1614,36 +1607,36 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
     if (xstart < 0) {
         ms_img_offset = -xstart;
         xstart = 0;
-        use_old_drawer = 1;
+        use_old_drawer = true;
     }
 
     if (ystart < 0) {
         frame_data += width * (-ystart);
         ystart = 0;
-        use_old_drawer = 1;
+        use_old_drawer = true;
     }
 
     if (xend >= viewport.Get_Width() - 1) {
         xend = viewport.Get_Width() - 1;
-        use_old_drawer = 1;
+        use_old_drawer = true;
     }
 
     if (yend >= viewport.Get_Height() - 1) {
         yend = viewport.Get_Height() - 1;
-        use_old_drawer = 1;
+        use_old_drawer = true;
     }
 
     int blit_width = xend - xstart + 1;
     int blit_height = yend - ystart + 1;
 
-    pitch = viewport.Get_Full_Pitch();
-    dst = ystart * pitch + xstart + static_cast<uint8_t *>(viewport.Get_Offset());
+    int pitch = viewport.Get_Full_Pitch();
+    uint8_t *dst = ystart * pitch + xstart + static_cast<uint8_t *>(viewport.Get_Offset());
     uint8_t *src = frame_data + ms_img_offset;
-    dst_pitch = pitch - blit_width;
-    src_pitch = width - blit_width;
+    int dst_pitch = pitch - blit_width;
+    int src_pitch = width - blit_width;
 
     // Use "new" line drawing routines that appear to have been added during the windows port.
-    if (use_old_drawer != 1) {
+    if (use_old_drawer != true) {
         // DEBUG_SAY("Drawing with Single_Line draw functions\n");
 
         // Here we can use the individual line drawing routines
