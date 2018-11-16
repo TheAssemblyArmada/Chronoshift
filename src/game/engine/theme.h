@@ -126,6 +126,9 @@ public:
     void Stop_Playing_Song() { Queue_Song(THEME_STOP); }
     void Play_Next_Song() { Queue_Song(THEME_NEXT); }
 
+    void Play_Prev();
+    void Play_Next();
+
     ThemeType Get_Random_Theme() const { return ThemeType(g_nonCriticalRandom(THEME_FIRST, THEME_LAST)); }
     ThemeType What_Is_Playing() { return CurrentTheme; }
     ThemeType What_Is_Queued() { return QueuedTheme; }
