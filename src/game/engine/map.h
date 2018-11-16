@@ -94,7 +94,7 @@ protected:
     int XSize;
     int YSize;
     int TotalSize;
-    CrateClass Crates[256];
+    CrateClass Crates[MAP_MAX_CRATES];
     int16_t OreGrowth[64];
     int OreGrowthCount;
     int OreGrowthExcess;
