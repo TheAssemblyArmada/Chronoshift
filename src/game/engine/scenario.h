@@ -29,6 +29,8 @@
 #include "theme.h"
 #include "ttimer.h"
 
+#define VIEW_COUNT 4
+
 enum ScenarioPlayerEnum
 {
     SCEN_PLAYER_SPAIN,
@@ -81,6 +83,8 @@ public:
     int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
     int Get_Global_Time() { return GlobalTimer.Time(); }
     BOOL Global_Timer_Running() { return GlobalTimer != 0; }
+    cell_t Get_View(int index) const { return Views[index]; }
+    void Set_View(int index, cell_t cell) { Views[index] = cell; }
 
 private:
     RandomClass SyncRandom;
@@ -108,7 +112,7 @@ private:
     int CarryOverCap;
     int CarryOverPercent;
     int GlobalVariables[30];
-    cell_t Views[4];
+    cell_t Views[VIEW_COUNT];
     int BridgeCount;
     int CarryOverTime;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
