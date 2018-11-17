@@ -1323,7 +1323,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
             break;
 
         default: // Unknown format, future expansion?
-            DEBUG_ASSERT_PRINT(false, "Invalid Map format\n");
+            DEBUG_LOG("Invalid Map format\n");
             break;
     }
 

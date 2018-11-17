@@ -74,7 +74,7 @@ BOOL CrateClass::Create_Crate(cell_t cell)
 
     return false;
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called.\n");
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return false;
 #endif
 }
@@ -86,7 +86,7 @@ BOOL CrateClass::Put_Crate(cell_t &cell)
     BOOL (*func)(cell_t &) = reinterpret_cast<BOOL (*)(cell_t &)>(0x004AC9B4);
     return func(cell);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called.\n");
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return false;
 #endif
 }
@@ -98,7 +98,7 @@ BOOL CrateClass::Get_Crate(cell_t cell)
     BOOL (*func)(cell_t) = reinterpret_cast<BOOL (*)(cell_t)>(0x004ACB1C);
     return func(cell);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called.\n");
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return false;
 #endif
 }

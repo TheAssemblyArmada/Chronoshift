@@ -84,8 +84,13 @@ void AnimClass::Init()
 
 coord_t AnimClass::Center_Coord() const
 {
+#ifndef CHRONOSHIFT_STANDALONE
+    // TODO
+    return 0;
+#else
     DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return 0;
+#endif
 }
 
 void AnimClass::AI()
@@ -94,7 +99,7 @@ void AnimClass::AI()
     void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x00424B94);
     func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -119,7 +124,7 @@ void AnimClass::Detach(target_t target, int a2)
     void (*func)(AnimClass *, target_t, int) = reinterpret_cast<void (*)(AnimClass *, target_t, int)>(0x00425A98);
     func(this, target, a2);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -129,7 +134,7 @@ BOOL AnimClass::Render(BOOL force_render)
     BOOL (*func)(AnimClass *, BOOL) = reinterpret_cast<BOOL (*)(AnimClass *, BOOL)>(0x0042410C);
     return func(this, force_render);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return false;
 #endif
 }
@@ -140,14 +145,14 @@ const int16_t *AnimClass::Occupy_List(BOOL a1) const
     int16_t *(*func)(const AnimClass *, BOOL) = reinterpret_cast<int16_t *(*)(const AnimClass *, BOOL)>(0x004245E8);
     return func(this, a1);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return nullptr;
 #endif
 }
 
 /*const int16_t *AnimClass::Overlap_List(BOOL a1) const
 {
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return nullptr;
 }*/
 
@@ -158,7 +163,7 @@ void AnimClass::Draw_It(int x_pos, int y_pos, WindowNumberType window) const
         reinterpret_cast<void (*)(const AnimClass *, int, int, WindowNumberType)>(0x0042415C);
     func(this, x_pos, y_pos, window);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -168,7 +173,7 @@ BOOL AnimClass::Mark(MarkType mark)
     BOOL (*func)(AnimClass *, MarkType) = reinterpret_cast<BOOL (*)(AnimClass *, MarkType)>(0x004242D0);
     return func(this, mark);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return false;
 #endif
 }
@@ -179,7 +184,7 @@ coord_t AnimClass::Sort_Y() const
     coord_t (*func)(const AnimClass *) = reinterpret_cast<coord_t (*)(const AnimClass *)>(0x00423F64);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return 0;
 #endif
 }
@@ -200,7 +205,7 @@ BOOL AnimClass::Can_Place_Here(coord_t coord) const
     BOOL (*func)(const AnimClass *, coord_t) = reinterpret_cast<BOOL (*)(const AnimClass *, coord_t)>(0x00425C50);
     return func(this, coord);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return false;
 #endif
 }
@@ -211,7 +216,7 @@ const int16_t *AnimClass::Anim_Overlap_List() const
     int16_t *(*func)(const AnimClass *) = reinterpret_cast<int16_t *(*)(const AnimClass *)>(0x00424318);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
     return nullptr;
 #endif
 }
@@ -222,14 +227,19 @@ void AnimClass::Attach_To(ObjectClass *object)
     void (*func)(AnimClass *, ObjectClass *) = reinterpret_cast<void (*)(AnimClass *, ObjectClass *)>(0x0042554C);
     func(this, object);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
 coord_t AnimClass::Adjust_Coord(coord_t coord)
 {
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+#ifndef CHRONOSHIFT_STANDALONE
+    // TODO
     return 0;
+#else
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    return 0;
+#endif
 }
 
 void AnimClass::Do_Atom_Damage(HousesType house, cell_t cell)
@@ -238,7 +248,7 @@ void AnimClass::Do_Atom_Damage(HousesType house, cell_t cell)
     void (*func)(AnimClass *, HousesType, cell_t) = reinterpret_cast<void (*)(AnimClass *, HousesType, cell_t)>(0x00425AE0);
     func(this, house, cell);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -248,7 +258,7 @@ void AnimClass::Start()
     void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x004256B8);
     func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -258,6 +268,6 @@ void AnimClass::Middle()
     void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x00425748);
     func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n%s\n", __FUNCTION__);
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
 }

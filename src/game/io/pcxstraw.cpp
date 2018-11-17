@@ -85,7 +85,7 @@ int PCXStraw::Get(void *buffer, int length)
             retrieved = Straw::Get(in_buff + Remaining, 2 * LinePitch - Remaining);
             int decoded = PCX_Decode((void const **)&in_buff, 2 * LinePitch, OutBuffer, LinePitch);
             if (decoded != LinePitch) {
-                DEBUG_ASSERT_PRINT(false, "PCXStraw failed to decode an entire line\n");
+                DEBUG_LOG("PCXStraw failed to decode an entire line\n");
                 break;
             }
 

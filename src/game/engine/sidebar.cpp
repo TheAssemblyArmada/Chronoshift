@@ -676,7 +676,7 @@ int SidebarClass::Which_Column(RTTIType type)
             return COLUMN_RIGHT;
 
         default:
-            DEBUG_ASSERT_PRINT(false, "Unhandled RTTIType in Which_Column() returning COLUMN_RIGHT, We should never reach here!");
+            DEBUG_LOG("Unhandled RTTIType in Which_Column() returning COLUMN_RIGHT, We should never reach here!");
             return COLUMN_RIGHT;
     }
 }
