@@ -25,11 +25,16 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#if defined(PLATFORM_WINDOWS)
+#include <direct.h> // Needs to be included before the following.
+#endif
+
 #if defined(COMPILER_WATCOM)
 #include "watcomintrin.h"
 #include <stdio.h> // For PATH_MAX
-#undef PATH_MAX // Undefine as this causes a define error through the codebase.
-#endif
+#undef PATH_MAX // Undefine these as this causes a define error through the codebase.
+#undef NAME_MAX
+#endif // COMPILER_WATCOM
 
 #if defined(PLATFORM_WINDOWS)
 #include <windows.h>
@@ -37,8 +42,7 @@
 #if !defined(PATH_MAX)
 #define PATH_MAX MAX_PATH
 #endif
-
-#endif
+#endif // PLATFORM_WINDOWS
 
 //  Define nullptr when standard is less than C++x0
 #if __cplusplus <= 199711L && !defined COMPILER_MSVC

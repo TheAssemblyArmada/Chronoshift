@@ -19,9 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#ifdef PLATFORM_WINDOWS
-#include <direct.h>
-#else
+#ifndef PLATFORM_WINDOWS
 #include <sys/stat.h>
 #endif
 
