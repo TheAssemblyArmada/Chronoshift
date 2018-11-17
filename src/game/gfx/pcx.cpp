@@ -40,7 +40,7 @@ GraphicBufferClass *Read_PCX_File(const char *filename, PaletteClass *pal, void 
         file.Open(FM_READ);
         file.Read(&header, sizeof(PCX_HEADER));
         if (header.Identifier != PCX_ZSOFT && header.Version != PCX_VER30 && header.BitsPixelPlane != 8) {
-            DEBUG_ASSERT_PRINT(false, "PCX does not have expected header.\n");
+            DEBUG_LOG("PCX does not have expected header.\n");
             file.Close();
             return nullptr;
         } else {
@@ -51,14 +51,14 @@ GraphicBufferClass *Read_PCX_File(const char *filename, PaletteClass *pal, void 
                 height = Min(size / width - 1, height);
                 gbuff = new GraphicBufferClass(width, height, buffer, size);
                 if (!gbuff || !gbuff->Get_GBuffer()->Get_Buffer()) {
-                    DEBUG_ASSERT_PRINT(false, "GraphicBuffer for PCX is not valid.\n");
+                    DEBUG_LOG("GraphicBuffer for PCX is not valid.\n");
                     file.Close();
                     return nullptr;
                 }
             } else {
                 gbuff = new GraphicBufferClass(width, height, 0, width * (height + 4));
                 if (!gbuff || !gbuff->Get_GBuffer()->Get_Buffer()) {
-                    DEBUG_ASSERT_PRINT(false, "Allocated GraphicBuffer for PCX is not valid.\n");
+                    DEBUG_LOG("Allocated GraphicBuffer for PCX is not valid.\n");
                     file.Close();
                     return nullptr;
                 }

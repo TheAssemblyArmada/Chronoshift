@@ -208,9 +208,10 @@ void GameMouseClass::Mouse_Small(BOOL use_small_frame)
  */
 BOOL GameMouseClass::Load(Straw &straw)
 {
-#ifdef COMPILER_WATCOM
+/*#ifdef COMPILER_WATCOM
     DEBUG_ASSERT_PRINT(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
-#endif
+#endif*/
+
     TheaterType theater = THEATER_NONE;
     NoInitClass noinit;
 
@@ -265,9 +266,9 @@ BOOL GameMouseClass::Load(Straw &straw)
  */
 BOOL GameMouseClass::Save(Pipe &pipe) const
 {
-#ifdef COMPILER_WATCOM
+/*#ifdef COMPILER_WATCOM
     DEBUG_ASSERT_PRINT(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
-#endif
+#endif*/
 
     TheaterType theater = Scen.Get_Theater();
     pipe.Put(&theater, sizeof(theater));

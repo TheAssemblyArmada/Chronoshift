@@ -395,85 +395,70 @@ const char *Name_From_Direction(DirType dir)
     switch (dir) {
         case DIR_NORTH:
             return "North";
-            break;
 
         //case -240:
         case DIR_NORTH_NORTH_EAST:
             return "North-northeast";
-            break;
 
         //case -224:
         case DIR_NORTH_EAST:
             return "Northeast";
-            break;
 
         //case -208:
         case DIR_EAST_NORTH_EAST:
             return "East-northeast";
-            break;
 
         //case -192:
         case DIR_EAST:
             return "East";
-            break;
 
         //case -176:
         case DIR_EAST_SOUTH_EAST:
             return "East-southeast";
-            break;
 
         //case -160:
         case DIR_SOUTH_EAST:
             return "Southeast";
-            break;
 
         //case -144:
         case DIR_SOUTH_SOUTH_EAST:
             return "South-southeast";
-            break;
 
         //case -128:
         case DIR_SOUTH:
             return "South";
-            break;
 
         //case -114:
         case DIR_SOUTH_SOUTH_WEST:
             return "South-southwest";
-            break;
 
         //case -96:
         case DIR_SOUTH_WEST:
             return "Southwest";
-            break;
 
         //case -80:
         case DIR_WEST_SOUTH_WEST:
             return "West-southwest";
-            break;
 
         //case -64:
         case DIR_WEST:
             return "West";
-            break;
 
         //case -48:
         case DIR_WEST_NORTH_WEST:
             return "West-northwest";
-            break;
 
         //case -32:
         case DIR_NORTH_WEST:
             return "Northwest";
-            break;
 
         //case -16:
         case DIR_NORTH_WEST_NORTH:
             return "North-northwest";
-            break;
 
         default:
-            // return "None";
-            return "[Unsupported]";
+            break;
     };
+
+    return "[Unsupported]";
 }
