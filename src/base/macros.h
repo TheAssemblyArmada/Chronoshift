@@ -215,7 +215,7 @@
 #define __CURRENT_FUNCTION__ __PRETTY_FUNCTION__
 #elif defined(__FUNCSIG__) || defined(COMPILER_MSVC)
 #define __CURRENT_FUNCTION__ __FUNCSIG__
-#elif defined(COMPILER_INTEL)
+#elif defined(COMPILER_INTEL) || defined(COMPILER_WATCOM)
 #define __CURRENT_FUNCTION__ __FUNCTION__
 #elif defined(COMPILER_BORLANDC)
 #define __CURRENT_FUNCTION__ __FUNC__
