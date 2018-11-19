@@ -23,6 +23,7 @@
 #include "filestraw.h"
 #include "rawfile.h"
 #include "readline.h"
+#include "gamedebug.h"
 #include <ctype.h>
 #include <stdio.h>
 

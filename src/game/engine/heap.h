@@ -18,7 +18,7 @@
 #ifndef HEAP_H
 #define HEAP_H
 
-#include "gamedebug.h"
+#include "gameassert.h"
 #include "noinit.h"
 #include "pipe.h"
 #include "straw.h"
