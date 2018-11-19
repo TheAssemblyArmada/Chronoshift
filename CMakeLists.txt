@@ -82,15 +82,26 @@ if (CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
     message(FATAL_ERROR "Building in-source is not supported! Create a build dir and remove ${CMAKE_SOURCE_DIR}/CMakeCache.txt")
 endif()
 
-if (WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
+if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     set(DEFAULT_STANDALONE OFF)
-else ()
+else()
     set(DEFAULT_STANDALONE ON)
-endif ()
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(DEFAULT_LOGGING ON)
+    set(DEFAULT_ASSERTIONS ON)
+else()
+    set(DEFAULT_ASSERTIONS OFF)
+    set(DEFAULT_LOGGING OFF)
+endif()
+
 # This doesn't really work yet, work ongoing to make it usable.
 # It should still compile fine.
 option(STANDALONE "Build a standalone version." ${DEFAULT_STANDALONE})
 option(NO_BITFIELDS "Use standard bool type in place of bitfields." OFF)
+option(LOGGING "Enable debug logging." ${DEFAULT_LOGGING})
+option(ASSERTIONS "Enable debug assertions." ${DEFAULT_ASSERTIONS})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CHRONOSHIFT_SOURCE_DIR}/cmake/modules)
 
@@ -112,15 +123,29 @@ if(MINGW)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -mabi=ms -Wno-invalid-offsetof -Wall")
 endif()
 
+# Define __STDC_FORMAT_MACROS so #include <inttypes.h> works as expected.
+if(WATCOM)
+    add_definitions(-D__STDC_FORMAT_MACROS)
+endif()
+
 # Enable Chronoshift debug features in Debug configs.
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
 endif()
 
-# Define __STDC_FORMAT_MACROS so #include <inttypes.h> works as expected.
-if(WATCOM)
-    add_definitions(-D__STDC_FORMAT_MACROS)
+# Enable Chronoshift debug logging.
+if(LOGGING)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_LOGGING")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_LOGGING")
+    add_definitions(-DCHRONOSHIFT_LOGGING)
+endif()
+
+# Enable Chronoshift debug assertions.
+if(ASSERTIONS)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_ASSERTS")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_ASSERTS")
+    add_definitions(-DCHRONOSHIFT_ASSERT)
 endif()
 
 # Locate git binary to provide information to the build environment

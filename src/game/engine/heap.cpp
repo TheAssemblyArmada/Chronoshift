@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "heap.h"
+#include "gamedebug.h"
 
 FixedHeapClass::FixedHeapClass() :
     IsAllocated(false),

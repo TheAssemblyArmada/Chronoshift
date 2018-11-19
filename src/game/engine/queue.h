@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "gametypes.h"
+#include "gamedebug.h"
 #include "mission.h"
 
 class TargetClass;

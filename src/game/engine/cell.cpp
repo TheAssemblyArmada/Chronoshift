@@ -15,6 +15,7 @@
  */
 #include "cell.h"
 #include "gamefile.h"
+#include "gamedebug.h"
 #include "coord.h"
 #include "ground.h"
 #include "drawshape.h"

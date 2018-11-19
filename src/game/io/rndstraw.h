@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "gamedebug.h"
+#include "gameassert.h"
 #include "random.h"
 #include "sha.h"
 #include "straw.h"

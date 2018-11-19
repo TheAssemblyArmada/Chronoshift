@@ -14,6 +14,7 @@
  */
 #include "ipx.h"
 #include "endiantype.h"
+#include "gamedebug.h"
 #include <cstring>
 
 using std::memcpy;

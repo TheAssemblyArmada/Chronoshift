@@ -15,7 +15,7 @@
  */
 #include "pk.h"
 #include "straw.h"
-
+#include "gamedebug.h"
 #include <cstdlib>
 
 using std::rand;
