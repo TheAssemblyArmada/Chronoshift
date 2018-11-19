@@ -182,9 +182,24 @@ void Create_Main_Window(void *hInstance, int nCmdShow, int width, int height)
 
     RegisterClassA(&WndClass);
 
+#if defined(CHRONOSHIFT_DEBUG)
+    const char *buildtype = "Debug";
+#else
+    const char *buildtype = "Release";
+#endif
+
+    char window_name[256];
+    snprintf(window_name,
+        sizeof(window_name),
+        "Chronoshift [%s] - Branch:%s ID:%s Date:%s",
+        buildtype,
+        CHRONOSHIFT_BRANCH,
+        CHRONOSHIFT_COMMIT_SHA1_SHORT,
+        CHRONOSHIFT_COMMIT_DATE);
+
     HWND app_hwnd = CreateWindowExA(WS_EX_TOPMOST,
         "Chronoshift",
-        "Chronoshift",
+        window_name,
         WS_POPUP,
         GetSystemMetrics(SM_CXSCREEN),
         GetSystemMetrics(SM_CYSCREEN),
