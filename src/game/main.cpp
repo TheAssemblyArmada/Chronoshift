@@ -25,6 +25,7 @@
 #include "gamemain.h"
 #include "gameoptions.h"
 #include "getcd.h"
+#include "gitverinfo.h"
 #include "globals.h"
 #include "ini.h"
 #include "keyboard.h"
@@ -193,9 +194,9 @@ void Create_Main_Window(void *hInstance, int nCmdShow, int width, int height)
         sizeof(window_name),
         "Chronoshift [%s] - Branch:%s ID:%s Date:%s",
         buildtype,
-        CHRONOSHIFT_BRANCH,
-        CHRONOSHIFT_COMMIT_SHA1_SHORT,
-        CHRONOSHIFT_COMMIT_DATE);
+        g_GitBranch,
+        g_GitShortSHA1,
+        g_GitCommitDate);
 
     HWND app_hwnd = CreateWindowExA(WS_EX_TOPMOST,
         "Chronoshift",
@@ -242,9 +243,9 @@ int main(int argc, char **argv)
     // Make pretty log header for debug logging builds.
     DEBUG_LOG("================================================================================\n\n");
     DEBUG_LOG("Chronoshift Version: %s\n", g_version.Version_Name());
-    DEBUG_LOG("Build date: %s\n", CHRONOSHIFT_COMMIT_DATE);
-    DEBUG_LOG("Build branch: %s\n", CHRONOSHIFT_BRANCH);
-    DEBUG_LOG("Build commit: %s\n", CHRONOSHIFT_COMMIT_SHA1_SHORT);
+    DEBUG_LOG("Build date: %s\n", g_GitCommitDate);
+    DEBUG_LOG("Build branch: %s\n", g_GitBranch);
+    DEBUG_LOG("Build commit: %s\n", g_GitShortSHA1);
     // DEBUG_LOG("Processor: %s\n", CPUDetectClass::Get_Processor_String());
     // DEBUG_LOG("Physical Memory: %llu MiB.\n", CPUDetectClass::Get_Total_Physical_Memory() / (1024 * 1024 + 1));
     DEBUG_LOG(CPUDetectClass::Get_Processor_Log());

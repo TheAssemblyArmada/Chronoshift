@@ -161,7 +161,6 @@ if(GIT_FOUND)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DCHRONOSHIFT_BRANCH="${CHRONOSHIFT_BRANCH}")
 
     # Define commit hash.
     execute_process(
@@ -171,8 +170,7 @@ if(GIT_FOUND)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1="${CHRONOSHIFT_COMMIT_SHA1}")
-
+    
     # Define short commit hash.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
@@ -181,8 +179,7 @@ if(GIT_FOUND)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1_SHORT="${CHRONOSHIFT_COMMIT_SHA1_SHORT}")
-
+    
     # Define commit count.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-list HEAD --count
@@ -191,8 +188,7 @@ if(GIT_FOUND)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DCHRONOSHIFT_COMMIT_COUNT=${CHRONOSHIFT_COMMIT_COUNT})
-
+    
     # Define commit time stamp.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:%ct
@@ -201,8 +197,7 @@ if(GIT_FOUND)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DCHRONOSHIFT_COMMIT_TSTAMP=${CHRONOSHIFT_COMMIT_TSTAMP})
-
+    
     # Define commit author.
     execute_process(
         COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:'%an'
@@ -211,7 +206,7 @@ if(GIT_FOUND)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    add_definitions(-DCHRONOSHIFT_COMMIT_AUTHOR="${CHRONOSHIFT_COMMIT_AUTHOR}")
+    string(REGEX REPLACE "'" "" ${CHRONOSHIFT_COMMIT_AUTHOR} "${CHRONOSHIFT_COMMIT_AUTHOR}")
     
     # Define commit date and time. Make builds more reproducible than using __DATE__ and __TIME__
     execute_process(
@@ -222,25 +217,24 @@ if(GIT_FOUND)
         ERROR_QUIET
     )
     string(REPLACE " " ";" CHRONOSHIFT_DATE_AND_TIME ${CHRONOSHIFT_DATE_AND_TIME})
-    list(GET CHRONOSHIFT_DATE_AND_TIME 0 CHRONOSHIFT_DATE)
-    list(GET CHRONOSHIFT_DATE_AND_TIME 1 CHRONOSHIFT_TIME)
-    list(GET CHRONOSHIFT_DATE_AND_TIME 2 CHRONOSHIFTTZONE)
-    add_definitions(-DCHRONOSHIFT_COMMIT_DATE="${CHRONOSHIFT_DATE}")
-    add_definitions(-DCHRONOSHIFT_COMMIT_TIME="${CHRONOSHIFT_TIME} ${CHRONOSHIFT_TZONE}")
+    list(GET CHRONOSHIFT_DATE_AND_TIME 0 CHRONOSHIFT_COMMIT_DATE)
+    list(GET CHRONOSHIFT_DATE_AND_TIME 1 CHRONOSHIFT_COMMIT_TIME)
+    list(GET CHRONOSHIFT_DATE_AND_TIME 2 CHRONOSHIFT_COMMIT_TZONE)
 
 else()
-    add_definitions(-DCHRONOSHIFT_BRANCH="netherrealm")
-    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1="DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF")
-    add_definitions(-DCHRONOSHIFT_COMMIT_SHA1_SHORT="DEADBEEF")
-    add_definitions(-DCHRONOSHIFT_COMMIT_COUNT=0)
-    add_definitions(-DCHRONOSHIFT_COMMIT_TSTAMP=0)
-    add_definitions(-DCHRONOSHIFT_COMMIT_DATE="1955-11-12")
-    add_definitions(-DCHRONOSHIFT_COMMIT_TIME="22:04:00 +0000")
-    add_definitions(-DCHRONOSHIFT_COMMIT_AUTHOR="Someone")
+    # Fallback information if git isn't found. This should never be present in official builds.
+    set(CHRONOSHIFT_BRANCH "netherrealm")
+    set(CHRONOSHIFT_COMMIT_SHA1 "DEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF")
+    set(CHRONOSHIFT_COMMIT_SHA1_SHORT "DEADBEEF")
+    set(CHRONOSHIFT_COMMIT_COUNT 0)
+    set(CHRONOSHIFT_COMMIT_TSTAMP 0)
+    set(CHRONOSHIFT_COMMIT_DATE "1955-11-12")
+    set(CHRONOSHIFT_COMMIT_TIME "22:04:00")
+    set(CHRONOSHIFT_COMMIT_TZONE "+0000")
+    set(CHRONOSHIFT_COMMIT_AUTHOR "Someone")
 endif()
 
-add_definitions(-DCHRONOSHIFT_MAJOR=${CHRONOSHIFT_VERSION_MAJOR})
-add_definitions(-DCHRONOSHIFT_MINOR=${CHRONOSHIFT_VERSION_MINOR})
+configure_file(src/base/gitverinfo.cpp.in src/base/gitverinfo.cpp @ONLY)
 
 if(STANDALONE)
     add_definitions(-DCHRONOSHIFT_STANDALONE)
