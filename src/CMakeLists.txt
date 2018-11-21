@@ -1,11 +1,14 @@
 # Add platform libraries needed for the build
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
-    find_package(DirectX)
+    find_package(DirectX REQUIRED dsound ddraw)
     
-    if(DirectX_DDRAW_FOUND)
+    if(DirectX_FOUND)
         message("Located DirectDraw.")
-        set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${DirectX_DDRAW_INCLUDE_DIR})
-        set(PLATFORM_LIBS ${PLATFORM_LIBS} ${DirectX_DDRAW_LIBRARY})
+        message("${DirectX_INCLUDE_DIRS}")
+        message("${DirectX_LIBRARIES}")
+
+        set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${DirectX_INCLUDE_DIRS})
+        set(PLATFORM_LIBS ${PLATFORM_LIBS} ${DirectX_LIBRARIES})
     endif()
     
     if(STANDALONE)
@@ -257,10 +260,12 @@ set(GAMEENGINE_SRC
 
 if(STANDALONE)
     add_executable(chronoshift ${GAMEENGINE_SRC})
-    target_include_directories(chronoshift BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES})
+    target_include_directories(chronoshift PUBLIC ${PLATFORM_INCLUDES})
+    target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES})
 else()
     add_library(chronoshift SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})
-    target_include_directories(chronoshift BEFORE PUBLIC ${PLATFORM_INCLUDES} ${GAMEENGINE_INCLUDES} hooker)
+    target_include_directories(chronoshift PUBLIC ${PLATFORM_INCLUDES})
+    target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES} hooker)
 endif()
 
 target_link_libraries(chronoshift ${PLATFORM_LIBS})
