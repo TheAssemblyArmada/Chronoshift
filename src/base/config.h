@@ -18,13 +18,4 @@
 #ifndef BASE_CONFIG_H
 #define BASE_CONFIG_H
 
-#include "platform.h"
-#include "compiler.h"
-
-
-//Forces use of INT_MAX macros where from stdint.h on some compilers
-#ifndef __STDC_LIMIT_MACROS
-    #define __STDC_LIMIT_MACROS 1
-#endif // __STDC_LIMIT_MACROS
-
 #endif // _BASE_CONFIG_H_
