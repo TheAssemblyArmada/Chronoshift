@@ -17,15 +17,8 @@
 #ifndef DEBUGBREAK_H
 #define DEBUGBREAK_H
 
-// If we have MSVC then we have the intrinsic.
-#if !defined _MSC_VER && !defined __debugbreak
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-// If we dont have __has_builtin then ensure it evaluates to false.
-#ifndef __has_builtin
-#define __has_builtin(x) 0
 #endif
 
 // If we have watcom, then use watcom inline assembly.
@@ -33,8 +26,16 @@ extern "C" {
 void __debugbreak(void);
 #pragma aux __debugbreak = "int 3"
 
+// If we have MSVC or MinGW then we have the intrinsic.
+#elif !defined _WIN32
+
+// If we dont have __has_builtin then ensure it evaluates to false.
+#ifndef __has_builtin
+#define __has_builtin(x) 0
+#endif
+
 // Check for clang intrinsic.
-#elif __has_builtin(__builtin_debugtrap)
+#if __has_builtin(__builtin_debugtrap)
 #define __debugbreak __builtin_debugtrap
 
 // If we have GCC or compiler that tries to be compatible, use GCC inline assembly.
@@ -67,10 +68,10 @@ extern __attribute__((gnu_inline, always_inline)) inline void __debugbreak(void)
 #error __debugbreak not currently supported on this compiler, see base/debugbreak.h
 #endif // compiler defines
 
+#endif // msvc exclusion and check for existing __debugbreak symbol.
+
 #ifdef __cplusplus
 }
 #endif
-
-#endif // msvc exclusion and check for existing __debugbreak symbol.
 
 #endif // DEBUGBREAK_H
