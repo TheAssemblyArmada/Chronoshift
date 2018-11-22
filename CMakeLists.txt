@@ -9,9 +9,9 @@ if(MSVC)
     set(MSVC_INCREMENTAL_DEFAULT ON)
 endif()
 
-set(PROJECT CHRONOSHIFT VERSION 3.3)
+project(CHRONOSHIFT VERSION 3.3 LANGUAGES C CXX)
 
-project(${PROJECT})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CHRONOSHIFT_SOURCE_DIR}/cmake/modules)
 
 if(MSVC)
     # Prevent incremental linking.
@@ -32,7 +32,10 @@ if(MSVC)
         #message("Processing flags ${flag_var}")
         string(REGEX REPLACE "/RTC[^ ]*" "" ${flag_var} "${${flag_var}}")
     endforeach(flag_var)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+    # Set warning level 3
+    # disable C4244: conversion from 'double' to 'float', possible loss of data
+    # disable C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /wd4244 /wd4800")
 endif()
 
 if(WATCOM)
@@ -103,7 +106,25 @@ option(NO_BITFIELDS "Use standard bool type in place of bitfields." OFF)
 option(LOGGING "Enable debug logging." ${DEFAULT_LOGGING})
 option(ASSERTIONS "Enable debug assertions." ${DEFAULT_ASSERTIONS})
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CHRONOSHIFT_SOURCE_DIR}/cmake/modules)
+# Enable a standalone build
+if(STANDALONE)
+    add_definitions(-DCHRONOSHIFT_STANDALONE)
+endif()
+
+# Enable using bools in place of bitfields for boolean class members.
+if(NO_BITFIELDS)
+    add_definitions(-DCHRONOSHIFT_NO_BITFIELDS)
+endif()
+
+# Enable Chronoshift debug logging.
+if(LOGGING)
+    add_definitions(-DCHRONOSHIFT_LOGGING)
+endif()
+
+# Enable Chronoshift debug assertions.
+if(ASSERTIONS)
+    add_definitions(-DCHRONOSHIFT_ASSERTS)
+endif()
 
 # Go lean and mean on windows.
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
@@ -118,6 +139,7 @@ endif()
 # Prevent lib prefix when built with MinGW to target windows and move to own dir.
 if(MINGW)
     add_definitions(-D__STDC_FORMAT_MACROS)
+    add_definitions(-D__STDC_LIMIT_MACROS)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CHRONOSHIFT_BINARY_DIR}/bin)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CHRONOSHIFT_BINARY_DIR}/bin)
@@ -127,27 +149,16 @@ endif()
 # Define __STDC_FORMAT_MACROS so #include <inttypes.h> works as expected.
 if(WATCOM)
     add_definitions(-D__STDC_FORMAT_MACROS)
+    add_definitions(-D__STDC_LIMIT_MACROS)
 endif()
 
 # Enable Chronoshift debug features in Debug configs.
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
-endif()
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
 
-# Enable Chronoshift debug logging.
-if(LOGGING)
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_LOGGING")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_LOGGING")
-    add_definitions(-DCHRONOSHIFT_LOGGING)
-endif()
-
-# Enable Chronoshift debug assertions.
-if(ASSERTIONS)
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_ASSERTS")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_ASSERTS")
-    add_definitions(-DCHRONOSHIFT_ASSERT)
-endif()
+# Include some standard CMake modules we use.
+include(CheckSymbolExists)
+include(CheckIncludeFiles)
 
 # Locate git binary to provide information to the build environment
 find_package(Git)
@@ -220,7 +231,6 @@ if(GIT_FOUND)
     list(GET CHRONOSHIFT_DATE_AND_TIME 0 CHRONOSHIFT_COMMIT_DATE)
     list(GET CHRONOSHIFT_DATE_AND_TIME 1 CHRONOSHIFT_COMMIT_TIME)
     list(GET CHRONOSHIFT_DATE_AND_TIME 2 CHRONOSHIFT_COMMIT_TZONE)
-
 else()
     # Fallback information if git isn't found. This should never be present in official builds.
     set(CHRONOSHIFT_BRANCH "netherrealm")
@@ -236,13 +246,52 @@ endif()
 
 configure_file(src/base/gitverinfo.cpp.in src/base/gitverinfo.cpp @ONLY)
 
-if(STANDALONE)
-    add_definitions(-DCHRONOSHIFT_STANDALONE)
+# Check for the existence of some functions we need or their equivalents.
+check_symbol_exists(strcasecmp strings.h HAVE_STRCASECMP)
+if(NOT HAVE_STRCASECMP)
+    check_symbol_exists(_stricmp string.h HAVE__STRICMP)
+    if(NOT HAVE__STRICMP)
+        message(FATAL_ERROR "No case-insensitive compare function found, please report!")
+    endif()
 endif()
 
-if(NO_BITFIELDS)
-    add_definitions(-DCHRONOSHIFT_NO_BITFIELDS)
+check_symbol_exists(strncasecmp strings.h HAVE_STRNCASECMP)
+if(NOT HAVE_STRNCASECMP)
+    check_symbol_exists(_strnicmp string.h HAVE__STRNICMP)
+    if(NOT HAVE__STRNICMP)
+        message(FATAL_ERROR "No case-insensitive size-limitted compare function found, please report!")
+    endif()
 endif()
+
+check_include_files(strings.h HAVE_STRINGS_H)
+
+# Check for best macro that expands to current function name.
+check_symbol_exists(__PRETTY_FUNCTION__ "" HAVE_PRETTY_FUNCTION_MACRO)
+if(NOT HAVE_PRETTY_FUNCTION_MACRO)
+    check_symbol_exists(__FUNCSIG__ "" HAVE_FUNCSIG_MACRO)
+
+    if(NOT HAVE_FUNCSIG_MACRO)
+        check_symbol_exists(__FUNCTION__ "" HAVE_FUNCTION_MACRO)
+        if(NOT HAVE_FUNCTION_MACRO)
+            check_symbol_exists(__func__ "" HAVE_FUNC_MACRO)
+            if(NOT HAVE_FUNCTION_MACRO)
+                message(FATAL_ERROR "No function name macro found, please report!")
+            else()
+                add_definitions(-D__CURRENT_FUNCTION__=__func__)
+            endif()
+        else()
+            add_definitions(-D__CURRENT_FUNCTION__=__FUNCTION__)
+        endif()
+    else()
+        add_definitions(-D__CURRENT_FUNCTION__=__FUNCSIG__)
+    endif()
+else()
+    add_definitions(-D__CURRENT_FUNCTION__=__PRETTY_FUNCTION__)
+endif()
+
+# Check for the existence of functions and headers.
+
+configure_file(src/base/config.h.in src/base/config.h @ONLY)
 
 # Set where the build results will end up
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -250,8 +299,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 if(NOT STANDALONE)
-# Build the launcher
-add_subdirectory(launcher)
+    # Build the launcher
+    add_subdirectory(launcher)
 endif()
 
 # Build Chronoshift
