@@ -15,11 +15,8 @@
  */
 #pragma once
 
-#ifndef BASE_MACROS_H
-#define BASE_MACROS_H
-
-#include "compiler.h"
-#include "platform.h"
+#ifndef MACROS_H
+#define MACROS_H
 
 /**
  * Returns the count of items in a built-in C array. This is a common technique
@@ -141,24 +138,4 @@
 #define DEFINE_ENUMERATION_OPERATORS(ENUMTYPE) // NOP, C allows these operators.
 #endif // __cplusplus
 
-/**
- * Macro to abstract the most informative compiler specific macro representing
- * the current function.
- */
-#if !defined(__CURRENT_FUNCTION__)
-#if defined(COMPILER_GNUC) || (defined(COMPILER_INTEL) && COMPILER_VERSION >= 600)
-#define __CURRENT_FUNCTION__ __PRETTY_FUNCTION__
-#elif defined(__FUNCSIG__) || defined(COMPILER_MSVC)
-#define __CURRENT_FUNCTION__ __FUNCSIG__
-#elif defined(COMPILER_INTEL) || defined(COMPILER_WATCOM)
-#define __CURRENT_FUNCTION__ __FUNCTION__
-#elif defined(COMPILER_BORLANDC)
-#define __CURRENT_FUNCTION__ __FUNC__
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901
-#define __CURRENT_FUNCTION__ __func__
-#else
-#define __CURRENT_FUNCTION__ "(unknown function)"
-#endif
-#endif // __CURRENT_FUNCTION__
-
-#endif // _BASE_MACROS_H_
+#endif // MACROS_H

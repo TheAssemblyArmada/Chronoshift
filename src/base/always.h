@@ -15,140 +15,127 @@
  */
 #pragma once
 
-#ifndef BASE_ALWAYS_H
-#define BASE_ALWAYS_H
+#ifndef ALWAYS_H
+#define ALWAYS_H
+
+#include "config.h"
 
 #include "bittype.h"
-#include "config.h"
+#include "compiler.h"
 #include "macros.h"
+#include "platform.h"
 #include "targetver.h"
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
-#if defined(PLATFORM_WINDOWS)
-#include <direct.h> // Needs to be included before the following.
-#endif
-
-#if defined(COMPILER_WATCOM)
+#ifdef COMPILER_WATCOM
 #include "watcomintrin.h"
+#include <direct.h>
 #include <stdio.h> // For PATH_MAX
 #undef PATH_MAX // Undefine these as this causes a define error through the codebase.
 #undef NAME_MAX
 #endif // COMPILER_WATCOM
 
-#if defined(PLATFORM_WINDOWS)
+#ifdef PLATFORM_WINDOWS
 #include <windows.h>
 #define NAME_MAX FILENAME_MAX
-#if !defined(PATH_MAX)
+#ifndef PATH_MAX
 #define PATH_MAX MAX_PATH
 #endif
 #endif // PLATFORM_WINDOWS
 
-//  Define nullptr when standard is less than C++x0
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
+//  Define nullptr when standard is less than C++11, mainly for watcom support
 #if __cplusplus <= 199711L && !defined COMPILER_MSVC
 #define nullptr NULL
 #define override
+#define final
 #define static_assert(x, ...)
 #endif
 
-//  General compiler specific
-#if defined(COMPILER_MSVC)
-// Allow inline recursive functions within inline recursive functions.
+// Allow inline recursive functions within inline recursive functions in msvc.
+#ifdef COMPILER_MSVC
 #pragma inline_recursion(on)
+#endif
 
-// Compilers don't necessarily inline code with inline keyword, especially in debug builds.
-// Use FORCE_INLINE to force them to where it is possible.
-//#define FORCE_INLINE    __forceinline
+// This section defines some keywords defining calling conventions
+// where the keywords needed differ between compilers.
+#if !defined COMPILER_MSVC && !defined COMPILER_WATCOM
+#if !defined(__fastcall)
+#if __has_attribute(fastcall)
+#define __fastcall __attribute__((fastcall))
+#else
+#define __fastcall
+#endif
+#endif
+
+#if !defined(__cdecl)
+#if __has_attribute(cdecl)
+#define __cdecl __attribute__((cdecl))
+#else
+#define __cdecl
+#endif
+#endif
+
+#if !defined(__stdcall)
+#if __has_attribute(stdcall)
+#define __stdcall __attribute__((stdcall))
+#else
+#define __stdcall
+#endif
+#endif
+#endif // !defined COMPILER_MSVC || !defined COMPILER_WATCOM
+
+// This section defines some keywords controlling inlining and unused variables
+// where the keywords needed differ between compilers.
+#ifdef COMPILER_MSVC
 #define __noinline __declspec(noinline)
 #define __unused __pragma(warning(suppress : 4100 4101))
-// When including windows, lets just bump the warning level back to 3...
-#pragma warning(push, 3)
-
-#else // !COMPILER_MSVC
-#if defined(COMPILER_GNUC) || defined(COMPILER_CLANG)
-#if defined(PROCESSOR_X86) // Only applies to 32bit
-#if !defined(__fastcall)
-#define __fastcall __attribute__((fastcall))
-#endif
-#if !defined(__cdecl)
-#define __cdecl __attribute__((cdecl))
-#endif
-#if !defined(__stdcall)
-#define __stdcall __attribute__((stdcall))
-#endif
 #else
-#if !defined(__fastcall)
-#define __fastcall
-#endif
-#if !defined(__cdecl)
-#define __cdecl
-#endif
-#if !defined(__stdcall)
-#define __stdcall
-#endif
-#endif
-
-#define __noinline __attribute__((noinline))
-#define __unused __attribute__((unused))
-
 #if !defined(__forceinline)
+#if __has_attribute(__always_inline__)
 #define __forceinline inline __attribute__((__always_inline__))
-#endif
-#elif defined COMPILER_WATCOM
-#define __forceinline inline
-#else // !COMPILER_GNUC || !COMPILER_CLANG
-// otherwise, nullify fastcall
-#if !defined(__fastcall)
-#define __fastcall
-#endif
-#if !defined(__cdecl)
-#define __cdecl
-#endif
-#if !defined(__stdcall)
-#define __stdcall
-#endif
-#if !defined(__forceinline)
+#else
 #define __forceinline inline
 #endif
-#define __noinline
-#endif // COMPILER_GNUC || COMPILER_CLANG
+#endif
 
+#if !defined(__unused)
+#if __has_attribute(unused)
+#define __unused __attribute__((unused))
+#else
+#define __unused
+#endif
+#endif
+
+#if !defined(__noinline)
+#if __has_attribute(noinline)
+#define __noinline __attribute__((noinline))
+#else
+#define __noinline
+#endif
+#endif
 #endif // COMPILER_MSVC
 
-// Few defines to keep things straight between windows and posix
-#if defined(PLATFORM_WINDOWS)
-// Not sure what flags need passing to MinGW-w64 GCC to get wcscasecmp without this
-#define wcscasecmp(a, b) _wcsicmp(a, b)
-#define localtime_r(a, b) localtime_s(b, a)
-typedef struct stat stat_t;
-
-#if !defined(PLATFORM_MINGW)
-#define strdup(s) _strdup(s)
-#define strcasecmp(a, b) _stricmp(a, b)
-#define strncasecmp(a, b, c) _strnicmp(a, b, c)
+// Based on the build system generated config.h information we define some stuff here
+// for cross platform consistency.
+#if defined HAVE__STRICMP && !defined HAVE_STRCASECMP
+#define strcasecmp _stricmp
 #endif
 
-// These are apparently implemented correctly in MSVC 2015
-#if defined(COMPILER_MSVC) && (COMPILER_VERSION < 1900)
-#define snprintf(...) _snprintf_s(__VA_ARGS__)
-#define vsnprintf(...) _vsnprintf_s(__VA_ARGS__)
+#if defined HAVE__STRNICMP && !defined HAVE_STRNCASECMP
+#define strncasecmp _strnicmp
 #endif
 
-#else
+// TODO Have cmake build system detect requirements for 64bit stat.
 typedef struct stat stat_t;
-#endif // PLATFORM_WINDOWS
 
-// This includes the minimum set of compiler defines and pragmas in order to bring the
-// various compilers to a common behavior such that the engine will compile without
-// error or warning.
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Watcom
-//
-////////////////////////////////////////////////////////////////////////////////
+// This section is for setting various pragmas for compilers for warnings we don't care about
+// when they can't be disabled from the command line in the build system.
 #if defined(COMPILER_WATCOM)
-
 // Turns off stack checking.
 #pragma off(check_stack)
 
@@ -196,82 +183,4 @@ typedef struct stat stat_t;
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Microsoft / Visual Studio
-//
-////////////////////////////////////////////////////////////////////////////////
-#if defined(COMPILER_MSVC)
-
-// "conversion from 'double' to 'float', possible loss of data".
-#pragma warning(disable : 4244)
-
-// warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
-#pragma warning(disable : 4800)
-
-// It is safe to ignore the following warning from MSVC 7.1 or higher:
-#if (COMPILER_VERSION >= 1310)
-// "new behavior: elements of array will be default initialized"
-//#pragma warning(disable : 4351)
-#endif // COMPILER_VERSION >= 1310
-
-// "unreferenced inline function has been removed" Yea, so what?
-//#pragma warning(disable : 4514)
-
-// Disable warning about exception handling not being enabled. It's used as part of STL - in a part of STL we don't use.
-//#pragma warning(disable : 4530)
-
-// "overflow in floating-point constant arithmetic" This warning occurs even if the
-// loss of precision is insignificant.
-//#pragma warning(disable : 4056)
-
-// "function not inlined" This warning is typically useless. The inline keyword
-// only serves as a suggestion to the compiler and it may or may not inline a
-// function on a case by case basis. No need to be told of this.
-//#pragma warning(disable : 4710)
-
-// "'this' used in base member initializer list" Using "this" in a base member
-// initializer is valid -- no need for this warning.
-//#pragma warning(disable : 4355)
-
-// "typedef-name used as a synonym for class-name". This is by design and should
-// not be a warning.
-//#pragma warning(disable : 4097)
-
-// Unreferenced local function removed.
-//#pragma warning(disable : 4505)
-
-// 'function selected for automatic inlining'
-//#pragma warning(disable : 4711)
-    
-// 'This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation,
-// use _CRT_SECURE_NO_WARNINGS. See online help for details.'
-//#pragma warning(disable : 4996)
-
-// 'copy constructor could not be generated'
-//#pragma warning(disable : 4511)
-
-// 'assignment operator could not be generated'
-//#pragma warning(disable : 4512)
-
-// 'unreferenced formal parameter'
-//#pragma warning(disable : 4100)
-
-// HIDE WARNING 4786 "identifier was truncated to '255' characters in the browser information"
-// Tempates create LLLOOONNNGGG identifiers!
-//#pragma warning(disable : 4786)
-
-// 'function selected for automatic inline expansion'.  Cool, but since we're treating
-// warnings as errors, don't warn me about this!
-//#pragma warning(disable : 4711)
-
-//for catching unrefernced local variables, we do not need to worry about this when compiling debug builds.
-#if !defined(NDEBUG)
-//#pragma warning(disable : 4189)
-//#pragma warning(disable : 4101)
-//#pragma warning(disable : 4700) // uninitialized local variable 'x' used
-#endif // !NDEBUG
-
-#endif // COMPILER_MSVC
-
-#endif // _BASE_ALWAYS_H_
+#endif // ALWAYS_H

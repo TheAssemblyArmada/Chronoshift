@@ -24,6 +24,7 @@
 
 #ifdef PLATFORM_WINDOWS
 #include <conio.h>
+#include <direct.h>
 #include <wincon.h>
 #endif
 

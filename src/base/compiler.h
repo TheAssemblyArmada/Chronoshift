@@ -148,6 +148,14 @@
     #define INTERNAL_PRIMITIVE_STRINGIZE(x) #x
 #endif
 
+// Make sure these evaluate to false for compiler that don't define them.
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#ifndef __has_builtin
+#define __has_builtin(x) 0
+#endif
 
 // SN Systems compiler 
 #if defined(__SNC__)

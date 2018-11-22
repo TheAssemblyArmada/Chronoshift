@@ -43,6 +43,7 @@ set(PLATFORM_LIBS ${PLATFORM_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
 # Build and link the DLL.
 set(GAMEENGINE_INCLUDES
+    ${CMAKE_CURRENT_BINARY_DIR}/base
     base
     game
     game/audio

@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief Basic header files and defines that are always needed.
+ * @brief Build system generated set of defines for discovered features.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -15,7 +15,14 @@
  */
 #pragma once
 
-#ifndef BASE_CONFIG_H
-#define BASE_CONFIG_H
+#ifndef CONFIG_H
+#define CONFIG_H
 
-#endif // _BASE_CONFIG_H_
+#cmakedefine HAVE_STRCASECMP
+#cmakedefine HAVE__STRICMP
+#cmakedefine HAVE_STRNCASECMP
+#cmakedefine HAVE__STRNICMP
+
+#cmakedefine HAVE_STRINGS_H
+
+#endif // CONFIG_H
