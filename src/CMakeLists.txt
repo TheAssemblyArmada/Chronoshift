@@ -1,41 +1,44 @@
 # Add platform libraries needed for the build
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
-    find_package(DirectX REQUIRED dsound ddraw)
-    
     if(DirectX_FOUND)
-        set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${DirectX_INCLUDE_DIRS})
-        set(PLATFORM_LIBS ${PLATFORM_LIBS} ${DirectX_LIBRARIES})
+        list(APPEND PLATFORM_INCLUDES ${DirectX_INCLUDE_DIRS})
+        list(APPEND PLATFORM_LIBS ${DirectX_LIBRARIES})
     endif()
     
     if(STANDALONE)
-        set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm ws2_32)
+        list(APPEND PLATFORM_LIBS ws2_32)
     else()
-        set(PLATFORM_LIBS ${PLATFORM_LIBS} winmm wsock32) # Original links wsock32, not ws2_32
+        list(APPEND PLATFORM_LIBS wsock32) # Original links wsock32, not ws2_32
     endif()
+
+    list(APPEND PLATFORM_LIBS winmm)
 elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-    set(PLATFORM_LIBS ${PLATFORM_LIBS} rt)
+    list(APPEND PLATFORM_LIBS rt)
 else()
     #No other platforms yet.
 endif()
 
-# Add LZO compression for save game support
-find_package(LZO)
-
-if(LZO_FOUND)
-    message("LZO found, building with system LZO library.")
-    set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${LZO_INCLUDE_DIRS})
-    set(PLATFORM_LIBS ${PLATFORM_LIBS} ${LZO_LIBRARIES})
-else()
-    message("LZO not found, using minilzo.")
-    add_library(minilzo STATIC EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/libs/minilzo/minilzo.c)
-    set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${CMAKE_SOURCE_DIR}/libs)
-    set(PLATFORM_LIBS ${PLATFORM_LIBS} minilzo)
-    add_definitions(-DCHRONOSHIFT_USE_MINILZO)
+if(SDL2_FOUND)
+    list(APPEND PLATFORM_INCLUDES ${SDL2_INCLUDE_DIRS})
+    list(APPEND PLATFORM_LIBS ${SDL2_LIBRARIES})
 endif()
 
-# Find threading libraries if any.
-find_package(Threads)
-set(PLATFORM_LIBS ${PLATFORM_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+if(OPENAL_FOUND)
+    list(APPEND PLATFORM_INCLUDES ${OPENAL_INCLUDE_DIRS})
+    list(APPEND PLATFORM_LIBS ${OPENAL_LIBRARIES})
+endif()
+
+if(LZO_FOUND)
+    list(APPEND PLATFORM_INCLUDES ${LZO_INCLUDE_DIRS})
+    list(APPEND PLATFORM_LIBS ${LZO_LIBRARIES})
+else()
+    message("Prebuilt LZO library not found, using minilzo.")
+    add_library(minilzo STATIC EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/libs/minilzo/minilzo.c)
+    list(APPEND PLATFORM_INCLUDES ${CMAKE_SOURCE_DIR}/libs)
+    list(APPEND PLATFORM_LIBS minilzo)
+endif()
+
+list(APPEND PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 
 # Build and link the DLL.
 set(GAMEENGINE_INCLUDES
@@ -256,18 +259,38 @@ set(GAMEENGINE_SRC
     game/ui/msgbox.cpp
 )
 
+# Glob all the header files together to add to the project for msvc/xcode.
+if(CMAKE_CONFIGURATION_TYPES)
+    file(GLOB_RECURSE GAMEENGINE_HEADERS "*.h")
+endif()
+
 if(STANDALONE)
-    add_executable(chronoshift ${GAMEENGINE_SRC})
+    add_executable(chronoshift ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
     target_include_directories(chronoshift PUBLIC ${PLATFORM_INCLUDES})
     target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES})
 else()
-    add_library(chronoshift SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC})
+    add_library(chronoshift SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
     target_include_directories(chronoshift PUBLIC ${PLATFORM_INCLUDES})
     target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES} hooker)
 endif()
+
+# For MSVC/XCode this will add the headers to the project.
+source_group("Header Files" FILES ${GAMEENGINE_HEADERS})
 
 target_link_libraries(chronoshift ${PLATFORM_LIBS})
 
 if(THREADS_HAVE_PTHREAD_ARG)
   target_compile_options(chronoshift PUBLIC "-pthread")
+endif()
+
+if(NOT LZO_FOUND)
+    target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_USE_MINILZO=1)
+endif()
+
+if(SDL2_FOUND)
+    target_compile_definitions(chronoshift PUBLIC SDL2_BUILD=1)
+endif()
+
+if(OPENAL_FOUND)
+    target_compile_definitions(chronoshift PUBLIC OPENAL_BUILD=1)
 endif()
