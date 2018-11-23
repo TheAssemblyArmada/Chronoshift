@@ -22,6 +22,7 @@
 
 #include "bittype.h"
 #include "compiler.h"
+#include "intrinsics.h"
 #include "macros.h"
 #include "platform.h"
 #include "targetver.h"
@@ -29,7 +30,6 @@
 #include <sys/types.h>
 
 #ifdef COMPILER_WATCOM
-#include "watcomintrin.h"
 #include <direct.h>
 #include <stdio.h> // For PATH_MAX
 #undef PATH_MAX // Undefine these as this causes a define error through the codebase.
