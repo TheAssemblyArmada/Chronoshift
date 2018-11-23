@@ -77,20 +77,19 @@ void CriticalSectionClass::Unlock()
  */
 void FastCriticalSectionClass::Thread_Safe_Set_Flag()
 {
-#ifdef PLATFORM_WINDOWS
+#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+    while (Flag.test_and_set(std::memory_order_seq_cst)) {
+#else
     // Should work for both x86_32 and x86_64 plus no assembly.
     while (_interlockedbittestandset(&Flag, 0)) {
-        // Yield the thread if no lock aquired.
-        Sleep(1);
-    }
-#elif defined COMPILER_GNUC || defined COMPILER_CLANG
-    while (__sync_lock_test_and_set(&Flag, 1)) {
-        // Yield the thread if no lock aquired.
-        usleep(1);
-    }
-#else
-#error Implement atomic test and set for your compiler/platform.
 #endif
+        // Yield the thread if no lock aquired.
+#ifdef PLATFORM_WINDOWS
+        Sleep(1);
+#else
+        usleep(1); // TODO test for usleep in build system?
+#endif
+    }
 }
 
 /**
