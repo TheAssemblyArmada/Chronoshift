@@ -252,18 +252,14 @@ configure_file(src/base/gitverinfo.cpp.in src/base/gitverinfo.cpp @ONLY)
 # Check for libraries we plan to build against.
 if(USE_SDL2)
     find_package(SDL2 REQUIRED)
-else()
-    list(APPEND DX_MODULES ddraw)
 endif()
 
 if(USE_OPENAL)
     find_package(OpenAL REQUIRED)
-else()
-    list(APPEND DX_MODULES dsound)
 endif()
 
 if(NOT USE_SDL2 OR NOT USE_OPENAL)
-    find_package(DirectX REQUIRED ${DX_MODULES})
+    find_package(DirectX REQUIRED dsound)
 endif()
 
 # Add LZO compression for save game support
