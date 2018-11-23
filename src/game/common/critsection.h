@@ -206,7 +206,11 @@ private:
 class FastCriticalSectionClass
 {
 public:
+#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+    FastCriticalSectionClass() { Flag.clear(); }
+#else
     FastCriticalSectionClass() : Flag(0) {}
+#endif
     ~FastCriticalSectionClass() {}
 
     class LockClass

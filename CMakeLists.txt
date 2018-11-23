@@ -59,7 +59,7 @@ if(WATCOM)
     # Dump useful debug info with -db
     # Disable stack checks in debug with -s
     # Prevents merging identical function returns with -oc
-    # Prevents merging identical functions into a sigal function -ou
+    # Prevents merging identical functions into a single function -ou
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -db -s -ou -oc")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -db")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -db -s")

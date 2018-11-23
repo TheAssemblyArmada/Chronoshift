@@ -97,5 +97,9 @@ void FastCriticalSectionClass::Thread_Safe_Set_Flag()
  */
 void FastCriticalSectionClass::Thread_Safe_Clear_Flag()
 {
+#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+    Flag.clear();
+#else
     Flag = 0;
+#endif
 }

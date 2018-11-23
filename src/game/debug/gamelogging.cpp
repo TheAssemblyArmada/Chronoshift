@@ -375,6 +375,7 @@ void Debug_Log(const char *format, ...)
     Remove_Unprintable(DebugBuffer);
 
     Log_Output(DebugBuffer);
+    va_end(va);
 }
 
 #endif // CHRONOSHIFT_LOGGING

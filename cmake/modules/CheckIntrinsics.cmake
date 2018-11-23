@@ -2,7 +2,13 @@ include(CheckCSourceCompiles)
 include(CheckSymbolExists)
 
 # check_symbol_exists doesn't work for some intrinsics, have to use check_cxx_source_compiles instead.
-check_symbol_exists(__rdtsc "x86intrin.h" HAVE__RDTSC)
+check_c_source_compiles("
+    #include <x86intrin.h>
+    int main() {
+        return __rdtsc();
+    }" HAVE__RDTSC_GCC)
+    set(HAVE__RDTSC ${HAVE__RDTSC_GCC})
+
 if(NOT HAVE__RDTSC)
     check_c_source_compiles("
     #include <intrin.h>
