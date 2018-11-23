@@ -21,6 +21,10 @@
 #include "always.h"
 #include "gamedebug.h"
 
+#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+#include <atomic>
+#endif
+
 #ifndef PLATFORM_WINDOWS
 #include <pthread.h>
 #endif // !(PLATFORM_WINDOWS)
@@ -226,7 +230,11 @@ private:
     void Thread_Safe_Set_Flag();
     void Thread_Safe_Clear_Flag();
 
+#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+    std::atomic_flag Flag;
+#else
     long Flag;
+#endif
 };
 
 #endif // _CRITSECTION_H
