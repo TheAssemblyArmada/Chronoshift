@@ -158,7 +158,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
 
 # Include some standard CMake modules we use.
 include(CheckSymbolExists)
-include(CheckIncludeFiles)
+include(CheckIncludeFile)
 
 # Locate git binary to provide information to the build environment
 find_package(Git)
@@ -246,24 +246,33 @@ endif()
 
 configure_file(src/base/gitverinfo.cpp.in src/base/gitverinfo.cpp @ONLY)
 
+# Check for the existence of platform specific headers.
+check_include_file(strings.h HAVE_STRINGS_H)
+
+check_include_file(intrin.h HAVE_INTRIN_H)
+if(NOT HAVE_INTRIN_H)
+    check_include_file(x86intrin.h HAVE_X86INTRIN_H)
+    check_include_file(cpuid.h HAVE_CPUID_H)
+endif()
+
 # Check for the existence of some functions we need or their equivalents.
-check_symbol_exists(strcasecmp strings.h HAVE_STRCASECMP)
+check_symbol_exists(strcasecmp "strings.h" HAVE_STRCASECMP)
 if(NOT HAVE_STRCASECMP)
-    check_symbol_exists(_stricmp string.h HAVE__STRICMP)
+    check_symbol_exists(_stricmp "string.h" HAVE__STRICMP)
     if(NOT HAVE__STRICMP)
         message(FATAL_ERROR "No case-insensitive compare function found, please report!")
     endif()
 endif()
 
-check_symbol_exists(strncasecmp strings.h HAVE_STRNCASECMP)
+check_symbol_exists(strncasecmp "strings.h" HAVE_STRNCASECMP)
 if(NOT HAVE_STRNCASECMP)
-    check_symbol_exists(_strnicmp string.h HAVE__STRNICMP)
+    check_symbol_exists(_strnicmp "string.h" HAVE__STRNICMP)
     if(NOT HAVE__STRNICMP)
         message(FATAL_ERROR "No case-insensitive size-limitted compare function found, please report!")
     endif()
 endif()
 
-check_include_files(strings.h HAVE_STRINGS_H)
+include(CheckIntrinsics)
 
 # Check for best macro that expands to current function name.
 check_symbol_exists(__PRETTY_FUNCTION__ "" HAVE_PRETTY_FUNCTION_MACRO)

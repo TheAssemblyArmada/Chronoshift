@@ -13,22 +13,36 @@
  *            LICENSE
  */
 
-#ifndef WATCOMINTRIN_H
-#define WATCOMINTRIN_H
+#ifndef INTRINSICS_H
+#define INTRINSICS_H
 
+#include "config.h"
+
+#ifdef HAVE_INTRIN_H
+#include <intrin.h>
+#endif
+
+#ifdef HAVE_X86INTRIN_H
+#include <x86intrin.h>
+#endif
+
+#ifdef HAVE_CPUID_H
+#include <cpuid.h>
+#endif
+
+// Watcom doesn't have the modern intrinsics, implement them here.
 #ifdef __WATCOMC__
-
 unsigned int __readeflags(void);
 #pragma aux __readeflags = \
     "pushfd" \
-    "pop eax" \
-value[eax] modify[eax];
+    "pop eax" value[eax] modify[eax];
+#define HAVE__READEFLAGS
 
 unsigned int __writeeflags(unsigned int eflg);
 #pragma aux __writeeflags = \
     "push eax" \
-    "popfd" \
-parm[eax] modify[];
+    "popfd" parm[eax] modify[];
+#define HAVE__WRITEEFLAGS
 
 void __cpuid(int cpuinfo[4], int function_id);
 #pragma aux __cpuid = \
@@ -37,8 +51,8 @@ void __cpuid(int cpuinfo[4], int function_id);
     "mov [esi+0],eax" \
     "mov [esi+4],ebx" \
     "mov [esi+8],ecx" \
-    "mov [esi+12],edx" \
-parm[esi][eax] modify[ebx ecx edx];
+    "mov [esi+12],edx" parm[esi][eax] modify[ebx ecx edx];
+#define HAVE__CPUID_MSVC
 
 void __cpuidex(int cpuinfo[4], int function_id, int subfunction_id);
 #pragma aux __cpuidex = \
@@ -47,23 +61,22 @@ void __cpuidex(int cpuinfo[4], int function_id, int subfunction_id);
     "mov [esi+0],eax" \
     "mov [esi+4],ebx" \
     "mov [esi+8],ecx" \
-    "mov [esi+12],edx" \
-parm[esi][eax][ecx] modify[ebx ecx edx];
+    "mov [esi+12],edx" parm[esi][eax][ecx] modify[ebx ecx edx];
+#define HAVE__CPUIDEX
 
 unsigned long long __rdtsc(void);
 #pragma aux __rdtsc = \
     " .586 " \
-    "rdtsc" \
-value[edx eax] modify[] nomemory;
+    "rdtsc" value[edx eax] modify[] nomemory;
+#define HAVE__RDTSC
 
 int _interlockedbittestandset(volatile long *base, long offset);
 #pragma aux _interlockedbittestandset = \
     " .586 " \
     "lock bts [eax],edx" \
     "setb cl" \
-    "movzx eax,cl" \
-parm[eax edx] value[eax] modify[cl]
+    "movzx eax,cl" parm[eax edx] value[eax] modify[cl]
 
 #endif
 
-#endif
+#endif // INTRINSICS_H

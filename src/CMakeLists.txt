@@ -3,10 +3,6 @@ if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     find_package(DirectX REQUIRED dsound ddraw)
     
     if(DirectX_FOUND)
-        message("Located DirectDraw.")
-        message("${DirectX_INCLUDE_DIRS}")
-        message("${DirectX_LIBRARIES}")
-
         set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} ${DirectX_INCLUDE_DIRS})
         set(PLATFORM_LIBS ${PLATFORM_LIBS} ${DirectX_LIBRARIES})
     endif()

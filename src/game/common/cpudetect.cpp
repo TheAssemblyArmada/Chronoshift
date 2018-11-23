@@ -18,21 +18,7 @@
 #include "gamedebug.h"
 #include "ostimer.h"
 #include "stringex.h"
-#include <inttypes.h>   // For printf formatting macros
 #include <stdio.h>
-
-#if defined PROCESSOR_X86 || defined PROCESSOR_X86_64
-#ifdef COMPILER_MSVC
-#include <intrin.h>
-#elif defined COMPILER_CLANG || defined COMPILER_GNUC
-#include <x86intrin.h>
-#include <cpuid.h>
-#elif defined COMPILER_WATCOM
-#include "watcomintrin.h"
-#endif
-#else
-#error cpudetect.cpp needs work for this platform
-#endif
 
 #ifdef PLATFORM_WINDOWS
 #include <mmsystem.h>
@@ -354,41 +340,32 @@ char CPUDetectClass::ProcessorString[48];
 
 const char *CPUDetectClass::Get_Processor_Manufacturer_Name()
 {
-#if defined PROCESSOR_X86 || defined PROCESSOR_X86_64
     static const char *_manufacturer_names[] = {
-        "<Unknown>",
-        "Intel",
-        "UMC",
-        "AMD",
-        "Cyrix",
-        "NextGen",
-        "VIA",
-        "Rise",
-        "Transmeta"
+        "<Unknown>", "Intel", "UMC", "AMD", "Cyrix", "NextGen", "VIA", "Rise", "Transmeta"
     };
-
+#if defined PROCESSOR_X86 || defined PROCESSOR_X86_64
     return _manufacturer_names[ProcessorManufacturer];
 #else
-    return nullptr;
+    return _manufacturer_names[0];
 #endif
 }
 
 static uint32_t Calculate_Processor_Speed(int64_t &ticks_per_second)
 {
-#if defined PROCESSOR_X86 || defined PROCESSOR_X86_64
+#ifdef HAVE__RDTSC
     uint64_t timer0 = __rdtsc();
     uint64_t timer1 = 0;
 
     uint32_t start = PlatformTimerClass::Get_Time();
     uint32_t elapsed;
 
-    while ( (elapsed = PlatformTimerClass::Get_Time() - start) < 200 ) {
+    while ((elapsed = PlatformTimerClass::Get_Time() - start) < 200) {
         timer1 = __rdtsc();
     }
 
     int64_t t = timer1 - timer0;
 
-    ticks_per_second = (1000 / 200) * t;    // Ticks per second
+    ticks_per_second = (1000 / 200) * t; // Ticks per second
 
     return uint32_t(t / (elapsed * 1000));
 #else
@@ -399,7 +376,7 @@ static uint32_t Calculate_Processor_Speed(int64_t &ticks_per_second)
 
 void CPUDetectClass::Init_Processor_Speed()
 {
-    if ( !Has_RDTSC_Instruction() ) {
+    if (!Has_RDTSC_Instruction()) {
         ProcessorSpeed = 0;
 
         return;
@@ -408,12 +385,11 @@ void CPUDetectClass::Init_Processor_Speed()
     uint32_t speed1 = Calculate_Processor_Speed(ProcessorTicksPerSecond);
     uint32_t total_speed = speed1;
 
-    for ( int i = 0; i < 5; ++i ) {
-
+    for (int i = 0; i < 5; ++i) {
         uint32_t speed2 = Calculate_Processor_Speed(ProcessorTicksPerSecond);
         float rel = float(speed1) / float(speed2);
 
-        if ( rel >= 0.95f && rel <= 1.05f ) {
+        if (rel >= 0.95f && rel <= 1.05f) {
             ProcessorSpeed = (speed1 + speed2) / 2;
             InvProcessorTicksPerSecond = 1.0 / double(ProcessorTicksPerSecond);
             return;
@@ -421,12 +397,10 @@ void CPUDetectClass::Init_Processor_Speed()
 
         speed1 = speed2;
         total_speed += speed2;
-
     }
 
     ProcessorSpeed = total_speed / 6;
     InvProcessorTicksPerSecond = 1.0 / double(ProcessorTicksPerSecond);
-
 }
 
 void CPUDetectClass::Init_Processor_Manufacturer()
@@ -435,25 +409,28 @@ void CPUDetectClass::Init_Processor_Manufacturer()
     VendorID[0] = 0;
     uint32_t max_cpuid = 0;
 
-    CPUID(
-        max_cpuid,
-        (uint32_t&)VendorID[0],
-        (uint32_t&)VendorID[8],
-        (uint32_t&)VendorID[4],
-        0
-    );
+    CPUID(max_cpuid, (uint32_t &)VendorID[0], (uint32_t &)VendorID[8], (uint32_t &)VendorID[4], 0);
 
     ProcessorManufacturer = MANUFACTURER_UNKNOWN;
 
-    if ( strcasecmp(VendorID, "GenuineIntel") == 0 ) ProcessorManufacturer = MANUFACTURER_INTEL;
-    else if ( strcasecmp(VendorID, "AuthenticAMD") == 0 ) ProcessorManufacturer = MANUFACTURER_AMD;
-    else if ( strcasecmp(VendorID, "AMD ISBETTER") == 0 ) ProcessorManufacturer = MANUFACTURER_AMD;
-    else if ( strcasecmp(VendorID, "UMC UMC UMC") == 0 ) ProcessorManufacturer = MANUFACTURER_UMC;
-    else if ( strcasecmp(VendorID, "CyrixInstead") == 0 ) ProcessorManufacturer = MANUFACTURER_CYRIX;
-    else if ( strcasecmp(VendorID, "NexGenDriven") == 0 ) ProcessorManufacturer = MANUFACTURER_NEXTGEN;
-    else if ( strcasecmp(VendorID, "CentaurHauls") == 0 ) ProcessorManufacturer = MANUFACTURER_VIA;
-    else if ( strcasecmp(VendorID, "RiseRiseRise") == 0 ) ProcessorManufacturer = MANUFACTURER_RISE;
-    else if ( strcasecmp(VendorID, "GenuineTMx86") == 0 ) ProcessorManufacturer = MANUFACTURER_TRANSMETA;
+    if (strcasecmp(VendorID, "GenuineIntel") == 0)
+        ProcessorManufacturer = MANUFACTURER_INTEL;
+    else if (strcasecmp(VendorID, "AuthenticAMD") == 0)
+        ProcessorManufacturer = MANUFACTURER_AMD;
+    else if (strcasecmp(VendorID, "AMD ISBETTER") == 0)
+        ProcessorManufacturer = MANUFACTURER_AMD;
+    else if (strcasecmp(VendorID, "UMC UMC UMC") == 0)
+        ProcessorManufacturer = MANUFACTURER_UMC;
+    else if (strcasecmp(VendorID, "CyrixInstead") == 0)
+        ProcessorManufacturer = MANUFACTURER_CYRIX;
+    else if (strcasecmp(VendorID, "NexGenDriven") == 0)
+        ProcessorManufacturer = MANUFACTURER_NEXTGEN;
+    else if (strcasecmp(VendorID, "CentaurHauls") == 0)
+        ProcessorManufacturer = MANUFACTURER_VIA;
+    else if (strcasecmp(VendorID, "RiseRiseRise") == 0)
+        ProcessorManufacturer = MANUFACTURER_RISE;
+    else if (strcasecmp(VendorID, "GenuineTMx86") == 0)
+        ProcessorManufacturer = MANUFACTURER_TRANSMETA;
 #endif
 }
 
@@ -660,8 +637,7 @@ void CPUDetectClass::Process_Extended_Cache_Info()
 {
     CPUIDStruct max_ext(0x80000000);
 
-    if ( max_ext.eax >= 0x80000006 ) {
-
+    if (max_ext.eax >= 0x80000006) {
         CPUIDStruct l1info(0x80000005);
         CPUIDStruct l2info(0x80000006);
 
@@ -679,7 +655,7 @@ void CPUDetectClass::Process_Extended_Cache_Info()
         L2CacheSize = ((l2info.ecx >> 16) & 0xFFFF) * 1024;
         L2CacheLineSize = l2info.ecx & 0xFF;
 
-        switch ( (l2info.ecx >> 12) & 0xF ) {
+        switch ((l2info.ecx >> 12) & 0xF) {
             case 0:
                 L2CacheSetAssociative = 0;
                 break;
@@ -704,45 +680,41 @@ void CPUDetectClass::Process_Extended_Cache_Info()
             default:
                 break;
         }
-
     }
 }
 
 void CPUDetectClass::Process_Intel_Cache_Info()
 {
-    for ( uint32_t count = 0; ; ++count ) {
+    for (uint32_t count = 0;; ++count) {
         CPUIDCountStruct id(4, count);
 
-        switch ( id.eax & 0x1F ) {
+        switch (id.eax & 0x1F) {
             case INTEL_CACHE_END:
                 return;
-            case INTEL_CACHE_DATA:      // fallthrough
+            case INTEL_CACHE_DATA: // fallthrough
             case INTEL_CACHE_UNIFIED:
-                switch ( (id.eax >> 5) & 0x07 ) {
-                    case 1:
-                    {
+                switch ((id.eax >> 5) & 0x07) {
+                    case 1: {
                         L1DataCacheSetAssociative = ((id.ebx >> 22) & 0x3FF) + 1;
                         L1DataCacheLineSize = (id.ebx & 0x0FFF) + 1;
-                        L1DataCacheSize = L1DataCacheSetAssociative * (((id.ebx >> 12) & 0x3FF) + 1) * L1DataCacheLineSize * (id.ecx + 1);
+                        L1DataCacheSize =
+                            L1DataCacheSetAssociative * (((id.ebx >> 12) & 0x3FF) + 1) * L1DataCacheLineSize * (id.ecx + 1);
                         L1InstructionCacheSetAssociative = L1DataCacheSetAssociative;
                         L1InstructionCacheLineSize = L1DataCacheLineSize;
                         L1InstructionCacheSize = L1DataCacheSize;
-                    }
-                        break;
-                    case 2:
-                    {
+                    } break;
+                    case 2: {
                         L2CacheSetAssociative = ((id.ebx >> 22) & 0x3FF) + 1;
                         L2CacheLineSize = (id.ebx & 0x0FFF) + 1;
-                        L2CacheSize = L2CacheSetAssociative * (((id.ebx >> 12) & 0x3FF) + 1) * L2CacheLineSize * (id.ecx + 1);
-                    }
-                        break;
-                    case 3:
-                    {
+                        L2CacheSize =
+                            L2CacheSetAssociative * (((id.ebx >> 12) & 0x3FF) + 1) * L2CacheLineSize * (id.ecx + 1);
+                    } break;
+                    case 3: {
                         L3CacheSetAssociative = ((id.ebx >> 22) & 0x3FF) + 1;
                         L3CacheLineSize = (id.ebx & 0x0FFF) + 1;
-                        L3CacheSize = L3CacheSetAssociative * (((id.ebx >> 12) & 0x3FF) + 1) * L3CacheLineSize * (id.ecx + 1);
-                    }
-                        break;
+                        L3CacheSize =
+                            L3CacheSetAssociative * (((id.ebx >> 12) & 0x3FF) + 1) * L3CacheLineSize * (id.ecx + 1);
+                    } break;
                     default:
                         break;
                 }
@@ -759,31 +731,30 @@ void CPUDetectClass::Init_Cache()
     CPUIDStruct max_reg(0);
     CPUIDStruct cache_id(2);
 
-    if ( Get_Processor_Manufacturer() == MANUFACTURER_INTEL && max_reg.eax >= 4 ) {
+    if (Get_Processor_Manufacturer() == MANUFACTURER_INTEL && max_reg.eax >= 4) {
         Process_Intel_Cache_Info();
-    } else if ( (cache_id.eax & 0xFF) == 1 ) {
-
-        if ( !(cache_id.eax & 0x80000000) ) {
+    } else if ((cache_id.eax & 0xFF) == 1) {
+        if (!(cache_id.eax & 0x80000000)) {
             Process_Cache_Info((cache_id.eax >> 24) & 0xFF);
             Process_Cache_Info((cache_id.eax >> 16) & 0xFF);
             Process_Cache_Info((cache_id.eax >> 8) & 0xFF);
         }
 
-        if ( !(cache_id.ebx & 0x80000000) ) {
+        if (!(cache_id.ebx & 0x80000000)) {
             Process_Cache_Info((cache_id.ebx >> 24) & 0xFF);
             Process_Cache_Info((cache_id.ebx >> 16) & 0xFF);
             Process_Cache_Info((cache_id.ebx >> 8) & 0xFF);
             Process_Cache_Info((cache_id.ebx) & 0xFF);
         }
-        
-        if ( !(cache_id.ecx & 0x80000000) ) {
+
+        if (!(cache_id.ecx & 0x80000000)) {
             Process_Cache_Info((cache_id.ecx >> 24) & 0xFF);
             Process_Cache_Info((cache_id.ecx >> 16) & 0xFF);
             Process_Cache_Info((cache_id.ecx >> 8) & 0xFF);
             Process_Cache_Info((cache_id.ecx) & 0xFF);
         }
-        
-        if ( !(cache_id.edx & 0x80000000) ) {
+
+        if (!(cache_id.edx & 0x80000000)) {
             Process_Cache_Info((cache_id.edx >> 24) & 0xFF);
             Process_Cache_Info((cache_id.edx >> 16) & 0xFF);
             Process_Cache_Info((cache_id.edx >> 8) & 0xFF);
@@ -796,12 +767,12 @@ void CPUDetectClass::Init_Cache()
 
 void CPUDetectClass::Init_Intel_Processor_Type()
 {
-    switch ( ProcessorFamily ) {
+    switch (ProcessorFamily) {
         case 3:
             IntelProcessor = INTEL_PROCESSOR_80386;
             break;
         case 4:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 default:
                 case 0:
                 case 1:
@@ -832,7 +803,7 @@ void CPUDetectClass::Init_Intel_Processor_Type()
 
             break;
         case 5:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 default:
                 case 0:
                     IntelProcessor = INTEL_PROCESSOR_PENTIUM;
@@ -863,7 +834,7 @@ void CPUDetectClass::Init_Intel_Processor_Type()
                     break;
             }
         case 6:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 default:
                 case 0:
                     IntelProcessor = INTEL_PROCESSOR_PENTIUM_PRO_SAMPLE;
@@ -872,7 +843,7 @@ void CPUDetectClass::Init_Intel_Processor_Type()
                     IntelProcessor = INTEL_PROCESSOR_PENTIUM_PRO;
                     break;
                 case 3:
-                    if ( ProcessorType == 0 ) {
+                    if (ProcessorType == 0) {
                         IntelProcessor = INTEL_PROCESSOR_PENTIUM_II_MODEL_3;
                     } else {
                         IntelProcessor = INTEL_PROCESSOR_PENTIUM_II_OVERDRIVE;
@@ -882,25 +853,23 @@ void CPUDetectClass::Init_Intel_Processor_Type()
                 case 4:
                     IntelProcessor = INTEL_PROCESSOR_PENTIUM_II_MODEL_4;
                     break;
-                case 5:
-                    {
-                        CPUIDStruct cache_id(2);
+                case 5: {
+                    CPUIDStruct cache_id(2);
 
-                        if ( L2CacheSize == 0 ) {
-                            IntelProcessor = INTEL_PROCESSOR_CELERON_MODEL_5;
-                        } else if ( L2CacheSize <= 512 * 1024 ) {
-                            IntelProcessor = INTEL_PROCESSOR_PENTIUM_II_MODEL_5;
-                        } else {
-                            IntelProcessor = INTEL_PROCESSOR_PENTIUM_II_XEON_MODEL_5;
-                        }
+                    if (L2CacheSize == 0) {
+                        IntelProcessor = INTEL_PROCESSOR_CELERON_MODEL_5;
+                    } else if (L2CacheSize <= 512 * 1024) {
+                        IntelProcessor = INTEL_PROCESSOR_PENTIUM_II_MODEL_5;
+                    } else {
+                        IntelProcessor = INTEL_PROCESSOR_PENTIUM_II_XEON_MODEL_5;
                     }
-                    break;
+                } break;
 
                 case 6:
                     IntelProcessor = INTEL_PROCESSOR_CELERON_MODEL_6;
                     break;
                 case 7:
-                    if ( L2CacheSize <= 512 * 1024 ) {
+                    if (L2CacheSize <= 512 * 1024) {
                         IntelProcessor = INTEL_PROCESSOR_PENTIUM_III_MODEL_7;
                     } else {
                         IntelProcessor = INTEL_PROCESSOR_PENTIUM_III_XEON_MODEL_7;
@@ -911,7 +880,7 @@ void CPUDetectClass::Init_Intel_Processor_Type()
                     // This could be PentiumIII Coppermine or Celeron with SSE, or a Xeon
                     {
                         CPUIDStruct brand(1);
-                        switch ( brand.ebx & 0xFF ) {
+                        switch (brand.ebx & 0xFF) {
                             case 0x1:
                                 IntelProcessor = INTEL_PROCESSOR_CELERON_MODEL_8;
                                 break;
@@ -947,9 +916,9 @@ void CPUDetectClass::Init_Intel_Processor_Type()
 
 void CPUDetectClass::Init_AMD_Processor_Type()
 {
-    switch ( ProcessorFamily ) {
+    switch (ProcessorFamily) {
         case 4:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 case 3:
                     AMDProcessor = AMD_PROCESSOR_486DX2;
                     break;
@@ -973,7 +942,7 @@ void CPUDetectClass::Init_AMD_Processor_Type()
             }
             break;
         case 5:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 case 0:
                     AMDProcessor = AMD_PROCESSOR_K5_MODEL0;
                     break;
@@ -1005,7 +974,7 @@ void CPUDetectClass::Init_AMD_Processor_Type()
                     AMDProcessor = AMD_PROCESSOR_K6;
             }
         case 6:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 case 1:
                     AMDProcessor = AMD_PROCESSOR_ATHLON_025;
                     break;
@@ -1029,9 +998,9 @@ void CPUDetectClass::Init_AMD_Processor_Type()
 
 void CPUDetectClass::Init_VIA_Processor_Type()
 {
-    switch ( ProcessorFamily ) {
+    switch (ProcessorFamily) {
         case 5:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 case 4:
                     VIAProcessor = VIA_PROCESSOR_IDT_C6_WINCHIP;
                     break;
@@ -1045,7 +1014,7 @@ void CPUDetectClass::Init_VIA_Processor_Type()
                     break;
             }
         case 6:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 case 4:
                     VIAProcessor = VIA_PROCESSOR_CYRIX_III_SAMUEL;
                     break;
@@ -1059,9 +1028,9 @@ void CPUDetectClass::Init_VIA_Processor_Type()
 
 void CPUDetectClass::Init_Rise_Processor_Type()
 {
-    switch ( ProcessorFamily ) {
+    switch (ProcessorFamily) {
         case 5:
-            switch ( ProcessorModel ) {
+            switch (ProcessorModel) {
                 case 0:
                     RiseProcessor = RISE_PROCESSOR_DRAGON_025;
                     break;
@@ -1094,7 +1063,7 @@ void CPUDetectClass::Init_Processor_Family()
     ProcessorType = (signature >> 12) & 0x0F;
     ProcessorFamily = (signature >> 8) & 0x0F;
     ProcessorModel = (signature >> 4) & 0x0F;
-    ProcessorRevision = (signature) & 0x0F;
+    ProcessorRevision = (signature)&0x0F;
 
     IntelProcessor = INTEL_PROCESSOR_UNKNOWN;
     AMDProcessor = AMD_PROCESSOR_UNKNOWN;
@@ -1103,7 +1072,7 @@ void CPUDetectClass::Init_Processor_Family()
 
     Init_Cache();
 
-    switch ( ProcessorManufacturer ) {
+    switch (ProcessorManufacturer) {
         case MANUFACTURER_INTEL:
             Init_Intel_Processor_Type();
             break;
@@ -1123,121 +1092,147 @@ void CPUDetectClass::Init_Processor_Family()
 
 void CPUDetectClass::Init_Processor_String()
 {
-    if ( !Has_CPUID_Instruction() ) {
+    if (!Has_CPUID_Instruction()) {
         ProcessorString[0] = '\0';
     }
 
     CPUIDStruct ext_id(0x80000000);
 
-    if ( ext_id.eax & 0x80000000 ) {
-        CPUDetectClass::CPUID(
-            (uint32_t&)ProcessorString[0],
-            (uint32_t&)ProcessorString[4],
-            (uint32_t&)ProcessorString[8],
-            (uint32_t&)ProcessorString[12],
-            0x80000002
-        );
+    if (ext_id.eax & 0x80000000) {
+        CPUDetectClass::CPUID((uint32_t &)ProcessorString[0],
+            (uint32_t &)ProcessorString[4],
+            (uint32_t &)ProcessorString[8],
+            (uint32_t &)ProcessorString[12],
+            0x80000002);
 
-        CPUDetectClass::CPUID(
-            (uint32_t&)ProcessorString[16],
-            (uint32_t&)ProcessorString[20],
-            (uint32_t&)ProcessorString[24],
-            (uint32_t&)ProcessorString[28],
-            0x80000003
-        );
+        CPUDetectClass::CPUID((uint32_t &)ProcessorString[16],
+            (uint32_t &)ProcessorString[20],
+            (uint32_t &)ProcessorString[24],
+            (uint32_t &)ProcessorString[28],
+            0x80000003);
 
-        CPUDetectClass::CPUID(
-            (uint32_t&)ProcessorString[32],
-            (uint32_t&)ProcessorString[36],
-            (uint32_t&)ProcessorString[40],
-            (uint32_t&)ProcessorString[44],
-            0x80000004
-        );
+        CPUDetectClass::CPUID((uint32_t &)ProcessorString[32],
+            (uint32_t &)ProcessorString[36],
+            (uint32_t &)ProcessorString[40],
+            (uint32_t &)ProcessorString[44],
+            0x80000004);
 
         strtrim(ProcessorString);
     } else {
         char str[2048];
         strcat(str, Get_Processor_Manufacturer_Name());
 
-        if ( ProcessorManufacturer == MANUFACTURER_INTEL ) {
+        if (ProcessorManufacturer == MANUFACTURER_INTEL) {
             strcat(str, " ");
 
-            switch ( IntelProcessor ) {
-                case INTEL_PROCESSOR_80386:                         
-                    strcat(str, "80386"); break;
+            switch (IntelProcessor) {
+                case INTEL_PROCESSOR_80386:
+                    strcat(str, "80386");
+                    break;
                 case INTEL_PROCESSOR_80486DX:
-                    strcat(str, "80486DX"); break;
-                case INTEL_PROCESSOR_80486SX: 
-                    strcat(str, "80486SX"); break;
+                    strcat(str, "80486DX");
+                    break;
+                case INTEL_PROCESSOR_80486SX:
+                    strcat(str, "80486SX");
+                    break;
                 case INTEL_PROCESSOR_80486DX2:
-                    strcat(str, "80486DX2"); break;
+                    strcat(str, "80486DX2");
+                    break;
                 case INTEL_PROCESSOR_80486SL:
-                    strcat(str, "80486SL"); break;
+                    strcat(str, "80486SL");
+                    break;
                 case INTEL_PROCESSOR_80486SX2:
-                    strcat(str, "80486SX2"); break;
+                    strcat(str, "80486SX2");
+                    break;
                 case INTEL_PROCESSOR_80486DX2_WB:
-                    strcat(str, "80486DX2(WB)"); break;
+                    strcat(str, "80486DX2(WB)");
+                    break;
                 case INTEL_PROCESSOR_80486DX4:
-                    strcat(str, "80486DX4"); break;
+                    strcat(str, "80486DX4");
+                    break;
                 case INTEL_PROCESSOR_80486DX4_WB:
-                    strcat(str, "80486DX4(WB)"); break;
+                    strcat(str, "80486DX4(WB)");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM:
-                    strcat(str, "Pentium"); break;
+                    strcat(str, "Pentium");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_OVERDRIVE:
-                    strcat(str, "Pentium Overdrive"); break;
+                    strcat(str, "Pentium Overdrive");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_MMX:
-                    strcat(str, "Pentium MMX"); break;
+                    strcat(str, "Pentium MMX");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_PRO_SAMPLE:
-                    strcat(str, "Pentium Pro (Engineering Sample)"); break;
+                    strcat(str, "Pentium Pro (Engineering Sample)");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_PRO:
-                    strcat(str, "Pentium Pro"); break;
+                    strcat(str, "Pentium Pro");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_II_OVERDRIVE:
-                    strcat(str, "Pentium II Overdrive"); break;
+                    strcat(str, "Pentium II Overdrive");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_II_MODEL_3:
-                    strcat(str, "Pentium II, model 3"); break;
+                    strcat(str, "Pentium II, model 3");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_II_MODEL_4:
-                    strcat(str, "Pentium II, model 4"); break;
+                    strcat(str, "Pentium II, model 4");
+                    break;
                 case INTEL_PROCESSOR_CELERON_MODEL_5:
-                    strcat(str, "Celeron, model 5"); break;
+                    strcat(str, "Celeron, model 5");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_II_MODEL_5:
-                    strcat(str, "Pentium II, model 5"); break;
+                    strcat(str, "Pentium II, model 5");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_II_XEON_MODEL_5:
-                    strcat(str, "Pentium II Xeon, model 5"); break;
+                    strcat(str, "Pentium II Xeon, model 5");
+                    break;
                 case INTEL_PROCESSOR_CELERON_MODEL_6:
-                    strcat(str, "Celeron, model 6"); break;
+                    strcat(str, "Celeron, model 6");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_III_MODEL_7:
-                    strcat(str, "Pentium III, model 7"); break;
+                    strcat(str, "Pentium III, model 7");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_III_XEON_MODEL_7:
-                    strcat(str, "Pentium III Xeon, model 7"); break;
+                    strcat(str, "Pentium III Xeon, model 7");
+                    break;
                 case INTEL_PROCESSOR_CELERON_MODEL_8:
-                    strcat(str, "Celeron, model 8"); break;
+                    strcat(str, "Celeron, model 8");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_III_MODEL_8:
-                    strcat(str, "Pentium III, model 8"); break;
+                    strcat(str, "Pentium III, model 8");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_III_XEON_MODEL_8:
-                    strcat(str, "Pentium III Xeon, model 8"); break;
+                    strcat(str, "Pentium III Xeon, model 8");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_III_XEON_MODEL_A:
-                    strcat(str, "Pentium III Xeon, model A"); break;
+                    strcat(str, "Pentium III Xeon, model A");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM_III_MODEL_B:
-                    strcat(str, "Pentium III, model B"); break;
+                    strcat(str, "Pentium III, model B");
+                    break;
                 case INTEL_PROCESSOR_PENTIUM4:
-                    strcat(str, "Pentium4"); break;
+                    strcat(str, "Pentium4");
+                    break;
                 case INTEL_PROCESSOR_UNKNOWN:
                 default:
-                    strcat(str, "<UNKNOWN>"); break;
+                    strcat(str, "<UNKNOWN>");
+                    break;
             }
         }
 
         strncpy(ProcessorString, str, sizeof(ProcessorString));
     }
-
 }
 
 void CPUDetectClass::Init_CPUID_Instruction()
 {
-#if defined PROCESSOR_X86 && !defined PROCESSOR_X86_64
+#ifdef PROCESSOR_X86_64
+    // 64bit x86 CPU always has it.
+    HasCPUIDInstruction = true;
+#elif defined HAVE__READEFLAGS && defined HAVE__WRITEEFLAGS
     // 32bit x86 CPU might not have CPUID instruction, though unlikely.
-    uint32_t    old_eflg;
-    uint32_t    new_eflg;
+    uint32_t old_eflg;
+    uint32_t new_eflg;
 
     // These intrinsics should be available on recent MSVC and GCC, no more ifdefs.
     old_eflg = __readeflags();
@@ -1245,10 +1240,7 @@ void CPUDetectClass::Init_CPUID_Instruction()
     __writeeflags(new_eflg);
     new_eflg = __readeflags();
 
-    HasCPUIDInstruction = new_eflg != old_eflg;  
-#elif defined PROCESSOR_X86_64 
-    // 64bit x86 CPU always has it.
-    HasCPUIDInstruction = true;
+    HasCPUIDInstruction = new_eflg != old_eflg;
 #else
     // None x86 hardware doesn't.
     HasCPUIDInstruction = false;
@@ -1257,7 +1249,7 @@ void CPUDetectClass::Init_CPUID_Instruction()
 
 void CPUDetectClass::Init_Processor_Features()
 {
-    if ( !CPUDetectClass::Has_CPUID_Instruction() ) {
+    if (!CPUDetectClass::Has_CPUID_Instruction()) {
         return;
     }
 
@@ -1271,11 +1263,11 @@ void CPUDetectClass::Init_Processor_Features()
     Has3DNowSupport = false;
     ExtendedFeatureBits = 0;
 
-    if ( ProcessorManufacturer == MANUFACTURER_AMD ) {
-        if ( Has_CPUID_Instruction() ) {
+    if (ProcessorManufacturer == MANUFACTURER_AMD) {
+        if (Has_CPUID_Instruction()) {
             CPUIDStruct max_ext_id(0x80000000);
 
-            if ( max_ext_id.eax >= 0x80000001 ) {    // Signature & features field available?
+            if (max_ext_id.eax >= 0x80000001) { // Signature & features field available?
                 CPUIDStruct ext_signature(0x80000001);
                 ExtendedFeatureBits = ext_signature.edx;
                 Has3DNowSupport = !!(ExtendedFeatureBits & 0x80000000);
@@ -1347,16 +1339,16 @@ void CPUDetectClass::Init_OS()
 
 bool CPUDetectClass::CPUID(uint32_t &u_eax_, uint32_t &u_ebx_, uint32_t &u_ecx_, uint32_t &u_edx_, uint32_t cpuid_type)
 {
-    if ( !Has_CPUID_Instruction() ) {
+    if (!Has_CPUID_Instruction()) {
         return false;
     }
 
     // MSVC has a different signature for its __cpuid intrinsic vs clang/gcc
-#if defined COMPILER_MSVC || defined COMPILER_WATCOM
+#ifdef HAVE__CPUID_MSVC
     int32_t regs[4];
 
     __cpuid(regs, cpuid_type);
-#elif defined COMPILER_CLANG || defined COMPILER_GNUC
+#elif defined HAVE__CPUID_GCC
     uint32_t regs[4];
 
     __cpuid(cpuid_type, regs[0], regs[1], regs[2], regs[3]);
@@ -1365,22 +1357,23 @@ bool CPUDetectClass::CPUID(uint32_t &u_eax_, uint32_t &u_ebx_, uint32_t &u_ecx_,
     u_ebx_ = regs[1];
     u_ecx_ = regs[2];
     u_edx_ = regs[3];
-    
+
     return true;
 }
 
-bool CPUDetectClass::CPUID_Count(uint32_t &u_eax_, uint32_t &u_ebx_, uint32_t &u_ecx_, uint32_t &u_edx_, uint32_t cpuid_type, uint32_t count)
+bool CPUDetectClass::CPUID_Count(
+    uint32_t &u_eax_, uint32_t &u_ebx_, uint32_t &u_ecx_, uint32_t &u_edx_, uint32_t cpuid_type, uint32_t count)
 {
-    if ( !Has_CPUID_Instruction() ) {
+    if (!Has_CPUID_Instruction()) {
         return false;
     }
 
     // MSVC has a different signature for its __cpuid intrinsic vs clang/gcc
-#if defined COMPILER_MSVC || defined COMPILER_WATCOM
+#ifdef HAVE__CPUIDEX
     int32_t regs[4];
 
     __cpuidex(regs, cpuid_type, count);
-#elif defined COMPILER_CLANG || defined COMPILER_GNUC
+#elif defined HAVE__CPUID_COUNT
     uint32_t regs[4];
 
     __cpuid_count(cpuid_type, count, regs[0], regs[1], regs[2], regs[3]);
@@ -1405,7 +1398,7 @@ void CPUDetectClass::Init_Processor_Log()
 
     CPU_LOG("Operating system: ");
 
-    switch ( OSVersionPlatformId ) {
+    switch (OSVersionPlatformId) {
         case 0:
             CPU_LOG("Windows 3.1");
             break;
@@ -1424,13 +1417,11 @@ void CPUDetectClass::Init_Processor_Log()
 
 #if defined PLATFORM_WINDOWS
     CPU_LOG("Operating system version: %d.%d\n", OSVersionNumberMajor, OSVersionNumberMinor);
-    CPU_LOG(
-        "Operating system build: %d.%d.%d\n",
+    CPU_LOG("Operating system build: %d.%d.%d\n",
         (OSVersionBuildNumber & 0xFF000000) >> 24,
         (OSVersionBuildNumber & 0xFF0000) >> 16,
-        (OSVersionBuildNumber & 0xFFFF)
-    );
-    //CPU_LOG("OS-Info: %s\n", OSVersionExtraInfo);
+        (OSVersionBuildNumber & 0xFFFF));
+    // CPU_LOG("OS-Info: %s\n", OSVersionExtraInfo);
 #elif defined PLATFORM_OSX
     CPU_LOG("Operating system version: %d.%d.%d\n", OSVersionNumberMajor, OSVersionNumberMinor, OSVersionBuildNumber);
 #endif
@@ -1462,57 +1453,46 @@ void CPUDetectClass::Init_Processor_Log()
 
     CPU_LOG("\n");
 
-    if ( CPUDetectClass::Get_L1_Data_Cache_Size() > 0 ) {
-        CPU_LOG(
-            "L1 Data Cache: %d byte cache lines, %d way set associative, %dk\n",
+    if (CPUDetectClass::Get_L1_Data_Cache_Size() > 0) {
+        CPU_LOG("L1 Data Cache: %d byte cache lines, %d way set associative, %dk\n",
             CPUDetectClass::Get_L1_Data_Cache_Line_Size(),
             CPUDetectClass::Get_L1_Data_Cache_Set_Associative(),
-            CPUDetectClass::Get_L1_Data_Cache_Size() / 1024
-        );
+            CPUDetectClass::Get_L1_Data_Cache_Size() / 1024);
     } else {
         CPU_LOG("L1 Data Cache: None\n");
     }
 
-    if ( CPUDetectClass::Get_L1_Instruction_Cache_Size() > 0 ) {
-        CPU_LOG(
-            "L1 Instruction Cache: %d byte cache lines, %d way set associative, %dk\n",
+    if (CPUDetectClass::Get_L1_Instruction_Cache_Size() > 0) {
+        CPU_LOG("L1 Instruction Cache: %d byte cache lines, %d way set associative, %dk\n",
             CPUDetectClass::Get_L1_Instruction_Cache_Line_Size(),
             CPUDetectClass::Get_L1_Instruction_Cache_Set_Associative(),
-            CPUDetectClass::Get_L1_Instruction_Cache_Size() / 1024
-        );
+            CPUDetectClass::Get_L1_Instruction_Cache_Size() / 1024);
     } else {
         CPU_LOG("L1 Instruction Cache: None\n");
     }
 
-    if ( CPUDetectClass::Get_L1_Instruction_Trace_Cache_Size() > 0 ) {
-        CPU_LOG(
-            "L1 Instruction Trace Cache: %d way set associative, %dk �OPs\n",
+    if (CPUDetectClass::Get_L1_Instruction_Trace_Cache_Size() > 0) {
+        CPU_LOG("L1 Instruction Trace Cache: %d way set associative, %dk �OPs\n",
             CPUDetectClass::Get_L1_Instruction_Cache_Set_Associative(),
-            CPUDetectClass::Get_L1_Instruction_Cache_Size() / 1024
-        );
+            CPUDetectClass::Get_L1_Instruction_Cache_Size() / 1024);
     } else {
         CPU_LOG("L1 Instruction Trace Cache: None\n");
     }
 
-
-    if ( CPUDetectClass::Get_L2_Cache_Size() > 0 ) {
-        CPU_LOG(
-            "L2 Cache: %d byte cache lines, %d way set associative, %dk\n",
+    if (CPUDetectClass::Get_L2_Cache_Size() > 0) {
+        CPU_LOG("L2 Cache: %d byte cache lines, %d way set associative, %dk\n",
             CPUDetectClass::Get_L2_Cache_Line_Size(),
             CPUDetectClass::Get_L2_Cache_Set_Associative(),
-            CPUDetectClass::Get_L2_Cache_Size() / 1024
-        );
+            CPUDetectClass::Get_L2_Cache_Size() / 1024);
     } else {
         CPU_LOG("L2 cache: None\n");
     }
 
-    if ( CPUDetectClass::Get_L3_Cache_Size() > 0 ) {
-        CPU_LOG(
-            "L3 Cache: %d byte cache lines, %d way set associative, %dk\n",
+    if (CPUDetectClass::Get_L3_Cache_Size() > 0) {
+        CPU_LOG("L3 Cache: %d byte cache lines, %d way set associative, %dk\n",
             CPUDetectClass::Get_L3_Cache_Line_Size(),
             CPUDetectClass::Get_L3_Cache_Set_Associative(),
-            CPUDetectClass::Get_L3_Cache_Size() / 1024
-        );
+            CPUDetectClass::Get_L3_Cache_Size() / 1024);
     } else {
         CPU_LOG("L3 cache: None\n");
     }
@@ -1541,7 +1521,7 @@ void CPUDetectClass::Init_Compact_Log()
     Get_OS_Info(os_info, OSVersionPlatformId, OSVersionNumberMajor, OSVersionNumberMinor, OSVersionBuildNumber);
     COMPACT_LOG("%s\t", os_info.Code);
 
-    if ( !strcasecmp(os_info.SubCode, "UNKNOWN") ) {
+    if (!strcasecmp(os_info.SubCode, "UNKNOWN")) {
         COMPACT_LOG("%d\t", OSVersionBuildNumber & 0xFFFF);
     } else {
         COMPACT_LOG("%s\t", os_info.SubCode);
@@ -1564,7 +1544,7 @@ public:
         CPUDetectClass::Init_CPUID_Instruction();
         // The game assumes its going to run on x86 hardware, hopefully we will be
         // able to change that eventually.
-        if ( CPUDetectClass::Has_CPUID_Instruction() ) {
+        if (CPUDetectClass::Has_CPUID_Instruction()) {
             CPUDetectClass::Init_Processor_Manufacturer();
             CPUDetectClass::Init_Processor_Family();
             CPUDetectClass::Init_Processor_String();
