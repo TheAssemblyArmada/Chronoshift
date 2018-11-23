@@ -34,5 +34,6 @@
 #cmakedefine HAVE_X86INTRIN_H
 #cmakedefine HAVE_CPUID_H
 #cmakedefine HAVE_STRINGS_H
+#cmakedefine HAVE_PTHREAD_H
 
 #endif // CONFIG_H

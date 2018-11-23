@@ -99,12 +99,13 @@ else()
     set(DEFAULT_LOGGING OFF)
 endif()
 
-# This doesn't really work yet, work ongoing to make it usable.
-# It should still compile fine.
+# Standalone builds still don't actually run but can be built for dev purposes.
 option(STANDALONE "Build a standalone version." ${DEFAULT_STANDALONE})
 option(NO_BITFIELDS "Use standard bool type in place of bitfields." OFF)
 option(LOGGING "Enable debug logging." ${DEFAULT_LOGGING})
 option(ASSERTIONS "Enable debug assertions." ${DEFAULT_ASSERTIONS})
+option(USE_SDL2 "Enable SDL2 for graphics and input handling." OFF)
+option(USE_OPENAL "Enable OpenAL for audio output." OFF)
 
 # Enable a standalone build
 if(STANDALONE)
@@ -217,7 +218,7 @@ if(GIT_FOUND)
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
     )
-    string(REGEX REPLACE "'" "" ${CHRONOSHIFT_COMMIT_AUTHOR} "${CHRONOSHIFT_COMMIT_AUTHOR}")
+    string(REPLACE "'" "" CHRONOSHIFT_COMMIT_AUTHOR ${CHRONOSHIFT_COMMIT_AUTHOR})
     
     # Define commit date and time. Make builds more reproducible than using __DATE__ and __TIME__
     execute_process(
@@ -246,13 +247,38 @@ endif()
 
 configure_file(src/base/gitverinfo.cpp.in src/base/gitverinfo.cpp @ONLY)
 
+# Check for libraries we plan to build against.
+if(USE_SDL2)
+    find_package(SDL2 REQUIRED)
+else()
+    list(APPEND DX_MODULES ddraw)
+endif()
+
+if(USE_OPENAL)
+    find_package(OpenAL REQUIRED)
+else()
+    list(APPEND DX_MODULES dsound)
+endif()
+
+if(NOT USE_SDL2 OR NOT USE_OPENAL)
+    find_package(DirectX REQUIRED ${DX_MODULES})
+endif()
+
+# Add LZO compression for save game support
+find_package(LZO)
+
+# Check for threading implementation.
+find_package(Threads)
+
 # Check for the existence of platform specific headers.
 check_include_file(strings.h HAVE_STRINGS_H)
 
 check_include_file(intrin.h HAVE_INTRIN_H)
-if(NOT HAVE_INTRIN_H)
-    check_include_file(x86intrin.h HAVE_X86INTRIN_H)
-    check_include_file(cpuid.h HAVE_CPUID_H)
+check_include_file(x86intrin.h HAVE_X86INTRIN_H)
+check_include_file(cpuid.h HAVE_CPUID_H)
+
+if(CMAKE_USE_PTHREADS_INIT)
+    check_include_file(pthread.h HAVE_PTHREAD_H)
 endif()
 
 # Check for the existence of some functions we need or their equivalents.
@@ -268,7 +294,7 @@ check_symbol_exists(strncasecmp "strings.h" HAVE_STRNCASECMP)
 if(NOT HAVE_STRNCASECMP)
     check_symbol_exists(_strnicmp "string.h" HAVE__STRNICMP)
     if(NOT HAVE__STRNICMP)
-        message(FATAL_ERROR "No case-insensitive size-limitted compare function found, please report!")
+        message(FATAL_ERROR "No case-insensitive size-limited compare function found, please report!")
     endif()
 endif()
 
