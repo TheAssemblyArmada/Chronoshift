@@ -16,6 +16,7 @@
 #ifndef INTRINSICS_H
 #define INTRINSICS_H
 
+#include "compiler.h"
 #include "config.h"
 
 #ifdef HAVE_INTRIN_H
@@ -28,6 +29,10 @@
 
 #ifdef HAVE_CPUID_H
 #include <cpuid.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 // Watcom doesn't have the modern intrinsics, implement them here.
@@ -77,6 +82,48 @@ int _interlockedbittestandset(volatile long *base, long offset);
     "setb cl" \
     "movzx eax,cl" parm[eax edx] value[eax] modify[cl]
 
+void __debugbreak(void);
+#pragma aux __debugbreak = "int 3"
+
+#elif !defined _WIN32
+
+// Check for clang intrinsic.
+#if __has_builtin(__builtin_debugtrap)
+#define __debugbreak __builtin_debugtrap
+
+// If we have GCC or compiler that tries to be compatible, use GCC inline assembly.
+#elif defined __GNUC__ || defined __clang__
+#if defined(__i386__) || defined(__x86_64__)
+extern __attribute__((gnu_inline, always_inline)) inline void __debugbreak(void)
+{
+    __asm__ volatile("int $0x03");
+}
+#elif defined(__arm__)
+extern __attribute__((gnu_inline, always_inline)) inline void __debugbreak(void)
+{
+    __asm__ volatile("bkpt #3");
+}
+#elif defined(__aarch64__)
+extern __attribute__((gnu_inline, always_inline)) inline void __debugbreak(void)
+{
+    // same values as used by msvc __debugbreak on arm64
+    __asm__ volatile("brk #0xF000");
+}
+#elif defined(__powerpc__)
+extern __attribute__((gnu_inline, always_inline)) inline void __debugbreak(void)
+{
+    __asm__ volatile(".4byte 0x7d821008");
+}
+#else
+#error __debugbreak not currently supported on this processor platform, see base/intrinsics.h
+#endif // CPU architectures on GCC like compilers
+#else
+#error __debugbreak not currently supported on this compiler, see base/intrinsics.h
+#endif // compiler defines
+#endif // __WATCOMC__
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif // INTRINSICS_H

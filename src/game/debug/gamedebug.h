@@ -41,8 +41,6 @@
 #endif // CHRONOSHIFT_LOGGING
 
 #ifdef CHRONOSHIFT_ASSERTS
-#include "debugbreak.h"
-
 #define DEBUG_ASSERT(exp) \
     if (!(exp)) { \
         static volatile bool _ignore_assert = false; \
