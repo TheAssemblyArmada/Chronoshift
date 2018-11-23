@@ -56,6 +56,10 @@
 #define static_assert(x, ...)
 #endif
 
+#ifndef BOOL
+typedef int BOOL;
+#endif
+
 // Allow inline recursive functions within inline recursive functions in msvc.
 #ifdef COMPILER_MSVC
 #pragma inline_recursion(on)
