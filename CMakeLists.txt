@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.1.0)
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "No build type selected, default to Debug")
@@ -73,13 +73,9 @@ if(WATCOM)
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG "Debug CODEVIEW All ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
     set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "opt symf ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
 else()
-    if (CMAKE_VERSION VERSION_LESS "3.1")
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
-        endif ()
-    else ()
-        set (CMAKE_CXX_STANDARD 11)
-    endif ()
+    # Require that we have at least C++11 when not using Watcom.
+    set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+    set(CMAKE_CXX_STANDARD 11)
 endif()
     
 # We don't support in tree builds, so help people make the right choice.
