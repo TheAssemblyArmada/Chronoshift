@@ -164,13 +164,18 @@ extern BOOL g_Debug_Print_Events;
 extern BOOL g_MonoEnabled;
 #endif
 
-extern BOOL g_Debug_Sight_Range;
-extern BOOL g_Debug_Guard_Range;
-extern BOOL g_Debug_Weapon_Range;
-extern BOOL g_Debug_Attack_Friendlies;
-extern BOOL g_Debug_Nav_List;
+extern BOOL g_Debug_SightRange;
+extern BOOL g_Debug_GuardRange;
+extern BOOL g_Debug_WeaponRange;
+extern BOOL g_Debug_AttackFriendlies;
+extern BOOL g_Debug_NavList;
 extern BOOL g_Debug_Damage;
 extern BOOL g_Debug_AIControl;
-extern BOOL g_Debug_Instant_Build;
+extern BOOL g_Debug_InstantBuild;
+extern BOOL g_Debug_BuildCheat;
+extern BOOL g_Debug_CursorCoords;
+
+extern BOOL g_Cheat_OreCivilians;
+extern BOOL g_Cheat_TeslaChoppers;
 
 #endif // GLOBALS_H

@@ -178,27 +178,27 @@ void Debug_Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_DebugKeySightRange()) {
-            g_Debug_Sight_Range = !g_Debug_Sight_Range;
+            g_Debug_SightRange = !g_Debug_SightRange;
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyGuardRange()) {
-            g_Debug_Guard_Range = !g_Debug_Guard_Range;
+            g_Debug_GuardRange = !g_Debug_GuardRange;
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyWeaponRange()) {
-            g_Debug_Weapon_Range = !g_Debug_Weapon_Range;
+            g_Debug_WeaponRange = !g_Debug_WeaponRange;
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyAttackFriendlies()) {
-            g_Debug_Attack_Friendlies = !g_Debug_Attack_Friendlies;
+            g_Debug_AttackFriendlies = !g_Debug_AttackFriendlies;
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyNavList()) {
-            g_Debug_Nav_List = !g_Debug_Nav_List;
+            g_Debug_NavList = !g_Debug_NavList;
             key = KN_NONE;
         }
 
@@ -308,7 +308,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
                 /*AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
                 DEBUG_ASSERT(aptr != nullptr);
                 if ( aptr != nullptr ) {
-                Explosion_Damage(coord, Rule.AtomDamage, nullptr, WARHEAD_HE);
+                    Explosion_Damage(coord, Rule.AtomDamage, nullptr, WARHEAD_HE);
                 }*/
             }
             key = KN_NONE;
@@ -340,6 +340,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
                     }
                 }
             }
+            Map.Recalc();
             key = KN_NONE;
         }
 
@@ -378,6 +379,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialSonarPulse()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_SONAR_PULSE).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_SONAR_PULSE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_SONAR_PULSE);
             //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
@@ -385,6 +387,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialAtomBomb()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_ATOM_BOMB).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_ATOM_BOMB).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_ATOM_BOMB);
             //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
@@ -392,6 +395,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialWarpSphere()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_WARP_SPHERE).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_WARP_SPHERE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_WARP_SPHERE);
             //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
@@ -399,6 +403,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialParaBomb()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_BOMB).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_PARA_BOMB).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_PARA_BOMB);
             //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
@@ -406,6 +411,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialParaInfantry()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_INFANTRY).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_PARA_INFANTRY).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_PARA_INFANTRY);
             //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
@@ -413,6 +419,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialSpyPlane()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_SPY_PLANE).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_SPY_PLANE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_SPY_PLANE);
             //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
@@ -420,6 +427,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialIronCurtain()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_IRON_CURTAIN).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_IRON_CURTAIN).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_IRON_CURTAIN);
             //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
@@ -427,8 +435,19 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialGPS()) {
             g_PlayerPtr->Special_Weapons(SPECIAL_GPS).Enable(true);
+            g_PlayerPtr->Special_Weapons(SPECIAL_GPS).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_GPS);
             //Map.Right_Strip_Flag_To_Redraw();
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyInstantBuild()) {
+            g_Debug_InstantBuild = !g_Debug_InstantBuild;
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyBuildCheat()) {
+            g_Debug_BuildCheat = !g_Debug_BuildCheat;
             key = KN_NONE;
         }
 
@@ -459,6 +478,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
                 Session.Get_Messages().Add_Simple_Message("Debug", "Player has now re-assumed control!", PLAYER_COLOR_LIGHT_BLUE);
             }
+            Map.Recalc();
             key = KN_NONE;
         }
 
@@ -477,12 +497,81 @@ void Debug_Keyboard_Process(KeyNumType &key)
                     }
                 }
             }
+            Map.Recalc();
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyToggleDamage()) {
             g_Debug_Damage = !g_Debug_Damage;
             key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyToggleCloakable()) {
+            if (CurrentObjects.Count() > 0) {
+                for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+                    TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
+                    DEBUG_ASSERT(objptr != nullptr);
+                    if (objptr != nullptr) {
+                        if (objptr->Is_Active() && !objptr->In_Limbo()) {
+                            objptr->Set_Cloakable(!objptr->Is_Cloakable());
+                        }
+                    }
+                }
+            }
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyApplyDamage()) {
+            if (CurrentObjects.Count() > 0) {
+                for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+                    TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
+                    DEBUG_ASSERT(objptr != nullptr);
+                    if (objptr != nullptr) {
+                        if (objptr->Is_Active() && !objptr->In_Limbo()) {
+                            int damage = 50;
+                            objptr->Take_Damage(damage, 0, WARHEAD_SA);
+                        }
+                    }
+                }
+            }
+            key = KN_NONE;
+        }
+
+        // TODO: Update radar.
+        // TODO: Find out why extended area is black.
+        if (justkey == Options.Get_DebugKeyToggleFullMap()) {
+            static int _mapcellx = -1;
+            static int _mapcelly = -1;
+            static int _mapcellwidth = -1;
+            static int _mapcellheight = -1;
+            static bool _toggle = false;
+            if (_toggle == false) {
+                _mapcellx = Map.Get_Map_Cell_X();
+                _mapcelly = Map.Get_Map_Cell_Y();
+                _mapcellwidth = Map.Get_Map_Cell_Width();
+                _mapcellheight = Map.Get_Map_Cell_Height();
+                Map.Set_Map_Dimensions(1, 1, 126, 126);
+                _toggle = true;
+            } else {
+                Map.Set_Map_Dimensions(_mapcellx, _mapcelly, _mapcellwidth, _mapcellheight);
+                _mapcellx = -1;
+                _mapcelly = -1;
+                _mapcellwidth = -1;
+                _mapcellheight = -1;
+                _toggle = false;
+            }
+            Map.Flag_All_Cells_To_Redraw();
+            Map.Flag_To_Redraw(true);
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeySpecialDialog()) {
+            if (Session.Game_To_Play() == GAME_CAMPAIGN) {
+                //Special_Dialog();
+            } else {
+                //g_SpecialDialog = SPECIAL_DLG_SPECIAL;
+                key = KN_NONE;
+            }
         }
 
     }
@@ -827,15 +916,17 @@ void Keyboard_Process(KeyNumType &key)
         }
 
     #if defined(CHRONOSHIFT_DEBUG)
-        if (justkey == Options.Get_DebugKeyToggleDebug()) {
-            g_Debug_Keys = !g_Debug_Keys;
-            DEBUG_LOG("Debug hotkeys %s!", (g_Debug_Keys ? "enabled" : "disabled"));
-            if (g_Debug_Keys) {
-                Session.Get_Messages().Add_Simple_Message("System", "Debug hotkeys enabled!", PLAYER_COLOR_LIGHT_BLUE);
+        if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.Game_To_Play() == GAME_SKIRMISH) {
+            if (justkey == Options.Get_DebugKeyToggleDebug()) {
+                g_Debug_Keys = !g_Debug_Keys;
+                DEBUG_LOG("Debug hotkeys %s!", (g_Debug_Keys ? "enabled" : "disabled"));
+                if (g_Debug_Keys) {
+                    Session.Get_Messages().Add_Simple_Message("System", "Debug hotkeys enabled!", PLAYER_COLOR_LIGHT_BLUE);
+                }
             }
-        }
-        if (g_Debug_Keys || g_Debug_Flag) {
-            Debug_Keyboard_Process(key);
+            if (g_Debug_Keys || g_Debug_Flag) {
+                Debug_Keyboard_Process(key);
+            }
         }
     #endif
 

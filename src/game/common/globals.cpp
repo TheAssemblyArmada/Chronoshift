@@ -149,11 +149,16 @@ BOOL g_Debug_Print_Events = false;
 BOOL g_MonoEnabled = false; // Actually a part of MonoClass.
 #endif
 
-BOOL g_Debug_Sight_Range = false;
-BOOL g_Debug_Guard_Range = false;
-BOOL g_Debug_Weapon_Range = false;
-BOOL g_Debug_Attack_Friendlies = false;
-BOOL g_Debug_Nav_List = false;
+BOOL g_Debug_SightRange = false;
+BOOL g_Debug_GuardRange = false;
+BOOL g_Debug_WeaponRange = false;
+BOOL g_Debug_AttackFriendlies = false;
+BOOL g_Debug_NavList = false;
 BOOL g_Debug_Damage = false;
 BOOL g_Debug_AIControl = false;
-BOOL g_Debug_Instant_Build = false;
+BOOL g_Debug_InstantBuild = false;
+BOOL g_Debug_BuildCheat = false;
+BOOL g_Debug_CursorCoords = false;
+
+BOOL g_Cheat_OreCivilians = false;
+BOOL g_Cheat_TeslaChoppers = false;
