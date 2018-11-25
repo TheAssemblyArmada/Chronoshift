@@ -75,6 +75,7 @@ public:
     BOOL Get_Repeat() const { return ScoreRepeats; }
     BOOL Get_Shuffle() const { return ScoreShuffles; }
     BOOL Sidebar_Toggle_Allowed() const { return AllowSidebarToggle; }
+    BOOL Free_Scrolling() const { return FreeScrolling; }
     BOOL Is_Counterstrike_Enabled() const { return CounterstrikeEnabled; }
     BOOL Is_Aftermath_Enabled() const { return AftermathEnabled; }
     fixed Get_Brightness() const { return (Brightness - fixed::_1_4) / fixed::_1_2; }
@@ -162,9 +163,15 @@ public:
     KeyNumType Get_DebugKeySpecialSpyPlane() const { return DebugKeySpecialSpyPlane; }
     KeyNumType Get_DebugKeySpecialIronCurtain() const { return DebugKeySpecialIronCurtain; }
     KeyNumType Get_DebugKeySpecialGPS() const { return DebugKeySpecialGPS; }
+    KeyNumType Get_DebugKeyInstantBuild() const { return DebugKeyInstantBuild; }
+    KeyNumType Get_DebugKeyBuildCheat() const { return DebugKeyBuildCheat; }
     KeyNumType Get_DebugKeyAIControl() const { return DebugKeyAIControl; }
     KeyNumType Get_DebugKeyStealObject() const { return DebugKeyStealObject; }
     KeyNumType Get_DebugKeyToggleDamage() const { return DebugKeyToggleDamage; }
+    KeyNumType Get_DebugKeyToggleCloakable() const { return DebugKeyToggleCloakable; }
+    KeyNumType Get_DebugKeyApplyDamage() const { return DebugKeyApplyDamage; }
+    KeyNumType Get_DebugKeyToggleFullMap() const { return DebugKeyToggleFullMap; }
+    KeyNumType Get_DebugKeySpecialDialog() const { return DebugKeySpecialDialog; }
 #endif
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -191,9 +198,11 @@ private:
             bool ScoreRepeats : 1; // & 2
             bool ScoreShuffles : 1; // & 4
             bool PaletteScroll : 1; // & 8
-            bool AllowSidebarToggle : 1; // & 16 Chronoshift option.
-            bool CounterstrikeEnabled : 1; // & 32 Chronoshift option.
-            bool AftermathEnabled : 1; // & 64 Chronoshift option.
+            bool FreeScrolling : 1; // & 16 Chronoshift option.
+            bool DeathAnnounce : 1; // & 32 Chronoshift option.
+            bool AllowSidebarToggle : 1; // & 64 Chronoshift option.
+            bool CounterstrikeEnabled : 1; // & 128 Chronoshift option.
+            bool AftermathEnabled : 1; // & 256 Chronoshift option.
         };
         int Bitfield;
     };
@@ -202,6 +211,8 @@ private:
     bool ScoreRepeats;
     bool ScoreShuffles;
     bool PaletteScroll;
+    bool FreeScrolling; // Chronoshift option.
+    bool DeathAnnounce; // Chronoshift option.
     bool AllowSidebarToggle; // Chronoshift option.
     bool CounterstrikeEnabled; // Chronoshift option.
     bool AftermathEnabled; // Chronoshift option.
@@ -301,9 +312,15 @@ private:
     static KeyNumType DebugKeySpecialSpyPlane;
     static KeyNumType DebugKeySpecialIronCurtain;
     static KeyNumType DebugKeySpecialGPS;
+    static KeyNumType DebugKeyInstantBuild;
+    static KeyNumType DebugKeyBuildCheat;
     static KeyNumType DebugKeyAIControl;
     static KeyNumType DebugKeyStealObject;
     static KeyNumType DebugKeyToggleDamage;
+    static KeyNumType DebugKeyToggleCloakable;
+    static KeyNumType DebugKeyApplyDamage;
+    static KeyNumType DebugKeyToggleFullMap;
+    static KeyNumType DebugKeySpecialDialog;
 #else // CHRONOSHIFT_STANDALONE
     KeyNumType DebugKeyToggleDebug;
     KeyNumType DebugKeyToggleVortex;
@@ -347,9 +364,15 @@ private:
     KeyNumType DebugKeySpecialSpyPlane;
     KeyNumType DebugKeySpecialIronCurtain;
     KeyNumType DebugKeySpecialGPS;
+    KeyNumType DebugKeyInstantBuild;
+    KeyNumType DebugKeyBuildCheat;
     KeyNumType DebugKeyAIControl;
     KeyNumType DebugKeyStealObject;
     KeyNumType DebugKeyToggleDamage;
+    KeyNumType DebugKeyToggleCloakable;
+    KeyNumType DebugKeyApplyDamage;
+    KeyNumType DebugKeyToggleFullMap;
+    KeyNumType DebugKeySpecialDialog;
 #endif // !CHRONOSHIFT_STANDALONE
 #endif // CHRONOSHIFT_DEBUG
 };

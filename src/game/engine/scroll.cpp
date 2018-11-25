@@ -55,25 +55,31 @@ void ScrollClass::Init_IO()
  */
 void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    static const int _rate[] = { 448, 384, 320, 256, 192, 128, 64, 32, 16 };
+    static const int _rate[] = {
+        448, 384, 320, 256, 192, 128, 64, 32, 16
+    };
 
-    static const MouseType _scroll_mouse[FACING_COUNT] = { MOUSE_SCROLL_N,
+    static const MouseType _scroll_mouse[FACING_COUNT] = {
+        MOUSE_SCROLL_N,
         MOUSE_SCROLL_NE,
         MOUSE_SCROLL_E,
         MOUSE_SCROLL_SE,
         MOUSE_SCROLL_S,
         MOUSE_SCROLL_SW,
         MOUSE_SCROLL_W,
-        MOUSE_SCROLL_NW };
+        MOUSE_SCROLL_NW
+    };
 
-    static const MouseType _noscroll_mouse[FACING_COUNT] = { MOUSE_CANT_SCROLL_N,
+    static const MouseType _noscroll_mouse[FACING_COUNT] = {
+        MOUSE_CANT_SCROLL_N,
         MOUSE_CANT_SCROLL_NE,
         MOUSE_CANT_SCROLL_E,
         MOUSE_CANT_SCROLL_SE,
         MOUSE_CANT_SCROLL_S,
         MOUSE_CANT_SCROLL_SW,
         MOUSE_CANT_SCROLL_W,
-        MOUSE_CANT_SCROLL_NW };
+        MOUSE_CANT_SCROLL_NW
+    };
 
     static DirType _direction = DIR_NONE;
 
@@ -95,13 +101,13 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
                 x_pos = Max(0, x_pos);
 
-                if (x_pos > /*540*/ (vp_w - 100)) {
-                    x_pos += x_pos - /*540*/ (vp_w - 100);
+                if (x_pos > (vp_w - 100)) {
+                    x_pos += x_pos - (vp_w - 100);
                 }
 
                 x_pos = Min(x_pos, vp_w);
                 
-                if (x_pos > 100 && x_pos < /*540*/ (vp_w - 100)) {
+                if (x_pos > 100 && x_pos < (vp_w - 100)) {
                     x_pos += (320 - x_pos) / 2;
                 }
 
@@ -113,8 +119,8 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
                 y_pos = Max(0, y_pos);
 
-                if (y_pos > /*300*/ (vp_h - 100)) {
-                    y_pos += y_pos - /*300*/ (vp_h - 100);
+                if (y_pos > (vp_h - 100)) {
+                    y_pos += y_pos - (vp_h - 100);
                 }
 
                 y_pos = Min(y_pos, vp_h);
@@ -131,12 +137,15 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                 ScrollUnkInt = 8 - (Options.Get_Scroll_Rate() + 1);
             }
 
-            // if the right mouse button is down, the scroll speed halfs?
+            // if the right mouse button is down, half the scroll speed.
             if (g_keyboard->Down(KN_RMOUSE)) {
                 rate_index = Clamp((rate_index + 1), 4, 8);
             }
 
-            _direction = Facing_To_Direction(Direction_To_Facing(_direction));
+            if (!Options.Free_Scrolling()) {
+                _direction = Facing_To_Direction(Direction_To_Facing(_direction));
+            }
+
             int distance = _rate[rate_index] / 2;
 
             if (Scroll_Map(_direction, distance, false)) {

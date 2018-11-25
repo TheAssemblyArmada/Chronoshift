@@ -65,9 +65,15 @@ KeyNumType OptionsClass::DebugKeySpecialParaInfantry = KN_NONE;
 KeyNumType OptionsClass::DebugKeySpecialSpyPlane = KN_NONE;
 KeyNumType OptionsClass::DebugKeySpecialIronCurtain = KN_NONE;
 KeyNumType OptionsClass::DebugKeySpecialGPS = KN_NONE;
+KeyNumType OptionsClass::DebugKeyInstantBuild = KN_NONE;
+KeyNumType OptionsClass::DebugKeyBuildCheat = KN_NONE;
 KeyNumType OptionsClass::DebugKeyAIControl = KN_NONE;
 KeyNumType OptionsClass::DebugKeyStealObject = KN_NONE;
 KeyNumType OptionsClass::DebugKeyToggleDamage = KN_NONE;
+KeyNumType OptionsClass::DebugKeyToggleCloakable = KN_NONE;
+KeyNumType OptionsClass::DebugKeyApplyDamage = KN_NONE;
+KeyNumType OptionsClass::DebugKeyToggleFullMap = KN_NONE;
+KeyNumType OptionsClass::DebugKeySpecialDialog = KN_NONE;
 #endif
 
 OptionsClass::OptionsClass() :
@@ -84,6 +90,8 @@ OptionsClass::OptionsClass() :
     ScoreRepeats(false),
     ScoreShuffles(false),
     PaletteScroll(true),
+    FreeScrolling(false),
+    DeathAnnounce(true),
     AllowSidebarToggle(false),
     CounterstrikeEnabled(false),
     AftermathEnabled(false),
@@ -180,9 +188,15 @@ OptionsClass::OptionsClass() :
     DebugKeySpecialSpyPlane(KN_NONE),
     DebugKeySpecialIronCurtain(KN_NONE),
     DebugKeySpecialGPS(KN_NONE),
+    DebugKeyInstantBuild(KN_NONE),
+    DebugKeyBuildCheat(KN_NONE),
     DebugKeyAIControl(KN_NONE),
     DebugKeyStealObject(KN_NONE),
-    DebugKeyToggleDamage(KN_NONE)
+    DebugKeyToggleDamage(KN_NONE),
+    DebugKeyToggleCloakable(KN_NONE),
+    DebugKeyApplyDamage(KN_NONE),
+    DebugKeyToggleFullMap(KN_NONE),
+    DebugKeySpecialDialog(KN_NONE)
 #endif // CHRONOSHIFT_STANDALONE && CHRONOSHIFT_DEBUG
 {
 }
@@ -225,11 +239,13 @@ void OptionsClass::Save_Settings()
     ini.Put_Fixed("Options", "Contrast", Contrast);
     ini.Put_Fixed("Options", "Color", Saturation);
     ini.Put_Fixed("Options", "Tint", Tint);
+
     ini.Put_Bool("Options", "IsScoreRepeat", ScoreRepeats);
     ini.Put_Bool("Options", "IsScoreShuffle", ScoreShuffles);
     ini.Put_Bool("Options", "PaletteScroll", PaletteScroll);
+    ini.Put_Bool("Options", "FreeScrolling", FreeScrolling);
+    ini.Put_Bool("Options", "DeathAnnounce", DeathAnnounce);
     ini.Put_Bool("Options", "AllowSidebarToggle", AllowSidebarToggle);
-
     ini.Put_Bool("Expansions", "CounterstrikeEnabled", CounterstrikeEnabled);
     ini.Put_Bool("Expansions", "AftermathEnabled", AftermathEnabled);
 
@@ -307,12 +323,14 @@ void OptionsClass::Load_Settings()
     Set_Contrast(ini.Get_Fixed("Options", "Contrast", Contrast));
     Set_Saturation(ini.Get_Fixed("Options", "Color", Saturation));
     Set_Tint(ini.Get_Fixed("Options", "Tint", Tint));
+
     AutoScroll = ini.Get_Bool("Options", "AutoScroll", AutoScroll);
     ScoreRepeats = ini.Get_Bool("Options", "IsScoreRepeat", ScoreRepeats);
     ScoreShuffles = ini.Get_Bool("Options", "IsScoreShuffle", ScoreShuffles);
     PaletteScroll = ini.Get_Bool("Options", "PaletteScroll", PaletteScroll);
+    FreeScrolling = ini.Get_Bool("Options", "FreeScrolling", FreeScrolling);
+    DeathAnnounce = ini.Get_Bool("Options", "DeathAnnounce", DeathAnnounce);
     AllowSidebarToggle = ini.Get_Bool("Options", "AllowSidebarToggle", false); // TODO use variable as default when ctor used.
-
     CounterstrikeEnabled = ini.Get_Bool("Expansions", "CounterstrikeEnabled", false); // TODO use variable as default when ctor used.
     AftermathEnabled = ini.Get_Bool("Expansions", "AftermathEnabled", false); // TODO use variable as default when ctor used.
 
@@ -409,9 +427,14 @@ void OptionsClass::Load_Settings()
     DebugKeySpecialSpyPlane = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialSpyPlane", DebugKeySpecialSpyPlane);
     DebugKeySpecialIronCurtain = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialIronCurtain", DebugKeySpecialIronCurtain);
     DebugKeySpecialGPS = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpecialGPS", DebugKeySpecialGPS);
+    DebugKeyInstantBuild = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyInstantBuild", DebugKeyInstantBuild);
+    DebugKeyBuildCheat = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyBuildCheat", DebugKeyBuildCheat);
     DebugKeyAIControl = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyAIControl", DebugKeyAIControl);
     DebugKeyStealObject = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyStealObject", DebugKeyStealObject);
     DebugKeyToggleDamage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleDamage", DebugKeyToggleDamage);
+    DebugKeyToggleCloakable = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleCloakable", DebugKeyToggleCloakable);
+    DebugKeyApplyDamage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyApplyDamage", DebugKeyApplyDamage);
+    DebugKeyToggleFullMap = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleFullMap", DebugKeyToggleFullMap);
 #endif // CHRONOSHIFT_DEBUG
 }
 
