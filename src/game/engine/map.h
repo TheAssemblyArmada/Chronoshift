@@ -81,8 +81,10 @@ public:
     ObjectClass *Close_Object(coord_t coord) const;
 
     cell_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
-    int Get_Map_Cell_Width() const {return MapCellWidth;}
-    int Get_Map_Cell_Height() const {return MapCellHeight;}
+    int Get_Map_Cell_X() const {return MapCellX; }
+    int Get_Map_Cell_Y() const {return MapCellY; }
+    int Get_Map_Cell_Width() const {return MapCellWidth; }
+    int Get_Map_Cell_Height() const {return MapCellHeight; }
 
 protected:
     int MapCellX;
