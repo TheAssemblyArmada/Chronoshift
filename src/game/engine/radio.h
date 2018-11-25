@@ -20,7 +20,6 @@
 #include "always.h"
 #include "gametypes.h"
 #include "mission.h"
-#include "smartptr.h"
 
 class TechnoClass;
 class FootClass;
@@ -73,7 +72,7 @@ public:
     RadioMessageType ReceivedMessage; // 0x37    //name subject to change!
     RadioMessageType TransmittedMessage; // 0x38    //name subject to change!
     RadioMessageType LastMessage; // 0x39
-    SmartPtr<ObjectClass> Radio; // 0x3A
+    ObjectClass *Radio; // 0x3A
 };
 
 #endif // RADIO_H

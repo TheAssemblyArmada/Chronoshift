@@ -27,7 +27,6 @@
 #include "layer.h"
 #include "objecttype.h"
 #include "rtti.h"
-#include "smartptr.h"
 #include "vector.h"
 #include "warheadtype.h"
 
@@ -106,7 +105,7 @@ public:
     virtual void Decode_Pointers();
     virtual void Move(FacingType facing);
 
-    SmartPtr<ObjectClass> &Get_Next() { return m_Next; }
+    ObjectClass *Get_Next() { return m_Next; }
     BOOL In_Limbo() const { return m_InLimbo; }
     int16_t Get_Health() const { return m_Health; }
 
@@ -145,7 +144,7 @@ protected:
     bool m_OBit1_128;
 #endif
     int m_FallingHeight;
-    SmartPtr<ObjectClass> m_Next;
+    ObjectClass *m_Next;
     int m_AttachedTrigger; // GamePtr<TriggerClass> once triggerclass is implemented.
     int16_t m_Health;
 };
