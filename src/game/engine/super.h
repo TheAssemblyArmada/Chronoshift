@@ -47,7 +47,7 @@ public:
     BOOL AI(BOOL feedback = false);
     int Anim_Stage() const;
     void Impatient_Click() const;
-    void Forced_Charge(BOOL feedback);
+    void Forced_Charge(BOOL feedback = false);
 
     bool Is_Powered() const { return m_IsPowered; }
     bool Is_Enabled() const { return m_IsEnabled; }
