@@ -139,6 +139,8 @@ public:
 
     void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
 
+    BOOL Is_Cloakable() const { return m_Cloakable; }
+    void Set_Cloakable(BOOL value) { m_Cloakable = value; }
     const GamePtr<HouseClass> Get_Owner_House() const { return m_OwnerHouse; }
     int Get_Price() const { return m_Price; }
     void Set_Price(int price) { m_Price = price; }
