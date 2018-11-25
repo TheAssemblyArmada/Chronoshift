@@ -144,7 +144,7 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-    RadioClass *radioptr = (radio == nullptr) ? reinterpret_cast<RadioClass *>(Radio.Get_Pointer()) : radio;
+    RadioClass *radioptr = (radio == nullptr) ? reinterpret_cast<RadioClass *>(Radio) : radio;
 
     if (radioptr == nullptr) {
         return RADIO_STATIC;
