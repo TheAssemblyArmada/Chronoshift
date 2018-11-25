@@ -22,42 +22,54 @@
 #include "gamedebug.h"
 #include "heap.h"
 
-class NoInitClass;
-
 template<class T>
 class GamePtr
 {
 public:
     GamePtr() : m_ID(-1) {}
-    GamePtr(T *ptr) : m_ID(-1)
-    {
-        if (ptr != nullptr) {
-            m_ID = ptr->Get_Heap_ID();
-        }
-    }
-    GamePtr(const GamePtr &that) {}
+    GamePtr(T *ptr) : m_ID(ptr != nullptr ? m_ID = ptr->Get_Heap_ID() : -1) {}
+    GamePtr(const GamePtr &that) : m_ID(that.m_ID) {}
     GamePtr(const NoInitClass &noinit) {}
     ~GamePtr() { m_ID = -1; }
 
-    //<RA_TODO>, these two might be the wrong way around.  code in TEventClass::Build_INI_Entry() is not correct
     T *operator->() const
     {
         DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
-        return !Is_Valid() ? nullptr : (T *)(&(*g_Heap)[m_ID]);
+        return Is_Valid() ? Get_Raw_Pointer() : nullptr;
     }
 
-    //<RA_TODO>, this might not be reference? code in TEventClass::Build_INI_Entry() is not correct
     T &operator*() const
     {
         DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
-        return *(T *)(&(*g_Heap)[m_ID]);
+        return *Get_Raw_Pointer();
     }
 
-    // Fairly certain this works the same way as operator->
     operator T *() const
     {
         DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
-        return !Is_Valid() ? nullptr : (T *)(&(*g_Heap)[m_ID]);
+        return Is_Valid() ? Get_Raw_Pointer() : nullptr;
+    }
+
+    operator T &() const
+    {
+        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        return *Get_Raw_Pointer();
+    }
+
+    operator uintptr_t() const
+    {
+        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        return Is_Valid() ? Get_Raw_Pointer() : nullptr;
+    }
+
+    operator bool() const
+    {
+        return Is_Valid();
+    }
+
+    bool operator!() const
+    {
+        return !Is_Valid();
     }
 
     GamePtr &operator=(const GamePtr &that)
@@ -70,26 +82,37 @@ public:
 
     GamePtr &operator=(const T *that)
     {
-        m_ID = -1;
-        if (that != nullptr) {
-            m_ID = g_Heap->ID(that);
-        }
+        m_ID = that != nullptr ? g_Heap->ID(that) : -1;
         return *this;
     }
 
     bool operator==(const T &that) const
     {
-        return strcasecmp((*this).Get_Name(), that.Get_Name()) == 0;
+        return Get_Raw_Pointer() == &that;
     }
     
     bool operator!=(const T &that) const
     {
-        return strcasecmp((*this).Get_Name(), that.Get_Name()) != 0;
+        return Get_Raw_Pointer() != &that;
+    }
+
+    bool Name_Equal(const T &that) const
+    {
+        return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) == 0;
+    }
+
+    bool Name_Not_Equal(const T &that) const
+    {
+        return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) != 0;
     }
 
     bool Is_Valid() const { return g_Heap != nullptr && m_ID != -1; }
     bool Has_Valid_ID() const { return m_ID != -1; }
     void Invalidate() { m_ID = -1; }
+
+protected:
+    T *Get_Raw_Pointer() const { return (T *)(&(*g_Heap)[m_ID]); }
+    const T *Get_Raw_Const_Pointer() const { return (T *)(&(*g_Heap)[m_ID]); }
 
 private:
     int32_t m_ID;
@@ -99,25 +122,41 @@ private:
 template<class T1, class T2>
 bool operator==(const GamePtr<T1> &a, const T2 *b)
 {
-    return static_cast<T1*>(a) == b;
+    return static_cast<T1 *>(a) == b;
 }
 
 template<class T1, class T2>
 bool operator==(const T1 *a, const GamePtr<T2> &b)
 {
-    return static_cast<T2*>(b) == a;
+    return static_cast<T2 *>(b) == a;
 }
 
 template<class T1, class T2>
 bool operator!=(const GamePtr<T1> &a, const T2 *b)
 {
-    return static_cast<T1*>(a) == b;
+    return static_cast<T1 *>(a) == b;
 }
 
 template<class T1, class T2>
 bool operator!=(const T1 *a, const GamePtr<T2> &b)
 {
-    return static_cast<T2*>(b) == a;
+    return static_cast<T2 *>(b) == a;
 }
+
+#ifndef COMPILER_WATCOM
+// "== nullptr"
+template<class T>
+bool operator==(GamePtr<T> &left, std::nullptr_t right)
+{
+    return left == right;
+}
+
+// "!= nullptr"
+template<class T>
+bool operator!=(GamePtr<T> &left, std::nullptr_t right)
+{
+    return left != right;
+}
+#endif
 
 #endif // GAMEPTR_H
