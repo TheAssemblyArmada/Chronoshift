@@ -82,6 +82,8 @@ BufferClass *DisplayClass::TheaterBuffer = nullptr;
 BooleanVectorClass DisplayClass::CellRedraw;
 #endif
 
+char DisplayClass::FadingWhite[256];
+
 DisplayClass::TacticalClass::TacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
 {
@@ -109,7 +111,7 @@ DisplayClass::DisplayClass() :
     PassedProximityCheck(false),
     PendingObjectPtr(nullptr),
     PendingObjectTypePtr(nullptr),
-    PendingObjectHouse(HOUSES_NONE),
+    PendingObjectOwner(HOUSES_NONE),
     TacOffsetX(0),
     TacOffsetY(0),
     DisplayNewPos(0),
@@ -137,7 +139,7 @@ void DisplayClass::Init_Clear()
     MapClass::Init_Clear();
     PendingObjectPtr = 0;
     PendingObjectTypePtr = 0;
-    PendingObjectHouse = HOUSES_NONE;
+    PendingObjectOwner = HOUSES_NONE;
     DisplayCursorOccupy = 0;
     PendingSuper = SPECIAL_NONE;
     DisplayToRedraw = true;
@@ -255,10 +257,13 @@ void DisplayClass::Init_Theater(TheaterType theater)
     Build_Fading_Table(GamePalette, FadingGreen, 3, 110);
     Build_Fading_Table(GamePalette, FadingYellow, 5, 140);
     Build_Fading_Table(GamePalette, FadingRed, 8, 140);
+    Build_Fading_Table(GamePalette, FadingWhite, 15, 120);
+
     Build_Translucent_Table(GamePalette, _mouse_cols, ARRAY_SIZE(_mouse_cols), MouseTranslucentTable);
     Build_Translucent_Table(GamePalette, _magic_cols, ARRAY_SIZE(_magic_cols), TranslucentTable);
     Build_Translucent_Table(GamePalette, _white_cols, ARRAY_SIZE(_white_cols), WhiteTranslucentTable);
     Build_Translucent_Table(GamePalette, _shadow_cols, ARRAY_SIZE(_shadow_cols), ShadowTrans);
+
     Conquer_Build_Translucent_Table(GamePalette, _ushadow_cols_air, ARRAY_SIZE(_ushadow_cols_air), UnitShadowAir);
 
     if (theater == THEATER_SNOW) {
@@ -281,6 +286,7 @@ void DisplayClass::Init_Theater(TheaterType theater)
 
     Make_Fading_Table(GamePalette, FadingBrighten, 15, 25);
     Make_Fading_Table(GamePalette, FadingWayDark, 13, 192);
+
     Options.Fixup_Palette();
 }
 
@@ -614,7 +620,7 @@ void DisplayClass::Mouse_Right_Press()
     if (PendingObjectPtr != nullptr && PendingObjectPtr->Is_Techno()) {
         PendingObjectPtr = nullptr;
         PendingObjectTypePtr = nullptr;
-        PendingObjectHouse = HOUSES_NONE;
+        PendingObjectOwner = HOUSES_NONE;
         Set_Cursor_Shape();
     } else if (DisplayRepairMode) {
         DisplayRepairMode = false;
@@ -1146,7 +1152,7 @@ cell_t DisplayClass::Set_Cursor_Pos(cell_t cell)
             }
 
             PassedProximityCheck = Passes_Proximity_Check(
-                PendingObjectTypePtr, PendingObjectHouse, DisplayCursorOccupy, DisplayCursorEnd + retval);
+                PendingObjectTypePtr, PendingObjectOwner, DisplayCursorOccupy, DisplayCursorEnd + retval);
 
             Swap(DisplayCursorStart, retval);
         }

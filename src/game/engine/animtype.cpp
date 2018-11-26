@@ -471,7 +471,7 @@ const char *AnimTypeClass::Name_From(AnimType type)
  */
 AnimTypeClass &AnimTypeClass::As_Reference(AnimType type)
 {
-    AnimTypeClass *ptr = &g_AnimTypes[anim];
+    AnimTypeClass *ptr = &g_AnimTypes[type];
     DEBUG_ASSERT(ptr != nullptr);
     return *ptr;
 }
@@ -481,5 +481,5 @@ AnimTypeClass &AnimTypeClass::As_Reference(AnimType type)
  */
 AnimTypeClass *AnimTypeClass::As_Pointer(AnimType type)
 {
-    return anim != ANIM_NONE && anim < ANIM_COUNT ? &g_AnimTypes[anim] : nullptr;
+    return type != ANIM_NONE && type < ANIM_COUNT ? &g_AnimTypes[type] : nullptr;
 }

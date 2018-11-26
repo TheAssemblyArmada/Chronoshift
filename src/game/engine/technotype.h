@@ -23,6 +23,7 @@
 #include "land.h"
 #include "mzone.h"
 #include "objecttype.h"
+#include "weapontype.h"
 #include "remap.h"
 
 class TechnoClass;
@@ -58,8 +59,27 @@ public:
     BOOL Is_Nominal() const { return IsNominal; } 
     int Get_ThreatPosed() const { return ThreatPosed; }
     BOOL Is_Invisible() const { return IsInvisible; }
+    BOOL Is_Cloakable() const { return Cloakable; }
+    BOOL Is_Turret_Equipped() const { return IsTurretEquipped; }
     int Get_Cost() const { return Cost; }
+    SpeedType Get_Speed() const { return Speed; }
+    int Get_Ammo() const { return Ammo; }
     RemapType Get_Remap() const { return Remap; }
+
+    WeaponTypeClass *Get_Weapon(WeaponSlotType weapon) const
+    {
+        WeaponTypeClass *wptr = nullptr;
+        switch (weapon) {
+            default:
+            case WEAPON_SLOT_PRIMARY:
+                wptr = Primary;
+                break;
+            case WEAPON_SLOT_SECONDARY:
+                wptr = Secondary;
+                break;
+        };
+        return wptr;
+    }
 
     TechnoClass *Techno_Create_One_Of(HouseClass *house) const { return reinterpret_cast<TechnoClass *>(Create_One_Of(house)); }
 
@@ -120,8 +140,8 @@ protected:
     void *CameoData; // Shape data for the side bar icon.
     int ROTCount; // Number of facing stages (def = 32)?
     int ROT; // Rate Of Turn for body (if present) and turret (if present) (def = 0)
-    void *Primary; // TODO Should be WeaponTypeClass *// Primary weapon equipped with (def = none)
-    void *Secondary; // TODO Should be WeaponTypeClass *// Secondary weapon equipped with (def = none)
+    WeaponTypeClass *Primary; // Primary weapon equipped with (def = none)
+    WeaponTypeClass *Secondary; // Secondary weapon equipped with (def = none)
     uint32_t DefualtFireCoord;
     uint32_t PrimaryFireCoordA;
     uint32_t PrimaryFireCoordB;

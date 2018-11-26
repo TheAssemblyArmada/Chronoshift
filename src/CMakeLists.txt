@@ -50,10 +50,12 @@ set(GAMEENGINE_SRC
     game/engine/abstract.cpp
     game/engine/abstracttype.cpp
     game/engine/action.cpp
+    game/engine/aircraft.cpp
     game/engine/aircrafttype.cpp
     game/engine/anim.cpp
     game/engine/animtype.cpp
     game/engine/armor.cpp
+    game/engine/building.cpp
     game/engine/buildingtype.cpp
     game/engine/bullettype.cpp
     game/engine/callback.cpp
@@ -65,11 +67,13 @@ set(GAMEENGINE_SRC
     game/engine/difficulty.cpp
     game/engine/display.cpp
     game/engine/door.cpp
+    game/engine/drive.cpp
     game/engine/expansion.cpp
     game/engine/facing.cpp
     game/engine/factory.cpp
     game/engine/flasher.cpp
     game/engine/focus.cpp
+    game/engine/foot.cpp
     game/engine/fuse.cpp
     game/engine/gameevent.cpp
     game/engine/gameini.cpp
@@ -86,6 +90,7 @@ set(GAMEENGINE_SRC
     game/engine/house.cpp
     game/engine/housestatic.cpp
     game/engine/housetype.cpp
+    game/engine/infantry.cpp
     game/engine/infantrytype.cpp
     game/engine/init.cpp
     game/engine/iomap.cpp
@@ -122,15 +127,20 @@ set(GAMEENGINE_SRC
     game/engine/target.cpp
     game/engine/techno.cpp
     game/engine/technotype.cpp
+    game/engine/team.cpp
+    game/engine/teamtype.cpp
     game/engine/templatetype.cpp
     game/engine/terraintype.cpp
     game/engine/theater.cpp
     game/engine/theme.cpp
     game/engine/tracker.cpp
+    game/engine/trigger.cpp
     game/engine/triggertype.cpp
+    game/engine/unit.cpp
     game/engine/unittype.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
+    game/engine/vessel.cpp
     game/engine/vesseltype.cpp
     game/engine/voc.cpp
     game/engine/vox.cpp

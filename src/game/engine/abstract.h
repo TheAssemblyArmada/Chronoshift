@@ -21,6 +21,7 @@
 #include "always.h"
 #include "facing.h"
 #include "gametypes.h"
+#include "coord.h"
 #include "rtti.h"
 #include "vector.h"
 
@@ -44,6 +45,8 @@ public:
     BOOL Is_Techno() const;
     BOOL Is_Foot() const;
     BOOL Is_Ground_Foot() const;
+
+    cell_t Center_Cell() const { return Coord_To_Cell(Center_Coord()); }
 
     int Get_Heap_ID() const { return m_HeapID; }
     BOOL Is_Active() const { return m_IsActive; }

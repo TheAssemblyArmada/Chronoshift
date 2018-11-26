@@ -61,7 +61,9 @@ public:
     ArmorType Get_Armor() const { return Armor; }
     void *Get_Image_Data() const { return ImageData; }
     const char *Get_Image_Name() const { return ImageName[0] != '\0' ? ImageName : Get_Name(); }
-    void Init_Frame_Dimensions(int frames) const { if (FrameDimensions != nullptr) FrameDimensions = new TRect<int>[frames]; }
+
+    void Init_Frame_Dimensions(int frames) const;
+    TRect<int> *Get_Frame_Dimensions() { return FrameDimensions; }
     void Set_Frame_Dimensions(void *shape, int frame) const;
 
     static void One_Time();
@@ -114,6 +116,13 @@ protected:
     static void *PipShapes;
 #endif
 };
+
+inline void ObjectTypeClass::Init_Frame_Dimensions(int frames) const
+{
+    if (FrameDimensions != nullptr) {
+        FrameDimensions = new TRect<int>[frames];
+    }
+}
 
 inline void ObjectTypeClass::Set_Frame_Dimensions(void *shape, int frame) const
 {

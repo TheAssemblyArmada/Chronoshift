@@ -21,6 +21,11 @@
 #include "house.h"
 #include "remap.h"
 
+int const TechnoClass::BodyShape32[32] = {
+    0, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16,
+    15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
+};
+
 TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     RadioClass(type, house),
     m_Flasher(),
@@ -40,7 +45,7 @@ TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     m_PlayerAware(false),
     m_AIAware(false),
     m_Lemon(false),
-    m_TechnoBit2_16(true),
+    m_Bit2_16(true),
     m_ArmorMult(),
     m_FirepowerMult(),
     m_IdleActionTimer(),
@@ -79,7 +84,7 @@ TechnoClass::TechnoClass(const TechnoClass &that) :
     m_PlayerAware(that.m_PlayerAware),
     m_AIAware(that.m_AIAware),
     m_Lemon(that.m_Lemon),
-    m_TechnoBit2_16(that.m_TechnoBit2_16),
+    m_Bit2_16(that.m_Bit2_16),
     m_ArmorMult(that.m_ArmorMult),
     m_FirepowerMult(that.m_FirepowerMult),
     m_IdleActionTimer(that.m_IdleActionTimer),
@@ -158,7 +163,7 @@ BOOL TechnoClass::Can_Player_Move() const
     return 0;
 }
 
-coord_t TechnoClass::Fire_Coord(int weapon) const
+coord_t TechnoClass::Fire_Coord(WeaponSlotType weapon) const
 {
     return coord_t();
 }
@@ -168,7 +173,7 @@ BOOL TechnoClass::Unlimbo(coord_t coord, DirType dir)
     return 0;
 }
 
-void TechnoClass::Detach(int32_t target, int a2)
+void TechnoClass::Detach(target_t target, int a2)
 {
 }
 
@@ -211,12 +216,12 @@ BOOL TechnoClass::Select()
     return 0;
 }
 
-BOOL TechnoClass::In_Range(coord_t a1, int weapon) const
+BOOL TechnoClass::In_Range(coord_t a1, WeaponSlotType weapon) const
 {
     return 0;
 }
 
-int TechnoClass::Weapon_Range(int weapon) const
+int TechnoClass::Weapon_Range(WeaponSlotType weapon) const
 {
     return 0;
 }
@@ -269,7 +274,7 @@ int TechnoClass::How_Many_Survivors() const
 
 DirType TechnoClass::Turret_Facing() const
 {
-    return DirType();
+    return m_Facing.Get_Current();
 }
 
 BuildingClass *TechnoClass::Find_Docking_Bay(BuildingType building, int a2) const
@@ -346,7 +351,7 @@ void TechnoClass::Response_Attack()
 {
 }
 
-void TechnoClass::Player_Assign_Mission(MissionType mission, int32_t target, int32_t dest)
+void TechnoClass::Player_Assign_Mission(MissionType mission, target_t target, target_t dest)
 {
 }
 
@@ -364,31 +369,31 @@ void TechnoClass::Stun()
 {
 }
 
-BOOL TechnoClass::In_Range(int32_t target, int weapon) const
+BOOL TechnoClass::In_Range(target_t target, WeaponSlotType weapon) const
 {
     return 0;
 }
 
-BOOL TechnoClass::In_Range(ObjectClass *object, int weapon) const
+BOOL TechnoClass::In_Range(ObjectClass *object, WeaponSlotType weapon) const
 {
     return 0;
 }
 
-FireErrorType TechnoClass::Can_Fire(int32_t target, int weapon) const
+FireErrorType TechnoClass::Can_Fire(target_t target, WeaponSlotType weapon) const
 {
     return FireErrorType();
 }
 
-int32_t TechnoClass::Greatest_Threat(ThreatType threat)
+target_t TechnoClass::Greatest_Threat(ThreatType threat)
 {
-    return int32_t();
+    return target_t();
 }
 
-void TechnoClass::Assign_Target(int32_t target)
+void TechnoClass::Assign_Target(target_t target)
 {
 }
 
-BulletClass *TechnoClass::Fire_At(int32_t target, int weapon)
+BulletClass *TechnoClass::Fire_At(target_t target, WeaponSlotType weapon)
 {
     return nullptr;
 }
@@ -398,7 +403,7 @@ BOOL TechnoClass::Captured(HouseClass *house)
     return 0;
 }
 
-BOOL TechnoClass::Electric_Zap(int32_t target, BOOL a2, coord_t a3, uint8_t *a4)
+BOOL TechnoClass::Electric_Zap(target_t target, BOOL a2, coord_t a3, uint8_t *a4)
 {
     return 0;
 }
@@ -434,12 +439,17 @@ bool TechnoClass::Random_Animate()
     return false;
 }
 
-void TechnoClass::Assign_Destination(int32_t target)
+void TechnoClass::Assign_Destination(target_t dest)
 {
 }
 
 void TechnoClass::Enter_Idle_Mode(BOOL a1)
 {
+}
+
+void TechnoClass::Set_Player_Owned()
+{
+    m_PlayerOwned = (m_OwnerHouse == *g_PlayerPtr);
 }
 
 void TechnoClass::Techno_Draw_It(
@@ -448,9 +458,11 @@ void TechnoClass::Techno_Draw_It(
     DEBUG_ASSERT(m_IsActive);
 
     if (shape != nullptr) {
-        VisualType visual = Visual_Character(false);
-        void *fading_table = Remap_Table();
-        void *ghost_table = DisplayClass::UnitShadow;
+
+        VisualType visual = Visual_Character();
+
+        void *remap_table = Remap_Table();
+        void *shadow_table = DisplayClass::UnitShadow;
 
         const ObjectTypeClass &type = Class_Of();
 
@@ -462,25 +474,25 @@ void TechnoClass::Techno_Draw_It(
         }
 
         if (m_Height > 0) {
-            ghost_table = DisplayClass::UnitShadowAir;
+            shadow_table = DisplayClass::UnitShadowAir;
         }
 
         y -= Lepton_To_Pixel(Get_Height());
 
         if (m_RTTI == RTTI_INFANTRY) {
             if (!m_PlayerOwned) {
-                if (reinterpret_cast<const InfantryTypeClass &>(Class_Of()).Get_Type() == INFANTRY_SPY) {
-                    fading_table = (void *)g_PlayerPtr->Remap_Table(false, REMAP_1);
+                if (reinterpret_cast<const InfantryTypeClass &>(Class_Of()).What_Type() == INFANTRY_SPY) {
+                    remap_table = (void *)g_PlayerPtr->Remap_Table(false, REMAP_1);
                 }
             }
 
             if (reinterpret_cast<const InfantryTypeClass &>(Class_Of()).Has_Alt_Remap()) {
-                fading_table = (void *)reinterpret_cast<const InfantryTypeClass &>(Class_Of()).Alt_Remap_Table();
+                remap_table = (void *)reinterpret_cast<const InfantryTypeClass &>(Class_Of()).Alt_Remap_Table();
             }
         }
 
         if (!m_InvulnerabilityTimer.Expired()) {
-            fading_table = DisplayClass::FadingRed;
+            remap_table = DisplayClass::FadingRed;
         }
 
         ShapeFlags flags = SHAPE_WIN_REL | SHAPE_CENTER;
@@ -498,8 +510,8 @@ void TechnoClass::Techno_Draw_It(
                             y,
                             window,
                             flags | SHAPE_GHOST | SHAPE_FADING,
-                            fading_table,
-                            ghost_table,
+                            remap_table,
+                            shadow_table,
                             dir);
                         break;
 
@@ -511,7 +523,7 @@ void TechnoClass::Techno_Draw_It(
                             y,
                             window,
                             flags | SHAPE_FADING,
-                            fading_table,
+                            remap_table,
                             DisplayClass::FadingShade,
                             dir);
                         break;
@@ -557,8 +569,8 @@ void TechnoClass::Techno_Draw_It(
                             y,
                             window,
                             flags | SHAPE_GHOST | SHAPE_FADING,
-                            fading_table,
-                            ghost_table,
+                            remap_table,
+                            shadow_table,
                             dir);
                     }
 
@@ -569,7 +581,7 @@ void TechnoClass::Techno_Draw_It(
                             y,
                             window,
                             flags | SHAPE_FADING | SHAPE_PREDATOR,
-                            fading_table,
+                            remap_table,
                             DisplayClass::FadingShade,
                             dir);
                     }

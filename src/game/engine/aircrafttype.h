@@ -66,6 +66,8 @@ public:
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
+
+    AircraftType What_Type() const { return m_Type; }
     
     static AircraftTypeClass &As_Reference(AircraftType type);
     static AircraftType From_Name(const char *name);

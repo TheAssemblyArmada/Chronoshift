@@ -31,6 +31,7 @@
 #include "theater.h"
 #include "tileset.h"
 #include "tracker.h"
+#include "house.h"
 
 const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
     0x00800080,     // abs center of cell                       //INFANTRY_SPOT_CENTER
@@ -778,12 +779,11 @@ int CellClass::Clear_Icon() const
  */
 void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
 {
-    // TODO Requires RadarClass layer of IOMap hierachy.
-#ifndef CHRONOSHIFT_STANDALONE
+/*#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, int, int, BOOL) =
         reinterpret_cast<void (*)(const CellClass *, int, int, BOOL)>(0x0049F5F8);
     func(this, x, y, unk_bool);
-#elif 0
+#elif 0*/
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
     int icon_num;
@@ -858,16 +858,15 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
         if (PlacementCheck) {
             SpeedType speed = SPEED_NONE;
 
-            if (Map.PendingObjTypePtr != nullptr && Map.PendingObjTypePtr->What_Am_I() == RTTI_BUILDING) {
-                speed = ((BuildingTypeClass *)Map.PendingObjTypePtr)->Speed;
+            if (Map.Pending_ObjectType() != nullptr && Map.Pending_ObjectType()->What_Am_I() == RTTI_BUILDING) {
+                speed = reinterpret_cast<TechnoTypeClass *>(Map.Pending_ObjectType())->Get_Speed();
             }
 
             int placement_icon = PLACEMENT_CLEAR;
 
-            // TODO, handle object in cell, do yellow tile
-            if (Map.PassedProximityCheck && Cell_Techno() != nullptr) {
+            if (!Map.Passed_Proximity_Check() && Get_Occupier() != nullptr && Get_Occupier()->What_Am_I() != RTTI_BUILDING) {
                 placement_icon = PLACEMENT_YELLOW;
-            } else if (!Map.PassedProximityCheck && !Is_Clear_To_Build(speed)) {
+            } else if (!Map.Passed_Proximity_Check() && !Is_Clear_To_Build(speed)) {
                 placement_icon = PLACEMENT_RED;
             }
 
@@ -880,10 +879,11 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
                 WindowList[WINDOW_TACTICAL].Y,
                 WindowList[WINDOW_TACTICAL].W,
                 WindowList[WINDOW_TACTICAL].H);
+
 #if 0 // TODO Edwin map stuff.
-            if (g_inMapEditor) {
-                if (Map.PendingObjTypePtr != nullptr) {
-                    switch (Map.PendingObjTypePtr->What_Am_I()) {
+            if (g_Debug_Placement_Ghosts) {
+                if (Map.Pending_ObjectType() != nullptr) {
+                    switch (Map.Pending_ObjectType()->What_Am_I()) {
                         case RTTI_VESSEL:
                             // TODO
 
@@ -911,38 +911,33 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
                 }
             }
 #endif
+
         }
 
         if (HasFlag) {
-            int flag_x;
-            int flag_y;
-            int flag_frame;
-            void *flag_shape;
 
-            flag_shape = GameFileClass::Retrieve("FLAGFLY.SHP");
+            void *flag_shape = GameFileClass::Retrieve("FLAGFLY.SHP");
 
             // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
-            // game is on, wrapped so it goes 0 to 13. So when game frame is 14 it will return 0, 15 will return 1 and so
-            // on.
-            flag_frame = g_frame % Get_Build_Frame_Count(flag_shape); // shape has 14 frames
+            // game is on, wrapped so it goes 0 to 13. So when game frame is 14 it will return 0, 15 will return 1 and so on.
+            int flag_frame = g_frame % Get_Build_Frame_Count(flag_shape); // shape has 14 frames
 
-            // 12 is what is set, but the shape is 23, so im gonna take it as / 2. or is this centered to a icon w/h? (24
-            // sq)
-            flag_x = x + (Get_Build_Frame_Width(flag_shape) / 2) + 1;
-            flag_y = y + (Get_Build_Frame_Height(flag_shape) / 2) + 1;
+            // 12 is what is set, but the shape is 23, so im gonna take it as / 2. or is this centered to a icon w/h? (24 sq)
+            int flag_x = x + (Get_Build_Frame_Width(flag_shape) / 2) + 1;
+            int flag_y = y + (Get_Build_Frame_Height(flag_shape) / 2) + 1;
 
             CC_Draw_Shape(
-                flag_shape, // GameFileClass::Retrieve("FLAGFLY.SHP"), //no point called retrieve again.
+                flag_shape,
                 flag_frame,
                 flag_x,
                 flag_y,
                 WINDOW_TACTICAL,
                 SHAPE_SHADOW | SHAPE_FADING | SHAPE_CENTER,
-                HouseClass::As_Pointer(OwnerHouse)->Remap_Table(false, REMAP_1),
+                (void *)HouseClass::As_Pointer(OwnerHouse)->Remap_Table(false, REMAP_1),
                 DisplayClass::UnitShadow);
         }
     }
-#endif
+//#endif
 }
 
 /**
@@ -1339,6 +1334,22 @@ int CellClass::Spot_Index(coord_t coord)
     }
 
     return 0;
+}
+
+/**
+ * @brief Performs a check for the result of a crate collection from the look of it.
+ *
+ * 0x004A0460
+ */
+BOOL CellClass::Goodie_Check(FootClass *foot)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*func)(const CellClass *, FootClass *) = reinterpret_cast<BOOL (*)(const CellClass *, FootClass *)>(0x004A0460);
+    return func(this, foot);
+#else
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    return false;
+#endif
 }
 
 /**

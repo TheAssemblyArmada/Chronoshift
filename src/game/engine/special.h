@@ -65,8 +65,11 @@ private:
             bool ThreePointTurnLogic : 1; // & 32 Used in hidden special dialog.
             bool OreGrows : 1; // & 64 Set in skirmish menu
             bool OreSpreads : 1; // & 128 Set in skirmish menu
+
             bool Spawned : 1; // & 1 "About to initialise Winsock" string RA demo, ow only skips intro and fades in the menu.
             bool Remixes : 1; // & 2 Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
+
+            //Bit3_1 is debug path finding is C&C Dos.
         };
         int SpecialFlags;
     };

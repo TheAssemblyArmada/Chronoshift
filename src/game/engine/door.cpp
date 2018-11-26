@@ -77,7 +77,7 @@ BOOL DoorClass::Close_Door(int delay, int stages)
 /**
  * @brief get the current state of the door.
  */
-int DoorClass::Door_Stage()
+int DoorClass::Door_Stage() const
 {
     switch (State) {
         case DOOR_CLOSING:

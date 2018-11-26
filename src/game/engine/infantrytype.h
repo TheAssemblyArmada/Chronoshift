@@ -121,7 +121,8 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    InfantryType Get_Type() const { return m_Type; }
+    InfantryType What_Type() const { return m_Type; }
+
     BOOL Has_Alt_Remap() const { return m_HasAltRemap; }
     const uint8_t *Alt_Remap_Table() const { return m_AltRemap; }
 

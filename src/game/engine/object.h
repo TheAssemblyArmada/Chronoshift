@@ -28,6 +28,7 @@
 #include "objecttype.h"
 #include "rtti.h"
 #include "vector.h"
+#include "trigger.h"
 #include "warheadtype.h"
 
 class TechnoClass;
@@ -63,7 +64,7 @@ public:
     virtual coord_t Docking_Coord() const { return Center_Coord(); }
     virtual coord_t Render_Coord() const { return Center_Coord(); }
     virtual coord_t Sort_Y() const { return Get_Coord(); }
-    virtual coord_t Fire_Coord(int weapon = WEAPON_SLOT_PRIMARY) const { return Get_Coord(); }
+    virtual coord_t Fire_Coord(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const { return Get_Coord(); }
     virtual coord_t Exit_Coord() const { return Center_Coord(); }
     virtual BOOL Limbo();
     virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH);
@@ -87,8 +88,8 @@ public:
     virtual void Clicked_As_Target(int a1) {}
     virtual BOOL Select();
     virtual void Unselect();
-    virtual BOOL In_Range(coord_t a1, int weapon = 0) const { return 0; }
-    virtual int Weapon_Range(int weapon = WEAPON_SLOT_PRIMARY) const { return 0; }
+    virtual BOOL In_Range(coord_t a1, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const { return 0; }
+    virtual int Weapon_Range(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const { return 0; }
     virtual DamageResultType Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false);
     virtual void Scatter(coord_t coord = 0, int a2 = 0, BOOL a3 = false) {}
     virtual BOOL Catch_Fire() { return 0; }
@@ -106,6 +107,8 @@ public:
     virtual void Move(FacingType facing);
 
     ObjectClass *Get_Next() { return m_Next; }
+    GamePtr<TriggerClass> Get_Attached_Trigger() const { return m_AttachedTrigger; }
+    void Invalidate_Attached_Trigger() { m_AttachedTrigger = nullptr; }
     BOOL In_Limbo() const { return m_InLimbo; }
     int16_t Get_Health() const { return m_Health; }
 
@@ -145,7 +148,7 @@ protected:
 #endif
     int m_FallingHeight;
     ObjectClass *m_Next;
-    int m_AttachedTrigger; // GamePtr<TriggerClass> once triggerclass is implemented.
+    GamePtr<TriggerClass> m_AttachedTrigger;
     int16_t m_Health;
 };
 

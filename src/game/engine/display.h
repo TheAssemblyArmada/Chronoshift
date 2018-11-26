@@ -115,62 +115,13 @@ public:
     void Flag_All_Cells_To_Redraw();
     static BOOL Is_Cell_Flagged(cell_t cellnum) { return CellRedraw[cellnum]; }
 
-    lepton_t Get_DisplayWidth() { return DisplayWidth; }
-    lepton_t Get_DisplayHeight() { return DisplayHeight; }
+    lepton_t Get_DisplayWidth() const { return DisplayWidth; }
+    lepton_t Get_DisplayHeight() const { return DisplayHeight; }
 
-#ifndef CHRONOSHIFT_STANDALONE
-    static void Hook_Me();
-    cell_t Hook_Click_Cell_Calc(int x, int y);
-    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
-#endif
-
-private:
-    // This only seems to be used by DisplayClass, so made it a static helper of this class.
-    static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
-    static void Hook_Get_Occupy_Dimensions(DisplayClass* ptr, int &w, int &h, int16_t *list)
-    {
-        ptr->Get_Occupy_Dimensions(w, h, list);
-    }
-
-    static ObjectClass *Hook_Cell_Object(DisplayClass* ptr, cell_t cellnum, int x, int y)
-    {
-        return ptr->Cell_Object(cellnum, x, y);
-    }
-    
-    static ObjectClass *Hook_Next_Object(DisplayClass* ptr, ObjectClass *object)
-    {
-        return ptr->Next_Object(object);
-    }
-
-    static BOOL Hook_In_View(DisplayClass* ptr, cell_t cellnum)
-    {
-        return ptr->In_View(cellnum);
-    }
-    
-    static BOOL Hook_Coord_To_Pixel(DisplayClass* ptr, coord_t coord, int &x, int &y)
-    {
-        return ptr->Coord_To_Pixel(coord, x, y);
-    }
-
-    static int Hook_Cell_Shadow(DisplayClass* ptr, cell_t cellnum)
-    {
-        return ptr->Cell_Shadow(cellnum);
-    }
-
-    static coord_t Hook_Closest_Free_Spot(DisplayClass* ptr, coord_t coord, BOOL skip_occupied)
-    {
-        return ptr->Closest_Free_Spot(coord, skip_occupied);
-    }
-
-    static cell_t Hook_Calculated_Cell(DisplayClass* ptr, SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
-    {
-        return ptr->Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
-    }
-
-    static BOOL Hook_Good_Reinforcement_Cell(DisplayClass* ptr, cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone)
-    {
-        return ptr->Good_Reinforcement_Cell(cell1, cell2, speed, zone, mzone);
-    }
+    BOOL Passed_Proximity_Check() const { return PassedProximityCheck; }
+    ObjectClass *Pending_Object() const { return PendingObjectPtr; }
+    ObjectTypeClass *Pending_ObjectType() const { return PendingObjectTypePtr; }
+    HousesType Pending_Object_Owner() const { return PendingObjectOwner; }
 
 protected:
     coord_t DisplayPos; // Coord of top left of tactical display within the map.
@@ -182,7 +133,7 @@ protected:
     BOOL PassedProximityCheck;
     ObjectClass *PendingObjectPtr;
     ObjectTypeClass *PendingObjectTypePtr;
-    HousesType PendingObjectHouse;
+    HousesType PendingObjectOwner;
     int TacOffsetX;
     int TacOffsetY;
     int DisplayNewPos;
@@ -256,6 +207,62 @@ public:
     static BufferClass *TheaterBuffer;
     static BooleanVectorClass CellRedraw;
 #endif
+    static char FadingWhite[256];
+
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+    cell_t Hook_Click_Cell_Calc(int x, int y);
+    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
+#endif
+
+private:
+    // This only seems to be used by DisplayClass, so made it a static helper of this class.
+    static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
+    static void Hook_Get_Occupy_Dimensions(DisplayClass* ptr, int &w, int &h, int16_t *list)
+    {
+        ptr->Get_Occupy_Dimensions(w, h, list);
+    }
+
+    static ObjectClass *Hook_Cell_Object(DisplayClass* ptr, cell_t cellnum, int x, int y)
+    {
+        return ptr->Cell_Object(cellnum, x, y);
+    }
+    
+    static ObjectClass *Hook_Next_Object(DisplayClass* ptr, ObjectClass *object)
+    {
+        return ptr->Next_Object(object);
+    }
+
+    static BOOL Hook_In_View(DisplayClass* ptr, cell_t cellnum)
+    {
+        return ptr->In_View(cellnum);
+    }
+    
+    static BOOL Hook_Coord_To_Pixel(DisplayClass* ptr, coord_t coord, int &x, int &y)
+    {
+        return ptr->Coord_To_Pixel(coord, x, y);
+    }
+
+    static int Hook_Cell_Shadow(DisplayClass* ptr, cell_t cellnum)
+    {
+        return ptr->Cell_Shadow(cellnum);
+    }
+
+    static coord_t Hook_Closest_Free_Spot(DisplayClass* ptr, coord_t coord, BOOL skip_occupied)
+    {
+        return ptr->Closest_Free_Spot(coord, skip_occupied);
+    }
+
+    static cell_t Hook_Calculated_Cell(DisplayClass* ptr, SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
+    {
+        return ptr->Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
+    }
+
+    static BOOL Hook_Good_Reinforcement_Cell(DisplayClass* ptr, cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone)
+    {
+        return ptr->Good_Reinforcement_Cell(cell1, cell2, speed, zone, mzone);
+    }
+
 };
 
 #ifndef CHRONOSHIFT_STANDALONE

@@ -143,20 +143,4 @@ bool operator!=(const T1 *a, const GamePtr<T2> &b)
     return static_cast<T2 *>(b) == a;
 }
 
-#ifndef COMPILER_WATCOM
-// "== nullptr"
-template<class T>
-bool operator==(GamePtr<T> &left, std::nullptr_t right)
-{
-    return left == right;
-}
-
-// "!= nullptr"
-template<class T>
-bool operator!=(GamePtr<T> &left, std::nullptr_t right)
-{
-    return left != right;
-}
-#endif
-
 #endif // GAMEPTR_H

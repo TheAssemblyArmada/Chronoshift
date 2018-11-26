@@ -65,6 +65,8 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    VesselType What_Type() const { return m_Type; }
+
     static VesselTypeClass &As_Reference(VesselType type);
     static VesselType From_Name(const char *name);
     static void One_Time();
