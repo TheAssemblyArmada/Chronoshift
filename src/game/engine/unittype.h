@@ -82,6 +82,8 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    UnitType What_Type() const { return m_Type; }
+
     static UnitTypeClass &As_Reference(UnitType type);
     static UnitType From_Name(const char *name);
     static void One_Time();

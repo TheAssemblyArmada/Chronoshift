@@ -491,6 +491,32 @@ BOOL HouseClass::Flag_To_Lose()
 #endif
 }
 
+void HouseClass::Tracking_Remove(TechnoClass *object)
+{
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+}
+
+void HouseClass::Tracking_Add(TechnoClass *object)
+{
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+}
+
+int *HouseClass::Factory_Counter(RTTIType type)
+{
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    return nullptr;
+}
+
+void HouseClass::Active_Remove(TechnoClass *object)
+{
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+}
+
+void HouseClass::Active_Add(TechnoClass *object)
+{
+    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+}
+
 const uint8_t *HouseClass::Remap_Table(BOOL unk1, RemapType type)
 {
     if (unk1) {
@@ -502,5 +528,22 @@ const uint8_t *HouseClass::Remap_Table(BOOL unk1, RemapType type)
         return ColorRemaps[m_Color].RemapPalette;
     }
 
+    return nullptr;
+}
+
+HouseClass &HouseClass::As_Reference(HousesType type)
+{
+    return *As_Pointer(type);
+}
+
+HouseClass *HouseClass::As_Pointer(HousesType type)
+{
+    if (type != HOUSES_NONE && type < HOUSES_COUNT) {
+        for (int index = 0; index < g_Houses.Count(); ++index) {
+            if (g_Houses[index].What_Type() == type) {
+                return &g_Houses[index];
+            }
+        }
+    }
     return nullptr;
 }

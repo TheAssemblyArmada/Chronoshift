@@ -216,6 +216,8 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    BuildingType What_Type() const { return m_Type; }
+
     static BuildingTypeClass &As_Reference(BuildingType type);
     static BuildingType From_Name(const char *name);
     static void Init(TheaterType theater);

@@ -61,8 +61,11 @@ public:
     TechnoClass(const NoInitClass &init);
     virtual ~TechnoClass() {}
 
+    // AbstractClass
     virtual HousesType Owner() const override;
     virtual void AI() override;
+
+    // ObjectClass
     virtual BOOL Is_Player_Army() const override;
     virtual ActionType What_Action(ObjectClass *object) const override;
     virtual ActionType What_Action(cell_t cellnum) const override;
@@ -70,9 +73,9 @@ public:
     virtual BOOL Can_Repair() const override;
     virtual BOOL Can_Player_Fire() const override;
     virtual BOOL Can_Player_Move() const override;
-    virtual coord_t Fire_Coord(int weapon = WEAPON_SLOT_PRIMARY) const override;
+    virtual coord_t Fire_Coord(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH) override;
-    virtual void Detach(int32_t target, int a2) override;
+    virtual void Detach(target_t target, int a2) override;
     virtual void Record_The_Kill(TechnoClass *object = nullptr) override;
     virtual void Do_Shimmer() override;
     virtual int Exit_Object(TechnoClass *object) override;
@@ -82,8 +85,8 @@ public:
     virtual BOOL Mark(MarkType mark) override;
     virtual void Clicked_As_Target(int a1) override;
     virtual BOOL Select() override;
-    virtual BOOL In_Range(coord_t a1, int weapon = 0) const override;
-    virtual int Weapon_Range(int weapon = WEAPON_SLOT_PRIMARY) const override;
+    virtual BOOL In_Range(coord_t a1, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
+    virtual int Weapon_Range(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual DamageResultType Take_Damage(
         int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) override;
     virtual int Value() const override;
@@ -92,10 +95,12 @@ public:
     virtual BOOL Revealed(HouseClass *house) override;
     virtual void Code_Pointers() override;
     virtual void Decode_Pointers() override;
-    // MissionClass virtuals.
+
+    // MissionClass.
     virtual void Override_Mission(MissionType mission, int target1 = -1, int target2 = -1) override;
     virtual BOOL Restore_Mission() override;
-    // TechnoClass virtuals
+
+    // TechnoClass
     virtual int How_Many_Survivors() const;
     virtual DirType Turret_Facing() const;
     virtual BuildingClass *Find_Docking_Bay(BuildingType building, int a2 = 0) const;
@@ -114,19 +119,19 @@ public:
     virtual void Response_Select();
     virtual void Response_Move();
     virtual void Response_Attack();
-    virtual void Player_Assign_Mission(MissionType mission, int32_t target = 0, int32_t dest = 0);
+    virtual void Player_Assign_Mission(MissionType mission, target_t target = 0, target_t dest = 0);
     virtual int Made_A_Kill();
     virtual BOOL Target_Something_Nearby(ThreatType threat);
     virtual void Stun();
-    virtual BOOL In_Range(int32_t target, int weapon = WEAPON_SLOT_PRIMARY) const;
-    virtual BOOL In_Range(ObjectClass *object, int weapon = WEAPON_SLOT_PRIMARY) const;
-    virtual void Death_Announcement(TechnoClass *object) const = 0;
-    virtual FireErrorType Can_Fire(int32_t target, int weapon = WEAPON_SLOT_PRIMARY) const;
-    virtual int32_t Greatest_Threat(ThreatType threat);
-    virtual void Assign_Target(int32_t target);
-    virtual BulletClass *Fire_At(int32_t target, int weapon = WEAPON_SLOT_PRIMARY);
+    virtual BOOL In_Range(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
+    virtual BOOL In_Range(ObjectClass *object, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
+    virtual void Death_Announcement(TechnoClass *killer) const = 0;
+    virtual FireErrorType Can_Fire(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
+    virtual target_t Greatest_Threat(ThreatType threat);
+    virtual void Assign_Target(target_t target);
+    virtual BulletClass *Fire_At(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY);
     virtual BOOL Captured(HouseClass *house);
-    virtual BOOL Electric_Zap(int32_t target, BOOL a2, coord_t a3 = 0, uint8_t *a4 = nullptr);
+    virtual BOOL Electric_Zap(target_t target, BOOL a2, coord_t a3 = 0, uint8_t *a4 = nullptr);
     virtual void Renovate();
     virtual uint8_t *Remap_Table() const;
     virtual void Draw_Pips(int x, int y, WindowNumberType window) const;
@@ -134,16 +139,33 @@ public:
     virtual void Do_Cloak();
     virtual bool Is_Ready_To_Random_Animate() const;
     virtual bool Random_Animate();
-    virtual void Assign_Destination(int32_t target); // TODO A second arg exists in SS and TS
+    virtual void Assign_Destination(target_t dest);
     virtual void Enter_Idle_Mode(BOOL a1 = false);
 
     void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
+    BOOL Visually_Unclear() const { VisualType visual = Visual_Character(); return visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN; }
 
-    BOOL Is_Cloakable() const { return m_Cloakable; }
-    void Set_Cloakable(BOOL value) { m_Cloakable = value; }
-    const GamePtr<HouseClass> Get_Owner_House() const { return m_OwnerHouse; }
+    HouseClass *Get_Owner_House() const { return m_OwnerHouse; }
     int Get_Price() const { return m_Price; }
     void Set_Price(int price) { m_Price = price; }
+
+    target_t Get_TarCom() const { return m_TarCom; }
+
+    BOOL Is_Useless() const { return m_IsUseless; }
+    BOOL Is_Ticked_Off() const { return m_IsTickedOff; }
+    BOOL Is_Cloakable() const { return m_Cloakable; }
+    void Set_Cloakable(BOOL value) { m_Cloakable = value; }
+    BOOL Is_Primary() const { return m_IsPrimary; }
+    BOOL Is_A_Loner() const { return m_IsALoner; }
+    BOOL Is_Locked_On_Map() const { return m_LockedOnMap; }
+    BOOL Is_Recoiling() const { return m_IsRecoiling; }
+    BOOL Is_Tethered() const { return m_Tethered; }
+    BOOL Is_Player_Owned() const { return m_PlayerOwned; }
+    void Set_Player_Owned();
+    BOOL Is_Player_Aware() const { return m_PlayerAware; }
+    BOOL Is_AI_Aware() const { return m_AIAware; }
+    BOOL Is_Lemon() const { return m_Lemon; }
+    BOOL Is_Bit2_16() const { return m_Bit2_16; }
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
@@ -154,7 +176,7 @@ public:
 #endif
 
 protected:
-    VisualType Visual_Character(BOOL flag) const;
+    VisualType Visual_Character(BOOL flag = false) const;
 
 private:
     const TechnoTypeClass &Techno_Class_Of() const { return reinterpret_cast<const TechnoTypeClass &>(Class_Of()); }
@@ -183,7 +205,7 @@ protected:
             bool m_PlayerAware : 1; // & 2 C&CDOS has this as "Discovered"
             bool m_AIAware : 1; // & 4 maybe this is Discovered in C&C95?
             bool m_Lemon : 1; // & 8"degrades" in OpenDUNE, seems to imply some decaying logic
-            bool m_TechnoBit2_16 : 1; // & 16
+            bool m_Bit2_16 : 1; // & 16
         };
         int m_Bitfield;
     };
@@ -200,24 +222,27 @@ protected:
     bool m_PlayerAware; // C&CDOS has this as "Discovered"
     bool m_AIAware; // maybe this is Discovered in C&C95?
     bool m_Lemon; //"degrades" in OpenDUNE, seems to imply some decaying logic
-    bool m_TechnoBit2_16;
+    bool m_Bit2_16;
 #endif
     fixed m_ArmorMult;
     fixed m_FirepowerMult;
     TCountDownTimerClass<FrameTimerClass> m_IdleActionTimer;
     TCountDownTimerClass<FrameTimerClass> m_InvulnerabilityTimer;
     int m_Spied;
-    int m_Archive;
+    target_t m_Archive;
     GamePtr<HouseClass> m_OwnerHouse;
     CloakState m_CloakState;
     StageClass m_CloakingStage;
     TCountDownTimerClass<FrameTimerClass> m_CloakDelayTimer;
-    int m_TarCom;
-    int m_SuspendedTarCom;
+    target_t m_TarCom;
+    target_t m_SuspendedTarCom;
     FacingClass m_Facing;
     TCountDownTimerClass<FrameTimerClass> m_RearmTimer;
     int m_Ammo;
     int m_Price;
+
+protected:
+    static int const BodyShape32[32];
 };
 
 #ifndef CHRONOSHIFT_STANDALONE

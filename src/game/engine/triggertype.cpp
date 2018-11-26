@@ -6,6 +6,10 @@ TFixedIHeapClass<TriggerTypeClass> &g_TriggerTypes = *reinterpret_cast<TFixedIHe
 TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
 #endif
 
+TriggerTypeClass::TriggerTypeClass() : AbstractTypeClass(RTTI_TRIGGERTYPE, g_TriggerTypes.ID(this), 0, "x") {
+
+}
+
 void TriggerTypeClass::Code_Pointers()
 {
 #ifndef CHRONOSHIFT_STANDALONE

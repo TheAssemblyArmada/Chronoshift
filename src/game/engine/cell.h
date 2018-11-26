@@ -34,6 +34,7 @@ class BuildingClass;
 class VesselClass;
 class AircraftClass;
 class TerrainClass;
+class FootClass;
 class Straw;
 class Pipe;
 
@@ -65,10 +66,11 @@ class CellClass
     {
         ORESTAGE_SPREADING = 6,
         ORESTAGE_FULLGROWN = 11,
+
         PLACEMENT_CLEAR = 0,
         PLACEMENT_YELLOW = 1,
         PLACEMENT_RED = 2,
-        PLACEMENT_SOMETHING = 3,
+        PLACEMENT_SELECT = 3,
     };
 
 public:
@@ -118,6 +120,7 @@ public:
     int Ore_Adjust(BOOL randomize);
     coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const;
     BOOL Is_Spot_Free(int spotindex) const { return ((1 << spotindex) & OccupantBit) == 0; }
+    BOOL Goodie_Check(FootClass *foot);
     BOOL Should_Save() const;
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
@@ -128,15 +131,17 @@ public:
     BOOL Get_Placement_Check() const { return PlacementCheck; }
     void Set_Placement_Check(BOOL check) { PlacementCheck = check; }
     BOOL Is_Visible() const { return Visible; }
-    void Set_Visible(BOOL bit) { Visible = bit; }
+    void Set_Visible(BOOL value) { Visible = value; }
     BOOL Is_Revealed() const { return Revealed; }
-    void Set_Revealed(BOOL bit) { Revealed = bit; }
+    void Set_Revealed(BOOL value) { Revealed = value; }
     BOOL Get_Bit1() const { return Bit1; }
-    void Set_Bit1(BOOL bit) { Bit1 = bit; }
+    void Set_Bit1(BOOL value) { Bit1 = value; }
+    BOOL Get_Bit16() const { return Bit16; }
+    void Set_Bit16(BOOL value) { Bit16 = value; }
     BOOL Get_Bit32() const { return Bit32; }
-    void Set_Bit32(BOOL bit) { Bit32 = bit; }
+    void Set_Bit32(BOOL value) { Bit32 = value; }
     BOOL Get_Bit128() const { return Bit128; }
-    void Set_Bit128(BOOL bit) { Bit128 = bit; }
+    void Set_Bit128(BOOL value) { Bit128 = value; }
     TemplateType Get_Template() const { return Template; }
     void Set_Template(TemplateType temp) { Template = temp; }
     uint8_t Get_Icon() const { return Icon; }
@@ -156,9 +161,21 @@ public:
     static int Spot_Index(coord_t coord);
 
 #ifndef CHRONOSHIFT_STANDALONE
-    static void Hook_Me();
+public:
+    static void Hook_Me()
+    {
+    #ifdef COMPILER_WATCOM
+        Hook_Function(0x0049EE70, *CellClass::Hook_Ctor);
+        Hook_Function(0x0049FF98, *CellClass::Spot_Index);
+        Hook_Function(0x004F8E64, *CellClass::Load);
+        Hook_Function(0x0049F5F8, *CellClass::Hook_Draw_It);
+    #endif
+    }
+
     CellClass *Hook_Ctor() { return new (this) CellClass; }
+    void Hook_Draw_It(int x, int y, BOOL unk_bool) { CellClass::Draw_It(x, y, unk_bool); }
 #endif
+
 private:
     cell_t CellNumber;
 
@@ -226,14 +243,4 @@ inline BOOL CellClass::operator==(CellClass const &that) const
         && memcmp(Overlapper, that.Overlapper, sizeof(Overlapper)) == 0;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
-inline void CellClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x0049EE70, *CellClass::Hook_Ctor);
-    Hook_Function(0x0049FF98, *CellClass::Spot_Index);
-    Hook_Function(0x004F8E64, *CellClass::Load);
-#endif
-}
-#endif
 #endif // CELL_H

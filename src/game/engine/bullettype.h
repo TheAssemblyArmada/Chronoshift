@@ -77,6 +77,10 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    BOOL Get_UnderWater() const { return UnderWater; }
+
+    BulletType What_Type() const { return Type; }
+
     static void Init_Heap();
     static void One_Time();
     static BulletType From_Name(const char *name);

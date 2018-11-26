@@ -25,6 +25,8 @@
 #include "queue.h"
 #include "techno.h"
 //#include "vortex.h"
+#include "building.h"
+#include "unit.h"
 #include "theme.h"
 #include "coord.h"
 #include "rules.h"
@@ -581,11 +583,12 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
 void Keyboard_Process(KeyNumType &key)
 {
+    // Distance to scroll on scroll commands. 256 == 1 cell.
+    static int _scroll_dist = 256;
+
     if (key != KN_NONE) {
 
         Message_Input(key);
-
-        int scroll_dist = 256;
 
         ObjectClass *objptr = nullptr;
         ObjectClass *curobj = nullptr;
@@ -660,7 +663,7 @@ void Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_KeyStop()) {
-            for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+            for (int index = 0; index < CurrentObjects.Count(); ++index) {
                 objptr = CurrentObjects[index];
                 DEBUG_ASSERT(objptr != nullptr);
                 if (objptr != nullptr) {
@@ -674,7 +677,7 @@ void Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_KeyGuard()) {
-            for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+            for (int index = 0; index < CurrentObjects.Count(); ++index) {
                 objptr = CurrentObjects[index];
                 DEBUG_ASSERT(objptr != nullptr);
                 if (objptr != nullptr) {
@@ -688,7 +691,7 @@ void Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_KeyScatter()) {
-            for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+            for (int index = 0; index < CurrentObjects.Count(); ++index) {
                 objptr = CurrentObjects[index];
                 DEBUG_ASSERT(objptr != nullptr);
                 if (objptr != nullptr) {
@@ -714,55 +717,54 @@ void Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_KeyBase()) {
 
             bool selected = false;
-            coord_t coord = 0;
+            coord_t object_coord = 0;
 
             Unselect_All();
 
-            // TODO: Requires BuildingClass.
-            /*if (!selected && g_PlayerPtr->Currently_Owned_Building_Count() > 0) {
-                for (size_t index = 0; index < g_Buildings.Count(); ++index) {
-                    BuildingClass *bptr = g_Buildings[index];
+            // If we have a construction yard, center in on that.
+            if (!selected && g_PlayerPtr->Currently_Owned_Building_Count() > 0) {
+                for (int index = 0; index < g_Buildings.Count(); ++index) {
+                    BuildingClass *bptr = &g_Buildings[index];
                     DEBUG_ASSERT(bptr != nullptr);
                     if (bptr != nullptr) {
                         if (!bptr->In_Limbo() && bptr->Get_Owner_House()->Is_Player()) {
                             if (bptr->What_Type() == BUILDING_FACT) {
-                                if (bptr->IsPrimary) {
-                                    Unselect_All();
+                                Unselect_All();
+                                if (bptr->Is_Primary()) {
                                     bptr->Select();
                                     selected = true;
-                                    coord = bptr->Center_Coord();
+                                    object_coord = bptr->Center_Coord();
                                     break;
                                 }
                             }
                         }
                     }
                 }
-            }*/
+            }
 
-            // TODO: Requires UnitClass.
-            /*if (!selected && g_PlayerPtr->Currently_Owned_Unit_Count() > 0) {
-                for (size_t index = 0; index < g_Units.Count(); ++index) {
-                    UnitClass *uptr = g_Units[index];
+            // Or, if we have a mcv, center in on that instead.
+            if (!selected && g_PlayerPtr->Currently_Owned_Unit_Count() > 0) {
+                for (int index = 0; index < g_Units.Count(); ++index) {
+                    UnitClass *uptr = &g_Units[index];
                     DEBUG_ASSERT(uptr != nullptr);
                     if (uptr != nullptr) {
-                        if (!uptr->InLimbo && uptr->Get_Owner_House()->Is_Player()) {
+                        if (!uptr->In_Limbo() && uptr->Get_Owner_House()->Is_Player()) {
                             if (uptr->What_Type() == UNIT_MCV) {
                                 Unselect_All();
                                 uptr->Select();
                                 selected = true;
-                                coord = uptr->Center_Coord();
+                                object_coord = uptr->Center_Coord();
                                 break;
                             }
                         }
                     }
                 }
-            }*/
+            }
 
-            /*if (selected) {
-                if (g_PlayerPtr->BaseCenter) {
-                    Map.Center_Map(g_PlayerPtr->BaseCenter);
-                }
-            }*/
+            coord_t center_coord = (selected ? object_coord : g_PlayerPtr->Base_Center());
+            if (center_coord) {
+                Map.Center_Map(center_coord);
+            }
 
             Map.Flag_To_Redraw(true);
 
@@ -810,47 +812,47 @@ void Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_KeySidebarUp()) {
-            Map.Scroll(true, -1);
+            Map.Scroll(true);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_KeySidebarDown()) {
-            Map.Scroll(false, -1);
+            Map.Scroll(false);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyOption1() || key == Options.Get_KeyOption2())) {
+        if (justkey == Options.Get_KeyOption1() || key == Options.Get_KeyOption2()) {
             Map.Help_Text(TXT_NULL);
             Queue_Options();
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_KeyScrollLeft()) {
-            Map.Scroll_Map(DIR_WEST, scroll_dist);
+            Map.Scroll_Map(DIR_WEST, _scroll_dist);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_KeyScrollRight()) {
-            Map.Scroll_Map(DIR_EAST, scroll_dist);
+            Map.Scroll_Map(DIR_EAST, _scroll_dist);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_KeyScrollUp()) {
-            Map.Scroll_Map(DIR_NORTH, scroll_dist);
+            Map.Scroll_Map(DIR_NORTH, _scroll_dist);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_KeyScrollDown()) {
-            Map.Scroll_Map(DIR_SOUTH, scroll_dist);
+            Map.Scroll_Map(DIR_SOUTH, _scroll_dist);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam1() || justkey == '1')) {
+        if (justkey == Options.Get_KeyTeam1() || justkey == '1') {
             Handle_Team(0, modifierkey);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam2() || justkey == '2')) {
+        if (justkey == Options.Get_KeyTeam2() || justkey == '2') {
             Handle_Team(1, modifierkey);
             key = KN_NONE;
         }
@@ -860,37 +862,37 @@ void Keyboard_Process(KeyNumType &key)
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam4() || justkey == '4')) {
+        if (justkey == Options.Get_KeyTeam4() || justkey == '4') {
             Handle_Team(3, modifierkey);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam5() || justkey == '5')) {
+        if (justkey == Options.Get_KeyTeam5() || justkey == '5') {
             Handle_Team(4, modifierkey);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam6() || justkey == '6')) {
+        if (justkey == Options.Get_KeyTeam6() || justkey == '6') {
             Handle_Team(5, modifierkey);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam7() || justkey == '7')) {
+        if (justkey == Options.Get_KeyTeam7() || justkey == '7') {
             Handle_Team(6, modifierkey);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam8() || justkey == '8')) {
+        if (justkey == Options.Get_KeyTeam8() || justkey == '8') {
             Handle_Team(7, modifierkey);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam9() || justkey == '9')) {
+        if (justkey == Options.Get_KeyTeam9() || justkey == '9') {
             Handle_Team(8, modifierkey);
             key = KN_NONE;
         }
 
-        if ((justkey == Options.Get_KeyTeam10() || justkey == '0')) {
+        if (justkey == Options.Get_KeyTeam10() || justkey == '0') {
             Handle_Team(9, modifierkey);
             key = KN_NONE;
         }

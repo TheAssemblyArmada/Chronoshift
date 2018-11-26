@@ -24,9 +24,6 @@
 class TechnoClass;
 class FootClass;
 
-// A invalid target instance parsed into Transmit_Message() as a default param.
-extern target_t NullRadioTarget;
-
 class RadioClass : public MissionClass
 {
 public:
@@ -40,7 +37,7 @@ public:
     virtual void Code_Pointers() override;
     virtual void Decode_Pointers() override;
     virtual RadioMessageType Transmit_Message(
-        RadioMessageType message, target_t &target = NullRadioTarget, RadioClass *radio = nullptr);
+        RadioMessageType message, target_t &target = RadioClass::Get_LParam(), RadioClass *radio = nullptr);
     virtual RadioMessageType Transmit_Message(RadioMessageType message, RadioClass *radio);
 
     // TODO, rename!
@@ -62,13 +59,15 @@ public:
         return nullptr;
     }
 
+    static target_t &Get_LParam();
+
     static const char *Message_From(RadioMessageType message);
     static RadioMessageType From_Message(const char *message);
 
 private:
     static const char *Messages[RADIO_COUNT];
 
-public:
+protected:
     RadioMessageType ReceivedMessage; // 0x37    //name subject to change!
     RadioMessageType TransmittedMessage; // 0x38    //name subject to change!
     RadioMessageType LastMessage; // 0x39

@@ -206,7 +206,7 @@ public:
     BOOL Activate_Upgrade(int state);
     BOOL Activate_Demolish(int state);
     BOOL Add(RTTIType type, int id);
-    BOOL Scroll(BOOL reverse, int column);
+    BOOL Scroll(BOOL reverse, int column = -1);
     void Recalc();
     BOOL Activate(int mode = SIDEBAR_TOGGLE);
     int Abandon_Production(RTTIType, int);

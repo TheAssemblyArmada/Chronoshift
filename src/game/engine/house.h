@@ -37,7 +37,6 @@
 
 class HouseTypeClass;
 class NoInitClass;
-class CCINIClass;
 
 template<class T>
 class TFixedIHeapClass;
@@ -94,6 +93,8 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
+    const char *Get_Name() const { return m_Type->Get_Name(); }
+
     void Stole(unsigned int amount) { m_Stolen += amount; }
     unsigned int Available_Money() const { return m_Credits + m_Ore; }
     void Spend_Money(unsigned int amount);
@@ -108,6 +109,12 @@ public:
     BOOL Flag_To_Die();
     BOOL Flag_To_Win();
     BOOL Flag_To_Lose();
+
+    void Tracking_Remove(TechnoClass *object);
+    void Tracking_Add(TechnoClass *object);
+    int *Factory_Counter(RTTIType type);
+    void Active_Remove(TechnoClass *object);
+    void Active_Add(TechnoClass *object);
 
     const uint8_t *Remap_Table(BOOL unk1, RemapType type);
 
@@ -137,8 +144,19 @@ public:
 
     SuperClass &Special_Weapons(SpecialWeaponType type) { return m_Specials[type]; }
 
+    int Currently_Owned_Unit_Count() const { return m_CurrentUnitCount; }
+    int Currently_Owned_Building_Count() const { return m_CurrentBuildingCount; }
+    int Currently_Owned_Infantry_Count() const { return m_CurrentInfantryCount; }
+    int Currently_Owned_Vessel_Count() const { return m_CurrentVesselCount; }
+    int Currently_Owned_Aircraft_Count() const { return m_CurrentAircraftCount; }
+
+    coord_t Base_Center() const { return m_BaseCenter; }
+
     void Code_Pointers() {}
     void Decode_Pointers() {}
+
+    static HouseClass &As_Reference(HousesType type);
+    static HouseClass *As_Pointer(HousesType type);
 
 private:
     RTTIType m_RTTI;
@@ -342,8 +360,10 @@ private:
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TFixedIHeapClass<HouseClass> &g_Houses;
+extern HouseClass *&g_PlayerPtr;
 #else
 extern TFixedIHeapClass<HouseClass> g_Houses;
+extern HouseClass *g_PlayerPtr;
 #endif
 
 #endif // HOUSE_H

@@ -14,10 +14,14 @@
  */
 
 #include "radio.h"
-//#include "techno.h"
 
-// A invalid target instance parsed into Transmit_Message() as a default param.
-target_t NullRadioTarget = 0;
+// A invalid target instance parsed into targets as a default param.
+static target_t LParam = 0;
+
+target_t &RadioClass::Get_LParam()
+{
+    return LParam;
+}
 
 const char *RadioClass::Messages[RADIO_COUNT] = {
     "static (no message)",
@@ -144,7 +148,7 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-    RadioClass *radioptr = (radio == nullptr) ? reinterpret_cast<RadioClass *>(Radio) : radio;
+    RadioClass *radioptr = radio == nullptr ? reinterpret_cast<RadioClass *>(Radio) : radio;
 
     if (radioptr == nullptr) {
         return RADIO_STATIC;
@@ -174,13 +178,8 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioCla
     // DEBUG_ASSERT(radio != nullptr);
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
-#ifndef CHRONOSHIFT_STANDALONE
-    RadioMessageType (*func)(RadioMessageType, RadioClass *) =
-        reinterpret_cast<RadioMessageType (*)(RadioMessageType, RadioClass *)>(0x00532AF0);
-    return func(message, radio);
-#else
-    return Transmit_Message(message, NullRadioTarget, radio);
-#endif
+
+    return Transmit_Message(message, LParam, radio);
 }
 
 void RadioClass::Code_Pointers()

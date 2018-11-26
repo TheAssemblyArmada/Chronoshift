@@ -22,23 +22,18 @@ TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClas
 TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;
 #endif
 
-const WarheadTypeClass WarheadSA(WARHEAD_SA, "SA");
-const WarheadTypeClass WarheadHE(WARHEAD_HE, "HE");
-const WarheadTypeClass WarheadAP(WARHEAD_AP, "AP");
-const WarheadTypeClass WarheadFire(WARHEAD_FIRE, "Fire");
-const WarheadTypeClass WarheadHollowPoint(WARHEAD_HOLLOWPOINT, "HollowPoint");
-const WarheadTypeClass WarheadSuper(WARHEAD_SUPER, "Super");
-const WarheadTypeClass WarheadOrganic(WARHEAD_ORGANIC, "Organic");
-const WarheadTypeClass WarheadNuke(WARHEAD_NUKE, "Nuke");
-const WarheadTypeClass WarheadMechanical(WARHEAD_MECHANICAL, "Mechanical");
+const WarheadTypeClass WarheadSA("SA");
+const WarheadTypeClass WarheadHE("HE");
+const WarheadTypeClass WarheadAP("AP");
+const WarheadTypeClass WarheadFire("Fire");
+const WarheadTypeClass WarheadHollowPoint("HollowPoint");
+const WarheadTypeClass WarheadSuper("Super");
+const WarheadTypeClass WarheadOrganic("Organic");
+const WarheadTypeClass WarheadNuke("Nuke");
+const WarheadTypeClass WarheadMechanical("Mechanical");
 
-/**
- * @brief
- *
- * 0x0058F9D8 Prototypes don't match but it fulfills same purpose, do not hook.
- */
-WarheadTypeClass::WarheadTypeClass(WarheadType warhead, const char *name) :
-    Type(warhead),
+WarheadTypeClass::WarheadTypeClass(const char *name) :
+    HeapID(g_WarheadTypes.ID(this)),
     Name(name),
     Spread(1),
     Wall(false),
@@ -54,7 +49,7 @@ WarheadTypeClass::WarheadTypeClass(WarheadType warhead, const char *name) :
 }
 
 WarheadTypeClass::WarheadTypeClass(WarheadTypeClass const &that) :
-    Type(that.Type),
+    HeapID(that.HeapID),
     Name(that.Name),
     Spread(that.Spread),
     Wall(that.Wall),
@@ -165,6 +160,7 @@ WarheadTypeClass *WarheadTypeClass::As_Pointer(WarheadType warhead)
 BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
 {
     char verses_buffer[128];
+    char verses_format_buffer[128];
 
     if (ini.Find_Section(Get_Name()) != nullptr) {
         Spread = ini.Get_Int(Get_Name(), "Spread", Spread);
@@ -174,9 +170,15 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
         Explosion = ini.Get_Int(Get_Name(), "Explosion", Explosion);
         Death = ini.Get_Int(Get_Name(), "InfDeath", Death);
 
-        // NOTE: If you add or remove from the ArmorTypes, you need to change VERSUS_FORMAT!
-#define VERSUS_FORMAT "100%%,100%%,100%%,100%%,100%%"
-        if (ini.Get_String(Get_Name(), "Verses", VERSUS_FORMAT, verses_buffer, sizeof(verses_buffer)) > 0) {
+        // Build the verses format based on the armor count.
+        for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
+            strncat(verses_format_buffer, "100%%", sizeof(verses_format_buffer));
+            if (armor != (ARMOR_COUNT - 1)) {
+                strncat(verses_format_buffer, ",", sizeof(verses_format_buffer));
+            }
+        }
+
+        if (ini.Get_String(Get_Name(), "Verses", verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
             char *value = strtok(verses_buffer, ",");
             for (ArmorType armor = ARMOR_FIRST; (armor < ARMOR_COUNT) && (value != nullptr); ++armor) {
                 DEBUG_ASSERT(value != nullptr);
@@ -185,7 +187,7 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
             }
         }
 
-        UnkBool = Verses[3] == fixed::_0_1;
+        UnkBool = Verses[ARMOR_HEAVY] == fixed::_0_1;
 
         return true;
     }

@@ -38,9 +38,13 @@ public:
     void AI();
     BOOL Open_Door(int delay, int stages);
     BOOL Close_Door(int delay, int stages);
-    int Door_Stage();
+    int Door_Stage() const;
     BOOL Get_Stage_Complete() { return StageComplete; }
     void Set_Stage_Compelte(BOOL complete) { StageComplete = complete; }
+    BOOL Is_Closed() const { return State == DOOR_CLOSED; }
+    BOOL Is_Open() const { return State == DOOR_OPEN; }
+    BOOL Is_Opening() const { return State == DOOR_OPENING; }
+    BOOL Is_Closing() const { return State == DOOR_CLOSING; }
 private:
     StageClass DoorTimer;
     int8_t Stage; // Number of stages between end states (open or closed).

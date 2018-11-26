@@ -66,6 +66,7 @@ public:
     MissionType Get_Queued_Mission() const { return MissionQueue; }
     void Set_Mission_Status(MissionStatusType status) { Status = status; }
     int Get_Mission_Status() const { return Status; }
+    BOOL Not_On_A_Mission() const { return Get_Mission() == MISSION_NONE && Get_Queued_Mission() == MISSION_NONE; }
 
     static BOOL Is_Recruitable_Mission(MissionType mission);
 
