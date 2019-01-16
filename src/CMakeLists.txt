@@ -1,45 +1,3 @@
-# Add platform libraries needed for the build
-if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
-    if(DirectX_FOUND)
-        list(APPEND PLATFORM_INCLUDES ${DirectX_INCLUDE_DIRS})
-        list(APPEND PLATFORM_LIBS ${DirectX_LIBRARIES})
-    endif()
-    
-    if(STANDALONE)
-        list(APPEND PLATFORM_LIBS ws2_32)
-    else()
-        list(APPEND PLATFORM_LIBS wsock32) # Original links wsock32, not ws2_32
-    endif()
-
-    list(APPEND PLATFORM_LIBS winmm)
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-    list(APPEND PLATFORM_LIBS rt)
-else()
-    #No other platforms yet.
-endif()
-
-if(SDL2_FOUND)
-    list(APPEND PLATFORM_INCLUDES ${SDL2_INCLUDE_DIRS})
-    list(APPEND PLATFORM_LIBS ${SDL2_LIBRARIES})
-endif()
-
-if(OPENAL_FOUND)
-    list(APPEND PLATFORM_INCLUDES ${OPENAL_INCLUDE_DIRS})
-    list(APPEND PLATFORM_LIBS ${OPENAL_LIBRARIES})
-endif()
-
-if(LZO_FOUND)
-    list(APPEND PLATFORM_INCLUDES ${LZO_INCLUDE_DIRS})
-    list(APPEND PLATFORM_LIBS ${LZO_LIBRARIES})
-else()
-    message("Prebuilt LZO library not found, using minilzo.")
-    add_library(minilzo STATIC EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/libs/minilzo/minilzo.c)
-    list(APPEND PLATFORM_INCLUDES ${CMAKE_SOURCE_DIR}/libs)
-    list(APPEND PLATFORM_LIBS minilzo)
-endif()
-
-list(APPEND PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
-
 # Build and link the DLL.
 set(GAMEENGINE_INCLUDES
     ${CMAKE_CURRENT_BINARY_DIR}/base
@@ -277,20 +235,51 @@ endif()
 # For MSVC/XCode this will add the headers to the project.
 source_group("Header Files" FILES ${GAMEENGINE_HEADERS})
 
-target_link_libraries(chronoshift ${PLATFORM_LIBS})
+if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
+    target_link_libraries(chronoshift winmm)
 
-if(THREADS_HAVE_PTHREAD_ARG)
-  target_compile_options(chronoshift PUBLIC "-pthread")
+    if(STANDALONE)
+        target_link_libraries(chronoshift ws2_32)
+    else()
+        target_link_libraries(chronoshift wsock32) # Original links wsock32, not ws2_32
+    endif()
+elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    target_link_libraries(chronoshift rt)
 endif()
 
-if(NOT LZO_FOUND)
-    target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_USE_MINILZO=1)
+# We don't need to link anything if we have win32 threads. Affects MinGW builds primarily.
+if(CMAKE_USE_PTHREADS_INIT AND NOT CMAKE_USE_WIN32_THREADS_INIT)
+    target_link_libraries(chronoshift Threads::Threads)
+endif()
+
+if(DDRAW_FOUND)
+    target_compile_definitions(chronoshift PRIVATE BUILD_WITH_DDRAW=1)
+    target_link_libraries(chronoshift DirectX::ddraw)
+endif()
+
+if(DSOUND_FOUND)
+    target_compile_definitions(chronoshift PRIVATE BUILD_WITH_DSOUND=1)
+    target_link_libraries(chronoshift DirectX::dsound)
 endif()
 
 if(SDL2_FOUND)
-    target_compile_definitions(chronoshift PUBLIC SDL2_BUILD=1)
+    target_compile_definitions(chronoshift PRIVATE BUILD_WITH_SDL2=1)
+    target_link_libraries(chronoshift SDL2::SDL2)
 endif()
 
 if(OPENAL_FOUND)
-    target_compile_definitions(chronoshift PUBLIC OPENAL_BUILD=1)
+    target_compile_definitions(chronoshift PRIVATE BUILD_WITH_OPENAL=1)
+    target_link_libraries(chronoshift ${OPENAL_LIBRARIES})
+    target_include_directories(chronoshift PUBLIC ${OPENAL_INCLUDE_DIRS})
+endif()
+
+if(LZO_FOUND)
+    target_link_libraries(chronoshift ${LZO_LIBRARIES})
+    target_include_directories(chronoshift PUBLIC ${LZO_INCLUDE_DIRS})
+else()
+    message("Prebuilt LZO library not found, using minilzo.")
+    add_library(minilzo STATIC EXCLUDE_FROM_ALL ${CMAKE_SOURCE_DIR}/libs/minilzo/minilzo.c)
+    target_include_directories(minilzo PUBLIC ${CMAKE_SOURCE_DIR}/libs)
+    target_compile_definitions(chronoshift PRIVATE CHRONOSHIFT_USE_MINILZO=1)
+    target_link_libraries(chronoshift minilzo)
 endif()
