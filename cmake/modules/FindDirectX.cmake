@@ -1,11 +1,36 @@
+# FindDirectX
+# -------
+#
+# Find the DirectX libraries and programs. Searches most recent SDK first.
+#
+# This module supports multiple components.
+# Components can include any of: ``ddraw``, ``dsound``, ``d3d``,
+# ``d3dx``, ``d3d8``, ``d3dx8``, ``d3d9``, ``d3dx9``, ``dxgi``,
+# ``d3d10``, ``d3d10_1``, ``d3dx10``, ``d3d11``, ``d3d11_1``, ``d3d11_2``,
+# ``d3dx11``, ``d2d1``
+#
+# This module reports information about the DirectX installation in
+# several variables.  General variables::
+#
+#   DirectX_FOUND - true if the main programs and libraries were found
+#   DirectX_LIBRARIES - component libraries to be linked
+#   DirectX_INCLUDE_DIRS - the directories containing the DirectX headers
+#
+# Imported targets::
+#
+#   DirectX::<C>
+#
+# Where ``<C>`` is the name of an DirectX component, for example
+# ``DirectX::d3d9``.
+#
+# DirectX component libraries are reported in::
+#
+#   <C>_FOUND - ON if component was found
+#   <C>_LIBRARIES - libraries for component
+#
+# Note that ``<C>`` is the uppercased name of the component.
 include(CheckIncludeFileCXX)
 include(FindPackageMessage)
-
-set(DIRECTX_ROOT_DIR
-	"${DIRECTX_ROOT_DIR}"
-	CACHE
-	PATH
-	"Root directory to search for DirectX")
 
 function(_DirectX_FIND)
     if(MSVC)
@@ -25,7 +50,7 @@ function(_DirectX_FIND)
         endif()
         
         set(DirectX_SDK_PATHS)
-
+        
         set(_dx_quiet)
         if(DirectX_FIND_QUIETLY)
             set(_dx_quiet QUIET)
@@ -48,6 +73,16 @@ function(_DirectX_FIND)
             endif()
         endmacro()
         
+        # Find this file as the older DXSDK paths being listed before this will causes errors.
+        find_path(WINSDK_INCLUDES
+            NAMES "rpcsal.h"
+            PATHS ${DirectX_SDK_PATHS}
+            PATH_SUFFIXES include directx
+            NO_DEFAULT_PATH
+        )
+        
+        message("Found rpcsal.h in ${WINSDK_INCLUDES}")
+        
         _append_dxsdk_in_inclusive_range(1500 1600 "${_PROG_FILES}/Microsoft DirectX SDK (June 2010)")
         _append_dxsdk_in_inclusive_range(1400 1600
             "${_PROG_FILES}/Microsoft DirectX SDK (February 2010)"
@@ -69,7 +104,11 @@ function(_DirectX_FIND)
             "${_PROG_FILES}/Microsoft DirectX SDK (June 2006)"
             "${_PROG_FILES}/Microsoft DirectX SDK (April 2006)"
             "${_PROG_FILES}/Microsoft DirectX SDK (February 2006)")
-
+        
+        if(DirectX_ROOT)
+            list(APPEND DirectX_SDK_PATHS "${DirectX_ROOT}")
+        endif()
+        
         file(TO_CMAKE_PATH "$ENV{DXSDK_DIR}" ENV_DXSDK_DIR)
         if(ENV_DXSDK_DIR)
             list(APPEND DirectX_SDK_PATHS ${ENV_DXSDK_DIR})
@@ -86,6 +125,10 @@ function(_DirectX_FIND)
     
     set(DirectX_REQUIRED_LIBS_FOUND ON)   
     
+    if(WINSDK_INCLUDES)
+        list(APPEND DirectX_INCLUDE_DIR "${WINSDK_INCLUDES}")
+    endif()
+    
     foreach(component ${DirectX_FIND_COMPONENTS})
         string(TOUPPER "${component}" component_upcase)
         set(component_cache "DirectX_${component_upcase}_LIBRARY")
@@ -93,9 +136,7 @@ function(_DirectX_FIND)
         set(component_cache_release "${component_cache}_RELEASE")
         set(component_cache_debug "${component_cache}_DEBUG")
         set(component_found "${component_upcase}_FOUND")
-        
-        message("Searching ${DirectX_SDK_PATHS}")
-        
+
         # Search default locations
         find_path (${component_include}
             NAMES "${component}.h"
@@ -103,7 +144,7 @@ function(_DirectX_FIND)
             PATH_SUFFIXES include directx
             DOC "DirectX ${component} include directory"
         )
-
+        
         if(${component_include})
             list(APPEND DirectX_INCLUDE_DIR "${${component_include}}")
         endif()
@@ -158,6 +199,13 @@ function(_DirectX_FIND)
     )
     
     if(NOT DirectX_FIND_QUIETLY)
+        if(DirectX_INCLUDE_DIR)
+            message(STATUS "Found the following DirectX include directories:")
+            foreach(found ${DirectX_INCLUDE_DIR})
+                message(STATUS "  ${found}")
+            endforeach()
+        endif()
+        
         if(DirectX_LIBS_FOUND)
             message(STATUS "Found the following DirectX libraries:")
             foreach(found ${DirectX_LIBS_FOUND})
@@ -176,8 +224,6 @@ endfunction()
 
 if(WIN32)
     _DirectX_FIND()
-    message("Include directories: ${DirectX_INCLUDE_DIR}")
-    message("Libraries: ${DirectX_LIBRARY}")
 
     include(FindPackageHandleStandardArgs)
     FIND_PACKAGE_HANDLE_STANDARD_ARGS(DirectX
