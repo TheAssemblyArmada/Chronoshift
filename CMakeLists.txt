@@ -110,21 +110,6 @@ if(STANDALONE)
     add_definitions(-DCHRONOSHIFT_STANDALONE)
 endif()
 
-# Enable using bools in place of bitfields for boolean class members.
-if(NO_BITFIELDS)
-    add_definitions(-DCHRONOSHIFT_NO_BITFIELDS)
-endif()
-
-# Enable Chronoshift debug logging.
-if(LOGGING)
-    add_definitions(-DCHRONOSHIFT_LOGGING)
-endif()
-
-# Enable Chronoshift debug assertions.
-if(ASSERTIONS)
-    add_definitions(-DCHRONOSHIFT_ASSERTS)
-endif()
-
 # Go lean and mean on windows.
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     add_definitions(-DWIN32_LEAN_AND_MEAN)
