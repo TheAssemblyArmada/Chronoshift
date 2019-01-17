@@ -247,6 +247,23 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     target_link_libraries(chronoshift rt)
 endif()
 
+target_compile_definitions(chronoshift PUBLIC $<$<CONFIG:DEBUG>:CHRONOSHIFT_DEBUG=1>)
+
+# Enable using bools in place of bitfields for boolean class members.
+if(NO_BITFIELDS)
+    target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_NO_BITFIELDS=1)
+endif()
+
+# Enable Thyme debug logging.
+if(LOGGING)
+    target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_LOGGING=1)
+endif()
+
+# Enable Thyme debug assertions.
+if(ASSERTIONS)
+    target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_ASSERTS=1)
+endif()
+
 # We don't need to link anything if we have win32 threads. Affects MinGW builds primarily.
 if(CMAKE_USE_PTHREADS_INIT AND NOT CMAKE_USE_WIN32_THREADS_INIT)
     target_link_libraries(chronoshift Threads::Threads)
