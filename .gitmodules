@@ -1,0 +1,3 @@
+[submodule "libs/baseconfig"]
+	path = libs/baseconfig
+	url = https://github.com/TheAssemblyArmada/BaseConfig.git

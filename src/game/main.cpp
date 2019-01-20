@@ -194,9 +194,9 @@ void Create_Main_Window(void *hInstance, int nCmdShow, int width, int height)
         sizeof(window_name),
         "Chronoshift [%s] - Branch:%s ID:%s Date:%s",
         buildtype,
-        g_GitBranch,
-        g_GitShortSHA1,
-        g_GitCommitDate);
+        g_gitBranch,
+        g_gitShortSHA1,
+        g_gitCommitDate);
 
     HWND app_hwnd = CreateWindowExA(WS_EX_TOPMOST,
         "Chronoshift",
@@ -243,9 +243,9 @@ int main(int argc, char **argv)
     // Make pretty log header for debug logging builds.
     DEBUG_LOG("================================================================================\n\n");
     DEBUG_LOG("Chronoshift Version: %s\n", g_version.Version_Name());
-    DEBUG_LOG("Build date: %s\n", g_GitCommitDate);
-    DEBUG_LOG("Build branch: %s\n", g_GitBranch);
-    DEBUG_LOG("Build commit: %s\n", g_GitShortSHA1);
+    DEBUG_LOG("Build date: %s\n", g_gitCommitDate);
+    DEBUG_LOG("Build branch: %s\n", g_gitBranch);
+    DEBUG_LOG("Build commit: %s\n", g_gitShortSHA1);
     // DEBUG_LOG("Processor: %s\n", CPUDetectClass::Get_Processor_String());
     // DEBUG_LOG("Physical Memory: %llu MiB.\n", CPUDetectClass::Get_Total_Physical_Memory() / (1024 * 1024 + 1));
     DEBUG_LOG(CPUDetectClass::Get_Processor_Log());
