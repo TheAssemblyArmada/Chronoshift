@@ -1,7 +1,5 @@
 # Build and link the DLL.
 set(GAMEENGINE_INCLUDES
-    ${CMAKE_CURRENT_BINARY_DIR}/base
-    base
     game
     game/audio
     game/common
@@ -20,7 +18,6 @@ set(GAMEENGINE_INCLUDES
 set(HOOKER_SRC hooker/dllmain.cpp hooker/hooker.cpp)
 
 set(GAMEENGINE_SRC
-    ${CMAKE_CURRENT_BINARY_DIR}/base/gitverinfo.cpp
     game/main.cpp
     game/startup.cpp
     game/common/base64.cpp
@@ -224,11 +221,9 @@ endif()
 
 if(STANDALONE)
     add_executable(chronoshift ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
-    target_include_directories(chronoshift PUBLIC ${PLATFORM_INCLUDES})
     target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES})
 else()
     add_library(chronoshift SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
-    target_include_directories(chronoshift PUBLIC ${PLATFORM_INCLUDES})
     target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES} hooker)
 endif()
 
@@ -264,10 +259,7 @@ if(ASSERTIONS)
     target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_ASSERTS=1)
 endif()
 
-# We don't need to link anything if we have win32 threads. Affects MinGW builds primarily.
-if(CMAKE_USE_PTHREADS_INIT AND NOT CMAKE_USE_WIN32_THREADS_INIT)
-    target_link_libraries(chronoshift Threads::Threads)
-endif()
+target_link_libraries(chronoshift base)
 
 if(DDRAW_FOUND)
     target_compile_definitions(chronoshift PRIVATE BUILD_WITH_DDRAW=1)

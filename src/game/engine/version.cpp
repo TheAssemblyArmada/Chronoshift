@@ -99,7 +99,7 @@ const char *VersionClass::Version_String()
         }
 
         strlcat(_buffer, "\r", sizeof(_buffer));
-        strlcat(_buffer, g_GitShortSHA1, sizeof(_buffer));
+        strlcat(_buffer, g_gitShortSHA1, sizeof(_buffer));
 
         if (strlen(m_fileVersionName) > 0) {
             strlcat(_buffer, "\r", sizeof(_buffer));
@@ -158,12 +158,12 @@ int VersionClass::Clip_Version(unsigned min, unsigned max)
 
 int VersionClass::Min_Version()
 {
-    return (g_MajorVersion << 16) | g_MinorVersion;
+    return (g_majorVersion << 16) | g_minorVersion;
 }
 
 int VersionClass::Max_Version()
 {
-    return (g_MajorVersion << 16) | g_MinorVersion;
+    return (g_majorVersion << 16) | g_minorVersion;
 }
 
 void VersionClass::Read_Text_String()
@@ -190,7 +190,7 @@ int VersionClass::Minor_Version()
     }
 
     if (!m_minorSet) {
-        m_minorVersion = g_MinorVersion;
+        m_minorVersion = g_minorVersion;
         m_minorSet = true;
     }
 
@@ -205,7 +205,7 @@ int VersionClass::Major_Version()
     }
 
     if (!m_majorSet) {
-        m_majorVersion = g_MajorVersion;
+        m_majorVersion = g_majorVersion;
         m_majorSet = true;
     }
 
