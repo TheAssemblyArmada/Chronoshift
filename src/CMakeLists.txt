@@ -183,6 +183,7 @@ set(GAMEENGINE_SRC
     game/io/straw.cpp
     game/memory/alloc.cpp
     game/memory/newdel.cpp
+    game/net/connection.cpp
     game/net/commbuff.cpp
     game/net/field.cpp
     game/net/ipx.cpp
