@@ -29,9 +29,9 @@ public:
     struct SendQueueType
     {
         uint32_t m_Flags;
-        uint32_t m_InitialSendTime; // first send time perhaps when field_c is 0?
-        uint32_t m_LastSendTime; // last send attempt time?
-        uint32_t m_AckToConnection; // some count? send retry count perhaps?
+        uint32_t m_InitialSendTime; // first send time?
+        uint32_t m_LastSendTime; // last send attempt time if not acked?
+        uint32_t m_AckToConnection;
         int32_t m_DataLength;
         uint8_t *m_DataBuffer;
         int32_t m_AckToConnectionLength;
