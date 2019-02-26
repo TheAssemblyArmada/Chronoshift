@@ -22,18 +22,25 @@ TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClas
 TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;
 #endif
 
-const WarheadTypeClass WarheadSA("SA");
-const WarheadTypeClass WarheadHE("HE");
-const WarheadTypeClass WarheadAP("AP");
-const WarheadTypeClass WarheadFire("Fire");
-const WarheadTypeClass WarheadHollowPoint("HollowPoint");
-const WarheadTypeClass WarheadSuper("Super");
-const WarheadTypeClass WarheadOrganic("Organic");
-const WarheadTypeClass WarheadNuke("Nuke");
-const WarheadTypeClass WarheadMechanical("Mechanical");
+const WarheadTypeClass WarheadSA(WARHEAD_SA, "SA");
+const WarheadTypeClass WarheadHE(WARHEAD_HE, "HE");
+const WarheadTypeClass WarheadAP(WARHEAD_AP, "AP");
+const WarheadTypeClass WarheadFire(WARHEAD_FIRE, "Fire");
+const WarheadTypeClass WarheadHollowPoint(WARHEAD_HOLLOWPOINT, "HollowPoint");
+const WarheadTypeClass WarheadSuper(WARHEAD_SUPER, "Super");
+const WarheadTypeClass WarheadOrganic(WARHEAD_ORGANIC, "Organic");
+const WarheadTypeClass WarheadNuke(WARHEAD_NUKE, "Nuke");
+const WarheadTypeClass WarheadMechanical(WARHEAD_MECHANICAL, "Mechanical");
 
-WarheadTypeClass::WarheadTypeClass(const char *name) :
-    HeapID(g_WarheadTypes.ID(this)),
+/**
+ * Global template ctor differs intentionally from the binary, don't change unless
+ * you are sure you know why they are different and that your changes won't break
+ * anything.
+ *
+ * 0x0058F9D8 Prototypes don't match but it fulfills same purpose, do not hook.
+ */
+WarheadTypeClass::WarheadTypeClass(WarheadType warhead, const char *name) :
+    Type(warhead),
     Name(name),
     Spread(1),
     Wall(false),
@@ -49,7 +56,7 @@ WarheadTypeClass::WarheadTypeClass(const char *name) :
 }
 
 WarheadTypeClass::WarheadTypeClass(WarheadTypeClass const &that) :
-    HeapID(that.HeapID),
+    Type(that.Type),
     Name(that.Name),
     Spread(that.Spread),
     Wall(that.Wall),
@@ -170,11 +177,15 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
         Explosion = ini.Get_Int(Get_Name(), "Explosion", Explosion);
         Death = ini.Get_Int(Get_Name(), "InfDeath", Death);
 
-        // Build the verses format based on the armor count.
+        // NOTE: If you add or remove from the ArmorTypes, you need to change VERSUS_FORMAT!
+		// Build the verses format based on the armor count.
         for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
-            strncat(verses_format_buffer, "100%%", sizeof(verses_format_buffer));
+            size_t check = strlcat(verses_format_buffer, "100%%", sizeof(verses_format_buffer));
+            DEBUG_ASSERT(check <= sizeof(verses_format_buffer));
+
             if (armor != (ARMOR_COUNT - 1)) {
-                strncat(verses_format_buffer, ",", sizeof(verses_format_buffer));
+                check = strlcat(verses_format_buffer, ",", sizeof(verses_format_buffer));
+                DEBUG_ASSERT(check <= sizeof(verses_format_buffer));
             }
         }
 

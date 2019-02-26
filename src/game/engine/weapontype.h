@@ -22,8 +22,6 @@
 #include "animtype.h"
 #include "voc.h"
 #include "gametypes.h"
-#include "bullettype.h"
-#include "warheadtype.h"
 #include "heap.h"
 
 enum WeaponType {
@@ -78,11 +76,14 @@ enum WeaponType {
 DEFINE_ENUMERATION_OPERATORS(WeaponType);
 
 class GameINIClass;
+class WarheadTypeClass;
+class BulletTypeClass;
 
 class WeaponTypeClass
 {
 public:
     WeaponTypeClass(const char *name);
+    WeaponTypeClass(WeaponType weapon, const char *name);
     WeaponTypeClass(const WeaponTypeClass &that);
     WeaponTypeClass(const NoInitClass &noinit) {}
     ~WeaponTypeClass();
@@ -103,9 +104,7 @@ public:
     WarheadTypeClass *Get_Warhead() const { return Warhead; }
     BulletTypeClass *Get_Projectile() const { return Projectile; }
     const char *Get_Name() const { return Name; }
-
-    // NOTE: WeaponTypeClass seems to store the HeapID instead of its type.
-    WeaponType What_Type() const { return (WeaponType)HeapID; }
+    WeaponType What_Type() const { return (WeaponType)Type; }
 
     static void Init_Heap();
     static WeaponType From_Name(const char *name);
@@ -114,7 +113,7 @@ public:
     static WeaponTypeClass *As_Pointer(WeaponType weapon);
 
 private:
-    int HeapID;
+    int Type;
     const char *Name;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
