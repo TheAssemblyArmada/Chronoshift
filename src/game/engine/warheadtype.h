@@ -46,7 +46,7 @@ class GameINIClass;
 class WarheadTypeClass
 {
 public:
-    WarheadTypeClass(const char *name);
+    WarheadTypeClass(WarheadType warhead, const char *name);
     WarheadTypeClass(const WarheadTypeClass &that);
     WarheadTypeClass(const NoInitClass &noinit) {}
     ~WarheadTypeClass() {}
@@ -62,10 +62,8 @@ public:
     void Decode_Pointers() {}
     BOOL Read_INI(GameINIClass &ini);
     const char *Get_Name() const { return Name; }
+    WarheadType What_Type() const { return (WarheadType)Type; }
     BOOL Is_Wall_Destroyer() const { return Wall; }
-
-    // NOTE: WarheadTypeClass seems to store the HeapID instead of its type.
-    WarheadType What_Type() const { return (WarheadType)HeapID; }
 
     static void Init_Heap();
     static WarheadType From_Name(const char *name);
@@ -74,7 +72,7 @@ public:
     static WarheadTypeClass *As_Pointer(WarheadType warhead);
 
 private:
-    int HeapID;
+    int Type;
     const char *Name;
     int Spread; // damage spread factor[larger means greater spread]. Damage halves every n pixels from center.
 #ifndef CHRONOSHIFT_NO_BITFIELDS

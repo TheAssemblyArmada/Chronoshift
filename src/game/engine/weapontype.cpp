@@ -24,52 +24,59 @@ TFixedIHeapClass<WeaponTypeClass> &g_WeaponTypes = Make_Global<TFixedIHeapClass<
 TFixedIHeapClass<WeaponTypeClass> g_WeaponTypes;
 #endif
 
-const WeaponTypeClass WeaponColt45("Colt45");
-const WeaponTypeClass WeaponZSU23("ZSU-23");
-const WeaponTypeClass WeaponVulcan("Vulcan");
-const WeaponTypeClass WeaponMaverick("Maverick");
-const WeaponTypeClass WeaponCamera("Camera");
-const WeaponTypeClass WeaponFireballLauncher("FireballLauncher");
-const WeaponTypeClass WeaponSniper("Sniper");
-const WeaponTypeClass WeaponChainGun("ChainGun");
-const WeaponTypeClass WeaponPistol("Pistol");
-const WeaponTypeClass WeaponM1Carbine("M1Carbine");
-const WeaponTypeClass WeaponDragon("Dragon");
-const WeaponTypeClass WeaponHellfire("Hellfire");
-const WeaponTypeClass WeaponGrenade("Grenade");
-const WeaponTypeClass Weapon75mm("75mm");
-const WeaponTypeClass Weapon90mm("90mm");
-const WeaponTypeClass Weapon105mm("105mm");
-const WeaponTypeClass Weapon120mm("120mm");
-const WeaponTypeClass WeaponTurretGun("TurretGun");
-const WeaponTypeClass WeaponMammothTusk("MammothTusk");
-const WeaponTypeClass Weapon155mm("155mm");
-const WeaponTypeClass WeaponM60mg("M60mg");
-const WeaponTypeClass WeaponNapalm("Napalm");
-const WeaponTypeClass WeaponTeslaZap("TeslaZap");
-const WeaponTypeClass WeaponNike("Nike");
-const WeaponTypeClass Weapon8Inch("8Inch");
-const WeaponTypeClass WeaponStinger("Stinger");
-const WeaponTypeClass WeaponTorpTube("TorpTube");
-const WeaponTypeClass Weapon2Inch("2Inch");
-const WeaponTypeClass WeaponDepthCharge("DepthCharge");
-const WeaponTypeClass WeaponParaBomb("ParaBomb");
-const WeaponTypeClass WeaponDogJaw("DogJaw");
-const WeaponTypeClass WeaponHeal("Heal");
-const WeaponTypeClass WeaponSCUD("SCUD");
-const WeaponTypeClass WeaponFlamer("Flamer");
-const WeaponTypeClass WeaponRedEye("RedEye");
-const WeaponTypeClass WeaponMandible("Mandible");
-const WeaponTypeClass WeaponPortaTesla("PortaTesla");
-const WeaponTypeClass WeaponGoodWrench("GoodWrench");
-const WeaponTypeClass WeaponSubSCUD("SubSCUD");
-const WeaponTypeClass WeaponTTankZap("TTankZap");
-const WeaponTypeClass WeaponAPTusk("APTusk");
-const WeaponTypeClass WeaponDemocharge("Democharge");
-const WeaponTypeClass WeaponAirAssault("AirAssault");
+const WeaponTypeClass WeaponColt45(WEAPON_COLT45, "Colt45");
+const WeaponTypeClass WeaponZSU23(WEAPON_ZSU23, "ZSU-23");
+const WeaponTypeClass WeaponVulcan(WEAPON_VULCAN, "Vulcan");
+const WeaponTypeClass WeaponMaverick(WEAPON_MAVERICK, "Maverick");
+const WeaponTypeClass WeaponCamera(WEAPON_CAMERA, "Camera");
+const WeaponTypeClass WeaponFireballLauncher(WEAPON_FIREBALL_LAUNCHER, "FireballLauncher");
+const WeaponTypeClass WeaponSniper(WEAPON_SNIPER, "Sniper");
+const WeaponTypeClass WeaponChainGun(WEAPON_CHAINGUN, "ChainGun");
+const WeaponTypeClass WeaponPistol(WEAPON_PISTOL, "Pistol");
+const WeaponTypeClass WeaponM1Carbine(WEAPON_M1CARBINE, "M1Carbine");
+const WeaponTypeClass WeaponDragon(WEAPON_DRAGON, "Dragon");
+const WeaponTypeClass WeaponHellfire(WEAPON_HELLFIRE, "Hellfire");
+const WeaponTypeClass WeaponGrenade(WEAPON_GRENADE, "Grenade");
+const WeaponTypeClass Weapon75mm(WEAPON_75MM, "75mm");
+const WeaponTypeClass Weapon90mm(WEAPON_90MM, "90mm");
+const WeaponTypeClass Weapon105mm(WEAPON_105MM, "105mm");
+const WeaponTypeClass Weapon120mm(WEAPON_120MM, "120mm");
+const WeaponTypeClass WeaponTurretGun(WEAPON_TURRET_GUN, "TurretGun");
+const WeaponTypeClass WeaponMammothTusk(WEAPON_MAMMOTH_TUSK, "MammothTusk");
+const WeaponTypeClass Weapon155mm(WEAPON_155MM, "155mm");
+const WeaponTypeClass WeaponM60mg(WEAPON_M60MG, "M60mg");
+const WeaponTypeClass WeaponNapalm(WEAPON_NAPALM, "Napalm");
+const WeaponTypeClass WeaponTeslaZap(WEAPON_TESLAZAP, "TeslaZap");
+const WeaponTypeClass WeaponNike(WEAPON_NIKE, "Nike");
+const WeaponTypeClass Weapon8Inch(WEAPON_8INCH, "8Inch");
+const WeaponTypeClass WeaponStinger(WEAPON_STINGER, "Stinger");
+const WeaponTypeClass WeaponTorpTube(WEAPON_TORPTUBE, "TorpTube");
+const WeaponTypeClass Weapon2Inch(WEAPON_2INCH, "2Inch");
+const WeaponTypeClass WeaponDepthCharge(WEAPON_DEPTH_CHARGE, "DepthCharge");
+const WeaponTypeClass WeaponParaBomb(WEAPON_PARABOMB, "ParaBomb");
+const WeaponTypeClass WeaponDogJaw(WEAPON_DOGJAW, "DogJaw");
+const WeaponTypeClass WeaponHeal(WEAPON_HEAL, "Heal");
+const WeaponTypeClass WeaponSCUD(WEAPON_SCUD, "SCUD");
+const WeaponTypeClass WeaponFlamer(WEAPON_FLAMER, "Flamer");
+const WeaponTypeClass WeaponRedEye(WEAPON_REDEYE, "RedEye");
+const WeaponTypeClass WeaponMandible(WEAPON_MANDIBLE, "Mandible");
+const WeaponTypeClass WeaponPortaTesla(WEAPON_PORTATESLA, "PortaTesla");
+const WeaponTypeClass WeaponGoodWrench(WEAPON_GOOD_WRENCH, "GoodWrench");
+const WeaponTypeClass WeaponSubSCUD(WEAPON_SUBSCUD, "SubSCUD");
+const WeaponTypeClass WeaponTTankZap(WEAPON_TTANKZAP, "TTankZap");
+const WeaponTypeClass WeaponAPTusk(WEAPON_APTUSK, "APTusk");
+const WeaponTypeClass WeaponDemocharge(WEAPON_DEMO_CHARGE, "Democharge");
+const WeaponTypeClass WeaponAirAssault(WEAPON_AIR_ASSAULT, "AirAssault");
 
-WeaponTypeClass::WeaponTypeClass(const char *name) :
-    HeapID(g_WeaponTypes.ID(this)),
+/**
+ * Global template ctor differs intentionally from the binary, don't change unless
+ * you are sure you know why they are different and that your changes won't break
+ * anything.
+ *
+ * 0x0058FD98 Prototypes don't match but it fulfills same purpose, do not hook.
+ */
+WeaponTypeClass::WeaponTypeClass(WeaponType weapon, const char *name) :
+    Type(weapon),
     Name(name),
     TurboBoost(false),
     Supress(false),
@@ -95,7 +102,7 @@ WeaponTypeClass::~WeaponTypeClass()
 }
 
 WeaponTypeClass::WeaponTypeClass(WeaponTypeClass const &that) :
-    HeapID(that.HeapID),
+    Type(that.Type),
     Name(that.Name),
     TurboBoost(that.TurboBoost),
     Supress(that.Supress),
