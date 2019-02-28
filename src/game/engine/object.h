@@ -114,6 +114,7 @@ public:
 
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);
+    static void Detach_This_From_All(target_t object, BOOL unk);
 
     // This function was a global, but only ObjectClass derived classes use it.
     void Shorten_Attached_Anims();

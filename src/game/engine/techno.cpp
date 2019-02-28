@@ -14,16 +14,20 @@
  *            LICENSE
  */
 #include "techno.h"
+#include "bullettype.h"
 #include "coord.h"
 #include "display.h"
 #include "drawshape.h"
 #include "globals.h"
 #include "house.h"
 #include "remap.h"
+#include "weapontype.h"
+#include <algorithm>
+
+using std::min;
 
 int const TechnoClass::BodyShape32[32] = {
-    0, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16,
-    15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
+    0, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
 };
 
 TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
@@ -52,7 +56,7 @@ TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     m_InvulnerabilityTimer(),
     m_Spied(0),
     m_Archive(0),
-    m_OwnerHouse(/*HouseClass::As_Pointer(house)*/),
+    m_OwnerHouse(HouseClass::As_Pointer(house)),
     m_CloakState(CLOAK_UNCLOAKED),
     m_CloakingStage(),
     m_CloakDelayTimer(),
@@ -587,8 +591,8 @@ void TechnoClass::Techno_Draw_It(
                     }
                 }
 
-                // This draws for all except VISUAL_NORMAL and VISUAL_HIDDEN, provides predator effect over whatever is drawn above.
-                // This is the major difference between C&C and RA in addition to the stages being more nuanced.
+                // This draws for all except VISUAL_NORMAL and VISUAL_HIDDEN, provides predator effect over whatever is drawn
+                // above. This is the major difference between C&C and RA in addition to the stages being more nuanced.
                 if (visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN) {
                     CC_Draw_Shape((void *)shape, frame, x, y, window, flags | SHAPE_PREDATOR, nullptr, nullptr, dir);
                 }
@@ -596,6 +600,84 @@ void TechnoClass::Techno_Draw_It(
                 break;
         }
     }
+}
+
+int TechnoClass::Anti_Air()
+{
+    if (!Is_Weapon_Equipped()) {
+        return 0;
+    }
+
+    const TechnoTypeClass &tech_type = reinterpret_cast<const TechnoTypeClass &>(Class_Of());
+    WeaponTypeClass *weapon = tech_type.Get_Weapon(WEAPON_SLOT_PRIMARY);
+
+    if (!weapon->Get_Projectile()->Is_Anti_Air()) {
+        return 0;
+    }
+
+    int effectiveness = weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_LIGHT) * weapon->Get_Range();
+
+    if (tech_type.Is_Two_Shooter()) {
+        effectiveness *= 2;
+    }
+
+    return effectiveness / 50;
+}
+
+int TechnoClass::Anti_Armor()
+{
+    if (!Is_Weapon_Equipped()) {
+        return 0;
+    }
+
+    const TechnoTypeClass &tech_type = reinterpret_cast<const TechnoTypeClass &>(Class_Of());
+    WeaponTypeClass *weapon = tech_type.Get_Weapon(WEAPON_SLOT_PRIMARY);
+
+    if (!weapon->Get_Projectile()->Is_Anti_Ground()) {
+        return 0;
+    }
+
+    lepton_t range = min<lepton_t>(weapon->Get_Range(), 1024);
+    int effectiveness = weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_HEAVY) * range
+        * weapon->Get_Warhead()->Get_Spread() / weapon->Get_ROF();
+
+    if (tech_type.Is_Two_Shooter()) {
+        effectiveness *= 2;
+    }
+
+    if (weapon->Get_Projectile()->Is_Inaccurate()) {
+        effectiveness /= 2;
+    }
+
+    return effectiveness / 50;
+}
+
+int TechnoClass::Anti_Infantry()
+{
+    if (!Is_Weapon_Equipped()) {
+        return 0;
+    }
+
+    const TechnoTypeClass &tech_type = reinterpret_cast<const TechnoTypeClass &>(Class_Of());
+    WeaponTypeClass *weapon = tech_type.Get_Weapon(WEAPON_SLOT_PRIMARY);
+
+    if (!weapon->Get_Projectile()->Is_Anti_Ground()) {
+        return 0;
+    }
+
+    lepton_t range = min<lepton_t>(weapon->Get_Range(), 1024);
+    int effectiveness = weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_NONE) * range
+        * weapon->Get_Warhead()->Get_Spread() / weapon->Get_ROF();
+
+    if (tech_type.Is_Two_Shooter()) {
+        effectiveness *= 2;
+    }
+
+    if (weapon->Get_Projectile()->Is_Inaccurate()) {
+        effectiveness /= 2;
+    }
+
+    return effectiveness / 50;
 }
 
 VisualType TechnoClass::Visual_Character(BOOL flag) const

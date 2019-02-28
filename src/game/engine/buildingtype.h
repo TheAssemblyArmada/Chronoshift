@@ -135,7 +135,8 @@ enum BuildingType
     BUILDING_LAR1 = 85,
     BUILDING_LAR2 = 86,
 
-    BUILDING_COUNT = 87
+    BUILDING_COUNT = 87,
+    BUILDING_NOEXP_COUNT = 84
 };
 
 DEFINE_ENUMERATION_OPERATORS(BuildingType);
@@ -217,6 +218,8 @@ public:
     void Decode_Pointers() {}
 
     BuildingType What_Type() const { return m_Type; }
+    RTTIType Factory_Type() const { return m_FactoryType; }
+    BOOL Unsellable() const { return m_Unsellable; }
 
     static BuildingTypeClass &As_Reference(BuildingType type);
     static BuildingType From_Name(const char *name);

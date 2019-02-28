@@ -864,3 +864,13 @@ void ObjectClass::Shorten_Attached_Anims()
     // TODO: Requires AnimClass.
 #endif
 }
+
+void ObjectClass::Detach_This_From_All(target_t object, BOOL unk)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)(target_t, BOOL) = reinterpret_cast<void (*)(target_t, BOOL)>(0x0056C5E0);
+    func(object, unk);
+#else
+    // TODO: Requires Detach function in TeamClass, TeamTypeClass, HouseClass, Object classes, MapClass, VortexClass
+#endif
+}

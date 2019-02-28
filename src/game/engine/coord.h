@@ -161,9 +161,15 @@ inline uint8_t Lepton_Sub_Cell(lepton_t lepton)
     return lepton & 0xFF;
 }
 
+inline BOOL Valid_Cell(cell_t cellnum)
+{
+    return cellnum != 0;
+}
+
 int Distance(coord_t coord1, coord_t coord2);
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance);
+coord_t Coord_Scatter(coord_t coord, uint16_t distance, BOOL center);
 BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h);
 
 int Distance(coord_t coord1, coord_t coord2);

@@ -47,6 +47,13 @@ public:
     PlayerColorType Get_Color() const { return Color; }
     char Get_Prefix() const { return Prefix; }
     HousesType What_Type() const { return Type; }
+    const fixed &Get_Firepower() const { return Firepower; }
+    const fixed &Get_Groundspeed() const { return Groundspeed; }
+    const fixed &Get_Airspeed() const { return Airspeed; }
+    const fixed &Get_Armor() const { return Armor; }
+    const fixed &Get_ROF() const { return ROF; }
+    const fixed &Get_Cost() const { return Cost; }
+    const fixed &Get_BuildTime() const { return BuildTime; }
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }

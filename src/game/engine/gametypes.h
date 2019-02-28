@@ -232,7 +232,7 @@ enum UrgencyType
     URGENCY_NOTHING = 0,
     URGENCY_LOW_MONEY, // Low on money.
     URGENCY_LOW_POWER, // Low on power.
-    URGENCY_ATTACKED, // House was attacked.
+    URGENCY_3,
     URGENCY_FIRE_SALE, // TODO, used for Fire_Sale and setting the whole house to Hunt (last resort attack?)
     URGENCY_COUNT
 };
@@ -388,6 +388,7 @@ enum ZoneType
     ZONE_SOUTH,
     ZONE_WEST,
     ZONE_COUNT,
+    ZONE_FIRST = 0,
 };
 
 DEFINE_ENUMERATION_OPERATORS(ZoneType);

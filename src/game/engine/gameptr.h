@@ -34,43 +34,42 @@ public:
 
     T *operator->() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        DEBUG_ASSERT(g_Heap != nullptr);
+        DEBUG_ASSERT(m_ID < g_Heap->Length());
         return Is_Valid() ? Get_Raw_Pointer() : nullptr;
     }
 
     T &operator*() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        DEBUG_ASSERT(g_Heap != nullptr);
+        DEBUG_ASSERT(m_ID < g_Heap->Length());
         return *Get_Raw_Pointer();
     }
 
     operator T *() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
-        return Is_Valid() ? Get_Raw_Pointer() : nullptr;
+        DEBUG_ASSERT(g_Heap != nullptr);
+        DEBUG_ASSERT(m_ID < g_Heap->Length());
+        return Has_Valid_ID() ? Get_Raw_Pointer() : nullptr;
     }
 
     operator T &() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        DEBUG_ASSERT(g_Heap != nullptr);
+        DEBUG_ASSERT(m_ID < g_Heap->Length());
         return *Get_Raw_Pointer();
     }
 
     operator uintptr_t() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr && m_ID < g_Heap->Length());
+        DEBUG_ASSERT(g_Heap != nullptr);
+        DEBUG_ASSERT(m_ID < g_Heap->Length());
         return Is_Valid() ? Get_Raw_Pointer() : nullptr;
     }
 
-    operator bool() const
-    {
-        return Is_Valid();
-    }
+    operator bool() const { return Is_Valid(); }
 
-    bool operator!() const
-    {
-        return !Is_Valid();
-    }
+    bool operator!() const { return !Is_Valid(); }
 
     GamePtr &operator=(const GamePtr &that)
     {
@@ -86,25 +85,13 @@ public:
         return *this;
     }
 
-    bool operator==(const T &that) const
-    {
-        return Get_Raw_Pointer() == &that;
-    }
-    
-    bool operator!=(const T &that) const
-    {
-        return Get_Raw_Pointer() != &that;
-    }
+    bool operator==(const T &that) const { return Get_Raw_Pointer() == &that; }
 
-    bool Name_Equal(const T &that) const
-    {
-        return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) == 0;
-    }
+    bool operator!=(const T &that) const { return Get_Raw_Pointer() != &that; }
 
-    bool Name_Not_Equal(const T &that) const
-    {
-        return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) != 0;
-    }
+    bool Name_Equal(const T &that) const { return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) == 0; }
+
+    bool Name_Not_Equal(const T &that) const { return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) != 0; }
 
     bool Is_Valid() const { return g_Heap != nullptr && m_ID != -1; }
     bool Has_Valid_ID() const { return m_ID != -1; }
@@ -116,7 +103,7 @@ protected:
 
 private:
     int32_t m_ID;
-    static FixedIHeapClass *g_Heap;
+    static FixedIHeapClass *const g_Heap;
 };
 
 template<class T1, class T2>

@@ -30,6 +30,11 @@
 // TODO this is require for some none virtual calls to functions higher in the stack.
 #include "iomap.h"
 
+#include <algorithm>
+
+using std::min;
+using std::max;
+
 //This appears to be missing the entries for 309+ which TS has for sight 11
 const int MapClass::RadiusOffset[] = {
     0, -129, -128, -127, -1, 1, 127, 128,
@@ -374,6 +379,23 @@ BOOL MapClass::In_Radar(cell_t cellnum) const
     }
 
     return false;
+}
+
+/**
+ * Clamps a cell number to fall within the currently playable region of the map.
+ */
+cell_t MapClass::Clamp_To_Radar(cell_t cellnum) const
+{
+    // TODO use clamp rather than min/max when std::clamp baseconfig merged.
+    unsigned cell_x = Cell_Get_X(cellnum);
+    unsigned cell_y = Cell_Get_Y(cellnum);
+
+    cell_x = max<unsigned>(cell_x, MapCellX);
+    cell_y = max<unsigned>(cell_y, MapCellY);
+    cell_x = min<unsigned>(cell_x, MapCellWidth);
+    cell_y = min<unsigned>(cell_y, MapCellHeight);
+
+    return Cell_From_XY(cell_x, cell_y);
 }
 
 /**

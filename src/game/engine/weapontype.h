@@ -20,11 +20,12 @@
 
 #include "always.h"
 #include "animtype.h"
-#include "voc.h"
 #include "gametypes.h"
 #include "heap.h"
+#include "voc.h"
 
-enum WeaponType {
+enum WeaponType
+{
     WEAPON_NONE = -1,
     WEAPON_FIRST = 0,
     WEAPON_COLT45 = 0,
@@ -105,6 +106,9 @@ public:
     BulletTypeClass *Get_Projectile() const { return Projectile; }
     const char *Get_Name() const { return Name; }
     WeaponType What_Type() const { return (WeaponType)Type; }
+    int Get_Damage() const { return Damage; }
+    lepton_t Get_Range() const { return Range; }
+    int Get_ROF() const { return ROF; }
 
     static void Init_Heap();
     static WeaponType From_Name(const char *name);
@@ -122,7 +126,7 @@ private:
         struct
         {
             bool TurboBoost : 1; // Should the weapon get a boosted speed bonus when firing upon aircraft?
-            bool Supress : 1;// Should nearby friendly buildings be scanned for and if found, discourage firing on target?
+            bool Supress : 1; // Should nearby friendly buildings be scanned for and if found, discourage firing on target?
             bool Camera : 1; // Reveals area around firer ?
             bool Charges : 1; // Does it have charge-up-before-firing logic?
         };
@@ -130,7 +134,7 @@ private:
     };
 #else
     bool TurboBoost; // Should the weapon get a boosted speed bonus when firing upon aircraft?
-    bool Supress;// Should nearby friendly buildings be scanned for and if found, discourage firing on target?
+    bool Supress; // Should nearby friendly buildings be scanned for and if found, discourage firing on target?
     bool Camera; // Reveals area around firer ?
     bool Charges; // Does it have charge-up-before-firing logic?
 #endif
@@ -138,9 +142,9 @@ private:
     BulletTypeClass *Projectile; // Projectile characteristic to use
     int Damage; // The amount of damage (unattenuated) dealt with every bullet
     MPHType Speed; // Speed of projectile to target (100 is maximum)
-    WarheadTypeClass *Warhead;    // Warhead to attach to projectile
+    WarheadTypeClass *Warhead; // Warhead to attach to projectile
     int ROF; // Delay between shots in ticks [15 = 1 second at middle speed setting]
-    lepton_t Range;    // Maximum cell range in leptons
+    lepton_t Range; // Maximum cell range in leptons
     VocType Report; // Sound to play when firing
     AnimType Anim; // Animation to display as a firing effect
 };
