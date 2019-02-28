@@ -62,8 +62,10 @@ public:
     void Decode_Pointers() {}
     BOOL Read_INI(GameINIClass &ini);
     const char *Get_Name() const { return Name; }
+    int Get_Spread() const { return Spread; }
     WarheadType What_Type() const { return (WarheadType)Type; }
     BOOL Is_Wall_Destroyer() const { return Wall; }
+    const fixed &Get_Verses(ArmorType armor) const { return Verses[armor]; }
 
     static void Init_Heap();
     static WarheadType From_Name(const char *name);
@@ -84,7 +86,7 @@ private:
             bool Wall : 1; // Does this warhead damage concrete walls?
             bool Wood : 1; // Does this warhead damage wood walls?
             bool Ore : 1; // Does this warhead destroy ore?
-            bool UnkBool : 1; // Only checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester
+            bool UnkBool : 1; // Checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester
         };
         int Bitfield;
     };

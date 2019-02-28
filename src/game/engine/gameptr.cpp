@@ -41,28 +41,80 @@
 #include "warheadtype.h"
 #include "weapontype.h"
 
+#ifdef CHRONOSHIFT_STANDALONE
 // Template specialisation to initialise the heaps required for GamePtr.
-template<> FixedIHeapClass *GamePtr<AircraftTypeClass>::g_Heap = &g_AircraftTypes;
-template<> FixedIHeapClass *GamePtr<AnimClass>::g_Heap = &g_Anims;
-template<> FixedIHeapClass *GamePtr<AnimTypeClass>::g_Heap = &g_AnimTypes;
-template<> FixedIHeapClass *GamePtr<BuildingClass>::g_Heap = &g_Buildings;
-template<> FixedIHeapClass *GamePtr<BuildingTypeClass>::g_Heap = &g_BuildingTypes;
-template<> FixedIHeapClass *GamePtr<BulletTypeClass>::g_Heap = &g_BulletTypes;
-template<> FixedIHeapClass *GamePtr<FactoryClass>::g_Heap = &g_Factories;
-template<> FixedIHeapClass *GamePtr<HouseClass>::g_Heap = &g_Houses;
-template<> FixedIHeapClass *GamePtr<HouseTypeClass>::g_Heap = &g_HouseTypes;
-template<> FixedIHeapClass *GamePtr<InfantryClass>::g_Heap = &g_Infantry;
-template<> FixedIHeapClass *GamePtr<InfantryTypeClass>::g_Heap = &g_InfantryTypes;
-template<> FixedIHeapClass *GamePtr<OverlayTypeClass>::g_Heap = &g_OverlayTypes;
-template<> FixedIHeapClass *GamePtr<SmudgeTypeClass>::g_Heap = &g_SmudgeTypes;
-template<> FixedIHeapClass *GamePtr<TeamClass>::g_Heap = &g_Teams;
-template<> FixedIHeapClass *GamePtr<TeamTypeClass>::g_Heap = &g_TeamTypes;
-template<> FixedIHeapClass *GamePtr<TemplateTypeClass>::g_Heap = &g_TemplateTypes;
-template<> FixedIHeapClass *GamePtr<TerrainTypeClass>::g_Heap = &g_TerrainTypes;
-template<> FixedIHeapClass *GamePtr<TriggerTypeClass>::g_Heap = &g_TriggerTypes;
-template<> FixedIHeapClass *GamePtr<UnitClass>::g_Heap = &g_Units;
-template<> FixedIHeapClass *GamePtr<UnitTypeClass>::g_Heap = &g_UnitTypes;
-template<> FixedIHeapClass *GamePtr<VesselClass>::g_Heap = &g_Vessels;
-template<> FixedIHeapClass *GamePtr<VesselTypeClass>::g_Heap = &g_VesselTypes;
-template<> FixedIHeapClass *GamePtr<WarheadTypeClass>::g_Heap = &g_WarheadTypes;
-template<> FixedIHeapClass *GamePtr<WeaponTypeClass>::g_Heap = &g_WeaponTypes;
+template<> FixedIHeapClass *const GamePtr<AircraftTypeClass>::g_Heap = &g_AircraftTypes;
+template<> FixedIHeapClass *const GamePtr<AnimClass>::g_Heap = &g_Anims;
+template<> FixedIHeapClass *const GamePtr<AnimTypeClass>::g_Heap = &g_AnimTypes;
+template<> FixedIHeapClass *const GamePtr<BuildingClass>::g_Heap = &g_Buildings;
+template<> FixedIHeapClass *const GamePtr<BuildingTypeClass>::g_Heap = &g_BuildingTypes;
+template<> FixedIHeapClass *const GamePtr<BulletTypeClass>::g_Heap = &g_BulletTypes;
+template<> FixedIHeapClass *const GamePtr<FactoryClass>::g_Heap = &g_Factories;
+template<> FixedIHeapClass *const GamePtr<HouseClass>::g_Heap = &g_Houses;
+template<> FixedIHeapClass *const GamePtr<HouseTypeClass>::g_Heap = &g_HouseTypes;
+template<> FixedIHeapClass *const GamePtr<InfantryClass>::g_Heap = &g_Infantry;
+template<> FixedIHeapClass *const GamePtr<InfantryTypeClass>::g_Heap = &g_InfantryTypes;
+template<> FixedIHeapClass *const GamePtr<OverlayTypeClass>::g_Heap = &g_OverlayTypes;
+template<> FixedIHeapClass *const GamePtr<SmudgeTypeClass>::g_Heap = &g_SmudgeTypes;
+template<> FixedIHeapClass *const GamePtr<TeamClass>::g_Heap = &g_Teams;
+template<> FixedIHeapClass *const GamePtr<TeamTypeClass>::g_Heap = &g_TeamTypes;
+template<> FixedIHeapClass *const GamePtr<TemplateTypeClass>::g_Heap = &g_TemplateTypes;
+template<> FixedIHeapClass *const GamePtr<TerrainTypeClass>::g_Heap = &g_TerrainTypes;
+template<> FixedIHeapClass *const GamePtr<TriggerTypeClass>::g_Heap = &g_TriggerTypes;
+template<> FixedIHeapClass *const GamePtr<UnitClass>::g_Heap = &g_Units;
+template<> FixedIHeapClass *const GamePtr<UnitTypeClass>::g_Heap = &g_UnitTypes;
+template<> FixedIHeapClass *const GamePtr<VesselClass>::g_Heap = &g_Vessels;
+template<> FixedIHeapClass *const GamePtr<VesselTypeClass>::g_Heap = &g_VesselTypes;
+template<> FixedIHeapClass *const GamePtr<WarheadTypeClass>::g_Heap = &g_WarheadTypes;
+template<> FixedIHeapClass *const GamePtr<WeaponTypeClass>::g_Heap = &g_WeaponTypes;
+#else
+#include "hooker.h"
+template<>
+FixedIHeapClass *const GamePtr<AircraftTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DDBC);
+template<>
+FixedIHeapClass *const GamePtr<AnimClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065D864);
+template<>
+FixedIHeapClass *const GamePtr<AnimTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DEA0);
+template<>
+FixedIHeapClass *const GamePtr<BuildingClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065D8B0);
+template<>
+FixedIHeapClass *const GamePtr<BuildingTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DD70);
+template<>
+FixedIHeapClass *const GamePtr<BulletTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DE54);
+template<>
+FixedIHeapClass *const GamePtr<FactoryClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065D948);
+template<>
+FixedIHeapClass *const GamePtr<HouseClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065D994);
+template<>
+FixedIHeapClass *const GamePtr<HouseTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DD24);
+template<>
+FixedIHeapClass *const GamePtr<InfantryClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065D9E0);
+template<>
+FixedIHeapClass *const GamePtr<InfantryTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DE08);
+template<>
+FixedIHeapClass *const GamePtr<OverlayTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065E01C);
+template<>
+FixedIHeapClass *const GamePtr<SmudgeTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065E068);
+template<>
+FixedIHeapClass *const GamePtr<TeamClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DAC4);
+template<>
+FixedIHeapClass *const GamePtr<TeamTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DB10);
+template<>
+FixedIHeapClass *const GamePtr<TemplateTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DF84);
+template<>
+FixedIHeapClass *const GamePtr<TerrainTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DFD0);
+template<>
+FixedIHeapClass *const GamePtr<TriggerTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DCD8);
+template<>
+FixedIHeapClass *const GamePtr<UnitClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DC40);
+template<>
+FixedIHeapClass *const GamePtr<UnitTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DEEC);
+template<>
+FixedIHeapClass *const GamePtr<VesselClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DC8C);
+template<>
+FixedIHeapClass *const GamePtr<VesselTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DF38);
+template<>
+FixedIHeapClass *const GamePtr<WarheadTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x00691600);
+template<>
+FixedIHeapClass *const GamePtr<WeaponTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0069164C);
+#endif

@@ -157,7 +157,7 @@ inline fixed fixed::operator*(const fixed &that) const
     // Multiplication can overflow, largest whole value multi supported
     // by 8:8 fixed point is around <16.0 * <16.0
     fixed tmp;
-    tmp.m_number.word = ((int)m_number.word * that.m_number.word) >> 8;
+    tmp.m_number.word = ((int)m_number.word * that.m_number.word) / 256;
 
     return tmp;
 }

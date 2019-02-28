@@ -115,7 +115,7 @@ public:
 
     void All_Layers_To_Redraw();
     void Flag_All_Cells_To_Redraw();
-    static BOOL Is_Cell_Flagged(cell_t cellnum) { return CellRedraw[cellnum]; }
+    static BOOL Is_Cell_Flagged(cell_t cellnum) { return CellRedraw.Is_True(cellnum); }
 
     lepton_t Get_DisplayWidth() const { return DisplayWidth; }
     lepton_t Get_DisplayHeight() const { return DisplayHeight; }

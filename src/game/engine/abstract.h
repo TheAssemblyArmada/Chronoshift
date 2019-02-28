@@ -56,6 +56,7 @@ public:
     void Set_Coord(coord_t coord) { m_Coord = coord; }
     int Get_Height() const { return m_Height; }
     void Set_Height(int height) { m_Height = height; }
+    target_t As_Target() const { return ((m_RTTI & 0xFF) << 24) & (m_HeapID & 0xFFFFFF); }
 
 protected:
     RTTIType m_RTTI; // ID for this object type, set from derived type constructors.

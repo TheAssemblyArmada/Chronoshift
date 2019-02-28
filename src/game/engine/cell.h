@@ -150,6 +150,7 @@ public:
     SmudgeType Get_Smudge() const { return Smudge; }
     void Set_Smudge(SmudgeType smudge) { Smudge = smudge; }
     HousesType Owner() const { return OwnerHouse; }
+    void Set_Owner(HousesType owner) { OwnerHouse = owner; }
     ObjectClass *Get_Overlapper(int index) { return Overlapper[index]; }
     ObjectClass *Get_Occupier() const { return OccupierPtr; }
     LandType Get_Land() const { return Land; }

@@ -46,6 +46,9 @@ public:
     int Get_MaxAircraft() const { return MaxAircraft; }
     int Get_Credits() const { return Credits; }
     SourceType Get_Edge() const { return Edge; }
+    void Add_Ally(HousesType house) { Allies |= 1 << house; }
+    void Remove_Ally(HousesType house) { Allies &= ~(1 << house); }
+    void Set_Credits(int credits) { Credits = credits; }
 
 private:
     // The initial IQ for this house.
@@ -60,7 +63,7 @@ private:
     // (This only means the side can not attack these sides, not the other way
     // around unless they both define each other as allies!)
     // NOTE: This only means that this house is allied with the houses set here.
-    int32_t Allies;
+    uint32_t Allies;
 
     // Maximum number of vessels this house can produce.
     int MaxUnit;

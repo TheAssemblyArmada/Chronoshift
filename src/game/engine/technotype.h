@@ -65,6 +65,9 @@ public:
     SpeedType Get_Speed() const { return Speed; }
     int Get_Ammo() const { return Ammo; }
     RemapType Get_Remap() const { return Remap; }
+    int Get_Sight() const { return Sight; }
+    int Get_TechLevel() const { return TechLevel; }
+    uint32_t Get_Prerequisites() const { return Prerequisite; }
 
     WeaponTypeClass *Get_Weapon(WeaponSlotType weapon) const
     {

@@ -144,7 +144,9 @@ public:
 
     void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
     BOOL Visually_Unclear() const { VisualType visual = Visual_Character(); return visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN; }
-
+    int Anti_Air();
+    int Anti_Armor();
+    int Anti_Infantry();
     HouseClass *Get_Owner_House() const { return m_OwnerHouse; }
     int Get_Price() const { return m_Price; }
     void Set_Price(int price) { m_Price = price; }

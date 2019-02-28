@@ -74,6 +74,7 @@ public:
     int Get_Type() const { return Type; }
     BOOL Is_Anti_Air() const { return AntiAir; }
     BOOL Is_Anti_Ground() const { return AntiGround; }
+    BOOL Is_Inaccurate() const { return Inaccurate; }
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
@@ -135,7 +136,7 @@ private:
     bool UnderWater; // Does the projectile travel under water?
     bool Parachuted; // Equipped with a parachute for dropping from plane (def = false)?
     bool Gigundo; // Is the projectile larger than normal?
-#endif 
+#endif
     BulletType Type;
     uint8_t ROT; // Rate Of Turn [non zero implies homing].
     int Arm; // Arming delay.
