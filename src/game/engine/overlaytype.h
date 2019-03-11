@@ -79,7 +79,8 @@ class GameINIClass;
 class OverlayTypeClass : public ObjectTypeClass
 {
 public:
-    OverlayTypeClass(OverlayType overlay, const char *name, int uiname, LandType land, int damage_levels, int strength, BOOL a7, BOOL a8, BOOL legal_target, BOOL crushable, BOOL a11, BOOL a12, BOOL a13, BOOL wall, BOOL crate);
+    OverlayTypeClass(OverlayType overlay, const char *name, int uiname, LandType land, int damage_levels, int strength,
+        BOOL a7, BOOL a8, BOOL legal_target, BOOL crushable, BOOL a11, BOOL a12, BOOL a13, BOOL wall, BOOL crate);
     OverlayTypeClass(const OverlayTypeClass &that);
     OverlayTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
     ~OverlayTypeClass() {}
@@ -108,6 +109,7 @@ public:
     BOOL Is_Crate() const { return Crate; }
     BOOL Is_Radar_Visible() const { return RadarVisible; }
     BOOL Is_Ore() const { return Ore; }
+    BOOL Is_Theater() const { return Theater; }
 #
     static void Init_Heap();
     static void Init(TheaterType theater);
@@ -132,7 +134,8 @@ private:
             bool Wall : 1; // 2
             bool High : 1; // 4
             bool Ore : 1; // 8
-            bool Boolean16 : 1; // 16        //this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
+            bool Boolean16 : 1; // 16        //this is checked in Explosion_Damage() if warhead has wall or wood to see if
+                                // destroyed.
             bool Crate : 1; // 32
             bool RadarVisible : 1; // 64
         };

@@ -49,11 +49,8 @@ enum CellOccupantEnum
     INFANTRY_SPOT_BOTTOM_LEFT = 0x4,
     INFANTRY_SPOT_BOTTOM_RIGHT = 0x8,
     INFANTRY_SPOT_CENTER = 0x10,
-    OCCUPANT_INFANTRY = INFANTRY_SPOT_TOP_LEFT
-    | INFANTRY_SPOT_TOP_RIGHT
-    | INFANTRY_SPOT_BOTTOM_LEFT
-    | INFANTRY_SPOT_BOTTOM_RIGHT
-    | INFANTRY_SPOT_CENTER,
+    OCCUPANT_INFANTRY = INFANTRY_SPOT_TOP_LEFT | INFANTRY_SPOT_TOP_RIGHT | INFANTRY_SPOT_BOTTOM_LEFT
+        | INFANTRY_SPOT_BOTTOM_RIGHT | INFANTRY_SPOT_CENTER,
     OCCUPANT_UNIT = 0x20, // unit, vessel or aircraft.
     OCCUPANT_TERRAIN = 0x40,
     OCCUPANT_BUILDING = 0x80,
@@ -92,8 +89,8 @@ public:
     VesselClass *Cell_Vessel() const;
     AircraftClass *Cell_Aircraft() const;
     TerrainClass *Cell_Terrain() const;
-    //SmudgeClass *Cell_Smudge() const;
-    //OverlayClass *Cell_Overlay() const;
+    // SmudgeClass *Cell_Smudge() const;
+    // OverlayClass *Cell_Overlay() const;
     coord_t Cell_Coord() const;
     void Recalc_Attributes();
     BOOL Can_Ore_Grow() const;
@@ -164,16 +161,23 @@ public:
 public:
     static void Hook_Me()
     {
-    #ifdef COMPILER_WATCOM
+#ifdef COMPILER_WATCOM
         Hook_Function(0x0049EE70, *CellClass::Hook_Ctor);
         Hook_Function(0x0049FF98, *CellClass::Spot_Index);
         Hook_Function(0x004F8E64, *CellClass::Load);
         Hook_Function(0x0049F5F8, *CellClass::Hook_Draw_It);
-    #endif
+        Hook_Function(0x0049EFBC, *CellClass::Hook_Cell_Techno);
+        Hook_Function(0x0049F084, *CellClass::Hook_Cell_Find_Object);
+        Hook_Function(0x0049F0D8, *CellClass::Hook_Cell_Object);
+        Hook_Function(0x0049F314, *CellClass::Recalc_Attributes);
+#endif
     }
 
     CellClass *Hook_Ctor() { return new (this) CellClass; }
     void Hook_Draw_It(int x, int y, BOOL unk_bool) { CellClass::Draw_It(x, y, unk_bool); }
+    TechnoClass *Hook_Cell_Techno(int x, int y) { return CellClass::Cell_Techno(x, y); }
+    ObjectClass *Hook_Cell_Find_Object(RTTIType type) { return CellClass::Cell_Find_Object(type); }
+    ObjectClass *Hook_Cell_Object(int x, int y) { return CellClass::Cell_Object(x, y); }
 #endif
 
 private:

@@ -18,6 +18,7 @@
 #include "coord.h"
 #include "drawshape.h"
 #include "globals.h"
+#include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
 #include <cstdio>
@@ -270,24 +271,18 @@ const int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
 
 void OverlayTypeClass::Draw_It(int x, int y, int frame) const
 {
-    // TODO Needs DisplayClass
-#ifndef CHRONOSHIFT_STANDALONE
-    void(*func)(const OverlayTypeClass*, int, int, int) = reinterpret_cast<void(*)(const OverlayTypeClass*, int, int, int)>(0x00524ACC);
-    func(this, x, y, frame);
-#elif 0
     if (ImageData != nullptr) {
         g_isTheaterShape = Theater;
         CC_Draw_Shape(ImageData,
             frame,
-            x + Map.TacOffsetX + 12,
-            y + Map.TacOffsetY + 12,
-            WINDOW_TACTICAL,
+            x + Map.Tac_Offset_X() + 12,
+            y + Map.Tac_Offset_Y() + 12,
+            WINDOW_0,
             SHAPE_GHOST | SHAPE_WIN_REL | SHAPE_CENTER,
             0,
             DisplayClass::UnitShadow);
         g_isTheaterShape = false;
     }
-#endif
 }
 
 uint8_t *OverlayTypeClass::Radar_Icon(int frame) const

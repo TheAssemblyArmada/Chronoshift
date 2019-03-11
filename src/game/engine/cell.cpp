@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "cell.h"
+#include "aircraft.h"
 #include "gamefile.h"
 #include "gamedebug.h"
 #include "coord.h"
@@ -231,10 +232,10 @@ TerrainClass *CellClass::Cell_Terrain() const
  */
 ObjectClass *CellClass::Cell_Object(int x, int y) const
 {
-    ObjectClass *object = (ObjectClass *)Cell_Aircraft();
+    ObjectClass *object = Cell_Aircraft();
 
     if (object == nullptr) {
-        object = (ObjectClass *)Cell_Techno(x, y);
+        object = Cell_Techno(x, y);
 
         if (object == nullptr) {
             object = (ObjectClass *)Cell_Terrain();
@@ -852,7 +853,20 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
         }
 
         if (Overlay != OVERLAY_NONE && OverlayFrame != -1) {
-            OverlayTypeClass::As_Reference(Overlay).Draw_It(x, y, OverlayFrame);
+            // TODO this looks like a hack in the original code, since OverlayTypeClass::Draw_It doesn't
+            // clip to the tactical view as it should.
+            // OverlayTypeClass::As_Reference(Overlay).Draw_It(x, y, OverlayFrame);
+            OverlayTypeClass &otc = OverlayTypeClass::As_Reference(Overlay);
+            g_isTheaterShape = otc.Is_Theater();
+            CC_Draw_Shape(otc.Get_Image_Data(),
+                OverlayFrame,
+                x + 12,
+                y + 12,
+                WINDOW_TACTICAL,
+                SHAPE_GHOST | SHAPE_WIN_REL | SHAPE_CENTER,
+                nullptr,
+                DisplayClass::UnitShadow);
+            g_isTheaterShape = false;
         }
 
         if (PlacementCheck) {
