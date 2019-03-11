@@ -21,13 +21,14 @@
 #include "always.h"
 #include "gadget.h"
 #include "map.h"
+#include "noinit.h"
 #include "source.h"
 #include "trect.h"
-#include "noinit.h"
 
 class BufferClass;
 
-enum ModeControl {
+enum ModeControl
+{
     MODE_CONTROL_TOGGLE = -1,
     MODE_CONTROL_OFF = 0,
     MODE_CONTROL_ON = 1
@@ -103,7 +104,8 @@ public:
     coord_t Pixel_To_Coord(int x, int y) const;
     int Cell_Shadow(cell_t cellnum) const;
     BOOL Push_Onto_TacMap(coord_t &coord1, coord_t &coord2);
-    cell_t Calculated_Cell(SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const;
+    cell_t Calculated_Cell(
+        SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const;
     BOOL Good_Reinforcement_Cell(cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone) const;
     coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const;
     void All_To_Look(BOOL skip_buildings);
@@ -122,6 +124,8 @@ public:
     ObjectClass *Pending_Object() const { return PendingObjectPtr; }
     ObjectTypeClass *Pending_ObjectType() const { return PendingObjectTypePtr; }
     HousesType Pending_Object_Owner() const { return PendingObjectOwner; }
+    int Tac_Offset_X() const { return TacOffsetX; }
+    int Tac_Offset_Y() const { return TacOffsetY; }
 
 protected:
     coord_t DisplayPos; // Coord of top left of tactical display within the map.
@@ -146,7 +150,7 @@ protected:
             bool DisplayToRedraw : 1; // 1
             bool DisplayRepairMode : 1; // 2
             bool DisplaySellMode : 1; // 4
-            bool DisplayBit8 : 1;  // 8 This is Bit32 in SS. passes proximity check/can place?
+            bool DisplayBit8 : 1; // 8 This is Bit32 in SS. passes proximity check/can place?
             bool DisplayBit16 : 1; // 16
             bool RedrawShadow : 1; // 32 this is Bit128 in SS
         };
@@ -156,9 +160,10 @@ protected:
     bool DisplayToRedraw;
     bool DisplayRepairMode;
     bool DisplaySellMode;
-    bool DisplayBit8;  // This is Bit32 in SS. passes proximity check/can place? Could also be if mouse is pressed/dragging a band box?
+    bool DisplayBit8; // This is Bit32 in SS. passes proximity check/can place? Could also be if mouse is pressed/dragging a
+                      // band box?
     bool DisplayBit16;
-    bool RedrawShadow; //this is Bit128 in SS
+    bool RedrawShadow; // this is Bit128 in SS
 #endif
     SpecialWeaponType PendingSuper; // Current superweapon selected to fire.
     TRect<int> BandBox; // Dimensions of the selection band box.
@@ -188,7 +193,7 @@ public:
 #else
     static LayerClass Layers[LAYER_COUNT];
     static TacticalClass TacticalButton;
-    static char FadingBrighten[256]; 
+    static char FadingBrighten[256];
     static char FadingShade[256];
     static char FadingWayDark[256];
     static char FadingLight[256];
@@ -218,51 +223,43 @@ public:
 private:
     // This only seems to be used by DisplayClass, so made it a static helper of this class.
     static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
-    static void Hook_Get_Occupy_Dimensions(DisplayClass* ptr, int &w, int &h, int16_t *list)
+    static void Hook_Get_Occupy_Dimensions(DisplayClass *ptr, int &w, int &h, int16_t *list)
     {
         ptr->Get_Occupy_Dimensions(w, h, list);
     }
 
-    static ObjectClass *Hook_Cell_Object(DisplayClass* ptr, cell_t cellnum, int x, int y)
+    static ObjectClass *Hook_Cell_Object(DisplayClass *ptr, cell_t cellnum, int x, int y)
     {
         return ptr->Cell_Object(cellnum, x, y);
     }
-    
-    static ObjectClass *Hook_Next_Object(DisplayClass* ptr, ObjectClass *object)
-    {
-        return ptr->Next_Object(object);
-    }
 
-    static BOOL Hook_In_View(DisplayClass* ptr, cell_t cellnum)
-    {
-        return ptr->In_View(cellnum);
-    }
-    
-    static BOOL Hook_Coord_To_Pixel(DisplayClass* ptr, coord_t coord, int &x, int &y)
+    static ObjectClass *Hook_Next_Object(DisplayClass *ptr, ObjectClass *object) { return ptr->Next_Object(object); }
+
+    static BOOL Hook_In_View(DisplayClass *ptr, cell_t cellnum) { return ptr->In_View(cellnum); }
+
+    static BOOL Hook_Coord_To_Pixel(DisplayClass *ptr, coord_t coord, int &x, int &y)
     {
         return ptr->Coord_To_Pixel(coord, x, y);
     }
 
-    static int Hook_Cell_Shadow(DisplayClass* ptr, cell_t cellnum)
-    {
-        return ptr->Cell_Shadow(cellnum);
-    }
+    static int Hook_Cell_Shadow(DisplayClass *ptr, cell_t cellnum) { return ptr->Cell_Shadow(cellnum); }
 
-    static coord_t Hook_Closest_Free_Spot(DisplayClass* ptr, coord_t coord, BOOL skip_occupied)
+    static coord_t Hook_Closest_Free_Spot(DisplayClass *ptr, coord_t coord, BOOL skip_occupied)
     {
         return ptr->Closest_Free_Spot(coord, skip_occupied);
     }
 
-    static cell_t Hook_Calculated_Cell(DisplayClass* ptr, SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
+    static cell_t Hook_Calculated_Cell(
+        DisplayClass *ptr, SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
     {
         return ptr->Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
     }
 
-    static BOOL Hook_Good_Reinforcement_Cell(DisplayClass* ptr, cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone)
+    static BOOL Hook_Good_Reinforcement_Cell(
+        DisplayClass *ptr, cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone)
     {
         return ptr->Good_Reinforcement_Cell(cell1, cell2, speed, zone, mzone);
     }
-
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -280,40 +277,40 @@ inline cell_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
 inline void DisplayClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear); 
-    Hook_Function(0x004AEFF4, *DisplayClass::Init_IO); 
-    Hook_Function(0x004AF02C, *DisplayClass::Init_Theater); 
-    Hook_Function(0x004B0140, *DisplayClass::AI); 
-    Hook_Function(0x004AEEF4, *DisplayClass::One_Time); 
-    Hook_Function(0x004AF700, *DisplayClass::Set_Cursor_Shape); 
-    Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc); 
-    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map); 
-    Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells); 
-    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions); 
-    Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position); 
-    Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);  
-    Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press); 
-    Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press); 
+    Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear);
+    Hook_Function(0x004AEFF4, *DisplayClass::Init_IO);
+    Hook_Function(0x004AF02C, *DisplayClass::Init_Theater);
+    Hook_Function(0x004B0140, *DisplayClass::AI);
+    Hook_Function(0x004AEEF4, *DisplayClass::One_Time);
+    Hook_Function(0x004AF700, *DisplayClass::Set_Cursor_Shape);
+    Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc);
+    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map);
+    Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells);
+    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions);
+    Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position);
+    Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);
+    Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press);
+    Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press);
     Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held);
-    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band); 
-    Hook_Function(0x004B006C, *DisplayClass::Cursor_Mark); 
-    Hook_Function(0x004AFFA8, *DisplayClass::Hook_Get_Occupy_Dimensions); 
+    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band);
+    Hook_Function(0x004B006C, *DisplayClass::Cursor_Mark);
+    Hook_Function(0x004AFFA8, *DisplayClass::Hook_Get_Occupy_Dimensions);
     Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);
-    Hook_Function(0x004B25A4, *DisplayClass::Hook_Next_Object); 
-    Hook_Function(0x004B0214, *DisplayClass::Submit); 
-    Hook_Function(0x004B0248, *DisplayClass::Remove); 
-    Hook_Function(0x004B0C78, *DisplayClass::Hook_Cell_Object); 
-    Hook_Function(0x004B4E20, *DisplayClass::Center_Map); 
-    Hook_Function(0x004AFD40, *DisplayClass::Set_Cursor_Pos); 
+    Hook_Function(0x004B25A4, *DisplayClass::Hook_Next_Object);
+    Hook_Function(0x004B0214, *DisplayClass::Submit);
+    Hook_Function(0x004B0248, *DisplayClass::Remove);
+    Hook_Function(0x004B0C78, *DisplayClass::Hook_Cell_Object);
+    Hook_Function(0x004B4E20, *DisplayClass::Center_Map);
+    Hook_Function(0x004AFD40, *DisplayClass::Set_Cursor_Pos);
     Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons);
     Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow);
-    Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View); 
+    Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View);
     Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel);
     Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);
     Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap);
-    Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell); 
-    Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell); 
-    Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot); 
+    Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell);
+    Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell);
+    Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot);
     Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow);
 #endif
 }
