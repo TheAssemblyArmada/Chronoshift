@@ -853,8 +853,6 @@ void Unselect_All()
     while (CurrentObjects.Count() > 0) {
         CurrentObjects[0]->Unselect();
     }
-
-    CurrentObjects.Clear();
 }
 
 void ObjectClass::Shorten_Attached_Anims()
