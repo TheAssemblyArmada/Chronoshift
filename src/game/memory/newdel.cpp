@@ -26,7 +26,7 @@ void* operator new[](size_t size)
     return Alloc(size, MEM_NEW);
 }
 
-void operator delete(void* ptr)
+void operator delete(void* ptr) noexcept
 {
     Free(ptr);
 }
