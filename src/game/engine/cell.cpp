@@ -878,9 +878,14 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
 
             int placement_icon = PLACEMENT_CLEAR;
 
-            if (!Map.Passed_Proximity_Check() && Get_Occupier() != nullptr && Get_Occupier()->What_Am_I() != RTTI_BUILDING) {
+            // TODO this is an enhancement to make unit occupied cells yellow rather than red.
+            /*if (!Map.Passed_Proximity_Check() && Get_Occupier() != nullptr && Get_Occupier()->What_Am_I() != RTTI_BUILDING) {
                 placement_icon = PLACEMENT_YELLOW;
-            } else if (!Map.Passed_Proximity_Check() && !Is_Clear_To_Build(speed)) {
+            } else if (!Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
+                placement_icon = PLACEMENT_RED;
+            }*/
+
+            if (!Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
                 placement_icon = PLACEMENT_RED;
             }
 
