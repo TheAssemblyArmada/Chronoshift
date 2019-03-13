@@ -24,6 +24,7 @@
 #include "cpudetect.h"
 #include "dialog.h"
 #include "display.h"
+#include "drawshape.h"
 #include "facing.h"
 #include "fading.h"
 #include "flasher.h"
@@ -134,7 +135,9 @@ void Setup_Hooks()
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
-    Hook_Function(0x004AD670, Dialog_Box);
+    Hook_Function(0x004A96E8, CC_Draw_Shape);
+    //Hook_Function(0x004AD670, Dialog_Box);
+    Dialog::Hook_Me();
     //Hook_Function(0x004AC798, Coord_Move);
     Hook_Function(0x004AC814, Move_Point);
     //Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
