@@ -274,14 +274,14 @@ int GraphicViewPortClass::Blit(
             src_y + Get_YPos(),
             dst_x + view.Get_XPos(),
             dst_y + view.Get_YPos(),
-            view.Get_Width(),
-            view.Get_Height(),
+            w,
+            h,
             use_keysrc);
     }
 #endif
     if (Lock()) {
         if (view.Lock()) {
-            Linear_Blit_To_Linear(*this, view, src_x, src_y, dst_x, dst_y, Get_Width(), Get_Height(), use_keysrc);
+            Linear_Blit_To_Linear(*this, view, src_x, src_y, dst_x, dst_y, w, h, use_keysrc);
         }
         view.Unlock();
     }

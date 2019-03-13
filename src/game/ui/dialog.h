@@ -208,6 +208,7 @@ namespace Dialog
 
 inline void Hook_Me()
 {
+#ifdef COMPILER_WATCOM
     Hook_Function(0x004AE3FC, &Simple_Text_Print);
     Hook_Function(0x004AE7FC, static_cast<void(*)(int, unsigned, unsigned, RemapControlType *, uint8_t, TextPrintType, ...)>(&Fancy_Text_Print));//int
     Hook_Function(0x004AE8C0, static_cast<void(*)(const char *, unsigned, unsigned, RemapControlType *, uint8_t, TextPrintType, ...)>(&Fancy_Text_Print));//char
@@ -221,6 +222,7 @@ inline void Hook_Me()
     Hook_Function(0x004AD670, &Dialog_Box);
     Hook_Function(0x004ADB5C, &Draw_Box);
     Hook_Function(0x004AE350, &Window_Box);
+#endif
 }
 }
 
