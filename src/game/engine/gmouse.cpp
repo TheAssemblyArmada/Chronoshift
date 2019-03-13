@@ -35,16 +35,16 @@
 #include <new>
 
 #ifndef CHRONOSHIFT_STANDALONE
-void *&GameMouseClass::MouseShapes = Make_Global<void *>(0x00685160);
-TCountDownTimerClass<SystemTimerClass> &GameMouseClass::AnimationTimer =
+void *&GameMouseClass::s_MouseShapes = Make_Global<void *>(0x00685160);
+TCountDownTimerClass<SystemTimerClass> &GameMouseClass::s_AnimationTimer =
     Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x00685164);
 #else
-void *GameMouseClass::MouseShapes = nullptr;
-TCountDownTimerClass<SystemTimerClass> GameMouseClass::AnimationTimer;
+void *GameMouseClass::s_MouseShapes = nullptr;
+TCountDownTimerClass<SystemTimerClass> GameMouseClass::s_AnimationTimer;
 #endif
 
 // Frame, Count, Rate, Small, HotSpotX, HotSpotY
-GameMouseClass::MouseStruct GameMouseClass::MouseControl[MOUSE_COUNT] = {
+GameMouseClass::MouseStruct GameMouseClass::s_MouseControl[MOUSE_COUNT] = {
     { 0, 1, 0, 80, 0, 0 }, // 0  //Arrow
     { 1, 1, 0, -1, 14, 0 }, // 1  //ScrollN
     { 2, 1, 0, -1, 29, 0 }, // 2  //ScrollNE
@@ -91,47 +91,47 @@ GameMouseClass::MouseStruct GameMouseClass::MouseControl[MOUSE_COUNT] = {
 };
 
 GameMouseClass::GameMouseClass() :
-    MouseInRadar(false),
-    PreviousMouseShape(MOUSE_POINTER),
-    MouseShape(MOUSE_POINTER),
-    MouseFrame(0)
+    m_MouseInRadar(false),
+    m_CurrentMouse(MOUSE_POINTER),
+    m_DefaultMouse(MOUSE_POINTER),
+    m_MouseFrame(0)
 {
 }
 
 void GameMouseClass::One_Time()
 {
     ScrollClass::One_Time();
-    MouseShapes = GameFileClass::Retrieve("mouse.shp");
+    s_MouseShapes = GameFileClass::Retrieve("mouse.shp");
 }
 
 void GameMouseClass::Init_Clear()
 {
     ScrollClass::Init_Clear();
-    MouseShape = MOUSE_POINTER;
-    MouseInRadar = false;
+    m_DefaultMouse = MOUSE_POINTER;
+    m_MouseInRadar = false;
 }
 
 void GameMouseClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    MouseStruct &cursor = MouseControl[MouseShape];
+    MouseStruct &cursor = s_MouseControl[m_CurrentMouse];
 
     if (cursor.Rate) {
-        if (AnimationTimer == 0) {
-            ++MouseFrame;
-            MouseFrame %= cursor.Count;
-            AnimationTimer = cursor.Rate;
+        if (s_AnimationTimer == 0) {
+            ++m_MouseFrame;
+            m_MouseFrame %= cursor.Count;
+            s_AnimationTimer = cursor.Rate;
 
             // If we have a small cursor or we aren't in radar evaluate setting a new cursor.
-            if (!MouseInRadar || cursor.Small != -1) {
+            if (!m_MouseInRadar || cursor.Small != -1) {
                 int frame = 0;
 
-                if (MouseInRadar) {
+                if (m_MouseInRadar) {
                     frame = cursor.Small;
                 } else {
                     frame = cursor.Frame;
                 }
 
-                g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, Extract_Shape(MouseShapes, MouseFrame + frame));
+                g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, Extract_Shape(s_MouseShapes, m_MouseFrame + frame));
             }
         }
     }
@@ -142,7 +142,7 @@ void GameMouseClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 void GameMouseClass::Set_Default_Mouse(MouseType mouse, BOOL in_radar)
 {
     if (mouse != MOUSE_NONE && mouse < MOUSE_COUNT) {
-        MouseShape = mouse;
+        m_DefaultMouse = mouse;
         Override_Mouse_Shape(mouse, in_radar);
     }
 }
@@ -159,45 +159,45 @@ BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
 
     static BOOL _startup = false;
 
-    MouseStruct &cursor = MouseControl[mouse];
+    MouseStruct &cursor = s_MouseControl[mouse];
 
     if (cursor.Small == -1) {
         in_radar = false;
     }
     
     // No need to change it, we are already using the correct cursor.
-    if (_startup && (MouseShapes == nullptr || (mouse == PreviousMouseShape && MouseInRadar == in_radar))) {
+    if (_startup && (s_MouseShapes == nullptr || (mouse == m_CurrentMouse && m_MouseInRadar == in_radar))) {
         return false;
     }
 
     _startup = true;
-    AnimationTimer = cursor.Rate;
-    MouseFrame = 0;
+    s_AnimationTimer = cursor.Rate;
+    m_MouseFrame = 0;
     int frame = in_radar ? (cursor.Small == -1 ? cursor.Frame : cursor.Small) : cursor.Frame;
-    g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, Extract_Shape(MouseShapes, frame));
-    PreviousMouseShape = mouse;
-    MouseInRadar = in_radar;
+    g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, Extract_Shape(s_MouseShapes, frame));
+    m_CurrentMouse = mouse;
+    m_MouseInRadar = in_radar;
 
     return true;
 }
 
 void GameMouseClass::Mouse_Small(BOOL use_small_frame)
 {
-    if (MouseInRadar != use_small_frame) {
+    if (m_MouseInRadar != use_small_frame) {
         if (use_small_frame) {
-            if (MouseControl[PreviousMouseShape].Small == -1) {
-                g_mouse->Set_Cursor(MouseControl[MOUSE_POINTER].HotSpotX,
-                    MouseControl[MOUSE_POINTER].HotSpotY,
-                    Extract_Shape(MouseShapes, 0));
+            if (s_MouseControl[m_CurrentMouse].Small == -1) {
+                g_mouse->Set_Cursor(s_MouseControl[MOUSE_POINTER].HotSpotX,
+                    s_MouseControl[MOUSE_POINTER].HotSpotY,
+                    Extract_Shape(s_MouseShapes, 0));
             } else {
-                g_mouse->Set_Cursor(MouseControl[MouseShape].HotSpotX,
-                    MouseControl[MouseShape].HotSpotY,
-                    Extract_Shape(MouseShapes, MouseControl[MouseShape].Small + MouseFrame));
+                g_mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
+                    s_MouseControl[m_DefaultMouse].HotSpotY,
+                    Extract_Shape(s_MouseShapes, s_MouseControl[m_DefaultMouse].Small + m_MouseFrame));
             }
         } else {
-            g_mouse->Set_Cursor(MouseControl[MouseShape].HotSpotX,
-                MouseControl[MouseShape].HotSpotY,
-                Extract_Shape(MouseShapes, MouseControl[MouseShape].Frame + MouseFrame));
+            g_mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
+                s_MouseControl[m_DefaultMouse].HotSpotY,
+                Extract_Shape(s_MouseShapes, s_MouseControl[m_DefaultMouse].Frame + m_MouseFrame));
         }
     }
 }

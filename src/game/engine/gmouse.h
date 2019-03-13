@@ -43,9 +43,9 @@ public:
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Set_Default_Mouse(MouseType mouse, BOOL in_radar = false) override;
     virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL in_radar = false) override;
-    virtual void Revert_Mouse_Shape() override { Override_Mouse_Shape(PreviousMouseShape); }
+    virtual void Revert_Mouse_Shape() override { Override_Mouse_Shape(m_CurrentMouse); }
     virtual void Mouse_Small(BOOL use_small_frame) override;
-    virtual MouseType Get_Mouse_Shape() const override { return MouseShape; }
+    virtual MouseType Get_Mouse_Shape() const override { return m_DefaultMouse; }
     virtual BOOL Load(Straw &straw) override;
     virtual BOOL Save(Pipe &pipe) const override;
 
@@ -61,26 +61,26 @@ protected:
     {
         struct
         {
-            bool MouseInRadar : 1; // 1 InRadar? RadarMouse?, seems there is only one bool here, TS only has one too.
+            bool m_MouseInRadar : 1; // 1 Is the mouse in the radar map?
         };
         int Bitfield;
     };
 #else
-    bool MouseInRadar;
+    bool m_MouseInRadar; // Is the mouse in the radar map?
 #endif
-    MouseType PreviousMouseShape;
-    MouseType MouseShape;
-    unsigned MouseFrame; // this is the current frame index for the animated mouse.
+    MouseType m_CurrentMouse;
+    MouseType m_DefaultMouse;
+    unsigned m_MouseFrame; // this is the current frame index for the animated mouse.
 
 private:
 #ifndef CHRONOSHIFT_STANDALONE
-    static void *&MouseShapes;
-    static TCountDownTimerClass<SystemTimerClass> &AnimationTimer;
+    static void *&s_MouseShapes;
+    static TCountDownTimerClass<SystemTimerClass> &s_AnimationTimer;
 #else
-    static void *MouseShapes;
-    static TCountDownTimerClass<SystemTimerClass> AnimationTimer;
+    static void *s_MouseShapes;
+    static TCountDownTimerClass<SystemTimerClass> s_AnimationTimer;
 #endif
-    static MouseStruct MouseControl[MOUSE_COUNT];
+    static MouseStruct s_MouseControl[MOUSE_COUNT];
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
