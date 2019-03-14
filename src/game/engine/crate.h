@@ -58,6 +58,11 @@ public:
     BOOL Create_Crate(cell_t cell);
     cell_t Get_Cell() { return Cell; }
     BOOL Timer_Expired() { return CrateTimer.Time() <= 0; }
+    void Init_Clear()
+    {
+        Cell = -1;
+        CrateTimer.Stop();
+    }
 
     static BOOL Put_Crate(cell_t &cell);
     static BOOL Get_Crate(cell_t cell);
