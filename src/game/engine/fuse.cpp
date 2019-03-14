@@ -64,7 +64,7 @@ int FuseClass::Fuse_Checkup(coord_t pos)
         }
 
         if (dist < 256 && dist > ArmDistance) {
-            return FUSE_2;
+            return FUSE_1;
         }
 
         ArmDistance = dist;
