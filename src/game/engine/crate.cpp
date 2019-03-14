@@ -54,8 +54,7 @@ BOOL CrateClass::Remove_It()
     }
 
     Get_Crate(Cell);
-    Cell = -1;
-    CrateTimer.Stop();
+    Init_Clear();
 
     return true;
 }

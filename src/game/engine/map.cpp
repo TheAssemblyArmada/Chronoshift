@@ -135,6 +135,10 @@ void MapClass::Init_Clear()
     OreGrowthExcess = 0;
     OreSpreadCount = 0;
     OreSpreadExcess = 0;
+
+    for (int i = 0; i < MAP_MAX_CRATES; ++i) {
+        Crates[i].Init_Clear();
+    }
 }
 
 /**
