@@ -14,6 +14,7 @@
  */
 
 #include "radio.h"
+#include "target.h"
 
 // A invalid target instance parsed into targets as a default param.
 static target_t LParam = 0;
@@ -184,13 +185,19 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioCla
 
 void RadioClass::Code_Pointers()
 {
-    DEBUG_ASSERT(this != nullptr);
+    if (Radio != nullptr) {
+        Radio = reinterpret_cast<ObjectClass *>((m_HeapID & 0xFFFFFF) | ((m_RTTI & 0xFF)) << 24);
+    }
+
     MissionClass::Code_Pointers();
 }
 
 void RadioClass::Decode_Pointers()
 {
-    DEBUG_ASSERT(this != nullptr);
+    if (Radio != nullptr) {
+        Radio = reinterpret_cast<ObjectClass *>(As_Techno((uintptr_t)(Radio)));
+    }
+
     MissionClass::Decode_Pointers();
 }
 
