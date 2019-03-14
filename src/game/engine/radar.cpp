@@ -93,8 +93,8 @@ RadarClass::RadarClass() :
 
 void RadarClass::One_Time()
 {
-    RadarButtonHeight = 160;
-    RadarButtonWidth = 140;
+    RadarButtonWidth = 160;
+    RadarButtonHeight = 140;
     RadarButtonYPos = 14;
     field_CA8 = 128;
     field_CAC = 128;
@@ -102,12 +102,12 @@ void RadarClass::One_Time()
     MinRadarY = 7;
     MaxRadarWidth = 146;
     MaxRadarHeight = 130;
-    RadarButtonXPos = g_seenBuff.Get_Width() - RadarButtonHeight;
+    RadarButtonXPos = g_seenBuff.Get_Width() - RadarButtonWidth;
 
     DisplayClass::One_Time();
 
     RadarButton.Set_Position(RadarButtonXPos, RadarButtonYPos);
-    RadarButton.Set_Size(RadarButtonHeight, RadarButtonWidth);
+    RadarButton.Set_Size(RadarButtonWidth, RadarButtonHeight);
 
     // Moved from Draw_It as its the same no matter what.
     RadarPulse = GameFileClass::Retrieve("pulse.shp");

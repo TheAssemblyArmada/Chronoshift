@@ -114,8 +114,8 @@ protected:
     int MinRadarX;
     int RadarButtonYPos;
     int MinRadarY;
-    int RadarButtonHeight;
     int RadarButtonWidth;
+    int RadarButtonHeight;
     int MaxRadarWidth;
     int MaxRadarHeight;
     int field_CA8;
