@@ -229,27 +229,27 @@ BulletTypeClass *BulletTypeClass::As_Pointer(BulletType bullet)
 BOOL BulletTypeClass::Read_INI(GameINIClass &ini)
 {
     if (ObjectTypeClass::Read_INI(ini)) {
-        Arm = ini.Get_Int(Get_Name(), "Arm", 0);
-        ROT = ini.Get_Int(Get_Name(), "ROT", 0);
-        Frames = ini.Get_Int(Get_Name(), "Frames", 1);
-        High = ini.Get_Bool(Get_Name(), "High", false);
-        Shadow = ini.Get_Bool(Get_Name(), "Shadow", true);
-        Arcing = ini.Get_Bool(Get_Name(), "Arcing", false);
-        Dropping = ini.Get_Bool(Get_Name(), "Dropping", false);
-        Inviso = ini.Get_Bool(Get_Name(), "Inviso", false);
-        Proximity = ini.Get_Bool(Get_Name(), "Proximity", false);
-        Animates = ini.Get_Bool(Get_Name(), "Animates", false);
-        Ranged = ini.Get_Bool(Get_Name(), "Ranged", false);
-        Inaccurate = ini.Get_Bool(Get_Name(), "Inaccuate", false);
-        AntiAir = ini.Get_Bool(Get_Name(), "AA", false);
-        AntiGround = ini.Get_Bool(Get_Name(), "AG", true);
-        AntiSubWarfare = ini.Get_Bool(Get_Name(), "ASW", false);
-        Degenerates = ini.Get_Bool(Get_Name(), "Degenerates", false);
-        UnderWater = ini.Get_Bool(Get_Name(), "UnderWater", false);
-        Parachuted = ini.Get_Bool(Get_Name(), "Parachuted", false);
-        Rotates = ini.Get_Bool(Get_Name(), "Rotates", false);
-        Translucent = ini.Get_Bool(Get_Name(), "Translucent", false);
-        Gigundo = ini.Get_Bool(Get_Name(), "Gigundo", false);
+        Arm = ini.Get_Int(Get_Name(), "Arm", Arm);
+        ROT = ini.Get_Int(Get_Name(), "ROT", ROT);
+        Frames = ini.Get_Int(Get_Name(), "Frames", Frames);
+        High = ini.Get_Bool(Get_Name(), "High", High);
+        Shadow = ini.Get_Bool(Get_Name(), "Shadow", Shadow);
+        Arcing = ini.Get_Bool(Get_Name(), "Arcing", Arcing);
+        Dropping = ini.Get_Bool(Get_Name(), "Dropping", Dropping);
+        Inviso = ini.Get_Bool(Get_Name(), "Inviso", Inviso);
+        Proximity = ini.Get_Bool(Get_Name(), "Proximity", Proximity);
+        Animates = ini.Get_Bool(Get_Name(), "Animates", Animates);
+        Ranged = ini.Get_Bool(Get_Name(), "Ranged", Ranged);
+        Inaccurate = ini.Get_Bool(Get_Name(), "Inaccuate", Inaccurate);
+        AntiAir = ini.Get_Bool(Get_Name(), "AA", AntiAir);
+        AntiGround = ini.Get_Bool(Get_Name(), "AG", AntiGround);
+        AntiSubWarfare = ini.Get_Bool(Get_Name(), "ASW", AntiSubWarfare);
+        Degenerates = ini.Get_Bool(Get_Name(), "Degenerates", Degenerates);
+        UnderWater = ini.Get_Bool(Get_Name(), "UnderWater", UnderWater);
+        Parachuted = ini.Get_Bool(Get_Name(), "Parachuted", Parachuted);
+        Rotates = ini.Get_Bool(Get_Name(), "Rotates", Rotates);
+        Translucent = ini.Get_Bool(Get_Name(), "Translucent", Translucent);
+        Gigundo = ini.Get_Bool(Get_Name(), "Gigundo", Gigundo);
 
         return true;
     }

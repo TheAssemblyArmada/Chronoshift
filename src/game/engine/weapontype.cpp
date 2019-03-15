@@ -248,7 +248,7 @@ WeaponTypeClass *WeaponTypeClass::As_Pointer(WeaponType weapon)
 BOOL WeaponTypeClass::Read_INI(GameINIClass &ini)
 {
     if (ini.Find_Section(Get_Name()) != nullptr) {
-        Supress = ini.Get_Bool(Get_Name(), "Supress", false);
+        Supress = ini.Get_Bool(Get_Name(), "Supress", Supress);
         Burst = ini.Get_Int(Get_Name(), "Burst", Burst);
         Damage = ini.Get_Int(Get_Name(), "Damage", Damage);
         Speed = ini.Get_MPHType(Get_Name(), "Speed", Speed);
@@ -256,9 +256,9 @@ BOOL WeaponTypeClass::Read_INI(GameINIClass &ini)
         Range = ini.Get_Lepton(Get_Name(), "Range", Range);
         Report = ini.Get_VocType(Get_Name(), "Report", Report);
         Anim = ini.Get_AnimType(Get_Name(), "Anim", Anim);
-        Camera = ini.Get_Bool(Get_Name(), "Camera", false);
-        Charges = ini.Get_Bool(Get_Name(), "Charges", false);
-        TurboBoost = ini.Get_Bool(Get_Name(), "TurboBoost", false);
+        Camera = ini.Get_Bool(Get_Name(), "Camera", Camera);
+        Charges = ini.Get_Bool(Get_Name(), "Charges", Charges);
+        TurboBoost = ini.Get_Bool(Get_Name(), "TurboBoost", TurboBoost);
         Warhead = WarheadTypeClass::As_Pointer(ini.Get_WarheadType(
             Get_Name(), "Warhead", (Warhead != nullptr ? WarheadType(Warhead->What_Type()) : WARHEAD_NONE)));
         Projectile = BulletTypeClass::As_Pointer(ini.Get_BulletType(
