@@ -27,6 +27,13 @@
 
 #include "always.h"
 
+#ifdef __WATCOMC__
+#include <windows.h>
+#else
+#include <processthreadsapi.h>
+#include <memoryapi.h>
+#endif
+
 template<typename T, const int size>
 class RefArrayHelper
 {

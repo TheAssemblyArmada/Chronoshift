@@ -38,7 +38,7 @@ public:
     virtual BOOL Delete();
     virtual BOOL Is_Available(BOOL forced = false);
 #ifdef PLATFORM_WINDOWS
-    virtual BOOL Is_Open() const { return m_handle != INVALID_HANDLE_VALUE; };
+    virtual BOOL Is_Open() const { return m_handle != (HANDLE)(LONG_PTR)-1; };
 #else
     virtual BOOL Is_Open() const { return m_handle != -1; };
 #endif

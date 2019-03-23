@@ -15,9 +15,17 @@
  */
 #include "alloc.h"
 #include "gamedebug.h"
-#include <malloc.h>
 #include <cstdlib>
 #include <cstring>
+#include <malloc.h>
+
+#ifdef PLATFORM_WINDOWS
+#ifdef __WATCOMC__
+#include <windows.h>
+#else
+#include <sysinfoapi.h>
+#endif
+#endif
 
 #ifndef PLATFORM_WINDOWS
 #include <sys/sysinfo.h>

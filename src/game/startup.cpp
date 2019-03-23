@@ -16,9 +16,20 @@
 #include "startup.h"
 #include "gamedebug.h"
 
-#ifndef PLATFORM_WINDOWS
-#include <sys/statvfs.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifdef HAVE_SYS_STATVFS_H
+#include <sys/statvfs.h>
+#endif
+
+#ifdef PLATFORM_WINDOWS
+#ifdef __WATCOMC__
+#include <windows.h>
+#else
+#include <fileapi.h>
+#endif
 #endif
 
 void Emergency_Exit(int exit_code)

@@ -21,16 +21,31 @@
 #include "always.h"
 #include "timer.h"
 
-#if defined(PLATFORM_WINDOWS)
-#include <mmsystem.h>
+#ifdef PLATFORM_WINDOWS
+#ifdef __WATCOMC__
+#include <windows.h>
 #else
+#include <synchapi.h>
+#endif
+#include <mmsystem.h>
+#endif
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#if defined(PLATFORM_OSX)
-#include <dispatch/dispatch.h>
-#elif defined(PLATFORM_UNIX)
+#endif
+
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#endif // PLATFORM_WINDOWS
+
+#ifdef HAVE_MACOS_GDC
+#include <dispatch/dispatch.h>
+#endif
+
+#ifdef HAVE_POSIX_TIMERS
+#include <signal.h>
+#include <time.h>
+#endif
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
@@ -50,13 +65,15 @@ public:
     // Calls OS sleep function in micro seconds
     static void Sleep(int interval)
     {
-#if defined(PLATFORM_WINDOWS)
+#if defined PLATFORM_WINDOWS
         ::Sleep(interval);
-#elif defined(PLATFORM_UNIX) || defined(PLATFORM_OSX)
+#elif defined HAVE_UNISTD_H
         usleep(1000 * interval);
-#endif // PLATFORM_WINDOWS || PLATFORM_UNIX || PLATFORM_OSX
+#else
+#error Add sleep function in ostimer.h
+#endif
     }
-    
+
     static unsigned Get_Time()
     {
 #ifdef PLATFORM_WINDOWS
@@ -67,31 +84,33 @@ public:
         return now.tv_usec / 1000;
 #endif
     }
-    
+
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
 private:
 #ifdef PLATFORM_WINDOWS
     static void __stdcall Timer_Callback(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
-#elif defined PLATFORM_OSX
+#elif defined HAVE_MACOS_GCD
     static void Timer_Callback(void *arg);
-#else // !PLATFORM_WINDOWS || !PLATFORM_OSX
+#elif defined HAVE_POSIX_TIMERS
     static void Timer_Callback(union sigval arg);
-#endif // PLATFORM_WINDOWS
+#else
+#error Implement a threaded timer callback in ostimer.h/cpp
+#endif
     void Update_Tick_Count();
     void Update_System_Tick_Count() { ++m_sysTicks; }
     void Update_User_Tick_Count() { ++m_userTicks; }
 
 private:
-#if defined(PLATFORM_WINDOWS)
+#if defined PLATFORM_WINDOWS
     MMRESULT m_timerHandle;
-#elif defined(PLATFORM_OSX)
+#elif defined HAVE_MACOS_GCD
     dispatch_source_t m_timerHandle;
     dispatch_queue_t TimerQueue;
-#elif defined(PLATFORM_UNIX)
+#elif defined HAVE_POSIX_TIMERS
     timer_t m_timerHandle;
-#endif // PLATFORM_WINDOWS || PLATFORM_OSX || PLATFORM_UNIX
+#endif
 
     unsigned m_frequency;
     unsigned m_trueRate;

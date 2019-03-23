@@ -22,6 +22,12 @@
 
 #ifdef PLATFORM_WINDOWS
 #include <mmsystem.h>
+#ifdef __WATCOMC__
+#include <windows.h>
+#else
+#include <sysinfoapi.h>
+#include <timezoneapi.h>
+#endif
 #endif
 
 #ifdef PLATFORM_APPLE

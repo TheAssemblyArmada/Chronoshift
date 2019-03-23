@@ -14,34 +14,31 @@
  *            LICENSE
  */
 #include "critsection.h"
-#include <cstdlib>
 
-#ifndef PLATFORM_WINDOWS
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-using std::atoi;
-
-CriticalSectionClass::CriticalSectionClass() : Handle(), Locked(0)
+CriticalSectionClass::CriticalSectionClass() : m_handle(), m_locked(0)
 {
-#ifdef PLATFORM_WINDOWS
-    InitializeCriticalSection(&Handle);
-#else
+#ifdef HAVE_PTHREAD_H
     pthread_mutexattr_t attr;
 
     pthread_mutexattr_init(&attr);
     pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&Handle, &attr);
-#endif // PLATFORM_WINDOWS
+    pthread_mutex_init(&m_handle, &attr);
+#elif defined PLATFORM_WINDOWS
+    InitializeCriticalSection(&m_handle);
+#endif
 }
 
 CriticalSectionClass::~CriticalSectionClass()
 {
-#ifdef PLATFORM_WINDOWS
-    DeleteCriticalSection(&Handle);
-#else
-    pthread_mutex_destroy(&Handle);
-#endif // PLATFORM_WINDOWS
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_destroy(&m_handle);
+#elif defined PLATFORM_WINDOWS
+    DeleteCriticalSection(&m_handle);
+#endif
 }
 
 /**
@@ -49,13 +46,12 @@ CriticalSectionClass::~CriticalSectionClass()
  */
 void CriticalSectionClass::Lock()
 {
-#ifdef PLATFORM_WINDOWS
-    EnterCriticalSection(&Handle);
-#else
-    pthread_mutex_lock(&Handle);
-#endif // PLATFORM_WINDOWS
-
-    ++Locked;
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_lock(&m_handle);
+#elif defined PLATFORM_WINDOWS
+    EnterCriticalSection(&m_handle);
+#endif
+    ++m_locked;
 }
 
 /**
@@ -63,13 +59,12 @@ void CriticalSectionClass::Lock()
  */
 void CriticalSectionClass::Unlock()
 {
-#ifdef PLATFORM_WINDOWS
-    LeaveCriticalSection(&Handle);
-#else
-    pthread_mutex_unlock(&Handle);
-#endif // PLATFORM_WINDOWS
-
-    --Locked;
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_unlock(&m_handle);
+#elif defined PLATFORM_WINDOWS
+    LeaveCriticalSection(&m_handle);
+#endif
+    --m_locked;
 }
 
 /**
@@ -78,16 +73,18 @@ void CriticalSectionClass::Unlock()
 void FastCriticalSectionClass::Thread_Safe_Set_Flag()
 {
 #if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
-    while (Flag.test_and_set(std::memory_order_seq_cst)) {
+    while (m_flag.test_and_set(std::memory_order_seq_cst)) {
 #else
     // Should work for both x86_32 and x86_64 plus no assembly.
-    while (_interlockedbittestandset(&Flag, 0)) {
+    while (_interlockedbittestandset(&m_flag, 0)) {
 #endif
         // Yield the thread if no lock aquired.
-#ifdef PLATFORM_WINDOWS
+#if defined PLATFORM_WINDOWS
         Sleep(1);
+#elif defined HAVE_UNISTD_H
+        usleep(1);
 #else
-        usleep(1); // TODO test for usleep in build system?
+#error Add appropriate sleep function to critsection.cpp
 #endif
     }
 }
@@ -98,8 +95,8 @@ void FastCriticalSectionClass::Thread_Safe_Set_Flag()
 void FastCriticalSectionClass::Thread_Safe_Clear_Flag()
 {
 #if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
-    Flag.clear();
+    m_flag.clear();
 #else
-    Flag = 0;
+    m_flag = 0;
 #endif
 }
