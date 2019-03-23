@@ -17,17 +17,19 @@
 #include "gamedebug.h"
 #include "stringex.h"
 #include <cerrno>
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 #include <fcntl.h>
 #include <malloc.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 using std::remove;
 
 // Headers needed for posix open, close, read... etc.
 #ifdef PLATFORM_WINDOWS
 #include <io.h>
-#include <sys/utime.h>
+#include <winbase.h>
 
 // Make lseek 64bit on windows to match other platforms behaviour?
 //#ifdef lseek
@@ -40,10 +42,16 @@ using std::remove;
 
 //#define lseek _lseeki64
 // typedef __int64 off_t;
-#else
-#include <sys/types.h>
-#include <utime.h>
+#endif
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifdef HAVE_UTIME_H
+#include <utime.h>
+#elif defined HAVE_SYS_UTIME_H
+#include <sys/utime.h>
 #endif
 
 RawFileClass::RawFileClass() :
@@ -514,7 +522,7 @@ const char *RawFileClass::Set_Name(const char *filename)
 
 time_t RawFileClass::Get_Date_Time()
 {
-    stat_t attrib;
+    struct stat attrib;
 
     // get stats
     if (stat(m_filename, &attrib) == 0) {

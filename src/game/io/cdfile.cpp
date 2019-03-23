@@ -22,7 +22,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#if defined(PLATFORM_WINDOWS)
+#if defined PLATFORM_WINDOWS
+#ifdef __WATCOMC__
+#include <windows.h>
+#else
+#include <fileapi.h>
+#include <handleapi.h>
+#endif
 #define CD_DRIVE_PREFIX "?:"
 #define CD_PREFIX_SIZE 2
 #define CD_PATH_SEP "\\"
@@ -41,8 +47,8 @@
 char *CDFileClass::s_rawPath = Make_Pointer<char>(0x006AC06C);
 CDFileClass::SearchDriveType *&CDFileClass::s_first =
     *reinterpret_cast<CDFileClass::SearchDriveType **>(0x006AC060); // first entry in the search drive, each entry is linked.
-int &CDFileClass::s_currentCDDrive = *reinterpret_cast<int*>(0x006AC064);
-int &CDFileClass::s_lastCDDrive = *reinterpret_cast<int*>(0x006AC068);
+int &CDFileClass::s_currentCDDrive = *reinterpret_cast<int *>(0x006AC064);
+int &CDFileClass::s_lastCDDrive = *reinterpret_cast<int *>(0x006AC068);
 #else
 char CDFileClass::s_rawPath[PATH_MAX * 2]; // full raw path of the search drive set.
 CDFileClass::SearchDriveType *CDFileClass::s_first; // first entry in the search drive, each entry is linked.
@@ -59,8 +65,8 @@ CDFileClass::CDFileClass(char *filename) : m_disableSearchDrives(false)
 }
 
 /**
-* @brief Set the file name to use for this instance, checks all search paths for requested file name.
-*/
+ * @brief Set the file name to use for this instance, checks all search paths for requested file name.
+ */
 const char *CDFileClass::Set_Name(const char *filename)
 {
     char path_buffer[PATH_MAX];
@@ -95,16 +101,16 @@ const char *CDFileClass::Set_Name(const char *filename)
 }
 
 /**
-* @brief Open the file from the internally set file name.
-*/
+ * @brief Open the file from the internally set file name.
+ */
 BOOL CDFileClass::Open(int rights)
 {
     return BufferIOFileClass::Open(rights);
 }
 
 /**
-* @brief Open a file with a given file name.
-*/
+ * @brief Open a file with a given file name.
+ */
 BOOL CDFileClass::Open(const char *filename, int rights)
 {
     BufferIOFileClass::Close();
@@ -123,8 +129,8 @@ BOOL CDFileClass::Open(const char *filename, int rights)
 }
 
 /**
-* @brief Resets the search path to only those drives stored in s_rawPath.
-*/
+ * @brief Resets the search path to only those drives stored in s_rawPath.
+ */
 void CDFileClass::Refresh_Search_Drives()
 {
     Clear_Search_Drives();
@@ -132,8 +138,8 @@ void CDFileClass::Refresh_Search_Drives()
 }
 
 /**
-* @brief Parses the paths passed by the -CD command line argument or the stored raw path.
-*/
+ * @brief Parses the paths passed by the -CD command line argument or the stored raw path.
+ */
 int CDFileClass::Set_Search_Drives(const char *path)
 {
     char path_buffer[PATH_MAX];
@@ -146,14 +152,14 @@ int CDFileClass::Set_Search_Drives(const char *path)
         return 0;
     }
 
-    //DEBUG_LOG("Current search path is '%s', appending '%s'.\n", s_rawPath, path);
+    // DEBUG_LOG("Current search path is '%s', appending '%s'.\n", s_rawPath, path);
 
     // Append path to raw path list
     if (path != s_rawPath) {
-        //PATH_MAX * 2
+        // PATH_MAX * 2
         int current_len = (int)strlen(s_rawPath);
-        //current_len += snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", s_pathSeperator);
-        //snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", path);
+        // current_len += snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", s_pathSeperator);
+        // snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", path);
         current_len += snprintf(&s_rawPath[current_len], PATH_MAX * 2 - current_len, "%s", s_pathSeperator);
         snprintf(&s_rawPath[current_len], PATH_MAX * 2 - current_len, "%s", path);
     }
@@ -174,7 +180,7 @@ int CDFileClass::Set_Search_Drives(const char *path)
 
             // Check if we have our "disk drive" prefix, if so we need to check which
             // disk we are dealing with.
-            //DEBUG_LOG("Checking if '%s' is a CD path.\n", path_buffer);
+            // DEBUG_LOG("Checking if '%s' is a CD path.\n", path_buffer);
             if (strncmp(path_buffer, CD_DRIVE_PREFIX, CD_PREFIX_SIZE) == 0) {
 // Only windows uses the drive logic that this applies to
 #if defined(PLATFORM_WINDOWS)
@@ -182,12 +188,12 @@ int CDFileClass::Set_Search_Drives(const char *path)
                     paths_set = true;
                     // Move Get_CD_Index and its static vars if any into CDFileClass?
                     // Need to decide what we are doing with this
-                    //DEBUG_LOG("Adding CD drive path as search drive.\n", path_buffer);
+                    // DEBUG_LOG("Adding CD drive path as search drive.\n", path_buffer);
                     if (Get_CD_Index(s_currentCDDrive, 120) >= 0) {
                         path_buffer[0] = s_currentCDDrive + 'A';
                         // surely this is path buffer
                         // Add_Search_Drive((const char *)v13);
-                        DEBUG_LOG("Adding '%s as CD path.\n", path_buffer); 
+                        DEBUG_LOG("Adding '%s as CD path.\n", path_buffer);
                         Add_Search_Drive(path_buffer);
                     }
                 }
@@ -217,8 +223,8 @@ int CDFileClass::Set_Search_Drives(const char *path)
 }
 
 /**
-* @brief Add a path to the list of paths to search for a file.
-*/
+ * @brief Add a path to the list of paths to search for a file.
+ */
 void CDFileClass::Add_Search_Drive(const char *path)
 {
     SearchDriveType *entry = new SearchDriveType(nullptr, strdup(path));
@@ -239,8 +245,8 @@ void CDFileClass::Add_Search_Drive(const char *path)
 }
 
 /**
-* @brief Set current CD drive to use.
-*/
+ * @brief Set current CD drive to use.
+ */
 void CDFileClass::Set_CD_Drive(int cd_drive)
 {
     s_lastCDDrive = s_currentCDDrive;
@@ -248,8 +254,8 @@ void CDFileClass::Set_CD_Drive(int cd_drive)
 }
 
 /**
-* @brief Clears the list of paths to search for files.
-*/
+ * @brief Clears the list of paths to search for files.
+ */
 void CDFileClass::Clear_Search_Drives()
 {
     SearchDriveType *entry = s_first;
@@ -282,12 +288,12 @@ BOOL CDFileClass::Is_Disk_Inserted(int cd_drive)
     name[0] = cd_drive + 'A';
 
     HANDLE h = FindFirstFileA(name, file);
-    if ( h == INVALID_HANDLE_VALUE ) {
+    if (h == INVALID_HANDLE_VALUE) {
         return false;
     }
 
     FindClose(h);
-    
+
     return true;
 #else
     // TODO!

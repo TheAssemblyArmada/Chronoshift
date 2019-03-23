@@ -15,6 +15,15 @@
 #include "getcd.h"
 #include <cstring>
 
+#ifdef PLATFORM_WINDOWS
+#ifdef __WATCOMC__
+#include <windows.h>
+#else
+#include <fileapi.h>
+#include <winbase.h>
+#endif
+#endif
+
 using std::memset;
 
 #ifndef CHRONOSHIFT_STANDALONE

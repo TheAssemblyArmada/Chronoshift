@@ -16,6 +16,10 @@
 #include "expansion.h"
 #include "gameoptions.h"
 
+#ifdef PLATFORM_WINDOWS
+#include <winreg.h>
+#endif
+
 BOOL Is_Counterstrike_Installed()
 {
     if (Options.Is_Counterstrike_Enabled()) {

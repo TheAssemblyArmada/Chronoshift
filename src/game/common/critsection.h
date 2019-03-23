@@ -25,9 +25,17 @@
 #include <atomic>
 #endif
 
-#ifndef PLATFORM_WINDOWS
+#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
-#endif // !(PLATFORM_WINDOWS)
+#elif defined PLATFORM_WINDOWS
+#ifdef __WATCOMC__
+#include <windows.h>
+#else
+#include <synchapi.h>
+#endif
+#else
+#error Threading API not detected.
+#endif
 
 /**
  * @brief Wrapper around WinAPI critical secitons and pthread mutexes.
@@ -52,96 +60,84 @@ public:
     void Leave();
 
 protected:
-    //
     SimpleCriticalSectionClass &operator=(SimpleCriticalSectionClass const &that) { return *this; }
 
-    //
-#ifdef PLATFORM_WINDOWS
-    CRITICAL_SECTION Handle;
-#else
-    pthread_mutex_t Handle;
-#endif // !(PLATFORM_WINDOWS)
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_t m_handle;
+#elif defined PLATFORM_WINDOWS
+    CRITICAL_SECTION m_handle;
+#endif
 };
 
-inline SimpleCriticalSectionClass::SimpleCriticalSectionClass() : Handle()
+inline SimpleCriticalSectionClass::SimpleCriticalSectionClass() : m_handle()
 {
-#ifdef PLATFORM_WINDOWS
-    InitializeCriticalSection(&Handle);
-
-    //
-    // We should look at profiling this when more mature and seeing if its worth
-    // bothering with.
-    //
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683476(v=vs.85).aspx
-    // InitializeCriticalSectionAndSpinCount(&Handle, spin);
-#else
+#ifdef HAVE_PTHREAD_H
     pthread_mutexattr_t attr;
-
     pthread_mutexattr_init(&attr);
     pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&Handle, &attr);
-#endif // PLATFORM_WINDOWS
+    pthread_mutex_init(&m_handle, &attr);
+#elif defined PLATFORM_WINDOWS
+    InitializeCriticalSection(&m_handle);
+#endif
 }
 
 inline SimpleCriticalSectionClass::~SimpleCriticalSectionClass()
 {
-#ifdef PLATFORM_WINDOWS
-    DeleteCriticalSection(&Handle);
-#else
-    pthread_mutex_destroy(&Handle);
-#endif // PLATFORM_WINDOWS
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_destroy(&m_handle);
+#elif defined PLATFORM_WINDOWS
+    DeleteCriticalSection(&m_handle);
+#endif
 }
 
 inline void SimpleCriticalSectionClass::Enter()
 {
-#ifdef PLATFORM_WINDOWS
-    // DEBUG_LOG("Entering CriticalSection %lp\n", this);
-    EnterCriticalSection(&Handle);
-#else
-    pthread_mutex_lock(&Handle);
-#endif // PLATFORM_WINDOWS
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_lock(&m_handle);
+#elif defined PLATFORM_WINDOWS
+    EnterCriticalSection(&m_handle);
+#endif
 }
 
 inline bool SimpleCriticalSectionClass::Try_Enter()
 {
-#ifdef PLATFORM_WINDOWS
-    return TryEnterCriticalSection(&Handle) != FALSE;
-#else
-    return pthread_mutex_trylock(&Handle) == 0;
-#endif // PLATFORM_WINDOWS
+#ifdef HAVE_PTHREAD_H
+    return pthread_mutex_trylock(&m_handle) == 0;
+#elif defined PLATFORM_WINDOWS
+    return TryEnterCriticalSection(&m_handle) != FALSE;
+#endif
 }
 
 inline void SimpleCriticalSectionClass::Leave()
 {
-#ifdef PLATFORM_WINDOWS
-    // DEBUG_LOG("Leaving CriticalSection %lp\n", this);
-    LeaveCriticalSection(&Handle);
-#else
-    pthread_mutex_unlock(&Handle);
-#endif // PLATFORM_WINDOWS
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_unlock(&m_handle);
+#elif defined PLATFORM_WINDOWS
+    LeaveCriticalSection(&m_handle);
+#endif
 }
 
 class ScopedCriticalSectionClass
 {
 public:
-    ScopedCriticalSectionClass(SimpleCriticalSectionClass *cs) : CritSection(cs)
+    ScopedCriticalSectionClass(SimpleCriticalSectionClass *cs) : m_critSection(cs)
     {
         if (cs != nullptr) {
             // DEBUG_LOG("Entering CriticalSection from scoped lock\n");
-            CritSection->Enter();
+            m_critSection->Enter();
         }
     }
 
     virtual ~ScopedCriticalSectionClass()
     {
-        if (CritSection != nullptr) {
+        if (m_critSection != nullptr) {
             // DEBUG_LOG("Leaving CriticalSection from scoped lock\n");
-            CritSection->Leave();
+            m_critSection->Leave();
         }
     }
 
 private:
-    SimpleCriticalSectionClass *CritSection;
+    SimpleCriticalSectionClass *m_critSection;
 };
 
 /**
@@ -164,10 +160,7 @@ public:
     class LockClass
     {
     public:
-        //
-        // In order to enter a critical section create a local
-        // instance of LockClass with critical section as a parameter.
-        //
+        // In order to enter a critical section create a local instance of LockClass with critical section as a parameter.
         LockClass(CriticalSectionClass &critical_section) : CriticalSection(critical_section) { CriticalSection.Lock(); }
 
         ~LockClass() { CriticalSection.Unlock(); }
@@ -184,15 +177,15 @@ private:
     // CriticalSectionClass::LockClass object to call them instead.
     void Lock();
     void Unlock();
-    bool Is_Locked() { return Locked > 0; }
+    bool Is_Locked() { return m_locked > 0; }
 
-#ifdef PLATFORM_WINDOWS
-    CRITICAL_SECTION Handle;
-#else
-    pthread_mutex_t Handle;
-#endif // !(PLATFORM_WINDOWS)
+#ifdef HAVE_PTHREAD_H
+    pthread_mutex_t m_handle;
+#elif defined PLATFORM_WINDOWS
+    CRITICAL_SECTION m_handle;
+#endif
 
-    unsigned int Locked;
+    unsigned int m_locked;
 };
 
 /**
@@ -207,9 +200,9 @@ class FastCriticalSectionClass
 {
 public:
 #if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
-    FastCriticalSectionClass() { Flag.clear(); }
+    FastCriticalSectionClass() { m_flag.clear(); }
 #else
-    FastCriticalSectionClass() : Flag(0) {}
+    FastCriticalSectionClass() : m_flag(0) {}
 #endif
     ~FastCriticalSectionClass() {}
 
@@ -234,10 +227,11 @@ private:
     void Thread_Safe_Set_Flag();
     void Thread_Safe_Clear_Flag();
 
+private:
 #if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
-    std::atomic_flag Flag;
+    std::atomic_flag m_flag;
 #else
-    long Flag;
+    long m_flag;
 #endif
 };
 
