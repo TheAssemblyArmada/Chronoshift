@@ -13,9 +13,10 @@ if(MSVC)
     set(MSVC_INCREMENTAL_DEFAULT ON)
 endif()
 
-project(CHRONOSHIFT VERSION 3.3 LANGUAGES C CXX)
+project(chronoshift VERSION 3.3 LANGUAGES C CXX)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CHRONOSHIFT_SOURCE_DIR}/cmake/modules)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
+set(CMAKE_NO_SYSTEM_FROM_IMPORTED TRUE) # Needed to prevent FindDirectX screwing up a mingw build.
 
 if(MSVC)
     # Prevent incremental linking.
@@ -110,33 +111,18 @@ option(ASSERTIONS "Enable debug assertions." ${DEFAULT_ASSERTIONS})
 option(USE_SDL2 "Enable SDL2 for graphics and input handling." OFF)
 option(USE_OPENAL "Enable OpenAL for audio output." OFF)
 
-# Enable a standalone build
-if(STANDALONE)
-    add_definitions(-DCHRONOSHIFT_STANDALONE)
-endif()
-
-# Go lean and mean on windows and disable some warnings.
+# Adjust size of time_t for original binary abi.
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
-    add_definitions(-DWIN32_LEAN_AND_MEAN)
-    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
-    add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS)
     if(CMAKE_SIZEOF_VOID_P EQUAL 4 AND NOT STANDALONE)
-        add_definitions(-D_USE_32BIT_TIME_T)    #This is for ABI compatibility with a few functions, remove when original binary no longer required.
+        add_definitions(-D_USE_32BIT_TIME_T) # This is for ABI compatibility with a few functions, remove when original binary no longer required.
     endif()
 endif()
 
 # Prevent lib prefix when built with MinGW to target windows and move to own dir.
 if(MINGW)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CHRONOSHIFT_BINARY_DIR}/bin)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CHRONOSHIFT_BINARY_DIR}/bin)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -mabi=ms -Wno-invalid-offsetof -Wall")
 endif()
-
-# Enable Chronoshift debug features in Debug configs.
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCHRONOSHIFT_DEBUG")
 
 # Check for libraries we plan to build against.
 if(USE_SDL2)
@@ -167,6 +153,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(GITINFO_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(GITINFO_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(GITINFO_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+
+if(NOT STANDALONE)
+    set(BASECONF_WINSOCK32 TRUE BOOL)
+endif()
 
 # Add base module
 add_subdirectory(libs/baseconfig EXCLUDE_FROM_ALL)
