@@ -232,10 +232,10 @@ endif()
 
 if(STANDALONE)
     add_executable(chronoshift ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
-    target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES})
+    target_include_directories(chronoshift PUBLIC ${GAMEENGINE_INCLUDES})
 else()
     add_library(chronoshift SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
-    target_include_directories(chronoshift BEFORE PUBLIC ${GAMEENGINE_INCLUDES} hooker)
+    target_include_directories(chronoshift PUBLIC ${GAMEENGINE_INCLUDES} hooker)
 endif()
 
 # For MSVC/XCode this will add the headers to the project.
@@ -254,6 +254,10 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 endif()
 
 target_compile_definitions(chronoshift PUBLIC $<$<CONFIG:DEBUG>:CHRONOSHIFT_DEBUG=1>)
+
+if(STANDALONE)
+    target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_STANDALONE=1)
+endif()
 
 # Enable using bools in place of bitfields for boolean class members.
 if(NO_BITFIELDS)
