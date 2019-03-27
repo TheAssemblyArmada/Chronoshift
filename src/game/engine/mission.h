@@ -73,6 +73,10 @@ public:
     static MissionType From_Name(const char *name);
     static const char *Name_From(MissionType mission);
 
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+#endif
+
 protected:
     MissionType Mission; // The current mission of this object (def = MISSION_NONE).
     MissionType SuspendedMission;
@@ -82,5 +86,22 @@ protected:
 
     static const char *Missions[MISSION_COUNT];
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void MissionClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x00502C70, *MissionClass::Assign_Mission);
+    Hook_Function(0x00502C2C, *MissionClass::Commence);
+    Hook_Function(0x00502798, *MissionClass::Set_Mission);
+    Hook_Function(0x00502CFC, *MissionClass::Override_Mission);
+    Hook_Function(0x00502D20, *MissionClass::Restore_Mission);
+    Hook_Function(0x00502824, *MissionClass::AI);
+    Hook_Function(0x00502D54, *MissionClass::Is_Recruitable_Mission);
+#endif
+}
+#endif
 
 #endif // MISSION_H

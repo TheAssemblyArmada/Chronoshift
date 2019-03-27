@@ -64,6 +64,10 @@ public:
     static const char *Message_From(RadioMessageType message);
     static RadioMessageType From_Message(const char *message);
 
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+#endif
+
 private:
     static const char *Messages[RADIO_COUNT];
 
@@ -73,5 +77,16 @@ protected:
     RadioMessageType LastMessage; // 0x39
     ObjectClass *Radio; // 0x3A
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void RadioClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x00532BA8, *RadioClass::Limbo);
+#endif
+}
+#endif
 
 #endif // RADIO_H

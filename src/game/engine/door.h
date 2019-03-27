@@ -45,6 +45,12 @@ public:
     BOOL Is_Open() const { return State == DOOR_OPEN; }
     BOOL Is_Opening() const { return State == DOOR_OPENING; }
     BOOL Is_Closing() const { return State == DOOR_CLOSING; }
+
+#ifndef CHRONOSHIFT_STANDALONE
+    int DoorClass::Hook_Door_Stage() { return Door_Stage(); }
+    static void Hook_Me();
+#endif
+
 private:
     StageClass DoorTimer;
     int8_t Stage; // Number of stages between end states (open or closed).
@@ -63,5 +69,19 @@ private:
     bool StageComplete;
 #endif
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void DoorClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004B5C40, *DoorClass::AI);
+    Hook_Function(0x004B5D08, *DoorClass::Open_Door);
+    Hook_Function(0x004B5D60, *DoorClass::Close_Door);
+    Hook_Function(0x004B5DC8, *DoorClass::Hook_Door_Stage);
+#endif
+}
+#endif
 
 #endif // DOOR_H
