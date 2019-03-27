@@ -62,6 +62,24 @@ public:
 
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
+
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+#endif
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void LayerClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x004B59B0, *LayerClass::Init);
+    Hook_Function(0x004FBA80, *LayerClass::Submit);
+    Hook_Function(0x004FBAA4, *LayerClass::Sort);
+    Hook_Function(0x004FBB20, *LayerClass::Sorted_Add);
+#endif
+}
+#endif
 
 #endif // LAYER_H

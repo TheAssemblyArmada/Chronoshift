@@ -15,7 +15,6 @@
  */
 #include "alloc.h"
 #include "blitters.h"
-#include "gamefile.h"
 #include "cd.h"
 #include "cdfile.h"
 #include "cell.h"
@@ -30,6 +29,7 @@
 #include "flasher.h"
 #include "gadget.h"
 #include "gamedebug.h"
+#include "gamefile.h"
 #include "gbuffer.h"
 #include "heap.h"
 #include "hooker.h"
@@ -41,27 +41,29 @@
 #include "keyboard.h"
 #include "lcw.h"
 #include "list.h"
-#include "lzostraw.h"
 #include "lzopipe.h"
+#include "lzostraw.h"
 #include "main.h"
 #include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
 #include "msgbox.h"
+#include "msglist.h"
 #include "options.h"
 #include "ostimer.h"
 #include "power.h"
 #include "radar.h"
 #include "rawfile.h"
 #include "rgb.h"
+#include "scenario.h"
 #include "shape.h"
 #include "sidebar.h"
 #include "slider.h"
+#include "surfacemonitor.h"
 #include "techno.h"
 #include "textbtn.h"
 #include "textprint.h"
 #include "toggle.h"
-#include "surfacemonitor.h"
 #include "version.h"
 #include "wsa.h"
 #include "xordelta.h"
@@ -131,18 +133,25 @@ void Setup_Hooks()
     ScrollClass::Hook_Me();
     GameMouseClass::Hook_Me();
     CellClass::Hook_Me();
+    DoorClass::Hook_Me();
+    LayerClass::Hook_Me();
+    MapClass::Hook_Me();
+    ScenarioClass::Hook_Me();
+    MissionClass::Hook_Me();
     MessageBoxClass::Hook_Me();
+    MessageListClass::Hook_Me();
+    RadioClass::Hook_Me();
     TechnoClass::Hook_Me();
     HouseClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
     Hook_Function(0x004A96E8, CC_Draw_Shape);
-    //Hook_Function(0x004AD670, Dialog_Box);
+    // Hook_Function(0x004AD670, Dialog_Box);
     Dialog::Hook_Me();
-    //Hook_Function(0x004AC798, Coord_Move);
+    // Hook_Function(0x004AC798, Coord_Move);
     Hook_Function(0x004AC814, Move_Point);
-    //Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
+    // Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
     Init::Hook_Me();
     Hook_Function(0x004AAC58, &Force_CD_Available);
 }
