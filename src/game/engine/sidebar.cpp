@@ -669,6 +669,7 @@ int SidebarClass::Which_Column(RTTIType type)
         case RTTI_AIRCRAFTTYPE:
         case RTTI_INFANTRY:
         case RTTI_INFANTRYTYPE:
+        case RTTI_SPECIAL:
         case RTTI_UNIT:
         case RTTI_UNITTYPE:
         case RTTI_VESSEL:
