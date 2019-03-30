@@ -81,7 +81,8 @@ public:
 
     GamePtr &operator=(const T *that)
     {
-        m_ID = that != nullptr ? g_Heap->ID(that) : -1;
+        //m_ID = that != nullptr ? g_Heap->ID(that) : -1;
+        m_ID = that != nullptr ? that->Get_Heap_ID() : -1; // Original takes the classes word for it.
         return *this;
     }
 
