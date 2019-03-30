@@ -35,13 +35,13 @@ public:
 
     char &operator[](int index)
     {
-        DEBUG_ASSERT(index < ActiveCount);
+        DEBUG_ASSERT(index < HeapLength);
         return *(HeapSize * index + Pointer);
     }
 
     char const &operator[](int index) const
     {
-        DEBUG_ASSERT(index < ActiveCount);
+        DEBUG_ASSERT(index < HeapLength);
         return *(HeapSize * index + Pointer);
     }
 
