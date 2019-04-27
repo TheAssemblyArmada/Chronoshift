@@ -29,7 +29,11 @@
 #define FACING_COUNT_32 32
 
 // these are pretty much the standard 8 compass
+#ifdef COMPILER_WATCOM
 enum FacingType
+#else
+enum FacingType : int8_t
+#endif
 {
     FACING_FIXUP_MARK = -2,
     FACING_NONE = -1,
