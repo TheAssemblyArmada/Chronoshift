@@ -153,6 +153,7 @@ inline void MapClass::Hook_Me()
     Hook_Function(0x004FFAC4, *MapClass::Hook_Nearby_Location);
     Hook_Function(0x0050083C, *MapClass::Hook_Intact_Bridge_Count);
     Hook_Function(0x004FED90, *MapClass::Read_Binary);
+    Hook_Function(0x004FF1BC, *MapClass::Cell_Threat);
 #endif
 }
 #endif
