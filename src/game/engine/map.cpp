@@ -17,6 +17,7 @@
 #include "abs.h"
 #include "coord.h"
 #include "globals.h"
+#include "house.h"
 #include "lcwpipe.h"
 #include "lcwstraw.h"
 #include "lists.h"
@@ -763,38 +764,22 @@ int MapClass::Cell_Region(cell_t cellnum)
 }
 
 /**
- * @brief Calculates how dangerous a given cells is?
+ * Calculates how dangerous a given cells is?
  *
  * 0x004FF1BC
  */
 int MapClass::Cell_Threat(cell_t cellnum, HousesType house)
 {
-    // TODO requires HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
-    int(*func)(const MapClass*, cell_t, HousesType) = reinterpret_cast<int(*)(const MapClass*, cell_t, HousesType)>(0x004FF1BC);
-    return func(this, cellnum, house);
-#elif 0
-    DEBUG_ASSERT(this != nullptr);
+    RegionClass *house_regions = HouseClass::As_Pointer(house)->Threat_Regions();
+    int retval = house_regions[Cell_Region(Array[cellnum].Cell_Number())].Get_Value();
 
-    RegionClass *house_regions = HouseClass::As_Pointer(house)->Regions;
-    int region = Cell_Region(Array[cellnum].Cell_Number());
-
-    if (house_regions != nullptr) {
-        int retval = house_regions[region].field_0;
-
-        if (retval == 0) {
-            if (Array[cellnum].Get_Bit128()) {
-                return 1;
-            }
+    if (retval == 0) {
+        if (Array[cellnum].Get_Bit128()) {
+            return 1;
         }
-
-        return retval;
     }
 
-    return 0;
-#else
-    return 0;
-#endif
+    return retval;
 }
 
 /**

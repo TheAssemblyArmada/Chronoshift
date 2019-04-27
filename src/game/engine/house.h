@@ -172,7 +172,7 @@ public:
     int Currently_Owned_Vessel_Count() const { return m_CurrentVesselCount; }
     int Currently_Owned_Aircraft_Count() const { return m_CurrentAircraftCount; }
     coord_t Base_Center() const { return m_BaseCenter; }
-
+    RegionClass *Threat_Regions() { return m_ThreatRegions; }
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
