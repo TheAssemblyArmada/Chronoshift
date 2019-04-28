@@ -310,7 +310,7 @@ BOOL ObjectClass::Render(BOOL force_render)
 
                     FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
 
-                    if (foot_thisptr->m_HeadTo) {
+                    if (foot_thisptr->Head_To()) {
 
                         int my_x_pos = 0;
                         int my_y_pos = 0;
@@ -326,7 +326,7 @@ BOOL ObjectClass::Render(BOOL force_render)
                         g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_YELLOW);
 
                         // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->m_HeadTo, headto_x_pos, headto_y_pos);
+                        Map.Coord_To_Pixel(foot_thisptr->Head_To(), headto_x_pos, headto_y_pos);
                         headto_y_pos += 16;
                         g_logicPage->Put_Fat_Pixel(headto_x_pos - 1, headto_y_pos - 1, pixel_size, COLOR_YELLOW);
 
@@ -351,9 +351,9 @@ BOOL ObjectClass::Render(BOOL force_render)
 
                     FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
 
-                    if (foot_thisptr->m_HeadTo) {
+                    if (foot_thisptr->Head_To()) {
 
-                        if (foot_thisptr->m_Paths[0] != FACING_NONE) {
+                        if (foot_thisptr->Get_Path_Facing(0) != FACING_NONE) {
 
                             /*int path_x_pos = 0;
                             int path_y_pos = 0;
@@ -369,7 +369,7 @@ BOOL ObjectClass::Render(BOOL force_render)
                                     break;
                                 }
 
-                                cell_t adjcell = Coord_To_Cell(foot_thisptr->m_HeadTo) + AdjacentCell[foot_thisptr->m_Paths[index]];
+                                cell_t adjcell = Coord_To_Cell(foot_thisptr->Head_To()) + AdjacentCell[foot_thisptr->m_Paths[index]];
                                 coord_t coord = Cell_To_Coord(adjcell);
 
                                 if (Map.Coord_To_Pixel(coord, path2_x_pos, path2_y_pos) )  {
@@ -413,7 +413,7 @@ BOOL ObjectClass::Render(BOOL force_render)
 
                     FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
 
-                    if (Target_Legal(foot_thisptr->m_NavCom)) {
+                    if (Target_Legal(foot_thisptr->Nav_Com())) {
 
                         int my_x_pos = 0;
                         int my_y_pos = 0;
@@ -429,7 +429,7 @@ BOOL ObjectClass::Render(BOOL force_render)
                         g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_BLUE);
 
                         // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(As_Coord(foot_thisptr->m_NavCom), navcom_x_pos, navcom_y_pos);
+                        Map.Coord_To_Pixel(As_Coord(foot_thisptr->Nav_Com()), navcom_x_pos, navcom_y_pos);
                         navcom_y_pos += 16;
                         g_logicPage->Put_Fat_Pixel(navcom_x_pos - 1, navcom_y_pos - 1, pixel_size, COLOR_BLUE);
 
