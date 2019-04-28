@@ -27,6 +27,7 @@
 #include "facing.h"
 #include "fading.h"
 #include "flasher.h"
+#include "foot.h"
 #include "gadget.h"
 #include "gamedebug.h"
 #include "gamefile.h"
@@ -143,6 +144,7 @@ void Setup_Hooks()
     RadioClass::Hook_Me();
     TechnoClass::Hook_Me();
     HouseClass::Hook_Me();
+    FootClass::Hook_Me();
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
