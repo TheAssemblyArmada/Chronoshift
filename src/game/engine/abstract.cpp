@@ -14,9 +14,11 @@
  *            LICENSE
  */
 #include "abstract.h"
+#include "building.h"
 #include "globals.h"
 #include "coord.h"
-#include "minmax.h"
+#include "target.h"
+#include <algorithm>
 
 AbstractClass::AbstractClass(RTTIType type, int id) :
     m_IsActive(true),
@@ -39,4 +41,17 @@ AbstractClass::AbstractClass(AbstractClass const &that) :
 cell_t AbstractClass::Get_Cell() const
 {
     return Coord_To_Cell(m_Coord);
+}
+
+int AbstractClass::Distance_To_Target(target_t target)
+{
+    int distance = Distance(Center_Coord(), As_Coord(target));
+    BuildingClass *bptr = As_Building(target);
+
+    if (bptr != nullptr) {
+        distance -= (bptr->Class_Of().Width() + bptr->Class_Of().Height()) * 64;
+        distance = std::max(0, distance);
+    }
+
+    return distance;
 }

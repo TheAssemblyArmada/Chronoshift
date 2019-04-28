@@ -23,8 +23,8 @@
 #include "land.h"
 #include "mzone.h"
 #include "objecttype.h"
-#include "weapontype.h"
 #include "remap.h"
+#include "weapontype.h"
 
 class TechnoClass;
 class GameINIClass;
@@ -56,7 +56,7 @@ public:
     BOOL Write_INI(GameINIClass &ini) const;
     BOOL Is_Two_Shooter() const;
     BOOL Legal_Placement(cell_t cellnum) const;
-    BOOL Is_Nominal() const { return IsNominal; } 
+    BOOL Is_Nominal() const { return IsNominal; }
     int Get_ThreatPosed() const { return ThreatPosed; }
     BOOL Is_Invisible() const { return IsInvisible; }
     BOOL Is_Cloakable() const { return Cloakable; }
@@ -68,6 +68,7 @@ public:
     int Get_Sight() const { return Sight; }
     int Get_TechLevel() const { return TechLevel; }
     uint32_t Get_Prerequisites() const { return Prerequisite; }
+    MZoneType Get_Movement_Zone() const { return MovementZone; }
 
     WeaponTypeClass *Get_Weapon(WeaponSlotType weapon) const
     {
@@ -84,7 +85,10 @@ public:
         return wptr;
     }
 
-    TechnoClass *Techno_Create_One_Of(HouseClass *house) const { return reinterpret_cast<TechnoClass *>(Create_One_Of(house)); }
+    TechnoClass *Techno_Create_One_Of(HouseClass *house) const
+    {
+        return reinterpret_cast<TechnoClass *>(Create_One_Of(house));
+    }
 
     static void One_Time();
 

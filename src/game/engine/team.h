@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief 
+ * @brief
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -21,9 +21,9 @@
 #include "always.h"
 #include "abstract.h"
 #include "gameptr.h"
-#include "triggertype.h"
 #include "gametypes.h"
 #include "house.h"
+#include "triggertype.h"
 #include "ttimer.h"
 
 class NoInitClass;
@@ -51,6 +51,8 @@ public:
     void Decode_Pointers() {}
 
     void Force_Active() { m_ForcedActive = true; }
+    BOOL Should_Avoid_Threats() const { return m_Type->Avoid_Threats(); }
+    int Field35() const { return m_field_35; }
 
 private:
     GamePtr<TeamTypeClass> m_Type;

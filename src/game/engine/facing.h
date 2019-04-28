@@ -32,11 +32,9 @@
 #ifdef COMPILER_WATCOM
 enum FacingType
 #else
-enum FacingType : int8_t
+enum FacingType : uint8_t
 #endif
 {
-    FACING_FIXUP_MARK = -2,
-    FACING_NONE = -1,
     FACING_FIRST = 0,
     FACING_NORTH = 0, // North
     FACING_NORTH_EAST = 1, // North East
@@ -47,6 +45,11 @@ enum FacingType : int8_t
     FACING_WEST = 6, // West
     FACING_NORTH_WEST = 7, // North West
     FACING_COUNT = 8,
+    FACING_FIXUP_MARK = 0xFE,
+    FACING_NONE = 0xFF,
+    FACING_ORDINAL_TEST = 1,
+    FACING_EDGE_LEFT = 0xFF,
+    FACING_EDGE_RIGHT = 1,
 };
 
 DEFINE_ENUMERATION_OPERATORS(FacingType);
@@ -177,9 +180,9 @@ inline FacingType SS_41B710(FacingType facing, int chirality)
 
 // sub_44BEA4 in SS
 // TODO rename, Subtract Facing?
-inline FacingType Reverse_Adjust(FacingType facing, int chirality)
+inline FacingType Reverse_Adjust(FacingType facing, FacingType chirality)
 {
-    return (FacingType)(((unsigned)facing - (unsigned)chirality) & (FACING_COUNT - 1)); // 7
+    return (facing - chirality) % FACING_COUNT; // 7
 }
 
 // sub_41B73C in SS
@@ -190,14 +193,14 @@ inline FacingType SS_41B73C(FacingType facing, int chirality)
 }
 
 // sub_41B768 in SS
-inline FacingType Facing_Adjust(FacingType facing, int chirality)
+inline FacingType Facing_Adjust(FacingType facing, FacingType chirality)
 {
-    return (FacingType)(((unsigned)chirality + (unsigned)facing) & (FACING_COUNT - 1)); // 7
+    return (chirality + facing) % FACING_COUNT; // 7
 }
 
 inline FacingType Opposite_Facing(FacingType facing)
 {
-    return (FacingType)((unsigned)facing ^ (FACING_COUNT / 2)); // 4
+    return (FacingType)(facing ^ (FACING_COUNT / 2)); // 4
 }
 
 #ifndef CHRONOSHIFT_STANDALONE

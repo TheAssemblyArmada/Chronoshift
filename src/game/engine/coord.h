@@ -166,6 +166,16 @@ inline BOOL Valid_Cell(cell_t cellnum)
     return cellnum != 0;
 }
 
+inline cell_t Cell_Get_Adjacent(cell_t cellnum, FacingType facing)
+{
+    return AdjacentCell[facing] + cellnum;
+}
+
+inline DirType Cell_Direction8(cell_t cell1, cell_t cell2)
+{
+    return Desired_Facing8(Cell_Get_X(cell1), Cell_Get_Y(cell1), Cell_Get_X(cell2), Cell_Get_Y(cell2));
+}
+
 int Distance(coord_t coord1, coord_t coord2);
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance);
