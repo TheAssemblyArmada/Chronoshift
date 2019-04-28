@@ -26,10 +26,24 @@ class TeamClass;
 
 struct PathType
 {
+    cell_t StartCell;
+    int32_t Score; // How costly is it to traverse this route?
+    int32_t Length; // How many moves is this route?
+    FacingType *Moves; // Array of directions, moves to make each cell.
+    uint32_t *Overlap; // Flags of which cells have been checked?
+    cell_t PreviousCell; // Possible name, not 100%
+    cell_t UnravelCheckpoint;
 };
 
 class FootClass : public TechnoClass
 {
+    enum
+    {
+        NAV_LENGTH = 10, // Length of our nav list.
+        PATH_LENGTH = 12, // Length of path we store to act on.
+        GEN_PATH_LENGTH = 200, // Length of path we actually generate.
+    };
+
 public:
     FootClass(RTTIType type, int id, HousesType house);
     FootClass(const FootClass &that);
@@ -98,6 +112,9 @@ public:
     FacingType Get_Path_Facing(int index) const { return m_Paths[index]; }
     target_t Nav_Com() const { return m_NavCom; }
 
+    static int Point_Relative_To_Line(int px, int py, int sx, int sy, int ex, int ey);
+    PathType *Find_Path_Wrapper(cell_t dest, FacingType *buffer, int length, MoveType move);
+
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     BOOL Hook_Can_Demolish() { return FootClass::Can_Demolish(); }
@@ -119,7 +136,6 @@ protected:
             bool m_Firing : 1; // 32
             bool m_Rotating : 1; // 64
             bool m_Moving : 1; // 128
-
             bool m_Bit2_1 : 1; // 1
             bool m_InFormation : 1; // 2
             bool m_Bit2_4 : 1; // 4
@@ -137,7 +153,6 @@ protected:
     bool m_Firing;
     bool m_Rotating;
     bool m_Moving;
-
     bool m_Bit2_1;
     bool m_InFormation;
     bool m_Bit2_4;
@@ -151,15 +166,15 @@ protected:
     int32_t m_FormYCoefficient;
     target_t m_NavCom;
     target_t m_SuspendedNavCom;
-    target_t m_NavList[10];
-    TeamClass *m_Team;
+    target_t m_NavList[NAV_LENGTH];
+    GamePtr<TeamClass> m_Team;
     TeamNumberType m_field_113;
     FootClass *m_field_114; // Next team member?
-    FacingType m_Paths[12];
-    MoveType m_field_124;
-    TCountDownTimerClass<FrameTimerClass> m_field_125; // path delay timer?
+    FacingType m_Paths[PATH_LENGTH];
+    MoveType m_PathMove; // The move type the current path was generated with.
+    TCountDownTimerClass<FrameTimerClass> m_PathDelay;
     uint32_t m_field_12E;
-    TCountDownTimerClass<FrameTimerClass> m_field_132;
+    TCountDownTimerClass<FrameTimerClass> m_BaseDefenseDelay;
     SpeedType m_TeamSpeed;
     MPHType m_TeamMaxSpeed;
     coord_t m_HeadTo;
@@ -174,7 +189,16 @@ inline void FootClass::Hook_Me()
     Hook_Function(0x004C3328, *FootClass::Hook_Can_Demolish);
     Hook_Function(0x004C154C, *FootClass::Hook_Sort_Y);
     // Hook_Function(0x004C1B6C, *FootClass::Unlimbo); Needs TechnoClass stuff.
+    Hook_Function(0x004BF77C, *FootClass::Find_Path);
+    Hook_Function(0x004BF49C, *FootClass::Unravel_Loop);
+    Hook_Function(0x004BF5E0, *FootClass::Register_Cell);
+    Hook_Function(0x004BFDE4, *FootClass::Follow_Edge);
+    Hook_Function(0x004C0130, *FootClass::Optimize_Moves);
+    // Hook_Function(0x004C037C, *FootClass::Safety_Point); Need to work out test case
     Hook_Function(0x004C0570, *FootClass::Passable_Cell);
+    Hook_Function(0x004BF470, *FootClass::Point_Relative_To_Line);
+    Hook_Function(0x004C09E4, *FootClass::Basic_Path);
+    // Hook_Call(0x004C0CDE, *FootClass::Find_Path_Wrapper); // replaces Find_Path call in Basic_Path
 #endif
 }
 #endif

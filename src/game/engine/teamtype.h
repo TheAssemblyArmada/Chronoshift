@@ -106,6 +106,8 @@ public:
     void Code_Pointers();
     void Decode_Pointers();
 
+    BOOL Avoid_Threats() const { return m_AvoidThreats; }
+
     static void Read_Scenario_INI(GameINIClass &ini);
     static void Write_Scenario_INI(GameINIClass &ini);
 

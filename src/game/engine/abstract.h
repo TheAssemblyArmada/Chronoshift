@@ -45,9 +45,8 @@ public:
     BOOL Is_Techno() const;
     BOOL Is_Foot() const;
     BOOL Is_Ground_Foot() const;
-
+    int Distance_To_Target(target_t target);
     cell_t Center_Cell() const { return Coord_To_Cell(Center_Coord()); }
-
     int Get_Heap_ID() const { return m_HeapID; }
     BOOL Is_Active() const { return m_IsActive; }
     RTTIType What_Am_I() const { return m_RTTI; }
@@ -57,6 +56,7 @@ public:
     int Get_Height() const { return m_Height; }
     void Set_Height(int height) { m_Height = height; }
     target_t As_Target() const { return ((m_RTTI & 0xFF) << 24) & (m_HeapID & 0xFFFFFF); }
+    int Distance_To(cell_t cell) const { return Distance(Center_Coord(), Cell_To_Coord(cell)); } 
 
 protected:
     RTTIType m_RTTI; // ID for this object type, set from derived type constructors.
