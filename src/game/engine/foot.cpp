@@ -74,8 +74,8 @@ FootClass::FootClass(RTTIType type, int id, HousesType house) :
     m_TeamMaxSpeed(MPH_MIN),
     m_HeadTo(0)
 {
-    memset(&m_NavList, 0, sizeof(m_NavList));
-    memset(&m_Paths, FACING_NONE, sizeof(m_Paths));
+    memset(m_NavList, 0, sizeof(m_NavList));
+    memset(m_Paths, FACING_NONE, sizeof(m_Paths));
 }
 
 FootClass::FootClass(const FootClass &that) :
@@ -110,8 +110,8 @@ FootClass::FootClass(const FootClass &that) :
     m_TeamMaxSpeed(that.m_TeamMaxSpeed),
     m_HeadTo(that.m_HeadTo)
 {
-    memcpy(&m_NavList, that.m_NavList, sizeof(m_NavList));
-    memcpy(&m_Paths, that.m_Paths, sizeof(m_Paths));
+    memcpy(m_NavList, that.m_NavList, sizeof(m_NavList));
+    memcpy(m_Paths, that.m_Paths, sizeof(m_Paths));
 }
 
 FootClass::FootClass(const NoInitClass &noinit) : TechnoClass(noinit), m_PathDelay(noinit), m_BaseDefenseDelay(noinit) {}
