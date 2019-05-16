@@ -852,10 +852,10 @@ BOOL GameINIClass::Put_PKey(PKey &key)
     char buffer[sizeof(PKey)];
 
     // Put public key
-    Put_UUBlock("PublicKey", &buffer, key.Encode_Modulus(&buffer));
+    Put_UUBlock("PublicKey", buffer, key.Encode_Modulus(buffer));
 
     // Put private key
-    Put_UUBlock("PrivateKey", &buffer, key.Encode_Exponent(&buffer));
+    Put_UUBlock("PrivateKey", buffer, key.Encode_Exponent(buffer));
 
     return true;
 }

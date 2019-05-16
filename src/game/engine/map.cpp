@@ -1249,7 +1249,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
                 uint8_t coord[2];
                 uint8_t icon[2];
 
-                while (straw.Get(&coord, sizeof(coord)) > 0 && straw.Get(icon, sizeof(icon)) > 0) {
+                while (straw.Get(coord, sizeof(coord)) > 0 && straw.Get(icon, sizeof(icon)) > 0) {
                     DEBUG_ASSERT((coord[0] * coord[1]) < MAP_MAX_AREA);
                     CellClass &cell = Array[coord[0] * coord[1]];
 

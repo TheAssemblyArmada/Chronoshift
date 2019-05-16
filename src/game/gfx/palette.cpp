@@ -47,17 +47,17 @@ PaletteClass::PaletteClass(const RGBClass &rgb)
 
 bool PaletteClass::operator==(PaletteClass &pal) const
 {
-    if (&m_palette != &pal.m_palette) {
-        return memcmp(m_palette, &pal, sizeof(PaletteClass)) == 0;
+    if (this != &pal) {
+        return memcmp(m_palette, pal.m_palette, sizeof(m_palette)) == 0;
     }
 
-    return false;
+    return true;
 }
 
 PaletteClass &PaletteClass::operator=(PaletteClass &pal)
 {
     if (this != &pal) {
-        memcpy(m_palette, &pal.m_palette, sizeof(PaletteClass));
+        memcpy(m_palette, pal.m_palette, sizeof(m_palette));
     }
 
     return *this;
@@ -119,15 +119,14 @@ void PaletteClass::Set(int fading_steps, void (*callback)())
     TCountDownTimerClass<SystemTimerClass> timer;
 
     timer = fading_steps;
-
-    memcpy(&tmppal, &PaletteClass::CurrentPalette, sizeof(PaletteClass::m_palette));
-
+    tmppal = CurrentPalette;
+    
     while (timer.Time() > 0) {
-        memcpy(&adjpal, &tmppal, sizeof(PaletteClass::m_palette));
+        adjpal = tmppal;
         int remaining = timer.Time();
         adjpal.Adjust(((fading_steps - remaining) * ARRAY_SIZE(PaletteClass::m_palette)) / fading_steps, *this);
         remaining = timer.Time();
-        Set_Palette((uint8_t *)&adjpal.m_palette);
+        Set_Palette((uint8_t *)adjpal.m_palette);
 
         int i = timer.Time();
         while (i == remaining && remaining > 0) {
