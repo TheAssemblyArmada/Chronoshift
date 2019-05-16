@@ -56,7 +56,6 @@ if(WATCOM)
         string(REGEX REPLACE "-br[^ ]*" "" ${flag_var} "${${flag_var}}")
         string(REGEX REPLACE "-xs[^ ]*" "" ${flag_var} "${${flag_var}}")
         string(REGEX REPLACE "-d2" "-d1" ${flag_var} "${${flag_var}}")
-        string(REGEX REPLACE "-w3" "-w1" ${flag_var} "${${flag_var}}")
     endforeach(flag_var)
     
     # Set packing and alignment to 1 byte to match original game ABI
@@ -78,6 +77,9 @@ if(WATCOM)
     set(CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO "opt symf ${CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO}")
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG "Debug CODEVIEW All ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
     set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "opt symf ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
+    
+    # Disable some warnings.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wcd=004 -wcd=248 -wcd=549")
 else()
     # Require that we have at least C++11 when not using Watcom.
     set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
