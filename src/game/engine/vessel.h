@@ -38,7 +38,7 @@ class VesselClass : public DriveClass
 #endif
 
     // AbstractClass
-    virtual MoveType Can_Enter_Cell(cell_t cellnum, FacingType facing = FACING_NONE) const;
+    virtual MoveType Can_Enter_Cell(cell_t cellnum, FacingType facing = FACING_NONE) const override;
     virtual void AI() override;
 
     // ObjectClass
