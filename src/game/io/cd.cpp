@@ -355,7 +355,7 @@ BOOL Force_CD_Available(int cd)
         // Compose string for insert disc message box.
         if (cd != DISK_COUNTERSTRIKE && cd != DISK_AFTERMATH) {
             if (cd == DISK_CDCHECK) {
-                snprintf(msg_buff, sizeof(msg_buff), Fetch_String(TXT_CD_DIALOG_1));
+                snprintf(msg_buff, sizeof(msg_buff), "%s", Fetch_String(TXT_CD_DIALOG_1));
             } else {
                 snprintf(msg_buff, sizeof(msg_buff), Fetch_String(TXT_CD_DIALOG_2), cd + 1, _cd_name[cd]);
             }
