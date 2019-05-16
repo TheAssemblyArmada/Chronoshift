@@ -95,7 +95,7 @@ void ScenarioClass::Set_Scenario_Name(const char *scen_name)
     DEBUG_LOG("Set_Scenario_Name() - ScenarioName set to '%s'\n", ScenarioName);
 
     // Get the number part of the scenario name and calculate the ScenarioIndex.
-    memcpy(&buffer, &ScenarioName[3], sizeof(buffer));
+    memcpy(buffer, &ScenarioName[3], sizeof(buffer));
     buffer[2] = '\0';
 
     if (buffer[0] <= '9' && buffer[1] <= '9') {
