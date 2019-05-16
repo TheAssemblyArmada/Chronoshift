@@ -25,10 +25,13 @@ TeamTypeClass::TeamTypeClass() : AbstractTypeClass(RTTI_TEAMTYPE, g_TeamTypes.ID
 
 void *TeamTypeClass::operator new(size_t size)
 {
-    return nullptr;
+    return g_TeamTypes.Allocate();
 }
 
-void TeamTypeClass::operator delete(void *ptr) {}
+void TeamTypeClass::operator delete(void *ptr)
+{
+    g_TeamTypes.Free(ptr);
+}
 
 void TeamTypeClass::Code_Pointers() {}
 
