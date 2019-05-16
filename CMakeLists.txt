@@ -85,7 +85,17 @@ else()
     set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
     set(CMAKE_CXX_STANDARD 11)
 endif()
-    
+
+# If we exclude Watcom and MSVC we now assume GCC like compiler syntax.
+if(NOT MSVC AND NOT WATCOM)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-var-template")
+    endif()
+endif()
+
+
 # We don't support in tree builds, so help people make the right choice.
 if (CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
     message(FATAL_ERROR "Building in-source is not supported! Create a build dir and remove ${CMAKE_SOURCE_DIR}/CMakeCache.txt")
