@@ -37,13 +37,13 @@ public:
     
     void Set_Style(TextPrintType style);
     void Set_Lifetime(unsigned lifetime) { Lifetime = lifetime; }
-    void Set_ID(int id) { ID = id; }
+    void Set_Label_ID(int id) { ID = id; }
     void Set_Remap(RemapControlType *remap) { Remap = remap; }
     void Set_Max_Width(int max) { MaxWidth = max; }
     char *Get_Text() { return LabelText; }
     TextPrintType Get_Style() { return TextStyle; }
     unsigned Get_Lifetime() { return Lifetime; }
-    int Get_ID() { return ID; }
+    int Get_Label_ID() { return ID; }
     RemapControlType *Get_Remap() { return Remap; }
 
 protected:
