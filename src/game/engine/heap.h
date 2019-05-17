@@ -145,9 +145,9 @@ public:
     }
 
     // these overide the ones in FixedIHeapClass
-    virtual BOOL Free(void *object) { return FixedIHeapClass::Free(object); }
-    virtual int Logical_ID(int index) const { return FixedIHeapClass::Logical_ID(index); }
-    virtual int ID(T const *object) const { return FixedIHeapClass::ID(object); }
+    virtual BOOL Free(void *object) override { return FixedIHeapClass::Free(object); }
+    virtual int Logical_ID(int index) const override { return FixedIHeapClass::Logical_ID(index); }
+    virtual int ID(const T *object) const { return FixedIHeapClass::ID(object); }
     virtual int Logical_ID(T *object) const { return FixedIHeapClass::Logical_ID((void *)object); }
     virtual T *Alloc() { return (T *)FixedIHeapClass::Allocate(); }
     virtual BOOL Free(T *object) { return FixedIHeapClass::Free(object); }
