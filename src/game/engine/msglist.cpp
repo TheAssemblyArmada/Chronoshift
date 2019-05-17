@@ -214,7 +214,7 @@ TextLabelClass *MessageListClass::Add_Message(
         msglabel->Set_Lifetime(TickCountTimer.Time() + lifetime);
     }
 
-    msglabel->Set_ID(id);
+    msglabel->Set_Label_ID(id);
     bool new_message = false;
 
     // Use next free slot.
@@ -269,7 +269,7 @@ char *MessageListClass::Get_Message(int id)
     TextLabelClass *label = LabelList;
 
     if (label != nullptr) {
-        while (label->Get_ID() != id) {
+        while (label->Get_Label_ID() != id) {
             label = reinterpret_cast<TextLabelClass *>(label->Get_Next());
 
             if (label == nullptr) {
@@ -291,7 +291,7 @@ TextLabelClass *MessageListClass::Get_Label(int id)
     TextLabelClass *label = LabelList;
 
     if (label != nullptr) {
-        while (label->Get_ID() != id) {
+        while (label->Get_Label_ID() != id) {
             label = reinterpret_cast<TextLabelClass *>(label->Get_Next());
 
             if (label == nullptr) {
@@ -318,7 +318,7 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int li
     TextLabelClass *label;
 
     for (label = LabelList; label != nullptr; label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
-        if (id == label->Get_ID() && memcmp(label->Get_Text(), msg, strlen(msg)) == 0) {
+        if (id == label->Get_Label_ID() && memcmp(label->Get_Text(), msg, strlen(msg)) == 0) {
             found = true;
 
             break;
