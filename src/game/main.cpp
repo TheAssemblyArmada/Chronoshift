@@ -135,10 +135,35 @@ void Set_Working_Directory()
 
 #elif defined(PLATFORM_LINUX) // posix otherwise, really just linux currently
     // TODO /proc/curproc/file for FreeBSD /proc/self/path/a.out Solaris
-    char path[PATH_MAX];
-    readlink("/proc/self/exe", path, PATH_MAX);
-    chdir(dirname(path));
+    const char *link = "/proc/self/exe";
+    struct stat sb;
 
+    if (lstat(link, &sb) == -1) {
+        DEBUG_LOG("lstat() error setting working directory.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char *path = new char[sb.st_size + 1];
+    ssize_t ret = readlink(link, path, PATH_MAX);
+
+    if (ret < 0) {
+        DEBUG_LOG("readlink() error setting working directory.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (ret > sb.st_size) {
+        DEBUG_LOG("symlink increased in size between lstat() and readlink()\n");
+        exit(EXIT_FAILURE);
+    }
+
+    path[sb.st_size] = '\0';
+
+    if(chdir(dirname(path)) != 0) {
+        DEBUG_LOG("Failed to set working directory with chdir().\n");
+        exit(EXIT_FAILURE);
+    }
+
+    delete[] path;
 #elif defined(PLATFORM_OSX) // osx otherwise
     char path[PATH_MAX];
     int size = PATH_MAX;
