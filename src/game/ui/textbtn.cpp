@@ -23,18 +23,18 @@
 
 TextButtonClass::TextButtonClass() :
     ToggleClass(0, 0, 0, 0, 0),
+    HasOutline(true),
     FilledBackground(false),
     HasShadow(false),
-    HasOutline(true),
     ButtonText(nullptr)
 {
 }
 
 TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w, int h, BOOL outline) :
     ToggleClass(id, x, y, w, h),
+    HasOutline(outline),
     FilledBackground(false),
     HasShadow(false),
-    HasOutline(outline),
     ButtonText(string)
 {
     Set_Style(style);
@@ -55,9 +55,9 @@ TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType 
 
 TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w, int h, BOOL outline) :
     ToggleClass(id, x, y, w, h),
+    HasOutline(outline),
     FilledBackground(false),
     HasShadow(false),
-    HasOutline(outline),
     ButtonText(nullptr)
 {
     Set_Style(style);
@@ -79,8 +79,8 @@ TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, i
 
 TextButtonClass::TextButtonClass(TextButtonClass &that) :
     ToggleClass(that),
-    FilledBackground(that.FilledBackground),
     HasOutline(that.HasOutline),
+    FilledBackground(that.FilledBackground),
     ButtonText(that.ButtonText),
     TextStyle(that.TextStyle)
 {

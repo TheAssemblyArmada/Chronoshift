@@ -21,20 +21,20 @@
 #include <algorithm>
 
 AbstractClass::AbstractClass(RTTIType type, int id) :
-    m_IsActive(true),
     m_RTTI(type),
     m_HeapID(id),
     m_Coord(-1),
-    m_Height(0)
+    m_Height(0),
+    m_IsActive(true)
 {
 }
 
 AbstractClass::AbstractClass(AbstractClass const &that) :
-    m_IsActive(that.m_IsActive),
     m_RTTI(that.m_RTTI),
     m_HeapID(that.m_HeapID),
     m_Coord(that.m_Coord),
-    m_Height(that.m_Height)
+    m_Height(that.m_Height),
+    m_IsActive(that.m_IsActive)
 {
 }
 

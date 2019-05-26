@@ -60,8 +60,8 @@ SmudgeTypeClass::SmudgeTypeClass(SmudgeTypeClass const &that) :
     Type(that.Type),
     Width(that.Width),
     Height(that.Height),
-    Bib(that.Bib),
-    Crater(that.Crater)
+    Crater(that.Crater),
+    Bib(that.Bib)
 {
 }
 

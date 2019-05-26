@@ -27,39 +27,39 @@
     }
 
 GameEventClass::EventInfoStruct GameEventClass::EventTypeList[EVENT_COUNT] = {
-    "EMPTY", 0, // No extra data.
-    "ALLY", sizeof(GameEventClass::HouseEventStruct),
-    "MEGAMISSION", sizeof(GameEventClass::MegaMissionEventStruct),
-    "MEGAMISSION_F", sizeof(GameEventClass::MegaMissionFEventStruct),
-    "IDLE", sizeof(GameEventClass::WhomEventStruct),
-    "SCATTER", sizeof(GameEventClass::WhomEventStruct),
-    "DESTRUCT", 0, // No extra data.
-    "DEPLOY", 0, // No extra data.
-    "PLACE", 3,
-    "OPTIONS", 0, // No extra data.
-    "GAMESPEED", sizeof(GameEventClass::GameSpeedEventStruct),
-    "PRODUCE", sizeof(GameEventClass::RTTIHeapIDEventStruct),
-    "SUSPEND", sizeof(GameEventClass::RTTIEventStruct),
-    "ABANDON", sizeof(GameEventClass::RTTIEventStruct),
-    "PRIMARY", sizeof(GameEventClass::WhomEventStruct),
-    "SPECIAL_PLACE", sizeof(GameEventClass::SpecialPlaceEventStruct),
-    "EXIT", 0, // No extra data.
-    "ANIMATION", sizeof(GameEventClass::AnimEventStruct),
-    "REPAIR", sizeof(GameEventClass::WhomEventStruct),
-    "SELL", sizeof(GameEventClass::WhomEventStruct),
-    "SELLCELL", sizeof(GameEventClass::CellEventStruct),
-    "SPECIAL", sizeof(GameEventClass::SpecialEventStruct),
-    "FRAME_SYNC", 0, // Should be "sizeof(GameEventClass::FrameEventStruct)"
-    "MESSAGE", 0, // No extra data.
-    "RESPONSE_TIME", sizeof(GameEventClass::TimeEventStruct),
-    "FRAME_INFO", sizeof(GameEventClass::FrameEventStruct),
-    "SAVEGAME", 0, // No extra data.
-    "ARCHIVE", sizeof(GameEventClass::WhomTargetEventStruct),
-    "ADDPLAYER", 4, // TODO
-    "TIMING", sizeof(GameEventClass::TimingEventStruct),
-    "PROCESS_TIME", 2,
-    "PROPOSE_DRAW", 0, // No extra data.
-    "RETRACT_DRAW", 0 // No extra data.
+    { "EMPTY", 0 },// No extra data.
+    { "ALLY", sizeof(GameEventClass::HouseEventStruct) },
+    { "MEGAMISSION", sizeof(GameEventClass::MegaMissionEventStruct) },
+    { "MEGAMISSION_F", sizeof(GameEventClass::MegaMissionFEventStruct) },
+    { "IDLE", sizeof(GameEventClass::WhomEventStruct) },
+    { "SCATTER", sizeof(GameEventClass::WhomEventStruct) },
+    { "DESTRUCT", 0 }, // No extra data.
+    { "DEPLOY", 0 }, // No extra data.
+    { "PLACE", 3 },
+    { "OPTIONS", 0 }, // No extra data.
+    { "GAMESPEED", sizeof(GameEventClass::GameSpeedEventStruct) },
+    { "PRODUCE", sizeof(GameEventClass::RTTIHeapIDEventStruct) },
+    { "SUSPEND", sizeof(GameEventClass::RTTIEventStruct) },
+    { "ABANDON", sizeof(GameEventClass::RTTIEventStruct) },
+    { "PRIMARY", sizeof(GameEventClass::WhomEventStruct) },
+    { "SPECIAL_PLACE", sizeof(GameEventClass::SpecialPlaceEventStruct) },
+    { "EXIT", 0 }, // No extra data.
+    { "ANIMATION", sizeof(GameEventClass::AnimEventStruct) },
+    { "REPAIR", sizeof(GameEventClass::WhomEventStruct) },
+    { "SELL", sizeof(GameEventClass::WhomEventStruct) },
+    { "SELLCELL", sizeof(GameEventClass::CellEventStruct) },
+    { "SPECIAL", sizeof(GameEventClass::SpecialEventStruct) },
+    { "FRAME_SYNC", 0 }, // Should be "sizeof(GameEventClass::FrameEventStruct)"
+    { "MESSAGE", 0 }, // No extra data.
+    { "RESPONSE_TIME", sizeof(GameEventClass::TimeEventStruct) },
+    { "FRAME_INFO", sizeof(GameEventClass::FrameEventStruct) },
+    { "SAVEGAME", 0 }, // No extra data.
+    { "ARCHIVE", sizeof(GameEventClass::WhomTargetEventStruct) },
+    { "ADDPLAYER", 4 }, // TODO
+    { "TIMING", sizeof(GameEventClass::TimingEventStruct) },
+    { "PROCESS_TIME", 2 },
+    { "PROPOSE_DRAW", 0 }, // No extra data.
+    { "RETRACT_DRAW", 0 } // No extra data.
 };
 
 GameEventClass::GameEventClass() : m_Type(EVENT_EMPTY), m_EventFrame(g_frame), m_HouseID(0), m_IsExecuted(false)
