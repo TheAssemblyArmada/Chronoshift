@@ -208,8 +208,6 @@ int INIClass::Load(FileClass &file)
 int INIClass::Load(Straw &straw)
 {
     char buffer[MAX_LINE_LENGTH];
-    //char section[64];
-    BOOL merge = false;
     BOOL end_of_file = false;
 
     // Read all lines until we find the first section.
