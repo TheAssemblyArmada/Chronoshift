@@ -17,8 +17,6 @@
 #include "gamedebug.h"
 #include "endiantype.h"
 
-const int MAX_LINE_LENGTH = 72;
-
 static const char _pad = '=';
 static const char _encoder[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
