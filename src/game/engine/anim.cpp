@@ -24,8 +24,8 @@ TFixedIHeapClass<AnimClass> g_Anims;
 
 AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, unsigned char loop_count/*, BOOL invisible*/) :
     ObjectClass(RTTI_ANIM, g_Anims.ID(this)),
-    m_Type(AnimTypeClass::As_Pointer(type)),
     m_LoopStage(),
+    m_Type(AnimTypeClass::As_Pointer(type)),
     m_AttachedTo(0),
     m_Owner(HOUSES_NONE),
     m_Loops(loop_count),
@@ -38,8 +38,8 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
 }
 
 AnimClass::AnimClass(const AnimClass &that) :
-    m_Type(that.m_Type),
     m_LoopStage(that.m_LoopStage),
+    m_Type(that.m_Type),
     m_AttachedTo(that.m_AttachedTo),
     m_Owner(that.m_Owner),
     m_Loops(that.m_Loops),

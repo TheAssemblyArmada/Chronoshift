@@ -181,11 +181,11 @@ AircraftTypeClass::AircraftTypeClass(AircraftType type, int uiname, const char *
     BuildingType dock, int landing_dist, int a18, MissionType mission) :
     TechnoTypeClass(RTTI_AIRCRAFTTYPE, type, uiname, name, REMAP_1, def_fire_coord, a5, a6, a5, a6, false, a11, a12, a13, a14, a15,
         false, false, true, true, a18, SPEED_WINGED),
-    m_Type(type),
     m_Airplane(airplane),
     m_CustomRotor(custom_rotors),
     m_Rotors(rotors),
     m_Transport(transport),
+    m_Type(type),
     m_UnkMission(mission),
     m_DockingBay(dock),
     m_LandingDistance(landing_dist)
@@ -198,11 +198,11 @@ AircraftTypeClass::AircraftTypeClass(AircraftType type, int uiname, const char *
  */
 AircraftTypeClass::AircraftTypeClass(AircraftTypeClass const &that) :
     TechnoTypeClass(that),
-    m_Type(that.m_Type),
     m_Airplane(that.m_Airplane),
     m_CustomRotor(that.m_CustomRotor),
     m_Rotors(that.m_Rotors),
     m_Transport(that.m_Transport),
+    m_Type(that.m_Type),
     m_UnkMission(that.m_UnkMission),
     m_DockingBay(that.m_DockingBay),
     m_LandingDistance(that.m_LandingDistance)

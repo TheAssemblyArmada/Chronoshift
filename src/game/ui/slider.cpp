@@ -23,9 +23,9 @@
 
 SliderClass::SliderClass(unsigned id, int x, int y, int w, int h, BOOL no_buttons) :
     GaugeClass(id, x, y, w, h),
-    NoButtons(no_buttons),
     ButtonPlus(nullptr),
-    ButtonMinus(nullptr)
+    ButtonMinus(nullptr),
+    NoButtons(no_buttons)
 {
     if (!no_buttons) {
         ButtonPlus = new ShapeButtonClass(id, GameFileClass::Retrieve("BTN-PLUS.SHP"), XPos + Width + 2, YPos);

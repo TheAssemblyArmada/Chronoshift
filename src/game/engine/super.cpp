@@ -20,14 +20,14 @@
 #define MAX_CLOCK_STAGES 54
 
 SuperClass::SuperClass(int recharge_time, BOOL is_powered, VoxType charging, VoxType recharge, VoxType impatient, VoxType suspend) : 
-    m_ChargeTime(),
-    m_ClockAnimStage(-1),
     m_IsPowered(is_powered),
     m_IsEnabled(false),
     m_OneTime(false),
     m_FullyCharged(false),
-    m_ChargingVoice(charging),
+    m_ChargeTime(),
+    m_ClockAnimStage(-1),
     m_RechargeVoice(recharge),
+    m_ChargingVoice(charging),
     m_ImpatientVoice(impatient),
     m_SuspendVoice(suspend),
     m_RechargeTime(recharge_time)
@@ -35,14 +35,14 @@ SuperClass::SuperClass(int recharge_time, BOOL is_powered, VoxType charging, Vox
 }
 
 SuperClass::SuperClass(const SuperClass &that) :
-    m_ChargeTime(that.m_ChargeTime),
-    m_ClockAnimStage(that.m_ClockAnimStage),
     m_IsPowered(that.m_IsPowered),
     m_IsEnabled(that.m_IsEnabled),
     m_OneTime(that.m_OneTime),
     m_FullyCharged(that.m_FullyCharged),
-    m_ChargingVoice(that.m_ChargingVoice),
+    m_ChargeTime(that.m_ChargeTime),
+    m_ClockAnimStage(that.m_ClockAnimStage),
     m_RechargeVoice(that.m_RechargeVoice),
+    m_ChargingVoice(that.m_ChargingVoice),
     m_ImpatientVoice(that.m_ImpatientVoice),
     m_SuspendVoice(that.m_SuspendVoice),
     m_RechargeTime(that.m_RechargeTime)

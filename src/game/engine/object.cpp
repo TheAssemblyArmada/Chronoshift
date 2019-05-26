@@ -79,9 +79,9 @@ ObjectClass::ObjectClass(ObjectClass const &that) :
     m_IsFalling(that.m_IsFalling),
     m_OBit1_128(that.m_OBit1_128),
     m_FallingHeight(that.m_FallingHeight),
-    m_Health(that.m_Health),
     m_Next(that.m_Next),
-    m_AttachedTrigger(that.m_AttachedTrigger)
+    m_AttachedTrigger(that.m_AttachedTrigger),
+    m_Health(that.m_Health)
 {
 }
 
