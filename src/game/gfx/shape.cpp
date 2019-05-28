@@ -1486,7 +1486,7 @@ static void Single_Line_Flagger(
         if (tmp_flags & 1 && (has_skipped = 1, width == skipped)) {
             row_flags = 0x10;
         } else {
-            row_flags = tmp_flags & 4 | tmp_flags & 2 | tmp_flags & 8 | has_skipped;
+            row_flags = (tmp_flags & 4) | (tmp_flags & 2) | (tmp_flags & 8) | has_skipped;
         }
 
         *flag_dst++ = row_flags;
