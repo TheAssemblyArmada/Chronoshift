@@ -446,16 +446,19 @@ void OptionsClass::Load_Settings()
 void OptionsClass::Adjust_Palette(
     PaletteClass &src, PaletteClass &dst, fixed brightness, fixed saturation, fixed tint, fixed contrast) const
 {
-    if (&src[0] != nullptr && &dst[0] != nullptr) {
-        for (int index = 0; index < PaletteClass::PALETTE_ENTRIES; ++index) {
-            // Index 16 is pure white, we do not want to adjust this.
-            if (index == 16) {
-                dst[index] = src[index];
-            } else {
-                HSVClass hsv = src[index];
-                hsv.Adjust(brightness, saturation, tint, contrast);
-                dst[index] = hsv;
-            }
+    // TODO, the original does this, but the check is pointless as references can be assumed never to be null.
+    // if (&src == nullptr || &dst == nullptr) {
+    //     return;
+    // }
+
+    for (int index = 0; index < PaletteClass::PALETTE_ENTRIES; ++index) {
+        // Index 16 is pure white, we do not want to adjust this.
+        if (index == 16) {
+            dst[index] = src[index];
+        } else {
+            HSVClass hsv = src[index];
+            hsv.Adjust(brightness, saturation, tint, contrast);
+            dst[index] = hsv;
         }
     }
 }

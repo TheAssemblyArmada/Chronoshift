@@ -103,7 +103,6 @@ void VesselClass::operator delete(void *ptr)
 
 MoveType VesselClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -117,7 +116,6 @@ MoveType VesselClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 
 void VesselClass::AI()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -185,7 +183,6 @@ void VesselClass::AI()
 
 ActionType VesselClass::What_Action(ObjectClass *object) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -199,7 +196,6 @@ ActionType VesselClass::What_Action(ObjectClass *object) const
 
 ActionType VesselClass::What_Action(cell_t cellnum) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -227,7 +223,6 @@ ActionType VesselClass::What_Action(cell_t cellnum) const
 
 coord_t VesselClass::Fire_Coord(WeaponSlotType weapon) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
     switch (What_Type())
@@ -250,7 +245,6 @@ coord_t VesselClass::Fire_Coord(WeaponSlotType weapon) const
 
 const int16_t *VesselClass::Overlap_List(BOOL a1) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -285,7 +279,6 @@ const int16_t *VesselClass::Overlap_List(BOOL a1) const
 
 void VesselClass::Draw_It(int x, int y, WindowNumberType window) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -298,7 +291,6 @@ void VesselClass::Draw_It(int x, int y, WindowNumberType window) const
 
 void VesselClass::Active_Click_With(ActionType action, ObjectClass *object)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
     if (What_Action(object) == ACTION_ENTER) {
@@ -310,7 +302,6 @@ void VesselClass::Active_Click_With(ActionType action, ObjectClass *object)
 
 void VesselClass::Active_Click_With(ActionType action, cell_t cellnum)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
     DriveClass::Active_Click_With(action, cellnum);
@@ -318,7 +309,6 @@ void VesselClass::Active_Click_With(ActionType action, cell_t cellnum)
 
 DamageResultType VesselClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -332,7 +322,6 @@ DamageResultType VesselClass::Take_Damage(int &damage, int a2, WarheadType warhe
 
 void VesselClass::Per_Cell_Process(PCPType pcp)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -345,7 +334,6 @@ void VesselClass::Per_Cell_Process(PCPType pcp)
 
 RadioMessageType VesselClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -359,7 +347,6 @@ RadioMessageType VesselClass::Receive_Message(RadioClass *radio, RadioMessageTyp
 
 int VesselClass::Mission_Retreat()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -373,7 +360,6 @@ int VesselClass::Mission_Retreat()
 
 int VesselClass::Mission_Unload()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -387,7 +373,6 @@ int VesselClass::Mission_Unload()
 
 DirType VesselClass::Turret_Facing() const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
     return (Class_Of().Is_Turret_Equipped() ? m_SecondaryTurretFacing.Get_Current() : m_Facing.Get_Current());
@@ -395,7 +380,6 @@ DirType VesselClass::Turret_Facing() const
 
 DirType VesselClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -409,7 +393,6 @@ DirType VesselClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) cons
 
 BOOL VesselClass::Is_Allowed_To_Recloak() const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
     return m_SubmergeTimer.Expired();
@@ -417,7 +400,6 @@ BOOL VesselClass::Is_Allowed_To_Recloak() const
 
 FireErrorType VesselClass::Can_Fire(target_t target, WeaponSlotType weapon) const
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -431,7 +413,6 @@ FireErrorType VesselClass::Can_Fire(target_t target, WeaponSlotType weapon) cons
 
 target_t VesselClass::Greatest_Threat(ThreatType threat)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -445,7 +426,6 @@ target_t VesselClass::Greatest_Threat(ThreatType threat)
 
 BulletClass *VesselClass::Fire_At(target_t target, WeaponSlotType weapon)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -459,7 +439,6 @@ BulletClass *VesselClass::Fire_At(target_t target, WeaponSlotType weapon)
 
 void VesselClass::Assign_Destination(target_t dest)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -472,7 +451,6 @@ void VesselClass::Assign_Destination(target_t dest)
 
 void VesselClass::Enter_Idle_Mode(BOOL a1)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -485,7 +463,6 @@ void VesselClass::Enter_Idle_Mode(BOOL a1)
 
 BOOL VesselClass::Start_Driver(coord_t &dest)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -523,7 +500,6 @@ int VesselClass::Shape_Number() const
 
 void VesselClass::Rotation_AI()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -536,7 +512,6 @@ void VesselClass::Rotation_AI()
 
 void VesselClass::Combat_AI()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -549,7 +524,6 @@ void VesselClass::Combat_AI()
 
 void VesselClass::Repair_AI()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -585,7 +559,6 @@ void VesselClass::Repair_AI()
 
 BOOL VesselClass::Edge_Of_World_AI()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -611,7 +584,6 @@ BOOL VesselClass::Edge_Of_World_AI()
 
 void VesselClass::Transport_Open_Door()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
     if (!m_Moving && !m_Rotating) {
@@ -621,7 +593,6 @@ void VesselClass::Transport_Open_Door()
 
 void VesselClass::Transport_Close_Door()
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(m_IsActive);
 
     m_Door.Close_Door(TRANSPORT_DOOR_DELAY, TRANSPORT_DOOR_STAGES);

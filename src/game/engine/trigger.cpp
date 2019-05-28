@@ -115,8 +115,6 @@ BOOL TriggerClass::Spring(TEventType tevent, ObjectClass *object, cell_t cellnum
 
 BOOL TriggerClass::Spring(TEventType tevent, HousesType house, target_t target)
 {
-    DEBUG_ASSERT(this != nullptr);
-
     return false;
 }
 

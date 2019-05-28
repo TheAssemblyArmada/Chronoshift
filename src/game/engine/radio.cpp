@@ -86,8 +86,6 @@ RadioClass::~RadioClass()
 
 BOOL RadioClass::Limbo()
 {
-    DEBUG_ASSERT(this != nullptr);
-
     if (!In_Limbo()) {
         Transmit_Message(RADIO_OVER_AND_OUT);
     }
@@ -97,7 +95,6 @@ BOOL RadioClass::Limbo()
 
 RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(radio != nullptr);
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
@@ -145,7 +142,6 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
 
 RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t &target, RadioClass *radio)
 {
-    DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
@@ -175,7 +171,6 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
 
 RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioClass *radio)
 {
-    DEBUG_ASSERT(this != nullptr);
     // DEBUG_ASSERT(radio != nullptr);
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
