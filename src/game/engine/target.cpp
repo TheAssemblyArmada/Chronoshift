@@ -51,7 +51,7 @@ ObjectClass *TargetClass::As_Object() const
 TargetClass::TargetClass(AbstractClass *abstract)
 {
     if (abstract != nullptr){
-        m_Target = abstract->What_Am_I() << 24 | abstract->Get_Heap_ID() & 0xFFFFFF;
+        m_Target = (abstract->What_Am_I() << 24) | (abstract->Get_Heap_ID() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
     }
@@ -60,7 +60,7 @@ TargetClass::TargetClass(AbstractClass *abstract)
 TargetClass::TargetClass(AbstractTypeClass *abstractype)
 {
     if (abstractype != nullptr){
-        m_Target = abstractype->What_Am_I() << 24 | abstractype->Get_Heap_ID() & 0xFFFFFF;
+        m_Target = (abstractype->What_Am_I() << 24) | (abstractype->Get_Heap_ID() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
     }
@@ -69,7 +69,7 @@ TargetClass::TargetClass(AbstractTypeClass *abstractype)
 TargetClass::TargetClass(CellClass *cell)
 {
     if (cell != nullptr){
-        m_Target = RTTI_CELL << 24 | cell->Cell_Number() & 0xFFFFFF;
+        m_Target = (RTTI_CELL << 24) | (cell->Cell_Number() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
     }
