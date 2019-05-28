@@ -138,8 +138,6 @@ const char *WarheadTypeClass::Name_From(WarheadType warhead)
  */
 WarheadTypeClass &WarheadTypeClass::As_Reference(WarheadType warhead)
 {
-    DEBUG_ASSERT(&g_WarheadTypes[warhead] != nullptr);
-
     return g_WarheadTypes[warhead];
 }
 
@@ -150,8 +148,6 @@ WarheadTypeClass &WarheadTypeClass::As_Reference(WarheadType warhead)
  */
 WarheadTypeClass *WarheadTypeClass::As_Pointer(WarheadType warhead)
 {
-    DEBUG_ASSERT(&g_WarheadTypes[warhead] != nullptr);
-
     if (warhead != WARHEAD_NONE && warhead < WARHEAD_COUNT) {
         return &g_WarheadTypes[warhead];
     }

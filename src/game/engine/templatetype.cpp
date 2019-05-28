@@ -1133,8 +1133,6 @@ TemplateTypeClass &TemplateTypeClass::As_Reference(TemplateType tem)
 
 coord_t TemplateTypeClass::Coord_Fixup(coord_t coord) const
 {
-    DEBUG_ASSERT(this != nullptr);
-
     return Coord_Top_Left(coord);
 }
 

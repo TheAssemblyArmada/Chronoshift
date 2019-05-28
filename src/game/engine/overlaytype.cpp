@@ -213,7 +213,6 @@ void OverlayTypeClass::Init(TheaterType theater)
 OverlayTypeClass &OverlayTypeClass::As_Reference(OverlayType overlay)
 {
     DEBUG_ASSERT(overlay < OVERLAY_COUNT);
-    DEBUG_ASSERT(&g_OverlayTypes[overlay] != nullptr);
 
     return g_OverlayTypes[overlay];
 }

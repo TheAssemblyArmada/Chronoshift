@@ -112,8 +112,6 @@ ObjectClass *SmudgeTypeClass::Create_One_Of(HouseClass *house) const
 
 const int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const
 {
-    DEBUG_ASSERT(this != nullptr);
-
     static int16_t _occupy[32];
 
     int16_t *list = _occupy;
@@ -130,14 +128,11 @@ const int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const
 
 const int16_t *SmudgeTypeClass::Overlap_List() const
 {
-    DEBUG_ASSERT(this != nullptr);
     return Occupy_List(false);
 }
 
 void SmudgeTypeClass::Draw_It(int x, int y, int frame) const
 {
-    DEBUG_ASSERT(this != nullptr);
-
     if (Get_Image_Data() != nullptr) {
         g_isTheaterShape = true;
         CC_Draw_Shape(Get_Image_Data(), frame, x, y, WINDOW_TACTICAL, SHAPE_WIN_REL);
@@ -214,7 +209,6 @@ SmudgeTypeClass &SmudgeTypeClass::As_Reference(SmudgeType smudge)
 {
     DEBUG_ASSERT(smudge != SMUDGE_NONE);
     DEBUG_ASSERT(smudge < SMUDGE_COUNT);
-    DEBUG_ASSERT(&g_SmudgeTypes[smudge] != nullptr);
 
     return g_SmudgeTypes[smudge];
 }
