@@ -27,7 +27,7 @@ class GamePtr
 {
 public:
     GamePtr() : m_ID(-1) {}
-    GamePtr(T *ptr) : m_ID(ptr != nullptr ? m_ID = ptr->Get_Heap_ID() : -1) {}
+    GamePtr(T *ptr) : m_ID(ptr != nullptr ? ptr->Get_Heap_ID() : -1) {}
     GamePtr(const GamePtr &that) : m_ID(that.m_ID) {}
     GamePtr(const NoInitClass &noinit) {}
     ~GamePtr() { m_ID = -1; }
