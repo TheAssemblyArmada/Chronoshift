@@ -236,7 +236,7 @@ int MessageBoxClass::Process(
                 g_cancelCurrentMsgBox = false;
             }
 
-            switch (input) {
+            switch ((int)input) {
                 case KN_RETURN:
                     process_action = true;
                     click_button = button_idx[current_button];
