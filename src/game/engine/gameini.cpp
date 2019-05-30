@@ -14,9 +14,9 @@
  *            LICENSE
  */
 #include "gameini.h"
+#include "crc.h"
 #include "minmax.h"
 #include "shapipe.h"
-#include "crc.h"
 
 GameINIClass::GameINIClass() : DigestValid(false) {}
 
@@ -30,11 +30,12 @@ const lepton_t GameINIClass::Get_Lepton(const char *section, const char *entry, 
 BOOL GameINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(GameINIClass *, const char *, const char *, const lepton_t) =
+    BOOL (*func)
+    (GameINIClass *, const char *, const char *, const lepton_t) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const lepton_t)>(0x004630FC);
     return func(this, section, entry, value);
 #else
-    //TODO: OmniBlade, please implement.
+    // TODO: OmniBlade, please implement.
     return false;
 #endif
 }
@@ -49,11 +50,12 @@ const MPHType GameINIClass::Get_MPHType(const char *section, const char *entry, 
 BOOL GameINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(GameINIClass *, const char *, const char *, const MPHType) =
+    BOOL (*func)
+    (GameINIClass *, const char *, const char *, const MPHType) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const MPHType)>(0x004631A4);
     return func(this, section, entry, value);
 #else
-    //TODO: OmniBlade, please implement.
+    // TODO: OmniBlade, please implement.
     return false;
 #endif
 }
@@ -113,7 +115,7 @@ const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const
         reinterpret_cast<TriggerTypeClass *(*)(GameINIClass *, const char *, const char *)>(0x004638BC);
     return func((GameINIClass *)this, section, entry);
 #elif 0
-    //TODO: Requires TriggerTypeClass interface to be complete
+    // TODO: Requires TriggerTypeClass interface to be complete
     char valuebuf[MAX_LINE_LENGTH];
 
     if (Get_String(section, entry, "<none>", valuebuf, sizeof(valuebuf)) > 0) {
@@ -129,8 +131,9 @@ const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const
 BOOL GameINIClass::Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *trigger)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL(*func)(GameINIClass *, const char *, const char *, const TriggerTypeClass *) =
-        reinterpret_cast<BOOL(*)(GameINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
+    BOOL (*func)
+    (GameINIClass *, const char *, const char *, const TriggerTypeClass *) =
+        reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
     return func(this, section, entry, trigger);
 #else
     return Put_String(section, entry, trigger != nullptr ? trigger->Get_Name() : "<none>");
@@ -241,7 +244,7 @@ const VoxType GameINIClass::Get_VoxType(const char *section, const char *entry, 
 #else
     char valuebuf[MAX_LINE_LENGTH];
 
-    //TODO: Requires Vox interface to be complete
+    // TODO: Requires Vox interface to be complete
     if (Get_String(section, entry, Name_From_Vox(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
         return Vox_From_Name(valuebuf);
     }
@@ -256,7 +259,7 @@ BOOL GameINIClass::Put_VoxType(const char *section, const char *entry, const Vox
     // Inlined in RA
     return false;
 #else
-    //TODO: Requires Vox interface to be complete
+    // TODO: Requires Vox interface to be complete
     return Put_String(section, entry, Name_From_Vox(value));
 #endif
 }
@@ -297,7 +300,8 @@ const UnitType GameINIClass::Get_UnitType(const char *section, const char *entry
 BOOL GameINIClass::Put_UnitType(const char *section, const char *entry, const UnitType value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(GameINIClass *, const char *, const char *, const UnitType) =
+    BOOL (*func)
+    (GameINIClass *, const char *, const char *, const UnitType) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
     return func(this, section, entry, value);
 #else
@@ -327,7 +331,7 @@ BOOL GameINIClass::Put_InfantryType(const char *section, const char *entry, cons
     // Inlined in RA
     return false;
 #else
-    //TODO: Requires InfantryTypeClass to be complete
+    // TODO: Requires InfantryTypeClass to be complete
     return Put_String(section, entry, InfantryTypeClass::Name_From(value));
 #endif
 }
@@ -354,7 +358,7 @@ BOOL GameINIClass::Put_AircraftType(const char *section, const char *entry, cons
     // Inlined in RA
     return false;
 #else
-    //TODO: Requires AircraftTypeClass to be complete
+    // TODO: Requires AircraftTypeClass to be complete
     return Put_String(section, entry, AircraftTypeClass::Name_From(value));
 #endif
 }
@@ -381,7 +385,7 @@ BOOL GameINIClass::Put_VesselType(const char *section, const char *entry, const 
     // Inlined in RA
     return false;
 #else
-    //TODO: Requires VesselTypeClass to be complete
+    // TODO: Requires VesselTypeClass to be complete
     return Put_String(section, entry, VesselTypeClass::Name_From(value));
 #endif
 }
@@ -408,7 +412,7 @@ BOOL GameINIClass::Put_BuildingType(const char *section, const char *entry, cons
     // Inlined in RA
     return false;
 #else
-    //TODO: Requires BuildingTypeClass to be complete
+    // TODO: Requires BuildingTypeClass to be complete
     return Put_String(section, entry, BuildingTypeClass::Name_From(value));
 #endif
 }
@@ -587,9 +591,9 @@ const int GameINIClass::Get_Owners(const char *section, const char *entry, const
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
+    if (Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0) {
         int owners = 0;
-        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
+        for (char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",")) {
             owners |= HouseTypeClass::Owner_From_Name(token);
         }
         return owners;
@@ -603,22 +607,22 @@ BOOL GameINIClass::Put_Owners(const char *section, const char *entry, const int 
 
     int owner = value;
 
-    if ( (owner & SIDE_SOVIET) == SIDE_SOVIET ) {
+    if ((owner & SIDE_SOVIET) == SIDE_SOVIET) {
         strcat(buffer, "soviet");
         owner &= ~(SIDE_SOVIET);
     }
 
-    if ( (owner & SIDE_ALLIES) == SIDE_ALLIES ) {
-        if ( buffer[0] != '\0' ) {
+    if ((owner & SIDE_ALLIES) == SIDE_ALLIES) {
+        if (buffer[0] != '\0') {
             strcat(&buffer[strlen(buffer)], ",");
         }
         strcat(buffer, "allies");
         owner &= ~(SIDE_ALLIES);
     }
 
-    for ( int type = 0; type < HOUSES_COUNT; ++type ) {
-        if ( (1 << type) & owner ) {
-            if ( buffer[0] != '\0' ) {
+    for (int type = 0; type < HOUSES_COUNT; ++type) {
+        if ((1 << type) & owner) {
+            if (buffer[0] != '\0') {
                 strcat(&buffer[strlen(buffer)], ",");
             }
             strcat(&buffer[strlen(buffer)], HouseTypeClass::As_Reference((HousesType)type).Get_Name());
@@ -632,11 +636,11 @@ const int GameINIClass::Get_Units(const char *section, const char *entry, const 
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
+    if (Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0) {
         int value = 0;
-        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            //TODO: Requires UnitTypeClass to be complete
-            UnitType type = UNIT_NONE; //UnitTypeClass::From_Name(token);
+        for (char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",")) {
+            // TODO: Requires UnitTypeClass to be complete
+            UnitType type = UNIT_NONE; // UnitTypeClass::From_Name(token);
             if (type != UNIT_NONE && type < UNIT_COUNT) {
                 value |= (1 << type);
             }
@@ -650,12 +654,12 @@ BOOL GameINIClass::Put_Units(const char *section, const char *entry, const int v
 {
     char buffer[MAX_LINE_LENGTH];
 
-    for (UnitType type = UNIT_FIRST; type < UNIT_COUNT; ++type ) {
-        if ( (1 << type) & value ) {
-            if ( buffer[0] != '\0' ) {
+    for (UnitType type = UNIT_FIRST; type < UNIT_COUNT; ++type) {
+        if ((1 << type) & value) {
+            if (buffer[0] != '\0') {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            //TODO: Requires UnitTypeClass to be complete
+            // TODO: Requires UnitTypeClass to be complete
             strcat(&buffer[strlen(buffer)], UnitTypeClass::Name_From(type));
         }
     }
@@ -666,10 +670,10 @@ const int GameINIClass::Get_Infantry(const char *section, const char *entry, con
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
+    if (Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0) {
         int value = 0;
-        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            //TODO: Requires InfantryTypeClass to be complete
+        for (char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",")) {
+            // TODO: Requires InfantryTypeClass to be complete
             InfantryType type = InfantryTypeClass::From_Name(token);
             if (type != INFANTRY_NONE && type < INFANTRY_COUNT) {
                 value |= (1 << type);
@@ -684,12 +688,12 @@ BOOL GameINIClass::Put_Infantry(const char *section, const char *entry, const in
 {
     char buffer[MAX_LINE_LENGTH];
 
-    for (InfantryType type = INFANTRY_FIRST; type < INFANTRY_COUNT; ++type ) {
-        if ( (1 << type) & value ) {
-            if ( buffer[0] != '\0' ) {
+    for (InfantryType type = INFANTRY_FIRST; type < INFANTRY_COUNT; ++type) {
+        if ((1 << type) & value) {
+            if (buffer[0] != '\0') {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            
+
             strcat(&buffer[strlen(buffer)], InfantryTypeClass::Name_From(type));
         }
     }
@@ -700,10 +704,9 @@ const int GameINIClass::Get_Aircrafts(const char *section, const char *entry, co
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
+    if (Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0) {
         int value = 0;
-        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            
+        for (char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",")) {
             AircraftType type = AircraftTypeClass::From_Name(token);
             if (type != AIRCRAFT_NONE && type < AIRCRAFT_COUNT) {
                 value |= (1 << type);
@@ -718,12 +721,12 @@ BOOL GameINIClass::Put_Aircrafts(const char *section, const char *entry, const i
 {
     char buffer[MAX_LINE_LENGTH];
 
-    for (AircraftType type = AIRCRAFT_FIRST; type < AIRCRAFT_COUNT; ++type ) {
-        if ( (1 << type) & value ) {
-            if ( buffer[0] != '\0' ) {
+    for (AircraftType type = AIRCRAFT_FIRST; type < AIRCRAFT_COUNT; ++type) {
+        if ((1 << type) & value) {
+            if (buffer[0] != '\0') {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            
+
             strcat(&buffer[strlen(buffer)], AircraftTypeClass::Name_From(type));
         }
     }
@@ -734,10 +737,9 @@ const int GameINIClass::Get_Vessels(const char *section, const char *entry, cons
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
+    if (Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0) {
         int value = 0;
-        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            
+        for (char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",")) {
             VesselType type = VesselTypeClass::From_Name(token);
             if (type != VESSEL_NONE && type < VESSEL_COUNT) {
                 value |= (1 << type);
@@ -752,12 +754,12 @@ BOOL GameINIClass::Put_Vessels(const char *section, const char *entry, const int
 {
     char buffer[MAX_LINE_LENGTH];
 
-    for (VesselType type = VESSEL_FIRST; type < VESSEL_COUNT; ++type ) {
-        if ( (1 << type) & value ) {
-            if ( buffer[0] != '\0' ) {
+    for (VesselType type = VESSEL_FIRST; type < VESSEL_COUNT; ++type) {
+        if ((1 << type) & value) {
+            if (buffer[0] != '\0') {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            
+
             strcat(&buffer[strlen(buffer)], VesselTypeClass::Name_From(type));
         }
     }
@@ -773,10 +775,9 @@ const int GameINIClass::Get_Buildings(const char *section, const char *entry, co
 #else
     char valuebuf[MAX_LINE_LENGTH];
 
-    if ( Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0 ) {
+    if (Get_String(section, entry, "", valuebuf, sizeof(valuebuf)) > 0) {
         int value = 0;
-        for ( char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",") ) {
-            
+        for (char *token = strtok(valuebuf, ","); token != nullptr; token = strtok(nullptr, ",")) {
             BuildingType type = BuildingTypeClass::From_Name(token);
             if (type != BUILDING_NONE && type < BUILDING_COUNT) {
                 value |= (1 << type);
@@ -791,18 +792,19 @@ const int GameINIClass::Get_Buildings(const char *section, const char *entry, co
 BOOL GameINIClass::Put_Buildings(const char *section, const char *entry, const int value)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)(GameINIClass *, const char *, const char *, const int) =
+    BOOL (*func)
+    (GameINIClass *, const char *, const char *, const int) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const int)>(0x00463AFC);
     return func(this, section, entry, value);
 #else
     char buffer[MAX_LINE_LENGTH];
 
-    for ( BuildingType type = BUILDING_FIRST; type < BUILDING_VALID_COUNT; ++type ) {
-        if ( (1 << type) & value ) {
-            if ( buffer[0] != '\0' ) {
+    for (BuildingType type = BUILDING_FIRST; type < BUILDING_VALID_COUNT; ++type) {
+        if ((1 << type) & value) {
+            if (buffer[0] != '\0') {
                 strcat(&buffer[strlen(buffer)], ",");
             }
-            
+
             strcat(&buffer[strlen(buffer)], BuildingTypeClass::Name_From(type));
         }
     }
@@ -862,7 +864,7 @@ BOOL GameINIClass::Put_PKey(PKey &key)
 
 void GameINIClass::Calculate_Message_Digest()
 {
-    if ( !DigestValid ) {
+    if (!DigestValid) {
         SHAPipe pipe;
         INIClass::Save(pipe);
         pipe.Result(&Digest);
@@ -878,7 +880,7 @@ void GameINIClass::Invalidate_Message_Digest()
 
 int32_t const GameINIClass::Get_Unique_ID()
 {
-    if ( !DigestValid ) {
+    if (!DigestValid) {
         Calculate_Message_Digest();
     }
     return Calculate_CRC(&Digest, sizeof(Digest));
