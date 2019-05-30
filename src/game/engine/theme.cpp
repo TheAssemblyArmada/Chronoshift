@@ -149,7 +149,7 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
     DEBUG_ASSERT(theme < THEME_COUNT);
 
     if (theme == THEME_NONE || theme == THEME_NEXT
-        || theme != THEME_STOP && !Themes[theme].IsRepeat && !Options.Get_Repeat()) {
+        || (theme != THEME_STOP && !Themes[theme].IsRepeat && !Options.Get_Repeat())) {
         // If we are shuffling the score, select a random score. If its the same as the one we were passed or isn't allowed,
         // roll for another.
         if (Options.Get_Shuffle()) {

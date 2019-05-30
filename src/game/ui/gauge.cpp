@@ -92,7 +92,7 @@ BOOL GaugeClass::Action(unsigned flags, KeyNumType &key)
 
     Sticky_Process(flags);
 
-    if (flags & MOUSE_LEFT_PRESS || flags & MOUSE_LEFT_HELD && this == GadgetClass::StuckOn) {
+    if ((flags & MOUSE_LEFT_PRESS) || ((flags & MOUSE_LEFT_HELD) && this == GadgetClass::StuckOn)) {
         int valpixel;
         int mousepos;
 
