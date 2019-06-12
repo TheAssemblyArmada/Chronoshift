@@ -539,7 +539,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
     }
 
     if (speed != SPEED_NONE) {
-        if (Ground[Land].Get_Speed(speed) != fixed::_0_1) {
+        if (Ground[Land].Get_Speed(speed) == fixed::_0_1) {
             return false;
         }
 
@@ -778,7 +778,7 @@ int CellClass::Clear_Icon() const
  *
  * 0x0049F5F8
  */
-void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
+void CellClass::Draw_It(int x, int y, BOOL flag) const
 {
 /*#ifndef CHRONOSHIFT_STANDALONE
     void (*func)(const CellClass *, int, int, BOOL) =
@@ -798,7 +798,7 @@ void CellClass::Draw_It(int x, int y, BOOL unk_bool) const
         WindowList[WINDOW_TACTICAL].W,
         WindowList[WINDOW_TACTICAL].H);
 
-    if (!unk_bool) {
+    if (!flag) {
         //++CellCount; // Original has a global variable here. Not sure what this is used for.
 
         // TODO
