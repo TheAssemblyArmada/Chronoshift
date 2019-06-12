@@ -1197,7 +1197,7 @@ void DisplayClass::Redraw_Icons()
                 CellClass &cell = Array[Coord_To_Cell(coord)];
 
                 if (cell.Is_Visible() || DebugUnshroud) {
-                    cell.Draw_It(draw_x, draw_y, false);
+                    cell.Draw_It(draw_x, draw_y);
                 }
 
                 if (!cell.Is_Revealed() && !DebugUnshroud) {

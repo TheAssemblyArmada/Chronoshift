@@ -108,7 +108,7 @@ public:
     void Overlap_Down(ObjectClass *object);
     void Overlap_Up(ObjectClass *object);
     int Clear_Icon() const;
-    void Draw_It(int x, int y, BOOL unk_bool) const;
+    void Draw_It(int x, int y, BOOL flag = false) const;
     void Concrete_Calc();
     void Wall_Update();
     int Reduce_Ore(int reduction);
