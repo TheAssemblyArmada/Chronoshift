@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "building.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<BuildingClass> &g_Buildings = Make_Global<TFixedIHeapClass<BuildingClass> >(0x0065D8B0);

@@ -18,7 +18,6 @@
 #include "coord.h"
 #include "facing.h"
 #include "lists.h"
-#include "minmax.h"
 #include "mixfile.h"
 #include "scenario.h"
 #include <cstdio>

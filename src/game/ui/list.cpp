@@ -16,9 +16,9 @@
 #include "list.h"
 #include "dialog.h"
 #include "language.h"
-#include "minmax.h"
 #include "mouse.h"
 #include "textprint.h"
+#include <algorithm>
 
 #ifndef PLATFORM_WINDOWS
 #include <strings.h>
@@ -44,10 +44,10 @@ ListClass::ListClass(
     ScrollDownButton.Set_XPos(ScrollDownButton.Get_XPos() - ScrollDownButton.Get_Width());
     ScrollDownButton.Set_YPos(ScrollDownButton.Get_YPos() - ScrollDownButton.Get_Height());
 
-    Scrollbar.Set_XPos(Scrollbar.Get_XPos() - Max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
+    Scrollbar.Set_XPos(Scrollbar.Get_XPos() - std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
     Scrollbar.Set_YPos(ScrollUpButton.Get_Height() + YPos);
     Scrollbar.Set_Height(Scrollbar.Get_Height() - ScrollDownButton.Get_Height() + ScrollUpButton.Get_Height());
-    Scrollbar.Set_Width(Max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
+    Scrollbar.Set_Width(std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
 
     // The nullptr Fancy_Text_Print sets the font pointer and the dimension globals
     // for the YSpacing and ThumbSize
@@ -165,9 +165,9 @@ void ListClass::Set_Position(int x, int y)
     ScrollDownButton.Set_YPos(y + Height - ScrollDownButton.Get_Height());
 
     // Set scroll bar position.
-    Scrollbar.Set_XPos(x + Width - Max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
+    Scrollbar.Set_XPos(x + Width - std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
     Scrollbar.Set_YPos(y + ScrollUpButton.Get_Height());
-    Scrollbar.Set_Width(Max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
+    Scrollbar.Set_Width(std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
     Scrollbar.Set_Height(Height - (ScrollDownButton.Get_Height() + ScrollUpButton.Get_Height()));
 }
 
@@ -220,7 +220,7 @@ BOOL ListClass::Action(unsigned flags, KeyNumType &key)
         }
     } else {
         CurrentIndex = ViewIndex + (g_mouse->Get_Mouse_Y() - YPos) / YSpacing;
-        CurrentIndex = Min(CurrentIndex, Entries.Count() - 1);
+        CurrentIndex = std::min(CurrentIndex, Entries.Count() - 1);
 
         if (CurrentIndex == -1) {
             CurrentIndex = 0;
@@ -326,7 +326,7 @@ const char *ListClass::Current_Item() const
 const char *ListClass::Get_Item(int string_index) const
 {
     if (Count()) {
-        return Entries[Min(string_index, Count() - 1)];
+        return Entries[std::min(string_index, Count() - 1)];
     }
 
     return nullptr;
@@ -447,7 +447,7 @@ void ListClass::Set_Tabs(int *tab_list)
 
 BOOL ListClass::Set_View_Index(int index)
 {
-    int new_index = Clamp(index, 0, Max(Entries.Count() - ThumbSize, 0));
+    int new_index = std::clamp(index, 0, std::max(Entries.Count() - ThumbSize, 0));
 
     if (new_index == ViewIndex) {
         return false;

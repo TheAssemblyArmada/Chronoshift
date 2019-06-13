@@ -14,14 +14,12 @@
  *            LICENSE
  */
 #include "map.h"
-#include "abs.h"
 #include "coord.h"
 #include "globals.h"
 #include "house.h"
 #include "lcwpipe.h"
 #include "lcwstraw.h"
 #include "lists.h"
-#include "minmax.h"
 #include "rules.h"
 #include "scenario.h"
 #include "session.h"
@@ -206,7 +204,7 @@ void MapClass::Logic_AI()
 
     if (Rule.Ore_Grows() || Rule.Ore_Spreads()) {
         // Limit how much of the map we try to mark at any one time to limit how often the growth logic runs.
-        int growth_limit = Max(MAP_MAX_AREA / (Rule.Ore_Growth_Rate() * GAME_TICKS_PER_MINUTE), 1);
+        int growth_limit = std::max(MAP_MAX_AREA / (Rule.Ore_Growth_Rate() * GAME_TICKS_PER_MINUTE), 1);
         int index;
 
         // Build lists of cells that need growth and spreading applied to them.
@@ -894,7 +892,7 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
 
         }
 
-        left_pos = Max(left_pos, MapCellX);
+        left_pos = std::max(left_pos, MapCellX);
 
         int right_pos;
 
@@ -910,7 +908,7 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
             }
         }
 
-        right_pos = Min(right_pos, MapCellWidth + MapCellX - 1);
+        right_pos = std::min(right_pos, MapCellWidth + MapCellX - 1);
 
         // Set all the cells between the two positions to our zone value for this movement zone.
         for (int i = left_pos; i <= right_pos; ++i) {

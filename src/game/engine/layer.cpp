@@ -16,7 +16,6 @@
 #include "layer.h"
 #include "gamedebug.h"
 #include "object.h"
-#include "swap.h"
 //#include "target.h"
 
 LayerClass::LayerClass() {}

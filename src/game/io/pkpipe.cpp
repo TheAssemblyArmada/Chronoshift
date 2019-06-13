@@ -15,7 +15,7 @@
  */
 #include "pkpipe.h"
 #include "gamedebug.h"
-#include "minmax.h"
+#include <algorithm>
 
 PKPipe::PKPipe(PipeControl mode, Straw &rstraw) :
     m_changeKey(true),
@@ -48,7 +48,7 @@ int PKPipe::Put(const void *buffer, int length)
     // the mode we are using.
     if (m_changeKey) {
         if (m_mode == PIPE_DECRYPT) {
-            int to_copy = Min(length, m_carryOver); // m_carryOver >= length ? length : m_carryOver;
+            int to_copy = std::min(length, m_carryOver); // m_carryOver >= length ? length : m_carryOver;
 
             memcpy(&m_cryptoBuffer[m_encryptedKeyLength - m_carryOver], inbuff, to_copy);
             inbuff += to_copy;

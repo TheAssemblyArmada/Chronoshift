@@ -14,11 +14,9 @@
  *            LICENSE
  */
 #include "language.h"
-#include "abs.h"
 #include "gamefile.h"
 #include "dipthong.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include "mixfile.h"
 #include <cstdio>
 
@@ -404,7 +402,7 @@ const char *Fetch_String(int str_id)
         return Extract_String(DebugStrings, str_id);
     }
 
-    if (str_id < TXT_FIRST && Abs(str_id) < 25) {
+    if (str_id < TXT_FIRST && std::abs(str_id) < 25) {
         return NameOverride[-(str_id + 1)];
     }
 

@@ -16,8 +16,6 @@
 #include "sha.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include "minmax.h"
-#include "rotl.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -184,7 +182,7 @@ void SHAEngine::Process_Block(const void *input, SHADigest &digest) const
     }
 
     for (; t < 80; ++t) {
-        W[t] = RotateLeft(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], (uint32_t)1);
+        W[t] = __rotl32(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], (uint32_t)1);
     }
 
     // Initialize registers with the previous intermediate value.
@@ -213,10 +211,10 @@ void SHAEngine::Process_Block(const void *input, SHADigest &digest) const
             f = b ^ c ^ d;
         }
 
-        uint32_t temp = RotateLeft(a, (uint32_t)5) + f + e + W[t] + K;
+        uint32_t temp = __rotl32(a, (uint32_t)5) + f + e + W[t] + K;
         e = d;
         d = c;
-        c = RotateLeft(b, (uint32_t)30);
+        c = __rotl32(b, (uint32_t)30);
         b = a;
         a = temp;
     }

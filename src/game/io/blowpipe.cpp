@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "blowpipe.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memset;
 
@@ -74,7 +74,7 @@ int BlowPipe::Put(const void *buffer, int length)
         // If there is carried over data that didn't exactly fill a Blowfish
         // block, then make it up to a full block with the new data and encrypt.
         if (m_carryOver) {
-            int rsize = Min(BF_BLOCKSIZE - m_carryOver, length);
+            int rsize = std::min(BF_BLOCKSIZE - m_carryOver, length);
 
             memmove(&m_currentBlock[m_carryOver], buf, rsize);
             buf += rsize;

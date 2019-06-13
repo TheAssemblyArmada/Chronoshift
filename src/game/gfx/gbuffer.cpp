@@ -16,9 +16,9 @@
 #include "gbuffer.h"
 #include "gamedebug.h"
 #include "blitters.h"
-#include "minmax.h"
 #include "textprint.h"
 #include "tileset.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 // BOOL &GraphicViewPortClass::AllowHardwareBlitFills;
@@ -98,8 +98,8 @@ GraphicViewPortClass::~GraphicViewPortClass()
 void GraphicViewPortClass::Attach(GraphicBufferClass *buffer, int x, int y, int w, int h)
 {
     if (buffer != this) {
-        x = Clamp(x, 0, buffer->Get_Width() - 1); // Min(Max(0, x), buffer->Get_Width() - 1);
-        y = Clamp(y, 0, buffer->Get_Height() - 1); // Min(Max(0, y), buffer->Get_Height() - 1);
+        x = std::clamp(x, 0, buffer->Get_Width() - 1); // std::min(std::max(0, x), buffer->Get_Width() - 1);
+        y = std::clamp(y, 0, buffer->Get_Height() - 1); // std::min(std::max(0, y), buffer->Get_Height() - 1);
         w = x + w > buffer->Get_Width() ? buffer->Get_Width() - x : w;
         h = y + h > buffer->Get_Height() ? buffer->Get_Height() - y : h;
 

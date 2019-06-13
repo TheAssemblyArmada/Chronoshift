@@ -14,7 +14,6 @@
  *            LICENSE
  */
 #include "coord.h"
-#include "abs.h"
 #include "scenario.h"
 
 const coord_t AdjacentCoord[FACING_COUNT] = {
@@ -49,8 +48,8 @@ int Distance(coord_t coord1, coord_t coord2)
     int ydiff;
     int xdiff;
 
-    ydiff = Abs(Coord_Lepton_Y(coord1) - Coord_Lepton_Y(coord2));
-    xdiff = Abs(Coord_Lepton_X(coord1) - Coord_Lepton_X(coord2));
+    ydiff = std::abs(Coord_Lepton_Y(coord1) - Coord_Lepton_Y(coord2));
+    xdiff = std::abs(Coord_Lepton_X(coord1) - Coord_Lepton_X(coord2));
 
     if (ydiff <= xdiff) {
         ydiff /= 2;

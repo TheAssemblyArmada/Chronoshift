@@ -17,8 +17,8 @@
 #include "gamefile.h"
 #include "coord.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include "mixfile.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes = Make_Global<TFixedIHeapClass<TemplateTypeClass> >(0x0065DF84);
@@ -962,8 +962,8 @@ void TemplateTypeClass::Init(TheaterType theater)
             tem.Height = 0;
 
             if (tem.ImageData != nullptr) {
-                tem.Width = Max(int16_t(0), IconSetClass::Get_Icon_Set_Width(static_cast<IconControlType *>(tem.ImageData)));
-                tem.Height = Max(int16_t(0), IconSetClass::Get_Icon_Set_Height(static_cast<IconControlType *>(tem.ImageData)));
+                tem.Width = std::max(int16_t(0), IconSetClass::Get_Icon_Set_Width(static_cast<IconControlType *>(tem.ImageData)));
+                tem.Height = std::max(int16_t(0), IconSetClass::Get_Icon_Set_Height(static_cast<IconControlType *>(tem.ImageData)));
 
             }
 

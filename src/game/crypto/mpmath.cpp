@@ -16,9 +16,9 @@
 #include "mpmath.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <stdlib.h>
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 using std::memset;
@@ -4867,7 +4867,7 @@ void MPMath::Randomize_Bounded(
 
 void MPMath::Randomize(mp_digit_u *result, Straw *rng, int total_bits, int precision)
 {
-    int bits = Min(total_bits, (int)DIGITSIZE * precision);
+    int bits = std::min(total_bits, (int)DIGITSIZE * precision);
     Init(result, 0, precision);
     rng->Get(result, bits / 8 + 1);
     reinterpret_cast<uint8_t *>(result)[bits / 8] &= ~(-1 << bits % 8);

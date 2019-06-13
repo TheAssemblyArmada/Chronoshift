@@ -14,7 +14,6 @@
  *            LICENSE
  */
 #include "display.h"
-#include "abs.h"
 #include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"
@@ -29,12 +28,12 @@
 #include "pk.h"
 #include "rules.h"
 #include "scenario.h"
-#include "swap.h"
 #include "technotype.h"
 #include "target.h"
 #include "textprint.h"
 #include "theater.h"
 #include <cstdio>
+#include <algorithm>
 
 using std::snprintf;
 
@@ -662,17 +661,17 @@ void DisplayClass::Mouse_Left_Held(int mouse_x, int mouse_y)
         if (mouse_x != BandBox.m_right || mouse_y != BandBox.m_bottom) {
             Refresh_Band();
             // Need confirming, check between sole and ra!
-            BandBox.m_right = Clamp(mouse_x, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-            BandBox.m_bottom = Clamp(mouse_y, 0, Lepton_To_Pixel(DisplayHeight) - 1);
+            BandBox.m_right = std::clamp(mouse_x, 0, Lepton_To_Pixel(DisplayWidth) - 1);
+            BandBox.m_bottom = std::clamp(mouse_y, 0, Lepton_To_Pixel(DisplayHeight) - 1);
             DisplayToRedraw = true;
             Flag_To_Redraw();
         }
     } else if (DisplayBit16) {
         // Ensure we actually drew a bandbox of usable size?
-        if (Abs(BandBox.m_left - mouse_x) > 4 || Abs(BandBox.m_top - mouse_y) > 4) {
+        if (std::abs(BandBox.m_left - mouse_x) > 4 || std::abs(BandBox.m_top - mouse_y) > 4) {
             DisplayBit8 = true;
-            BandBox.m_right = Clamp(mouse_x, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-            BandBox.m_bottom = Clamp(mouse_y, 0, Lepton_To_Pixel(DisplayHeight) - 1);
+            BandBox.m_right = std::clamp(mouse_x, 0, Lepton_To_Pixel(DisplayWidth) - 1);
+            BandBox.m_bottom = std::clamp(mouse_y, 0, Lepton_To_Pixel(DisplayHeight) - 1);
             DisplayToRedraw = true;
             Flag_To_Redraw();
 
@@ -752,23 +751,23 @@ void DisplayClass::Refresh_Band()
         int box_h = BandBox.m_bottom + TacOffsetY;
 
         if (box_x > box_w) {
-            Swap(box_x, box_w);
+            std::swap(box_x, box_w);
         }
 
         if (box_y > box_h) {
-            Swap(box_y, box_h);
+            std::swap(box_y, box_h);
         }
 
         // This loop should redraw the left and right side of the selection band.
         for (int i = box_y; i <= (box_h + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayHeight) + TacOffsetY;
-            cell_t click_cell = Click_Cell_Calc(box_x, Clamp(i, 0, b_pxl));
+            cell_t click_cell = Click_Cell_Calc(box_x, std::clamp(i, 0, b_pxl));
             
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
             }
 
-            click_cell = Click_Cell_Calc(box_w, Clamp(i, 0, b_pxl));
+            click_cell = Click_Cell_Calc(box_w, std::clamp(i, 0, b_pxl));
 
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
@@ -778,13 +777,13 @@ void DisplayClass::Refresh_Band()
         // This loop should redraw the top and bottom side of the selection band.
         for (int i = box_x; i < (box_w + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayWidth) + TacOffsetX;
-            cell_t click_cell = Click_Cell_Calc(Clamp(i, 0, b_pxl), box_y);
+            cell_t click_cell = Click_Cell_Calc(std::clamp(i, 0, b_pxl), box_y);
             
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
             }
 
-            click_cell = Click_Cell_Calc(Clamp(i, 0, b_pxl), box_h);
+            click_cell = Click_Cell_Calc(std::clamp(i, 0, b_pxl), box_h);
             
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
@@ -847,15 +846,15 @@ void DisplayClass::Get_Occupy_Dimensions(int &w, int &h, int16_t *list) const
             int cell_x = Cell_Get_X(*list);
             int cell_y = Cell_Get_Y(*list);
 
-            left = Max(left, cell_x);
-            right = Min(right, cell_x);
-            top = Max(top, cell_y);
-            bottom = Min(bottom, cell_y);
+            left = std::max(left, cell_x);
+            right = std::min(right, cell_x);
+            top = std::max(top, cell_y);
+            bottom = std::min(bottom, cell_y);
             ++list;
         }
 
-        w = Max(1, left - right + 1);
-        h = Max(1, top - bottom + 1);
+        w = std::max(1, left - right + 1);
+        h = std::min(1, top - bottom + 1);
     }
 }
 
@@ -883,7 +882,7 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
 
         if (width >= x) {
             cell_t click_cell = Click_Cell_Calc(x, y - 1);
-            int height = Clamp(y + 24, TacOffsetY, TacOffsetY + (Lepton_To_Pixel(DisplayHeight) - 1));
+            int height = std::clamp(y + 24, TacOffsetY, TacOffsetY + (Lepton_To_Pixel(DisplayHeight) - 1));
             cell_t offset_click = Click_Cell_Calc(str_width + x - 1, height);
 
             if (click_cell == -1) {
@@ -1102,8 +1101,8 @@ void DisplayClass::Center_Map(uint32_t coord)
 
     // Only bother setting the position if we have a coord from somewhere. SS doesn't do the min X/Y checks
     if (coord_set) {
-        int16_t x_lep = Max((int16_t)(x - DisplayWidth / 2), Coord_Cell_To_Lepton(MapCellX));
-        int16_t y_lep = Max((int16_t)(y - DisplayHeight / 2), Coord_Cell_To_Lepton(MapCellY));
+        int16_t x_lep = std::max((int16_t)(x - DisplayWidth / 2), Coord_Cell_To_Lepton(MapCellX));
+        int16_t y_lep = std::max((int16_t)(y - DisplayHeight / 2), Coord_Cell_To_Lepton(MapCellY));
         Set_Tactical_Position(Coord_From_Lepton_XY(x_lep, y_lep));
     }
 }
@@ -1127,8 +1126,8 @@ cell_t DisplayClass::Set_Cursor_Pos(cell_t cell)
 
         Get_Occupy_Dimensions(occupy_x, occupy_y, DisplayCursorOccupy);
 
-        int cell_x = Max(Cell_Get_X(DisplayCursorEnd + cell), Coord_Cell_X(DisplayPos));
-        int cell_y = Max(Cell_Get_Y(DisplayCursorEnd + cell), Coord_Cell_Y(DisplayPos));
+        int cell_x = std::max(Cell_Get_X(DisplayCursorEnd + cell), Coord_Cell_X(DisplayPos));
+        int cell_y = std::max(Cell_Get_Y(DisplayCursorEnd + cell), Coord_Cell_Y(DisplayPos));
 
         if (cell_x + occupy_x >= Coord_Lepton_X(DisplayPos) + Lepton_To_Cell_Coord(DisplayWidth)) {
             cell_x = Coord_Lepton_X(DisplayPos) + cell_x - occupy_x;
@@ -1154,7 +1153,7 @@ cell_t DisplayClass::Set_Cursor_Pos(cell_t cell)
             PassedProximityCheck = Passes_Proximity_Check(
                 PendingObjectTypePtr, PendingObjectOwner, DisplayCursorOccupy, DisplayCursorEnd + retval);
 
-            Swap(DisplayCursorStart, retval);
+            std::swap(DisplayCursorStart, retval);
         }
     } else {
         retval = DisplayCursorStart;
@@ -1463,8 +1462,8 @@ BOOL DisplayClass::Push_Onto_TacMap(coord_t &coord1, coord_t &coord2)
     }
 
     // Set bounded coords.
-    coord1 = Coord_From_Lepton_XY(Clamp(coord1_x, start_x, end_x), Clamp(coord1_y, start_y, end_y));
-    coord2 = Coord_From_Lepton_XY(Clamp(coord2_x, start_x, end_x), Clamp(coord2_y, start_y, end_y));
+    coord1 = Coord_From_Lepton_XY(std::clamp(coord1_x, start_x, end_x), std::clamp(coord1_y, start_y, end_y));
+    coord2 = Coord_From_Lepton_XY(std::clamp(coord2_x, start_x, end_x), std::clamp(coord2_y, start_y, end_y));
 
     return true;
 }
@@ -1498,9 +1497,9 @@ cell_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, cell_t cel
     // If we have a cell number from either the parameters or a waypoint, calculate an x and y position and ensure its within
     // the visible map. We also work out which edges we should clip to, x (east and west) or y (north and south).
     if (cell_num != -1) {
-        int x_pos = Min(Cell_Get_X(cell_num) - MapCellX, MapCellWidth + MapCellX - Cell_Get_X(cell_num));
+        int x_pos = std::min(Cell_Get_X(cell_num) - MapCellX, MapCellWidth + MapCellX - Cell_Get_X(cell_num));
 
-        int y_pos = Min(Cell_Get_Y(cell_num) - MapCellY, MapCellHeight + MapCellY - Cell_Get_Y(cell_num));
+        int y_pos = std::min(Cell_Get_Y(cell_num) - MapCellY, MapCellHeight + MapCellY - Cell_Get_Y(cell_num));
 
         if (x_pos > y_pos) {
             y_clipped = true;

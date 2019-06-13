@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "buffpipe.h"
-#include "minmax.h"
 #include <string.h>
+#include <algorithm>
 
 /**
 * @brief Writes data from the provided buffer to the underlying buffer class.
@@ -31,7 +31,7 @@ int BufferPipe::Put(const void *buffer, int length)
 
     if (buff_size) {
         buff_size -= m_index;
-        size = Min(size, buff_size);
+        size = std::min(size, buff_size);
     }
 
     if (size > 0) {

@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "buffstraw.h"
-#include "minmax.h"
 #include <string.h>
+#include <algorithm>
 
 /**
 * @brief Reads data to the provided buffer from the underlying buffer class.
@@ -30,7 +30,7 @@ int BufferStraw::Get(void *buffer, int length)
 
     if (read_len) {
         read_len -= m_index;
-        read_len = Min(length, read_len);
+        read_len = std::min(length, read_len);
     }
 
     if (read_len > 0) {

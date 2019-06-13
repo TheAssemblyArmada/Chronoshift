@@ -16,8 +16,8 @@
 #include "lzopipe.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 
@@ -68,7 +68,7 @@ int LZOPipe::Put(const void *source, int length)
     if (m_mode == PIPE_UNCOMPRESS) {
         while (length > 0) {
             if (m_compressedBytes == -1) {
-                int datasize = Min(length, 4 - m_dataInBuffer);
+                int datasize = std::min(length, 4 - m_dataInBuffer);
 
                 memcpy(m_inBuffer + m_dataInBuffer, src, datasize);
                 src += datasize;
@@ -89,7 +89,7 @@ int LZOPipe::Put(const void *source, int length)
                 break;
             }
 
-            int bytesloaded = Min(length, m_compressedBytes - m_dataInBuffer);
+            int bytesloaded = std::min(length, m_compressedBytes - m_dataInBuffer);
 
             memcpy(m_inBuffer + m_dataInBuffer, src, bytesloaded);
             m_dataInBuffer += bytesloaded;
@@ -109,7 +109,7 @@ int LZOPipe::Put(const void *source, int length)
         // Check if we already have some buffered data that wasn't enough for a
         // whole compressed chunk.
         if (m_dataInBuffer > 0) {
-            int datasize = Min(length, m_blockSize - m_dataInBuffer);
+            int datasize = std::min(length, m_blockSize - m_dataInBuffer);
 
             memcpy(m_inBuffer + m_dataInBuffer, src, datasize);
             src += datasize;

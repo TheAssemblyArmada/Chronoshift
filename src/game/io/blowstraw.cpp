@@ -15,8 +15,8 @@
  */
 #include "blowstraw.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memmove;
 
@@ -52,7 +52,7 @@ int BlowStraw::Get(void *buffer, int length)
             // to the buffer as it was either a full block or the data source
             // can't retrieve any more data.
             if (m_carryOver > 0) {
-                int to_copy = Min(length, m_carryOver); // length >= m_carryOver ? m_carryOver : length;
+                int to_copy = std::min(length, m_carryOver); // length >= m_carryOver ? m_carryOver : length;
                 memmove(buf, &m_currentBlock[BF_BLOCKSIZE - m_carryOver], to_copy);
                 m_carryOver -= to_copy;
                 buf += to_copy;

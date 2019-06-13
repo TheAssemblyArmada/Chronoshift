@@ -19,10 +19,10 @@
 #include "filestraw.h"
 #include "gamedebug.h"
 #include "gbuffer.h"
-#include "minmax.h"
 #include "pcxpipe.h"
 #include "pcxrle.h"
 #include "pcxstraw.h"
+#include <algorithm>
 
 /**
  * Read a PCX file directly into a graphic buffer.
@@ -48,7 +48,7 @@ GraphicBufferClass *Read_PCX_File(const char *filename, PaletteClass *pal, void 
             int height = le16toh(header.YEnd) - le16toh(header.YStart) + 1;
 
             if (buffer) {
-                height = Min(size / width - 1, height);
+                height = std::min(size / width - 1, height);
                 gbuff = new GraphicBufferClass(width, height, buffer, size);
                 if (!gbuff || !gbuff->Get_GBuffer()->Get_Buffer()) {
                     DEBUG_LOG("GraphicBuffer for PCX is not valid.\n");

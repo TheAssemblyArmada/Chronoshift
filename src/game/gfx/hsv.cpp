@@ -14,9 +14,8 @@
  *            LICENSE
  */
 #include "hsv.h"
-#include "abs.h"
-#include "minmax.h"
 #include "rgb.h"
+#include <algorithm>
 
 HSVClass const HSVClass::s_blackColor(0, 0, 0);
 HSVClass const HSVClass::s_whiteColor(0, 0, 100);
@@ -43,13 +42,13 @@ void HSVClass::Adjust(int adjust, HSVClass const &that)
  */
 void HSVClass::Adjust(fixed brightness, fixed saturation, fixed tint, fixed contrast)
 {
-    //int v10 = Clamp(((brightness * 256) * m_val) / 128, 0, 255);
-    //int tmp = ((Clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256));
+    //int v10 = std::clamp(((brightness * 256) * m_val) / 128, 0, 255);
+    //int tmp = ((std::clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256));
     //int v12 = (tmp / 128) + 128;
 
-    int v = Clamp((((Clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256)) / 128) + 128, 0, 255);
-    int s = Clamp(((saturation * 256) * m_sat) / 128, 0, 255);
-    int h = Clamp(((tint * 256) * m_hue) / 128, 0, 255);
+    int v = std::clamp((((std::clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256)) / 128) + 128, 0, 255);
+    int s = std::clamp(((saturation * 256) * m_sat) / 128, 0, 255);
+    int h = std::clamp(((tint * 256) * m_hue) / 128, 0, 255);
 
     m_hue = h;
     m_sat = s;
@@ -67,9 +66,9 @@ int const HSVClass::Difference(HSVClass const &that) const
     int saturation = m_sat - that.m_sat;
     int value = m_val - that.m_val;
 
-    hue = Abs(hue);
-    saturation = Abs(saturation);
-    value = Abs(value);
+    hue = std::abs(hue);
+    saturation = std::abs(saturation);
+    value = std::abs(value);
 
     return hue * hue + saturation * saturation + value * value;
 }

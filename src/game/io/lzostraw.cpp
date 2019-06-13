@@ -16,8 +16,8 @@
 #include "lzostraw.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 
@@ -66,7 +66,7 @@ int LZOStraw::Get(void *buffer, int length)
 
     while (length > 0) {
         if (m_carryover > 0) {
-            int datasize = Min(m_carryover, length);
+            int datasize = std::min(m_carryover, length);
 
             uint8_t *srcbuff =
                 m_mode == STRAW_UNCOMPRESS ? m_inBuffer + m_uncompressedBytes - m_carryover : m_outBuffer + m_compressedBytes - m_carryover + 4;

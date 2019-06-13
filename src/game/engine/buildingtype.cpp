@@ -19,10 +19,10 @@
 #include "gamedebug.h"
 #include "globals.h"
 #include "lists.h"
-#include "minmax.h"
 #include "rules.h"
 #include "special.h"
 #include "unittype.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes = Make_Global<TFixedIHeapClass<BuildingTypeClass> >(0x0065DD70);
@@ -166,7 +166,7 @@ int BuildingTypeClass::Full_Name() const
  */
 int BuildingTypeClass::Max_Pips() const
 {
-    return Clamp((m_Storage / 100), 0, (24 * Width() / 4));
+    return std::clamp((m_Storage / 100), 0, (24 * Width() / 4));
 }
 
 /**

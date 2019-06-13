@@ -20,6 +20,7 @@
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
+#include <algorithm>
 
 #define POWER_MAX_HEIGHT 108
 
@@ -283,7 +284,7 @@ int PowerClass::Power_Height(int power)
         height += power_left * height_inc / 100;
     }
 
-    return Clamp(height, 0, POWER_MAX_HEIGHT);
+    return std::clamp(height, 0, POWER_MAX_HEIGHT);
 }
 
 void PowerClass::Flash_Power()

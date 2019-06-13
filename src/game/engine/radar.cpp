@@ -21,12 +21,11 @@
 #include "globals.h"
 #include "iomap.h"
 #include "lists.h"
-#include "minmax.h"
 #include "mixfile.h"
 #include "radar.h"
 #include "session.h"
-#include "swap.h"
 #include "voc.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 RadarClass::RTacticalClass &RadarClass::RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
@@ -337,7 +336,7 @@ void RadarClass::Render_Terrain(cell_t cellnum, int x, int y, int scale)
             for (int i = 0; i < objectcount - 1; ++i) {
                 for (int j = i + 1; j < objectcount; ++j) {
                     if (ObjectClass::Sort_Y_Greater_Than(objects[i], objects[j])) {
-                        Swap(objects[i], objects[j]);
+                        std::swap(objects[i], objects[j]);
                     }
                 }
             }
@@ -412,13 +411,13 @@ void RadarClass::Zoom_Mode(cell_t cellnum)
     } else {
         int xscale = MaxRadarWidth / MapCellWidth;
         int yscale = MaxRadarHeight / MapCellHeight;
-        MiniMapScale = Clamp(Min(xscale, yscale), 1, yscale);
+        MiniMapScale = std::clamp(std::min(xscale, yscale), 1, yscale);
         width = MapCellWidth;
         height = MapCellHeight;
     }
 
-    width = Min(Min(width, MaxRadarWidth), MapCellWidth);
-    height = Min(Min(height, MaxRadarHeight), MapCellHeight);
+    width = std::min(std::min(width, MaxRadarWidth), MapCellWidth);
+    height = std::min(std::min(height, MaxRadarHeight), MapCellHeight);
 
     int xremain = MaxRadarWidth - MiniMapScale * width;
     int yremain = MaxRadarHeight - MiniMapScale * height;
@@ -441,7 +440,7 @@ BOOL RadarClass::Is_Zoomable() const
     int wratio = MaxRadarWidth / MapCellWidth;
     int hratio = MaxRadarHeight / MapCellHeight;
 
-    return Max(1, Min(wratio, hratio)) != 3;
+    return std::max(1, std::min(wratio, hratio)) != 3;
 }
 
 int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const

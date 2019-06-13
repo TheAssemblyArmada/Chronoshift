@@ -16,7 +16,6 @@
 #include "crc.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include "rotl.h"
 
 void CRCEngine::operator()(char datum)
 {
@@ -34,7 +33,7 @@ void CRCEngine::operator()(char datum)
 uint32_t CRCEngine::Result()
 {
     if (m_index > 0) {
-        return RotateLeft(m_crc, 1) + m_buffer.integer;
+        return __rotl32(m_crc, 1) + m_buffer.integer;
     }
 
     return m_crc;
@@ -57,7 +56,7 @@ int32_t CRCEngine::operator()(const void *data, unsigned int length)
         int blockcount = (remaining / 4) - 1;
         if (remaining / 4) {
             while (blockcount != -1) {
-                m_crc = *reinterpret_cast<const int32_t *>(getp) + RotateLeft(m_crc, 1);
+                m_crc = *reinterpret_cast<const int32_t *>(getp) + __rotl32(m_crc, 1);
                 getp += 4;
                 remaining -= 4;
                 --blockcount;

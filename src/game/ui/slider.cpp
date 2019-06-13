@@ -20,6 +20,7 @@
 #include "mixfile.h"
 #include "mouse.h"
 #include "shapebtn.h"
+#include <algorithm>
 
 SliderClass::SliderClass(unsigned id, int x, int y, int w, int h, BOOL no_buttons) :
     GaugeClass(id, x, y, w, h),
@@ -162,7 +163,7 @@ BOOL SliderClass::Set_Maximum(int max)
 
 BOOL SliderClass::Set_Value(int value)
 {
-    if (GaugeClass::Set_Value(Min(value, Maximum - BumpSize))) {
+    if (GaugeClass::Set_Value(std::min(value, Maximum - BumpSize))) {
         Recalc_Thumb();
 
         return true;
@@ -182,7 +183,7 @@ void SliderClass::Draw_Thumb()
 
 void SliderClass::Set_Thumb_Size(int size)
 {
-    BumpSize = Clamp(size, 1, Maximum);
+    BumpSize = std::clamp(size, 1, Maximum);
     Recalc_Thumb();
 }
 
@@ -207,6 +208,6 @@ BOOL SliderClass::Step(BOOL step_up)
 void SliderClass::Recalc_Thumb()
 {
     int length = IsHorizontal ? Width : Height;
-    ThumbnailPixels = Max(4, length * fixed(BumpSize, Maximum));
-    ThumbnailSize = Min(length - ThumbnailPixels, length * fixed(Value, Maximum));
+    ThumbnailPixels = std::max(4, length * fixed(BumpSize, Maximum));
+    ThumbnailSize = std::min(length - ThumbnailPixels, length * fixed(Value, Maximum));
 }

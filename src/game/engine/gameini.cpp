@@ -15,8 +15,8 @@
  */
 #include "gameini.h"
 #include "crc.h"
-#include "minmax.h"
 #include "shapipe.h"
+#include <algorithm>
 
 GameINIClass::GameINIClass() : DigestValid(false) {}
 
@@ -42,9 +42,9 @@ BOOL GameINIClass::Put_Lepton(const char *section, const char *entry, const lept
 
 const MPHType GameINIClass::Get_MPHType(const char *section, const char *entry, const MPHType defvalue) const
 {
-    int value = Clamp(Get_Int(section, entry, (100 * defvalue) / 256), 0, 100);
+    int value = std::clamp(Get_Int(section, entry, (100 * defvalue) / 256), 0, 100);
 
-    return (MPHType)Min((value * 256) / 100, 255);
+    return (MPHType)std::min((value * 256) / 100, 255);
 }
 
 BOOL GameINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)

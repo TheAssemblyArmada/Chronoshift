@@ -16,9 +16,9 @@
 #include "mouseshape.h"
 #include "mouse.h"
 #include "gbuffer.h"
-#include "minmax.h"
 #include "lcw.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 
@@ -95,8 +95,8 @@ void __cdecl Mouse_Shadow_Buffer(WWMouseClass &mouse, GraphicViewPortClass &view
         ystart = 0;
     }
 
-    xend = Min(xend, viewport.Get_Width() - 1);
-    yend = Min(yend, viewport.Get_Height() - 1);
+    xend = std::min(xend, viewport.Get_Width() - 1);
+    yend = std::min(yend, viewport.Get_Height() - 1);
 
     int blit_height = yend - ystart + 1;
     int blit_width = xend - xstart + 1;
@@ -151,8 +151,8 @@ void __cdecl Mouse_Draw(WWMouseClass &mouse, GraphicViewPortClass &viewport, int
         ystart = 0;
     }
 
-    xend = Min(xend, viewport.Get_Width() - 1);
-    yend = Min(yend, viewport.Get_Height() - 1);
+    xend = std::min(xend, viewport.Get_Width() - 1);
+    yend = std::min(yend, viewport.Get_Height() - 1);
 
     int pitch = viewport.Get_Pitch() + viewport.Get_XAdd() + viewport.Get_Width();
     uint8_t *dst = xstart + pitch * ystart + static_cast<uint8_t*>(viewport.Get_Offset());

@@ -33,6 +33,7 @@
 #include "tileset.h"
 #include "tracker.h"
 #include "house.h"
+#include <algorithm>
 
 const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
     0x00800080,     // abs center of cell                       //INFANTRY_SPOT_CENTER
@@ -1259,7 +1260,7 @@ int CellClass::Ore_Adjust(BOOL randomize)
         DEBUG_ASSERT(adjustment < ARRAY_SIZE(_adjgem));
 
         if (is_gems) {
-            OverlayFrame = Max(2, _adjgem[adjustment]);
+            OverlayFrame = std::max(2, _adjgem[adjustment]);
         } else {
             OverlayFrame = _adj[adjustment];
         }
