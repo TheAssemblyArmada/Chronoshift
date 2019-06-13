@@ -32,10 +32,10 @@ class GameINIClass;
 class TechnoTypeClass : public ObjectTypeClass
 {
 public:
-    TechnoTypeClass(RTTIType type, int id, int uiname, const char *name, RemapType remap, int def_fire_coord,
-        int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL crushable,
+    TechnoTypeClass(RTTIType type, int id, int ui_name, const char *name, RemapType remap, int fire_offset_z,
+        int pri_fire_off_x, int pri_fire_off_y, int sec_fire_off_x, int sec_fire_off_y, BOOL nominal,
         BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL theater,
-        BOOL turret, BOOL remapable, BOOL logical, int facings, SpeedType speed);
+        BOOL turret, BOOL remapable, BOOL unk1, int rot_count, SpeedType speed);
 
     TechnoTypeClass(const TechnoTypeClass &that);
     TechnoTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
@@ -141,11 +141,11 @@ protected:
     int ROT; // Rate Of Turn for body (if present) and turret (if present) (def = 0)
     WeaponTypeClass *Primary; // Primary weapon equipped with (def = none)
     WeaponTypeClass *Secondary; // Secondary weapon equipped with (def = none)
-    uint32_t DefualtFireCoord;
-    uint32_t PrimaryFireCoordA;
-    uint32_t PrimaryFireCoordB;
-    uint32_t SecondaryFireCoordA;
-    uint32_t SecondaryFireCoordB;
+    uint32_t FireOffsetZ;
+    uint32_t PrimaryFireOffsetX;
+    uint32_t PrimaryFireOffsetY;
+    uint32_t SecondaryFireOffsetX;
+    uint32_t SecondaryFireOffsetY;
     int Points;
 
 #ifndef CHRONOSHIFT_STANDALONE

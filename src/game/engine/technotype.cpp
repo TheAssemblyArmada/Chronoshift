@@ -39,12 +39,12 @@ void *TechnoTypeClass::MissingCameoShape = nullptr;
 /**
  * 0x00569564
  */
-TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *name, RemapType altremap, int def_fire_coord,
-    int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL nominal,
+TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int ui_name, const char *name, RemapType altremap, int fire_offset_z,
+    int pri_fire_off_x, int pri_fire_off_y, int sec_fire_off_x, int sec_fire_off_y, BOOL nominal,
     BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL theater, BOOL turret,
-    BOOL remapable, BOOL logical, int rot_count, SpeedType speed) :
+    BOOL remapable, BOOL unk1, int rot_count, SpeedType speed) :
     ObjectTypeClass(
-        type, id, nominal, radar_invisible, selectable, legal_target, insignificant, is_immune, logical, uiname, name),
+        type, id, true, radar_invisible, selectable, legal_target, insignificant, is_immune, unk1, ui_name, name),
     Remap(altremap),
     DoubleOwned(false),
     IsInvisible(false),
@@ -60,10 +60,11 @@ TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *
     IsSelfHealing(false),
     Explodes(false),
     MovementZone(MZONE_NORMAL),
+    GuardRange(0),
     Passengers(0),
     Sight(0),
     Cost(0),
-    TechLevel(0),
+    TechLevel(-1),
     Prerequisite(0),
     ThreatPosed(0),
     ThreatPoints(0),
@@ -76,11 +77,11 @@ TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int uiname, const char *
     ROT(0),
     Primary(nullptr),
     Secondary(nullptr),
-    DefualtFireCoord(def_fire_coord),
-    PrimaryFireCoordA(pri_fire_coord_a),
-    PrimaryFireCoordB(pri_fire_coord_b),
-    SecondaryFireCoordA(sec_fire_coord_a),
-    SecondaryFireCoordB(sec_fire_coord_b),
+    FireOffsetZ(fire_offset_z),
+    PrimaryFireOffsetX(pri_fire_off_x),
+    PrimaryFireOffsetY(pri_fire_off_y),
+    SecondaryFireOffsetX(sec_fire_off_x),
+    SecondaryFireOffsetY(sec_fire_off_y),
     Points(0)
 {
 }
@@ -118,11 +119,11 @@ TechnoTypeClass::TechnoTypeClass(const TechnoTypeClass &that) :
     ROT(that.ROT),
     Primary(that.Primary),
     Secondary(that.Secondary),
-    DefualtFireCoord(that.DefualtFireCoord),
-    PrimaryFireCoordA(that.PrimaryFireCoordA),
-    PrimaryFireCoordB(that.PrimaryFireCoordB),
-    SecondaryFireCoordA(that.SecondaryFireCoordA),
-    SecondaryFireCoordB(that.SecondaryFireCoordB),
+    FireOffsetZ(that.FireOffsetZ),
+    PrimaryFireOffsetX(that.PrimaryFireOffsetX),
+    PrimaryFireOffsetY(that.PrimaryFireOffsetY),
+    SecondaryFireOffsetX(that.SecondaryFireOffsetX),
+    SecondaryFireOffsetY(that.SecondaryFireOffsetY),
     Points(that.Points)
 {
 }
@@ -162,11 +163,11 @@ TechnoTypeClass &TechnoTypeClass::operator=(TechnoTypeClass &that)
         ROT = that.ROT;
         Primary = that.Primary;
         Secondary = that.Secondary;
-        DefualtFireCoord = that.DefualtFireCoord;
-        PrimaryFireCoordA = that.PrimaryFireCoordA;
-        PrimaryFireCoordB = that.PrimaryFireCoordB;
-        SecondaryFireCoordA = that.SecondaryFireCoordA;
-        SecondaryFireCoordB = that.SecondaryFireCoordB;
+        FireOffsetZ = that.FireOffsetZ;
+        PrimaryFireOffsetX = that.PrimaryFireOffsetX;
+        PrimaryFireOffsetY = that.PrimaryFireOffsetY;
+        SecondaryFireOffsetX = that.SecondaryFireOffsetX;
+        SecondaryFireOffsetY = that.SecondaryFireOffsetY;
         Points = that.Points;
     }
 
