@@ -61,7 +61,7 @@ ActionType Action_From_Name(const char *name)
     }
 
     if (name != nullptr) {
-        // Try to find a action with this name in the list.
+        // Try to find a type with this name in the list.
         for (ActionType action = ACTION_NONE; action < ACTION_COUNT; ++action) {
             if (strcasecmp(name, ActionName[action]) == 0) {
                 return action;
@@ -69,8 +69,7 @@ ActionType Action_From_Name(const char *name)
         }
     }
 
-    // The input name was NULL, or we failed to find it within the list.
-    // Return ACTION_NONE to represent this.
+    // The input name was NULL, or we failed to find it in the list, return NONE to represent this.
     return ACTION_NONE;
 }
 

@@ -28,13 +28,13 @@ enum AircraftType
     AIRCRAFT_NONE = -1,
     AIRCRAFT_FIRST = 0,
     AIRCRAFT_TRANSPORT = 0,
-    AIRCRAFT_BADGER = 1,
-    AIRCRAFT_U2 = 2,
-    AIRCRAFT_MIG = 3,
-    AIRCRAFT_YAK = 4,
-    AIRCRAFT_HELI = 5,
-    AIRCRAFT_HIND = 6,
-    AIRCRAFT_COUNT = 7
+    AIRCRAFT_BADGER,
+    AIRCRAFT_U2,
+    AIRCRAFT_MIG,
+    AIRCRAFT_YAK,
+    AIRCRAFT_HELI,
+    AIRCRAFT_HIND,
+    AIRCRAFT_COUNT
 };
 
 DEFINE_ENUMERATION_OPERATORS(AircraftType);
@@ -42,9 +42,9 @@ DEFINE_ENUMERATION_OPERATORS(AircraftType);
 class AircraftTypeClass : public TechnoTypeClass
 {
 public:
-    AircraftTypeClass(AircraftType type, int uiname, const char *name, int a4, int a5, int a6, BOOL airplane, BOOL rotors,
-        BOOL transport, BOOL custom_rotors, BOOL a11, BOOL a12, BOOL a13, BOOL a14, BOOL a15, BuildingType dock,
-        int landing_dist, int a18, MissionType mission);
+    AircraftTypeClass(AircraftType type, int ui_name, const char *name, int fire_offset_z, int pri_fire_off_x, int pri_fire_off_y, BOOL airplane, BOOL rotors,
+        BOOL transport, BOOL custom_rotors, BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL immune, BuildingType dock,
+        int landing_dist, int rot_count, MissionType mission);
     AircraftTypeClass(const AircraftTypeClass &that);
     AircraftTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
     ~AircraftTypeClass() {}
@@ -72,6 +72,9 @@ public:
     static AircraftTypeClass &As_Reference(AircraftType type);
     static AircraftType From_Name(const char *name);
     static const char *Name_From(AircraftType type) { return As_Reference(type).m_Name; }
+
+    static void One_Time();
+    static void Init_Heap();
     
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -86,19 +89,67 @@ private:
     bool m_Transport;
 #endif
     AircraftType m_Type;
-    MissionType m_UnkMission; // Possibly unused?
-    BuildingType m_DockingBay; // Buiding type this docks at, planes explode if player doesn't have one.
+    MissionType m_UnkMission; // Possibly unused and leftover from Dune II? Could be initial or ai mission.
+    BuildingType m_DockingBay; // The buiding type this aircraft docks at. Planes will explode if house doesn't have one.
     int m_LandingDistance;
 
 public:
 #ifndef CHRONOSHIFT_STANDALONE
-    static void *&LeftRotorData;
-    static void *&RightRotorData;
+    static void *&g_LeftRotorData;
+    static void *&g_RightRotorData;
 #else
-    static void *LeftRotorData;
-    static void *RightRotorData;
+    static void *g_LeftRotorData;
+    static void *g_RightRotorData;
+#endif
+
+#ifndef CHRONOSHIFT_STANDALONE
+public:
+    static void Hook_Me();
+
+private:
+    AircraftTypeClass *Hook_Ctor(AircraftType type, int ui_name, const char *name, int def_fire_coord, int pri_fire_coord_a,
+        int pri_fire_coord_b, BOOL airplane, BOOL rotors, BOOL transport, BOOL custom_rotors, BOOL radar_invisible,
+        BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL immune, BuildingType dock, int landing_dist,
+        int rot_count, MissionType mission)
+    {
+        return new (this) AircraftTypeClass(type,
+            ui_name, name, def_fire_coord, pri_fire_coord_a, pri_fire_coord_b, airplane, rotors, transport, custom_rotors,
+            radar_invisible, selectable, legal_target, insignificant, immune, dock, landing_dist, rot_count, mission);
+    }
+    AircraftTypeClass *Hook_Ctor_NoInit(const NoInitClass &noinit) { return new (this) AircraftTypeClass(noinit); }
+    AircraftTypeClass *Hook_Ctor_Copy(const AircraftTypeClass &that) { return new (this) AircraftTypeClass(that); }
+    void Hook_Dtor() { AircraftTypeClass::~AircraftTypeClass(); }
+    int Hook_Max_Pips() { return AircraftTypeClass::Max_Pips(); }
+    void Hook_Dimensions(int &w, int &h) { return AircraftTypeClass::Dimensions(w, h); }
+    BOOL Hook_Create_And_Place(cell_t cellnum, HousesType house) { return AircraftTypeClass::Create_And_Place(cellnum, house); }
+    ObjectClass *Hook_Create_One_Of(HouseClass *house) { return AircraftTypeClass::Create_One_Of(house); }
+    const int16_t *Hook_Occupy_List(BOOL recalc) { return AircraftTypeClass::Occupy_List(recalc); }
+    const int16_t *Hook_Overlap_List() { return AircraftTypeClass::Overlap_List(); }
 #endif
 };
+
+#ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
+inline void AircraftTypeClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x00401210, *AircraftTypeClass::Hook_Ctor);
+    Hook_Function(0x00404E80, *AircraftTypeClass::Hook_Ctor_Copy);
+    Hook_Function(0x00405470, *AircraftTypeClass::Hook_Dtor);
+    Hook_Function(0x00404090, *AircraftTypeClass::Hook_Max_Pips);
+    Hook_Function(0x004040BC, *AircraftTypeClass::Hook_Dimensions);
+    Hook_Function(0x004040B0, *AircraftTypeClass::Hook_Create_And_Place);
+    //Hook_Function(0x00404024, *AircraftTypeClass::Hook_Create_One_Of); // TODO: Requires implementation.
+    Hook_Function(0x00404078, *AircraftTypeClass::Hook_Occupy_List);
+    Hook_Function(0x00404084, *AircraftTypeClass::Hook_Overlap_List);
+    Hook_Function(0x004040F0, *AircraftTypeClass::As_Reference);
+    Hook_Function(0x00403EF0, *AircraftTypeClass::From_Name);
+    Hook_Function(0x00403F40, *AircraftTypeClass::One_Time);
+    Hook_Function(0x00401350, *AircraftTypeClass::Init_Heap);
+#endif
+}
+#endif
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
