@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief Base class for most in game objects.
+ * @brief Base class for most in game type objects.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -15,29 +15,29 @@
  */
 #include "abstracttype.h"
 
-AbstractTypeClass::AbstractTypeClass(RTTIType type, int id, int uiname, const char *name) :
-    RTTI(type),
-    HeapID(id),
-    UIName(uiname)
+AbstractTypeClass::AbstractTypeClass(RTTIType type, int heap_id, int ui_name, const char *name) :
+    m_RTTI(type),
+    m_HeapID(heap_id),
+    m_UIName(ui_name)
 {
-    strlcpy(Name, name, sizeof(Name));
+    strlcpy(m_Name, name, sizeof(m_Name));
 }
 
-AbstractTypeClass::AbstractTypeClass(AbstractTypeClass const &that) :
-    RTTI(that.RTTI),
-    HeapID(that.HeapID),
-    UIName(that.UIName)
+AbstractTypeClass::AbstractTypeClass(const AbstractTypeClass &that) :
+    m_RTTI(that.m_RTTI),
+    m_HeapID(that.m_HeapID),
+    m_UIName(that.m_UIName)
 {
-    strlcpy(Name, that.Name, sizeof(Name));
+    strlcpy(m_Name, that.m_Name, sizeof(m_Name));
 }
 
 int AbstractTypeClass::Full_Name() const
 {
     for (int i = 0; i < 25; ++i) {
-        if (100 * (RTTI + 1) + HeapID == NameIDOverride[i]) {
+        if (100 * (m_RTTI + 1) + m_HeapID == NameIDOverride[i]) {
             return -(i + 1);
         }
     }
 
-    return UIName;
+    return m_UIName;
 }

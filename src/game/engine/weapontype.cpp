@@ -172,7 +172,7 @@ WeaponType WeaponTypeClass::From_Name(const char *name)
  */
 const char *WeaponTypeClass::Name_From(WeaponType weapon)
 {
-    return weapon != WEAPON_NONE && weapon < WEAPON_COUNT ? As_Reference(weapon).Get_Name() : "<none>";
+    return weapon != WEAPON_NONE && weapon < WEAPON_COUNT ? As_Reference(weapon).Name : "<none>";
 }
 
 /**
@@ -204,22 +204,22 @@ WeaponTypeClass *WeaponTypeClass::As_Pointer(WeaponType weapon)
  */
 BOOL WeaponTypeClass::Read_INI(GameINIClass &ini)
 {
-    if (ini.Find_Section(Get_Name()) != nullptr) {
-        Supress = ini.Get_Bool(Get_Name(), "Supress", Supress);
-        Burst = ini.Get_Int(Get_Name(), "Burst", Burst);
-        Damage = ini.Get_Int(Get_Name(), "Damage", Damage);
-        Speed = ini.Get_MPHType(Get_Name(), "Speed", Speed);
-        ROF = ini.Get_Int(Get_Name(), "ROF", ROF);
-        Range = ini.Get_Lepton(Get_Name(), "Range", Range);
-        Report = ini.Get_VocType(Get_Name(), "Report", Report);
-        Anim = ini.Get_AnimType(Get_Name(), "Anim", Anim);
-        Camera = ini.Get_Bool(Get_Name(), "Camera", Camera);
-        Charges = ini.Get_Bool(Get_Name(), "Charges", Charges);
-        TurboBoost = ini.Get_Bool(Get_Name(), "TurboBoost", TurboBoost);
+    if (ini.Find_Section(Name) != nullptr) {
+        Supress = ini.Get_Bool(Name, "Supress", Supress);
+        Burst = ini.Get_Int(Name, "Burst", Burst);
+        Damage = ini.Get_Int(Name, "Damage", Damage);
+        Speed = ini.Get_MPHType(Name, "Speed", Speed);
+        ROF = ini.Get_Int(Name, "ROF", ROF);
+        Range = ini.Get_Lepton(Name, "Range", Range);
+        Report = ini.Get_VocType(Name, "Report", Report);
+        Anim = ini.Get_AnimType(Name, "Anim", Anim);
+        Camera = ini.Get_Bool(Name, "Camera", Camera);
+        Charges = ini.Get_Bool(Name, "Charges", Charges);
+        TurboBoost = ini.Get_Bool(Name, "TurboBoost", TurboBoost);
         Warhead = WarheadTypeClass::As_Pointer(ini.Get_WarheadType(
-            Get_Name(), "Warhead", (Warhead != nullptr ? WarheadType(Warhead->What_Type()) : WARHEAD_NONE)));
+            Name, "Warhead", (Warhead != nullptr ? WarheadType(Warhead->What_Type()) : WARHEAD_NONE)));
         Projectile = BulletTypeClass::As_Pointer(ini.Get_BulletType(
-            Get_Name(), "Projectile", (Projectile != nullptr ? BulletType(Projectile->What_Type()) : BULLET_NONE)));
+            Name, "Projectile", (Projectile != nullptr ? BulletType(Projectile->What_Type()) : BULLET_NONE)));
 
         return true;
     }

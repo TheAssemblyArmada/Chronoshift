@@ -230,7 +230,7 @@ public:
     static BuildingTypeClass &As_Reference(BuildingType type);
     static BuildingType From_Name(const char *name);
     static void Init(TheaterType theater);
-    static const char *Name_From(BuildingType type) { return As_Reference(type).Name; }
+    static const char *Name_From(BuildingType type) { return As_Reference(type).m_Name; }
     
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

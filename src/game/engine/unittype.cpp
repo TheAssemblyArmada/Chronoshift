@@ -189,14 +189,14 @@ BOOL UnitTypeClass::Read_INI(GameINIClass &ini)
         // TODO Allow setting additional unit parameters, will need some conditional code for units to get correct
         // default with original rules.ini.
 
-        // m_CrateGoodie = ini.Get_Bool(Get_Name(), "CrateGoodie", m_CrateGoodie);
-        // m_Crusher = ini.Get_Bool(Get_Name(), "Crusher", m_Crusher);
-        // m_Harvester = ini.Get_Bool(Get_Name(), "Harvester", m_Harvester);
-        // m_TurretSpins = ini.Get_Bool(Get_Name(), "TurretSpins", m_TurretSpins);
-        // m_IsRadarJammer = ini.Get_Bool(Get_Name(), "IsRadarJammer", m_IsRadarJammer);
-        // m_IsMobileGapGen = ini.Get_Bool(Get_Name(), "IsMobileGapGen", m_IsMobileGapGen);
-        m_NoMovingFire = ini.Get_Bool(Get_Name(), "NoMovingFire", m_NoMovingFire);
-        Speed = ini.Get_Bool(Get_Name(), "Tracked", Speed == SPEED_TRACK) ? SPEED_TRACK : SPEED_FOOT;
+        // m_CrateGoodie = ini.Get_Bool(m_Name, "CrateGoodie", m_CrateGoodie);
+        // m_Crusher = ini.Get_Bool(m_Name, "Crusher", m_Crusher);
+        // m_Harvester = ini.Get_Bool(m_Name, "Harvester", m_Harvester);
+        // m_TurretSpins = ini.Get_Bool(m_Name, "TurretSpins", m_TurretSpins);
+        // m_IsRadarJammer = ini.Get_Bool(m_Name, "IsRadarJammer", m_IsRadarJammer);
+        // m_IsMobileGapGen = ini.Get_Bool(m_Name, "IsMobileGapGen", m_IsMobileGapGen);
+        m_NoMovingFire = ini.Get_Bool(m_Name, "NoMovingFire", m_NoMovingFire);
+        Speed = ini.Get_Bool(m_Name, "Tracked", Speed == SPEED_TRACK) ? SPEED_TRACK : SPEED_FOOT;
 
         if (MovementZone == MZONE_NORMAL && m_Crusher) {
             MovementZone = MZONE_CRUSHER;
@@ -231,7 +231,7 @@ UnitType UnitTypeClass::From_Name(const char *name)
 {
     if (name != nullptr) {
         for (UnitType unit = UNIT_FIRST; unit < UNIT_COUNT; ++unit) {
-            if (strcasecmp(name, As_Reference(unit).Name) == 0) {
+            if (strcasecmp(name, As_Reference(unit).m_Name) == 0) {
                 return unit;
             }
         }

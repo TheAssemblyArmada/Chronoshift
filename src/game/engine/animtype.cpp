@@ -242,7 +242,7 @@ void AnimTypeClass::One_Time()
 
     for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
         AnimTypeClass *aptr = As_Pointer(type);
-        const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->Get_Name();
+        const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->m_Name;
         snprintf(filename, sizeof(filename), "%s.shp", name);
         aptr->ImageData = GameFileClass::Retrieve(filename);
 
@@ -264,7 +264,7 @@ void AnimTypeClass::Init(TheaterType theater)
     if (theater != g_lastTheater) {
         for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
             AnimTypeClass *atptr = As_Pointer(type);
-            const char *name = atptr->ImageName[0] != '\0' ? atptr->ImageName : atptr->Get_Name();
+            const char *name = atptr->ImageName[0] != '\0' ? atptr->ImageName : atptr->m_Name;
             // TODO: Change the theater info to lower case and standardise on that?
             const char *ext = atptr->m_Theater ? g_theaters[theater].ext : "shp";
             snprintf(filename, sizeof(filename), "%s.%s", name, ext);
@@ -301,7 +301,7 @@ AnimType AnimTypeClass::From_Name(const char *name)
  */
 const char *AnimTypeClass::Name_From(AnimType type)
 {
-    return type != ANIM_NONE && type < ANIM_COUNT ? As_Reference(type).Get_Name() : "<none>";
+    return type != ANIM_NONE && type < ANIM_COUNT ? As_Reference(type).m_Name : "<none>";
 }
 
 /**

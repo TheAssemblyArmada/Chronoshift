@@ -244,7 +244,7 @@ void TerrainTypeClass::Init(TheaterType theater)
                 snprintf(filename,
                     sizeof(filename),
                     "%s.%s",
-                    /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.Get_Name(),
+                    /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.m_Name,
                     /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_theaters[theater].ext);
                 terrain.ImageData = GameFileClass::Retrieve(filename);
                 g_isTheaterShape = true;
@@ -289,7 +289,7 @@ TerrainType TerrainTypeClass::From_Name(const char *name)
 const char *TerrainTypeClass::Name_From(TerrainType terrain)
 {
     if (terrain != TERRAIN_NONE && terrain < TERRAIN_COUNT) {
-        return As_Reference(terrain).Get_Name();
+        return As_Reference(terrain).m_Name;
     }
 
     return "<none>";
