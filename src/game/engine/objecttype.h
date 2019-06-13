@@ -34,7 +34,7 @@ class ObjectTypeClass : public AbstractTypeClass
 {
 public:
     ObjectTypeClass(RTTIType type, int id, BOOL animates, BOOL radar_invisible, BOOL selectable, BOOL legal_target,
-        BOOL insignificant, BOOL is_immune, BOOL logical, int uiname, const char *name);
+        BOOL insignificant, BOOL is_immune, BOOL logical, int ui_name, const char *name);
     ObjectTypeClass(const ObjectTypeClass &that);
     ObjectTypeClass(const NoInitClass &noinit) : AbstractTypeClass(noinit) {}
     ~ObjectTypeClass();
@@ -83,17 +83,17 @@ protected:
     BOOL Bit64 : 1; // & 64
     BOOL Bit128 : 1; // & 128
 #else
-    bool Crushable; // Can it be crushed by a heavy tracked vehicle (def = false)?
-    bool RadarInvisible; // Is it invisible on radar maps (def = false)? unused in RA?
-    bool Selectable; // Can this object be selected by the player (def = true)?
-    bool LegalTarget; // Is this allowed to be a combat target (def = true)?
-    bool Insignificant; // Will this object not be announced when destroyed (def = false)?
-    bool Immune; // Is this object immune to damage (def = false)?
-    bool Bit64; // TODO: Related to logical or animate?
-    bool Bit128; // TODO: Related to logical or animate?
+    bool Crushable; // Can it be crushed by a heavy tracked vehicle?
+    bool RadarInvisible; // Is it invisible on radar maps?
+    bool Selectable; // Can this object be selected by the player?
+    bool LegalTarget; // Is this allowed to be a combat target?
+    bool Insignificant; // Will this object not be announced when destroyed?
+    bool Immune; // Is this object immune to damage?
+    bool Bit64; // TODO: Logical or HasLogic? If true, object gets added to and removed from the logic layer.
+    bool Bit128; // TODO: If true, object can be placed down and picked up from the tactical map.
 #endif
 
-    ArmorType Armor; // The armor type of this object, see ArmorType (def = ARMOR_NONE).
+    ArmorType Armor; // The armor type of this object, see ArmorType enum.
     int16_t Strength;
     void *ImageData;
     mutable TRect<int> *FrameDimensions; // Mutable as only lazy caches information, not changeable state.
