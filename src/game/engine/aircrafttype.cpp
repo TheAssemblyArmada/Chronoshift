@@ -15,26 +15,28 @@
  */
 #include "aircrafttype.h"
 #include "aircraftdata.h"
+#include "gamefile.h"
+#include "aircraft.h"
 #include "lists.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<AircraftTypeClass> &g_AircraftTypes = Make_Global<TFixedIHeapClass<AircraftTypeClass> >(0x0065DDBC);
-void *&AircraftTypeClass::LeftRotorData = Make_Global<void *>(0x00623010);
-void *&AircraftTypeClass::RightRotorData = Make_Global<void *>(0x00623014);
+void *&AircraftTypeClass::g_LeftRotorData = Make_Global<void *>(0x00623010);
+void *&AircraftTypeClass::g_RightRotorData = Make_Global<void *>(0x00623014);
 #else
 TFixedIHeapClass<AircraftTypeClass> g_AircraftTypes;
-void *AircraftTypeClass::LeftRotorData = nullptr;
-void *AircraftTypeClass::RightRotorData = nullptr;
+void *AircraftTypeClass::g_LeftRotorData = nullptr;
+void *AircraftTypeClass::g_RightRotorData = nullptr;
 #endif
 
 /**
  * 0x00401210
  */
-AircraftTypeClass::AircraftTypeClass(AircraftType type, int uiname, const char *name, int def_fire_coord, int a5, int a6,
-    BOOL airplane, BOOL rotors, BOOL transport, BOOL custom_rotors, BOOL a11, BOOL a12, BOOL a13, BOOL a14, BOOL a15,
-    BuildingType dock, int landing_dist, int a18, MissionType mission) :
-    TechnoTypeClass(RTTI_AIRCRAFTTYPE, type, uiname, name, REMAP_1, def_fire_coord, a5, a6, a5, a6, false, a11, a12, a13, a14, a15,
-        false, false, true, true, a18, SPEED_WINGED),
+AircraftTypeClass::AircraftTypeClass(AircraftType type, int ui_name, const char *name, int fire_offset_z, int pri_fire_off_x, int pri_fire_off_y,
+    BOOL airplane, BOOL rotors, BOOL transport, BOOL custom_rotors, BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL immune,
+    BuildingType dock, int landing_dist, int rot_count, MissionType mission) :
+    TechnoTypeClass(RTTI_AIRCRAFTTYPE, type, ui_name, name, REMAP_1, fire_offset_z, pri_fire_off_x, pri_fire_off_y, pri_fire_off_x, pri_fire_off_y,
+        false, radar_invisible, selectable, legal_target, insignificant, immune, false, false, true, true, rot_count, SPEED_WINGED),
     m_Airplane(airplane),
     m_CustomRotor(custom_rotors),
     m_Rotors(rotors),
@@ -44,13 +46,12 @@ AircraftTypeClass::AircraftTypeClass(AircraftType type, int uiname, const char *
     m_DockingBay(dock),
     m_LandingDistance(landing_dist)
 {
-
 }
 
 /**
  * 0x00404E80
  */
-AircraftTypeClass::AircraftTypeClass(AircraftTypeClass const &that) :
+AircraftTypeClass::AircraftTypeClass(const AircraftTypeClass &that) :
     TechnoTypeClass(that),
     m_Airplane(that.m_Airplane),
     m_CustomRotor(that.m_CustomRotor),
@@ -124,7 +125,16 @@ void AircraftTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL AircraftTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-    // TODO, could this be why you can't pre place aircraft on a map correctly.
+#if 0
+    AircraftClass *aptr = new AircraftClass(m_Type, house);
+    DEBUG_ASSERT(aptr != nullptr);
+    if (aptr != nullptr) {
+        return aptr->Unlimbo(Cell_To_Coord(cellnum));
+    }
+
+    return false;
+#endif
+    // TODO: This function returns false, this could be why you can't pre place aircraft on a map correctly...
     return false;
 }
 
@@ -135,6 +145,7 @@ BOOL AircraftTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *AircraftTypeClass::Create_One_Of(HouseClass *house) const
 {
+    //TODO: Requires AircaftClass to be implemented
 #ifndef CHRONOSHIFT_STANDALONE
     ObjectClass *(*func)(const AircraftTypeClass *, HouseClass *) =
         reinterpret_cast<ObjectClass *(*)(const AircraftTypeClass *, HouseClass *)>(0x00404024);
@@ -201,3 +212,49 @@ AircraftType AircraftTypeClass::From_Name(const char *name)
 
     return AIRCRAFT_NONE;
 }
+
+/**
+* Initialises data that requires a one time load.
+*
+* 0x00403F40
+*/
+void AircraftTypeClass::One_Time()
+{
+    char buffer[256];
+
+    for (AircraftType i = AIRCRAFT_FIRST; i < AIRCRAFT_COUNT; ++i) {
+        AircraftTypeClass &type = As_Reference(i);
+        const char *name = type.ImageName[0] != '\0' ? type.ImageName : type.m_Name;
+
+        snprintf(buffer, sizeof(buffer), "%.4sicon.shp", name);
+        type.CameoData = GameFileClass::Retrieve(buffer);
+        snprintf(buffer, sizeof(buffer), "%s.shp", name);
+        type.ImageData = GameFileClass::Retrieve(buffer);
+    }
+
+    if (g_LeftRotorData == nullptr) {
+        g_LeftRotorData = GameFileClass::Retrieve("lrotor.shp");
+    }
+
+    if (g_RightRotorData == nullptr) {
+        g_RightRotorData = GameFileClass::Retrieve("rrotor.shp");
+    }
+}
+
+/**
+* @brief Initialises the memory heap for AircraftTypeClass objects.
+* @warning Order of initialisation is important so enum matches position in the heap.
+*
+* 0x00401350
+*/
+void AircraftTypeClass::Init_Heap()
+{
+    new AircraftTypeClass(AircraftTransportHeli);
+    new AircraftTypeClass(AircraftBadgerPlane);
+    new AircraftTypeClass(AircraftU2Plane);
+    new AircraftTypeClass(AircraftMigPlane);
+    new AircraftTypeClass(AircraftYakPlane);
+    new AircraftTypeClass(AircraftAttackHeli);
+    new AircraftTypeClass(AircraftHindHeli);
+}
+
