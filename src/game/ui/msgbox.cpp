@@ -19,12 +19,12 @@
 #include "gbuffer.h"
 #include "globals.h"
 #include "keyboard.h"
-#include "minmax.h"
 #include "mouse.h"
 #include "stringex.h"
 #include "surfacemonitor.h"
 #include "textbtn.h"
 #include "textprint.h"
+#include <algorithm>
 
 /**
  * Creates message box windows and retrieves all strings from the string table.
@@ -87,11 +87,11 @@ int MessageBoxClass::Process(
 
     if (button_1_text != nullptr) {
         b1_ypos = g_fontYSpacing + g_fontHeight + 4;
-        b_width = Max(60, String_Pixel_Width(button_1_text) + 16);
+        b_width = std::max(60, String_Pixel_Width(button_1_text) + 16);
 
         if (button_2_text != nullptr) {
             button_count = 2;
-            b_width = Max(b_width, String_Pixel_Width(button_2_text) + 16);
+            b_width = std::max(b_width, String_Pixel_Width(button_2_text) + 16);
 
             if (button_3_text != nullptr) {
                 button_count = 3;
@@ -109,7 +109,7 @@ int MessageBoxClass::Process(
     int formatted_height;
     int format_result = Format_Window_String(buffer, sizeof(buffer), formatted_width, formatted_height);
     TextPrintType style = TPF_6PT_GRAD | TPF_NOSHADOW;
-    formatted_width = Max(formatted_width, 180) + 80;
+    formatted_width = std::max(formatted_width, 180) + 80;
     formatted_height += button_count == 0 ? 80 : 120;
     int xpos = (g_seenBuff.Get_Width() - formatted_width) / 2;
     int ypos = (g_seenBuff.Get_Height() - formatted_height) / 2;

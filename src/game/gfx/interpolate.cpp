@@ -19,9 +19,8 @@
 #include "gbuffer.h"
 #include "mouse.h"
 #include "palette.h"
-#include "rotr.h"
-#include "swap.h"
 #include <malloc.h>
+#include <algorithm>
 
 // PaletteClass *g_interpolationPalette = &PaletteClass::CurrentPalette;
 #ifndef CHRONOSHIFT_STANDALONE
@@ -376,7 +375,7 @@ void __cdecl Interpolate_Line_Interpolate(void *src, void *dst, int src_height, 
     int pitch = dst_pitch / 2;
     Interpolate_X_Axis(src, buff_offset1, src_width);
 
-    Swap(buff_offset1, buff_offset2);
+    std::swap(buff_offset1, buff_offset2);
 
     uint8_t *current_line = static_cast<uint8_t *>(src) + src_width;
     int lines = src_height - 1;
@@ -389,7 +388,7 @@ void __cdecl Interpolate_Line_Interpolate(void *src, void *dst, int src_height, 
         memcpy(dptr, g_interpolationBuffer, 2 * src_width);
         current_line += src_width;
         dptr += pitch;
-        Swap(buff_offset1, buff_offset2);
+        std::swap(buff_offset1, buff_offset2);
     }
 
     memcpy(dptr, buff_offset2, 2 * src_width);

@@ -16,7 +16,6 @@
 #include "land.h"
 #include "gameini.h"
 #include "gamedebug.h"
-#include "minmax.h"
 
 const char *LandName[LAND_COUNT] = { "Clear", "Road", "Water", "Rock", "Wall", "Ore", "Beach", "Rough", "River" };
 

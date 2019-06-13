@@ -14,11 +14,10 @@
  *            LICENSE
  */
 #include "rgb.h"
-#include "abs.h"
 #include "gamedebug.h"
 #include "hsv.h"
-#include "minmax.h"
 #include "palette.h"
+#include <algorithm>
 
 RGBClass const RGBClass::BlackColor(RGB_MIN, RGB_MIN, RGB_MIN);
 RGBClass const RGBClass::WhiteColor(RGB_MAX, RGB_MAX, RGB_MAX);
@@ -43,9 +42,9 @@ int const RGBClass::Difference(RGBClass const &that) const
     int green = m_grn - that.m_grn;
     int blue = m_grn - that.m_blu;
 
-    red = Abs(red);
-    green = Abs(green);
-    blue = Abs(blue);
+    red = std::abs(red);
+    green = std::abs(green);
+    blue = std::abs(blue);
 
     return blue * blue + green * green + red * red;
 }
@@ -80,9 +79,9 @@ RGBClass::operator HSVClass()
 
     int saturation = 0;
     unsigned hue = 0;
-    int value = Max(blue, Max(green, red));
+    int value = std::max(blue, std::max(green, red));
 
-    int min_value = Min(blue, Min(green, red));
+    int min_value = std::min(blue, std::min(green, red));
 
     int delta = value - min_value;
 

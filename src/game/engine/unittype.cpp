@@ -18,10 +18,10 @@
 #include "gamefile.h"
 #include "coord.h"
 #include "globals.h"
-#include "minmax.h"
 #include "mixfile.h"
 #include "shape.h"
 #include <cstdio>
+#include <algorithm>
 
 using std::snprintf;
 
@@ -186,8 +186,8 @@ int UnitTypeClass::Max_Pips() const
  */
 void UnitTypeClass::Dimensions(int &w, int &h) const
 {
-    w = Min(m_UnkInt - (m_UnkInt / 4), 48);
-    h = Min(m_UnkInt - (m_UnkInt / 4), 48);
+    w = std::min(m_UnkInt - (m_UnkInt / 4), 48);
+    h = std::min(m_UnkInt - (m_UnkInt / 4), 48);
 }
 
 /**
@@ -316,10 +316,10 @@ void UnitTypeClass::One_Time()
         int big_dimension = 0;
 
         if (unit.ImageData != nullptr) {
-            big_dimension = Max(Max(0, (int)Get_Build_Frame_Width(unit.ImageData)), (int)Get_Build_Frame_Height(unit.ImageData));
+            big_dimension = std::max(std::max(0, (int)Get_Build_Frame_Width(unit.ImageData)), (int)Get_Build_Frame_Height(unit.ImageData));
         }
 
-        unit.m_UnkInt = Max(big_dimension, 8);
+        unit.m_UnkInt = std::max(big_dimension, 8);
     }
 
     // TODO original initialises these here, move them somewhere more appropriate when possible.

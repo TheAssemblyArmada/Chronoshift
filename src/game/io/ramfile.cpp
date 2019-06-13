@@ -15,8 +15,8 @@
  */
 #include "ramfile.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memmove;
 
@@ -135,10 +135,10 @@ int RAMFileClass::Read(void *buffer, int size)
             opened = true;
         }
 
-        size = Min((int)(BufferSize - BufferOffset), size);
+        size = std::min((int)(BufferSize - BufferOffset), size);
         memmove(buffer, Buffer + BufferOffset, size);
         BufferOffset += size;
-        BufferAvailable = Max(BufferOffset, BufferAvailable);
+        BufferAvailable = std::max(BufferOffset, BufferAvailable);
 
         if (opened) {
             Close();
@@ -175,8 +175,8 @@ off_t RAMFileClass::Seek(off_t offset, int whence)
                 break;
         }
 
-        BufferOffset = Min(Max(BufferOffset, 0), buffer_end);
-        BufferAvailable = Max(BufferAvailable, BufferOffset);
+        BufferOffset = std::min(std::max(BufferOffset, 0), buffer_end);
+        BufferAvailable = std::max(BufferAvailable, BufferOffset);
 
         return BufferOffset;
     }
@@ -213,10 +213,10 @@ int RAMFileClass::Write(const void *buffer, int size)
         }
 
         // Adjust size if we are trying to write out of bounds
-        size = Min(size, BufferSize - BufferOffset);
+        size = std::min(size, BufferSize - BufferOffset);
         memmove(Buffer + BufferOffset, buffer, size);
         BufferOffset += size;
-        BufferAvailable = Max(BufferAvailable, BufferOffset);
+        BufferAvailable = std::max(BufferAvailable, BufferOffset);
 
         if (opened) {
             Close();

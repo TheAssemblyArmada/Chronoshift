@@ -14,11 +14,10 @@
  *            LICENSE
  */
 #include "textprint.h"
-#include "abs.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 using std::memset;
@@ -104,14 +103,14 @@ uint16_t __cdecl String_Pixel_Width(const char *string)
         while (*string != '\0') {
             if (*string == '\r') {
                 ++string;
-                linewidth = Max(linewidth, width);
+                linewidth = std::max(linewidth, width);
                 width = 0;
             } else {
                 width += Char_Pixel_Width(*string++);
             }
         }
 
-        return Max(linewidth, width);
+        return std::max(linewidth, width);
     }
 
     return 0;

@@ -15,12 +15,12 @@
  */
 #include "gamefile.h"
 #include "cd.h"
-#include "minmax.h"
 #include "mixfile.h"
 #include "startup.h"
 #include <new>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 #define FILE_HANDLE_COUNT 10
 
@@ -64,7 +64,7 @@ int GameFileClass::Read(void *buffer, int length)
     }
 
     if (Is_Cached()) {
-        length = Min((int)m_fileBuffer.Get_Size() - m_cachePosition, length);
+        length = std::min((int)m_fileBuffer.Get_Size() - m_cachePosition, length);
 
         if (length > 0) {
             memmove(buffer, (m_fileBuffer.Get_Buffer() + m_cachePosition), length);
@@ -103,7 +103,7 @@ off_t GameFileClass::Seek(off_t offset, int whence)
                 break;
         }
 
-        m_cachePosition = Min(Max(int(offset + m_cachePosition), 0), m_fileBuffer.Get_Size());
+        m_cachePosition = std::min(std::max(int(offset + m_cachePosition), 0), m_fileBuffer.Get_Size());
 
         return m_cachePosition;
     }

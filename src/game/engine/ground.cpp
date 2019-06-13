@@ -15,7 +15,7 @@
 #include "ground.h"
 #include "gameini.h"
 #include "gamedebug.h"
-#include "minmax.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 GroundClass *Ground = Make_Pointer<GroundClass>(0x00655DF0);
@@ -56,7 +56,7 @@ BOOL GroundClass::Read_INI(GameINIClass &ini, LandType const land)
 
     if (ini.Find_Section(landname) != nullptr) {
         for (SpeedType speed = SPEED_FIRST; speed < SPEED_COUNT; ++speed) {
-            Speeds[speed] = Min(fixed::_1_1, ini.Get_Fixed(landname, GroundTypes[speed], Speeds[SPEED_FOOT]));
+            Speeds[speed] = std::min(fixed::_1_1, ini.Get_Fixed(landname, GroundTypes[speed], Speeds[SPEED_FOOT]));
         }
 
         Buildable = ini.Get_Bool(landname, "Buildable", false);

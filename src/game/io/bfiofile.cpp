@@ -15,8 +15,8 @@
  */
 #include "bfiofile.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::strcmp;
 
@@ -111,7 +111,7 @@ BOOL BufferIOFileClass::Cache(int size, void *buffer)
             bool opened = false;
             int startpos = 0;
 
-            int sizetocache = Min(m_bufferedFileSize, m_bufferedSize);
+            int sizetocache = std::min(m_bufferedFileSize, m_bufferedSize);
 
             if (Is_Open()) {
                 startpos = Tell();
@@ -313,7 +313,7 @@ int BufferIOFileClass::Write(const void *buffer, int length)
 
         } else {
             while (length) {
-                movedsize = Min(length, (m_bufferedSize - m_bufferPosition));
+                movedsize = std::min(length, (m_bufferedSize - m_bufferPosition));
 
                 if (movedsize != m_bufferedSize && !m_bufferFull) {
                     if (m_bufferedFileSize >= m_bufferedSize) {
@@ -360,9 +360,9 @@ int BufferIOFileClass::Write(const void *buffer, int length)
             }
 
             m_bufferPosition += movedsize;
-            m_uncommitedEnd = Max(m_uncommitedEnd, m_bufferPosition);
+            m_uncommitedEnd = std::max(m_uncommitedEnd, m_bufferPosition);
             m_bufferedBiasStart = m_bufferPosition + m_bufferStart;
-            m_bufferedFileSize = Max(m_bufferedFileSize, m_bufferedBiasStart);
+            m_bufferedFileSize = std::max(m_bufferedFileSize, m_bufferedBiasStart);
 
             if (m_bufferPosition == m_bufferedSize) {
                 Commit();
@@ -421,7 +421,7 @@ int BufferIOFileClass::Read(void *buffer, int size)
 
         } else {
             while (size > 0) {
-                movedsize = Min(size, (m_bufferedSize - m_bufferPosition));
+                movedsize = std::min(size, (m_bufferedSize - m_bufferPosition));
 
                 if (!m_bufferFull) {
                     if (m_bufferedFileSize >= m_bufferedSize) {

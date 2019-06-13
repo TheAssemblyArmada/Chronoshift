@@ -14,11 +14,11 @@
  *            LICENSE
  */
 #include "fixed.h"
-#include "minmax.h"
 #include "stringex.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <cstdlib>
+#include <algorithm>
 
 using std::atoi;
 
@@ -134,7 +134,7 @@ int fixed::To_ASCII(char *string, int size) const
 
     strlcpy((char *)string, char_buff, size);
 
-    return Min((int)strlen(char_buff), (size - 1));
+    return std::min((int)strlen(char_buff), (size - 1));
 }
 
 char *const fixed::As_ASCII() const

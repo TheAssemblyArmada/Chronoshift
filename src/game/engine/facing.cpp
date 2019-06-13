@@ -14,10 +14,8 @@
  *            LICENSE
  */
 #include "facing.h"
-#include "abs.h"
 #include "gamedebug.h"
-#include "minmax.h"
-#include "swap.h"
+#include <algorithm>
 
 #ifndef PLATFORM_WINDOWS
 #include <strings.h>
@@ -149,9 +147,9 @@ BOOL FacingClass::Rotation_Adjust(int adjust)
         DirType curr = Current;
         int diff = (int8_t)(Desired - Current); //Fixed watcom optimising DirType to uint8_t and failing diff check.
 
-        adjust = Min(adjust, 127);
+        adjust = std::min(adjust, 127);
 
-        if (Abs(diff) >= adjust) {
+        if (std::abs(diff) >= adjust) {
             if (diff >= 0) {
                 Current += adjust;
             } else {

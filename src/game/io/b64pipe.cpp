@@ -17,8 +17,8 @@
 #include "b64pipe.h"
 #include "base64.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 using std::memmove;
@@ -57,7 +57,7 @@ int Base64Pipe::Put(const void *source, int slen)
         }
 
         if (m_counter > 0) {
-            int cpylen = Min(slen, incount - m_counter);
+            int cpylen = std::min(slen, incount - m_counter);
             memcpy(srcbuffp + m_counter, source, cpylen);
             m_counter += cpylen;
             slen -= cpylen;

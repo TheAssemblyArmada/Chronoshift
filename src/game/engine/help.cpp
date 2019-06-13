@@ -20,8 +20,8 @@
 #include "textprint.h"
 #include "coord.h"
 #include "lists.h"
-#include "minmax.h"
 #include <cstdio>
+#include <algorithm>
 
 using std::snprintf;
 
@@ -121,7 +121,7 @@ void HelpClass::Draw_It(BOOL force_redraw)
 
             g_logicPage->Draw_Line(HelpXPos,
                 HelpYPos + g_fontHeight,
-                HelpXPos + Min(stringwidth + 1, HelpWidth) - 1,
+                HelpXPos + std::min(stringwidth + 1, HelpWidth) - 1,
                 HelpYPos + g_fontHeight,
                 COLOR_BLACK);
         }

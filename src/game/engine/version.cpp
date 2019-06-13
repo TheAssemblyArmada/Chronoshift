@@ -16,7 +16,6 @@
 #include "version.h"
 #include "expansion.h"
 #include "gitverinfo.h"
-#include "minmax.h"
 #include "rawfile.h"
 #include "stringex.h"
 #include <stdio.h>

@@ -17,8 +17,8 @@
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "lcw.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 
@@ -61,7 +61,7 @@ int LCWStraw::Get(void *buffer, int length)
 
     while (length > 0) {
         if (m_carryOver > 0) {
-            int datasize = Min(m_carryOver, length);
+            int datasize = std::min(m_carryOver, length);
 
             uint8_t *srcbuff = m_mode == STRAW_UNCOMPRESS ? m_outBuffer + m_uncompressedBytes - m_carryOver :
                                                             m_outBuffer + m_compressedBytes - m_carryOver + 4;

@@ -14,7 +14,6 @@
  *            LICENSE
  */
 #include "dialog.h"
-#include "abs.h"
 #include "gamefile.h"
 #include "drawshape.h"
 #include "gadget.h"
@@ -640,11 +639,11 @@ void Draw_Caption(int str_id, int x, int y, int w)
 
 void Dialog_Box(int x_pos, int y_pos, int width, int height)
 {
-    //int new_x_pos = Max(x_pos - 30, 0);
-    //int new_y_pos = Max(y_pos - 8, 0);
+    //int new_x_pos = std::max(x_pos - 30, 0);
+    //int new_y_pos = std::max(y_pos - 8, 0);
 
-    //int new_width = Min(width + 60, GraphicViewPortClass::ScreenWidth - new_x_pos);
-    //int new_height = Min(height + 16, GraphicViewPortClass::ScreenHeight - new_y_pos);
+    //int new_width = std::min(width + 60, GraphicViewPortClass::ScreenWidth - new_x_pos);
+    //int new_height = std::min(height + 16, GraphicViewPortClass::ScreenHeight - new_y_pos);
 
     WindowList[WINDOW_6].X = x_pos;
     WindowList[WINDOW_6].Y = y_pos;

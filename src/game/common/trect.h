@@ -19,7 +19,7 @@
 #define TRECT_H
 
 #include "always.h"
-#include "minmax.h"
+#include <algorithm>
 
 template<typename T>
 class TRect
@@ -56,10 +56,10 @@ public:
 
     TRect &operator+=(const TRect<T> &that)
     {
-        m_left = Min(m_left, that.m_left);
-        m_top = Min(m_top, that.m_top);
-        m_right = Max(m_right, that.m_right);
-        m_bottom = Max(m_bottom, that.m_bottom);
+        m_left = std::min(m_left, that.m_left);
+        m_top = std::min(m_top, that.m_top);
+        m_right = std::max(m_right, that.m_right);
+        m_bottom = std::max(m_bottom, that.m_bottom);
         return *this;
     }
 
@@ -158,11 +158,11 @@ TRect<T> const TRect<T>::Union(TRect<T> &that) const
 /*
 TRect Intersect(const TRect &that) const
 {
-    int x1 = Max(m_left, that.m_left);
-    int x2 = Min(m_right, that.m_right);
-    int y1 = Max(m_top, that.m_top);
-    int y2 = Min(m_bottom, that.m_bottom);
-    return TRect(x1, y1, Max(0, x2 - x1 + 1), Max(0, y2 - y1 + 1));
+    int x1 = std::max(m_left, that.m_left);
+    int x2 = std::min(m_right, that.m_right);
+    int y1 = std::max(m_top, that.m_top);
+    int y2 = std::min(m_bottom, that.m_bottom);
+    return TRect(x1, y1, std::max(0, x2 - x1 + 1), std::max(0, y2 - y1 + 1));
 }
 */
 

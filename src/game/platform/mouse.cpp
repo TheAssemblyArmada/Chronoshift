@@ -17,9 +17,9 @@
 #include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
-#include "minmax.h"
 #include "mouseshape.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 
@@ -338,16 +338,16 @@ void WWMouseClass::Conditional_Hide_Mouse(int x_pos, int y_pos, int width, int h
     ++m_mouseUpdate;
 
     // this looks like the hotspot calculation
-    x_pos = Max(0, x_pos - m_cursorWidth - m_mouseHotX);
-    y_pos = Max(0, y_pos - m_cursorHeight - m_mouseHotY);
-    width = Min(width + m_mouseHotX, m_screen->Get_Width());
-    height = Min(height + m_mouseHotY, m_screen->Get_Height());
+    x_pos = std::max(0, x_pos - m_cursorWidth - m_mouseHotX);
+    y_pos = std::max(0, y_pos - m_cursorHeight - m_mouseHotY);
+    width = std::min(width + m_mouseHotX, m_screen->Get_Width());
+    height = std::min(height + m_mouseHotY, m_screen->Get_Height());
 
     if (m_cCount) {
-        m_mouseCXLeft = Min(x_pos, m_mouseCXLeft);
-        m_mouseCYUpper = Min(y_pos, m_mouseCYUpper);
-        m_mouseCXRight = Max(width, m_mouseCXRight);
-        m_mouseCYLower = Max(height, m_mouseCYLower);
+        m_mouseCXLeft = std::min(x_pos, m_mouseCXLeft);
+        m_mouseCYUpper = std::min(y_pos, m_mouseCYUpper);
+        m_mouseCXRight = std::max(width, m_mouseCXRight);
+        m_mouseCYLower = std::max(height, m_mouseCYLower);
     } else {
         m_mouseCXLeft = x_pos;
         m_mouseCYUpper = y_pos;

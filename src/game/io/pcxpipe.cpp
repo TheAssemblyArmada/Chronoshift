@@ -15,10 +15,10 @@
 #include "always.h"
 #include "pcxpipe.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include "pcxrle.h"
 #include <climits>
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 
@@ -62,7 +62,7 @@ int PCXPipe::Put(const void *buffer, int length)
 
     while (length > 0) {
         if (Carryover) {
-            int to_copy = Min(Carryover, length);
+            int to_copy = std::min(Carryover, length);
             bytes_put += Pipe::Put(OutBuffer + (LineLength - Carryover), to_copy);
             length -= to_copy;
             Carryover -= to_copy;
@@ -85,7 +85,7 @@ int PCXPipe::Put(const void *buffer, int length)
                 memmove(InBuffer, in_buff, Remaining);
             }
 
-            int to_copy = Min(enc, length);
+            int to_copy = std::min(enc, length);
             bytes_put += Pipe::Put(OutBuffer, to_copy);
             length -= LineLength - Remaining;
             Carryover = enc - to_copy;

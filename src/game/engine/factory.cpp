@@ -20,6 +20,7 @@
 #include "techno.h"
 #include "technotype.h"
 #include "house.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<FactoryClass> &g_Factories = Make_Global<TFixedIHeapClass<FactoryClass> >(0x0065D948);
@@ -86,7 +87,7 @@ void FactoryClass::AI()
         if (!Has_Completed()) {
             if (m_ProductionTime.Stage_Changed()) {
                 m_IsDifferent = true;
-                unsigned int tick_cost = Min(Cost_Per_Tick(), m_Balance);
+                unsigned int tick_cost = std::min(Cost_Per_Tick(), m_Balance);
                 if (m_Owner->Available_Money() >= tick_cost) {
                     m_Owner->Spend_Money(tick_cost);
                     m_Balance -= tick_cost;

@@ -14,7 +14,7 @@
  */
 #include "pcxrle.h"
 #include "gamedebug.h"
-#include "minmax.h"
+#include <algorithm>
 
 #ifdef COMPILER_WATCOM
 enum EncodingFlags
@@ -56,7 +56,7 @@ int PCX_Encode(void const **source, int srclength, void *dest, int destlength)
                     count = 0;
                 } else {
                     // int write = count > 63 ? 63 : count;
-                    int write = Min(count, (uint8_t)RLE_MAX_RUN);
+                    int write = std::min(count, (uint8_t)RLE_MAX_RUN);
                     *putp++ = 0xC0 | write;
                     *putp++ = last;
                     count -= write;
@@ -73,7 +73,7 @@ int PCX_Encode(void const **source, int srclength, void *dest, int destlength)
             *putp++ = last;
             count = 0;
         } else {
-            int write = Min(count, (uint8_t)RLE_MAX_RUN);
+            int write = std::min(count, (uint8_t)RLE_MAX_RUN);
             *putp++ = 0xC0 | write;
             *putp++ = last;
             count -= write;

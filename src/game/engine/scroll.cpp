@@ -18,7 +18,7 @@
 #include "gameoptions.h"
 #include "gametypes.h"
 #include "globals.h"
-#include "minmax.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter =
@@ -99,13 +99,13 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                     x_pos -= x_pos - 100;
                 }
 
-                x_pos = Max(0, x_pos);
+                x_pos = std::max(0, x_pos);
 
                 if (x_pos > (vp_w - 100)) {
                     x_pos += x_pos - (vp_w - 100);
                 }
 
-                x_pos = Min(x_pos, vp_w);
+                x_pos = std::min(x_pos, vp_w);
                 
                 if (x_pos > 100 && x_pos < (vp_w - 100)) {
                     x_pos += (320 - x_pos) / 2;
@@ -117,13 +117,13 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                     y_pos -= 100 - y_pos;
                 }
 
-                y_pos = Max(0, y_pos);
+                y_pos = std::max(0, y_pos);
 
                 if (y_pos > (vp_h - 100)) {
                     y_pos += y_pos - (vp_h - 100);
                 }
 
-                y_pos = Min(y_pos, vp_h);
+                y_pos = std::min(y_pos, vp_h);
 
                 _direction = Desired_Facing256(320, 200, x_pos, y_pos);
             }
@@ -139,7 +139,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
             // if the right mouse button is down, half the scroll speed.
             if (g_keyboard->Down(KN_RMOUSE)) {
-                rate_index = Clamp((rate_index + 1), 4, 8);
+                rate_index = std::clamp((rate_index + 1), 4, 8);
             }
 
             if (!Options.Free_Scrolling()) {

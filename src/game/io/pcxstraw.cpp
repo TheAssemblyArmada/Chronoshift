@@ -15,10 +15,10 @@
 #include "always.h"
 #include "pcxstraw.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include "pcxrle.h"
 #include <climits>
 #include <cstring>
+#include <algorithm>
 
 using std::memcpy;
 
@@ -35,7 +35,7 @@ PCXStraw::PCXStraw(StrawControl mode, unsigned pitch, unsigned width) :
     // Must be less than half of int max
     DEBUG_ASSERT(LinePitch < (INT_MAX / 2) && LinePitch > 0);
 
-    LineWidth = Min(LineWidth, LinePitch);
+    LineWidth = std::min(LineWidth, LinePitch);
 
     if (Mode == STRAW_ENCODE) {
         InBuffer = new uint8_t[LinePitch];
@@ -67,7 +67,7 @@ int PCXStraw::Get(void *buffer, int length)
     while (length > 0) {
         // Handle where we have carryover from the encode/decode
         if (Carryover > 0) {
-            int to_copy = Min(Carryover, length);
+            int to_copy = std::min(Carryover, length);
             memcpy(buffer, OutBuffer + (LinePitch - Carryover), to_copy);
             buffer = static_cast<char *>(buffer) + to_copy;
             length -= to_copy;
@@ -96,7 +96,7 @@ int PCXStraw::Get(void *buffer, int length)
                 memmove(InBuffer, in_buff, Remaining);
             }
 
-            int to_copy = Min(LineWidth, length);
+            int to_copy = std::min(LineWidth, length);
 
             memcpy(buffer, OutBuffer, to_copy);
             buffer = static_cast<char *>(buffer) + to_copy;

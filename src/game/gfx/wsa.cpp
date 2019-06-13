@@ -14,7 +14,6 @@
  *            LICENSE
  */
 #include "wsa.h"
-#include "abs.h"
 #include "alloc.h"
 #include "blitters.h"
 #include "gamefile.h"
@@ -347,7 +346,7 @@ BOOL __cdecl Animate_Frame(SysAnimHeaderType *header, GraphicViewPortClass &view
             }
 
             int cur_frame = header->current_frame;
-            int frame_diff = Abs(cur_frame - frame);
+            int frame_diff = std::abs(cur_frame - frame);
             int direction = 1;
 
             // This replaces the goto stuff, I think the logic is correct

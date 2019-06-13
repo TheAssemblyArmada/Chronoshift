@@ -16,9 +16,9 @@
 #include "gauge.h"
 #include "dialog.h"
 #include "fixed.h"
-#include "minmax.h"
 #include "mouse.h"
 #include "remap.h"
+#include <algorithm>
 
 const int GaugeClass::DefaultThumbSize = 4;
 
@@ -153,7 +153,7 @@ BOOL GaugeClass::Set_Maximum(int max)
 
 BOOL GaugeClass::Set_Value(int value)
 {
-    value = Clamp(value, 0, Maximum);
+    value = std::clamp(value, 0, Maximum);
 
     if (value != Value) {
         Value = value;
@@ -178,7 +178,7 @@ void GaugeClass::Draw_Thumb()
         start_pixel = Value_To_Pixel(Maximum) - 2;
     }
 
-    start_pixel = Max(XPos, start_pixel);
+    start_pixel = std::max(XPos, start_pixel);
 
     if (IsHorizontal) {
         Draw_Box(start_pixel, YPos, Thumb_Pixels(), Height, BOX_STYLE_1, true);
@@ -200,7 +200,7 @@ int GaugeClass::Pixel_To_Value(int pixel)
         max = Height - 2;
     }
 
-    int value = Clamp(offset, 0, max);
+    int value = std::clamp(offset, 0, max);
     fixed fval(value, max);
 
     return Maximum * fval;

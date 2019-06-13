@@ -23,11 +23,11 @@
 #include "globals.h"
 #include "session.h"
 //#include "anim.h"
-#include "minmax.h"
 #include "special.h"
 #include "tracker.h"
 #include "foot.h"
 #include "target.h"
+#include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClass<ObjectClass*> >(0x006677F8);
@@ -126,10 +126,10 @@ void ObjectClass::AI()
 
         if (m_AnimAttached) {
             --m_FallingHeight;
-            m_FallingHeight = Max(-3, m_FallingHeight);
+            m_FallingHeight = std::max(-3, m_FallingHeight);
         } else {
             m_FallingHeight = m_FallingHeight - Rule.Get_Gravity();
-            m_FallingHeight = Max(-100, m_FallingHeight);
+            m_FallingHeight = std::max(-100, m_FallingHeight);
         }
 
         if (layer != In_Which_Layer()) {

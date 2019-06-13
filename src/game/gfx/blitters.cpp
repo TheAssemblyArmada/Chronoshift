@@ -15,8 +15,8 @@
  */
 #include "blitters.h"
 #include "gamedebug.h"
-#include "minmax.h"
 #include <cstring>
+#include <algorithm>
 
 using std::memset;
 using std::memcpy;
@@ -247,8 +247,8 @@ void __cdecl Buffer_Fill_Rect(GraphicViewPortClass &vp, int x, int y, int w, int
         y = 0;
     }
 
-    w = Min(w, vp.Get_Width() - 1);
-    h = Min(h, vp.Get_Height() - 1);
+    w = std::min(w, vp.Get_Width() - 1);
+    h = std::min(h, vp.Get_Height() - 1);
 
     uint8_t *offset = y * vp.Get_Full_Pitch() + x + static_cast<uint8_t *>(vp.Get_Offset());
     int height = h - y + 1;
@@ -285,8 +285,8 @@ void __cdecl Buffer_Remap(GraphicViewPortClass &vp, int x, int y, int w, int h, 
         ystart = 0;
     }
 
-    xend = Min(xend, vp.Get_Width() - 1);
-    yend = Min(yend, vp.Get_Height() - 1);
+    xend = std::min(xend, vp.Get_Width() - 1);
+    yend = std::min(yend, vp.Get_Height() - 1);
 
     // Setup parameters for blit
     uint8_t *offset = ystart * vp.Get_Full_Pitch() + xstart + static_cast<uint8_t *>(vp.Get_Offset());
@@ -332,10 +332,10 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
         return;
     }
 
-    src_x = Max(0, src_x);
-    src_y = Max(0, src_y);
-    dst_x = Max(0, dst_x);
-    dst_y = Max(0, dst_y);
+    src_x = std::max(0, src_x);
+    src_y = std::max(0, src_y);
+    dst_x = std::max(0, dst_x);
+    dst_y = std::max(0, dst_y);
 
     h = (dst_y + h) > dst_vp.Get_Height() ? dst_vp.Get_Height() - 1 - dst_y : h;
     w = (dst_x + w) > dst_vp.Get_Width() ? dst_vp.Get_Width() - 1 - dst_x : w;
@@ -429,8 +429,8 @@ void __cdecl Buffer_To_Buffer(GraphicViewPortClass &vp, int x, int y, int w, int
         ystart = 0;
     }
 
-    xend = Min(xend, (int)vp.Get_Width() - 1);
-    yend = Min(yend, (int)vp.Get_Height() - 1);
+    xend = std::min(xend, (int)vp.Get_Width() - 1);
+    yend = std::min(yend, (int)vp.Get_Height() - 1);
 
     // Setup parameters for blit
     int pitch = vp.Get_Pitch() + vp.Get_Width() + vp.Get_XAdd();
@@ -477,8 +477,8 @@ void __cdecl Buffer_To_Page(int x, int y, int w, int h, void *buffer, GraphicVie
         ystart = 0;
     }
 
-    xend = Min(xend, vp.Get_Width() - 1);
-    yend = Min(yend, vp.Get_Height() - 1);
+    xend = std::min(xend, vp.Get_Width() - 1);
+    yend = std::min(yend, vp.Get_Height() - 1);
 
     int pitch = vp.Get_Pitch() + vp.Get_Width() + vp.Get_XAdd();
     uint8_t *dst = y * pitch + x + static_cast<uint8_t *>(vp.Get_Offset());

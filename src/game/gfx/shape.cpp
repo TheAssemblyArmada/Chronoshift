@@ -18,7 +18,6 @@
 #include "endiantype.h"
 #include "gamedebug.h"
 #include "lcw.h"
-#include "minmax.h"
 #include "xordelta.h"
 #include <cstdarg>
 #include <cstring>

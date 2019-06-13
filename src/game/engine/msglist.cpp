@@ -15,7 +15,6 @@
  */
 #include "msglist.h"
 #include "globals.h"
-#include "minmax.h"
 #include "mouse.h"
 #include "stringex.h"
 #include "textprint.h"
@@ -23,6 +22,7 @@
 #include "txtlabel.h"
 #include "rules.h"
 #include <stdio.h>
+#include <algorithm>
 
 int MessageListClass::MaxMessageWidth = 640;
 
@@ -82,8 +82,8 @@ void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int heig
     EditingLabel = nullptr;
     XPos = x;
     YPos = y;
-    FreeSlots = Min((int)MAX_MESSAGES, max_lines);
-    MaxChars = Min(120, max_chars);
+    FreeSlots = std::min((int)MAX_MESSAGES, max_lines);
+    MaxChars = std::min(120, max_chars);
     MessageHeight = height;
     Concatenate = concatenate;
 
@@ -329,7 +329,7 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int li
         char *label_sub_str = &label->Get_Text()[strlen(msg) + 1];
 
         if (strlen(to_concat) + strlen(label_sub_str) >= (unsigned)MaxChars) {
-            int required = Max(strlen(to_concat) + strlen(label_sub_str) - MaxChars, strlen(label_sub_str));
+            int required = std::max(strlen(to_concat) + strlen(label_sub_str) - MaxChars, strlen(label_sub_str));
 
             Trim_Message(nullptr, label_sub_str, strlen(to_concat) + strlen(label_sub_str) - MaxChars, required, 0);
         } else {
@@ -342,7 +342,7 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int li
 
             for (int i = width_diff + String_Pixel_Width(new_str); i < Width - 8;
                  i = width_diff + String_Pixel_Width(new_str)) {
-                int sub_st_len = Min(strlen(label_sub_str), (size_t)10u);
+                int sub_st_len = std::min(strlen(label_sub_str), (size_t)10u);
                 Trim_Message(nullptr, label_sub_str, 10, sub_st_len, 0);
                 strcpy(new_str, label_sub_str);
                 strcpy(&new_str[strlen(new_str)], to_concat);
@@ -713,7 +713,7 @@ int MessageListClass::Trim_Message(char *reserve, char *msg, int trim_start, int
         return 0;
     }
 
-    trim_end = Min(strlen(msg), (size_t)trim_end);
+    trim_end = std::min(strlen(msg), (size_t)trim_end);
 
     bool trim_adjusted = true;
     int trim_pos;

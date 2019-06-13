@@ -15,7 +15,7 @@
  */
 #include "pkstraw.h"
 #include "gamedebug.h"
-#include "minmax.h"
+#include <algorithm>
 
 PKStraw::PKStraw(StrawControl mode, Straw &rstraw) :
     m_changeKey(true),
@@ -82,7 +82,7 @@ int PKStraw::Get(void *buffer, int length)
 
     // If there is data waiting to be sent to the output buffer, send it now.
     if (m_carryOver > 0) {
-        int tocopy = Min(length, m_carryOver); // length >= m_carryOver ? m_carryOver : length;
+        int tocopy = std::min(length, m_carryOver); // length >= m_carryOver ? m_carryOver : length;
 
         memmove(outbuff, &m_cryptoBuffer[m_encryptedKeyLength - m_carryOver], tocopy);
 
