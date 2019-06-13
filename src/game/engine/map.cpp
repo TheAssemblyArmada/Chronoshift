@@ -610,10 +610,10 @@ void MapClass::Place_Down(cell_t cellnum, ObjectClass *object)
             list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                cell_t occupy_cell = cellnum + *list_ptr++;
+                cell_t overlap_cell = cellnum + *list_ptr++;
 
-                if (occupy_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[occupy_cell];
+                if (overlap_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[overlap_cell];
                     cell.Overlap_Down(object);
                     cell.Redraw_Objects(false);
                 }
@@ -654,10 +654,10 @@ void MapClass::Pick_Up(cell_t cellnum, ObjectClass *object)
             list_ptr = tmp_list;
 
             while (*list_ptr != LIST_END) {
-                cell_t occupy_cell = cellnum + *list_ptr++;
+                cell_t overlap_cell = cellnum + *list_ptr++;
 
-                if (occupy_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[occupy_cell];
+                if (overlap_cell < MAP_MAX_AREA) {
+                    CellClass &cell = Array[overlap_cell];
                     cell.Overlap_Up(object);
                     cell.Redraw_Objects(false);
                 }
