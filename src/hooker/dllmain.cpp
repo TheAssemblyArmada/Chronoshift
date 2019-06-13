@@ -179,6 +179,7 @@ void Setup_Hooks()
     FootClass::Hook_Me();
 
     AbstractClass::Hook_Me();
+    AbstractTypeClass::Hook_Me();
 
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);

@@ -132,7 +132,7 @@ void BulletTypeClass::One_Time()
         BulletTypeClass *bptr = As_Pointer(bullet);
 
         if (!bptr->Inviso) {
-            const char *name = bptr->ImageName[0] != '\0' ? bptr->ImageName : bptr->Get_Name();
+            const char *name = bptr->ImageName[0] != '\0' ? bptr->ImageName : bptr->m_Name;
             snprintf(filename, sizeof(filename), "%s.shp", name);
             bptr->ImageData = GameFileClass::Retrieve(filename);
         }
@@ -181,7 +181,7 @@ BulletType BulletTypeClass::From_Name(const char *name)
  */
 const char *BulletTypeClass::Name_From(BulletType bullet)
 {
-    return bullet != BULLET_NONE && bullet < BULLET_COUNT ? As_Reference(bullet).Get_Name() : "<none>";
+    return bullet != BULLET_NONE && bullet < BULLET_COUNT ? As_Reference(bullet).m_Name : "<none>";
 }
 
 /**

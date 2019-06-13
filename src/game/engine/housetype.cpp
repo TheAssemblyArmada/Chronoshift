@@ -71,17 +71,17 @@ void HouseTypeClass::operator delete(void *ptr)
 
 BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
 {
-    if (ini.Find_Section(Name) == nullptr) {
+    if (ini.Find_Section(m_Name) == nullptr) {
         return false;
     }
 
-    Firepower = ini.Get_Fixed(Name, "Firepower", Firepower);
-    Groundspeed = ini.Get_Fixed(Name, "Groundspeed", Groundspeed);
-    Airspeed = ini.Get_Fixed(Name, "Airspeed", Airspeed);
-    Armor = ini.Get_Fixed(Name, "Armor", Armor);
-    ROF = ini.Get_Fixed(Name, "ROF", ROF);
-    Cost = ini.Get_Fixed(Name, "Cost", Cost);
-    BuildTime = ini.Get_Fixed(Name, "BuildTime", BuildTime);
+    Firepower = ini.Get_Fixed(m_Name, "Firepower", Firepower);
+    Groundspeed = ini.Get_Fixed(m_Name, "Groundspeed", Groundspeed);
+    Airspeed = ini.Get_Fixed(m_Name, "Airspeed", Airspeed);
+    Armor = ini.Get_Fixed(m_Name, "Armor", Armor);
+    ROF = ini.Get_Fixed(m_Name, "ROF", ROF);
+    Cost = ini.Get_Fixed(m_Name, "Cost", Cost);
+    BuildTime = ini.Get_Fixed(m_Name, "BuildTime", BuildTime);
 
     return true;
 }
@@ -116,7 +116,7 @@ void HouseTypeClass::Init_Heap()
 const char *HouseTypeClass::Name_From(HousesType type)
 {
     if (type >= HOUSES_FIRST && type < HOUSES_COUNT) {
-        return As_Reference(type).Name;
+        return As_Reference(type).m_Name;
     }
 
     return "None";
@@ -125,7 +125,7 @@ const char *HouseTypeClass::Name_From(HousesType type)
 HousesType HouseTypeClass::From_Name(const char *name)
 {
     for (HousesType type = HOUSES_FIRST; type < HOUSES_COUNT; ++type) {
-        if (strcasecmp(As_Reference(type).Name, name) == 0) {
+        if (strcasecmp(As_Reference(type).m_Name, name) == 0) {
             return type;
         }
     }

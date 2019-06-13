@@ -609,7 +609,7 @@ BuildingType BuildingTypeClass::From_Name(const char *name)
 {
     if (name != nullptr) {
         for (BuildingType building = BUILDING_FIRST; building < BUILDING_COUNT; ++building) {
-            if (strcasecmp(name, As_Reference(building).Name) == 0) {
+            if (strcasecmp(name, As_Reference(building).m_Name) == 0) {
                 return building;
             }
         }

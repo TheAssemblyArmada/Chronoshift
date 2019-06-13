@@ -149,7 +149,7 @@ const char *SmudgeTypeClass::Name_From(SmudgeType smudge)
     DEBUG_ASSERT(smudge != SMUDGE_NONE);
     DEBUG_ASSERT(smudge < SMUDGE_COUNT);
 
-    return smudge != SMUDGE_NONE && smudge < SMUDGE_COUNT ? As_Reference(smudge).Get_Name() : "<none>";
+    return smudge != SMUDGE_NONE && smudge < SMUDGE_COUNT ? As_Reference(smudge).m_Name : "<none>";
 }
 
 void SmudgeTypeClass::Init_Heap()
@@ -183,7 +183,7 @@ void SmudgeTypeClass::Init(TheaterType theater)
     if (theater != g_lastTheater) {
         for (SmudgeType i = SMUDGE_FIRST; i < SMUDGE_COUNT; ++i) {
             SmudgeTypeClass &smudge = As_Reference(i);
-            const char *name = smudge.ImageName[0] != '\0' ? smudge.ImageName : smudge.Get_Name();
+            const char *name = smudge.ImageName[0] != '\0' ? smudge.ImageName : smudge.m_Name;
             snprintf(filename, sizeof(filename), "%s.%s", name, g_theaters[theater].ext);
             smudge.ImageData = GameFileClass::Retrieve(filename);
         }

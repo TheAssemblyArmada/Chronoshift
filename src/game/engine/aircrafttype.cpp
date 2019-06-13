@@ -193,7 +193,7 @@ AircraftType AircraftTypeClass::From_Name(const char *name)
 {
     if (name != nullptr) {
         for (AircraftType type = AIRCRAFT_FIRST; type < AIRCRAFT_COUNT; ++type) {
-            if (strcasecmp(name, As_Reference(type).Name) == 0) {
+            if (strcasecmp(name, As_Reference(type).m_Name) == 0) {
                 return type;
             }
         }

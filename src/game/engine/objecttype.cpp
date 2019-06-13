@@ -119,9 +119,9 @@ BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType ho
 
  BOOL ObjectTypeClass::Read_INI(GameINIClass &ini)
  {
-     if (ini.Find_Section(Get_Name())) {
-         ini.Get_String(Get_Name(), "Image", "none", ImageName, sizeof(ImageName));
-         
+     if (ini.Find_Section(m_Name)) {
+         ini.Get_String(m_Name, "Image", "none", ImageName, sizeof(ImageName));
+
          return true;
      }
 

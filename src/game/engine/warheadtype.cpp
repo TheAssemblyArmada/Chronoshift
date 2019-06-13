@@ -121,7 +121,7 @@ WarheadType WarheadTypeClass::From_Name(const char *name)
  */
 const char *WarheadTypeClass::Name_From(WarheadType warhead)
 {
-    return warhead != WARHEAD_NONE && warhead < WARHEAD_COUNT ? As_Reference(warhead).Get_Name() : "<none>";
+    return warhead != WARHEAD_NONE && warhead < WARHEAD_COUNT ? As_Reference(warhead).Name : "<none>";
 }
 
 /**
@@ -156,13 +156,13 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
     char verses_buffer[128];
     char verses_format_buffer[128];
 
-    if (ini.Find_Section(Get_Name()) != nullptr) {
-        Spread = ini.Get_Int(Get_Name(), "Spread", Spread);
-        Wall = ini.Get_Bool(Get_Name(), "Wall", Wall);
-        Wood = ini.Get_Bool(Get_Name(), "Wood", Wood);
-        Ore = ini.Get_Bool(Get_Name(), "Ore", Ore);
-        Explosion = ini.Get_Int(Get_Name(), "Explosion", Explosion);
-        Death = ini.Get_Int(Get_Name(), "InfDeath", Death);
+    if (ini.Find_Section(Name) != nullptr) {
+        Spread = ini.Get_Int(Name, "Spread", Spread);
+        Wall = ini.Get_Bool(Name, "Wall", Wall);
+        Wood = ini.Get_Bool(Name, "Wood", Wood);
+        Ore = ini.Get_Bool(Name, "Ore", Ore);
+        Explosion = ini.Get_Int(Name, "Explosion", Explosion);
+        Death = ini.Get_Int(Name, "InfDeath", Death);
 
         // NOTE: If you add or remove from the ArmorTypes, you need to change VERSUS_FORMAT!
 		// Build the verses format based on the armor count.
@@ -176,7 +176,7 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
             }
         }
 
-        if (ini.Get_String(Get_Name(), "Verses", verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
+        if (ini.Get_String(Name, "Verses", verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
             char *value = strtok(verses_buffer, ",");
             for (ArmorType armor = ARMOR_FIRST; (armor < ARMOR_COUNT) && (value != nullptr); ++armor) {
                 DEBUG_ASSERT(value != nullptr);

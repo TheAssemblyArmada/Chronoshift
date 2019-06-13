@@ -188,10 +188,10 @@ const int16_t *InfantryTypeClass::Occupy_List(BOOL a1) const
 BOOL InfantryTypeClass::Read_INI(GameINIClass &ini)
 {
     if (TechnoTypeClass::Read_INI(ini)) {
-        m_IsFraidycat = ini.Get_Bool(Get_Name(), "Fraidycat", m_IsFraidycat);
-        m_IsInfiltrator = ini.Get_Bool(Get_Name(), "Infiltrate", m_IsInfiltrator);
-        m_HasC4 = ini.Get_Bool(Get_Name(), "C4", m_HasC4);
-        m_IsCanine = ini.Get_Bool(Get_Name(), "IsCanine", m_IsCanine);
+        m_IsFraidycat = ini.Get_Bool(m_Name, "Fraidycat", m_IsFraidycat);
+        m_IsInfiltrator = ini.Get_Bool(m_Name, "Infiltrate", m_IsInfiltrator);
+        m_HasC4 = ini.Get_Bool(m_Name, "C4", m_HasC4);
+        m_IsCanine = ini.Get_Bool(m_Name, "IsCanine", m_IsCanine);
 
         // C4 presumes infiltrate.
         if (m_HasC4) {
@@ -229,7 +229,7 @@ InfantryType InfantryTypeClass::From_Name(const char *name)
 {
     if (name != nullptr) {
         for (InfantryType type = INFANTRY_FIRST; type < INFANTRY_COUNT; ++type) {
-            if (strcasecmp(name, As_Reference(type).Name) == 0) {
+            if (strcasecmp(name, As_Reference(type).m_Name) == 0) {
                 return type;
             }
         }

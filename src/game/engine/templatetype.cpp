@@ -516,7 +516,7 @@ void TemplateTypeClass::Init(TheaterType theater)
         TemplateTypeClass &tem = As_Reference(i);
 
         if (((1 << theater) & tem.Theater) != 0) {
-            const char *name = tem.ImageName[0] != '\0' ? tem.ImageName : tem.Get_Name();
+            const char *name = tem.ImageName[0] != '\0' ? tem.ImageName : tem.m_Name;
 
             sprintf(buffer, "%s.%s", name, TheaterTypeClass::As_Reference(theater).FileExt);
             tem.ImageData = GameFileClass::Retrieve(buffer);
@@ -659,7 +659,7 @@ const char *TemplateTypeClass::Name_From(TemplateType tem)
     DEBUG_ASSERT(tem != TEMPLATE_NONE);
     DEBUG_ASSERT(tem < TEMPLATE_COUNT);
 
-    return tem != TEMPLATE_NONE && tem < TEMPLATE_COUNT ? As_Reference(tem).Get_Name() : "<none>";
+    return tem != TEMPLATE_NONE && tem < TEMPLATE_COUNT ? As_Reference(tem).m_Name : "<none>";
 }
 
 

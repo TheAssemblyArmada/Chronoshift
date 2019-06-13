@@ -132,7 +132,7 @@ const char *OverlayTypeClass::Name_From(OverlayType overlay)
     DEBUG_ASSERT(overlay != OVERLAY_NONE);
     DEBUG_ASSERT(overlay < OVERLAY_COUNT);
 
-    return overlay != OVERLAY_NONE && overlay < OVERLAY_COUNT ? As_Reference(overlay).Get_Name() : "<none>";
+    return overlay != OVERLAY_NONE && overlay < OVERLAY_COUNT ? As_Reference(overlay).m_Name : "<none>";
 }
 
 void OverlayTypeClass::Init(TheaterType theater)
@@ -149,7 +149,7 @@ void OverlayTypeClass::Init(TheaterType theater)
             snprintf(filename,
                 sizeof(filename),
                 "%s.%s",
-                overlay.Get_Name(),
+                overlay.m_Name,
                 overlay.Theater ? g_theaters[theater].ext : "shp");
             overlay.ImageData = GameFileClass::Retrieve(filename);
 
@@ -254,31 +254,31 @@ BOOL OverlayTypeClass::Read_INI(GameINIClass &ini)
     //
     if (ObjectTypeClass::Read_INI(ini)) {
         // The land type of this overlay [def = LAND_CLEAR].
-        Land = ini.Get_LandType(Get_Name(), "Land", Land);
+        Land = ini.Get_LandType(m_Name, "Land", Land);
 
         // Strength (hit points) of this overlay.
-        OverlayStrength = ini.Get_Int(Get_Name(), "Strength", OverlayStrength);
+        OverlayStrength = ini.Get_Int(m_Name, "Strength", OverlayStrength);
 
         //
-        Wall = ini.Get_BOOL(Get_Name(), "Wall", Wall);
+        Wall = ini.Get_BOOL(m_Name, "Wall", Wall);
 
         //
-        High = ini.Get_BOOL(Get_Name(), "High", High);
+        High = ini.Get_BOOL(m_Name, "High", High);
 
         // Is this ore or gem [growth (ore only) and graphic logic applies] (def = false)?
-        Ore = ini.Get_BOOL(Get_Name(), "Ore", Ore);
+        Ore = ini.Get_BOOL(m_Name, "Ore", Ore);
 
         // Is this overlay a crate (def = false)?
-        Crate = ini.Get_BOOL(Get_Name(), "Crate", Crate);
+        Crate = ini.Get_BOOL(m_Name, "Crate", Crate);
 
         //
-        DamageLevels = ini.Get_Int(Get_Name(), "DamageLevels", DamageLevels);
+        DamageLevels = ini.Get_Int(m_Name, "DamageLevels", DamageLevels);
 
         // Does it have theater specific imagery (def = false)?
-        Theater = ini.Get_BOOL(Get_Name(), "Theater", Theater);
+        Theater = ini.Get_BOOL(m_Name, "Theater", Theater);
 
         // <TODO> (def = ANIM_NONE)?
-        CellAnim = ini.Get_AnimType(Get_Name(), "CellAnim", CellAnim);
+        CellAnim = ini.Get_AnimType(m_Name, "CellAnim", CellAnim);
 
         //
         //

@@ -89,7 +89,7 @@ public:
     static UnitTypeClass &As_Reference(UnitType type);
     static UnitType From_Name(const char *name);
     static void One_Time();
-    static const char *Name_From(UnitType type) { return As_Reference(type).Name; }
+    static const char *Name_From(UnitType type) { return As_Reference(type).m_Name; }
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

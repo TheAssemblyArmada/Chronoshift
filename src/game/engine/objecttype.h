@@ -60,7 +60,7 @@ public:
     int16_t Get_Strength() const { return Strength; }
     ArmorType Get_Armor() const { return Armor; }
     void *Get_Image_Data() const { return ImageData; }
-    const char *Get_Image_Name() const { return ImageName[0] != '\0' ? ImageName : Get_Name(); }
+    const char *Get_Image_Name() const { return ImageName[0] != '\0' ? ImageName : m_Name; }
 
     void Init_Frame_Dimensions(int frames) const;
     TRect<int> *Get_Frame_Dimensions() { return FrameDimensions; }

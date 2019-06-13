@@ -316,23 +316,23 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
     return func(this, ini);
 #elif 0
     if (ObjectTypeClass::Read_INI(ini)) {
-        DoubleOwned = ini.Get_Bool(Get_Name(), "DoubleOwned", DoubleOwned);
-        GuardRange = ini.Get_Lepton(Get_Name(), "GuardRange", GuardRange);
-        Explodes = ini.Get_Bool(Get_Name(), "Explodes", Explodes);
+        DoubleOwned = ini.Get_Bool(m_Name, "DoubleOwned", DoubleOwned);
+        GuardRange = ini.Get_Lepton(m_Name, "GuardRange", GuardRange);
+        Explodes = ini.Get_Bool(m_Name, "Explodes", Explodes);
         Primary =
-            WeaponTypeClass::As_Pointer(ini.Get_WeaponType(Get_Name(), "Primary", (Primary ? Primary->Type : WEAPON_NONE)));
+            WeaponTypeClass::As_Pointer(ini.Get_WeaponType(m_Name, "Primary", (Primary ? Primary->Type : WEAPON_NONE)));
         Secondary = WeaponTypeClass::As_Pointer(
-            ini.Get_WeaponType(Get_Name(), "Secondary", (Secondary ? Secondary->Type : WEAPON_NONE)));
-        Cloakable = ini.Get_Bool(Get_Name(), "Cloakable", Cloakable);
-        IsScanner = ini.Get_Bool(Get_Name(), "Sensors", IsScanner);
-        Prerequisite = ini.Get_Buildings(Get_Name(), "Prerequisite", Prerequisite);
-        Sight = ini.Get_Int(Get_Name(), "Sight", Sight);
-        TechLevel = ini.Get_Int(Get_Name(), "TechLevel", TechLevel);
+            ini.Get_WeaponType(m_Name, "Secondary", (Secondary ? Secondary->Type : WEAPON_NONE)));
+        Cloakable = ini.Get_Bool(m_Name, "Cloakable", Cloakable);
+        IsScanner = ini.Get_Bool(m_Name, "Sensors", IsScanner);
+        Prerequisite = ini.Get_Buildings(m_Name, "Prerequisite", Prerequisite);
+        Sight = ini.Get_Int(m_Name, "Sight", Sight);
+        TechLevel = ini.Get_Int(m_Name, "TechLevel", TechLevel);
 
         // MPH
         // TODO, two versions of code, maybe we need to fix Get_MPH?, see CCINI
         fixed_t def(MPH, 256);
-        int value = ini.Get_MPHType(Get_Name(), "Speed", MPH);
+        int value = ini.Get_MPHType(m_Name, "Speed", MPH);
 
         if (value != -1) {
             value = Bound(value, 0, 100);
@@ -346,16 +346,16 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
             MPH = (MPHType)retval;
         }
 
-        Cost = ini.Get_Int(Get_Name(), "Cost", Cost);
-        Ammo = ini.Get_Int(Get_Name(), "Ammo", Ammo);
-        Points = ini.Get_Int(Get_Name(), "Points", Points);
-        Owner = ini.Get_Owners(Get_Name(), "Owner", Owner);
-        IsCrewed = ini.Get_Bool(Get_Name(), "Crewed", IsCrewed);
-        IsRepairable = ini.Get_Bool(Get_Name(), "Repairable", IsRepairable);
-        IsInvisible = ini.Get_Bool(Get_Name(), "Invisible", IsInvisible);
-        IsSelfHealing = ini.Get_Bool(Get_Name(), "SelfHealing", IsSelfHealing);
-        ROT = ini.Get_Int(Get_Name(), "ROT", ROT);
-        Passengers = ini.Get_Int(Get_Name(), "Passengers", Passengers);
+        Cost = ini.Get_Int(m_Name, "Cost", Cost);
+        Ammo = ini.Get_Int(m_Name, "Ammo", Ammo);
+        Points = ini.Get_Int(m_Name, "Points", Points);
+        Owner = ini.Get_Owners(m_Name, "Owner", Owner);
+        IsCrewed = ini.Get_Bool(m_Name, "Crewed", IsCrewed);
+        IsRepairable = ini.Get_Bool(m_Name, "Repairable", IsRepairable);
+        IsInvisible = ini.Get_Bool(m_Name, "Invisible", IsInvisible);
+        IsSelfHealing = ini.Get_Bool(m_Name, "SelfHealing", IsSelfHealing);
+        ROT = ini.Get_Int(m_Name, "ROT", ROT);
+        Passengers = ini.Get_Int(m_Name, "Passengers", Passengers);
         
         ThreatPoints = Points;
 
