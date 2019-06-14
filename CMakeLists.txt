@@ -58,8 +58,11 @@ if(WATCOM)
         string(REGEX REPLACE "-d2" "-d1" ${flag_var} "${${flag_var}}")
     endforeach(flag_var)
     
-    # Set packing and alignment to 1 byte to match original game ABI
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -zp1")
+    # Set packing and alignment to 1 byte to match original game ABI with -zp1
+    # Optimise for run time with -ot
+    # Some stack trace option we believe the original was compiled with -of+
+    # Expand intrinsics inline with -oi
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -zp1 -ot -of+ -oi")
     
     # Dump useful debug info with -db
     # Disable stack checks in debug with -s
