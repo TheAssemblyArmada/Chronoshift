@@ -178,8 +178,19 @@ endif()
 add_subdirectory(libs/baseconfig EXCLUDE_FROM_ALL)
 
 if(NOT STANDALONE)
+    set(SETSAIL_ENTRY 0x005D6148)
+    set(SETSAIL_DLL "${PROJECT_NAME}.dll")
+    set(SETSAIL_EXE "ra95.dat")
+    set(SETSAIL_LAUNCHER launch${PROJECT_NAME})
+    set(SETSAIL_HASH "5ad529abba97b0ca2eb8358a4b1b934aa5e3f086")
+    message("Configuring launcher as ${SETSAIL_LAUNCHER} using entry at ${SETSAIL_ENTRY} to inject ${SETSAIL_DLL} into ${SETSAIL_EXE}")
     # Build the launcher
     add_subdirectory(launcher)
+
+    if(WATCOM)
+        message("Adding -xs flag for launcher to enable exceptions for watcom.")
+        target_compile_options(${SETSAIL_LAUNCHER} PRIVATE -xs)
+    endif()
 endif()
 
 # Build Chronoshift

@@ -1,3 +1,6 @@
 [submodule "libs/baseconfig"]
 	path = libs/baseconfig
 	url = https://github.com/TheAssemblyArmada/BaseConfig.git
+[submodule "launcher"]
+	path = launcher
+	url = https://github.com/TheAssemblyArmada/SetSail.git
