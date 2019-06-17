@@ -109,10 +109,10 @@ build_script:
             If ($env:STANDALONE -eq "ON") {
                 & 7z a chronoshift.zip .\$env:configuration\chronoshift.exe -tzip;
             } Else {
-                & 7z a chronoshift.zip .\$env:configuration\chronoshift.dll .\$env:configuration\launch_chronoshift.exe -tzip;
+                & 7z a chronoshift.zip .\$env:configuration\chronoshift.dll .\$env:configuration\launchchronoshift.exe -tzip;
             }
         } Else {
-            & 7z a chronoshift.zip .\chronoshift.dll .\launch_chronoshift.exe -tzip;
+            & 7z a chronoshift.zip .\chronoshift.dll .\launchchronoshift.exe -tzip;
         }
 
 artifacts:
