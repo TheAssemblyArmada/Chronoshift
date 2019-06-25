@@ -155,7 +155,7 @@ int SuperClass::Anim_Stage() const
         if (m_FullyCharged) {
             anim_stage = MAX_CLOCK_STAGES;
         } else {
-            anim_stage = (MAX_CLOCK_STAGES * fixed(m_RechargeTime - m_ChargeTime.Time(), m_RechargeTime));
+            anim_stage = (MAX_CLOCK_STAGES * fixed_t(m_RechargeTime - m_ChargeTime.Time(), m_RechargeTime));
             if (anim_stage >= (MAX_CLOCK_STAGES - 1)) {
                 anim_stage = (MAX_CLOCK_STAGES - 1);
             }

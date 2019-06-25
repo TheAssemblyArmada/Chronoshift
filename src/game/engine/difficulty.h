@@ -36,15 +36,15 @@ enum DiffType
 
 struct DifficultyClass
 {
-    fixed Firepower; // Multiplier to firepower for all weapons [larger means more damage].
-    fixed Groundspeed; // Multiplier to speed for all ground units [larger means faster].
-    fixed Airspeed; // Multiplier to speed for all air units [larger means faster].
-    fixed Armor; // Multiplier to armor damage for all units and buildings [smaller means less damage].
-    fixed ROF; // Multiplier to Rate Of Fire for all weapons [larger means slower ROF].
-    fixed Cost; // Multiplier to cost for all units and buildings [larger means costlier].
-    fixed BuildTime; // Multiplier to general object build time [larger means longer to build].
-    fixed RepairDelay; // Average delay (minutes) between initiating building repair.
-    fixed BuildDelay; // Average delay (minutes) between initiating construction.
+    fixed_t Firepower; // Multiplier to firepower for all weapons [larger means more damage].
+    fixed_t Groundspeed; // Multiplier to speed for all ground units [larger means faster].
+    fixed_t Airspeed; // Multiplier to speed for all air units [larger means faster].
+    fixed_t Armor; // Multiplier to armor damage for all units and buildings [smaller means less damage].
+    fixed_t ROF; // Multiplier to Rate Of Fire for all weapons [larger means slower ROF].
+    fixed_t Cost; // Multiplier to cost for all units and buildings [larger means costlier].
+    fixed_t BuildTime; // Multiplier to general object build time [larger means longer to build].
+    fixed_t RepairDelay; // Average delay (minutes) between initiating building repair.
+    fixed_t BuildDelay; // Average delay (minutes) between initiating construction.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union

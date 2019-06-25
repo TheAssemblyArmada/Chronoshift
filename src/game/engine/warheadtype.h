@@ -65,7 +65,7 @@ public:
     int Get_Spread() const { return Spread; }
     WarheadType What_Type() const { return (WarheadType)Type; }
     BOOL Is_Wall_Destroyer() const { return Wall; }
-    const fixed &Get_Verses(ArmorType armor) const { return Verses[armor]; }
+    const fixed_t &Get_Verses(ArmorType armor) const { return Verses[armor]; }
 
     static void Init_Heap();
     static WarheadType From_Name(const char *name);
@@ -96,7 +96,7 @@ private:
     bool Ore; // Does this warhead destroy ore?
     bool UnkBool; // Only checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester
 #endif
-    fixed Verses[ARMOR_COUNT]; // Damage verses various armor types (as percentage of full damage). eg, Verses[ARMOR_WOOD];
+    fixed_t Verses[ARMOR_COUNT]; // Damage verses various armor types (as percentage of full damage). eg, Verses[ARMOR_WOOD];
     int Explosion; // Which explosion set to use when warhead of this type impacts.
     int Death; // Which infantry death animation to use.
 };

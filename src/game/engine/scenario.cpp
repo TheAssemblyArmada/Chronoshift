@@ -273,7 +273,7 @@ void ScenarioClass::Do_Fade_AI()
         Options.Adjust_Palette(OriginalPalette,
             GamePalette,
             Options.Get_Brightness(),
-            Options.Get_Saturation() * fixed((15 - FadeTimer), 15),
+            Options.Get_Saturation() * fixed_t((15 - FadeTimer), 15),
             Options.Get_Tint(),
             Options.Get_Contrast());
 
@@ -288,7 +288,7 @@ void ScenarioClass::Do_Fade_AI()
         Options.Adjust_Palette(OriginalPalette,
             GamePalette,
             Options.Get_Brightness(),
-            Options.Get_Saturation() * fixed(FadeTimer, 15),
+            Options.Get_Saturation() * fixed_t(FadeTimer, 15),
             Options.Get_Tint(),
             Options.Get_Contrast());
 

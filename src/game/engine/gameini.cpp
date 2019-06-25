@@ -24,7 +24,7 @@ GameINIClass::~GameINIClass() {}
 
 const lepton_t GameINIClass::Get_Lepton(const char *section, const char *entry, const lepton_t defvalue) const
 {
-    return Get_Fixed(section, entry, fixed(defvalue, 256)) * 256;
+    return Get_Fixed(section, entry, fixed_t(defvalue, 256)) * 256;
 }
 
 BOOL GameINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)

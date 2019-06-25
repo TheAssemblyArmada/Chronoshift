@@ -51,7 +51,7 @@ WarheadTypeClass::WarheadTypeClass(WarheadType warhead, const char *name) :
     Death(0)
 {
     for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
-        Verses[armor] = fixed::_1_1;
+        Verses[armor] = fixed_t::_1_1;
     }
 }
 
@@ -189,12 +189,12 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
             char *value = strtok(verses_buffer, ",");
             for (ArmorType armor = ARMOR_FIRST; (armor < ARMOR_COUNT) && (value != nullptr); ++armor) {
                 DEBUG_ASSERT(value != nullptr);
-                Verses[armor] = fixed(value);
+                Verses[armor] = fixed_t(value);
                 value = strtok(nullptr, ",");
             }
         }
 
-        UnkBool = Verses[ARMOR_HEAVY] == fixed::_0_1;
+        UnkBool = Verses[ARMOR_HEAVY] == fixed_t::_0_1;
 
         return true;
     }

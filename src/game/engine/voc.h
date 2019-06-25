@@ -267,7 +267,7 @@ inline void Sound_Effect(VocType voc, coord_t location, int int2 = 1, HousesType
 #endif
 }
 
-inline int Sound_Effect(VocType voc, fixed_t volume = fixed::_1_1, int int1 = 1, short pan = 0, HousesType house = HOUSES_NONE)
+inline int Sound_Effect(VocType voc, fixed_t volume = fixed_t::_1_1, int int1 = 1, short pan = 0, HousesType house = HOUSES_NONE)
 {
 #ifndef CHRONOSHIFT_STANDALONE
     int (*call_Sound_Effect)(VocType, fixed_t, int, short, HousesType) =

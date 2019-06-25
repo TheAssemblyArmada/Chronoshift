@@ -117,7 +117,7 @@ private:
     char BriefingText[1024];
     ThemeType TransitTheme;
     HousesType SomeHouse;
-    fixed CarryOverMoney;
+    fixed_t CarryOverMoney;
     int CarryOverMoneyAmount;
     int CarryOverCap;
     int CarryOverPercent;

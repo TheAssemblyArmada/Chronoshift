@@ -68,10 +68,10 @@ BOOL MissionControlClass::Read_INI(GameINIClass &ini)
         Retaliate = ini.Get_Bool(Name(), "Retaliate", Retaliate);
         Scatter = ini.Get_Bool(Name(), "Scatter", Scatter);
         Rate = ini.Get_Fixed(Name(), "Rate", Rate);
-        AARate = ini.Get_Fixed(Name(), "AARate", fixed(0, 0));
+        AARate = ini.Get_Fixed(Name(), "AARate", fixed_t(0, 0));
 
         // Falls back to Rate for AARate if AARate is zero.
-        if (AARate == fixed::_0_1) {
+        if (AARate == fixed_t::_0_1) {
             AARate = Rate;
         }
 

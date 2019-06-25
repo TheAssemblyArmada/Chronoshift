@@ -62,14 +62,14 @@ public:
     BOOL Write_INI(GameINIClass &ini, const LandType land) const;
 
     BOOL const Is_Buildable() { return Buildable; }
-    fixed const Get_Speed(SpeedType speed) { return Speeds[speed]; }
+    fixed_t const Get_Speed(SpeedType speed) { return Speeds[speed]; }
 
     static GroundType From_Name(const char *name);
     static const char *Name_From(GroundType ground);
 
 public:
     // Percent of full speed for each speed type (0.0 means impassable) [def = 1.0]
-    fixed Speeds[SPEED_COUNT];
+    fixed_t Speeds[SPEED_COUNT];
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.

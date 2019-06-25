@@ -247,7 +247,7 @@ int TechnoTypeClass::Get_Ownable() const
  */
 int TechnoTypeClass::Time_To_Build() const
 {
-    return fixed(900, 1000) * Cost * Rule.Get_Build_Speed();
+    return fixed_t(900, 1000) * Cost * Rule.Get_Build_Speed();
 }
 
 /**
@@ -331,7 +331,7 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
 
         // MPH
         // TODO, two versions of code, maybe we need to fix Get_MPH?, see CCINI
-        fixed def(MPH, 256);
+        fixed_t def(MPH, 256);
         int value = ini.Get_MPHType(Get_Name(), "Speed", MPH);
 
         if (value != -1) {

@@ -540,7 +540,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
     }
 
     if (speed != SPEED_NONE) {
-        if (Ground[Land].Get_Speed(speed) == fixed::_0_1) {
+        if (Ground[Land].Get_Speed(speed) == fixed_t::_0_1) {
             return false;
         }
 
@@ -816,7 +816,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
 
 #if 0 // TODO Editor related stuff.
         if ((g_inMapEditor && Map.field_8567) /*|| Debug_CellPassable*/) {
-            if (!Ground[Land].Is_Buildable() || Ground[Land].Get_Speed(SPEED_FOOT) == fixed::_0_1 && obj != nullptr) {
+            if (!Ground[Land].Is_Buildable() || Ground[Land].Get_Speed(SPEED_FOOT) == fixed_t::_0_1 && obj != nullptr) {
                 fading_table = DisplayClass::FadingRed;
             }
         }
@@ -1201,7 +1201,7 @@ BOOL CellClass::Is_Clear_To_Move(
     }
 
     // Check to make sure our speed type can actually move on this ground.
-    return (Ground[land].Get_Speed(speed) != fixed::_0_1);
+    return (Ground[land].Get_Speed(speed) != fixed_t::_0_1);
 }
 
 /**

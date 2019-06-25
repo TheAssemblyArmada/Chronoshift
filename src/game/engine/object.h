@@ -77,7 +77,7 @@ public:
     virtual BOOL Render(BOOL force_render = false);
     virtual const int16_t *Occupy_List(BOOL a1 = false) const;
     virtual const int16_t *Overlap_List(BOOL a1 = false) const;
-    virtual fixed Health_Ratio() const;
+    virtual fixed_t Health_Ratio() const;
     virtual void Draw_It(int x, int y, WindowNumberType window) const = 0;
     virtual void Hidden() {}
     virtual void Look(BOOL a1 = false) {}

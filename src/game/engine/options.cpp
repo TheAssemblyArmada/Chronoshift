@@ -82,10 +82,10 @@ OptionsClass::OptionsClass() :
     Volume(".40"),
     ScoreVolume(".25"),
     MultiplayerScoreVolume("0"),
-    Brightness(fixed::_1_2),
-    Tint(fixed::_1_2),
-    Saturation(fixed::_1_2),
-    Contrast(fixed::_1_2),
+    Brightness(fixed_t::_1_2),
+    Tint(fixed_t::_1_2),
+    Saturation(fixed_t::_1_2),
+    Contrast(fixed_t::_1_2),
     AutoScroll(true),
     ScoreRepeats(false),
     ScoreShuffles(false),
@@ -444,7 +444,7 @@ void OptionsClass::Load_Settings()
  * 0x00525884
  */
 void OptionsClass::Adjust_Palette(
-    PaletteClass &src, PaletteClass &dst, fixed brightness, fixed saturation, fixed tint, fixed contrast) const
+    PaletteClass &src, PaletteClass &dst, fixed_t brightness, fixed_t saturation, fixed_t tint, fixed_t contrast) const
 {
     // TODO, the original does this, but the check is pointless as references can be assumed never to be null.
     // if (&src == nullptr || &dst == nullptr) {
@@ -504,7 +504,7 @@ int OptionsClass::Normalize_Delay(int delay) const
  *
  * 0x0052520C
  */
-void OptionsClass::Set_Score_Volume(fixed volume, BOOL beep)
+void OptionsClass::Set_Score_Volume(fixed_t volume, BOOL beep)
 {
     if (volume >= 1) {
         volume.Set_Word(255);
@@ -517,7 +517,7 @@ void OptionsClass::Set_Score_Volume(fixed volume, BOOL beep)
     if (beep) {
         // TODO requires ThemeClass
         // if (Theme.Still_Playing()) {
-        //    Sound_Effect(VOC_RABEEP1, fixed::_1_1, 1, 0, HOUSES_NONE);
+        //    Sound_Effect(VOC_RABEEP1, fixed_t::_1_1, 1, 0, HOUSES_NONE);
         //}
     }
 }
@@ -527,7 +527,7 @@ void OptionsClass::Set_Score_Volume(fixed volume, BOOL beep)
  *
  * 0x005252BC
  */
-void OptionsClass::Set_Sound_Volume(fixed volume, BOOL beep)
+void OptionsClass::Set_Sound_Volume(fixed_t volume, BOOL beep)
 {
     if (volume >= 1) {
         volume.Set_Word(255);
@@ -545,9 +545,9 @@ void OptionsClass::Set_Sound_Volume(fixed volume, BOOL beep)
  *
  * 0x0052534C
  */
-void OptionsClass::Set_Brightness(fixed brightness)
+void OptionsClass::Set_Brightness(fixed_t brightness)
 {
-    Brightness = brightness * fixed::_1_2 + fixed::_1_4;
+    Brightness = brightness * fixed_t::_1_2 + fixed_t::_1_4;
     Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
     GamePalette.Set();
 }
@@ -557,7 +557,7 @@ void OptionsClass::Set_Brightness(fixed brightness)
  *
  * 0x0052551C
  */
-void OptionsClass::Set_Saturation(fixed saturation)
+void OptionsClass::Set_Saturation(fixed_t saturation)
 {
     Saturation = saturation;
     Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
@@ -569,9 +569,9 @@ void OptionsClass::Set_Saturation(fixed saturation)
  *
  * 0x005255E8
  */
-void OptionsClass::Set_Contrast(fixed contrast)
+void OptionsClass::Set_Contrast(fixed_t contrast)
 {
-    Contrast = contrast * fixed::_1_2 + fixed::_1_4;
+    Contrast = contrast * fixed_t::_1_2 + fixed_t::_1_4;
     Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
     GamePalette.Set();
 }
@@ -581,7 +581,7 @@ void OptionsClass::Set_Contrast(fixed contrast)
  *
  * 0x005257B8
  */
-void OptionsClass::Set_Tint(fixed tint)
+void OptionsClass::Set_Tint(fixed_t tint)
 {
     Tint = tint;
     Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);

@@ -36,7 +36,7 @@ public:
 
     void Reset() { m_hue = 0; m_sat = 0; m_val = 0; }
     void Adjust(int adjust, HSVClass const &that);
-    void Adjust(fixed brightness, fixed saturation, fixed tint, fixed contrast);
+    void Adjust(fixed_t brightness, fixed_t saturation, fixed_t tint, fixed_t contrast);
     int const Difference(HSVClass const &that) const;
     void const Set(uint8_t index) const;
 

@@ -59,8 +59,8 @@ private:
     bool Retaliate; // Is allowed to retaliate while on this mission (def = true)?
     bool Scatter; // Is allowed to scatter from threats (def = true)?
 #endif
-    fixed Rate; // Delay between normal processing (larger = faster game, less responsiveness) (def = 0.016).
-    fixed AARate; // Anti-aircraft delay rate (if not specifed it uses regular rate) (def = 0.016).
+    fixed_t Rate; // Delay between normal processing (larger = faster game, less responsiveness) (def = 0.016).
+    fixed_t AARate; // Anti-aircraft delay rate (if not specifed it uses regular rate) (def = 0.016).
 
 #ifndef CHRONOSHIFT_STANDALONE
     static MissionControlClass *const MissionControl;

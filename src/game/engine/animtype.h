@@ -30,7 +30,7 @@ class AnimTypeClass : public ObjectTypeClass
 {
 public:
     AnimTypeClass(AnimType anim, const char *name, int a3, int mid_point, BOOL theater, BOOL normalized, BOOL a7,
-        BOOL scorch, BOOL crater, BOOL sticky, BOOL surface, BOOL translucent, BOOL flamer, fixed damage, int rate,
+        BOOL scorch, BOOL crater, BOOL sticky, BOOL surface, BOOL translucent, BOOL flamer, fixed_t damage, int rate,
         int start, int loop_start, int loop_end, int end, int loop_count, VocType report, AnimType next);
     AnimTypeClass(const AnimTypeClass &that);
     AnimTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
@@ -97,7 +97,7 @@ private:
     AnimType m_Type;
     int m_field_13D; // coord offset?
     int m_MidPoint; // middle frame, for logic purposes    //DamageFrame? //LogicFrame?
-    fixed m_Damage;
+    fixed_t m_Damage;
     int m_Rate; // Desired animation frames per minute (def = 900) default is 1 frame per logic tick.
     int m_Start; // Frame to start this animation from.
     int m_LoopStart; // Beginning frame of loop [if animation loops]

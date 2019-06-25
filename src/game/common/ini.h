@@ -192,8 +192,8 @@ public:
     BOOL Put_String(const char *section, const char *entry, const char *string);
     int Get_String(const char *section, const char *entry, const char *defvalue = "", char *buffer = nullptr,
         int length = 0) const;
-    BOOL Put_Fixed(const char *section, const char *entry, fixed value);
-    fixed const Get_Fixed(const char *section, const char *entry, fixed defvalue = 0) const;
+    BOOL Put_Fixed(const char *section, const char *entry, fixed_t value);
+    fixed_t const Get_Fixed(const char *section, const char *entry, fixed_t defvalue = 0) const;
     //void Duplicate_CRC_Error(const char *function_name, const char *section, const char *entry);
     //void Duplicate_CRC(const char *function_name, const char *section, const char *entry);
 

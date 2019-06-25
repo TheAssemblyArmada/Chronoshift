@@ -55,22 +55,22 @@ public:
     void Save_Settings();
     void Load_Settings();
     void Adjust_Palette(
-        PaletteClass &src, PaletteClass &dst, fixed brightness, fixed saturation, fixed tint, fixed contrast) const;
+        PaletteClass &src, PaletteClass &dst, fixed_t brightness, fixed_t saturation, fixed_t tint, fixed_t contrast) const;
     void Fixup_Palette() const;
     int Normalize_Volume(int volume) const { return volume * Volume; }
     int Normalize_Delay(int delay) const;
     void Set_Shuffle(BOOL shuffle) { ScoreShuffles = shuffle; }
     void Set_Repeat(BOOL repeat) { ScoreRepeats = repeat; }
-    void Set_Score_Volume(fixed volume, BOOL beep = false);
-    void Set_Sound_Volume(fixed volume, BOOL beep = false);
-    void Set_Brightness(fixed brightness);
-    void Set_Saturation(fixed saturation);
-    void Set_Contrast(fixed contrast);
-    void Set_Tint(fixed tint);
+    void Set_Score_Volume(fixed_t volume, BOOL beep = false);
+    void Set_Sound_Volume(fixed_t volume, BOOL beep = false);
+    void Set_Brightness(fixed_t brightness);
+    void Set_Saturation(fixed_t saturation);
+    void Set_Contrast(fixed_t contrast);
+    void Set_Tint(fixed_t tint);
     void Set();
 
     int Get_Scroll_Rate() const { return ScrollRate; }
-    const fixed &Get_Score_Volume() const { return ScoreVolume; }
+    const fixed_t &Get_Score_Volume() const { return ScoreVolume; }
     BOOL Get_Auto_Scroll() const { return AutoScroll; }
     BOOL Get_Repeat() const { return ScoreRepeats; }
     BOOL Get_Shuffle() const { return ScoreShuffles; }
@@ -78,10 +78,10 @@ public:
     BOOL Free_Scrolling() const { return FreeScrolling; }
     BOOL Is_Counterstrike_Enabled() const { return CounterstrikeEnabled; }
     BOOL Is_Aftermath_Enabled() const { return AftermathEnabled; }
-    fixed Get_Brightness() const { return (Brightness - fixed::_1_4) / fixed::_1_2; }
-    fixed Get_Saturation() const { return Saturation; }
-    fixed Get_Contrast() const { return (Contrast - fixed::_1_4) / fixed::_1_2; }
-    fixed Get_Tint() const { return Tint; }
+    fixed_t Get_Brightness() const { return (Brightness - fixed_t::_1_4) / fixed_t::_1_2; }
+    fixed_t Get_Saturation() const { return Saturation; }
+    fixed_t Get_Contrast() const { return (Contrast - fixed_t::_1_4) / fixed_t::_1_2; }
+    fixed_t Get_Tint() const { return Tint; }
 
     KeyNumType Get_KeySelectView() const { return KeySelectView; }
     KeyNumType Get_KeyRepairToggle() const { return KeyRepairToggle; }
@@ -181,13 +181,13 @@ public:
 private:
     int GameSpeed;
     int ScrollRate;
-    fixed Volume;
-    fixed ScoreVolume;
-    fixed MultiplayerScoreVolume;
-    fixed Brightness;
-    fixed Tint;
-    fixed Saturation;
-    fixed Contrast;
+    fixed_t Volume;
+    fixed_t ScoreVolume;
+    fixed_t MultiplayerScoreVolume;
+    fixed_t Brightness;
+    fixed_t Tint;
+    fixed_t Saturation;
+    fixed_t Contrast;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required to get correct packing when compiler packing set to 1.
     union

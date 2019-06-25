@@ -109,8 +109,8 @@ public:
     int Adjust_Capacity(int amount, BOOL cap);
     void Refund_Money(unsigned amount) { m_Credits += amount; }
     void Silo_Redraw_Check(unsigned ore, unsigned capacity);
-    fixed Ore_Fraction();
-    fixed Power_Fraction();
+    fixed_t Ore_Fraction();
+    fixed_t Power_Fraction();
     DiffType Assign_Handicap(DiffType diff);
     BOOL Can_Build(TechnoTypeClass *obj, HousesType house);
     void Make_Ally(HousesType type);

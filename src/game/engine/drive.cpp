@@ -116,7 +116,7 @@ void DriveClass::Response_Select()
         VOC_VEHIC1, VOC_REPORT1, VOC_YESSIR1/*, VOC_YESSIR1, VOC_YESSIR1*/, VOC_AWAIT1
     };
     if (g_AllowVoice) {
-        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed::_1_1, -(Get_Heap_ID() + 1));
+        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t::_1_1, -(Get_Heap_ID() + 1));
     }
 //#endif
 }
@@ -131,7 +131,7 @@ void DriveClass::Response_Move()
         VOC_ACKNO, VOC_AFFIRM1
     };
     if (g_AllowVoice) {
-        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed::_1_1, -(Get_Heap_ID() + 1));
+        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t::_1_1, -(Get_Heap_ID() + 1));
     }
 //#endif
 }
@@ -146,7 +146,7 @@ void DriveClass::Response_Attack()
         VOC_AFFIRM1, VOC_ACKNO
     };
     if (g_AllowVoice) {
-        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed::_1_1, -(Get_Heap_ID() + 1));
+        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t::_1_1, -(Get_Heap_ID() + 1));
     }
 //#endif
 }
