@@ -208,6 +208,6 @@ BOOL SliderClass::Step(BOOL step_up)
 void SliderClass::Recalc_Thumb()
 {
     int length = IsHorizontal ? Width : Height;
-    ThumbnailPixels = std::max(4, length * fixed(BumpSize, Maximum));
-    ThumbnailSize = std::min(length - ThumbnailPixels, length * fixed(Value, Maximum));
+    ThumbnailPixels = std::max(4, length * fixed_t(BumpSize, Maximum));
+    ThumbnailSize = std::min(length - ThumbnailPixels, length * fixed_t(Value, Maximum));
 }

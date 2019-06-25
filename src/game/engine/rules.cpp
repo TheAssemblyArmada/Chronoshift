@@ -22,19 +22,19 @@
 #include "theme.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
-fixed &RulesClass::EngineerDamage = Make_Global<fixed>(0x00665E02);
-fixed &RulesClass::EngineerCaptureLevel = Make_Global<fixed>(0x00665E04);
-fixed &RulesClass::ChronoTankDuration = Make_Global<fixed>(0x00665E00);
+fixed_t &RulesClass::EngineerDamage = Make_Global<fixed_t>(0x00665E02);
+fixed_t &RulesClass::EngineerCaptureLevel = Make_Global<fixed_t>(0x00665E04);
+fixed_t &RulesClass::ChronoTankDuration = Make_Global<fixed_t>(0x00665E00);
 int &RulesClass::MTankDistance = Make_Global<int>(0x006016A4);
 int &RulesClass::CarrierLaunchDelay = Make_Global<int>(0x006016A8);
-fixed &RulesClass::QuakeUnitDamage = Make_Global<fixed>(0x00665DF8);
-fixed RulesClass::QuakeVesselDamage = (fixed)0;
-fixed &RulesClass::QuakeBuildingDamage = Make_Global<fixed>(0x00665DFA);
+fixed_t &RulesClass::QuakeUnitDamage = Make_Global<fixed_t>(0x00665DF8);
+fixed_t RulesClass::QuakeVesselDamage = (fixed_t)0;
+fixed_t &RulesClass::QuakeBuildingDamage = Make_Global<fixed_t>(0x00665DFA);
 int &RulesClass::QuakeInfantryDamage = Make_Global<int>(0x006016AC);
 int &RulesClass::QuakeDelay = Make_Global<int>(0x00665DFC);
 BOOL &RulesClass::OrigNewUnitsEnabled = Make_Global<BOOL>(0x00665DE0);
 BOOL &RulesClass::OrigSecretUnitsEnabled = Make_Global<BOOL>(0x00665DE4);
-fixed RulesClass::CloakDelay;
+fixed_t RulesClass::CloakDelay;
 RulesClass &Rule = Make_Global<RulesClass>(0x00666704);
 #else
 RulesClass Rule;
@@ -292,7 +292,7 @@ BOOL RulesClass::Aftermath(GameINIClass &ini)
         QuakeUnitDamage = ini.Get_Fixed("Aftermath", "QuakeUnitDamage", QuakeUnitDamage);
         QuakeVesselDamage = ini.Get_Fixed("Aftermath", "QuakeVesselDamage", QuakeVesselDamage);
 
-        if (QuakeVesselDamage <= (fixed)0) {
+        if (QuakeVesselDamage <= (fixed_t)0) {
             QuakeVesselDamage = QuakeUnitDamage;
         }
 
@@ -586,7 +586,7 @@ BOOL RulesClass::Powerups(GameINIClass &ini)
                 char *data = strtok(value, ",");
 
                 if (strpbrk(value, ".%")) {
-                    CrateClass::CrateData[crate] = fixed(data).To_Int();
+                    CrateClass::CrateData[crate] = fixed_t(data).To_Int();
                 } else {
                     strtrim(data);
                     CrateClass::CrateData[crate] = strtol(data, nullptr, 10);

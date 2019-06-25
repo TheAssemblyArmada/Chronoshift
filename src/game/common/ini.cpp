@@ -784,17 +784,17 @@ BOOL const INIClass::Get_Bool(const char *section, const char *entry, BOOL defva
     return defvalue;
 }
 
-BOOL INIClass::Put_Fixed(const char *section, const char *entry, fixed value)
+BOOL INIClass::Put_Fixed(const char *section, const char *entry, fixed_t value)
 {
     return Put_String(section, entry, value.As_ASCII());
 }
 
-fixed const INIClass::Get_Fixed(const char *section, const char *entry, fixed defvalue) const
+fixed_t const INIClass::Get_Fixed(const char *section, const char *entry, fixed_t defvalue) const
 {
     char buffer[128];
 
     if (Get_String(section, entry, "", buffer, sizeof(buffer)) > 0) {
-        return fixed(buffer);
+        return fixed_t(buffer);
     }
 
     return defvalue;

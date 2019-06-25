@@ -529,13 +529,13 @@ void HouseClass::Silo_Redraw_Check(unsigned ore, unsigned capacity)
  *
  * 0x004D2C78
  */
-fixed HouseClass::Ore_Fraction()
+fixed_t HouseClass::Ore_Fraction()
 {
     if (m_Ore > 0) {
-        return fixed(m_Ore, m_Capacity);
+        return fixed_t(m_Ore, m_Capacity);
     }
 
-    return fixed(0, 0);
+    return fixed_t(0, 0);
 }
 
 /**
@@ -543,17 +543,17 @@ fixed HouseClass::Ore_Fraction()
  *
  * 0x004D8CA8
  */
-fixed HouseClass::Power_Fraction()
+fixed_t HouseClass::Power_Fraction()
 {
     if (m_Power < m_Drain && m_Drain != 0) {
         if (m_Power != 0) {
-            return fixed(m_Power, m_Drain);
+            return fixed_t(m_Power, m_Drain);
         } else {
-            return fixed(0);
+            return fixed_t(0);
         }
     }
 
-    return fixed(1);
+    return fixed_t(1);
 }
 
 /**

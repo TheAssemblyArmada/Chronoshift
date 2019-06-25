@@ -201,7 +201,7 @@ int GaugeClass::Pixel_To_Value(int pixel)
     }
 
     int value = std::clamp(offset, 0, max);
-    fixed fval(value, max);
+    fixed_t fval(value, max);
 
     return Maximum * fval;
 }
@@ -219,7 +219,7 @@ int GaugeClass::Value_To_Pixel(int value)
         offset = YPos;
     }
 
-    fixed result(value, Maximum);
+    fixed_t result(value, Maximum);
 
     return offset + (max * result);
 }

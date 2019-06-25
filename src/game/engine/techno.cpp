@@ -708,7 +708,7 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
                 return VISUAL_NORMAL;
             }
 
-            int stage = fixed(value, 38) * 256;
+            int stage = fixed_t(value, 38) * 256;
 
             if (stage < 64) {
                 return VISUAL_INDISTINCT;

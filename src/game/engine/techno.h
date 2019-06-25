@@ -110,7 +110,7 @@ public:
     virtual InfantryType Crew_Type() const;
     virtual BOOL Is_Allowed_To_Recloak() const;
     virtual BOOL Is_Weapon_Equipped() const;
-    virtual fixed Ore_Load() const { return fixed::_0_1; }
+    virtual fixed_t Ore_Load() const { return fixed_t::_0_1; }
     virtual int Pip_Count() const { return 0; }
     virtual int Rearm_Delay(int a1, int a2) const;
     virtual int Refund_Amount() const;
@@ -226,8 +226,8 @@ protected:
     bool m_Lemon; //"degrades" in OpenDUNE, seems to imply some decaying logic
     bool m_Bit2_16;
 #endif
-    fixed m_ArmorMult;
-    fixed m_FirepowerMult;
+    fixed_t m_ArmorMult;
+    fixed_t m_FirepowerMult;
     TCountDownTimerClass<FrameTimerClass> m_IdleActionTimer;
     TCountDownTimerClass<FrameTimerClass> m_InvulnerabilityTimer;
     int m_Spied;

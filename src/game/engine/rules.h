@@ -78,46 +78,46 @@ public:
     BOOL Objects(GameINIClass &ini);
     BOOL Difficulty(GameINIClass &ini);
 
-    const fixed &Turbo_Boost() const { return TurboBoost; }
-    const fixed &Attack_Interval() const { return AttackInterval; }
-    const fixed &Attack_Delay() const { return AttackDelay; }
-    const fixed &Power_Emergency() const { return PowerEmergency; }
+    const fixed_t &Turbo_Boost() const { return TurboBoost; }
+    const fixed_t &Attack_Interval() const { return AttackInterval; }
+    const fixed_t &Attack_Delay() const { return AttackDelay; }
+    const fixed_t &Power_Emergency() const { return PowerEmergency; }
     int Badger_Bomb_Count() const { return BadgerBombCount; }
-    const fixed &Airstrip_Ratio() const { return AirstripRatio; }
+    const fixed_t &Airstrip_Ratio() const { return AirstripRatio; }
     int Airstrip_Limit() const { return AirstripLimit; }
-    const fixed &Helipad_Ratio() const { return HelipadRatio; }
+    const fixed_t &Helipad_Ratio() const { return HelipadRatio; }
     int Helipad_Limit() const { return HelipadLimit; }
-    const fixed &Tesla_Ratio() const { return TeslaRatio; }
+    const fixed_t &Tesla_Ratio() const { return TeslaRatio; }
     int Tesla_Limit() const { return TeslaLimit; }
-    const fixed &AA_Ratio() const { return AARatio; }
+    const fixed_t &AA_Ratio() const { return AARatio; }
     int AA_Limit() const { return AALimit; }
-    const fixed &Defense_Ratio() const { return DefenseRatio; }
+    const fixed_t &Defense_Ratio() const { return DefenseRatio; }
     int Defense_Limit() const { return DefenseLimit; }
-    const fixed &War_Factory_Ratio() const { return WarRatio; }
+    const fixed_t &War_Factory_Ratio() const { return WarRatio; }
     int War_Factory_Limit() const { return WarLimit; }
-    const fixed &Barracks_Ratio() const { return BarracksRatio; }
+    const fixed_t &Barracks_Ratio() const { return BarracksRatio; }
     int Barracks_Limit() const { return BarracksLimit; }
     int Refinery_Limit() const { return RefineryLimit; }
-    const fixed &Refinery_Ratio() const { return RefineryRatio; }
+    const fixed_t &Refinery_Ratio() const { return RefineryRatio; }
     int Base_Size_Add() const { return BaseSizeAdd; }
     int Power_Surplus() const { return PowerSurplus; }
     int Infantry_Reserve() const { return InfantryReserve; }
     int Infantry_Base_Mult() const { return InfantryBaseMult; }
-    const fixed &Chrono_Duration() const { return ChronoDuration; }
-    const fixed &Water_Crate_Chance() const { return WaterCrateChance; }
+    const fixed_t &Chrono_Duration() const { return ChronoDuration; }
+    const fixed_t &Water_Crate_Chance() const { return WaterCrateChance; }
     int Solo_Crate_Money() const { return SoloCrateMoney; }
     int GPS_Tech_Level() const { return GPSTechLevel; }
     UnitType Unit_CrateType() const { return UnitCrateType; }
-    const fixed &Patrol_Scan() const { return PatrolScan; }
-    const fixed &Team_Delay() const { return TeamDelay; }
-    const fixed &Submerge_Delay() const { return SubmergeDelay; }
-    const fixed &GameSpeed_Bias() const { return GameSpeedBias; }
-    const fixed &Base_Bias() const { return BaseBias; }
+    const fixed_t &Patrol_Scan() const { return PatrolScan; }
+    const fixed_t &Team_Delay() const { return TeamDelay; }
+    const fixed_t &Submerge_Delay() const { return SubmergeDelay; }
+    const fixed_t &GameSpeed_Bias() const { return GameSpeedBias; }
+    const fixed_t &Base_Bias() const { return BaseBias; }
     lepton_t Vortex_Range() const { return VortexRange; }
     MPHType Vortex_Speed() const { return VortexSpeed; }
     int Vortex_Damage() const { return VortexDamage; }
-    const fixed &Vortex_Chance() const { return VortexChance; }
-    const fixed &Exp_Spread() const { return ExpSpread; }
+    const fixed_t &Vortex_Chance() const { return VortexChance; }
+    const fixed_t &Exp_Spread() const { return ExpSpread; }
     lepton_t Fire_Supress() const { return FireSupress; }
     int Para_Tech() const { return ParaTech; }
     int Spy_Plane_Tech() const { return SpyPlaneTech; }
@@ -138,18 +138,18 @@ public:
     bool MPlayer_AIPlayers() const { return MPlayerAIPlayers; }
     bool MPlayer_Capture_The_Flag() const { return MPlayerCaptureTheFlag; }
     lepton_t Drop_Zone_Radius() const { return DropZoneRadius; }
-    const fixed &Message_Delay() const { return MessageDelay; }
-    const fixed &Savour_Delay() const { return SavourDelay; }
+    const fixed_t &Message_Delay() const { return MessageDelay; }
+    const fixed_t &Savour_Delay() const { return SavourDelay; }
     int AV_Mine_Damage() const { return AVMineDamage; }
     int AP_Mine_Damage() const { return APMineDamage; }
     int Max_Players() const { return Players; }
-    const fixed &Base_Defense_Delay() const { return BaseDefenseDelay; }
+    const fixed_t &Base_Defense_Delay() const { return BaseDefenseDelay; }
     int Suspend_Priority() const { return SuspendPriority; }
-    const fixed &Suspend_Delay() const { return SuspendDelay; }
-    const fixed &Survivor_Rate() const { return SurvivorRate; }
-    const fixed &Reload_Rate() const { return ReloadRate; }
-    const fixed &Autocreate_Time() const { return AutocreateTime; }
-    const fixed &Buildup_Time() const { return BuildupTime; }
+    const fixed_t &Suspend_Delay() const { return SuspendDelay; }
+    const fixed_t &Survivor_Rate() const { return SurvivorRate; }
+    const fixed_t &Reload_Rate() const { return ReloadRate; }
+    const fixed_t &Autocreate_Time() const { return AutocreateTime; }
+    const fixed_t &Buildup_Time() const { return BuildupTime; }
     int Ore_Truck_Rate() const { return OreTruckRate; }
     int Atom_Damage() const { return AtomDamage; }
     const DifficultyClass &Difficulty_Control(DiffType diff) const { return Difficulties[diff]; }
@@ -174,40 +174,40 @@ public:
     bool Chrono_Kill_Cargo() const { return ChronoKillCargo; }
     bool Secret_Units_Enabled() const { return SecretUnitsEnabled; }
     bool New_Units_Enabled() const { return NewUnitsEnabled; }
-    const fixed &Prone_Damage() const { return ProneDamage; }
-    const fixed &Quake_Damage() const { return QuakeDamage; }
-    const fixed &Quake_Chance() const { return QuakeChance; }
-    const fixed &Ore_Growth_Rate() const { return GrowthRate; }
-    const fixed &Shroud_Rate() const { return ShroudRate; }
-    const fixed &Crate_Regen() const { return CrateRegen; }
-    const fixed &Get_Timer_Warning() const { return TimerWarning; }
-    const fixed &Get_Recharge_Sonar() const { return RechargeSonar; }
-    const fixed &Get_Recharge_Chrono() const { return RechargeChrono; }
-    const fixed &Get_Recharge_ParaBomb() const { return RechargeParaBomb; }
-    const fixed &Get_Recharge_Paratrooper() const { return RechargeParatrooper; }
-    const fixed &Get_Recharge_ParaSaboteur() const { return RechargeParaSaboteur; }
-    const fixed &Get_Recharge_SpyPlane() const { return RechargeSpyPlane; }
-    const fixed &Get_Recharge_IronCurtain() const { return RechargeIronCurtain; }
-    const fixed &Get_Recharge_GPS() const { return RechargeGPS; }
-    const fixed &Get_Recharge_Nuke() const { return RechargeNuke; }
-    const fixed &Get_Speak_Delay() const { return SpeakDelay; }
-    const fixed &Get_Damage_Delay() const { return DamageDelay; }
+    const fixed_t &Prone_Damage() const { return ProneDamage; }
+    const fixed_t &Quake_Damage() const { return QuakeDamage; }
+    const fixed_t &Quake_Chance() const { return QuakeChance; }
+    const fixed_t &Ore_Growth_Rate() const { return GrowthRate; }
+    const fixed_t &Shroud_Rate() const { return ShroudRate; }
+    const fixed_t &Crate_Regen() const { return CrateRegen; }
+    const fixed_t &Get_Timer_Warning() const { return TimerWarning; }
+    const fixed_t &Get_Recharge_Sonar() const { return RechargeSonar; }
+    const fixed_t &Get_Recharge_Chrono() const { return RechargeChrono; }
+    const fixed_t &Get_Recharge_ParaBomb() const { return RechargeParaBomb; }
+    const fixed_t &Get_Recharge_Paratrooper() const { return RechargeParatrooper; }
+    const fixed_t &Get_Recharge_ParaSaboteur() const { return RechargeParaSaboteur; }
+    const fixed_t &Get_Recharge_SpyPlane() const { return RechargeSpyPlane; }
+    const fixed_t &Get_Recharge_IronCurtain() const { return RechargeIronCurtain; }
+    const fixed_t &Get_Recharge_GPS() const { return RechargeGPS; }
+    const fixed_t &Get_Recharge_Nuke() const { return RechargeNuke; }
+    const fixed_t &Get_Speak_Delay() const { return SpeakDelay; }
+    const fixed_t &Get_Damage_Delay() const { return DamageDelay; }
     int Get_Gravity() const { return Gravity; }
     int Gap_Radius() const { return GapRadius; }
-    const fixed &Gap_Regen_Interval() const { return GapRegenInterval; }
+    const fixed_t &Gap_Regen_Interval() const { return GapRegenInterval; }
     lepton_t Radar_Jam_Radius() const { return RadarJamRadius; }
     MPHType Get_Incoming() const { return Incoming; }
     int Min_Damage() const { return MinDamage; }
     int Max_Damage() const { return MaxDamage; }
     int Get_Repair_Step() const { return RepairStep; }
-    const fixed &Get_Repair_Percent() const { return RepairPercent; }
+    const fixed_t &Get_Repair_Percent() const { return RepairPercent; }
     int Get_Unit_Repair_Step() const { return URepairStep; }
-    const fixed &Get_Unit_Repair_Percent() const { return URepairPercent; }
-    const fixed &Get_Repair_Rate() const { return RepairRate; }
-    const fixed &Condition_Green() const { return ConditionGreen; }
-    const fixed &Condition_Yellow() const { return ConditionYellow; }
-    const fixed &Condition_Red() const { return ConditionRed; }
-    const fixed &Idle_Action_Frequency() const { return IdleActionFrequency; }
+    const fixed_t &Get_Unit_Repair_Percent() const { return URepairPercent; }
+    const fixed_t &Get_Repair_Rate() const { return RepairRate; }
+    const fixed_t &Condition_Green() const { return ConditionGreen; }
+    const fixed_t &Condition_Yellow() const { return ConditionYellow; }
+    const fixed_t &Condition_Red() const { return ConditionRed; }
+    const fixed_t &Idle_Action_Frequency() const { return IdleActionFrequency; }
     int Bail_Count() const { return BailCount; }
     int Get_Gold_Value() const { return GoldValue; }
     int Get_Gem_Value() const { return GemValue; }
@@ -236,70 +236,70 @@ public:
     lepton_t Crate_Radius() const { return CrateRadius; }
     lepton_t Homing_Scatter_Distance() const { return HomingScatter; }
     lepton_t Ballistic_Scatter_Distance() const { return BallisticScatter; }
-    const fixed &Refund_Percent() const { return RefundPercent; }
-    const fixed &Get_Iron_Curtain() const { return IronCurtain; }
+    const fixed_t &Refund_Percent() const { return RefundPercent; }
+    const fixed_t &Get_Iron_Curtain() const { return IronCurtain; }
     int Bridge_Strength() const { return BridgeStrength; }
-    const fixed &Get_Build_Speed() const { return BuildSpeed; }
-    const fixed &C4_Delay() const { return C4Delay; }
+    const fixed_t &Get_Build_Speed() const { return BuildSpeed; }
+    const fixed_t &C4_Delay() const { return C4Delay; }
     int Credit_Reserve() const { return CreditReserve; }
-    const fixed &Path_Delay() const { return PathDelay; }
-    const fixed &Movie_Time() const { return MovieTime; }
+    const fixed_t &Path_Delay() const { return PathDelay; }
+    const fixed_t &Movie_Time() const { return MovieTime; }
     int Chrono_Tech_Level() const { return ChronoTechLevel; }
     lepton_t Ore_Near_Scan() const { return OreNearScan; }
     lepton_t Ore_Far_Scan() const { return OreFarScan; }
-    const fixed &Engineer_Damage() const { return EngineerDamage; }
-    const fixed &Engineer_Capture_Level() const { return EngineerCaptureLevel; }
-    const fixed &Chrono_Tank_Duration() const { return ChronoTankDuration; }
+    const fixed_t &Engineer_Damage() const { return EngineerDamage; }
+    const fixed_t &Engineer_Capture_Level() const { return EngineerCaptureLevel; }
+    const fixed_t &Chrono_Tank_Duration() const { return ChronoTankDuration; }
     int MTank_Distance() const { return MTankDistance; }
     int Carrier_Launch_Delay() const { return CarrierLaunchDelay; }
-    const fixed &Quake_Unit_Damage() const { return QuakeUnitDamage; }
-    const fixed &Quake_Vessel_Damage() const { return QuakeVesselDamage; }
-    const fixed &Quake_Building_Damage() const { return QuakeBuildingDamage; }
+    const fixed_t &Quake_Unit_Damage() const { return QuakeUnitDamage; }
+    const fixed_t &Quake_Vessel_Damage() const { return QuakeVesselDamage; }
+    const fixed_t &Quake_Building_Damage() const { return QuakeBuildingDamage; }
     int Quake_Infantry_Damage() const { return QuakeInfantryDamage; }
     int Quake_Delay() const { return QuakeDelay; }
-    const fixed &Cloak_Delay() const { return CloakDelay; }
+    const fixed_t &Cloak_Delay() const { return CloakDelay; }
 
 private:
-    fixed TurboBoost;
-    fixed AttackInterval;
-    fixed AttackDelay;
-    fixed PowerEmergency;
+    fixed_t TurboBoost;
+    fixed_t AttackInterval;
+    fixed_t AttackDelay;
+    fixed_t PowerEmergency;
     int BadgerBombCount;
-    fixed AirstripRatio;
+    fixed_t AirstripRatio;
     int AirstripLimit;
-    fixed HelipadRatio;
+    fixed_t HelipadRatio;
     int HelipadLimit;
-    fixed TeslaRatio;
+    fixed_t TeslaRatio;
     int TeslaLimit;
-    fixed AARatio;
+    fixed_t AARatio;
     int AALimit;
-    fixed DefenseRatio;
+    fixed_t DefenseRatio;
     int DefenseLimit;
-    fixed WarRatio;
+    fixed_t WarRatio;
     int WarLimit;
-    fixed BarracksRatio;
+    fixed_t BarracksRatio;
     int BarracksLimit;
     int RefineryLimit;
-    fixed RefineryRatio;
+    fixed_t RefineryRatio;
     int BaseSizeAdd;
     int PowerSurplus;
     int InfantryReserve;
     int InfantryBaseMult;
-    fixed ChronoDuration;
-    fixed WaterCrateChance;
+    fixed_t ChronoDuration;
+    fixed_t WaterCrateChance;
     int SoloCrateMoney;
     int GPSTechLevel;
     UnitType UnitCrateType;
-    fixed PatrolScan;
-    fixed TeamDelay;
-    fixed SubmergeDelay;
-    fixed GameSpeedBias;
-    fixed BaseBias;
+    fixed_t PatrolScan;
+    fixed_t TeamDelay;
+    fixed_t SubmergeDelay;
+    fixed_t GameSpeedBias;
+    fixed_t BaseBias;
     lepton_t VortexRange;
     MPHType VortexSpeed;
     int VortexDamage;
-    fixed VortexChance;
-    fixed ExpSpread;
+    fixed_t VortexChance;
+    fixed_t ExpSpread;
     lepton_t FireSupress;
     int ParaTech;
     int SpyPlaneTech;
@@ -337,18 +337,18 @@ private:
     bool MPlayerCaptureTheFlag; // 32
 #endif
     lepton_t DropZoneRadius;
-    fixed MessageDelay;
-    fixed SavourDelay;
+    fixed_t MessageDelay;
+    fixed_t SavourDelay;
     int AVMineDamage;
     int APMineDamage;
     int Players;
-    fixed BaseDefenseDelay;
+    fixed_t BaseDefenseDelay;
     int SuspendPriority;
-    fixed SuspendDelay;
-    fixed SurvivorRate;
-    fixed ReloadRate;
-    fixed AutocreateTime;
-    fixed BuildupTime;
+    fixed_t SuspendDelay;
+    fixed_t SurvivorRate;
+    fixed_t ReloadRate;
+    fixed_t AutocreateTime;
+    fixed_t BuildupTime;
     int OreTruckRate;
     int AtomDamage;
     DifficultyClass Difficulties[3];
@@ -405,40 +405,40 @@ private:
     bool SecretUnitsEnabled;
     bool NewUnitsEnabled;
 #endif
-    fixed ProneDamage;
-    fixed QuakeDamage;
-    fixed QuakeChance;
-    fixed GrowthRate;
-    fixed ShroudRate;
-    fixed CrateRegen;
-    fixed TimerWarning;
-    fixed RechargeSonar;
-    fixed RechargeChrono;
-    fixed RechargeParaBomb;
-    fixed RechargeParatrooper;
-    fixed RechargeParaSaboteur;
-    fixed RechargeSpyPlane;
-    fixed RechargeIronCurtain;
-    fixed RechargeGPS;
-    fixed RechargeNuke;
-    fixed SpeakDelay;
-    fixed DamageDelay;
+    fixed_t ProneDamage;
+    fixed_t QuakeDamage;
+    fixed_t QuakeChance;
+    fixed_t GrowthRate;
+    fixed_t ShroudRate;
+    fixed_t CrateRegen;
+    fixed_t TimerWarning;
+    fixed_t RechargeSonar;
+    fixed_t RechargeChrono;
+    fixed_t RechargeParaBomb;
+    fixed_t RechargeParatrooper;
+    fixed_t RechargeParaSaboteur;
+    fixed_t RechargeSpyPlane;
+    fixed_t RechargeIronCurtain;
+    fixed_t RechargeGPS;
+    fixed_t RechargeNuke;
+    fixed_t SpeakDelay;
+    fixed_t DamageDelay;
     int Gravity;
     int GapRadius;
-    fixed GapRegenInterval;
+    fixed_t GapRegenInterval;
     lepton_t RadarJamRadius;
     MPHType Incoming;
     int MinDamage;
     int MaxDamage;
     int RepairStep;
-    fixed RepairPercent;
+    fixed_t RepairPercent;
     int URepairStep;
-    fixed URepairPercent;
-    fixed RepairRate;
-    fixed ConditionGreen;
-    fixed ConditionYellow;
-    fixed ConditionRed;
-    fixed IdleActionFrequency;
+    fixed_t URepairPercent;
+    fixed_t RepairRate;
+    fixed_t ConditionGreen;
+    fixed_t ConditionYellow;
+    fixed_t ConditionRed;
+    fixed_t IdleActionFrequency;
     int BailCount;
     int GoldValue;
     int GemValue;
@@ -467,44 +467,44 @@ private:
     lepton_t CrateRadius;
     lepton_t HomingScatter;
     lepton_t BallisticScatter;
-    fixed RefundPercent;
-    fixed IronCurtain;
+    fixed_t RefundPercent;
+    fixed_t IronCurtain;
     int BridgeStrength;
-    fixed BuildSpeed;
-    fixed C4Delay;
+    fixed_t BuildSpeed;
+    fixed_t C4Delay;
     int CreditReserve;
-    fixed PathDelay;
-    fixed MovieTime;
+    fixed_t PathDelay;
+    fixed_t MovieTime;
     int ChronoTechLevel;
     lepton_t OreNearScan;
     lepton_t OreFarScan;
 #ifndef CHRONOSHIFT_STANDALONE
-    static fixed &EngineerDamage;
-    static fixed &EngineerCaptureLevel;
-    static fixed &ChronoTankDuration;
+    static fixed_t &EngineerDamage;
+    static fixed_t &EngineerCaptureLevel;
+    static fixed_t &ChronoTankDuration;
     static int &MTankDistance;
     static int &CarrierLaunchDelay;
-    static fixed &QuakeUnitDamage;
-    static fixed QuakeVesselDamage;
-    static fixed &QuakeBuildingDamage;
+    static fixed_t &QuakeUnitDamage;
+    static fixed_t QuakeVesselDamage;
+    static fixed_t &QuakeBuildingDamage;
     static int &QuakeInfantryDamage;
     static int &QuakeDelay;
     static BOOL &OrigNewUnitsEnabled;
     static BOOL &OrigSecretUnitsEnabled;
-    static fixed CloakDelay;
+    static fixed_t CloakDelay;
 #else
     // If we aren't trying to match the ABI, make these part of the class.
-    fixed EngineerDamage;
-    fixed EngineerCaptureLevel;
-    fixed ChronoTankDuration;
+    fixed_t EngineerDamage;
+    fixed_t EngineerCaptureLevel;
+    fixed_t ChronoTankDuration;
     int MTankDistance;
     int CarrierLaunchDelay;
-    fixed QuakeUnitDamage;
-    fixed QuakeVesselDamage; // New additional control for Chronoshift.
-    fixed QuakeBuildingDamage;
+    fixed_t QuakeUnitDamage;
+    fixed_t QuakeVesselDamage; // New additional control for Chronoshift.
+    fixed_t QuakeBuildingDamage;
     int QuakeInfantryDamage;
     int QuakeDelay;
-    fixed CloakDelay; // New additional control for Chronoshift, to be moved next to SubmergeDelay.
+    fixed_t CloakDelay; // New additional control for Chronoshift, to be moved next to SubmergeDelay.
 #endif
 };
 

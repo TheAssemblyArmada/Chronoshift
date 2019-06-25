@@ -47,13 +47,13 @@ public:
     PlayerColorType Get_Color() const { return Color; }
     char Get_Prefix() const { return Prefix; }
     HousesType What_Type() const { return Type; }
-    const fixed &Get_Firepower() const { return Firepower; }
-    const fixed &Get_Groundspeed() const { return Groundspeed; }
-    const fixed &Get_Airspeed() const { return Airspeed; }
-    const fixed &Get_Armor() const { return Armor; }
-    const fixed &Get_ROF() const { return ROF; }
-    const fixed &Get_Cost() const { return Cost; }
-    const fixed &Get_BuildTime() const { return BuildTime; }
+    const fixed_t &Get_Firepower() const { return Firepower; }
+    const fixed_t &Get_Groundspeed() const { return Groundspeed; }
+    const fixed_t &Get_Airspeed() const { return Airspeed; }
+    const fixed_t &Get_Armor() const { return Armor; }
+    const fixed_t &Get_ROF() const { return ROF; }
+    const fixed_t &Get_Cost() const { return Cost; }
+    const fixed_t &Get_BuildTime() const { return BuildTime; }
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
@@ -77,13 +77,13 @@ private:
     int LemonFactor;
     PlayerColorType Color; // Color to use when displaying objects owned by this country.
     char Prefix;
-    fixed Firepower; // Multiplier to firepower for all weapons [larger means more damage]
-    fixed Groundspeed; // Multiplier to speed for all ground units [larger means faster]
-    fixed Airspeed; // Multiplier to speed for all air units [larger means faster]
-    fixed Armor; // Multiplier to armor damage for all units and buildings [larger means more damage]
-    fixed ROF; // Multiplier to Rate Of Fire for all weapons [larger means slower ROF]
-    fixed Cost; // Multiplier to cost for all units and buildings [larger means costlier]
-    fixed BuildTime; // Multiplier to general object build time [larger means longer to build]
+    fixed_t Firepower; // Multiplier to firepower for all weapons [larger means more damage]
+    fixed_t Groundspeed; // Multiplier to speed for all ground units [larger means faster]
+    fixed_t Airspeed; // Multiplier to speed for all air units [larger means faster]
+    fixed_t Armor; // Multiplier to armor damage for all units and buildings [larger means more damage]
+    fixed_t ROF; // Multiplier to Rate Of Fire for all weapons [larger means slower ROF]
+    fixed_t Cost; // Multiplier to cost for all units and buildings [larger means costlier]
+    fixed_t BuildTime; // Multiplier to general object build time [larger means longer to build]
 };
 
 #ifndef CHRONOSHIFT_STANDALONE

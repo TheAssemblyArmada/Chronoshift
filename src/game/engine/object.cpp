@@ -505,9 +505,9 @@ const int16_t *ObjectClass::Overlap_List(BOOL a1) const
     return Class_Of().Overlap_List();
 }
 
-fixed ObjectClass::Health_Ratio() const
+fixed_t ObjectClass::Health_Ratio() const
 {
-    return fixed(m_Health, Class_Of().Get_Strength());
+    return fixed_t(m_Health, Class_Of().Get_Strength());
 }
 
 BOOL ObjectClass::Mark(MarkType mark)

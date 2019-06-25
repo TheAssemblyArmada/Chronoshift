@@ -22,24 +22,15 @@
 
 using std::atoi;
 
-const fixed fixed::_0_1(0, 1);
-const fixed fixed::_1_1(1, 1);
-const fixed fixed::_1_2(1, 2);
-const fixed fixed::_1_3(1, 3);
-const fixed fixed::_1_4(1, 4);
-const fixed fixed::_3_4(3, 4);
-const fixed fixed::_2_3(2, 3);
+const fixed_t fixed_t::_0_1(0, 1);
+const fixed_t fixed_t::_1_1(1, 1);
+const fixed_t fixed_t::_1_2(1, 2);
+const fixed_t fixed_t::_1_3(1, 3);
+const fixed_t fixed_t::_1_4(1, 4);
+const fixed_t fixed_t::_3_4(3, 4);
+const fixed_t fixed_t::_2_3(2, 3);
 
-fixed::fixed(int a, int b)
-{
-    if (b) {
-        m_number.word = (a << 8) / b;
-    } else {
-        m_number.word = 0;
-    }
-}
-
-fixed::fixed(const char *string)
+fixed_t::fixed_t(const char *string)
 {
     const char *str_read = string;
 
@@ -58,11 +49,11 @@ fixed::fixed(const char *string)
         }
 
         if (*i == '%') {
-            m_number.word = (atoi(str_read) << 8) / 100;
+            m_number = (atoi(str_read) << 8) / 100;
         } else {
-            m_number.word = 0;
+            m_number = 0;
             if (string && *string != '.') {
-                m_number.ch.hi = atoi(string);
+                m_number = atoi(string) << 8;
             }
 
             // finds '.' if it exists, nulls char *if not to indicate no
@@ -95,15 +86,15 @@ fixed::fixed(const char *string)
                     divisor *= 10;
                 }
 
-                m_number.ch.low = (fraction << 8) / divisor;
+                m_number = ((fraction << 8) / divisor) & 0xFF;
             }
         }
     } else {
-        m_number.word = 0;
+        m_number = 0;
     }
 }
 
-int fixed::To_ASCII(char *string, int size) const
+int fixed_t::To_ASCII(char *string, int size) const
 {
     char char_buff[32];
 
@@ -111,8 +102,8 @@ int fixed::To_ASCII(char *string, int size) const
         return 0;
     }
 
-    int whole = m_number.ch.hi;
-    int fraction = (100 * m_number.ch.low) >> 8;
+    int whole = m_number >> 8;
+    int fraction = (100 * (m_number & 0xFF)) >> 8;
 
     if (fraction > 0) {
         snprintf(char_buff, sizeof(char_buff), "%d.%02d", whole, fraction);
@@ -137,7 +128,7 @@ int fixed::To_ASCII(char *string, int size) const
     return std::min((int)strlen(char_buff), (size - 1));
 }
 
-char *const fixed::As_ASCII() const
+char *const fixed_t::As_ASCII() const
 {
     static char _buffer[32];
 

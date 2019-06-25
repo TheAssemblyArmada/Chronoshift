@@ -40,7 +40,7 @@ void HSVClass::Adjust(int adjust, HSVClass const &that)
 /**
  * @brief Carries out an adjustment based on brightness, saturation, tint and contrast.
  */
-void HSVClass::Adjust(fixed brightness, fixed saturation, fixed tint, fixed contrast)
+void HSVClass::Adjust(fixed_t brightness, fixed_t saturation, fixed_t tint, fixed_t contrast)
 {
     //int v10 = std::clamp(((brightness * 256) * m_val) / 128, 0, 255);
     //int tmp = ((std::clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256));
