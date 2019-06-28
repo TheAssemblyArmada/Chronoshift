@@ -18,16 +18,21 @@
 #define SURFACEMONITOR_H
 #include "always.h"
 
-#ifdef PLATFORM_WINDOWS
+#ifdef BUILD_WITH_DDRAW
 #include "ddraw.h"
 #endif
 
 class SurfaceMonitorClass
 {
+    enum
+    {
+        SURFACE_COUNT = 20,
+    };
+
 public:
     SurfaceMonitorClass();
     ~SurfaceMonitorClass();
-#ifdef PLATFORM_WINDOWS
+#ifdef BUILD_WITH_DDRAW
     void Add_Surface(LPDIRECTDRAWSURFACE new_surface);
     void Remove_Surface(LPDIRECTDRAWSURFACE old_surface);
     bool Got_Surface_Already(LPDIRECTDRAWSURFACE test_surface);
@@ -44,19 +49,10 @@ public:
 
 private:
     BOOL m_surfacesRestored;
-#ifdef PLATFORM_WINDOWS
-    LPDIRECTDRAWSURFACE m_surface[20];
+#ifdef BUILD_WITH_DDRAW
+    LPDIRECTDRAWSURFACE m_surface[SURFACE_COUNT];
 #endif
     BOOL m_inFocus;
-
-#ifndef CHRONOSHIFT_STANDALONE
-    static void Hook_Add_Surface(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE new_surface);
-    static void Hook_Remove_Surface(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE old_surface);
-    static bool Hook_Got_Surface_Already(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE test_surface);
-    static void Hook_Restore_Surfaces(SurfaceMonitorClass *ptr);
-    static void Hook_Set_Surface_Focus(SurfaceMonitorClass *ptr, bool focus);
-    static void Hook_Release(SurfaceMonitorClass *ptr);
-#endif
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -69,12 +65,14 @@ extern SurfaceMonitorClass &g_allSurfaces;
 inline void SurfaceMonitorClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
-    Hook_Function(0x005CA1D0, &Hook_Add_Surface);
-    Hook_Function(0x005CA230, &Hook_Remove_Surface);
-    Hook_Function(0x005CA280, &Hook_Got_Surface_Already);
-    Hook_Function(0x005CA2D0, &Hook_Restore_Surfaces);
-    Hook_Function(0x005CA370, &Hook_Set_Surface_Focus);
-    Hook_Function(0x005CA390, &Hook_Release);
+#ifdef BUILD_WITH_DDRAW
+    Hook_Function(0x005CA1D0, *SurfaceMonitorClass::Add_Surface);
+    Hook_Function(0x005CA230, *SurfaceMonitorClass::Remove_Surface);
+    Hook_Function(0x005CA280, *SurfaceMonitorClass::Got_Surface_Already);
+#endif
+    Hook_Function(0x005CA2D0, *SurfaceMonitorClass::Restore_Surfaces);
+    Hook_Function(0x005CA370, *SurfaceMonitorClass::Set_Surface_Focus);
+    Hook_Function(0x005CA390, *SurfaceMonitorClass::Release);
 #endif
 }
 #else

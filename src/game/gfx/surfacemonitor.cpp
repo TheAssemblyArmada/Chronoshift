@@ -27,8 +27,8 @@ SurfaceMonitorClass g_allSurfaces;
 
 SurfaceMonitorClass::SurfaceMonitorClass()
 {
-#ifdef PLATFORM_WINDOWS
-    for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
+#ifdef BUILD_WITH_DDRAW
+    for (int i = 0; i < SURFACE_COUNT; ++i) {
         m_surface[i] = nullptr;
     }
 #endif
@@ -41,7 +41,7 @@ SurfaceMonitorClass::~SurfaceMonitorClass()
     Release();
 }
 
-#ifdef PLATFORM_WINDOWS
+#ifdef BUILD_WITH_DDRAW
 void SurfaceMonitorClass::Add_Surface(LPDIRECTDRAWSURFACE new_surface)
 {
     if (!Got_Surface_Already(new_surface)) {
@@ -78,8 +78,8 @@ bool SurfaceMonitorClass::Got_Surface_Already(LPDIRECTDRAWSURFACE test_surface)
 void SurfaceMonitorClass::Restore_Surfaces()
 {
     if (m_inFocus) {
-#ifdef PLATFORM_WINDOWS
-        for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
+#ifdef BUILD_WITH_DDRAW
+        for (int i = 0; i < SURFACE_COUNT; ++i) {
             if (m_surface[i] && m_surface[i]->Restore()) {
                 if (Misc_Focus_Loss_Function) {
                     Misc_Focus_Loss_Function();
@@ -103,8 +103,8 @@ void SurfaceMonitorClass::Set_Surface_Focus(bool in_focus)
 
 void SurfaceMonitorClass::Release()
 {
-#ifdef PLATFORM_WINDOWS
-    for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
+#ifdef BUILD_WITH_DDRAW
+    for (int i = 0; i < SURFACE_COUNT; ++i) {
         if (m_surface[i]) {
             m_surface[i]->Release();
             m_surface[i] = nullptr;
@@ -112,30 +112,3 @@ void SurfaceMonitorClass::Release()
     }
 #endif
 }
-
-#ifndef CHRONOSHIFT_STANDALONE
-void SurfaceMonitorClass::Hook_Add_Surface(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE new_surface)
-{
-    return ptr->SurfaceMonitorClass::Add_Surface(new_surface);
-}
-void SurfaceMonitorClass::Hook_Remove_Surface(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE old_surface)
-{
-    return ptr->SurfaceMonitorClass::Remove_Surface(old_surface);
-}
-bool SurfaceMonitorClass::Hook_Got_Surface_Already(SurfaceMonitorClass *ptr, LPDIRECTDRAWSURFACE test_surface)
-{
-    return ptr->SurfaceMonitorClass::Got_Surface_Already(test_surface);
-}
-void SurfaceMonitorClass::Hook_Restore_Surfaces(SurfaceMonitorClass *ptr)
-{
-    return ptr->SurfaceMonitorClass::Restore_Surfaces();
-}
-void SurfaceMonitorClass::Hook_Set_Surface_Focus(SurfaceMonitorClass *ptr, bool focus)
-{
-    return ptr->SurfaceMonitorClass::Set_Surface_Focus(focus);
-}
-void SurfaceMonitorClass::Hook_Release(SurfaceMonitorClass *ptr)
-{
-    return ptr->SurfaceMonitorClass::Release();
-}
-#endif
