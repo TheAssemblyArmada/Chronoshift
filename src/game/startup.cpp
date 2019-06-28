@@ -42,16 +42,6 @@ void Emergency_Exit(int exit_code)
 #endif
 }
 
-BOOL InitDDraw()
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)() = reinterpret_cast<BOOL (*)()>(0x00552368);
-    return func();
-#else
-    return false;
-#endif
-}
-
 void Read_Setup_Options(FileClass *fc)
 {
 #ifndef CHRONOSHIFT_STANDALONE

@@ -28,6 +28,7 @@
 #include "gitverinfo.h"
 #include "globals.h"
 #include "ini.h"
+#include "initvideo.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "ostimer.h"
@@ -348,7 +349,7 @@ int main(int argc, char **argv)
     g_soundOn = Audio_Init(nullptr, 16, 0, 22050, 0);
 #endif
 
-    if (!InitDDraw()) {
+    if (!Init_Video()) {
         delete PlatformTimer;
         PlatformTimer = nullptr;
 

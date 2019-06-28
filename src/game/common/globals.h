@@ -36,6 +36,8 @@ extern HWND MainWindow;
 
 #endif
 
+// For ScreenWidth and ScreenHeight, see public static members of GraphicViewPortClass.
+
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"

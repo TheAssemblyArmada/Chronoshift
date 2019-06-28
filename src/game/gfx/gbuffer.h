@@ -22,12 +22,9 @@
 #include "buffer.h"
 #include "tpoint.h"
 
-#ifdef PLATFORM_WINDOWS
-#include "ddraw.h"
-#endif
-
-#ifndef CHRONOSHIFT_STANDALONE
-#include "hooker.h"
+#ifdef BUILD_WITH_DDRAW
+#define DIRECTDRAW_VERSION 0x300
+#include <ddraw.h>
 #endif
 
 // Flags for using DD surfaces in GBC
@@ -37,6 +34,7 @@ enum GBCEnum
     GBC_VIDEO_MEM = 1,
     GBC_VISIBLE = 2,
 };
+DEFINE_ENUMERATION_BITWISE_OPERATORS(GBCEnum);
 
 #define BLIT_GET_PITCH(view) (view.Get_Full_Pitch())
 
@@ -151,7 +149,7 @@ public:
     BufferClass *Get_GBuffer() { return &m_graphicBuffer; }
 
     void DD_Init(GBCEnum mode);
-#ifdef PLATFORM_WINDOWS
+#ifdef BUILD_WITH_DDRAW
     LPDIRECTDRAWSURFACE Get_DD_Surface() { return m_videoSurface; }
 #endif
 
@@ -168,9 +166,12 @@ public:
 
     static int TotalLocks;
 
+#ifndef CHRONOSHIFT_STANDALONE
+    static void Hook_Me();
+#endif
 private:
     BufferClass m_graphicBuffer;
-#ifdef PLATFORM_WINDOWS
+#ifdef BUILD_WITH_DDRAW
     LPDIRECTDRAWSURFACE m_videoSurface;
     DDSURFACEDESC m_surfaceInfo;
 #endif
@@ -182,27 +183,35 @@ GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *view);
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &view);
 
 #ifndef CHRONOSHIFT_STANDALONE
+#include "hooker.h"
+
 inline void GraphicViewPortClass::Hook_Me() {}
+inline void GraphicBufferClass::Hook_Me()
+{
+#ifdef COMPILER_WATCOM
+    Hook_Function(0x005C0AF4, *GraphicBufferClass::DD_Init);
+    Hook_Function(0x005C0C2D, *GraphicBufferClass::Init);
+    Hook_Function(0x005C0D0F, *GraphicBufferClass::Un_Init);
+    Hook_Function(0x005C101A, *GraphicBufferClass::Lock);
+    Hook_Function(0x005C1191, *GraphicBufferClass::Unlock);
+#endif
+}
 
 extern GraphicViewPortClass *&g_logicPage;
-#ifdef PLATFORM_WINDOWS
-extern LPDIRECTDRAWSURFACE &g_paletteSurface;
-#endif
 extern GraphicViewPortClass &g_seenBuff;
 extern GraphicViewPortClass &g_hidPage;
 extern GraphicBufferClass &g_visiblePage;
 extern GraphicBufferClass &g_hiddenPage;
 extern GraphicBufferClass &g_sysMemPage;
+extern GraphicBufferClass &g_modeXBuff;
 #else
 extern GraphicViewPortClass *g_logicPage;
-#ifdef PLATFORM_WINDOWS
-extern LPDIRECTDRAWSURFACE g_paletteSurface;
-#endif
 extern GraphicViewPortClass g_seenBuff;
 extern GraphicViewPortClass g_hidPage;
 extern GraphicBufferClass g_visiblePage;
 extern GraphicBufferClass g_hiddenPage;
 extern GraphicBufferClass g_sysMemPage;
+extern GraphicBufferClass g_modeXBuff;
 #endif
 
 #endif // GBUFFER_H
