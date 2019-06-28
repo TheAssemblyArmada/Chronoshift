@@ -202,6 +202,7 @@ set(GAMEENGINE_SRC
     game/net/udp.cpp
     game/net/wsock.cpp
     game/platform/eventhandler.cpp
+    game/platform/initvideo.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
     game/ui/bigcheck.cpp

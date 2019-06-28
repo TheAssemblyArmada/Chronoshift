@@ -3,7 +3,7 @@
  *
  * @author OmniBlade
  *
- * @brief Low level palette handling.
+ * @brief Initialisation functions for graphics API.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -14,22 +14,33 @@
  */
 #pragma once
 
-#ifndef PAL_H
-#define PAL_H
+#ifndef INITVIDEO_H
+#define INITVIDEO_H
 
 #include "always.h"
 
 #ifdef BUILD_WITH_DDRAW
+#define DIRECTDRAW_VERSION 0x300
 #include <ddraw.h>
 #endif
 
+BOOL Set_Video_Mode(uintptr_t handle, int w, int h, int bpp);
+void Reset_Video_Mode();
+BOOL Init_Video();
+void Set_Video_Palette(void *pal);
+
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-extern uint8_t *const g_currentPalette;
+
+#ifdef BUILD_WITH_DDRAW
+extern LPDIRECTDRAW &g_directDrawObject;
+extern LPDIRECTDRAWSURFACE &g_paletteSurface;
+#endif
 #else
-extern uint8_t g_currentPalette[];
+#ifdef BUILD_WITH_DDRAW
+extern LPDIRECTDRAW g_directDrawObject;
+extern LPDIRECTDRAWSURFACE g_paletteSurface;
+#endif
 #endif
 
-void Set_Palette(void *pal);
-
-#endif // PAL_H
+#endif // INITVIDEO_H
