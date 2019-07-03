@@ -23,6 +23,11 @@
 #include "remap.h"
 #include "trect.h"
 
+ // Redraw flags used by the game menu loops.
+#define NO_REDRAW 0
+#define REDRAW_GADGETS 1
+#define REDRAW_ALL 2
+
 class ControlClass;
 
 enum GadgetInput
