@@ -55,7 +55,7 @@ struct GlobalPacket
     char pad[0x8B];
 };
 
-struct MPlayerScoreType
+struct MPlayerScoreStruct
 {
     char Name[12];
     int field_0D;
@@ -64,6 +64,19 @@ struct MPlayerScoreType
     int Economy;
     int Score;
     PlayerColorType Scheme;
+};
+
+struct MPlayerOptionsStruct
+{
+    int LocalID;
+    BOOL Bases;
+    int Credits;
+    BOOL Ore;
+    BOOL Goodies;
+    BOOL Ghosts;
+    int UnitCount;
+    int AIPlayers;
+    char ScenarioName[44];
 };
 
 struct SerialSettingsType
@@ -94,26 +107,45 @@ class SessionClass
 {
 public:
     SessionClass();
+    ~SessionClass();
+
+    GameEnum Game_To_Play() const { return GameToPlay; }
+    CommProtocolEnum Packet_Protocol() const { return PacketProtocol; }
+
+    BOOL MPlayer_Goodies_Allowed() const { return Options.Goodies; }
+    BOOL MPlayer_Ore_Growth() const { return Options.Ore; }
+
+    int Desired_Frame_Rate() const { return DesiredFrameRate; }
+    void Set_Desired_Frame_Rate(int value) { DesiredFrameRate = value; }
+    int Processing_Start_Tick() const { return ProcessingStartTick; }
+    void Set_Processing_Start_Tick(int value) { ProcessingStartTick = value; }
+    void Update_Processing_Tick_Value(int value) { ProcessingTicks += value; }
+    void Tick_Processing_Frame() { ++ProcessingFrames; }
+
+    BOOL Loading_Game() const { return LoadGame; }
+    BOOL Saving_Game() const { return SaveGame; }
 
     MessageListClass &Get_Messages() { return Messages; }
-    GameEnum Game_To_Play() const { return GameToPlay; }
-    BOOL MPlayer_Goodies_Allowed() const { return MPlayerGoodies; }
-    BOOL MPlayer_Ore_Growth() const { return MPlayerOre; }
+
+    BOOL Record_Game() const { return RecordGame; }
     BOOL Playback_Game() const { return PlaybackGame; }
-    BOOL Loading_Game() const { return LoadGame; }
+    BOOL Attraction_Allowed() const { return AllowAttract; }
+
+    DynamicVectorClass<NodeNameTag *> &Games_List() { return Games; }
+    DynamicVectorClass<NodeNameTag *> &Players_List() { return Players; }
+    DynamicVectorClass<NodeNameTag *> &Network_Players_List() { return NetworkPlayers; }
+
+    BOOL Modem_Service() const { return ModemService; }
+
+    void Trap_Object();
+
+    int Trap_Frame() const { return TrapFrame; }
+    BOOL Trap_Check_Heap() const { return TrapCheckHeap; }
 
 private:
     GameEnum GameToPlay;
     CommProtocolEnum PacketProtocol;
-    int MPlayerLocalID;
-    BOOL MPlayerBases;
-    int MPlayerCredits;
-    BOOL MPlayerOre;
-    BOOL MPlayerGoodies;
-    BOOL MPlayerGhosts;
-    int MPlayerUnitCount;
-    int MPlayerAIPlayers;
-    char MPlayerScenarioName[44];
+    MPlayerOptionsStruct Options;
     int UniqueID;
     char MPlayerName[12];
     PlayerColorType MPlayerPrefColor;
@@ -142,24 +174,16 @@ private:
     MessageListClass Messages;
     IPXAddressClass MessageAddress;
     char LastMessage[124];
-    MPlayerScoreType MPlayerScores[8];
+    MPlayerScoreStruct MPlayerScores[8];
     int MPlayerGamesPlayed;
     int MPlayerNumScores;
     int MPlayerWinner;
     int MPlayerCurrentGame;
     GameFileClass RecordFile;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool RecordGame : 1; // & 1
-            bool PlaybackGame : 1; // & 2
-            bool AllowAttract : 1; // & 4
-        };
-        int m_sessionFlags;
-    };
+    BOOL RecordGame : 1; // & 1
+    BOOL PlaybackGame : 1; // & 2
+    BOOL AllowAttract : 1; // & 4
 #else
     bool RecordGame;
     bool PlaybackGame;
@@ -189,7 +213,7 @@ private:
     DynamicVectorClass<char *> InitStrings;
     int TrapFrame;
     RTTIType TrapType; // Suspect this is RTTIType but needs confirming.
-    int TrapTrappedObject;
+    int TrappedObject;
     coord_t TrapCoord;
     target_t TrapTarget;
     CellClass *TrapCell;

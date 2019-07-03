@@ -86,6 +86,9 @@ public:
     cell_t Get_View(int index) const { return Views[index]; }
     void Set_View(int index, cell_t cell) { Views[index] = cell; }
 
+    BOOL Get_field_7CF() const { return field_7CF; }
+    BOOL Get_field_7D3() const { return field_7D3; }
+
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
     void Hook_Set_Scenario_Name1(const char *scen_name) { Set_Scenario_Name(scen_name); }
@@ -168,8 +171,8 @@ private:
 #endif
     TCountDownTimerClass<FrameTimerClass> FadeTimer;
     TCountDownTimerClass<FrameTimerClass> AutoSonarTime;
-    int field_7CF;
-    int field_7D3;
+    BOOL field_7CF; // These two are related to proposing a game draw within onlined games.
+    BOOL field_7D3;
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
