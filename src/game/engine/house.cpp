@@ -563,6 +563,10 @@ fixed_t HouseClass::Power_Fraction()
  */
 DiffType HouseClass::Assign_Handicap(DiffType diff)
 {
+    DiffType prevdiff = m_AIDifficulty;
+
+    m_AIDifficulty = diff;
+
     // If the game isn't the single player campaign, apply house bonuses from ActsLike house.
     if (Session.Game_To_Play() != GAME_CAMPAIGN) {
         HouseTypeClass &act_like = HouseTypeClass::As_Reference(m_ActsLike);
@@ -593,7 +597,7 @@ DiffType HouseClass::Assign_Handicap(DiffType diff)
         m_BuildTimerMult *= Rule.GameSpeed_Bias();
     }
 
-    return m_AIDifficulty;
+    return prevdiff;
 }
 
 /**
