@@ -17,6 +17,11 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
+class PaletteClass;
+
 void Call_Back();
+void Call_Back_Delay(int a1);
+void Cycle_Call_Back_Delay(int a1, PaletteClass &pal);
+void IPX_Call_Back();
 
 #endif
