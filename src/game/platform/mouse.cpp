@@ -28,21 +28,21 @@ using std::memcpy;
 #endif
 
 #ifndef CHRONOSHIFT_STANDALONE
-WWMouseClass *&g_mouse = Make_Global<WWMouseClass *>(0x006AC284);
-WWMouseClass *&g_wwmouse = Make_Global<WWMouseClass *>(0x00665E08);
+MouseClass *&g_mouse = Make_Global<MouseClass *>(0x006AC284);
+MouseClass *&g_wwmouse = Make_Global<MouseClass *>(0x00665E08);
 
-void WWMouseClass::Hook_Low_Hide(WWMouseClass *ptr)
+void MouseClass::Hook_Low_Hide(MouseClass *ptr)
 {
-    ptr->WWMouseClass::Low_Hide_Mouse();
+    ptr->MouseClass::Low_Hide_Mouse();
 }
 
-void WWMouseClass::Hook_Low_Show(WWMouseClass *ptr, int x, int y)
+void MouseClass::Hook_Low_Show(MouseClass *ptr, int x, int y)
 {
-    ptr->WWMouseClass::Low_Show_Mouse(x, y);
+    ptr->MouseClass::Low_Show_Mouse(x, y);
 }
 #else
-WWMouseClass *g_mouse = nullptr;
-WWMouseClass *g_wwmouse = nullptr;
+MouseClass *g_mouse = nullptr;
+MouseClass *g_wwmouse = nullptr;
 #endif
 //
 // Frequency to update the mouse in ms
@@ -65,7 +65,7 @@ void CALLBACK Process_Mouse(UINT uDelay, UINT uResolution, DWORD_PTR fptc, DWORD
 }
 #endif
 
-WWMouseClass::WWMouseClass(GraphicViewPortClass *scr, int width, int height) :
+MouseClass::MouseClass(GraphicViewPortClass *scr, int width, int height) :
     m_mouseCursor(new uint8_t[width * height]),
     m_mouseHotX(0),
     m_mouseHotY(0),
@@ -101,7 +101,7 @@ WWMouseClass::WWMouseClass(GraphicViewPortClass *scr, int width, int height) :
     Set_Cursor_Clip();
 }
 
-WWMouseClass::~WWMouseClass()
+MouseClass::~MouseClass()
 {
     ++m_mouseUpdate;
     delete[] m_mouseCursor;
@@ -119,7 +119,7 @@ WWMouseClass::~WWMouseClass()
     Clear_Cursor_Clip();
 }
 
-int WWMouseClass::Get_Mouse_X()
+int MouseClass::Get_Mouse_X()
 {
 #if !defined CHRONOSHIFT_STANDALONE
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
@@ -138,7 +138,7 @@ int WWMouseClass::Get_Mouse_X()
 #endif
 }
 
-int WWMouseClass::Get_Mouse_Y()
+int MouseClass::Get_Mouse_Y()
 {
 #if !defined CHRONOSHIFT_STANDALONE
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
@@ -157,7 +157,7 @@ int WWMouseClass::Get_Mouse_Y()
 #endif
 }
 
-void WWMouseClass::Get_Mouse_XY(int &x_pos, int &y_pos)
+void MouseClass::Get_Mouse_XY(int &x_pos, int &y_pos)
 {
 #if !defined CHRONOSHIFT_STANDALONE
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
@@ -176,21 +176,21 @@ void WWMouseClass::Get_Mouse_XY(int &x_pos, int &y_pos)
 #endif
 }
 
-void WWMouseClass::Set_Mouse_X(int x_pos)
+void MouseClass::Set_Mouse_X(int x_pos)
 {
 #ifdef PLATFORM_WINDOWS
     SetCursorPos(x_pos, Get_Mouse_Y());
 #endif
 }
 
-void WWMouseClass::Set_Mouse_Y(int y_pos)
+void MouseClass::Set_Mouse_Y(int y_pos)
 {
 #ifdef PLATFORM_WINDOWS
     SetCursorPos(Get_Mouse_X(), y_pos);
 #endif
 }
 
-BOOL WWMouseClass::Set_Mouse_XY(int x_pos, int y_pos)
+BOOL MouseClass::Set_Mouse_XY(int x_pos, int y_pos)
 {
 #ifdef PLATFORM_WINDOWS
     return SetCursorPos(x_pos, y_pos);
@@ -199,7 +199,7 @@ BOOL WWMouseClass::Set_Mouse_XY(int x_pos, int y_pos)
 #endif
 }
 
-void WWMouseClass::Block_Mouse(GraphicBufferClass *gbuffer)
+void MouseClass::Block_Mouse(GraphicBufferClass *gbuffer)
 {
     if (m_screen->Get_Graphic_Buffer() == gbuffer) {
 #ifdef PLATFORM_WINDOWS
@@ -208,7 +208,7 @@ void WWMouseClass::Block_Mouse(GraphicBufferClass *gbuffer)
     }
 }
 
-void WWMouseClass::Unblock_Mouse(GraphicBufferClass *gbuffer)
+void MouseClass::Unblock_Mouse(GraphicBufferClass *gbuffer)
 {
     if (m_screen->Get_Graphic_Buffer() == gbuffer) {
 #ifdef PLATFORM_WINDOWS
@@ -217,7 +217,7 @@ void WWMouseClass::Unblock_Mouse(GraphicBufferClass *gbuffer)
     }
 }
 
-void WWMouseClass::Set_Cursor_Clip()
+void MouseClass::Set_Cursor_Clip()
 {
 #ifdef PLATFORM_WINDOWS
     RECT cliprect;
@@ -233,14 +233,14 @@ void WWMouseClass::Set_Cursor_Clip()
 #endif
 }
 
-void WWMouseClass::Clear_Cursor_Clip()
+void MouseClass::Clear_Cursor_Clip()
 {
 #ifdef PLATFORM_WINDOWS
     ClipCursor(nullptr);
 #endif
 }
 
-void WWMouseClass::Process_Mouse()
+void MouseClass::Process_Mouse()
 {
     if (m_screen != nullptr && m_state <= 0 && !m_mouseUpdate && !m_eraseFlags && g_gameInFocus && m_screen->Get_LockCount() == 0) {
         int cur_x;
@@ -267,7 +267,7 @@ void WWMouseClass::Process_Mouse()
     }
 }
 
-void *WWMouseClass::Set_Cursor(int hotspot_x, int hotspot_y, void *cursor)
+void *MouseClass::Set_Cursor(int hotspot_x, int hotspot_y, void *cursor)
 {
     if (cursor && cursor != m_prevCursor) {
         ++m_mouseUpdate;
@@ -282,7 +282,7 @@ void *WWMouseClass::Set_Cursor(int hotspot_x, int hotspot_y, void *cursor)
     return nullptr;
 }
 
-void WWMouseClass::Low_Hide_Mouse()
+void MouseClass::Low_Hide_Mouse()
 {
     if (m_state == 0) {
         if (m_buffX != -1 || m_buffY != -1) {
@@ -301,15 +301,15 @@ void WWMouseClass::Low_Hide_Mouse()
     ++m_state;
 }
 
-void WWMouseClass::Hide_Mouse()
+void MouseClass::Hide_Mouse()
 {
-    // DEBUG_LOG("WWMouseClass::Hide_Mouse()\n");
+    // DEBUG_LOG("MouseClass::Hide_Mouse()\n");
     ++m_mouseUpdate;
     Low_Hide_Mouse();
     --m_mouseUpdate;
 }
 
-void WWMouseClass::Low_Show_Mouse(int x_pos, int y_pos)
+void MouseClass::Low_Show_Mouse(int x_pos, int y_pos)
 {
     if (m_state != 0 && (--m_state) == 0 && m_screen->Lock()) {
         Mouse_Shadow_Buffer(*this, *m_screen, m_mouseBuffer, x_pos, y_pos, m_mouseHotX, m_mouseHotY, true);
@@ -320,9 +320,9 @@ void WWMouseClass::Low_Show_Mouse(int x_pos, int y_pos)
     }
 }
 
-void WWMouseClass::Show_Mouse()
+void MouseClass::Show_Mouse()
 {
-    // DEBUG_LOG("WWMouseClass::Show_Mouse()\n");
+    // DEBUG_LOG("MouseClass::Show_Mouse()\n");
     int x_pos;
     int y_pos;
 
@@ -333,7 +333,7 @@ void WWMouseClass::Show_Mouse()
     ++m_mouseUpdate;
 }
 
-void WWMouseClass::Conditional_Hide_Mouse(int x_pos, int y_pos, int width, int height)
+void MouseClass::Conditional_Hide_Mouse(int x_pos, int y_pos, int width, int height)
 {
     ++m_mouseUpdate;
 
@@ -368,7 +368,7 @@ void WWMouseClass::Conditional_Hide_Mouse(int x_pos, int y_pos, int width, int h
     --m_mouseUpdate;
 }
 
-void WWMouseClass::Conditional_Show_Mouse()
+void MouseClass::Conditional_Show_Mouse()
 {
     // open dune has a idle sleep here waiting.
     // https://github.com/OpenDUNE/OpenDUNE/blob/master/src/gui/gui.c#L3849
@@ -389,7 +389,7 @@ void WWMouseClass::Conditional_Show_Mouse()
     --m_mouseUpdate;
 }
 
-void WWMouseClass::Draw_Mouse(GraphicViewPortClass &viewport)
+void MouseClass::Draw_Mouse(GraphicViewPortClass &viewport)
 {
     if (!m_state) {
         ++m_mouseUpdate;
@@ -425,7 +425,7 @@ void WWMouseClass::Draw_Mouse(GraphicViewPortClass &viewport)
     }
 }
 
-void WWMouseClass::Erase_Mouse(GraphicViewPortClass &viewport, bool erase)
+void MouseClass::Erase_Mouse(GraphicViewPortClass &viewport, bool erase)
 {
     if (!erase || m_eraseBuffX != -1 || m_eraseBuffY != -1) {
         ++m_mouseUpdate;
