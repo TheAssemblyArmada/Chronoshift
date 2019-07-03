@@ -1023,7 +1023,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
     }
 
     if (near_cell_index > 0) {
-        return near_cells[g_frame % near_cell_index];
+        return near_cells[g_GameFrame % near_cell_index];
     }
 
     return 0;

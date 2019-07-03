@@ -940,7 +940,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
 
             // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
             // game is on, wrapped so it goes 0 to 13. So when game frame is 14 it will return 0, 15 will return 1 and so on.
-            int flag_frame = g_frame % Get_Build_Frame_Count(flag_shape); // shape has 14 frames
+            int flag_frame = g_GameFrame % Get_Build_Frame_Count(flag_shape); // shape has 14 frames
 
             // 12 is what is set, but the shape is 23, so im gonna take it as / 2. or is this centered to a icon w/h? (24 sq)
             int flag_x = x + (Get_Build_Frame_Width(flag_shape) / 2) + 1;

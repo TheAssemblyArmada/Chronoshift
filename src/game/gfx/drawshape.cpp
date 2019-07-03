@@ -85,7 +85,7 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
                     flags |= SHAPE_GHOST;
                 }
 
-                curr_frame = g_frame;
+                curr_frame = g_GameFrame;
                 if (WindowList[window_num].X >> 1 < draw_x) {
                     curr_frame = -curr_frame;
                 }
