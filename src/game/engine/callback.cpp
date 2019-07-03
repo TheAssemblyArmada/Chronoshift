@@ -13,11 +13,32 @@
  *            LICENSE
  */
 #include "callback.h"
+#include "theme.h"
+#include "vox.h"
+#include "session.h"
+
+void IPX_Call_Back()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)() = reinterpret_cast<void (*)()>(0x004A7800);
+    func();
+#endif
+}
 
 void Call_Back()
 {
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*callback)() = reinterpret_cast<void (*)()>(0x004A765C);
-    callback();
-#endif
+    Theme.AI();
+    Speak_AI();
+
+    if (Session.Game_To_Play() == GAME_3 || Session.Game_To_Play() == GAME_INTERNET) {
+        IPX_Call_Back();
+    }
+
+    if ((Session.Game_To_Play() == GAME_1 || Session.Game_To_Play() == GAME_2) && Session.Modem_Service()) {
+        // NullModem.Service();
+    }
+
+    /*if (g_pWolapi != nullptr) {
+        // We won't be supporting WolAPI.
+    }*/
 }
