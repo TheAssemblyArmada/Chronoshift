@@ -31,7 +31,7 @@ extern int g_mapBinaryVersion;
 #include "hooker.h"
 
 extern int &g_iniFormat;
-extern int &g_frame;
+extern int &g_GameFrame; // NOTE: previously g_Frame.
 extern BOOL &g_gameInFocus;
 extern BOOL &g_inMapEditor;
 extern char *&Metal12FontPtr;
@@ -99,7 +99,7 @@ extern BOOL &g_Debug_Print_Events;
 extern BOOL &g_MonoEnabled;
 #else
 extern int g_iniFormat;
-extern int g_frame;
+extern int g_GameFrame;
 extern BOOL g_gameInFocus;
 extern BOOL g_inMapEditor;
 extern char *Metal12FontPtr;

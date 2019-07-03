@@ -531,7 +531,7 @@ void VesselClass::Repair_AI()
     return func(this);
 #else
     if (m_ToSelfRepair) {
-        if (!(g_frame % (Rule.Get_Repair_Rate() * 900))) {
+        if (!(g_GameFrame % (Rule.Get_Repair_Rate() * 900))) {
             Mark(MARK_REDRAW);
 
             int cost = Class_Of().Repair_Cost();

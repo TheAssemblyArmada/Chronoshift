@@ -62,7 +62,7 @@ GameEventClass::EventInfoStruct GameEventClass::EventTypeList[EVENT_COUNT] = {
     { "RETRACT_DRAW", 0 } // No extra data.
 };
 
-GameEventClass::GameEventClass() : m_Type(EVENT_EMPTY), m_EventFrame(g_frame), m_HouseID(0), m_IsExecuted(false)
+GameEventClass::GameEventClass() : m_Type(EVENT_EMPTY), m_EventFrame(g_GameFrame), m_HouseID(0), m_IsExecuted(false)
 {
     // Removed, as this is used at the default constructor, so it will fire a lot of times...
     // EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
@@ -93,7 +93,7 @@ GameEventClass &GameEventClass::operator=(const GameEventClass &that)
 
 GameEventClass::GameEventClass(GameEventType type) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -104,7 +104,7 @@ GameEventClass::GameEventClass(GameEventType type) :
 
 GameEventClass::GameEventClass(GameEventType type, cell_t cell) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -117,7 +117,7 @@ GameEventClass::GameEventClass(GameEventType type, cell_t cell) :
 
 GameEventClass::GameEventClass(GameEventType type, unsigned int gamespeed) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -130,7 +130,7 @@ GameEventClass::GameEventClass(GameEventType type, unsigned int gamespeed) :
 
 GameEventClass::GameEventClass(GameEventType type, HousesType house) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -143,7 +143,7 @@ GameEventClass::GameEventClass(GameEventType type, HousesType house) :
 
 GameEventClass::GameEventClass(GameEventType type, RTTIType rtti) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -156,7 +156,7 @@ GameEventClass::GameEventClass(GameEventType type, RTTIType rtti) :
 
 GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, unsigned int heap_id) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -170,7 +170,7 @@ GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, unsigned int h
 
 GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, cell_t cell) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -184,7 +184,7 @@ GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, cell_t cell) :
 
 GameEventClass::GameEventClass(GameEventType type, SpecialWeaponType special, cell_t cell) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -198,7 +198,7 @@ GameEventClass::GameEventClass(GameEventType type, SpecialWeaponType special, ce
 
 GameEventClass::GameEventClass(GameEventType type, void *a2, unsigned long a3) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -211,7 +211,7 @@ GameEventClass::GameEventClass(GameEventType type, void *a2, unsigned long a3) :
 
 GameEventClass::GameEventClass(GameEventType type, TargetClass whom) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -224,7 +224,7 @@ GameEventClass::GameEventClass(GameEventType type, TargetClass whom) :
 
 GameEventClass::GameEventClass(GameEventType type, TargetClass whom, TargetClass target) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -238,7 +238,7 @@ GameEventClass::GameEventClass(GameEventType type, TargetClass whom, TargetClass
 
 GameEventClass::GameEventClass(GameEventType type, AnimType anim, HousesType owner, coord_t coord) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -255,7 +255,7 @@ GameEventClass::GameEventClass(GameEventType type, AnimType anim, HousesType own
 
 GameEventClass::GameEventClass(GameEventType type, unsigned int crc, unsigned short cmd_count, unsigned char delay) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -270,7 +270,7 @@ GameEventClass::GameEventClass(GameEventType type, unsigned int crc, unsigned sh
 
 GameEventClass::GameEventClass(GameEventType type, unsigned short desired_frame_rate, unsigned short max_ahead) :
     m_Type(type),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -284,7 +284,7 @@ GameEventClass::GameEventClass(GameEventType type, unsigned short desired_frame_
 
 GameEventClass::GameEventClass(TargetClass whom, MissionType mission, TargetClass target, TargetClass dest) :
     m_Type(EVENT_MEGAMISSION),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -301,7 +301,7 @@ GameEventClass::GameEventClass(TargetClass whom, MissionType mission, TargetClas
 GameEventClass::GameEventClass(
     TargetClass whom, MissionType mission, TargetClass target, TargetClass dest, SpeedType speed, MPHType max_speed) :
     m_Type(EVENT_MEGAMISSION_F),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -319,7 +319,7 @@ GameEventClass::GameEventClass(
 
 GameEventClass::GameEventClass(SpecialClass special) :
     m_Type(EVENT_SPECIAL),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -332,7 +332,7 @@ GameEventClass::GameEventClass(SpecialClass special) :
 
 GameEventClass::GameEventClass(AnimType anim, HousesType owner, coord_t coord) :
     m_Type(EVENT_ANIMATION),
-    m_EventFrame(g_frame),
+    m_EventFrame(g_GameFrame),
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
@@ -350,7 +350,7 @@ void GameEventClass::Execute()
 {
     EVENT_DEBUG_LOG("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, ID:%d).\n",
         Name_From(m_Type),
-        g_frame,
+        g_GameFrame,
         m_EventFrame,
         m_HouseID);
 

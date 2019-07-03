@@ -49,7 +49,7 @@ void Queue_Record()
     int event_index = 0;
     for (int index = 0; index < ScheduledEvents.Get_Count(); ++index) {
         GameEventClass ev = ScheduledEvents[index];
-        if (ev.Get_Event_Frame() == g_frame && !ev.Is_Executed()) {
+        if (ev.Get_Event_Frame() == g_GameFrame && !ev.Is_Executed()) {
             ++event_index;
         }
     }
@@ -57,7 +57,7 @@ void Queue_Record()
 
     for (int index = 0; index < ScheduledEvents.Get_Count(); ++index) {
         GameEventClass ev = ScheduledEvents.Fetch_From_Tail(index);
-        if (ev.Get_Event_Frame() == g_frame && !ev.Is_Executed()) {
+        if (ev.Get_Event_Frame() == g_GameFrame && !ev.Is_Executed()) {
             //Session.RecordFile.Write(&ev, sizeof(ev));
             --event_index;
         }
@@ -168,7 +168,7 @@ void Clean_ScheduledEvents(ConnectionManagerClass *conn_mgr)
     while (ScheduledEvents.Get_Count() > 0) {
         GameEventClass ev = ScheduledEvents.Fetch_Tail();
         if (!ev.Is_Executed()) {
-            if (ev.Get_Event_Frame() >= g_frame) {
+            if (ev.Get_Event_Frame() >= g_GameFrame) {
                 break;
             }
         }

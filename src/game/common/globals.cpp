@@ -19,7 +19,7 @@ int g_mapBinaryVersion; // For handling C&C and Sole Survivor map formats.
 
 #ifndef CHRONOSHIFT_STANDALONE
 int &g_iniFormat = Make_Global<int>(0x00665DE8);
-int &g_frame = Make_Global<int>(0x006680C4);
+int &g_GameFrame = Make_Global<int>(0x006680C4);
 BOOL &g_gameInFocus = Make_Global<BOOL>(0x00665F64);
 BOOL &g_inMapEditor = Make_Global<BOOL>(0x0065D7E8);
 char *&Metal12FontPtr = Make_Global<char *>(0x0066992C);
@@ -87,7 +87,7 @@ BOOL &g_Debug_Print_Events = Make_Global<BOOL>(0x0065D814);
 BOOL &g_MonoEnabled = Make_Global<BOOL>(0x006AC288); // Actually a part of MonoClass.
 #else
 int g_iniFormat;
-int g_frame;
+int g_GameFrame;
 BOOL g_gameInFocus;
 BOOL g_inMapEditor;
 char *Metal12FontPtr;
