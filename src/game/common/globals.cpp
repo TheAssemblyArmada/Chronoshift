@@ -15,7 +15,17 @@
  */
 #include "globals.h"
 
-int g_mapBinaryVersion; // For handling C&C and Sole Survivor map formats.
+#ifdef PLATFORM_WINDOWS
+#ifndef CHRONOSHIFT_STANDALONE
+HWND &MainWindow = Make_Global<HWND>(0x006B1498);
+HMODULE &ProgramInstance = Make_Global<HMODULE>(0x0068A4BC);
+#else
+HWND MainWindow = nullptr;
+//HMODULE ProgramInstance = nullptr; // Only used in gameres packet, won't be needed in final
+#endif
+#else
+
+#endif
 
 #ifndef CHRONOSHIFT_STANDALONE
 int &g_iniFormat = Make_Global<int>(0x00665DE8);
@@ -46,15 +56,21 @@ BOOL &AllowHardwareFilledBlits = Make_Global<BOOL>(0x0060BA70);
 BOOL &g_soundOn = Make_Global<BOOL>(0x006807F4);
 BOOL &g_slowPalette = Make_Global<BOOL>(0x006678E4);
 BOOL &g_breakoutAllowed = Make_Global<BOOL>(0x006016B8);
-HWND &MainWindow = Make_Global<HWND>(0x006B1498);
-#ifdef PLATFORM_WINDOWS
-HMODULE &ProgramInstance = Make_Global<HMODULE>(0x0068A4BC); // Only used in gameres packet, won't be needed in final
-#endif
+SpecialDialogType &g_SpecialDialog = Make_Global<SpecialDialogType>(0x00680834);
+BOOL &g_TimeQuake = Make_Global<BOOL>(0x00665DEC);
+BOOL &g_PendingTimeQuake = Make_Global<BOOL>(0x00665DF0);
+int &g_TimeQuakeCenter = Make_Global<int>(0x00665DF4);
+BOOL &g_GameStatisticsPacketSent = Make_Global<BOOL>(0x006ABBB8);
+BOOL &g_PlayerWins = Make_Global<BOOL>(0x006680C8);
+BOOL &g_PlayerLoses = Make_Global<BOOL>(0x006680CC);
+BOOL &g_PlayerRestarts = Make_Global<BOOL>(0x006680D0);
+BOOL g_PlayerAborts = false;
 char **TutorialText = reinterpret_cast<char **>(0x00666304);
 BOOL &MouseInstalled = Make_Global<BOOL>(0x00680838);
 int &g_seed = Make_Global<int>(0x00680654);
 int &CustomSeed = Make_Global<int>(0x00680658);
 int &RandNumb = Make_Global<int>(0x0060D61C);
+int &g_SpareTicks = Make_Global<int>(0x006670E8);
 int &g_readyToQuit = Make_Global<int>(0x00680880);
 HousesType &Whom = Make_Global<HousesType>(0x00669910);
 void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
@@ -86,46 +102,53 @@ BOOL &g_Debug_Print_Events = Make_Global<BOOL>(0x0065D814);
 
 BOOL &g_MonoEnabled = Make_Global<BOOL>(0x006AC288); // Actually a part of MonoClass.
 #else
-int g_iniFormat;
-int g_GameFrame;
-BOOL g_gameInFocus;
-BOOL g_inMapEditor;
-char *Metal12FontPtr;
-char *MapFontPtr;
-char *Font6Ptr;
-char *GradFont6Ptr;
-char *EditorFont;
-char *Font8Ptr;
-char *Font3Ptr;
-char *ScoreFontPtr;
-char *FontLEDPtr;
-char *VCRFontPtr;
-char *TypeFontPtr;
-BOOL g_AllowVoice;
-BOOL GameActive;
+int g_iniFormat = 0;
+int g_GameFrame = 0;
+BOOL g_gameInFocus = false;
+BOOL g_inMapEditor = false;
+char *Metal12FontPtr = nullptr;
+char *MapFontPtr = nullptr;
+char *Font6Ptr = nullptr;
+char *GradFont6Ptr = nullptr;
+char *EditorFont = nullptr;
+char *Font8Ptr = nullptr;
+char *Font3Ptr = nullptr;
+char *ScoreFontPtr = nullptr;
+char *FontLEDPtr = nullptr;
+char *VCRFontPtr = nullptr;
+char *TypeFontPtr = nullptr;
+BOOL g_AllowVoice = true;
+BOOL GameActive = false;
 BOOL ScenarioInit;
-BOOL DebugUnshroud;
-BOOL DebugQuiet;
-BOOL ScoresPresent;
-BOOL StreamLowImpact;
-BOOL g_cancelCurrentMsgBox;
-BOOL g_soundOn;
-BOOL g_slowPalette;
+BOOL DebugUnshroud = false;
+BOOL DebugQuiet = false;
+BOOL ScoresPresent = false;
+BOOL StreamLowImpact = false;
+BOOL g_cancelCurrentMsgBox = false;
+BOOL g_soundOn = false;
+BOOL g_slowPalette = false;
 BOOL g_breakoutAllowed = true;
-#ifdef PLATFORM_WINDOWS
-HWND MainWindow;
-#endif
-char *TutorialText;
-BOOL MouseInstalled;
-int g_seed;
-int CustomSeed;
+SpecialDialogType g_SpecialDialog = SPECIAL_DLG_NONE;
+BOOL g_TimeQuake = false;
+BOOL g_PendingTimeQuake = false;
+target_t g_TimeQuakeCenter = 0;
+BOOL g_GameStatisticsPacketSent = false;
+BOOL g_PlayerWins = false;
+BOOL g_PlayerLoses = false;
+BOOL g_PlayerRestarts = false;
+BOOL g_PlayerAborts = false;
+char *TutorialText = nullptr;
+BOOL MouseInstalled = false;
+int g_seed = 0;
+int CustomSeed = 0;
 int RandNumb = 0x12349876;
-int g_readyToQuit;
-HousesType Whom;
-void *g_WakeShapes;
-void *g_TurretShapes;
-void *g_SamShapes;
-void *g_MGunShapes;
+int g_readyToQuit = false;
+int g_SpareTicks = 0;
+HousesType Whom = HOUSES_NONE;
+void *g_WakeShapes = nullptr;
+void *g_TurretShapes = nullptr;
+void *g_SamShapes = nullptr;
+void *g_MGunShapes = nullptr;
 
 BOOL g_Debug_MotionCapture = false;
 BOOL g_Debug_Rotate = false;
@@ -148,8 +171,15 @@ BOOL g_Debug_Smart_Print = false;
 BOOL g_Debug_Trap_Check_Heap = false;
 BOOL g_Debug_Modem_Dump = false;
 BOOL g_Debug_Print_Events = false;
+
 BOOL g_MonoEnabled = false; // Actually a part of MonoClass.
 #endif
+
+int g_mapBinaryVersion; // For handling C&C and Sole Survivor map formats.
+
+BOOL g_Debug_Paused = false;
+BOOL g_Debug_Step = false;
+int g_Debug_StepCount = 0;
 
 BOOL g_Debug_SightRange = false;
 BOOL g_Debug_GuardRange = false;

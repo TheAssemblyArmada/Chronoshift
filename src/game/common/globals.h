@@ -24,7 +24,17 @@
 #define GAME_TICKS_PER_SECOND 15
 #define GAME_TICKS_PER_MINUTE GAME_TICKS_PER_SECOND * 60
 
-extern int g_mapBinaryVersion;
+#ifdef PLATFORM_WINDOWS
+#ifndef CHRONOSHIFT_STANDALONE
+extern HWND &MainWindow;
+extern HMODULE &ProgramInstance;
+#else
+extern HWND MainWindow;
+//extern HMODULE ProgramInstance; // Only used in gameres packet, won't be needed in final
+#endif
+#else
+
+#endif
 
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
 #ifndef CHRONOSHIFT_STANDALONE
@@ -58,15 +68,21 @@ extern BOOL &AllowHardwareFilledBlits;
 extern BOOL &g_soundOn;
 extern BOOL &g_slowPalette;
 extern BOOL &g_breakoutAllowed;
-#ifdef PLATFORM_WINDOWS
-extern HWND &MainWindow;
-extern HMODULE &ProgramInstance; // Only used in gameres packet, won't be needed in final
-#endif
+extern SpecialDialogType &g_SpecialDialog;
+extern BOOL &g_TimeQuake;
+extern BOOL &g_PendingTimeQuake;
+extern int &g_TimeQuakeCenter;
+extern BOOL &g_GameStatisticsPacketSent;
+extern BOOL &g_PlayerWins;
+extern BOOL &g_PlayerLoses;
+extern BOOL &g_PlayerRestarts;
+extern BOOL g_PlayerAborts;
 extern char **TutorialText;
 extern BOOL &MouseInstalled;
 extern int &g_seed;
 extern int &CustomSeed;
 extern int &RandNumb;
+extern int &g_SpareTicks;
 extern int &g_readyToQuit;
 extern HousesType &Whom;
 extern void *&g_WakeShapes;
@@ -126,14 +142,21 @@ extern BOOL AllowHardwareFilledBlits;
 extern BOOL g_soundOn;
 extern BOOL g_slowPalette;
 extern BOOL g_breakoutAllowed;
-#ifdef PLATFORM_WINDOWS
-extern HWND MainWindow;
-#endif
+extern SpecialDialogType g_SpecialDialog;
+extern BOOL g_TimeQuake;
+extern BOOL g_PendingTimeQuake;
+extern target_t g_TimeQuakeCenter;
+extern BOOL g_GameStatisticsPacketSent;
+extern BOOL g_PlayerWins;
+extern BOOL g_PlayerLoses;
+extern BOOL g_PlayerRestarts;
+extern BOOL g_PlayerAborts;
 extern char *TutorialText;
 extern BOOL MouseInstalled;
 extern int g_seed;
 extern int CustomSeed;
 extern int RandNumb;
+extern int g_SpareTicks;
 extern int g_readyToQuit;
 extern HousesType Whom;
 extern void *g_WakeShapes;
@@ -165,6 +188,12 @@ extern BOOL g_Debug_Print_Events;
 
 extern BOOL g_MonoEnabled;
 #endif
+
+extern int g_mapBinaryVersion;
+
+extern BOOL g_Debug_Paused;
+extern BOOL g_Debug_Step;
+extern int g_Debug_StepCount;
 
 extern BOOL g_Debug_SightRange;
 extern BOOL g_Debug_GuardRange;
