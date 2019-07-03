@@ -252,8 +252,10 @@ uint32_t TCountDownTimerClass<T>::Time() const
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 extern TTimerClass<SystemTimerClass> &TickCountTimer;
+extern TCountDownTimerClass<SystemTimerClass> &FrameTimer;
 #else
 extern TTimerClass<SystemTimerClass> TickCountTimer;
+extern TCountDownTimerClass<SystemTimerClass> FrameTimer;
 #endif
 
 #endif
