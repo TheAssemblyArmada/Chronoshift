@@ -69,7 +69,7 @@ int Get_Shape_Original_Height(void *shape)
     return static_cast<MouseShapeFrameHeader *>(shape)->height;
 }
 
-void __cdecl Mouse_Shadow_Buffer(WWMouseClass &mouse, GraphicViewPortClass &viewport, void *buffer, int x_pos, int y_pos, int hspot_x, int hspot_y, BOOL save)
+void __cdecl Mouse_Shadow_Buffer(MouseClass &mouse, GraphicViewPortClass &viewport, void *buffer, int x_pos, int y_pos, int hspot_x, int hspot_y, BOOL save)
 {
     int xstart = x_pos - hspot_x;
     int ystart = y_pos - hspot_y;
@@ -125,7 +125,7 @@ void __cdecl Mouse_Shadow_Buffer(WWMouseClass &mouse, GraphicViewPortClass &view
     }
 }
 
-void __cdecl Mouse_Draw(WWMouseClass &mouse, GraphicViewPortClass &viewport, int x_pos, int y_pos)
+void __cdecl Mouse_Draw(MouseClass &mouse, GraphicViewPortClass &viewport, int x_pos, int y_pos)
 {
     int xstart = x_pos - mouse.Get_Hotspot_X();
     int ystart = y_pos - mouse.Get_Hotspot_Y();
@@ -183,7 +183,7 @@ void __cdecl Mouse_Draw(WWMouseClass &mouse, GraphicViewPortClass &viewport, int
     }
 }
 
-void *__cdecl Mouse_Set_Cursor(WWMouseClass &mouse, int hspot_x, int hspot_y, void *frame)
+void *__cdecl Mouse_Set_Cursor(MouseClass &mouse, int hspot_x, int hspot_y, void *frame)
 {
     uint8_t *frame_buff;
     uint8_t *data_buff;

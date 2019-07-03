@@ -112,7 +112,7 @@ void Setup_Hooks()
     TextButtonClass::Hook_Me();
     ToggleClass::Hook_Me();
     WSAFile::Hook_Me();
-    WWMouseClass::Hook_Me();
+    MouseClass::Hook_Me();
     XorDelta::Hook_Me();
     SurfaceMonitorClass::Hook_Me();
     SliderClass::Hook_Me();

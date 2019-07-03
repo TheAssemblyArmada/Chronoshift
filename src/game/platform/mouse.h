@@ -25,11 +25,11 @@
 #include <mmsystem.h>
 #endif
 
-class WWMouseClass
+class MouseClass
 {
 public:
-    WWMouseClass(GraphicViewPortClass *scr, int mouse_max_width, int mouse_max_height);
-    ~WWMouseClass();
+    MouseClass(GraphicViewPortClass *scr, int mouse_max_width, int mouse_max_height);
+    ~MouseClass();
 
     int Get_Mouse_X();
     int Get_Mouse_Y();
@@ -68,8 +68,8 @@ public:
     void Set_Frame_Pointer(void *frame) { m_prevCursor = frame; }
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
-    static void Hook_Low_Hide(WWMouseClass *ptr);
-    static void Hook_Low_Show(WWMouseClass *ptr, int x, int y);
+    static void Hook_Low_Hide(MouseClass *ptr);
+    static void Hook_Low_Show(MouseClass *ptr, int x, int y);
 #endif
 
 private:
@@ -114,7 +114,7 @@ void __stdcall Process_Mouse(
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
-inline void WWMouseClass::Hook_Me()
+inline void MouseClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM
     //Hook_Function(0x005C2180, ::Process_Mouse);
@@ -123,11 +123,11 @@ inline void WWMouseClass::Hook_Me()
 #endif
 }
 
-extern WWMouseClass *&g_mouse;
-extern WWMouseClass *&g_wwmouse;
+extern MouseClass *&g_mouse;
+extern MouseClass *&g_wwmouse;
 #else
-extern WWMouseClass *g_mouse;
-extern WWMouseClass *g_wwmouse;
+extern MouseClass *g_mouse;
+extern MouseClass *g_wwmouse;
 #endif
 
 #endif // MOUSE_H

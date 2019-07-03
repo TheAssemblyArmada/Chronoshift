@@ -40,7 +40,7 @@ struct MouseShapeHeader
 };
 #pragma pack(pop)
 
-class WWMouseClass;
+class MouseClass;
 class GraphicViewPortClass;
 
 int Get_Shape_Uncomp_Size(void *shape);
@@ -51,9 +51,9 @@ int Get_Shape_Height(void *shape);
 int Restore_Shape_Height(void *shape);
 int Get_Shape_Original_Height(void *shape);
 
-void __cdecl Mouse_Shadow_Buffer(WWMouseClass &mouse, GraphicViewPortClass &viewport, void *buffer, int x_pos, int y_pos, int hspot_x, int hspot_y, BOOL save);
-void __cdecl Mouse_Draw(WWMouseClass &mouse, GraphicViewPortClass &viewport, int x_pos, int y_pos);
-void *__cdecl Mouse_Set_Cursor(WWMouseClass &mouse, int hspot_x, int hspot_y, void *shape);
+void __cdecl Mouse_Shadow_Buffer(MouseClass &mouse, GraphicViewPortClass &viewport, void *buffer, int x_pos, int y_pos, int hspot_x, int hspot_y, BOOL save);
+void __cdecl Mouse_Draw(MouseClass &mouse, GraphicViewPortClass &viewport, int x_pos, int y_pos);
+void *__cdecl Mouse_Set_Cursor(MouseClass &mouse, int hspot_x, int hspot_y, void *shape);
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"

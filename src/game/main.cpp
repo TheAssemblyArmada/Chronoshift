@@ -365,7 +365,7 @@ int main(int argc, char **argv)
     WindowList[WINDOW_5].H = g_seenBuff.Get_Height();
     
     // TODO Won't need both of these once standalone.
-    g_mouse = g_wwmouse = new WWMouseClass(&g_seenBuff, 48, 48);
+    g_mouse = g_wwmouse = new MouseClass(&g_seenBuff, 48, 48);
     MouseInstalled = true;
     
     int cd_drive = g_cdList.Reset_And_Get_CD_Drive();
