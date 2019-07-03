@@ -235,20 +235,15 @@ void Reset_Video_Mode()
 BOOL Init_Video()
 {
 #ifdef BUILD_WITH_DDRAW
-    BOOL set_mode = false;
+    BOOL set_mode =
+        Set_Video_Mode((uintptr_t)MainWindow, GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, 8);
 
-    if (GraphicViewPortClass::ScreenHeight == 400) {
-        set_mode = Set_Video_Mode((uintptr_t)MainWindow, GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, 8);
+    if (GraphicViewPortClass::ScreenHeight == 400 && !set_mode) {
+        set_mode = Set_Video_Mode((uintptr_t)MainWindow, GraphicViewPortClass::ScreenWidth, 480, 8);
 
-        if (!set_mode) {
-            set_mode = Set_Video_Mode((uintptr_t)MainWindow, GraphicViewPortClass::ScreenWidth, 480, 8);
-
-            if (set_mode) {
-                GraphicViewPortClass::ScreenHeight = 480;
-            }
+        if (set_mode) {
+            GraphicViewPortClass::ScreenHeight = 480;
         }
-    } else {
-        set_mode = Set_Video_Mode((uintptr_t)MainWindow, GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, 8);
     }
 
     if (set_mode) {
