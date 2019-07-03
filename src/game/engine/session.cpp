@@ -23,5 +23,21 @@ SessionClass Session;
 
 SessionClass::SessionClass()
 {
+}
 
+SessionClass::~SessionClass()
+{
+}
+
+/**
+* @brief 
+*
+* 0x0054C298
+*/
+void SessionClass::Trap_Object()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)() = reinterpret_cast<void (*)()>(0x0054C298);
+    return func();
+#endif
 }

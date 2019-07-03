@@ -69,6 +69,7 @@ public:
     void Set_Tint(fixed_t tint);
     void Set();
 
+    int Game_Speed() const { return GameSpeed; }
     int Get_Scroll_Rate() const { return ScrollRate; }
     const fixed_t &Get_Score_Volume() const { return ScoreVolume; }
     BOOL Get_Auto_Scroll() const { return AutoScroll; }
