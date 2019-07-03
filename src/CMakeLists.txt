@@ -78,6 +78,7 @@ set(GAMEENGINE_SRC
     game/engine/gameevent.cpp
     game/engine/gameini.cpp
     game/engine/gamekeyboard.cpp
+    game/engine/gameloop.cpp
     game/engine/gamemain.cpp
     game/engine/gameoptions.cpp
     game/engine/gameptr.cpp
