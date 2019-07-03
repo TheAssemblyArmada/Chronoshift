@@ -19,8 +19,10 @@
 
 #ifndef CHRONOSHIFT_STANDALONE
 TTimerClass<SystemTimerClass> &TickCountTimer = *reinterpret_cast<TTimerClass<SystemTimerClass> *>(0x00680870);
+TCountDownTimerClass<SystemTimerClass> &FrameTimer = *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x006807F8);
 #else
 TTimerClass<SystemTimerClass> TickCountTimer;
+TCountDownTimerClass<SystemTimerClass> FrameTimer;
 #endif
 
 uint32_t SystemTimerClass::operator()() const
