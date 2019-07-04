@@ -105,18 +105,18 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyToggleVortex()) {
             static bool _vortex_active = false;
-            // TODO: Requires ChronalVortexClass.
+            
             if (!_vortex_active) {
                 coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
                 if (coord) {
-                    // ChronalVortex.Appear(coord);
-                    // ChronalVortex.Set_Target(nullptr);
+                    g_ChronalVortex.Appear(coord);
+                    g_ChronalVortex.Set_Target(nullptr);
                     Sound_Effect(VOC_TESLA1, coord);
                     _vortex_active = true;
                 }
             } else {
-                // ChronalVortex.Set_Target(nullptr);
-                // ChronalVortex.Disappear();
+                g_ChronalVortex.Set_Target(nullptr);
+                g_ChronalVortex.Disappear();
                 _vortex_active = false;
             }
             key = KN_NONE;
