@@ -149,6 +149,7 @@ public:
     void Set_Overlay_Frame(int8_t frame) { OverlayFrame = frame; }
     SmudgeType Get_Smudge() const { return Smudge; }
     void Set_Smudge(SmudgeType smudge) { Smudge = smudge; }
+    uint8_t Get_Smudge_Frame() const { return SmudgeFrame; }
     HousesType Owner() const { return OwnerHouse; }
     void Set_Owner(HousesType owner) { OwnerHouse = owner; }
     ObjectClass *Get_Overlapper(int index) { return Overlapper[index]; }
