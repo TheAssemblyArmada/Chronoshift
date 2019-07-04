@@ -81,6 +81,11 @@ inline coord_t Coord_Top_Left(coord_t coord)
     return coord & 0xFF00FF00;
 }
 
+inline coord_t Coord_Sub_Cell(coord_t coord)
+{
+    return coord & 0x00FF00FF;
+}
+
 inline coord_t Coord_Get_Adjacent(coord_t coord, FacingType facing)
 {
     return Coord_Centered(Coord_Add(coord, AdjacentCoord[(unsigned)facing % FACING_COUNT]));
@@ -149,6 +154,11 @@ inline int16_t Lepton_Round_To_Pixel(int16_t lepton)
 inline coord_t Coord_From_Pixel_XY(int x, int y)
 {
     return Coord_From_Lepton_XY(Pixel_To_Lepton(x), Pixel_To_Lepton(y));
+}
+
+inline coord_t Round_Coord_To_Pixel(coord_t coord)
+{
+    return Coord_From_Pixel_XY(Lepton_To_Pixel(Coord_Lepton_X(coord)), Lepton_To_Pixel(Coord_Lepton_Y(coord)));
 }
 
 inline uint8_t Lepton_To_Cell_Coord(lepton_t lepton)
