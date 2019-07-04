@@ -144,6 +144,7 @@ set(GAMEENGINE_SRC
     game/engine/vessel.cpp
     game/engine/vesseltype.cpp
     game/engine/voc.cpp
+    game/engine/vortex.cpp
     game/engine/vox.cpp
     game/engine/warheadtype.cpp
     game/engine/weapontype.cpp

@@ -20,6 +20,7 @@
 #include "land.h"
 #include "stringex.h"
 #include "theme.h"
+#include "vortex.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 fixed_t &RulesClass::EngineerDamage = Make_Global<fixed_t>(0x00665E02);
@@ -424,9 +425,9 @@ BOOL RulesClass::General(GameINIClass &ini)
         VortexChance = ini.Get_Fixed("General", "VortexChance", VortexChance);
 
         // Set variables within the vortex class global instance.
-        ChronalVortex.VortexRange = VortexRange / 256;
-        ChronalVortex.VortexSpeed = VortexSpeed;
-        ChronalVortex.VortexDamage = VortexDamage;
+        g_ChronalVortex.Set_Range(VortexRange / 256);
+        g_ChronalVortex.Set_Speed(VortexSpeed);
+        g_ChronalVortex.Set_Damage(VortexDamage);
 
         return true;
     }
