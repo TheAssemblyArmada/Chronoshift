@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief 
+ * @brief
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -14,29 +14,28 @@
  *            LICENSE
  */
 #include "gamekeyboard.h"
+#include "audio.h"
+#include "building.h"
+#include "coord.h"
 #include "display.h"
 #include "gamedebug.h"
 #include "gameevent.h"
+#include "mouse.h"
 #include "gameoptions.h"
 #include "globals.h"
 #include "house.h"
 #include "iomap.h"
-#include "queue.h"
-#include "techno.h"
-//#include "vortex.h"
-#include "audio.h"
-#include "building.h"
-#include "coord.h"
-#include "gbuffer.h"
-#include "mouse.h"
 #include "msglist.h"
 #include "palette.h"
 #include "pcx.h"
+#include "queue.h"
 #include "rules.h"
 #include "scenario.h"
 #include "session.h"
+#include "techno.h"
 #include "theme.h"
 #include "unit.h"
+#include "vortex.h"
 
 static BOOL g_Debug_Keys = false;
 
@@ -79,17 +78,16 @@ void Message_Input(KeyNumType &key)
     void (*func)(KeyNumType &) = reinterpret_cast<void (*)(KeyNumType &)>(0x004A6BB0);
     func(key);
 #else
-    //TODO
+    // TODO
 #endif
 }
 
-#if defined(CHRONOSHIFT_DEBUG)
+#ifdef CHRONOSHIFT_DEBUG
 void Debug_Keyboard_Process(KeyNumType &key)
 {
     char msg_buffer[256];
 
     if (key != KN_NONE) {
-        
         KeyNumType justkey = (KeyNumType)(key & ~(KEY_SHIFT_BIT | KEY_CTRL_BIT | KEY_ALT_BIT | KEY_VK_BIT));
         KeyNumType keynum = (KeyNumType)(key & ~(KEY_VK_BIT));
 
@@ -107,18 +105,18 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyToggleVortex()) {
             static bool _vortex_active = false;
-            //TODO: Requires ChronalVortexClass.
+            // TODO: Requires ChronalVortexClass.
             if (!_vortex_active) {
                 coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
                 if (coord) {
-                    //ChronalVortex.Appear(coord);
-                    //ChronalVortex.Set_Target(nullptr);
+                    // ChronalVortex.Appear(coord);
+                    // ChronalVortex.Set_Target(nullptr);
                     Sound_Effect(VOC_TESLA1, coord);
                     _vortex_active = true;
                 }
             } else {
-                //ChronalVortex.Set_Target(nullptr);
-                //ChronalVortex.Disappear();
+                // ChronalVortex.Set_Target(nullptr);
+                // ChronalVortex.Disappear();
                 _vortex_active = false;
             }
             key = KN_NONE;
@@ -146,7 +144,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeyFreeMoney()) {
             static int _free_money = 2500;
             g_PlayerPtr->Refund_Money(_free_money);
-            Session.Get_Messages().Add_Simple_Message("Debug", "Player has been rewarded free money!", PLAYER_COLOR_LIGHT_BLUE);
+            Session.Get_Messages().Add_Simple_Message(
+                "Debug", "Player has been rewarded free money!", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
@@ -166,7 +165,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_DebugKeyBailOut()) {
-            //Emergency_Exit(-1);
+            // Emergency_Exit(-1);
             key = KN_NONE;
         }
 
@@ -260,8 +259,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpawnMCV()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
-            if ( coord ) {
-                //TODO: Requires UnitClass.
+            if (coord) {
+                // TODO: Requires UnitClass.
                 /*UnitClass *uptr = new UnitClass(UNIT_MCV, g_PlayerPtr->What_Type());
                 DEBUG_ASSERT(uptr != nullptr);
                 if ( uptr != nullptr ) {
@@ -273,8 +272,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpawnHarvester()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
-            if ( coord ) {
-                //TODO: Requires UnitClass.
+            if (coord) {
+                // TODO: Requires UnitClass.
                 /*UnitClass *uptr = new UnitClass(UNIT_HARVESTER, g_PlayerPtr->What_Type());
                 DEBUG_ASSERT(uptr != nullptr);
                 if ( uptr != nullptr ) {
@@ -286,8 +285,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpawnHeli()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
-            if ( coord ) {
-                //TODO: Requires AircraftClass.
+            if (coord) {
+                // TODO: Requires AircraftClass.
                 /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_HELI, g_PlayerPtr->What_Type());
                 DEBUG_ASSERT(aptr != nullptr);
                 if ( aptr != nullptr ) {
@@ -301,7 +300,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeySpawnHind()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                //TODO: Requires AircraftClass.
+                // TODO: Requires AircraftClass.
                 /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_HIND, g_PlayerPtr->What_Type());
                 DEBUG_ASSERT(aptr != nullptr);
                 if (aptr != nullptr) {
@@ -314,8 +313,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpawnTransport()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
-            if ( coord ) {
-                //TODO: Requires AircraftClass.
+            if (coord) {
+                // TODO: Requires AircraftClass.
                 /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_TRANSPORT, g_PlayerPtr->What_Type());
                 DEBUG_ASSERT(aptr != nullptr);
                 if ( aptr != nullptr ) {
@@ -328,8 +327,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyAtomExplosion()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
-            if ( coord ) {
-                //TODO: Requires AnimClass, Explosion_Damage.
+            if (coord) {
+                // TODO: Requires AnimClass, Explosion_Damage.
                 /*AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
                 DEBUG_ASSERT(aptr != nullptr);
                 if ( aptr != nullptr ) {
@@ -341,8 +340,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySuperExplosion()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
-            if ( coord ) {
-                //TODO: Requires AnimClass, Explosion_Damage.
+            if (coord) {
+                // TODO: Requires AnimClass, Explosion_Damage.
                 /*AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
                 DEBUG_ASSERT(aptr != nullptr);
                 if ( aptr != nullptr ) {
@@ -354,8 +353,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyExplosion()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
-            if ( coord ) {
-                //TODO: Requires AnimClass, Explosion_Damage.
+            if (coord) {
+                // TODO: Requires AnimClass, Explosion_Damage.
                 /*AnimClass *aptr = new AnimClass(ANIM_ART_EXP1, coord);
                 DEBUG_ASSERT(aptr != nullptr);
                 if ( aptr != nullptr ) {
@@ -366,7 +365,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_DebugKeyDeleteObject()) {
-            if ( CurrentObjects.Count() > 0 ) {
+            if (CurrentObjects.Count() > 0) {
                 for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     ObjectClass *objptr = CurrentObjects[index];
                     DEBUG_ASSERT(objptr != nullptr);
@@ -384,9 +383,16 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyScreenshot()) {
             char filename[256];
-            static GraphicBufferClass temp_page(g_seenBuff.Get_Width(), g_seenBuff.Get_Height(), nullptr, g_seenBuff.Get_Width() * g_seenBuff.Get_Height());
-            g_seenBuff.Blit(temp_page, g_seenBuff.Get_XPos(), g_seenBuff.Get_YPos(), g_seenBuff.Get_XPos(), g_seenBuff.Get_YPos(), g_seenBuff.Get_Width(), g_seenBuff.Get_Height());
-            for (int index = 0; index < 9999; ++index ) {
+            static GraphicBufferClass temp_page(
+                g_seenBuff.Get_Width(), g_seenBuff.Get_Height(), nullptr, g_seenBuff.Get_Width() * g_seenBuff.Get_Height());
+            g_seenBuff.Blit(temp_page,
+                g_seenBuff.Get_XPos(),
+                g_seenBuff.Get_YPos(),
+                g_seenBuff.Get_XPos(),
+                g_seenBuff.Get_YPos(),
+                g_seenBuff.Get_Width(),
+                g_seenBuff.Get_Height());
+            for (int index = 0; index < 9999; ++index) {
                 snprintf(filename, sizeof(filename), "scrn%04d.pcx", index);
                 if (!GameFileClass::File_Available(filename)) {
                     break;
@@ -419,7 +425,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_SONAR_PULSE).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_SONAR_PULSE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_SONAR_PULSE);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -427,7 +433,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_ATOM_BOMB).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_ATOM_BOMB).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_ATOM_BOMB);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -435,7 +441,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_WARP_SPHERE).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_WARP_SPHERE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_WARP_SPHERE);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -443,7 +449,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_BOMB).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_BOMB).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_PARA_BOMB);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -451,7 +457,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_INFANTRY).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_INFANTRY).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_PARA_INFANTRY);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -459,7 +465,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_SPY_PLANE).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_SPY_PLANE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_SPY_PLANE);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -467,7 +473,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_IRON_CURTAIN).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_IRON_CURTAIN).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_IRON_CURTAIN);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -475,7 +481,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_GPS).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_GPS).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_GPS);
-            //Map.Right_Strip_Flag_To_Redraw();
+            // Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -503,7 +509,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
                 g_PlayerPtr->Set_IQ_Level(Rule.IQ_Controls().MaxIQLevels);
                 g_PlayerPtr->Set_AI_Difficulty(DIFF_HARDEST);
 
-                Session.Get_Messages().Add_Simple_Message("Debug", "AI has taken control of the player!", PLAYER_COLOR_LIGHT_BLUE);
+                Session.Get_Messages().Add_Simple_Message(
+                    "Debug", "AI has taken control of the player!", PLAYER_COLOR_LIGHT_BLUE);
             } else {
                 // Re-assume control.
                 g_PlayerPtr->Set_Human(true);
@@ -514,14 +521,15 @@ void Debug_Keyboard_Process(KeyNumType &key)
                 g_PlayerPtr->Set_IQ_Level(_player_iq);
                 g_PlayerPtr->Set_AI_Difficulty(_player_diff);
 
-                Session.Get_Messages().Add_Simple_Message("Debug", "Player has now re-assumed control!", PLAYER_COLOR_LIGHT_BLUE);
+                Session.Get_Messages().Add_Simple_Message(
+                    "Debug", "Player has now re-assumed control!", PLAYER_COLOR_LIGHT_BLUE);
             }
             Map.Recalc();
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyStealObject()) {
-            if ( CurrentObjects.Count() > 0 ) {
+            if (CurrentObjects.Count() > 0) {
                 for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
                     TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
                     DEBUG_ASSERT(objptr != nullptr);
@@ -529,7 +537,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             if (!objptr->Get_Owner_House()->Is_Player()) {
                                 objptr->Captured(g_PlayerPtr);
-                                Session.Get_Messages().Add_Simple_Message("Debug", "Captured object!", PLAYER_COLOR_LIGHT_BLUE);
+                                Session.Get_Messages().Add_Simple_Message(
+                                    "Debug", "Captured object!", PLAYER_COLOR_LIGHT_BLUE);
                             }
                         }
                     }
@@ -605,15 +614,13 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeySpecialDialog()) {
             if (Session.Game_To_Play() == GAME_CAMPAIGN) {
-                //Special_Dialog();
+                // Special_Dialog();
             } else {
-                //g_SpecialDialog = SPECIAL_DLG_SPECIAL;
+                // g_SpecialDialog = SPECIAL_DLG_SPECIAL;
                 key = KN_NONE;
             }
         }
-
     }
-
 }
 #endif
 
@@ -623,7 +630,6 @@ void Keyboard_Process(KeyNumType &key)
     static int _scroll_dist = 256;
 
     if (key != KN_NONE) {
-
         Message_Input(key);
 
         ObjectClass *objptr = nullptr;
@@ -751,7 +757,6 @@ void Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_KeyBase()) {
-
             bool selected = false;
             coord_t object_coord = 0;
 
@@ -813,11 +818,12 @@ void Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_KeyAlliance()) {
-            if ( (g_Debug_Flag || Session.Game_To_Play() != GAME_CAMPAIGN) && CurrentObjects.Count() > 0 && !g_PlayerPtr->Is_Defeated() ) {
+            if ((g_Debug_Flag || Session.Game_To_Play() != GAME_CAMPAIGN) && CurrentObjects.Count() > 0
+                && !g_PlayerPtr->Is_Defeated()) {
                 ObjectClass *objptr = CurrentObjects.Fetch_Head();
                 DEBUG_ASSERT(objptr != nullptr);
-                if ( objptr != nullptr ) {
-                    if ( objptr->Owner() == g_PlayerPtr->What_Type() ) {
+                if (objptr != nullptr) {
+                    if (objptr->Owner() == g_PlayerPtr->What_Type()) {
                         GameEventClass ev(GameEventClass::EVENT_ALLY, objptr->Owner());
                         OutgoingEvents.Add(ev);
                     }
@@ -953,7 +959,7 @@ void Keyboard_Process(KeyNumType &key)
             key = KN_NONE;
         }
 
-    #if defined(CHRONOSHIFT_DEBUG)
+#ifdef CHRONOSHIFT_DEBUG
         if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.Game_To_Play() == GAME_SKIRMISH) {
             if (justkey == Options.Get_DebugKeyToggleDebug()) {
                 g_Debug_Keys = !g_Debug_Keys;
@@ -966,8 +972,6 @@ void Keyboard_Process(KeyNumType &key)
                 Debug_Keyboard_Process(key);
             }
         }
-    #endif
-
+#endif
     }
-
 }
