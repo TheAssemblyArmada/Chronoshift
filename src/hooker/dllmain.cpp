@@ -71,6 +71,8 @@
 #include "version.h"
 #include "wsa.h"
 #include "xordelta.h"
+#include "gameloop.h"
+#include "vortex.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -166,6 +168,7 @@ void Setup_Hooks()
     Hook_Function(0x005C9E60, Reset_Video_Mode);
     Hook_Function(0x00552368, Init_Video);
     Hook_Function(0x005CA070, Set_Video_Palette);
+    ChronalVortexClass::Hook_Me();
 }
 
 StaticInitObject::StaticInitObject()
