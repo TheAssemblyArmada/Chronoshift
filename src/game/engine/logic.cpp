@@ -134,7 +134,7 @@ void LogicClass::AI()
         Shake_The_Screen(8);
     }
 
-    ChronalVortex.AI();
+    g_ChronalVortex.AI();
 
     for (int index = 0; index < Logic.Count(); ++index) {
         ObjectClass *objptr = Logic[index];
