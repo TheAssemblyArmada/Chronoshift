@@ -143,6 +143,11 @@ public:
     KeyNumType Get_DebugKeyToggleMono() const { return DebugKeyToggleMono; }
     KeyNumType Get_DebugKeyPrevMonoPage() const { return DebugKeyPrevMonoPage; }
     KeyNumType Get_DebugKeyNextMonoPage() const { return DebugKeyNextMonoPage; }
+    KeyNumType Get_DebugKeyPaused() const { return DebugKeyPaused; }
+    KeyNumType Get_DebugKeyFrameStep() const { return DebugKeyFrameStep; }
+    KeyNumType Get_DebugKeyOneFrameStep() const { return DebugKeyOneFrameStep; }
+    KeyNumType Get_DebugKeyFiveFrameStep() const { return DebugKeyFiveFrameStep; }
+    KeyNumType Get_DebugKeyTenFrameStep() const { return DebugKeyTenFrameStep; }
     KeyNumType Get_DebugKeySpawnMCV() const { return DebugKeySpawnMCV; }
     KeyNumType Get_DebugKeySpawnHarvester() const { return DebugKeySpawnHarvester; }
     KeyNumType Get_DebugKeySpawnHeli() const { return DebugKeySpawnHeli; }
@@ -292,6 +297,11 @@ private:
     static KeyNumType DebugKeyToggleMono;
     static KeyNumType DebugKeyPrevMonoPage;
     static KeyNumType DebugKeyNextMonoPage;
+    static KeyNumType DebugKeyPaused;
+    static KeyNumType DebugKeyFrameStep;
+    static KeyNumType DebugKeyOneFrameStep;
+    static KeyNumType DebugKeyFiveFrameStep;
+    static KeyNumType DebugKeyTenFrameStep;
     static KeyNumType DebugKeySpawnMCV;
     static KeyNumType DebugKeySpawnHarvester;
     static KeyNumType DebugKeySpawnHeli;
@@ -344,6 +354,11 @@ private:
     KeyNumType DebugKeyToggleMono;
     KeyNumType DebugKeyPrevMonoPage;
     KeyNumType DebugKeyNextMonoPage;
+    KeyNumType DebugKeyPaused;
+    KeyNumType DebugKeyFrameStep;
+    KeyNumType DebugKeyOneFrameStep;
+    KeyNumType DebugKeyFiveFrameStep;
+    KeyNumType DebugKeyTenFrameStep;
     KeyNumType DebugKeySpawnMCV;
     KeyNumType DebugKeySpawnHarvester;
     KeyNumType DebugKeySpawnHeli;

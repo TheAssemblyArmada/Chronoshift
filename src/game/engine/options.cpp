@@ -44,6 +44,11 @@ KeyNumType OptionsClass::DebugKeyNavList = KN_NONE;
 KeyNumType OptionsClass::DebugKeyToggleMono = KN_NONE;
 KeyNumType OptionsClass::DebugKeyPrevMonoPage = KN_NONE;
 KeyNumType OptionsClass::DebugKeyNextMonoPage = KN_NONE;
+KeyNumType OptionsClass::DebugKeyPaused = KN_NONE;
+KeyNumType OptionsClass::DebugKeyFrameStep = KN_NONE;
+KeyNumType OptionsClass::DebugKeyOneFrameStep = KN_NONE;
+KeyNumType OptionsClass::DebugKeyFiveFrameStep = KN_NONE;
+KeyNumType OptionsClass::DebugKeyTenFrameStep = KN_NONE;
 KeyNumType OptionsClass::DebugKeySpawnMCV = KN_NONE;
 KeyNumType OptionsClass::DebugKeySpawnHarvester = KN_NONE;
 KeyNumType OptionsClass::DebugKeySpawnHeli = KN_NONE;
@@ -167,6 +172,11 @@ OptionsClass::OptionsClass() :
     DebugKeyToggleMono(KN_NONE),
     DebugKeyPrevMonoPage(KN_NONE),
     DebugKeyNextMonoPage(KN_NONE),
+    DebugKeyPaused(KN_NONE),
+    DebugKeyFrameStep(KN_NONE),
+    DebugKeyOneFrameStep(KN_NONE),
+    DebugKeyFiveFrameStep(KN_NONE),
+    DebugKeyTenFrameStep(KN_NONE),
     DebugKeySpawnMCV(KN_NONE),
     DebugKeySpawnHarvester(KN_NONE),
     DebugKeySpawnHeli(KN_NONE),
@@ -406,6 +416,11 @@ void OptionsClass::Load_Settings()
     DebugKeyToggleMono = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleMono", DebugKeyToggleMono);
     DebugKeyPrevMonoPage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyPrevMonoPage", DebugKeyPrevMonoPage);
     DebugKeyNextMonoPage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyNextMonoPage", DebugKeyNextMonoPage);
+    DebugKeyPaused = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyPaused", DebugKeyPaused);
+    DebugKeyFrameStep = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyFrameStep", DebugKeyFrameStep);
+    DebugKeyOneFrameStep = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyOneFrameStep", DebugKeyOneFrameStep);
+    DebugKeyFiveFrameStep = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyFiveFrameStep", DebugKeyFiveFrameStep);
+    DebugKeyTenFrameStep = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyTenFrameStep", DebugKeyTenFrameStep);
     DebugKeySpawnMCV = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnMCV", DebugKeySpawnMCV);
     DebugKeySpawnHarvester = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnHarvester", DebugKeySpawnHarvester);
     DebugKeySpawnHeli = ini.Get_KeyNumType("DebugHotkeys", "DebugKeySpawnHeli", DebugKeySpawnHeli);
