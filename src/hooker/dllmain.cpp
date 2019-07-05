@@ -31,6 +31,7 @@
 #include "gadget.h"
 #include "gamedebug.h"
 #include "gamefile.h"
+#include "gamekeyboard.h"
 #include "gbuffer.h"
 #include "heap.h"
 #include "hooker.h"
@@ -158,6 +159,7 @@ void Setup_Hooks()
     Init::Hook_Me();
     Hook_Function(0x004AAC58, &Force_CD_Available);
     Hook_Function(0x004A7C74, Main_Loop);
+    Hook_Function(0x004A56D8, Keyboard_Process);
 }
 
 StaticInitObject::StaticInitObject()
