@@ -139,7 +139,7 @@ void Sync_Delay()
         }
 
         // Yield remaining timeslice to other processes?
-        //PlatformTimer->Sleep(1); // why not 0? 1 Frees up processor time?
+        PlatformTimer->Sleep(1); // why not 0? 1 Frees up processor time?
     }
 
     Color_Cycle();
