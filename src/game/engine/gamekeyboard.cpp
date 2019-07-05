@@ -85,6 +85,8 @@ void Message_Input(KeyNumType &key)
 #if defined(CHRONOSHIFT_DEBUG)
 void Debug_Keyboard_Process(KeyNumType &key)
 {
+    char msg_buffer[256];
+
     if (key != KN_NONE) {
         
         KeyNumType justkey = (KeyNumType)(key & ~(KEY_SHIFT_BIT | KEY_CTRL_BIT | KEY_ALT_BIT | KEY_VK_BIT));
@@ -220,6 +222,39 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyNextMonoPage()) {
             key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyPaused()) {
+            g_Debug_Paused = !g_Debug_Paused;
+
+            snprintf(msg_buffer, sizeof(msg_buffer), "Game %s!", (g_Debug_Paused ? "paused" : "resumed"));
+            Session.Get_Messages().Add_Simple_Message("System", msg_buffer, PLAYER_COLOR_LIGHT_BLUE);
+            
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyFrameStep()) {
+            g_Debug_Step = !g_Debug_Step;
+
+            snprintf(msg_buffer, sizeof(msg_buffer), "Debug frame stepping %s", (g_Debug_Step ? "enabled" : "disabled"));
+            Session.Get_Messages().Add_Simple_Message("System", msg_buffer, PLAYER_COLOR_LIGHT_BLUE);
+
+            key = KN_NONE;
+        }
+
+        if (g_Debug_Step) {
+            if (justkey == Options.Get_DebugKeyOneFrameStep()) {
+                g_Debug_StepCount = 1;
+                key = KN_NONE;
+            }
+            if (justkey == Options.Get_DebugKeyFiveFrameStep()) {
+                g_Debug_StepCount = 5;
+                key = KN_NONE;
+            }
+            if (justkey == Options.Get_DebugKeyTenFrameStep()) {
+                g_Debug_StepCount = 10;
+                key = KN_NONE;
+            }
         }
 
         if (justkey == Options.Get_DebugKeySpawnMCV()) {
