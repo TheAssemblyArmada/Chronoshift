@@ -132,7 +132,7 @@ void Sync_Delay()
             PlatformTimer->Sleep(4);
         }*/
 
-        if (g_SpecialDialog != SPECIAL_DLG_NONE) {
+        if (g_SpecialDialog == SPECIAL_DLG_NONE) {
             g_mouse->Erase_Mouse(g_hidPage, true);
             Process_Input();
             Map.Render();
@@ -172,8 +172,18 @@ void Debug_Motion_Capture()
 BOOL Main_Loop()
 {
     if (GameActive) {
+
 #ifdef CHRONOSHIFT_DEBUG
-        if (g_Debug_Step && g_Debug_StepCount <= 0) {
+
+        // This chunk both handles debug frame stepping after we have flushed all the
+        // requested steps, or if the pause flag has been enabled. The game will continue
+        // to render the last frame and accept input, and the engine will sleep.
+        if (g_Debug_Step && g_Debug_StepCount <= 0 || g_Debug_Paused) {
+
+            // We need this here so the audio stream updates.
+            Call_Back();
+
+            // And this to make sure we still render the game viewport and handle input still.
             if (!Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
                 if (g_gameInFocus) {
                     g_mouse->Erase_Mouse(g_hidPage, true);
@@ -182,11 +192,20 @@ BOOL Main_Loop()
                 }
             }
 
+            // Force a redraw if there are any pending messages. The debug key system needs this.
+            if (Session.Get_Messages().Manage()) {
+                g_hiddenPage.Clear();
+                Map.Flag_To_Redraw(true);
+            }
+
             // Yield remaining timeslice to other processes?
             PlatformTimer->Sleep(1); // why not 0? 1 frees up processor time?
 
         } else {
-            while ((g_Debug_Step && g_Debug_StepCount > 0) || (!g_Debug_Step && g_Debug_StepCount <= 0)) {
+
+            // Run the normal game loop body if frame stepping is disabled or if
+            // we have remaining frames to flush before we go back to a paused state.
+            if (!g_Debug_Step || (g_Debug_Step && g_Debug_StepCount > 0)) {
 #endif
 
                 Check_For_Focus_Loss();
@@ -245,7 +264,8 @@ BOOL Main_Loop()
 
                 Logic.AI();
 
-                g_TimeQuake = 0;
+                g_TimeQuake = false;
+
                 if (!g_PendingTimeQuake) {
                     g_TimeQuakeCenter = 0;
                 }
@@ -257,8 +277,8 @@ BOOL Main_Loop()
                 }
 
                 Session.Tick_Processing_Frame();
-                // Session.Update_Processing_Tick_Value(std::min<int>((TickCountTimer.Time() -
-                // Session.Processing_Start_Tick()), MAX_PROCESSING_TICKS));
+
+                // Session.Update_Processing_Tick_Value(std::min<int>((TickCountTimer.Time() - Session.Processing_Start_Tick()), MAX_PROCESSING_TICKS));
                 Session.Update_Processing_Tick_Value(TickCountTimer.Time() - Session.Processing_Start_Tick());
 
                 Queue_AI();
@@ -268,7 +288,7 @@ BOOL Main_Loop()
                 int &score_field_28 = Make_Global<int>(0x006698E4);
                 score_field_28 += 4;
 #else
-        // Score.field_28 += 4;
+                // Score.field_28 += 4;
 #endif
 
                 Call_Back();
@@ -341,13 +361,16 @@ BOOL Main_Loop()
 #endif
 
                     Sync_Delay();
+
                 }
 
 #ifdef CHRONOSHIFT_DEBUG
+                // derecment the step count after we have processed one frame iteration.
                 if (g_Debug_Step && g_Debug_StepCount > 0) {
                     --g_Debug_StepCount;
                 }
-            } // while case
+
+            } // if case
         } // sleep case
 #endif
     }
