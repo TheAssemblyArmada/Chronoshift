@@ -3,6 +3,7 @@
  *
  * @author CCHyper
  * @author OmniBlade
+ * @author tomsons26
  *
  * @brief Class holding information regarding the current game session.
  *
@@ -28,9 +29,12 @@
 #include "vector.h"
 #include "version.h" // Current place for CommProtocolEnum but will likely move.
 
-#define     MAX_PROCESSING_TICKS     1000
+#define MAX_PROCESSING_TICKS 1000
 
 class CellClass;
+class GameFileClass;
+class Pipe;
+class Straw;
 
 enum GameEnum
 {
@@ -43,11 +47,11 @@ enum GameEnum
     GAME_SKIRMISH,
     GAME_6,
     GAME_7,
-    //GAME_SOLE_SURVIVOR, // TODO, add SS code to allow RA to have a Sole Survivor mode
+    // GAME_SOLE_SURVIVOR, // TODO, add SS code to allow RA to have a Sole Survivor mode
     GAME_COUNT
 };
 
-struct MultiMission;
+class MultiMission;
 
 // Temp, this contains a union of a number of different structs.
 struct GlobalPacket
@@ -109,6 +113,11 @@ public:
     SessionClass();
     ~SessionClass();
 
+    void One_Time();
+    void Init();
+    int Create_Connections();
+    int Am_I_Master();
+
     GameEnum Game_To_Play() const { return GameToPlay; }
     CommProtocolEnum Packet_Protocol() const { return PacketProtocol; }
 
@@ -124,6 +133,16 @@ public:
 
     BOOL Loading_Game() const { return LoadGame; }
     BOOL Saving_Game() const { return SaveGame; }
+
+    int Save(Pipe &pipe);
+    int Load(Straw &straw);
+    int Save(GameFileClass &file);
+    int Load(GameFileClass &file);
+
+    void Read_MultiPlayer_Settings();
+    void Write_MultiPlayer_Settings();
+    void Read_Scenario_Descriptions();
+    void Free_Scenario_Descriptions();
 
     MessageListClass &Get_Messages() { return Messages; }
 
@@ -141,6 +160,8 @@ public:
 
     int Trap_Frame() const { return TrapFrame; }
     BOOL Trap_Check_Heap() const { return TrapCheckHeap; }
+
+    uint32_t Compute_Unique_ID();
 
 private:
     GameEnum GameToPlay;

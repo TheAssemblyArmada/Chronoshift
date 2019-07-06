@@ -85,6 +85,7 @@ public:
     BOOL Global_Timer_Running() { return GlobalTimer != 0; }
     cell_t Get_View(int index) const { return Views[index]; }
     void Set_View(int index, cell_t cell) { Views[index] = cell; }
+    void Set_Bridge_Count(int count) { BridgeCount = count; }
 
     BOOL Get_field_7CF() const { return field_7CF; }
     BOOL Get_field_7D3() const { return field_7D3; }
