@@ -99,6 +99,7 @@ set(GAMEENGINE_SRC
     game/engine/layer.cpp
     game/engine/lists.cpp
     game/engine/logic.cpp
+    game/engine/loaddialog.cpp
     game/engine/map.cpp
     game/engine/mission.cpp
     game/engine/multimission.cpp
@@ -117,6 +118,7 @@ set(GAMEENGINE_SRC
     game/engine/radar.cpp
     game/engine/rtti.cpp
     game/engine/rules.cpp
+    game/engine/saveload.cpp
     game/engine/scroll.cpp
     game/engine/scenario.cpp
     game/engine/session.cpp
