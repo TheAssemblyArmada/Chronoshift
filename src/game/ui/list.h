@@ -51,8 +51,8 @@ public:
     virtual const char *Current_Item() const;
     virtual const char *Get_Item(int string_index) const;
     virtual int Step_Selected_Index(int index);
-    virtual void Remove_Item(int string_index);
     virtual void Remove_Item(const char *string);
+    virtual void Remove_Item(int string_index);
     virtual BOOL Remove_Scroll_Bar();
     virtual void Set_Selected_Index(int string_index);
     virtual void Set_Selected_Index(const char *string);
