@@ -101,6 +101,7 @@ set(GAMEENGINE_SRC
     game/engine/logic.cpp
     game/engine/map.cpp
     game/engine/mission.cpp
+    game/engine/multimission.cpp
     game/engine/missioncontrol.cpp
     game/engine/movie.cpp
     game/engine/msglist.cpp
