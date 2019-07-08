@@ -322,10 +322,10 @@ void __cdecl Buffer_Put_Pixel(GraphicViewPortClass &vp, unsigned x, unsigned y, 
 void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPortClass &dst_vp, int src_x, int src_y,
     int dst_x, int dst_y, int w, int h, bool use_key)
 {
-    uint8_t *src = static_cast<uint8_t *>(src_vp.Get_Offset()) + src_vp.Get_XAdd();
-    uint8_t *dst = static_cast<uint8_t *>(dst_vp.Get_Offset()) + dst_vp.Get_XAdd();
-    int s_scanline = (src_vp.Get_Pitch() + src_vp.Get_XAdd() + src_vp.Get_Width());
-    int d_scanline = (dst_vp.Get_Pitch() + dst_vp.Get_XAdd() + dst_vp.Get_Width());
+    uint8_t *src = static_cast<uint8_t *>(src_vp.Get_Offset());
+    uint8_t *dst = static_cast<uint8_t *>(dst_vp.Get_Offset());
+    int src_pitch = src_vp.Get_Full_Pitch();
+    int dst_pitch = dst_vp.Get_Full_Pitch();
 
     if (src_x >= src_vp.Get_Width() || src_y >= src_vp.Get_Height() || dst_x >= dst_vp.Get_Width()
         || dst_y >= dst_vp.Get_Height() || h < 0 || w < 1) {
@@ -341,14 +341,14 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
     w = (dst_x + w) > dst_vp.Get_Width() ? dst_vp.Get_Width() - 1 - dst_x : w;
 
     // move our pointers to the start locations
-    src += src_x + src_y * s_scanline;
-    dst += dst_x + dst_y * d_scanline;
+    src += src_x + src_y * src_pitch;
+    dst += dst_x + dst_y * dst_pitch;
 
     // If src is before dst, we run the risk of overlapping memory regions so we
     // need to move src and dst to the last line and work backwards
     if (src < dst) {
-        uint8_t *esrc = src + (h - 1) * s_scanline;
-        uint8_t *edst = dst + (h - 1) * d_scanline;
+        uint8_t *esrc = src + (h - 1) * src_pitch;
+        uint8_t *edst = dst + (h - 1) * dst_pitch;
         if (use_key) {
             char key_colour = 0;
             while (h-- != 0) {
@@ -359,14 +359,14 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
                     }
                 }
 
-                edst -= d_scanline;
-                esrc -= s_scanline;
+                edst -= dst_pitch;
+                esrc -= src_pitch;
             }
         } else {
             while (h-- != 0) {
                 memmove(edst, esrc, w);
-                edst -= d_scanline;
-                esrc -= s_scanline;
+                edst -= dst_pitch;
+                esrc -= src_pitch;
             }
         }
     } else {
@@ -380,14 +380,14 @@ void __cdecl Linear_Blit_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPort
                     }
                 }
 
-                dst += d_scanline;
-                src += s_scanline;
+                dst += dst_pitch;
+                src += src_pitch;
             }
         } else {
             while (h-- != 0) {
                 memmove(dst, src, w);
-                dst += d_scanline;
-                src += s_scanline;
+                dst += dst_pitch;
+                src += src_pitch;
             }
         }
     }
