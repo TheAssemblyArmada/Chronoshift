@@ -17,7 +17,7 @@
 #define TEXTPRINT_H
 
 #include "always.h"
-#include "gbuffer.h"
+class GraphicViewPortClass;
 
 // Defines for TextPrintType fonts
 #define FONT_6 1

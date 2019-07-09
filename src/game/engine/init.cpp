@@ -15,8 +15,10 @@
  *            LICENSE
  */
 #include "init.h"
-#include "gameini.h"
+#include "gadget.h"
 #include "gamefile.h"
+#include "gameini.h"
+#include "gbuffer.h"
 #include "globals.h"
 #include "mixfile.h"
 #include "picture.h"

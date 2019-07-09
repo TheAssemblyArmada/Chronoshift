@@ -15,6 +15,8 @@
  */
 #include "pkpipe.h"
 #include "gamedebug.h"
+#include "pk.h"
+#include "straw.h"
 #include <algorithm>
 
 PKPipe::PKPipe(PipeControl mode, Straw &rstraw) :

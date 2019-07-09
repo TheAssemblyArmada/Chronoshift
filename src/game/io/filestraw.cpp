@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "filestraw.h"
+#include "fileclass.h"
 
 FileStraw::~FileStraw()
 {

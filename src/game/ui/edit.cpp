@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "edit.h"
+#include "gbuffer.h"
 #include "mouse.h"
 #include "textprint.h"
 #include <cctype>

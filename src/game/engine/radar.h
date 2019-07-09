@@ -20,7 +20,9 @@
 
 #include "always.h"
 #include "display.h"
-#include "noinit.h"
+#include "gbuffer.h"
+
+class NoInitClass;
 
 enum RadarStateType
 {

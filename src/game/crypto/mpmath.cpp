@@ -16,9 +16,10 @@
 #include "mpmath.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include <stdlib.h>
-#include <cstring>
+#include "straw.h"
 #include <algorithm>
+#include <cstring>
+#include <stdlib.h>
 
 using std::memcpy;
 using std::memset;

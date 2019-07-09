@@ -22,11 +22,12 @@
 #include "cell.h"
 #include "crate.h"
 #include "gscreen.h"
-#include "object.h"
-#include "pipe.h"
-#include "straw.h"
 #include "vector.h"
-#include "noinit.h"
+
+class Pipe;
+class Straw;
+class NoInitClass;
+class ObjectClass;
 
 class MapClass : public GameScreenClass
 {

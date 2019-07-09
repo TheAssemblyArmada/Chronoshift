@@ -16,6 +16,7 @@
 #include "scenario.h"
 #include "gamefile.h"
 #include "gameoptions.h"
+#include "palette.h"
 #include "stringex.h"
 #include <cstdio>
 

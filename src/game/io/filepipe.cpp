@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "filepipe.h"
+#include "fileclass.h"
 
 FilePipe::~FilePipe()
 {

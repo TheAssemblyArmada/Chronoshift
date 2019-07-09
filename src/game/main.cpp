@@ -24,6 +24,7 @@
 #include "gamedebug.h"
 #include "gamemain.h"
 #include "gameoptions.h"
+#include "gbuffer.h"
 #include "getcd.h"
 #include "gitverinfo.h"
 #include "globals.h"

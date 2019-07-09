@@ -14,26 +14,27 @@
  *            LICENSE
  */
 #include "display.h"
-#include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"
+#include "gamefile.h"
 #include "gameoptions.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
+#include "mouse.h"
 #include "palette.h"
 #include "pk.h"
 #include "rules.h"
 #include "scenario.h"
-#include "technotype.h"
 #include "target.h"
+#include "technotype.h"
 #include "textprint.h"
 #include "theater.h"
-#include <cstdio>
 #include <algorithm>
+#include <cstdio>
 
 using std::snprintf;
 

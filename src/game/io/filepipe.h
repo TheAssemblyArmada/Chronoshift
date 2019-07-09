@@ -19,8 +19,9 @@
 #define FILEPIPE_H
 
 #include "always.h"
-#include "fileclass.h"
 #include "pipe.h"
+
+class FileClass;
 
 class FilePipe : public Pipe
 {

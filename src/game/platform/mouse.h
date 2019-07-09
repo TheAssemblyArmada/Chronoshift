@@ -19,7 +19,8 @@
 #define MOUSE_H
 
 #include "always.h"
-#include "gbuffer.h"
+class GraphicViewPortClass;
+class GraphicBufferClass;
 
 #ifdef PLATFORM_WINDOWS
 #include <mmsystem.h>

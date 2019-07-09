@@ -15,6 +15,7 @@
  */
 #include "checkbox.h"
 #include "dialog.h"
+#include "gbuffer.h"
 #include "mouse.h"
 
 BOOL CheckBoxClass::Draw_Me(BOOL redraw)

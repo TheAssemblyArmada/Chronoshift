@@ -19,11 +19,12 @@
 #define ABSTRACTTYPE_H
 
 #include "always.h"
-#include "language.h"
-#include "noinit.h"
-#include "rtti.h"
 #include "gametypes.h"
+#include "language.h"
+#include "rtti.h"
 #include "stringex.h"
+
+class NoInitClass;
 
 class AbstractTypeClass
 {

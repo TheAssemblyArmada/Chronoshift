@@ -20,11 +20,11 @@
 
 #include "always.h"
 #include "controlc.h"
-#include "noinit.h"
 #include "power.h"
 #include "shapebtn.h"
-#include "textbtn.h"
 #include "stage.h"
+
+class NoInitClass;
 
 enum ColumnType
 {

@@ -18,10 +18,10 @@
 #define PCX_H
 
 #include "always.h"
-#include "buffer.h"
-#include "fileclass.h"
-#include "gbuffer.h"
-#include "palette.h"
+
+class FileClass;
+class GraphicBufferClass;
+class PaletteClass;
 
 enum PCX_MANF_ID
 {

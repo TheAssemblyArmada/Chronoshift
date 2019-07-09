@@ -18,7 +18,8 @@
 #define FADING_H
 
 #include "always.h"
-#include "palette.h"
+
+class PaletteClass;
 
 struct TLucentType
 {

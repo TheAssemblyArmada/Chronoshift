@@ -19,9 +19,11 @@
 #define MSGLIST_H
 
 #include "always.h"
+#include "dialog.h"
 #include "keyboard.h"
 #include "remap.h"
-#include "txtlabel.h"
+
+class TextLabelClass;
 
 class MessageListClass
 {

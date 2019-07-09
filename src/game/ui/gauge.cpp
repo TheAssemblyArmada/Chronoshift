@@ -16,6 +16,7 @@
 #include "gauge.h"
 #include "dialog.h"
 #include "fixed.h"
+#include "gbuffer.h"
 #include "mouse.h"
 #include "remap.h"
 #include <algorithm>

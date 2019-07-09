@@ -23,9 +23,9 @@
 #include "fixed.h"
 #include "gametypes.h"
 #include "heap.h"
-#include "noinit.h"
 #include "remap.h"
 
+class NoInitClass;
 class GameINIClass;
 
 class HouseTypeClass : public AbstractTypeClass

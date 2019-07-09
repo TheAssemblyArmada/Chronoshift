@@ -22,7 +22,6 @@
 #include "audio.h"
 #include "language.h"
 #include "random.h"
-#include "vector.h"
 
 enum ThemeType
 {

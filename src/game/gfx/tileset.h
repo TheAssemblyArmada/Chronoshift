@@ -19,7 +19,8 @@
 #define TILESET_H
 
 #include "always.h"
-#include "gbuffer.h"
+
+class GraphicViewPortClass;
 
 #define TD_TILESET_CHECK 0x20
 

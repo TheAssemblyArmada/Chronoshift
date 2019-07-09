@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "checklist.h"
+#include "gamedebug.h"
 #include "gbuffer.h"
 #include <stdio.h>
 

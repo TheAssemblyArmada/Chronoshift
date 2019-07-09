@@ -19,11 +19,10 @@
 #define ABSTRACT_H
 
 #include "always.h"
+#include "coord.h"
 #include "facing.h"
 #include "gametypes.h"
-#include "coord.h"
 #include "rtti.h"
-#include "vector.h"
 
 class NoInitClass;
 

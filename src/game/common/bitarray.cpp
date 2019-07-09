@@ -14,7 +14,6 @@
  *            LICENSE
  */
 #include "bitarray.h"
-#include "gamedebug.h"
 
 /**
  * @brief Sets or clears a bit at a given position in an arbitrary array of data.

@@ -26,11 +26,11 @@
 #include "gameptr.h"
 #include "gametypes.h"
 #include "infantrytype.h"
-#include "noinit.h"
 #include "radio.h"
 #include "stage.h"
 #include "ttimer.h"
 
+class NoInitClass;
 class BulletClass;
 class HouseClass;
 

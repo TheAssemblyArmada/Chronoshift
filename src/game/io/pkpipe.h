@@ -21,8 +21,9 @@
 #include "always.h"
 #include "blowpipe.h"
 #include "pipe.h"
-#include "pk.h"
-#include "rndstraw.h"
+
+class Straw;
+class PKey;
 
 class PKPipe : public Pipe
 {

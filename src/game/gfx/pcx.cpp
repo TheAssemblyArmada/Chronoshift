@@ -13,12 +13,13 @@
  *            LICENSE
  */
 #include "pcx.h"
-#include "gamefile.h"
 #include "endiantype.h"
 #include "filepipe.h"
 #include "filestraw.h"
 #include "gamedebug.h"
+#include "gamefile.h"
 #include "gbuffer.h"
+#include "palette.h"
 #include "pcxpipe.h"
 #include "pcxrle.h"
 #include "pcxstraw.h"

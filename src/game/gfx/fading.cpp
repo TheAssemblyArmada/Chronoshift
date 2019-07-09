@@ -14,6 +14,7 @@
  */
 #include "fading.h"
 #include "gamedebug.h"
+#include "palette.h"
 #include "rgb.h"
 #include <cstring>
 
