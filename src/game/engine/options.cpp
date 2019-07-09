@@ -19,7 +19,6 @@
 #include "gameini.h"
 #include "hsv.h"
 #include "palette.h"
-#include "rgb.h"
 #include "session.h"
 #include "voc.h"
 

@@ -15,7 +15,6 @@
  */
 #include "staticbtn.h"
 #include "gbuffer.h"
-#include "language.h"
 #include "mouse.h"
 #include "stringex.h"
 #include "textprint.h"

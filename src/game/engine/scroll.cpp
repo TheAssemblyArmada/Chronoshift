@@ -17,7 +17,6 @@
 #include "scroll.h"
 #include "gameoptions.h"
 #include "gametypes.h"
-#include "gbuffer.h"
 #include "globals.h"
 #include <algorithm>
 
@@ -155,7 +154,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                 if (g_keyboard->Down(KN_LMOUSE) || Autoscroll) {
                     distance = _rate[rate_index];
                     Scroll_Map(_direction, distance, true);
-                        
+
                     if (g_inMapEditor) {
                         ScrollingCounter = 1;
                     } else {

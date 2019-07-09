@@ -14,10 +14,7 @@
  *            LICENSE
  */
 #include "textbtn.h"
-#include "dialog.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
-#include "language.h"
 #include "mouse.h"
 #include "textprint.h"
 

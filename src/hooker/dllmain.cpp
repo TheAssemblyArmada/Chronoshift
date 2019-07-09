@@ -32,6 +32,7 @@
 #include "gamedebug.h"
 #include "gamefile.h"
 #include "gamekeyboard.h"
+#include "gameloop.h"
 #include "gbuffer.h"
 #include "heap.h"
 #include "hooker.h"
@@ -70,7 +71,6 @@
 #include "version.h"
 #include "wsa.h"
 #include "xordelta.h"
-#include "gameloop.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
