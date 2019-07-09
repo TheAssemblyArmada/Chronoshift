@@ -19,8 +19,9 @@
 #define DOOR_H
 
 #include "always.h"
-#include "noinit.h"
 #include "stage.h"
+
+class NoInitClass;
 
 class DoorClass
 {

@@ -20,15 +20,16 @@
 
 #include "always.h"
 #include "crc.h"
-#include "fileclass.h"
 #include "fixed.h"
 #include "index.h"
 #include "listnode.h"
-#include "pipe.h"
-#include "straw.h"
 #include "stringex.h"
 
 #define SYS_NEW_LINE "\r\n"
+
+class FileClass;
+class Straw;
+class Pipe;
 
 // find out what this really is.
 enum INIIntegerType

@@ -15,6 +15,7 @@
  */
 #include "pkstraw.h"
 #include "gamedebug.h"
+#include "pk.h"
 #include <algorithm>
 
 PKStraw::PKStraw(StrawControl mode, Straw &rstraw) :

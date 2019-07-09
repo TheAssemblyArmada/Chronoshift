@@ -15,14 +15,17 @@
  */
 #include "cell.h"
 #include "aircraft.h"
-#include "gamefile.h"
-#include "gamedebug.h"
 #include "coord.h"
-#include "ground.h"
 #include "drawshape.h"
+#include "gamedebug.h"
+#include "gamefile.h"
+#include "gbuffer.h"
 #include "globals.h"
+#include "ground.h"
+#include "house.h"
 #include "iomap.h"
 #include "mixfile.h"
+#include "objecttype.h"
 #include "pipe.h"
 #include "rules.h"
 #include "scenario.h"
@@ -32,7 +35,6 @@
 #include "theater.h"
 #include "tileset.h"
 #include "tracker.h"
-#include "house.h"
 #include <algorithm>
 
 const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {

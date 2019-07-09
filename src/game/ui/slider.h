@@ -23,8 +23,6 @@
 #include "globals.h"
 #include "shapebtn.h"
 
-class ShapeButtonClass;
-
 class SliderClass : public GaugeClass
 {
 public:

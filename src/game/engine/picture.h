@@ -15,8 +15,9 @@
 #pragma once
 
 #include "always.h"
-#include "buffer.h"
-#include "fileclass.h"
+
+class FileClass;
+class BufferClass;
 
 enum PicturePlaneType
 {

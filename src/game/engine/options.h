@@ -21,7 +21,8 @@
 #include "always.h"
 #include "fixed.h"
 #include "keyboard.h"
-#include "palette.h"
+
+class PaletteClass;
 
 enum GameSpeedEnum
 {

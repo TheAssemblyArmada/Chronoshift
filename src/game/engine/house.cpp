@@ -31,6 +31,7 @@
 #include "session.h"
 #include "target.h"
 #include "unit.h"
+#include "utracker.h"
 #include "vessel.h"
 #include <algorithm>
 #include <cstdio>

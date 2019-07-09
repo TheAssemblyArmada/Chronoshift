@@ -21,11 +21,8 @@
 #include "always.h"
 #include "action.h"
 #include "facing.h"
-#include "gadget.h"
 #include "gametypes.h"
 #include "keyboard.h"
-#include "mouse.h"
-#include "noinit.h"
 #include "theater.h"
 
 enum RedrawEnum
@@ -85,6 +82,8 @@ enum MouseType
     MOUSE_COUNT = 43
 };
 
+class GadgetClass;
+class NoInitClass;
 class GameINIClass;
 class GraphicViewPortClass;
 class HouseClass;

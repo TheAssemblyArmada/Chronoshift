@@ -16,8 +16,9 @@
 #include "textprint.h"
 #include "endiantype.h"
 #include "gamedebug.h"
-#include <cstring>
+#include "gbuffer.h"
 #include <algorithm>
+#include <cstring>
 
 using std::memcpy;
 using std::memset;

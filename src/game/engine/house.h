@@ -34,7 +34,6 @@
 #include "super.h"
 #include "ttimer.h"
 #include "unittype.h"
-#include "utracker.h"
 #include "vesseltype.h"
 
 class HouseTypeClass;
@@ -42,6 +41,7 @@ class NoInitClass;
 class HouseClass;
 class FootClass;
 class GameINIClass;
+class UnitTrackerClass;
 
 #ifndef CHRONOSHIFT_STANDALONE
 extern HouseClass *&g_PlayerPtr;

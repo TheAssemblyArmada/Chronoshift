@@ -19,8 +19,8 @@
 #define CARGO_H
 
 #include "always.h"
-#include "noinit.h"
 
+class NoInitClass;
 class FootClass;
 
 class CargoClass

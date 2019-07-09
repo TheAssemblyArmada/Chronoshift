@@ -20,7 +20,8 @@
 
 #include "always.h"
 #include "gamedebug.h"
-#include "straw.h"
+
+class Straw;
 
 typedef uint32_t mp_digit_u;
 typedef int32_t mp_digit_s;

@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "list.h"
+#include "vector.h"
 
 enum SelectEnum
 {

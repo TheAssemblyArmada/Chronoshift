@@ -20,9 +20,10 @@
 
 #include "always.h"
 #include "blowstraw.h"
-#include "pk.h"
 #include "rndstraw.h"
 #include "straw.h"
+
+class PKey;
 
 class PKStraw : public Straw
 {

@@ -15,6 +15,7 @@
  */
 #include "tileset.h"
 #include "endiantype.h"
+#include "gbuffer.h"
 #include <cstring>
 
 using std::memcpy;

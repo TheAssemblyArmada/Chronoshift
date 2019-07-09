@@ -19,8 +19,9 @@
 #define STAGE_H
 
 #include "always.h"
-#include "noinit.h"
 #include "ttimer.h"
+
+class NoInitClass;
 
 class StageClass
 {

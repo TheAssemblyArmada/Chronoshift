@@ -19,8 +19,9 @@
 #define FILESTRAW_H
 
 #include "always.h"
-#include "fileclass.h"
 #include "straw.h"
+
+class FileClass;
 
 class FileStraw : public Straw
 {

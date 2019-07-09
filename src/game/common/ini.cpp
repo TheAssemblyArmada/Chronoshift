@@ -21,9 +21,9 @@
 //#include "cstraw.h"
 #include "filepipe.h"
 #include "filestraw.h"
+#include "gamedebug.h"
 #include "rawfile.h"
 #include "readline.h"
-#include "gamedebug.h"
 #include <ctype.h>
 #include <stdio.h>
 

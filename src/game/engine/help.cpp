@@ -15,13 +15,14 @@
  */
 
 #include "help.h"
-#include "tab.h"
-#include "globals.h"
-#include "textprint.h"
 #include "coord.h"
+#include "globals.h"
 #include "lists.h"
-#include <cstdio>
+#include "mouse.h"
+#include "tab.h"
+#include "textprint.h"
 #include <algorithm>
+#include <cstdio>
 
 using std::snprintf;
 

@@ -14,8 +14,10 @@
  *            LICENSE
  */
 #include "gameloop.h"
+#include "callback.h"
 #include "gamekeyboard.h"
 #include "gameoptions.h"
+#include "gbuffer.h"
 #include "globals.h"
 #include "house.h"
 #include "iomap.h"
@@ -24,7 +26,6 @@
 #include "msgbox.h"
 #include "ostimer.h"
 #include "queue.h"
-#include "callback.h"
 #include "scenario.h"
 #include "session.h"
 #include "shape.h"

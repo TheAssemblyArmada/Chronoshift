@@ -14,17 +14,18 @@
  *            LICENSE
  */
 #include "sidebar.h"
-#include "voc.h"
-#include "gamefile.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"
+#include "gamefile.h"
 #include "globals.h"
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
 #include "noinit.h"
+#include "palette.h"
 #include "session.h"
+#include "voc.h"
 #include "vox.h"
 
 namespace

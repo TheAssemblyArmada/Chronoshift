@@ -21,10 +21,10 @@
 #include "always.h"
 #include "gadget.h"
 #include "map.h"
-#include "noinit.h"
 #include "source.h"
 #include "trect.h"
 
+class NoInitClass;
 class BufferClass;
 
 enum ModeControl

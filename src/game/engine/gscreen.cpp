@@ -14,9 +14,11 @@
  *            LICENSE
  */
 #include "gscreen.h"
+#include "gadget.h"
 #include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
+#include "mouse.h"
 #include "msglist.h"
 #include "session.h"
 

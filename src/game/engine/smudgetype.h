@@ -23,6 +23,8 @@
 #include "objecttype.h"
 #include "theater.h"
 
+class NoInitClass;
+
 enum SmudgeType
 {
     SMUDGE_NONE = -1,

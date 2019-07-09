@@ -14,13 +14,14 @@
  *            LICENSE
  */
 #include "options.h"
-#include "voc.h"
+#include "expansion.h"
 #include "gamefile.h"
-#include "hsv.h"
 #include "gameini.h"
+#include "hsv.h"
+#include "palette.h"
 #include "rgb.h"
 #include "session.h"
-#include "expansion.h"
+#include "voc.h"
 
 #if !defined(CHRONOSHIFT_STANDALONE) && defined(CHRONOSHIFT_DEBUG)
 KeyNumType OptionsClass::DebugKeyToggleDebug = KN_NONE;

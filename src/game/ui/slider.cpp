@@ -14,9 +14,10 @@
  *            LICENSE
  */
 #include "slider.h"
-#include "gamefile.h"
 #include "dialog.h"
 #include "fixed.h"
+#include "gamefile.h"
+#include "gbuffer.h"
 #include "mixfile.h"
 #include "mouse.h"
 #include "shapebtn.h"

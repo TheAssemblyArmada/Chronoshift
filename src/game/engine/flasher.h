@@ -19,7 +19,8 @@
 #define FLASHER_H
 
 #include "always.h"
-#include "noinit.h"
+
+class NoInitClass;
 
 class FlasherClass
 {

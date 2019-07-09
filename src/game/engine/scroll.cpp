@@ -17,6 +17,7 @@
 #include "scroll.h"
 #include "gameoptions.h"
 #include "gametypes.h"
+#include "gbuffer.h"
 #include "globals.h"
 #include <algorithm>
 

@@ -17,6 +17,7 @@
 #include "alloc.h"
 #include "endiantype.h"
 #include "gamedebug.h"
+#include "gbuffer.h"
 #include "lcw.h"
 #include "xordelta.h"
 #include <cstdarg>

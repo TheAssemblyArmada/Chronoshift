@@ -20,10 +20,10 @@
 
 #include "always.h"
 #include "gametypes.h"
-#include "pipe.h"
-#include "straw.h"
 #include "vector.h"
 
+class Pipe;
+class Straw;
 class ObjectClass;
 
 enum LayerType

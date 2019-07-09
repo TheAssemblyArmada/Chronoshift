@@ -19,8 +19,9 @@
 #define READLINE_H
 
 #include "always.h"
-#include "fileclass.h"
-#include "straw.h"
+
+class FileClass;
+class Straw;
 
 int Read_Line(FileClass &file, char *buffer, int length, BOOL &eof);
 int Read_Line(Straw &straw, char *buffer, int length, BOOL &eof);

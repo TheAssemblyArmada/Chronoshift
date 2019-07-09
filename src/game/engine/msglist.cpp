@@ -14,15 +14,16 @@
  *            LICENSE
  */
 #include "msglist.h"
+#include "gbuffer.h"
 #include "globals.h"
 #include "mouse.h"
+#include "rules.h"
 #include "stringex.h"
 #include "textprint.h"
 #include "ttimer.h"
 #include "txtlabel.h"
-#include "rules.h"
-#include <stdio.h>
 #include <algorithm>
+#include <stdio.h>
 
 int MessageListClass::MaxMessageWidth = 640;
 

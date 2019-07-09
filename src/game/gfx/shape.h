@@ -19,8 +19,9 @@
 #define SHAPE_H
 
 #include "always.h"
-#include "gbuffer.h"
 #include "trect.h"
+
+class GraphicViewPortClass;
 
 #define SHAPE_BUFFER_SIZE 65000
 
