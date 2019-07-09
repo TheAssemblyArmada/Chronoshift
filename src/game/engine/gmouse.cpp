@@ -17,10 +17,8 @@
 #include "gmouse.h"
 #include "animtype.h"
 #include "buildingtype.h"
-#include "coord.h"
 #include "gamedebug.h"
 #include "gamefile.h"
-#include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
 #include "noinit.h"
@@ -30,7 +28,6 @@
 #include "shape.h"
 #include "smudgetype.h"
 #include "straw.h"
-#include "tab.h"
 #include "templatetype.h"
 #include "terraintype.h"
 #include <new>

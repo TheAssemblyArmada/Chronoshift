@@ -14,9 +14,7 @@
  *            LICENSE
  */
 #include "list.h"
-#include "dialog.h"
 #include "gbuffer.h"
-#include "language.h"
 #include "mouse.h"
 #include "textprint.h"
 #include <algorithm>

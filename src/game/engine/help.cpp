@@ -15,11 +15,8 @@
  */
 
 #include "help.h"
-#include "coord.h"
-#include "globals.h"
 #include "lists.h"
 #include "mouse.h"
-#include "tab.h"
 #include "textprint.h"
 #include <algorithm>
 #include <cstdio>

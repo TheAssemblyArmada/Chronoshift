@@ -16,7 +16,6 @@
 #include "musiclist.h"
 #include "gamefile.h"
 #include "gbuffer.h"
-#include "globals.h"
 #include "mixfile.h"
 #include "remap.h"
 

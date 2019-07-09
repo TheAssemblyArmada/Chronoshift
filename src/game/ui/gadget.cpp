@@ -14,8 +14,6 @@
  *            LICENSE
  */
 #include "gadget.h"
-#include "gamedebug.h"
-#include "gbuffer.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "remap.h"

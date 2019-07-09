@@ -15,7 +15,6 @@
  */
 #include "msglist.h"
 #include "gbuffer.h"
-#include "globals.h"
 #include "mouse.h"
 #include "rules.h"
 #include "stringex.h"

@@ -15,7 +15,6 @@
  */
 #include "abstract.h"
 #include "building.h"
-#include "globals.h"
 #include "coord.h"
 #include "target.h"
 #include <algorithm>
