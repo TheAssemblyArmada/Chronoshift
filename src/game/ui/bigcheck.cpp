@@ -17,6 +17,7 @@
 #include "drawshape.h"
 #include "mixfile.h"
 #include "mouse.h"
+#include "nstrdup.h"
 #include "stringex.h"
 
 BigCheckBoxClass::BigCheckBoxClass(unsigned id, int x, int y, int w, int h, const char *text, TextPrintType style) :

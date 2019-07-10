@@ -16,6 +16,7 @@
 #include "staticbtn.h"
 #include "gbuffer.h"
 #include "mouse.h"
+#include "nstrdup.h"
 #include "stringex.h"
 #include "textprint.h"
 
@@ -96,9 +97,9 @@ void StaticButtonClass::Set_Text(const char *string, BOOL adjust)
 void StaticButtonClass::Draw_Background()
 {
     // If we don't have the buffer allocated already, allocate it and grab whatever is in the viewport to it.
-    if (DrawBuffer.Get_Buffer() == nullptr && Width > 0 && Height > 0 ) {
+    if (DrawBuffer.Get_Buffer() == nullptr && Width > 0 && Height > 0) {
         DrawBuffer.Resize(nullptr, Width * Height);
-        
+
         if (DrawBuffer.Get_Buffer() != nullptr) {
             g_logicPage->To_Buffer(XPos, YPos, Width, Height, DrawBuffer.Get_Buffer(), DrawBuffer.Get_Size());
         }

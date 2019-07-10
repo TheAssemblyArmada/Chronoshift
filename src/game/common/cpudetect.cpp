@@ -17,8 +17,11 @@
 #include "cpudetect.h"
 #include "gamedebug.h"
 #include "ostimer.h"
-#include "stringex.h"
+#include <cstring>
 #include <stdio.h>
+
+using std::strcat;
+using std::strncpy;
 
 #ifdef PLATFORM_WINDOWS
 #include <mmsystem.h>
@@ -37,6 +40,10 @@
 #ifdef PLATFORM_LINUX
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
+#endif
+
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
 #endif
 
 namespace

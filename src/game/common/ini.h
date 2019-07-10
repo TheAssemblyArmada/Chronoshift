@@ -23,7 +23,9 @@
 #include "fixed.h"
 #include "index.h"
 #include "listnode.h"
-#include "stringex.h"
+#include "pipe.h"
+#include "straw.h"
+#include <string.h>
 
 #define SYS_NEW_LINE "\r\n"
 

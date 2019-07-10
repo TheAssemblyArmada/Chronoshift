@@ -17,8 +17,11 @@
 #include "expansion.h"
 #include "gitverinfo.h"
 #include "rawfile.h"
-#include "stringex.h"
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
+
+using std::strlen;
+using std::snprintf;
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
