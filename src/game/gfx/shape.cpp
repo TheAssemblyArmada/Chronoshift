@@ -402,7 +402,7 @@ void BF_Predator_Fading(int width, int height, uint8_t *dst, uint8_t *src, int d
                 if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                     sbyte = dst[g_PredTable[g_PredFrame]];
                 }
-                
+
                 g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
@@ -430,7 +430,7 @@ void BF_Predator_Fading_Trans(int width, int height, uint8_t *dst, uint8_t *src,
                     if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                         sbyte = dst[g_PredTable[g_PredFrame]];
                     }
-                    
+
                     g_PredFrame = (g_PredFrame + 2) % 8;
                 }
 
@@ -464,7 +464,7 @@ void BF_Predator_Ghost_Fading(int width, int height, uint8_t *dst, uint8_t *src,
                 if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                     sbyte = dst[g_PredTable[g_PredFrame]];
                 }
-                
+
                 g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
@@ -502,7 +502,7 @@ void BF_Predator_Ghost_Fading_Trans(int width, int height, uint8_t *dst, uint8_t
                     if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                         sbyte = dst[g_PredTable[g_PredFrame]];
                     }
-                    
+
                     g_PredFrame = (g_PredFrame + 2) % 8;
                 }
 
@@ -715,7 +715,7 @@ void Single_Line_Predator(
             if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                 *dst = dst[g_PredTable[g_PredFrame]];
             }
-                
+
             g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
@@ -739,7 +739,7 @@ void Single_Line_Predator_Trans(
                 if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                     sbyte = dst[g_PredTable[g_PredFrame]];
                 }
-                    
+
                 g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
@@ -763,7 +763,7 @@ void Single_Line_Predator_Ghost(
             if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                 sbyte = dst[g_PredTable[g_PredFrame]];
             }
-                
+
             g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
@@ -791,7 +791,7 @@ void Single_Line_Predator_Ghost_Trans(
                 if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                     sbyte = dst[g_PredTable[g_PredFrame]];
                 }
-                    
+
                 g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
@@ -821,7 +821,7 @@ void Single_Line_Predator_Fading(
             if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                 sbyte = dst[g_PredTable[g_PredFrame]];
             }
-                
+
             g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
@@ -847,7 +847,7 @@ void Single_Line_Predator_Fading_Trans(
                 if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                     sbyte = dst[g_PredTable[g_PredFrame]];
                 }
-                    
+
                 g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
@@ -876,7 +876,7 @@ void Single_Line_Predator_Ghost_Fading(
             if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                 sbyte = dst[g_PredTable[g_PredFrame]];
             }
-                
+
             g_PredFrame = (g_PredFrame + 2) % 8;
         }
 
@@ -909,7 +909,7 @@ void Single_Line_Predator_Ghost_Fading_Trans(
                 if (&dst[g_PredTable[g_PredFrame]] < g_PredatorLimit) {
                     sbyte = dst[g_PredTable[g_PredFrame]];
                 }
-                    
+
                 g_PredFrame = (g_PredFrame + 2) % 8;
             }
 
@@ -966,107 +966,73 @@ static Single_Line_Function NewShapeJumpTable[32] = { Single_Line_Copy,
 
 TRect<int> Shape_Dimensions(void *shape, int frame)
 {
-    TRect<int> rect;
+    TRect<int> rect(0, 0, 0, 0);
 
     if (shape != nullptr && frame >= 0 && frame <= Get_Build_Frame_Count(shape)) {
         void *bframe = Build_Frame(shape, frame, g_shapeBuffer);
 
         if (bframe != nullptr) {
-            void *data = Get_Shape_Header_Data(bframe);
+            uint8_t *data = static_cast<uint8_t *>(Get_Shape_Header_Data(bframe));
             int w = Get_Build_Frame_Width(shape);
             int h = Get_Build_Frame_Height(shape);
 
             // top, left, bottom, right
-            int t = 0;
-            int l = 0;
+            rect.m_top = 0;
+            rect.m_left = 0;
             int b = h - 1;
             int r = w - 1;
-
+            
+            // These 4 sets of nested loops iterate over the data from different
+            // directions and extents to identify the minimum rect that contains
+            // actual image data.
             for (int i = 0; i <= b; ++i) {
-                if (r >= 0) {
-                    uint8_t *sptr = static_cast<uint8_t *>(data) + i * w;
-                    int tmp_l = 0;
-
-                    while (*sptr++ == 0) {
-                        ++tmp_l;
-
-                        if (tmp_l > r) {
-                            break;
-                        }
-                    }
-
-                    if (tmp_l <= r) {
-                        t = i;
-                        l = tmp_l;
+                for (int j = 0; j <= r; ++j) {
+                    // Check when we find the top most pixel and possible left most.
+                    if (data[j + w * i] != 0) {
+                        rect.m_top = i;
+                        rect.m_left = j;
                         i = b + 1;
+                        break;
                     }
                 }
             }
 
-            for (int i = b; i >= t; --i) {
-                if (r >= 0) {
-                    uint8_t *sptr = static_cast<uint8_t *>(data) + r + i * w;
-                    int tmp_r = r;
-
-                    while (*sptr-- == 0) {
-                        --tmp_r;
-
-                        if (tmp_r < 0) {
-                            break;
-                        }
-                    }
-
-                    if (tmp_r >= 0) {
-                        rect.m_bottom = i - t + 1;
-                        r = tmp_r;
-                        i = t - 1;
+            for (int i = b; i >= rect.m_top; --i) {
+                for (int j = r; j >= 0; --j) {
+                    // Check when we find the bottom pixel and possible right most.
+                    if (data[j + w * i] != 0) {
+                        rect.m_bottom = i - rect.m_top + 1;
+                        r = j;
+                        i = rect.m_top - 1;
+                        break;
                     }
                 }
             }
 
-            for (int i = 0; i < l; ++i) {
-                if (rect.m_bottom + t > t) {
-                    uint8_t *sptr = static_cast<uint8_t *>(data) + w * t + i;
-                    int tmp_t = t;
-
-                    while (*sptr == 0) {
-                        sptr += w;
-                        ++tmp_t;
-
-                        if (tmp_t >= rect.m_bottom + t) {
-                            break;
-                        }
-                    }
-
-                    if (tmp_t < rect.m_bottom + t) {
-                        l = i;
+            for (int i = 0; i < rect.m_left; ++i) {
+                for (int j = rect.m_top; j < rect.m_bottom + rect.m_top; ++j) {
+                    // Check when we find the left most pixel.
+                    if (data[i + w * j] != 0) {
+                        rect.m_left = i;
+                        break;
                     }
                 }
             }
 
             for (int i = w - 1; i >= r; --i) {
-                if (rect.m_bottom + t > t) {
-                    uint8_t *sptr = static_cast<uint8_t *>(data) + w * t + i;
-                    int tmp_t = t;
-
-                    while (*sptr == 0) {
-                        sptr += w;
-                        ++tmp_t;
-
-                        if (tmp_t >= rect.m_bottom + t) {
-                            break;
-                        }
-                    }
-
-                    if (tmp_t < rect.m_bottom + t) {
-                        rect.m_right = i - l + 1;
+                for (int j = rect.m_top; j < rect.m_bottom + rect.m_top; ++j) {
+                    // Check when we find the right most pixel.
+                    if (data[i + w * j] != 0) {
+                        rect.m_right = i - rect.m_left + 1;
                         i = r - 1;
+                        break;
                     }
                 }
             }
 
-            rect.m_top = t - h / 2;
-            rect.m_left = l - w / 2;
+            // Final rect contains x/y pos relative to image center and its width and height.
+            rect.m_left -= w / 2;
+            rect.m_top -= h / 2;
         }
     }
 
@@ -1114,7 +1080,7 @@ void Reallocate_Big_Shape_Buffer()
         g_bigShapeBufferLength += BIGSHP_BUFFER_GROW;
         g_bigShapeBufferPtr -= (intptr_t)g_bigShapeBufferStart;
         g_bigShapeBufferStart = (char *)Resize_Alloc(g_bigShapeBufferStart, g_bigShapeBufferLength);
-        //DEBUG_LOG("Reallocating Big Shape Buffer, size is now %d.\n", g_bigShapeBufferLength);
+        // DEBUG_LOG("Reallocating Big Shape Buffer, size is now %d.\n", g_bigShapeBufferLength);
         // TODO
         // g_memoryError = Memory_Error_Handler;
         if (g_bigShapeBufferStart) {
@@ -1147,7 +1113,7 @@ void Check_Use_Compressed_Shapes()
     GlobalMemoryStatusEx(&Buffer);
     g_useBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
     g_originalUseBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
-    //DEBUG_LOG("Using Big Shape Buffer and Original Buffer is %s.\n", Buffer.ullTotalPhys > 0x1000000 ? "true" : "false");
+    // DEBUG_LOG("Using Big Shape Buffer and Original Buffer is %s.\n", Buffer.ullTotalPhys > 0x1000000 ? "true" : "false");
 #elif defined PLATFORM_OSX
     size_t totalmem;
     size_t len = sizeof(totalmem);
@@ -1182,8 +1148,9 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
     ShapeHeaderStruct *header = static_cast<ShapeHeaderStruct *>(shape);
     if (frame >= le16toh(header->frame_count)) {
-        //DEBUG_LOG(
-        //    "Requested frame %d is greater than total frames %d in this shape file.\n", frame, le16toh(header->frame_count));
+        // DEBUG_LOG(
+        //    "Requested frame %d is greater than total frames %d in this shape file.\n", frame,
+        //    le16toh(header->frame_count));
 
         return nullptr;
     }
@@ -1191,14 +1158,15 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
     // If we are using a cache
     if (g_useBigShapeBuffer) {
         if (!g_bigShapeBufferStart) {
-           // DEBUG_LOG("Allocating buffers for g_useBigShapeBuffer.\n");
+            // DEBUG_LOG("Allocating buffers for g_useBigShapeBuffer.\n");
             g_bigShapeBufferStart = static_cast<char *>(Alloc(g_bigShapeBufferLength, MEM_NORMAL));
             g_bigShapeBufferPtr = g_bigShapeBufferStart;
             g_theaterShapeBufferStart = static_cast<char *>(Alloc(g_theaterShapeBufferLength, MEM_NORMAL));
             g_theaterShapeBufferPtr = g_theaterShapeBufferStart;
         }
 
-        if (g_bigShapeBufferLength + (uintptr_t)g_bigShapeBufferStart - (uintptr_t)g_bigShapeBufferPtr < BIGSHP_BUFFER_MIN_FREE) {
+        if (g_bigShapeBufferLength + (uintptr_t)g_bigShapeBufferStart - (uintptr_t)g_bigShapeBufferPtr
+            < BIGSHP_BUFFER_MIN_FREE) {
             g_reallocShapeBufferFlag = true;
         }
 
@@ -1218,7 +1186,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         // Do we have anything in our keyframe slot yet? If so, return it.
         uint32_t shp_buff_offset = g_keyFrameSlots[header->y_pos][frame];
         if (shp_buff_offset != 0) {
-            //DEBUG_LOG("Using Cached frame.\n");
+            // DEBUG_LOG("Using Cached frame.\n");
 
             if (g_isTheaterShape) {
                 return shp_buff_offset + g_theaterShapeBufferStart;
@@ -1235,7 +1203,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
     uint8_t frame_type = (le32toh(offset_buff[0]) & 0xFF000000) >> 24;
 
     if (frame_type & SHP_LCW_FRAME) {
-        //DEBUG_LOG("Decoding key frame.\n");
+        // DEBUG_LOG("Decoding key frame.\n");
         uint8_t *frame_data = &shape_data[le32toh(offset_buff[0]) & 0xFFFFFF];
 
         // Amazingly it seems that shp files actually do support having a pal, just none do.
@@ -1245,7 +1213,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
         frame_size = LCW_Uncomp(frame_data, buffer, frame_size);
     } else {
-        //DEBUG_LOG("Decoding XOR frame.\n");
+        // DEBUG_LOG("Decoding XOR frame.\n");
         int ref_frame = 0;
         // If we have an Xor chain, load first delta address into buffer
         if (frame_type & SHP_XOR_PREV_FRAME) {
@@ -1263,14 +1231,14 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         }
 
         if (LCW_Uncomp(lcw_data, buffer, frame_size) > frame_size) {
-            //DEBUG_LOG("LCW decompressed more data than expected.\n");
+            // DEBUG_LOG("LCW decompressed more data than expected.\n");
             return nullptr;
         }
 
         Apply_XOR_Delta(buffer, lcw_data + xor_data_offset);
 
         if (frame_type & SHP_XOR_PREV_FRAME) {
-            //DEBUG_LOG("Decoding delta sequence.\n");
+            // DEBUG_LOG("Decoding delta sequence.\n");
             ++ref_frame;
             int offset_index = 2;
 
