@@ -22,7 +22,6 @@
 #include "heap.h"
 #include "source.h"
 
-class NoInitClass;
 class GameINIClass;
 
 class HouseStaticClass

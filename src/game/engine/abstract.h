@@ -22,9 +22,8 @@
 #include "coord.h"
 #include "facing.h"
 #include "gametypes.h"
+#include "noinit.h"
 #include "rtti.h"
-
-class NoInitClass;
 
 class AbstractClass
 {

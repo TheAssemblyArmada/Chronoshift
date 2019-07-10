@@ -22,8 +22,6 @@
 #include "ttimer.h"
 #include "vox.h"
 
-class NoInitClass;
-
 class SuperClass
 {
 public:

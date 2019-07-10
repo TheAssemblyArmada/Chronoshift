@@ -26,7 +26,6 @@
 #include "triggertype.h"
 #include "ttimer.h"
 
-class NoInitClass;
 class FootClass;
 class TeamTypeClass;
 

@@ -37,7 +37,6 @@
 #include "vesseltype.h"
 
 class HouseTypeClass;
-class NoInitClass;
 class HouseClass;
 class FootClass;
 class GameINIClass;

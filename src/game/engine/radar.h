@@ -22,8 +22,6 @@
 #include "display.h"
 #include "gbuffer.h"
 
-class NoInitClass;
-
 enum RadarStateType
 {
     RADAR_M1 = -1, // Toggle active and inactive

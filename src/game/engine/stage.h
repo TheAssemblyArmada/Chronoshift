@@ -21,8 +21,6 @@
 #include "always.h"
 #include "ttimer.h"
 
-class NoInitClass;
-
 class StageClass
 {
 public:
