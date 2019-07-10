@@ -140,7 +140,7 @@ inline void Hook_Me()
 #ifdef COMPILER_WATCOM
     Hook_Function(0x005B48EC, Build_Frame);
     Hook_Function(0x005AB354, Buffer_Frame_To_Page);
-    //Hook_Function(0x004A9AB8, Shape_Dimensions);  // Currently broken.
+    Hook_Function(0x004A9AB8, Shape_Dimensions);
 #endif
 }
 
