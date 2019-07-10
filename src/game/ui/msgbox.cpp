@@ -25,6 +25,9 @@
 #include "textbtn.h"
 #include "textprint.h"
 #include <algorithm>
+#include <cstring>
+
+using std::memset;
 
 /**
  * Creates message box windows and retrieves all strings from the string table.

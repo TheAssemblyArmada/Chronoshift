@@ -14,13 +14,14 @@
  *            LICENSE
  */
 #include "fixed.h"
-#include "stringex.h"
+#include <cstring>
 #include <ctype.h>
 #include <stdio.h>
 #include <cstdlib>
 #include <algorithm>
 
 using std::atoi;
+using std::strlen;
 
 const fixed_t fixed_t::_0_1(0, 1);
 const fixed_t fixed_t::_1_1(1, 1);
