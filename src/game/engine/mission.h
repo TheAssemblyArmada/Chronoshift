@@ -22,8 +22,6 @@
 #include "object.h"
 #include "ttimer.h"
 
-class NoInitClass;
-
 class MissionClass : public ObjectClass
 {
     friend class MissionControlClass;

@@ -26,7 +26,6 @@
 
 class Pipe;
 class Straw;
-class NoInitClass;
 class ObjectClass;
 
 class MapClass : public GameScreenClass

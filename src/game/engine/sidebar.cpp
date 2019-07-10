@@ -22,7 +22,6 @@
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
-#include "noinit.h"
 #include "palette.h"
 #include "session.h"
 #include "voc.h"

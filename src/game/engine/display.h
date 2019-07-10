@@ -24,7 +24,6 @@
 #include "source.h"
 #include "trect.h"
 
-class NoInitClass;
 class BufferClass;
 
 enum ModeControl

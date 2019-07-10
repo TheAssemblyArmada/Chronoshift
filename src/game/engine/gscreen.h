@@ -24,6 +24,7 @@
 #include "gametypes.h"
 #include "keyboard.h"
 #include "theater.h"
+#include "noinit.h"
 
 enum RedrawEnum
 {

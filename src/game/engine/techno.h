@@ -30,7 +30,6 @@
 #include "stage.h"
 #include "ttimer.h"
 
-class NoInitClass;
 class BulletClass;
 class HouseClass;
 

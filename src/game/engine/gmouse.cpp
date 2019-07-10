@@ -21,7 +21,6 @@
 #include "gamefile.h"
 #include "mouse.h"
 #include "mouseshape.h"
-#include "noinit.h"
 #include "overlaytype.h"
 #include "pipe.h"
 #include "scenario.h"

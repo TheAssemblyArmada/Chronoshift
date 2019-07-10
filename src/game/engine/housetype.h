@@ -25,7 +25,6 @@
 #include "heap.h"
 #include "remap.h"
 
-class NoInitClass;
 class GameINIClass;
 
 class HouseTypeClass : public AbstractTypeClass

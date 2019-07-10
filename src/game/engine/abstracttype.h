@@ -21,10 +21,9 @@
 #include "always.h"
 #include "gametypes.h"
 #include "language.h"
+#include "noinit.h"
 #include "rtti.h"
 #include "stringex.h"
-
-class NoInitClass;
 
 class AbstractTypeClass
 {

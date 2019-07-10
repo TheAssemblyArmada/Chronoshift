@@ -26,7 +26,6 @@
 class HouseClass;
 class TechnoClass;
 class TechnoTypeClass;
-class NoInitClass;
 
 class FactoryClass
 {

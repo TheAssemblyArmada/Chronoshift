@@ -24,8 +24,6 @@
 #include "shapebtn.h"
 #include "stage.h"
 
-class NoInitClass;
-
 enum ColumnType
 {
     COLUMN_NONE = -1,
