@@ -78,7 +78,7 @@ void ChronalVortexClass::Appear(coord_t coord)
         m_FrameIncrement = 1;
         m_Frame = 0;
         m_AIState = VORTEX_STATE_0;
-        m_SkipFullAI = 0;
+        m_SkipFullAI = false;
         m_AttackState = 0;
         m_SpeedX = 0;
         m_SpeedY = 0;
