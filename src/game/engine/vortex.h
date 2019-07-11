@@ -80,7 +80,7 @@ private:
     int32_t m_FrameIncrement;
     int32_t m_Frame;
     int32_t m_AIState;
-    bool m_SkipFullAI;
+    bool m_SkipStateTick; // Toggles each AI call to skip some logic every other tick.
     uint8_t m_GhostTable[GHOST_TABLE_COUNT][GHOST_TABLE_SIZE]; // x16 remap/palette tables [256][16]
     uint8_t m_RemapTable[GHOST_TABLE_SIZE];
 #ifndef CHRONOSHIFT_NO_BITFIELDS

@@ -78,7 +78,7 @@ void ChronalVortexClass::Appear(coord_t coord)
         m_FrameIncrement = 1;
         m_Frame = 0;
         m_AIState = VORTEX_STATE_0;
-        m_SkipFullAI = false;
+        m_SkipStateTick = false;
         m_AttackState = 0;
         m_SpeedX = 0;
         m_SpeedY = 0;
@@ -181,7 +181,7 @@ void ChronalVortexClass::AI()
             return;
         }
 
-        if (!m_SkipFullAI) {
+        if (!m_SkipStateTick) {
             m_Frame += m_FrameIncrement;
 
             if (m_Frame <= 16) {
@@ -189,7 +189,7 @@ void ChronalVortexClass::AI()
                     Attack();
                 }
 
-                m_SkipFullAI = !m_SkipFullAI;
+                m_SkipStateTick = !m_SkipStateTick;
 
                 return;
             }
@@ -201,7 +201,7 @@ void ChronalVortexClass::AI()
                     Set_Redraw();
                     m_Frame = 0;
                     m_IsActive = false;
-                    m_SkipFullAI = !m_SkipFullAI;
+                    m_SkipStateTick = !m_SkipStateTick;
 
                     return;
                 }
@@ -213,7 +213,7 @@ void ChronalVortexClass::AI()
                         m_AIState = VORTEX_STATE_1;
                     }
 
-                    m_SkipFullAI = !m_SkipFullAI;
+                    m_SkipStateTick = !m_SkipStateTick;
 
                     return;
                 }
@@ -229,7 +229,7 @@ void ChronalVortexClass::AI()
                         Disappear();
                     }
 
-                    m_SkipFullAI = !m_SkipFullAI;
+                    m_SkipStateTick = !m_SkipStateTick;
 
                     return;
                 }
@@ -239,7 +239,7 @@ void ChronalVortexClass::AI()
             }
         }
 
-        m_SkipFullAI = !m_SkipFullAI;
+        m_SkipStateTick = !m_SkipStateTick;
     }
 }
 
