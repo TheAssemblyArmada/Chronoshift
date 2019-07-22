@@ -39,10 +39,10 @@ public:
     MessageBoxClass(int caption = TXT_NULL) : CaptionText(caption) {}
     ~MessageBoxClass() {}
 
-    int Process(const int body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NONE,
-        const int button_3_text = TXT_NONE, BOOL shadow_seen = false);
-    int Process(const char *body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NONE,
-        const int button_3_text = TXT_NONE, BOOL shadow_seen = false);
+    int Process(const int body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NULL,
+        const int button_3_text = TXT_NULL, BOOL shadow_seen = false);
+    int Process(const char *body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NULL,
+        const int button_3_text = TXT_NULL, BOOL shadow_seen = false);
     int Process(const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text = nullptr,
         BOOL shadow_seen = false);
 
