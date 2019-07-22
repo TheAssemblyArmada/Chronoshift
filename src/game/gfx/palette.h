@@ -55,19 +55,20 @@ private:
     RGBClass m_palette[PALETTE_ENTRIES];
 };
 
-extern PaletteClass WhitePalette;
-extern PaletteClass BlackPalette;
-
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 extern PaletteClass &GamePalette;
 extern PaletteClass &OriginalPalette;
 extern PaletteClass &CCPalette;
+extern PaletteClass &BlackPalette;
+extern PaletteClass &WhitePalette;
 #else
 extern PaletteClass GamePalette;
 extern PaletteClass OriginalPalette;
 extern PaletteClass CCPalette;
+extern PaletteClass BlackPalette;
+extern PaletteClass WhitePalette;
 #endif
 
 #endif // PALETTE_H
