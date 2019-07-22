@@ -15,31 +15,53 @@
  *            LICENSE
  */
 #include "init.h"
+#include "callback.h"
 #include "gadget.h"
 #include "gamefile.h"
 #include "gameini.h"
 #include "gbuffer.h"
 #include "globals.h"
+#include "iomap.h"
+#include "keyboard.h"
+#include "language.h"
 #include "mixfile.h"
+#include "mouse.h"
+#include "mouseshape.h"
+#include "msgbox.h"
+#include "palette.h"
 #include "picture.h"
 #include "pk.h"
 #include "ramfile.h"
 #include "scenario.h"
 #include "session.h"
+#include "shape.h"
+#include "surfacemonitor.h"
 #include "textprint.h"
 #include "theme.h"
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
-
-#ifndef PLATFORM_WINDOWS
-#include <dirent.h>
-#include <fnmatch.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <sys/types.h>
+
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
 #endif
 
-namespace {
+#ifdef HAVE_DIRENT_H
+#include <dirent.h>
+#endif
+
+#ifdef HAVE_FNMATCH_H
+#include <fnmatch.h>
+#endif
+
+#define SHAPE_BUFF_SIZE 65000
+
+using std::sprintf;
+
+namespace
+{
 // These pointers are used only within this translation unit for reinitialisation after CD changes and such.
 #ifndef CHRONOSHIFT_STANDALONE
 GameMixFile *&MainMix = Make_Global<GameMixFile *>(0x00668180);
@@ -49,7 +71,7 @@ GameMixFile *&MoviesMix = Make_Global<GameMixFile *>(0x00668174);
 GameMixFile *&ScoreMix = Make_Global<GameMixFile *>(0x0066817C);
 #else
 GameMixFile *MainMix;
-GameMixFile  *ConquerMix;
+GameMixFile *ConquerMix;
 GameMixFile *GeneralMix;
 GameMixFile *MoviesMix;
 GameMixFile *ScoreMix;
@@ -85,7 +107,7 @@ void Init_Expansion_Files()
             new GameMixFile(find.cFileName, &g_publicKey);
         } while (FindNextFileA(hndl, &find));
     }
-#else // Assuming posix dirent here
+#elif defined HAVE_DIRENT_H && defined HAVE_FNMATCH_H
     DIR *dp;
     struct dirent *dirp;
     struct stat st;
@@ -117,6 +139,8 @@ void Init_Expansion_Files()
         }
     }
     closedir(dp);
+#else
+#error Suitable directory enumeration functions not found.
 #endif
 }
 
@@ -301,7 +325,7 @@ void Init_Random()
     g_cryptRandom.Seed_Bit(sys_time.wDayOfWeek);
     g_cryptRandom.Seed_Bit(sys_time.wMonth);
     g_cryptRandom.Seed_Bit(sys_time.wYear);
-#else
+#elif defined HAVE_SYS_TIME_H
     struct tm *sys_time;
     struct timeval curr_time;
     gettimeofday(&curr_time, nullptr);
@@ -323,6 +347,8 @@ void Init_Random()
     g_cryptRandom.Seed_Bit(sys_time->tm_wday);
     g_cryptRandom.Seed_Bit(sys_time->tm_mon);
     g_cryptRandom.Seed_Bit(sys_time->tm_year);
+#else
+#error Suitable time functions not found.
 #endif
 
     if (!Session.Loading_Game()) {
@@ -436,4 +462,92 @@ void Init_Color_Remaps()
 
     // Set gadget remap type.
     GadgetClass::Set_Color_Scheme(&ColorRemaps[REMAP_10]);
+}
+
+/**
+ * Initialises the data needed for the mouse cursor and sets the default state.
+ *
+ * 0x004F8390
+ */
+void Init_Mouse()
+{
+   if (!MouseInstalled) {
+        char buff[256];
+        GamePalette.Set();
+        sprintf(buff, "Chronoshift is unable to detect your mouse driver.");
+        g_visiblePage.Clear();
+        MessageBoxClass box;
+        box.Process(buff);
+        Emergency_Exit(1);
+    }
+
+#ifdef PLATFORM_WINDOWS
+   ShowCursor(FALSE); // Hides the OS GUI cursor.
+#endif
+ 
+    void *mouse_shp = MixFileClass<GameFileClass>::Retrieve("mouse.shp");
+
+    if (mouse_shp != nullptr) {
+        g_mouse->Set_Cursor(0, 0, Extract_Shape(mouse_shp));
+
+        while (g_mouse->Get_Mouse_State() > 1) {
+            g_mouse->Show_Mouse();
+        }
+    }
+
+    Map.Set_Default_Mouse(MOUSE_POINTER);
+
+    do {
+        g_mouse->Show_Mouse();
+    } while (g_mouse->Get_Mouse_State() > 1);
+
+    Call_Back();
+    g_mouse->Hide_Mouse();
+}
+
+/**
+ * Bootstraps a bunch of data needed by later code.
+ *
+ * 0x004F81CC
+ */
+void Bootstrap()
+{
+    static RemapControlType _sidebar_scheme;
+
+    BlackPalette.Set();
+
+    if (CDFileClass::Has_Paths()) {
+        g_requiredCD = DISK_ANY;
+    }
+
+    // Call event handler until we are in focus.
+    do {
+        g_keyboard->Check();
+    } while (!g_gameInFocus);
+
+    g_allSurfaces.Clear_Surfaces_Restored();
+    // Mono_Clear_Screen();
+    Init_Bootstrap_Mixfiles();
+    Init_Fonts();
+    g_keyboard->Clear();
+    Set_Shape_Buffer(new uint8_t[SHAPE_BUFF_SIZE], SHAPE_BUFF_SIZE);
+    Init_Language(); // Original just assigned the pointers here, didn't have separate function.
+    memmove(&GamePalette, GameFileClass::Retrieve("temperat.pal"), sizeof(GamePalette));
+
+    if (&WhitePalette != &BlackPalette) {
+        WhitePalette[0] = BlackPalette[0];
+    }
+
+    Init_Expansion_Files();
+
+    // Prep a gadget color scheme.
+    _sidebar_scheme.WindowPalette[0] = 13;
+    _sidebar_scheme.WindowPalette[1] = 12;
+    _sidebar_scheme.WindowPalette[2] = 14;
+    _sidebar_scheme.WindowPalette[3] = 15;
+    _sidebar_scheme.WindowPalette[4] = 14;
+    _sidebar_scheme.WindowPalette[5] = 15;
+    _sidebar_scheme.BrightColor = 15;
+    _sidebar_scheme.MediumColor = 14;
+    GadgetClass::Set_Color_Scheme(&_sidebar_scheme);
 }
