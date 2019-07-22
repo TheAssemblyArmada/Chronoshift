@@ -30,6 +30,8 @@ void Init_Keys();
 void Init_Fonts();
 void Init_Random();
 void Init_Color_Remaps();
+void Init_Mouse();
+void Bootstrap();
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
@@ -47,6 +49,8 @@ inline void Hook_Me()
     Hook_Function(0x004F7DF0, Init_Bootstrap_Mixfiles);
     Hook_Function(0x004F8018, Init_Secondary_Mixfiles);
     Hook_Function(0x004F8664, Init_Keys);
+    Hook_Function(0x004F81CC, Bootstrap);
+    Hook_Function(0x004F8390, Init_Mouse);
 #endif
 }
 
