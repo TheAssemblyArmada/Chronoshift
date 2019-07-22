@@ -21,17 +21,18 @@
 using std::memcpy;
 using std::memcmp;
 
-PaletteClass WhitePalette(RGBClass::WhiteColor);
-PaletteClass BlackPalette(RGBClass::BlackColor);
-
 #ifndef CHRONOSHIFT_STANDALONE
 PaletteClass &GamePalette = Make_Global<PaletteClass>(0x00669C5C);
 PaletteClass &OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
 PaletteClass &CCPalette = Make_Global<PaletteClass>(0x0066995C);
+PaletteClass &BlackPalette = Make_Global<PaletteClass>(0x00668F5C);
+PaletteClass &WhitePalette = Make_Global<PaletteClass>(0x0066925C);
 #else
 PaletteClass GamePalette;
 PaletteClass OriginalPalette;
 PaletteClass CCPalette;
+PaletteClass BlackPalette(RGBClass::BlackColor);
+PaletteClass WhitePalette(RGBClass::WhiteColor);
 #endif
 
 PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g_currentPalette);
