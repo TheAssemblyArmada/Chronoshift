@@ -20,6 +20,8 @@
 
 #include "always.h"
 #include "timer.h"
+#include <signal.h>
+#include <time.h>
 
 #ifdef PLATFORM_WINDOWS
 #ifdef __WATCOMC__
@@ -34,17 +36,16 @@
 #include <unistd.h>
 #endif
 
+#ifdef HAVE_SYS_SELECT
+#include <sys/select.h>
+#endif
+
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
 
 #ifdef HAVE_MACOS_GDC
 #include <dispatch/dispatch.h>
-#endif
-
-#ifdef HAVE_POSIX_TIMERS
-#include <signal.h>
-#include <time.h>
 #endif
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -67,8 +68,18 @@ public:
     {
 #if defined PLATFORM_WINDOWS
         ::Sleep(interval);
-#elif defined HAVE_UNISTD_H
+#elif defined HAVE_NANOSLEEP
+        struct timespec ts;
+        ts.tv_sec = interval / 1000;
+        ts.tv_nsec = (interval % 1000) * 1000000;
+        nanosleep(&ts, nullptr);
+#elif defined HAVE_USLEEP
         usleep(1000 * interval);
+#elif defined HAVE_SYS_SELECT_H
+        struct timeval tv;
+        tv.tv_sec = interval / 1000;
+        tv.tv_usec = (interval % 1000) * 1000;
+        select(0, nullptr, nullptr, nullptr, &tv);
 #else
 #error Add sleep function in ostimer.h
 #endif
