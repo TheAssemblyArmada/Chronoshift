@@ -20,6 +20,14 @@
 
 #include "always.h"
 
+enum ExpansionType
+{
+    EXPANSION_NONE = -1,
+    EXPANSION_AFTERMATH,
+    EXPANSION_COUNTERSTRIKE,
+    EXPANSION_COUNT,
+};
+
 BOOL Is_Counterstrike_Installed();
 BOOL Is_Aftermath_Installed();
 
