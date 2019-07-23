@@ -22,12 +22,17 @@
 #include "rules.h"
 #include "special.h"
 #include "unittype.h"
+#include "gamefile.h"
 #include <algorithm>
 
 #ifndef CHRONOSHIFT_STANDALONE
 TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes = Make_Global<TFixedIHeapClass<BuildingTypeClass> >(0x0065DD70);
+void *&BuildingTypeClass::g_WarFactoryOverlay = Make_Global<void *>(0x00635BA8);
+void *&BuildingTypeClass::g_LightningShapes = Make_Global<void *>(0x00635BAC); // TODO: Should be moved to TechnoTypeClass.
 #else
 TFixedIHeapClass<BuildingTypeClass> g_BuildingTypes;
+void *BuildingTypeClass::g_WarFactoryOverlay = nullptr;
+void *BuildingTypeClass::g_LightningShapes = nullptr;
 #endif
 
 /**
@@ -65,24 +70,11 @@ BuildingTypeClass::BuildingTypeClass(BuildingType type, int uiname, const char *
     m_OverlapList(overlap_list),
     m_BuildupData(nullptr)
 { 
-    m_Anims[BSTATE_0].m_Start = 0;
-    m_Anims[BSTATE_0].m_FrameCount = 1;
-    m_Anims[BSTATE_0].m_Rate = 0;
-    m_Anims[BSTATE_1].m_Start = 0;
-    m_Anims[BSTATE_1].m_FrameCount = 1;
-    m_Anims[BSTATE_1].m_Rate = 0;
-    m_Anims[BSTATE_2].m_Start = 0;
-    m_Anims[BSTATE_2].m_FrameCount = 1;
-    m_Anims[BSTATE_2].m_Rate = 0;
-    m_Anims[BSTATE_3].m_Start = 0;
-    m_Anims[BSTATE_3].m_FrameCount = 1;
-    m_Anims[BSTATE_3].m_Rate = 0;
-    m_Anims[BSTATE_4].m_Start = 0;
-    m_Anims[BSTATE_4].m_FrameCount = 1;
-    m_Anims[BSTATE_4].m_Rate = 0;
-    m_Anims[BSTATE_5].m_Start = 0;
-    m_Anims[BSTATE_5].m_FrameCount = 1;
-    m_Anims[BSTATE_5].m_Rate = 0;
+    for (BStateType i = BSTATE_FIRST; i < BSTATE_COUNT; ++i) {
+        m_Anims[i].m_Start = 0;
+        m_Anims[i].m_FrameCount = 1;
+        m_Anims[i].m_Rate = 0;
+    }
 }
 
 /**
@@ -453,6 +445,145 @@ void BuildingTypeClass::Init(TheaterType theater)
     void (*func)(TheaterType) = reinterpret_cast<void (*)(TheaterType)>(0x004538F4);
     func(theater);
 #endif
+}
+
+/**
+* Initialises animation frame info.
+*
+* Inlined
+*/
+void BuildingTypeClass::Init_Anim(BStateType bstate, int start_frame, int frame_count, int delay)
+{
+    m_Anims[bstate].m_Start = start_frame;
+    m_Anims[bstate].m_FrameCount = frame_count;
+    m_Anims[bstate].m_Rate = delay;
+}
+
+void BuildingTypeClass::One_Time()
+{
+    struct BAnimStruct {
+        BuildingType m_Building;
+        BStateType m_State;
+        int m_StartFrame;
+        int m_FrameCount;
+        int m_Delay;			// TODO: Needs confirming what this actually is, could be Rate or Speed?
+    };
+
+    static BAnimStruct _anims[] = {
+
+        // paradox device (chronosphere)
+        { BUILDING_PDOX, BSTATE_1, 0, 4, 6 },
+        { BUILDING_PDOX, BSTATE_2, 4, 16, 3 },
+
+        // missile silo
+        { BUILDING_MSLO, BSTATE_1, 0, 0, 0 },	//idle?
+        { BUILDING_MSLO, BSTATE_2, 0, 5, 2 },	//attacking?
+        { BUILDING_MSLO, BSTATE_4, 4, 1, 0 },	//closing?
+        { BUILDING_MSLO, BSTATE_5, 5, 3, 2 },
+
+        // camouflaged pill box
+        { BUILDING_HBOX, BSTATE_2, 0, 2, 1 },
+
+        // gap generator
+        { BUILDING_GAP_GENERATOR, BSTATE_1, 0, 32, 3 },
+
+        // soviet airfield
+        { BUILDING_AIRFIELD, BSTATE_1, 0, 0, 0 },
+        { BUILDING_AIRFIELD, BSTATE_4, 0, 8, 3 },
+
+        // soviet barracks
+        { BUILDING_BARR, BSTATE_2, 0, 10, 3 },
+        { BUILDING_BARR, BSTATE_1, 0, 10, 3 },
+
+        // allied barracks
+        { BUILDING_TENT, BSTATE_2, 0, 10, 3 },
+        { BUILDING_TENT, BSTATE_1, 0, 10, 3 },
+
+        // queen ant
+        { BUILDING_QUEE, BSTATE_1, 0, 10, 3 },
+
+        // construction yard
+        { BUILDING_FACT, BSTATE_2, 0, 26, 3 },
+
+        // fake construction yard
+        { BUILDING_FACF, BSTATE_2, 0, 26, 3 },
+
+        // helipad
+        { BUILDING_HELIPAD, BSTATE_2, 0, 7, 4 }, //Active?
+        { BUILDING_HELIPAD, BSTATE_1, 0, 0, 0 }, //Idle?
+
+        // civillian hosptial
+        { BUILDING_HOSPITAL, BSTATE_1, 0, 4, 3 }, //Idle?
+
+        // 
+        { BUILDING_V19, BSTATE_1, 0, 14, 4 }, //Idle?
+
+        // service depot
+        { BUILDING_FIX, BSTATE_2, 0, 7, 2 }, //Active?
+        { BUILDING_FIX, BSTATE_1, 0, 1, 0 }, //Idle?
+
+        // 
+        { BUILDING_V20, BSTATE_1, 0, 3, 3 }, //Idle?
+        { BUILDING_V21, BSTATE_1, 0, 3, 3 }, //Idle?
+        { BUILDING_V22, BSTATE_1, 0, 3, 3 }, //Idle?
+        { BUILDING_V23, BSTATE_1, 0, 3, 3 }, //Idle?
+
+        // weapons factory
+        { BUILDING_WEAP, BSTATE_2, 0, 1, 0 }, //Active?
+        { BUILDING_WEAP, BSTATE_1, 0, 1, 0 }, //Idle?
+
+        // fake weapons factory
+        { BUILDING_WEAF, BSTATE_2, 0, 1, 0 },
+        { BUILDING_WEAF, BSTATE_1, 0, 1, 0 },
+
+        // iron curtain
+        { BUILDING_IRON_CURTAIN, BSTATE_2, 0, 11, 3 },
+
+        // tesla coil
+        { BUILDING_TESLA_COIL, BSTATE_2, 0, 10, 2 }
+
+    };
+
+    char filename[512];
+
+    for (BuildingType i = BUILDING_FIRST; i < BUILDING_COUNT; ++i) {
+        BuildingTypeClass &building = As_Reference(i);
+
+        char const *name = (building.ImageName[0] != '\0' ? building.ImageName : building.Get_Name());
+
+        if (building.TechLevel != -1) {
+            sprintf(filename, "%.4sicon.shp", name);
+            building.CameoData = GameFileClass::Retrieve(filename);
+        }
+
+        sprintf(filename, "%s.shp", name);
+        building.ImageData = GameFileClass::Retrieve(filename);
+
+        sprintf(filename, "%.4smake.shp", name);
+        building.m_BuildupData = GameFileClass::Retrieve(filename);
+
+        if (building.m_BuildupData != nullptr) {
+            int frame_count = Get_Build_Frame_Count(building.m_BuildupData);
+            int delay = (frame_count > 0 ? ((Rule.Buildup_Time() * 900) / frame_count) : 1);
+            building.Init_Anim(BSTATE_0, 0, frame_count, delay);
+        }
+    }
+
+    if (g_WarFactoryOverlay == nullptr) {
+        g_WarFactoryOverlay = GameFileClass::Retrieve("weap2.shp");
+        DEBUG_ASSERT(g_WarFactoryOverlay != nullptr);
+    }
+
+    // TODO: Should be moved to TechnoTypeClass.
+    if (g_LightningShapes == nullptr) {
+        g_LightningShapes = GameFileClass::Retrieve("litning.shp");
+        DEBUG_ASSERT(g_LightningShapes != nullptr);
+    }
+
+    for (int index = 0; index < ARRAY_SIZE(_anims); ++index) {
+        BAnimStruct &bstate = _anims[index];
+        As_Reference(bstate.m_Building).Init_Anim(bstate.m_State, bstate.m_StartFrame, bstate.m_FrameCount, bstate.m_Delay);
+    }
 }
 
 /**

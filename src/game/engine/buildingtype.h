@@ -160,6 +160,7 @@ enum BSizeType
 enum BStateType
 {
     BSTATE_NONE = -1,
+    BSTATE_FIRST = 0,
     BSTATE_0 = 0, // this could be ActiveAnimOne            //CONSTRUCTION
     BSTATE_1 = 1, // i think this is Idle or ActiveAnimTwo
     BSTATE_2 = 2, // attacking?                //ATTACKING
@@ -168,6 +169,8 @@ enum BStateType
     BSTATE_5 = 5,
     BSTATE_COUNT
 };
+
+DEFINE_ENUMERATION_OPERATORS(BStateType);
 
 class BuildingTypeClass : public TechnoTypeClass
 {
@@ -221,6 +224,9 @@ public:
     RTTIType Factory_Type() const { return m_FactoryType; }
     BOOL Unsellable() const { return m_Unsellable; }
 
+    void Init_Anim(BStateType bstate, int start_frame, int frame_count, int delay);
+
+    static void One_Time();
     static BuildingTypeClass &As_Reference(BuildingType type);
     static BuildingType From_Name(const char *name);
     static void Init(TheaterType theater);
@@ -233,15 +239,15 @@ private:
     {
         struct
         {
-            bool m_BaseNormal : 1; // & 1Considered for building adjacency checks (def = true)?
-            bool m_Fake : 1; // & 2 Is this a fake structure (def = false)?
-            bool m_Bib : 1; // & 4 Does the building have a bib built in (def = false)?
-            bool m_Wall : 1; // & 8 Is this a wall type structure [special rules apply] (def = false)?
-            bool m_SimpleDamage : 1; // & 16 Does building have simple damage imagery (def = true)?
-            bool m_Capturable : 1; // & 32 Can this building be infiltrated by a spy/thief/engineer (def = false)?
-            bool m_Normalized : 1; // & 64 Is nimation speed adjusted for a consistent speed (def = false)?
-            bool m_Powered : 1; // & 128 Does it require power to function (def = false)?
-            bool m_Unsellable : 1; // & 1 Cannot sell this building (even if it can be built) (def = false)?
+            bool m_BaseNormal : 1;
+            bool m_Fake : 1;
+            bool m_Bib : 1;
+            bool m_Wall : 1;
+            bool m_SimpleDamage : 1;
+            bool m_Capturable : 1;
+            bool m_Normalized : 1;
+            bool m_Powered : 1;
+            bool m_Unsellable : 1;
         };
         int Bitfield;
     };
@@ -271,6 +277,14 @@ private:
     const int16_t *m_OccupyList;
     const int16_t *m_OverlapList;
     void *m_BuildupData;
+
+#ifndef CHRONOSHIFT_STANDALONE
+    static void *&g_WarFactoryOverlay;
+    static void *&g_LightningShapes;
+#else
+    static void *g_WarFactoryOverlay;
+    static void *g_LightningShapes;
+#endif
 };
 
 #ifndef CHRONOSHIFT_STANDALONE
