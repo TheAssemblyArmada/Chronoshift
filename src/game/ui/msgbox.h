@@ -21,8 +21,13 @@
 #include "always.h"
 #include "language.h"
 
-enum MessageBoxReturn
+// TODO: This needs refactoring
+enum MsgBoxReturnType
 {
+    ID_BUTTON_1,
+    ID_BUTTON_2,
+    ID_BUTTON_3,
+
     MSGBOX_IDFAIL = 0,
     MSGBOX_IDOK = 1,
     MSGBOX_IDCANCEL = 2,
@@ -30,7 +35,7 @@ enum MessageBoxReturn
     MSGBOX_IDRETRY = 4,
     MSGBOX_IDIGNORE = 5,
     MSGBOX_IDYES = 6,
-    MSGBOX_IDNO = 7
+    MSGBOX_IDNO = 7,
 };
 
 class MessageBoxClass
@@ -45,6 +50,11 @@ public:
         const int button_3_text = TXT_NONE, BOOL shadow_seen = false);
     int Process(const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text = nullptr,
         BOOL shadow_seen = false);
+
+    static int Simple_OK_Message_Box(const int body_text, const int button_1_text = TXT_OK);
+    static int Simple_OK_Message_Box(const char *body_text, const int button_1_text = TXT_OK);
+    static int Simple_YesNo_Message_Box(const int body_text, const int button_1_text = TXT_YES, const int button_2_text = TXT_NO);
+    static int Simple_YesNo_Message_Box(const char *body_text, const int button_1_text = TXT_YES, const int button_2_text = TXT_NO);
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
