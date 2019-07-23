@@ -711,6 +711,7 @@ coord_t DisplayClass::Pixel_To_Coord(int x, int y)
 
 /**
  * @brief Sets the occupy list for the cells the band box currently covers.
+ * @note Parsing a value of NULL will clear the cursor shape.
  *
  * 0x004AF700
  */
@@ -1074,7 +1075,7 @@ void DisplayClass::Repair_Mode_Control(int mode)
  *
  * 0x004B4E20
  */
-void DisplayClass::Center_Map(uint32_t coord)
+void DisplayClass::Center_Map(coord_t coord)
 {
     bool coord_set = false;
     int x = 0;
@@ -1850,4 +1851,12 @@ void DisplayClass::Flag_All_Cells_To_Redraw()
             CellRedraw[cellnum] = true;
         }
     }
+}
+
+void DisplayClass::Reset_Pending_Object()
+{
+    PendingObjectPtr = nullptr;
+    PendingObjectTypePtr = nullptr;
+    PendingObjectOwner = HOUSES_NONE;
+    PendingSuper = SPECIAL_NONE;
 }
