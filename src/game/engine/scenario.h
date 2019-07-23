@@ -73,16 +73,24 @@ public:
     BOOL Set_Global_To(int global, BOOL value);
     int Get_Random_Value(int min, int max) { return SyncRandom(min, max); }
     void Set_Random_Seed(int seed) { SyncRandom = seed; }
+
     DiffType Get_Human_Difficulty() const { return HumanDifficulty; }
     DiffType Get_AI_Difficulty() const { return AIDifficulty; }
+    void Set_Difficulties(DiffType human, DiffType ai) { HumanDifficulty = human; AIDifficulty = ai; }
+    TCountDownTimerClass<FrameTimerClass> &Elapsed_Timer() { return ElapsedTimer; }
+    int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
+    TCountDownTimerClass<FrameTimerClass> &Global_Timer() { return GlobalTimer; }
+    int Get_Global_Time() { return GlobalTimer.Time(); }
+    BOOL Global_Timer_Running() { return GlobalTimer != 0; }
+    TCountDownTimerClass<FrameTimerClass> &Some_Timer() { return SomeTimer; }
     int Get_Scenario_Index() const { return ScenarioIndex; }
     TheaterType Get_Theater() const { return Theater; }
     void Set_Theater(TheaterType theater) { Theater = theater; }
+    const char *Scenario_Name() const { return ScenarioName; }
+    const char *Scenario_Description() const { return ScenarioDescription; }
     cell_t Get_Waypoint(int waypoint_num) const { return Waypoints[waypoint_num]; }
     void Set_Waypoint(int waypoint_num, cell_t cell) { Waypoints[waypoint_num] = cell; }
-    int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
-    int Get_Global_Time() { return GlobalTimer.Time(); }
-    BOOL Global_Timer_Running() { return GlobalTimer != 0; }
+    void Set_Carry_Over_Money(fixed_t value) { CarryOverMoney = value; }
     cell_t Get_View(int index) const { return Views[index]; }
     void Set_View(int index, cell_t cell) { Views[index] = cell; }
     void Set_Bridge_Count(int count) { BridgeCount = count; }
@@ -193,5 +201,8 @@ inline void ScenarioClass::Hook_Me()
 #else
 extern ScenarioClass Scen;
 #endif
+
+BOOL Start_Scenario(const char *filename, BOOL play_movies = false);
+BOOL Read_Scenario(const char *filename);
 
 #endif // SCENARIO_H
