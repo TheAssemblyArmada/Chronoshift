@@ -30,7 +30,7 @@ void Call_Back()
     Theme.AI();
     Speak_AI();
 
-    if (Session.Game_To_Play() == GAME_3 || Session.Game_To_Play() == GAME_INTERNET) {
+    if (Session.Game_To_Play() == GAME_IPX || Session.Game_To_Play() == GAME_INTERNET) {
         IPX_Call_Back();
     }
 
