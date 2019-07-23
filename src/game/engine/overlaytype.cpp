@@ -60,19 +60,19 @@ const OverlayTypeClass OverlayGems3(
 const OverlayTypeClass OverlayGems4(
     OVERLAY_GEM_04, "GEM04", TXT_GEMS, LAND_ORE, 0, 0, true, false, false, false, true, false, true, false, false);
 const OverlayTypeClass OverlayV12(
-    OVERLAY_V12, "V12", TXT_HAYSTACKS, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
+    OVERLAY_V12, "V12", TXT_CIV12, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
 const OverlayTypeClass OverlayV13(
-    OVERLAY_V13, "V13", TXT_HAYSTACK, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
+    OVERLAY_V13, "V13", TXT_CIV13, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
 const OverlayTypeClass OverlayV14(
-    OVERLAY_V14, "V14", TXT_WHEAT_FIELD, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
+    OVERLAY_V14, "V14", TXT_CIV14, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
 const OverlayTypeClass OverlayV15(
-    OVERLAY_V15, "V15", TXT_FALLOW_FIELD, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
+    OVERLAY_V15, "V15", TXT_CIV15, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
 const OverlayTypeClass OverlayV16(
-    OVERLAY_V16, "V16", TXT_CORN_FIELD, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
+    OVERLAY_V16, "V16", TXT_CIV16, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
 const OverlayTypeClass OverlayV17(
-    OVERLAY_V17, "V17", TXT_CELERY_FIELD, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
+    OVERLAY_V17, "V17", TXT_CIV17, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
 const OverlayTypeClass OverlayV18(
-    OVERLAY_V18, "V18", TXT_POTATO_FIELD, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
+    OVERLAY_V18, "V18", TXT_CIV18, LAND_ROCK, 0, 0, false, false, false, true, false, false, true, false, false);
 const OverlayTypeClass OverlayFlagSpot(
     OVERLAY_FPLS, "FPLS", TXT_FLAG_SPOT, LAND_CLEAR, 0, 0, true, false, false, false, false, false, false, false, false);
 const OverlayTypeClass OverlayWoodCrate(OVERLAY_WOOD_FENCE_CRATE, "WCRATE", TXT_WOOD_CRATE, LAND_CLEAR, 0, 0, false, false,

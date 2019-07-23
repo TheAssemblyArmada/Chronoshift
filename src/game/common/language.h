@@ -20,31 +20,24 @@
 
 #include "always.h"
 
+#define NAME_OVERRIDE_MAX 25
+
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
-extern char *&GameStrings;
-extern char *&DebugStrings;
 extern char **NameOverride;
 extern int *NameIDOverride;
 #else
-extern char *GameStrings;
-extern char *DebugStrings;
-extern char *NameOverride[25];
-extern int NameIDOverride[25];
+extern char *NameOverride[NAME_OVERRIDE_MAX];
+extern int NameIDOverride[NAME_OVERRIDE_MAX];
 #endif
 
-extern char *EditorStrings;
+// clang-format off
 
 // the following variables defines the text used throughout the game.
 enum TextEnum
 {
-    TXT_NONE = -1,
-
-    TXT_FIRST = 0,
-
-    TXT_NULL = 0, //"bollocks"    //good ol' Retaliation tells me this, even though its blank in the PC verison.
-
+    TXT_NULL = 0, // Empty string.
     TXT_CREDIT_FORMAT = 1, // %3d.%02d
     TXT_TIME_HMS_FORMAT = 2, // Time:%02d:%02d:%02d
     TXT_TIME_MS_FORMAT = 3, // Time:%02d:%02d
@@ -130,42 +123,42 @@ enum TextEnum
     TXT_STORAGE = 83, // Ore Silo
     TXT_CONST_YARD = 84, // Construction Yard
     TXT_REFINERY = 85, // Ore Refinery
-                       // TXT_     = 86,        // Church
-                       // TXT_     = 87,        // Han's and Gretel's
-                       // TXT_     = 88,        // Hewitt's Manor
-                       // TXT_     = 89,        // Ricktor's House
-                       // TXT_     = 90,        // Gretchin's House
-                       // TXT_     = 91,        // The Barn
-                       // TXT_     = 92,        // Damon's pub
-                       // TXT_     = 93,        // Fran's House
-                       // TXT_     = 94,        // Music Factory
-                       // TXT_     = 95,        // Toymaker's
-                       // TXT_     = 96,        // Ludwig's House
-    TXT_HAYSTACKS     = 97,        // Haystacks
-    TXT_HAYSTACK     = 98,        // Haystack
-    TXT_WHEAT_FIELD = 99, // Wheat Field
-    TXT_FALLOW_FIELD     = 100,        // Fallow Field
-    TXT_CORN_FIELD     = 101,        // Corn Field
-    TXT_CELERY_FIELD     = 102,        // Celery Field
-    TXT_POTATO_FIELD     = 103,        // Potato Field
-                          // TXT_     = 104,        // Sala's House
-                          // TXT_     = 105,        // Abdul's House
-                          // TXT_     = 106,        // Pablo's Wicked Pub
-                          // TXT_     = 107,        // Village Well
-                          // TXT_     = 108,        // Camel Trader
-                          // TXT_     = 109,        // Church
-                          // TXT_     = 110,        // Ali's House
-                          // TXT_     = 111,        // Trader Ted's
-                          // TXT_     = 112,        // Menelik's House
-                          // TXT_     = 113,        // Prestor John's House
-                          // TXT_     = 114,        // Village Well
-                          // TXT_     = 115,        // Witch Doctor's Hut
-                          // TXT_     = 116,        // Rikitikitembo's Hut
-                          // TXT_     = 117,        // Roarke's Hut
-                          // TXT_     = 118,        // Mubasa's Hut
-                          // TXT_     = 119,        // Aksum's Hut
-                          // TXT_     = 120,        // Mambo's Hut
-                          // TXT_     = 121,        // The Studio
+    TXT_CIV1 = 86, // Church
+    TXT_CIV2 = 87, // Han's and Gretel's
+    TXT_CIV3 = 88, // Hewitt's Manor
+    TXT_CIV4 = 89, // Ricktor's House
+    TXT_CIV5 = 90, // Gretchin's House
+    TXT_CIV6 = 91, // The Barn
+    TXT_CIV7 = 92, // Damon's pub
+    TXT_CIV8 = 93, // Fran's House
+    TXT_CIV9 = 94, // Music Factory
+    TXT_CIV10 = 95, // Toymaker's
+    TXT_CIV11 = 96, // Ludwig's House
+    TXT_CIV12 = 97, // Haystacks
+    TXT_CIV13 = 98, // Haystack
+    TXT_CIV14 = 99, // Wheat Field
+    TXT_CIV15 = 100, // Fallow Field
+    TXT_CIV16 = 101, // Corn Field
+    TXT_CIV17 = 102, // Celery Field
+    TXT_CIV18 = 103, // Potato Field
+    TXT_CIV20 = 104, // Sala's House
+    TXT_CIV21 = 105, // Abdul's House
+    TXT_CIV22 = 106, // Pablo's Wicked Pub
+    TXT_CIV23 = 107, // Village Well
+    TXT_CIV24 = 108, // Camel Trader
+    TXT_CIV25 = 109, // Church
+    TXT_CIV26 = 110, // Ali's House
+    TXT_CIV27 = 111, // Trader Ted's
+    TXT_CIV28 = 112, // Menelik's House
+    TXT_CIV29 = 113, // Prestor John's House
+    TXT_CIV30 = 114, // Village Well
+    TXT_CIV31 = 115, // Witch Doctor's Hut
+    TXT_CIV32 = 116, // Rikitikitembo's Hut
+    TXT_CIV33 = 117, // Roarke's Hut
+    TXT_CIV34 = 118, // Mubasa's Hut
+    TXT_CIV35 = 119, // Aksum's Hut
+    TXT_CIV36 = 120, // Mambo's Hut
+    TXT_CIV37 = 121, // The Studio
     TXT_CIVMISS = 122, // Technology Center
     TXT_TURRET = 123, // Turret
     TXT_GUNBOAT = 124, // Gunboat
@@ -182,8 +175,8 @@ enum TextEnum
     TXT_BARBWIRE_WALL = 135, // Barbwire Fence
     TXT_WOOD_WALL = 136, // Wood Fence
     TXT_WEAPON_FACTORY = 137, // War Factory
-                              // TXT_     = 138,        // Advanced Guard Tower
-                              // TXT_     = 139,        // Bio-Research Laboratory
+    TXT_ADV_GUARD_TOWER = 138, // Advanced Guard Tower
+    TXT_BIO_LAB = 139, // Bio-Research Laboratory
     TXT_FIX_IT = 140, // Service Depot
     TXT_TAB_SIDEBAR = 141, // Sidebar
     TXT_TAB_BUTTON_CONTROLS = 142, // Options
@@ -394,8 +387,7 @@ enum TextEnum
     TXT_SELECT_SETTINGS = 347, // Please select 'Settings' to setup default configuration
     TXT_PRISON = 348, // Prison
     TXT_GAME_WAS_SAVED = 349, // Mission Saved
-    TXT_INSUFFICIENT_SAVE = 350, // Insufficient disk space to save a game.  Please delete a previous save to free up some
-                                 // disk space and try again.
+    TXT_INSUFFICIENT_SAVE = 350, // Insufficient disk space to save a game.  Please delete a previous save to free up some disk space and try again.
     TXT_PORT_ADDRESS = 351, // Invalid Port/Address. COM 1-4 OR ADDRESS
     TXT_PORT_INVALID_SETTINGS = 352, // Invalid Port and/or IRQ settings
     TXT_IRQ_ALREADY_IN_USE = 353, // IRQ already in use
@@ -405,15 +397,15 @@ enum TextEnum
     TXT_LOADING = 357, // Mission is loading. Please wait...
     TXT_ERROR_IN_INITSTRING = 358, // Error in the InitString
     TXT_SHROUD_COLON = 359, // Shroud:
-                            // TXT_     = 360,        // Anti-Vehicle Mine
-                            // TXT_     = 361,        // Anti-Personnel Mine
+    TXT_AVM = 360, // Anti-Vehicle Mine
+    TXT_APM = 361, // Anti-Personnel Mine
     TXT_NEW_MISSIONS = 362, // New Missions
     TXT_THIEF = 363, // Thief
-    TXT_MRJ = 364,        // Radar Jammer
-    TXT_MGG = 365,        // Gap Generator
-                     // TXT_     = 366,        // Pillbox
-                     // TXT_     = 367,        // Camo. Pillbox
-                     // TXT_     = 368,        // Chronosphere
+    TXT_MRJ = 364, // Radar Jammer
+    TXT_MGG = 365, // Gap Generator
+    TXT_PILLBOX = 366, // Pillbox
+    TXT_CAMO_PILLBOX = 367, // Camo. Pillbox
+    TXT_CHRONOSPHERE = 368, // Chronosphere
     TXT_ENGLAND = 369, // England
     TXT_GERMANY = 370, // Germany
     TXT_SPAIN = 371, // Spain
@@ -430,7 +422,7 @@ enum TextEnum
     TXT_LST = 382, // Transport
     TXT_PT = 383, // Gun Boat
     TXT_LOBBY = 384, // Lobby
-    TXT_GAMES_2 = 385, // Games                //TODO, check enum name for this one
+    TXT_LOBBY_GAMES = 385, // Games
     TXT_SAVING_GAME = 386, // Save Game...
     TXT_GAME_FULL = 387, // Game is full.
     TXT_MUST_SELECT_GAME = 388, // You must select a game!
@@ -439,12 +431,12 @@ enum TextEnum
     TXT_GAME_CANCELLED = 391, // Game was cancelled.
     TXT_S_FORMED_NEW_GAME = 392, // %s has formed a new game.
     TXT_GAME_NOW_IN_PROGRESS = 393, // %s's game is now in progress.
-                                    // TXT_     = 394,        // Tesla Coil
-                                    // TXT_     = 395,        // Mobile Gap Generator
-                                    // TXT_     = 396,        // Flame Tower
-                                    // TXT_     = 397,        // AA Gun
-                                    // TXT_     = 398,        // Kennel
-                                    // TXT_     = 399,        // Soviet Tech Center
+    TXT_TESLA_COIL = 394, // Tesla Coil
+    TXT_MOBILE_GAP_GEN = 395, // Mobile Gap Generator
+    TXT_FLAME_TOWER = 396, // Flame Tower
+    TXT_AA_GUN = 397, // AA Gun
+    TXT_KENNEL = 398, // Kennel
+    TXT_TECH_CENTER = 399, // Soviet Tech Center
     TXT_BADGER = 400, // Badger Bomber
     TXT_MIG = 401, // Mig Attack Plane
     TXT_YAK = 402, // Yak Attack Plane
@@ -455,10 +447,10 @@ enum TextEnum
     TXT_E7 = 407, // Tanya
     TXT_PARABOMBS = 408, // Parabombs
     TXT_PARATROOPERS = 409, // Paratroopers
-                            // TXT_     = 410,        // Parachute Saboteur
-                            // TXT_     = 411,        // Naval Yard
-                            // TXT_     = 412,        // Sub Pen
-                            // TXT_     = 413,        // Scenario Options
+    TXT_PARA_SABOTEUR = 410, // Parachute Saboteur
+    TXT_NAVAL_YARD = 411, // Naval Yard
+    TXT_SUB_PEN = 412, // Sub Pen
+    TXT_SCENARIO_OPTS = 413, // Scenario Options
     TXT_SPY_PLANE = 414, // Spy Plane
     TXT_U2 = 415, // Spy Plane
     TXT_DOG = 416, // Attack Dog
@@ -469,45 +461,45 @@ enum TextEnum
     TXT_INFO_AIRCRAFT = 421, // Aircraft
     TXT_TRUCK = 422, // Supply Truck
     TXT_INVUL_DEVICE = 423, // Invulnerability Device
-                            // TXT_     = 424,        // Iron Curtain
-                            // TXT_     = 425,        // Allied Tech Center
-    TXT_V2RL     = 426,        // V2 Rocket
-                            // TXT_     = 427,        // Forward Command Post
-                            // TXT_     = 428,        // Demolitioner
-    TXT_MNLY = 429,        // Mine Layer
-                            // TXT_     = 430,        // Fake Construction Yard
-                            // TXT_     = 431,        // Fake War Factory
-                            // TXT_     = 432,        // Fake Naval Yard
-                            // TXT_     = 433,        // Fake Sub Pen
-                            // TXT_     = 434,        // Fake Radar Dome
+    TXT_IRON_CURTAIN = 424, // Iron Curtain
+    TXT_ALLIED_TECH_CENTER = 425, // Allied Tech Center
+    TXT_V2RL = 426, // V2 Rocket
+    TXT_FCOM = 427, // Forward Command Post
+    TXT_DEMOLITIONER = 428, // Demolitioner
+    TXT_MNLY = 429, // Mine Layer
+    TXT_FAKE_CONST_YARD = 430, // Fake Construction Yard
+    TXT_FAKE_WEAP_FACT = 431, // Fake War Factory
+    TXT_FAKE_NAVAL_YARD = 432, // Fake Naval Yard
+    TXT_FAKE_SUB_PEN = 433, // Fake Sub Pen
+    TXT_FAKE_RADAR_DOME = 434, // Fake Radar Dome
     TXT_THEME_BIGFOOT = 435, // Bigfoot
     TXT_THEME_CRUSH = 436, // Crush
-                           // TXT_THEME_     = 437,        // Face the Enemy 1
-                           // TXT_THEME_     = 438,        // Face the Enemy 2
+    TXT_THEME_FACE_ENEMY_1 = 437, // Face the Enemy 1
+    TXT_THEME_FACE_ENEMY_2 = 438, // Face the Enemy 2
     TXT_THEME_HELL_MARCH = 439, // Hell March
-                                // TXT_THEME_     = 440,        // Run for Your Life
-                                // TXT_THEME_     = 441,        // Smash
-                                // TXT_THEME_     = 442,        // Trenches
-                                // TXT_THEME_     = 443,        // Workmen
-                                // TXT_THEME_     = 444,        // Await
-                                // TXT_THEME_     = 445,        // Dense
-                                // TXT_THEME_     = 446,        // Map Selection
-                                // TXT_THEME_     = 447,        // Fogger
-                                // TXT_THEME_     = 448,        // Mud
-                                // TXT_THEME_     = 449,        // Radio 2
-                                // TXT_THEME_     = 450,        // Roll Out
-                                // TXT_THEME_     = 451,        // Snake
-                                // TXT_THEME_     = 452,        // Terminate
-                                // TXT_THEME_     = 453,        // Twin
-                                // TXT_THEME_     = 454,        // Vector
-                                // TXT_     = 455,        // Team Members
+    TXT_THEME_RUN_LIFE = 440, // Run for Your Life
+    TXT_THEME_SMASH = 441, // Smash
+    TXT_THEME_TRENCHES = 442, // Trenches
+    TXT_THEME_WORKMEN = 443, // Workmen
+    TXT_THEME_AWAIT = 444, // Await
+    TXT_THEME_DENSE = 445, // Dense
+    TXT_THEME_MAP_SEL = 446, // Map Selection
+    TXT_THEME_FOGGER = 447, // Fogger
+    TXT_THEME_MUD = 448, // Mud
+    TXT_THEME_RADIO2 = 449, // Radio 2
+    TXT_THEME_ROLL_OUT = 450, // Roll Out
+    TXT_THEME_SNAKE = 451, // Snake
+    TXT_THEME_TERMINATE = 452, // Terminate
+    TXT_THEME_TWIN = 453, // Twin
+    TXT_THEME_VECTOR = 454, // Vector
+    TXT_TEAM_MEMBERS = 455, // Team Members
     TXT_BRIDGE = 456, // Bridge
-                      // TXT_     = 457,        // Barrel
+    TXT_BARREL = 457, // Barrel
     TXT_FRIENDLY = 458, // Friendly
     TXT_ENEMY = 459, // Enemy
     TXT_GOLD = 460, // Gold
     TXT_GEMS = 461, // Gems
-                    // TXT_     = 462,        // Title Movie
+    TXT_TITLE_MOVIE = 462, // Title Movie
     TXT_MOVIES = 463, // Movies
     TXT_INTERIOR = 464, // Interior
     TXT_SONAR_PULSE = 465, // Sonar Pulse
@@ -521,21 +513,21 @@ enum TextEnum
     TXT_ALLIES = 473, // Allies
     TXT_SOVIET = 474, // Soviet
     TXT_THEME_MENU = 475, // Intro Theme
-                          // TXT_     = 476,        // Shroud Regrows
-                          // TXT_     = 477,        // Ore Regenerates
+    TXT_SHROUD_REGROWS = 476, // Shroud Regrows
+    TXT_ORE_REGENERATES = 477, // Ore Regenerates
     TXT_THEME_SCORE = 478, // Score Theme
-                           // TXT_     = 479,        // Internet Game
+    TXT_INTERNET_GAME = 479, // Internet Game
     TXT_ICE = 480, // Ice
     TXT_CRATES_2 = 481, // Crates                    //TODO, check enum name for this one
     TXT_SKIRMISH = 482, // Skirmish
     TXT_CHOOSE_SIDE = 483, // Choose your side.
     TXT_VALUABLE_MINERALS = 484, // Valuable Minerals
     TXT_IGNORE = 485, // Ignore
-                      // TXT_     = 486,        // Error - modem is not responding.
-                      // TXT_     = 487,        // Error - modem did not respond to result code enable command.
+    TXT_ERROR_NOT_RESPONDING = 486, // Error - modem is not responding.
+    TXT_ERROR_NOT_ENABLED = 487, // Error - modem did not respond to result code enable command.
     TXT_ERROR_NO_INIT = 488, // Error - modem did not respond to initialisation string.
-                             // TXT_     = 489,        // Error - modem did not respond to 'verbose' command.
-                             // TXT_     = 490,        // Error - modem did not respond to 'echo' command.
+    TXT_ERROR_NO_VERBOSE = 489, // Error - modem did not respond to 'verbose' command.
+    TXT_ERROR_NO_ECHO = 490, // Error - modem did not respond to 'echo' command.
     TXT_ERROR_NO_DISABLE = 491, // Error - unable to disable modem auto answer.
     TXT_ERROR_TOO_MANY = 492, // Error - Too many errors initialising modem - Aborting.
     TXT_ERROR_ERROR = 493, // Error - Modem returned error status.
@@ -544,18 +536,14 @@ enum TextEnum
     TXT_CLICK_CONTINUE = 496, // Click to Continue
     TXT_RECEIVING_SCENARIO = 497, // Receiving scenario from host.
     TXT_SENDING_SCENARIO = 498, // Sending scenario to remote players.
-    TXT_NO_FLOW_CONTROL_RESPONSE =
-        499, // Error - Modem failed to respond to flow control command. Your Windows configuration may be incorrect.
-    TXT_NO_COMP_DISABLE_RESPONSE =
-        500, // Error - Modem failed to respond to compression command. Your Windows configuration may be incorrect.
-    TXT_NO_EC_DISABLE_RESPONSE = 501, // Error - Modem failed to respond to error correction command. Your Windows
-                                      // configuration may be incorrect.
-                                      // TXT_     = 502,        // To play Red Alert via the internet you must be connected to
-                                      // an internet services provider and be registered with Planet Westwood  TXT_     = 503,
-                                      // // Wchat not installed. Please install it from either CD.
+    TXT_NO_FLOW_CONTROL_RESPONSE = 499, // Error - Modem failed to respond to flow control command. Your Windows configuration may be incorrect.
+    TXT_NO_COMP_DISABLE_RESPONSE = 500, // Error - Modem failed to respond to compression command. Your Windows configuration may be incorrect.
+    TXT_NO_EC_DISABLE_RESPONSE = 501, // Error - Modem failed to respond to error correction command. Your Windows configuration may be incorrect.
+    TXT_REGISTER_PLANETWW = 502, // To play Red Alert via the internet you must be connected to an internet services provider and be registered with Planet Westwood
+    TXT_NO_WCHAT = 503, // Wchat not installed. Please install it from either CD.
     TXT_REGISTER = 504, // Register
     TXT_ORE_MINE = 505, // Ore Mine
-                        // TXT_     = 506,        // No registered modem
+    TXT_NO_REGISTERED_MODEM = 506, // No registered modem
     TXT_CHRONOSHIFT = 507, // Chronoshift
     TXT_UNABLE_TO_OPEN_PORT = 508, // Invalid Port or Port is in use
     TXT_NO_DIAL_TONE = 509, // No dial tone. Ensure your modem is connected to the phone line and try again.
@@ -570,26 +558,23 @@ enum TextEnum
     TXT_MISMATCH = 518, // Game versions incompatible. To make sure you have the latest version, visit www.westwood.com
     TXT_SCENARIO_ERROR = 519, // Incompatible scenario file detected. The scenario may be corrupt.
     TXT_CONNECTING = 520, // Connecting...
-                          // TXT_     = 521,        // Modem Initialization
+    TXT_MODEM_INIT = 521, // Modem Initialization
     TXT_DATA_COMPRESSION = 522, // Data Compression
     TXT_ERROR_CORRECTION = 523, // Error Correction
-                                // TXT_     = 524,        // Hardware Flow Control
-                                // TXT_     = 525,        // Advanced
-                                // TXT_THEME_     = 526,        // 2nd_Hand
-                                // TXT_THEME_     = 527,        // Arazoid
-                                // TXT_THEME_     = 528,        // BackStab
-                                // TXT_THEME_     = 529,        // Chaos2
-                                // TXT_THEME_     = 530,        // Shut_It
-                                // TXT_THEME_     = 531,        // TwinMix1
-                                // TXT_THEME_     = 532,        // Under3
+    TXT_HARDWARE_FLOW_CONTROL = 524, // Hardware Flow Control
+    TXT_ADVANCED = 525, // Advanced
+    TXT_THEME_2NDHAND = 526, // 2nd_Hand
+    TXT_THEME_ARAZOID = 527, // Arazoid
+    TXT_THEME_BACKSTAB = 528, // BackStab
+    TXT_THEME_CHAOS2 = 529, // Chaos2
+    TXT_THEME_SHUT_IT = 530, // Shut_It
+    TXT_THEME_TWINMIX1 = 531, // TwinMix1
+    TXT_THEME_UNDER3 = 532, // Under3
     TXT_THEME_VR2 = 533, // VR2
-                         // TXT_     = 534,        // The other system is not responding. Do you wish to attempt an emergency
-                         // game save? Both players must save for this to work.
-                         // TXT_     = 535,        // The other system hung up. Do you wish to attempt an emergency game
-                         // save? Both players must save for this to work.
-                         // TXT_     = 536,        // Red Alert was unable to run the registration software. You need to
-                         // install Westwood Chat from the Red Alert CD to register.  TXT_         = 537,        // A player in
-                         // the game does not have this expansion scenario.
+    TXT_PLAYER_NOT_RESPONDING = 534, // The other system is not responding. Do you wish to attempt an emergency game save? Both players must save for this to work.
+    TXT_PLAYER_HUNG_UP = 535, // The other system hung up. Do you wish to attempt an emergency game save? Both players must save for this to work.
+    TXT_ERROR_REGISTRATION_FAILED = 536, // Red Alert was unable to run the registration software. You need to install Westwood Chat from the Red Alert CD to register.
+    TXT_PLAYER_NO_EXPANSION_SCENARIO = 537, // A player in the game does not have this expansion scenario.
     TXT_MS = 538, // Missile Sub
     TXT_SHOK = 539, // Shock Trooper
     TXT_MECH = 540, // Mechanic
@@ -598,90 +583,127 @@ enum TextEnum
     TXT_QTNK = 543, // M.A.D. Tank
     TXT_DTRK = 544, // Demolition Truck
     TXT_STNK = 545, // Phase Transport
-                    // TXT_THEME_     = 546,        // Bog
-                    // TXT_THEME_     = 547,        // Floating
-                    // TXT_THEME_     = 548,        // Gloom
-                    // TXT_THEME_     = 549,        // Ground Wire
-                    // TXT_THEME_     = 550,        // Mech Man 2
+    TXT_THEME_BOG = 546, // Bog
+    TXT_THEME_FLOATING = 547, // Floating
+    TXT_THEME_GLOOM = 548, // Gloom
+    TXT_THEME_GROUNDWIRE = 549, // Ground Wire
+    TXT_THEME_MECHMAN2 = 550, // Mech Man 2
     TXT_THEME_SEARCH = 551, // Search
-                            // TXT_THEME_     = 552,        // Traction
-                            // TXT_THEME_     = 553,        // Wasteland
+    TXT_THEME_TRACTION = 552, // Traction
+    TXT_THEME_WASTELAND = 553, // Wasteland
     TXT_CARR = 554, // Helicarrier
 
-    TXT_LAST = 554,
-
-    TXT_COUNT = 555,
-
-    //
-    //
-    //
-    TXT_DEBUG_MAGIC_NUM = 1000, //
-
-    TXT_DEBUG_FIRST = 1000, //
-
-    // TXT_DEBUG_    = ,    //
-
-    TXT_DEBUG_COUNT = 1999,
+    TXT_COUNT,
+    TXT_NONE = -1,
+    TXT_FIRST = TXT_NULL,
 
     //
+    // Debug Strings.
     //
+    TXT_DEBUG_MAGIC_NUM = 1000,
+
+    TXT_DEBUG_CLEAR_MAP = 1000, // Clear the map
+    TXT_DEBUG_INHERIT_PREV_MAP, // Inherit previous map
+    TXT_DEBUG_SPECIAL_OPTIONS, // Select Special Options
+    TXT_DEBUG_FLASH_TO_ALL, // Targeting flash visible to all.
+    TXT_DEBUG_TREE_TARGETING, // Allow targeting of trees.
+    TXT_DEBUG_CONST_UNDEPLOY, // Allow undeploy of construction yard.
+    TXT_DEBUG_SMARTER_SELF_DEFENSE, // Employ smarter self defense logic.
+    TXT_DEBUG_MODERATE_PRODUCTION, // Moderate production speed.
+    TXT_DEBUG_3POINT_TURN, // Use three point turn logic.
+    TXT_DEBUG_ORE_GROW, // Ore will grow.
+    TXT_DEBUG_ORE_SPREAD, // Ore will spread.
+    TXT_DEBUG_DISABLE_BIBS, // Disable building "bib" pieces.
+    TXT_DEBUG_RUN_FROM_THREATS, // Allow running from immediate threats.
+    TXT_DEBUG_TRUE_NAMES, // Show true object names.
+    TXT_DEBUG_DEFENDER_ADVANTAGE, // Defender has the advantage.
+    TXT_DEBUG_SEPERATE_HELIPAD, // Allow separate helipad purchase
+    TXT_DEBUG_PASSWORD_REQUEST, // Password Request
+    TXT_DEBUG_ENTER_CODE, // Enter Red Alert access code to gain access.
+    TXT_DEBUG_ACCESS_ERROR, // Access code error detected.
+    TXT_DEBUG_TRY_AGAIN, // Try Again
+    TXT_DEBUG_AVOID_MINES, // Friendly units avoid friendly mines
+    TXT_DEBUG_TRIGGER_EDITOR, // Trigger Editor
+    TXT_DEBUG_JUST_EVENT, // Just This Event
+    TXT_DEBUG_TRIGGER_AND, // ... and ...
+    TXT_DEBUG_TRIGGER_OR, // ... or ...
+    TXT_DEBUG_TRIGGER_LINKED, // ... linked ...
+    TXT_DEBUG_JUST_ACTION, // Just This Action
+    TXT_DEBUG_TEAM_EDITOR, // Team Editor
+    TXT_DEBUG_SELLABLE, // Sellable
+    TXT_DEBUG_REBUILD, // Rebuild
+    TXT_DEBUG_CONSTRUCTION_ACCELERATED, // Building constructin time accelerated?
+    TXT_DEBUG_SCEN_AUTH_MISSING, // Scenario authentication code missing or invalid. Re-save scenario to correct it.
+    TXT_DEBUG_MONO_1, // 
+    TXT_DEBUG_MONO_2, // 
+    TXT_DEBUG_MONO_3, // 
+    TXT_DEBUG_MONO_4, // 
+    TXT_DEBUG_MONO_5, // 
+    TXT_DEBUG_MONO_6, // 
+    TXT_DEBUG_MONO_7, // 
+    TXT_DEBUG_MONO_8, // 
+    TXT_DEBUG_PENTIUM_PAD_TOP, // *******************************
+    TXT_DEBUG_PENTIUM_NOT_DETECTED, // ** Pentium CPU not detected. **
+    TXT_DEBUG_PENTIUM_PAD_BOTTOM, // *******************************
+    TXT_DEBUG_SIZE_MAP, // Size Map
+    TXT_DEBUG_TRUCKS_DROP_CRATE, // Trucks drop crate when destroyed?
+
+    TXT_DEBUG_COUNT,
+    TXT_DEBUG_FIRST = TXT_DEBUG_CLEAR_MAP,
+
+    //
+    // Editor Strings.
     //
     TXT_EDITOR_MAGIC_NUM = 2000,
 
-    TXT_EDITOR_FIRST = 2000,
-
     TXT_EDITOR_NEW_MAP = 2000, // New Map
-    TXT_EDITOR_LOAD_MAP = 2001, // Load Map
-    TXT_EDITOR_SAVE_MAP = 2002, // Save Map
-    TXT_EDITOR_MODIFY_MAP = 2003, // Modify Map Info
-    TXT_EDITOR_RESUME_EDITING = 2004, // Resume Editing
-    TXT_EDITOR_QUIT_EDITOR = 2005, // Quit Editor
-                                   // TXT_EDITOR_    = 2006,        // You have not saved your changes!  Load Another file?
-                                   // TXT_EDITOR_    = 2007,        // You have not saved your changes!  Exit Scenario Editor?
-    TXT_EDITOR_EXIT_EDITOR = 2008, // Exit Scenario Editor?
-    TXT_EDITOR_64_BY_64 = 2009, // 64 x 64
-    TXT_EDITOR_96_BY_96 = 2010, // 96 x 96
-    TXT_EDITOR_126_BY_64 = 2011, // 126 x 64
-    TXT_EDITOR_64_BY_126 = 2012, // 64 x 126
-    TXT_EDITOR_TEMPERATE = 2013, // Temperate
-    TXT_EDITOR_SNOW = 2014, // Snow
-    TXT_EDITOR_RIDGES = 2015, // Ridges
-    TXT_EDITOR_TREES = 2016, // Trees
-    TXT_EDITOR_DEBRIS = 2017, // Debris
-    TXT_EDITOR_UNABLE_TO_READ = 2018, // Unable to read scenario!
-    TXT_EDITOR_SCENARIO_LOADED = 2019, // Scenario Loaded
-    TXT_EDITOR_SCENARIO_SAVED = 2020, // Scenario Saved.
-    TXT_EDITOR_OBSOLETE_SCENARIO = 2021, // Obsolete Scenario.
-    TXT_EDITOR_ASK_REPLACE = 2022, // Do you wish to replace the existing scenario named %s?
-    TXT_EDITOR_LOW_DISK_SPACE = 2023, // Insufficient disk space to save scenario.  Please delete a previous scenario to free
-                                      // up some disk space and try again.
-    TXT_EDITOR_SELECT_TILE = 2024, // Select Tile
-    TXT_EDITOR_ASK_UNSAVED_NEW = 2025, // You have not saved your changes!  Create a new map?
-    TXT_EDITOR_DELETE_MAP = 2026, // Delete Map
-    TXT_EDITOR_ASK_DELETE = 2027, // Are you sure you wish to delete this scenario?
-    TXT_EDITOR_MAP_DESCRIPTION = 2025, // Map Description
-    TXT_EDITOR_PASSABLE = 2029, // Passable
-    TXT_EDITOR_CONFIRMATION = 2030, // Confirmation
-    TXT_EDITOR_ASK_RESIZE = 2031, // Portions of the map that don't fit on the new size will be deleted!  Resize the map?
-    TXT_EDITOR_SCROLL_RATE = 2032, // Change Scroll Rate
-    TXT_EDITOR_LOADING_MAP = 2033, // Loading Map
-    TXT_EDITOR_NO_MORE_AVAILABLE = 2034, // No more objects of this type are available.
-    TXT_EDITOR_FAILED_INIT_TIMER = 2035, // Unable to to initialize system timer.  Please restart windows.
-    TXT_EDITOR_STARTUP_ERROR = 2036, // Startup Error
-    TXT_EDITOR_TILESET_PAGE = 2037, // Page %d of %d
-    TXT_EDITOR_CURRENT_MAP = 2038, // Current Map: %s
-    TXT_EDITOR_CURRENT_MAP_UNTITLED = 2039, // Current Map: Untitled
-
-    TXT_EDITOR_LAST = 2999,
+    TXT_EDITOR_LOAD_MAP, // Load Map
+    TXT_EDITOR_SAVE_MAP, // Save Map
+    TXT_EDITOR_MODIFY_MAP, // Modify Map Info
+    TXT_EDITOR_RESUME_EDITING, // Resume Editing
+    TXT_EDITOR_QUIT_EDITOR, // Quit Editor
+    TXT_EDITOR_UNSAVED_LOAD_FILE, // You have not saved your changes!  Load Another file?
+    TXT_EDITOR_UNSAVED_EXIT_EDITOR, // You have not saved your changes!  Exit Scenario Editor?
+    TXT_EDITOR_EXIT_EDITOR, // Exit Scenario Editor?
+    TXT_EDITOR_64_BY_64, // 64 x 64
+    TXT_EDITOR_96_BY_96, // 96 x 96
+    TXT_EDITOR_126_BY_64, // 126 x 64
+    TXT_EDITOR_64_BY_126, // 64 x 126
+    TXT_EDITOR_TEMPERATE, // Temperate
+    TXT_EDITOR_SNOW, // Snow
+    TXT_EDITOR_RIDGES, // Ridges
+    TXT_EDITOR_TREES, // Trees
+    TXT_EDITOR_DEBRIS, // Debris
+    TXT_EDITOR_UNABLE_TO_READ, // Unable to read scenario!
+    TXT_EDITOR_SCENARIO_LOADED, // Scenario Loaded
+    TXT_EDITOR_SCENARIO_SAVED, // Scenario Saved.
+    TXT_EDITOR_OBSOLETE_SCENARIO, // Obsolete Scenario.
+    TXT_EDITOR_ASK_REPLACE, // Do you wish to replace the existing scenario named %s?
+    TXT_EDITOR_LOW_DISK_SPACE, // Insufficient disk space to save scenario.  Please delete a previous scenario to free up some disk space and try again.
+    TXT_EDITOR_SELECT_TILE, // Select Tile
+    TXT_EDITOR_ASK_UNSAVED_NEW, // You have not saved your changes!  Create a new map?
+    TXT_EDITOR_DELETE_MAP, // Delete Map
+    TXT_EDITOR_ASK_DELETE, // Are you sure you wish to delete this scenario?
+    TXT_EDITOR_MAP_DESCRIPTION, // Map Description
+    TXT_EDITOR_PASSABLE, // Passable
+    TXT_EDITOR_CONFIRMATION, // Confirmation
+    TXT_EDITOR_ASK_RESIZE, // Portions of the map that don't fit on the new size will be deleted!  Resize the map?
+    TXT_EDITOR_SCROLL_RATE, // Change Scroll Rate
+    TXT_EDITOR_LOADING_MAP, // Loading Map
+    TXT_EDITOR_NO_MORE_AVAILABLE, // No more objects of this type are available.
+    TXT_EDITOR_FAILED_INIT_TIMER, // Unable to to initialize system timer.  Please restart windows.
+    TXT_EDITOR_STARTUP_ERROR, // Startup Error
+    TXT_EDITOR_TILESET_PAGE, // Page %d of %d
+    TXT_EDITOR_CURRENT_MAP, // Current Map: %s
+    TXT_EDITOR_CURRENT_MAP_UNTITLED, // Current Map: Untitled
 
     TXT_EDITOR_COUNT = 40,
+    TXT_EDITOR_FIRST = TXT_EDITOR_NEW_MAP,
 
     //
-    //
+    // Chronoshift Strings.
     //
     TXT_ADDITIONAL_MAGIC_NUM = 3000, //
-
-    TXT_ADDITIONAL_FIRST = 3000, //
 
     TXT_ADDITIONAL_CS_MISSIONS = 3000, // Counterstrike Missions
     TXT_ADDITIONAL_AM_MISSIONS, // = 3001,     // Aftermath Missions
@@ -713,7 +735,7 @@ enum TextEnum
 
     TXT_ADDITIONAL_BASE_DEFENSES_OFFLINE, // = 3022,     // Low Power: Base defenses offline
 
-    TXT_ADDITIONAL_RAPP_TODO, // = 3023,     // << !! RA++ TODO !! >>
+    TXT_ADDITIONAL_CHRONOSHIFT_TODO, // = 3023,     // << !! Chronoshift TODO !! >>
 
     // Keyboard Command Categories
     TXT_ADDITIONAL_CONTROL, // = ,     // Control
@@ -732,12 +754,11 @@ enum TextEnum
     TXT_ADDITIONAL_DEPLOY_OBJECT, // = ,     // Deploy Object
     TXT_ADDITIONAL_DEPLOY_OBJECT_DESC, // = ,     // Deploy selected object(s).
 
-    TXT_ADDITIONAL_LAST = 3999, //
-
     TXT_ADDITIONAL_COUNT = 3999,
+    TXT_ADDITIONAL_FIRST = TXT_ADDITIONAL_CS_MISSIONS,
 
     //
-    //
+    // 
     //
     TXT_MPMAP_MAGIC_NUM = 5000, //
 
@@ -745,24 +766,33 @@ enum TextEnum
 
 };
 
+// clang-format on
+
 enum LanguageType
 {
-    LANGUAGE_NONE = -1,
     LANGUAGE_ENGLISH,
     LANGUAGE_FRENCH,
     LANGUAGE_GERMAN,
     LANGUAGE_ITALIAN,
     LANGUAGE_SPANISH,
+    LANGUAGE_JAPANESE,
+
     LANGUAGE_COUNT,
+
+    LANGUAGE_NONE = -1,
 };
 
 extern LanguageType Language;
 extern const char *MissionStr[];
 extern const char TXT_CS_MISSIONS[];
 extern const char TXT_AM_MISSIONS[];
+extern const char TXT_ABOUT[];
 extern const char TXT_MORE_1[];
 extern const char TXT_MORE_2[];
 extern const char TXT_CONFIRM_QUIT[];
+extern const char TXT_CHRONOSHIFT_TITLE[];
+extern const char TXT_CHRONOSHIFT_NOTE[];
+extern const char TXT_CHRONOSHIFT_WEBSITE[];
 
 bool Init_Language();
 const char *Language_Name(const char *filename);

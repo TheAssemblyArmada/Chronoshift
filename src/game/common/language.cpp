@@ -30,14 +30,29 @@ int *NameIDOverride = reinterpret_cast<int *>(0x006661D0);
 #else
 char *GameStrings = nullptr;
 char *DebugStrings = nullptr;
-char *NameOverride[25];
-int NameIDOverride[25];
+char *NameOverride[NAME_OVERRIDE_MAX];
+int NameIDOverride[NAME_OVERRIDE_MAX];
 #endif
 
 char *EditorStrings = nullptr;
+char *NewGameStrings = nullptr; // Chronshift strings table.
+
 LanguageType Language = LANGUAGE_ENGLISH;
 
-const char *MissionStr[] = { "Coastal Influence (Med)",
+const char TXT_CS_MISSIONS[] = { "Counterstrike Missions" };
+const char TXT_AM_MISSIONS[] = { "Aftermath Missions" };
+const char TXT_ABOUT[] = { "About" };
+const char TXT_MORE_1[] = { "--More--" };
+const char TXT_MORE_2[] = { "<MORE>" };
+const char TXT_CONFIRM_QUIT[] = { "Are you sure you want to quit?" };
+const char TXT_CHRONOSHIFT_TITLE[] = { "Chronoshit" };
+const char TXT_CHRONOSHIFT_NOTE[] = { "Powered by Chronoshit" };
+const char TXT_CHRONOSHIFT_WEBSITE[] = { "https://github.com/TheAssemblyArmada/Chronoshift" };
+
+// clang-format off
+
+const char *MissionStr[] = {
+    "Coastal Influence (Med)",
     "Middle Mayhem (Sm)",
     "Equal Opportunity (Sm)",
     "Marooned II (Med)",
@@ -266,56 +281,49 @@ const char *MissionStr[] = { "Coastal Influence (Med)",
     "Waterloo Revisited (Lg 6 players)",
     "Water Werks (Mega 8 players)",
     "Warlord's Lake (Sm 4 players)",
-    "Zama (Sm 4 players)" };
+    "Zama (Sm 4 players)"
+};
 
-// TODO Create new Chronoshift specific string table to hold these hard coded strings.
-const char TXT_CS_MISSIONS[] = { "Counterstrike Missions" };
-const char TXT_AM_MISSIONS[] = { "Aftermath Missions" };
-const char TXT_MORE_1[] = { "--More--" };
-const char TXT_MORE_2[] = { "<MORE>" };
-const char TXT_CONFIRM_QUIT[] = { "Are you sure you want to quit Chronoshift?" };
+// clang-format on
 
 bool Init_Language()
 {
-    // Load System string table
-    DEBUG_LOG("Bootstrap() - Loading Game Strings...\n");
-    GameFileClass gamestr_file;
-    gamestr_file.Set_Name(Language_Name("CONQUER"));
-
-    if (gamestr_file.Is_Available()) {
-        GameStrings = (char *)GameFileClass::Retrieve(Language_Name("CONQUER"));
-    } else {
-        DEBUG_LOG("Failed to find string file %s.\n", Language_Name("CONQUER"));
-        GameStrings = nullptr;
+    // Load Game string table.
+    DEBUG_LOG("Init_Language() - Loading Game Strings...\n");
+    const char *filename = Language_Name("conquer");
+    GameStrings = (char *)GameFileClass::Retrieve(filename);
+    if (GameStrings == nullptr) {
+        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
+        return false;
     }
 
-    gamestr_file.Close();
-
-    // Load Editor string table
-    DEBUG_LOG("Bootstrap() - Loading Editor Strings...\n");
-    GameFileClass edstr_file;
-    edstr_file.Set_Name(Language_Name("EDITOR"));
-
-    if (edstr_file.Is_Available()) {
-        EditorStrings = (char *)GameFileClass::Retrieve(Language_Name("EDITOR"));
-    } else {
-        DEBUG_LOG("Failed to find string file %s.\n", Language_Name("EDITOR"));
-        EditorStrings = nullptr;
+    // Load System string table.
+    DEBUG_LOG("Init_Language() - Loading Chronoshift Strings...\n");
+    filename = Language_Name("chonoshift");
+    NewGameStrings = (char *)GameFileClass::Retrieve(filename);
+    if (NewGameStrings == nullptr) {
+        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
+        return false;
     }
-    edstr_file.Close();
 
-    // Load Debug string table
+    // Load Editor string table.
+#if defined(CHRONOSHIFT_MAP_EDITOR)
+    DEBUG_LOG("Init_Language() - Loading Editor Strings...\n");
+    filename = Language_Name("editor");
+    EditorStrings = (char *)GameFileClass::Retrieve(filename);
+    if (EditorStrings == nullptr) {
+        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
+    }
+#endif // CHRONOSHIFT_MAP_EDITOR
+
+    // Load Debug string table.
 #if defined(CHRONOSHIFT_DEBUG)
-    DEBUG_LOG("Bootstrap() - Loading Debug Strings...\n");
-    GameFileClass dbgstr_file;
-    dbgstr_file.Set_Name(Language_Name("DEBUG"));
-    if (dbgstr_file.Is_Available()) {
-        DebugStrings = (char *)GameFileClass::Retrieve(Language_Name("DEBUG"));
-    } else {
-        DEBUG_LOG("Failed to find string file %s.\n", Language_Name("DEBUG"));
-        DebugStrings = nullptr;
+    DEBUG_LOG("Init_Language() - Loading Debug Strings...\n");
+    filename = Language_Name("debug");
+    DebugStrings = (char *)GameFileClass::Retrieve(filename);
+    if (DebugStrings == nullptr) {
+        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
     }
-    dbgstr_file.Close();
 #endif // CHRONOSHIFT_DEBUG
 
     return GameStrings != nullptr;
@@ -334,19 +342,27 @@ const char *Language_Name(const char *filename)
         switch (Language) {
             default: // Fallthrough.
             case LANGUAGE_ENGLISH:
-                snprintf(_fullname, sizeof(_fullname), "%s.ENG", filename);
+                snprintf(_fullname, sizeof(_fullname), "%s.eng", filename);
                 break;
 
             case LANGUAGE_FRENCH:
-                snprintf(_fullname, sizeof(_fullname), "%s.FRE", filename);
+                snprintf(_fullname, sizeof(_fullname), "%s.fre", filename);
                 break;
 
             case LANGUAGE_GERMAN:
-                snprintf(_fullname, sizeof(_fullname), "%s.GER", filename);
+                snprintf(_fullname, sizeof(_fullname), "%s.ger", filename);
                 break;
 
             case LANGUAGE_SPANISH:
-                snprintf(_fullname, sizeof(_fullname), "%s.SPN", filename);
+                snprintf(_fullname, sizeof(_fullname), "%s.spn", filename);
+                break;
+
+            case LANGUAGE_ITALIAN:
+                snprintf(_fullname, sizeof(_fullname), "%s.ita", filename);
+                break;
+
+            case LANGUAGE_JAPANESE:
+                snprintf(_fullname, sizeof(_fullname), "%s.jap", filename);
                 break;
         }
 
@@ -381,6 +397,14 @@ const char *Get_Language_Char()
         case LANGUAGE_SPANISH:
             strcpy(_char, "S");
             break;
+
+        case LANGUAGE_ITALIAN:
+            strcpy(_char, "I");
+            break;
+
+        case LANGUAGE_JAPANESE:
+            strcpy(_char, "J");
+            break;
     }
 
     return _char;
@@ -388,21 +412,28 @@ const char *Get_Language_Char()
 
 const char *Fetch_String(int str_id)
 {
+    if (str_id >= TXT_ADDITIONAL_FIRST) {
+        str_id -= TXT_ADDITIONAL_MAGIC_NUM; // ground the value to be zero based.
+        DEBUG_ASSERT(str_id < (TXT_ADDITIONAL_FIRST + TXT_ADDITIONAL_COUNT));
+        DEBUG_ASSERT(NewGameStrings != nullptr);
+        return Extract_String(NewGameStrings, str_id);
+    }
+
     if (str_id >= TXT_EDITOR_FIRST) {
-        str_id -= TXT_EDITOR_MAGIC_NUM; // ground the value to zero based
+        str_id -= TXT_EDITOR_MAGIC_NUM; // ground the value to be zero based.
         DEBUG_ASSERT(str_id < (TXT_EDITOR_FIRST + TXT_EDITOR_COUNT));
         DEBUG_ASSERT(EditorStrings != nullptr);
         return Extract_String(EditorStrings, str_id);
     }
 
     if (str_id >= TXT_DEBUG_FIRST) {
-        str_id -= TXT_DEBUG_MAGIC_NUM; // ground the value to zero based
+        str_id -= TXT_DEBUG_MAGIC_NUM; // ground the value to be zero based.
         DEBUG_ASSERT(str_id < (TXT_DEBUG_FIRST + TXT_DEBUG_COUNT));
         DEBUG_ASSERT(DebugStrings != nullptr);
         return Extract_String(DebugStrings, str_id);
     }
 
-    if (str_id < TXT_FIRST && std::abs(str_id) < 25) {
+    if (str_id < TXT_FIRST && std::abs(str_id) < NAME_OVERRIDE_MAX) {
         return NameOverride[-(str_id + 1)];
     }
 

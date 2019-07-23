@@ -17,6 +17,7 @@
 #include "expansion.h"
 #include "gitverinfo.h"
 #include "rawfile.h"
+#include "language.h"
 #include <cstdio>
 #include <cstring>
 
@@ -89,8 +90,8 @@ const char *VersionClass::Version_String()
         }
 
         snprintf(_buffer, sizeof(_buffer), "%d.%02d", Major_Version(), Minor_Version());
-        // TODO, this should change based on current language.
-        strlcat(_buffer, "E", sizeof(_buffer));
+
+        strlcat(_buffer, Get_Language_Char(), sizeof(_buffer));
 
         if (Is_Counterstrike_Installed()) {
             strlcat(_buffer, "CS", sizeof(_buffer));
