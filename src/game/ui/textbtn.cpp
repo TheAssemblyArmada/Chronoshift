@@ -35,19 +35,7 @@ TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType 
     ButtonText(string)
 {
     Set_Style(style);
-
-    // If we got invalid width and height values, calc them from string.
-    if (w == -1 || h == -1) {
-        Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, TextStyle);
-
-        if (w == -1) {
-            Width = String_Pixel_Width(ButtonText) + 8;
-        }
-
-        if (h == -1) {
-            Height = g_fontYSpacing + g_fontHeight + 2;
-        }
-    }
+    Calculate_Button_Size(w, h);
 }
 
 TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w, int h, BOOL outline) :
@@ -59,19 +47,7 @@ TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, i
 {
     Set_Style(style);
     Set_Text(str_id, false);
-
-    // If we got invalid width and height values, calc them from string.
-    if (w == -1 || h == -1) {
-        Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, TextStyle);
-
-        if (w == -1) {
-            Width = String_Pixel_Width(ButtonText) + 8;
-        }
-
-        if (h == -1) {
-            Height = g_fontYSpacing + g_fontHeight + 2;
-        }
-    }
+    Calculate_Button_Size(w, h);
 }
 
 TextButtonClass::TextButtonClass(TextButtonClass &that) :
@@ -124,30 +100,15 @@ void TextButtonClass::Set_Text(int str_id, BOOL adjust)
     }
 }
 
-void TextButtonClass::Set_Style(TextPrintType style)
-{
-    TextStyle = style;
-}
-
 void TextButtonClass::Draw_Background()
 {
     BoxStyleEnum style;
 
     if (HasOutline) {
         g_logicPage->Draw_Rect(XPos - 1, YPos - 1, Width + XPos + 2, Height + YPos + 2, COLOR_BLACK);
-
-        // Draw an drop shadow underneath the button if required.
-        //if (HasShadow) {
-        //    LogicPage->Draw_Line(Width + XPos + 2, YPos, Width + XPos + 2, Height + YPos + 2, ShadowColor);
-        //    LogicPage->Draw_Line(XPos, Height + YPos + 2, Width + XPos + 2, Height + YPos + 2, ShadowColor);
-        //}
-
-        // Draw an outline around the button if required.
-        //if (FilledBackground) {
-        //    LogicPage->Fill_Rect(XPos - 1, YPos - 1, Width + XPos + 2, Height + YPos + 2, OutlineColor);
-        //}
     }
-        // Select required box style based on button state.
+
+    // Select required box style based on button state.
     if (IsDisabled) {
         style = BOX_STYLE_4;
     } else {
@@ -168,16 +129,32 @@ void TextButtonClass::Draw_Text(const char *string)
     if (ButtonText != nullptr) {
         if (!IsDisabled) {
             if (Toggle_Boolean1 || ToggleState) {
-                style = style | TPF_USE_BRIGHT | TPF_USE_GRAD_PAL;
+                style |= TPF_USE_BRIGHT | TPF_USE_GRAD_PAL;
             } else {
-                style = style | TPF_USE_MEDIUM | TPF_USE_GRAD_PAL;
+                style |= TPF_USE_MEDIUM | TPF_USE_GRAD_PAL;
             }
         }
 
         // Set the text alignment to the center
-        style = style | TPF_CENTER;
+        style |= TPF_CENTER;
 
         // Print the button text!
         Fancy_Text_Print(string, (Width / 2) + XPos - 1, YPos + 1, GadgetClass::ColorScheme, COLOR_TBLACK, style);
+    }
+}
+
+void TextButtonClass::Calculate_Button_Size(int w, int h)
+{
+    // If we got invalid width and height values, calc them from string.
+    if (w == -1 || h == -1) {
+        Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, TextStyle);
+
+        if (w == -1) {
+            Width = String_Pixel_Width(ButtonText) + 8;
+        }
+
+        if (h == -1) {
+            Height = g_fontYSpacing + g_fontHeight + 2;
+        }
     }
 }

@@ -27,8 +27,8 @@ class TextButtonClass : public ToggleClass
 {
 public:
     TextButtonClass();
-    TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL outline = true);
-    TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL outline = true);
+    TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL outline = false);
+    TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w = -1, int h = -1, BOOL outline = false);
     TextButtonClass(TextButtonClass &that);
     virtual ~TextButtonClass() {}
 
@@ -37,13 +37,16 @@ public:
     virtual BOOL Draw_Me(BOOL redraw) override;
     virtual void Set_Text(const char *string, BOOL adjust = true);
     virtual void Set_Text(int str_id, BOOL adjust = true);
-    virtual void Set_Style(TextPrintType style);
+    virtual void Set_Style(TextPrintType style) { TextStyle = style; }
     virtual void Draw_Background();
     virtual void Draw_Text(const char *string);
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();
 #endif
+
+private:
+    void Calculate_Button_Size(int w, int h);
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -65,9 +68,6 @@ protected:
 #endif
     const char *ButtonText;
     TextPrintType TextStyle;
-
-    // uint8_t OutlineColor;
-    // uint8_t ShadowColor;
 };
 
 
@@ -80,8 +80,6 @@ inline TextButtonClass &TextButtonClass::operator=(TextButtonClass &that)
         HasOutline = that.HasOutline;
         ButtonText = that.ButtonText;
         TextStyle = that.TextStyle;
-        //OutlineColor = that.OutlineColor;
-        //ShadowColor = that.ShadowColor;
     }
 
     return *this;
