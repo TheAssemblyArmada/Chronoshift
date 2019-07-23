@@ -72,15 +72,7 @@ public:
     fixed_t Speeds[SPEED_COUNT];
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Buildable : 1; // & 1
-        };
-        int Bitfield;
-    };
+    BOOL Buildable : 1; // & 1
 #else
     bool Buildable; // Can buildings be built upon this terrain [def = false]?
 #endif

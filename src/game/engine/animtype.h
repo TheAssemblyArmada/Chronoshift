@@ -66,23 +66,15 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_Normalized : 1; // Should the animation speed be adjusted to appear at a consistent speed (def = false)?
-            bool m_Surface : 1; // Is this animation at ground level (def = false)?
-            bool m_Translucent : 1; // Is this animation translucent in appearence (def = false)?
-            bool m_Bit_8 : 1; // AltPalette = Does it use an alternate drawing palette (def = false)?
-            bool m_Flamer : 1; // Flamer = Does this animation leave flames after it is gone [e.g., napalm] (def = false)?
-            bool m_Scorch : 1; // Does this animation scorch the ground [e.g., napalm does this] (def = false)?
-            bool m_Crater : 1; // Does this form a crater [e.g., artillery does this] (def = false)?
-            bool m_Sticky : 1; // Sticky = Animation sticks to unit in cell (def = false)? C&C uses this for BOAT
-            bool m_Theater : 1; // Does it have theater specific imagery (def = false)?
-        };
-        int Bitfield;
-    };
+    BOOL m_Normalized : 1;
+    BOOL m_Surface : 1;
+    BOOL m_Translucent : 1;
+    BOOL m_Bit_8 : 1;
+    BOOL m_Flamer : 1;
+    BOOL m_Scorch : 1;
+    BOOL m_Crater : 1;
+    BOOL m_Sticky : 1;
+    BOOL m_Theater : 1;
 #else
     bool m_Normalized; // Should the animation speed be regulated/adjusted to appear at a consistent speed (def = false)?
     bool m_Surface; // Is this animation at ground level (def = false)?

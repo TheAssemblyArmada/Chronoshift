@@ -58,49 +58,41 @@ private:
     GamePtr<HouseClass> m_Owner;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_Bit1_1 : 1; // 1
-            bool m_Bit1_2 : 1; // 2
-            bool m_Bit1_4 : 1; // 4
-            bool m_ForcedActive : 1; // 8
-            bool m_Bit1_16 : 1; // 16
-            bool m_Bit1_32 : 1; // 32
-            bool m_Bit1_64 : 1; // 64
-            bool m_Bit1_128 : 1; // 128
+    BOOL m_Bit1_1 : 1; // 1
+    BOOL m_Bit1_2 : 1; // 2
+    BOOL m_Bit1_4 : 1; // 4
+    BOOL m_ForcedActive : 1; // 8
+    BOOL m_Bit1_16 : 1; // 16
+    BOOL m_Bit1_32 : 1; // 32
+    BOOL m_Bit1_64 : 1; // 64
+    BOOL m_Bit1_128 : 1; // 128
 
-            bool m_Bit2_1 : 1; // 1
-            bool m_Bit2_2 : 1; // 2
-            bool m_Bit2_4 : 1; // 4
-            bool m_Bit2_8 : 1; // 8
-            bool m_Bit2_16 : 1; // 16
-            bool m_Bit2_32 : 1; // 32
-            bool m_Bit2_64 : 1; // 64
-            bool m_Bit2_128 : 1; // 128
-        };
-        int m_Bitfield;
-    };
+    BOOL m_Bit2_1 : 1; // 1
+    BOOL m_Bit2_2 : 1; // 2
+    BOOL m_Bit2_4 : 1; // 4
+    BOOL m_Bit2_8 : 1; // 8
+    BOOL m_Bit2_16 : 1; // 16
+    BOOL m_Bit2_32 : 1; // 32
+    BOOL m_Bit2_64 : 1; // 64
+    BOOL m_Bit2_128 : 1; // 128
 #else
-    bool m_Bit1_1 : 1;
-    bool m_Bit1_2 : 1;
-    bool m_Bit1_4 : 1;
-    bool m_ForcedActive : 1;
-    bool m_Bit1_16 : 1;
-    bool m_Bit1_32 : 1;
-    bool m_Bit1_64 : 1;
-    bool m_Bit1_128 : 1;
+    bool m_Bit1_1;
+    bool m_Bit1_2;
+    bool m_Bit1_4;
+    bool m_ForcedActive;
+    bool m_Bit1_16;
+    bool m_Bit1_32;
+    bool m_Bit1_64;
+    bool m_Bit1_128;
 
-    bool m_Bit2_1 : 1;
-    bool m_Bit2_2 : 1;
-    bool m_Bit2_4 : 1;
-    bool m_Bit2_8 : 1;
-    bool m_Bit2_16 : 1;
-    bool m_Bit2_32 : 1;
-    bool m_Bit2_64 : 1;
-    bool m_Bit2_128 : 1;
+    bool m_Bit2_1;
+    bool m_Bit2_2;
+    bool m_Bit2_4;
+    bool m_Bit2_8;
+    bool m_Bit2_16;
+    bool m_Bit2_32;
+    bool m_Bit2_64;
+    bool m_Bit2_128;
 #endif
 
     target_t m_field_21;

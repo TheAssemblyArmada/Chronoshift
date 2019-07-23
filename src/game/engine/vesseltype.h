@@ -75,15 +75,7 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_UnkBool : 1; // & 1 Unknown, may relate to TS ini entry "Rotates".
-        };
-        int Bitfield;
-    };
+    BOOL m_UnkBool : 1; // & 1 Unknown, may relate to TS ini entry "Rotates".
 #else
     bool m_UnkBool; // Unknown, may relate to TS ini entry "Rotates".
 #endif

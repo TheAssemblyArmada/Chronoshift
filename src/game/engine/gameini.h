@@ -175,15 +175,7 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool DigestValid : 1; // & 1
-        };
-        int Bitfield;
-    };
+    BOOL DigestValid : 1; // & 1
 #else
     bool DigestValid;
 #endif

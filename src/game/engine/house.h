@@ -222,42 +222,34 @@ private:
     HousesType m_ActsLike;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_IsActive : 1; // 1
-            bool m_IsHuman : 1; // 2
-            bool m_PlayerControl : 1; // 4
-            bool m_Production : 1; // 8
-            bool m_Autocreate : 1; // 16
-            bool m_AutoBaseAI : 1; // 32
-            bool m_Discovered : 1; // 64
-            bool m_MaxCapacity : 1; // 128
+    BOOL m_IsActive : 1; // 1
+    BOOL m_IsHuman : 1; // 2
+    BOOL m_PlayerControl : 1; // 4
+    BOOL m_Production : 1; // 8
+    BOOL m_Autocreate : 1; // 16
+    BOOL m_AutoBaseAI : 1; // 32
+    BOOL m_Discovered : 1; // 64
+    BOOL m_MaxCapacity : 1; // 128
 
-            bool m_Defeated : 1; // 1
-            bool m_ToDie : 1; // 2
-            bool m_ToWin : 1; // 4
-            bool m_ToLose : 1; // 8
-            bool m_CivEvac : 1; // 16
-            bool m_RecalcNeeded : 1; // 32
-            bool m_Visionary : 1; // 64
-            bool m_OreShort : 1; // 128
+    BOOL m_Defeated : 1; // 1
+    BOOL m_ToDie : 1; // 2
+    BOOL m_ToWin : 1; // 4
+    BOOL m_ToLose : 1; // 8
+    BOOL m_CivEvac : 1; // 16
+    BOOL m_RecalcNeeded : 1; // 32
+    BOOL m_Visionary : 1; // 64
+    BOOL m_OreShort : 1; // 128
 
-            bool m_Spied : 1; // 1
-            bool m_Infiltrated : 1; // 2
-            bool m_Repairing : 1; // 4
-            bool m_MapIsClear : 1; // 8
-            bool m_BuiltSomething : 1; // 16
-            bool m_Resigned : 1; // 32
-            bool m_GaveUp : 1; // 64
-            bool m_Paranoid : 1; // 128
+    BOOL m_Spied : 1; // 1
+    BOOL m_Infiltrated : 1; // 2
+    BOOL m_Repairing : 1; // 4
+    BOOL m_MapIsClear : 1; // 8
+    BOOL m_BuiltSomething : 1; // 16
+    BOOL m_Resigned : 1; // 32
+    BOOL m_GaveUp : 1; // 64
+    BOOL m_Paranoid : 1; // 128
 
-            bool m_AllToLook : 1; // 1
-        };
-        int m_Bitfield;
-    };
+    BOOL m_AllToLook : 1; // 1
 #else
     bool m_IsActive; // Is this object allocated and active for use? (def = false)
                      // NOTE: This should be set to true on class creation.

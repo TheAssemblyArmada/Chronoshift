@@ -120,22 +120,13 @@ private:
 private:
     char *m_fileName;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_hasChecksum : 1;
-            bool m_isEncrypted : 1;
-            bool m_isAllocated : 1;
-        };
-        int m_flags;
-    };
+    BOOL m_hasChecksum : 1;
+    BOOL m_isEncrypted : 1;
+    BOOL m_isAllocated : 1;
 #else
     bool m_hasChecksum;
     bool m_isEncrypted;
     bool m_isAllocated;
-    bool m_useObscureHash;
 #endif
     int m_fileCount;
     int m_fileSize; // size of the body, not including this header and the index.

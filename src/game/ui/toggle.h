@@ -44,17 +44,9 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Toggle_Boolean1 : 1; // & 1
-            bool ToggleState : 1; // & 2
-            bool ToggleDisabled : 1; // & 4
-        };
-        int m_toggleFlags;
-    };
+    BOOL Toggle_Boolean1 : 1; // & 1
+    BOOL ToggleState : 1; // & 2
+    BOOL ToggleDisabled : 1; // & 4
 #else
     bool Toggle_Boolean1;
     bool ToggleState;

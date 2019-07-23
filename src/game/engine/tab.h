@@ -65,17 +65,9 @@ class TabClass : public SidebarClass
         int Available;
         int Credits;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-        // Union/Struct required to get correct packing when compiler packing set to 1.
-        union
-        {
-            struct
-            {
-                bool CreditToRedraw : 1; // & 1
-                bool CreditHasIncreased : 1; // & 2
-                bool CreditHasChanged : 1; // & 4
-            };
-            int Bitfield;
-        };
+        BOOL CreditToRedraw : 1; // & 1
+        BOOL CreditHasIncreased : 1; // & 2
+        BOOL CreditHasChanged : 1; // & 4
 #else
         bool CreditToRedraw;
         bool CreditHasIncreased;
@@ -108,15 +100,7 @@ protected:
     CreditClass CreditDisplay;
     TCountDownTimerClass<FrameTimerClass> TimerFlashTimer;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool TabToRedraw : 1; // 1
-        };
-        int Bitfield;
-    };
+    BOOL TabToRedraw : 1; // 1
 #else
     bool TabToRedraw;
 #endif

@@ -196,23 +196,15 @@ private:
     fixed_t Saturation;
     fixed_t Contrast;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool AutoScroll : 1; // & 1
-            bool ScoreRepeats : 1; // & 2
-            bool ScoreShuffles : 1; // & 4
-            bool PaletteScroll : 1; // & 8
-            bool FreeScrolling : 1; // & 16 Chronoshift option.
-            bool DeathAnnounce : 1; // & 32 Chronoshift option.
-            bool AllowSidebarToggle : 1; // & 64 Chronoshift option.
-            bool CounterstrikeEnabled : 1; // & 128 Chronoshift option.
-            bool AftermathEnabled : 1; // & 256 Chronoshift option.
-        };
-        int Bitfield;
-    };
+    BOOL AutoScroll : 1; // & 1
+    BOOL ScoreRepeats : 1; // & 2
+    BOOL ScoreShuffles : 1; // & 4
+    BOOL PaletteScroll : 1; // & 8
+    BOOL FreeScrolling : 1; // & 16 Chronoshift option.
+    BOOL DeathAnnounce : 1; // & 32 Chronoshift option.
+    BOOL AllowSidebarToggle : 1; // & 64 Chronoshift option.
+    BOOL CounterstrikeEnabled : 1; // & 128 Chronoshift option.
+    BOOL AftermathEnabled : 1; // & 256 Chronoshift option.
 #else
     bool AutoScroll;
     bool ScoreRepeats;

@@ -72,15 +72,7 @@ protected:
     int YSpacing; // horziontal line spacing.
     int ThumbSize; // this visible is a line count/page size.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-                   // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool HasScrollbar : 1; // & 1
-        };
-        int m_listFlags;
-    };
+    BOOL HasScrollbar : 1; // & 1
 #else
     bool HasScrollbar; // Does this List have a scroll bar for scrolling through the entries?
 #endif

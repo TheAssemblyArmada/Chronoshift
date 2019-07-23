@@ -186,22 +186,14 @@ private:
     cell_t CellNumber;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Bit1 : 1; // 1
-            bool PlacementCheck : 1; // 2
-            bool Visible : 1; // 4 // Is this cell at least partly visible due ot being next to a revealed or visible cell.
-            bool Revealed : 1; // 8 // Is this cell fully revealed and thus has no shroud at all.
-            bool Bit16 : 1; // 16    //Could be HasWaypoint?  HasCellTag?
-            bool Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
-            bool HasFlag : 1; // 64
-            bool Bit128 : 1; // 128 // HasFlag in C&C relates to Region here. Look like it marks a cell to advance shroud.
-        };
-        int Bitfield;
-    };
+    BOOL Bit1 : 1; // 1
+    BOOL PlacementCheck : 1; // 2
+    BOOL Visible : 1; // 4 // Is this cell at least partly visible due ot being next to a revealed or visible cell.
+    BOOL Revealed : 1; // 8 // Is this cell fully revealed and thus has no shroud at all.
+    BOOL Bit16 : 1; // 16    //Could be HasWaypoint?  HasCellTag?
+    BOOL Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
+    BOOL HasFlag : 1; // 64
+    BOOL Bit128 : 1; // 128 // HasFlag in C&C relates to Region here. Look like it marks a cell to advance shroud.
 #else
     bool Bit1;
     bool PlacementCheck;

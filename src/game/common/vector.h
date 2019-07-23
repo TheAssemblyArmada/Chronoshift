@@ -53,15 +53,7 @@ protected:
     T *Vector;
     int VectorMax;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool IsAllocated : 1; // & 1
-        };
-        int m_vectorFlags;
-    };
+    BOOL IsAllocated : 1;
 #else
     bool IsAllocated;
 #endif

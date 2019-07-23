@@ -57,15 +57,7 @@ private:
     int8_t Stage; // Number of stages between end states (open or closed).
     DoorState State; // Current processing state.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool StageComplete : 1;
-        };
-        int Bitfield; // This shouldn't be used in the code.
-    };
+    BOOL StageComplete : 1;
 #else
     bool StageComplete;
 #endif

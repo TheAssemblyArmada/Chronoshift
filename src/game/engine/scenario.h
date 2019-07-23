@@ -138,37 +138,30 @@ private:
     int BridgeCount;
     int CarryOverTime;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool _DestroyBridges : 1; // & 1 BridgeDestroyed?
-            bool _GlobalsChanged : 1; // & 2 VariablesChanged?
-            bool ToCarryOver : 1; // & 4
-            bool ToInherit : 1; // & 8
-            bool CivEvac : 1; // & 16
-            bool FadeOutBW : 1; // & 32 looks like FadeToBW
-            bool FadeInBW : 1; // & 64 and this looks like BWFadeReset
-            bool EndOfGame : 1; // & 128
-            bool TimerInherit : 1; // & 1
-            bool NoSpyPlane : 1; // & 2
-            bool SkipScore : 1; // & 4
-            bool OneTimeOnly : 1; // & 8
-            bool SkipMapSelect : 1; // & 16
-            bool TruckCrate : 1; // & 32
-            bool FillSilos : 1; // & 64
-        };
-        int Bitfield;
-    };
+    BOOL _DestroyBridges : 1; // & 1 BridgeDestroyed?
+    BOOL _GlobalsChanged : 1; // & 2 VariablesChanged?
+    BOOL ToCarryOver : 1; // & 4
+    BOOL ToInherit : 1; // & 8
+    BOOL CivEvac : 1; // & 16
+    BOOL FadeOutBW : 1; // & 32
+    BOOL FadeInBW : 1; // & 64
+    BOOL EndOfGame : 1; // & 128
+
+    BOOL TimerInherit : 1; // & 1
+    BOOL NoSpyPlane : 1; // & 2
+    BOOL SkipScore : 1; // & 4
+    BOOL OneTimeOnly : 1; // & 8
+    BOOL SkipMapSelect : 1; // & 16
+    BOOL TruckCrate : 1; // & 32
+    BOOL FillSilos : 1; // & 64
 #else
     bool _DestroyBridges; // BridgeDestroyed?
     bool _GlobalsChanged; // VariablesChanged?
     bool ToCarryOver;
     bool ToInherit;
     bool CivEvac;
-    bool FadeOutBW; // looks like FadeToBW
-    bool FadeInBW; // and this looks like BWFadeReset
+    bool FadeOutBW;
+    bool FadeInBW;
     bool EndOfGame;
     bool TimerInherit;
     bool NoSpyPlane;

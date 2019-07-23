@@ -131,17 +131,9 @@ protected:
     int Height;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool ToRedraw : 1; // & 1
-            bool IsSticky : 1; // & 2
-            bool IsDisabled : 1; // & 4
-        };
-        int m_gadgetFlags;
-    };
+    BOOL ToRedraw : 1; // & 1
+    BOOL IsSticky : 1; // & 2
+    BOOL IsDisabled : 1; // & 4
 #else
     bool ToRedraw;
     bool IsSticky;

@@ -151,27 +151,18 @@ class SidebarClass : public PowerClass
         int YPos; // 0x15 -654
         int WhichColumn; // 0x19 -650
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-        // Union/Struct required to get correct packing when compiler packing set to 1.
-        union
-        {
-            struct
-            {
-                // bitfield 0x1D
-                bool StripToRedraw : 1; // 1
-                bool Strip_Boolean2 : 1; // 2
-                bool Strip_Boolean4 : 1; // 4    //related to some direction?
-                bool Strip_Boolean8 : 1; // 8    //Flags if the icons are scrolling?
-                bool Strip_Boolean16 : 1; // 16
-                bool Strip_Boolean32 : 1; // 32
-            };
-            int Bitfield;
-        };
+        BOOL StripToRedraw : 1; // 1
+        BOOL Strip_Boolean2 : 1; // 2
+        BOOL Strip_Boolean4 : 1; // 4    // related to some direction?
+        BOOL Strip_Boolean8 : 1; // 8    // Flags if the icons are scrolling?
+        BOOL Strip_Boolean16 : 1; // 16
+        BOOL Strip_Boolean32 : 1; // 32
 #else
         // bitfield 0x1D
         bool StripToRedraw; // 1
         bool Strip_Boolean2; // 2
-        bool Strip_Boolean4; // 4    //related to some direction?
-        bool Strip_Boolean8; // 8    //Flags if the icons are scrolling?
+        bool Strip_Boolean4; // 4    // related to some direction?
+        bool Strip_Boolean8; // 8    // Flags if the icons are scrolling?
         bool Strip_Boolean16; // 16
         bool Strip_Boolean32; // 32
 #endif
@@ -221,19 +212,11 @@ public:
 protected:
     StripClass Columns[COLUMN_COUNT];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool SidebarIsDrawn : 1; // 1 when set to false, the sidebar is not drawn (for sidebar TAB hidding in C&C).
-            bool SidebarToRedraw : 1; // 2 buttons to redraw?
-            bool SidebarBit4 : 1; // 4 repair active
-            bool SidebarBit8 : 1; // 8 upgrade active
-            bool SidebarBit16 : 1; // 16 demolish active
-        };
-        int Bitfield;
-    };
+    BOOL SidebarIsDrawn : 1; // 1
+    BOOL SidebarToRedraw : 1; // 2 
+    BOOL SidebarBit4 : 1; // 4
+    BOOL SidebarBit8 : 1; // 8
+    BOOL SidebarBit16 : 1; // 16
 #else
     // bitfield 0x15F6
     bool SidebarIsDrawn; // when set to false, the sidebar is not drawn.(related to the sidebar TAB hidding in C&C)

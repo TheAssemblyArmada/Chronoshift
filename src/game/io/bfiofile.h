@@ -60,20 +60,12 @@ public:
 #endif
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_bufferAllocated : 1; // & 1
-            bool m_bufferedFileAvailable : 1; // & 2
-            bool m_bufferedFileOpen : 1; // & 4
-            bool m_bufferFull : 1; // & 8
-            bool m_uncommited : 1; // & 0x10
-            bool m_buffered : 1; // & 0x20
-        };
-        int m_bufferFlags;
-    };
+    BOOL m_bufferAllocated : 1; // & 1
+    BOOL m_bufferedFileAvailable : 1; // & 2
+    BOOL m_bufferedFileOpen : 1; // & 4
+    BOOL m_bufferFull : 1; // & 8
+    BOOL m_uncommited : 1; // & 0x10
+    BOOL m_buffered : 1; // & 0x20
 #else
     bool m_bufferAllocated;
     bool m_bufferedFileAvailable;

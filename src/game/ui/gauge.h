@@ -49,17 +49,9 @@ static void Hook_Me();
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool FillGauge : 1; // & 1
-            bool UseThumb : 1; // & 2
-            bool IsHorizontal : 1; // & 4
-        };
-        int m_gaugeFlags;
-    };
+    BOOL FillGauge : 1; // & 1
+    BOOL UseThumb : 1; // & 2
+    BOOL IsHorizontal : 1; // & 4
 #else
     bool FillGauge;
     bool UseThumb;

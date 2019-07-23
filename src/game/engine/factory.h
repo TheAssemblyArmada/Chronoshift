@@ -72,17 +72,9 @@ private:
     RTTIType m_RTTI;
     int m_HeapID;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_IsActive : 1; // 1
-            bool m_IsSuspended : 1; // 2
-            bool m_IsDifferent : 1; // 4
-        };
-        int m_Bitfield;
-    };
+    BOOL m_IsActive : 1; // 1
+    BOOL m_IsSuspended : 1; // 2
+    BOOL m_IsDifferent : 1; // 4
 #else
     bool m_IsActive;
     bool m_IsSuspended;

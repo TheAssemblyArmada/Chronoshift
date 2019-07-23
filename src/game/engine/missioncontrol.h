@@ -37,20 +37,12 @@ public:
 private:
     MissionType Mission; // The mission we control (def = MISSION_NONE).
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-                         // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool NoThreat : 1; // & 1 Is its weapons disabled and thus ignored as a potential target until fired upon (def = false)?
-            bool Zombie : 1; // & 2 Is forced to sit there like a zombie and never recovers (def = false)?
-            bool Recruitable : 1; // & 4 Can it be recruited into a team or base defense (def = true)?
-            bool Paralyzed : 1;    // & 8 Is the object frozen in place but can still fire and function (def = false)?
-            bool Retaliate : 1; // & 16 Is allowed to retaliate while on this mission (def = true)?
-            bool Scatter : 1; // & 32 Is allowed to scatter from threats (def = true)?
-        };
-        int Bitfield;
-    };
+    BOOL NoThreat : 1;
+    BOOL Zombie : 1;
+    BOOL Recruitable : 1;
+    BOOL Paralyzed : 1;
+    BOOL Retaliate : 1;
+    BOOL Scatter : 1;
 #else
     bool NoThreat; // Is its weapons disabled and thus ignored as a potential target until fired upon (def = false)?
     bool Zombie; // Is forced to sit there like a zombie and never recovers (def = false)?

@@ -94,16 +94,8 @@ private:
     int Width;// Width in cells
     int Height; // Height in cells
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Crater : 1; // 1 Crater smudges
-            bool Bib : 1; //2 Burn and Bib smudges
-        };
-        int Bitfield;
-    };
+    BOOL Crater : 1; // 1 Crater smudges
+    BOOL Bib : 1; //2 Burn and Bib smudges
 #else
     bool Crater; // Crater smudges
     bool Bib; // Burn and Bib smudges

@@ -84,17 +84,9 @@ protected:
     HousesType m_Owner;
     unsigned char m_Loops;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_Bit1 : 1; // 1
-            bool m_Bit2 : 1; // 2
-            bool m_Invisible : 1; // 4
-        };
-        int m_Bitfield;
-    };
+    BOOL m_Bit1 : 1; // 1
+    BOOL m_Bit2 : 1; // 2
+    BOOL m_Invisible : 1; // 4
 #else
     bool m_Bit1; // to remove / delete?
     bool m_Bit2; // skip process once?

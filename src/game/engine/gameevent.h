@@ -223,17 +223,9 @@ private:
     GameEventType m_Type; // The type for this object (def = EVENT_NONE).
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            unsigned int m_EventFrame : 26; //
-            unsigned int m_HouseID : 5; //
-            BOOL m_IsExecuted : 1; //
-        };
-        int m_Bitfield;
-    };
+    unsigned int m_EventFrame : 26; //
+    unsigned int m_HouseID : 5; //
+    BOOL m_IsExecuted : 1; //
 #else
     unsigned int m_EventFrame; // The frame this event was created on.
     unsigned int m_HouseID; // The id of the house that triggered this event.

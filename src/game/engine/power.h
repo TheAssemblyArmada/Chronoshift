@@ -54,15 +54,7 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool PowerToRedraw : 1; // 1
-        };
-        int Bitfield;
-    };
+    BOOL PowerToRedraw : 1; // 1
 #else
     bool PowerToRedraw;
 #endif

@@ -75,18 +75,10 @@ public:
     
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_Airplane : 1;
-            bool m_CustomRotor : 1;
-            bool m_Rotors : 1;
-            bool m_Transport : 1;
-        };
-        int Bitfield;
-    };
+    BOOL m_Airplane : 1;
+    BOOL m_CustomRotor : 1;
+    BOOL m_Rotors : 1;
+    BOOL m_Transport : 1;
 #else
     bool m_Airplane;
     bool m_CustomRotor;

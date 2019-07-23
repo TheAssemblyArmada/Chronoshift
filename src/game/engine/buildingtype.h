@@ -234,23 +234,15 @@ public:
     
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_BaseNormal : 1;
-            bool m_Fake : 1;
-            bool m_Bib : 1;
-            bool m_Wall : 1;
-            bool m_SimpleDamage : 1;
-            bool m_Capturable : 1;
-            bool m_Normalized : 1;
-            bool m_Powered : 1;
-            bool m_Unsellable : 1;
-        };
-        int Bitfield;
-    };
+    BOOL m_BaseNormal : 1; // & 1Considered for building adjacency checks (def = true)?
+    BOOL m_Fake : 1; // & 2 Is this a fake structure (def = false)?
+    BOOL m_Bib : 1; // & 4 Does the building have a bib built in (def = false)?
+    BOOL m_Wall : 1; // & 8 Is this a wall type structure [special rules apply] (def = false)?
+    BOOL m_SimpleDamage : 1; // & 16 Does building have simple damage imagery (def = true)?
+    BOOL m_Capturable : 1; // & 32 Can this building be infiltrated by a spy/thief/engineer (def = false)?
+    BOOL m_Normalized : 1; // & 64 Is nimation speed adjusted for a consistent speed (def = false)?
+    BOOL m_Powered : 1; // & 128 Does it require power to function (def = false)?
+    BOOL m_Unsellable : 1; // & 1 Cannot sell this building (even if it can be built) (def = false)?
 #else
     bool m_BaseNormal; // Considered for building adjacency checks (def = true)?
     bool m_Fake; // Is this a fake structure (def = false)?

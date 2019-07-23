@@ -95,27 +95,19 @@ public:
 protected:
     RemapType Remap;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool DoubleOwned : 1; // 1 Can be built/owned by all countries in a multiplayer game (def = false)?
-            bool IsInvisible : 1; // 2 confirmed or RadarVisible, depending on how its used.
-            bool IsLeader : 1; // 4 99.9% sure, its set when a object has a valid Primary with Damage greater than 0.
-            bool IsScanner : 1; // 8 In TS this is Sensors?
-            bool IsNominal : 1; // 16 Always use the given name rather than generic "enemy object" (def = false)?
-            bool IsTheater : 1; // 32 Does it have theater specific imagery (def = false)?
-            bool IsTurretEquipped : 1; // 64
-            bool IsRepairable : 1; // 128
-            bool IsCrewed : 1; // 1 Does it contain a crew that can escape [never infantry] (def = false)?
-            bool IsRemapable : 1; // 2
-            bool Cloakable : 1; // 4 or NoMovingFire?
-            bool IsSelfHealing : 1; // 8 Does the object heal automatically up to half strength (def = false)?
-            bool Explodes : 1; // 16 Does it explode violently when destroyed(def = false)?
-        };
-        int Bitfield;
-    };
+    BOOL DoubleOwned : 1; // 1
+    BOOL IsInvisible : 1; // 2
+    BOOL IsLeader : 1; // 4
+    BOOL IsScanner : 1; // 8
+    BOOL IsNominal : 1; // 16
+    BOOL IsTheater : 1; // 32
+    BOOL IsTurretEquipped : 1; // 64
+    BOOL IsRepairable : 1; // 128
+    BOOL IsCrewed : 1; // 1
+    BOOL IsRemapable : 1; // 2
+    BOOL Cloakable : 1; // 4
+    BOOL IsSelfHealing : 1; // 8
+    BOOL Explodes : 1; // 16
 #else
     bool DoubleOwned; // Can be built/owned by all countries in a multiplayer game (def = false)?
     bool IsInvisible; // confirmed or RadarVisible, depending on how its used.

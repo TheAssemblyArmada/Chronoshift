@@ -106,15 +106,7 @@ public:
     uint32_t UnkInt; // Object bounds perhaps, packed coord?
     uint32_t Theater; // Bitfield of which theaters this terrain is allowed to appear in.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool WaterBound : 1; // Is the terrain only allowed on the water (def = false)?
-        };
-        int Bitfield;
-    };
+    BOOL WaterBound : 1; // & 1
 #else
     bool WaterBound; // Is the terrain only allowed on the water (def = false)?
 #endif

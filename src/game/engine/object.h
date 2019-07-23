@@ -121,22 +121,14 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_IsDown : 1; // 1
-            bool m_ToDamage : 1; // 2
-            bool m_ToDisplay : 1; // 4
-            bool m_InLimbo : 1; // 8 Is this object in limbo [state of nothing, thus not processed per frame tick]?
-            bool m_Selected : 1; // 16 Has this object been selected by the player?
-            bool m_AnimAttached : 1; // 32
-            bool m_IsFalling : 1; // 64 Is this object falling from a height [as a paradropped object]?
-            bool m_OBit1_128 : 1; // 128
-        };
-        int m_Bitfield;
-    };
+    BOOL m_IsDown : 1; // 1
+    BOOL m_ToDamage : 1; // 2
+    BOOL m_ToDisplay : 1; // 4
+    BOOL m_InLimbo : 1; // 8
+    BOOL m_Selected : 1; // 16
+    BOOL m_AnimAttached : 1; // 32
+    BOOL m_IsFalling : 1; // 64
+    BOOL m_OBit1_128 : 1; // 128
 #else
     bool m_IsDown;
     bool m_ToDamage;

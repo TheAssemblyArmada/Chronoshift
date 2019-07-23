@@ -57,18 +57,10 @@ private:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_IsPowered : 1; // 1
-            bool m_IsEnabled : 1; // 2
-            bool m_OneTime : 1; // 4
-            bool m_FullyCharged : 1; // 8
-        };
-        int m_Bitfield;
-    };
+    BOOL m_IsPowered : 1; // 1
+    BOOL m_IsEnabled : 1; // 2
+    BOOL m_OneTime : 1; // 4
+    BOOL m_FullyCharged : 1; // 8
 #else
     bool m_IsPowered; // Does this super weapon become inoperative in a low power situation?
     bool m_IsEnabled; // 

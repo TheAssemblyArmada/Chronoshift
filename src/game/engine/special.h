@@ -51,39 +51,40 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
+    // Union/Struct required so we fetch the data easily with SpecialFlags.
     union
     {
         struct
         {
-            bool ShroudRegrows : 1; // & 1 Used in skirmish menu
-            bool BuildTimeAccelerated : 1; // & 2 Used in special dialog
-            bool FirstRun : 1; // & 4 Play intro followed by allied 1.
-            //bool DemoMode : 1; // & 4 activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1.
-            bool CaptureTheFlag : 1; // & 8 Used in lan dialog, also checked in bridge destruction related code.
-            bool NoDamage : 1; // & 16 Used by Explosion_Damage code.
-            bool ThreePointTurnLogic : 1; // & 32 Used in hidden special dialog.
-            bool OreGrows : 1; // & 64 Set in skirmish menu
-            bool OreSpreads : 1; // & 128 Set in skirmish menu
+            BOOL ShroudRegrows : 1; // & 1
+            BOOL BuildTimeAccelerated : 1; // & 2
+            BOOL FirstRun : 1; // & 4
+            //BOOL DemoMode : 1; // & 4
+            BOOL CaptureTheFlag : 1; // & 8
+            BOOL NoDamage : 1; // & 16
+            BOOL ThreePointTurnLogic : 1; // & 32
+            BOOL OreGrows : 1; // & 64
+            BOOL OreSpreads : 1; // & 128
 
-            bool Spawned : 1; // & 1 "About to initialise Winsock" string RA demo, ow only skips intro and fades in the menu.
-            bool Remixes : 1; // & 2 Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
+            BOOL Spawned : 1; // & 1
+            BOOL Remixes : 1; // & 2
 
             //Bit3_1 is debug path finding is C&C Dos.
         };
         int SpecialFlags;
     };
 #else
-    bool ShroudRegrows;
-    bool BuildTimeAccelerated;
-    bool FirstRun;
-    bool CaptureTheFlag;
-    bool NoDamage;
-    bool ThreePointTurnLogic;
-    bool OreGrows;
-    bool OreSpreads;
-    bool Spawned;
-    bool Remixes;
+    bool ShroudRegrows; // Used in skirmish menu
+    bool BuildTimeAccelerated; //  Used in special dialog
+    bool FirstRun; // Play intro followed by allied 1 or soviet 1.
+    // bool DemoMode; // activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1 or soviet 1.
+    bool CaptureTheFlag; // Used in lan dialog, also checked in bridge destruction related code.
+    bool NoDamage; // Used by Explosion_Damage code.
+    bool ThreePointTurnLogic; // Used in hidden special dialog.
+    bool OreGrows; // Set in skirmish menu
+    bool OreSpreads; // Set in skirmish menu
+    bool Spawned; // "About to initialise Winsock" string RA demo, now only skips intro and fades in the menu. For Wchat?
+    bool Remixes; // Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
 #endif
 };
 

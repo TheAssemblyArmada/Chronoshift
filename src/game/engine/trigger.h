@@ -42,15 +42,7 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_Bit1 : 1; // 1
-        };
-        int m_Bitfield;
-    };
+    BOOL m_Bit1 : 1; // 1
 #else
     bool m_Bit1;
 #endif
@@ -99,15 +91,7 @@ private:
     int m_HeapID;
     GamePtr<TriggerTypeClass> m_Type;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_IsActive : 1; // 1
-        };
-        int m_Bitfield;
-    };
+    BOOL m_IsActive : 1; // 1
 #else
     bool m_IsActive;
 #endif

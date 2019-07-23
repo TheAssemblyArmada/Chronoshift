@@ -91,32 +91,24 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool High : 1; // Can it fly over walls?
-            bool Shadow : 1; // If High, does this bullet need to have a shadow drawn?
-            bool Arcing : 1; // Does it have a ballistic trajectory?
-            bool Dropping : 1; // Does it fall from a starting height?
-            bool Inviso : 1; // Is the projectile invisible as it travels?
-            bool Proximity : 1; // Does it blow up when near its target?
-            bool Animates : 1; // Does it animate [this means smoke puffs]?
-            bool Ranged : 1; // Can it run out of fuel?
-            bool Rotates : 1; // Does the projectile have rotation specific imagery?
-            bool Inaccurate : 1; // Is it inherently inaccurate?
-            bool Translucent : 1; // Are translucent colors used in artwork?
-            bool AntiAir : 1; // Can this weapon fire upon flying aircraft?
-            bool AntiGround : 1; // Can this weapon fire upon ground objects?
-            bool AntiSubWarfare : 1; // Is this an Anti-Submarine-Warfare projectile?
-            bool Degenerates : 1; // Does the bullet strength weaken as it travels?
-            bool UnderWater : 1; // Does the projectile travel under water?
-            bool Parachuted : 1; // Equipped with a parachute for dropping from plane (def = false)?
-            bool Gigundo : 1; // Is the projectile larger than normal?
-        };
-        int Bitfield;
-    };
+    BOOL High : 1; // Can it fly over walls?
+    BOOL Shadow : 1; // If High, does this bullet need to have a shadow drawn?
+    BOOL Arcing : 1; // Does it have a ballistic trajectory?
+    BOOL Dropping : 1; // Does it fall from a starting height?
+    BOOL Inviso : 1; // Is the projectile invisible as it travels?
+    BOOL Proximity : 1; // Does it blow up when near its target?
+    BOOL Animates : 1; // Does it animate [this means smoke puffs]?
+    BOOL Ranged : 1; // Can it run out of fuel?
+    BOOL Rotates : 1; // Does the projectile have rotation specific imagery?
+    BOOL Inaccurate : 1; // Is it inherently inaccurate?
+    BOOL Translucent : 1; // Are translucent colors used in artwork?
+    BOOL AntiAir : 1; // Can this weapon fire upon flying aircraft?
+    BOOL AntiGround : 1; // Can this weapon fire upon ground objects?
+    BOOL AntiSubWarfare : 1; // Is this an Anti-Submarine-Warfare projectile?
+    BOOL Degenerates : 1; // Does the bullet strength weaken as it travels?
+    BOOL UnderWater : 1; // Does the projectile travel under water?
+    BOOL Parachuted : 1; // Equipped with a parachute for dropping from plane (def = false)?
+    BOOL Gigundo : 1; // Is the projectile larger than normal?
 #else
     bool High; // Can it fly over walls?
     bool Shadow; // If High, does this bullet need to have a shadow drawn?

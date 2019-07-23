@@ -314,20 +314,12 @@ private:
     int MPlayerMoney;
     int MPlayerMaxMoney;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool MPlayerShadowGrow : 1; // 1
-            bool MPlayerBases : 1; // 2
-            bool MPlayerOreGrows : 1; // 4
-            bool MPlayerCrates : 1; // 8
-            bool MPlayerAIPlayers : 1; // 16
-            bool MPlayerCaptureTheFlag : 1; // 32
-        };
-        int MPBitfield;
-    };
+    BOOL MPlayerShadowGrow : 1; // 1
+    BOOL MPlayerBases : 1; // 2
+    BOOL MPlayerOreGrows : 1; // 4
+    BOOL MPlayerCrates : 1; // 8
+    BOOL MPlayerAIPlayers : 1; // 16
+    BOOL MPlayerCaptureTheFlag : 1; // 32
 #else
     bool MPlayerShadowGrow; // 1
     bool MPlayerBases; // 2
@@ -353,55 +345,49 @@ private:
     int AtomDamage;
     DifficultyClass Difficulties[3];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Paranoid : 1; // 1
-            bool CurleyShuffle : 1; // 2
-            bool FlashLowPower : 1; // 4
-            bool CompEasyBonus : 1; // 8
-            bool FineDiffControl : 1; // 16
-            bool OreExplosive : 1; // 32
-            bool EnemyHealth : 1; // 64
-            bool MCVUndeploy : 1; // 128
-            bool AllyReveal : 1; // 1
-            bool SeparateAircraft : 1; // 2
-            bool TreeTargeting : 1; // 4
-            bool MineAware : 1; // 8
-            bool OreGrows : 1; // 16
-            bool OreSpreads : 1; // 32
-            bool NamedCivilians : 1; // 64
-            bool PlayerAutoCrush : 1; // 128
-            bool PlayerReturnFire : 1; // 1
-            bool PlayerScatter : 1; // 2
-            bool ChronoKillCargo : 1; // 4
-            bool SecretUnitsEnabled : 1;
-            bool NewUnitsEnabled : 1;
-        };
-        int Bitfield;
-    };
+    BOOL Paranoid : 1; // 1
+    BOOL CurleyShuffle : 1; // 2
+    BOOL FlashLowPower : 1; // 4
+    BOOL CompEasyBonus : 1; // 8
+    BOOL FineDiffControl : 1; // 16
+    BOOL OreExplosive : 1; // 32
+    BOOL EnemyHealth : 1; // 64
+    BOOL MCVUndeploy : 1; // 128
+
+    BOOL AllyReveal : 1; // 1
+    BOOL SeparateAircraft : 1; // 2
+    BOOL TreeTargeting : 1; // 4
+    BOOL MineAware : 1; // 8
+    BOOL OreGrows : 1; // 16
+    BOOL OreSpreads : 1; // 32
+    BOOL NamedCivilians : 1; // 64
+    BOOL PlayerAutoCrush : 1; // 128
+
+    BOOL PlayerReturnFire : 1; // 1
+    BOOL PlayerScatter : 1; // 2
+    BOOL ChronoKillCargo : 1; // 4
+    BOOL SecretUnitsEnabled : 1; // new in Chronoshift
+    BOOL NewUnitsEnabled : 1; // new in Chronoshift
 #else
-    bool Paranoid; // 1
-    bool CurleyShuffle; // 2
-    bool FlashLowPower; // 4
-    bool CompEasyBonus; // 8
-    bool FineDiffControl; // 16
-    bool OreExplosive; // 32
-    bool EnemyHealth; // 64
-    bool MCVUndeploy; // 128
-    bool AllyReveal; // 1
-    bool SeparateAircraft; // 2
-    bool TreeTargeting; // 4
-    bool MineAware; // 8
-    bool OreGrows; // 16
-    bool OreSpreads; // 32
-    bool NamedCivilians; // 64
-    bool PlayerAutoCrush; // 128
-    bool PlayerReturnFire; // 1
-    bool PlayerScatter; // 2
-    bool ChronoKillCargo; // 4
+    bool Paranoid;
+    bool CurleyShuffle;
+    bool FlashLowPower;
+    bool CompEasyBonus;
+    bool FineDiffControl;
+    bool OreExplosive;
+    bool EnemyHealth;
+    bool MCVUndeploy;
+    bool AllyReveal;
+    bool SeparateAircraft;
+    bool TreeTargeting;
+    bool MineAware;
+    bool OreGrows;
+    bool OreSpreads;
+    bool NamedCivilians;
+    bool PlayerAutoCrush;
+    bool PlayerReturnFire;
+    bool PlayerScatter;
+    bool ChronoKillCargo;
     bool SecretUnitsEnabled;
     bool NewUnitsEnabled;
 #endif

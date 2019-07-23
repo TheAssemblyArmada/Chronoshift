@@ -120,18 +120,10 @@ private:
     int Type;
     const char *Name;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool TurboBoost : 1; // Should the weapon get a boosted speed bonus when firing upon aircraft?
-            bool Supress : 1; // Should nearby friendly buildings be scanned for and if found, discourage firing on target?
-            bool Camera : 1; // Reveals area around firer ?
-            bool Charges : 1; // Does it have charge-up-before-firing logic?
-        };
-        int Bitfield;
-    };
+    BOOL TurboBoost : 1;
+    BOOL Supress : 1;
+    BOOL Camera : 1;
+    BOOL Charges : 1;
 #else
     bool TurboBoost; // Should the weapon get a boosted speed bonus when firing upon aircraft?
     bool Supress; // Should nearby friendly buildings be scanned for and if found, discourage firing on target?
