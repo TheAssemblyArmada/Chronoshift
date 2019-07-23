@@ -122,6 +122,7 @@ BOOL Target_Legal(target_t target);
 target_t As_Target(cell_t cellnum);
 target_t As_Target(coord_t coord);
 target_t As_Target(CellClass *cell);
+target_t As_Target(AbstractClass *object);
 
 TriggerClass *As_Trigger(target_t target);
 TriggerTypeClass *As_TriggerType(target_t target);
