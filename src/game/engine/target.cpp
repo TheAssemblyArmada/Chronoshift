@@ -101,6 +101,11 @@ target_t As_Target(CellClass *cell)
     return cell != nullptr ? As_Target(cell->Cell_Number()) : 0;
 }
 
+target_t As_Target(AbstractClass *object)
+{
+    return object != nullptr ? ((object->Get_Heap_ID() & 0xFFFFFF) | ((object->What_Am_I() << 24) & 0xFF000000)) : 0;
+}
+
 TriggerClass *As_Trigger(target_t target)
 {
 #ifndef CHRONOSHIFT_STANDALONE
