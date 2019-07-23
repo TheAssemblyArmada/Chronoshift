@@ -363,3 +363,27 @@ int MessageBoxClass::Process(
 
     return ret_val;
 }
+
+int MessageBoxClass::Simple_OK_Message_Box(const int body_text, const int button_1_text)
+{
+    MessageBoxClass msgbox;
+    return msgbox.Process(body_text, button_1_text);
+}
+
+int MessageBoxClass::Simple_OK_Message_Box(const char *body_text, const int button_1_text)
+{
+    MessageBoxClass msgbox;
+    return msgbox.Process(body_text, button_1_text);
+}
+
+int MessageBoxClass::Simple_YesNo_Message_Box(const int body_text, const int button_1_text, const int button_2_text)
+{
+    MessageBoxClass msgbox;
+    return msgbox.Process(body_text, button_1_text, button_2_text);
+}
+
+int MessageBoxClass::Simple_YesNo_Message_Box(const char *body_text, const int button_1_text, const int button_2_text)
+{
+    MessageBoxClass msgbox;
+    return msgbox.Process(body_text, button_1_text, button_2_text);
+}
