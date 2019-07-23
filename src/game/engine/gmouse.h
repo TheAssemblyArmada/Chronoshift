@@ -56,15 +56,7 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_MouseInRadar : 1; // 1 Is the mouse in the radar map?
-        };
-        int Bitfield;
-    };
+    BOOL m_MouseInRadar : 1; // 1 Is the mouse in the radar map?
 #else
     bool m_MouseInRadar; // Is the mouse in the radar map?
 #endif

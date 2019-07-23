@@ -71,18 +71,10 @@ private:
     unsigned m_minVersion;
     unsigned m_maxVersion;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_versionSet : 1; // & 1
-            bool m_majorSet : 1; // & 2
-            bool m_minorSet : 1; // & 4
-            bool m_fileRead : 1; // & 8
-        };
-        int m_versionFlags;
-    };
+    BOOL m_versionSet : 1; // & 1
+    BOOL m_majorSet : 1; // & 2
+    BOOL m_minorSet : 1; // & 4
+    BOOL m_fileRead : 1; // & 8
 #else
     bool m_versionSet;
     bool m_majorSet;

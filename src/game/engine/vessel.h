@@ -94,16 +94,8 @@ class VesselClass : public DriveClass
 private:
     GamePtr<VesselTypeClass> m_Type;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_ToSelfRepair : 1; // 1
-            bool m_Repairing : 1; // 2
-        };
-        int m_Bitfield;
-    };
+    BOOL m_ToSelfRepair : 1; // 1
+    BOOL m_Repairing : 1; // 2
 #else
     bool m_ToSelfRepair; // 
     bool m_Repairing; // Is this vessel currently receiving repairs?

@@ -143,20 +143,12 @@ protected:
     int TacOffsetY;
     coord_t DisplayNewPos;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool DisplayToRedraw : 1; // 1
-            bool DisplayRepairMode : 1; // 2
-            bool DisplaySellMode : 1; // 4
-            bool DisplayBit8 : 1; // 8 This is Bit32 in SS. passes proximity check/can place?
-            bool DisplayBit16 : 1; // 16
-            bool RedrawShadow : 1; // 32 this is Bit128 in SS
-        };
-        int Bitfield;
-    };
+    BOOL DisplayToRedraw : 1; // 1
+    BOOL DisplayRepairMode : 1; // 2
+    BOOL DisplaySellMode : 1; // 4
+    BOOL DisplayBit8 : 1; // 8 This is Bit32 in SS. passes proximity check/can place?
+    BOOL DisplayBit16 : 1; // 16
+    BOOL RedrawShadow : 1; // 32 this is Bit128 in SS
 #else
     bool DisplayToRedraw;
     bool DisplayRepairMode;

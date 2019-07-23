@@ -122,48 +122,40 @@ protected:
     int field_CAC;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool RadarToRedraw : 1; // 1
-            bool RadarCursorRedraw : 1; // 2
-            bool RadarExists : 1; // 4 Low power?
-            bool RadarActive : 1; // 8 enabling from power off?
-            bool RadarActivating : 1; // 16 //RadarActivating?
-            bool RadarDeactivating : 1; // 32 //RadarDeactivating?
-            bool RadarJammed : 1; // 64
-            bool RadarPulseActive : 1; // 128 this is also set when the radar is being jammed? see HouseClass::AI
-            bool RadarZoomed : 1; // 1 Zoomed?
-            bool RadarDrawNames : 1; // 2
-            bool RadarDrawSpiedInfo : 1; // 4 tomsons said this does some type of redraw?
-            bool RadarBit2_8 : 1; // 8
-            bool RadarBit2_16 : 1; // 16
-            bool RadarBit2_32 : 1; // 32
-            bool RadarBit2_64 : 1; // 64
-            bool RadarBit2_128 : 1; // 128
-        };
-        int Bitfield;
-    };
+    BOOL RadarToRedraw : 1; // 1
+    BOOL RadarCursorRedraw : 1; // 2
+    BOOL RadarExists : 1; // 4
+    BOOL RadarActive : 1; // 8
+    BOOL RadarActivating : 1; // 16
+    BOOL RadarDeactivating : 1; // 32
+    BOOL RadarJammed : 1; // 64
+    BOOL RadarPulseActive : 1; // 128
+
+    BOOL RadarZoomed : 1; // 1
+    BOOL RadarDrawNames : 1; // 2
+    BOOL RadarDrawSpiedInfo : 1; // 4
+    BOOL RadarBit2_8 : 1; // 8
+    BOOL RadarBit2_16 : 1; // 16
+    BOOL RadarBit2_32 : 1; // 32
+    BOOL RadarBit2_64 : 1; // 64
+    BOOL RadarBit2_128 : 1; // 128
 #else
-    // bitfield 0xCB0
-    bool RadarToRedraw; // 1
-    bool RadarCursorRedraw; // 2
-    bool RadarExists; // 4 Low power?
-    bool RadarActive; // enabling from power off?
-    bool RadarActivating; // 16 //RadarActivating?
-    bool RadarDeactivating; // 32 //RadarDeactivating?
-    bool RadarJammed; // 64
-    bool RadarPulseActive; // 128 this is also set when the radar is being jammed? see HouseClass::AI
-    bool RadarZoomed; // 1 Zoomed?
-    bool RadarDrawNames; // 2
-    bool RadarDrawSpiedInfo; // 4 tomsons said this does some type of redraw?
-    bool RadarBit2_8; //
-    bool RadarBit2_16; // 16
-    bool RadarBit2_32; // 32
-    bool RadarBit2_64; // 64
-    bool RadarBit2_128; // 128
+    bool RadarToRedraw;
+    bool RadarCursorRedraw;
+    bool RadarExists;
+    bool RadarActive;
+    bool RadarActivating;
+    bool RadarDeactivating;
+    bool RadarJammed;
+    bool RadarPulseActive;
+    bool RadarZoomed;
+    bool RadarDrawNames;
+    bool RadarDrawSpiedInfo;
+    bool RadarBit2_8;
+    bool RadarBit2_16;
+    bool RadarBit2_32;
+    bool RadarBit2_64;
+    bool RadarBit2_128;
 #endif
     int RadarPulseFrame;
     int RadarCursorFrame; // bytes relating to region box focus in animation.

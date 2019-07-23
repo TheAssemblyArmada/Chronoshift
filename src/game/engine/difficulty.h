@@ -46,17 +46,9 @@ struct DifficultyClass
     fixed_t RepairDelay; // Average delay (minutes) between initiating building repair.
     fixed_t BuildDelay; // Average delay (minutes) between initiating construction.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool BuildSlowdown : 1; // & 1 Should the computer build slower than the player.
-            bool DestroyWalls : 1; // & 2 Allow scanning for nearby enemy walls and destroy them.
-            bool ContentScan : 1; // & 4 Should the contents of a transport be considered when picking best target?
-        };
-        int Bitfield;
-    };
+    BOOL BuildSlowdown : 1; // & 1 Should the computer build slower than the player.
+    BOOL DestroyWalls : 1; // & 2 Allow scanning for nearby enemy walls and destroy them.
+    BOOL ContentScan : 1; // & 4 Should the contents of a transport be considered when picking best target?
 #else
     bool BuildSlowdown; // Should the computer build slower than the player.
     bool DestroyWalls; // Allow scanning for nearby enemy walls and destroy them.

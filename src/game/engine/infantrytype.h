@@ -133,22 +133,14 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_FemaleVoice : 1; // & 1 Uses the civilian female voice (def = false)?
-            bool m_IsCrawler : 1; // & 2 Does this infantry crawl (go prone) when under fire (def = false)?
-            bool m_IsInfiltrator : 1; // & 4 Can it enter a building like a spy or thief (def = false)?
-            bool m_IsFraidycat : 1; // & 8 Is it inherently afraid and will panic easily (def = false)?
-            bool m_IsCivilian : 1; // & 16 Counts a civilian for evac and kill tracking (def = false)?
-            bool m_HasC4 : 1; // & 32 Equipped with explosives [presumes Infiltrate is also true] (def = false)?
-            bool m_IsCanine : 1; // & 64 Should special case dog logic be applied to this (def = false)?
-            bool m_HasAltRemap : 1; // & 128
-        };
-        int Bitfield;
-    };
+    BOOL m_FemaleVoice : 1; // & 1 Uses the civilian female voice (def = false)?
+    BOOL m_IsCrawler : 1; // & 2 Does this infantry crawl (go prone) when under fire (def = false)?
+    BOOL m_IsInfiltrator : 1; // & 4 Can it enter a building like a spy or thief (def = false)?
+    BOOL m_IsFraidycat : 1; // & 8 Is it inherently afraid and will panic easily (def = false)?
+    BOOL m_IsCivilian : 1; // & 16 Counts a civilian for evac and kill tracking (def = false)?
+    BOOL m_HasC4 : 1; // & 32 Equipped with explosives [presumes Infiltrate is also true] (def = false)?
+    BOOL m_IsCanine : 1; // & 64 Should special case dog logic be applied to this (def = false)?
+    BOOL m_HasAltRemap : 1; // & 128
 #else
     bool m_FemaleVoice; // Uses the civilian female voice (def = false)?
     bool m_IsCrawler; // Does this infantry crawl (go prone) when under fire (def = false)?

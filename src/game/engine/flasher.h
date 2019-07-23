@@ -41,20 +41,10 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-#pragma pack(push, 1)
-        struct
-        {
-            int8_t Frames : 7;
-            bool Flashed : 1;
-        };
-#pragma pack(pop)
-        int Bitfield; // This shouldn't be used in the code.
-    };
+    unsigned int Frames : 7;
+    BOOL Flashed : 1;
 #else
-    int Frames; // Number of frames to flash for.
+    unsigned int Frames; // Number of frames to flash for.
     bool Flashed; // Is current frame a flash frame?
 #endif
 };

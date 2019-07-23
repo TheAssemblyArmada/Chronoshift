@@ -66,18 +66,10 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_IsHarvesting : 1; // 1
-            bool m_Teleported : 1; // 2
-            bool m_Bit_4 : 1; // 4
-            bool m_Bit_8 : 1; // 8
-        };
-        int m_Bitfield;
-    };
+    BOOL m_IsHarvesting : 1; // 1
+    BOOL m_Teleported : 1; // 2
+    BOOL m_Bit_4 : 1; // 4
+    BOOL m_Bit_8 : 1; // 8
 #else
     bool m_IsHarvesting;
     bool m_Teleported;

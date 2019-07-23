@@ -53,19 +53,11 @@ private:
     DoType m_Doing;
     TCountDownTimerClass<FrameTimerClass> m_StokeTimer;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_Technician : 1; // 1
-            bool m_Stoked : 1; // 2
-            bool m_Prone : 1; // 4
-            bool m_Bit8 : 1; // 8
-            bool m_Bit16 : 1; // 16
-        };
-        int m_Bitfield;
-    };
+    BOOL m_Technician : 1; // 1
+    BOOL m_Stoked : 1; // 2
+    BOOL m_Prone : 1; // 4
+    BOOL m_Bit8 : 1; // 8
+    BOOL m_Bit16 : 1; // 16
 #else
     bool m_Technician;
     bool m_Stoked;

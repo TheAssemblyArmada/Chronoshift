@@ -189,27 +189,20 @@ protected:
     DoorClass m_Door;
     uint16_t m_KillCount;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_IsUseless : 1; // & 1
-            bool m_IsTickedOff : 1; // & 2 Has this object been attacked and pissed off?
-            bool m_Cloakable : 1; // & 4
-            bool m_IsPrimary : 1; // & 8
-            bool m_IsALoner : 1; // & 16
-            bool m_LockedOnMap : 1; // & 32
-            bool m_IsRecoiling : 1; // & 64
-            bool m_Tethered : 1; // & 128 Is this in radio chit chat with something (on repair bay, helipad etc)
-            bool m_PlayerOwned : 1; // & 1
-            bool m_PlayerAware : 1; // & 2 C&CDOS has this as "Discovered"
-            bool m_AIAware : 1; // & 4 maybe this is Discovered in C&C95?
-            bool m_Lemon : 1; // & 8"degrades" in OpenDUNE, seems to imply some decaying logic
-            bool m_Bit2_16 : 1; // & 16
-        };
-        int m_Bitfield;
-    };
+    BOOL m_IsUseless : 1; // & 1
+    BOOL m_IsTickedOff : 1; // & 2
+    BOOL m_Cloakable : 1; // & 4
+    BOOL m_IsPrimary : 1; // & 8
+    BOOL m_IsALoner : 1; // & 16
+    BOOL m_LockedOnMap : 1; // & 32
+    BOOL m_IsRecoiling : 1; // & 64
+    BOOL m_Tethered : 1; // & 128
+
+    BOOL m_PlayerOwned : 1; // & 1
+    BOOL m_PlayerAware : 1; // & 2
+    BOOL m_AIAware : 1; // & 4
+    BOOL m_Lemon : 1; // & 8
+    BOOL m_Bit2_16 : 1; // & 16
 #else
     bool m_IsUseless;
     bool m_IsTickedOff; // Has this object been attacked and pissed off?

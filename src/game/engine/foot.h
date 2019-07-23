@@ -123,27 +123,19 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_Bit1_1 : 1; // 1
-            bool m_Initiated : 1; // 2
-            bool m_Bit1_4 : 1; // 4
-            bool m_ToLook : 1; // 8
-            bool m_Deploying : 1; // 16
-            bool m_Firing : 1; // 32
-            bool m_Rotating : 1; // 64
-            bool m_Moving : 1; // 128
-            bool m_Bit2_1 : 1; // 1
-            bool m_InFormation : 1; // 2
-            bool m_Bit2_4 : 1; // 4
-            bool m_ToScatter : 1; // 8
-            bool m_Bit2_16 : 1; // 16
-        };
-        int m_Bitfield;
-    };
+    BOOL m_Bit1_1 : 1; // 1
+    BOOL m_Initiated : 1; // 2
+    BOOL m_Bit1_4 : 1; // 4
+    BOOL m_ToLook : 1; // 8
+    BOOL m_Deploying : 1; // 16
+    BOOL m_Firing : 1; // 32
+    BOOL m_Rotating : 1; // 64
+    BOOL m_Moving : 1; // 128
+    BOOL m_Bit2_1 : 1; // 1
+    BOOL m_InFormation : 1; // 2
+    BOOL m_Bit2_4 : 1; // 4
+    BOOL m_ToScatter : 1; // 8
+    BOOL m_Bit2_16 : 1; // 16
 #else
     bool m_Bit1_1;
     bool m_Initiated;

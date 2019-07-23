@@ -50,17 +50,9 @@ private:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool HasOutline : 1; // & 1
-            bool FilledBackground : 1; // & 2
-            bool HasShadow : 1; // & 4
-        };
-        int m_toggleFlags;
-    };
+    BOOL HasOutline : 1; // & 1
+    BOOL FilledBackground : 1; // & 2
+    BOOL HasShadow : 1; // & 4
 #else
     bool HasOutline;
     bool FilledBackground;

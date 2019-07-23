@@ -74,17 +74,9 @@ private:
     int MaxChars;
     int MessageHeight;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Concatenate : 1; // & 1
-            bool Editing : 1; // & 2
-            bool EditAsMessage : 1; // & 4
-        };
-        int m_listFlags;
-    };
+    BOOL Concatenate : 1; // & 1
+    BOOL Editing : 1; // & 2
+    BOOL EditAsMessage : 1; // & 4
 #else
     bool Concatenate; // 1
     bool Editing; // 2

@@ -74,22 +74,14 @@ protected:
 protected:
     char ImageName[256];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Crushable : 1; // & 1 Can it be crushed by a heavy tracked vehicle (def = false)?
-            bool RadarInvisible : 1; // & 2 Is it invisible on radar maps (def = false)? unused in RA?
-            bool Selectable : 1; // & 4 Can this object be selected by the player (def = true)?
-            bool LegalTarget : 1; // & 8 Is this allowed to be a combat target (def = true)?
-            bool Insignificant : 1; // & 16 Will this object not be announced when destroyed (def = false)?
-            bool Immune : 1; // & 32 Is this object immune to damage (def = false)?
-            bool Bit64 : 1; // & 64 TODO: Related to logical or animate?
-            bool Bit128 : 1; // & 128 TODO: Related to logical or animate?
-        };
-        int Bitfield;
-    };
+    BOOL Crushable : 1; // & 1
+    BOOL RadarInvisible : 1; // & 2
+    BOOL Selectable : 1; // & 4
+    BOOL LegalTarget : 1; // & 8
+    BOOL Insignificant : 1; // & 16
+    BOOL Immune : 1; // & 32
+    BOOL Bit64 : 1; // & 64
+    BOOL Bit128 : 1; // & 128
 #else
     bool Crushable; // Can it be crushed by a heavy tracked vehicle (def = false)?
     bool RadarInvisible; // Is it invisible on radar maps (def = false)? unused in RA?

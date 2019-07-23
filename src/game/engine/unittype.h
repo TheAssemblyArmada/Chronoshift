@@ -93,34 +93,17 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool m_CrateGoodie : 1;
-            bool m_Crusher : 1; // Is this vehicle able to crush infantry (def = false)?
-            bool m_Harvester : 1; // Does the special Ore harvesting rules apply (def = false)?
-            bool m_TurretSpins : 1; // Does the turret just sit and spin [only if turret equipped] (def = false)?
-            bool m_Bit16 : 1; // Causes the unit to start firing on itself if it has to drive to the location?
-            bool m_Bit32 : 1;
-            /*
-            00:27 < tomscncnet> started the game
-            00:29 < tomscncnet> aha
-            00:29 < tomscncnet> yea, so when it aquires a target on its own it turns the entire body to face it
-            00:29 < tomscncnet> with U on
-            00:30 < tomscncnet> but only when it does it itself
-            00:30 < tomscncnet> if i force fire it still turns the turret
-            00:30 < tomscncnet> heh its like a opposite of OmniFire
-            */
-            bool m_IsLarge : 1; // Is large unit for refresh purposes (refresh 48x48)
-            bool m_IsViceroid : 1; // Cycle through graphics viceroid style?
-            bool m_IsRadarJammer : 1;
-            bool m_IsMobileGapGen : 1;
-            bool m_NoMovingFire : 1; // The vehicle must stop before it can fire (def = false)?
-        };
-        int Bitfield;
-    };
+    BOOL m_CrateGoodie : 1;
+    BOOL m_Crusher : 1;
+    BOOL m_Harvester : 1;
+    BOOL m_TurretSpins : 1;
+    BOOL m_Bit16 : 1;
+    BOOL m_Bit32 : 1;
+    BOOL m_IsLarge : 1;
+    BOOL m_IsViceroid : 1;
+    BOOL m_IsRadarJammer : 1;
+    BOOL m_IsMobileGapGen : 1;
+    BOOL m_NoMovingFire : 1;
 #else
     bool m_CrateGoodie;
     bool m_Crusher; // Is this vehicle able to crush infantry (def = false)?

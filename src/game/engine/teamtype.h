@@ -124,28 +124,21 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            /* //map bit, >> 1, as it goes past IsActive.
-            Always take the safest route, even if it's a detour  1
-            Charge at target ignoring enemy units/enemy fire  	2
-            Team is only used by autocreate AI (produced taskforces) 	4
-            Prebuild teammembers before creating team   	8
-            Automatically reinforce     	16
-            */
+    /*
+    //map bit, >> 1, as it goes past IsActive.
+    Always take the safest route, even if it’s a detour  1
+    Charge at target ignoring enemy units/enemy fire  	2
+    Team is only used by autocreate AI (produced taskforces) 	4
+    Prebuild teammembers before creating team   	8
+    Automatically reinforce     	16
+    */
 
-            bool m_IsActive : 1; // 1
-            bool m_AvoidThreats : 1; // 2
-            bool m_Suicide : 1; // 4
-            bool m_Autocreate : 1; // 8
-            bool m_Prebuild : 1; // 16
-            bool m_Reinforce : 1; // 32
-        };
-        int m_Bitfield;
-    };
+    BOOL m_IsActive : 1; // 1
+    BOOL m_AvoidThreats : 1; // 2
+    BOOL m_Suicide : 1; // 4
+    BOOL m_Autocreate : 1; // 8
+    BOOL m_Prebuild : 1; // 16
+    BOOL m_Reinforce : 1; // 32
 #else
     bool m_IsActive;
     bool m_AvoidThreats;

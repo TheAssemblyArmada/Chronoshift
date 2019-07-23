@@ -125,30 +125,21 @@ private:
     int DamageLevels; // think how many damage stages walls have for example.
     int OverlayStrength;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Theater : 1; // 1
-            bool Wall : 1; // 2
-            bool High : 1; // 4
-            bool Ore : 1; // 8
-            bool Boolean16 : 1; // 16        //this is checked in Explosion_Damage() if warhead has wall or wood to see if
-                                // destroyed.
-            bool Crate : 1; // 32
-            bool RadarVisible : 1; // 64
-        };
-        int Bitfield;
-    };
+    BOOL Theater : 1; // 1
+    BOOL Wall : 1; // 2
+    BOOL High : 1; // 4
+    BOOL Ore : 1; // 8
+    BOOL Boolean16 : 1; // 16
+    BOOL Crate : 1; // 32
+    BOOL RadarVisible : 1; // 64
 #else
-    bool Theater; // 1
-    bool Wall; // 2
-    bool High; // 4
-    bool Ore; // 8
-    bool Boolean16; // 16        //this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
-    bool Crate; // 32
-    bool RadarVisible; // 64
+    bool Theater;
+    bool Wall;
+    bool High;
+    bool Ore;
+    bool Boolean16; // TODO: this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
+    bool Crate;
+    bool RadarVisible;
 #endif
 };
 

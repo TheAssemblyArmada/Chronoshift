@@ -78,18 +78,10 @@ private:
     const char *Name;
     int Spread; // damage spread factor[larger means greater spread]. Damage halves every n pixels from center.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-                // Union/Struct required to get correct packing when compiler packing set to 1.
-    union
-    {
-        struct
-        {
-            bool Wall : 1; // Does this warhead damage concrete walls?
-            bool Wood : 1; // Does this warhead damage wood walls?
-            bool Ore : 1; // Does this warhead destroy ore?
-            bool UnkBool : 1; // Checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester
-        };
-        int Bitfield;
-    };
+    BOOL Wall : 1;
+    BOOL Wood : 1;
+    BOOL Ore : 1;
+    BOOL UnkBool : 1;
 #else
     bool Wall; // Does this warhead damage concrete walls?
     bool Wood; // Does this warhead damage wood walls?
