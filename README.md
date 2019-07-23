@@ -1,7 +1,11 @@
-# Chronoshift
+<p align="center">
+  <img width="600" src="https://imgur.com/17i3TcG.png" alt="Chronoshift Logo">
+</p>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/7pkmbx9gbpet8s9a?svg=true)](https://ci.appveyor.com/project/AdamMondez/chronoshift-k6j75)
-[![Build Status](https://travis-ci.org/TheAssemblyArmada/Chronoshift.svg?branch=develop)](https://travis-ci.org/TheAssemblyArmada/Chronoshift)
+<p align="center">
+  <a href="https://ci.appveyor.com/project/AdamMondez/chronoshift-k6j75"><img src="https://ci.appveyor.com/api/projects/status/7pkmbx9gbpet8s9a?svg=true" alt="Build Status"></a>
+  <a href="https://travis-ci.org/TheAssemblyArmada/Chronoshift.svg?branch=develop"><img src="https://travis-ci.org/TheAssemblyArmada/Chronoshift.svg?branch=develop" alt="Build Status"></a>
+</p>
 
 An Open Source Re-Implementation of Command and Conquer: Red Alert
 
