@@ -662,6 +662,7 @@ enum HousesType
     HOUSES_NEUTRAL = 10,
     HOUSES_SPECIAL = 11,
     HOUSES_LAST = 11,
+
     HOUSES_MULTI_FIRST = 12,
     HOUSES_MULTI_1 = 12,
     HOUSES_MULTI_2 = 13,
@@ -673,7 +674,9 @@ enum HousesType
     HOUSES_MULTI_8 = 19,
     HOUSES_MULTI_LAST = 19,
     HOUSES_MULTI_COUNT = 8,
+
     HOUSES_ALL_LAST = 19,
+
     HOUSES_COUNT = 20
 };
 

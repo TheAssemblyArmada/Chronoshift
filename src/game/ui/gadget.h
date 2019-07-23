@@ -30,6 +30,18 @@
 
 class ControlClass;
 
+enum GadgetMasks {
+    UNK_BIT = 0x4000,
+    BTN_BIT = 0x8000
+};
+
+// TODO, not sure, looks like EditClass only mask?
+#define     GADGET_INPUT_RENAME(id)        (KeyNumType)((UNK_BIT | id))
+
+// All UI controls are this number + the control ID.
+// Otherwise, input will return a standard KeyNumType.
+#define     GADGET_INPUT_RENAME2(id)         (KeyNumType)((BTN_BIT | id))
+
 enum GadgetInput
 {
     INPUT_NONE = 0x0,
