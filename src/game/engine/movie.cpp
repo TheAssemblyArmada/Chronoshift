@@ -13,6 +13,10 @@
  *            LICENSE
  */
 #include "movie.h"
+#include "gbuffer.h"
+#include "keyboard.h"
+#include "mouse.h"
+#include "gamedebug.h"
 
 #ifndef PLATFORM_WINDOWS
 #include <strings.h>
@@ -198,4 +202,68 @@ MovieInfoStruct *MovieInfo_From_Movie(MovieType movie)
         return &MovieTypes[movie];
     }
     return nullptr;
+}
+
+void Play_Movie(MovieType movie, ThemeType theme, BOOL a3)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)() = reinterpret_cast<void (*)()>(0x004A88AC);
+    func();
+#endif
+}
+
+void Play_Intro(BOOL flag)
+{
+    static MovieType _counter = MOVIE_NONE;
+
+    g_keyboard->Clear();
+
+    if ( flag ) {
+
+        // If counter is less than zero or greater than MOVIE_COUNT, reset it.
+        if ( _counter < 0 || _counter > MOVIE_COUNT ) {
+            _counter = MOVIE_COUNT;
+        }
+
+        // We dont want to play the intro movies in our cycle, so go down one entry.
+        if ( _counter == MOVIE_ENGLISH || _counter == MOVIE_REDINTRO ) {
+            --_counter;
+        }
+
+        //dobule check before we try to play.
+        DEBUG_ASSERT(_counter != MOVIE_NONE);
+        DEBUG_ASSERT(_counter < MOVIE_COUNT);
+
+        g_visiblePage.Clear();
+
+        Play_Movie(_counter);
+
+        // Decrement the counter to get the next movie entry for next time.
+        --_counter;
+
+    } else {
+
+        g_visiblePage.Clear();
+
+        Play_Movie(MOVIE_PROLOG, THEME_NONE, false);
+
+    }
+}
+
+void Play_SneakPeak()
+{
+    g_visiblePage.Clear();
+
+    Play_Movie(MOVIE_PROLOG);
+    g_keyboard->Clear();
+
+    g_visiblePage.Clear();
+
+    Play_Movie(MOVIE_SIZZLE);
+    g_keyboard->Clear();
+
+    g_visiblePage.Clear();
+
+    Play_Movie(MOVIE_SIZZLE2);
+    g_keyboard->Clear();
 }

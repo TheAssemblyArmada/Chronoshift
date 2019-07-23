@@ -18,6 +18,7 @@
 #define MOVIE_H
 
 #include "always.h"
+#include "theme.h"
 
 enum MovieType
 {
@@ -139,6 +140,10 @@ MovieType Movie_From_Name(const char *name);
 const char *Name_From_Movie(MovieType movie);
 
 MovieInfoStruct *MovieInfo_From_Movie(MovieType movie);
+
+void Play_Movie(MovieType movie, ThemeType theme = THEME_NONE, BOOL a3 = true);
+void Play_Intro(BOOL flag = false);
+void Play_SneakPeak();
 
 extern MovieInfoStruct MovieTypes[MOVIE_COUNT];
 
