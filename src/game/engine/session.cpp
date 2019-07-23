@@ -38,6 +38,7 @@ void SessionClass::One_Time()
 {
     Read_MultiPlayer_Settings();
     Read_Scenario_Descriptions();
+
     UniqueID = Compute_Unique_ID();
 }
 
@@ -46,31 +47,7 @@ void SessionClass::Init()
     //empty
 }
 
-int SessionClass::Create_Connections()
-{
-#ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(SessionClass*) = reinterpret_cast<int (*)(SessionClass*)>(0x0054A4F8);
-    return func(this);
-#else
-    return 0;
-#endif
-}
-
-int SessionClass::Am_I_Master()
-{
-    for (int i = 0; i < Session.MPlayerMax; ++i) {
-        HouseClass *house = HouseClass::As_Pointer((HousesType)i + HOUSES_MULTI_FIRST);
-        if (house->Is_Human()) {
-            if (house == g_PlayerPtr) {
-                return 1;
-            }
-            return 0;
-        }
-    }
-    return 0;
-}
-
-int SessionClass::Save(Pipe &pipe)
+BOOL SessionClass::Save(Pipe &pipe)
 {
     pipe.Put(&PacketProtocol, sizeof(PacketProtocol));
     pipe.Put(&MaxAhead, sizeof(MaxAhead));
@@ -89,10 +66,10 @@ int SessionClass::Save(Pipe &pipe)
     pipe.Put(&Options.AIPlayers, sizeof(Options.AIPlayers));
     pipe.Put(&MPlayerObiWan, sizeof(MPlayerObiWan));
     pipe.Put(&SaveGame, sizeof(SaveGame));
-    return 1;
+    return true;
 }
 
-int SessionClass::Load(Straw &straw)
+BOOL SessionClass::Load(Straw &straw)
 {
     straw.Get(&PacketProtocol, sizeof(PacketProtocol));
     straw.Get(&MaxAhead, sizeof(MaxAhead));
@@ -111,10 +88,10 @@ int SessionClass::Load(Straw &straw)
     straw.Get(&Options.AIPlayers, sizeof(Options.AIPlayers));
     straw.Get(&MPlayerObiWan, sizeof(MPlayerObiWan));
     straw.Get(&SaveGame, sizeof(SaveGame));
-    return 1;
+    return true;
 }
 
-int SessionClass::Save(GameFileClass &file)
+BOOL SessionClass::Save(GameFileClass &file)
 {
     file.Write(&PacketProtocol, sizeof(GameToPlay));
     file.Write(&PacketProtocol, sizeof(PacketProtocol));
@@ -134,16 +111,17 @@ int SessionClass::Save(GameFileClass &file)
     file.Write(&Options.AIPlayers, sizeof(Options.AIPlayers));
     file.Write(&MPlayerObiWan, sizeof(MPlayerObiWan));
     file.Write(&SaveGame, sizeof(SaveGame));
+    
     int playercount = Players.Count();
     file.Write(&playercount, sizeof(playercount));
-    for (int i = 0; i < Players.Count(); ++i)
-    {
+    for (int i = 0; i < Players.Count(); ++i) {
         file.Write(&Players[i], sizeof(NodeNameTag));
     }
-    return 1;
+    
+    return true;
 }
 
-int SessionClass::Load(GameFileClass &file)
+BOOL SessionClass::Load(GameFileClass &file)
 {
     file.Read(&PacketProtocol, sizeof(GameToPlay));
     file.Read(&PacketProtocol, sizeof(PacketProtocol));
@@ -163,19 +141,18 @@ int SessionClass::Load(GameFileClass &file)
     file.Read(&Options.AIPlayers, sizeof(Options.AIPlayers));
     file.Read(&MPlayerObiWan, sizeof(MPlayerObiWan));
     file.Read(&SaveGame, sizeof(SaveGame));
+    
     int playercount;
     file.Read(&playercount, sizeof(playercount));
-    if (playercount <= 0)
-    {
-        return 1;
+    if (playercount > 0) {
+        for (int i = 0; i < playercount; ++i) {
+            NodeNameTag *nodename = new NodeNameTag();
+            file.Read(nodename, sizeof(NodeNameTag));
+            Players.Add(nodename);
+        }
     }
-    for (int i = 0; i < playercount; ++i)
-    {
-        NodeNameTag *nodename = new NodeNameTag();
-        file.Read(nodename, sizeof(NodeNameTag));
-        Players.Add(nodename);
-    }
-    return 1;
+
+    return true;
 }
 
 void SessionClass::Read_MultiPlayer_Settings()
@@ -209,13 +186,13 @@ void SessionClass::Free_Scenario_Descriptions()
     }
     MPlayerScenarios.Clear();
 
-    for (int j = 0; j < InitStrings.Count(); ++j) {
-        delete InitStrings[j];
+    for (int i = 0; i < InitStrings.Count(); ++i) {
+        delete InitStrings[i];
     }
     InitStrings.Clear();
 
-    for (int k = 0; k < PhoneBookEntries.Count(); ++k) {
-        delete PhoneBookEntries[k];
+    for (int i = 0; i < PhoneBookEntries.Count(); ++i) {
+        delete PhoneBookEntries[i];
     }
     PhoneBookEntries.Clear();
 }
@@ -228,7 +205,7 @@ void SessionClass::Free_Scenario_Descriptions()
 void SessionClass::Trap_Object()
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(SessionClass*) = reinterpret_cast<void (*)(SessionClass*)>(0x0054C298);
+    void (*func)(SessionClass *) = reinterpret_cast<void (*)(SessionClass *)>(0x0054C298);
     return func(this);
 #endif
 }
@@ -236,9 +213,33 @@ void SessionClass::Trap_Object()
 uint32_t SessionClass::Compute_Unique_ID()
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    uint32_t (*func)(SessionClass*) = reinterpret_cast<uint32_t (*)(SessionClass*)>(0x0054C8F4);
+    uint32_t (*func)(SessionClass *) = reinterpret_cast<uint32_t (*)(SessionClass *)>(0x0054C8F4);
     return func(this);
 #else
     return 0;
+#endif
+}
+
+BOOL SessionClass::Am_I_Master()
+{
+    for (int i = 0; i < Session.MPlayerMax; ++i) {
+        HouseClass *house = HouseClass::As_Pointer(HousesType(i) + HOUSES_MULTI_FIRST);
+        if (house->Is_Human()) {
+            if (house == g_PlayerPtr) {
+                return true;
+            }
+            return false;
+        }
+    }
+    return false;
+}
+
+BOOL SessionClass::Create_Connections()
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    BOOL (*func)(SessionClass *) = reinterpret_cast<BOOL (*)(SessionClass *)>(0x0054A4F8);
+    return func(this);
+#else
+    return false;
 #endif
 }

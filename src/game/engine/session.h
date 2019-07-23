@@ -42,7 +42,7 @@ enum GameEnum
     GAME_CAMPAIGN,
     GAME_1,
     GAME_2,
-    GAME_3, // think this is LAN/NETWORK
+    GAME_IPX,
     GAME_INTERNET,
     GAME_SKIRMISH,
     GAME_6,
@@ -62,11 +62,13 @@ struct GlobalPacket
 struct MPlayerScoreStruct
 {
     char Name[12];
-    int field_0D;
-    int Lost;
-    int Kills;
-    int Economy;
-    int Score;
+#ifndef CHRONOSHIFT_NO_BITFIELDS
+    BOOL Bit1 : 1; // & 1
+#else
+    bool Bit1;
+#endif
+    int Winner;
+    int field_10[4];
     PlayerColorType Scheme;
 };
 
@@ -115,19 +117,24 @@ public:
 
     void One_Time();
     void Init();
-    int Create_Connections();
-    int Am_I_Master();
 
     GameEnum Game_To_Play() const { return GameToPlay; }
+    void Set_Game_To_Play(GameEnum game) { GameToPlay = game; }
     CommProtocolEnum Packet_Protocol() const { return PacketProtocol; }
 
+    MPlayerOptionsStruct &MPlayer_Options() { return Options; }
     BOOL MPlayer_Goodies_Allowed() const { return Options.Goodies; }
     BOOL MPlayer_Ore_Growth() const { return Options.Ore; }
+    BOOL MPlayer_Obi_Wan() const { return MPlayerObiWan; }
+    void Set_MPlayer_Obi_Wan(BOOL onoff) { MPlayerObiWan = onoff; }
+    BOOL MPlayer_Blitz() const { return MPlayerBlitz; }
+    void Set_MPlayer_Blitz(BOOL onoff) { MPlayerBlitz = onoff; }
 
     int Desired_Frame_Rate() const { return DesiredFrameRate; }
     void Set_Desired_Frame_Rate(int value) { DesiredFrameRate = value; }
     int Processing_Start_Tick() const { return ProcessingStartTick; }
     void Set_Processing_Start_Tick(int value) { ProcessingStartTick = value; }
+    void Reset_Processing_Values() { ProcessingStartTick = 0; ProcessingTicks = 0; ProcessingFrames = 0; }
     void Update_Processing_Tick_Value(int value) { ProcessingTicks += value; }
     void Tick_Processing_Frame() { ++ProcessingFrames; }
 
@@ -146,15 +153,26 @@ public:
 
     MessageListClass &Get_Messages() { return Messages; }
 
+    MPlayerScoreStruct &MPlayer_Score_Info(HousesType house) { return MPlayerScores[house]; }
+    int MPlayer_Current_Game() const { return MPlayerCurrentGame; }
+
+    GameFileClass &Recording_File() { return RecordFile; }
     BOOL Record_Game() const { return RecordGame; }
+    void Set_Record_Game(BOOL onoff) { RecordGame = onoff; }
     BOOL Playback_Game() const { return PlaybackGame; }
+    void Set_Playback_Game(BOOL onoff) { PlaybackGame = onoff; }
     BOOL Attraction_Allowed() const { return AllowAttract; }
+    void Set_Allow_Attraction(BOOL onoff) { AllowAttract = onoff; }
+    BOOL Super_Record_Game() const { return SuperRecord; }
 
     DynamicVectorClass<NodeNameTag *> &Games_List() { return Games; }
     DynamicVectorClass<NodeNameTag *> &Players_List() { return Players; }
     DynamicVectorClass<NodeNameTag *> &Network_Players_List() { return NetworkPlayers; }
 
     BOOL Modem_Service() const { return ModemService; }
+
+    BOOL Am_I_Master();
+    BOOL Create_Connections();
 
     void Trap_Object();
 
@@ -171,7 +189,7 @@ private:
     char MPlayerName[12];
     PlayerColorType MPlayerPrefColor;
     PlayerColorType MPlayerColorIdx;
-    HousesType MPlayerHouse; // Should be HouseType?
+    HousesType MPlayerHouse;
     BOOL MPlayerObiWan;
     BOOL MPlayerBlitz;
     int MPlayerMax;
@@ -191,11 +209,16 @@ private:
     BOOL SendScenarioIsOfficial;
     char UnkArray[20];
     int UnkArrayPos;
-    IPXAddressClass UnkIPXAddress;
+    IPXAddressClass HostAddress;
     MessageListClass Messages;
     IPXAddressClass MessageAddress;
-    char LastMessage[124];
-    MPlayerScoreStruct MPlayerScores[8];
+    char LastMessage[118];
+#ifndef CHRONOSHIFT_NO_BITFIELDS
+    BOOL SessionBit1 : 1; // & 1
+#else
+    bool SessionBit1;
+#endif
+    MPlayerScoreStruct MPlayerScores[HOUSES_MULTI_COUNT];
     int MPlayerGamesPlayed;
     int MPlayerNumScores;
     int MPlayerWinner;
@@ -205,11 +228,12 @@ private:
     BOOL RecordGame : 1; // & 1
     BOOL PlaybackGame : 1; // & 2
     BOOL AllowAttract : 1; // & 4
+    BOOL SuperRecord : 1; // & 8 // Unknown if in RA, but seems to be used as if there is one huge recording file (ie, multipule games)?
 #else
     bool RecordGame;
     bool PlaybackGame;
     bool AllowAttract;
-
+    bool SuperRecord;
 #endif
     BOOL IsBridge;
     IPXAddressClass BridgeNetwork;
