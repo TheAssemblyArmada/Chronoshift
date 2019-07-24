@@ -130,7 +130,7 @@ protected:
         struct
         {
             /* //map bit, >> 1, as it goes past IsActive.
-            Always take the safest route, even if it’s a detour  1
+            Always take the safest route, even if it's a detour  1
             Charge at target ignoring enemy units/enemy fire  	2
             Team is only used by autocreate AI (produced taskforces) 	4
             Prebuild teammembers before creating team   	8
@@ -155,15 +155,15 @@ protected:
     bool m_Reinforce;
 #endif
     int m_Priority; // 0x29 //confirmed
-    int m_field_2D; // 0x2D
-    int m_Max; // 0x2E //confirmed 	//max instance count?
-    char m_field_2F; // 0x2F
+    uint8_t m_field_2D; // 0x2D
+    uint8_t m_Max; // 0x2E //confirmed 	//max instance count?
+    uint8_t m_field_2F; // 0x2F
     HousesType m_Owner; // 0x30
     GamePtr<TriggerTypeClass> m_TriggerType; // 0x31
     int m_field_35; // 0x35  //some waypoint?
     int m_Instances; // 0x39  //instance count?   //needs confirming, doesnt seem like a right name
     int m_MissionCount; // 0x3D //team mission count?
-    TeamMissionClass m_Missions[TMISSION_COUNT]; // 0x41 // game creates a list of 20, but TMISSION_COUNT is definalty 17?
+    TeamMissionClass m_Missions[20]; // 0x41 // A TeamType can have maximum of 20 missions asigned to it
     int m_MemberCount; // 0xA5 	//im not sure if this is exact member count or how many different types we have.
     TeamTypeContent m_Content[5]; // 0xA9 	//members?
 

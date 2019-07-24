@@ -22,17 +22,17 @@ TFixedIHeapClass<UnitClass> g_Units;
 #endif
 
 UnitClass::UnitClass(RTTIType type, int id, HousesType house) :
-    FootClass(type, id, house)
+    DriveClass(type, id, house)
 {
 }
 
 UnitClass::UnitClass(const UnitClass &that) :
-    FootClass(that)
+    DriveClass(that)
 {
 }
 
 UnitClass::UnitClass(const NoInitClass &noinit) :
-    FootClass(noinit)
+    DriveClass(noinit)
 {
 }
 
