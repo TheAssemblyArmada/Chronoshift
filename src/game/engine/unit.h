@@ -19,10 +19,10 @@
 #define UNIT_H
 
 #include "always.h"
-#include "foot.h"
+#include "drive.h"
 #include "unittype.h"
 
-class UnitClass : public FootClass
+class UnitClass : public DriveClass
 {
 public:
     UnitClass(RTTIType type, int id, HousesType house);

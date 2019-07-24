@@ -63,7 +63,7 @@ public:
     TriggerClass(TriggerTypeClass *trigger_type);
     TriggerClass(const TriggerClass &that);
     TriggerClass(const NoInitClass &noinit);
-    virtual ~TriggerClass();
+    ~TriggerClass();
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }

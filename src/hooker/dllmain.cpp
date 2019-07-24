@@ -266,6 +266,7 @@ ASSERT_SIZEOF(DriveClass, 0x15C);
 ASSERT_SIZEOF(DropListClass, 0x1A5);
 ASSERT_SIZEOF(FactoryClass, 0x2E);
 ASSERT_SIZEOF(FlasherClass, 0x4);
+ASSERT_SIZEOF(FlyClass, 0x5);
 ASSERT_SIZEOF(FootClass, 0x141);
 ASSERT_SIZEOF(GadgetClass, 0x24);
 ASSERT_SIZEOF(GameEventClass, 0x14);
