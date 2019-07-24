@@ -29,6 +29,7 @@
 #include "mouseshape.h"
 #include "msgbox.h"
 #include "palette.h"
+#include "pcx.h"
 #include "picture.h"
 #include "pk.h"
 #include "ramfile.h"
@@ -550,4 +551,94 @@ void Bootstrap()
     _sidebar_scheme.BrightColor = 15;
     _sidebar_scheme.MediumColor = 14;
     GadgetClass::Set_Color_Scheme(&_sidebar_scheme);
+}
+
+/**
+ * Performs checks for a CD drive and if an game CD is present.
+ *
+ * 0x004F7A08
+ */
+void Init_CDROM_Access()
+{
+    g_visiblePage.Clear();
+    g_hidPage.Clear();
+
+    if (CDFileClass::Has_Paths()) {
+        g_requiredCD = DISK_ANY;
+    } else {
+        int result;
+        MessageBoxClass msg;
+        Force_CD_Available(DISK_CDCHECK);
+
+        do {
+            result = CDFileClass::Set_Search_Drives("?:\\");
+
+            switch (result) {
+                default: // Fallthrough
+                case 0: // Set drives succeeded.
+                    g_visiblePage.Clear();
+                    g_mouse->Show_Mouse();
+
+                    if (!Force_CD_Available(g_requiredCD)) {
+                        Emergency_Exit(0xFF);
+                    }
+
+                    g_mouse->Hide_Mouse();
+
+                    break;
+                case 1: // Set drives failed with no CD drive found.
+                    g_visiblePage.Clear();
+                    GamePalette.Set();
+                    g_mouse->Show_Mouse();
+                    msg.Process(TXT_CD_DIALOG_ERROR1);
+                    Emergency_Exit(0xFF);
+                    break;
+                case 2: // Set drives failed with CD not being RA disk.
+                    g_visiblePage.Clear();
+                    GamePalette.Set();
+                    g_mouse->Show_Mouse();
+
+                    if (msg.Process(TXT_CD_DIALOG_1, TXT_OK, TXT_CANCEL) == 1) {
+                        Emergency_Exit(0xFF);
+                    }
+
+                    g_mouse->Hide_Mouse();
+                    break;
+            }
+
+        } while (result != 0);
+
+        g_requiredCD = DISK_ANY;
+    }
+}
+
+/**
+ * Loads a PCX file data into the provided viewport and palette.
+ *
+ * 0x005B3CD8
+ */
+void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteClass *pal)
+{
+    GraphicBufferClass *buff = Read_PCX_File(filename, pal);
+
+    if (buff == nullptr) {
+        return;
+    }
+
+    buff->Blit(*vp);
+    delete buff;
+}
+
+/**
+ * Loads and displays the prolog page.
+ *
+ * 0x004F3E98
+ */
+void Load_Prolog_Page()
+{
+    g_mouse->Hide_Mouse();
+    Load_Title_Screen("prolog.pcx", &g_hidPage, &CCPalette);
+    g_hidPage.Blit(g_seenBuff);
+    CCPalette.Set();
+    g_mouse->Show_Mouse();
 }

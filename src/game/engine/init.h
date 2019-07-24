@@ -21,24 +21,29 @@
 
 #include "always.h"
 
+class GraphicViewPortClass;
+class PaletteClass;
+
 void Init_Expansion_Files();
 void Init_Bootstrap_Mixfiles();
 void Init_Secondary_Mixfiles();
 void Reinit_Secondary_Mixfiles();
-//void Init_Bulk_Data();
+// void Init_Bulk_Data();
 void Init_Keys();
 void Init_Fonts();
 void Init_Random();
 void Init_Color_Remaps();
 void Init_Mouse();
 void Bootstrap();
+void Init_CDROM_Access();
+void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteClass *pal);
+void Load_Prolog_Page();
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 
 namespace Init
 {
-
 inline void Hook_Me()
 {
 #ifdef COMPILER_WATCOM
@@ -51,10 +56,13 @@ inline void Hook_Me()
     Hook_Function(0x004F8664, Init_Keys);
     Hook_Function(0x004F81CC, Bootstrap);
     Hook_Function(0x004F8390, Init_Mouse);
+    Hook_Function(0x004F7A08, Init_CDROM_Access);
+    Hook_Function(0x005B3CD8, Load_Title_Screen);
+    Hook_Function(0x004F3E98, Load_Prolog_Page);
 #endif
 }
 
-}
+} // namespace Init
 #endif
 
 #endif // INIT_H
