@@ -99,7 +99,7 @@ class InfantryTypeClass : public TechnoTypeClass
 {
 public:
     InfantryTypeClass(InfantryType type, int uiname, const char *name, int def_fire_coord, int rot_count, BOOL female,
-        BOOL crawls, BOOL civilian, BOOL has_alt_remap, BOOL nominal, BOOL theater, PipEnum pip, DoInfoStruct *sequence,
+        BOOL crawls, BOOL civilian, BOOL has_alt_remap, BOOL nominal, BOOL theater, PipEnum pip, const DoInfoStruct *do_info,
         int fire_up, int fire_prone, const uint8_t *alt_remap);
     InfantryTypeClass(const InfantryTypeClass &that);
     InfantryTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
@@ -153,7 +153,7 @@ private:
 #endif
     InfantryType m_Type;
     PipEnum m_Pip;
-    DoInfoStruct *m_DoControl;
+    const DoInfoStruct *m_DoControl;
     uint8_t m_FireUp;
     uint8_t m_FireProne;
     const uint8_t *m_AltRemap;

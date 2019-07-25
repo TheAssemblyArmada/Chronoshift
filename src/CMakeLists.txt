@@ -50,12 +50,16 @@ set(GAMEENGINE_SRC
     game/engine/abstracttype.cpp
     game/engine/action.cpp
     game/engine/aircraft.cpp
+    game/engine/aircraftdata.cpp
     game/engine/aircrafttype.cpp
     game/engine/anim.cpp
+    game/engine/animdata.cpp
     game/engine/animtype.cpp
     game/engine/armor.cpp
     game/engine/building.cpp
+    game/engine/buildingdata.cpp
     game/engine/buildingtype.cpp
+    game/engine/bulletdata.cpp
     game/engine/bullettype.cpp
     game/engine/callback.cpp
     game/engine/cargo.cpp
@@ -89,9 +93,11 @@ set(GAMEENGINE_SRC
     game/engine/heap.cpp
     game/engine/help.cpp
     game/engine/house.cpp
+    game/engine/housedata.cpp
     game/engine/housestatic.cpp
     game/engine/housetype.cpp
     game/engine/infantry.cpp
+    game/engine/infantrydata.cpp
     game/engine/infantrytype.cpp
     game/engine/init.cpp
     game/engine/iomap.cpp
@@ -110,6 +116,7 @@ set(GAMEENGINE_SRC
     game/engine/object.cpp
     game/engine/objecttype.cpp
     game/engine/options.cpp
+    game/engine/overlaydata.cpp
     game/engine/overlaytype.cpp
     game/engine/picture.cpp
     game/engine/power.cpp
@@ -122,6 +129,7 @@ set(GAMEENGINE_SRC
     game/engine/scroll.cpp
     game/engine/scenario.cpp
     game/engine/session.cpp
+    game/engine/smudgedata.cpp
     game/engine/smudgetype.cpp
     game/engine/source.cpp
     game/engine/sidebar.cpp
@@ -133,7 +141,9 @@ set(GAMEENGINE_SRC
     game/engine/technotype.cpp
     game/engine/team.cpp
     game/engine/teamtype.cpp
+    game/engine/templatedata.cpp
     game/engine/templatetype.cpp
+    game/engine/terraindata.cpp
     game/engine/terraintype.cpp
     game/engine/theater.cpp
     game/engine/theme.cpp
@@ -141,15 +151,19 @@ set(GAMEENGINE_SRC
     game/engine/trigger.cpp
     game/engine/triggertype.cpp
     game/engine/unit.cpp
+    game/engine/unitdata.cpp
     game/engine/unittype.cpp
     game/engine/utracker.cpp
     game/engine/version.cpp
     game/engine/vessel.cpp
+    game/engine/vesseldata.cpp
     game/engine/vesseltype.cpp
     game/engine/voc.cpp
     game/engine/vortex.cpp
     game/engine/vox.cpp
+    game/engine/warheaddata.cpp
     game/engine/warheadtype.cpp
+    game/engine/weapondata.cpp
     game/engine/weapontype.cpp
     game/gfx/blitters.cpp
     game/gfx/drawshape.cpp

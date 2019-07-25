@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "warheadtype.h"
+#include "warheaddata.h"
 #include "gameini.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
@@ -21,16 +22,6 @@ TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClas
 #else
 TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;
 #endif
-
-const WarheadTypeClass WarheadSA(WARHEAD_SA, "SA");
-const WarheadTypeClass WarheadHE(WARHEAD_HE, "HE");
-const WarheadTypeClass WarheadAP(WARHEAD_AP, "AP");
-const WarheadTypeClass WarheadFire(WARHEAD_FIRE, "Fire");
-const WarheadTypeClass WarheadHollowPoint(WARHEAD_HOLLOWPOINT, "HollowPoint");
-const WarheadTypeClass WarheadSuper(WARHEAD_SUPER, "Super");
-const WarheadTypeClass WarheadOrganic(WARHEAD_ORGANIC, "Organic");
-const WarheadTypeClass WarheadNuke(WARHEAD_NUKE, "Nuke");
-const WarheadTypeClass WarheadMechanical(WARHEAD_MECHANICAL, "Mechanical");
 
 /**
  * Global template ctor differs intentionally from the binary, don't change unless
@@ -92,9 +83,9 @@ void WarheadTypeClass::Init_Heap()
 {
     // in the binary, all warhead types are initliased in RulesClass::Heap_Maximums("") and
     // do not have global class instance, so i have moved them here for continuity.
-    new WarheadTypeClass(WarheadSA);
-    new WarheadTypeClass(WarheadHE);
-    new WarheadTypeClass(WarheadAP);
+    new WarheadTypeClass(WarheadSmallArms);
+    new WarheadTypeClass(WarheadHighExplosive);
+    new WarheadTypeClass(WarheadArmorPiercing);
     new WarheadTypeClass(WarheadFire);
     new WarheadTypeClass(WarheadHollowPoint);
     new WarheadTypeClass(WarheadSuper);
