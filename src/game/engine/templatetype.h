@@ -24,8 +24,6 @@
 #include "objecttype.h"
 #include "theater.h"
 
-class NoInit;
-
 enum TemplateType
 {
     TEMPLATE_NONE = -1,

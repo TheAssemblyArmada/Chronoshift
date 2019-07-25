@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "vesseltype.h"
+#include "vesseldata.h"
 #include "gamefile.h"
 #include "coord.h"
 #include "facing.h"
@@ -29,21 +30,6 @@ TFixedIHeapClass<VesselTypeClass> &g_VesselTypes = Make_Global<TFixedIHeapClass<
 #else
 TFixedIHeapClass<VesselTypeClass> g_VesselTypes;
 #endif
-
-VesselTypeClass const VesselSubmarine(
-    VESSEL_SUBMARINE, TXT_SS, "SS", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false, FACING_COUNT_8, MISSION_HUNT);
-VesselTypeClass const VesselDestroyer(
-    VESSEL_DESTROYER, TXT_DD, "DD", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, FACING_COUNT_8, MISSION_HUNT);
-VesselTypeClass const VesselCruiser(
-    VESSEL_CRUISER, TXT_CA, "CA", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, FACING_COUNT_8, MISSION_HUNT);
-VesselTypeClass const VesselTransport(VESSEL_TRANSPORT, TXT_LST, "LST", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false,
-    FACING_COUNT_NONE, MISSION_SLEEP);
-VesselTypeClass const VesselPTBoat(
-    VESSEL_PT_BOAT, TXT_PT, "PT", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, true, FACING_COUNT_8, MISSION_HUNT);
-VesselTypeClass const VesselMissileSubmarine(VESSEL_MISSILE_SUB, TXT_MS, "MSUB", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true,
-    false, FACING_COUNT_8, MISSION_HUNT);
-VesselTypeClass const VesselHeliCarrier(VESSEL_CARRIER, TXT_CARR, "CARR", ANIM_FBALL1, 0, 0, 0, 0, 0, false, true, false,
-    FACING_COUNT_NONE, MISSION_SLEEP);
 
 /**
  * 0x00581F0C

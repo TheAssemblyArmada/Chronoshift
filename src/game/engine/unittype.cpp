@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "unittype.h"
+#include "unitdata.h"
 #include "gameini.h"
 #include "gamefile.h"
 #include "coord.h"
@@ -30,62 +31,6 @@ TFixedIHeapClass<UnitTypeClass> &g_UnitTypes = Make_Global<TFixedIHeapClass<Unit
 #else
 TFixedIHeapClass<UnitTypeClass> g_UnitTypes;
 #endif
-
-UnitTypeClass const UnitV2Launcher(UNIT_V2RL, TXT_V2RL, "V2RL", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, true, false, true,
-    false, false, false, false, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitLTank(UNIT_LTANK, TXT_LTANK, "1TNK", ANIM_FRAG1, REMAP_1, 32, 192, 0, 0, 0, true, false, true,
-    false, false, false, true, false, false, false, false, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitMTank(UNIT_MTANK, TXT_HTANK, "3TNK", ANIM_FRAG1, REMAP_1, 64, 128, 24, 128, 24, true, false, true,
-    false, false, false, true, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitMTank2(UNIT_MTANK2, TXT_MTANK, "2TNK", ANIM_FRAG1, REMAP_1, 48, 192, 0, 192, 0, true, false, true,
-    false, false, false, true, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitHTank(UNIT_HTANK, TXT_4TANK, "4TNK", ANIM_ART_EXP1, REMAP_1, 32, 192, 40, 8, 64, true, false,
-    true, false, false, false, true, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitMRJammer(UNIT_MRJAMMER, TXT_MRJ, "MRJ", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, false, false, true,
-    false, true, false, false, true, false, false, false, false, true, false, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitMGG(UNIT_MGAPGEN, TXT_MGG, "MGG", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, false, false, true,
-    false, false, false, false, true, false, false, true, false, false, true, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitArty(UNIT_ARTY, TXT_ARTY, "ARTY", ANIM_ART_EXP1, REMAP_1, 64, 96, 0, 0, 0, true, false, false,
-    false, false, false, false, false, false, false, false, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitHarvester(UNIT_HARVESTER, TXT_HARVESTER, "HARV", ANIM_FBALL1, REMAP_2, 0, 0, 0, 0, 0, true, true,
-    true, true, false, false, false, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HARVEST);
-UnitTypeClass const UnitMCV(UNIT_MCV, TXT_MCV, "MCV", ANIM_FBALL1, REMAP_2, 0, 0, 0, 0, 0, true, false, true, false,
-    false, false, false, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitJeep(UNIT_JEEP, TXT_JEEP, "JEEP", ANIM_FRAG1, REMAP_1, 48, 48, 0, 48, 0, true, false, false,
-    false, false, false, true, false, false, false, false, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitAPC(UNIT_APC, TXT_APC, "APC", ANIM_FRAG1, REMAP_1, 48, 48, 0, 48, 0, true, false, true, false,
-    false, false, false, false, false, false, false, false, false, false, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitMineLayer(UNIT_MINELAYER, TXT_MNLY, "MNLY", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, true, false,
-    true, false, false, false, false, false, false, false, false, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitConvoyTruck(UNIT_CARGO_TRUCK, TXT_TRUCK, "TRUK", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, false,
-    false, false, false, false, false, false, false, false, false, false, false, false, false, FACING_COUNT_32,
-    MISSION_SLEEP, MISSION_GUARD);
-UnitTypeClass const UnitAnt1(UNIT_ANT1, TXT_NULL, "ANT1", ANIM_ANTDEATH, REMAP_1, 0, 0, 0, 0, 0, false, true, false,
-    false, false, true, false, false, false, false, true, false, false, false, FACING_COUNT_8, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitAnt2(UNIT_ANT2, TXT_NULL, "ANT2", ANIM_ANTDEATH, REMAP_1, 0, 0, 0, 0, 0, false, true, false,
-    false, false, true, false, false, false, false, true, false, false, false, FACING_COUNT_8, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitAnt3(UNIT_ANT3, TXT_NULL, "ANT3", ANIM_ANTDEATH, REMAP_1, 0, 0, 0, 0, 0, false, true, false,
-    false, false, true, false, false, false, false, true, false, false, false, FACING_COUNT_8, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitChrono(UNIT_CHRONO, TXT_CTNK, "CTNK", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, false, false, true,
-    false, false, false, false, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitTesla(UNIT_TESLA, TXT_TTNK, "TTNK", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, false, false, true,
-    false, true, false, false, true, false, false, true, false, true, false, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
-UnitTypeClass const UnitMAD(UNIT_MAD_TANK, TXT_QTNK, "QTNK", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, false, false, true,
-    false, false, false, false, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_HUNT);
-UnitTypeClass const UnitDemoTruck(UNIT_DEMO_TRUCK, TXT_DTRK, "DTRK", ANIM_FRAG1, REMAP_1, 0, 0, 0, 0, 0, false, false,
-    false, false, false, false, false, false, false, false, false, false, false, false, FACING_COUNT_32, MISSION_SLEEP,
-    MISSION_GUARD);
-UnitTypeClass const UnitPhase(UNIT_PHASE, TXT_STNK, "STNK", ANIM_FRAG1, REMAP_1, 48, 48, 0, 48, 0, false, false, true,
-    false, false, false, true, false, false, false, true, false, false, false, FACING_COUNT_32, MISSION_SLEEP, MISSION_HUNT);
 
 /**
  * 0x0056E09C

@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "housetype.h"
+#include "housedata.h"
 #include "gameini.h"
 #include "language.h"
 #include "stringex.h"
@@ -23,28 +24,6 @@ TFixedIHeapClass<HouseTypeClass> &g_HouseTypes = Make_Global<TFixedIHeapClass<Ho
 #else
 TFixedIHeapClass<HouseTypeClass> g_HouseTypes;
 #endif
-
-// These global objects are used to initialise the heap
-HouseTypeClass const HouseEngland(HOUSES_ENGLAND, "England", TXT_ENGLAND, "ENG", 0, PLAYER_COLOR_GREEN, 'E');
-HouseTypeClass const HouseGermany(HOUSES_GERMANY, "Germany", TXT_GERMANY, "GER", 0, PLAYER_COLOR_GREY, 'G');
-HouseTypeClass const HouseFrance(HOUSES_FRANCE, "France", TXT_FRANCE, "FRA", 0, PLAYER_COLOR_BLUE, 'F');
-HouseTypeClass const HouseUkraine(HOUSES_UKRAINE, "Ukraine", TXT_UKRAINE, "UKA", 0, PLAYER_COLOR_ORANGE, 'K');
-HouseTypeClass const HouseUSSR(HOUSES_USSR, "USSR", TXT_RUSSIA, "RED", 0, PLAYER_COLOR_RED, 'U');
-HouseTypeClass const HouseGreece(HOUSES_GREECE, "Greece", TXT_GREECE, "GRE", 0, PLAYER_COLOR_LIGHT_BLUE, 'G');
-HouseTypeClass const HouseTurkey(HOUSES_TURKEY, "Turkey", TXT_TURKEY, "TRK", 0, PLAYER_COLOR_BROWN, 'T');
-HouseTypeClass const HouseSpain(HOUSES_SPAIN, "Spain", TXT_SPAIN, "SPN", 0, PLAYER_COLOR_YELLOW, 'S');
-HouseTypeClass const HouseGood(HOUSES_GOODGUY, "GoodGuy", TXT_FRIENDLY, "GDI", 0, PLAYER_COLOR_LIGHT_BLUE, 'G');
-HouseTypeClass const HouseBad(HOUSES_BADGUY, "BadGuy", TXT_ENEMY, "NOD", 0, PLAYER_COLOR_RED, 'B');
-HouseTypeClass const HouseCivilian(HOUSES_NEUTRAL, "Neutral", TXT_CIVILIAN, "CIV", 0, PLAYER_COLOR_YELLOW, 'C');
-HouseTypeClass const HouseJP(HOUSES_SPECIAL, "Special", TXT_JP, "JP", 0, PLAYER_COLOR_YELLOW, 'J');
-HouseTypeClass const HouseMulti1(HOUSES_MULTI_1, "Multi1", TXT_CIVILIAN, "MP1", 0, PLAYER_COLOR_YELLOW, 'M');
-HouseTypeClass const HouseMulti2(HOUSES_MULTI_2, "Multi2", TXT_CIVILIAN, "MP2", 0, PLAYER_COLOR_LIGHT_BLUE, 'M');
-HouseTypeClass const HouseMulti3(HOUSES_MULTI_3, "Multi3", TXT_CIVILIAN, "MP3", 0, PLAYER_COLOR_RED, 'M');
-HouseTypeClass const HouseMulti4(HOUSES_MULTI_4, "Multi4", TXT_CIVILIAN, "MP4", 0, PLAYER_COLOR_GREEN, 'M');
-HouseTypeClass const HouseMulti5(HOUSES_MULTI_5, "Multi5", TXT_CIVILIAN, "MP5", 0, PLAYER_COLOR_ORANGE, 'M');
-HouseTypeClass const HouseMulti6(HOUSES_MULTI_6, "Multi6", TXT_CIVILIAN, "MP6", 0, PLAYER_COLOR_GREY, 'M');
-HouseTypeClass const HouseMulti7(HOUSES_MULTI_7, "Multi7", TXT_CIVILIAN, "MP7", 0, PLAYER_COLOR_BLUE, 'M');
-HouseTypeClass const HouseMulti8(HOUSES_MULTI_8, "Multi8", TXT_CIVILIAN, "MP8", 0, PLAYER_COLOR_BROWN, 'M');
 
 HouseTypeClass::HouseTypeClass(HousesType type, const char *name, int uiname, const char *suffix, int lemon_factor,
     PlayerColorType color, char prefix) :
