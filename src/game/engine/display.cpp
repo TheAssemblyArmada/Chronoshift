@@ -1853,10 +1853,12 @@ void DisplayClass::Flag_All_Cells_To_Redraw()
     }
 }
 
-void DisplayClass::Reset_Pending_Object()
+void DisplayClass::Reset_Pending_Object(bool clear_special)
 {
     PendingObjectPtr = nullptr;
     PendingObjectTypePtr = nullptr;
     PendingObjectOwner = HOUSES_NONE;
-    PendingSuper = SPECIAL_NONE;
+    if (clear_special) {
+        PendingSuper = SPECIAL_NONE;
+    }
 }

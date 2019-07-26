@@ -21,7 +21,7 @@ HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 HMODULE &ProgramInstance = Make_Global<HMODULE>(0x0068A4BC);
 #else
 HWND MainWindow = nullptr;
-//HMODULE ProgramInstance = nullptr; // Only used in gameres packet, won't be needed in final
+// HMODULE ProgramInstance = nullptr; // Only used in gameres packet, won't be needed in final
 #endif
 #else
 
@@ -88,6 +88,9 @@ void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
 void *&g_TurretShapes = Make_Global<void *>(0x0068D2E0);
 void *&g_SamShapes = Make_Global<void *>(0x0068D2E4);
 void *&g_MGunShapes = Make_Global<void *>(0x0068D2E8);
+int &g_FormMove = Make_Global<int>(0x0065E0CC);
+SpeedType &g_FormSpeed = Make_Global<SpeedType>(0x0065E0D0);
+MPHType &g_FormMaxSpeed = Make_Global<MPHType>(0x0065E0D1);
 
 BOOL &g_Debug_MotionCapture = Make_Global<BOOL>(0x0065D7C4);
 BOOL &g_Debug_Rotate = Make_Global<BOOL>(0x0065D7C8);
@@ -172,6 +175,9 @@ void *g_WakeShapes = nullptr;
 void *g_TurretShapes = nullptr;
 void *g_SamShapes = nullptr;
 void *g_MGunShapes = nullptr;
+int g_FormMove = 0;
+SpeedType g_FormSpeed = SPEED_NONE;
+MPHType g_FormMaxSpeed = MPH_MAX;
 
 BOOL g_Debug_MotionCapture = false;
 BOOL g_Debug_Rotate = false;

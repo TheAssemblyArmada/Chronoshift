@@ -55,6 +55,14 @@ struct ZoneInfo
     int Infantry;
 };
 
+enum ProdFailType
+{
+    PROD_FAIL_0, // ok?
+    PROD_FAIL_1,
+    PROD_FAIL_2,
+    PROD_FAIL_3, // rejected?
+};
+
 class HouseClass
 {
     // a class of all the buildings (BUILDING_COUNT) and with settings on if they are chosen, i think...
@@ -117,6 +125,11 @@ public:
     BOOL Is_Ally(HousesType type) const;
     BOOL Is_Ally(HouseClass *house) const;
     BOOL Is_Ally(ObjectClass *object) const;
+    ProdFailType Begin_Production(RTTIType rtti, int id);
+    ProdFailType Suspend_Production(RTTIType rtti);
+    ProdFailType Abandon_Production(RTTIType rtti);
+    int Place_Special_Blast(SpecialWeaponType, short);
+    int Place_Object(RTTIType rtti, cell_t cell);
     BOOL Flag_To_Die();
     BOOL Flag_To_Win();
     BOOL Flag_To_Lose();
@@ -146,6 +159,7 @@ public:
     int Get_Quantity(AircraftType type) const { return m_AircraftQuantity[type]; }
     int Get_Quantity(BuildingType type) const { return m_BuildingQuantity[type]; }
     int Get_Heap_ID() const { return m_HeapID; }
+    PlayerColorType Get_Color() { return m_Color; }
     HousesType What_Type() const { return m_Type->What_Type(); }
     BOOL Is_Player() const { return this == g_PlayerPtr; }
     DiffType Get_AI_Difficulty() const { return m_AIDifficulty; }

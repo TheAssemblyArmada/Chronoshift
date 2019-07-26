@@ -107,6 +107,7 @@ struct NodeNameTag
     HousesType House; // HousesType?
     PlayerColorType Color; // looks like a PlayerColorType?
     HousesType AltHouse; // HousesType?
+    int field_19;
 };
 
 class SessionClass
@@ -120,6 +121,8 @@ public:
 
     GameEnum Game_To_Play() const { return GameToPlay; }
     void Set_Game_To_Play(GameEnum game) { GameToPlay = game; }
+    void Set_MaxAhead(int maxahead) { MaxAhead = maxahead; }
+    int Get_MaxAhead() { return MaxAhead; }
     CommProtocolEnum Packet_Protocol() const { return PacketProtocol; }
 
     MPlayerOptionsStruct &MPlayer_Options() { return Options; }
@@ -134,7 +137,12 @@ public:
     void Set_Desired_Frame_Rate(int value) { DesiredFrameRate = value; }
     int Processing_Start_Tick() const { return ProcessingStartTick; }
     void Set_Processing_Start_Tick(int value) { ProcessingStartTick = value; }
-    void Reset_Processing_Values() { ProcessingStartTick = 0; ProcessingTicks = 0; ProcessingFrames = 0; }
+    void Reset_Processing_Values()
+    {
+        ProcessingStartTick = 0;
+        ProcessingTicks = 0;
+        ProcessingFrames = 0;
+    }
     void Update_Processing_Tick_Value(int value) { ProcessingTicks += value; }
     void Tick_Processing_Frame() { ++ProcessingFrames; }
 
@@ -228,7 +236,8 @@ private:
     BOOL RecordGame : 1; // & 1
     BOOL PlaybackGame : 1; // & 2
     BOOL AllowAttract : 1; // & 4
-    BOOL SuperRecord : 1; // & 8 // Unknown if in RA, but seems to be used as if there is one huge recording file (ie, multipule games)?
+    BOOL SuperRecord : 1; // & 8 // Unknown if in RA, but seems to be used as if there is one huge recording file (ie,
+                          // multipule games)?
 #else
     bool RecordGame;
     bool PlaybackGame;

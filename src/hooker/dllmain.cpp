@@ -196,6 +196,7 @@ void Setup_Hooks()
     Hook_Function(0x00552368, Init_Video);
     Hook_Function(0x005CA070, Set_Video_Palette);
     ChronalVortexClass::Hook_Me();
+    GameEventClass::Hook_Me();
 }
 
 StaticInitObject::StaticInitObject()

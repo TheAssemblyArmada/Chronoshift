@@ -201,6 +201,7 @@ public:
     int Abandon_Production(RTTIType, int);
     void Zoom_Mode_Control();
 
+    void Flag_Sidebar_To_Redraw() { SidebarToRedraw = true; }
     BOOL Is_Sidebar_Drawn() const { return SidebarIsDrawn; }
     void Disable_Zoom_Button() { ZoomButton.Disable(); }
     void Enable_Zoom_Button() { ZoomButton.Enable(); }

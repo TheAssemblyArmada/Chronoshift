@@ -17,6 +17,7 @@
 #include "aircraft.h"
 #include "building.h"
 #include "display.h"
+#include "fetchtechtype.h"
 #include "foot.h"
 #include "gameini.h"
 #include "globals.h"
@@ -823,6 +824,93 @@ BOOL HouseClass::Is_Ally(ObjectClass *object) const
     return Is_Ally(object->Owner());
 }
 
+ProdFailType HouseClass::Begin_Production(RTTIType rtti, int id)
+{
+    TechnoTypeClass *techtype = Fetch_Techno_Type(rtti, id);
+    BOOL setstate = true;
+    FactoryClass *fptr = Fetch_Factory(rtti);
+    if (fptr == nullptr) {
+        FactoryClass *fptr = new FactoryClass;
+        if (fptr == nullptr) {
+            return PROD_FAIL_3;
+        }
+        Set_Factory(rtti, fptr);
+        setstate = fptr->Set(*techtype, *this);
+
+    } else {
+        if (fptr->Is_Building()) {
+            return PROD_FAIL_3;
+        }
+    }
+    if (setstate == false) {
+        if (fptr != nullptr) {
+            delete fptr;
+        }
+        return PROD_FAIL_3;
+    }
+    fptr->Start();
+    if (Is_Player()) {
+        Map.Factory_Link(fptr->Get_Heap_ID(), rtti, id);
+    }
+    return PROD_FAIL_0;
+}
+
+ProdFailType HouseClass::Suspend_Production(RTTIType rtti)
+{
+    FactoryClass *fptr = Fetch_Factory(rtti);
+    if (fptr != nullptr) {
+        fptr->Suspend();
+        if (Is_Player()) {
+            Map.Flag_Sidebar_To_Redraw();
+            Map.Flag_To_Redraw();
+        }
+        return PROD_FAIL_0;
+    }
+    return PROD_FAIL_3;
+}
+
+ProdFailType HouseClass::Abandon_Production(RTTIType rtti)
+{
+    FactoryClass *fptr = Fetch_Factory(rtti);
+    if (fptr != nullptr) {
+        if (Is_Player()) {
+            Map.Abandon_Production(rtti, fptr->Get_Heap_ID());
+            if (rtti == RTTI_BUILDINGTYPE || rtti == RTTI_BUILDING) {
+                Map.Reset_Pending_Object(false);
+                Map.Set_Cursor_Shape();
+            }
+            fptr->Abandon();
+            Set_Factory(rtti, nullptr);
+            if (fptr) {
+                delete fptr;
+            }
+            return PROD_FAIL_0;
+        }
+    }
+    return PROD_FAIL_3;
+}
+
+int HouseClass::Place_Special_Blast(SpecialWeaponType swtype, short target)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    int (*func)(HouseClass *, SpecialWeaponType, short) =
+        reinterpret_cast<int (*)(HouseClass *, SpecialWeaponType, short)>(0x004D68CC);
+    return func(this, swtype, target);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::Place_Object(RTTIType rtti, cell_t cell)
+{
+#ifndef CHRONOSHIFT_STANDALONE
+    int (*func)(HouseClass *, RTTIType, cell_t) = reinterpret_cast<int (*)(HouseClass *, RTTIType, cell_t)>(0x004D7678);
+    return func(this, rtti, cell);
+#else
+    return 0;
+#endif
+}
+
 /**
  * Flags the house to die.
  *
@@ -1030,8 +1118,8 @@ int *HouseClass::Factory_Counter(RTTIType type)
 int HouseClass::Factory_Count(RTTIType type)
 {
     int *counter = Factory_Counter(type);
-    
-    return counter != nullptr? *counter : 0;
+
+    return counter != nullptr ? *counter : 0;
 }
 
 /**

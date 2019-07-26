@@ -123,7 +123,7 @@ public:
     ObjectClass *Pending_Object() const { return PendingObjectPtr; }
     ObjectTypeClass *Pending_ObjectType() const { return PendingObjectTypePtr; }
     HousesType Pending_Object_Owner() const { return PendingObjectOwner; }
-    void Reset_Pending_Object();
+    void Reset_Pending_Object(bool clear_special = true);
     int Tac_Offset_X() const { return TacOffsetX; }
     int Tac_Offset_Y() const { return TacOffsetY; }
     coord_t New_Pos() const { return DisplayNewPos; }

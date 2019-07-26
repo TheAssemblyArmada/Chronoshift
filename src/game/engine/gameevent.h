@@ -1,6 +1,7 @@
 /**
  * @file
  *
+ * @author tomsons26
  * @author CCHyper
  * @author OmniBlade
  *
@@ -219,6 +220,17 @@ private:
         unsigned int m_GameSpeed;
     };
 
+    struct AddPlayerEventStruct
+    {
+        int *m_pointer;
+        unsigned int m_uintval;
+    };
+
+    struct ProcessTimeEventStruct
+    {
+        unsigned short m_word;
+    };
+
 private:
     GameEventType m_Type; // The type for this object (def = EVENT_NONE).
 
@@ -251,6 +263,8 @@ private:
         TimingEventStruct u_Timing;
         TimeEventStruct u_ResponseTime;
         GameSpeedEventStruct u_GameSpeed;
+        AddPlayerEventStruct u_AddPlayer;
+        ProcessTimeEventStruct u_ProcessTime;
     } m_EventData;
 
 public:

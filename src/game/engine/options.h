@@ -69,8 +69,9 @@ public:
     void Set_Contrast(fixed_t contrast);
     void Set_Tint(fixed_t tint);
     void Set();
+    void Set_Game_Speed(int speed) {GameSpeed = speed; }
 
-    int Game_Speed() const { return GameSpeed; }
+    int Get_Game_Speed() const { return GameSpeed; }
     int Get_Scroll_Rate() const { return ScrollRate; }
     const fixed_t &Get_Score_Volume() const { return ScoreVolume; }
     BOOL Get_Auto_Scroll() const { return AutoScroll; }

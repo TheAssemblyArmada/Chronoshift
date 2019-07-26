@@ -44,6 +44,7 @@ public:
     void Set_First_Run(BOOL first_run) { FirstRun = first_run; }
 
     uint32_t Pack() const { return SpecialFlags; }
+    void Set(int special) { SpecialFlags = special; }
 
 #ifndef CHRONOSHIFT_STANDALONE
     static void Hook_Me();

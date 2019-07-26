@@ -566,7 +566,8 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                     // DEBUG_LOG("  Find_Path found a right path.\n");
                     chosen_path = &right_path;
                 } else {
-                    // DEBUG_LOG("  Find_Path chose path based on length, left %d vs right %d.\n", left_path.Length, right_path.Length);
+                    // DEBUG_LOG("  Find_Path chose path based on length, left %d vs right %d.\n", left_path.Length,
+                    // right_path.Length);
                     chosen_path = left_path.Length >= right_path.Length ? &right_path : &left_path;
                 }
 
@@ -681,7 +682,7 @@ BOOL FootClass::Basic_Path()
                 path = Find_Path(navcell, facings, GEN_PATH_LENGTH, m_PathMove);
 
                 if (path != nullptr && path->Score != 0) {
-                    //memcpy(&pathobj, path, sizeof(pathobj));
+                    // memcpy(&pathobj, path, sizeof(pathobj));
                     pathobj = *path;
                     do_fixup = true;
 
@@ -981,7 +982,7 @@ int FootClass::Optimize_Moves(PathType *path, MoveType move)
     DEBUG_ASSERT(m_IsActive);
     DEBUG_ASSERT(move != MOVE_NONE);
     // DEBUG_ASSERT_PRINT(move < MOVE_COUNT, "move value is %d which exceed expected %d.\n", move, MOVE_COUNT);
-                
+
     static FacingType _trans[] = { FACING_NORTH,
         FACING_NORTH,
         FACING_NORTH_EAST,
@@ -1097,7 +1098,7 @@ int FootClass::Optimize_Moves(PathType *path, MoveType move)
 
     ++path->Length;
     *moves = FACING_NONE;
-                
+
     return path->Length;
 }
 
@@ -1254,4 +1255,34 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
     delete[] buffer2;
     DEBUG_LOG("***Find_Path_Wrapper exit***\n");
     return real;
+}
+
+void FootClass::Queue_Navigation_List(target_t target)
+{
+    int i;
+    if (target) {
+        for (int i = 0; i < 10 && m_NavList[i]; ++i) {
+            ;
+        }
+        if ((m_HeapID & 0xFFFFFF | (m_RTTI << 24) & 0xFF000000) != target || i <= 0) {
+            if (!i) {
+                m_Bit2_4 = false;
+            }
+            if (i < 10) {
+                m_NavList[i] = target;
+            }
+        } else {
+            m_Bit2_4 = true;
+        }
+        if (m_NavCom == NULL && Mission == MISSION_GUARD) {
+            Enter_Idle_Mode(0);
+        }
+    }
+}
+
+void FootClass::Clear_Navigation_List()
+{
+    for (int i = 0; i < NAV_LENGTH; ++i) {
+        m_NavList[i] = 0;
+    }
 }

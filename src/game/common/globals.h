@@ -81,7 +81,7 @@ extern HWND &MainWindow;
 extern HMODULE &ProgramInstance;
 #else
 extern HWND MainWindow;
-//extern HMODULE ProgramInstance; // Only used in gameres packet, won't be needed in final
+// extern HMODULE ProgramInstance; // Only used in gameres packet, won't be needed in final
 #endif
 #else
 
@@ -153,6 +153,9 @@ extern void *&g_WakeShapes;
 extern void *&g_TurretShapes;
 extern void *&g_SamShapes;
 extern void *&g_MGunShapes;
+extern int &g_FormMove;
+extern SpeedType &g_FormSpeed;
+extern MPHType &g_FormMaxSpeed;
 
 extern BOOL &g_Debug_MotionCapture;
 extern BOOL &g_Debug_Rotate;
@@ -238,6 +241,9 @@ extern void *g_WakeShapes;
 extern void *g_TurretShapes;
 extern void *g_SamShapes;
 extern void *g_MGunShapes;
+extern int g_FormMove;
+extern SpeedType g_FormSpeed;
+extern MPHType g_FormMaxSpeed;
 
 extern BOOL g_Debug_MotionCapture;
 extern BOOL g_Debug_Rotate;

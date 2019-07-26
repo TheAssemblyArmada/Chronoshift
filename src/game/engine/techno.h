@@ -142,7 +142,11 @@ public:
     virtual void Enter_Idle_Mode(BOOL a1 = false);
 
     void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
-    BOOL Visually_Unclear() const { VisualType visual = Visual_Character(); return visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN; }
+    BOOL Visually_Unclear() const
+    {
+        VisualType visual = Visual_Character();
+        return visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN;
+    }
     int Anti_Air();
     int Anti_Armor();
     int Anti_Infantry();
@@ -151,6 +155,9 @@ public:
     void Set_Price(int price) { m_Price = price; }
 
     target_t Get_TarCom() const { return m_TarCom; }
+
+    void Set_Archive(target_t archive) { m_Archive = archive; }
+    void Set_Suspended_TarCom(target_t target) { m_SuspendedTarCom = target; }
 
     BOOL Is_Useless() const { return m_IsUseless; }
     BOOL Is_Ticked_Off() const { return m_IsTickedOff; }

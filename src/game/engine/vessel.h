@@ -1,18 +1,18 @@
 /**
-* @file
-*
-* @author CCHyper
-* @author OmniBlade
-*
-* @brief 
-*
-* @copyright Chronoshift is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef VESSEL_H
@@ -24,7 +24,7 @@
 
 class VesselClass : public DriveClass
 {
-    public:
+public:
     VesselClass(VesselType type, int id, HousesType house);
     VesselClass(const VesselClass &that);
     VesselClass(const NoInitClass &noinit);
@@ -89,6 +89,9 @@ class VesselClass : public DriveClass
 
     VesselType What_Type() const { return m_Type->What_Type(); }
 
+    void Set_Self_Repair(BOOL state) { m_ToSelfRepair = state; }
+    void Set_Repairing(BOOL state) { m_Repairing = state; }
+
     static void Init();
 
 private:
@@ -97,7 +100,7 @@ private:
     BOOL m_ToSelfRepair : 1; // 1
     BOOL m_Repairing : 1; // 2
 #else
-    bool m_ToSelfRepair; // 
+    bool m_ToSelfRepair; //
     bool m_Repairing; // Is this vessel currently receiving repairs?
 #endif
     TCountDownTimerClass<FrameTimerClass> m_TransportDoorTimer;
@@ -112,10 +115,7 @@ private:
 
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
-void VesselClass::Hook_Me()
-{
-
-}
+void VesselClass::Hook_Me() {}
 #endif
 
 #ifndef CHRONOSHIFT_STANDALONE

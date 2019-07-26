@@ -240,7 +240,7 @@ BOOL Main_Loop()
                         FrameTimer = 60 / Session.Desired_Frame_Rate();
                     }
                 } else {
-                    int game_speed = Options.Game_Speed();
+                    int game_speed = Options.Get_Game_Speed();
                     DiffType ai_diff = g_PlayerPtr->Get_AI_Difficulty();
                     if (game_speed > 0) {
                         FrameTimer = game_speed + ((ai_diff == DIFF_EASIEST) - (ai_diff == DIFF_NORMAL));
