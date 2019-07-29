@@ -14,13 +14,19 @@
  *            LICENSE
  */
 #include "technotype.h"
-#include "gamefile.h"
+#include "aircrafttype.h"
+#include "buildingtype.h"
 #include "cell.h"
+#include "gamefile.h"
+#include "infantrytype.h"
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
 #include "rules.h"
 #include "session.h"
+#include "technotype.h"
+#include "unittype.h"
+#include "vesseltype.h"
 
 #ifndef CHRONOSHIFT_STANDALONE
 void *&TechnoTypeClass::WakeShapes = Make_Global<void *>(0x0068D2DC);
@@ -311,8 +317,9 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
 {
     // TODO Requires WeaponTypeClass and more functions in GameINIClass
 #ifndef CHRONOSHIFT_STANDALONE
-    BOOL (*func)
-    (const TechnoTypeClass *, GameINIClass &) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *, GameINIClass &)>(0x00569914);
+    BOOL(*func)
+    (const TechnoTypeClass *, GameINIClass &) =
+        reinterpret_cast<BOOL (*)(const TechnoTypeClass *, GameINIClass &)>(0x00569914);
     return func(this, ini);
 #elif 0
     if (ObjectTypeClass::Read_INI(ini)) {
@@ -356,7 +363,7 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
         IsSelfHealing = ini.Get_Bool(Get_Name(), "SelfHealing", IsSelfHealing);
         ROT = ini.Get_Int(Get_Name(), "ROT", ROT);
         Passengers = ini.Get_Int(Get_Name(), "Passengers", Passengers);
-        
+
         ThreatPoints = Points;
 
         if (Primary != nullptr && Primary->Damage > 0) {
@@ -419,5 +426,34 @@ void TechnoTypeClass::One_Time()
     if (!MissingCameoShape) {
         MissingCameoShape = GameFileClass::Retrieve("xxicon.shp");
         DEBUG_ASSERT(MissingCameoShape != nullptr);
+    }
+}
+
+TechnoTypeClass *Fetch_Techno_Type(RTTIType type, int id)
+{
+    switch (type) {
+        case RTTI_AIRCRAFT:
+        case RTTI_AIRCRAFTTYPE:
+            return (TechnoTypeClass *)&AircraftTypeClass::As_Reference(AircraftType(id));
+
+        case RTTI_INFANTRY:
+        case RTTI_INFANTRYTYPE:
+            return (TechnoTypeClass *)&InfantryTypeClass::As_Reference(InfantryType(id));
+
+        case RTTI_UNIT:
+        case RTTI_UNITTYPE:
+            return (TechnoTypeClass *)&UnitTypeClass::As_Reference(UnitType(id));
+
+        case RTTI_VESSEL:
+        case RTTI_VESSELTYPE:
+            return (TechnoTypeClass *)&VesselTypeClass::As_Reference(VesselType(id));
+
+        case RTTI_BUILDING:
+        case RTTI_BUILDINGTYPE:
+            return (TechnoTypeClass *)&BuildingTypeClass::As_Reference(BuildingType(id));
+
+        default:
+            DEBUG_LOG("Unsupported factory type requested in Fetch_Techno_Type() (RTTI %d)", type);
+            return nullptr;
     }
 }

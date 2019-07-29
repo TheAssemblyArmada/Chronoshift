@@ -163,6 +163,8 @@ protected:
     static void *MissingCameoShape; // New with RA++
 };
 
+TechnoTypeClass *Fetch_Techno_Type(RTTIType type, int id);
+
 #ifndef CHRONOSHIFT_STANDALONE
 #include "hooker.h"
 #endif

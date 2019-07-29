@@ -1,9 +1,9 @@
 /**
  * @file
  *
- * @author tomsons26
  * @author CCHyper
  * @author OmniBlade
+ * @author tomsons26
  *
  * @brief
  *
@@ -27,6 +27,10 @@
 #include "house.h"
 #include "iomap.h"
 #include "mission.h"
+#include "msgbox.h"
+#include "rules.h"
+#include "saveload.h"
+#include "scenario.h"
 #include "session.h"
 #include "team.h"
 #include "techno.h"
@@ -47,7 +51,7 @@ GameEventClass::EventInfoStruct GameEventClass::EventTypeList[EVENT_COUNT] = {
     { "SCATTER", sizeof(GameEventClass::WhomEventStruct) },
     { "DESTRUCT", 0 }, // No extra data.
     { "DEPLOY", 0 }, // No extra data.
-    { "PLACE", 3 },
+    { "PLACE", sizeof(GameEventClass::RTTICellEventStruct) },
     { "OPTIONS", 0 }, // No extra data.
     { "GAMESPEED", sizeof(GameEventClass::GameSpeedEventStruct) },
     { "PRODUCE", sizeof(GameEventClass::RTTIHeapIDEventStruct) },
@@ -61,15 +65,15 @@ GameEventClass::EventInfoStruct GameEventClass::EventTypeList[EVENT_COUNT] = {
     { "SELL", sizeof(GameEventClass::WhomEventStruct) },
     { "SELLCELL", sizeof(GameEventClass::CellEventStruct) },
     { "SPECIAL", sizeof(GameEventClass::SpecialEventStruct) },
-    { "FRAME_SYNC", 0 }, // Should be "sizeof(GameEventClass::FrameEventStruct)"
+    { "FRAME_SYNC", 0 }, // No extra data.
     { "MESSAGE", 0 }, // No extra data.
-    { "RESPONSE_TIME", sizeof(GameEventClass::TimeEventStruct) },
+    { "RESPONSE_TIME", sizeof(GameEventClass::ResponseTimeEventStruct) },
     { "FRAME_INFO", sizeof(GameEventClass::FrameEventStruct) },
     { "SAVEGAME", 0 }, // No extra data.
     { "ARCHIVE", sizeof(GameEventClass::WhomTargetEventStruct) },
-    { "ADDPLAYER", 4 }, // TODO
+    { "ADDPLAYER", 4 }, // original table has it as 4 but the event is actually 8
     { "TIMING", sizeof(GameEventClass::TimingEventStruct) },
-    { "PROCESS_TIME", 2 },
+    { "PROCESS_TIME", sizeof(GameEventClass::ProcessTimeEventStruct) },
     { "PROPOSE_DRAW", 0 }, // No extra data.
     { "RETRACT_DRAW", 0 } // No extra data.
 };
@@ -148,7 +152,7 @@ GameEventClass::GameEventClass(GameEventType type, RTTIType rtti) :
     m_EventData.u_RTTI.m_RTTI = rtti;
 }
 
-GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, unsigned int heap_id) :
+GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, int heap_id) :
     m_Type(type), m_EventFrame(g_GameFrame), m_HouseID(g_PlayerPtr->Get_Heap_ID()), m_IsExecuted(false)
 {
     EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
@@ -177,7 +181,7 @@ GameEventClass::GameEventClass(GameEventType type, SpecialWeaponType special, ce
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
-    m_EventData.u_SpecialPlace.m_Special = special;
+    m_EventData.u_SpecialPlace.m_SpecialWeapon = special;
     m_EventData.u_SpecialPlace.m_Cell = cell;
 }
 
@@ -303,13 +307,11 @@ GameEventClass::GameEventClass(AnimType anim, HousesType owner, coord_t coord) :
 
 void GameEventClass::Execute()
 {
-// original function for unimplamented events
-#ifndef CHRONOSHIFT_STANDALONE
-    void (*func)(GameEventClass *) = reinterpret_cast<void (*)(GameEventClass *)>(0x004BD0C8);
-#endif
     BOOL formation_event = false;
-    FootClass *foot;
-    TechnoClass *techno;
+    FootClass *fptr = nullptr;
+    TechnoClass *tptr = nullptr;
+    char message[100] = { '\0' };
+    char *messageptr = nullptr;
     EVENT_DEBUG_LOG("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, ID:%d).\n",
         Name_From(m_Type),
         g_GameFrame,
@@ -317,11 +319,9 @@ void GameEventClass::Execute()
         m_HouseID);
 
     switch (m_Type) {
-        // done
-        case EVENT_EMPTY: {
+        case EVENT_EMPTY:
             break;
-        }
-        // done - handle alliance request
+        // todo confirm its working when we have online play
         case EVENT_ALLY: {
             if (g_Houses[m_HouseID].Is_Ally((HousesType)m_EventData.u_House.m_Whom)) {
                 g_Houses[m_HouseID].Make_Enemy((HousesType)m_EventData.u_House.m_Whom);
@@ -330,7 +330,6 @@ void GameEventClass::Execute()
             }
             break;
         }
-        // done - handle in formation megamission
         case EVENT_MEGAMISSION_F: {
             EVENT_DEBUG_LOG(
                 "    MEGAMISSION_F - Whom:%08X, Mission:%s, Target:%08X\n"
@@ -341,13 +340,13 @@ void GameEventClass::Execute()
                 m_EventData.u_MegaMissionF.m_Dest,
                 m_EventData.u_MegaMissionF.m_FormSpeed,
                 m_EventData.u_MegaMissionF.m_FormMaxSpeed);
-            foot = (FootClass *)(TechnoClass *)As_Techno(m_EventData.u_MegaMissionF.m_Whom);
-            if (foot != nullptr && foot->Is_Active()) {
-                if (foot->Is_Foot() && foot->Is_Active()) {
-                    foot->Set_In_Formation(true);
-                    foot->Set_Team_Speed(m_EventData.u_MegaMissionF.m_FormSpeed);
-                    g_FormMove = 1;
-                    foot->Set_Team_Max_Speed(m_EventData.u_MegaMissionF.m_FormMaxSpeed);
+            fptr = (FootClass *)(TechnoClass *)As_Techno(m_EventData.u_MegaMissionF.m_Whom);
+            if (fptr != nullptr && fptr->Is_Active()) {
+                if (fptr->Is_Foot() && fptr->Is_Active()) {
+                    fptr->Set_In_Formation(true);
+                    fptr->Set_Team_Speed(m_EventData.u_MegaMissionF.m_FormSpeed);
+                    g_FormMove = true;
+                    fptr->Set_Team_Max_Speed(m_EventData.u_MegaMissionF.m_FormMaxSpeed);
                     formation_event = true;
                     g_FormMaxSpeed = m_EventData.u_MegaMissionF.m_FormMaxSpeed;
                     g_FormSpeed = m_EventData.u_MegaMissionF.m_FormSpeed;
@@ -355,8 +354,6 @@ void GameEventClass::Execute()
             }
             // fallthough
         }
-        // handle megamission
-        // todo, see if can be rewritten to TS flow
         case EVENT_MEGAMISSION: {
             EVENT_DEBUG_LOG("    MEGAMISSION - Whom:%08X, Mission:%s, Target:%08X, Dest:%08X.\n",
                 m_EventData.u_MegaMission.m_Whom,
@@ -364,164 +361,120 @@ void GameEventClass::Execute()
                 m_EventData.u_MegaMission.m_Target,
                 m_EventData.u_MegaMission.m_Dest);
             TechnoClass *whom = As_Techno(m_EventData.u_MegaMission.m_Whom);
-            // make sure the mission taker is alive and ready for action
-            if (whom != nullptr && whom->Is_Active() && whom->Get_Health() > 0 && !whom->In_Limbo()) {
-                ObjectClass *target = nullptr;
-                /*
-                //old code, was confirmed as working
-                ObjectClass *target1 = nullptr;
-                ObjectClass *desttarget = nullptr;
-                // make sure the target if there is one is alive and ready for action
-                if (Target_Get_RTTI(m_EventData.u_MegaMission.m_Target) == RTTI_NONE
-                    || (target1 = As_Object(m_EventData.u_MegaMission.m_Target), (target = target1) == 0)
-                    || target1->Is_Active() && target1->Get_Health() && !target1->In_Limbo()) {
-                    // make sure the destination object if there is one is alive and ready for action
-                    if (Target_Get_RTTI(m_EventData.u_MegaMission.m_Dest) == RTTI_NONE
-                        || (desttarget = As_Object(m_EventData.u_MegaMission.m_Dest), (target = desttarget) == 0)
-                        || desttarget->Is_Active() && desttarget->Get_Health() && !desttarget->In_Limbo()) {
-                        //code was here
-                    }
-                }
-                 */
 
-                // cleaned up code from TS, seems to work as intended
-                //
-                if (Target_Get_RTTI(m_EventData.u_MegaMission.m_Target) != RTTI_NONE) {
-                    target = As_Object(m_EventData.u_MegaMission.m_Target);
-                    if (target != nullptr) {
-                        if (!target->Is_Active() || !target->Get_Health() || target->In_Limbo()) {
-                            break;
-                        }
-                    }
-                }
-                if (Target_Get_RTTI(m_EventData.u_MegaMission.m_Dest) != RTTI_NONE) {
-                    target = As_Object(m_EventData.u_MegaMission.m_Dest);
-                    if (target != nullptr) {
-                        if (!target->Is_Active() || !target->Get_Health() || target->In_Limbo()) {
-                            break;
-                        }
-                    }
-                }
-                if (target == nullptr) {
-                    DEBUG_LOG("EventClass::Execute EVENT_MEGAMISSION target is nullptr! This should not happen!\n");
+            if (whom != nullptr) {
+                if (!whom->Is_Active() || !whom->Get_Health() || whom->In_Limbo()) {
                     break;
                 }
-                if (!whom->Is_Tethered()) {
-                    whom->Transmit_Message(RADIO_OVER_AND_OUT);
-                }
-                FootClass *whomf = reinterpret_cast<FootClass *>(whom);
-                // this code is weird...
-                if (whom->Is_Foot()) {
-                    if (formation_event == false) {
-                        whomf->Set_In_Formation(false); // why tho its not already...
-                    }
-                    // remove mission taker from any team if its part of one
-                    // mission check is a TS line, todo find out why this was added
-                    if (whomf->Get_Team()
-                        != nullptr /* && m_EventData.u_MegaMission.m_Mission->Mission != MISSION_UNLOAD */) {
-                        whomf->Get_Team()->Remove(whomf, -1);
-                    }
-                }
+            }
+            ObjectClass *target = nullptr;
+
+            if (Target_Get_RTTI(m_EventData.u_MegaMission.m_Target) != RTTI_NONE) {
+                target = As_Object(m_EventData.u_MegaMission.m_Target);
                 if (target != nullptr) {
-                    if (g_PlayerPtr->Is_Ally(whom)) {
-                        // if target is owned by a ally flash it
-                        target->Clicked_As_Target(7);
+                    if (!target->Is_Active() || !target->Get_Health() || target->In_Limbo()) {
+                        break;
                     }
                 }
-                // assign mission from event to mission taker
-                whom->Assign_Mission(m_EventData.u_MegaMission.m_Mission);
-                // clear suspended navcom and tarcom
+            }
+            if (Target_Get_RTTI(m_EventData.u_MegaMission.m_Dest) != RTTI_NONE) {
+                target = As_Object(m_EventData.u_MegaMission.m_Dest);
+                if (target != nullptr) {
+                    if (!target->Is_Active() || !target->Get_Health() || target->In_Limbo()) {
+                        break;
+                    }
+                }
+            }
+            if (!whom->Is_Tethered()) {
+                whom->Transmit_Message(RADIO_OVER_AND_OUT);
+            }
+            FootClass *whomf = reinterpret_cast<FootClass *>(whom);
+            if (whom->Is_Foot()) {
+                if (formation_event == false) {
+                    whomf->Set_In_Formation(false);
+                }
+                if (whomf->Get_Team() != nullptr) {
+                    whomf->Get_Team()->Remove(whomf, -1);
+                }
+            }
+            if (target != nullptr) {
+                if (g_PlayerPtr->Is_Ally(whom)) {
+                    target->Clicked_As_Target(7);
+                }
+            }
+            whom->Assign_Mission(m_EventData.u_MegaMission.m_Mission);
+            if (whom->Is_Foot()) {
+                whomf->Set_Suspended_NavCom(0);
+            }
+            whom->Set_Suspended_TarCom(0);
+            if (m_EventData.u_MegaMission.m_Mission == MISSION_AREA_GUARD && whom->Is_Foot()) {
+                whom->Assign_Target(0);
+                whom->Assign_Destination(m_EventData.u_MegaMission.m_Target);
+                whom->Set_Archive(m_EventData.u_MegaMission.m_Target);
+            } else if (m_EventData.u_MegaMission.m_Mission == MISSION_QMOVE && whom->Is_Foot()) {
+                whomf->Queue_Navigation_List(m_EventData.u_MegaMission.m_Dest);
+            } else {
                 if (whom->Is_Foot()) {
-                    whomf->Set_Suspended_NavCom(0);
+                    whomf->Clear_Navigation_List();
                 }
-                whom->Set_Suspended_TarCom(0);
-                if (m_EventData.u_MegaMission.m_Mission == MISSION_AREA_GUARD && whom->Is_Foot()) {
-                    // we got a area guard mission, so we make the object go to the cell as its destination instead
-                    // of going after a target
-                    whom->Assign_Target(0);
-                    whom->Assign_Destination(m_EventData.u_MegaMission.m_Target);
-                    whom->Set_Archive(m_EventData.u_MegaMission.m_Target);
-                } else if (m_EventData.u_MegaMission.m_Mission == MISSION_QMOVE) {
-                    // we got a qmove mission so queue the mission in the queue list
-                    if (whom->Is_Foot()) {
-                        whomf->Queue_Navigation_List(m_EventData.u_MegaMission.m_Dest);
-                    }
-                } else {
-                    // we got any other mission, so we just assign the destination and target, and if Foot clear the
-                    // NavList this else case is why this chunk of code can't be rewritten to a switch
-                    if (whom->Is_Foot()) {
-                        whomf->Clear_Navigation_List();
-                    }
-                    whom->Assign_Target(m_EventData.u_MegaMission.m_Target);
-                    whom->Assign_Destination(m_EventData.u_MegaMission.m_Dest);
-                }
-                if (m_EventData.u_MegaMission.m_Mission == MISSION_MOVE) {
-                    // this if is another reason this can't be rewritten to a switch, as the else above has to be
-                    // executed before this should it be invoked
-                    //
-                    // if we got a move mission, the object is a vessel and the target is a shipyard initate repairs
-                    //
-                    // TODO add code here to check for player and allies,
-                    // as it stands this seems like it allows repairing at any shipyard, be it yours or enemy's
-                    if (whom->What_Am_I() == RTTI_VESSEL) {
-                        VesselClass *whomv = reinterpret_cast<VesselClass *>(whom);
-                        BuildingClass *targetb = reinterpret_cast<BuildingClass *>(target);
-                        if (targetb != nullptr && targetb->What_Am_I() == RTTI_BUILDING
-                            && (targetb->What_Type() == BUILDING_SYRD || targetb->What_Type() == BUILDING_SPEN)) {
-                            whomv->Set_Self_Repair(true);
-                        } else {
-                            whomv->Set_Self_Repair(false);
-                            whomv->Set_Repairing(false);
-                        }
+                whom->Assign_Target(m_EventData.u_MegaMission.m_Target);
+                whom->Assign_Destination(m_EventData.u_MegaMission.m_Dest);
+            }
+            if (m_EventData.u_MegaMission.m_Mission == MISSION_MOVE) {
+                // TODO add code here to check for player and allies,
+                // as it stands this seems like it allows repairing at any shipyard, be it yours or enemy's
+                if (whom->What_Am_I() == RTTI_VESSEL) {
+                    VesselClass *whomv = reinterpret_cast<VesselClass *>(whom);
+                    BuildingClass *targetb = reinterpret_cast<BuildingClass *>(target);
+                    if (targetb != nullptr && targetb->What_Am_I() == RTTI_BUILDING
+                        && (targetb->What_Type() == BUILDING_SYRD || targetb->What_Type() == BUILDING_SPEN)) {
+                        whomv->Set_Self_Repair(true);
+                    } else {
+                        whomv->Set_Self_Repair(false);
+                        whomv->Set_Repairing(false);
                     }
                 }
             }
             break;
         }
-        // done - make a foot go idle
         case EVENT_IDLE: {
-            EVENT_DEBUG_LOG("    IDLE.\n");
-            foot = (FootClass *)As_Techno(m_EventData.u_Whom.m_Whom);
-            if (foot != nullptr && foot->Is_Active() && !foot->In_Limbo() && !foot->Is_Tethered()
-                && foot->What_Am_I() != RTTI_BUILDING) {
-                foot->Transmit_Message(RADIO_OVER_AND_OUT);
-                foot->Assign_Destination(0);
-                foot->Assign_Target(0);
-                foot->Enter_Idle_Mode(0);
-                if (foot->Is_Foot()) {
-                    foot->Clear_Navigation_List();
+            EVENT_DEBUG_LOG("    IDLE - Whom:%08X.\n", m_EventData.u_Whom.m_Whom);
+            fptr = (FootClass *)As_Techno(m_EventData.u_Whom.m_Whom);
+            if (fptr != nullptr && fptr->Is_Active() && !fptr->In_Limbo() && !fptr->Is_Tethered()
+                && fptr->What_Am_I() != RTTI_BUILDING) {
+                fptr->Transmit_Message(RADIO_OVER_AND_OUT);
+                fptr->Assign_Destination(0);
+                fptr->Assign_Target(0);
+                fptr->Enter_Idle_Mode();
+                if (fptr->Is_Foot()) {
+                    fptr->Clear_Navigation_List();
                 }
             }
             break;
         }
-        // done - scatter selected foot
         case EVENT_SCATTER: {
-            EVENT_DEBUG_LOG("    SCATTER.\n");
-            foot = (FootClass *)As_Techno(m_EventData.u_Whom.m_Whom);
-            if (foot->Is_Foot() && foot->Is_Active() && !foot->In_Limbo() && !foot->Is_Tethered()) {
-                foot->Set_To_Scatter(true);
-                foot->Scatter(0, 1, 0);
+            EVENT_DEBUG_LOG("    SCATTER - Whom:%08X.\n", m_EventData.u_Whom.m_Whom);
+            fptr = (FootClass *)As_Techno(m_EventData.u_Whom.m_Whom);
+            if (fptr->Is_Foot() && fptr->Is_Active() && !fptr->In_Limbo() && !fptr->Is_Tethered()) {
+                fptr->Set_To_Scatter(true);
+                fptr->Scatter(0, 1, 0);
             }
             break;
         }
-        // done - blow up house
         case EVENT_DESTRUCT: {
             EVENT_DEBUG_LOG("    DESTRUCT.\n");
             g_Houses[m_HouseID].Flag_To_Die();
             break;
         }
-        // done - does nothing?
         case EVENT_DEPLOY: {
             EVENT_DEBUG_LOG("    DEPLOY.\n");
             break;
         }
-        // done - place object on map
         case EVENT_PLACE: {
-            EVENT_DEBUG_LOG("    PLACE.\n");
+            EVENT_DEBUG_LOG("    PLACE - RTTI:%d Cell:%d.\n", m_EventData.u_RTTICell.m_RTTI, m_EventData.u_RTTICell.m_Cell);
             g_Houses[m_HouseID].Place_Object(m_EventData.u_RTTICell.m_RTTI, m_EventData.u_RTTICell.m_Cell);
             break;
         }
-        // done - invoke opening options dialog
         case EVENT_OPTIONS: {
             EVENT_DEBUG_LOG("    OPTIONS.\n");
             if (!Session.Playback_Game()) {
@@ -529,49 +482,42 @@ void GameEventClass::Execute()
             }
             break;
         }
-        // done - change game speed
         case EVENT_GAMESPEED: {
             EVENT_DEBUG_LOG("    GAMESPEED - GameSpeed:%d.\n", m_EventData.u_GameSpeed.m_GameSpeed);
             Options.Set_Game_Speed(m_EventData.u_GameSpeed.m_GameSpeed);
             break;
         }
-        // done - begin production of a unit
         case EVENT_PRODUCE: {
-            EVENT_DEBUG_LOG("    PRODUCE.\n");
+            EVENT_DEBUG_LOG("    PRODUCE - RTTI:%d HeapID:%d.\n", m_EventData.u_RTTIHeapID.m_RTTI, m_EventData.u_RTTIHeapID.m_HeapID);
             g_Houses[m_HouseID].Begin_Production(m_EventData.u_RTTIHeapID.m_RTTI, m_EventData.u_RTTIHeapID.m_HeapID);
             break;
         }
-        // done - suspend production of a object
         case EVENT_SUSPEND: {
-            EVENT_DEBUG_LOG("    SUSPEND.\n");
+            EVENT_DEBUG_LOG("    SUSPEND - RTTI:%d.\n", m_EventData.u_RTTI.m_RTTI);
             g_Houses[m_HouseID].Suspend_Production(m_EventData.u_RTTI.m_RTTI);
             break;
         }
-        // done - abandon production of a object
         case EVENT_ABANDON: {
-            EVENT_DEBUG_LOG("    ABANDON.\n");
+            EVENT_DEBUG_LOG("    ABANDON - RTTI:%d.\n", m_EventData.u_RTTI.m_RTTI);
             g_Houses[m_HouseID].Abandon_Production(m_EventData.u_RTTI.m_RTTI);
             break;
         }
-        // done - set building primary
         case EVENT_PRIMARY: {
-            EVENT_DEBUG_LOG("    PRIMARY.\n");
+            EVENT_DEBUG_LOG("    PRIMARY - Whom:%08X.\n", m_EventData.u_Whom.m_Whom);
             if (Target_Get_RTTI(m_EventData.u_Whom.m_Whom) == RTTI_BUILDING) {
-                BuildingClass *building = (BuildingClass *)As_Techno(m_EventData.u_Whom.m_Whom);
-                if (building != nullptr && building->Is_Active()) {
-                    // building->Toggle_Primary();
+                BuildingClass *bptr = (BuildingClass *)As_Techno(m_EventData.u_Whom.m_Whom);
+                if (bptr != nullptr && bptr->Is_Active()) {
+                    bptr->Toggle_Primary();
                 }
             }
             break;
         }
-        // done - activate a super
         case EVENT_SPECIAL_PLACE: {
-            EVENT_DEBUG_LOG("    SPECIAL_PLACE.\n");
+            EVENT_DEBUG_LOG("    SPECIAL_PLACE - Special Weapon:%d Cell:%d.\n", m_EventData.u_SpecialPlace.m_SpecialWeapon, m_EventData.u_SpecialPlace.m_Cell);
             g_Houses[m_HouseID].Place_Special_Blast(
-                (SpecialWeaponType)m_EventData.u_SpecialPlace.m_Special, m_EventData.u_SpecialPlace.m_Cell);
+                (SpecialWeaponType)m_EventData.u_SpecialPlace.m_SpecialWeapon, m_EventData.u_SpecialPlace.m_Cell);
             break;
         }
-        // done - terminate battlecontrol
         case EVENT_EXIT: {
             EVENT_DEBUG_LOG("    EXIT.\n");
             Theme.Fade_Out();
@@ -583,104 +529,104 @@ void GameEventClass::Execute()
             GameActive = false;
             break;
         }
-        // done - create a animation
         case EVENT_ANIMATION: {
             EVENT_DEBUG_LOG("    ANIMATION - Anim:%s, Coord: X:%d Y:%d.\n",
                 AnimTypeClass::Name_From(m_EventData.u_Anim.m_Anim),
                 Coord_Lepton_X(m_EventData.u_Anim.m_Coord),
                 Coord_Lepton_Y(m_EventData.u_Anim.m_Coord));
-            AnimClass *anim = new AnimClass(m_EventData.u_Anim.m_Anim, m_EventData.u_Anim.m_Coord, 0, 1);
-            if (anim != nullptr && m_EventData.u_Anim.m_Owner != HOUSES_NONE) {
+            AnimClass *aptr = new AnimClass(m_EventData.u_Anim.m_Anim, m_EventData.u_Anim.m_Coord, 0, 1);
+            if (aptr != nullptr && m_EventData.u_Anim.m_Owner != HOUSES_NONE) {
                 if (g_PlayerPtr->What_Type() != m_EventData.u_Anim.m_Owner) {
-                    anim->Make_Invisible();
+                    aptr->Make_Invisible();
                 }
             }
             break;
         }
-        // done - repair a object
         case EVENT_REPAIR: {
-            EVENT_DEBUG_LOG("    REPAIR.\n");
-            techno = As_Techno(m_EventData.u_Whom.m_Whom);
-            if (techno != nullptr && techno->Is_Active()) {
-                techno->Repair();
+            EVENT_DEBUG_LOG("    REPAIR - Whom:%08X.\n", m_EventData.u_Whom.m_Whom);
+            tptr = As_Techno(m_EventData.u_Whom.m_Whom);
+            if (tptr != nullptr && tptr->Is_Active()) {
+                tptr->Repair();
             }
             break;
         }
-        // done - sell a object
         case EVENT_SELL: {
-            EVENT_DEBUG_LOG("    SELL.\n");
-            techno = As_Techno(m_EventData.u_Whom.m_Whom);
-            if (techno != nullptr && techno->Is_Active()) {
-                if (&g_Houses[m_HouseID] == techno->Get_Owner_House()) {
-                    if ((techno->What_Am_I() == RTTI_BUILDING || techno->What_Am_I() == RTTI_UNIT
-                            /* || techno->What_Am_I() == RTTI_AIRCRAFT*/) // TS addition
-                        && Map[techno->Center_Cell()].Cell_Building() != nullptr) {
-                        techno->Sell_Back(-1);
+            EVENT_DEBUG_LOG("    SELL - Whom:%08X.\n", m_EventData.u_Whom.m_Whom);
+            tptr = As_Techno(m_EventData.u_Whom.m_Whom);
+            if (tptr != nullptr && tptr->Is_Active()) {
+                if (&g_Houses[m_HouseID] == tptr->Get_Owner_House()) {
+                    if ((tptr->What_Am_I() == RTTI_BUILDING || tptr->What_Am_I() == RTTI_UNIT)
+                        && Map[tptr->Center_Cell()].Cell_Building() != nullptr) {
+                        tptr->Sell_Back(-1);
                     }
                 }
             }
             break;
         }
-        // done - sell a wall segment
         case EVENT_SELL_CELL: {
-            EVENT_DEBUG_LOG("    SELL_CELL.\n");
+            EVENT_DEBUG_LOG("    SELL_CELL - Cell:%d.\n", m_EventData.u_Cell.m_Cell);
             g_Houses[m_HouseID].Sell_Wall(m_EventData.u_Cell.m_Cell);
             break;
         }
-        // done - change SpecialClass flags
+        // todo test this when we have a functional special options dialog
         case EVENT_SPECIAL: {
             EVENT_DEBUG_LOG("    SPECIAL.\n");
             Special.Set(m_EventData.u_Special.m_Special);
-            char msg[80];
-            memset(msg, 0, sizeof(msg)); // possible fix for text corruption on this message
-            sprintf(msg, Fetch_String(TXT_SPECIAL_WARNING), g_Houses[m_HouseID].Get_Name());
+            sprintf(message, Fetch_String(TXT_SPECIAL_WARNING), g_Houses[m_HouseID].Get_Name());
             Session.Get_Messages().Add_Message(
-                nullptr, 0, msg, g_Houses[m_HouseID].Get_Color(), TPF_12PT_METAL | TPF_OUTLINE, 1200);
+                nullptr, 0, message, g_Houses[m_HouseID].Get_Color(), TPF_12PT_METAL | TPF_OUTLINE, 1200);
             Map.Flag_To_Redraw();
             break;
         }
-        // done - no code?
         case EVENT_FRAME_SYNC: {
             EVENT_DEBUG_LOG("    FRAME_SYNC.\n");
             break;
         }
-        // done - no code?
         case EVENT_MESSAGE: {
             EVENT_DEBUG_LOG("    MESSAGE.\n");
             break;
         }
-        // done - set maxahead for the current session
+        // todo confirm its working when we have online play
         case EVENT_RESPONSE_TIME: {
-            EVENT_DEBUG_LOG("    RESPONSE_TIME.\n");
+            EVENT_DEBUG_LOG("    RESPONSE_TIME - Changing MaxAhead to frames %d.\n", m_EventData.u_ResponseTime.m_MaxAhead);
             Session.Set_MaxAhead(m_EventData.u_ResponseTime.m_MaxAhead);
             break;
         }
-        // done - no code?
         case EVENT_FRAME_INFO: {
             EVENT_DEBUG_LOG("    FRAME_INFO.\n");
             break;
         }
-        // save the game
+        // todo confirm its working when we have online play
         case EVENT_SAVE_GAME: {
             EVENT_DEBUG_LOG("    SAVE_GAME.\n");
-#ifndef CHRONOSHIFT_STANDALONE
-            func(this);
-#endif
+            if (g_SpecialDialog != SPECIAL_DLG_NONE) {
+                Save_Game(-1, Fetch_String(TXT_MULTIPLAYER_GAME));
+            } else {
+                TCountDownTimerClass<SystemTimerClass> timer(60);
+                MessageBoxClass msg;
+                msg.Process(TXT_SAVING_GAME);
+                Save_Game(-1, Fetch_String(TXT_MULTIPLAYER_GAME));
+                while (timer.Time() > 0) {
+                    Call_Back();
+                }
+                g_hidPage.Clear();
+                Map.Flag_To_Redraw(true);
+                Map.Render();
+            }
             break;
         }
-        // done - store target in archive
+        // todo figure out how to test, seems only Conyard invokes it... for what?
         case EVENT_ARCHIVE: {
             EVENT_DEBUG_LOG("    ARCHIVE - Whom:%08X, Target:%08X.\n",
                 m_EventData.u_WhomTarget.m_Whom,
                 m_EventData.u_WhomTarget.m_Target);
-            techno = As_Techno(m_EventData.u_WhomTarget.m_Whom);
-            if (techno != nullptr && techno->Is_Active()) {
-                techno->Set_Archive(m_EventData.u_WhomTarget.m_Target);
+            tptr = As_Techno(m_EventData.u_WhomTarget.m_Whom);
+            if (tptr != nullptr && tptr->Is_Active()) {
+                tptr->Set_Archive(m_EventData.u_WhomTarget.m_Target);
             }
             break;
         }
 
-        // done - adds player to the current game, is this used!?
         case EVENT_ADD_PLAYER: {
             EVENT_DEBUG_LOG("    ADD_PLAYER.\n");
             for (int i = 0; i < m_EventData.u_AddPlayer.m_uintval; ++i) {
@@ -691,9 +637,9 @@ void GameEventClass::Execute()
             }
             break;
         }
-        // done - adjusts timing of the current session
+        // todo confirm its working when we have online play
         case EVENT_TIMING: {
-            EVENT_DEBUG_LOG("    TIMING. - DesiredFrameRate:%d MaxAhead:%d\n",
+            EVENT_DEBUG_LOG("    TIMING - DesiredFrameRate:%d MaxAhead:%d.\n",
                 m_EventData.u_Timing.m_DesiredFrameRate,
                 m_EventData.u_Timing.m_MaxAhead);
             if (m_EventData.u_Timing.m_MaxAhead < Session.Get_MaxAhead()) {
@@ -704,37 +650,82 @@ void GameEventClass::Execute()
             Session.Set_MaxAhead(m_EventData.u_Timing.m_MaxAhead);
             break;
         }
-        // done - ?
+        // todo this needs to be rechecked
+        // todo confirm its working when we have online play
         case EVENT_PROCESS_TIME: {
-            EVENT_DEBUG_LOG("    PROCESS_TIME.\n");
             NodeNameTag *nodename;
-            for (int j = 0;; ++j) {
-                if (j >= Session.Players_List().Count()) {
-                    break;
-                }
-                nodename = Session.Players_List()[j];
+            for (int i = 0; i < Session.Player_Count(); ++i) {
+                nodename = Session.Player(i);
                 if (m_HouseID == nodename->House) {
+                    nodename->field_19 = m_EventData.u_ProcessTime.m_Ticks;
                     break;
                 }
             }
-            // this doesn't seem safe...
-            nodename->field_19 = m_EventData.u_ProcessTime.m_word;
+            EVENT_DEBUG_LOG("    PROCESS_TIME - %04x ticks.\n", m_EventData.u_ProcessTime.m_Ticks);
+            // this was here but, this doesn't seem safe so moved above...
+            //nodename->field_19 = m_EventData.u_ProcessTime.m_Ticks;
             break;
         }
-        // propose a draw
+        // todo this needs to be rechecked
+        // todo confirm its working when we have online play
         case EVENT_PROPOSE_DRAW: {
             EVENT_DEBUG_LOG("    PROPOSE_DRAW.\n");
-#ifndef CHRONOSHIFT_STANDALONE
-            func(this);
-#endif
+            if (m_HouseID == g_PlayerPtr->Get_Heap_ID()) {
+                if (!Scen.Get_field_7D3()) {
+                    Scen.Set_field_7CF(true);
+                    break;
+                }
+                Scen.Set_field_7CF(true);
+                messageptr = "You have proposed that the game be declared a draw.";
+            } else {
+                if (!Scen.Get_field_7CF()) {
+                    Scen.Set_field_7D3(true);
+                    break;
+                }
+                for (int i = 0; i < Session.Player_Count(); ++i) {
+                    if (m_HouseID == Session.Player(i)->House) {
+                        sprintf(
+                            message, "%s has proposed that the game be declared a draw.", Session.Player(i)->Name);
+                        break;
+                    }
+                }
+                Scen.Set_field_7D3(true);
+                messageptr = message;
+            }
+            Session.Get_Messages().Add_Message(0,
+                0,
+                messageptr,
+                PLAYER_COLOR_YELLOW,
+                TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL,
+                900 * Rule.Message_Delay());
+            Sound_Effect(VOC_INCOMING_MESSAGE);
             break;
         }
-        // retract a proposed draw
+        // todo this needs to be rechecked
+        // todo confirm its working when we have online play
         case EVENT_RETRACT_DRAW: {
             EVENT_DEBUG_LOG("    RETRACT_DRAW.\n");
-#ifndef CHRONOSHIFT_STANDALONE
-            func(this);
-#endif
+
+            if (m_HouseID == g_PlayerPtr->Get_Heap_ID()) {
+                Scen.Set_field_7CF(false);
+                messageptr = "You have retracted your offer of a draw.";
+            } else {
+                for (int i = 0; i < Session.Player_Count(); ++i) {
+                    if (m_HouseID == Session.Player(i)->House) {
+                        sprintf(message, "%s has retracted the offer of a draw.", Session.Player(i)->Name);
+                        break;
+                    }
+                }
+                Scen.Set_field_7CF(false);
+                messageptr = message;
+            }
+            Session.Get_Messages().Add_Message(0,
+                0,
+                messageptr,
+                PLAYER_COLOR_YELLOW,
+                TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL,
+                900 * Rule.Message_Delay());
+            Sound_Effect(VOC_INCOMING_MESSAGE);
             break;
         }
         default:

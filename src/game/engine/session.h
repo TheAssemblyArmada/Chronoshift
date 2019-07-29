@@ -122,7 +122,7 @@ public:
     GameEnum Game_To_Play() const { return GameToPlay; }
     void Set_Game_To_Play(GameEnum game) { GameToPlay = game; }
     void Set_MaxAhead(int maxahead) { MaxAhead = maxahead; }
-    int Get_MaxAhead() { return MaxAhead; }
+    int Get_MaxAhead() const { return MaxAhead; }
     CommProtocolEnum Packet_Protocol() const { return PacketProtocol; }
 
     MPlayerOptionsStruct &MPlayer_Options() { return Options; }
@@ -176,6 +176,8 @@ public:
     DynamicVectorClass<NodeNameTag *> &Games_List() { return Games; }
     DynamicVectorClass<NodeNameTag *> &Players_List() { return Players; }
     DynamicVectorClass<NodeNameTag *> &Network_Players_List() { return NetworkPlayers; }
+    int Player_Count() const { return Players.Count(); }
+    NodeNameTag *Player(int num) { return Players[num]; }
 
     BOOL Modem_Service() const { return ModemService; }
 

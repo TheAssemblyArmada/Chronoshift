@@ -34,10 +34,10 @@ void Put_All(Pipe &pipe, int skip_callback)
 #endif
 }
 
-int Save_Game(int number, char *savename, int unknown)
+BOOL Save_Game(int number, const char *savename, BOOL unknown)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(int, char *, int) = reinterpret_cast<int (*)(int, char *, int)>(0x005379FC);
+    BOOL (*func)(int, const char *, BOOL) = reinterpret_cast<BOOL (*)(int, const char *, BOOL)>(0x005379FC);
     return func(number, savename, unknown);
 #else
     return 0;
@@ -53,11 +53,11 @@ void Post_Load_Game(int skip_overpass)
     Map.Zone_Reset(15);
 }
 
-int Load_Game(int unknown)
+BOOL Load_Game(int number)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    int (*func)() = reinterpret_cast<int (*)()>(0x00537D10);
-    return func();
+    BOOL (*func)(int) = reinterpret_cast<BOOL (*)(int)>(0x00537D10);
+    return func(number);
 #else
     return 0;
 #endif

@@ -34,7 +34,7 @@ FactoryClass::FactoryClass() :
     m_ProductionTime(),
     m_RTTI(RTTI_FACTORY),
     m_HeapID(g_Factories.ID(this)),
-    m_IsActive(false),
+    m_IsActive(true),
     m_IsSuspended(false),
     m_IsDifferent(false),
     m_Balance(0),

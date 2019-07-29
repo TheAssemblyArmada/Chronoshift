@@ -17,7 +17,6 @@
 #include "aircraft.h"
 #include "building.h"
 #include "display.h"
-#include "fetchtechtype.h"
 #include "foot.h"
 #include "gameini.h"
 #include "globals.h"
@@ -827,32 +826,34 @@ BOOL HouseClass::Is_Ally(ObjectClass *object) const
 ProdFailType HouseClass::Begin_Production(RTTIType rtti, int id)
 {
     TechnoTypeClass *techtype = Fetch_Techno_Type(rtti, id);
-    BOOL setstate = true;
+    BOOL set = true;
     FactoryClass *fptr = Fetch_Factory(rtti);
     if (fptr == nullptr) {
-        FactoryClass *fptr = new FactoryClass;
+        fptr = new FactoryClass;
         if (fptr == nullptr) {
-            return PROD_FAIL_3;
+            DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Unable to create factory\n", techtype->Get_Name());
+            return PROD_REJECTED;
         }
         Set_Factory(rtti, fptr);
-        setstate = fptr->Set(*techtype, *this);
-
-    } else {
-        if (fptr->Is_Building()) {
-            return PROD_FAIL_3;
-        }
+        set = fptr->Set(*techtype, *this);
     }
-    if (setstate == false) {
+    if (fptr->Is_Building()) {
+        DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Cannot queue buildings.\n", techtype->Get_Name());
+        return PROD_REJECTED;
+    }
+    if (set == false) {
+        DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Factory was unable to create the requested object\n",
+            techtype->Get_Name());
         if (fptr != nullptr) {
             delete fptr;
         }
-        return PROD_FAIL_3;
+        return PROD_REJECTED;
     }
     fptr->Start();
     if (Is_Player()) {
         Map.Factory_Link(fptr->Get_Heap_ID(), rtti, id);
     }
-    return PROD_FAIL_0;
+    return PROD_APPROVED;
 }
 
 ProdFailType HouseClass::Suspend_Production(RTTIType rtti)
@@ -864,9 +865,9 @@ ProdFailType HouseClass::Suspend_Production(RTTIType rtti)
             Map.Flag_Sidebar_To_Redraw();
             Map.Flag_To_Redraw();
         }
-        return PROD_FAIL_0;
+        return PROD_APPROVED;
     }
-    return PROD_FAIL_3;
+    return PROD_REJECTED;
 }
 
 ProdFailType HouseClass::Abandon_Production(RTTIType rtti)
@@ -881,31 +882,31 @@ ProdFailType HouseClass::Abandon_Production(RTTIType rtti)
             }
             fptr->Abandon();
             Set_Factory(rtti, nullptr);
-            if (fptr) {
+            if (fptr != nullptr) {
                 delete fptr;
             }
-            return PROD_FAIL_0;
+            return PROD_APPROVED;
         }
     }
-    return PROD_FAIL_3;
+    return PROD_REJECTED;
 }
 
-int HouseClass::Place_Special_Blast(SpecialWeaponType swtype, short target)
+BOOL HouseClass::Place_Special_Blast(SpecialWeaponType special, cell_t cellnum)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(HouseClass *, SpecialWeaponType, short) =
-        reinterpret_cast<int (*)(HouseClass *, SpecialWeaponType, short)>(0x004D68CC);
-    return func(this, swtype, target);
+    BOOL (*func)(HouseClass *, SpecialWeaponType, cell_t) =
+        reinterpret_cast<BOOL (*)(HouseClass *, SpecialWeaponType, cell_t)>(0x004D68CC);
+    return func(this, special, cellnum);
 #else
     return 0;
 #endif
 }
 
-int HouseClass::Place_Object(RTTIType rtti, cell_t cell)
+BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cellnum)
 {
 #ifndef CHRONOSHIFT_STANDALONE
-    int (*func)(HouseClass *, RTTIType, cell_t) = reinterpret_cast<int (*)(HouseClass *, RTTIType, cell_t)>(0x004D7678);
-    return func(this, rtti, cell);
+    BOOL (*func)(HouseClass *, RTTIType, cell_t) = reinterpret_cast<BOOL (*)(HouseClass *, RTTIType, cell_t)>(0x004D7678);
+    return func(this, rtti, cellnum);
 #else
     return 0;
 #endif
@@ -1163,6 +1164,13 @@ void HouseClass::Active_Add(TechnoClass *object)
  */
 FactoryClass *HouseClass::Fetch_Factory(RTTIType rtti) const
 {
+//wrapped cause all factories return nullptr
+#ifndef CHRONOSHIFT_STANDALONE
+    FactoryClass * (*func)(HouseClass const*, RTTIType) = reinterpret_cast<FactoryClass * (*)(HouseClass const*, RTTIType)>(0x004DDBD0);
+    return func(this, rtti);
+#else
+    return nullptr;
+#endif
     switch (rtti) {
         case RTTI_AIRCRAFT:
         case RTTI_AIRCRAFTTYPE: // Fallthrough
@@ -1251,6 +1259,14 @@ const uint8_t *HouseClass::Remap_Table(BOOL alt, RemapType type)
  */
 void HouseClass::Sell_Wall(cell_t cellnum)
 {
+    // wrapped cause crashes selling wall in test map
+#ifndef CHRONOSHIFT_STANDALONE
+    ProdFailType (*func)(HouseClass *, cell_t) = reinterpret_cast<ProdFailType (*)(HouseClass *, cell_t)>(0x004D8D1C);
+    func(this, cellnum);
+    return;
+#else
+    return;
+#endif
     if (cellnum != 0) {
         CellClass &cell = Map[cellnum];
 

@@ -153,7 +153,7 @@ extern void *&g_WakeShapes;
 extern void *&g_TurretShapes;
 extern void *&g_SamShapes;
 extern void *&g_MGunShapes;
-extern int &g_FormMove;
+extern BOOL &g_FormMove;
 extern SpeedType &g_FormSpeed;
 extern MPHType &g_FormMaxSpeed;
 
@@ -241,7 +241,7 @@ extern void *g_WakeShapes;
 extern void *g_TurretShapes;
 extern void *g_SamShapes;
 extern void *g_MGunShapes;
-extern int g_FormMove;
+extern BOOL g_FormMove;
 extern SpeedType g_FormSpeed;
 extern MPHType g_FormMaxSpeed;
 

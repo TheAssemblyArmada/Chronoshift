@@ -36,6 +36,16 @@ class BuildingClass : public TechnoClass
 
     // TechnoClass
     virtual void Death_Announcement(TechnoClass *killer) const override;
+    virtual FireErrorType Can_Fire(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
+    virtual target_t Greatest_Threat(ThreatType threat) override;
+    virtual void Assign_Target(target_t target) override;
+    virtual BOOL Captured(HouseClass *house = nullptr) override;
+
+    virtual void Enter_Idle_Mode(BOOL a1 = false) override;
+    virtual void Grand_Opening(int a1);
+    virtual void Update_Buildables();
+    virtual void *Remap_Table();
+    virtual int Toggle_Primary();
 
     BuildingType What_Type() const { return m_Type->What_Type(); }
 

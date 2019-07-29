@@ -1,9 +1,9 @@
 /**
  * @file
  *
- * @author tomsons26
  * @author CCHyper
  * @author OmniBlade
+ * @author tomsons26
  *
  * @brief
  *
@@ -82,14 +82,14 @@ public:
     GameEventClass(GameEventType type, unsigned int gamespeed); // For events: GAMESPEED
     GameEventClass(GameEventType type, HousesType house); // For events: ALLY
     GameEventClass(GameEventType type, RTTIType rtti); // For events: SUSPEND, ABANDON
-    GameEventClass(GameEventType type, RTTIType rtti, unsigned int heap_id); // For events: PLACE, PRODUCE
+    GameEventClass(GameEventType type, RTTIType rtti, int heap_id); // For events: PLACE, PRODUCE
     GameEventClass(GameEventType type, RTTIType rtti, cell_t cell); // For events:
     GameEventClass(GameEventType type, SpecialWeaponType special, cell_t cell); // For events: SPECIAL_PLACE
-    GameEventClass(GameEventType type, void *a2, unsigned long a3); // For events:
+    GameEventClass(GameEventType type, void *a2, unsigned long a3); // For events: ADDPLAYER
     GameEventClass(GameEventType type, TargetClass whom); // For events: PRIMARY, SELL, IDLE, SCATTER, REPAIR
     GameEventClass(GameEventType type, TargetClass whom, TargetClass target); // For events: ARCHIVE
     GameEventClass(GameEventType type, AnimType anim, HousesType owner, coord_t coord); // For events: ANIMATION
-    GameEventClass(GameEventType type, unsigned int crc, unsigned short cmd_count, unsigned char delay); // For events: FRAME_SYNC
+    GameEventClass(GameEventType type, unsigned int crc, unsigned short cmd_count, unsigned char delay); // For events: FRAMEINFO
     GameEventClass(GameEventType type, unsigned short desired_frame_rate, unsigned short max_ahead); // For events: TIMING
 
     // TODOL: Once GameEventClass is complete, and code for event below is under control, move
@@ -115,6 +115,7 @@ public:
     const char *Name() const { return Name_From(m_Type); }
 
 private:
+    // confirmed - MEGAMISSION
     struct MegaMissionEventStruct
     {
         target_t m_Whom;
@@ -123,6 +124,7 @@ private:
         target_t m_Dest;
     };
 
+    // confirmed - MEGAMISSION_F
     struct MegaMissionFEventStruct
     {
         target_t m_Whom;
@@ -133,29 +135,26 @@ private:
         MPHType m_FormMaxSpeed;
     };
 
+    // confirmed - PRIMARY, SELL, IDLE, SCATTER, REPAIR
     struct WhomEventStruct
     {
         target_t m_Whom;
     };
 
+    // confirmed - ARCHIVE
     struct WhomTargetEventStruct
     {
         target_t m_Whom;
         target_t m_Target;
     };
 
-    struct WhomTargetDestEventStruct
-    {
-        target_t m_Whom;
-        target_t m_Target;
-        target_t m_Dest;
-    };
-
+    // confirmed - ALLY
     struct HouseEventStruct
     {
         int /*HousesType*/ m_Whom;
     };
 
+    // confirmed - ANIMATION
     struct AnimEventStruct
     {
         AnimType m_Anim;
@@ -163,40 +162,47 @@ private:
         coord_t m_Coord;
     };
 
+    // confirmed - SELLCELL
     struct CellEventStruct
     {
         cell_t m_Cell;
     };
 
+    // confirmed - SUSPEND, ABANDON
     struct RTTIEventStruct
     {
         RTTIType m_RTTI;
     };
 
+    // confirmed - PLACE
     struct RTTICellEventStruct
     {
         RTTIType m_RTTI;
         cell_t m_Cell;
     };
 
+    // confirmed - PRODUCE
     struct RTTIHeapIDEventStruct
     {
         RTTIType m_RTTI;
         int m_HeapID;
     };
 
+    // confirmed - SPECIAL_PLACE
     struct SpecialPlaceEventStruct
     {
-        int /*SpecialWeaponType*/ m_Special;
+        int /*SpecialWeaponType*/ m_SpecialWeapon;
         cell_t m_Cell;
     };
 
+    // confirmed - SPECIAL
     struct SpecialEventStruct
     {
         void operator=(const SpecialClass &that) { m_Special = that.Pack(); }
         uint32_t m_Special;
     };
 
+    // confirmed - FRAMEINFO
     struct FrameEventStruct
     {
         unsigned int m_CRC;
@@ -204,31 +210,36 @@ private:
         unsigned char m_Delay;
     };
 
+    // confirmed - TIMING
     struct TimingEventStruct
     {
-        unsigned int m_DesiredFrameRate : 16; // 1
-        unsigned int m_MaxAhead : 16; // 16
+        unsigned short m_DesiredFrameRate;
+        unsigned short m_MaxAhead;
     };
 
-    struct TimeEventStruct
+    // confirmed - RESPONSE_TIME
+    struct ResponseTimeEventStruct
     {
         unsigned char m_MaxAhead;
     };
 
+    // confirmed - GAMESPEED
     struct GameSpeedEventStruct
     {
         unsigned int m_GameSpeed;
     };
 
+    // confirmed - ADDPLAYER
     struct AddPlayerEventStruct
     {
         int *m_pointer;
         unsigned int m_uintval;
     };
 
+    // confirmed - PROCESS_TIME
     struct ProcessTimeEventStruct
     {
-        unsigned short m_word;
+        unsigned short m_Ticks;
     };
 
 private:
@@ -261,7 +272,7 @@ private:
         SpecialEventStruct u_Special;
         FrameEventStruct u_Frame;
         TimingEventStruct u_Timing;
-        TimeEventStruct u_ResponseTime;
+        ResponseTimeEventStruct u_ResponseTime;
         GameSpeedEventStruct u_GameSpeed;
         AddPlayerEventStruct u_AddPlayer;
         ProcessTimeEventStruct u_ProcessTime;

@@ -1259,25 +1259,28 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
 
 void FootClass::Queue_Navigation_List(target_t target)
 {
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)(FootClass *, target_t) = reinterpret_cast<void (*)(FootClass *, target_t)>(0x004C35D0);
+    func(this, target);
+#else
     int i;
-    if (target) {
-        for (int i = 0; i < 10 && m_NavList[i]; ++i) {
-            ;
-        }
-        if ((m_HeapID & 0xFFFFFF | (m_RTTI << 24) & 0xFF000000) != target || i <= 0) {
-            if (!i) {
+    if (target != 0) {
+        for (i = 0; i < NAV_LENGTH && m_NavList[i] != 0; ++i);
+        if (target != As_Target() || i <= 0) {
+            if (i == 0) {
                 m_Bit2_4 = false;
             }
-            if (i < 10) {
+            if (i < NAV_LENGTH) {
                 m_NavList[i] = target;
             }
         } else {
             m_Bit2_4 = true;
         }
-        if (m_NavCom == NULL && Mission == MISSION_GUARD) {
-            Enter_Idle_Mode(0);
+        if (m_NavCom == 0 && Mission == MISSION_GUARD) {
+            Enter_Idle_Mode();
         }
     }
+#endif
 }
 
 void FootClass::Clear_Navigation_List()

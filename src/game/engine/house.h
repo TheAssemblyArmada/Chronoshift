@@ -57,10 +57,10 @@ struct ZoneInfo
 
 enum ProdFailType
 {
-    PROD_FAIL_0, // ok?
-    PROD_FAIL_1,
-    PROD_FAIL_2,
-    PROD_FAIL_3, // rejected?
+    PROD_APPROVED, // ok?
+    PROD_FAIL_1, // guess, invalid type? (rtti?)
+    PROD_FAIL_2, // guess, invalid factory pointer?
+    PROD_REJECTED, // rejected?
 };
 
 class HouseClass
@@ -128,8 +128,8 @@ public:
     ProdFailType Begin_Production(RTTIType rtti, int id);
     ProdFailType Suspend_Production(RTTIType rtti);
     ProdFailType Abandon_Production(RTTIType rtti);
-    int Place_Special_Blast(SpecialWeaponType, short);
-    int Place_Object(RTTIType rtti, cell_t cell);
+    BOOL Place_Special_Blast(SpecialWeaponType special, cell_t cellnum);
+    BOOL Place_Object(RTTIType rtti, cell_t cellnum);
     BOOL Flag_To_Die();
     BOOL Flag_To_Win();
     BOOL Flag_To_Lose();
@@ -159,7 +159,7 @@ public:
     int Get_Quantity(AircraftType type) const { return m_AircraftQuantity[type]; }
     int Get_Quantity(BuildingType type) const { return m_BuildingQuantity[type]; }
     int Get_Heap_ID() const { return m_HeapID; }
-    PlayerColorType Get_Color() { return m_Color; }
+    PlayerColorType Get_Color() const { return m_Color; }
     HousesType What_Type() const { return m_Type->What_Type(); }
     BOOL Is_Player() const { return this == g_PlayerPtr; }
     DiffType Get_AI_Difficulty() const { return m_AIDifficulty; }
@@ -454,10 +454,10 @@ inline void HouseClass::Hook_Me()
     Hook_Function(0x004D5E80, *HouseClass::Adjust_Capacity);
     Hook_Function(0x004D8CC4, *HouseClass::Power_Fraction);
     Hook_Function(0x004D658C, *HouseClass::Adjust_Threat);
-    Hook_Function(0x004DDBD0, *HouseClass::Hook_Fetch_Factory);
+    //Hook_Function(0x004DDBD0, *HouseClass::Hook_Fetch_Factory);
     Hook_Function(0x004DDC58, *HouseClass::Set_Factory);
     Hook_Function(0x004D40F4, *HouseClass::Init);
-    Hook_Function(0x004D8D1C, *HouseClass::Sell_Wall);
+    //Hook_Function(0x004D8D1C, *HouseClass::Sell_Wall);
     Hook_Function(0x004D8F34, *HouseClass::Hook_Find_Building);
     Hook_Function(0x004D9020, *HouseClass::Hook_Find_Build_Location);
     Hook_Function(0x004DE81C, *HouseClass::Hook_Find_Cell_In_Zone);

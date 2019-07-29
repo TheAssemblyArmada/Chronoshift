@@ -129,7 +129,7 @@ public:
     virtual target_t Greatest_Threat(ThreatType threat);
     virtual void Assign_Target(target_t target);
     virtual BulletClass *Fire_At(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY);
-    virtual BOOL Captured(HouseClass *house);
+    virtual BOOL Captured(HouseClass *house  = nullptr);
     virtual BOOL Electric_Zap(target_t target, BOOL a2, coord_t a3 = 0, uint8_t *a4 = nullptr);
     virtual void Renovate();
     virtual uint8_t *Remap_Table() const;

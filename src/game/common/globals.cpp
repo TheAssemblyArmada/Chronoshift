@@ -88,7 +88,7 @@ void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
 void *&g_TurretShapes = Make_Global<void *>(0x0068D2E0);
 void *&g_SamShapes = Make_Global<void *>(0x0068D2E4);
 void *&g_MGunShapes = Make_Global<void *>(0x0068D2E8);
-int &g_FormMove = Make_Global<int>(0x0065E0CC);
+BOOL &g_FormMove = Make_Global<BOOL>(0x0065E0CC);
 SpeedType &g_FormSpeed = Make_Global<SpeedType>(0x0065E0D0);
 MPHType &g_FormMaxSpeed = Make_Global<MPHType>(0x0065E0D1);
 
@@ -175,7 +175,7 @@ void *g_WakeShapes = nullptr;
 void *g_TurretShapes = nullptr;
 void *g_SamShapes = nullptr;
 void *g_MGunShapes = nullptr;
-int g_FormMove = 0;
+BOOL g_FormMove = false;
 SpeedType g_FormSpeed = SPEED_NONE;
 MPHType g_FormMaxSpeed = MPH_MAX;
 
