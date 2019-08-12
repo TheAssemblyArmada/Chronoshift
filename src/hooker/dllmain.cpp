@@ -82,6 +82,7 @@
 #include "rgb.h"
 #include "rules.h"
 #include "scenario.h"
+#include "session.h"
 #include "shape.h"
 #include "sidebar.h"
 #include "slider.h"
@@ -242,9 +243,21 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved
 }
 
 #if defined COMPILER_WATCOM && !defined CHRONOSHIFT_STANDALONE
-// Watcom has no static_assert so we are forced to use this instead
+// this is various stuff for making sure sizes and offsets are correct in the Watcom build
+
+// Watcom has no static_assert so we are forced to use these instead
+
 // Watcom throws "dimension cannot be negative" on missmatches
 #define ASSERT_SIZEOF(structname, expectedsize) typedef char __ASSERT_SIZEOF__[(sizeof(structname) == expectedsize) ? 1 : -1]
+
+// Watcom throws a error "cannot assign a pointer value to an arithmetic item"
+// and the note "right operand type is char (* )[offset]"
+// offset - indicating the offset of the member as a decimal number
+// example use case CHECK_OFFSET(SessionClass, MPlayerScores);
+#define CHECK_OFFSET(s, o) char check_##s_##o[offsetof(s, o)] = { &check_##s_##o }
+
+// To get a full class/struct/enum layout in Watcom use #pragma dump_object_model name
+// like so #pragma dump_object_model SessionClass;
 
 #pragma message("Checking Type Sizes!")
 //
@@ -292,6 +305,7 @@ ASSERT_SIZEOF(RadarClass, 0x100D);
 ASSERT_SIZEOF(RulesClass, 0x200);
 ASSERT_SIZEOF(ScenarioClass, 0x7D7);
 ASSERT_SIZEOF(ScrollClass, 0x1661);
+ASSERT_SIZEOF(SessionClass, 0x127C);
 ASSERT_SIZEOF(ShapeButtonClass, 0x38);
 ASSERT_SIZEOF(SidebarClass, 0x15FA);
 ASSERT_SIZEOF(SliderClass, 0x54);

@@ -312,17 +312,17 @@ void GameEventClass::Execute()
     TechnoClass *tptr = nullptr;
     char message[100] = { '\0' };
     char *messageptr = nullptr;
-    EVENT_DEBUG_LOG("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, ID:%d).\n",
-        Name_From(m_Type),
-        g_GameFrame,
-        m_EventFrame,
-        m_HouseID);
+    //EVENT_DEBUG_LOG("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, ID:%d).\n",
+    //    Name_From(m_Type),
+    //    g_GameFrame,
+    //    m_EventFrame,
+    //    m_HouseID);
 
     switch (m_Type) {
         case EVENT_EMPTY:
             break;
-        // todo confirm its working when we have online play
         case EVENT_ALLY: {
+            EVENT_DEBUG_LOG("    ALLY - House:%d.\n", m_EventData.u_House.m_Whom);
             if (g_Houses[m_HouseID].Is_Ally((HousesType)m_EventData.u_House.m_Whom)) {
                 g_Houses[m_HouseID].Make_Enemy((HousesType)m_EventData.u_House.m_Whom);
             } else {
@@ -340,17 +340,15 @@ void GameEventClass::Execute()
                 m_EventData.u_MegaMissionF.m_Dest,
                 m_EventData.u_MegaMissionF.m_FormSpeed,
                 m_EventData.u_MegaMissionF.m_FormMaxSpeed);
-            fptr = (FootClass *)(TechnoClass *)As_Techno(m_EventData.u_MegaMissionF.m_Whom);
-            if (fptr != nullptr && fptr->Is_Active()) {
-                if (fptr->Is_Foot() && fptr->Is_Active()) {
-                    fptr->Set_In_Formation(true);
-                    fptr->Set_Team_Speed(m_EventData.u_MegaMissionF.m_FormSpeed);
-                    g_FormMove = true;
-                    fptr->Set_Team_Max_Speed(m_EventData.u_MegaMissionF.m_FormMaxSpeed);
-                    formation_event = true;
-                    g_FormMaxSpeed = m_EventData.u_MegaMissionF.m_FormMaxSpeed;
-                    g_FormSpeed = m_EventData.u_MegaMissionF.m_FormSpeed;
-                }
+            fptr = (FootClass *)As_Techno(m_EventData.u_MegaMissionF.m_Whom);
+            if (fptr != nullptr && fptr->Is_Active() && fptr->Is_Foot()) {
+                fptr->Set_In_Formation(true);
+                fptr->Set_Team_Speed(m_EventData.u_MegaMissionF.m_FormSpeed);
+                g_FormMove = true;
+                fptr->Set_Team_Max_Speed(m_EventData.u_MegaMissionF.m_FormMaxSpeed);
+                formation_event = true;
+                g_FormMaxSpeed = m_EventData.u_MegaMissionF.m_FormMaxSpeed;
+                g_FormSpeed = m_EventData.u_MegaMissionF.m_FormSpeed;
             }
             // fallthough
         }
@@ -362,11 +360,14 @@ void GameEventClass::Execute()
                 m_EventData.u_MegaMission.m_Dest);
             TechnoClass *whom = As_Techno(m_EventData.u_MegaMission.m_Whom);
 
-            if (whom != nullptr) {
-                if (!whom->Is_Active() || !whom->Get_Health() || whom->In_Limbo()) {
-                    break;
-                }
+            if (whom == nullptr) {
+                break;
             }
+
+            if (!whom->Is_Active() || !whom->Get_Health() || whom->In_Limbo()) {
+                break;
+            }
+
             ObjectClass *target = nullptr;
 
             if (Target_Get_RTTI(m_EventData.u_MegaMission.m_Target) != RTTI_NONE) {
@@ -455,7 +456,7 @@ void GameEventClass::Execute()
         case EVENT_SCATTER: {
             EVENT_DEBUG_LOG("    SCATTER - Whom:%08X.\n", m_EventData.u_Whom.m_Whom);
             fptr = (FootClass *)As_Techno(m_EventData.u_Whom.m_Whom);
-            if (fptr->Is_Foot() && fptr->Is_Active() && !fptr->In_Limbo() && !fptr->Is_Tethered()) {
+            if (fptr != nullptr && fptr->Is_Foot() && fptr->Is_Active() && !fptr->In_Limbo() && !fptr->Is_Tethered()) {
                 fptr->Set_To_Scatter(true);
                 fptr->Scatter(0, 1, 0);
             }
@@ -471,7 +472,7 @@ void GameEventClass::Execute()
             break;
         }
         case EVENT_PLACE: {
-            EVENT_DEBUG_LOG("    PLACE - RTTI:%d Cell:%d.\n", m_EventData.u_RTTICell.m_RTTI, m_EventData.u_RTTICell.m_Cell);
+            EVENT_DEBUG_LOG("    PLACE - RTTI:%d Cell: X:%d Y:%d.\n", m_EventData.u_RTTICell.m_RTTI, Cell_Get_X(m_EventData.u_RTTICell.m_Cell), Cell_Get_Y(m_EventData.u_RTTICell.m_Cell));
             g_Houses[m_HouseID].Place_Object(m_EventData.u_RTTICell.m_RTTI, m_EventData.u_RTTICell.m_Cell);
             break;
         }
@@ -488,7 +489,8 @@ void GameEventClass::Execute()
             break;
         }
         case EVENT_PRODUCE: {
-            EVENT_DEBUG_LOG("    PRODUCE - RTTI:%d HeapID:%d.\n", m_EventData.u_RTTIHeapID.m_RTTI, m_EventData.u_RTTIHeapID.m_HeapID);
+            EVENT_DEBUG_LOG(
+                "    PRODUCE - RTTI:%d HeapID:%d.\n", m_EventData.u_RTTIHeapID.m_RTTI, m_EventData.u_RTTIHeapID.m_HeapID);
             g_Houses[m_HouseID].Begin_Production(m_EventData.u_RTTIHeapID.m_RTTI, m_EventData.u_RTTIHeapID.m_HeapID);
             break;
         }
@@ -513,7 +515,9 @@ void GameEventClass::Execute()
             break;
         }
         case EVENT_SPECIAL_PLACE: {
-            EVENT_DEBUG_LOG("    SPECIAL_PLACE - Special Weapon:%d Cell:%d.\n", m_EventData.u_SpecialPlace.m_SpecialWeapon, m_EventData.u_SpecialPlace.m_Cell);
+            EVENT_DEBUG_LOG("    SPECIAL_PLACE - Special Weapon:%d Cell: X:%d Y:%d.\n",
+                m_EventData.u_SpecialPlace.m_SpecialWeapon,
+                Cell_Get_X(m_EventData.u_SpecialPlace.m_Cell), Cell_Get_Y(m_EventData.u_SpecialPlace.m_Cell));
             g_Houses[m_HouseID].Place_Special_Blast(
                 (SpecialWeaponType)m_EventData.u_SpecialPlace.m_SpecialWeapon, m_EventData.u_SpecialPlace.m_Cell);
             break;
@@ -564,7 +568,7 @@ void GameEventClass::Execute()
             break;
         }
         case EVENT_SELL_CELL: {
-            EVENT_DEBUG_LOG("    SELL_CELL - Cell:%d.\n", m_EventData.u_Cell.m_Cell);
+            EVENT_DEBUG_LOG("    SELL_CELL - Cell: X:%d Y:%d.\n", Cell_Get_X(m_EventData.u_Cell.m_Cell), Cell_Get_Y(m_EventData.u_Cell.m_Cell));
             g_Houses[m_HouseID].Sell_Wall(m_EventData.u_Cell.m_Cell);
             break;
         }
@@ -586,7 +590,6 @@ void GameEventClass::Execute()
             EVENT_DEBUG_LOG("    MESSAGE.\n");
             break;
         }
-        // todo confirm its working when we have online play
         case EVENT_RESPONSE_TIME: {
             EVENT_DEBUG_LOG("    RESPONSE_TIME - Changing MaxAhead to frames %d.\n", m_EventData.u_ResponseTime.m_MaxAhead);
             Session.Set_MaxAhead(m_EventData.u_ResponseTime.m_MaxAhead);
@@ -596,7 +599,7 @@ void GameEventClass::Execute()
             EVENT_DEBUG_LOG("    FRAME_INFO.\n");
             break;
         }
-        // todo confirm its working when we have online play
+        // todo, WOL exclusive feature, confirm its working when we have online play
         case EVENT_SAVE_GAME: {
             EVENT_DEBUG_LOG("    SAVE_GAME.\n");
             if (g_SpecialDialog != SPECIAL_DLG_NONE) {
@@ -626,7 +629,6 @@ void GameEventClass::Execute()
             }
             break;
         }
-
         case EVENT_ADD_PLAYER: {
             EVENT_DEBUG_LOG("    ADD_PLAYER.\n");
             for (int i = 0; i < m_EventData.u_AddPlayer.m_uintval; ++i) {
@@ -637,7 +639,6 @@ void GameEventClass::Execute()
             }
             break;
         }
-        // todo confirm its working when we have online play
         case EVENT_TIMING: {
             EVENT_DEBUG_LOG("    TIMING - DesiredFrameRate:%d MaxAhead:%d.\n",
                 m_EventData.u_Timing.m_DesiredFrameRate,
@@ -650,47 +651,39 @@ void GameEventClass::Execute()
             Session.Set_MaxAhead(m_EventData.u_Timing.m_MaxAhead);
             break;
         }
-        // todo this needs to be rechecked
-        // todo confirm its working when we have online play
         case EVENT_PROCESS_TIME: {
-            NodeNameTag *nodename;
+            EVENT_DEBUG_LOG("    PROCESS_TIME - %04x ticks.\n", m_EventData.u_ProcessTime.m_Ticks);
             for (int i = 0; i < Session.Player_Count(); ++i) {
-                nodename = Session.Player(i);
-                if (m_HouseID == nodename->House) {
+                NodeNameTag *nodename = Session.Player(i);
+                if (nodename != nullptr && m_HouseID == nodename->AltHouse) {
                     nodename->field_19 = m_EventData.u_ProcessTime.m_Ticks;
                     break;
                 }
             }
-            EVENT_DEBUG_LOG("    PROCESS_TIME - %04x ticks.\n", m_EventData.u_ProcessTime.m_Ticks);
-            // this was here but, this doesn't seem safe so moved above...
-            //nodename->field_19 = m_EventData.u_ProcessTime.m_Ticks;
             break;
         }
-        // todo this needs to be rechecked
-        // todo confirm its working when we have online play
         case EVENT_PROPOSE_DRAW: {
             EVENT_DEBUG_LOG("    PROPOSE_DRAW.\n");
-            if (m_HouseID == g_PlayerPtr->Get_Heap_ID()) {
-                if (!Scen.Get_field_7D3()) {
+            if (m_HouseID != g_PlayerPtr->Get_Heap_ID()) {
+                if (Scen.Get_field_7CF()) {
+                    Scen.Set_field_7D3(true);
+                    break;
+                }
+                for (int i = 0; i < Session.Player_Count(); ++i) {
+                    if (m_HouseID == Session.Player(i)->AltHouse) {
+                        Scen.Set_field_7D3(true);
+                        sprintf(message, "%s has proposed that the game be declared a draw.", Session.Player(i)->Name);
+                        messageptr = message;
+                        break;
+                    }
+                }
+            } else {
+                if (Scen.Get_field_7D3()) {
                     Scen.Set_field_7CF(true);
                     break;
                 }
                 Scen.Set_field_7CF(true);
                 messageptr = "You have proposed that the game be declared a draw.";
-            } else {
-                if (!Scen.Get_field_7CF()) {
-                    Scen.Set_field_7D3(true);
-                    break;
-                }
-                for (int i = 0; i < Session.Player_Count(); ++i) {
-                    if (m_HouseID == Session.Player(i)->House) {
-                        sprintf(
-                            message, "%s has proposed that the game be declared a draw.", Session.Player(i)->Name);
-                        break;
-                    }
-                }
-                Scen.Set_field_7D3(true);
-                messageptr = message;
             }
             Session.Get_Messages().Add_Message(0,
                 0,
@@ -701,8 +694,6 @@ void GameEventClass::Execute()
             Sound_Effect(VOC_INCOMING_MESSAGE);
             break;
         }
-        // todo this needs to be rechecked
-        // todo confirm its working when we have online play
         case EVENT_RETRACT_DRAW: {
             EVENT_DEBUG_LOG("    RETRACT_DRAW.\n");
 
@@ -711,12 +702,12 @@ void GameEventClass::Execute()
                 messageptr = "You have retracted your offer of a draw.";
             } else {
                 for (int i = 0; i < Session.Player_Count(); ++i) {
-                    if (m_HouseID == Session.Player(i)->House) {
+                    if (m_HouseID == Session.Player(i)->AltHouse) {
                         sprintf(message, "%s has retracted the offer of a draw.", Session.Player(i)->Name);
                         break;
                     }
                 }
-                Scen.Set_field_7CF(false);
+                Scen.Set_field_7D3(false);
                 messageptr = message;
             }
             Session.Get_Messages().Add_Message(0,
@@ -731,6 +722,7 @@ void GameEventClass::Execute()
         default:
             break;
     }
+    // EVENT_DEBUG_LOG("EventClass::Execute - Complete\n");
 }
 
 char const *GameEventClass::Name_From(GameEventClass::GameEventType type)

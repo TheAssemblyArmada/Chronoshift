@@ -284,7 +284,7 @@ public:
     static inline void Hook_Me()
     {
 #ifdef COMPILER_WATCOM
-        Hook_Call(0x0052BC5E, *GameEventClass::Execute);
+        Hook_Function(0x004BD0C8, *GameEventClass::Execute);
 #endif
     }
 #endif

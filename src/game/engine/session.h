@@ -62,13 +62,8 @@ struct GlobalPacket
 struct MPlayerScoreStruct
 {
     char Name[12];
-#ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Bit1 : 1; // & 1
-#else
-    bool Bit1;
-#endif
-    int Winner;
-    int field_10[4];
+    int field_C; //whatever this is is incrimented in HouseClass::Tally_Score
+    int field_10[4]; //scores?
     PlayerColorType Scheme;
 };
 
@@ -222,7 +217,7 @@ private:
     IPXAddressClass HostAddress;
     MessageListClass Messages;
     IPXAddressClass MessageAddress;
-    char LastMessage[118];
+    char LastMessage[120];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL SessionBit1 : 1; // & 1
 #else
