@@ -36,7 +36,7 @@ AnimTypeClass::AnimTypeClass(AnimType anim, const char *name, int a3, int mid_po
     BOOL normalized, BOOL a7, BOOL scorch, BOOL crater, BOOL sticky, BOOL surface,
     BOOL translucent, BOOL flamer, fixed_t damage, int rate, int start, int loop_start,
     int loop_end, int end, int loop_count, VocType report, AnimType next) :
-    ObjectTypeClass(RTTI_ANIMTYPE, 0, 0, 0, 0, 0, 0, 0, 0, TXT_NULL, name),
+    ObjectTypeClass(RTTI_ANIMTYPE, anim, true, true, false, false, true, true, false, TXT_NULL, name),
     m_Normalized(normalized),
     m_Surface(surface),
     m_Translucent(translucent),
