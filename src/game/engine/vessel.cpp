@@ -17,6 +17,7 @@
 #include "house.h"
 #include "iomap.h"
 #include "gameini.h"
+#include "coord.h"
 #include "globals.h"
 #include "rules.h"
 #include <cstdio>

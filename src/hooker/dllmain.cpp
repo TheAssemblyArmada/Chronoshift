@@ -177,6 +177,9 @@ void Setup_Hooks()
     TechnoClass::Hook_Me();
     HouseClass::Hook_Me();
     FootClass::Hook_Me();
+
+    AbstractClass::Hook_Me();
+
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
