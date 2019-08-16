@@ -1166,7 +1166,7 @@ int FootClass::Passable_Cell(cell_t cell, FacingType facing, int threat, MoveTyp
     MoveType canmove = Can_Enter_Cell(cell, facing);
 
     if (canmove < MOVE_MOVING_BLOCK) {
-        if (Distance_To(cell) > 256) {
+        if (Distance_To_Cell(cell) > 256) {
             move = MOVE_MOVING_BLOCK;
         }
     }

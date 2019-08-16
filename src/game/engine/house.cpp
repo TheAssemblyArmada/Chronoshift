@@ -25,6 +25,7 @@
 #include "infantry.h"
 #include "iomap.h"
 #include "logic.h"
+#include "coord.h"
 #include "remap.h"
 #include "rules.h"
 #include "scenario.h"
