@@ -102,7 +102,7 @@ const int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const
     int16_t *list = _occupy;
     for (int i = 0; i < Width; ++i) {
         for (int j = 0; j < Height; ++j) {
-            *list++ += (i + 128);
+            *list++ = j * 128 + i;
         }
     }
 
