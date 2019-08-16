@@ -43,7 +43,7 @@ BulletTypeClass::BulletTypeClass(BulletType bullet, const char *name) :
     Proximity(false),
     Animates(false),
     Ranged(false),
-    Rotates(true),
+    NoRotate(true),
     Inaccurate(false),
     Translucent(false),
     AntiAir(false),
@@ -72,7 +72,7 @@ BulletTypeClass::BulletTypeClass(BulletTypeClass const &that) :
     Proximity(that.Proximity),
     Animates(that.Animates),
     Ranged(that.Ranged),
-    Rotates(that.Rotates),
+    NoRotate(that.NoRotate),
     Inaccurate(that.Inaccurate),
     Translucent(that.Translucent),
     AntiAir(that.AntiAir),
@@ -228,7 +228,7 @@ BOOL BulletTypeClass::Read_INI(GameINIClass &ini)
         Degenerates = ini.Get_Bool(Get_Name(), "Degenerates", Degenerates);
         UnderWater = ini.Get_Bool(Get_Name(), "UnderWater", UnderWater);
         Parachuted = ini.Get_Bool(Get_Name(), "Parachuted", Parachuted);
-        Rotates = ini.Get_Bool(Get_Name(), "Rotates", Rotates);
+        NoRotate = !ini.Get_Bool(Get_Name(), "Rotates", !NoRotate);
         Translucent = ini.Get_Bool(Get_Name(), "Translucent", Translucent);
         Gigundo = ini.Get_Bool(Get_Name(), "Gigundo", Gigundo);
 
