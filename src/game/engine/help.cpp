@@ -18,6 +18,7 @@
 #include "lists.h"
 #include "mouse.h"
 #include "textprint.h"
+#include "coord.h"
 #include <algorithm>
 #include <cstdio>
 
