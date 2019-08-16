@@ -29,6 +29,7 @@
 #include "straw.h"
 #include "templatetype.h"
 #include "terraintype.h"
+#include "coord.h"
 #include <new>
 
 #ifndef CHRONOSHIFT_STANDALONE
