@@ -99,7 +99,7 @@ private:
     BOOL Proximity : 1; // Does it blow up when near its target?
     BOOL Animates : 1; // Does it animate [this means smoke puffs]?
     BOOL Ranged : 1; // Can it run out of fuel?
-    BOOL Rotates : 1; // Does the projectile have rotation specific imagery?
+    BOOL NoRotate : 1; // Does the projectile have rotation specific imagery?
     BOOL Inaccurate : 1; // Is it inherently inaccurate?
     BOOL Translucent : 1; // Are translucent colors used in artwork?
     BOOL AntiAir : 1; // Can this weapon fire upon flying aircraft?
@@ -118,7 +118,7 @@ private:
     bool Proximity; // Does it blow up when near its target?
     bool Animates; // Does it animate [this means smoke puffs]?
     bool Ranged; // Can it run out of fuel?
-    bool Rotates; // Does the projectile have rotation specific imagery?
+    bool NoRotate; // Does the projectile have rotation specific imagery?
     bool Inaccurate; // Is it inherently inaccurate?
     bool Translucent; // Are translucent colors used in artwork?
     bool AntiAir; // Can this weapon fire upon flying aircraft?
