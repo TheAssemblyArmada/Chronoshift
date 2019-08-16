@@ -121,6 +121,8 @@ BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType ho
  {
      if (ini.Find_Section(Get_Name())) {
          ini.Get_String(Get_Name(), "Image", "none", ImageName, sizeof(ImageName));
+         
+         return true;
      }
 
      return false;
