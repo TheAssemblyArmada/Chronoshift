@@ -20,7 +20,6 @@
 void CRCEngine::operator()(char datum)
 {
     m_buffer.bytes[m_index] = datum;
-
     ++m_index;
 
     if (m_index == ARRAY_SIZE(m_buffer.bytes)) {
@@ -45,27 +44,34 @@ int32_t CRCEngine::operator()(const void *data, unsigned int length)
         const char *getp = static_cast<const char *>(data);
         unsigned int remaining = length;
 
-        // process first 4 bytes if we already had some bytes
-        while (remaining-- != 0) {
+        // Process first 4 bytes if we already had some bytes
+        while (remaining != 0) {
             if (!Buffer_Needs_Data()) {
                 break;
             }
 
             (*this)(*getp++);
+            --remaining;
         }
 
-        // do some rotl on the data in blocks.
-        int blockcount = remaining / 4;
+        // Do some rotl on the data in blocks.
         const int32_t *getpi = reinterpret_cast<const int32_t *>(getp);
-        while (blockcount-- != 0) {
+        int blockcount = remaining / 4;
+        
+		while (blockcount != 0) {
             m_crc = *getpi + __rotl32(m_crc, 1);
             ++getpi;
             remaining -= sizeof(*getpi);
+            --blockcount;
         }
 
+        // Move getp to where getpi got to.
+        getp = reinterpret_cast<const char *>(getpi);
+
         // This will catch any bytes remaining.
-        while (remaining-- != 0) {
+        while (remaining != 0) {
             (*this)(*getp++);
+            --remaining;
         }
     }
 

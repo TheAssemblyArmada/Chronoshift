@@ -37,7 +37,7 @@ public:
 private:
     void operator()(char datnum);
     int32_t Value();
-    BOOL Buffer_Needs_Data() { return m_index > 0; }
+    BOOL Buffer_Needs_Data() { return m_index != 0; }
 
 private:
     int32_t m_crc;
