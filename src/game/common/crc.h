@@ -29,22 +29,24 @@
 class CRCEngine
 {
 public:
-    CRCEngine() : m_crc(0), m_index(0) { m_buffer.integer = 0; }
+    CRCEngine(int32_t initial = 0) : m_crc(initial), m_index(0) { m_buffer.integer = 0; }
 
     int32_t operator()(const void *buffer, unsigned int length = 0);
+    operator int32_t() { return Value(); }
 
 private:
     void operator()(char datnum);
-    uint32_t Result();
+    int32_t Value();
+    BOOL Buffer_Needs_Data() { return m_index > 0; }
 
 private:
-    uint32_t m_crc;
+    int32_t m_crc;
     int m_index;
 
     union
     {
-        uint32_t integer;
-        uint8_t bytes[4];
+        int32_t integer;
+        int8_t bytes[4];
     } m_buffer;
 };
 
