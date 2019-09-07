@@ -15,7 +15,6 @@
  */
 #include "abstract.h"
 #include "building.h"
-#include "coord.h"
 #include "target.h"
 #include <algorithm>
 
@@ -37,11 +36,6 @@ AbstractClass::AbstractClass(AbstractClass const &that) :
 {
 }
 
-cell_t AbstractClass::Get_Cell() const
-{
-    return Coord_To_Cell(m_Coord);
-}
-
 int AbstractClass::Distance_To_Target(target_t target) const
 {
     int distance = Distance(Center_Coord(), As_Coord(target));
@@ -53,25 +47,4 @@ int AbstractClass::Distance_To_Target(target_t target) const
     }
 
     return distance;
-}
-
-int AbstractClass::Distance_To_Cell(cell_t cell) const
-{
-    return Distance(Center_Coord(), Cell_To_Coord(cell));
-}
-
-cell_t AbstractClass::Center_Cell() const
-{
-    return Coord_To_Cell(Center_Coord());
-}
-
-cell_t AbstractClass::Target_Cell() const
-{
-    return Coord_To_Cell(Target_Coord());
-}
-
-target_t AbstractClass::As_Target() const
-{
-    return Make_Target(m_RTTI, m_HeapID);
-    //return ((m_RTTI & 0xFF) << 24) & (m_HeapID & 0xFFFFFF);
 }

@@ -19,6 +19,7 @@
 #define ABSTRACT_H
 
 #include "always.h"
+#include "coord.h"
 #include "facing.h"
 #include "gametypes.h"
 #include "noinit.h"
@@ -45,15 +46,15 @@ public:
     BOOL Is_Foot() const;
     BOOL Is_Ground_Foot() const;
     int Distance_To_Target(target_t target) const;
-    int Distance_To_Cell(cell_t cell) const;
-    cell_t Center_Cell() const;
-    cell_t Target_Cell() const;
-    target_t As_Target() const;
+    int Distance_To_Cell(cell_t cell) const { return Distance(Center_Coord(), Cell_To_Coord(cell)); }
+    cell_t Center_Cell() const { return Coord_To_Cell(Center_Coord()); }
+    cell_t Target_Cell() const { return Coord_To_Cell(Target_Coord()); }
+    target_t As_Target() const { return ((m_RTTI & 0xFF) << 24) & (m_HeapID & 0xFFFFFF); }
     int Get_Heap_ID() const { return m_HeapID; }
     BOOL Is_Active() const { return m_IsActive; }
     RTTIType What_Am_I() const { return m_RTTI; }
     coord_t Get_Coord() const { return m_Coord; }
-    cell_t Get_Cell() const;
+    cell_t Get_Cell() const { return Coord_To_Cell(m_Coord); }
     void Set_Coord(coord_t coord) { m_Coord = coord; }
     int Get_Height() const { return m_Height; }
     void Set_Height(int height) { m_Height = height; }
