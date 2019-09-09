@@ -99,6 +99,7 @@
 #include "vortex.h"
 #include "wsa.h"
 #include "xordelta.h"
+#include <malloc.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -115,28 +116,44 @@ void Setup_Hooks()
     Hook_Function(0x00551A70, Main_Func);
 
     // Hooking memory allocation functions.
-    Memory_Hook_Me();
+    Hook_Function(0x005C5965, &malloc);
+    Hook_Function(0x005C3945, &free);
+    Hook_Function(0x005DE4DE, &realloc);
+    Hook_Function(0x005D5FC0, &Alloc);
+    Hook_Function(0x005D6010, &Free);
+    Hook_Function(0x005D6020, &Resize_Alloc);
+
     RawFileClass::Hook_Me();
     BufferIOFileClass::Hook_Me();
     GameFileClass::Hook_Me();
     CDFileClass::Hook_Me();
     ControlClass::Hook_Me();
     GraphicViewPortClass::Hook_Me();
-    INIClass::Hook_Me();
     KeyboardClass::Hook_Me();
-    PlatformTimerClass::Hook_Me();
+    
+    // ostimer.h
+    Hook_Function(0x005BBEB0, &PlatformTimerClass::Timer_Callback);
+
     Blitters::Hook_Me();
     Fading::Hook_Me();
     GadgetClass::Hook_Me();
     Interpolate::Hook_Me();
-    Lcw::Hook_Me();
+    
+    // lcw.h
+    Hook_Function(0x005D6880, LCW_Uncomp);
+    Hook_Function(0x005DD28C, LCW_Comp);
+
     MouseShape::Hook_Me();
     Shape::Hook_Me();
     TextButtonClass::Hook_Me();
     ToggleClass::Hook_Me();
     WSAFile::Hook_Me();
     MouseClass::Hook_Me();
-    XorDelta::Hook_Me();
+    
+    // xordelta.h
+    Hook_Function(0x005D6A50, Apply_XOR_Delta_To_Page_Or_Viewport);
+    Hook_Function(0x005D69E0, Apply_XOR_Delta);
+
     SurfaceMonitorClass::Hook_Me();
     SliderClass::Hook_Me();
     ListClass::Hook_Me();

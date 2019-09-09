@@ -283,6 +283,7 @@ if(STANDALONE)
 else()
     add_library(chronoshift SHARED ${HOOKER_SRC} ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
     target_include_directories(chronoshift BEFORE PUBLIC hooker ${GAMEENGINE_INCLUDES})
+    target_compile_definitions(chronoshift PUBLIC GAME_DLL=1)
 endif()
 
 if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
@@ -298,10 +299,6 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 endif()
 
 target_compile_definitions(chronoshift PUBLIC $<$<CONFIG:DEBUG>:CHRONOSHIFT_DEBUG=1>)
-
-if(NOT STANDALONE)
-    target_compile_definitions(chronoshift PUBLIC GAME_DLL=1)
-endif()
 
 # Enable using bools in place of bitfields for boolean class members.
 # This is for matching the ABI of the original game.

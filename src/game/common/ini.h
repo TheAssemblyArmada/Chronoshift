@@ -201,8 +201,7 @@ public:
     //void Duplicate_CRC(const char *function_name, const char *section, const char *entry);
 
 #ifdef GAME_DLL
-    static void Hook_Me();
-    static int Hook_Load(INIClass *ptr, Straw &straw);
+    int Hook_Load(Straw &straw) { return INIClass::Load(straw); }
 #endif
 private:
     static void Strip_Comments(char *line);

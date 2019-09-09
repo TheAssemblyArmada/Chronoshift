@@ -26,12 +26,7 @@
 #endif
 #endif
 
-#ifdef GAME_DLL
-PlatformTimerClass *&PlatformTimer = Make_Global<PlatformTimerClass *>(0x00665EB0);
-BOOL &PlatformTimerClass::s_timerSystemOn = Make_Global<BOOL>(0x006ABF68);
-BOOL &PlatformTimerClass::s_inCallback = Make_Global<BOOL>(0x006ABF8C);
-void *&PlatformTimerClass::s_threadHandle = Make_Global<void *>(0x006ABF88);
-#else
+#ifndef GAME_DLL
 PlatformTimerClass *PlatformTimer = nullptr;
 BOOL PlatformTimerClass::s_timerSystemOn = false;
 BOOL PlatformTimerClass::s_inCallback = false;

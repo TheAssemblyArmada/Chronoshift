@@ -27,10 +27,6 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#ifdef GAME_DLL
-#include "hooker.h"
-#endif
-
 INIEntry::~INIEntry()
 {
     if (m_key != nullptr) {
@@ -822,15 +818,3 @@ int32_t const INIClass::CRC(const char *string)
 {
     return Calculate_CRC(string, strlen(string));
 }
-
-#ifdef GAME_DLL
-void INIClass::Hook_Me()
-{
-    //Hook_Function((void*)0x004F2900, (void*)&Hook_Load);
-}
-
-int INIClass::Hook_Load(INIClass *ptr, Straw &straw)
-{
-    return ptr->Load(straw);
-}
-#endif

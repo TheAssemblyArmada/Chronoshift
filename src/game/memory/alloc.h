@@ -38,24 +38,8 @@ int Heap_Size(MemoryFlagType flag);
 int Total_Ram_Free(MemoryFlagType flag);
 
 #ifdef GAME_DLL
-#include "hooker.h"
-#include <malloc.h>
-
 extern memerrorhandler_t &g_memoryError; // Memory error handler function pointer.
 extern memexithandler_t &g_memoryErrorExit;
-
-inline void Memory_Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005C5965, &malloc);
-    Hook_Function(0x005C3945, &free);
-    Hook_Function(0x005DE4DE, &realloc);
-    Hook_Function(0x005D5FC0, &Alloc);
-    Hook_Function(0x005D6010, &Free);
-    Hook_Function(0x005D6020, &Resize_Alloc);
-#endif
-}
-
 #else
 extern memerrorhandler_t g_memoryError; // Memory error handler function pointer.
 extern memexithandler_t g_memoryErrorExit;
