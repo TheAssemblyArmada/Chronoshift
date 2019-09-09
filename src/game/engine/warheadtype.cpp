@@ -17,7 +17,7 @@
 #include "warheaddata.h"
 #include "gameini.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClass<WarheadTypeClass> >(0x00691600);
 #else
 TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;

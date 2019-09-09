@@ -32,7 +32,7 @@ public:
 
     BigCheckBoxClass & operator=(BigCheckBoxClass &that);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -52,7 +52,7 @@ inline BigCheckBoxClass &BigCheckBoxClass::operator=(BigCheckBoxClass &that)
     return *this;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void BigCheckBoxClass::Hook_Me()

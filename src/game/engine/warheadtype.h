@@ -93,7 +93,7 @@ private:
     int Death; // Which infantry death animation to use.
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes;
 #else

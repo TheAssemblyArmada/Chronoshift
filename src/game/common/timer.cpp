@@ -16,7 +16,7 @@
 #include "timer.h"
 #include "ostimer.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TimerClass &TickCount = Make_Global<TimerClass>(0x006ABF6C);
 CountDownTimerClass &CountDown = Make_Global<CountDownTimerClass>(0x006ABF78);
 #else

@@ -143,7 +143,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes;
 #else

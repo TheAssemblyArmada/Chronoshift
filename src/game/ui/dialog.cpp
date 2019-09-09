@@ -27,7 +27,7 @@
 #include <cstdarg>
 #include <cstdio>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 WindowType *WindowList = reinterpret_cast<WindowType*>(0x006016CC);
 unsigned &Window = Make_Global<unsigned>(0x006B1A08);
 int &WindowColumns = Make_Global<int>(0x0060CE6C);

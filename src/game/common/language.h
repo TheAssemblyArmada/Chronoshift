@@ -22,7 +22,7 @@
 
 #define NAME_OVERRIDE_MAX 25
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern char **NameOverride;

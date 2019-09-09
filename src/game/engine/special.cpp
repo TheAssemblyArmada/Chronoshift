@@ -16,7 +16,7 @@
  */
 #include "special.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 SpecialClass &Special = Make_Global<SpecialClass>(0x00669908);
 #else
 SpecialClass Special;

@@ -613,7 +613,7 @@ off_t RawFileClass::Raw_Seek(off_t offset, int whence)
     return retval;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 const char *RawFileClass::Hook_File_Name(RawFileClass *ptr)
 {
     return ptr->RawFileClass::File_Name();

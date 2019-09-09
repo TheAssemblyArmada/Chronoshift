@@ -28,7 +28,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 ThemeClass &Theme = Make_Global<ThemeClass>(0x00668248);
 ThemeClass::ThemeControl *ThemeClass::Themes = Make_Pointer<ThemeClass::ThemeControl>(0x006052FC);
 #else
@@ -323,7 +323,7 @@ BOOL ThemeClass::Still_Playing() const
 BOOL ThemeClass::Is_Allowed(ThemeType theme) const
 {
     // TODO Requires HouseClass and ScenarioClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*call_Is_Allowed)
     (const ThemeClass *, ThemeType) = reinterpret_cast<BOOL (*)(const ThemeClass *, ThemeType)>(0x0056C240);
     return call_Is_Allowed(this, theme);

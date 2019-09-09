@@ -39,7 +39,7 @@ void Init_CDROM_Access();
 void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteClass *pal);
 void Load_Prolog_Page();
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 namespace Init

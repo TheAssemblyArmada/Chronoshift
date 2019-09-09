@@ -254,7 +254,7 @@ private:
     } m_EventData;
 
 public:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
     static inline void Hook_Me()
     {

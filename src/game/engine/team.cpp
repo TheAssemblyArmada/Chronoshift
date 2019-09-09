@@ -16,7 +16,7 @@
 #include "team.h"
 #include "gamedebug.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<TeamClass> &g_Teams = Make_Global<TFixedIHeapClass<TeamClass> >(0x0065DAC4);
 #else
 TFixedIHeapClass<TeamClass> g_Teams;
@@ -61,7 +61,7 @@ void TeamClass::operator delete(void *ptr)
 
 BOOL TeamClass::Remove(FootClass *object, int a2)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(TeamClass *, FootClass *, int) = reinterpret_cast<BOOL (*)(TeamClass *, FootClass *, int)>(0x004C3794);
     return func(this, object, a2);
 #else

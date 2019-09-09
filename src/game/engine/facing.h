@@ -150,7 +150,7 @@ public:
     BOOL Has_Changed() const { return Current != Desired; }
     BOOL Has_Not_Changed() const { return Current == Desired; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -203,7 +203,7 @@ inline FacingType Opposite_Facing(FacingType facing)
     return (FacingType)(facing ^ (FACING_COUNT / 2)); // 4
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void FacingClass::Hook_Me()

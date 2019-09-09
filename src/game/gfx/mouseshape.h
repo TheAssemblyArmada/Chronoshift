@@ -55,7 +55,7 @@ void __cdecl Mouse_Shadow_Buffer(MouseClass &mouse, GraphicViewPortClass &viewpo
 void __cdecl Mouse_Draw(MouseClass &mouse, GraphicViewPortClass &viewport, int x_pos, int y_pos);
 void *__cdecl Mouse_Set_Cursor(MouseClass &mouse, int hspot_x, int hspot_y, void *shape);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 namespace MouseShape {

@@ -47,7 +47,7 @@ public:
     BOOL Is_Opening() const { return State == DOOR_OPENING; }
     BOOL Is_Closing() const { return State == DOOR_CLOSING; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int DoorClass::Hook_Door_Stage() { return Door_Stage(); }
     static void Hook_Me();
 #endif
@@ -63,7 +63,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void DoorClass::Hook_Me()

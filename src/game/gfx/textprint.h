@@ -53,7 +53,7 @@ struct FontHeader
 #pragma pack(pop)
 
 // Global attributes for the current font.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern char *&g_fontPtr;
 extern int &g_fontYSpacing;
 extern int &g_fontXSpacing;

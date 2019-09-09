@@ -206,7 +206,7 @@ MovieInfoStruct *MovieInfo_From_Movie(MovieType movie)
 
 void Play_Movie(MovieType movie, ThemeType theme, BOOL a3)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x004A88AC);
     func();
 #endif

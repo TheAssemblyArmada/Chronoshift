@@ -46,7 +46,7 @@ public:
     void Free();
     BOOL Commit();
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     static BOOL Hook_Is_Available(BufferIOFileClass *ptr, BOOL forced);
     static BOOL Hook_Is_Open(BufferIOFileClass *ptr);

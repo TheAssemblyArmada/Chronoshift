@@ -88,7 +88,7 @@ public:
 
     static void Hilite_Tab(int tab);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -107,7 +107,7 @@ protected:
     TCountDownTimerClass<FrameTimerClass> CreditsFlashTimer;
 
 private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void *&TabShape;
 #else
     static void *TabShape;
@@ -116,7 +116,7 @@ private:
     static void *TabBackgroundShape; // name subject to change
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 inline void TabClass::Hook_Me()
 {

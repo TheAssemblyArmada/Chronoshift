@@ -42,7 +42,7 @@ private:
     int m_currentDrive;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern GetCDClass &g_cdList;
 #else

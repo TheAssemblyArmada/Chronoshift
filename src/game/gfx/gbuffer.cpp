@@ -25,7 +25,7 @@
 #include "tileset.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 // BOOL &GraphicViewPortClass::AllowHardwareBlitFills;
 // BOOL &GraphicViewPortClass::AllowStretchBlits;
 int &GraphicViewPortClass::ScreenWidth = Make_Global<int>(0x006016B0);

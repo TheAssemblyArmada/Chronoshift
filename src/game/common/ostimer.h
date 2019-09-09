@@ -48,7 +48,7 @@
 #include <dispatch/dispatch.h>
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #endif
 
@@ -96,7 +96,7 @@ public:
 #endif
     }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 private:
@@ -130,7 +130,7 @@ private:
     unsigned m_userRate;
 
 public:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void *&s_threadHandle;
     static BOOL &s_inCallback;
     static BOOL &s_timerSystemOn;
@@ -141,7 +141,7 @@ public:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 inline void PlatformTimerClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM

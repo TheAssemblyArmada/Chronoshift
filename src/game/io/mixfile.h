@@ -134,14 +134,14 @@ private:
     FileInfoStruct *m_fileIndex;
     uint8_t *m_fileCache;
 // A linked list of all currently indexed mix files for the program
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static List<MixFileClass<FC> *> &s_mixList;
 #else
     static List<MixFileClass<FC> *> s_mixList;
 #endif
 };
 
-#ifdef CHRONOSHIFT_STANDALONE
+#ifndef GAME_DLL
 // Initialised for GameFileClass for dll in mixfile.cpp
 template<class FC>
 List<MixFileClass<FC> *> MixFileClass<FC>::s_mixList;

@@ -20,7 +20,7 @@
 #include "lists.h"
 #include "rules.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<InfantryTypeClass> &g_InfantryTypes = Make_Global<TFixedIHeapClass<InfantryTypeClass> >(0x0065DE08);
 #else
 TFixedIHeapClass<InfantryTypeClass> g_InfantryTypes;
@@ -129,7 +129,7 @@ void InfantryTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL InfantryTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (const InfantryTypeClass *, cell_t, HousesType) =
         reinterpret_cast<BOOL (*)(const InfantryTypeClass *, cell_t, HousesType)>(0x004EAF74);
@@ -155,7 +155,7 @@ BOOL InfantryTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *InfantryTypeClass::Create_One_Of(HouseClass *house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const InfantryTypeClass *, HouseClass *) =
         reinterpret_cast<ObjectClass *(*)(const InfantryTypeClass *, HouseClass *)>(0x004EAF20);
     return func(this, house);

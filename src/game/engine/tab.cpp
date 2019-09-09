@@ -28,7 +28,7 @@
 #include "rules.h"
 #include "scenario.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
 #else
 void *TabClass::TabShape = nullptr;
@@ -192,7 +192,7 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 void TabClass::CreditClass::AI(BOOL a1)
 {
     // TODO Needs HouseClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const CreditClass *, BOOL) = reinterpret_cast<void (*)(const CreditClass *, BOOL)>(0x004ACF04);
     func(this, a1);
 #endif

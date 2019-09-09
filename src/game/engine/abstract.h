@@ -70,7 +70,7 @@ protected:
     bool m_IsActive;
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 public:
     static void Hook_Me();
 
@@ -86,7 +86,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void AbstractClass::Hook_Me()

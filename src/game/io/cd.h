@@ -36,7 +36,7 @@ enum DiskType
 int Get_CD_Index(int drive, int delay);
 BOOL Force_CD_Available(int cd);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern int &g_currentCD;
 extern int &g_requiredCD;
 #else

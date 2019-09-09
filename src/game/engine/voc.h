@@ -260,7 +260,7 @@ extern SoundEffectType SoundEffectName[];
 
 inline void Sound_Effect(VocType voc, coord_t location, int int2 = 1, HousesType house = HOUSES_NONE)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*call_Sound_Effect)(VocType, coord_t, int, HousesType) =
         reinterpret_cast<void (*)(VocType, coord_t, int, HousesType)>(0x00425D1C);
     call_Sound_Effect(voc, location, int2, house);
@@ -269,7 +269,7 @@ inline void Sound_Effect(VocType voc, coord_t location, int int2 = 1, HousesType
 
 inline int Sound_Effect(VocType voc, fixed_t volume = fixed_t::_1_1, int int1 = 1, short pan = 0, HousesType house = HOUSES_NONE)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*call_Sound_Effect)(VocType, fixed_t, int, short, HousesType) =
         reinterpret_cast<int (*)(VocType, fixed_t, int, short, HousesType)>(0x00425F24);
     return call_Sound_Effect(voc, volume, int1, pan, house);

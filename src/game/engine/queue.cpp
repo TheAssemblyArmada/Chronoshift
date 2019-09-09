@@ -20,7 +20,7 @@
 #include "house.h"
 #include "session.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TEventQueueClass<GameEventClass, OUTGOING_SIZE> &OutgoingEvents = Make_Global<TEventQueueClass<GameEventClass, OUTGOING_SIZE> >(0x0066AB5C);
 TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &ScheduledEvents = Make_Global<TEventQueueClass<GameEventClass, SCHEDULED_SIZE> >(0x0066B068);
 #else
@@ -42,7 +42,7 @@ BOOL Queue_Exit()
 
 void Queue_Record()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x0052BD20);
     return func();
 #else
@@ -67,7 +67,7 @@ void Queue_Record()
 
 void Queue_Playback()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x0052BDEC);
     return func();
 #else
@@ -101,7 +101,7 @@ void Queue_AI()
 
 void Queue_AI_Normal()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x00528F20);
     return func();
 #else
@@ -123,14 +123,14 @@ void Queue_AI_Normal()
 
 void Queue_AI_Network()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #else
 #endif
 }
 
 void Queue_AI_Multiplayer()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x00529020);
     return func();
 #else
@@ -151,7 +151,7 @@ BOOL Queue_Mission_Formation(TargetClass whom, MissionType mission, target_t tar
 
 BOOL Execute_ScheduledEvents(int house_count, HousesType houses, ConnectionManagerClass *conn_mgr, TCountDownTimerClass<FrameTimerClass> *a4, signed int *a5, unsigned short *a6, unsigned short *a7)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(int, HousesType, ConnectionManagerClass *, TCountDownTimerClass<FrameTimerClass> *, signed int *, unsigned short *, unsigned short *) = reinterpret_cast<BOOL (*)(int, HousesType, ConnectionManagerClass *, TCountDownTimerClass<FrameTimerClass> *, signed int *, unsigned short *, unsigned short *)>(0x0052B69C);
     return func(house_count, houses, conn_mgr, a4, a5, a6, a7);
 #else
@@ -161,7 +161,7 @@ BOOL Execute_ScheduledEvents(int house_count, HousesType houses, ConnectionManag
 
 void Clean_ScheduledEvents(ConnectionManagerClass *conn_mgr)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(ConnectionManagerClass *) = reinterpret_cast<void (*)(ConnectionManagerClass *)>(0x0052BC94);
     return func(conn_mgr);
 #else

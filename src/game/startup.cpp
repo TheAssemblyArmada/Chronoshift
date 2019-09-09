@@ -34,7 +34,7 @@
 
 void Emergency_Exit(int exit_code)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     DEBUG_LOG("Calling emergency exit.\n");
     // TODO Requires GraphicBufferClass, PaletteClass, KeyboardClass
     void (*hooked_exit)(int) = reinterpret_cast<void (*)(int)>(0x00552714);
@@ -44,7 +44,7 @@ void Emergency_Exit(int exit_code)
 
 void Read_Setup_Options(FileClass *fc)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // TODO Requires GraphicBufferClass, PaletteClass, KeyboardClass
     void (*func)(FileClass *) = reinterpret_cast<void (*)(FileClass *)>(0x005528A8);
     func(fc);

@@ -96,7 +96,7 @@ protected:
     fixed_t m_field_4A;
 
 public:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
     static void Hook_Me()
     {
@@ -107,7 +107,7 @@ public:
 
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<AnimClass> &g_Anims;
 #else

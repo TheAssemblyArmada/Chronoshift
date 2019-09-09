@@ -23,7 +23,7 @@
 using std::memcpy;
 using std::memset;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 char *&g_fontPtr = Make_Global<char *>(0x006B1974);
 char *&g_fontWidthBlockPtr = Make_Global<char *>(0x006B1978);
 int &g_fontYSpacing = Make_Global<int>(0x006B1970);

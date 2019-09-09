@@ -21,7 +21,7 @@
 using std::memcpy;
 using std::memcmp;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 PaletteClass &GamePalette = Make_Global<PaletteClass>(0x00669C5C);
 PaletteClass &OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
 PaletteClass &CCPalette = Make_Global<PaletteClass>(0x0066995C);

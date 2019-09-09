@@ -27,7 +27,7 @@ BOOL InitDDraw();
 void Read_Setup_Options(FileClass *fc); // Original takes RawFileClass specifically
 uint64_t Disk_Space_Available(); // don't hook this, abi does not match.
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #endif
 

@@ -15,7 +15,7 @@
  */
 #include "teamtype.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<TeamTypeClass> &g_TeamTypes = Make_Global<TFixedIHeapClass<TeamTypeClass> >(0x0065DB10);
 #else
 TFixedIHeapClass<TeamTypeClass> g_TeamTypes;

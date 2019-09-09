@@ -117,7 +117,7 @@ private:
 
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<AnimTypeClass> &g_AnimTypes;
 #else

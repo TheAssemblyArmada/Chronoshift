@@ -39,7 +39,7 @@ public:
 
     BOOL Set_Autoscroll(int mode);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -52,14 +52,14 @@ protected:
     int ScrollUnkInt; // is this a rate of sorts?
 
 private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static TCountDownTimerClass<SystemTimerClass> &ScrollingCounter;
 #else
     static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 inline void ScrollClass::Hook_Me()
 {

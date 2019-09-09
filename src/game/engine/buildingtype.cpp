@@ -25,7 +25,7 @@
 #include "gamefile.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes = Make_Global<TFixedIHeapClass<BuildingTypeClass> >(0x0065DD70);
 void *&BuildingTypeClass::g_WarFactoryOverlay = Make_Global<void *>(0x00635BA8);
 void *&BuildingTypeClass::g_LightningShapes = Make_Global<void *>(0x00635BAC); // TODO: Should be moved to TechnoTypeClass.
@@ -181,7 +181,7 @@ void BuildingTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL BuildingTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const BuildingTypeClass *, cell_t, HousesType) =
         reinterpret_cast<BOOL (*)(const BuildingTypeClass *, cell_t, HousesType)>(0x00453804);
@@ -218,7 +218,7 @@ int BuildingTypeClass::Cost_Of() const
  */
 ObjectClass *BuildingTypeClass::Create_One_Of(HouseClass *house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const BuildingTypeClass *, HouseClass *) =
         reinterpret_cast<ObjectClass *(*)(const BuildingTypeClass *, HouseClass *)>(0x00453868);
     return func(this, house);
@@ -297,7 +297,7 @@ const int16_t *BuildingTypeClass::Overlap_List() const
  */
 int BuildingTypeClass::Raw_Cost() const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(const BuildingTypeClass *) = reinterpret_cast<int (*)(const BuildingTypeClass *)>(0x00453C70);
     return func(this);
 #elif 0
@@ -334,7 +334,7 @@ int BuildingTypeClass::Raw_Cost() const
  */
 BOOL BuildingTypeClass::Read_INI(GameINIClass &ini)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (const BuildingTypeClass *, GameINIClass &) =
         reinterpret_cast<BOOL (*)(const BuildingTypeClass *, GameINIClass &)>(0x00453E48);
@@ -441,7 +441,7 @@ BOOL BuildingTypeClass::Bib_And_Offset(SmudgeType &smudge, cell_t &cellnum) cons
 void BuildingTypeClass::Init(TheaterType theater)
 {
     // TODO Doable, just wrapped to complete IOMap stack.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(TheaterType) = reinterpret_cast<void (*)(TheaterType)>(0x004538F4);
     func(theater);
 #endif

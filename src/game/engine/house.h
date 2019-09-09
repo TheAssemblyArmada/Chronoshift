@@ -42,7 +42,7 @@ class FootClass;
 class GameINIClass;
 class UnitTrackerClass;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern HouseClass *&g_PlayerPtr;
 #else
 extern HouseClass *g_PlayerPtr;
@@ -183,7 +183,7 @@ public:
     static void Read_INI(GameINIClass &ini);
     static void Write_INI(GameINIClass &ini);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     FactoryClass *Hook_Fetch_Factory(RTTIType rtti) { return Fetch_Factory(rtti); }
     BuildingClass *Hook_Find_Building(BuildingType to_find, ZoneType zone) { return Find_Building(to_find, zone); }
@@ -368,7 +368,7 @@ private:
     int m_RadarSpied; // spied house bit?
     int m_Score;
     QuarryType m_PreferredTarget;
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int m_BuildingQuantity[BUILDING_NOEXP_COUNT]; // TODO: Must keep with pre expansion counts for ABI.
     int m_UnitQuantity[UNIT_NOEXP_COUNT]; // TODO: Must keep with pre expansion counts for ABI.
     int m_InfantryQuantity[INFANTRY_NOEXP_COUNT]; // TODO: Must keep with pre expansion counts for ABI.
@@ -405,18 +405,18 @@ private:
     char m_PlayerHandle[12];
 
 private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static TFixedIHeapClass<BuildChoiceClass> &g_BuildChoice;
 #else
     static TFixedIHeapClass<BuildChoiceClass> g_BuildChoice;
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<HouseClass> &g_Houses;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 inline void HouseClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM

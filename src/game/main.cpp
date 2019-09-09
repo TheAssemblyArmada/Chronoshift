@@ -42,7 +42,7 @@
 #ifdef PLATFORM_WINDOWS
 #include <shellapi.h>
 
-#if defined CHRONOSHIFT_STANDALONE && defined COMPILER_MSVC
+#if !defined GAME_DLL && defined COMPILER_MSVC
 // This pragma makes msvc use the normal main function for GUI applications.
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
@@ -254,7 +254,7 @@ void Create_Main_Window(void *hInstance, int nCmdShow, int width, int height)
 /**
  * @brief Entry point for the game engine.
  */
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 int not_main(int argc, char **argv)
 #else
 int main(int argc, char **argv)
@@ -284,7 +284,7 @@ int main(int argc, char **argv)
         return 255;
     }*/
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Remove this once Send_Statistics_Packet is implemented as its only used there.
     ProgramInstance = GetModuleHandleA(nullptr);
 #endif
@@ -413,7 +413,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 /**
  * @brief Wrapper for main to hook original entry point
  */

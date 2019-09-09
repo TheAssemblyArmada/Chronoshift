@@ -45,7 +45,7 @@ public:
 
     uint32_t Pack() const { return SpecialFlags; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -88,7 +88,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern SpecialClass &Special;
 

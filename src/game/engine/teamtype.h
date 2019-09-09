@@ -171,7 +171,7 @@ private:
     static TMissionInfoStruct TMissions[TMISSION_COUNT];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<TeamTypeClass> &g_TeamTypes;
 #else

@@ -41,7 +41,7 @@ public:
     virtual void Draw_Background();
     virtual void Draw_Text(const char *string);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -77,7 +77,7 @@ inline TextButtonClass &TextButtonClass::operator=(TextButtonClass &that)
     return *this;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void TextButtonClass::Hook_Me()

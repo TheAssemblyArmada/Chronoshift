@@ -43,7 +43,7 @@ int SHAStraw::Result(void *data)
     return m_sha1.Result(data);
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 int SHAStraw::Hook_Result(SHAStraw *ptr, void *data)
 {
     char hash[41];

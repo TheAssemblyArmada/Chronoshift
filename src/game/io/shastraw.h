@@ -21,7 +21,7 @@
 #include "always.h"
 #include "sha.h"
 #include "straw.h"
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #endif
 
@@ -35,7 +35,7 @@ public:
 
     int Result(void *data);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static int Hook_Result(SHAStraw *ptr, void *data);
     static int Hook_Get(SHAStraw *ptr, void *source, int length);
     static void Hook_Me();
@@ -46,7 +46,7 @@ protected:
 
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 inline void SHAStraw::Hook_Me()
 {
     Hook_Function(0x005D5B04, &Hook_Result);

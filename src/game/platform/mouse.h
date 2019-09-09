@@ -67,7 +67,7 @@ public:
     void Set_Hotspot_Y(int y_pos) { m_mouseHotY = y_pos; }
     void *Get_Frame_Pointer() { return m_prevCursor; }
     void Set_Frame_Pointer(void *frame) { m_prevCursor = frame; }
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     static void Hook_Low_Hide(MouseClass *ptr);
     static void Hook_Low_Show(MouseClass *ptr, int x, int y);
@@ -112,7 +112,7 @@ void __stdcall Process_Mouse(
 #endif
 
 // Global mouse instance.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void MouseClass::Hook_Me()

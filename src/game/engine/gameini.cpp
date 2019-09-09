@@ -29,7 +29,7 @@ const lepton_t GameINIClass::Get_Lepton(const char *section, const char *entry, 
 
 BOOL GameINIClass::Put_Lepton(const char *section, const char *entry, const lepton_t value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (GameINIClass *, const char *, const char *, const lepton_t) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const lepton_t)>(0x004630FC);
@@ -49,7 +49,7 @@ const MPHType GameINIClass::Get_MPHType(const char *section, const char *entry, 
 
 BOOL GameINIClass::Put_MPHType(const char *section, const char *entry, const MPHType value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (GameINIClass *, const char *, const char *, const MPHType) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const MPHType)>(0x004631A4);
@@ -110,7 +110,7 @@ BOOL GameINIClass::Put_TheaterType(const char *section, const char *entry, const
 
 const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const char *entry) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     TriggerTypeClass *(*func)(GameINIClass *, const char *, const char *) =
         reinterpret_cast<TriggerTypeClass *(*)(GameINIClass *, const char *, const char *)>(0x004638BC);
     return func((GameINIClass *)this, section, entry);
@@ -130,7 +130,7 @@ const TriggerTypeClass *GameINIClass::Get_TriggerType(const char *section, const
 
 BOOL GameINIClass::Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *trigger)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (GameINIClass *, const char *, const char *, const TriggerTypeClass *) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const TriggerTypeClass *)>(0x004638F4);
@@ -238,7 +238,7 @@ BOOL GameINIClass::Put_VocType(const char *section, const char *entry, const Voc
 
 const VoxType GameINIClass::Get_VoxType(const char *section, const char *entry, const VoxType defvalue) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return VOX_NONE;
 #else
@@ -255,7 +255,7 @@ const VoxType GameINIClass::Get_VoxType(const char *section, const char *entry, 
 
 BOOL GameINIClass::Put_VoxType(const char *section, const char *entry, const VoxType value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return false;
 #else
@@ -282,7 +282,7 @@ BOOL GameINIClass::Put_AnimType(const char *section, const char *entry, const An
 
 const UnitType GameINIClass::Get_UnitType(const char *section, const char *entry, const UnitType defvalue) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     UnitType (*func)(GameINIClass *, const char *, const char *, const UnitType) =
         reinterpret_cast<UnitType (*)(GameINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
     return func((GameINIClass *)this, section, entry, defvalue);
@@ -299,7 +299,7 @@ const UnitType GameINIClass::Get_UnitType(const char *section, const char *entry
 
 BOOL GameINIClass::Put_UnitType(const char *section, const char *entry, const UnitType value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (GameINIClass *, const char *, const char *, const UnitType) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const UnitType)>(0x004631A4);
@@ -311,7 +311,7 @@ BOOL GameINIClass::Put_UnitType(const char *section, const char *entry, const Un
 
 const InfantryType GameINIClass::Get_InfantryType(const char *section, const char *entry, const InfantryType defvalue) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return INFANTRY_NONE;
 #else
@@ -327,7 +327,7 @@ const InfantryType GameINIClass::Get_InfantryType(const char *section, const cha
 
 BOOL GameINIClass::Put_InfantryType(const char *section, const char *entry, const InfantryType value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return false;
 #else
@@ -338,7 +338,7 @@ BOOL GameINIClass::Put_InfantryType(const char *section, const char *entry, cons
 
 const AircraftType GameINIClass::Get_AircraftType(const char *section, const char *entry, const AircraftType defvalue) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return AIRCRAFT_NONE;
 #else
@@ -354,7 +354,7 @@ const AircraftType GameINIClass::Get_AircraftType(const char *section, const cha
 
 BOOL GameINIClass::Put_AircraftType(const char *section, const char *entry, const AircraftType value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return false;
 #else
@@ -365,7 +365,7 @@ BOOL GameINIClass::Put_AircraftType(const char *section, const char *entry, cons
 
 const VesselType GameINIClass::Get_VesselType(const char *section, const char *entry, const VesselType defvalue) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return VESSEL_NONE;
 #else
@@ -381,7 +381,7 @@ const VesselType GameINIClass::Get_VesselType(const char *section, const char *e
 
 BOOL GameINIClass::Put_VesselType(const char *section, const char *entry, const VesselType value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return false;
 #else
@@ -392,7 +392,7 @@ BOOL GameINIClass::Put_VesselType(const char *section, const char *entry, const 
 
 const BuildingType GameINIClass::Get_BuildingType(const char *section, const char *entry, const BuildingType defvalue) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return BUILDING_NONE;
 #else
@@ -408,7 +408,7 @@ const BuildingType GameINIClass::Get_BuildingType(const char *section, const cha
 
 BOOL GameINIClass::Put_BuildingType(const char *section, const char *entry, const BuildingType value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // Inlined in RA
     return false;
 #else
@@ -768,7 +768,7 @@ BOOL GameINIClass::Put_Vessels(const char *section, const char *entry, const int
 
 const int GameINIClass::Get_Buildings(const char *section, const char *entry, const int defvalue) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(GameINIClass *, const char *, const char *, const int) =
         reinterpret_cast<int (*)(GameINIClass *, const char *, const char *, const int)>(0x00463A88);
     return func((GameINIClass *)this, section, entry, defvalue);
@@ -791,7 +791,7 @@ const int GameINIClass::Get_Buildings(const char *section, const char *entry, co
 
 BOOL GameINIClass::Put_Buildings(const char *section, const char *entry, const int value)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (GameINIClass *, const char *, const char *, const int) =
         reinterpret_cast<BOOL (*)(GameINIClass *, const char *, const char *, const int)>(0x00463AFC);

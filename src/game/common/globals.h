@@ -76,7 +76,7 @@
 #define GAME_TICKS_PER_MINUTE GAME_TICKS_PER_SECOND * 60
 
 #ifdef PLATFORM_WINDOWS
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern HWND &MainWindow;
 extern HMODULE &ProgramInstance;
 #else
@@ -90,7 +90,7 @@ extern HWND MainWindow;
 // For ScreenWidth and ScreenHeight, see public static members of GraphicViewPortClass.
 
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern int &g_iniFormat;

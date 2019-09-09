@@ -57,7 +57,7 @@ public:
     void Check_Item(int index, BOOL check_state);
     BOOL Is_Checked(int index) const;
 
-    #ifndef CHRONOSHIFT_STANDALONE
+    #ifdef GAME_DLL
     static void Hook_Me();
 #endif
 protected:
@@ -74,7 +74,7 @@ inline CheckListClass &CheckListClass::operator=(CheckListClass &that)
     return *this;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void CheckListClass::Hook_Me()

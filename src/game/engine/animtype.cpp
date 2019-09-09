@@ -23,7 +23,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<AnimTypeClass> &g_AnimTypes = Make_Global<TFixedIHeapClass<AnimTypeClass> >(0x0065DEA0);
 #else
 TFixedIHeapClass<AnimTypeClass> g_AnimTypes;

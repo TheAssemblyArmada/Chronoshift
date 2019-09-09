@@ -68,7 +68,7 @@ private:
     unsigned char /*FearType*/ m_Fear;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern TFixedIHeapClass<InfantryClass> &g_Infantry;
 #else
 extern TFixedIHeapClass<InfantryClass> g_Infantry;

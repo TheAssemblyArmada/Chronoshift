@@ -26,7 +26,7 @@
 //#include "anim.h"
 #include "target.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 LogicClass &Logic = Make_Global<LogicClass>(0x00668230);
 DynamicVectorClass<TriggerClass *> &g_LogicTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F270);
 DynamicVectorClass<TriggerClass *> &g_MapTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F254);
@@ -65,7 +65,7 @@ BOOL LogicClass::Submit(ObjectClass *object, BOOL sort)
  */
 void LogicClass::AI()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(LogicClass *) = reinterpret_cast<void (*)(LogicClass *)>(0x004FDD70);
     return func(this);
 #elif 0
@@ -267,7 +267,7 @@ void LogicClass::AI()
 
 void LogicClass::Detach(target_t target, int a2)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(LogicClass *, target_t, int) = reinterpret_cast<void (*)(LogicClass *, target_t, int)>(0x004FE2BC);
     return func(this, target, a2);
 #elif 0

@@ -56,7 +56,7 @@ DriveClass::DriveClass(const NoInitClass &noinit) :
 
 void DriveClass::AI()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x004B7CA8);
     func(this);
 #else
@@ -66,7 +66,7 @@ void DriveClass::AI()
 
 BOOL DriveClass::Limbo()
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
+/*#ifdef GAME_DLL
     BOOL (*func)(DriveClass *) = reinterpret_cast<BOOL (*)(DriveClass *)>(0x004B6488);
     return func(this);
 #else*/
@@ -80,7 +80,7 @@ BOOL DriveClass::Limbo()
 
 void DriveClass::Scatter(coord_t coord, int a2, int a3)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(DriveClass *, coord_t, int, int) = reinterpret_cast<void (*)(DriveClass *, coord_t, int, int)>(0x004B6304);
     func(this, coord, a2, a3);
 #else
@@ -90,7 +90,7 @@ void DriveClass::Scatter(coord_t coord, int a2, int a3)
 
 void DriveClass::Per_Cell_Process(PCPType pcp)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
+/*#ifdef GAME_DLL
     void(*func)(DriveClass *, PCPType) = reinterpret_cast<void(*)(DriveClass *, PCPType)>(0x004B6F40);
     func(this, pcp);
 #else*/
@@ -108,7 +108,7 @@ void DriveClass::Per_Cell_Process(PCPType pcp)
 
 void DriveClass::Response_Select()
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
+/*#ifdef GAME_DLL
     void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x00423154);
     func(this);
 #else*/
@@ -123,7 +123,7 @@ void DriveClass::Response_Select()
 
 void DriveClass::Response_Move()
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
+/*#ifdef GAME_DLL
     void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x004230FC);
     func(this);
 #else*/
@@ -138,7 +138,7 @@ void DriveClass::Response_Move()
 
 void DriveClass::Response_Attack()
 {
-    /*#ifndef CHRONOSHIFT_STANDALONE
+    /*#ifdef GAME_DLL
     void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x004230A4);
     func(this);
 #else*/
@@ -153,7 +153,7 @@ void DriveClass::Response_Attack()
 
 void DriveClass::Assign_Destination(target_t dest)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(DriveClass *, target_t) = reinterpret_cast<void (*)(DriveClass *, target_t)>(0x004B67C8);
     func(this, dest);
 #else
@@ -163,7 +163,7 @@ void DriveClass::Assign_Destination(target_t dest)
 
 BOOL DriveClass::Stop_Driver()
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
+/*#ifdef GAME_DLL
     BOOL (*func)(DriveClass *) = reinterpret_cast<BOOL (*)(DriveClass *)>(0x004B64B8);
     return func(this);
 #else*/
@@ -182,7 +182,7 @@ BOOL DriveClass::Stop_Driver()
 
 void DriveClass::Fixup_Path(PathType *path)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(DriveClass *, PathType *) = reinterpret_cast<void (*)(DriveClass *, PathType *)>(0x004B7F4C);
     func(this, path);
 #else
@@ -192,7 +192,7 @@ void DriveClass::Fixup_Path(PathType *path)
 
 void DriveClass::Overrun_Cell(cell_t cell, int a2)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(DriveClass *, cell_t, int) = reinterpret_cast<int (*)(DriveClass *, cell_t, int)>(0x004B8470);
     func(this, cell, a2);
 #else
@@ -202,7 +202,7 @@ void DriveClass::Overrun_Cell(cell_t cell, int a2)
 
 BOOL DriveClass::Ok_To_Move(DirType dir)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(DriveClass *, DirType) = reinterpret_cast<BOOL (*)(DriveClass *, DirType)>(0x004B83AC);
     return func(this, dir);
 #else
@@ -213,7 +213,7 @@ BOOL DriveClass::Ok_To_Move(DirType dir)
 
 void DriveClass::Do_Turn(DirType dir)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(DriveClass *, DirType) = reinterpret_cast<void (*)(DriveClass *, DirType)>(0x004B6514);
     func(this, dir);
 #else
@@ -223,7 +223,7 @@ void DriveClass::Do_Turn(DirType dir)
 
 BOOL DriveClass::Teleport_To(cell_t cell)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(DriveClass *, short) = reinterpret_cast<BOOL (*)(DriveClass *, cell_t)>(0x004B653C);
     return func(this, cell);
 #else
@@ -234,7 +234,7 @@ BOOL DriveClass::Teleport_To(cell_t cell)
 
 void DriveClass::Force_Track(int track, coord_t coord)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(DriveClass *, int, coord_t) = reinterpret_cast<void (*)(DriveClass *, int, coord_t)>(0x004B669C);
     func(this, track, coord);
 #else
@@ -244,7 +244,7 @@ void DriveClass::Force_Track(int track, coord_t coord)
 
 coord_t DriveClass::Smooth_Turn(coord_t coord, DirType &dir)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     coord_t (*func)(DriveClass *, coord_t, DirType &) =
         reinterpret_cast<coord_t (*)(DriveClass *, coord_t, DirType &)>(0x004B6748);
     return func(this, coord, dir);
@@ -256,7 +256,7 @@ coord_t DriveClass::Smooth_Turn(coord_t coord, DirType &dir)
 
 BOOL DriveClass::While_Moving()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(DriveClass *) = reinterpret_cast<BOOL (*)(DriveClass *)>(0x004B68B0);
     return func(this);
 #else
@@ -267,7 +267,7 @@ BOOL DriveClass::While_Moving()
 
 BOOL DriveClass::Start_Of_Move()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(DriveClass *) = reinterpret_cast<BOOL (*)(DriveClass *)>(0x004B6FA0);
     return func(this);
 #else
@@ -283,7 +283,7 @@ void DriveClass::Lay_Track()
 
 void DriveClass::Mark_Track(coord_t coord, MarkType mark)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(DriveClass *, coord_t, MarkType) = reinterpret_cast<void (*)(DriveClass *, coord_t, MarkType)>(0x004B82AC);
     func(this, coord, mark);
 #else

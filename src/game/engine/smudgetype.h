@@ -102,7 +102,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<SmudgeTypeClass> &g_SmudgeTypes;
 #else

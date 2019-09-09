@@ -119,7 +119,7 @@ protected:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern WinsockInterfaceClass *&g_packetTransport;
 #else

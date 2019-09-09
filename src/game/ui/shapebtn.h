@@ -45,7 +45,7 @@ public:
     void *Get_Shape() const { return ButtonShape; }
     void Set_Shape_Bool_One(BOOL unk) { BooleanOne = unk; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 static void Hook_Me();
 #endif
 
@@ -59,7 +59,7 @@ protected:
 };
 
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void ShapeButtonClass::Hook_Me()

@@ -141,7 +141,7 @@ private:
     AnimType Anim; // Animation to display as a firing effect
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<WeaponTypeClass> &g_WeaponTypes;
 #else

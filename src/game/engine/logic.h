@@ -39,7 +39,7 @@ public:
     void Detach(target_t target, int a2);
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern LogicClass &Logic;
 extern DynamicVectorClass<TriggerClass *> &g_LogicTriggers;

@@ -21,7 +21,7 @@
 #include "always.h"
 #include "gamedebug.h"
 
-#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+#if !defined GAME_DLL && !defined COMPILER_WATCOM
 #include <atomic>
 #endif
 
@@ -199,7 +199,7 @@ private:
 class FastCriticalSectionClass
 {
 public:
-#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+#if !defined GAME_DLL && !defined COMPILER_WATCOM
     FastCriticalSectionClass() { m_flag.clear(); }
 #else
     FastCriticalSectionClass() : m_flag(0) {}
@@ -228,7 +228,7 @@ private:
     void Thread_Safe_Clear_Flag();
 
 private:
-#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+#if !defined GAME_DLL && !defined COMPILER_WATCOM
     std::atomic_flag m_flag;
 #else
     long m_flag;

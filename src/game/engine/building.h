@@ -66,7 +66,7 @@ private:
     TCountDownTimerClass<FrameTimerClass> m_field_F2;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern TFixedIHeapClass<BuildingClass> &g_Buildings;
 #else
 extern TFixedIHeapClass<BuildingClass> g_Buildings;

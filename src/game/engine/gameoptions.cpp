@@ -16,7 +16,7 @@
 #include "gameoptions.h"
 #include "gbuffer.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
 #else
 GameOptionsClass Options;
@@ -30,7 +30,7 @@ GameOptionsClass Options;
 void GameOptionsClass::Process()
 {
     // TODO
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*process)() = reinterpret_cast<void (*)()>(0x004C9EE0);
     process();
 #endif

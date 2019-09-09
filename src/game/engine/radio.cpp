@@ -99,7 +99,7 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     RadioMessageType (*func)(RadioClass *, RadioMessageType, target_t &) =
         reinterpret_cast<RadioMessageType (*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
     return func(radio, message, target);

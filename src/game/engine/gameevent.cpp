@@ -469,7 +469,7 @@ void GameEventClass::Execute()
             break;
     };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(GameEventClass *) = reinterpret_cast<void (*)(GameEventClass *)>(0x004BD0C8);
     func(this);
 #else

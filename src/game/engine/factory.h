@@ -86,7 +86,7 @@ private:
     int m_SpecialItem;
     HouseClass *m_Owner; // The house that owns the object.
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 public:
     static void Hook_Me();
     BOOL Hooked_Has_Completed() { return FactoryClass::Has_Completed(); }
@@ -96,7 +96,7 @@ public:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<FactoryClass> &g_Factories;
 

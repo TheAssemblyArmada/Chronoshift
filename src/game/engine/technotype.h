@@ -148,7 +148,7 @@ protected:
     uint32_t SecondaryFireOffsetY;
     int Points;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void *&WakeShapes;
     static void *&TurretShapes;
     static void *&SamShapes;
@@ -163,7 +163,7 @@ protected:
     static void *MissingCameoShape; // New with RA++
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #endif
 

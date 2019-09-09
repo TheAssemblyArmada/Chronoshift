@@ -21,7 +21,7 @@
 using std::rand;
 
 // RSA keys
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 PKey &g_publicKey = *reinterpret_cast<PKey *>(0x00665F68);
 #else
 PKey g_publicKey;

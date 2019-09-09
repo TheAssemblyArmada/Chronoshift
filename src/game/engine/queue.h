@@ -186,7 +186,7 @@ void Check_Mirror();
 extern uint32_t GameCRC;
 extern uint32_t CRC[32];
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TEventQueueClass<GameEventClass, OUTGOING_SIZE> &OutgoingEvents;
 extern TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &ScheduledEvents;

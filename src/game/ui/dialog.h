@@ -147,7 +147,7 @@ enum WindowNumberType
 };
 
 // TODO Refactor global naming after all locations implemented.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern WindowType *WindowList;
 extern unsigned &Window;
@@ -202,7 +202,7 @@ void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, B
 void Window_Box(WindowNumberType type, BoxStyleEnum style);
 unsigned Change_Window(unsigned window);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 namespace Dialog
 {
 

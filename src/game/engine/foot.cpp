@@ -29,7 +29,7 @@
 // Size in bits of each element of the path flags array.
 #define PATH_FLAG_BITSIZE 32
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 static cell_t &StartLocation = Make_Global<cell_t>(0x0065D7AE);
 static cell_t &DestLocation = Make_Global<cell_t>(0x0065D7AC);
 #else
@@ -278,7 +278,7 @@ void FootClass::Stun() {}
 
 void FootClass::Death_Announcement(TechnoClass *killer) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const FootClass *, TechnoClass *) =
         reinterpret_cast<void (*)(const FootClass *, TechnoClass *)>(0x004C3150);
     func(this, killer);
@@ -305,7 +305,7 @@ coord_t FootClass::Likely_Coord()
 
 BOOL FootClass::Start_Driver(coord_t &dest)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(FootClass *, coord_t &) = reinterpret_cast<BOOL (*)(FootClass *, coord_t &)>(0x004C14C8);
     return func(this, dest);
 #else
@@ -344,7 +344,7 @@ BOOL FootClass::Offload_Ore_Bail()
 
 void FootClass::Approach_Target()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(FootClass *) = reinterpret_cast<void (*)(FootClass *)>(0x005808FC);
     func(this);
 #else
@@ -1108,7 +1108,7 @@ int FootClass::Optimize_Moves(PathType *path, MoveType move)
  */
 cell_t FootClass::Safety_Point(cell_t start_cell, cell_t end_cell, int start, int end)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     cell_t (*func)(FootClass *, cell_t, cell_t, int, int) =
         reinterpret_cast<cell_t (*)(FootClass *, cell_t, cell_t, int, int)>(0x004C037C);
     return func(this, start_cell, end_cell, start, end);

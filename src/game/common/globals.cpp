@@ -16,7 +16,7 @@
 #include "globals.h"
 
 #ifdef PLATFORM_WINDOWS
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 HWND &MainWindow = Make_Global<HWND>(0x006B1498);
 HMODULE &ProgramInstance = Make_Global<HMODULE>(0x0068A4BC);
 #else
@@ -27,7 +27,7 @@ HWND MainWindow = nullptr;
 
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 int &g_iniFormat = Make_Global<int>(0x00665DE8);
 int &g_GameFrame = Make_Global<int>(0x006680C4);
 BOOL &g_gameInFocus = Make_Global<BOOL>(0x00665F64);

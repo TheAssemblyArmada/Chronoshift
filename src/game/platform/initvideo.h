@@ -29,7 +29,7 @@ void Reset_Video_Mode();
 BOOL Init_Video();
 void Set_Video_Palette(void *pal);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 #ifdef BUILD_WITH_DDRAW

@@ -115,7 +115,7 @@ public:
     static int Point_Relative_To_Line(int px, int py, int sx, int sy, int ex, int ey);
     PathType *Find_Path_Wrapper(cell_t dest, FacingType *buffer, int length, MoveType move);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     BOOL Hook_Can_Demolish() { return FootClass::Can_Demolish(); }
     coord_t Hook_Sort_Y() { return FootClass::Sort_Y(); }
@@ -172,7 +172,7 @@ protected:
     coord_t m_HeadTo;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void FootClass::Hook_Me()

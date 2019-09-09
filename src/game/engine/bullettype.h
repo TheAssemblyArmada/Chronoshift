@@ -135,7 +135,7 @@ private:
     int Frames; // Number of image frames for animation purposes.
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<BulletTypeClass> &g_BulletTypes;
 #else

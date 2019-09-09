@@ -26,7 +26,7 @@
 
 using std::memset;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 GetCDClass &g_cdList = Make_Global<GetCDClass>(0x00680884);
 #else
 GetCDClass g_cdList;

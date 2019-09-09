@@ -161,7 +161,7 @@ protected:
     int RedrawFlag;
 
 private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static GadgetClass *&Buttons;
     static GraphicViewPortClass *&ShadowPage;
 #else

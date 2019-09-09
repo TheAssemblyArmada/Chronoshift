@@ -87,7 +87,7 @@ public:
     int Get_Map_Cell_Width() const {return MapCellWidth; }
     int Get_Map_Cell_Height() const {return MapCellHeight; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     cell_t MapClass::Hook_Pick_Random_Location() { return Pick_Random_Location(); }
     BOOL MapClass::Hook_In_Radar(cell_t cellnum) { return In_Radar(cellnum); }
@@ -124,7 +124,7 @@ private:
     static const int RadiusCount[];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void MapClass::Hook_Me()

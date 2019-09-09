@@ -464,7 +464,7 @@ private:
     int ChronoTechLevel;
     lepton_t OreNearScan;
     lepton_t OreFarScan;
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static fixed_t &EngineerDamage;
     static fixed_t &EngineerCaptureLevel;
     static fixed_t &ChronoTankDuration;
@@ -494,7 +494,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern RulesClass &Rule;

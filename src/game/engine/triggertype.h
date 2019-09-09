@@ -87,7 +87,7 @@ protected:
     TActionWhenType m_TrigActionWhen;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<TriggerTypeClass> &g_TriggerTypes;
 #else

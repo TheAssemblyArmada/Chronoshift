@@ -36,7 +36,7 @@ using std::memcpy;
 #define BIGSHP_BUFFER_MIN_FREE 128000
 #define BIGSHP_BUFFER_GROW 2000000
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 BOOL &g_useBigShapeBuffer = Make_Global<BOOL>(0x006A1784);
 BOOL &g_isTheaterShape = Make_Global<BOOL>(0x006A1788);
 BOOL &g_originalUseBigShapeBuffer = Make_Global<BOOL>(0x006A178C);

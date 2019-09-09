@@ -26,7 +26,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<UnitTypeClass> &g_UnitTypes = Make_Global<TFixedIHeapClass<UnitTypeClass> >(0x0065DEEC);
 #else
 TFixedIHeapClass<UnitTypeClass> g_UnitTypes;
@@ -142,7 +142,7 @@ void UnitTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL UnitTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (const UnitTypeClass *, cell_t, HousesType) =
         reinterpret_cast<BOOL (*)(const UnitTypeClass *, cell_t, HousesType)>(0x00578B50);
@@ -166,7 +166,7 @@ BOOL UnitTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *UnitTypeClass::Create_One_Of(HouseClass *house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const UnitTypeClass *, HouseClass *) =
         reinterpret_cast<ObjectClass *(*)(const UnitTypeClass *, HouseClass *)>(0x00578BD0);
     return func(this, house);

@@ -17,7 +17,7 @@
 #include "gamedebug.h"
 #include "scenario.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 static char *CrateAnims = Make_Pointer<char>(0x005FF24C); // TODO should be AnimType *CrateAnims[CRATE_COUNT];
 static int *CrateShares = Make_Pointer<int>(0x005FF204);
 static int *CrateData = Make_Pointer<int>(0x00655DA8);
@@ -62,7 +62,7 @@ BOOL CrateClass::Remove_It()
 BOOL CrateClass::Create_Crate(cell_t cell)
 {
     // TODO Requires ScenarioClass and RuleClass to actuall implement the functions.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const CrateClass *, cell_t) = reinterpret_cast<BOOL (*)(const CrateClass *, cell_t)>(0x004AC91C);
     return func(this, cell);
 #elif 0
@@ -81,7 +81,7 @@ BOOL CrateClass::Create_Crate(cell_t cell)
 BOOL CrateClass::Put_Crate(cell_t &cell)
 {
     // TODO Requires MapClass, CellClass and ScenarioClass to actuall implement the functions.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(cell_t &) = reinterpret_cast<BOOL (*)(cell_t &)>(0x004AC9B4);
     return func(cell);
 #else
@@ -93,7 +93,7 @@ BOOL CrateClass::Put_Crate(cell_t &cell)
 BOOL CrateClass::Get_Crate(cell_t cell)
 {
     // TODO Requires MapClass, CellClass and ScenarioClass to actuall implement the functions.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(cell_t) = reinterpret_cast<BOOL (*)(cell_t)>(0x004ACB1C);
     return func(cell);
 #else

@@ -19,7 +19,7 @@
 
 #include "always.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 // This will eventually be replaced by a standard int main(int arc, char *argv[]) function
 int __stdcall Main_Func(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow);
 

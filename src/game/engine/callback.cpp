@@ -19,7 +19,7 @@
 
 void IPX_Call_Back()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x004A7800);
     func();
 #endif

@@ -64,7 +64,7 @@ using std::sprintf;
 namespace
 {
 // These pointers are used only within this translation unit for reinitialisation after CD changes and such.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 GameMixFile *&MainMix = Make_Global<GameMixFile *>(0x00668180);
 GameMixFile *&ConquerMix = Make_Global<GameMixFile *>(0x00668184);
 GameMixFile *&GeneralMix = Make_Global<GameMixFile *>(0x00668178);

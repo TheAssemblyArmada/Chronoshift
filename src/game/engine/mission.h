@@ -71,7 +71,7 @@ public:
     static MissionType From_Name(const char *name);
     static const char *Name_From(MissionType mission);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -85,7 +85,7 @@ protected:
     static const char *Missions[MISSION_COUNT];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void MissionClass::Hook_Me()

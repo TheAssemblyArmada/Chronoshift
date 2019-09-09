@@ -85,7 +85,7 @@ private:
     fixed_t BuildTime; // Multiplier to general object build time [larger means longer to build]
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<HouseTypeClass> &g_HouseTypes;
 #else

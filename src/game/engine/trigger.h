@@ -101,7 +101,7 @@ private:
     cell_t m_AttachedCell; // 0x2B // TODO: Name guessed.
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern TFixedIHeapClass<TriggerClass> &g_Triggers;
 #else
 extern TFixedIHeapClass<TriggerClass> g_Triggers;

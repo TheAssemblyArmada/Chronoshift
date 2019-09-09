@@ -31,7 +31,7 @@ void __cdecl Apply_XOR_Delta(void *dst, void *src);
 void __cdecl Apply_XOR_Delta_To_Page_Or_Viewport(void *offset, void *delta, int width, int pitch, BOOL copy);
 int Generate_XOR_Delta(void *dst, void *src, void *base, int size);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 namespace XorDelta {

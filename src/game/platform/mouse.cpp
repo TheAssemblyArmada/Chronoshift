@@ -27,7 +27,7 @@ using std::memcpy;
 // extern HWND MainWindow;
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 MouseClass *&g_mouse = Make_Global<MouseClass *>(0x006AC284);
 MouseClass *&g_wwmouse = Make_Global<MouseClass *>(0x00665E08);
 
@@ -121,7 +121,7 @@ MouseClass::~MouseClass()
 
 int MouseClass::Get_Mouse_X()
 {
-#if !defined CHRONOSHIFT_STANDALONE
+#if defined GAME_DLL
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
     // to allow windowed mode, so we can't use the one rapp.dll links to.
     typedef  BOOL(__stdcall *HookedGetCursorPos_t)(LPPOINT lpPoint);
@@ -140,7 +140,7 @@ int MouseClass::Get_Mouse_X()
 
 int MouseClass::Get_Mouse_Y()
 {
-#if !defined CHRONOSHIFT_STANDALONE
+#if defined GAME_DLL
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
     // to allow windowed mode, so we can't use the one rapp.dll links to.
     typedef  BOOL(__stdcall *HookedGetCursorPos_t)(LPPOINT lpPoint);
@@ -159,7 +159,7 @@ int MouseClass::Get_Mouse_Y()
 
 void MouseClass::Get_Mouse_XY(int &x_pos, int &y_pos)
 {
-#if !defined CHRONOSHIFT_STANDALONE
+#if defined GAME_DLL
     // This convolution is needed as it seems this function is detoured in ddraw.dll replacements
     // to allow windowed mode, so we can't use the one rapp.dll links to.
     typedef  BOOL(__stdcall *HookedGetCursorPos_t)(LPPOINT lpPoint);

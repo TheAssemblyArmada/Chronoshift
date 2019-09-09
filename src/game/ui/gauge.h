@@ -43,7 +43,7 @@ public:
 
     int const Get_Maximum() const { return Maximum; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 static void Hook_Me();
 #endif
 
@@ -80,7 +80,7 @@ inline GaugeClass &GaugeClass::operator=(GaugeClass &that)
     return *this;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void GaugeClass::Hook_Me()

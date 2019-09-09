@@ -195,7 +195,7 @@ void Setup_Hooks()
 #endif
 }
 
-#if defined __WATCOMC__ && !defined CHRONOSHIFT_STANDALONE
+#if defined __WATCOMC__ && defined GAME_DLL
 // Watcom has no static_assert so we are forced to use this instead
 // Watcom throws "dimension cannot be negative" on missmatches
 #define ASSERT_SIZEOF(structname, expectedsize) typedef char __ASSERT_SIZEOF__[(sizeof(structname) == expectedsize) ? 1 : -1]

@@ -30,7 +30,7 @@ public:
     virtual int Flush();
     virtual int Put(const void *source, int length);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -45,7 +45,7 @@ private:
     int16_t m_uncompressedBytes;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void LZOPipe::Hook_Me()

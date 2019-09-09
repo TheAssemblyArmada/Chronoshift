@@ -41,7 +41,7 @@
 #include "warheadtype.h"
 #include "weapontype.h"
 
-#ifdef CHRONOSHIFT_STANDALONE
+#ifndef GAME_DLL
 // Template specialisation to initialise the heaps required for GamePtr.
 template<> FixedIHeapClass *const GamePtr<AircraftTypeClass>::g_Heap = &g_AircraftTypes;
 template<> FixedIHeapClass *const GamePtr<AnimClass>::g_Heap = &g_Anims;

@@ -32,7 +32,7 @@ namespace
 const NoInitClass noinit;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 void *&SidebarClass::StripClass::LogoShapes = Make_Global<void *>(0x0068A464);
 void *&SidebarClass::StripClass::ClockShapes = Make_Global<void *>(0x0068A468);
 void **SidebarClass::StripClass::SpecialShapes = Make_Pointer<void *>(0x0068A46C);
@@ -72,7 +72,7 @@ SidebarClass::SBGadgetClass::SBGadgetClass() : GadgetClass(496, 154, 143, 244, M
 BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
 {
     // TODO, needs HelpClass, MouseClass, TechnoClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const SBGadgetClass *, unsigned, KeyNumType &) =
         reinterpret_cast<BOOL (*)(const SBGadgetClass *, unsigned, KeyNumType &)>(0x0054F380);
@@ -93,7 +93,7 @@ SidebarClass::StripClass::SelectClass::SelectClass() :
 BOOL SidebarClass::StripClass::SelectClass::Action(unsigned flags, KeyNumType &key)
 {
     // TODO, needs HelpClass, MouseClass, TechnoClass, EventClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const SelectClass *, unsigned, KeyNumType &) =
         reinterpret_cast<BOOL (*)(const SelectClass *, unsigned, KeyNumType &)>(0x0054ECD8);
@@ -140,7 +140,7 @@ SidebarClass::StripClass::StripClass(InitClass const &init) :
 void SidebarClass::StripClass::One_Time(int column)
 {
     // TODO, needs HouseClass, TabClass, HelpClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const StripClass *, int) = reinterpret_cast<void (*)(const StripClass *, int)>(0x0054DD54);
     func(this, column);
 #else
@@ -198,7 +198,7 @@ void SidebarClass::StripClass::Init_IO(int column)
         DownButton[WhichColumn].Set_Sticky(true);
 
         for (int index = 0; index < ROW_COUNT; ++index) {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
             SelectButton[WhichColumn * 4 + index].Set_Size(64, 48);
             SelectButton[WhichColumn * 4 + index].Set_XPos(XPos);
             SelectButton[WhichColumn * 4 + index].Set_YPos(YPos + index * 48);
@@ -229,7 +229,7 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
             memset(&palette[32], 63, 21);
 
             // Build the fading tables for drawing the clock sweep overlay.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
             Build_Translucent_Table(palette, &_clock_cols, 1, ClockTranslucentTable);
             Conquer_Build_Fading_Table(GamePalette, &ClockTranslucentTable[256], 12, 100);
 #else
@@ -243,7 +243,7 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
 void SidebarClass::StripClass::Reload_LogoShapes()
 {
     // TODO Needs HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E094);
     func(this);
 #endif
@@ -257,7 +257,7 @@ void SidebarClass::StripClass::Activate()
     Map.Add_A_Button(DownButton[WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
         SelectButton[(WhichColumn * ROW_COUNT) + index].Unlink();
         Map.Add_A_Button(SelectButton[(WhichColumn * ROW_COUNT) + index]);
 #else
@@ -273,7 +273,7 @@ void SidebarClass::StripClass::Deactivate()
     Map.Remove_A_Button(DownButton[WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
         Map.Remove_A_Button(SelectButton[(WhichColumn * ROW_COUNT) + index]);
 #else
         Map.Remove_A_Button(SelectButton[WhichColumn][index]);
@@ -343,7 +343,7 @@ void SidebarClass::StripClass::Flag_To_Redraw()
 BOOL SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
     // TODO needs EventClass and FactoryClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const StripClass *, KeyNumType &, int, int) =
         reinterpret_cast<BOOL (*)(const StripClass *, KeyNumType &, int, int)>(0x0054E2E8);
@@ -356,7 +356,7 @@ BOOL SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 void SidebarClass::StripClass::Draw_It(BOOL force_redraw)
 {
     // TODO Needs HouseClass and TechnoClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const StripClass *, BOOL) = reinterpret_cast<void (*)(const StripClass *, BOOL)>(0x0054E6FC);
     func(this, force_redraw);
 #endif
@@ -365,7 +365,7 @@ void SidebarClass::StripClass::Draw_It(BOOL force_redraw)
 BOOL SidebarClass::StripClass::Recalc()
 {
     // TODO Needs HouseClass, HouseTypeClass, and TechnoClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const StripClass *) = reinterpret_cast<BOOL (*)(const StripClass *)>(0x0054EB1C);
     return func(this);
 #else
@@ -391,7 +391,7 @@ BOOL SidebarClass::StripClass::Factory_Link(int factory_id, RTTIType type, int i
 int SidebarClass::StripClass::Abandon_Production(int unk1)
 {
     // TODO Needs FactoryClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(const StripClass *, int) = reinterpret_cast<int (*)(const StripClass *, int)>(0x0054F434);
     return func(this, unk1);
 #else
@@ -514,7 +514,7 @@ void SidebarClass::Init_Theater(TheaterType theater)
 void SidebarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
     // Requires HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const SidebarClass *, KeyNumType &, int, int) =
         reinterpret_cast<void (*)(const SidebarClass *, KeyNumType &, int, int)>(0x0054D8F0);
     func(this, key, mouse_x, mouse_y);
@@ -620,7 +620,7 @@ void SidebarClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
 void SidebarClass::Reload_Sidebar()
 {
 // TODO Needs HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D340);
     func(this);
 #elif 0

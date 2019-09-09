@@ -41,7 +41,7 @@ static BOOL g_Debug_Keys = false;
 
 void Handle_Team(int a1, int a2)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(int, int) = reinterpret_cast<void (*)(int, int)>(0x004A9FAC);
     func(a1, a2);
 #endif
@@ -49,7 +49,7 @@ void Handle_Team(int a1, int a2)
 
 void Handle_View(int view, int a2)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(int, int) = reinterpret_cast<void (*)(int, int)>(0x004AAA98);
     func(view, a2);
 #else
@@ -66,7 +66,7 @@ void Handle_View(int view, int a2)
 
 void Toggle_Formation()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x004A6300);
     func();
 #endif
@@ -74,7 +74,7 @@ void Toggle_Formation()
 
 void Message_Input(KeyNumType &key)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(KeyNumType &) = reinterpret_cast<void (*)(KeyNumType &)>(0x004A6BB0);
     func(key);
 #else

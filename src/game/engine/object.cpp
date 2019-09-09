@@ -29,7 +29,7 @@
 #include "target.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClass<ObjectClass*> >(0x006677F8);
 #else
 DynamicVectorClass<ObjectClass*> CurrentObjects;
@@ -104,7 +104,7 @@ coord_t ObjectClass::Target_Coord() const
 
 void ObjectClass::AI()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(ObjectClass *) = reinterpret_cast<void (*)(ObjectClass *)>(0x0051D7F0);
     func(this);
 #else
@@ -150,7 +150,7 @@ void ObjectClass::AI()
 
 BOOL ObjectClass::Limbo()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(ObjectClass *) = reinterpret_cast<BOOL (*)(ObjectClass *)>(0x0051DDE8);
     return func(this);
 #else
@@ -176,7 +176,7 @@ BOOL ObjectClass::Limbo()
 
 BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)
     (ObjectClass *, coord_t, DirType) = reinterpret_cast<BOOL (*)(ObjectClass *, coord_t, DirType)>(0x0051DE9C);
     return func(this, coord, dir);
@@ -212,7 +212,7 @@ BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
 
 void ObjectClass::Detach(target_t target, int a2)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(ObjectClass *, target_t, int) = reinterpret_cast<void(*)(ObjectClass *, target_t, int)>(0x0051DF74);
     func(this, target, a2);
 #else
@@ -229,7 +229,7 @@ void ObjectClass::Detach(target_t target, int a2)
 
 void ObjectClass::Detach_All(int a1)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(ObjectClass *, int) = reinterpret_cast<void(*)(ObjectClass *, int)>(0x0051DFDC);
     func(this, a1);
 #elif 0
@@ -243,7 +243,7 @@ void ObjectClass::Detach_All(int a1)
 
 BOOL ObjectClass::Paradrop(coord_t coord)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(ObjectClass *, coord_t) = reinterpret_cast<BOOL(*)(ObjectClass *, coord_t)>(0x0051E5C0);
     return func(this, coord);
 #elif 0
@@ -273,7 +273,7 @@ BOOL ObjectClass::Paradrop(coord_t coord)
 
 BOOL ObjectClass::Render(BOOL force_render)
 {
-/*#ifndef CHRONOSHIFT_STANDALONE
+/*#ifdef GAME_DLL
     BOOL(*func)(ObjectClass *, BOOL) = reinterpret_cast<BOOL(*)(ObjectClass *, BOOL)>(0x0051DD34);
     return func(this, force_render);
 #else*/
@@ -512,7 +512,7 @@ fixed_t ObjectClass::Health_Ratio() const
 
 BOOL ObjectClass::Mark(MarkType mark)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(ObjectClass *, MarkType) = reinterpret_cast<BOOL(*)(ObjectClass *, MarkType)>(0x0051E368);
     return func(this, mark);
 #elif 0
@@ -603,7 +603,7 @@ void ObjectClass::Mark_For_Redraw()
 
 BOOL ObjectClass::Select()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(ObjectClass *) = reinterpret_cast<BOOL(*)(ObjectClass *)>(0x0051DBB0);
     return func(this);
 #elif 0
@@ -680,7 +680,7 @@ void ObjectClass::Unselect()
 
 DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     DamageResultType (*func)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int) =
         reinterpret_cast<DamageResultType (*)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0051E07C);
     return func(this, damage, a2, warhead, object, a5);
@@ -809,7 +809,7 @@ BOOL ObjectClass::Revealed(HouseClass *house)
 
 void ObjectClass::Code_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F98E0);
     func(this);
 #else
@@ -823,7 +823,7 @@ void ObjectClass::Code_Pointers()
 
 void ObjectClass::Decode_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F9924);
     func(this);
 #else
@@ -857,7 +857,7 @@ void Unselect_All()
 
 void ObjectClass::Shorten_Attached_Anims()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x00423F20);
     func(this);
 #else
@@ -867,7 +867,7 @@ void ObjectClass::Shorten_Attached_Anims()
 
 void ObjectClass::Detach_This_From_All(target_t object, BOOL unk)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(target_t, BOOL) = reinterpret_cast<void (*)(target_t, BOOL)>(0x0056C5E0);
     func(object, unk);
 #else

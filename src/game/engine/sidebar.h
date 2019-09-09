@@ -106,7 +106,7 @@ class SidebarClass : public PowerClass
         int Abandon_Production(int unk1);
 
     private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
         static void *&LogoShapes;
         static void *&ClockShapes;
         static void **SpecialShapes;
@@ -205,7 +205,7 @@ public:
     void Disable_Zoom_Button() { ZoomButton.Disable(); }
     void Enable_Zoom_Button() { ZoomButton.Enable(); }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -226,7 +226,7 @@ protected:
     bool SidebarBit16; // demolish active
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static SBGadgetClass &Background;
     static ShapeButtonClass &RepairButton;
     static ShapeButtonClass &SellButton;
@@ -248,7 +248,7 @@ protected:
     static void *SidebarAddonShape; // RAPP addition
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 inline void SidebarClass::Hook_Me()
 {

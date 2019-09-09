@@ -41,7 +41,7 @@ private:
     int OptionsDialogBottomButtonOffsetTop;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern GameOptionsClass &Options;
