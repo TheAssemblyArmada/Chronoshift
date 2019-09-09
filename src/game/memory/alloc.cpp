@@ -33,10 +33,7 @@
 
 using std::memset;
 
-#ifdef GAME_DLL
-memerrorhandler_t &g_memoryError = Make_Global<memerrorhandler_t>(0x006B1A2C); // Memory error handler function pointer.
-memexithandler_t &g_memoryErrorExit = Make_Global<memexithandler_t>(0x006B1A30);
-#else
+#ifndef GAME_DLL
 memerrorhandler_t g_memoryError = nullptr; // Memory error handler function pointer.
 memexithandler_t g_memoryErrorExit = nullptr;
 #endif

@@ -48,12 +48,9 @@
 #include <dispatch/dispatch.h>
 #endif
 
-#ifdef GAME_DLL
-#include "hooker.h"
-#endif
-
 class PlatformTimerClass
 {
+    friend void Setup_Hooks();
 public:
     PlatformTimerClass(unsigned freq, BOOL partial = false);
     ~PlatformTimerClass();
@@ -96,9 +93,6 @@ public:
 #endif
     }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
 private:
 #ifdef PLATFORM_WINDOWS
     static void __stdcall Timer_Callback(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
@@ -142,13 +136,6 @@ public:
 };
 
 #ifdef GAME_DLL
-inline void PlatformTimerClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005BBEB0, &Timer_Callback);
-#endif
-}
-
 extern PlatformTimerClass *&PlatformTimer;
 #else
 extern PlatformTimerClass *PlatformTimer;

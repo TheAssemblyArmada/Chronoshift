@@ -30,18 +30,4 @@ inline int LCW_Worst_Case(int bytes)
 int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes = 0);
 int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes = 0);
 
-#ifdef GAME_DLL
-#include "hooker.h"
-
-namespace Lcw {
-inline void Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005D6880, LCW_Uncomp);
-    Hook_Function(0x005DD28C, LCW_Comp);
-#endif
-}
-}
-#endif
-
 #endif // LCW_H
