@@ -43,7 +43,7 @@ public:
     virtual BOOL Bump(BOOL bump_up);
     virtual BOOL Step(BOOL step_up);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -80,7 +80,7 @@ inline SliderClass &SliderClass::operator=(SliderClass &that)
     return *this;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void SliderClass::Hook_Me()

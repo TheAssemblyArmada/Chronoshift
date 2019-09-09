@@ -181,7 +181,7 @@ public:
     KeyNumType Get_DebugKeySpecialDialog() const { return DebugKeySpecialDialog; }
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -267,7 +267,7 @@ private:
     KeyNumType KeyTeam10;
 
 #if defined(CHRONOSHIFT_DEBUG)
-#if !defined(CHRONOSHIFT_STANDALONE)
+#if defined(GAME_DLL)
     // For now, these need to be static as they will increase the size of the class.
     static KeyNumType DebugKeyToggleDebug;
     static KeyNumType DebugKeyToggleVortex;
@@ -325,7 +325,7 @@ private:
     static KeyNumType DebugKeyApplyDamage;
     static KeyNumType DebugKeyToggleFullMap;
     static KeyNumType DebugKeySpecialDialog;
-#else // CHRONOSHIFT_STANDALONE
+#else // GAME_DLL
     KeyNumType DebugKeyToggleDebug;
     KeyNumType DebugKeyToggleVortex;
     KeyNumType DebugKeyForceRedraw;
@@ -382,11 +382,11 @@ private:
     KeyNumType DebugKeyApplyDamage;
     KeyNumType DebugKeyToggleFullMap;
     KeyNumType DebugKeySpecialDialog;
-#endif // !CHRONOSHIFT_STANDALONE
+#endif // GAME_DLL
 #endif // CHRONOSHIFT_DEBUG
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void OptionsClass::Hook_Me()

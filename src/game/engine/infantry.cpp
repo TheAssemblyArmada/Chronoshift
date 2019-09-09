@@ -15,7 +15,7 @@
  */
 #include "infantry.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<InfantryClass> &g_Infantry = Make_Global<TFixedIHeapClass<InfantryClass> >(0x0065D9E0);
 #else
 TFixedIHeapClass<InfantryClass> g_Infantry;

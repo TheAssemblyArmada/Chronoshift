@@ -43,7 +43,7 @@ public:
     BOOL Surfaces_Restored() const { return m_surfacesRestored; }
     void Clear_Surfaces_Restored() { m_surfacesRestored = false; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -55,7 +55,7 @@ private:
     BOOL m_inFocus;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern void (*&Misc_Focus_Loss_Function)();

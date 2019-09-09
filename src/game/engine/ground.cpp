@@ -17,7 +17,7 @@
 #include "gamedebug.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 GroundClass *Ground = Make_Pointer<GroundClass>(0x00655DF0);
 #else
 GroundClass Ground[LAND_COUNT];

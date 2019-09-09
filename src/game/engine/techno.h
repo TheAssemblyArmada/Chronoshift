@@ -168,7 +168,7 @@ public:
     BOOL Is_Lemon() const { return m_Lemon; }
     BOOL Is_Bit2_16() const { return m_Bit2_16; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     void Wrap_Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
     {
@@ -239,7 +239,7 @@ protected:
     static int const BodyShape32[32];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void TechnoClass::Hook_Me()

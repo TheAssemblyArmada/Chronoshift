@@ -32,7 +32,7 @@ typedef int socklen_t;
 int WinsockInterfaceClass::SocketsMax = 0;
 #endif // !PLATFORM_WINDOWS
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>(0x0069172C);
 #else

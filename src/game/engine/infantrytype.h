@@ -159,7 +159,7 @@ private:
     const uint8_t *m_AltRemap;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<InfantryTypeClass> &g_InfantryTypes;
 #else

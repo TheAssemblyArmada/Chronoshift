@@ -19,7 +19,7 @@
 #include <strings.h>
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TheaterType &g_lastTheater = Make_Global<TheaterType>(0x006017CC);
 #else
 TheaterType g_lastTheater = THEATER_NONE;

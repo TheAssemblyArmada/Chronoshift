@@ -55,7 +55,7 @@ private:
     RGBClass m_palette[PALETTE_ENTRIES];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern PaletteClass &GamePalette;

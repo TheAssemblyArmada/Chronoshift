@@ -16,7 +16,7 @@
 #include "missioncontrol.h"
 #include "mission.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 MissionControlClass *const MissionControlClass::MissionControl = reinterpret_cast<MissionControlClass *>(0x00666234);
 #else
 MissionControlClass MissionControlClass::MissionControl[MISSION_COUNT];

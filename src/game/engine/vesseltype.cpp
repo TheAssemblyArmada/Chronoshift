@@ -25,7 +25,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<VesselTypeClass> &g_VesselTypes = Make_Global<TFixedIHeapClass<VesselTypeClass> >(0x0065DF38);
 #else
 TFixedIHeapClass<VesselTypeClass> g_VesselTypes;
@@ -109,7 +109,7 @@ void VesselTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL VesselTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const VesselTypeClass *, cell_t, HousesType) =
         reinterpret_cast<BOOL (*)(const VesselTypeClass *, cell_t, HousesType)>(0x005848C4);
     return func(this, cellnum, house);
@@ -132,7 +132,7 @@ BOOL VesselTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *VesselTypeClass::Create_One_Of(HouseClass *house) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const VesselTypeClass *, HouseClass *) =
         reinterpret_cast<ObjectClass *(*)(const VesselTypeClass *, HouseClass *)>(0x00584870);
     return func(this, house);

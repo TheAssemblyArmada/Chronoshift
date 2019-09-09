@@ -43,7 +43,7 @@ public:
     void Set_Cost(int cost) { HelpCost = cost; }
     void Set_Text_Color(uint8_t color) { HelpTextColor = color; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
 #endif
@@ -71,7 +71,7 @@ protected:
     TCountDownTimerClass<SystemTimerClass> CountDownTimer;
 
 private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static int16_t *const OverlapList;
     static char *&HelpText;
 #else
@@ -80,7 +80,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 inline const int16_t *HelpClass::Hook_Text_Overlap_List(const char *string, int x, int y)
 {

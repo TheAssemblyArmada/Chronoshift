@@ -51,7 +51,7 @@ private:
     static const int s_adder;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern RandomClass &g_nonCriticalRandom;
 #else
 extern RandomClass g_nonCriticalRandom;

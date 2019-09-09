@@ -94,7 +94,7 @@ private:
     int m_LandingDistance;
 
 public:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void *&g_LeftRotorData;
     static void *&g_RightRotorData;
 #else
@@ -102,7 +102,7 @@ public:
     static void *g_RightRotorData;
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 public:
     static void Hook_Me();
 
@@ -128,7 +128,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void AircraftTypeClass::Hook_Me()
@@ -151,7 +151,7 @@ inline void AircraftTypeClass::Hook_Me()
 }
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<AircraftTypeClass> &g_AircraftTypes;
 #else

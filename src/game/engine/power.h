@@ -48,7 +48,7 @@ public:
     void Flash_Power();
 
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -70,7 +70,7 @@ protected:
     int16_t OutputInc;
     int16_t DrainInc;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static PowerButtonClass &PowerButton;
     static void *&PowerShape;
     static void *&PowerBarShape;
@@ -81,7 +81,7 @@ protected:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 inline void PowerClass::Hook_Me()
 {

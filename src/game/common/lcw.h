@@ -30,7 +30,7 @@ inline int LCW_Worst_Case(int bytes)
 int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes = 0);
 int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes = 0);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 namespace Lcw {

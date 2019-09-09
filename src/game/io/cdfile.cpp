@@ -43,7 +43,7 @@
 #define CD_PATH_SEP "/"
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 char *CDFileClass::s_rawPath = Make_Pointer<char>(0x006AC06C);
 CDFileClass::SearchDriveType *&CDFileClass::s_first =
     *reinterpret_cast<CDFileClass::SearchDriveType **>(0x006AC060); // first entry in the search drive, each entry is linked.

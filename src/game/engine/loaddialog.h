@@ -60,7 +60,7 @@ public:
     static int Num_From_Ext(const char *name);
     static int Compare(const void *ptr1, const void *ptr2);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -69,7 +69,7 @@ protected:
     DynamicVectorClass<FileEntryClass *> Files;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void LoadOptionsClass::Hook_Me()

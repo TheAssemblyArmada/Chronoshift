@@ -1,6 +1,6 @@
 #include "triggertype.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<TriggerTypeClass> &g_TriggerTypes = *reinterpret_cast<TFixedIHeapClass<TriggerTypeClass> *>(0x0065DCD8);
 #else
 TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
@@ -12,7 +12,7 @@ TriggerTypeClass::TriggerTypeClass() : AbstractTypeClass(RTTI_TRIGGERTYPE, g_Tri
 
 void TriggerTypeClass::Code_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(TriggerTypeClass *) =
         reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9448);
     return func(this);
@@ -27,7 +27,7 @@ void TriggerTypeClass::Code_Pointers()
 
 void TriggerTypeClass::Decode_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(TriggerTypeClass *) =
         reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9464);
     return func(this);

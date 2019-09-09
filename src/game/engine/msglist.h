@@ -58,7 +58,7 @@ public:
     int Num_Messages();
     void Set_Width(int width);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -100,7 +100,7 @@ private:
     static int MaxMessageWidth;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void MessageListClass::Hook_Me()

@@ -596,7 +596,7 @@ void BufferIOFileClass::Close()
     }
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 
 void BufferIOFileClass::Hook_Me()
 {

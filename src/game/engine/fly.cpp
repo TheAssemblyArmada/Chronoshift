@@ -16,7 +16,7 @@
 
 ImpactType FlyClass::Physics(unsigned int &somevalue, DirType dir)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ImpactType (*func)(FlyClass *, unsigned int &, DirType) =
         reinterpret_cast<ImpactType (*)(FlyClass *, unsigned int &, DirType)>(0x004C06E0);
     return func(this, somevalue, dir);
@@ -27,7 +27,7 @@ ImpactType FlyClass::Physics(unsigned int &somevalue, DirType dir)
 
 void FlyClass::Fly_Speed(int speed, MPHType mph)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(FlyClass *, int, MPHType) = reinterpret_cast<void (*)(FlyClass *, int, MPHType)>(0x004C0764);
     func(this, speed, mph);
 #endif

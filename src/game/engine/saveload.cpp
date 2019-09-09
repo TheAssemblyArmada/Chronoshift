@@ -28,7 +28,7 @@
 
 void Put_All(Pipe &pipe, int skip_callback)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(Pipe &, int) = reinterpret_cast<void (*)(Pipe &, int)>(0x005375D0);
     func(pipe, skip_callback);
 #endif
@@ -36,7 +36,7 @@ void Put_All(Pipe &pipe, int skip_callback)
 
 int Save_Game(int number, char *savename, int unknown)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(int, char *, int) = reinterpret_cast<int (*)(int, char *, int)>(0x005379FC);
     return func(number, savename, unknown);
 #else
@@ -55,7 +55,7 @@ void Post_Load_Game(int skip_overpass)
 
 int Load_Game(int unknown)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)() = reinterpret_cast<int (*)()>(0x00537D10);
     return func();
 #else
@@ -128,14 +128,14 @@ int Load_MPlayer_Values(Straw &straw)
 
 void Code_All_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x005392A4);
     func();
 #endif
 }
 void Decode_All_Pointers()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x005393D4);
     func();
 #endif
@@ -192,7 +192,7 @@ int Get_Savefile_Info(int number, char *savename, unsigned *scenarioidx, HousesT
 
 int Reconcile_Players()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)() = reinterpret_cast<int (*)()>(0x00539708);
     return func();
 #else

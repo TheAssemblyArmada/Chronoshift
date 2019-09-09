@@ -64,7 +64,7 @@ struct RemapControlType
     uint8_t WindowPalette[8];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern RemapControlType *ColorRemaps;

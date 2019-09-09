@@ -15,7 +15,7 @@
  */
 #include "aircraft.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<AircraftClass> &g_Aircraft = Make_Global<TFixedIHeapClass<AircraftClass> >(0x0065D818);
 #else
 TFixedIHeapClass<AircraftClass> g_Aircraft;

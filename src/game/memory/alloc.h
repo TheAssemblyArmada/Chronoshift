@@ -37,7 +37,7 @@ int Ram_Free();
 int Heap_Size(MemoryFlagType flag);
 int Total_Ram_Free(MemoryFlagType flag);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #include <malloc.h>
 

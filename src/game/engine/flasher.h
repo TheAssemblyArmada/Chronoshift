@@ -35,7 +35,7 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -55,7 +55,7 @@ inline void FlasherClass::Flash(int flash_frames, bool flash)
     Flashed = flash;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void FlasherClass::Hook_Me()

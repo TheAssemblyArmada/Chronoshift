@@ -22,7 +22,7 @@
 #include "session.h"
 #include "voc.h"
 
-#if !defined(CHRONOSHIFT_STANDALONE) && defined(CHRONOSHIFT_DEBUG)
+#if defined(GAME_DLL) && defined(CHRONOSHIFT_DEBUG)
 KeyNumType OptionsClass::DebugKeyToggleDebug = KN_NONE;
 KeyNumType OptionsClass::DebugKeyToggleVortex = KN_NONE;
 KeyNumType OptionsClass::DebugKeyForceRedraw = KN_NONE;
@@ -149,7 +149,7 @@ OptionsClass::OptionsClass() :
     KeyTeam8(KN_8),
     KeyTeam9(KN_9),
     KeyTeam10(KN_0)
-#if defined(CHRONOSHIFT_STANDALONE) && defined(CHRONOSHIFT_DEBUG)
+#if !defined(GAME_DLL) && defined(CHRONOSHIFT_DEBUG)
     ,
     DebugKeyToggleDebug(KN_NONE),
     DebugKeyToggleVortex(KN_NONE),
@@ -207,7 +207,7 @@ OptionsClass::OptionsClass() :
     DebugKeyApplyDamage(KN_NONE),
     DebugKeyToggleFullMap(KN_NONE),
     DebugKeySpecialDialog(KN_NONE)
-#endif // CHRONOSHIFT_STANDALONE && CHRONOSHIFT_DEBUG
+#endif // GAME_DLL && CHRONOSHIFT_DEBUG
 {
 }
 

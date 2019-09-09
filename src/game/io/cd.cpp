@@ -32,7 +32,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 int &g_requiredCD = *reinterpret_cast<int *>(0x006017D0);
 int &g_currentCD = Make_Global<int>(0x006017D4);
 #else

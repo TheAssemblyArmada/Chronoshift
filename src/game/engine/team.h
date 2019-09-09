@@ -110,7 +110,7 @@ private:
     unsigned char m_field_58[5];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<TeamClass> &g_Teams;
 #else

@@ -107,7 +107,7 @@ public:
     int Blit(GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
     void Draw_Stamp(void *tileset, int icon, int x, int y, const void *remapper, int left, int top, int right, int bottom);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     // static BOOL &AllowHardwareBlitFills;
     // static BOOL &AllowStretchBlits;
@@ -166,7 +166,7 @@ public:
 
     static int TotalLocks;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 private:
@@ -182,7 +182,7 @@ void Wait_Blit();
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *view);
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &view);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void GraphicViewPortClass::Hook_Me() {}

@@ -405,7 +405,7 @@ cell_t MapClass::Clamp_To_Radar(cell_t cellnum) const
 void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4)
 {
     // TODO requires RadarClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(const MapClass*, cell_t, int, HouseClass *, BOOL) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *, BOOL)>(0x004FE438);
     func(this, cellnum, radius, house, a4);
 #elif 0
@@ -461,7 +461,7 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
 void MapClass::Shroud_From(cell_t cellnum, int radius)
 {
     // TODO requires RadarClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(const MapClass*, cell_t, int) = reinterpret_cast<void(*)(const MapClass*, cell_t, int)>(0x004FE588);
     func(this, cellnum, radius);
 #elif 0
@@ -502,7 +502,7 @@ void MapClass::Shroud_From(cell_t cellnum, int radius)
 void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires HouseClass, RadarClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(const MapClass*, cell_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *)>(0x004FE68C);
     func(this, cellnum, radius, house);
 #elif 0
@@ -546,7 +546,7 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
 void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
 {
     // TODO requires RadarClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(const MapClass*, cell_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *)>(0x004FE7C8);
     func(this, cellnum, radius, house);
 #elif 0
@@ -1037,7 +1037,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
 BOOL MapClass::Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) const
 {
     // TODO requires HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const MapClass*, cell_t, HousesType&, ZoneType&) = reinterpret_cast<BOOL(*)(const MapClass*, cell_t, HousesType&, ZoneType&)>(0x004FFEAC);
     return func(this, cellnum, house, zone);
 #elif 0
@@ -1072,7 +1072,7 @@ BOOL MapClass::Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) co
 int MapClass::Destroy_Bridge_At(cell_t cellnum)
 {
     // TODO Needs TemplateClass, AnimClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int(*func)(const MapClass*, cell_t) = reinterpret_cast<int(*)(const MapClass*, cell_t)>(0x004FFF1C);
     return func(this, cellnum);
 #else
@@ -1088,7 +1088,7 @@ int MapClass::Destroy_Bridge_At(cell_t cellnum)
 void MapClass::Detach(int32_t target, int a2)
 {
     // TODO Requires TriggerClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(const MapClass*, int32_t, int) = reinterpret_cast<void(*)(const MapClass*, int32_t, int)>(0x0050078C);
     func(this, target, a2);
 #elif 0
@@ -1156,7 +1156,7 @@ int MapClass::Intact_Bridge_Count() const
 void MapClass::Shroud_The_Map()
 {
     // TODO Requires DisplayClass, TechnoClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(const MapClass*) = reinterpret_cast<void(*)(const MapClass*)>(0x00500908);
     func(this);
 #elif 0
@@ -1434,7 +1434,7 @@ BOOL MapClass::Validate()
 ObjectClass *MapClass::Close_Object(coord_t coord) const
 {
     // TODO Requires TechnoClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const MapClass*, coord_t) = reinterpret_cast<ObjectClass *(*)(const MapClass*, coord_t)>(0x004FF554);
     return func(this, coord);
 #elif 0

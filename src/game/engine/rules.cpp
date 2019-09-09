@@ -22,7 +22,7 @@
 #include "theme.h"
 #include "vortex.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 fixed_t &RulesClass::EngineerDamage = Make_Global<fixed_t>(0x00665E02);
 fixed_t &RulesClass::EngineerCaptureLevel = Make_Global<fixed_t>(0x00665E04);
 fixed_t &RulesClass::ChronoTankDuration = Make_Global<fixed_t>(0x00665E00);
@@ -209,7 +209,7 @@ RulesClass::RulesClass() :
     ChronoTechLevel(1),
     OreNearScan(1536), //6 cells in leptons
     OreFarScan(8192) //32 cells in leptons
-#ifdef CHRONOSHIFT_STANDALONE
+#ifndef GAME_DLL
     ,
     ChronoTankDuration("0.0"),
     MTankDistance(30),
@@ -234,7 +234,7 @@ RulesClass::RulesClass() :
     IQControls.Harvester = 3;
     IQControls.SellBack = 2;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ChronoTankDuration = "0.0";
     MTankDistance = 30;
     CarrierLaunchDelay = 60;
@@ -285,7 +285,7 @@ BOOL RulesClass::Aftermath(GameINIClass &ini)
         // i think they made these global so they didnt break save games...
         NewUnitsEnabled = ini.Get_Bool("Aftermath", "NewUnitsEnabled", false);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
         OrigNewUnitsEnabled = NewUnitsEnabled;
 #endif
 
@@ -314,7 +314,7 @@ BOOL RulesClass::Aftermath(GameINIClass &ini)
 BOOL RulesClass::General(GameINIClass &ini)
 {
     // TODO Requires GameINIClass::Get_UnitType, ChronalVortexClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x005342DC);
     return func(this, ini);
 #elif 0
@@ -478,7 +478,7 @@ BOOL RulesClass::Recharge(GameINIClass &ini)
 BOOL RulesClass::Heap_Maximums(GameINIClass &ini)
 {
     // TODO Requires WarheadTypeClass and WeaponTypeClass or those heap inits moving elsewhere.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x00535F38);
     return func(this, ini);
 #elif 0
@@ -561,7 +561,7 @@ BOOL RulesClass::AI(GameINIClass &ini)
 BOOL RulesClass::Powerups(GameINIClass &ini)
 {
     // TODO Needs AnimTypeClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x00536D3C);
     return func(this, ini);
 #elif 0
@@ -657,7 +657,7 @@ BOOL RulesClass::IQ(GameINIClass &ini)
 BOOL RulesClass::Objects(GameINIClass &ini)
 {
     // TODO Needs most *TypeClass classes.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x005373DC);
     return func(this, ini);
 #elif 0
@@ -719,7 +719,7 @@ BOOL RulesClass::Difficulty(GameINIClass &ini)
 BOOL RulesClass::Land_Types(GameINIClass &ini)
 {
     // TODO Needs most *TypeClass classes.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const RulesClass *, GameINIClass &) = reinterpret_cast<BOOL(*)(const RulesClass *, GameINIClass &)>(0x00536E8C);
     return func(this, ini);
 #elif 0

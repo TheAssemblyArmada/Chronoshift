@@ -23,7 +23,7 @@
 #include <ddraw.h>
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern uint8_t *const g_currentPalette;
 #else

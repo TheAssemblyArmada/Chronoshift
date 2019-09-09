@@ -60,7 +60,7 @@ private:
     uint8_t field_15E;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern TFixedIHeapClass<AircraftClass> &g_Aircraft;
 #else
 extern TFixedIHeapClass<AircraftClass> g_Aircraft;

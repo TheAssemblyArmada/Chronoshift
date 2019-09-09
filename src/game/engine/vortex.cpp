@@ -32,7 +32,7 @@
 #include "voc.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 ChronalVortexClass &g_ChronalVortex = Make_Global<ChronalVortexClass>(0x006904B4);
 #else
@@ -440,7 +440,7 @@ void ChronalVortexClass::Attack()
  */
 void ChronalVortexClass::Zap_Target()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const ChronalVortexClass *) = reinterpret_cast<void (*)(const ChronalVortexClass *)>(0x0058E9E0);
     func(this);
 #elif 0 // Needs more of BuildingClass implementing correctly.

@@ -15,7 +15,7 @@
  */
 #include "unit.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<UnitClass> &g_Units = Make_Global<TFixedIHeapClass<UnitClass> >(0x0065DC40);
 #else
 TFixedIHeapClass<UnitClass> g_Units;

@@ -23,7 +23,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<SmudgeTypeClass> &g_SmudgeTypes = Make_Global<TFixedIHeapClass<SmudgeTypeClass> >(0x0065E068);
 #else
 TFixedIHeapClass<SmudgeTypeClass> g_SmudgeTypes;
@@ -65,7 +65,7 @@ void SmudgeTypeClass::operator delete(void *ptr)
 BOOL SmudgeTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
     // TODO requires SmudgeClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const SmudgeTypeClass*, cell_t, HousesType) = reinterpret_cast<BOOL(*)(const SmudgeTypeClass*, cell_t, HousesType)>(0x00549E50);
     return func(this, cellnum, house);
 #elif 0
@@ -80,7 +80,7 @@ BOOL SmudgeTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 ObjectClass *SmudgeTypeClass::Create_One_Of(HouseClass *house) const
 {
     // TODO requires OverlayClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const SmudgeTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const SmudgeTypeClass*, HouseClass*)>(0x00549EB0);
     return func(this, house);
 #elif 0

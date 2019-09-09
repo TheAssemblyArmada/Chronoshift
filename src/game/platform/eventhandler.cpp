@@ -14,7 +14,7 @@
  */
 #include "eventhandler.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 unsigned &CCFocusMessage = Make_Global<unsigned>(0x00609BA0);
@@ -33,7 +33,7 @@ focusfunc_t MiscFocusRestore;
 #if defined PLATFORM_WINDOWS
 LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     LRESULT(__stdcall *func)
     (HWND, UINT, WPARAM, LPARAM) = reinterpret_cast<LRESULT(__stdcall *)(HWND, UINT, WPARAM, LPARAM)>(0x005B373C);
 

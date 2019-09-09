@@ -63,12 +63,12 @@ public:
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void LayerClass::Hook_Me()

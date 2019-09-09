@@ -114,7 +114,7 @@ public:
     const int16_t *OverlapList;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<TerrainTypeClass> &g_TerrainTypes;
 #else

@@ -26,7 +26,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes = Make_Global<TFixedIHeapClass<OverlayTypeClass> >(0x0065E01C);
 #else
 TFixedIHeapClass<OverlayTypeClass> g_OverlayTypes;
@@ -183,7 +183,7 @@ coord_t OverlayTypeClass::Coord_Fixup(coord_t coord) const
 BOOL OverlayTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
     // TODO requires OverlayClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const OverlayTypeClass*, cell_t, HousesType) = reinterpret_cast<BOOL(*)(const OverlayTypeClass*, cell_t, HousesType)>(0x00524A5C);
     return func(this, cellnum, house);
 #elif 0
@@ -198,7 +198,7 @@ BOOL OverlayTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 ObjectClass *OverlayTypeClass::Create_One_Of(HouseClass *house) const
 {
     // TODO requires OverlayClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const OverlayTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const OverlayTypeClass*, HouseClass*)>(0x00524A98);
     return func(this, house);
 #elif 0

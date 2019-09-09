@@ -270,7 +270,7 @@ private:
     const int16_t *m_OverlapList;
     void *m_BuildupData;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void *&g_WarFactoryOverlay;
     static void *&g_LightningShapes;
 #else
@@ -279,7 +279,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes;
 #else

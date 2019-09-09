@@ -16,7 +16,7 @@
 #include "anim.h"
 #include "target.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<AnimClass> &g_Anims = Make_Global<TFixedIHeapClass<AnimClass> >(0x0065D864);
 #else
 TFixedIHeapClass<AnimClass> g_Anims;
@@ -84,7 +84,7 @@ void AnimClass::Init()
 
 coord_t AnimClass::Center_Coord() const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // TODO
     return 0;
 #else
@@ -95,7 +95,7 @@ coord_t AnimClass::Center_Coord() const
 
 void AnimClass::AI()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x00424B94);
     func(this);
 #else
@@ -120,7 +120,7 @@ LayerType AnimClass::In_Which_Layer() const
 
 void AnimClass::Detach(target_t target, int a2)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(AnimClass *, target_t, int) = reinterpret_cast<void (*)(AnimClass *, target_t, int)>(0x00425A98);
     func(this, target, a2);
 #else
@@ -130,7 +130,7 @@ void AnimClass::Detach(target_t target, int a2)
 
 BOOL AnimClass::Render(BOOL force_render)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(AnimClass *, BOOL) = reinterpret_cast<BOOL (*)(AnimClass *, BOOL)>(0x0042410C);
     return func(this, force_render);
 #else
@@ -141,7 +141,7 @@ BOOL AnimClass::Render(BOOL force_render)
 
 const int16_t *AnimClass::Occupy_List(BOOL a1) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int16_t *(*func)(const AnimClass *, BOOL) = reinterpret_cast<int16_t *(*)(const AnimClass *, BOOL)>(0x004245E8);
     return func(this, a1);
 #else
@@ -158,7 +158,7 @@ const int16_t *AnimClass::Occupy_List(BOOL a1) const
 
 void AnimClass::Draw_It(int x_pos, int y_pos, WindowNumberType window) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const AnimClass *, int, int, WindowNumberType) =
         reinterpret_cast<void (*)(const AnimClass *, int, int, WindowNumberType)>(0x0042415C);
     func(this, x_pos, y_pos, window);
@@ -169,7 +169,7 @@ void AnimClass::Draw_It(int x_pos, int y_pos, WindowNumberType window) const
 
 BOOL AnimClass::Mark(MarkType mark)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(AnimClass *, MarkType) = reinterpret_cast<BOOL (*)(AnimClass *, MarkType)>(0x004242D0);
     return func(this, mark);
 #else
@@ -180,7 +180,7 @@ BOOL AnimClass::Mark(MarkType mark)
 
 coord_t AnimClass::Sort_Y() const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     coord_t (*func)(const AnimClass *) = reinterpret_cast<coord_t (*)(const AnimClass *)>(0x00423F64);
     return func(this);
 #else
@@ -201,7 +201,7 @@ void AnimClass::Decode_Pointers()
 
 BOOL AnimClass::Can_Place_Here(coord_t coord) const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const AnimClass *, coord_t) = reinterpret_cast<BOOL (*)(const AnimClass *, coord_t)>(0x00425C50);
     return func(this, coord);
 #else
@@ -212,7 +212,7 @@ BOOL AnimClass::Can_Place_Here(coord_t coord) const
 
 const int16_t *AnimClass::Anim_Overlap_List() const
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int16_t *(*func)(const AnimClass *) = reinterpret_cast<int16_t *(*)(const AnimClass *)>(0x00424318);
     return func(this);
 #else
@@ -223,7 +223,7 @@ const int16_t *AnimClass::Anim_Overlap_List() const
 
 void AnimClass::Attach_To(ObjectClass *object)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(AnimClass *, ObjectClass *) = reinterpret_cast<void (*)(AnimClass *, ObjectClass *)>(0x0042554C);
     func(this, object);
 #else
@@ -233,7 +233,7 @@ void AnimClass::Attach_To(ObjectClass *object)
 
 coord_t AnimClass::Adjust_Coord(coord_t coord)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     // TODO
     return 0;
 #else
@@ -244,7 +244,7 @@ coord_t AnimClass::Adjust_Coord(coord_t coord)
 
 void AnimClass::Do_Atom_Damage(HousesType house, cell_t cell)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(AnimClass *, HousesType, cell_t) = reinterpret_cast<void (*)(AnimClass *, HousesType, cell_t)>(0x00425AE0);
     func(this, house, cell);
 #else
@@ -254,7 +254,7 @@ void AnimClass::Do_Atom_Damage(HousesType house, cell_t cell)
 
 void AnimClass::Start()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x004256B8);
     func(this);
 #else
@@ -264,7 +264,7 @@ void AnimClass::Start()
 
 void AnimClass::Middle()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x00425748);
     func(this);
 #else

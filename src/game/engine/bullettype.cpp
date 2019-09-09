@@ -22,7 +22,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<BulletTypeClass> &g_BulletTypes = Make_Global<TFixedIHeapClass<BulletTypeClass> >(0x0065DE54);
 #else
 TFixedIHeapClass<BulletTypeClass> g_BulletTypes;

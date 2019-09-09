@@ -24,7 +24,7 @@
 
 #define FILE_HANDLE_COUNT 10
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 GameFileClass *g_handles = Make_Pointer<GameFileClass>(0x00635BE4);
 #else
 GameFileClass g_handles[FILE_HANDLE_COUNT];
@@ -394,7 +394,7 @@ void *Load_Alloc_Data(FileClass &file)
     return nullptr;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 
 void GameFileClass::Hook_Me()
 {

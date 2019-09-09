@@ -17,7 +17,7 @@
 #include "globals.h"
 #include "ostimer.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TTimerClass<SystemTimerClass> &TickCountTimer = *reinterpret_cast<TTimerClass<SystemTimerClass> *>(0x00680870);
 TCountDownTimerClass<SystemTimerClass> &FrameTimer = *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x006807F8);
 #else

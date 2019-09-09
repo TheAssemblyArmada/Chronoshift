@@ -24,7 +24,7 @@
 
 #define POWER_MAX_HEIGHT 108
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 PowerClass::PowerButtonClass &PowerClass::PowerButton = Make_Global<PowerClass::PowerButtonClass>(0x006877C0);
 void *&PowerClass::PowerShape = Make_Global<void *>(0x006877B8);
 void *&PowerClass::PowerBarShape = Make_Global<void *>(0x006877BC);
@@ -42,7 +42,7 @@ PowerClass::PowerButtonClass::PowerButtonClass() :
 BOOL PowerClass::PowerButtonClass::Action(unsigned flags, KeyNumType &key)
 {
     // TODO, needs HouseClass, TabClass, HelpClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const PowerButtonClass *, unsigned, KeyNumType &) =
         reinterpret_cast<BOOL (*)(const PowerButtonClass *, unsigned, KeyNumType &)>(0x00527F54);
@@ -102,7 +102,7 @@ void PowerClass::Init_Clear()
 void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
     //Needs HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const PowerClass *, KeyNumType &, int, int) =
         reinterpret_cast<void (*)(const PowerClass *, KeyNumType &, int, int)>(0x00527C60);
     func(this, key, mouse_x, mouse_y);
@@ -174,7 +174,7 @@ void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 void PowerClass::Draw_It(BOOL force_redraw)
 {
     //Needs HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const PowerClass *, BOOL) = reinterpret_cast<void (*)(const PowerClass *, BOOL)>(0x0052762C);
     func(this, force_redraw);
 #endif

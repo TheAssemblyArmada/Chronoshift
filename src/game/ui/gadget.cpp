@@ -18,7 +18,7 @@
 #include "mouse.h"
 #include "remap.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 RemapControlType *&GadgetClass::ColorScheme = Make_Global<RemapControlType *>(0x00601694);
 GadgetClass *&GadgetClass::StuckOn = Make_Global<GadgetClass *>(0x0065D7B0);
 GadgetClass *&GadgetClass::LastList = Make_Global<GadgetClass *>(0x0065D7B4);

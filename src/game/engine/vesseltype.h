@@ -86,7 +86,7 @@ private:
     int m_UnkInt; // Gets set to 26 in One_Time(), never used
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<VesselTypeClass> &g_VesselTypes;
 #else

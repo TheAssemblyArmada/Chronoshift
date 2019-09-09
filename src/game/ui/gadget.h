@@ -107,12 +107,12 @@ public:
     static RemapControlType *Get_Color_Scheme() { return ColorScheme; }
     static void Set_Color_Scheme(RemapControlType *remap) { ColorScheme = remap; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
 protected:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static RemapControlType *&ColorScheme;
     static GadgetClass *&StuckOn;
     static GadgetClass *&LastList;
@@ -143,7 +143,7 @@ protected:
     unsigned InputFlag;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void GadgetClass::Hook_Me()

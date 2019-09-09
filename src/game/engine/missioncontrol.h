@@ -54,7 +54,7 @@ private:
     fixed_t Rate; // Delay between normal processing (larger = faster game, less responsiveness) (def = 0.016).
     fixed_t AARate; // Anti-aircraft delay rate (if not specifed it uses regular rate) (def = 0.016).
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static MissionControlClass *const MissionControl;
 #else
     static MissionControlClass MissionControl[MISSION_COUNT];

@@ -72,7 +72,7 @@ void CriticalSectionClass::Unlock()
  */
 void FastCriticalSectionClass::Thread_Safe_Set_Flag()
 {
-#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+#if !defined GAME_DLL && !defined COMPILER_WATCOM
     while (m_flag.test_and_set(std::memory_order_seq_cst)) {
 #else
     // Should work for both x86_32 and x86_64 plus no assembly.
@@ -94,7 +94,7 @@ void FastCriticalSectionClass::Thread_Safe_Set_Flag()
  */
 void FastCriticalSectionClass::Thread_Safe_Clear_Flag()
 {
-#if defined CHRONOSHIFT_STANDALONE && !defined COMPILER_WATCOM
+#if !defined GAME_DLL && !defined COMPILER_WATCOM
     m_flag.clear();
 #else
     m_flag = 0;

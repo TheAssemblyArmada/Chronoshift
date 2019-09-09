@@ -49,7 +49,7 @@ public:
     virtual BOOL Load(Straw &straw) override;
     virtual BOOL Save(Pipe &pipe) const override;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     BOOL Hook_Save(Pipe &pipe) { return GameMouseClass::Save(pipe); }
 #endif
@@ -65,7 +65,7 @@ protected:
     unsigned m_MouseFrame; // this is the current frame index for the animated mouse.
 
 private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void *&s_MouseShapes;
     static TCountDownTimerClass<SystemTimerClass> &s_AnimationTimer;
 #else
@@ -75,7 +75,7 @@ private:
     static MouseStruct s_MouseControl[MOUSE_COUNT];
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 inline void GameMouseClass::Hook_Me()
 {

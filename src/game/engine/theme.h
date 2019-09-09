@@ -141,14 +141,14 @@ private:
     int ThemeHandle;
     ThemeType CurrentTheme;
     ThemeType QueuedTheme;
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static ThemeControl *Themes;
 #else
     static ThemeControl Themes[];
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern ThemeClass &Theme;

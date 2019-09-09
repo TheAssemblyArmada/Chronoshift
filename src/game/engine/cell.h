@@ -159,7 +159,7 @@ public:
 
     static int Spot_Index(coord_t coord);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 public:
     static void Hook_Me()
     {

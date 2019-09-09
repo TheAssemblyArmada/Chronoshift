@@ -21,7 +21,7 @@
 #include "mixfile.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes = Make_Global<TFixedIHeapClass<TemplateTypeClass> >(0x0065DF84);
 #else
 TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;
@@ -506,7 +506,7 @@ void TemplateTypeClass::Init_Heap()
 void TemplateTypeClass::Init(TheaterType theater)
 {
     // TODO Needs IconSet functions and TheaterTypeClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(TheaterType) = reinterpret_cast<void(*)(TheaterType)>(0x0049EAB0);
     func(theater);
 #elif 0
@@ -543,7 +543,7 @@ void TemplateTypeClass::Init(TheaterType theater)
 BOOL TemplateTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
     // TODO requires TemplateClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)(const TemplateTypeClass*, int16_t, HousesType) = reinterpret_cast<BOOL(*)(const TemplateTypeClass*, int16_t, HousesType)>(0x0049EB84);
     return func(this, cellnum, house);
 #elif 0
@@ -561,7 +561,7 @@ BOOL TemplateTypeClass::Create_And_Place(int16_t cellnum, HousesType house) cons
 ObjectClass *TemplateTypeClass::Create_One_Of(HouseClass *house) const
 {
     // TODO requires TemplateClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const TemplateTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const TemplateTypeClass*, HouseClass*)>(0x0049EBBC);
     return func(this, house);
 #elif 0
@@ -580,7 +580,7 @@ ObjectClass *TemplateTypeClass::Create_One_Of(HouseClass *house) const
 LandType TemplateTypeClass::Land_Type(int sub_icon) const
 {
     // TODO requires IconControlType
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     LandType(*func)(const TemplateTypeClass*, int) = reinterpret_cast<LandType(*)(const TemplateTypeClass*, int)>(0x0049E98C);
     return func(this, sub_icon);
 #elif 0
@@ -666,7 +666,7 @@ const char *TemplateTypeClass::Name_From(TemplateType tem)
 const int16_t *TemplateTypeClass::Occupy_List(BOOL a1) const
 {
     // TODO requires IconControlType
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     const int16_t *(*func)(const TemplateTypeClass*, BOOL) = reinterpret_cast<const int16_t *(*)(const TemplateTypeClass*, BOOL)>(0x0049EA2C);
     return func(this, a1);
 #else

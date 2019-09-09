@@ -57,7 +57,7 @@ public:
     static GameMixFile *Allocate_Mix(char const *filename);
     static bool Cache_Mix(char const *filename);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     static BOOL Hook_Is_Available(GameFileClass *ptr, BOOL forced);
     static BOOL Hook_Is_Open(GameFileClass *ptr);

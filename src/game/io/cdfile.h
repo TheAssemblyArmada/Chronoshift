@@ -61,7 +61,7 @@ public:
     static int Last_Drive() { return s_lastCDDrive; }
     static int Current_Drive() { return s_currentCDDrive; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -73,7 +73,7 @@ protected:
 #endif
 
 private:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static char *s_rawPath;
     static SearchDriveType *&s_first;
     static int &s_currentCDDrive;
@@ -87,7 +87,7 @@ private:
     static const char *s_pathSeperator;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void CDFileClass::Hook_Me()

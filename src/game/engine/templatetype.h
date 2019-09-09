@@ -478,7 +478,7 @@ private:
     int Height;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes;
 #else

@@ -133,7 +133,7 @@ private:
     int m_UnkInt; // Gets set to 8 or above in One_Time(), used for calulating dimensions.
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TFixedIHeapClass<UnitTypeClass> &g_UnitTypes;
 #else

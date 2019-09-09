@@ -22,7 +22,7 @@
 #include "house.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<FactoryClass> &g_Factories = Make_Global<TFixedIHeapClass<FactoryClass> >(0x0065D948);
 #else
 TFixedIHeapClass<FactoryClass> g_Factories;
@@ -119,7 +119,7 @@ BOOL FactoryClass::Has_Changed()
 
 BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(FactoryClass *, TechnoTypeClass &, HouseClass &) = reinterpret_cast<int (*)(FactoryClass *, TechnoTypeClass &, HouseClass &)>(0x004BEE30);
     return func(this, objecttype, house);
 #else
@@ -199,7 +199,7 @@ BOOL FactoryClass::Suspend()
 
 BOOL FactoryClass::Start()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(FactoryClass *) = reinterpret_cast<BOOL (*)(FactoryClass *)>(0x004BEFCC);
     return func(this);
 #else
@@ -286,7 +286,7 @@ BOOL FactoryClass::Completed()
 
 void FactoryClass::Code_Pointers()
 {
-//#ifndef CHRONOSHIFT_STANDALONE
+//#ifdef GAME_DLL
     void (*func)(FactoryClass *) = reinterpret_cast<void (*)(FactoryClass *)>(0x004F94E8);
     return func(this);
 /*#else
@@ -302,7 +302,7 @@ void FactoryClass::Code_Pointers()
 
 void FactoryClass::Decode_Pointers()
 {
-//#ifndef CHRONOSHIFT_STANDALONE
+//#ifdef GAME_DLL
     void (*func)(FactoryClass *) = reinterpret_cast<void (*)(FactoryClass *)>(0x004F9550);
     return func(this);
 /*#else

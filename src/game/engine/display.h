@@ -162,7 +162,7 @@ protected:
     TRect<int> BandBox; // Dimensions of the selection band box.
 
 public:
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static LayerClass *Layers;
     static TacticalClass &TacticalButton;
     static char *FadingBrighten;
@@ -207,7 +207,7 @@ public:
 #endif
     static char FadingWhite[256];
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     cell_t Hook_Click_Cell_Calc(int x, int y);
     const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
@@ -255,7 +255,7 @@ private:
     }
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 inline const int16_t *DisplayClass::Hook_Text_Overlap_List(const char *string, int x, int y)
 {

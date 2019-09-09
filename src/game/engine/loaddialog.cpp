@@ -39,7 +39,7 @@ LoadOptionsClass::~LoadOptionsClass()
 
 int LoadOptionsClass::Process()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(const LoadOptionsClass *) = reinterpret_cast<int (*)(const LoadOptionsClass *)>(0x004FCEB4);
     return func(this);
 #else

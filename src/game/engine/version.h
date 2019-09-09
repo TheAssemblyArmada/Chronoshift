@@ -53,7 +53,7 @@ public:
     int Min_Version();
     int Max_Version();
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -85,7 +85,7 @@ private:
 
 const char *Version_Name();
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern VersionClass &g_version;
 

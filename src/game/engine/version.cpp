@@ -24,7 +24,7 @@
 using std::strlen;
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 VersionClass &g_version = Make_Global<VersionClass>(0x00667810);
 #else

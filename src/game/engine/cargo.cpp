@@ -20,7 +20,7 @@
 void CargoClass::Attach(FootClass *object)
 {
     // TODO Needs FootClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(CargoClass *, FootClass *) = reinterpret_cast<void (*)(CargoClass *, FootClass *)>(0x004623D0);
     func(this, object);
 #else
@@ -62,7 +62,7 @@ FootClass *CargoClass::Attached_Object() const
 
 FootClass *CargoClass::Detach_Object()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     FootClass *(*func)(CargoClass *) = reinterpret_cast<FootClass *(*)(CargoClass *)>(0x004623D0);
     return func(this);
 #else
@@ -82,7 +82,7 @@ FootClass *CargoClass::Detach_Object()
 void CargoClass::Code_Pointers()
 {
     // TODO requires FootClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(CargoClass *) = reinterpret_cast<void (*)(CargoClass *)>(0x004F9884);
     func(this);
 #endif
@@ -91,7 +91,7 @@ void CargoClass::Code_Pointers()
 void CargoClass::Decode_Pointers()
 {
     // TODO requires FootClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(CargoClass *) = reinterpret_cast<void (*)(CargoClass *)>(0x004F98C0);
     func(this);
 #endif

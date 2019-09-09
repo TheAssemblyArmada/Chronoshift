@@ -56,7 +56,7 @@ const char *Name_From_Theater(TheaterType theater);
 
 extern TheaterDataType g_theaters[THEATER_COUNT];
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 extern TheaterType &g_lastTheater;
 #else

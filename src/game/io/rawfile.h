@@ -21,7 +21,7 @@
 #include "always.h"
 #include "fileclass.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #endif
 
@@ -61,7 +61,7 @@ public:
     int Get_File_Handle() { return m_handle; }
 #endif
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -69,7 +69,7 @@ private:
     void Reset();
     off_t Raw_Seek(off_t offset, int whence = FS_SEEK_CURRENT);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static const char *Hook_File_Name(RawFileClass *ptr);
     static const char *Hook_Set_Name(RawFileClass *ptr, const char *filename);
     static BOOL Hook_Create(RawFileClass *ptr);
@@ -98,7 +98,7 @@ protected:
     BOOL m_isAllocated;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 inline void RawFileClass::Hook_Me()
 {
 #ifdef COMPILER_WATCOM

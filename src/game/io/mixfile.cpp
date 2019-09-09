@@ -16,7 +16,7 @@
 #include "mixfile.h"
 #include "gamefile.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 template<> List<MixFileClass<GameFileClass> *> &MixFileClass<GameFileClass>::s_mixList =
     *reinterpret_cast<List<MixFileClass<GameFileClass> *> *>(0x006ECE30);
 #endif

@@ -75,7 +75,7 @@ private:
     VoxType m_SuspendVoice; // Voice to use when special weapon charging is suspended.
     int m_RechargeTime; // Time in minutes to recharge this special.
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 public:
     static void Hook_Me();
 
@@ -85,7 +85,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void SuperClass::Hook_Me()

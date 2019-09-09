@@ -22,7 +22,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 ScenarioClass &Scen = Make_Global<ScenarioClass>(0x006678E8);
 #else
 ScenarioClass Scen;
@@ -310,7 +310,7 @@ void ScenarioClass::Do_Fade_AI()
 BOOL ScenarioClass::Set_Global_To(int global, BOOL value)
 {
     // TODO requires Trigger and TEvent classes.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(int, BOOL) = reinterpret_cast<BOOL (*)(int, BOOL)>(0x00539EF4);
     return func(global, value);
 #else
@@ -320,7 +320,7 @@ BOOL ScenarioClass::Set_Global_To(int global, BOOL value)
 
 BOOL Start_Scenario(const char *filename, BOOL play_movies)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const char *, BOOL) = reinterpret_cast<BOOL (*)(const char *, BOOL)>(0x0053A0A4);
     return func(filename, play_movies);
 #else
@@ -330,7 +330,7 @@ BOOL Start_Scenario(const char *filename, BOOL play_movies)
 
 BOOL Read_Scenario(const char *filename)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const char *) = reinterpret_cast<BOOL (*)(const char *)>(0x0053A390);
     return func(filename);
 #else

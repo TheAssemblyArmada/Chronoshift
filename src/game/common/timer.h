@@ -20,7 +20,7 @@
 
 #include "always.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #endif
 
@@ -85,7 +85,7 @@ private:
 };
 
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern TimerClass &TickCount;
 extern CountDownTimerClass &CountDown;
 #else

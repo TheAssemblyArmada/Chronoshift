@@ -99,7 +99,7 @@ protected:
     mutable TRect<int> *FrameDimensions; // Mutable as only lazy caches information, not changeable state.
     void *RadarIconData;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
     static void *&SelectShapes;
     static void *&PipShapes;

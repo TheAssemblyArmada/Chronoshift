@@ -34,7 +34,7 @@
 
 void Check_For_Focus_Loss()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x005B3624);
     func();
 #endif
@@ -42,7 +42,7 @@ void Check_For_Focus_Loss()
 
 void Do_Record_Playback()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x004AB140);
     func();
 #endif
@@ -50,7 +50,7 @@ void Do_Record_Playback()
 
 void Register_Game_End_Time()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x005B7974);
     func();
 #endif
@@ -58,7 +58,7 @@ void Register_Game_End_Time()
 
 void Send_Statistics_Packet()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x005B653C);
     func();
 #endif
@@ -66,7 +66,7 @@ void Send_Statistics_Packet()
 
 void Do_Win()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x0053AC78);
     func();
 #endif
@@ -74,7 +74,7 @@ void Do_Win()
 
 void Do_Lose()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x0053B2A0);
     func();
 #endif
@@ -82,7 +82,7 @@ void Do_Lose()
 
 void Do_Restart()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x0053B708);
     func();
 #endif
@@ -92,7 +92,7 @@ void Do_Abort() {}
 
 void Do_Draw()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x0053B590);
     func();
 #endif
@@ -113,7 +113,7 @@ void Process_Input()
 
 void Color_Cycle()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x004A735C);
     func();
 #endif
@@ -285,7 +285,7 @@ BOOL Main_Loop()
                 Queue_AI();
 
                 // TODO, Requires ScoreClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
                 int &score_field_28 = Make_Global<int>(0x006698E4);
                 score_field_28 += 4;
 #else

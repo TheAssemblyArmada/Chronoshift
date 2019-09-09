@@ -72,7 +72,7 @@ public:
     void Set_Damage(int32_t damage) { m_VortexDamage = damage; }
     void Set_Speed(int32_t speed) { m_VortexSpeed = speed; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 private:
@@ -110,7 +110,7 @@ private:
     GraphicBufferClass *m_VortexGBuffer;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void ChronalVortexClass::Hook_Me()

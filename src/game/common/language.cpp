@@ -22,7 +22,7 @@
 
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 char *&GameStrings = Make_Global<char *>(0x0066991C);
 char *&DebugStrings = Make_Global<char *>(0x00669920);
 char **NameOverride = reinterpret_cast<char **>(0x0066616C);

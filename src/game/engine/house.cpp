@@ -41,7 +41,7 @@ using std::max;
 using std::min;
 using std::snprintf;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<HouseClass> &g_Houses = Make_Global<TFixedIHeapClass<HouseClass> >(0x0065D994);
 HouseClass *&g_PlayerPtr = Make_Global<HouseClass *>(0x00669958);
 TFixedIHeapClass<HouseClass::BuildChoiceClass> &HouseClass::g_BuildChoice =

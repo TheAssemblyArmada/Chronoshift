@@ -27,7 +27,7 @@
 #include "voc.h"
 #include <algorithm>
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 RadarClass::RTacticalClass &RadarClass::RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
 void *&RadarClass::RadarAnim = Make_Global<void *>(0x00687908);
 void *&RadarClass::RadarPulse = Make_Global<void *>(0x0068790C);
@@ -53,7 +53,7 @@ RadarClass::RTacticalClass::RTacticalClass() :
 BOOL RadarClass::RTacticalClass::Action(unsigned flags, KeyNumType &key)
 {
 // TODO, needs HelpClass, MouseClass, TechnoClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const RTacticalClass *, unsigned, KeyNumType &) =
         reinterpret_cast<BOOL (*)(const RTacticalClass *, unsigned, KeyNumType &)>(0x00531034);
@@ -134,7 +134,7 @@ void RadarClass::Init_Clear()
 void RadarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
 // TODO Needs SidebarClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const RadarClass *, KeyNumType &, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, KeyNumType &, int, int)>(0x00530E6C);
     func(this, key, mouse_x, mouse_y);
@@ -144,7 +144,7 @@ void RadarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 void RadarClass::Draw_It(BOOL force_redraw)
 {
 // TODO Needs HouseClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const RadarClass *, BOOL) = reinterpret_cast<void (*)(const RadarClass *, BOOL)>(0x0052DA14);
     func(this, force_redraw);
 #endif
@@ -213,7 +213,7 @@ void RadarClass::Flag_Cell(cell_t cellnum)
 BOOL RadarClass::Jam_Cell(cell_t cellnum, HouseClass *house)
 {
 // TODO Needs HouseClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const RadarClass *, cell_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const RadarClass *, cell_t, HouseClass *)>(0x005301F0);
@@ -226,7 +226,7 @@ BOOL RadarClass::Jam_Cell(cell_t cellnum, HouseClass *house)
 BOOL RadarClass::UnJam_Cell(cell_t cellnum, HouseClass *house)
 {
 // TODO Needs HouseClass.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL(*func)
     (const RadarClass *, cell_t, HouseClass *) =
         reinterpret_cast<BOOL (*)(const RadarClass *, cell_t, HouseClass *)>(0x00530274);
@@ -240,7 +240,7 @@ BOOL RadarClass::UnJam_Cell(cell_t cellnum, HouseClass *house)
 BOOL RadarClass::Is_Radar_Jammed()
 {
 // TODO Requires HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x005329C4);
     return func(this);
 #else
@@ -257,7 +257,7 @@ BOOL RadarClass::Is_Radar_Jammed()
 BOOL RadarClass::Is_Radar_Active()
 {
 // TODO Requires HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x00532974);
     return func(this);
 #else
@@ -271,7 +271,7 @@ BOOL RadarClass::Is_Radar_Active()
 BOOL RadarClass::Is_Radar_Existing()
 {
 // TODO Requires HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x0053299C);
     return func(this);
 #else
@@ -305,7 +305,7 @@ void RadarClass::Radar_Pixel(cell_t cellnum)
 void RadarClass::Render_Terrain(cell_t cellnum, int x, int y, int scale)
 {
 // TODO Needs TerrainClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const RadarClass *, cell_t, int, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, cell_t, int, int, int)>(0x0052E5BC);
     func(this, cellnum, x, y, scale);
@@ -357,7 +357,7 @@ void RadarClass::Render_Terrain(cell_t cellnum, int x, int y, int scale)
 
 void RadarClass::Render_Infantry(cell_t cellnum, int x, int y, int scale)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const RadarClass *, cell_t, int, int, int) =
         reinterpret_cast<void (*)(const RadarClass *, cell_t, int, int, int)>(0x0052E9E8);
     func(this, cellnum, x, y, scale);
@@ -493,7 +493,7 @@ BOOL RadarClass::Cell_On_Radar(cell_t cellnum)
 
 void RadarClass::Set_Radar_Position(cell_t cellnum)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const RadarClass *, cell_t) = reinterpret_cast<void (*)(const RadarClass *, cell_t)>(0x005314B4);
     func(this, cellnum);
 #endif
@@ -641,7 +641,7 @@ void RadarClass::Player_Names(BOOL draw)
 
 BOOL RadarClass::Draw_House_Info()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x00532268);
     return func(this);
 #else
@@ -651,7 +651,7 @@ BOOL RadarClass::Draw_House_Info()
 
 void RadarClass::Draw_Names()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const RadarClass *) = reinterpret_cast<void (*)(const RadarClass *)>(0x005325E4);
     func(this);
 #endif
@@ -695,7 +695,7 @@ void RadarClass::Cursor_Cell(cell_t cellnum, BOOL mark)
 
 void RadarClass::Plot_Radar_Pixel(cell_t cellnum)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const RadarClass *, cell_t) = reinterpret_cast<void (*)(const RadarClass *, cell_t)>(0x0052F4C4);
     func(this, cellnum);
 #endif
@@ -816,7 +816,7 @@ int RadarClass::Radar_Activate(int mode)
 BOOL RadarClass::Spy_Next_House()
 {
 // TODO Requires HouseClass
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(const RadarClass *) = reinterpret_cast<BOOL (*)(const RadarClass *)>(0x0053214C);
     return func(this);
 #else

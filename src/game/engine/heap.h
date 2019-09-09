@@ -57,7 +57,7 @@ public:
     int Count() const { return ActiveCount; }
     void *Get_Pointer() const { return Pointer; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -87,7 +87,7 @@ public:
     virtual void *Active_Ptr(int index);
     virtual void *Active_Ptr(int index) const;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -95,7 +95,7 @@ protected:
     DynamicVectorClass<void *> Objects;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void FixedHeapClass::Hook_Me()

@@ -16,7 +16,7 @@
 
 void Game_Main(int argc, char **argv)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(int, char **) = reinterpret_cast<void (*)(int, char **)>(0x004A5368);
     func(argc, argv);
 #endif

@@ -24,7 +24,7 @@
 #include "vessel.h"
 #include "logic.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<TriggerClass> &g_Triggers = Make_Global<TFixedIHeapClass<TriggerClass> >(0x00601810);
 #else
 TFixedIHeapClass<TriggerClass> g_Triggers;
@@ -105,7 +105,7 @@ AttachType TriggerClass::Attaches_To() const
 
 BOOL TriggerClass::Spring(TEventType tevent, ObjectClass *object, cell_t cellnum, BOOL a4)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(TriggerClass *, ObjectClass *, cell_t, BOOL) = reinterpret_cast<BOOL (*)(TriggerClass *, ObjectClass *, cell_t, BOOL)>(0x0056CC54);
     return func(this, object, cellnum, a4);
 #else

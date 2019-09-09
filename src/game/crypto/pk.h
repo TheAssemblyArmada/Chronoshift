@@ -69,7 +69,7 @@ inline PKey &PKey::operator=(PKey const &that)
 }
 
 // RSA keys
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern PKey &g_publicKey;
 #else
 extern PKey g_publicKey;

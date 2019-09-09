@@ -33,7 +33,7 @@
 
 using std::memset;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 memerrorhandler_t &g_memoryError = Make_Global<memerrorhandler_t>(0x006B1A2C); // Memory error handler function pointer.
 memexithandler_t &g_memoryErrorExit = Make_Global<memexithandler_t>(0x006B1A30);
 #else

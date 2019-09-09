@@ -391,7 +391,7 @@ private:
     int m_ElementPutPos; // Position of the next free space in the buffer.
     BOOL m_Initialised;
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 public:
     static void Hook_Me();
 
@@ -404,7 +404,7 @@ private:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void KeyboardClass::Hook_Me()

@@ -64,7 +64,7 @@ public:
     static const char *Message_From(RadioMessageType message);
     static RadioMessageType From_Message(const char *message);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -78,7 +78,7 @@ protected:
     ObjectClass *Radio; // 0x3A
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void RadioClass::Hook_Me()

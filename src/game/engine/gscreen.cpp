@@ -22,7 +22,7 @@
 #include "msglist.h"
 #include "session.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 GadgetClass *&GameScreenClass::Buttons = *reinterpret_cast<GadgetClass **>(0x00680900);
 GraphicViewPortClass *&GameScreenClass::ShadowPage = *reinterpret_cast<GraphicViewPortClass **>(0x00680904);
 #else

@@ -38,7 +38,7 @@ public:
 
     void Set_ID(unsigned id) { ID = id; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
 #endif
 
@@ -58,7 +58,7 @@ inline ControlClass &ControlClass::operator=(ControlClass &that)
     return *this;
 }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 inline void ControlClass::Hook_Me()

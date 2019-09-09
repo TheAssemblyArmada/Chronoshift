@@ -58,7 +58,7 @@ private:
     FacingClass m_TurretFacing;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 extern TFixedIHeapClass<UnitClass> &g_Units;
 #else
 extern TFixedIHeapClass<UnitClass> g_Units;

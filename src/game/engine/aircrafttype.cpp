@@ -19,7 +19,7 @@
 #include "aircraft.h"
 #include "lists.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<AircraftTypeClass> &g_AircraftTypes = Make_Global<TFixedIHeapClass<AircraftTypeClass> >(0x0065DDBC);
 void *&AircraftTypeClass::g_LeftRotorData = Make_Global<void *>(0x00623010);
 void *&AircraftTypeClass::g_RightRotorData = Make_Global<void *>(0x00623014);
@@ -146,7 +146,7 @@ BOOL AircraftTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 ObjectClass *AircraftTypeClass::Create_One_Of(HouseClass *house) const
 {
     //TODO: Requires AircaftClass to be implemented
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ObjectClass *(*func)(const AircraftTypeClass *, HouseClass *) =
         reinterpret_cast<ObjectClass *(*)(const AircraftTypeClass *, HouseClass *)>(0x00404024);
     return func(this, house);

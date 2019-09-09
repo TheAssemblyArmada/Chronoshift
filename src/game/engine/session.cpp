@@ -20,7 +20,7 @@
 #include "pipe.h"
 #include "straw.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 SessionClass &Session = Make_Global<SessionClass>(0x0067F2B4);
 #else
 SessionClass Session;
@@ -157,7 +157,7 @@ BOOL SessionClass::Load(GameFileClass &file)
 
 void SessionClass::Read_MultiPlayer_Settings()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(SessionClass*) = reinterpret_cast<void (*)(SessionClass*)>(0x0054AB08);
     return func(this);
 #endif
@@ -165,7 +165,7 @@ void SessionClass::Read_MultiPlayer_Settings()
 
 void SessionClass::Write_MultiPlayer_Settings()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(SessionClass*) = reinterpret_cast<void (*)(SessionClass*)>(0x0054B510);
     return func(this);
 #endif
@@ -173,7 +173,7 @@ void SessionClass::Write_MultiPlayer_Settings()
 
 void SessionClass::Read_Scenario_Descriptions()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(SessionClass*) = reinterpret_cast<void (*)(SessionClass*)>(0x0054BA1C);
     return func(this);
 #endif
@@ -204,7 +204,7 @@ void SessionClass::Free_Scenario_Descriptions()
 */
 void SessionClass::Trap_Object()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(SessionClass *) = reinterpret_cast<void (*)(SessionClass *)>(0x0054C298);
     return func(this);
 #endif
@@ -212,7 +212,7 @@ void SessionClass::Trap_Object()
 
 uint32_t SessionClass::Compute_Unique_ID()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     uint32_t (*func)(SessionClass *) = reinterpret_cast<uint32_t (*)(SessionClass *)>(0x0054C8F4);
     return func(this);
 #else
@@ -236,7 +236,7 @@ BOOL SessionClass::Am_I_Master()
 
 BOOL SessionClass::Create_Connections()
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(SessionClass *) = reinterpret_cast<BOOL (*)(SessionClass *)>(0x0054A4F8);
     return func(this);
 #else

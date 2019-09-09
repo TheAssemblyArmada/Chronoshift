@@ -98,7 +98,7 @@ public:
     BOOL Get_field_7CF() const { return field_7CF; }
     BOOL Get_field_7D3() const { return field_7D3; }
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static void Hook_Me();
     void Hook_Set_Scenario_Name1(const char *scen_name) { Set_Scenario_Name(scen_name); }
     void Hook_Set_Scenario_Name2(int index, ScenarioPlayerEnum player, ScenarioDirEnum dir, ScenarioVarEnum var)
@@ -177,7 +177,7 @@ private:
     BOOL field_7D3;
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 
 extern ScenarioClass &Scen;

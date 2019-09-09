@@ -18,7 +18,7 @@
 void Detach_This_From_All(int32_t target, int unk)
 {
     // TODO Needs most of the top level object classes.
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void(*func)(int32_t, int) = reinterpret_cast<void(*)(int32_t, int)>(0x0056C5E0);
     func(target, unk);
 #endif

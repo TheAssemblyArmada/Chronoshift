@@ -19,7 +19,7 @@
 #include "language.h"
 #include "stringex.h"
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<HouseTypeClass> &g_HouseTypes = Make_Global<TFixedIHeapClass<HouseTypeClass> >(0x0065DD24);
 #else
 TFixedIHeapClass<HouseTypeClass> g_HouseTypes;

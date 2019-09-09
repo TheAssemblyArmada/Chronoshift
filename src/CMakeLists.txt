@@ -299,8 +299,8 @@ endif()
 
 target_compile_definitions(chronoshift PUBLIC $<$<CONFIG:DEBUG>:CHRONOSHIFT_DEBUG=1>)
 
-if(STANDALONE)
-    target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_STANDALONE=1)
+if(NOT STANDALONE)
+    target_compile_definitions(chronoshift PUBLIC GAME_DLL=1)
 endif()
 
 # Enable using bools in place of bitfields for boolean class members.

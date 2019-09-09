@@ -75,7 +75,7 @@ private:
 
 public:
     static const char *CrateNames[];
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     static char *CrateAnims; // TODO should be AnimType *CrateAnims[CRATE_COUNT];
     static int *CrateShares;
     static int *CrateData;
@@ -86,7 +86,7 @@ public:
 #endif
 };
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 #include "hooker.h"
 #endif
 

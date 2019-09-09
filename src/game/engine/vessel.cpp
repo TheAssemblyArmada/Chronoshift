@@ -25,7 +25,7 @@
 #define TRANSPORT_DOOR_DELAY 5
 #define TRANSPORT_DOOR_STAGES 6
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
 TFixedIHeapClass<VesselClass> &g_Vessels = Make_Global<TFixedIHeapClass<VesselClass> >(0x0065DC8C);
 #else
 TFixedIHeapClass<VesselClass> g_Vessels;
@@ -106,7 +106,7 @@ MoveType VesselClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     MoveType const (*func)(const VesselClass *, cell_t, FacingType) = reinterpret_cast<MoveType const (*)(const VesselClass *, cell_t, FacingType)>(0x00589ECC);
     return func(this, cellnum, facing);
 #else
@@ -119,7 +119,7 @@ void VesselClass::AI()
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058A634);
     return func(this);
 #else
@@ -186,7 +186,7 @@ ActionType VesselClass::What_Action(ObjectClass *object) const
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ActionType (*func)(const VesselClass *, ObjectClass *) = reinterpret_cast<ActionType (*)(const VesselClass *, ObjectClass *)>(0x0058AAA0);
     return func(this, object);
 #else
@@ -199,7 +199,7 @@ ActionType VesselClass::What_Action(cell_t cellnum) const
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     ActionType (*func)(const VesselClass *, cell_t) = reinterpret_cast<ActionType (*)(const VesselClass *, cell_t)>(0x0058AAA0);
     return func(this, cellnum);
 #else
@@ -248,7 +248,7 @@ const int16_t *VesselClass::Overlap_List(BOOL a1) const
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     const int16_t *(*func)(const VesselClass *, BOOL) = reinterpret_cast<const int16_t *(*)(const VesselClass *, BOOL)>(0x0058A494);
     return func(this, a1);
 #else
@@ -282,7 +282,7 @@ void VesselClass::Draw_It(int x, int y, WindowNumberType window) const
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(const VesselClass *, int, int, WindowNumberType) = reinterpret_cast<void (*)(const VesselClass *, int, int, WindowNumberType)>(0x0058A0FC);
     return func(this, x, y, window);
 #else
@@ -312,7 +312,7 @@ DamageResultType VesselClass::Take_Damage(int &damage, int a2, WarheadType warhe
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     DamageResultType (*func)(VesselClass *, int &, int, WarheadType, TechnoClass *, int) = reinterpret_cast<DamageResultType (*)(VesselClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0058AD50);
     return func(this, damage, a2, warhead, object, a5);
 #else
@@ -325,7 +325,7 @@ void VesselClass::Per_Cell_Process(PCPType pcp)
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(VesselClass *, PCPType) = reinterpret_cast<void (*)(VesselClass *, PCPType)>(0x0058A90C);
     return func(this, pcp);
 #else
@@ -337,7 +337,7 @@ RadioMessageType VesselClass::Receive_Message(RadioClass *radio, RadioMessageTyp
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     RadioMessageType (*func)(VesselClass *, RadioClass *, RadioMessageType, target_t &) = reinterpret_cast<RadioMessageType (*)(VesselClass *, RadioClass *, RadioMessageType, target_t &)>(0x0058BA50);
     return func(this, radio, message, target);
 #else
@@ -350,7 +350,7 @@ int VesselClass::Mission_Retreat()
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(VesselClass *) = reinterpret_cast<int (*)(VesselClass *)>(0x0058C748);
     return func(this);
 #else
@@ -363,7 +363,7 @@ int VesselClass::Mission_Unload()
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     int (*func)(VesselClass *) = reinterpret_cast<int (*)(VesselClass *)>(0x0058C2A0);
     return func(this);
 #else
@@ -383,7 +383,7 @@ DirType VesselClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) cons
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     DirType const (*func)(const VesselClass *, ObjectClass *, cell_t &) = reinterpret_cast<DirType const (*)(const VesselClass *, ObjectClass *, cell_t &)>(0x0058C074);
     return func(this, object, cellnum);
 #else
@@ -403,7 +403,7 @@ FireErrorType VesselClass::Can_Fire(target_t target, WeaponSlotType weapon) cons
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     FireErrorType (*func)(const VesselClass *, target_t, WeaponSlotType) = reinterpret_cast<FireErrorType (*)(const VesselClass *, target_t, WeaponSlotType)>(0x0058AFF8);
     return func(this, target, weapon);
 #else
@@ -416,7 +416,7 @@ target_t VesselClass::Greatest_Threat(ThreatType threat)
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     target_t (*func)(VesselClass *, ThreatType) = reinterpret_cast<target_t (*)(VesselClass *, ThreatType)>(0x0058B6F8);
     return func(this, threat);
 #else
@@ -429,7 +429,7 @@ BulletClass *VesselClass::Fire_At(target_t target, WeaponSlotType weapon)
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BulletClass *(*func)(VesselClass *, target_t, WeaponSlotType) = reinterpret_cast<BulletClass * (*)(VesselClass *, target_t, WeaponSlotType)>(0x0058D498);
     return func(this, target, weapon);
 #else
@@ -442,7 +442,7 @@ void VesselClass::Assign_Destination(target_t dest)
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(VesselClass *, target_t) = reinterpret_cast<void (*)(VesselClass *, target_t)>(0x0058C654);
     return func(this, dest);
 #else
@@ -454,7 +454,7 @@ void VesselClass::Enter_Idle_Mode(BOOL a1)
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(VesselClass *, BOOL) = reinterpret_cast<void (*)(VesselClass *, BOOL)>(0x0058B87C);
     return func(this, a1);
 #else
@@ -466,7 +466,7 @@ BOOL VesselClass::Start_Driver(coord_t &dest)
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(VesselClass *, coord_t &) = reinterpret_cast<BOOL (*)(VesselClass *, coord_t &)>(0x0058CC9C);
     return func(this, dest);
 #else
@@ -503,7 +503,7 @@ void VesselClass::Rotation_AI()
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058CEE4);
     return func(this);
 #else
@@ -515,7 +515,7 @@ void VesselClass::Combat_AI()
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058D094);
     return func(this);
 #else
@@ -527,7 +527,7 @@ void VesselClass::Repair_AI()
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058D300);
     return func(this);
 #else
@@ -562,7 +562,7 @@ BOOL VesselClass::Edge_Of_World_AI()
 {
     DEBUG_ASSERT(m_IsActive);
 
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     BOOL (*func)(VesselClass *) = reinterpret_cast<BOOL (*)(VesselClass *)>(0x0058D14C);
     return func(this);
 #else
@@ -601,7 +601,7 @@ void VesselClass::Transport_Close_Door()
 
 void VesselClass::Read_INI(GameINIClass &ini)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(GameINIClass &) = reinterpret_cast<void (*)(GameINIClass &)>(0x0058C95C);
     return func(ini);
 #else
@@ -611,7 +611,7 @@ void VesselClass::Read_INI(GameINIClass &ini)
 
 void VesselClass::Write_INI(GameINIClass &ini)
 {
-#ifndef CHRONOSHIFT_STANDALONE
+#ifdef GAME_DLL
     void (*func)(GameINIClass &) = reinterpret_cast<void (*)(GameINIClass &)>(0x0058CC18);
     return func(ini);
 #else
