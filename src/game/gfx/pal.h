@@ -19,12 +19,7 @@
 
 #include "always.h"
 
-#ifdef BUILD_WITH_DDRAW
-#include <ddraw.h>
-#endif
-
 #ifdef GAME_DLL
-#include "hooker.h"
 extern uint8_t *const g_currentPalette;
 #else
 extern uint8_t g_currentPalette[];

@@ -21,13 +21,7 @@
 using std::memcpy;
 using std::memcmp;
 
-#ifdef GAME_DLL
-PaletteClass &GamePalette = Make_Global<PaletteClass>(0x00669C5C);
-PaletteClass &OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
-PaletteClass &CCPalette = Make_Global<PaletteClass>(0x0066995C);
-PaletteClass &BlackPalette = Make_Global<PaletteClass>(0x00668F5C);
-PaletteClass &WhitePalette = Make_Global<PaletteClass>(0x0066925C);
-#else
+#ifndef GAME_DLL
 PaletteClass GamePalette;
 PaletteClass OriginalPalette;
 PaletteClass CCPalette;

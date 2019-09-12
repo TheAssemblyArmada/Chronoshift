@@ -34,27 +34,4 @@ void __cdecl Buffer_To_Page(int x, int y, int w, int h, void *buffer, GraphicVie
 void __cdecl Linear_Scale_To_Linear(GraphicViewPortClass &src_vp, GraphicViewPortClass &dst_vp, int src_x, int src_y,
     int dst_x, int dst_y, int src_w, int src_h, int dst_w, int dst_h, bool use_keysrc, void *fade);
 
-#ifdef GAME_DLL
-#include "hooker.h"
-
-namespace Blitters
-{
-inline void Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005C53E4, Linear_Blit_To_Linear);
-    Hook_Function(0x005C23F0, Buffer_Fill_Rect);
-    Hook_Function(0x005C13E4, Buffer_Draw_Line);
-    Hook_Function(0x005C4BC4, Buffer_Remap);
-    Hook_Function(0x005CEE10, Buffer_Get_Pixel);
-    Hook_Function(0x005CC2B4, Buffer_Put_Pixel);
-    Hook_Function(0x005D0F60, Buffer_To_Buffer);
-    Hook_Function(0x005D10B8, Buffer_To_Page);
-    Hook_Function(0x005C4DE0, Buffer_Clear);
-    Hook_Function(0x005D4338, Linear_Scale_To_Linear);
-#endif
-}
-}
-#endif
-
 #endif // BLITTERS_H

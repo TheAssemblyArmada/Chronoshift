@@ -55,21 +55,4 @@ void __cdecl Mouse_Shadow_Buffer(MouseClass &mouse, GraphicViewPortClass &viewpo
 void __cdecl Mouse_Draw(MouseClass &mouse, GraphicViewPortClass &viewport, int x_pos, int y_pos);
 void *__cdecl Mouse_Set_Cursor(MouseClass &mouse, int hspot_x, int hspot_y, void *shape);
 
-#ifdef GAME_DLL
-#include "hooker.h"
-
-namespace MouseShape {
-
-inline void Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005D8F5C, Mouse_Shadow_Buffer);
-    Hook_Function(0x005D90A1, Mouse_Draw);
-    Hook_Function(0x005D91CF, Mouse_Set_Cursor);
-#endif
-}
-
-}
-#endif
-
 #endif

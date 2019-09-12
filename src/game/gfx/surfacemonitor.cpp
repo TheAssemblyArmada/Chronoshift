@@ -15,11 +15,7 @@
 #include "surfacemonitor.h"
 #include "pal.h"
 
-#ifdef GAME_DLL
-void (*&Misc_Focus_Loss_Function)() = Make_Global<void(*)()>(0x006B190C);
-void (*&Misc_Focus_Restore_Function)() = Make_Global<void(*)()>(0x006B1910);
-SurfaceMonitorClass &g_allSurfaces = Make_Global<SurfaceMonitorClass>(0x006B18A8);
-#else
+#ifndef GAME_DLL
 void (*Misc_Focus_Loss_Function)() = nullptr;
 void (*Misc_Focus_Restore_Function)() = nullptr;
 SurfaceMonitorClass g_allSurfaces;

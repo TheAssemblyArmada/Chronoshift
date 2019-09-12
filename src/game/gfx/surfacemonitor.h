@@ -43,10 +43,6 @@ public:
     BOOL Surfaces_Restored() const { return m_surfacesRestored; }
     void Clear_Surfaces_Restored() { m_surfacesRestored = false; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     BOOL m_surfacesRestored;
 #ifdef BUILD_WITH_DDRAW
@@ -56,25 +52,9 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern void (*&Misc_Focus_Loss_Function)();
 extern void (*&Misc_Focus_Restore_Function)();
 extern SurfaceMonitorClass &g_allSurfaces;
-
-inline void SurfaceMonitorClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-#ifdef BUILD_WITH_DDRAW
-    Hook_Function(0x005CA1D0, *SurfaceMonitorClass::Add_Surface);
-    Hook_Function(0x005CA230, *SurfaceMonitorClass::Remove_Surface);
-    Hook_Function(0x005CA280, *SurfaceMonitorClass::Got_Surface_Already);
-#endif
-    Hook_Function(0x005CA2D0, *SurfaceMonitorClass::Restore_Surfaces);
-    Hook_Function(0x005CA370, *SurfaceMonitorClass::Set_Surface_Focus);
-    Hook_Function(0x005CA390, *SurfaceMonitorClass::Release);
-#endif
-}
 #else
 extern void (*Misc_Focus_Loss_Function)();
 extern void (*Misc_Focus_Restore_Function)();

@@ -13,11 +13,13 @@
  *            LICENSE
  */
 #include "pal.h"
+#include "initvideo.h"
 #include <cstring>
 
 using std::memcpy;
 
 #ifdef GAME_DLL
+// Doesn't seem to link from setupglobals.cpp, not sure why.
 uint8_t *const g_currentPalette = reinterpret_cast<uint8_t *>(0x0060CE90);
 #else
 uint8_t g_currentPalette[768];
@@ -26,11 +28,5 @@ uint8_t g_currentPalette[768];
 void Set_Palette(void *pal)
 {
     memcpy(g_currentPalette, pal, 768);
-
-#ifdef GAME_DLL
-    static void (*hook_set_dd_pal)(void *) = reinterpret_cast<void(*)(void *)>(0x005CA070);
-    hook_set_dd_pal(pal);
-#else
-    // TODO implement low level palette set.
-#endif
+    Set_Video_Palette(pal);
 }

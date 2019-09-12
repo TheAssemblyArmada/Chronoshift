@@ -74,7 +74,7 @@ inline RGBClass &RGBClass::operator=(RGBClass const &that)
 
 inline bool RGBClass::operator==(RGBClass const &that) const
 {
-    return (m_red == that.m_red && m_grn == that.m_grn && m_grn == that.m_grn);
+    return m_red == that.m_red && m_grn == that.m_grn && m_grn == that.m_grn;
 }
 
 #endif // RGB_H

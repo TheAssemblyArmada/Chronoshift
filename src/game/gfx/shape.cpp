@@ -36,28 +36,7 @@ using std::memcpy;
 #define BIGSHP_BUFFER_MIN_FREE 128000
 #define BIGSHP_BUFFER_GROW 2000000
 
-#ifdef GAME_DLL
-BOOL &g_useBigShapeBuffer = Make_Global<BOOL>(0x006A1784);
-BOOL &g_isTheaterShape = Make_Global<BOOL>(0x006A1788);
-BOOL &g_originalUseBigShapeBuffer = Make_Global<BOOL>(0x006A178C);
-char *&g_bigShapeBufferStart = Make_Global<char *>(0x006A177C);
-char *&g_bigShapeBufferPtr = Make_Global<char *>(0x006A1790);
-// int &TotalBigShapes;
-BOOL &g_reallocShapeBufferFlag = Make_Global<BOOL>(0x006A1798);
-char *&g_theaterShapeBufferStart = Make_Global<char *>(0x006A1780);
-char *&g_theaterShapeBufferPtr = Make_Global<char *>(0x006A179C);
-int &g_totalTheaterShapes = Make_Global<int>(0x006A17A0);
-uint32_t **g_keyFrameSlots = reinterpret_cast<uint32_t **>(0x006A17A4);
-int &g_totalSlotsUsed = Make_Global<int>(0x006A2F14);
-// int &BuildFrameLength;
-BOOL &g_useOldShapeDraw = Make_Global<BOOL>(0x00655C08);
-uint8_t *&g_shapeBuffer = Make_Global<uint8_t *>(0x0060BE58);
-int &g_shapeBufferSize = Make_Global<int>(0x0060BE5C);
-unsigned int &g_bigShapeBufferLength = Make_Global<unsigned int>(0x00609D68);
-unsigned int &g_theaterShapeBufferLength = Make_Global<unsigned int>(0x00609D6C);
-int &g_theaterSlotsUsed = Make_Global<int>(0x00609D70);
-int &g_shapeLength = Make_Global<int>(0x006A2F18);
-#else
+#ifndef GAME_DLL
 BOOL g_useBigShapeBuffer;
 BOOL g_isTheaterShape = false;
 BOOL g_originalUseBigShapeBuffer;

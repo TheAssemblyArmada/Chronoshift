@@ -24,11 +24,7 @@
 
 // PaletteClass *g_interpolationPalette = &PaletteClass::CurrentPalette;
 #ifdef GAME_DLL
-uint8_t *g_paletteInterpolationTable = reinterpret_cast<uint8_t *>(0x00691734);
-BOOL &g_palettesRead = Make_Global<BOOL>(0x00655DA0);
-int &g_paletteCounter = Make_Global<int>(0x00655DA4);
-int &g_interpolationMode = Make_Global<int>(0x006A1738);
-uint8_t **g_interpolatedPalettes = reinterpret_cast<uint8_t **>(0x00655C10);
+extern uint8_t **g_interpolatedPalettes;
 #else
 uint8_t g_paletteInterpolationTable[INTERPOL_PAL_SIZE]; // rewrite this in to true 256 * 256 grid?
 BOOL g_palettesRead = false;
