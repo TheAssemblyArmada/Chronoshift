@@ -37,6 +37,7 @@
 #include "shape.h"
 #include "special.h"
 #include "startup.h"
+#include "surfacemonitor.h"
 #include "version.h"
 
 #ifdef PLATFORM_WINDOWS

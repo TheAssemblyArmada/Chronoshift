@@ -19,7 +19,7 @@
 #include "always.h"
 
 #ifdef BUILD_WITH_DDRAW
-#include "ddraw.h"
+#include <ddraw.h>
 #endif
 
 class SurfaceMonitorClass
@@ -52,12 +52,12 @@ private:
 };
 
 #ifdef GAME_DLL
-extern void (*&Misc_Focus_Loss_Function)();
-extern void (*&Misc_Focus_Restore_Function)();
+extern void (*&MiscFocusLoss)();
+extern void (*&MiscFocusRestore)();
 extern SurfaceMonitorClass &g_allSurfaces;
 #else
-extern void (*Misc_Focus_Loss_Function)();
-extern void (*Misc_Focus_Restore_Function)();
+extern void (*MiscFocusLoss)();
+extern void (*MiscFocusRestore)();
 extern SurfaceMonitorClass g_allSurfaces;
 #endif
 

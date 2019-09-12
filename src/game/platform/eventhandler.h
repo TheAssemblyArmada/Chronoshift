@@ -28,15 +28,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #ifdef GAME_DLL
 extern unsigned &CCFocusMessage;
 extern focusfunc_t &AudioFocusLoss;
-extern focusfunc_t &MiscFocusLoss;
 extern focusfunc_t &GBufferFocusLoss;
-extern focusfunc_t &MiscFocusRestore;
 #else
 extern unsigned CCFocusMessage;
 extern focusfunc_t AudioFocusLoss;
-extern focusfunc_t MiscFocusLoss;
 extern focusfunc_t GBufferFocusLoss;
-extern focusfunc_t MiscFocusRestore;
 #endif
 
 #endif // EVENTHANDLER_H
