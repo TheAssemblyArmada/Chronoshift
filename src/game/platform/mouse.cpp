@@ -27,20 +27,7 @@ using std::memcpy;
 // extern HWND MainWindow;
 #endif
 
-#ifdef GAME_DLL
-MouseClass *&g_mouse = Make_Global<MouseClass *>(0x006AC284);
-MouseClass *&g_wwmouse = Make_Global<MouseClass *>(0x00665E08);
-
-void MouseClass::Hook_Low_Hide(MouseClass *ptr)
-{
-    ptr->MouseClass::Low_Hide_Mouse();
-}
-
-void MouseClass::Hook_Low_Show(MouseClass *ptr, int x, int y)
-{
-    ptr->MouseClass::Low_Show_Mouse(x, y);
-}
-#else
+#ifndef GAME_DLL
 MouseClass *g_mouse = nullptr;
 MouseClass *g_wwmouse = nullptr;
 #endif

@@ -19,9 +19,7 @@
 
 using std::memset;
 
-#ifdef GAME_DLL
-KeyboardClass *&g_keyboard = Make_Global<KeyboardClass *>(0x00666904);
-#else
+#ifndef GAME_DLL
 KeyboardClass *g_keyboard = nullptr;
 #endif
 
@@ -454,29 +452,3 @@ int KeyboardClass::Available_Buffer_Room() const
 
     return 0;
 }
-
-#ifdef GAME_DLL
-BOOL KeyboardClass::Hook_Handler(KeyboardClass *ptr, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    return ptr->Message_Handler(hWnd, message, wParam, lParam);
-}
-
-uint16_t KeyboardClass::Hook_Check(KeyboardClass *ptr)
-{
-    return ptr->Check();
-}
-
-uint16_t KeyboardClass::Hook_Get(KeyboardClass *ptr)
-{
-    return ptr->Get();
-}
-
-void KeyboardClass::Hook_Clear(KeyboardClass *ptr)
-{
-    ptr->Clear();
-}
-void KeyboardClass::Hook_Fill(KeyboardClass *ptr)
-{
-    ptr->Fill_Buffer_From_System();
-}
-#endif

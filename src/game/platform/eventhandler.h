@@ -26,8 +26,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern unsigned &CCFocusMessage;
 extern focusfunc_t &AudioFocusLoss;
 extern focusfunc_t &MiscFocusLoss;

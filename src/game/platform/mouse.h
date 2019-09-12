@@ -67,11 +67,6 @@ public:
     void Set_Hotspot_Y(int y_pos) { m_mouseHotY = y_pos; }
     void *Get_Frame_Pointer() { return m_prevCursor; }
     void Set_Frame_Pointer(void *frame) { m_prevCursor = frame; }
-#ifdef GAME_DLL
-    static void Hook_Me();
-    static void Hook_Low_Hide(MouseClass *ptr);
-    static void Hook_Low_Show(MouseClass *ptr, int x, int y);
-#endif
 
 private:
     uint8_t *m_mouseCursor;
@@ -113,17 +108,6 @@ void __stdcall Process_Mouse(
 
 // Global mouse instance.
 #ifdef GAME_DLL
-#include "hooker.h"
-
-inline void MouseClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    //Hook_Function(0x005C2180, ::Process_Mouse);
-    Hook_Function(0x005C1B10, Hook_Low_Hide);
-    Hook_Function(0x005C1BF0, Hook_Low_Show);
-#endif
-}
-
 extern MouseClass *&g_mouse;
 extern MouseClass *&g_wwmouse;
 #else

@@ -14,15 +14,7 @@
  */
 #include "eventhandler.h"
 
-#ifdef GAME_DLL
-#include "hooker.h"
-
-unsigned &CCFocusMessage = Make_Global<unsigned>(0x00609BA0);
-focusfunc_t &AudioFocusLoss = Make_Global<focusfunc_t>(0x006AC058);
-focusfunc_t &MiscFocusLoss = Make_Global<focusfunc_t>(0x006B190C);
-focusfunc_t &GBufferFocusLoss = Make_Global<focusfunc_t>(0x006AC278);
-focusfunc_t &MiscFocusRestore = Make_Global<focusfunc_t>(0x006B1910);
-#else
+#ifndef GAME_DLL
 unsigned CCFocusMessage = 0x432;
 focusfunc_t AudioFocusLoss;
 focusfunc_t MiscFocusLoss;
