@@ -17,9 +17,7 @@
 #ifndef GAME_DLL
 unsigned CCFocusMessage = 0x432;
 focusfunc_t AudioFocusLoss;
-focusfunc_t MiscFocusLoss;
 focusfunc_t GBufferFocusLoss;
-focusfunc_t MiscFocusRestore;
 #endif
 
 #if defined PLATFORM_WINDOWS

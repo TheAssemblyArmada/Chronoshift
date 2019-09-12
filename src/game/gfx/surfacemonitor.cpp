@@ -16,8 +16,8 @@
 #include "pal.h"
 
 #ifndef GAME_DLL
-void (*Misc_Focus_Loss_Function)() = nullptr;
-void (*Misc_Focus_Restore_Function)() = nullptr;
+void (*MiscFocusLoss)() = nullptr;
+void (*MiscFocusRestore)() = nullptr;
 SurfaceMonitorClass g_allSurfaces;
 #endif
 
@@ -77,15 +77,15 @@ void SurfaceMonitorClass::Restore_Surfaces()
 #ifdef BUILD_WITH_DDRAW
         for (int i = 0; i < SURFACE_COUNT; ++i) {
             if (m_surface[i] && m_surface[i]->Restore()) {
-                if (Misc_Focus_Loss_Function) {
-                    Misc_Focus_Loss_Function();
+                if (MiscFocusLoss != nullptr) {
+                    MiscFocusLoss();
                 }
                 return;
             }
         }
 #endif
-        if (Misc_Focus_Restore_Function) {
-            Misc_Focus_Restore_Function();
+        if (MiscFocusRestore != nullptr) {
+            MiscFocusRestore();
         }
         m_surfacesRestored = true;
         Set_Palette(g_currentPalette);

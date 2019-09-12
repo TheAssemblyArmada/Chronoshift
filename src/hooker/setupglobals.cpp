@@ -50,9 +50,7 @@ LPDIRECTDRAWPALETTE &g_palettePtr = Make_Global<LPDIRECTDRAWPALETTE>(0x006B189C)
 typedef void (*focusfunc_t)();
 unsigned &CCFocusMessage = Make_Global<unsigned>(0x00609BA0);
 focusfunc_t &AudioFocusLoss = Make_Global<focusfunc_t>(0x006AC058);
-focusfunc_t &MiscFocusLoss = Make_Global<focusfunc_t>(0x006B190C);
 focusfunc_t &GBufferFocusLoss = Make_Global<focusfunc_t>(0x006AC278);
-focusfunc_t &MiscFocusRestore = Make_Global<focusfunc_t>(0x006B1910);
 
 // keyboard.cpp
 class KeyboardClass;
@@ -128,6 +126,6 @@ int &g_shapeLength = Make_Global<int>(0x006A2F18);
 
 //surfacemonitor.cpp
 class SurfaceMonitorClass;
-void (*&Misc_Focus_Loss_Function)() = Make_Global<void (*)()>(0x006B190C);
-void (*&Misc_Focus_Restore_Function)() = Make_Global<void (*)()>(0x006B1910);
+void (*&MiscFocusLoss)() = Make_Global<void (*)()>(0x006B190C);
+void (*&MiscFocusRestore)() = Make_Global<void (*)()>(0x006B1910);
 SurfaceMonitorClass &g_allSurfaces = Make_Global<SurfaceMonitorClass>(0x006B18A8);
