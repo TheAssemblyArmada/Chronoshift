@@ -25,7 +25,8 @@
 #define FILE_HANDLE_COUNT 10
 
 #ifdef GAME_DLL
-GameFileClass *g_handles = Make_Pointer<GameFileClass>(0x00635BE4);
+#include "hooker.h"
+extern ARRAY_DEC(GameFileClass, g_handles, 10);
 #else
 GameFileClass g_handles[FILE_HANDLE_COUNT];
 #endif
@@ -393,84 +394,3 @@ void *Load_Alloc_Data(FileClass &file)
 
     return nullptr;
 }
-
-#ifdef GAME_DLL
-
-void GameFileClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x00462A30, &Hook_Is_Available);
-    Hook_Function(0x00462A80, &Hook_Is_Open);
-    Hook_Function(0x00426400, &Hook_Open_Name);
-    Hook_Function(0x00462AD4, &Hook_Open);
-    Hook_Function(0x004628B0, &Hook_Read);
-    Hook_Function(0x00462958, &Hook_Seek);
-    Hook_Function(0x004629CC, &Hook_Size);
-    Hook_Function(0x00462860, &Hook_Write);
-    Hook_Function(0x00462AA8, &Hook_Close);
-    Hook_Function(0x00462BD8, &Hook_Get_Date_Time);
-    Hook_Function(0x00462C50, &Hook_Set_Date_Time);
-    Hook_Function(0x00462840, &Hook_Error);
-#endif
-}
-
-BOOL GameFileClass::Hook_Is_Available(GameFileClass *ptr, BOOL forced)
-{
-    return ptr->GameFileClass::Is_Available(forced);
-}
-
-BOOL GameFileClass::Hook_Is_Open(GameFileClass *ptr)
-{
-    return ptr->GameFileClass::Is_Open();
-}
-
-BOOL GameFileClass::Hook_Open_Name(GameFileClass *ptr, const char *filename, int rights)
-{
-    return ptr->GameFileClass::Open(filename, rights);
-}
-
-BOOL GameFileClass::Hook_Open(GameFileClass *ptr, int rights)
-{
-    return ptr->GameFileClass::Open(rights);
-}
-
-int GameFileClass::Hook_Read(GameFileClass *ptr, void *buffer, int length)
-{
-    return ptr->GameFileClass::Read(buffer, length);
-}
-
-off_t GameFileClass::Hook_Seek(GameFileClass *ptr, off_t offset, int whence)
-{
-    return ptr->GameFileClass::Seek(offset, whence);
-}
-
-off_t GameFileClass::Hook_Size(GameFileClass *ptr)
-{
-    return ptr->GameFileClass::Size();
-}
-
-int GameFileClass::Hook_Write(GameFileClass *ptr, const void *buffer, int length)
-{
-    return ptr->GameFileClass::Write(buffer, length);
-}
-
-void GameFileClass::Hook_Close(GameFileClass *ptr)
-{
-    ptr->GameFileClass::Close();
-}
-
-time_t GameFileClass::Hook_Get_Date_Time(GameFileClass *ptr)
-{
-    return ptr->GameFileClass::Get_Date_Time();
-}
-
-BOOL GameFileClass::Hook_Set_Date_Time(GameFileClass *ptr, time_t date_time)
-{
-    return ptr->GameFileClass::Set_Date_Time(date_time);
-}
-
-void GameFileClass::Hook_Error(GameFileClass *ptr, int error, BOOL can_retry, const char *filename)
-{
-    ptr->GameFileClass::Error(error, can_retry, filename);
-}
-#endif

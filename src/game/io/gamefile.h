@@ -58,19 +58,9 @@ public:
     static bool Cache_Mix(char const *filename);
 
 #ifdef GAME_DLL
-    static void Hook_Me();
-    static BOOL Hook_Is_Available(GameFileClass *ptr, BOOL forced);
-    static BOOL Hook_Is_Open(GameFileClass *ptr);
-    static BOOL Hook_Open_Name(GameFileClass *ptr, const char *filename, int rights);
-    static BOOL Hook_Open(GameFileClass *ptr, int rights);
-    static int Hook_Read(GameFileClass *ptr, void *buffer, int length);
-    static off_t Hook_Seek(GameFileClass *ptr, off_t offset, int whence);
-    static off_t Hook_Size(GameFileClass *ptr);
-    static int Hook_Write(GameFileClass *ptr, const void *buffer, int length);
-    static void Hook_Close(GameFileClass *ptr);
-    static time_t Hook_Get_Date_Time(GameFileClass *ptr);
-    static BOOL Hook_Set_Date_Time(GameFileClass *ptr, time_t date_time);
-    static void Hook_Error(GameFileClass *ptr, int error, BOOL can_retry, const char *filename);
+    BOOL Hook_Is_Open() { return GameFileClass::Is_Open(); }
+    BOOL Hook_Open_Name(const char *filename, int rights) { return GameFileClass::Open(filename, rights); }
+    BOOL Hook_Open(int rights) { return GameFileClass::Open(rights); }
 #endif
 private:
     BufferClass m_fileBuffer;

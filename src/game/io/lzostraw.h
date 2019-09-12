@@ -29,10 +29,6 @@ public:
 
     virtual int Get(void *buffer, int length) override;
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     StrawControl m_mode;
     int m_carryover;
@@ -43,16 +39,5 @@ private:
     int16_t m_compressedBytes;
     int16_t m_uncompressedBytes;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void LZOStraw::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005D5BF4, *LZOStraw::Get);
-#endif
-}
-#endif
 
 #endif // LZOSTRAW_H

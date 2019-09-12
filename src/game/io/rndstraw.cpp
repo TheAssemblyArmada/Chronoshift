@@ -16,11 +16,6 @@
 #include "rndstraw.h"
 
 // Global instance of random straw to use as a source of random data.
-#ifdef GAME_DLL
-RandomStraw<RandomClass> &g_cryptRandom = *reinterpret_cast<RandomStraw<RandomClass> *>(0x00667764);
-#else
+#ifndef GAME_DLL
 RandomStraw<RandomClass> g_cryptRandom;
 #endif
-// RandomStraw<Random2Class> CryptRandom2;
-// RandomStraw<Random3Class> CryptRandom3;
-// RandomStraw<Random4Class> CryptRandom4;    //Random4 is not designed for cryptography.

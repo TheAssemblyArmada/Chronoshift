@@ -21,9 +21,6 @@
 #include "always.h"
 #include "sha.h"
 #include "straw.h"
-#ifdef GAME_DLL
-#include "hooker.h"
-#endif
 
 class SHAStraw : public Straw
 {
@@ -35,23 +32,8 @@ public:
 
     int Result(void *data);
 
-#ifdef GAME_DLL
-    static int Hook_Result(SHAStraw *ptr, void *data);
-    static int Hook_Get(SHAStraw *ptr, void *source, int length);
-    static void Hook_Me();
-#endif
-
 protected:
     SHAEngine m_sha1; // A instance of the SHA-1 Engine class.
-
 };
-
-#ifdef GAME_DLL
-inline void SHAStraw::Hook_Me()
-{
-    Hook_Function(0x005D5B04, &Hook_Result);
-    Hook_Function(0x005D5AD0, &Hook_Get);
-}
-#endif
 
 #endif // SHASTRAW_H

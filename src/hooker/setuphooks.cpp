@@ -123,16 +123,57 @@ void Setup_Hooks()
     Hook_Function(0x005D6010, &Free);
     Hook_Function(0x005D6020, &Resize_Alloc);
 
-    RawFileClass::Hook_Me();
-    BufferIOFileClass::Hook_Me();
-    GameFileClass::Hook_Me();
-    CDFileClass::Hook_Me();
+    // rawfile.h
+    Hook_Function(0x005C006C, *RawFileClass::Set_Name);
+    Hook_Function(0x005C05F8, *RawFileClass::Create);
+    Hook_Function(0x005C063C, *RawFileClass::Delete);
+    Hook_Function(0x005C0100, *RawFileClass::Hook_Open);
+    Hook_Function(0x005C0210, *RawFileClass::Is_Available);
+    Hook_Function(0x005C0314, *RawFileClass::Read);
+    Hook_Function(0x005C04E8, *RawFileClass::Seek);
+    Hook_Function(0x005C056C, *RawFileClass::Size);
+    Hook_Function(0x005C0430, *RawFileClass::Write);
+    Hook_Function(0x005C02C8, *RawFileClass::Close);
+    Hook_Function(0x005C07CC, *RawFileClass::Raw_Seek);
+
+    // bfiofile.h
+    Hook_Function(0x005BD734, *BufferIOFileClass::Is_Available);
+    Hook_Function(0x005BD754, *BufferIOFileClass::Hook_Is_Open);
+    Hook_Function(0x005BD780, *BufferIOFileClass::Hook_Open_Name);
+    Hook_Function(0x005BD79C, *BufferIOFileClass::Hook_Open);
+    Hook_Function(0x005BDAD4, *BufferIOFileClass::Read);
+    Hook_Function(0x005BDCF4, *BufferIOFileClass::Seek);
+    Hook_Function(0x005BDDF0, *BufferIOFileClass::Size);
+    Hook_Function(0x005BD870, *BufferIOFileClass::Write);
+    Hook_Function(0x005BDE14, *BufferIOFileClass::Close);
+
+    // gamefile.h
+    Hook_Function(0x00462A30, *GameFileClass::Is_Available);
+    Hook_Function(0x00462A80, *GameFileClass::Hook_Is_Open);
+    Hook_Function(0x00426400, *GameFileClass::Hook_Open_Name);
+    Hook_Function(0x00462AD4, *GameFileClass::Hook_Open);
+    Hook_Function(0x004628B0, *GameFileClass::Read);
+    Hook_Function(0x00462958, *GameFileClass::Seek);
+    Hook_Function(0x004629CC, *GameFileClass::Size);
+    Hook_Function(0x00462860, *GameFileClass::Write);
+    Hook_Function(0x00462AA8, *GameFileClass::Close);
+    Hook_Function(0x00462BD8, *GameFileClass::Get_Date_Time);
+    Hook_Function(0x00462C50, *GameFileClass::Set_Date_Time);
+    Hook_Function(0x00462840, *GameFileClass::Error);
+
+    // cdfile.h
+    Hook_Function(0x005BFC60, &CDFileClass::Set_Search_Drives);
+
     ControlClass::Hook_Me();
     GraphicViewPortClass::Hook_Me();
     KeyboardClass::Hook_Me();
     
     // ostimer.h
     Hook_Function(0x005BBEB0, &PlatformTimerClass::Timer_Callback);
+
+    // shastraw.h
+    Hook_Function(0x005D5B04, *SHAStraw::Result);
+    Hook_Function(0x005D5AD0, *SHAStraw::Get);
 
     Blitters::Hook_Me();
     Fading::Hook_Me();
@@ -159,8 +200,14 @@ void Setup_Hooks()
     ListClass::Hook_Me();
     FixedHeapClass::Hook_Me();
     FixedIHeapClass::Hook_Me();
-    LZOPipe::Hook_Me();
-    LZOStraw::Hook_Me();
+    
+    // lzopipe.h
+    Hook_Function(0x005D5508, *LZOPipe::Put);
+    Hook_Function(0x005D57AC, *LZOPipe::Flush);
+    
+    // lzostraw.h
+    Hook_Function(0x005D5BF4, *LZOStraw::Get);
+
     VersionClass::Hook_Me();
     FacingClass::Hook_Me();
     FlasherClass::Hook_Me();
