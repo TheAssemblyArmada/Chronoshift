@@ -42,18 +42,3 @@ int SHAStraw::Result(void *data)
 {
     return m_sha1.Result(data);
 }
-
-#ifdef GAME_DLL
-int SHAStraw::Hook_Result(SHAStraw *ptr, void *data)
-{
-    char hash[41];
-    ptr->m_sha1.Print_Result(hash);
-    DEBUG_LOG("SHAStraw returns hash of '%s'.\n", hash);
-    return ptr->SHAStraw::Result(data);
-}
-
-int SHAStraw::Hook_Get(SHAStraw *ptr, void *source, int length)
-{
-    return ptr->SHAStraw::Get(source, length);
-}
-#endif

@@ -21,12 +21,9 @@
 #include "always.h"
 #include "fileclass.h"
 
-#ifdef GAME_DLL
-#include "hooker.h"
-#endif
-
 class RawFileClass : public FileClass
 {
+    friend void Setup_Hooks();
 public:
     RawFileClass();
     RawFileClass(const char *filename);
@@ -61,27 +58,12 @@ public:
     int Get_File_Handle() { return m_handle; }
 #endif
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     void Reset();
     off_t Raw_Seek(off_t offset, int whence = FS_SEEK_CURRENT);
 
 #ifdef GAME_DLL
-    static const char *Hook_File_Name(RawFileClass *ptr);
-    static const char *Hook_Set_Name(RawFileClass *ptr, const char *filename);
-    static BOOL Hook_Create(RawFileClass *ptr);
-    static BOOL Hook_Delete(RawFileClass *ptr);
-    static BOOL Hook_Open(RawFileClass *ptr, int rights = FM_READ);
-    static BOOL Hook_Is_Available(RawFileClass *ptr, BOOL forced = false);
-    static int Hook_Read(RawFileClass *ptr, void *buffer, int length);
-    static off_t Hook_Seek(RawFileClass *ptr, off_t offset, int whence = FS_SEEK_CURRENT);
-    static off_t Hook_Size(RawFileClass *ptr);
-    static int Hook_Write(RawFileClass *ptr, const void *buffer, int length);
-    static void Hook_Close(RawFileClass *ptr);
-    static off_t Hook_Raw_Seek(RawFileClass *ptr, off_t offset, int whence = FS_SEEK_CURRENT);
+    BOOL Hook_Open(int rights = FM_READ) { return RawFileClass::Open(rights); }
 #endif
 
 protected:
@@ -97,25 +79,5 @@ protected:
     time_t m_dateTime;
     BOOL m_isAllocated;
 };
-
-#ifdef GAME_DLL
-inline void RawFileClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x00426390, &Hook_File_Name);
-    Hook_Function(0x005C006C, &Hook_Set_Name);
-    Hook_Function(0x005C05F8, &Hook_Create);
-    Hook_Function(0x005C063C, &Hook_Delete);
-    Hook_Function(0x005C0100, &Hook_Open);
-    Hook_Function(0x005C0210, &Hook_Is_Available);
-    Hook_Function(0x005C0314, &Hook_Read);
-    Hook_Function(0x005C04E8, &Hook_Seek);
-    Hook_Function(0x005C056C, &Hook_Size);
-    Hook_Function(0x005C0430, &Hook_Write);
-    Hook_Function(0x005C02C8, &Hook_Close);
-    Hook_Function(0x005C07CC, &Hook_Raw_Seek);
-#endif
-}
-#endif
 
 #endif // _RAWFILECLASS_H

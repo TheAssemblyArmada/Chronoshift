@@ -47,16 +47,9 @@ public:
     BOOL Commit();
 
 #ifdef GAME_DLL
-    static void Hook_Me();
-    static BOOL Hook_Is_Available(BufferIOFileClass *ptr, BOOL forced);
-    static BOOL Hook_Is_Open(BufferIOFileClass *ptr);
-    static BOOL Hook_Open_Name(BufferIOFileClass *ptr, const char *filename, int rights);
-    static BOOL Hook_Open(BufferIOFileClass *ptr, int rights);
-    static int Hook_Read(BufferIOFileClass *ptr, void *buffer, int length);
-    static off_t Hook_Seek(BufferIOFileClass *ptr, off_t offset, int whence);
-    static off_t Hook_Size(BufferIOFileClass *ptr);
-    static int Hook_Write(BufferIOFileClass *ptr, const void *buffer, int length);
-    static void Hook_Close(BufferIOFileClass *ptr);
+    BOOL Hook_Is_Open() { return BufferIOFileClass::Is_Open(); }
+    BOOL Hook_Open_Name(const char *filename, int rights) { return BufferIOFileClass::Open(filename, rights); }
+    BOOL Hook_Open(int rights) { return BufferIOFileClass::Open(rights); }
 #endif
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -74,16 +67,16 @@ protected:
     bool m_uncommited;
     bool m_buffered;
 #endif
-    int m_bufferedRights; //Duplicate of Rights member inherited from RawFile???
+    int m_bufferedRights; // Duplicate of Rights member inherited from RawFile???
     void *m_buffer; // 0x2C
-    int m_bufferedSize; //Looks like this is the current size of the buffer??
-    int m_bufferPosition; //fairly sure this keeps track of the pos in buffer
-    int m_bufferStart; //Position in file that we have cached up to?
+    int m_bufferedSize; // Looks like this is the current size of the buffer??
+    int m_bufferPosition; // fairly sure this keeps track of the pos in buffer
+    int m_bufferStart; // Position in file that we have cached up to?
     int m_uncommitedStart;
     int m_uncommitedEnd;
-    int m_bufferedFileSize; //This appears to actually be the backing file size
-    int m_bufferedBiasStart; //Again, isn't this already inherited from RawFile?
-    int m_bufferedFileStart; //position in the file when we opened it.
+    int m_bufferedFileSize; // This appears to actually be the backing file size
+    int m_bufferedBiasStart; // Again, isn't this already inherited from RawFile?
+    int m_bufferedFileStart; // position in the file when we opened it.
 };
 
 #endif // BFIOFILECLASS_H

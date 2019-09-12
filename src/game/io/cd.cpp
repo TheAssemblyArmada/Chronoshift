@@ -32,10 +32,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-int &g_requiredCD = *reinterpret_cast<int *>(0x006017D0);
-int &g_currentCD = Make_Global<int>(0x006017D4);
-#else
+#ifndef GAME_DLL
 int g_requiredCD = DISK_CDCHECK;
 int g_currentCD = DISK_CDCHECK;
 #endif

@@ -30,10 +30,6 @@ public:
     virtual int Flush();
     virtual int Put(const void *source, int length);
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     PipeControl m_mode;
     int m_dataInBuffer;
@@ -44,17 +40,5 @@ private:
     int16_t m_compressedBytes;
     int16_t m_uncompressedBytes;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void LZOPipe::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005D5508, *LZOPipe::Put);
-    Hook_Function(0x005D57AC, *LZOPipe::Flush);
-#endif
-}
-#endif
 
 #endif // LZOPIPE_H

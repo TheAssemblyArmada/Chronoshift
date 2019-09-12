@@ -61,10 +61,6 @@ public:
     static int Last_Drive() { return s_lastCDDrive; }
     static int Current_Drive() { return s_currentCDDrive; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_disableSearchDrives : 1;
@@ -86,16 +82,5 @@ private:
 #endif
     static const char *s_pathSeperator;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void CDFileClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005BFC60, &Set_Search_Drives);
-#endif
-}
-#endif
 
 #endif // CDFILECLASS_H

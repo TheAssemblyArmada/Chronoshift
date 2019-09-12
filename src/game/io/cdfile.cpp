@@ -43,13 +43,7 @@
 #define CD_PATH_SEP "/"
 #endif
 
-#ifdef GAME_DLL
-char *CDFileClass::s_rawPath = Make_Pointer<char>(0x006AC06C);
-CDFileClass::SearchDriveType *&CDFileClass::s_first =
-    *reinterpret_cast<CDFileClass::SearchDriveType **>(0x006AC060); // first entry in the search drive, each entry is linked.
-int &CDFileClass::s_currentCDDrive = *reinterpret_cast<int *>(0x006AC064);
-int &CDFileClass::s_lastCDDrive = *reinterpret_cast<int *>(0x006AC068);
-#else
+#ifndef GAME_DLL
 char CDFileClass::s_rawPath[PATH_MAX * 2]; // full raw path of the search drive set.
 CDFileClass::SearchDriveType *CDFileClass::s_first; // first entry in the search drive, each entry is linked.
 int CDFileClass::s_currentCDDrive;
