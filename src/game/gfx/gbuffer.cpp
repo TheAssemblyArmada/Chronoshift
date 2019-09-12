@@ -25,19 +25,7 @@
 #include "tileset.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-// BOOL &GraphicViewPortClass::AllowHardwareBlitFills;
-// BOOL &GraphicViewPortClass::AllowStretchBlits;
-int &GraphicViewPortClass::ScreenWidth = Make_Global<int>(0x006016B0);
-int &GraphicViewPortClass::ScreenHeight = Make_Global<int>(0x006016B4);
-GraphicViewPortClass *&g_logicPage = Make_Global<GraphicViewPortClass *>(0x006AC274);
-GraphicViewPortClass &g_seenBuff = Make_Global<GraphicViewPortClass>(0x006807A4);
-GraphicViewPortClass &g_hidPage = Make_Global<GraphicViewPortClass>(0x006807CC);
-GraphicBufferClass &g_visiblePage = Make_Global<GraphicBufferClass>(0x0068065C);
-GraphicBufferClass &g_hiddenPage = Make_Global<GraphicBufferClass>(0x00680700);
-GraphicBufferClass &g_sysMemPage = Make_Global<GraphicBufferClass>(0x00665E0C);
-GraphicBufferClass &g_modeXBuff = Make_Global<GraphicBufferClass>(0x00665EB4);
-#else
+#ifndef GAME_DLL
 BOOL GraphicViewPortClass::AllowHardwareBlitFills;
 BOOL GraphicViewPortClass::AllowStretchBlits;
 int GraphicViewPortClass::ScreenWidth = 640;

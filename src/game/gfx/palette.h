@@ -56,8 +56,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern PaletteClass &GamePalette;
 extern PaletteClass &OriginalPalette;
 extern PaletteClass &CCPalette;

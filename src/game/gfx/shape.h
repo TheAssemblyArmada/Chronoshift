@@ -130,22 +130,4 @@ void Set_Shape_Buffer(void *buffer, int size);
 int Set_Shape_Height(void *shape, unsigned short new_height);
 void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, GraphicViewPortClass &viewport, int flags, ...);
 
-#ifdef GAME_DLL
-#include "hooker.h"
-
-namespace Shape
-{
-
-inline void Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005B48EC, Build_Frame);
-    Hook_Function(0x005AB354, Buffer_Frame_To_Page);
-    Hook_Function(0x004A9AB8, Shape_Dimensions);
-#endif
-}
-
-}
-#endif
-
 #endif // SHAPE_H

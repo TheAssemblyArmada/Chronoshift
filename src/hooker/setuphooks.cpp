@@ -165,8 +165,14 @@ void Setup_Hooks()
     Hook_Function(0x005BFC60, &CDFileClass::Set_Search_Drives);
 
     ControlClass::Hook_Me();
-    GraphicViewPortClass::Hook_Me();
     
+    // gbuffer.h
+    Hook_Function(0x005C0AF4, *GraphicBufferClass::DD_Init);
+    Hook_Function(0x005C0C2D, *GraphicBufferClass::Init);
+    Hook_Function(0x005C0D0F, *GraphicBufferClass::Un_Init);
+    Hook_Function(0x005C101A, *GraphicBufferClass::Lock);
+    Hook_Function(0x005C1191, *GraphicBufferClass::Unlock);
+
     // keyboard.h
     Hook_Function(0x005B82FC, *KeyboardClass::Message_Handler);
     // Hook_Function(0x005B7408, *KeyboardClass::Fill);
@@ -181,20 +187,66 @@ void Setup_Hooks()
     Hook_Function(0x005D5B04, *SHAStraw::Result);
     Hook_Function(0x005D5AD0, *SHAStraw::Get);
 
-    Blitters::Hook_Me();
-    Fading::Hook_Me();
+    // blitters.h
+    Hook_Function(0x005C53E4, Linear_Blit_To_Linear);
+    Hook_Function(0x005C23F0, Buffer_Fill_Rect);
+    Hook_Function(0x005C13E4, Buffer_Draw_Line);
+    Hook_Function(0x005C4BC4, Buffer_Remap);
+    Hook_Function(0x005CEE10, Buffer_Get_Pixel);
+    Hook_Function(0x005CC2B4, Buffer_Put_Pixel);
+    Hook_Function(0x005D0F60, Buffer_To_Buffer);
+    Hook_Function(0x005D10B8, Buffer_To_Page);
+    Hook_Function(0x005C4DE0, Buffer_Clear);
+    Hook_Function(0x005D4338, Linear_Scale_To_Linear);
+
+    //fading.h
+    Hook_Function(0x004FB914, Make_Fading_Table);
+    Hook_Function(0x005CC4C0, Build_Fading_Table);
+    Hook_Function(0x004FB994, Conquer_Build_Fading_Table);
+    Hook_Function(0x004FB7C4, Build_Translucent_Table);
+    Hook_Function(0x004FB870, Conquer_Build_Translucent_Table);
+
     GadgetClass::Hook_Me();
-    Interpolate::Hook_Me();
+    
+    // interpolate.h
+    Hook_Function(0x005B2DD0, Create_Palette_Interpolation_Table);
+    Hook_Function(0x005B2CE0, Read_Interpolation_Palette);
+    Hook_Function(0x005B2D5C, Write_Interpolation_Palette);
+    Hook_Function(0x004A8704, Load_Interpolated_Palettes);
+    Hook_Function(0x004A8874, Free_Interpolated_Palettes);
+    Hook_Function(0x005B2FCC, Interpolate_2X_Scale);
     
     // lcw.h
     Hook_Function(0x005D6880, LCW_Uncomp);
     Hook_Function(0x005DD28C, LCW_Comp);
 
-    MouseShape::Hook_Me();
-    Shape::Hook_Me();
+    // mouseshape.h
+    Hook_Function(0x005D8F5C, Mouse_Shadow_Buffer);
+    Hook_Function(0x005D90A1, Mouse_Draw);
+    Hook_Function(0x005D91CF, Mouse_Set_Cursor);
+
+    // shape.h
+    Hook_Function(0x005B48EC, Build_Frame);
+    Hook_Function(0x005AB354, Buffer_Frame_To_Page);
+    Hook_Function(0x004A9AB8, Shape_Dimensions);
+
     TextButtonClass::Hook_Me();
     ToggleClass::Hook_Me();
-    WSAFile::Hook_Me();
+    
+    // wsa.h
+    Hook_Function(0x005D03C0, Open_Animation);
+    Hook_Function(0x005D0820, Close_Animation);
+    Hook_Function(0x005D0860, Animate_Frame);
+    Hook_Function(0x005D0CF0, Apply_Delta);
+    Hook_Function(0x005D0C00, Get_Animation_Size);
+    Hook_Function(0x005D0C30, Get_Resident_Frame_Offset);
+    Hook_Function(0x005D0C90, Get_File_Frame_Offset);
+    Hook_Function(0x005D0AE0, Get_Animation_Frame_Count);
+    Hook_Function(0x005D0B10, Get_Animation_X);
+    Hook_Function(0x005D0B40, Get_Animation_Y);
+    Hook_Function(0x005D0B70, Get_Animation_Width);
+    Hook_Function(0x005D0BA0, Get_Animation_Height);
+    Hook_Function(0x005D0BD0, Get_Animation_Palette);
 
     // mouse.h
     Hook_Function(0x005C1B10, *MouseClass::Low_Hide_Mouse);
@@ -204,7 +256,16 @@ void Setup_Hooks()
     Hook_Function(0x005D6A50, Apply_XOR_Delta_To_Page_Or_Viewport);
     Hook_Function(0x005D69E0, Apply_XOR_Delta);
 
-    SurfaceMonitorClass::Hook_Me();
+    // surfacemonitor.h
+#ifdef BUILD_WITH_DDRAW
+    Hook_Function(0x005CA1D0, *SurfaceMonitorClass::Add_Surface);
+    Hook_Function(0x005CA230, *SurfaceMonitorClass::Remove_Surface);
+    Hook_Function(0x005CA280, *SurfaceMonitorClass::Got_Surface_Already);
+#endif
+    Hook_Function(0x005CA2D0, *SurfaceMonitorClass::Restore_Surfaces);
+    Hook_Function(0x005CA370, *SurfaceMonitorClass::Set_Surface_Focus);
+    Hook_Function(0x005CA390, *SurfaceMonitorClass::Release);
+
     SliderClass::Hook_Me();
     ListClass::Hook_Me();
     FixedHeapClass::Hook_Me();

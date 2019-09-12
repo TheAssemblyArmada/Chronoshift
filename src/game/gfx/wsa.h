@@ -152,31 +152,4 @@ int __cdecl Get_Animation_Width(SysAnimHeaderType *header);
 int __cdecl Get_Animation_Height(SysAnimHeaderType *header);
 int __cdecl Get_Animation_Palette(SysAnimHeaderType *header);
 
-#ifdef GAME_DLL
-#include "hooker.h"
-
-namespace WSAFile {
-
-inline void Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005D03C0, Open_Animation);
-    Hook_Function(0x005D0820, Close_Animation);
-    Hook_Function(0x005D0860, Animate_Frame);
-    Hook_Function(0x005D0CF0, Apply_Delta);
-    Hook_Function(0x005D0C00, Get_Animation_Size);
-    Hook_Function(0x005D0C30, Get_Resident_Frame_Offset);
-    Hook_Function(0x005D0C90, Get_File_Frame_Offset);
-    Hook_Function(0x005D0AE0, Get_Animation_Frame_Count);
-    Hook_Function(0x005D0B10, Get_Animation_X);
-    Hook_Function(0x005D0B40, Get_Animation_Y);
-    Hook_Function(0x005D0B70, Get_Animation_Width);
-    Hook_Function(0x005D0BA0, Get_Animation_Height);
-    Hook_Function(0x005D0BD0, Get_Animation_Palette);
-#endif
-}
-
-}
-#endif
-
 #endif // WSA_H

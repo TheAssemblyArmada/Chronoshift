@@ -46,28 +46,10 @@ void __cdecl Interpolate_Line_Double(void *src, void *dst, int src_height, int s
 void __cdecl Interpolate_Line_Interpolate(void *src, void *dst, int src_height, int src_width, int dst_pitch);
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern uint8_t *g_paletteInterpolationTable;
 extern BOOL &g_palettesRead;
 extern int &g_paletteCounter;
 extern int &g_interpolationMode;
-
-namespace Interpolate {
-
-inline void Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005B2DD0, Create_Palette_Interpolation_Table);
-    Hook_Function(0x005B2CE0, Read_Interpolation_Palette);
-    Hook_Function(0x005B2D5C, Write_Interpolation_Palette);
-    Hook_Function(0x004A8704, Load_Interpolated_Palettes);
-    Hook_Function(0x004A8874, Free_Interpolated_Palettes);
-    Hook_Function(0x005B2FCC, Interpolate_2X_Scale);
-#endif
-}
-
-}
 #else
 extern uint8_t g_paletteInterpolationTable[INTERPOL_PAL_SIZE];
 extern BOOL g_palettesRead;

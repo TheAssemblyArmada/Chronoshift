@@ -24,14 +24,7 @@ using std::memcpy;
 using std::memset;
 
 #ifdef GAME_DLL
-char *&g_fontPtr = Make_Global<char *>(0x006B1974);
-char *&g_fontWidthBlockPtr = Make_Global<char *>(0x006B1978);
-int &g_fontYSpacing = Make_Global<int>(0x006B1970);
-int &g_fontXSpacing = Make_Global<int>(0x006B196C);
-uint8_t &g_fontHeight = Make_Global<uint8_t>(0x0060CE65);
-uint8_t &g_fontWidth = Make_Global<uint8_t>(0x0060CE64);
-uint8_t *g_colorXlat = Make_Pointer<uint8_t>(0x00609BC8);
-uint8_t *byte_608988 = Make_Pointer<uint8_t>(0x00609BD8);
+extern char *&g_fontWidthBlockPtr;
 #else
 uint8_t g_colorXlat[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 uint8_t byte_608988[] = {
@@ -53,7 +46,6 @@ uint8_t byte_608988[] = {
 
 char *g_fontPtr = nullptr;
 char *g_fontWidthBlockPtr = nullptr;
-
 uint8_t g_fontHeight = 8;
 uint8_t g_fontWidth = 8;
 int g_fontXSpacing;
