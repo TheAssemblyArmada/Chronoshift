@@ -45,10 +45,6 @@ public:
     void *Get_Shape() const { return ButtonShape; }
     void Set_Shape_Bool_One(BOOL unk) { BooleanOne = unk; }
 
-#ifdef GAME_DLL
-static void Hook_Me();
-#endif
-
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL BooleanOne : 1; // & 1
@@ -57,18 +53,5 @@ protected:
 #endif
     void *ButtonShape;
 };
-
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void ShapeButtonClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x0054CD7C, *ShapeButtonClass::Set_Shape);
-    Hook_Function(0x0054CDB0, *ShapeButtonClass::Draw_Me);
-#endif
-}
-#endif
 
 #endif // SHAPEBTN_H

@@ -57,7 +57,6 @@ public:
     static int Simple_YesNo_Message_Box(const char *body_text, const int button_1_text = TXT_YES, const int button_2_text = TXT_NO);
 
 #ifdef GAME_DLL
-    static void Hook_Me();
     int Hook_Process(const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text,
         BOOL shadow_seen = false)
     {
@@ -68,17 +67,5 @@ public:
 private:
     int CaptionText;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void MessageBoxClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005043D0, *MessageBoxClass::Hook_Process);
-#endif
-}
-
-#endif
 
 #endif // MSGBOX_H

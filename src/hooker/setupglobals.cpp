@@ -129,3 +129,28 @@ class SurfaceMonitorClass;
 void (*&MiscFocusLoss)() = Make_Global<void (*)()>(0x006B190C);
 void (*&MiscFocusRestore)() = Make_Global<void (*)()>(0x006B1910);
 SurfaceMonitorClass &g_allSurfaces = Make_Global<SurfaceMonitorClass>(0x006B18A8);
+
+// dialog.cpp
+#include "dialog.h"
+WindowType *WindowList = reinterpret_cast<WindowType *>(0x006016CC);
+unsigned &Window = Make_Global<unsigned>(0x006B1A08);
+int &WindowColumns = Make_Global<int>(0x0060CE6C);
+int &WindowLines = Make_Global<int>(0x0060CE70);
+int &WindowWidth = Make_Global<int>(0x0060CE74);
+int &WPos = Make_Global<int>(0x006B19DC);
+int &WinX = Make_Global<int>(0x006B19F8);
+int &WinY = Make_Global<int>(0x006B19FC);
+int &WinW = Make_Global<int>(0x0060CE80);
+int &WinH = Make_Global<int>(0x0060CE7C);
+int &WinC = Make_Global<int>(0x0060CE78);
+int &WinB = Make_Global<int>(0x006B19F4);
+int &WinCx = Make_Global<int>(0x006B1A00);
+int &WinCy = Make_Global<int>(0x006B1A04);
+int &ScrollCounter = Make_Global<int>(0x006B197C);
+
+// gadget.cpp
+#include "gadget.h"
+RemapControlType *&GadgetClass::ColorScheme = Make_Global<RemapControlType *>(0x00601694);
+GadgetClass *&GadgetClass::StuckOn = Make_Global<GadgetClass *>(0x0065D7B0);
+GadgetClass *&GadgetClass::LastList = Make_Global<GadgetClass *>(0x0065D7B4);
+GadgetClass *&GadgetClass::Focused = Make_Global<GadgetClass *>(0x0065D7B8);
