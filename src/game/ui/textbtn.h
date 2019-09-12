@@ -41,10 +41,6 @@ public:
     virtual void Draw_Background();
     virtual void Draw_Text(const char *string);
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     void Calculate_Button_Size(int w, int h);
 
@@ -76,18 +72,5 @@ inline TextButtonClass &TextButtonClass::operator=(TextButtonClass &that)
 
     return *this;
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void TextButtonClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x0056BC2C, *TextButtonClass::Draw_Me);
-    Hook_Function(0x0056BD74, *TextButtonClass::Draw_Background);
-    Hook_Function(0x0056BDE4, *TextButtonClass::Draw_Text);
-#endif
-}
-#endif
 
 #endif // TEXTBTN_H

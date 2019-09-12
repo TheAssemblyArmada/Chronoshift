@@ -62,9 +62,7 @@ public:
     virtual void Draw_Entry(int index, int x, int y, int x_max, BOOL redraw);
 
     ListClass &operator=(ListClass &that);
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
+
 protected:
     TextPrintType TextStyle;
     int *Tabs;
@@ -108,42 +106,5 @@ inline ListClass &ListClass::operator=(ListClass &that)
 
     return *this;
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void ListClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004FCB38, *ListClass::Add);
-    Hook_Function(0x004FCBC0, *ListClass::Add_Tail);
-    Hook_Function(0x004FCB7C, *ListClass::Add_Head);
-    Hook_Function(0x004FCC08, *ListClass::Remove);
-    Hook_Function(0x004FCCD8, *ListClass::Flag_To_Redraw);
-    Hook_Function(0x004FC710, *ListClass::Peer_To_Peer);
-    Hook_Function(0x004FC1B0, *ListClass::Set_Position);
-    Hook_Function(0x004FC558, *ListClass::Draw_Me);
-    Hook_Function(0x004FC474, *ListClass::Action);
-    //Hook_Function(0x004FC2C0, static_cast<int(*)(const char *)>(*ListClass::Add_Item));//char
-    //Hook_Function(0x004FC320, static_cast<int(*)(int)>(*ListClass::Add_Item));//int
-    Hook_Function(0x004FC7C8, *ListClass::Add_Scroll_Bar);
-    Hook_Function(0x004FC640, *ListClass::Bump);
-    //Hook_Function(0x004A2840, *ListClass::Count);
-    //Hook_Function(0x004FC6D8, *ListClass::Current_Index);
-    //Hook_Function(0x004FC700, *ListClass::Current_Item);
-    //Hook_Function(0x004FC6B0, *ListClass::Get_Item);
-    Hook_Function(0x004FCCB8, *ListClass::Step_Selected_Index);
-    //Hook_Function(0x004FC394, *ListClass::Remove_Item);//int
-    //Hook_Function(0x004FC444, *ListClass::Remove_Item);//char*
-    Hook_Function(0x004FC890, *ListClass::Remove_Scroll_Bar);
-    //Hook_Function(0x004FCC40, *ListClass::Set_Selected_Index);//int
-    //Hook_Function(0x004FCD10, static_cast<void(*)(int)>(&ListClass::Set_Selected_Index));//char*
-    Hook_Function(0x004FC8E8, *ListClass::Set_Tabs);
-    Hook_Function(0x004FC768, *ListClass::Set_View_Index);
-    Hook_Function(0x004FC678, *ListClass::Step);
-    Hook_Function(0x004FC8F4, *ListClass::Draw_Entry);
-#endif
-}
-#endif
 
 #endif // LIST_H

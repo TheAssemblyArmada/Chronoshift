@@ -21,12 +21,15 @@
 #include "animtype.h"
 #include "bfiofile.h"
 #include "blitters.h"
+#include "bigcheck.h"
 #include "building.h"
 #include "buildingtype.h"
 #include "bullettype.h"
 #include "cd.h"
 #include "cdfile.h"
 #include "cell.h"
+#include "checkbox.h"
+#include "checklist.h"
 #include "controlc.h"
 #include "coord.h"
 #include "cpudetect.h"
@@ -82,6 +85,7 @@
 #include "rules.h"
 #include "scenario.h"
 #include "shape.h"
+#include "shapebtn.h"
 #include "sidebar.h"
 #include "slider.h"
 #include "surfacemonitor.h"
@@ -164,7 +168,9 @@ void Setup_Hooks()
     // cdfile.h
     Hook_Function(0x005BFC60, &CDFileClass::Set_Search_Drives);
 
-    ControlClass::Hook_Me();
+    // controlc.h
+    Hook_Function(0x004AC2C0, *ControlClass::Action);
+    Hook_Function(0x004AC338, *ControlClass::Draw_Me);
     
     // gbuffer.h
     Hook_Function(0x005C0AF4, *GraphicBufferClass::DD_Init);
@@ -206,7 +212,28 @@ void Setup_Hooks()
     Hook_Function(0x004FB7C4, Build_Translucent_Table);
     Hook_Function(0x004FB870, Conquer_Build_Translucent_Table);
 
-    GadgetClass::Hook_Me();
+    // gadget.h
+    Hook_Function(0x004C3E40, *GadgetClass::Remove);
+    Hook_Function(0x004C3F38, *GadgetClass::Input);
+    Hook_Function(0x004C3F08, *GadgetClass::Draw_All);
+    Hook_Function(0x004C3E74, *GadgetClass::Delete_List);
+    Hook_Function(0x004C4160, *GadgetClass::Extract_Gadget);
+    Hook_Function(0x004A2810, *GadgetClass::Flag_List_To_Redraw);
+    Hook_Function(0x004C3E2C, *GadgetClass::Disable);
+    Hook_Function(0x004C3E08, *GadgetClass::Enable);
+    // Hook_Function(0x004B5950, *GadgetClass::Get_ID);
+    Hook_Function(0x004C4198, *GadgetClass::Flag_To_Redraw);
+    Hook_Function(0x004AC370, *GadgetClass::Peer_To_Peer);
+    Hook_Function(0x004C41D4, *GadgetClass::Set_Focus);
+    Hook_Function(0x004C4210, *GadgetClass::Clear_Focus);
+    Hook_Function(0x004C423C, *GadgetClass::Has_Focus);
+    Hook_Function(0x004C4254, *GadgetClass::Is_List_To_Redraw);
+    Hook_Function(0x004A2830, *GadgetClass::Is_To_Redraw);
+    Hook_Function(0x004C4280, *GadgetClass::Set_Position);
+    Hook_Function(0x004C3EE8, *GadgetClass::Draw_Me);
+    Hook_Function(0x004C41A4, *GadgetClass::Sticky_Process); // issue
+    Hook_Function(0x004C3EC8, *GadgetClass::Action);
+    Hook_Function(0x004C3DB4, *GadgetClass::Clicked_On); // issue
     
     // interpolate.h
     Hook_Function(0x005B2DD0, Create_Palette_Interpolation_Table);
@@ -230,8 +257,42 @@ void Setup_Hooks()
     Hook_Function(0x005AB354, Buffer_Frame_To_Page);
     Hook_Function(0x004A9AB8, Shape_Dimensions);
 
-    TextButtonClass::Hook_Me();
-    ToggleClass::Hook_Me();
+    // bigcheck.h
+    Hook_Function(0x005AAC70, *BigCheckBoxClass::Draw_Me);
+    Hook_Function(0x005AAD4C, *BigCheckBoxClass::Action);
+
+    // checkbox.h
+    Hook_Function(0x004A1F00, *CheckBoxClass::Draw_Me);
+    Hook_Function(0x004A22E4, *CheckBoxClass::Action);
+
+    // checklist.h
+    Hook_Function(0x004A2510, *CheckListClass::Action);
+    Hook_Function(0x004A2568, *CheckListClass::Draw_Entry);
+    Hook_Function(0x004A24D4, *CheckListClass::Check_Item);
+
+    // gauge.h
+    Hook_Function(0x004C4E70, *GaugeClass::Draw_Me);
+    Hook_Function(0x004C52D0, *GaugeClass::Action);
+    Hook_Function(0x004C4D70, *GaugeClass::Set_Maximum);
+    Hook_Function(0x004C4D90, *GaugeClass::Set_Value);
+    // Hook_Function(0x004C6FB0, *GaugeClass::Get_Value);
+    Hook_Function(0x004C6FC0, *GaugeClass::Use_Thumb);
+    Hook_Function(0x004C6FF0, *GaugeClass::Thumb_Pixels);
+    Hook_Function(0x004C5440, *GaugeClass::Draw_Thumb);
+    Hook_Function(0x004C4DC8, *GaugeClass::Pixel_To_Value);
+    Hook_Function(0x004C4E28, *GaugeClass::Value_To_Pixel);
+
+    // shapebtn.h
+    Hook_Function(0x0054CD7C, *ShapeButtonClass::Set_Shape);
+    Hook_Function(0x0054CDB0, *ShapeButtonClass::Draw_Me);
+
+    // textbtn.h
+    Hook_Function(0x0056BC2C, *TextButtonClass::Draw_Me);
+    Hook_Function(0x0056BD74, *TextButtonClass::Draw_Background);
+    Hook_Function(0x0056BDE4, *TextButtonClass::Draw_Text);
+
+    // toggle.h
+    Hook_Function(0x0056C4C8, *ToggleClass::Action);
     
     // wsa.h
     Hook_Function(0x005D03C0, Open_Animation);
@@ -266,8 +327,48 @@ void Setup_Hooks()
     Hook_Function(0x005CA370, *SurfaceMonitorClass::Set_Surface_Focus);
     Hook_Function(0x005CA390, *SurfaceMonitorClass::Release);
 
-    SliderClass::Hook_Me();
-    ListClass::Hook_Me();
+    // slider.h
+    Hook_Function(0x004FCD70, *SliderClass::Thumb_Pixels);
+    Hook_Function(0x0054F8D0, *SliderClass::Set_Maximum);
+    Hook_Function(0x0054F8F4, *SliderClass::Set_Thumb_Size);
+    Hook_Function(0x0054F92C, *SliderClass::Set_Value);
+    Hook_Function(0x0054F95C, *SliderClass::Recalc_Thumb);
+    Hook_Function(0x0054F9E8, *SliderClass::Action);
+    Hook_Function(0x0054FA9C, *SliderClass::Bump);
+    Hook_Function(0x0054FACC, *SliderClass::Step);
+    Hook_Function(0x0054FAF0, *SliderClass::Draw_Thumb);
+    Hook_Function(0x0054FB3C, *SliderClass::Draw_Me);
+    Hook_Function(0x0054FBCC, *SliderClass::Peer_To_Peer);
+    
+    // list.h
+    Hook_Function(0x004FCB38, *ListClass::Add);
+    Hook_Function(0x004FCBC0, *ListClass::Add_Tail);
+    Hook_Function(0x004FCB7C, *ListClass::Add_Head);
+    Hook_Function(0x004FCC08, *ListClass::Remove);
+    Hook_Function(0x004FCCD8, *ListClass::Flag_To_Redraw);
+    Hook_Function(0x004FC710, *ListClass::Peer_To_Peer);
+    Hook_Function(0x004FC1B0, *ListClass::Set_Position);
+    Hook_Function(0x004FC558, *ListClass::Draw_Me);
+    Hook_Function(0x004FC474, *ListClass::Action);
+    // Hook_Function(0x004FC2C0, static_cast<int(*)(const char *)>(*ListClass::Add_Item));//char
+    // Hook_Function(0x004FC320, static_cast<int(*)(int)>(*ListClass::Add_Item));//int
+    Hook_Function(0x004FC7C8, *ListClass::Add_Scroll_Bar);
+    Hook_Function(0x004FC640, *ListClass::Bump);
+    // Hook_Function(0x004A2840, *ListClass::Count);
+    // Hook_Function(0x004FC6D8, *ListClass::Current_Index);
+    // Hook_Function(0x004FC700, *ListClass::Current_Item);
+    // Hook_Function(0x004FC6B0, *ListClass::Get_Item);
+    Hook_Function(0x004FCCB8, *ListClass::Step_Selected_Index);
+    // Hook_Function(0x004FC394, *ListClass::Remove_Item);//int
+    // Hook_Function(0x004FC444, *ListClass::Remove_Item);//char*
+    Hook_Function(0x004FC890, *ListClass::Remove_Scroll_Bar);
+    // Hook_Function(0x004FCC40, *ListClass::Set_Selected_Index);//int
+    // Hook_Function(0x004FCD10, static_cast<void(*)(int)>(&ListClass::Set_Selected_Index));//char*
+    Hook_Function(0x004FC8E8, *ListClass::Set_Tabs);
+    Hook_Function(0x004FC768, *ListClass::Set_View_Index);
+    Hook_Function(0x004FC678, *ListClass::Step);
+    Hook_Function(0x004FC8F4, *ListClass::Draw_Entry);
+
     FixedHeapClass::Hook_Me();
     FixedIHeapClass::Hook_Me();
     
@@ -296,7 +397,10 @@ void Setup_Hooks()
     MapClass::Hook_Me();
     ScenarioClass::Hook_Me();
     MissionClass::Hook_Me();
-    MessageBoxClass::Hook_Me();
+    
+    // msgbox.h
+    Hook_Function(0x005043D0, *MessageBoxClass::Hook_Process);
+
     MessageListClass::Hook_Me();
     RadioClass::Hook_Me();
     TechnoClass::Hook_Me();
@@ -311,11 +415,30 @@ void Setup_Hooks()
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
     Hook_Function(0x004A96E8, CC_Draw_Shape);
-    // Hook_Function(0x004AD670, Dialog_Box);
-    Dialog::Hook_Me();
-    // Hook_Function(0x004AC798, Coord_Move);
+    
+    // dialog.h
+    Hook_Function(0x004AE3FC, &Simple_Text_Print);
+    Hook_Function(0x004AE7FC,
+        static_cast<void (*)(int, unsigned, unsigned, RemapControlType *, uint8_t, TextPrintType, ...)>(
+            &Fancy_Text_Print)); // int
+    Hook_Function(0x004AE8C0,
+        static_cast<void (*)(const char *, unsigned, unsigned, RemapControlType *, uint8_t, TextPrintType, ...)>(
+            &Fancy_Text_Print)); // char
+    Hook_Function(0x004AE930, &Conquer_Clip_Text_Print);
+    Hook_Function(0x004AEA74,
+        static_cast<void (*)(int, unsigned, unsigned, uint8_t, uint8_t, TextPrintType, ...)>(&Plain_Text_Print)); // int
+    Hook_Function(0x004AEAF8,
+        static_cast<void (*)(const char *, unsigned, unsigned, uint8_t, uint8_t, TextPrintType, ...)>(
+            &Plain_Text_Print)); // char
+    Hook_Function(0x004AE284, &Format_Window_String);
+    Hook_Function(0x00591F3C, &Format_Window_String_New);
+    Hook_Function(0x004AEBB4, static_cast<void (*)(int, int, int, int)>(&Draw_Caption)); // int
+    Hook_Function(0x004AEC14, static_cast<void (*)(const char *, int, int, int)>(&Draw_Caption)); // char
+    Hook_Function(0x004AD670, &Dialog_Box);
+    Hook_Function(0x004ADB5C, &Draw_Box);
+    Hook_Function(0x004AE350, &Window_Box);
+
     Hook_Function(0x004AC814, Move_Point);
-    // Hook_Function(0x005E5200, (void *)0x005E53CD); // This one forces better interpolation algo.
     Init::Hook_Me();
     Hook_Function(0x004AAC58, &Force_CD_Available);
     Hook_Function(0x004A7C74, Main_Loop);

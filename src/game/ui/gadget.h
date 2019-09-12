@@ -107,10 +107,6 @@ public:
     static RemapControlType *Get_Color_Scheme() { return ColorScheme; }
     static void Set_Color_Scheme(RemapControlType *remap) { ColorScheme = remap; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
 #ifdef GAME_DLL
     static RemapControlType *&ColorScheme;
@@ -142,37 +138,5 @@ protected:
 
     unsigned InputFlag;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void GadgetClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004C3E40, *GadgetClass::Remove);
-    Hook_Function(0x004C3F38, *GadgetClass::Input);
-    Hook_Function(0x004C3F08, *GadgetClass::Draw_All);
-    Hook_Function(0x004C3E74, *GadgetClass::Delete_List);
-    Hook_Function(0x004C4160, *GadgetClass::Extract_Gadget);
-    Hook_Function(0x004A2810, *GadgetClass::Flag_List_To_Redraw);
-    Hook_Function(0x004C3E2C, *GadgetClass::Disable);
-    Hook_Function(0x004C3E08, *GadgetClass::Enable);
-    //Hook_Function(0x004B5950, *GadgetClass::Get_ID);
-    Hook_Function(0x004C4198, *GadgetClass::Flag_To_Redraw);
-    Hook_Function(0x004AC370, *GadgetClass::Peer_To_Peer);
-    Hook_Function(0x004C41D4, *GadgetClass::Set_Focus);
-    Hook_Function(0x004C4210, *GadgetClass::Clear_Focus);
-    Hook_Function(0x004C423C, *GadgetClass::Has_Focus);
-    Hook_Function(0x004C4254, *GadgetClass::Is_List_To_Redraw);
-    Hook_Function(0x004A2830, *GadgetClass::Is_To_Redraw);
-    Hook_Function(0x004C4280, *GadgetClass::Set_Position);
-    Hook_Function(0x004C3EE8, *GadgetClass::Draw_Me);
-    Hook_Function(0x004C41A4, *GadgetClass::Sticky_Process); //issue
-    Hook_Function(0x004C3EC8, *GadgetClass::Action);
-    Hook_Function(0x004C3DB4, *GadgetClass::Clicked_On); //issue
-
-#endif
-}
-#endif
 
 #endif // GADGET_H

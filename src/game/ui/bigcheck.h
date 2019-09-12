@@ -32,10 +32,6 @@ public:
 
     BigCheckBoxClass & operator=(BigCheckBoxClass &that);
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
     TextPrintType TextStyle;
     const char *TextString;
@@ -51,17 +47,5 @@ inline BigCheckBoxClass &BigCheckBoxClass::operator=(BigCheckBoxClass &that)
 
     return *this;
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void BigCheckBoxClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005AAC70, *BigCheckBoxClass::Draw_Me);
-    Hook_Function(0x005AAD4C, *BigCheckBoxClass::Action);
-#endif
-}
-#endif
 
 #endif // BIGCHECK_H

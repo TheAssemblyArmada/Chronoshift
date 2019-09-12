@@ -38,10 +38,6 @@ public:
 
     void Set_ID(unsigned id) { ID = id; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
     unsigned ID;
     GadgetClass *Peer;
@@ -57,17 +53,5 @@ inline ControlClass &ControlClass::operator=(ControlClass &that)
 
     return *this;
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void ControlClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004AC2C0, *ControlClass::Action);
-    Hook_Function(0x004AC338, *ControlClass::Draw_Me);
-#endif
-}
-#endif
 
 #endif // CONTROLC_H

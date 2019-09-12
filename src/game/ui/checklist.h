@@ -57,9 +57,6 @@ public:
     void Check_Item(int index, BOOL check_state);
     BOOL Is_Checked(int index) const;
 
-    #ifdef GAME_DLL
-    static void Hook_Me();
-#endif
 protected:
     BOOL IgnoreInput;
 };
@@ -73,19 +70,5 @@ inline CheckListClass &CheckListClass::operator=(CheckListClass &that)
 
     return *this;
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void CheckListClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004A2510, *CheckListClass::Action);
-    Hook_Function(0x004A2568, *CheckListClass::Draw_Entry);
-    Hook_Function(0x004A24D4, *CheckListClass::Check_Item);
-#endif
-}
-#endif
-
 
 #endif // CHECKLIST_H

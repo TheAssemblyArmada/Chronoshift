@@ -27,23 +27,7 @@
 #include <cstdarg>
 #include <cstdio>
 
-#ifdef GAME_DLL
-WindowType *WindowList = reinterpret_cast<WindowType*>(0x006016CC);
-unsigned &Window = Make_Global<unsigned>(0x006B1A08);
-int &WindowColumns = Make_Global<int>(0x0060CE6C);
-int &WindowLines = Make_Global<int>(0x0060CE70);
-int &WindowWidth = Make_Global<int>(0x0060CE74);
-int &WPos = Make_Global<int>(0x006B19DC);
-int &WinX = Make_Global<int>(0x006B19F8);
-int &WinY = Make_Global<int>(0x006B19FC);
-int &WinW = Make_Global<int>(0x0060CE80);
-int &WinH = Make_Global<int>(0x0060CE7C);
-int &WinC = Make_Global<int>(0x0060CE78);
-int &WinB = Make_Global<int>(0x006B19F4);
-int &WinCx = Make_Global<int>(0x006B1A00);
-int &WinCy = Make_Global<int>(0x006B1A04);
-int &ScrollCounter = Make_Global<int>(0x006B197C);
-#else
+#ifndef GAME_DLL
 WindowType WindowList[WINDOW_COUNT] = {
     { 0, 0, 640, 400, 15, 12, 0, 0 },
     { 8, 75, 304, 100, 15, 12, 0, 0 },

@@ -38,10 +38,6 @@ public:
     void Set_Toggle_Bool1(BOOL unk) { Toggle_Boolean1 = unk; }
     void Set_Toggle_Disabled(BOOL disabled) { ToggleDisabled = disabled; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL Toggle_Boolean1 : 1; // & 1
@@ -65,16 +61,5 @@ inline ToggleClass &ToggleClass::operator=(ToggleClass &that)
 
     return *this;
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void ToggleClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x0056C4C8, *ToggleClass::Action);
-#endif
-}
-#endif
 
 #endif // TOGGLE_H
