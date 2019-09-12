@@ -22,10 +22,8 @@
 
 #ifdef GAME_DLL
 #ifdef BUILD_WITH_DDRAW
-LPDIRECTDRAW &g_directDrawObject = Make_Global<LPDIRECTDRAW>(0x006B1490);
-LPDIRECTDRAWSURFACE &g_paletteSurface = Make_Global<LPDIRECTDRAWSURFACE>(0x006B18A4);
-tagPALETTEENTRY *const g_paletteEntries = Make_Pointer<tagPALETTEENTRY>(0x006B149C);
-LPDIRECTDRAWPALETTE &g_palettePtr = Make_Global<LPDIRECTDRAWPALETTE>(0x006B189C);
+extern ARRAY_DEC(tagPALETTEENTRY, g_paletteEntries, 256);
+extern LPDIRECTDRAWPALETTE &g_palettePtr;
 #endif
 #else
 #ifdef BUILD_WITH_DDRAW

@@ -390,34 +390,9 @@ private:
     int m_ElementGetPos; // Position of the next retrievable entry.
     int m_ElementPutPos; // Position of the next free space in the buffer.
     BOOL m_Initialised;
-
-#ifdef GAME_DLL
-public:
-    static void Hook_Me();
-
-private:
-    static BOOL Hook_Handler(KeyboardClass *ptr, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    static uint16_t Hook_Check(KeyboardClass *ptr);
-    static uint16_t Hook_Get(KeyboardClass *ptr);
-    static void Hook_Clear(KeyboardClass *ptr);
-    static void Hook_Fill(KeyboardClass *ptr);
-#endif
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
-inline void KeyboardClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005B82FC, Hook_Handler);
-    // Hook_Function(0x005B7408, Hook_Fill);
-    Hook_Function(0x005B7F30, Hook_Check);
-    Hook_Function(0x005B7F5C, Hook_Get);
-    Hook_Function(0x005B82CC, Hook_Clear);
-#endif
-}
-
 extern KeyboardClass *&g_keyboard;
 #else
 extern KeyboardClass *g_keyboard;

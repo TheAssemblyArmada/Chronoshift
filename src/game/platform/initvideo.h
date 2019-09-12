@@ -30,8 +30,6 @@ BOOL Init_Video();
 void Set_Video_Palette(void *pal);
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 #ifdef BUILD_WITH_DDRAW
 extern LPDIRECTDRAW &g_directDrawObject;
 extern LPDIRECTDRAWSURFACE &g_paletteSurface;

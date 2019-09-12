@@ -166,7 +166,13 @@ void Setup_Hooks()
 
     ControlClass::Hook_Me();
     GraphicViewPortClass::Hook_Me();
-    KeyboardClass::Hook_Me();
+    
+    // keyboard.h
+    Hook_Function(0x005B82FC, *KeyboardClass::Message_Handler);
+    // Hook_Function(0x005B7408, *KeyboardClass::Fill);
+    Hook_Function(0x005B7F30, *KeyboardClass::Check);
+    Hook_Function(0x005B7F5C, *KeyboardClass::Get);
+    Hook_Function(0x005B82CC, *KeyboardClass::Clear);
     
     // ostimer.h
     Hook_Function(0x005BBEB0, &PlatformTimerClass::Timer_Callback);
@@ -189,7 +195,10 @@ void Setup_Hooks()
     TextButtonClass::Hook_Me();
     ToggleClass::Hook_Me();
     WSAFile::Hook_Me();
-    MouseClass::Hook_Me();
+
+    // mouse.h
+    Hook_Function(0x005C1B10, *MouseClass::Low_Hide_Mouse);
+    Hook_Function(0x005C1BF0, *MouseClass::Low_Show_Mouse);
     
     // xordelta.h
     Hook_Function(0x005D6A50, Apply_XOR_Delta_To_Page_Or_Viewport);
