@@ -19,9 +19,7 @@
 #include "gameini.h"
 #include "warheadtype.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<WeaponTypeClass> &g_WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x0069164C);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<WeaponTypeClass> g_WeaponTypes;
 #endif
 

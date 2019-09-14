@@ -20,10 +20,7 @@
 #include "globals.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter =
-    *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x00687C08);
-#else
+#ifndef GAME_DLL
 TCountDownTimerClass<SystemTimerClass> ScrollClass::ScrollingCounter;
 #endif
 

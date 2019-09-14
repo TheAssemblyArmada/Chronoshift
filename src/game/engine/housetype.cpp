@@ -19,9 +19,7 @@
 #include "language.h"
 #include "stringex.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<HouseTypeClass> &g_HouseTypes = Make_Global<TFixedIHeapClass<HouseTypeClass> >(0x0065DD24);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<HouseTypeClass> g_HouseTypes;
 #endif
 

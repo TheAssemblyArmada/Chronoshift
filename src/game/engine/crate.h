@@ -86,8 +86,4 @@ public:
 #endif
 };
 
-#ifdef GAME_DLL
-#include "hooker.h"
-#endif
-
 #endif // CRATE_H

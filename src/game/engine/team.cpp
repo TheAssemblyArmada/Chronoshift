@@ -16,9 +16,7 @@
 #include "team.h"
 #include "gamedebug.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<TeamClass> &g_Teams = Make_Global<TFixedIHeapClass<TeamClass> >(0x0065DAC4);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<TeamClass> g_Teams;
 #endif
 

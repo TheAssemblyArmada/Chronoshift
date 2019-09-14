@@ -26,12 +26,7 @@
 //#include "anim.h"
 #include "target.h"
 
-#ifdef GAME_DLL
-LogicClass &Logic = Make_Global<LogicClass>(0x00668230);
-DynamicVectorClass<TriggerClass *> &g_LogicTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F270);
-DynamicVectorClass<TriggerClass *> &g_MapTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F254);
-DynamicVectorClass<TriggerClass *> *g_HouseTriggers = Make_Pointer<DynamicVectorClass<TriggerClass *> >(0x0067F074);
-#else
+#ifndef GAME_DLL
 LogicClass Logic;
 DynamicVectorClass<TriggerClass *> g_LogicTriggers;
 DynamicVectorClass<TriggerClass *> g_MapTriggers;

@@ -25,9 +25,7 @@
 #define TRANSPORT_DOOR_DELAY 5
 #define TRANSPORT_DOOR_STAGES 6
 
-#ifdef GAME_DLL
-TFixedIHeapClass<VesselClass> &g_Vessels = Make_Global<TFixedIHeapClass<VesselClass> >(0x0065DC8C);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<VesselClass> g_Vessels;
 #endif
 

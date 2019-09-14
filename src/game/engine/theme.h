@@ -149,8 +149,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern ThemeClass &Theme;
 #else
 extern ThemeClass Theme;

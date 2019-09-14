@@ -28,10 +28,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-ThemeClass &Theme = Make_Global<ThemeClass>(0x00668248);
-ThemeClass::ThemeControl *ThemeClass::Themes = Make_Pointer<ThemeClass::ThemeControl>(0x006052FC);
-#else
+#ifndef GAME_DLL
 ThemeClass Theme;
 
 // BaseName; Name; Scenario; Length; IsNormal; IsRepeat; IsAvailable; Side;

@@ -38,28 +38,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-LayerClass *DisplayClass::Layers = Make_Pointer<LayerClass>(0x00656080);
-DisplayClass::TacticalClass &DisplayClass::TacticalButton = Make_Global<DisplayClass::TacticalClass>(0x00658804);
-char *DisplayClass::FadingBrighten = Make_Pointer<char>(0x006560E0);
-char *DisplayClass::FadingShade = Make_Pointer<char>(0x006561E0);
-char *DisplayClass::FadingWayDark = Make_Pointer<char>(0x006562E0);
-char *DisplayClass::FadingLight = Make_Pointer<char>(0x006563E0);
-char *DisplayClass::FadingGreen = Make_Pointer<char>(0x006564E0);
-char *DisplayClass::FadingYellow = Make_Pointer<char>(0x006565E0);
-char *DisplayClass::FadingRed = Make_Pointer<char>(0x006566E0);
-char *DisplayClass::TranslucentTable = Make_Pointer<char>(0x006567E0);
-char *DisplayClass::WhiteTranslucentTable = Make_Pointer<char>(0x006575E0);
-char *DisplayClass::MouseTranslucentTable = Make_Pointer<char>(0x006577E0);
-char *DisplayClass::ShadowTrans = Make_Pointer<char>(0x006582E8);
-char *DisplayClass::UnitShadow = Make_Pointer<char>(0x00657CE4);
-char *DisplayClass::UnitShadowAir = Make_Pointer<char>(0x00657EE4);
-char *DisplayClass::SpecialGhost = Make_Pointer<char>(0x006580E4);
-void *&DisplayClass::TransIconset = Make_Global<void *>(0x00657CE0);
-void *&DisplayClass::ShadowShapes = Make_Global<void *>(0x006582E4);
-BufferClass *&DisplayClass::TheaterBuffer = Make_Global<BufferClass *>(0x006680E4);
-BooleanVectorClass &DisplayClass::CellRedraw = Make_Global<BooleanVectorClass>(0x006587E8);
-#else
+#ifndef GAME_DLL
 LayerClass DisplayClass::Layers[LAYER_COUNT];
 DisplayClass::TacticalClass DisplayClass::TacticalButton;
 char DisplayClass::FadingBrighten[256];

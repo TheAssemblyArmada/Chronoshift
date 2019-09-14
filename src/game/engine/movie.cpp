@@ -18,7 +18,7 @@
 #include "mouse.h"
 #include "gamedebug.h"
 
-#ifndef PLATFORM_WINDOWS
+#ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
 

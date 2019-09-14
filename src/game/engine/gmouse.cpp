@@ -32,11 +32,7 @@
 #include "coord.h"
 #include <new>
 
-#ifdef GAME_DLL
-void *&GameMouseClass::s_MouseShapes = Make_Global<void *>(0x00685160);
-TCountDownTimerClass<SystemTimerClass> &GameMouseClass::s_AnimationTimer =
-    Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x00685164);
-#else
+#ifndef GAME_DLL
 void *GameMouseClass::s_MouseShapes = nullptr;
 TCountDownTimerClass<SystemTimerClass> GameMouseClass::s_AnimationTimer;
 #endif

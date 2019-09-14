@@ -126,7 +126,11 @@ public:
     void Reset_Pending_Object();
     int Tac_Offset_X() const { return TacOffsetX; }
     int Tac_Offset_Y() const { return TacOffsetY; }
-    coord_t New_Pos() const { return DisplayNewPos; }
+    coord_t New_Pos() const { return DisplayNewPos; }  
+
+private:
+    // This only seems to be used by DisplayClass, so made it a static helper of this class.
+    static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
 
 protected:
     coord_t DisplayPos; // Coord of top left of tactical display within the map.
@@ -208,105 +212,48 @@ public:
     static char FadingWhite[256];
 
 #ifdef GAME_DLL
-    static void Hook_Me();
-    cell_t Hook_Click_Cell_Calc(int x, int y);
-    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
+    cell_t Hook_Click_Cell_Calc(int x, int y) { return DisplayClass::Click_Cell_Calc(x, y); }
+    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y)
+    {
+        return DisplayClass::Text_Overlap_List(string, x, y);
+    }
+
+    void Hook_Get_Occupy_Dimensions(int &w, int &h, int16_t *list)
+    {
+        DisplayClass::Get_Occupy_Dimensions(w, h, list);
+    }
+
+    ObjectClass *Hook_Cell_Object(cell_t cellnum, int x, int y)
+    {
+        return DisplayClass::Cell_Object(cellnum, x, y);
+    }
+
+    ObjectClass *Hook_Next_Object(ObjectClass *object) { return DisplayClass::Next_Object(object); }
+
+    BOOL Hook_In_View(cell_t cellnum) { return DisplayClass::In_View(cellnum); }
+
+    BOOL Hook_Coord_To_Pixel(coord_t coord, int &x, int &y)
+    {
+        return DisplayClass::Coord_To_Pixel(coord, x, y);
+    }
+
+    int Hook_Cell_Shadow(cell_t cellnum) { return DisplayClass::Cell_Shadow(cellnum); }
+
+    coord_t Hook_Closest_Free_Spot(coord_t coord, BOOL skip_occupied)
+    {
+        return DisplayClass::Closest_Free_Spot(coord, skip_occupied);
+    }
+
+    cell_t Hook_Calculated_Cell(SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
+    {
+        return DisplayClass::Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
+    }
+
+    BOOL Hook_Good_Reinforcement_Cell(cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone)
+    {
+        return DisplayClass::Good_Reinforcement_Cell(cell1, cell2, speed, zone, mzone);
+    }
 #endif
-
-private:
-    // This only seems to be used by DisplayClass, so made it a static helper of this class.
-    static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
-    static void Hook_Get_Occupy_Dimensions(DisplayClass *ptr, int &w, int &h, int16_t *list)
-    {
-        ptr->Get_Occupy_Dimensions(w, h, list);
-    }
-
-    static ObjectClass *Hook_Cell_Object(DisplayClass *ptr, cell_t cellnum, int x, int y)
-    {
-        return ptr->Cell_Object(cellnum, x, y);
-    }
-
-    static ObjectClass *Hook_Next_Object(DisplayClass *ptr, ObjectClass *object) { return ptr->Next_Object(object); }
-
-    static BOOL Hook_In_View(DisplayClass *ptr, cell_t cellnum) { return ptr->In_View(cellnum); }
-
-    static BOOL Hook_Coord_To_Pixel(DisplayClass *ptr, coord_t coord, int &x, int &y)
-    {
-        return ptr->Coord_To_Pixel(coord, x, y);
-    }
-
-    static int Hook_Cell_Shadow(DisplayClass *ptr, cell_t cellnum) { return ptr->Cell_Shadow(cellnum); }
-
-    static coord_t Hook_Closest_Free_Spot(DisplayClass *ptr, coord_t coord, BOOL skip_occupied)
-    {
-        return ptr->Closest_Free_Spot(coord, skip_occupied);
-    }
-
-    static cell_t Hook_Calculated_Cell(
-        DisplayClass *ptr, SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
-    {
-        return ptr->Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
-    }
-
-    static BOOL Hook_Good_Reinforcement_Cell(
-        DisplayClass *ptr, cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone)
-    {
-        return ptr->Good_Reinforcement_Cell(cell1, cell2, speed, zone, mzone);
-    }
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-inline const int16_t *DisplayClass::Hook_Text_Overlap_List(const char *string, int x, int y)
-{
-    return DisplayClass::Text_Overlap_List(string, x, y);
-}
-
-inline cell_t DisplayClass::Hook_Click_Cell_Calc(int x, int y)
-{
-    return DisplayClass::Click_Cell_Calc(x, y);
-}
-
-inline void DisplayClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear);
-    Hook_Function(0x004AEFF4, *DisplayClass::Init_IO);
-    Hook_Function(0x004AF02C, *DisplayClass::Init_Theater);
-    Hook_Function(0x004B0140, *DisplayClass::AI);
-    Hook_Function(0x004AEEF4, *DisplayClass::One_Time);
-    Hook_Function(0x004AF700, *DisplayClass::Set_Cursor_Shape);
-    Hook_Function(0x004B0278, *DisplayClass::Hook_Click_Cell_Calc);
-    Hook_Function(0x004B03B4, *DisplayClass::Scroll_Map);
-    Hook_Function(0x004B0628, *DisplayClass::Refresh_Cells);
-    Hook_Function(0x004AF4E0, *DisplayClass::Set_View_Dimensions);
-    Hook_Function(0x004B4860, *DisplayClass::Set_Tactical_Position);
-    Hook_Function(0x004B5908, *DisplayClass::Flag_Cell);
-    Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press);
-    Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press);
-    Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held);
-    Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band);
-    Hook_Function(0x004B006C, *DisplayClass::Cursor_Mark);
-    Hook_Function(0x004AFFA8, *DisplayClass::Hook_Get_Occupy_Dimensions);
-    Hook_Function(0x004AF2D8, *DisplayClass::Hook_Text_Overlap_List);
-    Hook_Function(0x004B25A4, *DisplayClass::Hook_Next_Object);
-    Hook_Function(0x004B0214, *DisplayClass::Submit);
-    Hook_Function(0x004B0248, *DisplayClass::Remove);
-    Hook_Function(0x004B0C78, *DisplayClass::Hook_Cell_Object);
-    Hook_Function(0x004B4E20, *DisplayClass::Center_Map);
-    Hook_Function(0x004AFD40, *DisplayClass::Set_Cursor_Pos);
-    Hook_Function(0x004B1FD0, *DisplayClass::Redraw_Icons);
-    Hook_Function(0x004B2178, *DisplayClass::Redraw_Shadow);
-    Hook_Function(0x004B4CB8, *DisplayClass::Hook_In_View);
-    Hook_Function(0x004B0968, *DisplayClass::Hook_Coord_To_Pixel);
-    Hook_Function(0x004B0698, *DisplayClass::Hook_Cell_Shadow);
-    Hook_Function(0x004B0B10, *DisplayClass::Push_Onto_TacMap);
-    Hook_Function(0x004B274C, *DisplayClass::Hook_Calculated_Cell);
-    Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell);
-    Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot);
-    Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow);
-#endif
-}
-#endif
 
 #endif // DISPLAY_H

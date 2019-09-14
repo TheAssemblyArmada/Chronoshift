@@ -40,7 +40,6 @@ public:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern LogicClass &Logic;
 extern DynamicVectorClass<TriggerClass *> &g_LogicTriggers;
 extern DynamicVectorClass<TriggerClass *> &g_MapTriggers;

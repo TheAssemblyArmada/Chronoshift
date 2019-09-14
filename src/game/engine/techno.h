@@ -169,7 +169,6 @@ public:
     BOOL Is_Bit2_16() const { return m_Bit2_16; }
 
 #ifdef GAME_DLL
-    static void Hook_Me();
     void Wrap_Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
     {
         TechnoClass::Techno_Draw_It(shape, frame, x, y, window, dir, scale);
@@ -238,16 +237,5 @@ protected:
 protected:
     static int const BodyShape32[32];
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void TechnoClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x0056706C, *TechnoClass::Wrap_Techno_Draw_It);
-#endif
-}
-#endif
 
 #endif // TECHNO_H

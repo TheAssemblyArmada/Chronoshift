@@ -184,7 +184,6 @@ public:
     static void Write_INI(GameINIClass &ini);
 
 #ifdef GAME_DLL
-    static void Hook_Me();
     FactoryClass *Hook_Fetch_Factory(RTTIType rtti) { return Fetch_Factory(rtti); }
     BuildingClass *Hook_Find_Building(BuildingType to_find, ZoneType zone) { return Find_Building(to_find, zone); }
     coord_t Hook_Find_Build_Location(BuildingClass *building) { return Find_Build_Location(building); }
@@ -413,54 +412,7 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<HouseClass> &g_Houses;
-
-#ifdef GAME_DLL
-inline void HouseClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004D5EF4, *HouseClass::Silo_Redraw_Check);
-    Hook_Function(0x004D2D48, *HouseClass::Assign_Handicap);
-    Hook_Function(0x004D6060, *HouseClass::Make_Ally);
-    Hook_Function(0x004D6370, *HouseClass::Make_Enemy);
-    Hook_Function(0x004D8B40, *HouseClass::Flag_To_Die);
-    Hook_Function(0x004D8BB8, *HouseClass::Flag_To_Win);
-    Hook_Function(0x004D8C30, *HouseClass::Flag_To_Lose);
-    Hook_Function(0x004DCB14, *HouseClass::Tracking_Remove);
-    Hook_Function(0x004DCC30, *HouseClass::Tracking_Add);
-    Hook_Function(0x004DCEB4, *HouseClass::Factory_Counter);
-    Hook_Function(0x004DCF6C, *HouseClass::Active_Add);
-    Hook_Function(0x004DCF1C, *HouseClass::Active_Remove);
-    Hook_Function(0x004DE640, *HouseClass::Computer_Paranoid);
-    Hook_Function(0x004D4014, *HouseClass::Can_Build);
-    Hook_Function(0x004D2D28, *HouseClass::One_Time);
-    Hook_Function(0x004D8CA8, *HouseClass::Init_Data);
-    Hook_Function(0x004D5D9C, *HouseClass::Harvested);
-    Hook_Function(0x004D5E80, *HouseClass::Adjust_Capacity);
-    Hook_Function(0x004D8CC4, *HouseClass::Power_Fraction);
-    Hook_Function(0x004D658C, *HouseClass::Adjust_Threat);
-    Hook_Function(0x004DDBD0, *HouseClass::Hook_Fetch_Factory);
-    Hook_Function(0x004DDC58, *HouseClass::Set_Factory);
-    Hook_Function(0x004D40F4, *HouseClass::Init);
-    Hook_Function(0x004D8D1C, *HouseClass::Sell_Wall);
-    Hook_Function(0x004D8F34, *HouseClass::Hook_Find_Building);
-    Hook_Function(0x004D9020, *HouseClass::Hook_Find_Build_Location);
-    Hook_Function(0x004DE81C, *HouseClass::Hook_Find_Cell_In_Zone);
-    Hook_Function(0x004DE9C0, *HouseClass::Hook_Random_Cell_In_Zone);
-    Hook_Function(0x004DD07C, *HouseClass::Hook_Which_Zone_Obj);
-    Hook_Function(0x004DD0A4, *HouseClass::Hook_Which_Zone_Cell);
-    Hook_Function(0x004DCFBC, *HouseClass::Hook_Which_Zone_Coord);
-    Hook_Function(0x004DDCD0, *HouseClass::Factory_Count);
-    Hook_Function(0x004DD920, *HouseClass::Hook_Zone_Cell);
-    Hook_Function(0x004DD9FC, *HouseClass::Hook_Where_To_Go);
-    Hook_Function(0x004DDA80, *HouseClass::Hook_Find_Juicy_Target);
-    Hook_Function(0x004DE094, *HouseClass::Hook_Is_No_Yak_Mig);
-    Hook_Function(0x004DE154, *HouseClass::Hook_Is_Hack_Prevented);
-    Hook_Function(0x004DDCFC, *HouseClass::Read_INI);
-#endif
-}
-#endif
 #else
 extern TFixedIHeapClass<HouseClass> g_Houses;
 #endif

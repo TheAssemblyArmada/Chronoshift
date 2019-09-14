@@ -21,9 +21,7 @@
 #include "mixfile.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes = Make_Global<TFixedIHeapClass<TemplateTypeClass> >(0x0065DF84);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;
 #endif
 

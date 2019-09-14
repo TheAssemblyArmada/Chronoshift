@@ -14,14 +14,11 @@
  */
 #include "vox.h"
 
-#ifndef PLATFORM_WINDOWS
+#ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
 
-#ifdef GAME_DLL
-void **SpeechBuffer = reinterpret_cast<void **>(0x006680D8);
-VoxType *SpeechRecord = Make_Pointer<VoxType>(0x006680E0);
-#else
+#ifndef GAME_DLL
 void *SpeechBuffer[VOX_BUFFERS];
 VoxType SpeechRecord[VOX_BUFFERS];
 #endif

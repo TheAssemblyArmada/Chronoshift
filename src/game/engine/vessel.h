@@ -103,20 +103,7 @@ private:
     TCountDownTimerClass<FrameTimerClass> m_TransportDoorTimer;
     TCountDownTimerClass<FrameTimerClass> m_SubmergeTimer;
     FacingClass m_SecondaryTurretFacing;
-
-#ifdef GAME_DLL
-private:
-    static inline void Hook_Me();
-#endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-void VesselClass::Hook_Me()
-{
-
-}
-#endif
 
 #ifdef GAME_DLL
 extern TFixedIHeapClass<VesselClass> &g_Vessels;

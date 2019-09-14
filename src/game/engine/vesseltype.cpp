@@ -25,9 +25,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-TFixedIHeapClass<VesselTypeClass> &g_VesselTypes = Make_Global<TFixedIHeapClass<VesselTypeClass> >(0x0065DF38);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<VesselTypeClass> g_VesselTypes;
 #endif
 

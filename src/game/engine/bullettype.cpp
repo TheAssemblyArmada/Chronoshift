@@ -22,9 +22,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-TFixedIHeapClass<BulletTypeClass> &g_BulletTypes = Make_Global<TFixedIHeapClass<BulletTypeClass> >(0x0065DE54);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<BulletTypeClass> g_BulletTypes;
 #endif
 

@@ -79,7 +79,6 @@ public:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern GroundClass *Ground;
 #else
 extern GroundClass Ground[LAND_COUNT];

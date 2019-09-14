@@ -280,7 +280,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes;
 #else
 extern TFixedIHeapClass<BuildingTypeClass> g_BuildingTypes;

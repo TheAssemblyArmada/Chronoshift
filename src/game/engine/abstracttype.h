@@ -28,6 +28,7 @@ class NoInitClass;
 
 class AbstractTypeClass
 {
+    friend void Setup_Hooks();
 public:
     AbstractTypeClass(RTTIType type, int heap_id = -1, int ui_name = TXT_NULL, const char *name = nullptr);
     AbstractTypeClass(const AbstractTypeClass &that);
@@ -53,9 +54,6 @@ protected:
     int m_UIName;
 
 #ifdef GAME_DLL
-public:
-    static void Hook_Me();
-
 private:
     AbstractTypeClass *Hook_Ctor(RTTIType type, int heap_id, int ui_name, const char *name) { return new (this) AbstractTypeClass(type, heap_id, ui_name, name); }
     AbstractTypeClass *Hook_Ctor_NoInit(const NoInitClass &noinit) { return new (this) AbstractTypeClass(noinit); }
@@ -65,22 +63,6 @@ private:
     int Hook_Get_Ownable() { return AbstractTypeClass::Get_Ownable(); }
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void AbstractTypeClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004055DC, *AbstractTypeClass::Hook_Ctor);
-    Hook_Function(0x004CD990, *AbstractTypeClass::Hook_Ctor_NoInit);
-    Hook_Function(0x00405480, *AbstractTypeClass::Hook_Ctor_Copy);
-    Hook_Function(0x00405610, *AbstractTypeClass::Hook_Coord_Fixup);
-    Hook_Function(0x0040561C, *AbstractTypeClass::Hook_Full_Name);
-    Hook_Function(0x0040566C, *AbstractTypeClass::Hook_Get_Ownable);
-#endif
-}
-#endif
 
 inline AbstractTypeClass &AbstractTypeClass::operator=(const AbstractTypeClass &that)
 {

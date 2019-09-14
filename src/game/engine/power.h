@@ -47,11 +47,6 @@ public:
     int Power_Height(int power);
     void Flash_Power();
 
-
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL PowerToRedraw : 1; // 1
@@ -80,19 +75,5 @@ protected:
     static void *PowerBarShape;
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-inline void PowerClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005275CC, *PowerClass::One_Time); // seems to work
-    Hook_Function(0x00527534, *PowerClass::Init_Clear); // seems to work
-    Hook_Function(0x00527EA4, *PowerClass::Refresh_Cells); // seems to work
-    Hook_Function(0x00527EE4, *PowerClass::Power_Height); // seems to work
-    Hook_Function(0x00528010, *PowerClass::Flash_Power); // seems to work
-#endif
-}
-#endif
 
 #endif // POWER_H

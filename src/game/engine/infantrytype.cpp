@@ -20,9 +20,7 @@
 #include "lists.h"
 #include "rules.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<InfantryTypeClass> &g_InfantryTypes = Make_Global<TFixedIHeapClass<InfantryTypeClass> >(0x0065DE08);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<InfantryTypeClass> g_InfantryTypes;
 #endif
 

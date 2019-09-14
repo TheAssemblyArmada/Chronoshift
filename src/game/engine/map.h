@@ -88,7 +88,6 @@ public:
     int Get_Map_Cell_Height() const {return MapCellHeight; }
 
 #ifdef GAME_DLL
-    static void Hook_Me();
     cell_t MapClass::Hook_Pick_Random_Location() { return Pick_Random_Location(); }
     BOOL MapClass::Hook_In_Radar(cell_t cellnum) { return In_Radar(cellnum); }
 
@@ -123,39 +122,5 @@ private:
     static const int RadiusOffset[];
     static const int RadiusCount[];
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void MapClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-
-    Hook_Function(0x004FE310, *MapClass::One_Time);
-    Hook_Function(0x004FE344, *MapClass::Init_Clear);
-    Hook_Function(0x004FE3B0, *MapClass::Alloc_Cells);
-    Hook_Function(0x004FE3DC, *MapClass::Free_Cells);
-    Hook_Function(0x004FE3EC, *MapClass::Init_Cells);
-    Hook_Function(0x004FEE94, *MapClass::Logic_AI);
-    Hook_Function(0x004FE420, *MapClass::Set_Map_Dimensions);
-    Hook_Function(0x004FF218, *MapClass::Place_Random_Crate);
-    Hook_Function(0x004FF2A0, *MapClass::Remove_Crate);
-    Hook_Function(0x005008A4, *MapClass::Hook_Pick_Random_Location);
-    Hook_Function(0x004FE8AC, *MapClass::Hook_In_Radar);
-    Hook_Function(0x004FE918, *MapClass::Place_Down);
-    Hook_Function(0x004FEA28, *MapClass::Pick_Up);
-    Hook_Function(0x004FEB38, *MapClass::Overlap_Down);
-    Hook_Function(0x004FEBD8, *MapClass::Overlap_Up);
-    Hook_Function(0x004FEC78, *MapClass::Overpass);
-    Hook_Function(0x004FF168, *MapClass::Cell_Region);
-    Hook_Function(0x004FF690, *MapClass::Zone_Reset);
-    Hook_Function(0x004FF7D8, *MapClass::Zone_Span);
-    Hook_Function(0x004FFAC4, *MapClass::Hook_Nearby_Location);
-    Hook_Function(0x0050083C, *MapClass::Hook_Intact_Bridge_Count);
-    Hook_Function(0x004FED90, *MapClass::Read_Binary);
-    Hook_Function(0x004FF1BC, *MapClass::Cell_Threat);
-#endif
-}
-#endif
 
 #endif // MAP_H

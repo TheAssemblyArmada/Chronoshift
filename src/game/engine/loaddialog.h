@@ -60,26 +60,9 @@ public:
     static int Num_From_Ext(const char *name);
     static int Compare(const void *ptr1, const void *ptr2);
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
     OperationModeEnum OperationMode;
     DynamicVectorClass<FileEntryClass *> Files;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void LoadOptionsClass::Hook_Me()
-{
-#ifdef COMPLIER_WATCOM
-    // Hook_Function(0x004FCEB4, *LoadOptionsClass::Process); // Not implemented.
-    Hook_Function(0x004FDA04, *LoadOptionsClass::Clear_List);
-    Hook_Function(0x004FDA80, *LoadOptionsClass::Fill_List);
-#endif
-}
-#endif
 
 #endif // LOADDIALOG_H

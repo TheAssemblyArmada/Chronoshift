@@ -15,9 +15,7 @@
  */
 #include "aircraft.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<AircraftClass> &g_Aircraft = Make_Global<TFixedIHeapClass<AircraftClass> >(0x0065D818);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<AircraftClass> g_Aircraft;
 #endif
 

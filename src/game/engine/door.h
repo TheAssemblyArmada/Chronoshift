@@ -48,8 +48,7 @@ public:
     BOOL Is_Closing() const { return State == DOOR_CLOSING; }
 
 #ifdef GAME_DLL
-    int DoorClass::Hook_Door_Stage() { return Door_Stage(); }
-    static void Hook_Me();
+    int Hook_Door_Stage() { return DoorClass::Door_Stage(); }
 #endif
 
 private:
@@ -62,19 +61,5 @@ private:
     bool StageComplete;
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void DoorClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004B5C40, *DoorClass::AI);
-    Hook_Function(0x004B5D08, *DoorClass::Open_Door);
-    Hook_Function(0x004B5D60, *DoorClass::Close_Door);
-    Hook_Function(0x004B5DC8, *DoorClass::Hook_Door_Stage);
-#endif
-}
-#endif
 
 #endif // DOOR_H

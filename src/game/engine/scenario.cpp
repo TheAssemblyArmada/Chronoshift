@@ -22,9 +22,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-ScenarioClass &Scen = Make_Global<ScenarioClass>(0x006678E8);
-#else
+#ifndef GAME_DLL
 ScenarioClass Scen;
 #endif
 

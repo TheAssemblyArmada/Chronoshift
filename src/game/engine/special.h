@@ -45,10 +45,6 @@ public:
 
     uint32_t Pack() const { return SpecialFlags; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     // Union/Struct required so we fetch the data easily with SpecialFlags.
@@ -89,15 +85,7 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern SpecialClass &Special;
-
-inline void SpecialClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x00550DE0, *SpecialClass::Init);
-#endif
-}
 #else
 extern SpecialClass Special;
 #endif

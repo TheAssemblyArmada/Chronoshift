@@ -18,10 +18,7 @@
 #include "gamefile.h"
 #include "mixfile.h"
 
-#ifdef GAME_DLL
-void *&ObjectTypeClass::SelectShapes = Make_Global<void *>(0x006857A8);
-void *&ObjectTypeClass::PipShapes = Make_Global<void *>(0x006857AC);
-#else
+#ifndef GAME_DLL
 void *ObjectTypeClass::SelectShapes = nullptr;
 void *ObjectTypeClass::PipShapes = nullptr;
 #endif

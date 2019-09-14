@@ -87,7 +87,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<VesselTypeClass> &g_VesselTypes;
 #else
 extern TFixedIHeapClass<VesselTypeClass> g_VesselTypes;

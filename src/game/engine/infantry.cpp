@@ -15,9 +15,7 @@
  */
 #include "infantry.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<InfantryClass> &g_Infantry = Make_Global<TFixedIHeapClass<InfantryClass> >(0x0065D9E0);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<InfantryClass> g_Infantry;
 #endif
 

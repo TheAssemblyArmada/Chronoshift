@@ -26,9 +26,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes = Make_Global<TFixedIHeapClass<OverlayTypeClass> >(0x0065E01C);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<OverlayTypeClass> g_OverlayTypes;
 #endif
 

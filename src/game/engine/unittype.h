@@ -134,7 +134,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<UnitTypeClass> &g_UnitTypes;
 #else
 extern TFixedIHeapClass<UnitTypeClass> g_UnitTypes;

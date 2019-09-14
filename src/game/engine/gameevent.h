@@ -91,7 +91,7 @@ public:
     GameEventClass(GameEventType type, unsigned int crc, unsigned short cmd_count, unsigned char delay); // For events: FRAME_SYNC
     GameEventClass(GameEventType type, unsigned short desired_frame_rate, unsigned short max_ahead); // For events: TIMING
 
-    // TODOL: Once GameEventClass is complete, and code for event below is under control, move
+    // TODO: Once GameEventClass is complete, and code for event below is under control, move
     //        these above and use the constructors above that explicitly take the event type.
 
     // Mega mission constructors.
@@ -252,17 +252,6 @@ private:
         TimeEventStruct u_ResponseTime;
         GameSpeedEventStruct u_GameSpeed;
     } m_EventData;
-
-public:
-#ifdef GAME_DLL
-#include "hooker.h"
-    static inline void Hook_Me()
-    {
-#ifdef COMPILER_WATCOM
-        Hook_Call(0x0052BC5E, *GameEventClass::Execute);
-#endif
-    }
-#endif
 
 public:
     struct EventInfoStruct

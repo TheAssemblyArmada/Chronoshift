@@ -24,10 +24,7 @@
 using std::strlen;
 using std::snprintf;
 
-#ifdef GAME_DLL
-#include "hooker.h"
-VersionClass &g_version = Make_Global<VersionClass>(0x00667810);
-#else
+#ifndef GAME_DLL
 VersionClass g_version;
 #endif
 

@@ -17,9 +17,7 @@
 #include "gamedebug.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-GroundClass *Ground = Make_Pointer<GroundClass>(0x00655DF0);
-#else
+#ifndef GAME_DLL
 GroundClass Ground[LAND_COUNT];
 #endif
 

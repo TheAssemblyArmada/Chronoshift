@@ -160,7 +160,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<InfantryTypeClass> &g_InfantryTypes;
 #else
 extern TFixedIHeapClass<InfantryTypeClass> g_InfantryTypes;

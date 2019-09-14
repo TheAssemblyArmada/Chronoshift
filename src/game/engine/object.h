@@ -160,7 +160,6 @@ inline BOOL ObjectClass::Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *
 }
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern DynamicVectorClass<ObjectClass*> &CurrentObjects;
 #else
 extern DynamicVectorClass<ObjectClass*> CurrentObjects;

@@ -150,10 +150,6 @@ public:
     BOOL Has_Changed() const { return Current != Desired; }
     BOOL Has_Not_Changed() const { return Current == Desired; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 public:
     static uint8_t const Facing8[256];
     static uint8_t const Facing16[256];
@@ -202,20 +198,5 @@ inline FacingType Opposite_Facing(FacingType facing)
 {
     return (FacingType)(facing ^ (FACING_COUNT / 2)); // 4
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void FacingClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004BEB44, *FacingClass::Rotation_Adjust);
-    Hook_Function(0x004BEB2C, *FacingClass::Set_Current);
-    Hook_Function(0x004BEB10, *FacingClass::Set_Desired);
-    Hook_Function(0x004BEA7C, Desired_Facing256);
-    Hook_Function(0x004BEA20, Desired_Facing8);
-#endif
-}
-#endif
 
 #endif // FACING_H

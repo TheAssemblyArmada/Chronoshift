@@ -32,23 +32,7 @@ namespace
 const NoInitClass noinit;
 }
 
-#ifdef GAME_DLL
-void *&SidebarClass::StripClass::LogoShapes = Make_Global<void *>(0x0068A464);
-void *&SidebarClass::StripClass::ClockShapes = Make_Global<void *>(0x0068A468);
-void **SidebarClass::StripClass::SpecialShapes = Make_Pointer<void *>(0x0068A46C);
-SidebarClass::StripClass::SelectClass *SidebarClass::StripClass::SelectButton =
-    Make_Pointer<SidebarClass::StripClass::SelectClass>(0x0068A2C4);
-ShapeButtonClass *SidebarClass::StripClass::UpButton = Make_Pointer<ShapeButtonClass>(0x0068A1E4);
-ShapeButtonClass *SidebarClass::StripClass::DownButton = Make_Pointer<ShapeButtonClass>(0x0068A254);
-char *SidebarClass::StripClass::ClockTranslucentTable = Make_Pointer<char>(0x00689F18);
-SidebarClass::SBGadgetClass &SidebarClass::Background = Make_Global<SidebarClass::SBGadgetClass>(0x0068A118);
-ShapeButtonClass &SidebarClass::RepairButton = Make_Global<ShapeButtonClass>(0x0068A13C);
-ShapeButtonClass &SidebarClass::SellButton = Make_Global<ShapeButtonClass>(0x0068A174);
-ShapeButtonClass &SidebarClass::ZoomButton = Make_Global<ShapeButtonClass>(0x0068A1AC);
-void *&SidebarClass::SidebarShape = Make_Global<void *>(0x00689F0C);
-void *&SidebarClass::SidebarMiddleShape = Make_Global<void *>(0x00689F10);
-void *&SidebarClass::SidebarBottomShape = Make_Global<void *>(0x00689F14);
-#else
+#ifndef GAME_DLL
 void *SidebarClass::StripClass::LogoShapes = nullptr;
 void *SidebarClass::StripClass::ClockShapes = nullptr;
 void *SidebarClass::StripClass::SpecialShapes[SPECIAL_COUNT];

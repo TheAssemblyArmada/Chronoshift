@@ -35,10 +35,6 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     unsigned int Frames : 7;
@@ -54,16 +50,5 @@ inline void FlasherClass::Flash(int flash_frames, bool flash)
     Frames = flash_frames;
     Flashed = flash;
 }
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void FlasherClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004C0690, *FlasherClass::Process);
-#endif
-}
-#endif
 
 #endif // FLASHER_H

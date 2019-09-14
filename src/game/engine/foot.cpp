@@ -30,8 +30,8 @@
 #define PATH_FLAG_BITSIZE 32
 
 #ifdef GAME_DLL
-static cell_t &StartLocation = Make_Global<cell_t>(0x0065D7AE);
-static cell_t &DestLocation = Make_Global<cell_t>(0x0065D7AC);
+extern cell_t &StartLocation;
+extern cell_t &DestLocation;
 #else
 static cell_t StartLocation;
 static cell_t DestLocation;

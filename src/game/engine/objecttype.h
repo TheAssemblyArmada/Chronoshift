@@ -100,7 +100,6 @@ protected:
     void *RadarIconData;
 
 #ifdef GAME_DLL
-#include "hooker.h"
     static void *&SelectShapes;
     static void *&PipShapes;
 #else

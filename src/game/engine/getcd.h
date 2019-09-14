@@ -43,7 +43,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern GetCDClass &g_cdList;
 #else
 extern GetCDClass g_cdList;
