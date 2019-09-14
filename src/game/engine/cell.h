@@ -161,20 +161,6 @@ public:
 
 #ifdef GAME_DLL
 public:
-    static void Hook_Me()
-    {
-#ifdef COMPILER_WATCOM
-        Hook_Function(0x0049EE70, *CellClass::Hook_Ctor);
-        Hook_Function(0x0049FF98, *CellClass::Spot_Index);
-        Hook_Function(0x004F8E64, *CellClass::Load);
-        Hook_Function(0x0049F5F8, *CellClass::Hook_Draw_It);
-        Hook_Function(0x0049EFBC, *CellClass::Hook_Cell_Techno);
-        Hook_Function(0x0049F084, *CellClass::Hook_Cell_Find_Object);
-        Hook_Function(0x0049F0D8, *CellClass::Hook_Cell_Object);
-        Hook_Function(0x0049F314, *CellClass::Recalc_Attributes);
-#endif
-    }
-
     CellClass *Hook_Ctor() { return new (this) CellClass; }
     void Hook_Draw_It(int x, int y, BOOL unk_bool) { CellClass::Draw_It(x, y, unk_bool); }
     TechnoClass *Hook_Cell_Techno(int x, int y) { return CellClass::Cell_Techno(x, y); }

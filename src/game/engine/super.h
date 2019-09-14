@@ -54,8 +54,6 @@ public:
     bool Ready_To_Fire() const { return m_IsEnabled && m_FullyCharged; }
 
 private:
-
-private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_IsPowered : 1; // 1
     BOOL m_IsEnabled : 1; // 2
@@ -77,31 +75,9 @@ private:
 
 #ifdef GAME_DLL
 public:
-    static void Hook_Me();
-
-private:
     int Hook_Anim_Stage() { return SuperClass::Anim_Stage(); }
     void Hook_Impatient_Click() { return SuperClass::Impatient_Click(); }
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void SuperClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x00552FE8, *SuperClass::Suspend);
-    Hook_Function(0x00553034, *SuperClass::Enable);
-    Hook_Function(0x0055308C, *SuperClass::Remove);
-    Hook_Function(0x005530B4, *SuperClass::Recharge);
-    Hook_Function(0x00553110, *SuperClass::Discharged);
-    Hook_Function(0x0055315C, *SuperClass::AI);
-    Hook_Function(0x00553224, *SuperClass::Hook_Anim_Stage);
-    Hook_Function(0x005532BC, *SuperClass::Hook_Impatient_Click);
-    Hook_Function(0x005532E8, *SuperClass::Forced_Charge);
-#endif
-}
-#endif
 
 #endif // SUPER_H

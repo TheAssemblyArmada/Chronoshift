@@ -13,7 +13,6 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-
 #include "help.h"
 #include "lists.h"
 #include "mouse.h"
@@ -24,10 +23,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-int16_t *const HelpClass::OverlapList = Make_Pointer<int16_t>(0x006018B8);
-char *&HelpClass::HelpText = Make_Global<char *>(0x006821B8);
-#else
+#ifndef GAME_DLL
 int16_t HelpClass::OverlapList[60];
 char *HelpClass::HelpText = nullptr;
 #endif

@@ -24,9 +24,7 @@
 #include "vessel.h"
 #include "logic.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<TriggerClass> &g_Triggers = Make_Global<TFixedIHeapClass<TriggerClass> >(0x00601810);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<TriggerClass> g_Triggers;
 #endif
 

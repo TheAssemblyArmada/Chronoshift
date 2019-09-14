@@ -15,9 +15,7 @@
  */
 #include "unit.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<UnitClass> &g_Units = Make_Global<TFixedIHeapClass<UnitClass> >(0x0065DC40);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<UnitClass> g_Units;
 #endif
 

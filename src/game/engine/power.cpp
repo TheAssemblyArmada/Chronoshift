@@ -24,11 +24,7 @@
 
 #define POWER_MAX_HEIGHT 108
 
-#ifdef GAME_DLL
-PowerClass::PowerButtonClass &PowerClass::PowerButton = Make_Global<PowerClass::PowerButtonClass>(0x006877C0);
-void *&PowerClass::PowerShape = Make_Global<void *>(0x006877B8);
-void *&PowerClass::PowerBarShape = Make_Global<void *>(0x006877BC);
-#else
+#ifndef GAME_DLL
 PowerClass::PowerButtonClass PowerClass::PowerButton;
 void *PowerClass::PowerShape = nullptr;
 void *PowerClass::PowerBarShape = nullptr;

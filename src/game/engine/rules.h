@@ -495,8 +495,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern RulesClass &Rule;
 #else
 extern RulesClass Rule;

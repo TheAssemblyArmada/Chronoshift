@@ -23,9 +23,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-TFixedIHeapClass<AnimTypeClass> &g_AnimTypes = Make_Global<TFixedIHeapClass<AnimTypeClass> >(0x0065DEA0);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<AnimTypeClass> g_AnimTypes;
 #endif
 

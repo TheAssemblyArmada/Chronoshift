@@ -15,13 +15,11 @@
  */
 #include "theater.h"
 
-#ifndef PLATFORM_WINDOWS
+#ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
 
-#ifdef GAME_DLL
-TheaterType &g_lastTheater = Make_Global<TheaterType>(0x006017CC);
-#else
+#ifndef GAME_DLL
 TheaterType g_lastTheater = THEATER_NONE;
 #endif
 

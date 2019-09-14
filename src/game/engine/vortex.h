@@ -72,9 +72,6 @@ public:
     void Set_Damage(int32_t damage) { m_VortexDamage = damage; }
     void Set_Speed(int32_t speed) { m_VortexSpeed = speed; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
 private:
     coord_t m_CurrentPos;
     int32_t m_FrameIncrement;
@@ -111,32 +108,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
-inline void ChronalVortexClass::Hook_Me()
-{
-#ifdef COMPLIER_WATCOM
-    Hook_Function(0x0058E0F4, *ChronalVortexClass::Appear);
-    Hook_Function(0x0058E240, *ChronalVortexClass::Disappear);
-    Hook_Function(0x0058E270, *ChronalVortexClass::Hide);
-    Hook_Function(0x0058E290, *ChronalVortexClass::Show);
-    Hook_Function(0x0058E304, *ChronalVortexClass::Stop);
-    Hook_Function(0x0058E3A8, *ChronalVortexClass::AI);
-    Hook_Function(0x0058E510, *ChronalVortexClass::Movement);
-    Hook_Function(0x0058E780, *ChronalVortexClass::Set_Target);
-    Hook_Function(0x0058E324, *ChronalVortexClass::Load);
-    Hook_Function(0x0058E364, *ChronalVortexClass::Save);
-    Hook_Function(0x0058E800, *ChronalVortexClass::Attack);
-    // Hook_Function(0x0058E9E0, *ChronalVortexClass::Zap_Target); // Not implemented.
-    Hook_Function(0x0058EDD8, *ChronalVortexClass::Render);
-    Hook_Function(0x0058EBC4, *ChronalVortexClass::Coordinate_Remap);
-    Hook_Function(0x0058F67C, *ChronalVortexClass::Set_Redraw);
-    Hook_Function(0x0058F858, *ChronalVortexClass::Build_Fading_Table);
-    Hook_Function(0x0058F724, *ChronalVortexClass::Setup_Remap_Tables);
-    Hook_Function(0x0058F960, *ChronalVortexClass::Detach);
-#endif
-}
-
 extern ChronalVortexClass &g_ChronalVortex;
 #else
 extern ChronalVortexClass g_ChronalVortex;

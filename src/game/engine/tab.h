@@ -46,6 +46,7 @@ enum TabShapeEnum
 
 class TabClass : public SidebarClass
 {
+    friend void Setup_Hooks();
     enum
     {
         TAB_WIDTH = 160,
@@ -88,10 +89,6 @@ public:
 
     static void Hilite_Tab(int tab);
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     void Set_Active(int tab);
     static void Draw_Credits_Tab();
@@ -115,18 +112,5 @@ private:
     static void *PassableShape; // Edwin tab for showing passablity of cells
     static void *TabBackgroundShape; // name subject to change
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-inline void TabClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x005533A0, *TabClass::Draw_It);
-    Hook_Function(0x005539D8, *TabClass::One_Time);
-    Hook_Function(0x005538D0, *TabClass::AI);
-    Hook_Function(0x00553744, *TabClass::Draw_Credits_Tab);
-#endif
-}
-#endif
 
 #endif // TAB_H

@@ -32,10 +32,7 @@
 #include "voc.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-#include "hooker.h"
-ChronalVortexClass &g_ChronalVortex = Make_Global<ChronalVortexClass>(0x006904B4);
-#else
+#ifndef GAME_DLL
 ChronalVortexClass g_ChronalVortex;
 #endif
 

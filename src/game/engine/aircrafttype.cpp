@@ -19,11 +19,7 @@
 #include "aircraft.h"
 #include "lists.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<AircraftTypeClass> &g_AircraftTypes = Make_Global<TFixedIHeapClass<AircraftTypeClass> >(0x0065DDBC);
-void *&AircraftTypeClass::g_LeftRotorData = Make_Global<void *>(0x00623010);
-void *&AircraftTypeClass::g_RightRotorData = Make_Global<void *>(0x00623014);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<AircraftTypeClass> g_AircraftTypes;
 void *AircraftTypeClass::g_LeftRotorData = nullptr;
 void *AircraftTypeClass::g_RightRotorData = nullptr;

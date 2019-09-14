@@ -23,9 +23,7 @@
 
 using std::snprintf;
 
-#ifdef GAME_DLL
-TFixedIHeapClass<SmudgeTypeClass> &g_SmudgeTypes = Make_Global<TFixedIHeapClass<SmudgeTypeClass> >(0x0065E068);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<SmudgeTypeClass> g_SmudgeTypes;
 #endif
 

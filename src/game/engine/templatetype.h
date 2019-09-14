@@ -479,7 +479,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes;
 #else
 extern TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;

@@ -39,10 +39,6 @@ public:
 
     BOOL Set_Autoscroll(int mode);
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL Autoscroll : 1; // 1
@@ -58,17 +54,5 @@ private:
     static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-inline void ScrollClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004F92E0, *ScrollClass::Init_IO);
-    Hook_Function(0x00547088, *ScrollClass::AI);
-    Hook_Function(0x00547464, *ScrollClass::Set_Autoscroll);
-#endif
-}
-#endif
 
 #endif // SCROLL_H

@@ -267,7 +267,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern SessionClass &Session;
 #else
 extern SessionClass Session;

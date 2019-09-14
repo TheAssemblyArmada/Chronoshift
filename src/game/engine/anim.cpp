@@ -16,9 +16,7 @@
 #include "anim.h"
 #include "target.h"
 
-#ifdef GAME_DLL
-TFixedIHeapClass<AnimClass> &g_Anims = Make_Global<TFixedIHeapClass<AnimClass> >(0x0065D864);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<AnimClass> g_Anims;
 #endif
 

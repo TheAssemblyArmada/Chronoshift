@@ -16,9 +16,7 @@
 #include "missioncontrol.h"
 #include "mission.h"
 
-#ifdef GAME_DLL
-MissionControlClass *const MissionControlClass::MissionControl = reinterpret_cast<MissionControlClass *>(0x00666234);
-#else
+#ifndef GAME_DLL
 MissionControlClass MissionControlClass::MissionControl[MISSION_COUNT];
 #endif
 

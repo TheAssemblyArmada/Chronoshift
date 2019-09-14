@@ -13,28 +13,21 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
+#include "radar.h"
 #include "audio.h"
-#include "gamefile.h"
 #include "coord.h"
 #include "display.h"
 #include "drawshape.h"
+#include "gamefile.h"
 #include "globals.h"
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
-#include "radar.h"
 #include "session.h"
 #include "voc.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-RadarClass::RTacticalClass &RadarClass::RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
-void *&RadarClass::RadarAnim = Make_Global<void *>(0x00687908);
-void *&RadarClass::RadarPulse = Make_Global<void *>(0x0068790C);
-void *&RadarClass::RadarFrame = Make_Global<void *>(0x00687910);
-BOOL &RadarClass::FullRedraw = Make_Global<BOOL>(0x00687914);
-GraphicBufferClass &RadarClass::TileStage = Make_Global<GraphicBufferClass>(0x006879BC);
-#else
+#ifndef GAME_DLL
 RadarClass::RTacticalClass RadarClass::RadarButton;
 void *RadarClass::RadarAnim = nullptr;
 void *RadarClass::RadarPulse = nullptr;

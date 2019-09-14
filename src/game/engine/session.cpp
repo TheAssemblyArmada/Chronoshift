@@ -20,9 +20,7 @@
 #include "pipe.h"
 #include "straw.h"
 
-#ifdef GAME_DLL
-SessionClass &Session = Make_Global<SessionClass>(0x0067F2B4);
-#else
+#ifndef GAME_DLL
 SessionClass Session;
 #endif
 

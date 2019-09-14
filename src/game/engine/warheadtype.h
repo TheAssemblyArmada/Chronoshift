@@ -94,7 +94,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes;
 #else
 extern TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;

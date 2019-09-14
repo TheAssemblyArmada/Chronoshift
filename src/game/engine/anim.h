@@ -94,21 +94,9 @@ protected:
 #endif
     unsigned int m_LoopDelay;
     fixed_t m_field_4A;
-
-public:
-#ifdef GAME_DLL
-#include "hooker.h"
-    static void Hook_Me()
-    {
-    #ifdef COMPILER_WATCOM
-    #endif
-    }
-#endif
-
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<AnimClass> &g_Anims;
 #else
 extern TFixedIHeapClass<AnimClass> g_Anims;

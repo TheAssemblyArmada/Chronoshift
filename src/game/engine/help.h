@@ -23,6 +23,8 @@
 
 class HelpClass : public TabClass
 {
+    friend void Setup_Hooks();
+
     enum
     {
         HELP_OVERLAP_BUFFER = 60,
@@ -44,8 +46,10 @@ public:
     void Set_Text_Color(uint8_t color) { HelpTextColor = color; }
 
 #ifdef GAME_DLL
-    static void Hook_Me();
-    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y);
+    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y)
+    {
+        return HelpClass::Text_Overlap_List(string, x, y);
+    }
 #endif
 
 private:
@@ -79,27 +83,5 @@ private:
     static char *HelpText;
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-inline const int16_t *HelpClass::Hook_Text_Overlap_List(const char *string, int x, int y)
-{
-    return HelpClass::Text_Overlap_List(string, x, y);
-}
-
-inline void HelpClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004D2338, *HelpClass::Init_Clear);
-    Hook_Function(0x004D23C8, *HelpClass::AI);
-    Hook_Function(0x004D26B0, *HelpClass::Draw_It);
-    Hook_Function(0x004D2574, *HelpClass::Help_Text);
-    Hook_Function(0x004D2B6C, *HelpClass::Scroll_Map);
-    Hook_Function(0x004D2BC0, *HelpClass::Set_Tactical_Position);
-    Hook_Function(0x004D2354, *HelpClass::Hook_Text_Overlap_List);
-    Hook_Function(0x004D293C, *HelpClass::Set_Text);
-#endif
-}
-#endif
 
 #endif // HELP_H

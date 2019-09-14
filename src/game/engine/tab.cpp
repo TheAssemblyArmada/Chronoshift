@@ -28,9 +28,7 @@
 #include "rules.h"
 #include "scenario.h"
 
-#ifdef GAME_DLL
-void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
-#else
+#ifndef GAME_DLL
 void *TabClass::TabShape = nullptr;
 #endif
 void *TabClass::PassableShape = nullptr;

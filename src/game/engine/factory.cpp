@@ -22,9 +22,7 @@
 #include "house.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-TFixedIHeapClass<FactoryClass> &g_Factories = Make_Global<TFixedIHeapClass<FactoryClass> >(0x0065D948);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<FactoryClass> g_Factories;
 #endif
 

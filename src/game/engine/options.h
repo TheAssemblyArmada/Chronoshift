@@ -181,10 +181,6 @@ public:
     KeyNumType Get_DebugKeySpecialDialog() const { return DebugKeySpecialDialog; }
 #endif
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     int GameSpeed;
     int ScrollRate;
@@ -385,18 +381,5 @@ private:
 #endif // GAME_DLL
 #endif // CHRONOSHIFT_DEBUG
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void OptionsClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    //Hook_Function(0x00525884, *OptionsClass::Adjust_Palette);
-    Hook_Function(0x00525A24, *OptionsClass::Load_Settings);
-    Hook_Function(0x005263A8, *OptionsClass::Save_Settings);
-#endif
-}
-#endif
 
 #endif // OPTIONS_H

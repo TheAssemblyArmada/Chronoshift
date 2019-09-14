@@ -86,7 +86,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<HouseTypeClass> &g_HouseTypes;
 #else
 extern TFixedIHeapClass<HouseTypeClass> g_HouseTypes;

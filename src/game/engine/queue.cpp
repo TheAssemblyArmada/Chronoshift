@@ -20,10 +20,7 @@
 #include "house.h"
 #include "session.h"
 
-#ifdef GAME_DLL
-TEventQueueClass<GameEventClass, OUTGOING_SIZE> &OutgoingEvents = Make_Global<TEventQueueClass<GameEventClass, OUTGOING_SIZE> >(0x0066AB5C);
-TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &ScheduledEvents = Make_Global<TEventQueueClass<GameEventClass, SCHEDULED_SIZE> >(0x0066B068);
-#else
+#ifndef GAME_DLL
 TEventQueueClass<GameEventClass, OUTGOING_SIZE> OutgoingEvents;
 TEventQueueClass<GameEventClass, SCHEDULED_SIZE> ScheduledEvents;
 #endif

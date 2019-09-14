@@ -39,30 +39,4 @@ void Init_CDROM_Access();
 void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteClass *pal);
 void Load_Prolog_Page();
 
-#ifdef GAME_DLL
-#include "hooker.h"
-
-namespace Init
-{
-inline void Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004F5EC4, Init_Random);
-    Hook_Function(0x004F6240, Init_Color_Remaps);
-    Hook_Function(0x004F781C, Init_Expansion_Files);
-    Hook_Function(0x004F7948, Init_Fonts);
-    Hook_Function(0x004F7DF0, Init_Bootstrap_Mixfiles);
-    Hook_Function(0x004F8018, Init_Secondary_Mixfiles);
-    Hook_Function(0x004F8664, Init_Keys);
-    Hook_Function(0x004F81CC, Bootstrap);
-    Hook_Function(0x004F8390, Init_Mouse);
-    Hook_Function(0x004F7A08, Init_CDROM_Access);
-    Hook_Function(0x005B3CD8, Load_Title_Screen);
-    Hook_Function(0x004F3E98, Load_Prolog_Page);
-#endif
-}
-
-} // namespace Init
-#endif
-
 #endif // INIT_H

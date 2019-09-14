@@ -111,7 +111,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<TeamClass> &g_Teams;
 #else
 extern TFixedIHeapClass<TeamClass> g_Teams;

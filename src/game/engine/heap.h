@@ -57,10 +57,6 @@ public:
     int Count() const { return ActiveCount; }
     void *Get_Pointer() const { return Pointer; }
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
     BOOL IsAllocated; // Did this class allocate the memory for the heap?
     int HeapSize; // Size of each object in the heap.
@@ -87,42 +83,9 @@ public:
     virtual void *Active_Ptr(int index);
     virtual void *Active_Ptr(int index) const;
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 protected:
     DynamicVectorClass<void *> Objects;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void FixedHeapClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004CD60C, *FixedHeapClass::Allocate);
-    Hook_Function(0x004CD744, *FixedHeapClass::Clear);
-    Hook_Function(0x004CD6A0, *FixedHeapClass::Free);
-    Hook_Function(0x004CD78C, *FixedHeapClass::Free_All);
-    Hook_Function(0x004CD594, *FixedHeapClass::Set_Heap);
-    //Hook_Function(0x004CD718, *FixedHeapClass::ID);
-#endif
-}
-
-inline void FixedIHeapClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004CD818, *FixedIHeapClass::Allocate);
-    Hook_Function(0x004CD7C4, *FixedIHeapClass::Clear);
-    Hook_Function(0x004CD850, *FixedIHeapClass::Free);
-    Hook_Function(0x004CD7A8, *FixedIHeapClass::Free_All);
-    Hook_Function(0x004CD7E4, *FixedIHeapClass::Set_Heap);
-    //Hook_Function();
-#endif
-}
-
-#endif
 
 template<class T>
 class TFixedIHeapClass : public FixedIHeapClass

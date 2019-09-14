@@ -163,8 +163,4 @@ protected:
     static void *MissingCameoShape; // New with RA++
 };
 
-#ifdef GAME_DLL
-#include "hooker.h"
-#endif
-
 #endif // TECHNOTYPE_H

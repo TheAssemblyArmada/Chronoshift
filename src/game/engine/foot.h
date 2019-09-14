@@ -116,7 +116,6 @@ public:
     PathType *Find_Path_Wrapper(cell_t dest, FacingType *buffer, int length, MoveType move);
 
 #ifdef GAME_DLL
-    static void Hook_Me();
     BOOL Hook_Can_Demolish() { return FootClass::Can_Demolish(); }
     coord_t Hook_Sort_Y() { return FootClass::Sort_Y(); }
 #endif
@@ -171,28 +170,5 @@ protected:
     MPHType m_TeamMaxSpeed;
     coord_t m_HeadTo;
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void FootClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004C3328, *FootClass::Hook_Can_Demolish);
-    Hook_Function(0x004C154C, *FootClass::Hook_Sort_Y);
-    // Hook_Function(0x004C1B6C, *FootClass::Unlimbo); Needs TechnoClass stuff.
-    Hook_Function(0x004BF77C, *FootClass::Find_Path);
-    Hook_Function(0x004BF49C, *FootClass::Unravel_Loop);
-    Hook_Function(0x004BF5E0, *FootClass::Register_Cell);
-    Hook_Function(0x004BFDE4, *FootClass::Follow_Edge);
-    Hook_Function(0x004C0130, *FootClass::Optimize_Moves);
-    // Hook_Function(0x004C037C, *FootClass::Safety_Point); Need to work out test case
-    Hook_Function(0x004C0570, *FootClass::Passable_Cell);
-    Hook_Function(0x004BF470, *FootClass::Point_Relative_To_Line);
-    Hook_Function(0x004C09E4, *FootClass::Basic_Path);
-    // Hook_Call(0x004C0CDE, *FootClass::Find_Path_Wrapper); // replaces Find_Path call in Basic_Path
-#endif
-}
-#endif
 
 #endif // FOOT_H

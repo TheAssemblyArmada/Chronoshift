@@ -23,7 +23,6 @@
 
 // TODO Update this as additional layers of the hierachy are implemented.
 #ifdef GAME_DLL
-#include "hooker.h"
 extern GameMouseClass &Map;
 #else
 extern GameMouseClass Map;

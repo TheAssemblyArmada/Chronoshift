@@ -61,23 +61,24 @@
 
 using std::sprintf;
 
-namespace
-{
+
 // These pointers are used only within this translation unit for reinitialisation after CD changes and such.
 #ifdef GAME_DLL
-GameMixFile *&MainMix = Make_Global<GameMixFile *>(0x00668180);
-GameMixFile *&ConquerMix = Make_Global<GameMixFile *>(0x00668184);
-GameMixFile *&GeneralMix = Make_Global<GameMixFile *>(0x00668178);
-GameMixFile *&MoviesMix = Make_Global<GameMixFile *>(0x00668174);
-GameMixFile *&ScoreMix = Make_Global<GameMixFile *>(0x0066817C);
+extern GameMixFile *&MainMix;
+extern GameMixFile *&ConquerMix;
+extern GameMixFile *&GeneralMix;
+extern GameMixFile *&MoviesMix;
+extern GameMixFile *&ScoreMix;
 #else
+namespace
+{
 GameMixFile *MainMix;
 GameMixFile *ConquerMix;
 GameMixFile *GeneralMix;
 GameMixFile *MoviesMix;
 GameMixFile *ScoreMix;
-#endif
 } // namespace
+#endif
 
 /**
  * Initialises mix files named using wildcard expansion scheme sc*.mix and ss*.mix.

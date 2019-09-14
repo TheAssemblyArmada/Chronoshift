@@ -17,12 +17,17 @@
 #include "gbuffer.h"
 #include "mouse.h"
 #include "rules.h"
-#include "stringex.h"
 #include "textprint.h"
 #include "ttimer.h"
 #include "txtlabel.h"
 #include <algorithm>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
+
+using std::snprintf;
+using std::strlen;
+using std::strcpy;
+using std::strncpy;
 
 int MessageListClass::MaxMessageWidth = 640;
 

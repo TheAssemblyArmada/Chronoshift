@@ -16,9 +16,7 @@
 #include "building.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-TFixedIHeapClass<BuildingClass> &g_Buildings = Make_Global<TFixedIHeapClass<BuildingClass> >(0x0065D8B0);
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<BuildingClass> g_Buildings;
 #endif
 

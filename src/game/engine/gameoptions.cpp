@@ -16,9 +16,7 @@
 #include "gameoptions.h"
 #include "gbuffer.h"
 
-#ifdef GAME_DLL
-GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
-#else
+#ifndef GAME_DLL
 GameOptionsClass Options;
 #endif
 

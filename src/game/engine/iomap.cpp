@@ -16,9 +16,6 @@
 #include "iomap.h"
 
 // TODO Update this as additional layers of the hierachy are implemented.
-#ifdef GAME_DLL
-#include "hooker.h"
-GameMouseClass &Map = Make_Global<GameMouseClass>(0x00668250);
-#else
+#ifndef GAME_DLL
 GameMouseClass Map;
 #endif

@@ -22,12 +22,7 @@
 #include "rules.h"
 #include "session.h"
 
-#ifdef GAME_DLL
-void *&TechnoTypeClass::WakeShapes = Make_Global<void *>(0x0068D2DC);
-void *&TechnoTypeClass::TurretShapes = Make_Global<void *>(0x0068D2E0);
-void *&TechnoTypeClass::SamShapes = Make_Global<void *>(0x0068D2E4);
-void *&TechnoTypeClass::MGunShapes = Make_Global<void *>(0x0068D2E8);
-#else
+#ifndef GAME_DLL
 void *TechnoTypeClass::WakeShapes = nullptr;
 void *TechnoTypeClass::TurretShapes = nullptr;
 void *TechnoTypeClass::SamShapes = nullptr;

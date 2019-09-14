@@ -17,14 +17,10 @@
 #include "gamedebug.h"
 #include "scenario.h"
 
-#ifdef GAME_DLL
-static char *CrateAnims = Make_Pointer<char>(0x005FF24C); // TODO should be AnimType *CrateAnims[CRATE_COUNT];
-static int *CrateShares = Make_Pointer<int>(0x005FF204);
-static int *CrateData = Make_Pointer<int>(0x00655DA8);
-#else
-static char CrateAnims[CRATE_COUNT]; // TODO should be AnimType CrateAnims[CRATE_COUNT];
-static int CrateShares[CRATE_COUNT] = { 50, 20, 3, 1, 3, 5, 5, 20, 1, 1, 3, 10, 10, 10, 1, 1, 3, 5 };
-static int CrateData[CRATE_COUNT];
+#ifndef GAME_DLL
+char CrateClass::CrateAnims[CRATE_COUNT]; // TODO should be AnimType CrateAnims[CRATE_COUNT];
+int CrateClass::CrateShares[CRATE_COUNT] = { 50, 20, 3, 1, 3, 5, 5, 20, 1, 1, 3, 10, 10, 10, 1, 1, 3, 5 };
+int CrateClass::CrateData[CRATE_COUNT];
 #endif
 
 const char *CrateClass::CrateNames[] = { "Money",

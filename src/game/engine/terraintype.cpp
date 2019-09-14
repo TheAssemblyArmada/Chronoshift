@@ -26,7 +26,6 @@
 using std::snprintf;
 
 #ifdef GAME_DLL
-TFixedIHeapClass<TerrainTypeClass> &g_TerrainTypes = Make_Global<TFixedIHeapClass<TerrainTypeClass> >(0x0065DFD0);
 #else
 TFixedIHeapClass<TerrainTypeClass> g_TerrainTypes;
 #endif

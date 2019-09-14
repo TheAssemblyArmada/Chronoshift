@@ -187,7 +187,6 @@ extern uint32_t GameCRC;
 extern uint32_t CRC[32];
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TEventQueueClass<GameEventClass, OUTGOING_SIZE> &OutgoingEvents;
 extern TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &ScheduledEvents;
 #else

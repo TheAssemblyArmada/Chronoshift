@@ -99,7 +99,6 @@ public:
     BOOL Get_field_7D3() const { return field_7D3; }
 
 #ifdef GAME_DLL
-    static void Hook_Me();
     void Hook_Set_Scenario_Name1(const char *scen_name) { Set_Scenario_Name(scen_name); }
     void Hook_Set_Scenario_Name2(int index, ScenarioPlayerEnum player, ScenarioDirEnum dir, ScenarioVarEnum var)
     {
@@ -178,19 +177,7 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern ScenarioClass &Scen;
-
-inline void ScenarioClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x0053CFB0, *ScenarioClass::Hook_Set_Scenario_Name1);
-    Hook_Function(0x0053CD80, *ScenarioClass::Hook_Set_Scenario_Name2);
-    Hook_Function(0x00539BF8, *ScenarioClass::Do_BW_Fade);
-    Hook_Function(0x00539C40, *ScenarioClass::Do_Fade_AI);
-#endif
-}
 #else
 extern ScenarioClass Scen;
 #endif

@@ -29,9 +29,7 @@
 #include "target.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-DynamicVectorClass<ObjectClass*> &CurrentObjects = Make_Global<DynamicVectorClass<ObjectClass*> >(0x006677F8);
-#else
+#ifndef GAME_DLL
 DynamicVectorClass<ObjectClass*> CurrentObjects;
 #endif
 

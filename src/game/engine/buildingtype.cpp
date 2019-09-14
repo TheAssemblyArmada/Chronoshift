@@ -25,11 +25,7 @@
 #include "gamefile.h"
 #include <algorithm>
 
-#ifdef GAME_DLL
-TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes = Make_Global<TFixedIHeapClass<BuildingTypeClass> >(0x0065DD70);
-void *&BuildingTypeClass::g_WarFactoryOverlay = Make_Global<void *>(0x00635BA8);
-void *&BuildingTypeClass::g_LightningShapes = Make_Global<void *>(0x00635BAC); // TODO: Should be moved to TechnoTypeClass.
-#else
+#ifndef GAME_DLL
 TFixedIHeapClass<BuildingTypeClass> g_BuildingTypes;
 void *BuildingTypeClass::g_WarFactoryOverlay = nullptr;
 void *BuildingTypeClass::g_LightningShapes = nullptr;

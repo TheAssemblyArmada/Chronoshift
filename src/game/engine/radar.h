@@ -101,12 +101,10 @@ public:
     BOOL Spy_Next_House();
 
 #ifdef GAME_DLL
-    static void Hook_Me();
     cell_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
     BOOL Hook_Is_Zoomable() { return Is_Zoomable(); }
     BOOL Hook_Cell_On_Radar(cell_t cellnum) { return Cell_On_Radar(cellnum); }
     int Hook_Click_In_Radar(int &x, int &y, BOOL set_coords = false) { return RadarClass::Click_In_Radar(x, y, set_coords); }
-
 #endif
 
 protected:
@@ -189,36 +187,5 @@ protected:
     static GraphicBufferClass TileStage;
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-inline void RadarClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x0052D668, *RadarClass::One_Time); // seems to work
-    Hook_Function(0x0052D718, *RadarClass::Init_Clear); // seems to work
-    Hook_Function(0x00532010, *RadarClass::Set_Map_Dimensions); // seems to work
-    Hook_Function(0x0052FEAC, *RadarClass::Map_Cell); // seems to work
-    Hook_Function(0x0052FE28, *RadarClass::Hook_Click_Cell_Calc); // seems to work
-    Hook_Function(0x00531474, *RadarClass::Refresh_Cells); // seems to work
-    Hook_Function(0x00532070, *RadarClass::Set_Tactical_Position); // seems to work
-    Hook_Function(0x005329EC, *RadarClass::Flag_Cell); // seems to work
-    Hook_Function(0x00532938, *RadarClass::Activate_Pulse); // seems to work
-    Hook_Function(0x0052F460, *RadarClass::Hook_Is_Zoomable); // seems to work
-    Hook_Function(0x00532098, *RadarClass::Hook_Cell_On_Radar); // seems to work
-    Hook_Function(0x00532000, *RadarClass::Radar_Position); // seems to work
-    Hook_Function(0x005301B4, *RadarClass::Cell_XY_To_Radar_Pixel); // seems to work
-    Hook_Function(0x0053210C, *RadarClass::Player_Names); // seems to work
-    Hook_Function(0x0052FF40, *RadarClass::Mark_Radar); // seems to work
-    Hook_Function(0x0052FED8, *RadarClass::Cursor_Cell); // seems to work
-    Hook_Function(0x0052EF8C, *RadarClass::Render_Overlay); // works
-    Hook_Function(0x00530300, *RadarClass::Radar_Cursor); // works
-    Hook_Function(0x0052F294, *RadarClass::Zoom_Mode); // 
-    Hook_Function(0x0052FCC0, *RadarClass::Radar_Pixel); // 
-    Hook_Function(0x0052FD3C, *RadarClass::Hook_Click_In_Radar); //
-    Hook_Function(0x0052D790, *RadarClass::Radar_Activate); //
-#endif
-}
-#endif
 
 #endif // RADAR_H

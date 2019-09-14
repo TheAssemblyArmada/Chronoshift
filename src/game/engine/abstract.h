@@ -29,6 +29,7 @@ class NoInitClass;
 
 class AbstractClass
 {
+    friend void Setup_Hooks();
 public:
     AbstractClass(RTTIType type = RTTI_NONE, int heap_id = -1);
     AbstractClass(const AbstractClass &that);
@@ -71,9 +72,6 @@ protected:
 #endif
 
 #ifdef GAME_DLL
-public:
-    static void Hook_Me();
-
 private:
     AbstractClass *Hook_Ctor_NoInit(const NoInitClass &noinit) { return new (this) AbstractClass(noinit); }
     void Hook_Dtor() { AbstractClass::~AbstractClass(); }
@@ -85,25 +83,6 @@ private:
     int Hook_Distance_To_Target(target_t target) { return AbstractClass::Distance_To_Target(target); }
 #endif
 };
-
-#ifdef GAME_DLL
-#include "hooker.h"
-
-inline void AbstractClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x004CD8E0, *AbstractClass::Hook_Ctor_NoInit);
-    Hook_Function(0x00423CB0, *AbstractClass::Hook_Dtor);
-    Hook_Function(0x004CD8F0, *AbstractClass::Hook_Name);
-    Hook_Function(0x00423CE0, *AbstractClass::Hook_Owner);
-    Hook_Function(0x004CD900, *AbstractClass::Hook_Center_Coord);
-    Hook_Function(0x004CD910, *AbstractClass::Hook_Target_Coord);
-    Hook_Function(0x00423CF0, *AbstractClass::Hook_Can_Enter_Cell);
-    Hook_Function(0x004CD920, *AbstractClass::AI);
-    Hook_Function(0x00405540, *AbstractClass::Hook_Distance_To_Target);
-#endif
-}
-#endif
 
 inline BOOL AbstractClass::Is_Techno() const
 {

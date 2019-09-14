@@ -53,10 +53,6 @@ public:
     int Min_Version();
     int Max_Version();
 
-#ifdef GAME_DLL
-    static void Hook_Me();
-#endif
-
 private:
     void Read_Text_String();
     int Minor_Version();
@@ -86,15 +82,7 @@ private:
 const char *Version_Name();
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern VersionClass &g_version;
-
-inline void VersionClass::Hook_Me()
-{
-#ifdef COMPILER_WATCOM
-    Hook_Function(0x00589960, ::Version_Name);
-#endif
-}
 #else
 extern VersionClass g_version;
 #endif

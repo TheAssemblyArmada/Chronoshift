@@ -110,7 +110,7 @@ public:
     BOOL Is_Radar_Visible() const { return RadarVisible; }
     BOOL Is_Ore() const { return Ore; }
     BOOL Is_Theater() const { return Theater; }
-#
+
     static void Init_Heap();
     static void Init(TheaterType theater);
     static void One_Time() {}
@@ -144,7 +144,6 @@ private:
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes;
 #else
 extern TFixedIHeapClass<OverlayTypeClass> g_OverlayTypes;
