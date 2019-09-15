@@ -163,7 +163,8 @@ int32_t UDPInterfaceClass::Message_Handler(void *hwnd, uint32_t msg, uint32_t wp
 
     switch (lparam & 0xFFFF) {
         case SOCKET_READ:
-            if ((recv_len = recvfrom(m_Socket, m_RecvBuffer, 0x8000, 0, (struct sockaddr *)&from, &fromlen)) == SOCKET_ERROR) {
+            if ((recv_len = recvfrom(m_Socket, m_RecvBuffer, sizeof(m_RecvBuffer), 0, (struct sockaddr *)&from, &fromlen))
+                == SOCKET_ERROR) {
                 break;
             }
 
@@ -194,7 +195,7 @@ int32_t UDPInterfaceClass::Message_Handler(void *hwnd, uint32_t msg, uint32_t wp
                 from.sin_port = htobe16(g_ChronoshiftPortNumber);
                 memcpy(&from.sin_addr, &buff->m_Header[4], sizeof(from.sin_addr));
 
-                if (sendto(m_Socket, buff->m_Data, buff->m_Length, 0, (sockaddr const *)&from, sizeof(from)) != -1
+                if (sendto(m_Socket, buff->m_Data, buff->m_Length, 0, (sockaddr const *)&from, sizeof(from)) != SOCKET_ERROR
                     || LastSocketError == SOCKEWOULDBLOCK) {
                     m_OutBuffers.Delete(0);
                     delete buff;
