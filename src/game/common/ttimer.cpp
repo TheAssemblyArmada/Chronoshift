@@ -17,10 +17,7 @@
 #include "globals.h"
 #include "ostimer.h"
 
-#ifdef GAME_DLL
-TTimerClass<SystemTimerClass> &TickCountTimer = *reinterpret_cast<TTimerClass<SystemTimerClass> *>(0x00680870);
-TCountDownTimerClass<SystemTimerClass> &FrameTimer = *reinterpret_cast<TCountDownTimerClass<SystemTimerClass> *>(0x006807F8);
-#else
+#ifndef GAME_DLL
 TTimerClass<SystemTimerClass> TickCountTimer;
 TCountDownTimerClass<SystemTimerClass> FrameTimer;
 #endif

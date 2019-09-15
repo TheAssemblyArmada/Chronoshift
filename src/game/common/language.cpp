@@ -23,10 +23,8 @@
 using std::snprintf;
 
 #ifdef GAME_DLL
-char *&GameStrings = Make_Global<char *>(0x0066991C);
-char *&DebugStrings = Make_Global<char *>(0x00669920);
-char **NameOverride = reinterpret_cast<char **>(0x0066616C);
-int *NameIDOverride = reinterpret_cast<int *>(0x006661D0);
+extern char *&GameStrings;
+extern char *&DebugStrings;
 #else
 char *GameStrings = nullptr;
 char *DebugStrings = nullptr;

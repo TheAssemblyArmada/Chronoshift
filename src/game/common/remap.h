@@ -65,8 +65,6 @@ struct RemapControlType
 };
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern RemapControlType *ColorRemaps;
 extern RemapControlType &MetalScheme;
 extern RemapControlType &GreyScheme;

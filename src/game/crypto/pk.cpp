@@ -21,9 +21,7 @@
 using std::rand;
 
 // RSA keys
-#ifdef GAME_DLL
-PKey &g_publicKey = *reinterpret_cast<PKey *>(0x00665F68);
-#else
+#ifndef GAME_DLL
 PKey g_publicKey;
 #endif
 PKey g_privateKey;
