@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "drawshape.h"
+#include "display.h"
 #include "gamefile.h"
 #include "gamedebug.h"
 #include "gbuffer.h"
@@ -34,11 +35,11 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
 
     if (shape_ptr != nullptr) {
         if (flags & SHAPE_FADING && fading_table == nullptr) {
-            fading_table = reinterpret_cast<void*>(0x006561E0); // TODO these should both be from DisplayClass
+            fading_table = DisplayClass::FadingShade;
         }
 
         if (flags & SHAPE_GHOST && ghost_table == nullptr) {
-            ghost_table = reinterpret_cast<void*>(0x006580E4); // TODO these should both be from DisplayClass
+            ghost_table = DisplayClass::SpecialGhost;
         }
 
         if (_xbuffer == nullptr) {

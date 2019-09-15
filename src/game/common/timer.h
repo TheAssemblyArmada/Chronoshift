@@ -20,10 +20,6 @@
 
 #include "always.h"
 
-#ifdef GAME_DLL
-#include "hooker.h"
-#endif
-
 enum BaseTimerEnum
 {
     BT_SYSTEM = 0,

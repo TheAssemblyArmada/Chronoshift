@@ -250,7 +250,6 @@ uint32_t TCountDownTimerClass<T>::Time() const
 }
 
 #ifdef GAME_DLL
-#include "hooker.h"
 extern TTimerClass<SystemTimerClass> &TickCountTimer;
 extern TCountDownTimerClass<SystemTimerClass> &FrameTimer;
 #else

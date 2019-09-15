@@ -16,10 +16,7 @@
 #include "timer.h"
 #include "ostimer.h"
 
-#ifdef GAME_DLL
-TimerClass &TickCount = Make_Global<TimerClass>(0x006ABF6C);
-CountDownTimerClass &CountDown = Make_Global<CountDownTimerClass>(0x006ABF78);
-#else
+#ifndef GAME_DLL
 TimerClass TickCount;
 CountDownTimerClass CountDown;
 #endif

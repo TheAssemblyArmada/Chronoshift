@@ -534,7 +534,6 @@ void Setup_Hooks()
     Hook_Function(0x00503078, *GameMouseClass::Revert_Mouse_Shape);
     Hook_Function(0x00503098, *GameMouseClass::Mouse_Small);
     Hook_Function(0x004F8F70, *GameMouseClass::Load);
-    Hook_Function(0x004F90F8, *GameMouseClass::Hook_Save);
     
     // gameevent.h
     Hook_Call(0x0052BC5E, *GameEventClass::Execute);

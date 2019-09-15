@@ -18,10 +18,7 @@
 
 using std::memcpy;
 
-#ifdef GAME_DLL
-// Doesn't seem to link from setupglobals.cpp, not sure why.
-uint8_t *const g_currentPalette = reinterpret_cast<uint8_t *>(0x0060CE90);
-#else
+#ifndef GAME_DLL
 uint8_t g_currentPalette[768];
 #endif
 

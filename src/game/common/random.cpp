@@ -15,9 +15,7 @@
  */
 #include "random.h"
 
-#ifdef GAME_DLL
-RandomClass &g_nonCriticalRandom = *reinterpret_cast<RandomClass*>(0x00667760);
-#else
+#ifndef GAME_DLL
 RandomClass g_nonCriticalRandom;
 #endif
 
@@ -58,11 +56,9 @@ int RandomClass::operator()(int minval, int maxval)
         --highbit;
     }
 
-    //
     // Create a full bit mask pattern that has all bits set that just
     // barely covers the magnitude of the number range desired.
-    //
-    int mask = ~((~0L) << (highbit + 1));
+    int mask = ~((~0u) << (highbit + 1));
 
     // Keep picking random numbers until it fits within the magnitude desired.
     // With a  good random number generator, it will have to perform this loop

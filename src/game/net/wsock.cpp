@@ -17,25 +17,11 @@
 #include "globals.h"
 #include "keyboard.h"
 
-#ifdef PLATFORM_WINDOWS
-// TODO when we can use winsock2, change this.
-//#include <ws2tcpip.h> //socklen_t typedef apparently
-typedef int socklen_t;
-#else
-#include <arpa/inet.h>
-#include <cerrno>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#endif
-
 #ifdef CHRONOSHIFT_SOCKETS_API
 int WinsockInterfaceClass::SocketsMax = 0;
 #endif // !PLATFORM_WINDOWS
 
-#ifdef GAME_DLL
-#include "hooker.h"
-WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>(0x0069172C);
-#else
+#ifndef GAME_DLL
 WinsockInterfaceClass *g_packetTransport = nullptr;
 #endif
 

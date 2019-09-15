@@ -91,8 +91,7 @@ int &g_interpolationMode = Make_Global<int>(0x006A1738);
 uint8_t **g_interpolatedPalettes = reinterpret_cast<uint8_t **>(0x00655C10);
 
 // pal.cpp
-// doesn't link for some reason?
-//uint8_t *const g_currentPalette = reinterpret_cast<uint8_t *>(0x0060CE90);
+uint8_t *g_currentPalette = reinterpret_cast<uint8_t *>(0x0060CE90);
 
 // palette.cpp
 class PaletteClass;
@@ -577,3 +576,33 @@ TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClas
 
 // weapontype.cpp
 TFixedIHeapClass<WeaponTypeClass> &g_WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x0069164C);
+
+// language.cpp
+char *&GameStrings = Make_Global<char *>(0x0066991C);
+char *&DebugStrings = Make_Global<char *>(0x00669920);
+char **NameOverride = Make_Pointer<char *>(0x0066616C);
+int *NameIDOverride = Make_Pointer<int>(0x006661D0);
+
+// random.cpp
+RandomClass &g_nonCriticalRandom = Make_Global<RandomClass>(0x00667760);
+
+// remap.cpp
+RemapControlType *ColorRemaps = Make_Pointer<RemapControlType>(0x00666908);
+RemapControlType &MetalScheme = Make_Global<RemapControlType>(0x00667528);
+RemapControlType &GreyScheme = Make_Global<RemapControlType>(0x00667644);
+RemapControlType &SidebarScheme = Make_Global<RemapControlType>(0x00684CC0);
+
+// timer.cpp
+TimerClass &TickCount = Make_Global<TimerClass>(0x006ABF6C);
+CountDownTimerClass &CountDown = Make_Global<CountDownTimerClass>(0x006ABF78);
+
+// ttimer.cpp
+TTimerClass<SystemTimerClass> &TickCountTimer = Make_Global<TTimerClass<SystemTimerClass> >(0x00680870);
+TCountDownTimerClass<SystemTimerClass> &FrameTimer = Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x006807F8);
+
+// pk.cpp
+PKey &g_publicKey = Make_Global<PKey>(0x00665F68);
+
+// wsock.cpp
+class WinsockInterfaceClass;
+WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>(0x0069172C);

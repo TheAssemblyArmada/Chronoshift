@@ -23,8 +23,6 @@
 #define NAME_OVERRIDE_MAX 25
 
 #ifdef GAME_DLL
-#include "hooker.h"
-
 extern char **NameOverride;
 extern int *NameIDOverride;
 #else
