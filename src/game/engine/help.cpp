@@ -239,13 +239,7 @@ void HelpClass::Set_Text(int string_id)
         }
 
         // Copy list and mark final buffer position as end in case source list is longer than buffer.
-#ifdef GAME_DLL
-        memcpy(OverlapList,
-            Text_Overlap_List(Fetch_String(HelpTextID), HelpXPos - 1, HelpYPos),
-            HELP_OVERLAP_BUFFER * sizeof(int16_t));
-#else
         memcpy(OverlapList, Text_Overlap_List(Fetch_String(HelpTextID), HelpXPos - 1, HelpYPos), sizeof(OverlapList));
-#endif
         OverlapList[HELP_OVERLAP_BUFFER - 1] = LIST_END;
     }
 }

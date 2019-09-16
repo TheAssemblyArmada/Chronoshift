@@ -123,7 +123,7 @@ unsigned int &g_theaterShapeBufferLength = Make_Global<unsigned int>(0x00609D6C)
 int &g_theaterSlotsUsed = Make_Global<int>(0x00609D70);
 int &g_shapeLength = Make_Global<int>(0x006A2F18);
 
-//surfacemonitor.cpp
+// surfacemonitor.cpp
 class SurfaceMonitorClass;
 void (*&MiscFocusLoss)() = Make_Global<void (*)()>(0x006B190C);
 void (*&MiscFocusRestore)() = Make_Global<void (*)()>(0x006B1910);
@@ -293,7 +293,7 @@ char *DisplayClass::MouseTranslucentTable = Make_Pointer<char>(0x006577E0);
 char *DisplayClass::ShadowTrans = Make_Pointer<char>(0x006582E8);
 char *DisplayClass::UnitShadow = Make_Pointer<char>(0x00657CE4);
 char *DisplayClass::UnitShadowAir = Make_Pointer<char>(0x00657EE4);
-char *DisplayClass::SpecialGhost = Make_Pointer<char>(0x006580E4);
+ARRAY2D_DEF(0x006580E4, char, DisplayClass::SpecialGhost, 2, 256);
 void *&DisplayClass::TransIconset = Make_Global<void *>(0x00657CE0);
 void *&DisplayClass::ShadowShapes = Make_Global<void *>(0x006582E4);
 BufferClass *&DisplayClass::TheaterBuffer = Make_Global<BufferClass *>(0x006680E4);
@@ -312,8 +312,8 @@ class GameOptionsClass;
 GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
 
 // gameptr.cpp
-#include "unittype.h"
 #include "terraintype.h"
+#include "unittype.h"
 #include "vesseltype.h"
 template<>
 FixedIHeapClass *const GamePtr<AircraftTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DDBC);
@@ -383,7 +383,7 @@ GadgetClass *&GameScreenClass::Buttons = Make_Global<GadgetClass *>(0x00680900);
 GraphicViewPortClass *&GameScreenClass::ShadowPage = Make_Global<GraphicViewPortClass *>(0x00680904);
 
 // help.cpp
-int16_t *const HelpClass::OverlapList = Make_Pointer<int16_t>(0x006018B8);
+ARRAY_DEF(0x006018B8, int16_t, HelpClass::OverlapList, HelpClass::HELP_OVERLAP_BUFFER);
 char *&HelpClass::HelpText = Make_Global<char *>(0x006821B8);
 
 // house.cpp
@@ -488,12 +488,12 @@ SessionClass &Session = Make_Global<SessionClass>(0x0067F2B4);
 // sidebar.cpp
 void *&SidebarClass::StripClass::LogoShapes = Make_Global<void *>(0x0068A464);
 void *&SidebarClass::StripClass::ClockShapes = Make_Global<void *>(0x0068A468);
-void **SidebarClass::StripClass::SpecialShapes = Make_Pointer<void *>(0x0068A46C);
-SidebarClass::StripClass::SelectClass *SidebarClass::StripClass::SelectButton =
-    Make_Pointer<SidebarClass::StripClass::SelectClass>(0x0068A2C4);
+ARRAY_DEF(0x0068A46C, void *, SidebarClass::StripClass::SpecialShapes, SPECIAL_COUNT);
+ARRAY2D_DEF(0x0068A2C4, SidebarClass::StripClass::SelectClass, SidebarClass::StripClass::SelectButton, COLUMN_COUNT,
+    SidebarClass::StripClass::ROW_COUNT);
 ShapeButtonClass *SidebarClass::StripClass::UpButton = Make_Pointer<ShapeButtonClass>(0x0068A1E4);
 ShapeButtonClass *SidebarClass::StripClass::DownButton = Make_Pointer<ShapeButtonClass>(0x0068A254);
-char *SidebarClass::StripClass::ClockTranslucentTable = Make_Pointer<char>(0x00689F18);
+ARRAY2D_DEF(0x00689F18, char, SidebarClass::StripClass::ClockTranslucentTable, 256, 2);
 SidebarClass::SBGadgetClass &SidebarClass::Background = Make_Global<SidebarClass::SBGadgetClass>(0x0068A118);
 ShapeButtonClass &SidebarClass::RepairButton = Make_Global<ShapeButtonClass>(0x0068A13C);
 ShapeButtonClass &SidebarClass::SellButton = Make_Global<ShapeButtonClass>(0x0068A174);

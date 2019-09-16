@@ -254,15 +254,8 @@ void DisplayClass::Init_Theater(TheaterType theater)
     }
 
     Conquer_Build_Fading_Table(GamePalette, FadingLight, 15, 85);
-
-    // Special case where pointer and array of arrays don't behave the same for our purpose.
-#ifdef GAME_DLL
-    Conquer_Build_Fading_Table(GamePalette, &SpecialGhost[256], 12, 100);
-#else
     Conquer_Build_Fading_Table(GamePalette, SpecialGhost[1], 12, 100);
-#endif
     memset(SpecialGhost, 0, 256);
-
     Make_Fading_Table(GamePalette, FadingBrighten, 15, 25);
     Make_Fading_Table(GamePalette, FadingWayDark, 13, 192);
 

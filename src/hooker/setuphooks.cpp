@@ -20,8 +20,8 @@
 #include "anim.h"
 #include "animtype.h"
 #include "bfiofile.h"
-#include "blitters.h"
 #include "bigcheck.h"
+#include "blitters.h"
 #include "building.h"
 #include "buildingtype.h"
 #include "bullettype.h"
@@ -173,7 +173,7 @@ void Setup_Hooks()
     // controlc.h
     Hook_Function(0x004AC2C0, *ControlClass::Action);
     Hook_Function(0x004AC338, *ControlClass::Draw_Me);
-    
+
     // gbuffer.h
     Hook_Function(0x005C0AF4, *GraphicBufferClass::DD_Init);
     Hook_Function(0x005C0C2D, *GraphicBufferClass::Init);
@@ -187,7 +187,7 @@ void Setup_Hooks()
     Hook_Function(0x005B7F30, *KeyboardClass::Check);
     Hook_Function(0x005B7F5C, *KeyboardClass::Get);
     Hook_Function(0x005B82CC, *KeyboardClass::Clear);
-    
+
     // ostimer.h
     Hook_Function(0x005BBEB0, &PlatformTimerClass::Timer_Callback);
 
@@ -207,7 +207,7 @@ void Setup_Hooks()
     Hook_Function(0x005C4DE0, Buffer_Clear);
     Hook_Function(0x005D4338, Linear_Scale_To_Linear);
 
-    //fading.h
+    // fading.h
     Hook_Function(0x004FB914, Make_Fading_Table);
     Hook_Function(0x005CC4C0, Build_Fading_Table);
     Hook_Function(0x004FB994, Conquer_Build_Fading_Table);
@@ -236,7 +236,7 @@ void Setup_Hooks()
     Hook_Function(0x004C41A4, *GadgetClass::Sticky_Process); // issue
     Hook_Function(0x004C3EC8, *GadgetClass::Action);
     Hook_Function(0x004C3DB4, *GadgetClass::Clicked_On); // issue
-    
+
     // interpolate.h
     Hook_Function(0x005B2DD0, Create_Palette_Interpolation_Table);
     Hook_Function(0x005B2CE0, Read_Interpolation_Palette);
@@ -244,7 +244,7 @@ void Setup_Hooks()
     Hook_Function(0x004A8704, Load_Interpolated_Palettes);
     Hook_Function(0x004A8874, Free_Interpolated_Palettes);
     Hook_Function(0x005B2FCC, Interpolate_2X_Scale);
-    
+
     // lcw.h
     Hook_Function(0x005D6880, LCW_Uncomp);
     Hook_Function(0x005DD28C, LCW_Comp);
@@ -295,7 +295,7 @@ void Setup_Hooks()
 
     // toggle.h
     Hook_Function(0x0056C4C8, *ToggleClass::Action);
-    
+
     // wsa.h
     Hook_Function(0x005D03C0, Open_Animation);
     Hook_Function(0x005D0820, Close_Animation);
@@ -314,7 +314,7 @@ void Setup_Hooks()
     // mouse.h
     Hook_Function(0x005C1B10, *MouseClass::Low_Hide_Mouse);
     Hook_Function(0x005C1BF0, *MouseClass::Low_Show_Mouse);
-    
+
     // xordelta.h
     Hook_Function(0x005D6A50, Apply_XOR_Delta_To_Page_Or_Viewport);
     Hook_Function(0x005D69E0, Apply_XOR_Delta);
@@ -341,7 +341,7 @@ void Setup_Hooks()
     Hook_Function(0x0054FAF0, *SliderClass::Draw_Thumb);
     Hook_Function(0x0054FB3C, *SliderClass::Draw_Me);
     Hook_Function(0x0054FBCC, *SliderClass::Peer_To_Peer);
-    
+
     // list.h
     Hook_Function(0x004FCB38, *ListClass::Add);
     Hook_Function(0x004FCBC0, *ListClass::Add_Tail);
@@ -383,17 +383,17 @@ void Setup_Hooks()
     Hook_Function(0x004CD850, *FixedIHeapClass::Free);
     Hook_Function(0x004CD7A8, *FixedIHeapClass::Free_All);
     Hook_Function(0x004CD7E4, *FixedIHeapClass::Set_Heap);
-    
+
     // lzopipe.h
     Hook_Function(0x005D5508, *LZOPipe::Put);
     Hook_Function(0x005D57AC, *LZOPipe::Flush);
-    
+
     // lzostraw.h
     Hook_Function(0x005D5BF4, *LZOStraw::Get);
 
     // version.h
     Hook_Function(0x00589960, ::Version_Name);
-    
+
     // facing.h
     Hook_Function(0x004BEB44, *FacingClass::Rotation_Adjust);
     Hook_Function(0x004BEB2C, *FacingClass::Set_Current);
@@ -469,7 +469,7 @@ void Setup_Hooks()
     Hook_Function(0x0052FCC0, *RadarClass::Radar_Pixel); //
     Hook_Function(0x0052FD3C, *RadarClass::Hook_Click_In_Radar); //
     Hook_Function(0x0052D790, *RadarClass::Radar_Activate); //
-    
+
     // power.h
     Hook_Function(0x005275CC, *PowerClass::One_Time); // seems to work
     Hook_Function(0x00527534, *PowerClass::Init_Clear); // seems to work
@@ -508,7 +508,7 @@ void Setup_Hooks()
     Hook_Function(0x005539D8, *TabClass::One_Time);
     Hook_Function(0x005538D0, *TabClass::AI);
     Hook_Function(0x00553744, *TabClass::Draw_Credits_Tab);
-    
+
     // help.h
     Hook_Function(0x004D2338, *HelpClass::Init_Clear);
     Hook_Function(0x004D23C8, *HelpClass::AI);
@@ -523,7 +523,7 @@ void Setup_Hooks()
     Hook_Function(0x004F92E0, *ScrollClass::Init_IO);
     Hook_Function(0x00547088, *ScrollClass::AI);
     Hook_Function(0x00547464, *ScrollClass::Set_Autoscroll);
-    
+
     // gmouse.h
     Hook_Function(0x005033E0, *GameMouseClass::One_Time);
     Hook_Function(0x005033FC, *GameMouseClass::Init_Clear);
@@ -534,7 +534,7 @@ void Setup_Hooks()
     Hook_Function(0x00503078, *GameMouseClass::Revert_Mouse_Shape);
     Hook_Function(0x00503098, *GameMouseClass::Mouse_Small);
     Hook_Function(0x004F8F70, *GameMouseClass::Load);
-    
+
     // gameevent.h
     Hook_Call(0x0052BC5E, *GameEventClass::Execute);
 
@@ -590,7 +590,7 @@ void Setup_Hooks()
     Hook_Function(0x0053CD80, *ScenarioClass::Hook_Set_Scenario_Name2);
     Hook_Function(0x00539BF8, *ScenarioClass::Do_BW_Fade);
     Hook_Function(0x00539C40, *ScenarioClass::Do_Fade_AI);
-    
+
     // mission.h
     Hook_Function(0x00502C70, *MissionClass::Assign_Mission);
     Hook_Function(0x00502C2C, *MissionClass::Commence);
@@ -599,7 +599,7 @@ void Setup_Hooks()
     Hook_Function(0x00502D20, *MissionClass::Restore_Mission);
     Hook_Function(0x00502824, *MissionClass::AI);
     Hook_Function(0x00502D54, *MissionClass::Is_Recruitable_Mission);
-    
+
     // msgbox.h
     Hook_Function(0x005043D0, *MessageBoxClass::Hook_Process);
 
@@ -629,7 +629,7 @@ void Setup_Hooks()
 
     // techno.h
     Hook_Function(0x0056706C, *TechnoClass::Wrap_Techno_Draw_It);
-    
+
     // house.h
     Hook_Function(0x004D5EF4, *HouseClass::Silo_Redraw_Check);
     Hook_Function(0x004D2D48, *HouseClass::Assign_Handicap);
@@ -669,7 +669,7 @@ void Setup_Hooks()
     Hook_Function(0x004DE094, *HouseClass::Hook_Is_No_Yak_Mig);
     Hook_Function(0x004DE154, *HouseClass::Hook_Is_Hack_Prevented);
     Hook_Function(0x004DDCFC, *HouseClass::Read_INI);
-    
+
     // foot.h
     Hook_Function(0x004C3328, *FootClass::Hook_Can_Demolish);
     Hook_Function(0x004C154C, *FootClass::Hook_Sort_Y);
@@ -722,7 +722,7 @@ void Setup_Hooks()
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
     Hook_Function(0x004A96E8, CC_Draw_Shape);
-    
+
     // factory.h
     Hook_Function(0x004BEE10, *FactoryClass::Has_Changed);
     Hook_Function(0x004BEF80, *FactoryClass::Suspend);
@@ -759,7 +759,7 @@ void Setup_Hooks()
     Hook_Function(0x004AE350, &Window_Box);
 
     Hook_Function(0x004AC814, Move_Point);
-    
+
     // init.h
     Hook_Function(0x004F5EC4, Init_Random);
     Hook_Function(0x004F6240, Init_Color_Remaps);
@@ -798,7 +798,7 @@ void Setup_Hooks()
     Hook_Function(0x005C9E60, Reset_Video_Mode);
     Hook_Function(0x00552368, Init_Video);
     Hook_Function(0x005CA070, Set_Video_Palette);
-    
+
     // vortex.h
     Hook_Function(0x0058E0F4, *ChronalVortexClass::Appear);
     Hook_Function(0x0058E240, *ChronalVortexClass::Disappear);

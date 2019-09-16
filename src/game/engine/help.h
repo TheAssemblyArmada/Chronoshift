@@ -25,6 +25,7 @@ class HelpClass : public TabClass
 {
     friend void Setup_Hooks();
 
+public:
     enum
     {
         HELP_OVERLAP_BUFFER = 60,
@@ -76,7 +77,7 @@ protected:
 
 private:
 #ifdef GAME_DLL
-    static int16_t *const OverlapList;
+    static ARRAY_DEC(int16_t, OverlapList, HELP_OVERLAP_BUFFER);
     static char *&HelpText;
 #else
     static int16_t OverlapList[HELP_OVERLAP_BUFFER];
