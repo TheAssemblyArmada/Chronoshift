@@ -62,6 +62,7 @@ class SidebarClass : public PowerClass
     {
         friend class SidebarClass;
 
+    public:
         enum
         {
             ROW_COUNT = 4,
@@ -109,18 +110,18 @@ class SidebarClass : public PowerClass
 #ifdef GAME_DLL
         static void *&LogoShapes;
         static void *&ClockShapes;
-        static void **SpecialShapes;
+        static ARRAY_DEC(void *, SpecialShapes, SPECIAL_COUNT);
         // this is an array of 2x4.
         // (1) left strip, cameo 1,2,3,4
         // (2) right strip, cameo 1,2,3,4
         // based on column count and row count, this will grow dynamicly.
-        static SelectClass *SelectButton;
+        static ARRAY2D_DEC(SelectClass, SelectButton, COLUMN_COUNT, ROW_COUNT);
 
         // these are the strip scrolling buttons, 2 pairs of up and down.
         // based on the column count, buttons will be allocated dynamicly.
         static ShapeButtonClass *UpButton;
         static ShapeButtonClass *DownButton;
-        static char *ClockTranslucentTable;
+        static ARRAY2D_DEC(char, ClockTranslucentTable, 256, 2);
 #else
         static void *LogoShapes;
         static void *ClockShapes;

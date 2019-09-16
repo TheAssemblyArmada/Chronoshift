@@ -182,17 +182,10 @@ void SidebarClass::StripClass::Init_IO(int column)
         DownButton[WhichColumn].Set_Sticky(true);
 
         for (int index = 0; index < ROW_COUNT; ++index) {
-#ifdef GAME_DLL
-            SelectButton[WhichColumn * 4 + index].Set_Size(64, 48);
-            SelectButton[WhichColumn * 4 + index].Set_XPos(XPos);
-            SelectButton[WhichColumn * 4 + index].Set_YPos(YPos + index * 48);
-            SelectButton[WhichColumn * 4 + index].Set_Owner(*this, index);
-#else
             SelectButton[WhichColumn][index].Set_Size(64, 48);
             SelectButton[WhichColumn][index].Set_XPos(XPos);
             SelectButton[WhichColumn][index].Set_YPos(YPos + index * 48);
             SelectButton[WhichColumn][index].Set_Owner(*this, index);
-#endif
         }
     }
 }
@@ -213,13 +206,8 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
             memset(&palette[32], 63, 21);
 
             // Build the fading tables for drawing the clock sweep overlay.
-#ifdef GAME_DLL
-            Build_Translucent_Table(palette, &_clock_cols, 1, ClockTranslucentTable);
-            Conquer_Build_Fading_Table(GamePalette, &ClockTranslucentTable[256], 12, 100);
-#else
             Build_Translucent_Table(palette, &_clock_cols, 1, ClockTranslucentTable[0]);
             Conquer_Build_Fading_Table(GamePalette, ClockTranslucentTable[1], 12, 100);
-#endif
         }
     }
 }
@@ -241,13 +229,8 @@ void SidebarClass::StripClass::Activate()
     Map.Add_A_Button(DownButton[WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-#ifdef GAME_DLL
-        SelectButton[(WhichColumn * ROW_COUNT) + index].Unlink();
-        Map.Add_A_Button(SelectButton[(WhichColumn * ROW_COUNT) + index]);
-#else
         SelectButton[WhichColumn][index].Unlink();
         Map.Add_A_Button(SelectButton[WhichColumn][index]);
-#endif
     }
 }
 
@@ -257,11 +240,7 @@ void SidebarClass::StripClass::Deactivate()
     Map.Remove_A_Button(DownButton[WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-#ifdef GAME_DLL
-        Map.Remove_A_Button(SelectButton[(WhichColumn * ROW_COUNT) + index]);
-#else
         Map.Remove_A_Button(SelectButton[WhichColumn][index]);
-#endif
     }
 }
 

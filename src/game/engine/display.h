@@ -126,7 +126,7 @@ public:
     void Reset_Pending_Object();
     int Tac_Offset_X() const { return TacOffsetX; }
     int Tac_Offset_Y() const { return TacOffsetY; }
-    coord_t New_Pos() const { return DisplayNewPos; }  
+    coord_t New_Pos() const { return DisplayNewPos; }
 
 private:
     // This only seems to be used by DisplayClass, so made it a static helper of this class.
@@ -182,7 +182,7 @@ public:
     static char *ShadowTrans;
     static char *UnitShadow;
     static char *UnitShadowAir;
-    static char *SpecialGhost;
+    static ARRAY2D_DEC(char, SpecialGhost, 2, 256);
     static void *&TransIconset;
     static void *&ShadowShapes;
     static BufferClass *&TheaterBuffer;
@@ -218,24 +218,15 @@ public:
         return DisplayClass::Text_Overlap_List(string, x, y);
     }
 
-    void Hook_Get_Occupy_Dimensions(int &w, int &h, int16_t *list)
-    {
-        DisplayClass::Get_Occupy_Dimensions(w, h, list);
-    }
+    void Hook_Get_Occupy_Dimensions(int &w, int &h, int16_t *list) { DisplayClass::Get_Occupy_Dimensions(w, h, list); }
 
-    ObjectClass *Hook_Cell_Object(cell_t cellnum, int x, int y)
-    {
-        return DisplayClass::Cell_Object(cellnum, x, y);
-    }
+    ObjectClass *Hook_Cell_Object(cell_t cellnum, int x, int y) { return DisplayClass::Cell_Object(cellnum, x, y); }
 
     ObjectClass *Hook_Next_Object(ObjectClass *object) { return DisplayClass::Next_Object(object); }
 
     BOOL Hook_In_View(cell_t cellnum) { return DisplayClass::In_View(cellnum); }
 
-    BOOL Hook_Coord_To_Pixel(coord_t coord, int &x, int &y)
-    {
-        return DisplayClass::Coord_To_Pixel(coord, x, y);
-    }
+    BOOL Hook_Coord_To_Pixel(coord_t coord, int &x, int &y) { return DisplayClass::Coord_To_Pixel(coord, x, y); }
 
     int Hook_Cell_Shadow(cell_t cellnum) { return DisplayClass::Cell_Shadow(cellnum); }
 
@@ -244,7 +235,8 @@ public:
         return DisplayClass::Closest_Free_Spot(coord, skip_occupied);
     }
 
-    cell_t Hook_Calculated_Cell(SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
+    cell_t Hook_Calculated_Cell(
+        SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone)
     {
         return DisplayClass::Calculated_Cell(source, waypoint, cellnum, speed, use_zone, mzone);
     }
