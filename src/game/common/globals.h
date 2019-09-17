@@ -96,6 +96,7 @@ extern HWND MainWindow;
 extern int &g_iniFormat;
 extern int &g_GameFrame; // NOTE: previously g_Frame.
 extern BOOL &g_gameInFocus;
+extern BOOL &g_InMovie;
 extern BOOL &g_inMapEditor;
 extern char *&Metal12FontPtr;
 extern char *&MapFontPtr;
@@ -181,6 +182,7 @@ extern BOOL &g_MonoEnabled;
 extern int g_iniFormat;
 extern int g_GameFrame;
 extern BOOL g_gameInFocus;
+extern BOOL g_InMovie;
 extern BOOL g_inMapEditor;
 extern char *Metal12FontPtr;
 extern char *MapFontPtr;

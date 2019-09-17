@@ -161,6 +161,7 @@ HMODULE &ProgramInstance = Make_Global<HMODULE>(0x0068A4BC);
 int &g_iniFormat = Make_Global<int>(0x00665DE8);
 int &g_GameFrame = Make_Global<int>(0x006680C4);
 BOOL &g_gameInFocus = Make_Global<BOOL>(0x00665F64);
+BOOL &g_InMovie = Make_Global<BOOL>(0x00665F58);
 BOOL &g_inMapEditor = Make_Global<BOOL>(0x0065D7E8);
 char *&Metal12FontPtr = Make_Global<char *>(0x0066992C);
 char *&MapFontPtr = Make_Global<char *>(0x00669930);

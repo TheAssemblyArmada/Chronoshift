@@ -24,6 +24,7 @@ HWND MainWindow = nullptr;
 int g_iniFormat = 0;
 int g_GameFrame = 0;
 BOOL g_gameInFocus = false;
+BOOL g_InMovie = false;
 BOOL g_inMapEditor = false;
 char *Metal12FontPtr = nullptr;
 char *MapFontPtr = nullptr;
