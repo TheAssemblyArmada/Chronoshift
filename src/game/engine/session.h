@@ -155,6 +155,7 @@ public:
 
     MPlayerScoreStruct &MPlayer_Score_Info(HousesType house) { return MPlayerScores[house]; }
     int MPlayer_Current_Game() const { return MPlayerCurrentGame; }
+    void MPlayer_Clear_Game_Name() { MPlayerGameName[0] = '\0'; }
 
     GameFileClass &Recording_File() { return RecordFile; }
     BOOL Record_Game() const { return RecordGame; }
