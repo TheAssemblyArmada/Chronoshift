@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "fuse.h"
+#include "basefile.h"
 #include "coord.h"
-#include "fileclass.h"
 
 /**
  * @brief Sets the fuse countdown running.

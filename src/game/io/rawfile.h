@@ -19,11 +19,12 @@
 #define RAWFILECLASS_H
 
 #include "always.h"
-#include "fileclass.h"
+#include "basefile.h"
 
 class RawFileClass : public FileClass
 {
     friend void Setup_Hooks();
+
 public:
     RawFileClass();
     RawFileClass(const char *filename);

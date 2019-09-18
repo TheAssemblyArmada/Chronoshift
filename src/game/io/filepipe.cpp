@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "filepipe.h"
-#include "fileclass.h"
+#include "basefile.h"
 
 FilePipe::~FilePipe()
 {
@@ -29,8 +29,8 @@ FilePipe::~FilePipe()
 }
 
 /**
-* @brief Finishes writing any cached data from the stream chain and closes the file.
-*/
+ * @brief Finishes writing any cached data from the stream chain and closes the file.
+ */
 int FilePipe::End()
 {
     int retval = Flush();
@@ -44,8 +44,8 @@ int FilePipe::End()
 }
 
 /**
-* @brief Writes data from the buffer to the underlying file class.
-*/
+ * @brief Writes data from the buffer to the underlying file class.
+ */
 int FilePipe::Put(const void *buffer, int length)
 {
     if (Valid_File() && buffer != nullptr && length > 0) {
