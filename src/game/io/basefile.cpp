@@ -13,7 +13,7 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "fileclass.h"
+#include "basefile.h"
 
 time_t FileClass::Get_Date_Time()
 {

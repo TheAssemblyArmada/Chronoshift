@@ -19,7 +19,7 @@
 #define RAMFILE_H
 
 #include "always.h"
-#include "fileclass.h"
+#include "basefile.h"
 
 class RAMFileClass : public FileClass
 {

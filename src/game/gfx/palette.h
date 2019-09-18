@@ -19,7 +19,7 @@
 #define PALETTE_H
 
 #include "always.h"
-#include "fileclass.h"
+#include "basefile.h"
 #include "rgb.h"
 
 class PaletteClass

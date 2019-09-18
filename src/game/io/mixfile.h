@@ -19,12 +19,13 @@
 #define MIXFILE_H
 
 #include "always.h"
+#include "basefile.h"
 #include "cd.h"
 #include "crc.h"
-#include "fileclass.h"
 #include "filestraw.h"
 #include "gamedebug.h"
 #include "listnode.h"
+
 //#include "obscure.h"
 #include "buffer.h"
 #include "endiantype.h"

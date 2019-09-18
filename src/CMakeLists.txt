@@ -181,6 +181,7 @@ set(GAMEENGINE_SRC
     game/gfx/textprint.cpp
     game/gfx/tileset.cpp
     game/gfx/wsa.cpp
+    game/io/basefile.cpp
     game/io/b64pipe.cpp
     game/io/b64straw.cpp
     game/io/bfiofile.cpp
@@ -190,7 +191,6 @@ set(GAMEENGINE_SRC
     game/io/buffstraw.cpp
     game/io/cd.cpp
     game/io/cdfile.cpp
-    game/io/fileclass.cpp
     game/io/filepipe.cpp
     game/io/filestraw.cpp
     game/io/gamefile.cpp

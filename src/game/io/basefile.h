@@ -15,8 +15,8 @@
  */
 #pragma once
 
-#ifndef FILECLASS_H
-#define FILECLASS_H
+#ifndef BASEFILE_H
+#define BASEFILE_H
 
 #include "always.h"
 #include <time.h>
@@ -62,4 +62,4 @@ public:
     int Tell() { return Seek(0, FS_SEEK_CURRENT); }
 };
 
-#endif // _FILECLASS_H
+#endif // BASEFILE_H
