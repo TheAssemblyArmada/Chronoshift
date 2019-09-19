@@ -97,6 +97,8 @@ public:
     }
 
     int MapClass::Hook_Intact_Bridge_Count() { return Intact_Bridge_Count(); }
+    ObjectClass *Hook_Close_Object(coord_t coord) { return Close_Object(coord); }
+    BOOL Hook_Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) { return Base_Region(cellnum, house, zone); }
 #endif
 
 protected:

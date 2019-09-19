@@ -152,6 +152,8 @@ public:
     fixed_t Cost_Multiplier() const { return m_CostMult; }
     HousesType Acts_Like() const { return m_ActsLike; }
     void Set_AI_Difficulty(DiffType value) { m_AIDifficulty = value; }
+    BOOL Is_Active() const { return m_IsActive; }
+    void Set_Active(BOOL value) { m_IsActive = value; }
     BOOL Is_Human() const { return m_IsHuman; }
     void Set_Human(BOOL value) { m_IsHuman = value; }
     BOOL Player_Has_Control() const { return m_PlayerControl; }

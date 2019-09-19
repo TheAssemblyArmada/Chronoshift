@@ -584,6 +584,13 @@ void Setup_Hooks()
     Hook_Function(0x0050083C, *MapClass::Hook_Intact_Bridge_Count);
     Hook_Function(0x004FED90, *MapClass::Read_Binary);
     Hook_Function(0x004FF1BC, *MapClass::Cell_Threat);
+    Hook_Function(0x004FFEAC, *MapClass::Hook_Base_Region);
+    Hook_Function(0x00500908, *MapClass::Shroud_The_Map);
+    Hook_Function(0x004FF554, *MapClass::Hook_Close_Object);
+    Hook_Function(0x004FE7C8, *MapClass::UnJam_From);
+    Hook_Function(0x004FE68C, *MapClass::Jam_From);
+    Hook_Function(0x004FE588, *MapClass::Shroud_From);
+    Hook_Function(0x004FE438, *MapClass::Sight_From);
 
     // scenario.h
     Hook_Function(0x0053CFB0, *ScenarioClass::Hook_Set_Scenario_Name1);
