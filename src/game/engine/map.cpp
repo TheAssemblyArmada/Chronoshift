@@ -24,15 +24,19 @@
 #include "scenario.h"
 #include "session.h"
 #include "target.h"
+#include "techno.h"
 #include "tileset.h"
 
 // TODO this is require for some none virtual calls to functions higher in the stack.
 #include "iomap.h"
 
 #include <algorithm>
+#include <cstdlib>
 
 using std::min;
 using std::max;
+using std::abs;
+using std::clamp;
 
 //This appears to be missing the entries for 309+ which TS has for sight 11
 const int MapClass::RadiusOffset[] = {
@@ -385,14 +389,10 @@ BOOL MapClass::In_Radar(cell_t cellnum) const
  */
 cell_t MapClass::Clamp_To_Radar(cell_t cellnum) const
 {
-    // TODO use clamp rather than min/max when std::clamp baseconfig merged.
     unsigned cell_x = Cell_Get_X(cellnum);
     unsigned cell_y = Cell_Get_Y(cellnum);
-
-    cell_x = max<unsigned>(cell_x, MapCellX);
-    cell_y = max<unsigned>(cell_y, MapCellY);
-    cell_x = min<unsigned>(cell_x, MapCellWidth);
-    cell_y = min<unsigned>(cell_y, MapCellHeight);
+    cell_x = clamp<unsigned>(cell_x, MapCellX, MapCellWidth);
+    cell_y = clamp<unsigned>(cell_y, MapCellY, MapCellHeight);
 
     return Cell_From_XY(cell_x, cell_y);
 }
@@ -404,11 +404,6 @@ cell_t MapClass::Clamp_To_Radar(cell_t cellnum) const
  */
 void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4)
 {
-    // TODO requires RadarClass
-#ifdef GAME_DLL
-    void(*func)(const MapClass*, cell_t, int, HouseClass *, BOOL) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *, BOOL)>(0x004FE438);
-    func(this, cellnum, radius, house, a4);
-#elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
     DEBUG_ASSERT(house != nullptr);
@@ -417,40 +412,33 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
     // Sole adjusts radius to be 10 if its greater than 10. Possible fix to avoid function treating radius > 10 as 0?
     // "!!!going past ten is a hard code Vegas crash!!!"
 
-    if (In_Radar(cellnum)) {
-        if (radius >= 0 && radius < ARRAY_SIZE(RadiusCount)) {
-            const int *offset_ptr = RadiusOffset;
-            int radius_count = RadiusCount[radius];
+    if (In_Radar(cellnum) && radius >= 0 && radius < ARRAY_SIZE(RadiusCount)) {
+        const int *offset_ptr = RadiusOffset;
+        int radius_count = RadiusCount[radius];
 
-            // In Sole/C&C the check is for radius > 1 and the adjustment is - 1. Not sure what significance that has, but a4 appears the be a bool that flags if this check and adjustment is made.
-            if (a4 && radius > 2) {
-                radius_count -= RadiusCount[radius];
-                offset_ptr = &RadiusOffset[RadiusCount[radius]];
-            }
+        // In Sole/C&C the check is for radius > 1 and the adjustment is - 1. Not sure what significance that has, but a4 appears the be a bool that flags if this check and adjustment is made.
+        if (a4 && radius > 2) {
+            radius_count -= RadiusCount[radius - 3];
+            offset_ptr = &RadiusOffset[RadiusCount[radius - 3]];
+        }
 
-            CellClass *cell = &Array[cellnum];
-            DEBUG_ASSERT(cell != nullptr);
+        while (--radius_count != -1) {
+            cell_t offset_cellnum = *offset_ptr + cellnum;
+            ++offset_ptr;
 
-            while (--radius_count != -1) {
-                cell_t offset_cellnum = *offset_ptr + cellnum;
-                ++offset_ptr;
-
-                // If the cell we are considering is within the map and the distance in the X axis is less than radius, calc actual distance.
-                if (offset_cellnum < MAP_MAX_AREA) {
-                    if (Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-                        // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <= radius, not radius * 256.
-                        if (Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
-                            if (!cell->Is_Visible()) {
-                                // TODO Calls to RadarClass function higherup class stack, bad juju, should be virtual.
-                                Map.Map_Cell(offset_cellnum, house);
-                            }
-                        }
+            // If the cell we are considering is within the map and the distance in the X axis is less than radius, calc
+            // actual distance.
+            if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+                // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
+                // radius, not radius * 256.
+                if (Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
+                    if (!Array[offset_cellnum].Is_Visible()) {
+                        Map.Map_Cell(offset_cellnum, house);
                     }
                 }
             }
         }
     }
-#endif
 }
 
 /**
@@ -460,38 +448,28 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
  */
 void MapClass::Shroud_From(cell_t cellnum, int radius)
 {
-    // TODO requires RadarClass
-#ifdef GAME_DLL
-    void(*func)(const MapClass*, cell_t, int) = reinterpret_cast<void(*)(const MapClass*, cell_t, int)>(0x004FE588);
-    func(this, cellnum, radius);
-#elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
 
-    // Original code does not check radius is with the array bounds
-    if (In_Radar(cellnum)) {
-        if (radius > 0 && radius <= Rule.Get_Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
-            const int32_t *offset_ptr = RadiusOffset;
-            int32_t radius_count = RadiusCount[radius];
+    // BUGFIX Original code does not check radius is with the array bounds
+    if (In_Radar(cellnum) && radius > 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+        const int32_t *offset_ptr = RadiusOffset;
+        int32_t radius_count = RadiusCount[radius];
 
-            while (radius_count-- >= 0) {
-                cell_t offset_cellnum = offset_ptr[cellnum];
-                ++offset_ptr;
+        while (--radius_count != -1) {
+            cell_t offset_cellnum = *offset_ptr + cellnum;
+            ++offset_ptr;
 
-                // TODO, same loop as above pretty much...
-
-                // checks the result of a distance check.
-                if (offset_cellnum < MAP_MAX_AREA && Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-                    // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
-                    // radius, not radius * 256.
-                    if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
-                        Map.Shroud_Cell(offset_cellnum); // TODO call from display class, should be virtual?
-                    }
+            // checks the result of a distance check.
+            if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+                // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
+                // radius, not radius * 256.
+                if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                    Map.Shroud_Cell(offset_cellnum); // TODO call from display class, should be virtual?
                 }
             }
         }
     }
-#endif
 }
 
 /**
@@ -501,28 +479,23 @@ void MapClass::Shroud_From(cell_t cellnum, int radius)
  */
 void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
 {
-    // TODO requires HouseClass, RadarClass
-#ifdef GAME_DLL
-    void(*func)(const MapClass*, cell_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *)>(0x004FE68C);
-    func(this, cellnum, radius, house);
-#elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
     DEBUG_ASSERT(house != nullptr);
 
     //this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
     if (!g_inMapEditor) {
-        // Original does not check radius is within array bounds
-        if (radius >= 0 && radius <= Rule.Get_Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+        // BUGFIX Original does not check radius is within array bounds
+        if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
             const int32_t *offset_ptr = RadiusOffset;
             int32_t radius_count = RadiusCount[radius];
 
-            while (radius_count-- >= 0) {
+            while (--radius_count != -1) {
                 cell_t offset_cellnum = *offset_ptr + cellnum;
                 ++offset_ptr;
 
                 if (offset_cellnum < MAP_MAX_AREA &&
-                    Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+                    abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
 
                     if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
                         Map.Jam_Cell(offset_cellnum, house);
@@ -530,12 +503,11 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
                 }
             }
 
-            if (house->PlayerControl) {
-                Map.Constrained_Look(Cell_To_Coord(cellnum), Rule.Get_Gap_Radius() * 256);
+            if (house->Player_Has_Control()) {
+                Map.Constrained_Look(Cell_To_Coord(cellnum), Rule.Gap_Radius() * 256);
             }
         }
     }
-#endif
 }
 
 /**
@@ -545,28 +517,23 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
  */
 void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
 {
-    // TODO requires RadarClass
-#ifdef GAME_DLL
-    void(*func)(const MapClass*, cell_t, int, HouseClass *) = reinterpret_cast<void(*)(const MapClass*, cell_t, int, HouseClass *)>(0x004FE7C8);
-    func(this, cellnum, radius, house);
-#elif 0
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
     DEBUG_ASSERT(house != nullptr);
 
     //this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
     if (!g_inMapEditor) {
-        // Original does not check radius is within array bounds
-        if (radius >= 0 && radius <= Rule.Get_Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+        // BUGFIX Original does not check radius is within array bounds
+        if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
             const int32_t *offset_ptr = RadiusOffset;
             int32_t radius_count = RadiusCount[radius];
 
-            while (radius_count-- >= 0) {
+            while (--radius_count != -1) {
                 cell_t offset_cellnum = *offset_ptr + cellnum;
                 ++offset_ptr;
 
                 if (offset_cellnum < MAP_MAX_AREA &&
-                    Abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+                    abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
 
                     if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
                         Map.UnJam_Cell(offset_cellnum, house);
@@ -575,7 +542,6 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
             }
         }
     }
-#endif
 }
 
 /**
@@ -1036,18 +1002,12 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
  */
 BOOL MapClass::Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) const
 {
-    // TODO requires HouseClass
-#ifdef GAME_DLL
-    BOOL(*func)(const MapClass*, cell_t, HousesType&, ZoneType&) = reinterpret_cast<BOOL(*)(const MapClass*, cell_t, HousesType&, ZoneType&)>(0x004FFEAC);
-    return func(this, cellnum, house, zone);
-#elif 0
     if (cellnum < MAP_MAX_AREA && In_Radar(cellnum)) {
         for (house = HOUSES_FIRST; house < HOUSES_COUNT; ++house) {
             HouseClass *hptr = HouseClass::As_Pointer(house);
-            DEBUG_ASSERT(hptr != nullptr);
 
             if (hptr != nullptr) {
-                if (hptr->Is_Active() && !hptr->Defeated && Valid_Coord(hptr->field_2AE)) {
+                if (hptr->Is_Active() && !hptr->Is_Defeated() && hptr->Base_Center() != 0) {
                     zone = hptr->Which_Zone(cellnum);
 
                     if (zone != ZONE_NONE) {
@@ -1059,9 +1019,6 @@ BOOL MapClass::Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) co
     }
 
     return false;
-#else
-    return false;
-#endif
 }
 
 /**
@@ -1155,11 +1112,6 @@ int MapClass::Intact_Bridge_Count() const
  */
 void MapClass::Shroud_The_Map()
 {
-    // TODO Requires DisplayClass, TechnoClass
-#ifdef GAME_DLL
-    void(*func)(const MapClass*) = reinterpret_cast<void(*)(const MapClass*)>(0x00500908);
-    func(this);
-#elif 0
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
         CellClass &cell = Array[cellnum];
 
@@ -1182,14 +1134,13 @@ void MapClass::Shroud_The_Map()
         if (DisplayClass::Layers[LAYER_GROUND][i]->Is_Techno()) {
             TechnoClass *tptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][i]);
 
-            if (tptr->OwnerHouse == house) {
+            if (tptr != nullptr && tptr->Is_Techno() && tptr->Get_Owner_House() == g_PlayerPtr) {
                 tptr->Look();
             }
         }
     }
 
     Flag_To_Redraw(true);
-#endif
 }
 
 /**
@@ -1433,24 +1384,21 @@ BOOL MapClass::Validate()
  */
 ObjectClass *MapClass::Close_Object(coord_t coord) const
 {
-    // TODO Requires TechnoClass
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const MapClass*, coord_t) = reinterpret_cast<ObjectClass *(*)(const MapClass*, coord_t)>(0x004FF554);
-    return func(this, coord);
-#elif 0
     static const int _offsets[9] = { 0, -1, 1, -128, 128, 127, 129, -127, -129 };
 
     ObjectClass *retval = nullptr;
     int nearest = 0;
+    cell_t target_cell = Coord_To_Cell(coord);
 
     for (int i = 0; i < ARRAY_SIZE(_offsets); ++i) {
-        cell_t offset_cell = _offsets[i] + Coord_To_Cell(coord);
+        cell_t offset_cell = _offsets[i] + target_cell;
 
         if (In_Radar(offset_cell)) {
             const CellClass &cell = Array[offset_cell];
 
-            for (ObjectClass *obj = cell.Get_Occupier(); obj != nullptr; obj = obj->Next) {
-                if (!obj->Is_Techno() || reinterpret_cast<TechnoClass *>(obj)->PlayerOwned || reinterpret_cast<TechnoClass *>(obj)->Is_Cloaked()) {
+            for (ObjectClass *obj = cell.Get_Occupier(); obj != nullptr; obj = obj->Get_Next()) {
+                if (!obj->Is_Techno() || reinterpret_cast<TechnoClass *>(obj)->Is_Player_Owned()
+                    || reinterpret_cast<TechnoClass *>(obj)->Cloak_State() != CLOAK_CLOAKED) {
                     int distance;
 
                     if (obj->What_Am_I() == RTTI_BUILDING) {
@@ -1472,8 +1420,9 @@ ObjectClass *MapClass::Close_Object(coord_t coord) const
         }
     }
 
+    if (retval != nullptr && nearest > 181) {
+        retval = nullptr;
+    }
+
     return retval;
-#else
-    return nullptr;
-#endif
 }

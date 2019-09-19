@@ -142,7 +142,11 @@ public:
     virtual void Enter_Idle_Mode(BOOL a1 = false);
 
     void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
-    BOOL Visually_Unclear() const { VisualType visual = Visual_Character(); return visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN; }
+    BOOL Visually_Unclear() const
+    {
+        VisualType visual = Visual_Character();
+        return visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN;
+    }
     int Anti_Air();
     int Anti_Armor();
     int Anti_Infantry();
@@ -167,6 +171,7 @@ public:
     BOOL Is_AI_Aware() const { return m_AIAware; }
     BOOL Is_Lemon() const { return m_Lemon; }
     BOOL Is_Bit2_16() const { return m_Bit2_16; }
+    CloakState Cloak_State() const { return m_CloakState; }
 
 #ifdef GAME_DLL
     void Wrap_Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
