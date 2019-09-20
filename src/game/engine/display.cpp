@@ -200,8 +200,7 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
                     action = ACTION_NO_MOVE;
                     Map.Set_Pending_Super(SPECIAL_NONE);
                 }
-            }
-                break;
+            } break;
 
             case SPECIAL_SONAR_PULSE: // These don't need to set anything so fall through to default.
             case SPECIAL_GPS:
@@ -235,8 +234,8 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
     }
 
     if (!at_edge && (flags & MOUSE_LEFT_PRESS)) {
-            Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
-            Map.Mouse_Left_Press(mouse_vpx, mouse_vpy);
+        Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
+        Map.Mouse_Left_Press(mouse_vpx, mouse_vpy);
     }
 
     if ((flags & MOUSE_LEFT_HELD) != 0) {
@@ -304,7 +303,8 @@ void DisplayClass::Init_Clear()
  *
  * 0x004AEEF4
  */
-void DisplayClass::One_Time() {
+void DisplayClass::One_Time()
+{
     MapClass::One_Time();
 
     // Resize the cell redraw vector to cover the map.
@@ -388,14 +388,14 @@ void DisplayClass::Init_Theater(TheaterType theater)
         if (_theater_data != nullptr) {
             delete _theater_data;
         }
-        
+
         _theater_data = new GameMixFile(mix_name, &g_publicKey);
         _theater_data->Cache(TheaterBuffer);
     }
 
     char pal_name[32];
     snprintf(pal_name, sizeof(pal_name), "%s.pal", g_theaters[theater].data);
-    
+
     GamePalette = *static_cast<PaletteClass *>(GameFileClass::Retrieve(pal_name));
     OriginalPalette = GamePalette;
 
@@ -525,7 +525,8 @@ cell_t DisplayClass::Click_Cell_Calc(int x, int y) const
     int ypos = (lepton_t)Pixel_To_Lepton(y - TacOffsetY);
 
     if (xpos < DisplayWidth && ypos < DisplayHeight) {
-        return Coord_To_Cell(Coord_From_Lepton_XY(xpos + Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos)), ypos + Lepton_Round_To_Pixel(Coord_Lepton_Y(DisplayPos))));
+        return Coord_To_Cell(Coord_From_Lepton_XY(xpos + Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos)),
+            ypos + Lepton_Round_To_Pixel(Coord_Lepton_Y(DisplayPos))));
     }
 
     return -1;
@@ -902,7 +903,7 @@ void DisplayClass::Refresh_Band()
         for (int i = box_y; i <= (box_h + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayHeight) + TacOffsetY;
             cell_t click_cell = Click_Cell_Calc(box_x, std::clamp(i, 0, b_pxl));
-            
+
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
             }
@@ -918,13 +919,13 @@ void DisplayClass::Refresh_Band()
         for (int i = box_x; i < (box_w + 24); i += 24) {
             int b_pxl = Lepton_To_Pixel(DisplayWidth) + TacOffsetX;
             cell_t click_cell = Click_Cell_Calc(std::clamp(i, 0, b_pxl), box_y);
-            
+
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
             }
 
             click_cell = Click_Cell_Calc(std::clamp(i, 0, b_pxl), box_h);
-            
+
             if (click_cell != -1) {
                 Array[click_cell].Redraw_Objects();
             }
@@ -1060,7 +1061,8 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
 ObjectClass *DisplayClass::Prev_Object(ObjectClass *object) const
 {
 #ifdef GAME_DLL
-    ObjectClass *(*func)(const DisplayClass *, ObjectClass *) = reinterpret_cast<ObjectClass*(*)(const DisplayClass *, ObjectClass *)>(0x004B2618);
+    ObjectClass *(*func)(const DisplayClass *, ObjectClass *) =
+        reinterpret_cast<ObjectClass *(*)(const DisplayClass *, ObjectClass *)>(0x004B2618);
     return func(this, object);
 #else
     return 0;
@@ -1123,7 +1125,8 @@ void DisplayClass::Select_These(coord_t start, coord_t finish)
 {
     // Needs HouseClass.
 #ifdef GAME_DLL
-    void(*func)(const DisplayClass *, coord_t, coord_t) = reinterpret_cast<void(*)(const DisplayClass *, coord_t, coord_t)>(0x004B2C50);
+    void (*func)(const DisplayClass *, coord_t, coord_t) =
+        reinterpret_cast<void (*)(const DisplayClass *, coord_t, coord_t)>(0x004B2C50);
     func(this, start, finish);
 #endif
 }
@@ -1132,7 +1135,7 @@ void DisplayClass::Sell_Mode_Control(int mode)
 {
     // Needs HouseClass.
 #ifdef GAME_DLL
-    void(*func)(const DisplayClass *, int) = reinterpret_cast<void(*)(const DisplayClass *, int)>(0x004B4B68);
+    void (*func)(const DisplayClass *, int) = reinterpret_cast<void (*)(const DisplayClass *, int)>(0x004B4B68);
     func(this, mode);
 #elif 0
     bool flag = DisplaySellMode;
@@ -1172,7 +1175,7 @@ void DisplayClass::Repair_Mode_Control(int mode)
 {
     // Needs HouseClass.
 #ifdef GAME_DLL
-    void(*func)(const DisplayClass *, int) = reinterpret_cast<void(*)(const DisplayClass *, int)>(0x004B4C10);
+    void (*func)(const DisplayClass *, int) = reinterpret_cast<void (*)(const DisplayClass *, int)>(0x004B4C10);
     func(this, mode);
 #elif 0
     bool flag = DisplayRepairMode;
@@ -1307,7 +1310,9 @@ BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType ho
 {
     // Needs HouseClass, BuildingTypeClass.
 #ifdef GAME_DLL
-    BOOL(*func)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t) = reinterpret_cast<BOOL(*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t)>(0x004AF7DC);
+    BOOL (*func)
+    (const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t) =
+        reinterpret_cast<BOOL (*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t)>(0x004AF7DC);
     return func(this, object, house, list, cell);
 #else
     return false;
@@ -1368,7 +1373,7 @@ void DisplayClass::Redraw_Shadow()
 
                     if (!cell.Is_Revealed()) {
                         int frame = -2;
-                            
+
                         if (cell.Is_Visible()) {
                             frame = Cell_Shadow(cellnum);
                         }
@@ -1413,7 +1418,8 @@ BOOL DisplayClass::In_View(cell_t cellnum) const
     uint32_t cell = Coord_Top_Left(Cell_To_Coord(cellnum));
     uint32_t loc1 = Coord_Top_Left(DisplayPos);
 
-    // Makes use of unsigned underflow to detect if we are greater than DisplayPos but within display dimensions in two compares.
+    // Makes use of unsigned underflow to detect if we are greater than DisplayPos but within display dimensions in two
+    // compares.
     if ((uint16_t)Coord_Lepton_X(cell) - (uint32_t)Coord_Lepton_X(loc1) <= (uint32_t)DisplayWidth + 255) {
         if ((uint16_t)Coord_Lepton_Y(cell) - (uint32_t)Coord_Lepton_Y(loc1) <= (uint32_t)DisplayHeight + 255) {
             return true;
@@ -1471,6 +1477,7 @@ coord_t DisplayClass::Pixel_To_Coord(int x, int y) const
  */
 int DisplayClass::Cell_Shadow(cell_t cellnum) const
 {
+    // clang-format off
     static const int8_t _shadow[] = {
         -1, 33, 2, 2, 34, 37, 2, 2,
         4, 26, 6, 6, 4, 26, 6, 6,
@@ -1505,6 +1512,7 @@ int DisplayClass::Cell_Shadow(cell_t cellnum) const
         9, 9, 11, 11, 22, 22, 11, 11,
         13, 13, -2, -2, 13, 13, -2, -2,
     };
+    // clang-format on
 
     int16_t cell_x = Cell_Get_X(cellnum);
     int16_t cell_y = Cell_Get_Y(cellnum);
@@ -1611,7 +1619,8 @@ BOOL DisplayClass::Push_Onto_TacMap(coord_t &coord1, coord_t &coord2)
 /**
  * 0x004B274C
  */
-cell_t DisplayClass::Calculated_Cell(SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const
+cell_t DisplayClass::Calculated_Cell(
+    SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const
 {
     cell_t cell_num = -1;
     int zone = -1;
@@ -1773,7 +1782,6 @@ coord_t DisplayClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
     cell_t cellnum = Coord_To_Cell(coord);
 
     return Array[cellnum].Closest_Free_Spot(coord, skip_occupied);
-
 }
 
 /**
@@ -1785,7 +1793,7 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
 {
     // Needs HouseClass, TechnoClass.
 #ifdef GAME_DLL
-    void(*func)(const DisplayClass *, BOOL) = reinterpret_cast<void(*)(const DisplayClass *, BOOL)>(0x004B5680);
+    void (*func)(const DisplayClass *, BOOL) = reinterpret_cast<void (*)(const DisplayClass *, BOOL)>(0x004B5680);
     func(this, skip_buildings);
 #elif 0
     for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {
@@ -1813,7 +1821,7 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
 }
 
 /**
- * @brief 
+ * @brief
  *
  * 0x004B5788
  */
@@ -1821,7 +1829,8 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
 {
     // Needs HouseClass, TechnoClass.
 #ifdef GAME_DLL
-    void(*func)(const DisplayClass *, coord_t, int) = reinterpret_cast<void(*)(const DisplayClass *, coord_t, int)>(0x004B5788);
+    void (*func)(const DisplayClass *, coord_t, int) =
+        reinterpret_cast<void (*)(const DisplayClass *, coord_t, int)>(0x004B5788);
     func(this, coord, constraint);
 #elif 0
     for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {
@@ -1832,7 +1841,8 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
 
             if (tcptr->OwnerHouse->PlayerControl) {
                 if (tcptr->PlayerAware) {
-                    int lepton_sight = constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
+                    int lepton_sight =
+                        constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
 
                     if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
                         tcptr->Look();
@@ -1841,7 +1851,8 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
             } else if (tcptr->What_Am_I() == RTTI_BUILDING) {
                 if (Rule.Ally_Reveal()) {
                     if (PlayerPtr->Is_Ally(tcptr->OwnerHouse->What_Type())) {
-                        int lepton_sight = constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
+                        int lepton_sight =
+                            constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
 
                         if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
                             tcptr->Look();
@@ -1901,11 +1912,11 @@ void DisplayClass::Shroud_Cell(cell_t cellnum)
 {
     // Needs HouseClass, TechnoClass.
 #ifdef GAME_DLL
-    void(*func)(const DisplayClass *, cell_t) = reinterpret_cast<void(*)(const DisplayClass *, cell_t)>(0x004B4FF4);
+    void (*func)(const DisplayClass *, cell_t) = reinterpret_cast<void (*)(const DisplayClass *, cell_t)>(0x004B4FF4);
     func(this, cellnum);
 #elif 0
     // If player has GPS or has units in the cell, then don't do anything.
-    if (!PlayerPtr->GPSActive || Array[cellnum].field_A[PlayerPtr->What_Type()] == false) { //TODO, needs confirming
+    if (!PlayerPtr->GPSActive || Array[cellnum].field_A[PlayerPtr->What_Type()] == false) { // TODO, needs confirming
         if (In_Radar(cellnum)) {
             CellClass &cell = Array[cellnum];
 
