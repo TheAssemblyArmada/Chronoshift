@@ -494,7 +494,7 @@ ARRAY2D_DEF(0x0068A2C4, SidebarClass::StripClass::SelectClass, SidebarClass::Str
     SidebarClass::StripClass::ROW_COUNT);
 ShapeButtonClass *SidebarClass::StripClass::UpButton = Make_Pointer<ShapeButtonClass>(0x0068A1E4);
 ShapeButtonClass *SidebarClass::StripClass::DownButton = Make_Pointer<ShapeButtonClass>(0x0068A254);
-ARRAY2D_DEF(0x00689F18, char, SidebarClass::StripClass::ClockTranslucentTable, 256, 2);
+ARRAY2D_DEF(0x00689F18, char, SidebarClass::StripClass::ClockTranslucentTable, 2, 256);
 SidebarClass::SBGadgetClass &SidebarClass::Background = Make_Global<SidebarClass::SBGadgetClass>(0x0068A118);
 ShapeButtonClass &SidebarClass::RepairButton = Make_Global<ShapeButtonClass>(0x0068A13C);
 ShapeButtonClass &SidebarClass::SellButton = Make_Global<ShapeButtonClass>(0x0068A174);
