@@ -121,7 +121,7 @@ class SidebarClass : public PowerClass
         // based on the column count, buttons will be allocated dynamicly.
         static ShapeButtonClass *UpButton;
         static ShapeButtonClass *DownButton;
-        static ARRAY2D_DEC(char, ClockTranslucentTable, 256, 2);
+        static ARRAY2D_DEC(char, ClockTranslucentTable, 2, 256);
 #else
         static void *LogoShapes;
         static void *ClockShapes;
