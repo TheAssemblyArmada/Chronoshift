@@ -155,7 +155,7 @@ public:
     void Set_Price(int price) { m_Price = price; }
 
     target_t Get_TarCom() const { return m_TarCom; }
-
+    BOOL Can_Teleport_Here(cell_t cell) const;
     BOOL Is_Useless() const { return m_IsUseless; }
     BOOL Is_Ticked_Off() const { return m_IsTickedOff; }
     BOOL Is_Cloakable() const { return m_Cloakable; }

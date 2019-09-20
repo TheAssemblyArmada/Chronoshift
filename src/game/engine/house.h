@@ -174,6 +174,7 @@ public:
     int Currently_Owned_Aircraft_Count() const { return m_CurrentAircraftCount; }
     coord_t Base_Center() const { return m_BaseCenter; }
     RegionClass *Threat_Regions() { return m_ThreatRegions; }
+    target_t Chrono_Object() const { return m_ChronoObject; }
     void Code_Pointers() {}
     void Decode_Pointers() {}
 

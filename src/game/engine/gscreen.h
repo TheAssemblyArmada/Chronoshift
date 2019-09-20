@@ -114,8 +114,8 @@ public:
     virtual void Render();
     virtual void Draw_It(BOOL force_redraw);
     virtual void Blit_Display();
-    virtual void Set_Default_Mouse(MouseType mouse, BOOL a2 = false) = 0;
-    virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL a2 = false) = 0;
+    virtual void Set_Default_Mouse(MouseType mouse, BOOL in_radar = false) = 0;
+    virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL in_radar = false) = 0;
     virtual void Revert_Mouse_Shape() = 0;
     virtual void Mouse_Small(BOOL use_small_frame) = 0;
     virtual GraphicViewPortClass *Shadow_Address() { return ShadowPage; }
