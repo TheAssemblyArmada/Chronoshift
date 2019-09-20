@@ -33,12 +33,13 @@
 #include <algorithm>
 #include <cstdlib>
 
-using std::min;
-using std::max;
 using std::abs;
 using std::clamp;
+using std::max;
+using std::min;
 
-//This appears to be missing the entries for 309+ which TS has for sight 11
+// This appears to be missing the entries for 309+ which TS has for sight 11
+// clang-format off
 const int MapClass::RadiusOffset[] = {
     0, -129, -128, -127, -1, 1, 127, 128,
     129, -257, -256, -255, -130, -126, -2, 2,
@@ -96,6 +97,7 @@ const int MapClass::RadiusCount[] = {
     253,
     309
 };
+// clang-format on
 
 MapClass::MapClass() :
     MapCellX(0),
@@ -125,7 +127,7 @@ void MapClass::One_Time()
 
     // Placement new init the crates array.
     for (int i = 0; i < MAP_MAX_CRATES; ++i) {
-        new(&Crates[i]) CrateClass;
+        new (&Crates[i]) CrateClass;
     }
 }
 
@@ -157,7 +159,7 @@ void MapClass::Init_Clear()
 void MapClass::Alloc_Cells()
 {
     // Reconstruct the vector (incase it has garbage in it from a save load) and then resize to total cell count.
-    new(&Array) VectorClass<CellClass>;
+    new (&Array) VectorClass<CellClass>;
     Array.Resize(TotalSize);
 }
 
@@ -184,7 +186,7 @@ void MapClass::Init_Cells()
 
     // Loop through the whole vector and call the the constructor for each cell with placement new.
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-        new(&Array[cellnum]) CellClass;
+        new (&Array[cellnum]) CellClass;
     }
 }
 
@@ -350,7 +352,6 @@ BOOL MapClass::Remove_Crate(cell_t cellnum)
     }
 
     return false;
-
 }
 
 /**
@@ -360,7 +361,8 @@ BOOL MapClass::Remove_Crate(cell_t cellnum)
  */
 cell_t MapClass::Pick_Random_Location() const
 {
-    return Cell_From_XY(MapCellX + Scen.Get_Random_Value(0, MapCellWidth - 1), MapCellY + Scen.Get_Random_Value(0, MapCellHeight - 1));
+    return Cell_From_XY(
+        MapCellX + Scen.Get_Random_Value(0, MapCellWidth - 1), MapCellY + Scen.Get_Random_Value(0, MapCellHeight - 1));
 }
 
 /**
@@ -371,12 +373,12 @@ cell_t MapClass::Pick_Random_Location() const
 BOOL MapClass::In_Radar(cell_t cellnum) const
 {
     if (cellnum <= MAP_MAX_AREA) {
-
         unsigned cell_x = Cell_Get_X(cellnum);
         unsigned cell_y = Cell_Get_Y(cellnum);
 
         // Treat as unsigned to check value is within both bounds for only one check by using unsigned underflow behaviour.
-        if ((cell_x - (unsigned)MapCellX) < (unsigned)MapCellWidth && (cell_y - (unsigned)MapCellY) < (unsigned)MapCellHeight) {
+        if ((cell_x - (unsigned)MapCellX) < (unsigned)MapCellWidth
+            && (cell_y - (unsigned)MapCellY) < (unsigned)MapCellHeight) {
             return true;
         }
     }
@@ -416,7 +418,8 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
         const int *offset_ptr = RadiusOffset;
         int radius_count = RadiusCount[radius];
 
-        // In Sole/C&C the check is for radius > 1 and the adjustment is - 1. Not sure what significance that has, but a4 appears the be a bool that flags if this check and adjustment is made.
+        // In Sole/C&C the check is for radius > 1 and the adjustment is - 1. Not sure what significance that has, but a4
+        // appears the be a bool that flags if this check and adjustment is made.
         if (a4 && radius > 2) {
             radius_count -= RadiusCount[radius - 3];
             offset_ptr = &RadiusOffset[RadiusCount[radius - 3]];
@@ -483,7 +486,7 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
     DEBUG_ASSERT(house != nullptr);
 
-    //this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
+    // this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
     if (!g_inMapEditor) {
         // BUGFIX Original does not check radius is within array bounds
         if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
@@ -494,9 +497,7 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
                 cell_t offset_cellnum = *offset_ptr + cellnum;
                 ++offset_ptr;
 
-                if (offset_cellnum < MAP_MAX_AREA &&
-                    abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-
+                if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                     if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
                         Map.Jam_Cell(offset_cellnum, house);
                     }
@@ -521,7 +522,7 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
     DEBUG_ASSERT(house != nullptr);
 
-    //this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
+    // this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
     if (!g_inMapEditor) {
         // BUGFIX Original does not check radius is within array bounds
         if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
@@ -532,9 +533,7 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
                 cell_t offset_cellnum = *offset_ptr + cellnum;
                 ++offset_ptr;
 
-                if (offset_cellnum < MAP_MAX_AREA &&
-                    abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-
+                if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                     if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
                         Map.UnJam_Cell(offset_cellnum, house);
                     }
@@ -792,7 +791,6 @@ int MapClass::Zone_Reset(int zones)
         tmp = 1;
 
         for (int cell = 0; cell < MAP_MAX_AREA; ++cell) {
-
             if (Zone_Span(cell, tmp, MZONE_CRUSHER) != 0) {
                 ++tmp;
             }
@@ -841,8 +839,8 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
         int retval = 0;
         int left_pos;
 
-        // Scan backwards from cell coord to edge of map until we find a cell that is already marked for this zone or can't be
-        // moved to and record the pos.
+        // Scan backwards from cell coord to edge of map until we find a cell that is already marked for this zone or can't
+        // be moved to and record the pos.
         for (left_pos = cell_x; left_pos >= MapCellX; --left_pos) {
             CellClass &cell = Array[Cell_From_XY(left_pos, cell_y)];
 
@@ -855,7 +853,6 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
                 ++left_pos;
                 break;
             }
-
         }
 
         left_pos = std::max(left_pos, MapCellX);
@@ -867,8 +864,7 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
             CellClass &cell = Array[Cell_From_XY(right_pos, cell_y)];
 
             // Check if clear to move, ignoring units, buildings and infantry.
-            if (cell.Get_Zone(mzone) != 0 ||
-                !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
+            if (cell.Get_Zone(mzone) != 0 || !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
                 --right_pos;
                 break;
             }
@@ -1030,7 +1026,7 @@ int MapClass::Destroy_Bridge_At(cell_t cellnum)
 {
     // TODO Needs TemplateClass, AnimClass
 #ifdef GAME_DLL
-    int(*func)(const MapClass*, cell_t) = reinterpret_cast<int(*)(const MapClass*, cell_t)>(0x004FFF1C);
+    int (*func)(const MapClass *, cell_t) = reinterpret_cast<int (*)(const MapClass *, cell_t)>(0x004FFF1C);
     return func(this, cellnum);
 #else
     return 0;
@@ -1046,7 +1042,7 @@ void MapClass::Detach(int32_t target, int a2)
 {
     // TODO Requires TriggerClass
 #ifdef GAME_DLL
-    void(*func)(const MapClass*, int32_t, int) = reinterpret_cast<void(*)(const MapClass*, int32_t, int)>(0x0050078C);
+    void (*func)(const MapClass *, int32_t, int) = reinterpret_cast<void (*)(const MapClass *, int32_t, int)>(0x0050078C);
     func(this, target, a2);
 #elif 0
     if (Target_Get_RTTI(target) == RTTI_TRIGGER) {
@@ -1067,7 +1063,6 @@ void MapClass::Detach(int32_t target, int a2)
                 cell.CellTag = nullptr;
             }
         }
-
     }
 #endif
 }
@@ -1081,12 +1076,13 @@ int MapClass::Intact_Bridge_Count() const
 {
     int count = 0;
 
-    // We loop through the cell array and only consider the 4 templates that have both bridge ends in the template (so not the long bridges)
+    // We loop through the cell array and only consider the 4 templates that have both bridge ends in the template (so not
+    // the long bridges)
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
         const CellClass &cell = Array[cellnum];
 
         switch (cell.Get_Template()) {
-            case TEMPLATE_BRIDGE1:    //Fall through on intact bridge templates
+            case TEMPLATE_BRIDGE1: // Fall through on intact bridge templates
             case TEMPLATE_BRIDGE2:
             case TEMPLATE_BRIDGE1H:
             case TEMPLATE_BRIDGE2H:
@@ -1121,16 +1117,14 @@ void MapClass::Shroud_The_Map()
             int xpos = Cell_Get_X(cellnum);
             int ypos = Cell_Get_Y(cellnum);
 
-            if (xpos >= MapCellX && xpos < MapCellWidth + MapCellX &&
-                ypos >= MapCellY && ypos < MapCellHeight + MapCellY) {
-
+            if (xpos >= MapCellX && xpos < MapCellWidth + MapCellX && ypos >= MapCellY && ypos < MapCellHeight + MapCellY) {
                 cell.Set_Visible(false);
                 cell.Set_Revealed(false);
             }
         }
     }
 
-    for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {    
+    for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {
         if (DisplayClass::Layers[LAYER_GROUND][i]->Is_Techno()) {
             TechnoClass *tptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][i]);
 
@@ -1182,7 +1176,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
     lcw.Get_From(&straw);
 
     switch (g_iniFormat) {
-        case INIFORMAT_0:    //Covers both TD and SS maps, .BIN files
+        case INIFORMAT_0: // Covers both TD and SS maps, .BIN files
             // TD and SS both "blank" the map cell array first.
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
                 CellClass &cell = Array[cellnum];
@@ -1229,7 +1223,8 @@ BOOL MapClass::Read_Binary(Straw &straw)
                             cell.Set_Icon(icon[1]);
                         }
 
-                        // TD and SS also call a CRC function here, used to calc CRC in absence of SHA1 checksums for the map?
+                        // TD and SS also call a CRC function here, used to calc CRC in absence of SHA1 checksums for the
+                        // map?
                         cell.Recalc_Attributes();
                     }
                 }
@@ -1237,8 +1232,8 @@ BOOL MapClass::Read_Binary(Straw &straw)
 
             break;
 
-        case INIFORMAT_1:    // Handles old MapPack data layout, similar to TD layout
-        case INIFORMAT_2:    // Fall through
+        case INIFORMAT_1: // Handles old MapPack data layout, similar to TD layout
+        case INIFORMAT_2: // Fall through
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
                 CellClass &cell = Array[cellnum];
 
@@ -1297,7 +1292,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
  */
 BOOL MapClass::Validate()
 {
-    // Some static pointer in CellClass in the original, not clear what it is for... 
+    // Some static pointer in CellClass in the original, not clear what it is for...
     // CellClass::BlubCell = &Array[797];
 
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
