@@ -21,7 +21,9 @@
 #include "gameoptions.h"
 #include "gbuffer.h"
 #include "globals.h"
+#include "house.h"
 #include "iomap.h"
+#include "keyboard.h"
 #include "lists.h"
 #include "mixfile.h"
 #include "mouse.h"
@@ -29,7 +31,9 @@
 #include "pk.h"
 #include "rules.h"
 #include "scenario.h"
+#include "super.h"
 #include "target.h"
+#include "techno.h"
 #include "technotype.h"
 #include "textprint.h"
 #include "theater.h"
@@ -66,18 +70,180 @@ char DisplayClass::FadingWhite[256];
 DisplayClass::TacticalClass::TacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
 {
-
 }
 
 BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
 {
-    // TODO, needs HouseClass, TechnoClass.
-#ifdef GAME_DLL
-    BOOL(*func)(const TacticalClass *, unsigned, KeyNumType &) = reinterpret_cast<BOOL(*)(const TacticalClass *, unsigned, KeyNumType &)>(0x004B3108);
-    return func(this, flags, key);
-#else
-    return false;
-#endif
+    int x;
+    int y;
+
+    if (flags & (MOUSE_LEFT_RLSE | MOUSE_LEFT_PRESS | MOUSE_RIGHT_RLSE | MOUSE_RIGHT_PRESS)) {
+        x = g_keyboard->Get_MouseQX();
+        y = g_keyboard->Get_MouseQY();
+    } else {
+        x = g_mouse->Get_Mouse_X();
+        y = g_mouse->Get_Mouse_Y();
+    }
+
+    bool at_edge = x == 0 || y == 0 || x == g_seenBuff.Get_Width() - 1 || y == g_seenBuff.Get_Height() - 1;
+    coord_t coord = Map.Pixel_To_Coord(x, y);
+    cell_t cell = Coord_To_Cell(coord);
+
+    if (coord == 0) {
+        return GadgetClass::Action(flags, key);
+    }
+
+    bool shrouded = !Map[cell].Is_Visible() && !g_Debug_Unshroud;
+    int mouse_vpx = x - Map.Tac_Offset_X();
+    int mouse_vpy = y - Map.Tac_Offset_Y();
+
+    if (cell != Map.Get_Cursor_Start()) {
+        Map.Set_Cursor_Pos(cell);
+    }
+
+    // Work out what object if any is near the cursor.
+    TechnoClass *close_tech = nullptr;
+
+    if (!shrouded) {
+        ObjectClass *obj = Map.Close_Object(coord);
+
+        if (obj != nullptr && obj->Is_Techno()) {
+            close_tech = reinterpret_cast<TechnoClass *>(obj);
+
+            if (!close_tech->Is_Player_Owned()
+                && (close_tech->Cloak_State() == CLOAK_CLOAKED
+                    || reinterpret_cast<const TechnoTypeClass &>(close_tech->Class_Of()).Is_Invisible())) {
+                close_tech = nullptr;
+            }
+        }
+    }
+
+    ActionType action = ACTION_NONE;
+
+    if (CurrentObjects.Count() > 0) {
+        if (close_tech != nullptr) {
+            action = CurrentObjects.Fetch_Head()->What_Action(close_tech);
+        } else {
+            action = CurrentObjects.Fetch_Head()->What_Action(cell);
+        }
+    } else {
+        if (close_tech != nullptr && close_tech->Class_Of().Is_Selectable()) {
+            action = ACTION_SELECT;
+        }
+
+        if (Map.Repair_Mode()) {
+            if (close_tech != nullptr && close_tech->Owner() == g_PlayerPtr->What_Type() && close_tech->Can_Repair()) {
+                action = ACTION_REPAIR;
+            } else {
+                action = ACTION_NO_REPAIR;
+            }
+        }
+
+        if (Map.Sell_Mode()) {
+            if (close_tech != nullptr && close_tech->Owner() == g_PlayerPtr->What_Type() && close_tech->Can_Demolish()) {
+                if (close_tech->What_Am_I() == RTTI_BUILDING) {
+                    action = ACTION_SELL;
+                } else {
+                    action = ACTION_SELL_UNIT;
+                }
+            } else {
+                if (Map[cell].Get_Overlay() != OVERLAY_NONE
+                    && OverlayTypeClass::As_Reference(Map[cell].Get_Overlay()).Is_Wall()
+                    && Map[cell].Owner() == g_PlayerPtr->What_Type()) {
+                    action = ACTION_SELL;
+                } else {
+                    action = ACTION_NO_SELL;
+                }
+            }
+        }
+
+        switch (Map.PendingSuper) {
+            case SPECIAL_ATOM_BOMB:
+                action = ACTION_NUKE;
+                break;
+
+            case SPECIAL_WARP_SPHERE:
+                action = ACTION_CHRONOSPHERE;
+                break;
+
+            case SPECIAL_PARA_BOMB:
+                action = ACTION_PARA_BOMB;
+                break;
+
+            case SPECIAL_PARA_INFANTRY:
+                action = ACTION_PARA_SABOTEUR;
+                break;
+
+            case SPECIAL_SPY_PLANE:
+                action = ACTION_SPY_MISSION;
+                break;
+
+            case SPECIAL_IRON_CURTAIN:
+                action = ACTION_IRON_CURTAIN;
+                break;
+
+            case SPECIAL_WARP_TELEPORT: {
+                action = ACTION_CHRONOWARP;
+
+                if (shrouded) {
+                    action = ACTION_NO_MOVE;
+                }
+
+                TechnoClass *shifter = As_Techno(g_PlayerPtr->Chrono_Object());
+
+                if (shifter != nullptr && shifter->Is_Techno()) {
+                    if (!shifter->Can_Teleport_Here(cell)) {
+                        action = ACTION_NO_MOVE;
+                    }
+
+                } else {
+                    action = ACTION_NO_MOVE;
+                    Map.Set_Pending_Super(SPECIAL_NONE);
+                }
+            }
+                break;
+
+            case SPECIAL_SONAR_PULSE: // These don't need to set anything so fall through to default.
+            case SPECIAL_GPS:
+            default:
+                break;
+        }
+
+        if (Map.Pending_ObjectType() != nullptr) {
+            action = ACTION_NONE;
+        }
+    }
+
+    if (cell != Map.Get_Cursor_Start()) {
+        Map.Set_Cursor_Pos(cell);
+    }
+
+    if (flags & MOUSE_RIGHT_PRESS) {
+        Map.Mouse_Right_Press();
+    }
+
+    if ((flags & MOUSE_LEFT_UP) && Map.Bit_8()) {
+        flags |= MOUSE_LEFT_RLSE;
+    }
+
+    if (!at_edge && (flags & MOUSE_LEFT_UP)) {
+        Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
+    }
+
+    if (flags & MOUSE_LEFT_RLSE) {
+        Map.Mouse_Left_Release(cell, mouse_vpx, mouse_vpy, close_tech, action);
+    }
+
+    if (!at_edge && (flags & MOUSE_LEFT_PRESS)) {
+            Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
+            Map.Mouse_Left_Press(mouse_vpx, mouse_vpy);
+    }
+
+    if ((flags & MOUSE_LEFT_HELD) != 0) {
+        Map.Mouse_Left_Held(mouse_vpx, mouse_vpy);
+    }
+
+    return GadgetClass::Action(flags, key);
 }
 
 DisplayClass::DisplayClass() :
@@ -604,7 +770,7 @@ void DisplayClass::Mouse_Right_Press()
         PendingSuper = SPECIAL_NONE;
     }
 
-    Set_Default_Mouse(MOUSE_POINTER);
+    Set_Default_Mouse(MOUSE_POINTER, Map.Mouse_In_Radar());
 }
 
 void DisplayClass::Mouse_Left_Press(int mouse_x, int mouse_y)

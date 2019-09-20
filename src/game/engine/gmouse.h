@@ -49,6 +49,8 @@ public:
     virtual BOOL Load(Straw &straw) override;
     virtual BOOL Save(Pipe &pipe) const override;
 
+    BOOL Mouse_In_Radar() const { return m_MouseInRadar; }
+
 #ifdef GAME_DLL
     BOOL Hook_Save(Pipe &pipe) { return GameMouseClass::Save(pipe); }
 #endif

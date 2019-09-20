@@ -118,15 +118,22 @@ public:
 
     lepton_t Get_DisplayWidth() const { return DisplayWidth; }
     lepton_t Get_DisplayHeight() const { return DisplayHeight; }
-
+    cell_t Get_Cursor_Start() const { return DisplayCursorStart; }
+    cell_t Get_Cursor_End() const { return DisplayCursorEnd; }
     BOOL Passed_Proximity_Check() const { return PassedProximityCheck; }
     ObjectClass *Pending_Object() const { return PendingObjectPtr; }
     ObjectTypeClass *Pending_ObjectType() const { return PendingObjectTypePtr; }
     HousesType Pending_Object_Owner() const { return PendingObjectOwner; }
+    SpecialWeaponType Pending_Super() const { return PendingSuper; }
+    void Set_Pending_Super(SpecialWeaponType type) { PendingSuper = type; }
     void Reset_Pending_Object();
     int Tac_Offset_X() const { return TacOffsetX; }
     int Tac_Offset_Y() const { return TacOffsetY; }
     coord_t New_Pos() const { return DisplayNewPos; }
+    BOOL To_Redraw() const { return DisplayToRedraw; }
+    BOOL Repair_Mode() const { return DisplayRepairMode; }
+    BOOL Sell_Mode() const { return DisplaySellMode; }
+    BOOL Bit_8() const { return DisplayBit8; }
 
 private:
     // This only seems to be used by DisplayClass, so made it a static helper of this class.

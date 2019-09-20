@@ -680,6 +680,16 @@ int TechnoClass::Anti_Infantry()
     return effectiveness / 50;
 }
 
+BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
+{
+#ifdef GAME_DLL
+    BOOL (*func)(cell_t) = reinterpret_cast<BOOL (*)(cell_t)>(0x00560A58);
+    return func(cell);
+#else
+    return 0;
+#endif
+}
+
 VisualType TechnoClass::Visual_Character(BOOL flag) const
 {
     DEBUG_ASSERT(Is_Active());

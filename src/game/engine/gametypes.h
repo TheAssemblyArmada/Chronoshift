@@ -735,9 +735,7 @@ enum MPHType : uint8_t
 };
 
 enum SpecialWeaponType {
-    SPECIAL_NONE = -1,
-    SPECIAL_FIRST = 0,
-    SPECIAL_SONAR_PULSE = 0,
+    SPECIAL_SONAR_PULSE,
     SPECIAL_ATOM_BOMB,
     SPECIAL_WARP_SPHERE,
     SPECIAL_PARA_BOMB,
@@ -746,6 +744,9 @@ enum SpecialWeaponType {
     SPECIAL_IRON_CURTAIN,
     SPECIAL_GPS,
     SPECIAL_COUNT,
+    SPECIAL_WARP_TELEPORT = SPECIAL_COUNT, // Teleport isn't a real super, its a special case for DisplayClass PendingSuper.
+    SPECIAL_NONE = -1,
+    SPECIAL_FIRST = 0,
 };
 
 DEFINE_ENUMERATION_OPERATORS(SpecialWeaponType);
