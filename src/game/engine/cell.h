@@ -156,7 +156,7 @@ public:
     ObjectClass *Get_Occupier() const { return OccupierPtr; }
     LandType Get_Land() const { return Land; }
     void Set_Land(LandType land) { Land = land; }
-
+    uint16_t Get_Field_A() const { return field_A; }
     static int Spot_Index(coord_t coord);
 
 #ifdef GAME_DLL

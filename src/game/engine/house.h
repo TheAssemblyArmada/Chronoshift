@@ -164,6 +164,8 @@ public:
     void Set_Autocreate(BOOL value) { m_Autocreate = value; }
     BOOL Is_Defeated() const { return m_Defeated; }
     void Set_Defeated(BOOL value) { m_Defeated = value; }
+    BOOL Is_Map_Clear() const { return m_MapIsClear; }
+    void Set_Map_Clear(BOOL value) { m_MapIsClear = value; }
     int Get_Current_IQ() const { return m_CurrentIQ; }
     void Set_IQ_Level(int value) { m_CurrentIQ = value; }
     SuperClass &Special_Weapons(SpecialWeaponType type) { return m_Specials[type]; }
