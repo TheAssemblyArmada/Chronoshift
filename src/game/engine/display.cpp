@@ -72,6 +72,11 @@ DisplayClass::TacticalClass::TacticalClass() :
 {
 }
 
+/**
+ * Gadget action for handling input to the main tactical view.
+ *
+ * RA 0x004B3108
+ */
 BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
 {
     int x;
@@ -1131,13 +1136,13 @@ void DisplayClass::Select_These(coord_t start, coord_t finish)
 #endif
 }
 
+/**
+ * Toggles the sell mode state.
+ *
+ * RA 0x004B4B68
+ */
 void DisplayClass::Sell_Mode_Control(int mode)
 {
-    // Needs HouseClass.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, int) = reinterpret_cast<void (*)(const DisplayClass *, int)>(0x004B4B68);
-    func(this, mode);
-#elif 0
     bool flag = DisplaySellMode;
 
     switch (mode) {
@@ -1160,7 +1165,7 @@ void DisplayClass::Sell_Mode_Control(int mode)
     if (flag != DisplaySellMode && PendingObjectTypePtr == nullptr) {
         DisplayRepairMode = false;
 
-        if (flag && !PlayerPtr->field_137.All_False()) {
+        if (flag && g_PlayerPtr->Has_Buildings()) {
             DisplaySellMode = true;
             Unselect_All();
         } else {
@@ -1168,16 +1173,15 @@ void DisplayClass::Sell_Mode_Control(int mode)
             Revert_Mouse_Shape();
         }
     }
-#endif
 }
 
+/**
+ * Toggles the repair mode state.
+ *
+ * RA 0x004B4C10
+ */
 void DisplayClass::Repair_Mode_Control(int mode)
 {
-    // Needs HouseClass.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, int) = reinterpret_cast<void (*)(const DisplayClass *, int)>(0x004B4C10);
-    func(this, mode);
-#elif 0
     bool flag = DisplayRepairMode;
 
     switch (mode) {
@@ -1200,7 +1204,7 @@ void DisplayClass::Repair_Mode_Control(int mode)
     if (flag != DisplayRepairMode && PendingObjectTypePtr == nullptr) {
         DisplaySellMode = false;
 
-        if (flag && !PlayerPtr->field_137.All_False()) {
+        if (flag && g_PlayerPtr->Has_Buildings()) {
             DisplayRepairMode = true;
             Unselect_All();
         } else {
@@ -1208,7 +1212,6 @@ void DisplayClass::Repair_Mode_Control(int mode)
             Revert_Mouse_Shape();
         }
     }
-#endif
 }
 
 /**

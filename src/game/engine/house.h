@@ -177,6 +177,7 @@ public:
     target_t Chrono_Object() const { return m_ChronoObject; }
     void Code_Pointers() {}
     void Decode_Pointers() {}
+    BOOL Has_Buildings() const { return m_BScan.m_HaveBuilt != 0; }
 
     static void One_Time();
     static void Init();
