@@ -1898,26 +1898,21 @@ void DisplayClass::Encroach_Shadow()
  */
 void DisplayClass::Shroud_Cell(cell_t cellnum)
 {
-    // Needs HouseClass, TechnoClass.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, cell_t) = reinterpret_cast<void (*)(const DisplayClass *, cell_t)>(0x004B4FF4);
-    func(this, cellnum);
-#elif 0
     // If player has GPS or has units in the cell, then don't do anything.
-    if (!PlayerPtr->GPSActive || Array[cellnum].field_A[PlayerPtr->What_Type()] == false) { // TODO, needs confirming
+    if (!g_PlayerPtr->Is_Map_Clear() || (Array[cellnum].Get_Field_A() & (1 << g_PlayerPtr->What_Type()))) {
         if (In_Radar(cellnum)) {
             CellClass &cell = Array[cellnum];
 
-            if (cell.Visible) {
-                cell.Visible = false;
-                cell.Revealed = false;
+            if (cell.Is_Visible()) {
+                cell.Set_Visible(false);
+                cell.Set_Revealed(false);
                 cell.Redraw_Objects();
 
                 for (FacingType facing = FACING_FIRST; facing < FACING_COUNT; ++facing) {
-                    cell_t adjcell = cellnum + AdjacentCell[facing];
+                    cell_t adjcell = Cell_Get_Adjacent(cellnum, facing);
 
                     if (adjcell != cellnum) {
-                        Array[adjcell].Revealed = false;
+                        Array[adjcell].Set_Revealed(false);
                     }
 
                     Array[adjcell].Redraw_Objects();
@@ -1925,7 +1920,6 @@ void DisplayClass::Shroud_Cell(cell_t cellnum)
             }
         }
     }
-#endif
 }
 
 /**
