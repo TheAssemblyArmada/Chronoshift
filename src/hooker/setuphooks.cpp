@@ -445,6 +445,9 @@ void Setup_Hooks()
     Hook_Function(0x004B2B90, *DisplayClass::Hook_Good_Reinforcement_Cell);
     Hook_Function(0x004B4D80, *DisplayClass::Hook_Closest_Free_Spot);
     Hook_Function(0x004B4F44, *DisplayClass::Encroach_Shadow);
+    Hook_Function(0x004B4B68, *DisplayClass::Sell_Mode_Control);
+    Hook_Function(0x004B4C10, *DisplayClass::Repair_Mode_Control);
+    Hook_Function(0x004B3108, *DisplayClass::TacticalClass::Action);
 
     // radar.h
     Hook_Function(0x0052D668, *RadarClass::One_Time); // seems to work
