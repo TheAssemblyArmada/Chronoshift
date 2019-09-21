@@ -1794,25 +1794,18 @@ coord_t DisplayClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
  */
 void DisplayClass::All_To_Look(BOOL skip_buildings)
 {
-    // Needs HouseClass, TechnoClass.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, BOOL) = reinterpret_cast<void (*)(const DisplayClass *, BOOL)>(0x004B5680);
-    func(this, skip_buildings);
-#elif 0
     for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {
-        ObjectClass *objptr = DisplayClass::Layers[LAYER_GROUND][i];
+        TechnoClass *objptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][i]);
 
         if (objptr != nullptr && objptr->Is_Techno()) {
             if (objptr->What_Am_I() != RTTI_BUILDING || !skip_buildings) {
-                TechnoClass *tcptr = reinterpret_cast<TechnoClass *>(objptr);
-
-                if (tcptr->OwnerHouse->PlayerControl) {
-                    if (tcptr->PlayerAware) {
-                        tcptr->Look();
+                if (objptr->Get_Owner_House()->Player_Has_Control()) {
+                    if (objptr->Is_Player_Aware()) {
+                        objptr->Look();
                     }
                 } else if (objptr->What_Am_I() == RTTI_BUILDING) {
                     if (Rule.Ally_Reveal()) {
-                        if (PlayerPtr->Is_Ally(objptr->OwnerHouse)) {
+                        if (g_PlayerPtr->Is_Ally(objptr->Get_Owner_House())) {
                             objptr->Look();
                         }
                     }
@@ -1820,7 +1813,6 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
             }
         }
     }
-#endif
 }
 
 /**
@@ -1830,22 +1822,16 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
  */
 void DisplayClass::Constrained_Look(coord_t coord, int constraint)
 {
-    // Needs HouseClass, TechnoClass.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, coord_t, int) =
-        reinterpret_cast<void (*)(const DisplayClass *, coord_t, int)>(0x004B5788);
-    func(this, coord, constraint);
-#elif 0
     for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {
         ObjectClass *objptr = DisplayClass::Layers[LAYER_GROUND][index];
 
         if (objptr != nullptr && objptr->Is_Techno()) {
             TechnoClass *tcptr = reinterpret_cast<TechnoClass *>(objptr);
 
-            if (tcptr->OwnerHouse->PlayerControl) {
-                if (tcptr->PlayerAware) {
+            if (tcptr->Get_Owner_House()->Player_Has_Control()) {
+                if (tcptr->Is_Player_Aware()) {
                     int lepton_sight =
-                        constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
+                        constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Get_Sight() * 256);
 
                     if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
                         tcptr->Look();
@@ -1853,9 +1839,9 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
                 }
             } else if (tcptr->What_Am_I() == RTTI_BUILDING) {
                 if (Rule.Ally_Reveal()) {
-                    if (PlayerPtr->Is_Ally(tcptr->OwnerHouse->What_Type())) {
+                    if (g_PlayerPtr->Is_Ally(tcptr->Get_Owner_House()->What_Type())) {
                         int lepton_sight =
-                            constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Sight * 256);
+                            constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Get_Sight() * 256);
 
                         if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
                             tcptr->Look();
@@ -1865,7 +1851,6 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
             }
         }
     }
-#endif
 }
 
 /**
