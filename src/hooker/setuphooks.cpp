@@ -553,6 +553,7 @@ void Setup_Hooks()
     Hook_Function(0x0049F084, *CellClass::Hook_Cell_Find_Object);
     Hook_Function(0x0049F0D8, *CellClass::Hook_Cell_Object);
     Hook_Function(0x0049F314, *CellClass::Recalc_Attributes);
+    Hook_Function(0x004A1B0C, *CellClass::Hook_Is_Clear_To_Move);
 
     // door.h
     Hook_Function(0x004B5C40, *DoorClass::AI);

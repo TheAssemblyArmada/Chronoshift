@@ -166,6 +166,10 @@ public:
     TechnoClass *Hook_Cell_Techno(int x, int y) { return CellClass::Cell_Techno(x, y); }
     ObjectClass *Hook_Cell_Find_Object(RTTIType type) { return CellClass::Cell_Find_Object(type); }
     ObjectClass *Hook_Cell_Object(int x, int y) { return CellClass::Cell_Object(x, y); }
+    BOOL Hook_Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone)
+    {
+        return CellClass::Is_Clear_To_Move(speed, ignore_crushable, ignore_destructable, zone, mzone);
+    }
 #endif
 
 private:
