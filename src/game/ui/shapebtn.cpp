@@ -46,38 +46,31 @@ ShapeButtonClass &ShapeButtonClass::operator=(ShapeButtonClass &that)
 
 BOOL ShapeButtonClass::Draw_Me(BOOL redraw)
 {
-    if (ToggleClass::Draw_Me(redraw) && ButtonShape != nullptr) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos - 1, Height + YPos - 1);
-        }
-
-        int frame_count = Get_Build_Frame_Count(ButtonShape);
-        DEBUG_ASSERT(frame_count > 0);
-
-        int shape_frame = SHAPE_DEFAULT;
-
-        if (frame_count > 1) {
-            if (ToggleDisabled) {
-                shape_frame = SHAPE_DISABLED;
-            } else {
-                if (BooleanOne) {
-                    shape_frame = ToggleState ? SHAPE_ENABLED : SHAPE_DEFAULT;
-                } else {
-                    shape_frame = Toggle_Boolean1 ? SHAPE_ENABLED : SHAPE_DEFAULT;
-                }
-            }
-        }
-
-        CC_Draw_Shape(ButtonShape, shape_frame, XPos, YPos);
-
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Show_Mouse();
-        }
-
-        return true;
+    if (!ToggleClass::Draw_Me(redraw) || ButtonShape == nullptr) {
+        return false;
     }
 
-    return false;
+    if (g_logicPage == &g_seenBuff) {
+        g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos - 1, Height + YPos - 1);
+    }
+
+    int shape_frame = SHAPE_DEFAULT;
+
+    if (IsDisabled) {
+        shape_frame = SHAPE_DISABLED;
+    } else if (BooleanOne) {
+        shape_frame = ToggleState ? SHAPE_ENABLED : SHAPE_DEFAULT;
+    } else {
+        shape_frame = Toggle_Boolean1 ? SHAPE_ENABLED : SHAPE_DEFAULT;
+    }
+
+    CC_Draw_Shape(ButtonShape, shape_frame, XPos, YPos);
+
+    if (g_logicPage == &g_seenBuff) {
+        g_mouse->Conditional_Show_Mouse();
+    }
+
+    return true;
 }
 
 void ShapeButtonClass::Set_Shape(void *button_shape)
