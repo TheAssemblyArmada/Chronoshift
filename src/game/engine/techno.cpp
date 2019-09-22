@@ -683,8 +683,8 @@ int TechnoClass::Anti_Infantry()
 BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
 {
 #ifdef GAME_DLL
-    BOOL (*func)(cell_t) = reinterpret_cast<BOOL (*)(cell_t)>(0x00560A58);
-    return func(cell);
+    BOOL (*func)(const TechnoClass *, cell_t) = reinterpret_cast<BOOL (*)(const TechnoClass *, cell_t)>(0x00560A58);
+    return func(this, cell);
 #else
     return 0;
 #endif

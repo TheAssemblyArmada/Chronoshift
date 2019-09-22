@@ -194,18 +194,19 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
                     action = ACTION_NO_MOVE;
                 }
 
-                TechnoClass *shifter = As_Techno(g_PlayerPtr->Chrono_Object());
+                TechnoClass *shifter = reinterpret_cast<TechnoClass *>(As_Object(g_PlayerPtr->Chrono_Object()));
 
                 if (shifter != nullptr && shifter->Is_Techno()) {
                     if (!shifter->Can_Teleport_Here(cell)) {
                         action = ACTION_NO_MOVE;
                     }
-
                 } else {
                     action = ACTION_NO_MOVE;
                     Map.Set_Pending_Super(SPECIAL_NONE);
                 }
-            } break;
+            } 
+                                       
+            break;
 
             case SPECIAL_SONAR_PULSE: // These don't need to set anything so fall through to default.
             case SPECIAL_GPS:
