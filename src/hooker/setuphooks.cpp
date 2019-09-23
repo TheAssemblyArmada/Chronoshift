@@ -450,6 +450,9 @@ void Setup_Hooks()
     Hook_Function(0x004B5680, *DisplayClass::All_To_Look);
     Hook_Function(0x004B5788, *DisplayClass::Constrained_Look);
     Hook_Function(0x004B4FF4, *DisplayClass::Shroud_Cell);
+    Hook_Function(0x004B0CA8, *DisplayClass::Draw_It);
+    Hook_Function(0x004F91DC, *DisplayClass::Code_Pointers);
+    Hook_Function(0x004F9220, *DisplayClass::Decode_Pointers);
     Hook_Function(0x004B3108, *DisplayClass::TacticalClass::Action);
 
     // radar.h
