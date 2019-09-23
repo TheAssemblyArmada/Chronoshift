@@ -69,6 +69,9 @@ BooleanVectorClass DisplayClass::CellRedraw;
 
 char DisplayClass::FadingWhite[256];
 
+#define SHADOW_CLEAR -1
+#define SHADOW_FULL -2
+
 DisplayClass::TacticalClass::TacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
 {
@@ -568,6 +571,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
             Set_Tactical_Position(DisplayNewPos);
             --ScenarioInit;
 
+            // If we aren't forcing a complete redraw, then redraw around the edges of the moved section.
             if (!force_redraw) {
                 width_remain -= 24;
                 height_remain -= 24;
@@ -816,17 +820,70 @@ void DisplayClass::Write_INI(GameINIClass &ini)
 #endif
 }
 
+/**
+ * Marks a cell as being visited by the givent house, provided the house is spied by, allied with or is the player.
+ */
 BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
 {
-    // TODO requires HouseClass
-#ifdef GAME_DLL
-    BOOL(*func)
-    (const DisplayClass *, cell_t, HouseClass *) =
-        reinterpret_cast<BOOL (*)(const DisplayClass *, cell_t, HouseClass *)>(0x004B0788);
-    return func(this, cellnum, house);
-#else
-    return false;
-#endif
+    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+
+    // Spied radar reveals enemy movement logic
+    if (house != nullptr && !house->Is_Player()) {
+        if (house->Spied_My_Radar(g_PlayerPtr) || (Session.Game_To_Play() == GAME_CAMPAIGN && house->Is_Ally(g_PlayerPtr))) {
+            house = g_PlayerPtr;
+        }
+    }
+
+    if (!house->Is_Player() || !In_Radar(cellnum)) {
+        return false;
+    }
+
+    CellClass &cell = Map[cellnum];
+
+    if (cell.Is_Visible()) {
+        if (!cell.Is_Revealed()) {
+            cell.Redraw_Objects();
+        }
+
+        return false;
+    }
+
+    cell.Set_Visible(true);
+    cell.Redraw_Objects();
+
+    if (Cell_Shadow(cellnum) == SHADOW_CLEAR) {
+        cell.Set_Revealed(true);
+    }
+
+    for (FacingType facing = FACING_FIRST; facing < FACING_COUNT; ++facing) {
+        cell_t adjacent = Cell_Get_Adjacent(cellnum, facing);
+        CellClass &adj_cell = Map[adjacent];
+
+        adj_cell.Redraw_Objects();
+
+        if (adjacent != cellnum && !adj_cell.Is_Revealed()) {
+            cell_t shadow = Cell_Shadow(adjacent);
+
+            if (shadow == SHADOW_CLEAR) {
+                if (adj_cell.Is_Visible()) {
+                    adj_cell.Set_Revealed(true);
+                } else {
+                    Map_Cell(adjacent, house);
+                }
+
+            } else if (shadow != SHADOW_FULL && !adj_cell.Is_Visible()) {
+                Map_Cell(adjacent, house);
+            }
+        }
+    }
+
+    TechnoClass *tptr = cell.Cell_Techno();
+
+    if (tptr != nullptr) {
+        tptr->Revealed(house);
+    }
+
+    return true;
 }
 
 cell_t DisplayClass::Click_Cell_Calc(int x, int y) const
@@ -1680,7 +1737,7 @@ void DisplayClass::Redraw_Shadow()
                     CellClass &cell = Array[Coord_To_Cell(coord)];
 
                     if (!cell.Is_Revealed()) {
-                        int frame = -2;
+                        int frame = SHADOW_FULL;
 
                         if (cell.Is_Visible()) {
                             frame = Cell_Shadow(cellnum);
@@ -1689,7 +1746,7 @@ void DisplayClass::Redraw_Shadow()
                         if (frame >= 0) { // If we have a valid frame, draw the shroud frame.
                             CC_Draw_Shape(
                                 ShadowShapes, frame, draw_x, draw_y, WINDOW_TACTICAL, SHAPE_GHOST, nullptr, ShadowTrans);
-                        } else if (frame != -1) { // Otherwise, if we don't have -1 fill black
+                        } else if (frame != SHADOW_CLEAR) { // Otherwise, if we don't have -1 fill black
                             int w = CELL_PIXELS;
                             int h = CELL_PIXELS;
 
@@ -1832,7 +1889,7 @@ int DisplayClass::Cell_Shadow(cell_t cellnum) const
 
         // If we aren't at least partly revealed, then no need to do anything else
         if (!cell->Is_Revealed() && !cell->Is_Visible()) {
-            return -2;
+            return SHADOW_FULL;
         }
 
         // If we are redrawing the icon, we need to know which frame we will need for the shroud
@@ -1887,7 +1944,7 @@ int DisplayClass::Cell_Shadow(cell_t cellnum) const
 
     // -1 indicates no shroud, -2 indicates draw black if cell is not partly visible.Return is the frame of the shadow shape
     // file otherwise.
-    return -1;
+    return SHADOW_CLEAR;
 }
 
 /**

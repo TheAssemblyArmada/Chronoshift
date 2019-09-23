@@ -180,6 +180,8 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
     BOOL Has_Buildings() const { return m_BScan.m_HaveBuilt != 0; }
+    BOOL Spied_My_Radar(HousesType house) const { return (m_RadarSpied & (1 << house)) != 0; }
+    BOOL Spied_My_Radar(HouseClass *house) const { return Spied_My_Radar(house->What_Type()); }
 
     static void One_Time();
     static void Init();
@@ -370,7 +372,7 @@ private:
     ZoneType m_LastAttackZone;
     HousesType m_LastAttackHouse;
     target_t m_LastCapBldTarget; // last captured building coord? see Building::Captured().
-    int m_RadarSpied; // spied house bit?
+    uint32_t m_RadarSpied; // spied house bit?
     int m_Score;
     QuarryType m_PreferredTarget;
 #ifdef GAME_DLL
