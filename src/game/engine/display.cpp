@@ -31,12 +31,14 @@
 #include "pk.h"
 #include "rules.h"
 #include "scenario.h"
+#include "session.h"
 #include "super.h"
 #include "target.h"
 #include "techno.h"
 #include "technotype.h"
 #include "textprint.h"
 #include "theater.h"
+#include "vortex.h"
 #include <algorithm>
 #include <cstdio>
 
@@ -204,8 +206,8 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
                     action = ACTION_NO_MOVE;
                     Map.Set_Pending_Super(SPECIAL_NONE);
                 }
-            } 
-                                       
+            }
+
             break;
 
             case SPECIAL_SONAR_PULSE: // These don't need to set anything so fall through to default.
@@ -454,42 +456,344 @@ void DisplayClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void DisplayClass::Draw_It(BOOL force_redraw)
 {
-    // TODO Requires ChronalVortexClass
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, BOOL) = reinterpret_cast<void (*)(const DisplayClass *, BOOL)>(0x004B0CA8);
-    func(this, force_redraw);
-#endif
+    if (DisplayToRedraw || force_redraw) {
+        DisplayToRedraw = false;
+        Refresh_Band();
+        g_ChronalVortex.Set_Redraw();
+        int msg_count = Session.Get_Messages().Num_Messages();
+
+        // If we have messages to draw, redraw the relevant rows of cells
+        if (msg_count > 0) {
+            cell_t cell = Coord_To_Cell(DisplayPos);
+            cell_t ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1;
+
+            for (; cell < ecell; ++cell) {
+                Map[cell].Redraw_Objects();
+            }
+
+            cell = Coord_To_Cell(DisplayPos) + MAP_MAX_WIDTH;
+            ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + MAP_MAX_WIDTH;
+
+            for (; cell < ecell; ++cell) {
+                Map[cell].Redraw_Objects();
+            }
+
+            if (msg_count > 1) {
+                cell = Coord_To_Cell(DisplayPos) + (MAP_MAX_WIDTH * 2);
+                ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 2);
+
+                for (; cell < ecell; ++cell) {
+                    Map[cell].Redraw_Objects();
+                }
+            }
+
+            if (msg_count > 2) {
+                cell = Coord_To_Cell(DisplayPos) + (MAP_MAX_WIDTH * 3);
+                ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 3);
+
+                for (; cell < ecell; ++cell) {
+                    Map[cell].Redraw_Objects();
+                }
+            }
+
+            if (msg_count > 3) {
+                cell = Coord_To_Cell(DisplayPos) + (MAP_MAX_WIDTH * 4);
+                ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 4);
+
+                for (; cell < ecell; ++cell) {
+                    Map[cell].Redraw_Objects();
+                }
+            }
+        }
+        
+        if (Lepton_To_Pixel(Coord_Lepton_X(DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_X(DisplayPos))
+            && Lepton_To_Pixel(Coord_Lepton_Y(DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_Y(DisplayPos))) {
+            ++ScenarioInit;
+
+            if (DisplayNewPos != DisplayPos) {
+                Set_Tactical_Position(DisplayNewPos);
+            }
+
+            --ScenarioInit;
+
+        } else {
+            int x_move_dist = Lepton_To_Pixel(Coord_Lepton_X(DisplayPos)) - Lepton_To_Pixel(Coord_Lepton_X(DisplayNewPos));
+            int y_move_dist = Lepton_To_Pixel(Coord_Lepton_Y(DisplayPos)) - Lepton_To_Pixel(Coord_Lepton_Y(DisplayNewPos));
+            int width_remain = Lepton_To_Pixel(DisplayWidth) - std::abs(x_move_dist);
+            int height_remain = Lepton_To_Pixel(DisplayHeight) - std::abs(y_move_dist);
+
+            // Check if we'v moved more than 1 screen away and so need to redraw
+            // everything.
+            if (width_remain < 1 || height_remain < 1) {
+                force_redraw = true;
+            }
+
+            bool move_right = x_move_dist < 0;
+            bool move_left = x_move_dist > 0;
+            bool move_down = y_move_dist < 0;
+            bool move_up = y_move_dist > 0;
+
+            // If we haven't moved at all redraw?
+            if (force_redraw
+                || (Lepton_To_Pixel(DisplayWidth) == width_remain && Lepton_To_Pixel(DisplayHeight) == height_remain)) {
+                force_redraw = true;
+            } else {
+                // Do a block blit of anything still in view.
+                Set_Cursor_Pos(-1);
+
+                if (g_hidPage.In_Video_Memory()) {
+                    g_mouse->Hide_Mouse();
+
+                    int src_x = TacOffsetX + -std::min(0, x_move_dist);
+                    int src_y = -std::min(0, y_move_dist) + TacOffsetY;
+                    int dst_x = std::max(0, x_move_dist) + TacOffsetX;
+                    int dst_y = TacOffsetY + std::max(0, y_move_dist);
+
+                    g_seenBuff.Blit(g_hidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
+                    g_mouse->Show_Mouse();
+                } else {
+                    int src_x = TacOffsetX + -std::min(0, x_move_dist);
+                    int src_y = -std::min(0, y_move_dist) + TacOffsetY;
+                    int dst_x = std::max(0, x_move_dist) + TacOffsetX;
+                    int dst_y = TacOffsetY + std::max(0, y_move_dist);
+
+                    g_hidPage.Blit(g_hidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
+                }
+            }
+
+            x_move_dist = std::max(0, x_move_dist);
+            y_move_dist = std::max(0, y_move_dist);
+
+            ++ScenarioInit;
+            Set_Tactical_Position(DisplayNewPos);
+            --ScenarioInit;
+
+            if (!force_redraw) {
+                width_remain -= 24;
+                height_remain -= 24;
+
+                if (std::abs(x_move_dist) >= 37 || std::abs(y_move_dist) >= 37) {
+                    int x_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_X(DisplayPos));
+                    int y_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_Y(DisplayPos));
+                    width_remain -= 24;
+                    height_remain -= 24;
+
+                    for (int j = y_pixel; Lepton_To_Pixel(DisplayHeight) + 48 >= j; j += 24) { // 24 == ICON_HEIGHT?
+                        for (int k = x_pixel; Lepton_To_Pixel(DisplayWidth) + 48 >= k; k += 24) { // 24 == ICON_WIDTH?
+                            if (k <= x_move_dist || width_remain + x_move_dist <= k || j <= y_move_dist
+                                || height_remain + y_move_dist <= j) {
+                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
+                                int lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int y_check = std::clamp(j, lo, hi);
+
+                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
+                                lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int x_check = std::clamp(k, lo, hi);
+
+                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+
+                                if (click_cell > 0) {
+                                    (*this)[click_cell].Redraw_Objects(true);
+                                }
+                            }
+                        }
+                    }
+
+                } else {
+                    int x_move_fudge = std::abs(x_move_dist) < 16 ? 1 : 2;
+                    int y_move_fudge = std::abs(y_move_dist) < 16 ? 1 : 2;
+
+                    int x_pixel2 = -Lepton_To_Pixel(Coord_Sub_Cell_X(DisplayPos));
+                    int y_pixel2 = -Lepton_To_Pixel(Coord_Sub_Cell_Y(DisplayPos));
+
+                    if (move_up) {
+                        for (int j = y_pixel2; y_pixel2 + 24 * y_move_fudge >= j; j += 24) {
+                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + 48 >= k; k += 24) {
+                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
+                                int lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int y_check = std::clamp(j, lo, hi);
+
+                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
+                                lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int x_check = std::clamp(k, lo, hi);
+
+                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+
+                                if (click_cell > 0) {
+                                    (*this)[click_cell].Redraw_Objects(true);
+                                }
+                            }
+                        }
+                    }
+
+                    if (move_down) {
+                        for (int j = Lepton_To_Pixel(DisplayHeight) - 24 * y_move_fudge;
+                             Lepton_To_Pixel(DisplayHeight) + 72 >= j;
+                             j += 24) {
+                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + 48 >= k; k += 24) {
+                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
+                                int lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int y_check = std::clamp(j, lo, hi);
+
+                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
+                                lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int x_check = std::clamp(k, lo, hi);
+
+                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+
+                                if (click_cell > 0) {
+                                    (*this)[click_cell].Redraw_Objects(true);
+                                }
+                            }
+                        }
+                    }
+
+                    if (move_left) {
+                        for (int k = x_pixel2; x_pixel2 + 24 * x_move_fudge >= k; k += 24) {
+                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + 48 >= j; j += 24) {
+                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
+                                int lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int y_check = std::clamp(j, lo, hi);
+
+                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
+                                lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int x_check = std::clamp(k, lo, hi);
+
+                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+
+                                if (click_cell > 0) {
+                                    (*this)[click_cell].Redraw_Objects(true);
+                                }
+                            }
+                        }
+                    }
+
+                    if (move_right) {
+                        for (int k = Lepton_To_Pixel(DisplayWidth) - x_move_fudge * 24;
+                             Lepton_To_Pixel(DisplayWidth) + 72 >= k;
+                             k += 24) {
+                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + 48 >= j; j += 24) {
+                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
+                                int lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int y_check = std::clamp(j, lo, hi);
+
+                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
+                                lo = 0;
+
+                                if (hi <= 0) {
+                                    std::swap(hi, lo);
+                                }
+
+                                int x_check = std::clamp(k, lo, hi);
+
+                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+
+                                if (click_cell > 0) {
+                                    (*this)[click_cell].Redraw_Objects(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (force_redraw) {
+            CellRedraw.Set();
+        }
+
+        if (g_hidPage.Lock()) {
+            Redraw_Icons();
+            g_hidPage.Unlock();
+        }
+
+        if (g_hidPage.Lock()) {
+            g_ChronalVortex.Render();
+
+            for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
+                Layers[layer].Render_All();
+            }
+
+            // SS does some drawing of FLAGFLY.SHP here after rendering surface
+            // objects.
+
+            Redraw_Shadow();
+            g_hidPage.Unlock();
+        }
+
+        if (DisplayBit8) {
+            g_logicPage->Draw_Rect(TacOffsetX + BandBox.Get_Left(),
+                TacOffsetY + BandBox.Get_Top(),
+                TacOffsetX + BandBox.Get_Right(),
+                TacOffsetY + BandBox.Get_Bottom(),
+                15);
+        }
+
+        CellRedraw.Reset();
+    }
 }
 
 void DisplayClass::Code_Pointers()
 {
-    // Requires target functions.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *) = reinterpret_cast<void (*)(const DisplayClass *)>(0x004F91DC);
-    func(this);
-#elif 0
     if (PendingObjectPtr != nullptr) {
-        PendingObjectPtr = (ObjectClass *)As_Target(PendingObjectPtr);
-        DEBUG_ASSERT(PendingObjectPtr != nullptr);
+        PendingObjectPtr = reinterpret_cast<ObjectClass *>((uintptr_t)PendingObjectPtr->As_Target());
     }
 
     MapClass::Code_Pointers();
-#endif
 }
 
 void DisplayClass::Decode_Pointers()
 {
-    // Requires target functions.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *) = reinterpret_cast<void (*)(const DisplayClass *)>(0x004F9220);
-    func(this);
-#elif 0
     if ((uintptr_t)PendingObjectPtr != 0) {
-        PendingObjectPtr = As_Object((uintptr)PendingObjectPtr);
+        PendingObjectPtr = As_Object((uintptr_t)PendingObjectPtr);
     }
 
     MapClass::Decode_Pointers();
-#endif
 }
 
 void DisplayClass::Read_INI(GameINIClass &ini)
@@ -1314,7 +1618,7 @@ BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType ho
 {
     // Needs HouseClass, BuildingTypeClass.
 #ifdef GAME_DLL
-    BOOL (*func)
+    BOOL(*func)
     (const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t) =
         reinterpret_cast<BOOL (*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t)>(0x004AF7DC);
     return func(this, object, house, list, cell);
