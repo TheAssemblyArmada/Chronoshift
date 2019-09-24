@@ -579,11 +579,11 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 if (std::abs(x_move_dist) >= 37 || std::abs(y_move_dist) >= 37) {
                     int x_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_X(DisplayPos));
                     int y_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_Y(DisplayPos));
-                    width_remain -= 24;
-                    height_remain -= 24;
+                    width_remain -= CELL_PIXELS;
+                    height_remain -= CELL_PIXELS;
 
-                    for (int j = y_pixel; Lepton_To_Pixel(DisplayHeight) + 48 >= j; j += 24) { // 24 == ICON_HEIGHT?
-                        for (int k = x_pixel; Lepton_To_Pixel(DisplayWidth) + 48 >= k; k += 24) { // 24 == ICON_WIDTH?
+                    for (int j = y_pixel; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) { // 24 == ICON_HEIGHT?
+                        for (int k = x_pixel; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) { // 24 == ICON_WIDTH?
                             if (k <= x_move_dist || width_remain + x_move_dist <= k || j <= y_move_dist
                                 || height_remain + y_move_dist <= j) {
                                 int hi = Lepton_To_Pixel(DisplayHeight) - 1;
@@ -621,8 +621,8 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     int y_pixel2 = -Lepton_To_Pixel(Coord_Sub_Cell_Y(DisplayPos));
 
                     if (move_up) {
-                        for (int j = y_pixel2; y_pixel2 + 24 * y_move_fudge >= j; j += 24) {
-                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + 48 >= k; k += 24) {
+                        for (int j = y_pixel2; y_pixel2 + CELL_PIXELS * y_move_fudge >= j; j += CELL_PIXELS) {
+                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
                                 int hi = Lepton_To_Pixel(DisplayHeight) - 1;
                                 int lo = 0;
 
@@ -651,10 +651,10 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     }
 
                     if (move_down) {
-                        for (int j = Lepton_To_Pixel(DisplayHeight) - 24 * y_move_fudge;
+                        for (int j = Lepton_To_Pixel(DisplayHeight) - CELL_PIXELS * y_move_fudge;
                              Lepton_To_Pixel(DisplayHeight) + 72 >= j;
-                             j += 24) {
-                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + 48 >= k; k += 24) {
+                             j += CELL_PIXELS) {
+                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
                                 int hi = Lepton_To_Pixel(DisplayHeight) - 1;
                                 int lo = 0;
 
@@ -683,8 +683,8 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     }
 
                     if (move_left) {
-                        for (int k = x_pixel2; x_pixel2 + 24 * x_move_fudge >= k; k += 24) {
-                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + 48 >= j; j += 24) {
+                        for (int k = x_pixel2; x_pixel2 + CELL_PIXELS * x_move_fudge >= k; k += CELL_PIXELS) {
+                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
                                 int hi = Lepton_To_Pixel(DisplayHeight) - 1;
                                 int lo = 0;
 
@@ -713,10 +713,10 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     }
 
                     if (move_right) {
-                        for (int k = Lepton_To_Pixel(DisplayWidth) - x_move_fudge * 24;
+                        for (int k = Lepton_To_Pixel(DisplayWidth) - x_move_fudge * CELL_PIXELS;
                              Lepton_To_Pixel(DisplayWidth) + 72 >= k;
-                             k += 24) {
-                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + 48 >= j; j += 24) {
+                             k += CELL_PIXELS) {
+                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
                                 int hi = Lepton_To_Pixel(DisplayHeight) - 1;
                                 int lo = 0;
 
@@ -862,7 +862,7 @@ BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
         adj_cell.Redraw_Objects();
 
         if (adjacent != cellnum && !adj_cell.Is_Revealed()) {
-            cell_t shadow = Cell_Shadow(adjacent);
+            int shadow = Cell_Shadow(adjacent);
 
             if (shadow == SHADOW_CLEAR) {
                 if (adj_cell.Is_Visible()) {
@@ -1267,7 +1267,7 @@ void DisplayClass::Refresh_Band()
         }
 
         // This loop should redraw the left and right side of the selection band.
-        for (int i = box_y; i <= (box_h + 24); i += 24) {
+        for (int i = box_y; i <= (box_h + CELL_PIXELS); i += CELL_PIXELS) {
             int b_pxl = Lepton_To_Pixel(DisplayHeight) + TacOffsetY;
             cell_t click_cell = Click_Cell_Calc(box_x, std::clamp(i, 0, b_pxl));
 
@@ -1283,7 +1283,7 @@ void DisplayClass::Refresh_Band()
         }
 
         // This loop should redraw the top and bottom side of the selection band.
-        for (int i = box_x; i < (box_w + 24); i += 24) {
+        for (int i = box_x; i < (box_w + CELL_PIXELS); i += CELL_PIXELS) {
             int b_pxl = Lepton_To_Pixel(DisplayWidth) + TacOffsetX;
             cell_t click_cell = Click_Cell_Calc(std::clamp(i, 0, b_pxl), box_y);
 
@@ -1378,7 +1378,7 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
 
     if (string != nullptr) {
         int count = 60;
-        int str_width = String_Pixel_Width(string) + 24;
+        int str_width = String_Pixel_Width(string) + CELL_PIXELS;
         int width = TacOffsetX + Lepton_To_Pixel(DisplayWidth);
 
         if (str_width + x >= width) {
@@ -1808,8 +1808,8 @@ BOOL DisplayClass::Coord_To_Pixel(coord_t coord, int &x, int &y) const
         int16_t lep_y = Lepton_Round_To_Pixel(Coord_Lepton_Y(coord)) + 512 - view_y;
 
         if (lep_x <= (DisplayWidth + 1024) && lep_y <= (DisplayHeight + 1024)) {
-            x = Lepton_To_Pixel(lep_x) - 48;
-            y = Lepton_To_Pixel(lep_y) - 48;
+            x = Lepton_To_Pixel(lep_x) - CELL_PIXELS * 2;
+            y = Lepton_To_Pixel(lep_y) - CELL_PIXELS * 2;
 
             return true;
         }
