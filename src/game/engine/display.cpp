@@ -760,7 +760,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
             g_ChronalVortex.Render();
 
             for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
-                Layers[layer].Render_All();
+                Layers[layer].Render_All(force_redraw);
             }
 
             // SS does some drawing of FLAGFLY.SHP here after rendering surface
