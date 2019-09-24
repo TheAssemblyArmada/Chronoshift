@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "display.h"
+#include "aircraft.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"
@@ -1488,14 +1489,89 @@ ObjectClass *DisplayClass::Cell_Object(cell_t cellnum, int x, int y) const
     return Array[cellnum].Cell_Object(x, y);
 }
 
+/**
+ * Selects all objects in the rectangle formed between the two coords.
+ *
+ * RA 0x004B2C50
+ */
 void DisplayClass::Select_These(coord_t start, coord_t finish)
 {
-    // Needs HouseClass.
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, coord_t, coord_t) =
-        reinterpret_cast<void (*)(const DisplayClass *, coord_t, coord_t)>(0x004B2C50);
-    func(this, start, finish);
-#endif
+    // Calc X and Y start and end points for select rectangle
+    // based on input coords.
+    lepton_t x1 = Coord_Lepton_X(start) + Coord_Lepton_X(DisplayPos);
+    lepton_t y1 = Coord_Lepton_Y(start) + Coord_Lepton_Y(DisplayPos);
+    lepton_t x2 = Coord_Lepton_X(finish) + Coord_Lepton_X(DisplayPos);
+    lepton_t y2 = Coord_Lepton_Y(finish) + Coord_Lepton_Y(DisplayPos);
+
+    if (x1 > x2) {
+        std::swap(x1, x2);
+    }
+
+    if (y1 > y2) {
+        std::swap(y1, y2);
+    }
+
+    // TODO, add keyboard shortcut to "add to" selection by skipping this?
+    Unselect_All();
+
+    g_AllowVoice = true;
+
+    // Loops through all ground units and select them if they fall
+    // within the rectangle.
+    for (int index = 0; index < Layers[LAYER_GROUND].Count(); ++index) {
+        TechnoClass *objptr = reinterpret_cast<TechnoClass *>(Layers[LAYER_GROUND][index]);
+
+        if (objptr != nullptr) {
+            coord_t obj_loc = objptr->Center_Coord();
+            lepton_t obj_x = Coord_Lepton_X(obj_loc);
+            lepton_t obj_y = Coord_Lepton_Y(obj_loc);
+
+            if (obj_x > x1 && obj_x < x2 && obj_y > y1 && obj_y < y2) {
+                HouseClass *owner = HouseClass::As_Pointer(objptr->Owner());
+
+                if (owner != nullptr && owner->Player_Has_Control()) {
+                    switch (objptr->What_Am_I()) {
+                        case RTTI_UNIT: // fallthrough
+                        case RTTI_INFANTRY: // fallthrough
+                        case RTTI_VESSEL: // fallthrough
+                        case RTTI_AIRCRAFT:
+                            if (objptr->Class_Of().Is_Selectable()) {
+                                if (objptr->Select()) {
+                                    g_AllowVoice = false;
+                                }
+                            }
+
+                            break;
+                        case RTTI_BUILDING: // fallthrough
+                        default:
+                            break;
+                    };
+                }
+            }
+        }
+    }
+
+    // This loops all Aircraft and selects those in rect that 
+    // weren't caught in the ground layer select irrespective 
+    // of their current layer.
+    for (int index = 0; index < g_Aircraft.Count(); ++index) {
+        AircraftClass &aptr = g_Aircraft[index];
+        coord_t obj_loc = aptr.Center_Coord();
+        lepton_t obj_x = Coord_Lepton_X(obj_loc);
+        lepton_t obj_y = Coord_Lepton_Y(obj_loc);
+
+        if (obj_x > x1 && obj_x < x2 && obj_y > y1 && obj_y < y2) {
+            if (aptr.Get_Owner_House() != nullptr) {
+                if (aptr.Class_Of().Is_Selectable()) {
+                    if (aptr.Select()) {
+                        g_AllowVoice = false;
+                    }
+                }
+            }
+        }
+    }
+
+    g_AllowVoice = true;
 }
 
 /**
