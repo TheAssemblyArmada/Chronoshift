@@ -15,6 +15,8 @@
  */
 #include "display.h"
 #include "aircraft.h"
+#include "building.h"
+#include "buildingtype.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"
@@ -822,7 +824,7 @@ void DisplayClass::Write_INI(GameINIClass &ini)
 }
 
 /**
- * Marks a cell as being visited by the givent house, provided the house is spied by, allied with or is the player.
+ * Marks a cell as being visited by the given house, provided the house is spied by, allied with or is the player.
  */
 BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
 {
@@ -1551,8 +1553,8 @@ void DisplayClass::Select_These(coord_t start, coord_t finish)
         }
     }
 
-    // This loops all Aircraft and selects those in rect that 
-    // weren't caught in the ground layer select irrespective 
+    // This loops all Aircraft and selects those in rect that
+    // weren't caught in the ground layer select irrespective
     // of their current layer.
     for (int index = 0; index < g_Aircraft.Count(); ++index) {
         AircraftClass &aptr = g_Aircraft[index];
@@ -1747,17 +1749,127 @@ cell_t DisplayClass::Set_Cursor_Pos(cell_t cell)
     return retval;
 }
 
+/**
+ * Helper function handling the proximity check part.
+ */
+void DisplayClass::Check_Proximity(ObjectTypeClass *object, HousesType house, cell_t cell, int &passes, bool &outside_radar) const
+{
+    BuildingTypeClass *bld = reinterpret_cast<BuildingTypeClass *>(object);
+
+    if (!In_Radar(cell)) {
+        outside_radar = true;
+        passes = 0;
+        return;
+    }
+
+    // check adjacent cells in all directions until we meet the condition to stop
+    for (FacingType i = FACING_NORTH; i < FACING_COUNT; ++i) {
+        cell_t adj_cell = Cell_Get_Adjacent(cell, i);
+        if (In_Radar(adj_cell)) {
+            // is the adjacent cell a Wall or Bib owned by this house?
+            if (bld->Is_Wall() || Array[adj_cell].Has_Bib()) {
+                if (Array[adj_cell].Owner() == house) {
+                    passes = 1;
+                    return;
+                }
+            }
+
+            // is the adjacent cell a building owned by this house and is BaseNormal?
+            BuildingClass *tptr = (BuildingClass *)Array[adj_cell].Cell_Techno();
+            if (tptr != nullptr && tptr->What_Am_I() == RTTI_BUILDING && tptr->Get_Owner_House()->What_Type() == house) {
+                if (tptr->Class_Of().Base_Normal()) {
+                    passes = 1;
+                    return;
+                }
+            }
+
+            // proximity hasn't passed yet so check all neighboring cells in all directions until we meet the condition to
+            // stop
+            for (FacingType j = FACING_NORTH; j < FACING_COUNT; ++j) {
+                cell_t next_cell = Cell_Get_Adjacent(adj_cell, j);
+                // is the cell next to the adjacent cell a Wall or Bib owned by this house?
+                if (bld->Is_Wall() || Array[next_cell].Has_Bib()) {
+                    if (Array[next_cell].Owner() == house) {
+                        passes = 1;
+                        return;
+                    }
+                }
+                // is the cell next to the adjacent cell a building owned by this house and is BaseNormal?
+                BuildingClass *tptr2 = (BuildingClass *)Array[next_cell].Cell_Techno();
+                if (tptr2 != nullptr && tptr2->What_Am_I() == RTTI_BUILDING
+                    && tptr2->Get_Owner_House()->What_Type() == house) {
+                    if (tptr2->Class_Of().Base_Normal()) {
+                        passes = 1;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Check if an object is clear to be placed at a given location, mainly for checking buildings can be placed.
+ *
+ * RA 0x004AF7DC
+ */
 BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType house, int16_t *list, cell_t cell) const
 {
-    // Needs HouseClass, BuildingTypeClass.
-#ifdef GAME_DLL
-    BOOL(*func)
-    (const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t) =
-        reinterpret_cast<BOOL (*)(const DisplayClass *, ObjectTypeClass *, HousesType, int16_t *, cell_t)>(0x004AF7DC);
-    return func(this, object, house, list, cell);
-#else
-    return false;
-#endif
+    int passes = -1;
+    bool outside_radar = false;
+    static bool _passed_proximity; // Appears to have been global originally, but only used in this function.
+
+    if (g_PlayerPtr->What_Type() == house) {
+        _passed_proximity = false;
+    }
+
+    if (g_inMapEditor) {
+        return true;
+    }
+
+    if (list == nullptr || cell == 0) {
+        return true;
+    }
+
+    if (object == nullptr || object->What_Am_I() != RTTI_BUILDINGTYPE) {
+        return true;
+    }
+
+    cell_t cell_num = cell;
+    if (reinterpret_cast<BuildingTypeClass *>(object)->Adjacency() == 1) {
+        for (; *list != LIST_END && passes == -1; ++list) {
+            cell_num = *list + cell;
+            Check_Proximity(object, house, cell_num, passes, outside_radar);
+        }
+    }
+    if (passes == -1) {
+        passes = 0;
+    }
+
+    if (g_PlayerPtr->What_Type() == house) {
+        _passed_proximity = (passes != 0);
+    }
+
+    if (!passes && !outside_radar && object->What_Am_I() == RTTI_BUILDINGTYPE
+        && reinterpret_cast<BuildingTypeClass *>(object)->Adjacency() > 1) {
+        for (int i = 0; i < g_Buildings.Count(); ++i) {
+            BuildingClass *bptr = &g_Buildings[i];
+            if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Owner_House()->What_Type() == house
+                && bptr->Class_Of().Base_Normal()) {
+                coord_t cell_coord = Cell_To_Coord(cell_num);
+                coord_t center_coord = bptr->Center_Coord();
+                int width = bptr->Class_Of().Width();
+                int height = bptr->Class_Of().Height();
+
+                if ((Distance(center_coord, cell_coord) / 256) - ((width + height) / 2)
+                    <= reinterpret_cast<BuildingTypeClass *>(object)->Adjacency()) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return passes;
 }
 
 /**
@@ -2199,10 +2311,10 @@ BOOL DisplayClass::Good_Reinforcement_Cell(cell_t cell1, cell_t cell2, SpeedType
 {
     if (Array[cell1].Is_Clear_To_Move(speed, false, false, zone, mzone)
         && Array[cell2].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
-        if (Array[cell1].Cell_Techno(0, 0) != nullptr) {
+        if (Array[cell1].Cell_Techno() != nullptr) {
             return false;
         } else {
-            return Array[cell2].Cell_Techno(0, 0) == nullptr;
+            return Array[cell2].Cell_Techno() == nullptr;
         }
     }
 
