@@ -121,6 +121,7 @@ public:
     BOOL Should_Save() const;
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
+    BOOL Has_Bib() const { return Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Reference(Smudge).Is_Bib(); }
 
     cell_t Cell_Number() const { return CellNumber; }
     int8_t Get_Zone(MZoneType mzone) const { return Zones[mzone]; }

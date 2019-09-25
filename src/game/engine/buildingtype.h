@@ -222,8 +222,10 @@ public:
 
     BuildingType What_Type() const { return m_Type; }
     RTTIType Factory_Type() const { return m_FactoryType; }
+    BOOL Base_Normal() const { return m_BaseNormal; }
     BOOL Unsellable() const { return m_Unsellable; }
-
+    BOOL Is_Wall() const { return m_Wall; }
+    int Adjacency() const { return m_Adjacency; }
     void Init_Anim(BStateType bstate, int start_frame, int frame_count, int delay);
 
     static void One_Time();
