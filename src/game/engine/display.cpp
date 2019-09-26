@@ -1348,17 +1348,46 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
     return _list;
 }
 
+/**
+ * Finds the previous object in the ground layer.
+ */
 ObjectClass *DisplayClass::Prev_Object(ObjectClass *object) const
 {
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const DisplayClass *, ObjectClass *) =
-        reinterpret_cast<ObjectClass *(*)(const DisplayClass *, ObjectClass *)>(0x004B2618);
-    return func(this, object);
-#else
-    return 0;
-#endif
+    ObjectClass *retval = nullptr;
+    bool found = false;
+
+    // Flag to return the first object encountered when iterating the list.
+    if (object == nullptr) {
+        found = true;
+    }
+
+    // Scan backwards through the list of units until we find the one that
+    // matches the passed pointer, then return the object before it in the list
+    // in the next loop.
+    for (int index = Layers[LAYER_GROUND].Count() - 1; index >= 0; --index) {
+        ObjectClass *prev = Layers[LAYER_GROUND][index];
+
+        if (prev != nullptr && prev->Is_Player_Army()) {
+            if (retval == nullptr) {
+                retval = prev;
+            }
+
+            if (found) {
+                return prev;
+            }
+
+            if (object == prev) {
+                found = true;
+            }
+        }
+    }
+
+    return retval;
 }
 
+/**
+ * Finds the next object in the ground layer.
+ */
 ObjectClass *DisplayClass::Next_Object(ObjectClass *object) const
 {
     ObjectClass *retval = nullptr;
