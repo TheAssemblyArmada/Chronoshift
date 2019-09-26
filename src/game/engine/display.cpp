@@ -474,14 +474,14 @@ void DisplayClass::Draw_It(BOOL force_redraw)
             cell_t ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1;
 
             for (; cell < ecell; ++cell) {
-                Map[cell].Redraw_Objects();
+                Array[cell].Redraw_Objects();
             }
 
             cell = Coord_To_Cell(DisplayPos) + MAP_MAX_WIDTH;
             ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + MAP_MAX_WIDTH;
 
             for (; cell < ecell; ++cell) {
-                Map[cell].Redraw_Objects();
+                Array[cell].Redraw_Objects();
             }
 
             if (msg_count > 1) {
@@ -489,7 +489,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 2);
 
                 for (; cell < ecell; ++cell) {
-                    Map[cell].Redraw_Objects();
+                    Array[cell].Redraw_Objects();
                 }
             }
 
@@ -498,7 +498,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 3);
 
                 for (; cell < ecell; ++cell) {
-                    Map[cell].Redraw_Objects();
+                    Array[cell].Redraw_Objects();
                 }
             }
 
@@ -507,11 +507,11 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 4);
 
                 for (; cell < ecell; ++cell) {
-                    Map[cell].Redraw_Objects();
+                    Array[cell].Redraw_Objects();
                 }
             }
         }
-        
+
         if (Lepton_To_Pixel(Coord_Lepton_X(DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_X(DisplayPos))
             && Lepton_To_Pixel(Coord_Lepton_Y(DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_Y(DisplayPos))) {
             ++ScenarioInit;
@@ -585,32 +585,16 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     width_remain -= CELL_PIXELS;
                     height_remain -= CELL_PIXELS;
 
-                    for (int j = y_pixel; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) { // 24 == ICON_HEIGHT?
-                        for (int k = x_pixel; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) { // 24 == ICON_WIDTH?
+                    for (int j = y_pixel; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
+                        for (int k = x_pixel; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
                             if (k <= x_move_dist || width_remain + x_move_dist <= k || j <= y_move_dist
                                 || height_remain + y_move_dist <= j) {
-                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
-                                int lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int y_check = std::clamp(j, lo, hi);
-
-                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
-                                lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int x_check = std::clamp(k, lo, hi);
-
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
                                 cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    (*this)[click_cell].Redraw_Objects(true);
+                                    Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
@@ -626,28 +610,12 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     if (move_up) {
                         for (int j = y_pixel2; y_pixel2 + CELL_PIXELS * y_move_fudge >= j; j += CELL_PIXELS) {
                             for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
-                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
-                                int lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int y_check = std::clamp(j, lo, hi);
-
-                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
-                                lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int x_check = std::clamp(k, lo, hi);
-
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
                                 cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    (*this)[click_cell].Redraw_Objects(true);
+                                    Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
@@ -658,28 +626,12 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                              Lepton_To_Pixel(DisplayHeight) + 72 >= j;
                              j += CELL_PIXELS) {
                             for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
-                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
-                                int lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int y_check = std::clamp(j, lo, hi);
-
-                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
-                                lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int x_check = std::clamp(k, lo, hi);
-
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
                                 cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    (*this)[click_cell].Redraw_Objects(true);
+                                    Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
@@ -688,28 +640,12 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     if (move_left) {
                         for (int k = x_pixel2; x_pixel2 + CELL_PIXELS * x_move_fudge >= k; k += CELL_PIXELS) {
                             for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
-                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
-                                int lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int y_check = std::clamp(j, lo, hi);
-
-                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
-                                lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int x_check = std::clamp(k, lo, hi);
-
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
                                 cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    (*this)[click_cell].Redraw_Objects(true);
+                                    Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
@@ -720,28 +656,12 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                              Lepton_To_Pixel(DisplayWidth) + 72 >= k;
                              k += CELL_PIXELS) {
                             for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
-                                int hi = Lepton_To_Pixel(DisplayHeight) - 1;
-                                int lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int y_check = std::clamp(j, lo, hi);
-
-                                hi = Lepton_To_Pixel(DisplayWidth) - 1;
-                                lo = 0;
-
-                                if (hi <= 0) {
-                                    std::swap(hi, lo);
-                                }
-
-                                int x_check = std::clamp(k, lo, hi);
-
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
                                 cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    (*this)[click_cell].Redraw_Objects(true);
+                                    Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
