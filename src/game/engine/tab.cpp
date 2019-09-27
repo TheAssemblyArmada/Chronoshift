@@ -15,18 +15,21 @@
  */
 
 #include "tab.h"
-#include "vox.h"
-#include "gamefile.h"
 #include "dialog.h"
 #include "drawshape.h"
+#include "gamefile.h"
 #include "gameoptions.h"
 #include "gbuffer.h"
 #include "globals.h"
+#include "house.h"
 #include "iomap.h"
 #include "mixfile.h"
 #include "queue.h"
 #include "rules.h"
 #include "scenario.h"
+#include "vox.h"
+#include <algorithm>
+#include <cstdlib>
 
 #ifndef GAME_DLL
 void *TabClass::TabShape = nullptr;
@@ -43,7 +46,7 @@ TabClass::CreditClass::CreditClass() :
     CreditToRedraw(false),
     CreditHasIncreased(false),
     CreditHasChanged(false),
-    field_C(0)
+    TicksToNextRecalc(0)
 {
     return;
 }
@@ -187,13 +190,58 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
  *
  * 0x004ACF04
  */
-void TabClass::CreditClass::AI(BOOL a1)
+void TabClass::CreditClass::AI(BOOL force_update)
 {
-    // TODO Needs HouseClass.
-#ifdef GAME_DLL
-    void (*func)(const CreditClass *, BOOL) = reinterpret_cast<void (*)(const CreditClass *, BOOL)>(0x004ACF04);
-    func(this, a1);
-#endif
+    static int _last = 0;
+
+    if (g_inMapEditor) {
+        Available = std::max(0, Map.TotalValue);
+
+        if (Credits != Available) {
+            CreditHasChanged = false;
+            Credits = Available;
+            CreditToRedraw = true;
+            Map.Flag_To_Redraw();
+        }
+    } else if (force_update || g_GameFrame != _last) {
+        _last = g_GameFrame;
+        Available = std::max(0, g_PlayerPtr->Available_Money());
+
+        if (!Scen.Global_Timer().Expired()) {
+            CreditToRedraw = true;
+            Map.Flag_To_Redraw();
+        }
+
+        if (Credits != Available) {
+            if (force_update) {
+                CreditHasChanged = false;
+                Credits = Available;
+            } else {
+                if (TicksToNextRecalc) {
+                    --TicksToNextRecalc;
+                }
+
+                if (TicksToNextRecalc == 0) {
+                    TicksToNextRecalc = Available - Credits <= 0 ? 3 : 1;
+                    int unk = std::clamp((unsigned)std::abs(Available - Credits) / 8, 1u, 143u);
+
+                    if (Credits > Available) {
+                        unk = -unk;
+                    }
+
+                    Credits += unk;
+
+                    if (Credits - unk != Credits) {
+                        CreditHasChanged = true;
+                        CreditHasIncreased = unk > 0;
+                    }
+                }
+            }
+
+            CreditToRedraw = true;
+            Map.Flag_To_Redraw();
+        }
+    }
 }
 
 TabClass::TabClass() : CreditDisplay(), TimerFlashTimer(), TabToRedraw(false), CreditsFlashTimer() {}
