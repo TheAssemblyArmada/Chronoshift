@@ -425,6 +425,7 @@ void Setup_Hooks()
     Hook_Function(0x004B35C4, *DisplayClass::Mouse_Right_Press);
     Hook_Function(0x004B4608, *DisplayClass::Mouse_Left_Press);
     Hook_Function(0x004B465C, *DisplayClass::Mouse_Left_Held);
+    Hook_Function(0x004B3780, *DisplayClass::Mouse_Left_Up);
     Hook_Function(0x004B2E84, *DisplayClass::Refresh_Band);
     Hook_Function(0x004B006C, *DisplayClass::Cursor_Mark);
     Hook_Function(0x004AFFA8, *DisplayClass::Hook_Get_Occupy_Dimensions);
