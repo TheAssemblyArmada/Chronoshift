@@ -1075,14 +1075,300 @@ void DisplayClass::Mouse_Left_Press(int mouse_x, int mouse_y)
     }
 }
 
+/**
+ * Handles mouse when left button is unpressed.
+ *
+ * RA 0x004B3780
+ */
 void DisplayClass::Mouse_Left_Up(
     cell_t cellnum, BOOL cell_shrouded, ObjectClass *object, ActionType action, BOOL mouse_in_radar)
 {
-#ifdef GAME_DLL
-    void (*func)(const DisplayClass *, cell_t, BOOL, ObjectClass *, ActionType, BOOL) =
-        reinterpret_cast<void (*)(const DisplayClass *, cell_t, BOOL, ObjectClass *, ActionType, BOOL)>(0x004B3780);
-    func(this, cellnum, cell_shrouded, object, action, mouse_in_radar);
-#endif
+    target_t target = 0;
+
+    DisplayBit16 = false;
+
+    if (object != nullptr) {
+        target = As_Target(object);
+    } else if (cellnum != -1) {
+        target = As_Target(cellnum);
+    }
+
+    if (cell_shrouded) {
+        switch (action) {
+            case ACTION_NONE:
+                Set_Default_Mouse(MOUSE_POINTER, mouse_in_radar);
+                break;
+
+            case ACTION_MOVE:
+            case ACTION_ENTER:
+            case ACTION_SELF:
+            case ACTION_ATTACK:
+            case ACTION_HARVEST:
+            case ACTION_SELECT:
+            case ACTION_TOGGLE_SELECT:
+            case ACTION_CAPTURE:
+            case ACTION_SABOTAGE:
+                Set_Default_Mouse(MOUSE_MOVE, mouse_in_radar);
+                break;
+
+            case ACTION_ION_CANNON:
+                Set_Default_Mouse(MOUSE_MOVE, mouse_in_radar);
+                break;
+
+            case ACTION_NO_MOVE:
+                if (CurrentObjects.Count() == 0 || CurrentObjects.Fetch_Head()->What_Am_I() != RTTI_AIRCRAFT) {
+                    Set_Default_Mouse(MOUSE_MOVE, mouse_in_radar);
+                } else {
+                    Set_Default_Mouse(MOUSE_CANT_MOVE, mouse_in_radar); 
+                }
+                break;
+
+            case ACTION_REPAIR:
+                Set_Default_Mouse(MOUSE_CANT_REPAIR, mouse_in_radar);
+                break;
+
+            case ACTION_NO_REPAIR:
+                Set_Default_Mouse(MOUSE_CANT_REPAIR, mouse_in_radar);
+                break;
+
+            case ACTION_SELL:
+            case ACTION_SELL_UNIT:
+            case ACTION_NO_SELL:
+                Set_Default_Mouse(MOUSE_CANT_SELL, mouse_in_radar);
+                break;
+
+            case ACTION_PARA_BOMB:
+            case ACTION_PARA_SABOTEUR:
+            case ACTION_AIR_STRIKE:
+            case ACTION_IRON_CURTAIN:
+            case ACTION_SPY_MISSION:
+                Set_Default_Mouse(MOUSE_AIR_STRIKE, mouse_in_radar);
+                break;
+
+            case ACTION_NUKE:
+                Set_Default_Mouse(MOUSE_NUKE, mouse_in_radar);
+                break;
+
+            case ACTION_CHRONOSPHERE:
+                Set_Default_Mouse(MOUSE_CHRONOSPHERE, mouse_in_radar);
+                break;
+
+            case ACTION_CHRONOWARP:
+                Set_Default_Mouse(MOUSE_CHRONO2, mouse_in_radar);
+                break;
+
+            case ACTION_GUARD_AREA:
+                Set_Default_Mouse(MOUSE_GUARD_AREA, mouse_in_radar);
+                break;
+
+            case ACTION_HEAL:
+                Set_Default_Mouse(MOUSE_HEAL, mouse_in_radar);
+                break;
+
+            case ACTION_DAMAGE:
+                Set_Default_Mouse(MOUSE_POINTER, mouse_in_radar);
+                break;
+
+            case ACTION_GREPAIR:
+                Set_Default_Mouse(MOUSE_POINTER, mouse_in_radar);
+                break;
+
+            case ACTION_NO_DEPLOY:
+                Set_Default_Mouse(MOUSE_CANT_DEPLOY, mouse_in_radar);
+                break;
+
+            case ACTION_NO_ENTER:
+                Set_Default_Mouse(MOUSE_CANT_ENTER, mouse_in_radar);
+                break;
+
+            case ACTION_NO_GREPAIR:
+                Set_Default_Mouse(MOUSE_CANT_GREPAIR, mouse_in_radar);
+                break;
+
+            default:
+                Set_Default_Mouse(MOUSE_MOVE, mouse_in_radar);
+                break;
+        }
+
+    } else {
+        switch (action) {
+            default:
+            case ACTION_NONE:
+                Set_Default_Mouse(MOUSE_POINTER, mouse_in_radar);
+                break;
+
+            case ACTION_NO_DEPLOY:
+                Set_Default_Mouse(MOUSE_CANT_DEPLOY, mouse_in_radar);
+                break;
+
+            case ACTION_NO_ENTER:
+                Set_Default_Mouse(MOUSE_CANT_ENTER, mouse_in_radar);
+                break;
+
+            case ACTION_NO_GREPAIR:
+                Set_Default_Mouse(MOUSE_CANT_GREPAIR, mouse_in_radar);
+                break;
+
+            case ACTION_NO_REPAIR:
+                Set_Default_Mouse(MOUSE_CANT_REPAIR, mouse_in_radar);
+                break;
+
+            case ACTION_NO_SELL:
+                Set_Default_Mouse(MOUSE_CANT_SELL, mouse_in_radar);
+                break;
+
+            case ACTION_PARA_BOMB:
+            case ACTION_PARA_SABOTEUR:
+            case ACTION_AIR_STRIKE:
+            case ACTION_IRON_CURTAIN:
+            case ACTION_SPY_MISSION:
+                Set_Default_Mouse(MOUSE_AIR_STRIKE, mouse_in_radar);
+                break;
+
+            case ACTION_MOVE:
+                Set_Default_Mouse(MOUSE_MOVE, mouse_in_radar);
+                break;
+
+            case ACTION_DAMAGE:
+                Set_Default_Mouse(MOUSE_DAMAGE, mouse_in_radar);
+                break;
+
+            case ACTION_GREPAIR:
+                Set_Default_Mouse(MOUSE_GREPAIR, mouse_in_radar);
+                break;
+
+            case ACTION_SELECT:
+            case ACTION_TOGGLE_SELECT:
+                Set_Default_Mouse(MOUSE_SELECT, mouse_in_radar);
+                break;
+
+            case ACTION_GUARD_AREA:
+                Set_Default_Mouse(MOUSE_GUARD_AREA, mouse_in_radar);
+                break;
+
+            case ACTION_ATTACK:
+                if (Target_Legal(target)) {
+                    if (CurrentObjects.Count() == 1) {
+                        if (CurrentObjects.Fetch_Head()->Is_Techno() && reinterpret_cast<TechnoClass *>(CurrentObjects.Fetch_Head())->In_Range(target)) {
+                            Set_Default_Mouse(MOUSE_ATTACK2, mouse_in_radar);
+                            break;
+                        }
+                    }
+                }
+                Set_Default_Mouse(MOUSE_ATTACK, mouse_in_radar);
+                break;
+
+            case ACTION_HARVEST:
+                Set_Default_Mouse(MOUSE_ATTACK, mouse_in_radar);
+                break;
+
+            case ACTION_SABOTAGE:
+                Set_Default_Mouse(MOUSE_SABOTAGE, mouse_in_radar);
+                break;
+
+            case ACTION_ENTER:
+            case ACTION_CAPTURE:
+                Set_Default_Mouse(MOUSE_ENTER, mouse_in_radar);
+                break;
+
+            case ACTION_NO_MOVE:
+                Set_Default_Mouse(MOUSE_CANT_MOVE, mouse_in_radar);
+                break;
+
+            case ACTION_SELF:
+                Set_Default_Mouse(MOUSE_DEPLOY, mouse_in_radar);
+                break;
+
+            case ACTION_REPAIR:
+                Set_Default_Mouse(MOUSE_REPAIR, mouse_in_radar);
+                break;
+
+            case ACTION_SELL_UNIT:
+                Set_Default_Mouse(MOUSE_SELL_UNIT, mouse_in_radar);
+                break;
+
+            case ACTION_SELL:
+                Set_Default_Mouse(MOUSE_SELL, mouse_in_radar);
+                break;
+
+            case ACTION_NUKE:
+                Set_Default_Mouse(MOUSE_NUKE, mouse_in_radar);
+                break;
+
+            case ACTION_CHRONOSPHERE:
+                Set_Default_Mouse(MOUSE_CHRONOSPHERE, mouse_in_radar);
+                break;
+
+            case ACTION_CHRONOWARP:
+                Set_Default_Mouse(MOUSE_CHRONO2, mouse_in_radar);
+                break;
+
+            case ACTION_HEAL:
+                Set_Default_Mouse(MOUSE_HEAL, mouse_in_radar);
+                break;
+        };
+    }
+
+    if (!mouse_in_radar) {
+        int text = TXT_NULL;
+        uint8_t color = COLOR_TBLACK;
+
+        if (cell_shrouded) {
+            color = COLOR_YELLOW;
+            text = TXT_SHADOW;
+        } else if (object != nullptr) {
+            if (g_PlayerPtr->Is_Ally(object)) {
+                color = COLOR_GREEN;
+            } else if (object->Owner() != HOUSES_NONE && object->Owner() != HOUSES_NEUTRAL) {
+                color = COLOR_PINK;
+            } else {
+                color = COLOR_LTGREY;
+            }
+
+            text = object->Full_Name();
+
+            if (object->Is_Techno()) {
+                TechnoClass *tptr = reinterpret_cast<TechnoClass *>(object);
+
+                if (!reinterpret_cast<const TechnoTypeClass &>(tptr->Class_Of()).Is_Nominal()) {
+                    if (!tptr->Get_Owner_House()->Is_Ally(g_PlayerPtr)) {
+                        switch (tptr->What_Am_I()) {
+                            case RTTI_BUILDING:
+                                text = TXT_ENEMY_STRUCTURE;
+                                break;
+
+                            case RTTI_INFANTRY:
+                                text = TXT_ENEMY_SOLDIER;
+                                break;
+
+                            // BUGFIX, seems RA doesnt handle aircraft or vessels? They display full name?
+                            case RTTI_UNIT:
+                            case RTTI_VESSEL:
+                            case RTTI_AIRCRAFT:
+                                text = TXT_ENEMY_VEHICLE;
+                                break;
+
+                            default:
+                                break;
+                        };
+                    }
+                }
+            }
+
+            if (object->What_Am_I() == RTTI_TERRAIN) {
+                color = COLOR_LTGREY;
+            }
+        } else {
+            CellClass &cell = Array[cellnum];
+
+            if (cell.Get_Land() == LAND_ORE) {
+                color = COLOR_YELLOW;
+                text = TXT_VALUABLE_MINERALS;
+            }
+        }
+
+        Help_Text(text, -1, -1, color);
+    }
 }
 
 void DisplayClass::Mouse_Left_Held(int mouse_x, int mouse_y)
