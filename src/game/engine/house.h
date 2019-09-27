@@ -103,7 +103,7 @@ public:
     const char *Get_Name() const { return m_Type->Get_Name(); }
     void Harvested(unsigned amount);
     void Stole(unsigned amount) { m_Stolen += amount; }
-    unsigned Available_Money() const { return m_Credits + m_Ore; }
+    int Available_Money() const { return m_Credits + m_Ore; }
     void Spend_Money(unsigned amount);
     int Adjust_Capacity(int amount, BOOL cap);
     void Refund_Money(unsigned amount) { m_Credits += amount; }

@@ -59,7 +59,7 @@ class TabClass : public SidebarClass
         CreditClass(const NoInitClass &noinit) {}
 
         void Graphic_Logic(BOOL force_redraw = false);
-        void AI(BOOL a1 = false);
+        void AI(BOOL force_update = false);
         void Set_Available(int avail) { Available = avail; }
 
     protected:
@@ -74,7 +74,7 @@ class TabClass : public SidebarClass
         bool CreditHasIncreased;
         bool CreditHasChanged;
 #endif
-        int field_C;
+        int TicksToNextRecalc;
     };
 
 public:
