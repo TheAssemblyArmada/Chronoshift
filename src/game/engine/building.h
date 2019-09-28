@@ -1,31 +1,31 @@
 /**
-* @file
-*
-* @author CCHyper
-* @author OmniBlade
-*
-* @brief 
-*
-* @copyright Chronoshift is free software: you can redistribute it and/or
-*            modify it under the terms of the GNU General Public License
-*            as published by the Free Software Foundation, either version
-*            2 of the License, or (at your option) any later version.
-*            A full copy of the GNU General Public License can be found in
-*            LICENSE
-*/
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ *
+ * @brief
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef BUILDING_H
 #define BUILDING_H
 
 #include "always.h"
-#include "techno.h"
 #include "buildingtype.h"
 #include "factory.h"
+#include "techno.h"
 
 class BuildingClass : public TechnoClass
 {
-    public:
+public:
     BuildingClass(RTTIType type, int id, HousesType house);
     BuildingClass(const BuildingClass &that);
     BuildingClass(const NoInitClass &noinit);
@@ -57,13 +57,13 @@ private:
     bool m_Bit16;
 #endif
     TCountDownTimerClass<FrameTimerClass> m_C4FuseTimer;
-    BStateType m_field_E3;
-    BStateType m_field_E4;
-    HousesType m_field_E5;
-    target_t m_field_E6;
+    BStateType m_CurrentState;
+    BStateType m_NextState; // name is subject to change after researching
+    HousesType m_LastAttackedBy; // house that last attacked this building, this is kept track for scoring purposes
+    target_t m_SabotagedBy; // what sabotaged this building
     int m_field_EA;
-    target_t m_field_EE;
-    TCountDownTimerClass<FrameTimerClass> m_field_F2;
+    target_t m_AttachedAnim; // currently attached animation, seems to be only used for SPUTDOOR
+    TCountDownTimerClass<FrameTimerClass> m_PlacementDelayTimer;
 };
 
 #ifdef GAME_DLL
