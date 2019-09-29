@@ -159,6 +159,9 @@ public:
     void Set_Land(LandType land) { Land = land; }
     uint16_t Get_Field_A() const { return field_A; }
     static int Spot_Index(coord_t coord);
+    void Adjust_Threat(HousesType house, int threat);
+    void Shimmer();
+    void Incoming(coord_t coord, BOOL a2 = false, BOOL a3 = false);
 
 #ifdef GAME_DLL
 public:
