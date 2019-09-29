@@ -559,6 +559,13 @@ void Setup_Hooks()
     Hook_Function(0x0049F0D8, *CellClass::Hook_Cell_Object);
     Hook_Function(0x0049F314, *CellClass::Recalc_Attributes);
     Hook_Function(0x004A1B0C, *CellClass::Hook_Is_Clear_To_Move);
+    // Hook_Function(0x004A1E40, *CellClass::Can_Ore_Germinate);
+    Hook_Function(0x0049F10C, *CellClass::Redraw_Objects);
+    Hook_Function(0x0049F590, *CellClass::Overlap_Up);
+    // Hook_Function(0x0049FC58, *CellClass::Wall_Update);//crashes
+    Hook_Function(0x004A0230, *CellClass::Adjust_Threat);
+    Hook_Function(0x004A1AE4, *CellClass::Shimmer);
+    Hook_Function(0x004A013C, *CellClass::Incoming);
 
     // door.h
     Hook_Function(0x004B5C40, *DoorClass::AI);

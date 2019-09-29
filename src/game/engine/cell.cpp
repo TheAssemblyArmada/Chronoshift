@@ -15,6 +15,7 @@
  */
 #include "cell.h"
 #include "aircraft.h"
+#include "building.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "gamedebug.h"
@@ -37,6 +38,7 @@
 #include "tracker.h"
 #include <algorithm>
 
+// clang-format off
 const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
     0x00800080,     // abs center of cell                       //INFANTRY_SPOT_CENTER
     0x00400040,     // center of top left quadrant of cell      //INFANTRY_SPOT_TOP_LEFT
@@ -44,6 +46,7 @@ const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
     0x00C00040,     // center of bottom left quadrant of cell   //INFANTRY_SPOT_BOTTOM_LEFT
     0x00C000C0      // center of bottom right quadrant of cell  //INFANTRY_SPOT_BOTTOM_RIGHT
 };
+// clang-format on
 
 CellClass::CellClass() :
     CellNumber(Map.Cell_Number(this)),
@@ -319,37 +322,29 @@ BOOL CellClass::Can_Ore_Spread() const
  */
 BOOL CellClass::Can_Ore_Germinate() const
 {
-    // TODO Needs BuildingClass.
-#ifdef GAME_DLL
-    BOOL (*func)(const CellClass *) = reinterpret_cast<BOOL (*)(const CellClass *)>(0x004A1E40);
-    return func(this);
-#elif 0
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
-    if (Map.In_Radar(CellNumber)) {
-        if (Is_Bridge_Here()) {
-            return false;
-        }
-
-        BuildingClass *bptr = Cell_Building();
-
-        // IsInvisible needs double checking
-        // TS has this checking for "InvisibleInGame", that internally toggles;
-        // IsInvisible to true;
-        // IsRadarVisible to false;
-        // in Read_INI() (TS of course).
-
-        if (bptr == nullptr || bptr->Class_Of().IsInvisible) {
-            if (GroundClass::Ground[Land].Is_Buildable()) {
-                return Overlay == OVERLAY_NONE;
-            }
-        }
+    if (!Map.In_Radar(CellNumber)) {
+        return false;
+    }
+    if (Is_Bridge_Here()) {
+        return false;
     }
 
+    BuildingClass *bptr = Cell_Building();
+
+    // IsInvisible needs double checking
+    // TS has this checking for "InvisibleInGame", that internally toggles;
+    // IsInvisible to true;
+    // IsRadarVisible to false;
+    // in Read_INI() (TS of course).
+    if (bptr != nullptr && reinterpret_cast<const BuildingTypeClass &>(bptr->Class_Of()).Is_Invisible()) {
+        return false;
+    }
+    if (Ground[Land].Is_Buildable()) {
+        return Overlay == OVERLAY_NONE;
+    }
     return false;
-#else
-    return false;
-#endif
 }
 
 /**
@@ -482,11 +477,6 @@ BOOL CellClass::Is_Bridge_Here() const
  */
 void CellClass::Redraw_Objects(BOOL force)
 {
-    // TODO Requires DisplayClass and RadarClass layers of IOMap hierachy.
-#ifdef GAME_DLL
-    void (*func)(const CellClass *, BOOL) = reinterpret_cast<void (*)(const CellClass *, BOOL)>(0x0049F10C);
-    func(this, force);
-#elif 0
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
     // Check if we are even visible first, then check if already flagged for a redraw.
@@ -497,19 +487,29 @@ void CellClass::Redraw_Objects(BOOL force)
             // Loop through occupiers and if active mark them for redraw.
             for (ObjectClass *optr = OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
                 DEBUG_ASSERT(optr->Is_Active());
+                if (!optr->Is_Active()) {
+                    break;
+                }
                 optr->Mark(MARK_REDRAW);
+                ObjectClass *next = optr->Get_Next();
+                if (next != nullptr && !next->Is_Active()) {
+                    optr->Set_Next(nullptr);
+                }
             }
 
             // Loop through overlappers and if active mark them for redraw.
-            for (int j = 0; j < ARRAY_SIZE(Overlapper); ++j) {
-                if (Overlapper[j] != nullptr) {
-                    DEBUG_ASSERT(Overlapper[j]->Is_Active());
-                    Overlapper[j]->Mark(MARK_REDRAW);
+            for (int i = 0; i < ARRAY_SIZE(Overlapper); ++i) {
+                if (Overlapper[i] != nullptr) {
+                    DEBUG_ASSERT(Overlapper[i]->Is_Active());
+                    if (Overlapper[i]->Is_Active()) {
+                        Overlapper[i]->Mark(MARK_REDRAW);
+                    } else {
+                        Overlapper[i] = nullptr;
+                    }
                 }
             }
         }
     }
-#endif
 }
 
 /**
@@ -533,7 +533,8 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
         return false;
     }
 
-    if ((Overlay != OVERLAY_NONE && OverlayFrame != -1) && (!g_inMapEditor || Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(Overlay).Is_Wall())) {
+    if ((Overlay != OVERLAY_NONE && OverlayFrame != -1)
+        && (!g_inMapEditor || Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(Overlay).Is_Wall())) {
         return false;
     }
 
@@ -743,12 +744,6 @@ void CellClass::Overlap_Down(ObjectClass *object)
  */
 void CellClass::Overlap_Up(ObjectClass *object)
 {
-    // TODO Requires RadarClass layer of IOMap hierachy.
-#ifdef GAME_DLL
-    void (*func)(const CellClass *, ObjectClass *) =
-        reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F590);
-    func(this, object);
-#elif 0
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
     DEBUG_ASSERT(object->Is_Active());
 
@@ -762,7 +757,6 @@ void CellClass::Overlap_Up(ObjectClass *object)
     if (g_inMapEditor) {
         Map.Radar_Pixel(CellNumber);
     }
-#endif
 }
 
 /**
@@ -783,11 +777,11 @@ int CellClass::Clear_Icon() const
  */
 void CellClass::Draw_It(int x, int y, BOOL flag) const
 {
-/*#ifdef GAME_DLL
-    void (*func)(const CellClass *, int, int, BOOL) =
-        reinterpret_cast<void (*)(const CellClass *, int, int, BOOL)>(0x0049F5F8);
-    func(this, x, y, unk_bool);
-#elif 0*/
+    /*#ifdef GAME_DLL
+        void (*func)(const CellClass *, int, int, BOOL) =
+            reinterpret_cast<void (*)(const CellClass *, int, int, BOOL)>(0x0049F5F8);
+        func(this, x, y, unk_bool);
+    #elif 0*/
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
     int icon_num;
@@ -882,9 +876,8 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             int placement_icon = PLACEMENT_CLEAR;
 
             // TODO this is an enhancement to make unit occupied cells yellow rather than red.
-            /*if (!Map.Passed_Proximity_Check() && Get_Occupier() != nullptr && Get_Occupier()->What_Am_I() != RTTI_BUILDING) {
-                placement_icon = PLACEMENT_YELLOW;
-            } else if (!Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
+            /*if (!Map.Passed_Proximity_Check() && Get_Occupier() != nullptr && Get_Occupier()->What_Am_I() != RTTI_BUILDING)
+            { placement_icon = PLACEMENT_YELLOW; } else if (!Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
                 placement_icon = PLACEMENT_RED;
             }*/
 
@@ -933,11 +926,9 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 }
             }
 #endif
-
         }
 
         if (HasFlag) {
-
             void *flag_shape = GameFileClass::Retrieve("FLAGFLY.SHP");
 
             // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
@@ -948,8 +939,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             int flag_x = x + (Get_Build_Frame_Width(flag_shape) / 2) + 1;
             int flag_y = y + (Get_Build_Frame_Height(flag_shape) / 2) + 1;
 
-            CC_Draw_Shape(
-                flag_shape,
+            CC_Draw_Shape(flag_shape,
                 flag_frame,
                 flag_x,
                 flag_y,
@@ -959,7 +949,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 DisplayClass::UnitShadow);
         }
     }
-//#endif
+    //#endif
 }
 
 /**
@@ -1268,7 +1258,7 @@ int CellClass::Ore_Adjust(BOOL randomize)
         }
 
         // This is done in edwin but not final game?
-        //if (OverlayFrame != frame) {
+        // if (OverlayFrame != frame) {
         //    Redraw_Objects();
         //}
 
@@ -1285,6 +1275,7 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
+    // clang-format off
     static char _sequence[][4] = {
         { 1, 2, 3, 4 },
         { 0, 2, 3, 4 },
@@ -1299,6 +1290,7 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
         { 3, 4, 1, 2 },
         { 4, 1, 2, 3 }
     };
+    // clang-format on
 
     int spotindex = Spot_Index(coord);
 
@@ -1307,7 +1299,7 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
         return 0;
     }
 
-    //If our intended spot is free or we are skipping occupied, return it.
+    // If our intended spot is free or we are skipping occupied, return it.
     if (skip_occupied || Is_Spot_Free(spotindex)) {
         return Coord_Add(coord, StoppingCoordAbs[spotindex]);
     }
@@ -1418,4 +1410,56 @@ BOOL CellClass::Load(Straw &straw)
 BOOL CellClass::Save(Pipe &pipe) const
 {
     return pipe.Put(this, sizeof(*this)) == sizeof(*this);
+}
+
+/**
+ * @brief
+ *
+ * 0x004A0230
+ */
+void CellClass::Adjust_Threat(HousesType house, int threat)
+{
+    int region = Map.Cell_Region(CellNumber);
+    for (HousesType i = HOUSES_FIRST; i < HOUSES_COUNT; ++i) {
+        if (i != house) {
+            HouseClass *hptr = HouseClass::As_Pointer(i);
+            if (hptr != nullptr) {
+                if (!hptr->Is_Human() || !hptr->Is_Ally(house)) {
+                    hptr->Adjust_Threat(region, threat);
+                }
+            }
+        }
+    }
+    if (g_Debug_Threat) {
+        Map.Flag_To_Redraw(true);
+    }
+}
+
+/**
+ * @brief
+ *
+ * 0x004A1AE4
+ */
+void CellClass::Shimmer()
+{
+    for (ObjectClass *optr = OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
+        optr->Do_Shimmer();
+    }
+}
+
+/**
+ * @brief
+ *
+ * 0x004A013C
+ */
+void CellClass::Incoming(coord_t coord, BOOL a2, BOOL a3)
+{
+    for (ObjectClass *optr = OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
+        if (a3 || Rule.Player_Scatter()
+            || (optr->Is_Techno()
+                && Rule.IQ_Controls().Scatter
+                    <= reinterpret_cast<TechnoClass *>(optr)->Get_Owner_House()->Get_Current_IQ())) {
+            optr->Scatter(coord, a2, a3);
+        }
+    }
 }
