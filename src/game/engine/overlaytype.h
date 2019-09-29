@@ -64,7 +64,7 @@ enum OverlayType
     OVERLAY_STEEL_CRATE = 22,
 
     // Barbwire fence
-    OVERLAY_FENC = 23,
+    OVERLAY_FENCE = 23,
 
     // Water wooden crate
     OVERLAY_WATER_WOOD_CRATE = 24,

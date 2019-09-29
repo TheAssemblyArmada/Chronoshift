@@ -411,7 +411,7 @@ BOOL CellClass::Spread_Ore(BOOL force)
 CellClass &CellClass::Adjacent_Cell(FacingType facing)
 {
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
-    DEBUG_ASSERT(facing < FACING_COUNT);
+    // DEBUG_ASSERT(facing < FACING_COUNT);
 
     static const cell_t AdjacentCell[FACING_COUNT] = {
         (-MAP_MAX_WIDTH), // NORTH
@@ -424,7 +424,7 @@ CellClass &CellClass::Adjacent_Cell(FacingType facing)
         (-MAP_MAX_WIDTH - 1) // NORTH WEST
     };
 
-    if (facing != FACING_NONE && facing < FACING_COUNT) {
+    if (facing < FACING_COUNT) {
         DEBUG_ASSERT_PRINT(uint16_t(CellNumber + AdjacentCell[facing]) <= MAP_MAX_AREA,
             "Attempting to get adjacent cell outside valid map.\n");
 
@@ -992,9 +992,7 @@ void CellClass::Wall_Update()
 
             // Identify neighbour cells that are the same overlay.
             for (int j = 0; j < ARRAY_SIZE(_offsets) - 1; ++j) {
-                CellClass &neighbour = adjcell.Adjacent_Cell(_offsets[j]);
-
-                if (neighbour.Overlay == adjcell.Overlay) {
+                if (adjcell.Adjacent_Cell(_offsets[j]).Overlay == adjcell.Overlay) {
                     neighbour_mask |= (1 << j);
                 }
             }
@@ -1004,43 +1002,49 @@ void CellClass::Wall_Update()
             // above.
             adjcell.OverlayFrame = (adjcell.OverlayFrame & 0xF0) | neighbour_mask;
 
+            // OverlayFrame checked against here are blanks in the art
+            // Frame 48 for BRIK is after the first damage state set
             if (adjcell.Overlay == OVERLAY_BRICK_WALL && adjcell.OverlayFrame == 48) {
-                adjcell.OverlayFrame = -1;
+                adjcell.OverlayFrame = 0;
                 adjcell.Overlay = OVERLAY_NONE;
                 adjcell.OwnerHouse = HOUSES_NONE; // C&C DOS sets this, bug fix perhaps?
-                Detach_This_From_All(As_Target(CellNumber), 1);
+                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
             }
 
+            // Frame 16 for SBAG is after the nondamaged set
             if (adjcell.Overlay == OVERLAY_SANDBAG && adjcell.OverlayFrame == 16) {
-                adjcell.OverlayFrame = -1;
+                adjcell.OverlayFrame = 0;
                 adjcell.Overlay = OVERLAY_NONE;
                 adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(CellNumber), 1);
+                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
             }
 
+            // Frame 32 for CYCL is after the first damage state set
             if (adjcell.Overlay == OVERLAY_CYCLONE_FENCE && OverlayFrame == 32) {
-                adjcell.OverlayFrame = -1;
+                adjcell.OverlayFrame = 0;
                 adjcell.Overlay = OVERLAY_NONE;
                 adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(CellNumber), 1);
+                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
             }
 
-            if (adjcell.Overlay == OVERLAY_FENC && (adjcell.OverlayFrame == 16 || adjcell.OverlayFrame == 32)) {
-                adjcell.OverlayFrame = -1;
+            // Frame 16 for FENC is after the nondamaged set, on a 0 basis frame 32 doesn't exist, some hack for older art?
+            if (adjcell.Overlay == OVERLAY_FENCE && (adjcell.OverlayFrame == 16 || adjcell.OverlayFrame == 32)) {
+                adjcell.OverlayFrame = 0;
                 adjcell.Overlay = OVERLAY_NONE;
                 adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(CellNumber), 1);
+                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
             }
 
+            // Frame 16 for SBAG is after the nondamaged set
             if (adjcell.Overlay == OVERLAY_BARB_WIRE && adjcell.OverlayFrame == 16) {
-                adjcell.OverlayFrame = -1;
+                adjcell.OverlayFrame = 0;
                 adjcell.Overlay = OVERLAY_NONE;
                 adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(CellNumber), 1);
+                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
             }
 
             adjcell.Recalc_Attributes();
-            adjcell.Redraw_Objects(false);
+            adjcell.Redraw_Objects();
         }
     }
 }

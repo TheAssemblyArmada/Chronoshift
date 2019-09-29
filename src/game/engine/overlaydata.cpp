@@ -33,7 +33,7 @@
  * A13
  * Wall
  * Crate
- * 
+ *
  */
 
 const OverlayTypeClass OverlaySandbag(
@@ -52,7 +52,7 @@ const OverlayTypeClass OverlayWood(
     OVERLAY_WOOD_FENCE, "WOOD", TXT_WOOD_WALL, LAND_WALL, 1, 2, true, true, true, true, false, false, false, true, false);
 
 const OverlayTypeClass OverlayFence(
-    OVERLAY_FENC, "FENC", TXT_FENC, LAND_WALL, 2, 10, true, false, true, true, false, false, false, true, false);
+    OVERLAY_FENCE, "FENC", TXT_FENCE, LAND_WALL, 2, 10, true, false, true, true, false, false, false, true, false);
 
 const OverlayTypeClass OverlayGold1(
     OVERLAY_GOLD_01, "GOLD01", TXT_GOLD, LAND_ORE, 0, 0, true, false, false, false, true, false, true, false, false);

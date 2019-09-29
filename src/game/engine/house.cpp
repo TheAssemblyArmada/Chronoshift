@@ -16,6 +16,7 @@
 #include "house.h"
 #include "aircraft.h"
 #include "building.h"
+#include "coord.h"
 #include "display.h"
 #include "foot.h"
 #include "gameini.h"
@@ -25,7 +26,6 @@
 #include "infantry.h"
 #include "iomap.h"
 #include "logic.h"
-#include "coord.h"
 #include "remap.h"
 #include "rules.h"
 #include "scenario.h"
@@ -36,6 +36,7 @@
 #include "vessel.h"
 #include <algorithm>
 #include <cstdio>
+
 
 using std::max;
 using std::min;
@@ -1026,8 +1027,8 @@ int *HouseClass::Factory_Counter(RTTIType type)
 int HouseClass::Factory_Count(RTTIType type)
 {
     int *counter = Factory_Counter(type);
-    
-    return counter != nullptr? *counter : 0;
+
+    return counter != nullptr ? *counter : 0;
 }
 
 /**
@@ -1189,7 +1190,7 @@ void HouseClass::Sell_Wall(cell_t cellnum)
                         bptr = &BuildingTypeClass::As_Reference(BUILDING_WOOD);
                         break;
 
-                    case OVERLAY_FENC:
+                    case OVERLAY_FENCE:
                         bptr = &BuildingTypeClass::As_Reference(BUILDING_FENC);
                         break;
 

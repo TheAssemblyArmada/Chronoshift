@@ -438,7 +438,7 @@ enum TextEnum
     TXT_BADGER = 400, // Badger Bomber
     TXT_MIG = 401, // Mig Attack Plane
     TXT_YAK = 402, // Yak Attack Plane
-    TXT_FENC = 403, // Barbed Wire
+    TXT_FENCE = 403, // Barbed Wire
     TXT_MEDIC = 404, // Field Medic
     TXT_SABOTEUR = 405, // Saboteur
     TXT_GENERAL = 406, // General
