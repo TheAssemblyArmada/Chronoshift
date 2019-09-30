@@ -151,6 +151,7 @@ public:
     SmudgeType Get_Smudge() const { return Smudge; }
     void Set_Smudge(SmudgeType smudge) { Smudge = smudge; }
     uint8_t Get_Smudge_Frame() const { return SmudgeFrame; }
+    void Set_Smudge_Frame(int8_t frame) { SmudgeFrame = frame; }
     HousesType Owner() const { return OwnerHouse; }
     void Set_Owner(HousesType owner) { OwnerHouse = owner; }
     ObjectClass *Get_Overlapper(int index) { return Overlapper[index]; }

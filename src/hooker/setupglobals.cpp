@@ -313,6 +313,7 @@ class GameOptionsClass;
 GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
 
 // gameptr.cpp
+#include "template.h"
 #include "terraintype.h"
 #include "unittype.h"
 #include "vesseltype.h"
@@ -346,6 +347,8 @@ template<>
 FixedIHeapClass *const GamePtr<TeamClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DAC4);
 template<>
 FixedIHeapClass *const GamePtr<TeamTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DB10);
+template<>
+FixedIHeapClass *const GamePtr<TemplateClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DB5C);
 template<>
 FixedIHeapClass *const GamePtr<TemplateTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DF84);
 template<>
@@ -528,6 +531,9 @@ void *&TechnoTypeClass::MGunShapes = Make_Global<void *>(0x0068D2E8);
 
 // templatetype.cpp
 TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes = Make_Global<TFixedIHeapClass<TemplateTypeClass> >(0x0065DF84);
+
+// template.cpp
+TFixedIHeapClass<TemplateClass> &g_Templates = Make_Global<TFixedIHeapClass<TemplateClass> >(0x0065DB5C);
 
 // terraintype.cpp
 TFixedIHeapClass<TerrainTypeClass> &g_TerrainTypes = Make_Global<TFixedIHeapClass<TerrainTypeClass> >(0x0065DFD0);

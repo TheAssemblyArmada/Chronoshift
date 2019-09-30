@@ -94,6 +94,7 @@
 #include "team.h"
 #include "teamtype.h"
 #include "techno.h"
+#include "template.h"
 #include "textbtn.h"
 #include "textprint.h"
 #include "toggle.h"
@@ -847,6 +848,9 @@ void Setup_Hooks()
 
     // special.h
     Hook_Function(0x00550DE0, *SpecialClass::Init);
+
+    // template.h
+    Hook_Function(0x00550DE0, *TemplateClass::Mark);
 #endif
 }
 
