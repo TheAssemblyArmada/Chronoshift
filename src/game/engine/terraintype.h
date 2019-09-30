@@ -93,6 +93,11 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+    uint32_t Get_Theater() const { return Theater; }
+    TerrainType Get_Type() const { return Type; }
+    coord_t Get_UnkCoord() const { return UnkCoord; }
+    bool Is_Waterbound() const { return WaterBound; }
+
     static void Init_Heap();
     static void One_Time() {}
     static void Init(TheaterType theater);
@@ -103,7 +108,7 @@ public:
 
 public:
     TerrainType Type; 
-    uint32_t UnkInt; // Object bounds perhaps, packed coord?
+    coord_t UnkCoord; // Object bounds perhaps
     uint32_t Theater; // Bitfield of which theaters this terrain is allowed to appear in.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL WaterBound : 1; // & 1

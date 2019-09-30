@@ -37,7 +37,7 @@ TerrainTypeClass::TerrainTypeClass(TerrainType type, int theater, uint32_t a3, B
     const char *name, int uiname, const int16_t *occupy_list, const int16_t *overlap_list) :
     ObjectTypeClass(RTTI_TERRAINTYPE, type, true, true, false, false, true, immune, true, uiname, name),
     Type(type),
-    UnkInt(a3),
+    UnkCoord(a3),
     Theater(theater),
     WaterBound(waterbound),
     OccupyList(occupy_list),
@@ -54,7 +54,7 @@ TerrainTypeClass::TerrainTypeClass(TerrainType type, int theater, uint32_t a3, B
 TerrainTypeClass::TerrainTypeClass(TerrainTypeClass const &that) :
     ObjectTypeClass(that),
     Type(that.Type),
-    UnkInt(that.UnkInt),
+    UnkCoord(that.UnkCoord),
     Theater(that.Theater),
     WaterBound(that.WaterBound),
     OccupyList(that.OccupyList),

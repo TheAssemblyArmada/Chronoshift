@@ -112,6 +112,7 @@ public:
     void Invalidate_Attached_Trigger() { m_AttachedTrigger = nullptr; }
     BOOL In_Limbo() const { return m_InLimbo; }
     int16_t Get_Health() const { return m_Health; }
+    void Set_Health(int16_t health) { m_Health = health; }
 
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);

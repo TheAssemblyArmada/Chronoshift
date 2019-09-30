@@ -144,6 +144,7 @@ set(GAMEENGINE_SRC
     game/engine/templatedata.cpp
     game/engine/template.cpp
     game/engine/templatetype.cpp
+    game/engine/terrain.cpp
     game/engine/terraindata.cpp
     game/engine/terraintype.cpp
     game/engine/theater.cpp
