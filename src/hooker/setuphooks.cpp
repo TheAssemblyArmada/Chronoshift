@@ -95,6 +95,7 @@
 #include "teamtype.h"
 #include "techno.h"
 #include "template.h"
+#include "terrain.h"
 #include "textbtn.h"
 #include "textprint.h"
 #include "toggle.h"
@@ -855,6 +856,23 @@ void Setup_Hooks()
     // coord.h
     Hook_Function(0x004AC46C, static_cast<const int16_t *(*)(coord_t, int)>(&Coord_Spillage_List));
     Hook_Function(0x004AC630, static_cast<const int16_t *(*)(coord_t, const TRect<int> &, BOOL)>(&Coord_Spillage_List));
+
+    // terrain.h
+    Hook_Function(0x0056AB98, *TerrainClass::Hook_Center_Coord);
+    Hook_Function(0x0056AC98, *TerrainClass::Hook_Target_Coord);
+    Hook_Function(0x0056A668, *TerrainClass::Hook_Can_Enter_Cell);
+    Hook_Function(0x0056A91C, *TerrainClass::AI);
+    Hook_Function(0x004CDCA0, *TerrainClass::Hook_Sort_Y);
+    Hook_Function(0x0056AB58, *TerrainClass::Limbo);
+    Hook_Function(0x0056AAB4, *TerrainClass::Unlimbo);
+    Hook_Function(0x0056A5AC, *TerrainClass::Hook_Draw_It);
+    Hook_Function(0x0056A510, *TerrainClass::Mark);
+    Hook_Function(0x0057AAE8, *TerrainClass::Take_Damage);
+    Hook_Function(0x0056A734, *TerrainClass::Catch_Fire);
+    Hook_Function(0x0056A854, *TerrainClass::Fire_Out);
+    Hook_Function(0x0056AB08, *TerrainClass::Start_To_Crumble);
+    Hook_Function(0x0056ABF0, *TerrainClass::Hook_Radar_Icon);
+
 #endif
 }
 
@@ -919,6 +937,8 @@ ASSERT_SIZEOF(TeamClass, 0x5D);
 ASSERT_SIZEOF(TeamTypeClass, 0xD1);
 ASSERT_SIZEOF(TechnoClass, 0xCD);
 ASSERT_SIZEOF(TechnoTypeClass, 0x192);
+ASSERT_SIZEOF(TemplateClass, 0x2B);
+ASSERT_SIZEOF(TerrainClass, 0x40);
 ASSERT_SIZEOF(TerrainTypeClass, 0x14D);
 ASSERT_SIZEOF(TextButtonClass, 0x3A);
 ASSERT_SIZEOF(ToggleClass, 0x30);
