@@ -142,6 +142,7 @@ set(GAMEENGINE_SRC
     game/engine/team.cpp
     game/engine/teamtype.cpp
     game/engine/templatedata.cpp
+    game/engine/template.cpp
     game/engine/templatetype.cpp
     game/engine/terraindata.cpp
     game/engine/terraintype.cpp

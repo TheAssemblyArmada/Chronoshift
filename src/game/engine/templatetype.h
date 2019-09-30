@@ -462,6 +462,8 @@ public:
     int Get_Width() { return Width; }
     int Get_Height() { return Height; }
 
+    TemplateType Get_Type() const { return Type; }
+
     static TemplateType From_Name(const char *name);
     static const char *Name_From(TemplateType tem);
     static TemplateTypeClass *As_Pointer(TemplateType tem);
@@ -472,7 +474,7 @@ public:
     static void MapEditor_418A1C();
 
 private:
-    TemplateType Type; 
+    TemplateType Type;
     int Theater;
     int Width;
     int Height;
