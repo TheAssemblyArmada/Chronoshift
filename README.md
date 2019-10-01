@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://ci.appveyor.com/project/AdamMondez/chronoshift-k6j75"><img src="https://ci.appveyor.com/api/projects/status/7pkmbx9gbpet8s9a?svg=true" alt="Build Status"></a>
+  <a href="https://ci.appveyor.com/project/AssemblyArmarda/chronoshift/branch/develop"><img src="https://ci.appveyor.com/api/projects/status/1ka2xxg8l7qwlocy/branch/develop?svg=true" alt="Build Status"></a>
   <a href="https://travis-ci.org/TheAssemblyArmada/Chronoshift.svg?branch=develop"><img src="https://travis-ci.org/TheAssemblyArmada/Chronoshift.svg?branch=develop" alt="Build Status"></a>
 </p>
 
