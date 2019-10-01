@@ -68,7 +68,7 @@ public:
     virtual void Set_Map_Dimensions(int x, int y, int w, int h) override;
     virtual BOOL Map_Cell(cell_t cellnum, HouseClass *house) override;
     virtual cell_t Click_Cell_Calc(int x, int y) const override;
-    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) override;
+    virtual void Refresh_Cells(cell_t cellnum, const int16_t *list) override;
     virtual void Set_Tactical_Position(coord_t location) override;
     virtual void Flag_Cell(cell_t cellnum) override;
     virtual BOOL Jam_Cell(cell_t cellnum, HouseClass *house) override;

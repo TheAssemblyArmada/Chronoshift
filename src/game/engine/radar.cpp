@@ -177,18 +177,18 @@ cell_t RadarClass::Click_Cell_Calc(int x, int y) const
     }
 }
 
-void RadarClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
+void RadarClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
-    if (overlap_list != nullptr) {
-        if (*overlap_list == LIST_START) {
+    if (list != nullptr) {
+        if (*list == LIST_START) {
             RadarToRedraw = true;
             Flag_To_Redraw();
         }
     }
 
-    DisplayClass::Refresh_Cells(cellnum, overlap_list);
+    DisplayClass::Refresh_Cells(cellnum, list);
 }
 
 void RadarClass::Set_Tactical_Position(coord_t location)

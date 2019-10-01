@@ -187,7 +187,7 @@ public:
     virtual void Init_Theater(TheaterType theater) override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
     virtual void Draw_It(BOOL force_redraw) override;
-    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) override;
+    virtual void Refresh_Cells(cell_t cellnum, const int16_t *list) override;
 
     void Reload_Sidebar();
     int Which_Column(RTTIType type);

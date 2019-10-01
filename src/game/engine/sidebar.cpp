@@ -563,11 +563,11 @@ void SidebarClass::Draw_It(BOOL force_redraw)
     }
 }
 
-void SidebarClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
+void SidebarClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    if (overlap_list != nullptr) {
-        if (overlap_list[0] == LIST_START) {
+    if (list != nullptr) {
+        if (list[0] == LIST_START) {
             for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
                 Columns[column].StripToRedraw = true;
             }
@@ -577,7 +577,7 @@ void SidebarClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
         }
     }
 
-    PowerClass::Refresh_Cells(cellnum, overlap_list);
+    PowerClass::Refresh_Cells(cellnum, list);
 }
 
 void SidebarClass::Reload_Sidebar()

@@ -66,7 +66,7 @@ public:
     virtual cell_t Click_Cell_Calc(int x, int y) const override;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) override {}
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) override;
-    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) override;
+    virtual void Refresh_Cells(cell_t cellnum, const int16_t *list) override;
     virtual void Set_View_Dimensions(int x, int y, int w = -1, int h = -1) override;
     virtual void Put_Place_Back(TechnoClass *obj) override {}
     virtual void Set_Tactical_Position(coord_t location) override;
