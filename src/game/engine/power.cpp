@@ -250,18 +250,18 @@ void PowerClass::Draw_It(BOOL force_redraw)
     */
 }
 
-void PowerClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
+void PowerClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 {
     DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
 
-    if (overlap_list != nullptr) {
-        if (*overlap_list == LIST_START) {
+    if (list != nullptr) {
+        if (*list == LIST_START) {
             PowerToRedraw = true;
             Flag_To_Redraw();
         }
     }
 
-    RadarClass::Refresh_Cells(cellnum, overlap_list);
+    RadarClass::Refresh_Cells(cellnum, list);
 }
 
 int PowerClass::Power_Height(int power)

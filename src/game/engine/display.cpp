@@ -929,16 +929,16 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
  *
  * 0x004B0628
  */
-void DisplayClass::Refresh_Cells(cell_t cellnum, int16_t *overlap_list)
+void DisplayClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 {
     int16_t tmp_list[60];
 
-    if (overlap_list != nullptr) {
-        if (*overlap_list == LIST_START) {
-            ++overlap_list;
+    if (list != nullptr) {
+        if (*list == LIST_START) {
+            ++list;
         }
 
-        List_Copy(tmp_list, overlap_list, ARRAY_SIZE(tmp_list));
+        List_Copy(tmp_list, list, ARRAY_SIZE(tmp_list));
 
         for (int i = 0; i < ARRAY_SIZE(tmp_list); ++i) {
             if (tmp_list[i] == LIST_END) {

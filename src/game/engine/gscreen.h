@@ -138,7 +138,7 @@ public:
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) = 0;
     virtual MouseType Get_Mouse_Shape() const = 0;
     virtual BOOL Scroll_Map(DirType dir, int &distance, BOOL redraw = true) = 0;
-    virtual void Refresh_Cells(cell_t cellnum, int16_t *overlap_list) = 0;
+    virtual void Refresh_Cells(cell_t cellnum, const int16_t *list) = 0;
     virtual void Set_View_Dimensions(int x, int y, int w = -1, int h = -1) = 0;
     virtual void Put_Place_Back(TechnoClass *) = 0;
     virtual void Set_Tactical_Position(coord_t location) = 0;
