@@ -14,7 +14,9 @@
  *            LICENSE
  */
 #include "coord.h"
+#include "lists.h"
 #include "scenario.h"
+#include <algorithm>
 
 const coord_t AdjacentCoord[FACING_COUNT] = {
     0xFF000000,     // (-256,  0)       // NORTH
@@ -177,4 +179,168 @@ BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h)
     }
 
     return confined;
+}
+
+/**
+ * Returns an overlap list to cover all possible cells that might need updating given an objects size and position.
+ */
+const int16_t *Coord_Spillage_List(coord_t coord, int size)
+{
+    // clang-format off
+    static const int16_t _gigundo[] = { 
+        -254, -255, -256, -257, -258, -126, -127, -128, -129, -130,
+           2,    1,    0,   -1,   -2,  126,  127,  128,  129,  130,
+         254,  255,  256,  257,  258, LIST_END };
+
+    static const uint8_t _pix_to_lepton[] = {
+          0u,  11u,  21u,  32u,  43u,  53u,  64u,  75u,  85u,  96u, 107u,
+        117u, 128u, 139u, 149u, 160u, 171u, 181u, 192u, 203u, 213u, 224u
+    };
+
+    static const int16_t _move_spillage[][5] = {
+        { 0, -128, LIST_END, 0, 0 },
+        { 0, -128, 1, -127, LIST_END },
+        { 0, 1, LIST_END, 0, 0 },
+        { 0, 1, 128, 129, LIST_END },
+        { 0, 128, LIST_END, 0, 0 },
+        { 0, -1, 128, 127, LIST_END },
+        { 0, -1, LIST_END, 0, 0 },
+        { 0, -1, -128, -129, LIST_END },
+        { 0, LIST_END, 0, 0, 0 }
+    };
+
+    const int8_t _spill_table[16] = {
+        8, 6, 2, -1, 0, 7, 1, -1, 4, 5, 3, -1, -1, -1, -1, -1
+    };
+
+    static int16_t _manual[10];
+    // clang-format on
+
+    // Its big, just use the big refresh list.
+    if (size > 48) {
+        return _gigundo;
+    }
+
+    if (size > 24) {
+        // Calculate the rect we need to consider.
+        int adjust = std::min(size, 48) / 2;
+        unsigned index = 0;
+        int x_lo = Lepton_To_Pixel(Coord_Sub_Cell_X(coord)) - adjust;
+        int x_hi = Lepton_To_Pixel(Coord_Sub_Cell_X(coord)) + adjust;
+        int y_lo = Lepton_To_Pixel(Coord_Sub_Cell_Y(coord)) - adjust;
+        int y_hi = Lepton_To_Pixel(Coord_Sub_Cell_Y(coord)) + adjust;
+
+        // Construct a refresh list based on where rect lies relative to cell boundaries.
+        _manual[index++] = 0;
+
+        // These are either side of the cell.
+        if (x_lo < 0) {
+            _manual[index++] = -1;
+        }
+
+        if (x_hi > 24) {
+            _manual[index++] = 1;
+        }
+
+        // These are above and below.
+        if (y_lo < 0) {
+            _manual[index++] = -128;
+        }
+
+        if (y_hi > 24) {
+            _manual[index++] = 128;
+        }
+
+        // These are the diagonal extents.
+        if (x_lo < 0 && y_lo < 0) {
+            _manual[index++] = -129;
+        }
+
+        if (x_hi > 24 && y_hi > 24) {
+            _manual[index++] = 129;
+        }
+
+        if (x_lo < 0 && y_hi > 24) {
+            _manual[index++] = 127;
+        }
+
+        if (x_hi > 24 && y_lo < 0) {
+            _manual[index++] = -127;
+        }
+
+        _manual[index] = LIST_END;
+
+        return _manual;
+    }
+
+    int ref = _pix_to_lepton[(24 - size) / 2];
+    int x = Coord_Sub_Cell_X(coord) - 128;
+    int y = Coord_Sub_Cell_Y(coord) - 128;
+    uint8_t index = 0;
+
+    // Set flags for which border of a cell we cross to perform look up of correct list.
+    if (y > ref) {
+        index = 8;
+    }
+
+    if (y < -ref) {
+        index |= 4;
+    }
+
+    if (x > ref) {
+        index |= 2;
+    }
+
+    if (x < -ref) {
+        index |= 1;
+    }
+
+    // This condition will result in an out of bounds read and probably shouldn't happen.
+    DEBUG_ASSERT(_spill_table[index] != -1);
+
+    return _move_spillage[_spill_table[index]]; 
+}
+
+/**
+ * Returns an overlap list to cover all possible cells that might need updating given a position and enclosing rect.
+ */
+const int16_t *Coord_Spillage_List(coord_t coord, const TRect<int> &rect, BOOL skip_match)
+{
+    static const int16_t _list[2] = { LIST_END, 0 };
+    static int16_t _spillage_list[128];
+
+    if (!rect.Is_Valid()) {
+        return _list;
+    }
+
+    cell_t cellnum = Coord_To_Cell(coord);
+    lepton_t x = Pixel_To_Lepton(rect.m_left) + Coord_Lepton_X(coord);
+    lepton_t y = Pixel_To_Lepton(rect.m_top) + Coord_Lepton_Y(coord);
+    int cell_w = Lepton_To_Cell_Coord_Chop(Pixel_To_Lepton(rect.m_right - 1) + x);
+    int cell_h = Lepton_To_Cell_Coord_Chop(Pixel_To_Lepton(rect.m_bottom - 1) + y);
+    unsigned index = 0;
+
+    for (int cell_y = Lepton_To_Cell_Coord_Chop(y); cell_y <= cell_h; ++cell_y) {
+        for (int cell_x = Lepton_To_Cell_Coord_Chop(x); cell_x <= cell_w; ++cell_x) {
+            cell_t cell_pos = Cell_From_XY(cell_x, cell_y);
+
+            if (!skip_match || cell_pos != cellnum) {
+                _spillage_list[index++] = cell_pos - cellnum;
+                
+                // Break leaving enough space for list end marker.
+                if (index >= ARRAY_SIZE(_spillage_list) - 2) {
+                    break;
+                }
+            }
+        }
+
+        // Break leaving enough space for list end marker.
+        if (index >= ARRAY_SIZE(_spillage_list) - 2) {
+            break;
+        }
+    }
+
+    _spillage_list[index] = LIST_END;
+
+    return _spillage_list;
 }

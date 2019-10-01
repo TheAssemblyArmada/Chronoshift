@@ -21,6 +21,7 @@
 #include "always.h"
 #include "facing.h"
 #include "gametypes.h"
+#include "trect.h"
 
 #define CELL_PIXELS 24
 #define CELL_LEPTONS 256
@@ -48,17 +49,17 @@ inline lepton_t Coord_Lepton_Y(coord_t coord)
     return (coord & 0xFFFF0000) >> 16;
 }
 
-inline int16_t Coord_Sub_Cell_X(coord_t coord)
+inline lepton_t Coord_Sub_Cell_X(coord_t coord)
 {
     return coord & 0xFF;
 }
 
-inline int16_t Coord_Sub_Cell_Y(coord_t coord)
+inline lepton_t Coord_Sub_Cell_Y(coord_t coord)
 {
     return (coord >> 16) & 0xFF;
 }
 
-inline coord_t Coord_From_Lepton_XY(int16_t x, int16_t y)
+inline coord_t Coord_From_Lepton_XY(lepton_t x, lepton_t y)
 {
     return (x & 0xFFFF) | (y << 16);
 }
@@ -108,7 +109,7 @@ inline BOOL Coord_Is_Negative(coord_t coord)
 
 inline cell_t Cell_From_XY(uint8_t x, uint8_t y)
 {
-    return ((y * MAP_MAX_WIDTH) + x);
+    return (((y % MAP_MAX_WIDTH) * MAP_MAX_WIDTH) + (x % MAP_MAX_WIDTH));
 }
 
 inline cell_t Coord_To_Cell(coord_t coord)
@@ -131,22 +132,22 @@ inline coord_t Cell_To_Coord(cell_t cellnum)
     return 0x00800080 | (Cell_Get_X(cellnum) << 8) | (Cell_Get_Y(cellnum) << 24);
 }
 
-inline int16_t Coord_Cell_To_Lepton(int cellcoord)
+inline lepton_t Coord_Cell_To_Lepton(int cellcoord)
 {
     return cellcoord * 256;
 }
 
-inline int16_t Pixel_To_Lepton(int pixel)
+inline lepton_t Pixel_To_Lepton(int pixel)
 {
-    return ((unsigned(pixel) * 256) + 12) / 24;
+    return ((pixel << 8) + 12) / 24;
 }
 
-inline int Lepton_To_Pixel(int16_t lepton)
+inline int Lepton_To_Pixel(lepton_t lepton)
 {
-    return (24 * lepton + 128) / 256;
+    return (24 * lepton + 128) >> 8;
 }
 
-inline int16_t Lepton_Round_To_Pixel(int16_t lepton)
+inline lepton_t Lepton_Round_To_Pixel(lepton_t lepton)
 {
     return Pixel_To_Lepton(Lepton_To_Pixel(lepton));
 }
@@ -163,7 +164,12 @@ inline coord_t Round_Coord_To_Pixel(coord_t coord)
 
 inline uint8_t Lepton_To_Cell_Coord(lepton_t lepton)
 {
-    return ((lepton_t)lepton >> 8) & 0xFF;
+    return ((uint16_t)(lepton + 128) >> 8) & 0xFF;
+}
+
+inline uint8_t Lepton_To_Cell_Coord_Chop(lepton_t lepton)
+{
+    return ((uint16_t)lepton >> 8) & 0xFF;
 }
 
 inline uint8_t Lepton_Sub_Cell(lepton_t lepton)
@@ -191,7 +197,7 @@ void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance);
 coord_t Coord_Scatter(coord_t coord, uint16_t distance, BOOL center);
 BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h);
-
-int Distance(coord_t coord1, coord_t coord2);
+const int16_t *Coord_Spillage_List(coord_t coord, int size);
+const int16_t *Coord_Spillage_List(coord_t coord, const TRect<int> &rect, BOOL skip_match);
 
 #endif // COORD_H
