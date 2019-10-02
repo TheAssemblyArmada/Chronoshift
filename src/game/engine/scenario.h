@@ -60,7 +60,7 @@ class ScenarioClass
 {
     enum
     {
-        WAYPOINT_COUNT = 100,
+        WAYPOINT_COUNT = 101,
     };
 
 public:
@@ -112,8 +112,7 @@ private:
     DiffType HumanDifficulty;
     DiffType AIDifficulty;
     TCountDownTimerClass<FrameTimerClass> ElapsedTimer;
-    cell_t Waypoints[WAYPOINT_COUNT];
-    cell_t UnkWaypoint;
+    cell_t Waypoints[WAYPOINT_COUNT]; // 98 = unknown, 99 = unknown, 100 = Home cell, 101 = Super cell.
     TCountDownTimerClass<FrameTimerClass> GlobalTimer;
     TCountDownTimerClass<FrameTimerClass> SomeTimer;
     int ScenarioIndex;
