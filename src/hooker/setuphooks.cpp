@@ -851,6 +851,10 @@ void Setup_Hooks()
 
     // template.h
     Hook_Function(0x00550DE0, *TemplateClass::Mark);
+
+    // coord.h
+    Hook_Function(0x004AC46C, static_cast<const int16_t *(*)(coord_t, int)>(&Coord_Spillage_List));
+    Hook_Function(0x004AC630, static_cast<const int16_t *(*)(coord_t, const TRect<int> &, BOOL)>(&Coord_Spillage_List));
 #endif
 }
 
