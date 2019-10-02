@@ -36,7 +36,7 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
-    virtual TemplateTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const TemplateTypeClass &Class_Of() const override { return *m_Type; }
     virtual void Draw_It(int x, int y, WindowNumberType window) const override {}
     virtual BOOL Mark(MarkType mark) override;
 

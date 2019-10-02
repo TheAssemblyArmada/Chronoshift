@@ -44,7 +44,7 @@ class InfantryClass : public FootClass
     virtual ~InfantryClass();
 
     // ObjectClass
-    virtual InfantryTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const InfantryTypeClass &Class_Of() const override { return *m_Type; }
 
     InfantryType What_Type() const { return m_Type->What_Type(); }
 
