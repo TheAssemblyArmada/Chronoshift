@@ -33,7 +33,7 @@ public:
     virtual ~AircraftClass();
 
     // ObjectClass
-    virtual AircraftTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const AircraftTypeClass &Class_Of() const override { return *m_Type; }
 
     AircraftType What_Type() const { return m_Type->What_Type(); }
 

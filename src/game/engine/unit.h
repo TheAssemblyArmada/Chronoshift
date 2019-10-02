@@ -31,7 +31,7 @@ public:
     virtual ~UnitClass();
 
     // ObjectClass
-    virtual UnitTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const UnitTypeClass &Class_Of() const override { return *m_Type; }
 
     UnitType What_Type() const { return m_Type->What_Type(); }
 
