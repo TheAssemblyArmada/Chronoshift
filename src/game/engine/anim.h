@@ -64,7 +64,7 @@ public:
 
     void Attach_To(ObjectClass *object);
     coord_t Adjust_Coord(coord_t coord);
-    void Do_Atom_Damage(HousesType house, cell_t cell);
+    static void Do_Atom_Damage(HousesType house, cell_t cell);
 
     unsigned char Get_Loops() const { return m_Loops; }
     void Make_Invisible() { m_Invisible = true; }

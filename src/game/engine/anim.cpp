@@ -243,8 +243,8 @@ coord_t AnimClass::Adjust_Coord(coord_t coord)
 void AnimClass::Do_Atom_Damage(HousesType house, cell_t cell)
 {
 #ifdef GAME_DLL
-    void (*func)(AnimClass *, HousesType, cell_t) = reinterpret_cast<void (*)(AnimClass *, HousesType, cell_t)>(0x00425AE0);
-    func(this, house, cell);
+    void (*func)(HousesType, cell_t) = reinterpret_cast<void (*)(HousesType, cell_t)>(0x00425AE0);
+    func(house, cell);
 #else
     DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
 #endif
