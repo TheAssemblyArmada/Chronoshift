@@ -20,10 +20,10 @@
 TFixedIHeapClass<AnimClass> g_Anims;
 #endif
 
-AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, unsigned char loop_count/*, BOOL invisible*/) :
+AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, unsigned char loop_count /*, BOOL invisible*/) :
     ObjectClass(RTTI_ANIM, g_Anims.ID(this)),
     m_LoopStage(),
-    m_Type(AnimTypeClass::As_Pointer(type)),
+    m_Type(g_AnimTypes.Ptr(type)),
     m_AttachedTo(0),
     m_Owner(HOUSES_NONE),
     m_Loops(loop_count),
