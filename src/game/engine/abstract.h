@@ -50,7 +50,7 @@ public:
     int Distance_To_Cell(cell_t cell) const { return Distance(Center_Coord(), Cell_To_Coord(cell)); }
     cell_t Center_Cell() const { return Coord_To_Cell(Center_Coord()); }
     cell_t Target_Cell() const { return Coord_To_Cell(Target_Coord()); }
-    target_t As_Target() const { return ((m_RTTI & 0xFF) << 24) & (m_HeapID & 0xFFFFFF); }
+    target_t As_Target() const { return ((m_RTTI & 0xFF) << 24) | (m_HeapID & 0xFFFFFF); }
     int Get_Heap_ID() const { return m_HeapID; }
     BOOL Is_Active() const { return m_IsActive; }
     RTTIType What_Am_I() const { return m_RTTI; }
