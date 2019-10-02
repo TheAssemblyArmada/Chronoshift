@@ -28,7 +28,8 @@ TFixedIHeapClass<TemplateClass> g_Templates;
  *
  * 0x0056A1D8
  */
-TemplateClass::TemplateClass(TemplateType type, cell_t cellnum) : ObjectClass(RTTI_TEMPLATE, g_Templates.ID(this))
+TemplateClass::TemplateClass(TemplateType type, cell_t cellnum) :
+    ObjectClass(RTTI_TEMPLATE, g_Templates.ID(this)), m_Type(g_TemplateTypes.Ptr(type))
 {
     if (cellnum != -1) {
         Unlimbo(Cell_To_Coord(cellnum));
