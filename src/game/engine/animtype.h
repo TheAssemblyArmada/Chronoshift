@@ -64,6 +64,12 @@ public:
     BOOL Is_Translucent() const { return m_Translucent; }
     BOOL Is_Theater() const { return m_Theater; }
 
+    int Get_Rate() { return m_Rate; }
+    int Get_End() { return m_End; }
+    void Set_End(int end) { m_End = end; }
+    int Get_Loop_End() { return m_LoopEnd; }
+    int Get_Loop_Count() { return m_LoopCount; }
+
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_Normalized : 1;

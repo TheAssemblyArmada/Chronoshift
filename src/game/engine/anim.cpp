@@ -14,6 +14,10 @@
  *            LICENSE
  */
 #include "anim.h"
+#include "gameoptions.h"
+#include "house.h"
+#include "iomap.h"
+#include "rules.h"
 #include "target.h"
 
 #ifndef GAME_DLL
@@ -33,6 +37,35 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
     m_LoopDelay(loop_delay),
     m_field_4A()
 {
+    if (m_Type->Get_End() == -1) {
+        // seems like this if once had Theater specific art access
+        // g_isTheaterShape = m_Type->Is_Theater();
+        m_Type->Set_End(Get_Build_Frame_Count(m_Type->Get_Image_Data()));
+        //g_isTheaterShape = false;
+    }
+    if (m_Type->Get_Loop_End() == -1) {
+        m_Type->Set_End(m_Type->Get_End());
+    }
+    if (m_Type->Is_Normalized()) {
+        m_LoopStage.Set_Delay(Options.Normalize_Delay(m_Type->Get_Rate()));
+    } else {
+        m_LoopStage.Set_Delay(m_Type->Get_Rate());
+    }
+    m_LoopStage.Set_Stage(0);
+    if (m_Type->Is_Surface()) {
+        Set_Height(256);
+    }
+    Unlimbo(Adjust_Coord(coord));
+    if (What_Type() == ANIM_LZ_SMOKE) {
+        Map.Sight_From(Coord_To_Cell(coord), Rule.Drop_Zone_Radius(), g_PlayerPtr, false);
+    }
+    // something here has been badly removed, this is how the code is in edwin and RA
+    m_Loops = m_Type->Get_Loop_Count() * std::max<uint8_t>(loop_count, 1);
+    m_Loops = std::max<uint8_t>(m_Loops, 1); // thats what it is...
+    //
+    if (m_LoopDelay > 0) {
+        Start();
+    }
 }
 
 AnimClass::AnimClass(const AnimClass &that) :
@@ -231,13 +264,8 @@ void AnimClass::Attach_To(ObjectClass *object)
 
 coord_t AnimClass::Adjust_Coord(coord_t coord)
 {
-#ifdef GAME_DLL
-    // TODO
-    return 0;
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-    return 0;
-#endif
+    //in TD this function adjusted the coord for Temple silo door
+    return coord;
 }
 
 void AnimClass::Do_Atom_Damage(HousesType house, cell_t cell)
