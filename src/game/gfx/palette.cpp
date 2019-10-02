@@ -93,14 +93,15 @@ void PaletteClass::Partial_Adjust(int adj, PaletteClass &pal, char *data)
 int PaletteClass::Closest_Color(RGBClass &rgb) const
 {
     int difference;
-    int index;
+    int index = 0;
     int prevdiff = -1;
 
-    for (index = 0; index < ARRAY_SIZE(PaletteClass::m_palette); ++index) {
-        difference = rgb.Difference(m_palette[index]);
+    for (int i = 0; i < ARRAY_SIZE(PaletteClass::m_palette); ++i) {
+        difference = rgb.Difference(m_palette[i]);
 
         if (prevdiff == -1 || difference < prevdiff) {
             prevdiff = difference;
+            index = i;
         }
     }
 
