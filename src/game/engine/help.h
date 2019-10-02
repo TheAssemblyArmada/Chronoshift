@@ -47,9 +47,9 @@ public:
     void Set_Text_Color(uint8_t color) { HelpTextColor = color; }
 
 #ifdef GAME_DLL
-    const int16_t *Hook_Text_Overlap_List(const char *string, int x, int y)
+    const int16_t *Hook_Overlap_List()
     {
-        return HelpClass::Text_Overlap_List(string, x, y);
+        return HelpClass::Overlap_List();
     }
 #endif
 

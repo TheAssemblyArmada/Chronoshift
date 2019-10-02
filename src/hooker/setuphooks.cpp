@@ -528,7 +528,7 @@ void Setup_Hooks()
     Hook_Function(0x004D2574, *HelpClass::Help_Text);
     Hook_Function(0x004D2B6C, *HelpClass::Scroll_Map);
     Hook_Function(0x004D2BC0, *HelpClass::Set_Tactical_Position);
-    Hook_Function(0x004D2354, *HelpClass::Hook_Text_Overlap_List);
+    Hook_Function(0x004D2354, *HelpClass::Hook_Overlap_List);
     Hook_Function(0x004D293C, *HelpClass::Set_Text);
 
     // scroll.h
