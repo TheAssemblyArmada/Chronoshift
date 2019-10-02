@@ -69,7 +69,6 @@ ScenarioClass::ScenarioClass() :
         Waypoints[index] = -1;
     }
 
-    UnkWaypoint = -1;
     ScenarioName[0] = '\0';
     ScenarioDescription[0] = '\0';
     BriefingText[0] = '\0';
