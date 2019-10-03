@@ -20,11 +20,11 @@
 #include "display.h"
 #include "gamedebug.h"
 #include "gameevent.h"
-#include "mouse.h"
 #include "gameoptions.h"
 #include "globals.h"
 #include "house.h"
 #include "iomap.h"
+#include "mouse.h"
 #include "msglist.h"
 #include "palette.h"
 #include "pcx.h"
@@ -105,7 +105,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyToggleVortex()) {
             static bool _vortex_active = false;
-            
+
             if (!_vortex_active) {
                 coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
                 if (coord) {
@@ -229,7 +229,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
             snprintf(msg_buffer, sizeof(msg_buffer), "Game %s!", (g_Debug_Paused ? "paused" : "resumed"));
             Session.Get_Messages().Add_Simple_Message("System", msg_buffer, PLAYER_COLOR_LIGHT_BLUE);
-            
+
             key = KN_NONE;
         }
 
@@ -624,354 +624,373 @@ void Debug_Keyboard_Process(KeyNumType &key)
 }
 #endif
 
-void Keyboard_Process(KeyNumType &key)
+void Editor_Keyboard_Process(KeyNumType &key)
 {
-    // Distance to scroll on scroll commands. 256 == 1 cell.
-    static int _scroll_dist = 256;
-
     if (key != KN_NONE) {
-        Message_Input(key);
-
-        ObjectClass *objptr = nullptr;
-        ObjectClass *curobj = nullptr;
-
         KeyNumType justkey = (KeyNumType)(key & ~(KEY_SHIFT_BIT | KEY_CTRL_BIT | KEY_ALT_BIT | KEY_VK_BIT));
         KeyNumType keynum = (KeyNumType)(key & ~(KEY_VK_BIT));
+    }
+}
 
-        int modifierkey = 0;
+void Keyboard_Process(KeyNumType &key)
+{
+    KeyNumType justkey = (KeyNumType)(key & ~(KEY_SHIFT_BIT | KEY_CTRL_BIT | KEY_ALT_BIT | KEY_VK_BIT));
+    KeyNumType keynum = (KeyNumType)(key & ~(KEY_VK_BIT));
 
-        if (key & KEY_SHIFT_BIT) {
-            modifierkey = 1;
-        }
-        if (key & KEY_CTRL_BIT) {
-            modifierkey = 2;
-        }
-        if (key & KEY_ALT_BIT) {
-            modifierkey = 3;
-        }
+    if (justkey == Options.Get_KeyEditorToggle()) {
+        g_InMapEditor = !g_InMapEditor;
+        key = KN_NONE;
+    }
 
-        if (justkey == Options.Get_KeyNext()) {
-            if (modifierkey == 0) {
-                if (CurrentObjects.Count() > 0) {
-                    curobj = CurrentObjects.Fetch_Head();
-                } else {
-                    curobj = nullptr;
-                }
-                objptr = Map.Next_Object(curobj);
-            } else {
-                if (CurrentObjects.Count() > 0) {
-                    curobj = CurrentObjects.Fetch_Head();
-                } else {
-                    curobj = nullptr;
-                }
-                objptr = Map.Prev_Object(curobj);
+    if (g_InMapEditor) {
+        Editor_Keyboard_Process(key);
+
+    } else {
+        // Distance to scroll on scroll commands. 256 leptons == 1 cell.
+        static int _scroll_dist = 256;
+
+        if (key != KN_NONE) {
+            Message_Input(key);
+
+            ObjectClass *objptr = nullptr;
+            ObjectClass *curobj = nullptr;
+
+            int modifierkey = 0;
+
+            if (key & KEY_SHIFT_BIT) {
+                modifierkey = 1;
             }
-            DEBUG_ASSERT(objptr != nullptr);
-            if (objptr != nullptr) {
-                DEBUG_LOG("Keyboard_Process() - Jumping to next object %s.\n", objptr->Name());
-                Unselect_All();
-                objptr->Select();
-                Map.Center_Map();
-                Map.Flag_To_Redraw(true);
+            if (key & KEY_CTRL_BIT) {
+                modifierkey = 2;
             }
-            key = KN_NONE;
-        }
+            if (key & KEY_ALT_BIT) {
+                modifierkey = 3;
+            }
 
-        if (justkey == Options.Get_KeyPrevious()) {
-            if (modifierkey == 0) {
-                if (CurrentObjects.Count() > 0) {
-                    curobj = CurrentObjects.Fetch_Head();
+            if (justkey == Options.Get_KeyNext()) {
+                if (modifierkey == 0) {
+                    if (CurrentObjects.Count() > 0) {
+                        curobj = CurrentObjects.Fetch_Head();
+                    } else {
+                        curobj = nullptr;
+                    }
+                    objptr = Map.Next_Object(curobj);
                 } else {
-                    curobj = nullptr;
+                    if (CurrentObjects.Count() > 0) {
+                        curobj = CurrentObjects.Fetch_Head();
+                    } else {
+                        curobj = nullptr;
+                    }
+                    objptr = Map.Prev_Object(curobj);
                 }
-                objptr = Map.Prev_Object(curobj);
-            } else {
-                if (CurrentObjects.Count() > 0) {
-                    curobj = CurrentObjects.Fetch_Head();
-                } else {
-                    curobj = nullptr;
-                }
-                objptr = Map.Next_Object(curobj);
-            }
-            DEBUG_ASSERT(objptr != nullptr);
-            if (objptr != nullptr) {
-                DEBUG_LOG("Keyboard_Process() - Jumping to prev object %s.\n", objptr->Name());
-                Unselect_All();
-                objptr->Select();
-                Map.Center_Map();
-                Map.Flag_To_Redraw(true);
-            }
-            key = KN_NONE;
-        }
-
-        if (justkey == Options.Get_KeyStop()) {
-            for (int index = 0; index < CurrentObjects.Count(); ++index) {
-                objptr = CurrentObjects[index];
                 DEBUG_ASSERT(objptr != nullptr);
                 if (objptr != nullptr) {
-                    if (objptr->Can_Player_Move() && objptr->What_Am_I() != RTTI_BUILDING) {
-                        GameEventClass ev(GameEventClass::EVENT_IDLE, TargetClass(objptr));
-                        OutgoingEvents.Add(ev);
-                    }
+                    DEBUG_LOG("Keyboard_Process() - Jumping to next object %s.\n", objptr->Name());
+                    Unselect_All();
+                    objptr->Select();
+                    Map.Center_Map();
+                    Map.Flag_To_Redraw(true);
                 }
-            }
-            key = KN_NONE;
-        }
-
-        if (justkey == Options.Get_KeyGuard()) {
-            for (int index = 0; index < CurrentObjects.Count(); ++index) {
-                objptr = CurrentObjects[index];
-                DEBUG_ASSERT(objptr != nullptr);
-                if (objptr != nullptr) {
-                    if (objptr->Can_Player_Move() && objptr->Can_Player_Fire()) {
-                        GameEventClass ev(TargetClass(objptr), MISSION_AREA_GUARD, TargetClass(0), TargetClass(0));
-                        OutgoingEvents.Add(ev);
-                    }
-                }
-            }
-            key = KN_NONE;
-        }
-
-        if (justkey == Options.Get_KeyScatter()) {
-            for (int index = 0; index < CurrentObjects.Count(); ++index) {
-                objptr = CurrentObjects[index];
-                DEBUG_ASSERT(objptr != nullptr);
-                if (objptr != nullptr) {
-                    if (objptr->Can_Player_Move()) {
-                        GameEventClass ev(GameEventClass::EVENT_SCATTER, TargetClass(objptr));
-                        OutgoingEvents.Add(ev);
-                    }
-                }
-            }
-            key = KN_NONE;
-        }
-
-        if ((justkey == Options.Get_KeyHome1() || key == Options.Get_KeyHome2())) {
-            if (CurrentObjects.Count() > 0) {
-                Map.Center_Map();
-                Map.Flag_To_Redraw(true);
                 key = KN_NONE;
-            } else {
-                key = Options.Get_KeyBase();
             }
-        }
 
-        if (justkey == Options.Get_KeyBase()) {
-            bool selected = false;
-            coord_t object_coord = 0;
+            if (justkey == Options.Get_KeyPrevious()) {
+                if (modifierkey == 0) {
+                    if (CurrentObjects.Count() > 0) {
+                        curobj = CurrentObjects.Fetch_Head();
+                    } else {
+                        curobj = nullptr;
+                    }
+                    objptr = Map.Prev_Object(curobj);
+                } else {
+                    if (CurrentObjects.Count() > 0) {
+                        curobj = CurrentObjects.Fetch_Head();
+                    } else {
+                        curobj = nullptr;
+                    }
+                    objptr = Map.Next_Object(curobj);
+                }
+                DEBUG_ASSERT(objptr != nullptr);
+                if (objptr != nullptr) {
+                    DEBUG_LOG("Keyboard_Process() - Jumping to prev object %s.\n", objptr->Name());
+                    Unselect_All();
+                    objptr->Select();
+                    Map.Center_Map();
+                    Map.Flag_To_Redraw(true);
+                }
+                key = KN_NONE;
+            }
 
-            Unselect_All();
+            if (justkey == Options.Get_KeyStop()) {
+                for (int index = 0; index < CurrentObjects.Count(); ++index) {
+                    objptr = CurrentObjects[index];
+                    DEBUG_ASSERT(objptr != nullptr);
+                    if (objptr != nullptr) {
+                        if (objptr->Can_Player_Move() && objptr->What_Am_I() != RTTI_BUILDING) {
+                            GameEventClass ev(GameEventClass::EVENT_IDLE, TargetClass(objptr));
+                            OutgoingEvents.Add(ev);
+                        }
+                    }
+                }
+                key = KN_NONE;
+            }
 
-            // If we have a construction yard, center in on that.
-            if (!selected && g_PlayerPtr->Currently_Owned_Building_Count() > 0) {
-                for (int index = 0; index < g_Buildings.Count(); ++index) {
-                    BuildingClass *bptr = &g_Buildings[index];
-                    DEBUG_ASSERT(bptr != nullptr);
-                    if (bptr != nullptr) {
-                        if (!bptr->In_Limbo() && bptr->Get_Owner_House()->Is_Player()) {
-                            if (bptr->What_Type() == BUILDING_FACT) {
-                                Unselect_All();
-                                if (bptr->Is_Primary()) {
-                                    bptr->Select();
+            if (justkey == Options.Get_KeyGuard()) {
+                for (int index = 0; index < CurrentObjects.Count(); ++index) {
+                    objptr = CurrentObjects[index];
+                    DEBUG_ASSERT(objptr != nullptr);
+                    if (objptr != nullptr) {
+                        if (objptr->Can_Player_Move() && objptr->Can_Player_Fire()) {
+                            GameEventClass ev(TargetClass(objptr), MISSION_AREA_GUARD, TargetClass(0), TargetClass(0));
+                            OutgoingEvents.Add(ev);
+                        }
+                    }
+                }
+                key = KN_NONE;
+            }
+
+            if (justkey == Options.Get_KeyScatter()) {
+                for (int index = 0; index < CurrentObjects.Count(); ++index) {
+                    objptr = CurrentObjects[index];
+                    DEBUG_ASSERT(objptr != nullptr);
+                    if (objptr != nullptr) {
+                        if (objptr->Can_Player_Move()) {
+                            GameEventClass ev(GameEventClass::EVENT_SCATTER, TargetClass(objptr));
+                            OutgoingEvents.Add(ev);
+                        }
+                    }
+                }
+                key = KN_NONE;
+            }
+
+            if ((justkey == Options.Get_KeyHome1() || key == Options.Get_KeyHome2())) {
+                if (CurrentObjects.Count() > 0) {
+                    Map.Center_Map();
+                    Map.Flag_To_Redraw(true);
+                    key = KN_NONE;
+                } else {
+                    key = Options.Get_KeyBase();
+                }
+            }
+
+            if (justkey == Options.Get_KeyBase()) {
+                bool selected = false;
+                coord_t object_coord = 0;
+
+                Unselect_All();
+
+                // If we have a construction yard, center in on that.
+                if (!selected && g_PlayerPtr->Currently_Owned_Building_Count() > 0) {
+                    for (int index = 0; index < g_Buildings.Count(); ++index) {
+                        BuildingClass *bptr = &g_Buildings[index];
+                        DEBUG_ASSERT(bptr != nullptr);
+                        if (bptr != nullptr) {
+                            if (!bptr->In_Limbo() && bptr->Get_Owner_House()->Is_Player()) {
+                                if (bptr->What_Type() == BUILDING_FACT) {
+                                    Unselect_All();
+                                    if (bptr->Is_Primary()) {
+                                        bptr->Select();
+                                        selected = true;
+                                        object_coord = bptr->Center_Coord();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Or, if we have a mcv, center in on that instead.
+                if (!selected && g_PlayerPtr->Currently_Owned_Unit_Count() > 0) {
+                    for (int index = 0; index < g_Units.Count(); ++index) {
+                        UnitClass *uptr = &g_Units[index];
+                        DEBUG_ASSERT(uptr != nullptr);
+                        if (uptr != nullptr) {
+                            if (!uptr->In_Limbo() && uptr->Get_Owner_House()->Is_Player()) {
+                                if (uptr->What_Type() == UNIT_MCV) {
+                                    Unselect_All();
+                                    uptr->Select();
                                     selected = true;
-                                    object_coord = bptr->Center_Coord();
+                                    object_coord = uptr->Center_Coord();
                                     break;
                                 }
                             }
                         }
                     }
                 }
+
+                coord_t center_coord = (selected ? object_coord : g_PlayerPtr->Base_Center());
+                if (center_coord) {
+                    Map.Center_Map(center_coord);
+                }
+
+                Map.Flag_To_Redraw(true);
+
+                key = KN_NONE;
             }
 
-            // Or, if we have a mcv, center in on that instead.
-            if (!selected && g_PlayerPtr->Currently_Owned_Unit_Count() > 0) {
-                for (int index = 0; index < g_Units.Count(); ++index) {
-                    UnitClass *uptr = &g_Units[index];
-                    DEBUG_ASSERT(uptr != nullptr);
-                    if (uptr != nullptr) {
-                        if (!uptr->In_Limbo() && uptr->Get_Owner_House()->Is_Player()) {
-                            if (uptr->What_Type() == UNIT_MCV) {
-                                Unselect_All();
-                                uptr->Select();
-                                selected = true;
-                                object_coord = uptr->Center_Coord();
-                                break;
-                            }
+            if (justkey == Options.Get_KeyFormation()) {
+                Toggle_Formation();
+                key = KN_NONE;
+            }
+
+            if (justkey == Options.Get_KeyAlliance()) {
+                if ((g_Debug_Flag || Session.Game_To_Play() != GAME_CAMPAIGN) && CurrentObjects.Count() > 0
+                    && !g_PlayerPtr->Is_Defeated()) {
+                    ObjectClass *objptr = CurrentObjects.Fetch_Head();
+                    DEBUG_ASSERT(objptr != nullptr);
+                    if (objptr != nullptr) {
+                        if (objptr->Owner() == g_PlayerPtr->What_Type()) {
+                            GameEventClass ev(GameEventClass::EVENT_ALLY, objptr->Owner());
+                            OutgoingEvents.Add(ev);
                         }
                     }
                 }
+                key = KN_NONE;
             }
 
-            coord_t center_coord = (selected ? object_coord : g_PlayerPtr->Base_Center());
-            if (center_coord) {
-                Map.Center_Map(center_coord);
+            if (justkey == Options.Get_KeySelectView()) {
+                // Value of 0 is top left of the screen.
+                Map.Select_These(0, Coord_From_Lepton_XY(Map.Get_DisplayWidth(), Map.Get_DisplayHeight()));
+                key = KN_NONE;
             }
 
-            Map.Flag_To_Redraw(true);
-
-            key = KN_NONE;
-        }
-
-        if (justkey == Options.Get_KeyFormation()) {
-            Toggle_Formation();
-            key = KN_NONE;
-        }
-
-        if (justkey == Options.Get_KeyAlliance()) {
-            if ((g_Debug_Flag || Session.Game_To_Play() != GAME_CAMPAIGN) && CurrentObjects.Count() > 0
-                && !g_PlayerPtr->Is_Defeated()) {
-                ObjectClass *objptr = CurrentObjects.Fetch_Head();
-                DEBUG_ASSERT(objptr != nullptr);
-                if (objptr != nullptr) {
-                    if (objptr->Owner() == g_PlayerPtr->What_Type()) {
-                        GameEventClass ev(GameEventClass::EVENT_ALLY, objptr->Owner());
-                        OutgoingEvents.Add(ev);
-                    }
-                }
+            if (justkey == Options.Get_KeyRepairToggle()) {
+                Map.Repair_Mode_Control(MODE_CONTROL_TOGGLE);
+                key = KN_NONE;
             }
-            key = KN_NONE;
-        }
 
-        if (justkey == Options.Get_KeySelectView()) {
-            // Value of 0 is top left of the screen.
-            Map.Select_These(0, Coord_From_Lepton_XY(Map.Get_DisplayWidth(), Map.Get_DisplayHeight()));
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeySellToggle()) {
+                Map.Sell_Mode_Control(MODE_CONTROL_TOGGLE);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyRepairToggle()) {
-            Map.Repair_Mode_Control(MODE_CONTROL_TOGGLE);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyMapToggle()) {
+                Map.Zoom_Mode_Control();
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeySellToggle()) {
-            Map.Sell_Mode_Control(MODE_CONTROL_TOGGLE);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeySidebarUp()) {
+                Map.Scroll(true);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyMapToggle()) {
-            Map.Zoom_Mode_Control();
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeySidebarDown()) {
+                Map.Scroll(false);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeySidebarUp()) {
-            Map.Scroll(true);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyOption1() || key == Options.Get_KeyOption2()) {
+                Map.Help_Text(TXT_NULL);
+                Queue_Options();
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeySidebarDown()) {
-            Map.Scroll(false);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyScrollLeft()) {
+                Map.Scroll_Map(DIR_WEST, _scroll_dist);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyOption1() || key == Options.Get_KeyOption2()) {
-            Map.Help_Text(TXT_NULL);
-            Queue_Options();
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyScrollRight()) {
+                Map.Scroll_Map(DIR_EAST, _scroll_dist);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyScrollLeft()) {
-            Map.Scroll_Map(DIR_WEST, _scroll_dist);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyScrollUp()) {
+                Map.Scroll_Map(DIR_NORTH, _scroll_dist);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyScrollRight()) {
-            Map.Scroll_Map(DIR_EAST, _scroll_dist);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyScrollDown()) {
+                Map.Scroll_Map(DIR_SOUTH, _scroll_dist);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyScrollUp()) {
-            Map.Scroll_Map(DIR_NORTH, _scroll_dist);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam1() || justkey == '1') {
+                Handle_Team(0, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyScrollDown()) {
-            Map.Scroll_Map(DIR_SOUTH, _scroll_dist);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam2() || justkey == '2') {
+                Handle_Team(1, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam1() || justkey == '1') {
-            Handle_Team(0, modifierkey);
-            key = KN_NONE;
-        }
+            if ((justkey == Options.Get_KeyTeam3() || justkey == '3')) {
+                Handle_Team(2, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam2() || justkey == '2') {
-            Handle_Team(1, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam4() || justkey == '4') {
+                Handle_Team(3, modifierkey);
+                key = KN_NONE;
+            }
 
-        if ((justkey == Options.Get_KeyTeam3() || justkey == '3')) {
-            Handle_Team(2, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam5() || justkey == '5') {
+                Handle_Team(4, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam4() || justkey == '4') {
-            Handle_Team(3, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam6() || justkey == '6') {
+                Handle_Team(5, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam5() || justkey == '5') {
-            Handle_Team(4, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam7() || justkey == '7') {
+                Handle_Team(6, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam6() || justkey == '6') {
-            Handle_Team(5, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam8() || justkey == '8') {
+                Handle_Team(7, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam7() || justkey == '7') {
-            Handle_Team(6, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam9() || justkey == '9') {
+                Handle_Team(8, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam8() || justkey == '8') {
-            Handle_Team(7, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyTeam10() || justkey == '0') {
+                Handle_Team(9, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam9() || justkey == '9') {
-            Handle_Team(8, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyBookmark1()) {
+                Handle_View(0, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyTeam10() || justkey == '0') {
-            Handle_Team(9, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyBookmark2()) {
+                Handle_View(1, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyBookmark1()) {
-            Handle_View(0, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyBookmark3()) {
+                Handle_View(2, modifierkey);
+                key = KN_NONE;
+            }
 
-        if (justkey == Options.Get_KeyBookmark2()) {
-            Handle_View(1, modifierkey);
-            key = KN_NONE;
-        }
-
-        if (justkey == Options.Get_KeyBookmark3()) {
-            Handle_View(2, modifierkey);
-            key = KN_NONE;
-        }
-
-        if (justkey == Options.Get_KeyBookmark4()) {
-            Handle_View(3, modifierkey);
-            key = KN_NONE;
-        }
+            if (justkey == Options.Get_KeyBookmark4()) {
+                Handle_View(3, modifierkey);
+                key = KN_NONE;
+            }
 
 #ifdef CHRONOSHIFT_DEBUG
-        if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.Game_To_Play() == GAME_SKIRMISH) {
-            if (justkey == Options.Get_DebugKeyToggleDebug()) {
-                g_Debug_Keys = !g_Debug_Keys;
-                DEBUG_LOG("Debug hotkeys %s!", (g_Debug_Keys ? "enabled" : "disabled"));
-                if (g_Debug_Keys) {
-                    Session.Get_Messages().Add_Simple_Message("System", "Debug hotkeys enabled!", PLAYER_COLOR_LIGHT_BLUE);
+            if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.Game_To_Play() == GAME_SKIRMISH) {
+                if (justkey == Options.Get_DebugKeyToggleDebug()) {
+                    g_Debug_Keys = !g_Debug_Keys;
+                    DEBUG_LOG("Debug hotkeys %s!", (g_Debug_Keys ? "enabled" : "disabled"));
+                    if (g_Debug_Keys) {
+                        Session.Get_Messages().Add_Simple_Message(
+                            "System", "Debug hotkeys enabled!", PLAYER_COLOR_LIGHT_BLUE);
+                    }
+                }
+                if (g_Debug_Keys || g_Debug_Flag) {
+                    Debug_Keyboard_Process(key);
                 }
             }
-            if (g_Debug_Keys || g_Debug_Flag) {
-                Debug_Keyboard_Process(key);
-            }
-        }
 #endif
+        }
     }
 }
