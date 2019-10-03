@@ -119,6 +119,11 @@ SidebarClass::StripClass::StripClass(InitClass const &init) :
     field_31(0),
     CameoCount(0)
 {
+    for (int i = 0; i < MAX_BUTTONS_PER_COLUMN; ++i) {
+        Entries[i].ID = 0;
+        Entries[i].Type = RTTI_NONE;
+        Entries[i].Factory = -1;
+    }
 }
 
 void SidebarClass::StripClass::One_Time(int column)
@@ -160,7 +165,7 @@ void SidebarClass::StripClass::Init_Clear()
     for (int i = 0; i < MAX_BUTTONS_PER_COLUMN; ++i) {
         Entries[i].ID = 0;
         Entries[i].Type = RTTI_NONE;
-        Entries[i].Factory = 0xFFFFFFFF;
+        Entries[i].Factory = -1;
     }
 }
 
@@ -182,6 +187,7 @@ void SidebarClass::StripClass::Init_IO(int column)
         DownButton[WhichColumn].Set_Sticky(true);
 
         for (int index = 0; index < ROW_COUNT; ++index) {
+            SelectButton[WhichColumn][index].Set_ID(220);
             SelectButton[WhichColumn][index].Set_Size(64, 48);
             SelectButton[WhichColumn][index].Set_XPos(XPos);
             SelectButton[WhichColumn][index].Set_YPos(YPos + index * 48);
@@ -370,11 +376,20 @@ SidebarClass::SidebarClass() :
     SidebarBit8(false),
     SidebarBit16(false)
 {
+    //this set the window for the strips in DOS
+    //WindowList[WINDOW_SIDEBAR].X = 248;
+    //WindowList[WINDOW_SIDEBAR].Y = 91;
+    //WindowList[WINDOW_SIDEBAR].W = 80;
+    //WindowList[WINDOW_SIDEBAR].H = 96;
+
     InitClass init;
     for (int column = 0; column < COLUMN_COUNT; ++column) {
         // Placement new to perform construction of object array with specific constructor.
         new (&Columns[column]) StripClass(init);
     }
+    //TODO dehardcode positions
+    Columns[0].Set_Position(496, 180);
+    Columns[1].Set_Position(566, 180);
 }
 
 void SidebarClass::One_Time()
