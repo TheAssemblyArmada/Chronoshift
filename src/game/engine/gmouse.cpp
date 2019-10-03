@@ -36,51 +36,58 @@ void *GameMouseClass::s_MouseShapes = nullptr;
 TCountDownTimerClass<SystemTimerClass> GameMouseClass::s_AnimationTimer;
 #endif
 
+void *GameMouseClass::s_EditorMouseShapes = nullptr;
+
 // Frame, Count, Rate, Small, HotSpotX, HotSpotY
 GameMouseClass::MouseStruct GameMouseClass::s_MouseControl[MOUSE_COUNT] = {
-    { 0, 1, 0, 80, 0, 0 }, // 0  //Arrow
-    { 1, 1, 0, -1, 14, 0 }, // 1  //ScrollN
-    { 2, 1, 0, -1, 29, 0 }, // 2  //ScrollNE
-    { 3, 1, 0, -1, 29, 11 }, // 3  //ScrollE
-    { 4, 1, 0, -1, 29, 23 }, // 4  //ScrollSE
-    { 5, 1, 0, -1, 14, 23 }, // 5  //ScrollS
-    { 6, 1, 0, -1, 0, 23 }, // 6  //ScrollSW
-    { 7, 1, 0, -1, 0, 11 }, // 7  //ScrollW
-    { 8, 1, 0, -1, 0, 0 }, // 8  //ScrollNW
-    { 124, 1, 0, -1, 14, 0 }, // 9  //NoScrollN
-    { 125, 1, 0, -1, 29, 0 }, // 10 //NoScrollNE
-    { 126, 1, 0, -1, 29, 11 }, // 11 //NoScrollE
-    { 127, 1, 0, -1, 29, 23 }, // 12 //NoScrollSE
-    { 128, 1, 0, -1, 14, 23 }, // 13 //NoScrollS
-    { 129, 1, 0, -1, 0, 23 }, // 14 //NoScrollSW
-    { 130, 1, 0, -1, 0, 11 }, // 15 //NoScrollW
-    { 131, 1, 0, -1, 0, 0 }, // 16 //NoScrollNW
-    { 14, 1, 0, 33, 14, 11 }, // 17 //NoMove
-    { 10, 4, 4, 29, 14, 11 }, // 18 //NotAllowed
-    { 113, 3, 4, 142, 14, 11 }, // 19 //Enter
-    { 59, 9, 4, -1, 14, 11 }, // 20 //Deploy
-    { 15, 6, 4, -1, 14, 11 }, // 21 //Select
-    { 21, 8, 4, 134, 14, 11 }, // 22 //Harvest
-    { 68, 12, 2, -1, 14, 11 }, // 23 //Sell
-    { 148, 12, 2, -1, 14, 11 }, // 24 //SellUnit
-    { 35, 24, 2, -1, 14, 11 }, // 25 //Repair
-    { 120, 1, 0, -1, 14, 11 }, // 26 //NoRepair
-    { 119, 1, 0, -1, 14, 11 }, // 27 //NoSell
-    { 81, 1, 0, 145, 14, 11 }, // 28 //
-    { 90, 7, 4, -1, 14, 11 }, // 29 //NukeBomb
-    { 82, 8, 2, 213, 14, 11 }, // 30 //Airstrike
-    { 116, 3, 4, 121, 14, 11 }, // 31 //Sabotage
-    { 147, 1, 0, 146, 14, 11 }, // 32 //GuardArea
-    { 160, 4, 4, 194, 14, 11 }, // 33 //Heal
-    { 164, 3, 4, 167, 14, 11 }, // 34 //Damage
-    { 170, 24, 2, -1, 14, 11 }, // 35 //GRepair
-    { 195, 8, 4, 203, 14, 11 }, // 36 //Attack
-    { 211, 1, 0, -1, 14, 11 }, // 37 //NoDeploy
-    { 212, 1, 0, -1, 14, 11 }, // 38 //NoEnter
-    { 213, 1, 0, -1, 14, 11 }, // 39 //NoGRepair
-    { 97, 8, 3, -1, 14, 11 }, // 40 //Chronosphere
-    { 105, 8, 2, -1, 14, 11 }, // 41 //Chrono2
-    { 211, 1, 0, 80, 0, 0 } // 42 //EditorBrush RA++ addition
+    { 0, 1, 0, 80, 0, 0 }, // Arrow
+    { 1, 1, 0, -1, 14, 0 }, // ScrollN
+    { 2, 1, 0, -1, 29, 0 }, // ScrollNE
+    { 3, 1, 0, -1, 29, 11 }, // ScrollE
+    { 4, 1, 0, -1, 29, 23 }, // ScrollSE
+    { 5, 1, 0, -1, 14, 23 }, // ScrollS
+    { 6, 1, 0, -1, 0, 23 }, // ScrollSW
+    { 7, 1, 0, -1, 0, 11 }, // ScrollW
+    { 8, 1, 0, -1, 0, 0 }, // ScrollNW
+    { 124, 1, 0, -1, 14, 0 }, // NoScrollN
+    { 125, 1, 0, -1, 29, 0 }, // NoScrollNE
+    { 126, 1, 0, -1, 29, 11 }, // NoScrollE
+    { 127, 1, 0, -1, 29, 23 }, // NoScrollSE
+    { 128, 1, 0, -1, 14, 23 }, // NoScrollS
+    { 129, 1, 0, -1, 0, 23 }, // NoScrollSW
+    { 130, 1, 0, -1, 0, 11 }, // NoScrollW
+    { 131, 1, 0, -1, 0, 0 }, // NoScrollNW
+    { 14, 1, 0, 33, 14, 11 }, // NoMove
+    { 10, 4, 4, 29, 14, 11 }, // NotAllowed
+    { 113, 3, 4, 142, 14, 11 }, // Enter
+    { 59, 9, 4, -1, 14, 11 }, // Deploy
+    { 15, 6, 4, -1, 14, 11 }, // Select
+    { 21, 8, 4, 134, 14, 11 }, // Harvest
+    { 68, 12, 2, -1, 14, 11 }, // Sell
+    { 148, 12, 2, -1, 14, 11 }, // SellUnit
+    { 35, 24, 2, -1, 14, 11 }, // Repair
+    { 120, 1, 0, -1, 14, 11 }, // NoRepair
+    { 119, 1, 0, -1, 14, 11 }, // NoSell
+    { 81, 1, 0, 145, 14, 11 }, // 
+    { 90, 7, 4, -1, 14, 11 }, // NukeBomb
+    { 82, 8, 2, 213, 14, 11 }, // Airstrike
+    { 116, 3, 4, 121, 14, 11 }, // Sabotage
+    { 147, 1, 0, 146, 14, 11 }, // GuardArea
+    { 160, 4, 4, 194, 14, 11 }, // Heal
+    { 164, 3, 4, 167, 14, 11 }, // Damage
+    { 170, 24, 2, -1, 14, 11 }, // GRepair
+    { 195, 8, 4, 203, 14, 11 }, // Attack
+    { 211, 1, 0, -1, 14, 11 }, // NoDeploy
+    { 212, 1, 0, -1, 14, 11 }, // NoEnter
+    { 213, 1, 0, -1, 14, 11 }, // NoGRepair
+    { 97, 8, 3, -1, 14, 11 }, // Chronosphere
+    { 105, 8, 2, -1, 14, 11 }, // ChronoWarp
+
+    // Special case! As we are merging the map editor and the game, and EDWIN
+    // has its own mouse shape, we need to make sure that g_InMapEditor is checked
+    // for this case and we switch the mouse shape file to EDMOUSE.SHP.
+    // In EDMOUSE.SHP, the brush has the same frame number as MOUSE_CANT_DEPLOY.
+    { 211, 1, 0, 80, 0, 0 } // EditorBrush
 };
 
 GameMouseClass::GameMouseClass() :
@@ -95,6 +102,7 @@ void GameMouseClass::One_Time()
 {
     ScrollClass::One_Time();
     s_MouseShapes = GameFileClass::Retrieve("mouse.shp");
+    s_EditorMouseShapes = GameFileClass::Retrieve("edmouse.shp");
 }
 
 void GameMouseClass::Init_Clear()
@@ -124,7 +132,8 @@ void GameMouseClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                     frame = cursor.Frame;
                 }
 
-                g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, Extract_Shape(s_MouseShapes, m_MouseFrame + frame));
+                void *shape = Extract_Shape(Get_Shape_File_For_Mouse(m_CurrentMouse), m_MouseFrame + frame);
+                g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, shape);
             }
         }
     }
@@ -167,7 +176,8 @@ BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
     s_AnimationTimer = cursor.Rate;
     m_MouseFrame = 0;
     int frame = in_radar ? (cursor.Small == -1 ? cursor.Frame : cursor.Small) : cursor.Frame;
-    g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, Extract_Shape(s_MouseShapes, frame));
+    void *shape = Extract_Shape(Get_Shape_File_For_Mouse(mouse), frame);
+    g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, shape);
     m_CurrentMouse = mouse;
     m_MouseInRadar = in_radar;
 
@@ -181,16 +191,16 @@ void GameMouseClass::Mouse_Small(BOOL use_small_frame)
             if (s_MouseControl[m_CurrentMouse].Small == -1) {
                 g_mouse->Set_Cursor(s_MouseControl[MOUSE_POINTER].HotSpotX,
                     s_MouseControl[MOUSE_POINTER].HotSpotY,
-                    Extract_Shape(s_MouseShapes, 0));
+                    Extract_Shape(Get_Shape_File_For_Mouse(MOUSE_POINTER), 0));
             } else {
                 g_mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
                     s_MouseControl[m_DefaultMouse].HotSpotY,
-                    Extract_Shape(s_MouseShapes, s_MouseControl[m_DefaultMouse].Small + m_MouseFrame));
+                    Extract_Shape(Get_Shape_File_For_Mouse(m_DefaultMouse), s_MouseControl[m_DefaultMouse].Small + m_MouseFrame));
             }
         } else {
             g_mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
                 s_MouseControl[m_DefaultMouse].HotSpotY,
-                Extract_Shape(s_MouseShapes, s_MouseControl[m_DefaultMouse].Frame + m_MouseFrame));
+                Extract_Shape(Get_Shape_File_For_Mouse(m_DefaultMouse), s_MouseControl[m_DefaultMouse].Frame + m_MouseFrame));
         }
     }
 }
@@ -291,4 +301,15 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
     DEBUG_ASSERT_PRINT(saved_cells == 0, "IOMap save failed to save %d cells that were counted to save.\n", saved_cells);
 
     return saved_cells == 0;
+}
+
+/**
+ * @brief Helper function for returning the correct mouse shape for the type.
+ */
+void *GameMouseClass::Get_Shape_File_For_Mouse(MouseType type) const
+{
+    if (type == MOUSE_EDITOR_BRUSH && s_EditorMouseShapes != nullptr) {
+        return s_EditorMouseShapes;
+    }
+    return s_MouseShapes;
 }

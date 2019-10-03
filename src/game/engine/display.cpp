@@ -1154,7 +1154,7 @@ void DisplayClass::Mouse_Left_Up(
                 break;
 
             case ACTION_CHRONOWARP:
-                Set_Default_Mouse(MOUSE_CHRONO2, mouse_in_radar);
+                Set_Default_Mouse(MOUSE_CHRONOWARP, mouse_in_radar);
                 break;
 
             case ACTION_GUARD_AREA:
@@ -1300,7 +1300,7 @@ void DisplayClass::Mouse_Left_Up(
                 break;
 
             case ACTION_CHRONOWARP:
-                Set_Default_Mouse(MOUSE_CHRONO2, mouse_in_radar);
+                Set_Default_Mouse(MOUSE_CHRONOWARP, mouse_in_radar);
                 break;
 
             case ACTION_HEAL:

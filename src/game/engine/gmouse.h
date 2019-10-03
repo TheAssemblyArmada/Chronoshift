@@ -55,6 +55,9 @@ public:
     BOOL Hook_Save(Pipe &pipe) { return GameMouseClass::Save(pipe); }
 #endif
 
+private:
+    void *Get_Shape_File_For_Mouse(MouseType type) const;
+
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_MouseInRadar : 1; // 1 Is the mouse in the radar map?
@@ -73,6 +76,7 @@ private:
     static void *s_MouseShapes;
     static TCountDownTimerClass<SystemTimerClass> s_AnimationTimer;
 #endif
+    static void *s_EditorMouseShapes;
     static MouseStruct s_MouseControl[MOUSE_COUNT];
 };
 
