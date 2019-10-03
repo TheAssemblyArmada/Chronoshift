@@ -35,52 +35,58 @@ enum RedrawEnum
 
 enum MouseType
 {
+    MOUSE_POINTER,
+    MOUSE_SCROLL_N,
+    MOUSE_SCROLL_NE,
+    MOUSE_SCROLL_E,
+    MOUSE_SCROLL_SE,
+    MOUSE_SCROLL_S,
+    MOUSE_SCROLL_SW,
+    MOUSE_SCROLL_W,
+    MOUSE_SCROLL_NW,
+    MOUSE_CANT_SCROLL_N,
+    MOUSE_CANT_SCROLL_NE,
+    MOUSE_CANT_SCROLL_E,
+    MOUSE_CANT_SCROLL_SE,
+    MOUSE_CANT_SCROLL_S,
+    MOUSE_CANT_SCROLL_SW,
+    MOUSE_CANT_SCROLL_W,
+    MOUSE_CANT_SCROLL_NW,
+    MOUSE_CANT_MOVE,
+    MOUSE_MOVE, // guessed name
+    MOUSE_ENTER,
+    MOUSE_DEPLOY,
+    MOUSE_SELECT,
+    MOUSE_ATTACK,
+    MOUSE_SELL,
+    MOUSE_SELL_UNIT,
+    MOUSE_REPAIR,
+    MOUSE_CANT_REPAIR,
+    MOUSE_CANT_SELL,
+    MOUSE_RADAR, // radar/minimap cursor?
+    MOUSE_NUKE,
+    MOUSE_AIR_STRIKE,
+    MOUSE_SABOTAGE,
+    MOUSE_GUARD_AREA,
+    MOUSE_HEAL,
+    MOUSE_DAMAGE,
+    MOUSE_GREPAIR,
+    MOUSE_ATTACK2,
+    MOUSE_CANT_DEPLOY,
+    MOUSE_CANT_ENTER,
+    MOUSE_CANT_GREPAIR,
+    MOUSE_CHRONOSPHERE, // WarpIn
+    MOUSE_CHRONOWARP, // WarpOut
+
+    MOUSE_EDITOR_BRUSH, // Special case! As we are merging the map editor and the game, and EDWIN
+                        // has its own mouse shape, we need to make sure that g_InMapEditor is checked
+                        // for this case and we switch the mouse shape file to EDMOUSE.SHP.
+                        // In EDMOUSE.SHP, the brush has the same frame number as MOUSE_CANT_DEPLOY.
+
+    MOUSE_COUNT,
+
     MOUSE_NONE = -1,
-    MOUSE_FIRST = 0,
-    MOUSE_POINTER = 0,
-    MOUSE_SCROLL_N = 1,
-    MOUSE_SCROLL_NE = 2,
-    MOUSE_SCROLL_E = 3,
-    MOUSE_SCROLL_SE = 4,
-    MOUSE_SCROLL_S = 5,
-    MOUSE_SCROLL_SW = 6,
-    MOUSE_SCROLL_W = 7,
-    MOUSE_SCROLL_NW = 8,
-    MOUSE_CANT_SCROLL_N = 9,
-    MOUSE_CANT_SCROLL_NE = 10,
-    MOUSE_CANT_SCROLL_E = 11,
-    MOUSE_CANT_SCROLL_SE = 12,
-    MOUSE_CANT_SCROLL_S = 13,
-    MOUSE_CANT_SCROLL_SW = 14,
-    MOUSE_CANT_SCROLL_W = 15,
-    MOUSE_CANT_SCROLL_NW = 16,
-    MOUSE_CANT_MOVE = 17,
-    MOUSE_MOVE = 18, // guessed name
-    MOUSE_ENTER = 19,
-    MOUSE_DEPLOY = 20,
-    MOUSE_SELECT = 21,
-    MOUSE_ATTACK = 22,
-    MOUSE_SELL = 23,
-    MOUSE_SELL_UNIT = 24,
-    MOUSE_REPAIR = 25,
-    MOUSE_CANT_REPAIR = 26,
-    MOUSE_CANT_SELL = 27,
-    MOUSE_RADAR = 28, // radar/minimap cursor?
-    MOUSE_NUKE = 29,
-    MOUSE_AIR_STRIKE = 30,
-    MOUSE_SABOTAGE = 31,
-    MOUSE_GUARD_AREA = 32,
-    MOUSE_HEAL = 33,
-    MOUSE_DAMAGE = 34,
-    MOUSE_GREPAIR = 35,
-    MOUSE_ATTACK2 = 36,
-    MOUSE_CANT_DEPLOY = 37,
-    MOUSE_CANT_ENTER = 38,
-    MOUSE_CANT_GREPAIR = 39,
-    MOUSE_CHRONOSPHERE = 40, // WarpIn
-    MOUSE_CHRONO2 = 41, // WarpOut    //ACTION_CHRONOWARP
-    MOUSE_EDITOR_BRUSH = 42, // frame is the same as "NoDeploy", only used for g_inMapEditor from EDMOUSE.SHP
-    MOUSE_COUNT = 43
+    MOUSE_FIRST = MOUSE_POINTER,
 };
 
 class GadgetClass;
