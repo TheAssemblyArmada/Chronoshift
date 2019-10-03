@@ -17,6 +17,7 @@
 #include "aircraft.h"
 #include "building.h"
 #include "buildingtype.h"
+#include "buffpipe.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"
@@ -733,7 +734,7 @@ void DisplayClass::Read_INI(GameINIClass &ini)
 #endif
 }
 
-void DisplayClass::Write_INI(GameINIClass &ini)
+/*void DisplayClass::Write_INI(GameINIClass &ini)
 {
     // Needs celltriggerclass
 #ifdef GAME_DLL
@@ -741,7 +742,7 @@ void DisplayClass::Write_INI(GameINIClass &ini)
         reinterpret_cast<void (*)(const DisplayClass *, GameINIClass &)>(0x004B545C);
     func(this, ini);
 #endif
-}
+}*/
 
 /**
  * Marks a cell as being visited by the given house, provided the house is spied by, allied with or is the player.
@@ -1404,6 +1405,44 @@ void DisplayClass::Mouse_Left_Release(
     void (*func)(const DisplayClass *, cell_t, int, int, ObjectClass *, ActionType, BOOL) =
         reinterpret_cast<void (*)(const DisplayClass *, cell_t, int, int, ObjectClass *, ActionType, BOOL)>(0x004B3CA8);
     func(this, cellnum, mouse_x, mouse_y, object, action, mouse_in_radar);
+#endif
+}
+
+void DisplayClass::Write_INI(GameINIClass &ini)
+{
+    // Needs celltriggerclass
+#ifndef CHRONOSHIFT_STANDALONE
+    void (*func)(const DisplayClass *, GameINIClass &) =
+        reinterpret_cast<void (*)(const DisplayClass *, GameINIClass &)>(0x004B545C);
+    func(this, ini);
+#else
+    static const char *_map_section_name = "Map";
+    static const char *_waypoint_section_name = "Waypoints";
+    static const char *_mappack_section_name = "MapPack";
+
+    ini.Clear(_map_section_name);
+
+    ini.Put_TheaterType(_map_section_name, "Theater", Scen.Get_Theater());
+    ini.Put_Int(_map_section_name, "X", MapCellX);
+    ini.Put_Int(_map_section_name, "Y", MapCellY);
+    ini.Put_Int(_map_section_name, "Width", MapCellWidth);
+    ini.Put_Int(_map_section_name, "Height", MapCellHeight);
+
+    char buffer[16];
+    for ( int i = 0; i < WAYPOINT_COUNT; ++i ) {
+        cell_t wpcell = Scen.Get_Waypoint(i);
+        if ( wpcell != -1 ) {
+            std::snprintf(buffer, sizeof(buffer), "%d", i);
+            ini.Put_Int(_waypoint_section_name, buffer, wpcell);
+        }
+    }
+
+    ini.Clear(_mappack_section_name);
+
+    BufferPipe buffpipe(_staging_buffer, sizeof(_staging_buffer));
+    if ( Write_Binary(buffpipe) ) {
+        ini.Put_UUBlock(_mappack_section_name, _staging_buffer, sizeof(_staging_buffer));
+    }
 #endif
 }
 

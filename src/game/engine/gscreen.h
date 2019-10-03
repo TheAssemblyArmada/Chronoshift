@@ -163,6 +163,10 @@ public:
     virtual BOOL Load(Straw &straw) = 0;
     virtual BOOL Save(Pipe &pipe) const = 0;
 
+    // Additions for MapEditorClass
+    virtual void Write_INI(GameINIClass &ini) = 0; // Not virtual in RA, but its at the end of the
+                                                   // virtual table, so no negative runtime impact.
+
 protected:
     int RedrawFlag;
 

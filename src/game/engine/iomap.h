@@ -19,13 +19,13 @@
 #define IOMAP_H
 
 #include "always.h"
-#include "gmouse.h"
+#include "mapeditor.h"
 
-// TODO Update this as additional layers of the hierachy are implemented.
+// NOTE: Update this as additional layers of the hierachy are added.
 #ifdef GAME_DLL
-extern GameMouseClass &Map;
+extern MapEditorClass &Map;
 #else
-extern GameMouseClass Map;
+extern MapEditorClass Map;
 #endif
 
 #endif // IOMAP_H
