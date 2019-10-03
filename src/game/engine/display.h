@@ -61,7 +61,6 @@ public:
     virtual void Decode_Pointers() override;
 
     virtual void Read_INI(GameINIClass &ini) override;
-    void Write_INI(GameINIClass &ini); // Not virtual in RA.
     virtual BOOL Map_Cell(cell_t cellnum, HouseClass *house) override;
     virtual cell_t Click_Cell_Calc(int x, int y) const override;
     virtual void Help_Text(int str_id, int x = -1, int y = -1, int color = 14, BOOL no_wait = false) override {}
@@ -78,7 +77,9 @@ public:
     virtual void Mouse_Left_Held(int mouse_x, int mouse_y) override;
     virtual void Mouse_Left_Release(cell_t cellnum, int mouse_x, int mouse_y, ObjectClass *object = nullptr,
         ActionType action = ACTION_NONE, BOOL mouse_in_radar = false) override;
+    virtual void Write_INI(GameINIClass &ini) override;
 
+    //void Write_INI(GameINIClass &ini); // Not virtual in RA.
     coord_t Pixel_To_Coord(int x, int y);
     void Set_Cursor_Shape(int16_t *list = nullptr);
     void Refresh_Band();

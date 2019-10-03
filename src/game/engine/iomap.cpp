@@ -15,7 +15,7 @@
  */
 #include "iomap.h"
 
-// TODO Update this as additional layers of the hierachy are implemented.
+// NOTE: Update this as additional layers of the hierachy are added.
 #ifndef GAME_DLL
-GameMouseClass Map;
+MapEditorClass Map;
 #endif

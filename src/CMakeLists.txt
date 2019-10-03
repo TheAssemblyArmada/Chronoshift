@@ -107,6 +107,7 @@ set(GAMEENGINE_SRC
     game/engine/logic.cpp
     game/engine/loaddialog.cpp
     game/engine/map.cpp
+    game/engine/mapeditor.cpp
     game/engine/mission.cpp
     game/engine/multimission.cpp
     game/engine/missioncontrol.cpp

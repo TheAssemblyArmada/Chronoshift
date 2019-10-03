@@ -471,6 +471,8 @@ public:
     static void Init_Heap();
     static void One_Time() {}
     static void Init(TheaterType theater);
+
+    // Functions only for the map editor mode.
     static void MapEditor_418A1C();
 
 private:
