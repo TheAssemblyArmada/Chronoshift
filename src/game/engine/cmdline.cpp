@@ -25,7 +25,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
 {
     Special.Init();
     Whom = HOUSES_GOODGUY;
-    g_inMapEditor = false;
+    g_InMapEditor = false;
     DebugUnshroud = false;
 
     // TODO decide what command line options we need to parse, original stuff might not make sense anymore.

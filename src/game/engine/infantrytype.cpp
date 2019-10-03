@@ -102,7 +102,7 @@ void InfantryTypeClass::operator delete(void *ptr)
  */
 int InfantryTypeClass::Full_Name() const
 {
-    if (g_inMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type == INFANTRY_C10 || m_Type == INFANTRY_EINSTEIN
+    if (g_InMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type == INFANTRY_C10 || m_Type == INFANTRY_EINSTEIN
         || m_Type == INFANTRY_DELPHI) {
         return AbstractTypeClass::Full_Name();
     }

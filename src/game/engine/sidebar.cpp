@@ -171,7 +171,7 @@ void SidebarClass::StripClass::Init_Clear()
 
 void SidebarClass::StripClass::Init_IO(int column)
 {
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         WhichColumn = column;
 
         UpButton[WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_LEFT);
@@ -202,7 +202,7 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
 
     PaletteClass palette;
 
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         Reload_LogoShapes();
 
         if (theater != THEATER_NONE && theater != g_lastTheater) {
@@ -412,7 +412,7 @@ void SidebarClass::Init_Clear()
 {
     PowerClass::Init_Clear();
     SidebarToRedraw = true;
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         SidebarBit4 = false;
         SidebarBit8 = false;
         SidebarBit16 = false;
@@ -429,7 +429,7 @@ void SidebarClass::Init_IO()
 {
     PowerClass::Init_IO();
 
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         RepairButton.Set_ID(BUTTON_REPAIR);
         RepairButton.Set_Position(498, 150);
         RepairButton.Set_Sticky(true);
@@ -473,7 +473,7 @@ void SidebarClass::Init_Theater(TheaterType theater)
 {
     PowerClass::Init_Theater(theater);
 
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         Reload_Sidebar();
 
         for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
@@ -496,8 +496,8 @@ void SidebarClass::Draw_It(BOOL force_redraw)
 {
     PowerClass::Draw_It(force_redraw);
 
-    if (!g_inMapEditor) {
-        if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && !g_inMapEditor ) {
+    if (!g_InMapEditor) {
+        if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && !g_InMapEditor ) {
             SidebarToRedraw = false;
             if (g_logicPage->Lock()) {
                 if (SidebarShape != nullptr) {
@@ -736,7 +736,7 @@ BOOL SidebarClass::Activate_Demolish(int state) // Actually Zoom?
 
 BOOL SidebarClass::Add(RTTIType item, int id)
 {
-    if (g_inMapEditor) {
+    if (g_InMapEditor) {
         return false;
     }
 
@@ -807,7 +807,7 @@ BOOL SidebarClass::Activate(int mode)
 {
     bool prevvalue = SidebarIsDrawn;
 
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         if (!Session.Playback_Game()) {
             SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? !SidebarIsDrawn : mode == SIDEBAR_ACTIVATE);
 

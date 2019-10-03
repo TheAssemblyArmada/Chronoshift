@@ -486,27 +486,29 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
     DEBUG_ASSERT(house != nullptr);
 
-    // this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
-    if (!g_inMapEditor) {
-        // BUGFIX Original does not check radius is within array bounds
-        if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
-            const int32_t *offset_ptr = RadiusOffset;
-            int32_t radius_count = RadiusCount[radius];
+    // We don't need to process jamming in map editing mode.
+    if (g_InMapEditor) {
+        return;
+    }
 
-            while (--radius_count != -1) {
-                cell_t offset_cellnum = *offset_ptr + cellnum;
-                ++offset_ptr;
+    // BUGFIX Original does not check radius is within array bounds
+    if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+        const int32_t *offset_ptr = RadiusOffset;
+        int32_t radius_count = RadiusCount[radius];
 
-                if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-                    if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
-                        Map.Jam_Cell(offset_cellnum, house);
-                    }
+        while (--radius_count != -1) {
+            cell_t offset_cellnum = *offset_ptr + cellnum;
+            ++offset_ptr;
+
+            if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+                if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                    Map.Jam_Cell(offset_cellnum, house);
                 }
             }
+        }
 
-            if (house->Player_Has_Control()) {
-                Map.Constrained_Look(Cell_To_Coord(cellnum), Rule.Gap_Radius() * 256);
-            }
+        if (house->Player_Has_Control()) {
+            Map.Constrained_Look(Cell_To_Coord(cellnum), Rule.Gap_Radius() * 256);
         }
     }
 }
@@ -522,21 +524,23 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
     DEBUG_ASSERT(house != nullptr);
 
-    // this function is empty in EDWIN, ensure function behaves correctly for map editing mode.
-    if (!g_inMapEditor) {
-        // BUGFIX Original does not check radius is within array bounds
-        if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
-            const int32_t *offset_ptr = RadiusOffset;
-            int32_t radius_count = RadiusCount[radius];
+    // We don't need to process jamming in map editing mode.
+    if (g_InMapEditor) {
+        return;
+    }
+    
+    // BUGFIX Original does not check radius is within array bounds
+    if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+        const int32_t *offset_ptr = RadiusOffset;
+        int32_t radius_count = RadiusCount[radius];
 
-            while (--radius_count != -1) {
-                cell_t offset_cellnum = *offset_ptr + cellnum;
-                ++offset_ptr;
+        while (--radius_count != -1) {
+            cell_t offset_cellnum = *offset_ptr + cellnum;
+            ++offset_ptr;
 
-                if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-                    if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
-                        Map.UnJam_Cell(offset_cellnum, house);
-                    }
+            if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+                if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                    Map.UnJam_Cell(offset_cellnum, house);
                 }
             }
         }

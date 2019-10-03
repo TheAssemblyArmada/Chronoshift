@@ -97,7 +97,7 @@ extern int &g_iniFormat;
 extern int &g_GameFrame; // NOTE: previously g_Frame.
 extern BOOL &g_gameInFocus;
 extern BOOL &g_InMovie;
-extern BOOL &g_inMapEditor;
+extern BOOL &g_InMapEditor;
 extern char *&Metal12FontPtr;
 extern char *&MapFontPtr;
 extern char *&Font6Ptr;
@@ -164,7 +164,7 @@ extern BOOL &g_Debug_Icon;
 extern BOOL &g_Debug_Flag;
 extern BOOL &g_Debug_Lose;
 extern BOOL &g_Debug_Win;
-extern BOOL &g_Debug_Map;
+//extern BOOL &g_Debug_Map; // NOTE: Use g_InMapEditor
 extern BOOL &g_Debug_Passable;
 extern BOOL &g_Debug_Unshroud;
 extern BOOL &g_Debug_Threat;
@@ -183,7 +183,7 @@ extern int g_iniFormat;
 extern int g_GameFrame;
 extern BOOL g_gameInFocus;
 extern BOOL g_InMovie;
-extern BOOL g_inMapEditor;
+extern BOOL g_InMapEditor;
 extern char *Metal12FontPtr;
 extern char *MapFontPtr;
 extern char *Font6Ptr;
@@ -250,7 +250,7 @@ extern BOOL g_Debug_Icon;
 extern BOOL g_Debug_Flag;
 extern BOOL g_Debug_Lose;
 extern BOOL g_Debug_Win;
-extern BOOL g_Debug_Map;
+//extern BOOL g_Debug_Map; // NOTE: Use g_InMapEditor
 extern BOOL g_Debug_Passable;
 extern BOOL g_Debug_Unshroud;
 extern BOOL g_Debug_Threat;

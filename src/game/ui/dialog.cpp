@@ -594,7 +594,7 @@ void Draw_Caption(const char *string, int x, int y, int w)
     if (string != nullptr && *string != '\0') {
         int middle = w / 2 + x;
 
-        if (g_inMapEditor) {
+        if (g_InMapEditor) {
             Fancy_Text_Print(string,
                 middle,
                 y + 4,
