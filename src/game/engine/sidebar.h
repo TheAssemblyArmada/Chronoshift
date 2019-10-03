@@ -106,6 +106,12 @@ class SidebarClass : public PowerClass
         BOOL Factory_Link(int factory_id, RTTIType type, int id);
         int Abandon_Production(int unk1);
 
+        void Set_Position(int x, int y)
+        {
+            XPos = x;
+            YPos = y;
+        }
+
     private:
 #ifdef GAME_DLL
         static void *&LogoShapes;
@@ -119,8 +125,8 @@ class SidebarClass : public PowerClass
 
         // these are the strip scrolling buttons, 2 pairs of up and down.
         // based on the column count, buttons will be allocated dynamicly.
-        static ShapeButtonClass *UpButton;
-        static ShapeButtonClass *DownButton;
+        static ARRAY_DEC(ShapeButtonClass, UpButton, COLUMN_COUNT);
+        static ARRAY_DEC(ShapeButtonClass, DownButton, COLUMN_COUNT);
         static ARRAY2D_DEC(char, ClockTranslucentTable, 2, 256);
 #else
         static void *LogoShapes;

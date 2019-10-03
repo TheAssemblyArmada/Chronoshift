@@ -495,8 +495,8 @@ void *&SidebarClass::StripClass::ClockShapes = Make_Global<void *>(0x0068A468);
 ARRAY_DEF(0x0068A46C, void *, SidebarClass::StripClass::SpecialShapes, SPECIAL_COUNT);
 ARRAY2D_DEF(0x0068A2C4, SidebarClass::StripClass::SelectClass, SidebarClass::StripClass::SelectButton, COLUMN_COUNT,
     SidebarClass::StripClass::ROW_COUNT);
-ShapeButtonClass *SidebarClass::StripClass::UpButton = Make_Pointer<ShapeButtonClass>(0x0068A1E4);
-ShapeButtonClass *SidebarClass::StripClass::DownButton = Make_Pointer<ShapeButtonClass>(0x0068A254);
+ARRAY_DEF(0x0068A1E4, ShapeButtonClass, SidebarClass::StripClass::UpButton, COLUMN_COUNT);
+ARRAY_DEF(0x0068A254, ShapeButtonClass, SidebarClass::StripClass::DownButton, COLUMN_COUNT);
 ARRAY2D_DEF(0x00689F18, char, SidebarClass::StripClass::ClockTranslucentTable, 2, 256);
 SidebarClass::SBGadgetClass &SidebarClass::Background = Make_Global<SidebarClass::SBGadgetClass>(0x0068A118);
 ShapeButtonClass &SidebarClass::RepairButton = Make_Global<ShapeButtonClass>(0x0068A13C);
