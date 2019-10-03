@@ -29,7 +29,11 @@
 #include "theme.h"
 #include "ttimer.h"
 
-#define VIEW_COUNT 4
+enum ScenarioEnums
+{
+    VIEW_COUNT = 4,
+    WAYPOINT_COUNT = 101,
+};
 
 enum ScenarioPlayerEnum
 {
@@ -58,11 +62,6 @@ enum ScenarioVarEnum
 
 class ScenarioClass
 {
-    enum
-    {
-        WAYPOINT_COUNT = 101,
-    };
-
 public:
     ScenarioClass();
 
