@@ -81,6 +81,8 @@ KeyNumType OptionsClass::DebugKeyToggleFullMap = KN_NONE;
 KeyNumType OptionsClass::DebugKeySpecialDialog = KN_NONE;
 #endif
 
+KeyNumType OptionsClass::KeyEditorToggle = KN_NONE;
+
 OptionsClass::OptionsClass() :
     GameSpeed(GAMESPEED_3),
     ScrollRate(SCROLLSPEED_3),
@@ -149,6 +151,7 @@ OptionsClass::OptionsClass() :
     KeyTeam8(KN_8),
     KeyTeam9(KN_9),
     KeyTeam10(KN_0)
+    // KeyEditorToggle(KN_NONE),
 #if !defined(GAME_DLL) && defined(CHRONOSHIFT_DEBUG)
     ,
     DebugKeyToggleDebug(KN_NONE),
@@ -393,6 +396,8 @@ void OptionsClass::Load_Settings()
     KeyTeam8 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam8", KeyTeam8);
     KeyTeam9 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam9", KeyTeam9);
     KeyTeam10 = ini.Get_KeyNumType("WinHotkeys", "KeyTeam10", KeyTeam10);
+
+    KeyEditorToggle = ini.Get_KeyNumType("WinHotkeys", "KeyEditorToggle", KeyEditorToggle);
 
 #if defined(CHRONOSHIFT_DEBUG)
     DebugKeyToggleDebug = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleDebug", DebugKeyToggleDebug);

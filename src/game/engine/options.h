@@ -122,6 +122,8 @@ public:
     KeyNumType Get_KeyGuard() const { return KeyGuard; }
     KeyNumType Get_KeyScatter() const { return KeyScatter; }
 
+    KeyNumType Get_KeyEditorToggle() const { return KeyEditorToggle; }
+
 #if defined(CHRONOSHIFT_DEBUG)
     KeyNumType Get_DebugKeyToggleDebug() const { return DebugKeyToggleDebug; }
     KeyNumType Get_DebugKeyToggleVortex() const { return DebugKeyToggleVortex; }
@@ -261,6 +263,8 @@ private:
     KeyNumType KeyTeam8;
     KeyNumType KeyTeam9;
     KeyNumType KeyTeam10;
+
+    static KeyNumType KeyEditorToggle;
 
 #if defined(CHRONOSHIFT_DEBUG)
 #if defined(GAME_DLL)
