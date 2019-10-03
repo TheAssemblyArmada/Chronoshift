@@ -126,7 +126,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
             FacingType scroll_facing = Direction_To_Facing(_direction);
 
-            int rate_index = g_inMapEditor ? Options.Get_Scroll_Rate() + 1 : (8 - ScrollUnkInt);
+            int rate_index = g_InMapEditor ? Options.Get_Scroll_Rate() + 1 : (8 - ScrollUnkInt);
 
             if (rate_index < (Options.Get_Scroll_Rate() + 1)) {
                 rate_index = (Options.Get_Scroll_Rate() + 1);
@@ -151,7 +151,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                     distance = _rate[rate_index];
                     Scroll_Map(_direction, distance, true);
 
-                    if (g_inMapEditor) {
+                    if (g_InMapEditor) {
                         ScrollingCounter = 1;
                     } else {
                         if (edge_scrolling && ScrollingCounter == 0) {
@@ -165,7 +165,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             }
         }
 
-        if (!g_inMapEditor && !edge_scrolling && ScrollingCounter == 0) {
+        if (!g_InMapEditor && !edge_scrolling && ScrollingCounter == 0) {
             --ScrollUnkInt;
 
             if (ScrollUnkInt < 0) {

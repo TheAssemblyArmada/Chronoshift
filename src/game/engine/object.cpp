@@ -279,7 +279,7 @@ BOOL ObjectClass::Render(BOOL force_render)
 
     coord_t render_coord = Render_Coord();
 
-    if (!g_inMapEditor && !DebugUnshroud) {
+    if (!g_InMapEditor && !DebugUnshroud) {
 
         if (!force_render && !m_ToDisplay) {
             return false;
@@ -548,7 +548,7 @@ BOOL ObjectClass::Mark(MarkType mark)
         return true;
     }
 
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         int risk = 0;
         HousesType house = HOUSES_NONE;
 
@@ -608,8 +608,8 @@ BOOL ObjectClass::Select()
     // TODO Needs TechnoClass, HouseClass, DisplayClass
     DEBUG_ASSERT(Is_Active());
 
-    if ((g_inMapEditor || !m_Selected) && Class_Of().Is_Selectable()) {
-        if (!g_inMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->m_IsALoner) {
+    if ((g_InMapEditor || !m_Selected) && Class_Of().Is_Selectable()) {
+        if (!g_InMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->m_IsALoner) {
             return false;
         }
 

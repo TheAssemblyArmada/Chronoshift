@@ -140,7 +140,7 @@ coord_t BuildingTypeClass::Coord_Fixup(coord_t coord) const
  */
 int BuildingTypeClass::Full_Name() const
 {
-    if (g_inMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type < BUILDING_V01 || m_Type > BUILDING_V37) {
+    if (g_InMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type < BUILDING_V01 || m_Type > BUILDING_V37) {
         return AbstractTypeClass::Full_Name();
     }
 

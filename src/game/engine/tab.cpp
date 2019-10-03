@@ -195,7 +195,7 @@ void TabClass::CreditClass::AI(BOOL force_update)
 {
     static int _last = 0;
 
-    if (g_inMapEditor) {
+    if (g_InMapEditor) {
         Available = std::max(0, Map.TotalValue);
 
         if (Credits != Available) {

@@ -209,7 +209,7 @@ void TerrainClass::Draw_It(int x, int y, WindowNumberType window) const
             frame = 1;
         }
         ShapeFlags flags = SHAPE_NORMAL;
-        if (m_Selected && g_Debug_Map) {
+        if (m_Selected && g_InMapEditor) {
             flags |= SHAPE_FADING;
         }
         // edwin has a if case for team flags here

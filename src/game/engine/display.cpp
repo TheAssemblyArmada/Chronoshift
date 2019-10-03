@@ -346,7 +346,7 @@ void DisplayClass::Init_IO()
 {
     MapClass::Init_IO();
 
-    if (!g_inMapEditor) {
+    if (!g_InMapEditor) {
         TacticalButton.Zap();
         Add_A_Button(TacticalButton);
     }
@@ -2058,7 +2058,7 @@ BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType ho
         _passed_proximity = false;
     }
 
-    if (g_inMapEditor) {
+    if (g_InMapEditor) {
         return true;
     }
 

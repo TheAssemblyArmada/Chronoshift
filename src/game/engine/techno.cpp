@@ -712,8 +712,8 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
         return VISUAL_NORMAL;
     }
 
-    if (!Techno_Class_Of().Is_Invisible() || m_PlayerOwned || g_inMapEditor) {
-        if (m_CloakState == CLOAK_UNCLOAKED || g_inMapEditor) {
+    if (!Techno_Class_Of().Is_Invisible() || m_PlayerOwned || g_InMapEditor) {
+        if (m_CloakState == CLOAK_UNCLOAKED || g_InMapEditor) {
             return VISUAL_NORMAL;
         }
 

@@ -122,7 +122,7 @@ void GameScreenClass::Remove_A_Button(GadgetClass &gadget)
 void GameScreenClass::Render()
 {
     // This if is only done in EDWIN, so editor only?
-    if (g_inMapEditor && Buttons != nullptr && Buttons->Is_List_To_Redraw()) {
+    if (g_InMapEditor && Buttons != nullptr && Buttons->Is_List_To_Redraw()) {
         RedrawFlag |= REDRAW_2;
     }
 
@@ -131,7 +131,7 @@ void GameScreenClass::Render()
 
         BOOL to_redraw = (RedrawFlag & REDRAW_FORCE) != 0;
 
-        if (g_inMapEditor && to_redraw) {
+        if (g_InMapEditor && to_redraw) {
             g_hidPage.Clear();
         }
 
@@ -141,7 +141,8 @@ void GameScreenClass::Render()
             Buttons->Draw_All(false);
         }
 
-        if (!g_inMapEditor) {
+
+        if (!g_InMapEditor) {
             if (Session.Get_Messages().Num_Messages() > 0) {
                 // Calculate the width of the message buffer based on the current tactical width.
                 Session.Get_Messages().Set_Width(CELL_PIXELS * Lepton_To_Cell_Coord(Map.Get_DisplayWidth()));

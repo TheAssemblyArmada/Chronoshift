@@ -534,7 +534,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
     }
 
     if ((Overlay != OVERLAY_NONE && OverlayFrame != -1)
-        && (!g_inMapEditor || Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(Overlay).Is_Wall())) {
+        && (!g_InMapEditor || Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(Overlay).Is_Wall())) {
         return false;
     }
 
@@ -754,7 +754,7 @@ void CellClass::Overlap_Up(ObjectClass *object)
         }
     }
 
-    if (g_inMapEditor) {
+    if (g_InMapEditor) {
         Map.Radar_Pixel(CellNumber);
     }
 }
@@ -811,7 +811,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
         }
 
 #if 0 // TODO Editor related stuff.
-        if ((g_inMapEditor && Map.field_8567) /*|| Debug_CellPassable*/) {
+        if ((g_InMapEditor && Map.field_8567) /*|| Debug_CellPassable*/) {
             if (!Ground[Land].Is_Buildable() || Ground[Land].Get_Speed(SPEED_FOOT) == fixed_t::_0_1 && obj != nullptr) {
                 fading_table = DisplayClass::FadingRed;
             }
@@ -819,7 +819,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
     
         obj = Cell_Occupier();
 
-        if ((g_inMapEditor
+        if ((g_InMapEditor
                 && obj != nullptr /*&& obj->Get_Next() != nullptr*/) /*|| Debug_CellOccupied*/) {
             if (Occupied_By_Foot()) {
                 fading_table = DisplayClass::FadingYellow;
