@@ -183,6 +183,9 @@ void Init_Bootstrap_Mixfiles()
     new GameMixFile("local.mix", &g_publicKey);
     GameFileClass::Cache_Mix("local.mix");
 
+    new GameMixFile("editor.mix", &g_publicKey);
+    GameFileClass::Cache_Mix("editor.mix");
+
     new GameMixFile("hires.mix", &g_publicKey);
     GameFileClass::Cache_Mix("hires.mix");
 
@@ -199,6 +202,10 @@ void Init_Bootstrap_Mixfiles()
 void Init_Secondary_Mixfiles()
 {
     MainMix = new GameMixFile("main.mix", &g_publicKey); // In RA main.mix contains the others.
+
+    new GameMixFile("edhi.mix", &g_publicKey);
+    GameFileClass::Cache_Mix("edhi.mix");
+
     ConquerMix = new GameMixFile("conquer.mix", &g_publicKey);
 
     if (GeneralMix == nullptr) {
@@ -488,6 +495,7 @@ void Init_Mouse()
 #endif
  
     void *mouse_shp = MixFileClass<GameFileClass>::Retrieve("mouse.shp");
+    void *edmouse_shp = MixFileClass<GameFileClass>::Retrieve("edmouse.shp");
 
     if (mouse_shp != nullptr) {
         g_mouse->Set_Cursor(0, 0, Extract_Shape(mouse_shp));

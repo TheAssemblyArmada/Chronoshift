@@ -305,14 +305,12 @@ bool Init_Language()
     }
 
     // Load Editor string table.
-#if defined(CHRONOSHIFT_MAP_EDITOR)
     DEBUG_LOG("Init_Language() - Loading Editor Strings...\n");
     filename = Language_Name("editor");
     EditorStrings = (char *)GameFileClass::Retrieve(filename);
     if (EditorStrings == nullptr) {
         DEBUG_LOG("Failed to find string file '%s'.\n", filename);
     }
-#endif // CHRONOSHIFT_MAP_EDITOR
 
     // Load Debug string table.
 #if defined(CHRONOSHIFT_DEBUG)
