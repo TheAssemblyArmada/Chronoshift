@@ -34,3 +34,5 @@ CPackSourceConfig.cmake
 *.tmp
 *.bak
 thumbs.db
+/.vscode/
+/.vs/
