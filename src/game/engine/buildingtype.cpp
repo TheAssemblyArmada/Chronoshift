@@ -613,3 +613,19 @@ BuildingType BuildingTypeClass::From_Name(const char *name)
 
     return BUILDING_NONE;
 }
+
+/**
+ * @brief Initialises the memory heap for BuildingTypeClass objects.
+ * @warning Order of initialisation is important so enum matches position in the heap.
+ *
+ * @address 0x00429F38
+ */
+void BuildingTypeClass::Init_Heap()
+{
+#ifdef GAME_DLL
+    void (*func)() = reinterpret_cast<void (*)()>(0x00429F38);
+    func();
+#else
+    // The order of heap initialisation MUST match the BuildingType enum in buildingtype.h
+#endif
+}

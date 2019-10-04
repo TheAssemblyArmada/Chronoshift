@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "infantrytype.h"
+#include "infantrydata.h"
 #include "gameini.h"
 #include "facing.h"
 #include "globals.h"
@@ -234,4 +235,41 @@ InfantryType InfantryTypeClass::From_Name(const char *name)
     }
 
     return INFANTRY_NONE;
+}
+
+/**
+ * @brief Initialises the memory heap for InfantryTypeClass objects.
+ * @warning Order of initialisation is important so enum matches position in the heap.
+ *
+ * @address 0x004DF754
+ */
+void InfantryTypeClass::Init_Heap()
+{
+    // The order of heap initialisation MUST match the InfantryType enum in infantrytype.h
+    new InfantryTypeClass(InfantryE1);
+    new InfantryTypeClass(InfantryGrenadier);
+    new InfantryTypeClass(InfantryE3);
+    new InfantryTypeClass(InfantryFlameTrooper);
+    new InfantryTypeClass(InfantryEngineer);
+    new InfantryTypeClass(InfantryE7);
+    new InfantryTypeClass(InfantrySpy);
+    new InfantryTypeClass(InfantryThief);
+    new InfantryTypeClass(InfantryMedic);
+    new InfantryTypeClass(InfantryGeneral);
+    new InfantryTypeClass(InfantryDog);
+    new InfantryTypeClass(InfantryC1);
+    new InfantryTypeClass(InfantryC2);
+    new InfantryTypeClass(InfantryC3);
+    new InfantryTypeClass(InfantryC4);
+    new InfantryTypeClass(InfantryC5);
+    new InfantryTypeClass(InfantryC6);
+    new InfantryTypeClass(InfantryC7);
+    new InfantryTypeClass(InfantryC8);
+    new InfantryTypeClass(InfantryC9);
+    new InfantryTypeClass(InfantryC10);
+    new InfantryTypeClass(InfantryEinstein);
+    new InfantryTypeClass(InfantryDelphi);
+    new InfantryTypeClass(InfantryDrChan);
+    new InfantryTypeClass(InfantryShockTrooper);
+    new InfantryTypeClass(InfantryMechanic);
 }
