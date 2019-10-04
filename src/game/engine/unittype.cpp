@@ -282,3 +282,36 @@ void UnitTypeClass::One_Time()
         g_MGunShapes = GameFileClass::Retrieve("mgun.shp");
     }
 }
+
+/**
+ * @brief Initialises the memory heap for UnitTypeClass objects.
+ * @warning Order of initialisation is important so enum matches position in the heap.
+ *
+ * @address 0x0056E2BC
+ */
+void UnitTypeClass::Init_Heap()
+{
+    // The order of heap initialisation MUST match the UnitType enum in unittype.h
+    new UnitTypeClass(UnitHTank);
+    new UnitTypeClass(UnitMTank);
+    new UnitTypeClass(UnitMTank2);
+    new UnitTypeClass(UnitLTank);
+    new UnitTypeClass(UnitAPC);
+    new UnitTypeClass(UnitMineLayer);
+    new UnitTypeClass(UnitJeep);
+    new UnitTypeClass(UnitHarvester);
+    new UnitTypeClass(UnitArty);
+    new UnitTypeClass(UnitMRJammer);
+    new UnitTypeClass(UnitMGG);
+    new UnitTypeClass(UnitMCV);
+    new UnitTypeClass(UnitV2Launcher);
+    new UnitTypeClass(UnitConvoyTruck);
+    new UnitTypeClass(UnitAnt1);
+    new UnitTypeClass(UnitAnt2);
+    new UnitTypeClass(UnitAnt3);
+    new UnitTypeClass(UnitChrono);
+    new UnitTypeClass(UnitTesla);
+    new UnitTypeClass(UnitMAD);
+    new UnitTypeClass(UnitDemoTruck);
+    new UnitTypeClass(UnitPhase);
+}

@@ -211,3 +211,21 @@ void VesselTypeClass::One_Time()
         vessel.m_UnkInt = 26;
     }
 }
+
+/**
+ * @brief Initialises the memory heap for VesselTypeClass objects.
+ * @warning Order of initialisation is important so enum matches position in the heap.
+ *
+ * @address 0x00582018
+ */
+void VesselTypeClass::Init_Heap()
+{
+    // The order of heap initialisation MUST match the VesselType enum in vesseltype.h
+    new VesselTypeClass(VesselSubmarine);
+    new VesselTypeClass(VesselDestroyer);
+    new VesselTypeClass(VesselCruiser);
+    new VesselTypeClass(VesselTransport);
+    new VesselTypeClass(VesselPTBoat);
+    new VesselTypeClass(VesselMissileSubmarine);
+    new VesselTypeClass(VesselHeliCarrier);
+}
