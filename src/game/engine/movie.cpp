@@ -221,7 +221,7 @@ void Play_Intro(BOOL flag)
     if ( flag ) {
 
         // If counter is less than zero or greater than MOVIE_COUNT, reset it.
-        if ( _counter < 0 || _counter > MOVIE_COUNT ) {
+        if ( _counter < MOVIE_FIRST || _counter > MOVIE_COUNT ) {
             _counter = MOVIE_COUNT;
         }
 

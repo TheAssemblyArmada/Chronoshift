@@ -18,9 +18,13 @@
 #include "object.h"
 //#include "target.h"
 
-LayerClass::LayerClass() {}
+LayerClass::LayerClass()
+{
+}
 
-LayerClass::~LayerClass() {}
+LayerClass::~LayerClass()
+{
+}
 
 void LayerClass::Init()
 {

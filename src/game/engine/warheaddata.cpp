@@ -24,19 +24,11 @@
 */
 
 const WarheadTypeClass WarheadSmallArms(WARHEAD_SA, "SA");
-
 const WarheadTypeClass WarheadHighExplosive(WARHEAD_HE, "HE");
-
 const WarheadTypeClass WarheadArmorPiercing(WARHEAD_AP, "AP");
-
 const WarheadTypeClass WarheadFire(WARHEAD_FIRE, "Fire");
-
 const WarheadTypeClass WarheadHollowPoint(WARHEAD_HOLLOWPOINT, "HollowPoint");
-
 const WarheadTypeClass WarheadSuper(WARHEAD_SUPER, "Super");
-
 const WarheadTypeClass WarheadOrganic(WARHEAD_ORGANIC, "Organic");
-
 const WarheadTypeClass WarheadNuke(WARHEAD_NUKE, "Nuke");
-
 const WarheadTypeClass WarheadMechanical(WARHEAD_MECHANICAL, "Mechanical");

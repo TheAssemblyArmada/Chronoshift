@@ -25,17 +25,16 @@
 
 enum GroundType
 {
+    GROUND_FOOT,
+    GROUND_TRACK,
+    GROUND_WHEEL,
+    GROUND_WINGED,
+    GROUND_FLOAT,
+
+    GROUND_COUNT,
+
     GROUND_NONE = -1,
-
-    GROUND_FIRST = 0,
-
-    GROUND_FOOT = 0,
-    GROUND_TRACK = 1,
-    GROUND_WHEEL = 2,
-    GROUND_WINGED = 3,
-    GROUND_FLOAT = 4,
-
-    GROUND_COUNT = 5
+    GROUND_FIRST = GROUND_FOOT,
 };
 
 DEFINE_ENUMERATION_OPERATORS(GroundType);
@@ -46,10 +45,7 @@ class GroundClass
 {
 public:
     GroundClass() : Buildable(false) { std::memset(Speeds, 0, sizeof(Speeds)); }
-
     GroundClass(GroundClass const &that) : Buildable(that.Buildable) { std::memcpy(Speeds, that.Speeds, sizeof(Speeds)); }
-
-    //~GroundClass() {}
 
     bool operator==(GroundClass const &that) const
     {
@@ -68,13 +64,12 @@ public:
     static const char *Name_From(GroundType ground);
 
 public:
-    // Percent of full speed for each speed type (0.0 means impassable) [def = 1.0]
-    fixed_t Speeds[SPEED_COUNT];
+    fixed_t Speeds[SPEED_COUNT]; // Percent of full speed for each speed type (0.0 means impassable).
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL Buildable : 1; // & 1
 #else
-    bool Buildable; // Can buildings be built upon this terrain [def = false]?
+    bool Buildable; // Can buildings be built upon this terrain?
 #endif
 };
 

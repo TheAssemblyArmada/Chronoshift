@@ -360,7 +360,7 @@ BOOL ChronalVortexClass::Load(Straw &straw)
         m_VortexGBuffer = nullptr;
     }
 
-    // TODO Make load and save save their members sequentially rather than dumping class
+    // TODO Make load and save their members sequentially rather than dumping class
     // as one big blob.
     int total = straw.Get(this, sizeof(ChronalVortexClass));
 
@@ -374,14 +374,14 @@ BOOL ChronalVortexClass::Load(Straw &straw)
  */
 BOOL ChronalVortexClass::Save(Pipe &pipe)
 {
-    GraphicBufferClass *tmpbuff;
+    GraphicBufferClass *tmpbuff = nullptr;
 
     if (m_VortexGBuffer != nullptr) {
         tmpbuff = m_VortexGBuffer;
         m_VortexGBuffer = nullptr;
     }
 
-    // TODO Make load and save save their members sequentially rather than dumping class
+    // TODO Make load and save their members sequentially rather than dumping class
     // as one big blob.
     int total = pipe.Put(this, sizeof(ChronalVortexClass));
 
@@ -548,8 +548,8 @@ void ChronalVortexClass::Render()
                         Buffer_Draw_Stamp_Clip(*m_VortexGBuffer,
                             (IconControlType *)tt->Get_Image_Data(),
                             icon_num,
-                            x * 24,
-                            y * 24,
+                            x * CELL_PIXELS,
+                            y * CELL_PIXELS,
                             nullptr,
                             WindowList[WINDOW_0].X,
                             WindowList[WINDOW_0].Y,
@@ -558,11 +558,11 @@ void ChronalVortexClass::Render()
                     }
 
                     if (cell.Get_Smudge() != SMUDGE_NONE && cell.Get_Smudge_Frame() != -1) {
-                        SmudgeTypeClass::As_Reference(cell.Get_Smudge()).Draw_It(x * 24, y * 24, cell.Get_Smudge_Frame());
+                        SmudgeTypeClass::As_Reference(cell.Get_Smudge()).Draw_It(x * CELL_PIXELS, y * CELL_PIXELS, cell.Get_Smudge_Frame());
                     }
 
                     if (cell.Get_Overlay() != OVERLAY_NONE && cell.Get_Overlay_Frame() != -1) {
-                        OverlayTypeClass::As_Reference(cell.Get_Overlay()).Draw_It(x * 24, y * 24, cell.Get_Overlay_Frame());
+                        OverlayTypeClass::As_Reference(cell.Get_Overlay()).Draw_It(x * CELL_PIXELS, y * CELL_PIXELS, cell.Get_Overlay_Frame());
                     }
                 }
             }

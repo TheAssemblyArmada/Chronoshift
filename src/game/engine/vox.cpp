@@ -13,6 +13,7 @@
  *            LICENSE
  */
 #include "vox.h"
+#include "gamedebug.h"
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -23,6 +24,7 @@ void *SpeechBuffer[VOX_BUFFERS];
 VoxType SpeechRecord[VOX_BUFFERS];
 #endif
 
+// clang-format off
 // Update the VoxType enum in vox.h if you add additional EVA lines
 const char *VoxName[VOX_COUNT] = {
     "MISNWON1", // 0
@@ -142,9 +144,12 @@ const char *VoxName[VOX_COUNT] = {
     "SAVE1", // 114
     "LOAD1" // 115
 };
+// clang-format on
 
 VoxType Vox_From_Name(const char *name)
 {
+    DEBUG_ASSERT(name != nullptr);
+
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return VOX_NONE;
     }

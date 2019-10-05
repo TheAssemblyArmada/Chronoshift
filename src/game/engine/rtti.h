@@ -22,7 +22,6 @@
 
 enum RTTIType
 {
-    RTTI_INVALID = -1,
     RTTI_NONE,
     RTTI_AIRCRAFT,
     RTTI_AIRCRAFTTYPE,
@@ -55,12 +54,11 @@ enum RTTIType
     RTTI_UNITTYPE,
     RTTI_VESSEL,
     RTTI_VESSELTYPE,
-    // RTTI_WEAPONTYPE = 32, //Added these two, as this allows us to have WeaponTypeClass and WarheadTypeClass derive from
-    // Abstract classes.
-    // RTTI_WARHEADTYPE = 33,
-    // RTTI_SUPERWEAPON = 34, //Added this for SuperWeaponClass
-    // RTTI_SUPERWEAPONTYPE = 35, //Added this for the new SuperWeaponTypeClass
+
     RTTI_COUNT,
+
+    RTTI_INVALID = -1,
+    RTTI_FIRST = RTTI_NONE,
 };
 
 DEFINE_ENUMERATION_OPERATORS(RTTIType)

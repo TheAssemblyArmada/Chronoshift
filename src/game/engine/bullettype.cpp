@@ -94,7 +94,8 @@ BulletTypeClass::BulletTypeClass(BulletTypeClass const &that) :
  */
 void BulletTypeClass::Init_Heap()
 {
-    // In the original binary, these where created with just names. this has been changed so all Bullets are created globaly
+    // In the original binary, these where created with just names.
+    // This has been changed so all Bullets are created globaly
     // and initialised like all other game objects.
     // Order of construction must match enum in bullettypes.h
     new BulletTypeClass(BulletInvisible);

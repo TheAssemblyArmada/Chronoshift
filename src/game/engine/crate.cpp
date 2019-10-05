@@ -18,7 +18,7 @@
 #include "scenario.h"
 
 #ifndef GAME_DLL
-char CrateClass::CrateAnims[CRATE_COUNT]; // TODO should be AnimType CrateAnims[CRATE_COUNT];
+AnimType CrateClass::CrateAnims[CRATE_COUNT];
 int CrateClass::CrateShares[CRATE_COUNT] = { 50, 20, 3, 1, 3, 5, 5, 20, 1, 1, 3, 10, 10, 10, 1, 1, 3, 5 };
 int CrateClass::CrateData[CRATE_COUNT];
 #endif

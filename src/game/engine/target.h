@@ -22,7 +22,6 @@
 #include "gametypes.h"
 #include "rtti.h"
 
-class NoInitClass;
 class CellClass;
 class TriggerClass;
 class TriggerTypeClass;
@@ -50,7 +49,6 @@ public:
     TargetClass(AbstractTypeClass *abstractype);
     TargetClass(CellClass *cell);
     TargetClass(const TargetClass &that) : m_Target(that.m_Target) {}
-    TargetClass(const NoInitClass &noinit) {}
     ~TargetClass() {}
 
     operator target_t() { return m_Target; }

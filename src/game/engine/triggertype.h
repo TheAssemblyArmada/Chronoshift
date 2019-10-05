@@ -64,7 +64,6 @@ class TriggerTypeClass : public AbstractTypeClass
 {
 public:
     TriggerTypeClass();
-    // TriggerTypeClass(const TriggerTypeClass &noinit);
     TriggerTypeClass(const NoInitClass &noinit) : AbstractTypeClass(noinit) {}
     ~TriggerTypeClass() {}
 

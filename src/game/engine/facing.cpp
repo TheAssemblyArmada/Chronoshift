@@ -145,7 +145,7 @@ BOOL FacingClass::Rotation_Adjust(int adjust)
 {
     if (Has_Changed()) {
         DirType curr = Current;
-        int diff = (int8_t)(Desired - Current); //Fixed watcom optimising DirType to uint8_t and failing diff check.
+        int diff = (int8_t)(Desired - Current); // Fixes watcom optimising DirType to uint8_t and failing diff check.
 
         adjust = std::min(adjust, 127);
 

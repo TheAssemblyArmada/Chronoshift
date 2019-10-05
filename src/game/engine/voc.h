@@ -164,7 +164,7 @@ enum VocType
     VOC_WHATS_UP = 105,
 
     VOC_WALLKIL2 = 106, // rename this.
-    VOC_UNKNOWN22 = 107, // rename this.
+    VOC_MRJ7 = 107, // rename this.
     VOC_GUN5 = 108, // rename this.
     VOC_SUB_SHOW = 109,
 
@@ -194,7 +194,7 @@ enum VocType
 
     VOC_SMOUT1 = 127, // rename this.
     VOC_SOKAY1 = 128, // rename this.
-    VOC_UNKNOWN23 = 129, // rename this.
+    VOC_SSTEAL1 = 129, // rename this.
     VOC_SWHAT1 = 130, // rename this.
     VOC_SAFFIRM1 = 131, // rename this.
     VOC_STAVCMDR = 132, // rename this.
@@ -241,15 +241,22 @@ enum VocType
 
 DEFINE_ENUMERATION_OPERATORS(VocType);
 
+enum VocVariationType
+{
+    VAR_NONE, // No house specific variation. 
+    VAR_HOUSE, // Has specific variation.
+    VAR_SPECIAL,
+};
+
 struct SoundEffectType
 {
-    const char *BaseName; // 0x00
+    const char *BaseName;
 
-    // Priority adjustment from normal (def = 10)
+    // Priority adjustment from normal.
     // Increasing numbers have higher priority.
-    int Priority; // 0x04
+    int Priority;
 
-    char Unknown1; // 0x08
+    VocVariationType Var;
 };
 
 VocType Voc_From_Name(const char *name);
@@ -257,26 +264,7 @@ const char *Name_From_Voc(VocType voc);
 
 extern SoundEffectType SoundEffectName[];
 
-
-inline void Sound_Effect(VocType voc, coord_t location, int int2 = 1, HousesType house = HOUSES_NONE)
-{
-#ifdef GAME_DLL
-    void (*call_Sound_Effect)(VocType, coord_t, int, HousesType) =
-        reinterpret_cast<void (*)(VocType, coord_t, int, HousesType)>(0x00425D1C);
-    call_Sound_Effect(voc, location, int2, house);
-#endif
-}
-
-inline int Sound_Effect(VocType voc, fixed_t volume = fixed_t::_1_1, int int1 = 1, short pan = 0, HousesType house = HOUSES_NONE)
-{
-#ifdef GAME_DLL
-    int (*call_Sound_Effect)(VocType, fixed_t, int, short, HousesType) =
-        reinterpret_cast<int (*)(VocType, fixed_t, int, short, HousesType)>(0x00425F24);
-    return call_Sound_Effect(voc, volume, int1, pan, house);
-#else
-    return 0;
-#endif
-}
-
+void Sound_Effect(VocType voc, coord_t location, int int2 = 1, HousesType house = HOUSES_NONE);
+int Sound_Effect(VocType voc, fixed_t volume = fixed_t(1, 1), int int1 = 1, int16_t pan = 0, HousesType house = HOUSES_NONE);
 
 #endif // VOC_H

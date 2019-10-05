@@ -25,16 +25,18 @@
 
 enum AircraftType
 {
-    AIRCRAFT_NONE = -1,
-    AIRCRAFT_FIRST = 0,
-    AIRCRAFT_TRANSPORT = 0,
+    AIRCRAFT_TRANSPORT,
     AIRCRAFT_BADGER,
     AIRCRAFT_U2,
     AIRCRAFT_MIG,
     AIRCRAFT_YAK,
     AIRCRAFT_HELI,
     AIRCRAFT_HIND,
-    AIRCRAFT_COUNT
+
+    AIRCRAFT_COUNT,
+
+    AIRCRAFT_NONE = -1,
+    AIRCRAFT_FIRST = AIRCRAFT_TRANSPORT,
 };
 
 DEFINE_ENUMERATION_OPERATORS(AircraftType);
@@ -86,8 +88,8 @@ private:
     BOOL m_Transport : 1;
 #else
     bool m_Airplane;
-    bool m_CustomRotor;
-    bool m_Rotors;
+    bool m_CustomRotor; // Does it have custom rotor shapes according to facing?
+    bool m_Rotors; // Does this aicraft have an attached rotor animation?
     bool m_Transport;
 #endif
     AircraftType m_Type;

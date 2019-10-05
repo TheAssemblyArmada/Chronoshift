@@ -103,7 +103,7 @@ private:
     int m_field_35;
     FormationType m_Formation;
     TCountDownTimerClass<FrameTimerClass> m_field_3A;
-    GamePtr<TriggerTypeClass> Trigger;
+    GamePtr<TriggerTypeClass> m_Trigger;
     int m_field_47;
     TCountDownTimerClass<FrameTimerClass> m_field_4B;
     FootClass *m_field_54;

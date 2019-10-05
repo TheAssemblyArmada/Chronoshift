@@ -40,7 +40,7 @@ WarheadTypeClass::WarheadTypeClass(WarheadType warhead, const char *name) :
     Death(0)
 {
     for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
-        Verses[armor] = fixed_t::_1_1;
+        Verses[armor] = fixed_t(1, 1);
     }
 }
 
@@ -163,7 +163,7 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
         Death = ini.Get_Int(Name, "InfDeath", Death);
 
         // NOTE: If you add or remove from the ArmorTypes, you need to change VERSUS_FORMAT!
-		// Build the verses format based on the armor count.
+        // Build the verses format based on the armor count.
         for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
             size_t check = strlcat(verses_format_buffer, "100%%", sizeof(verses_format_buffer));
             DEBUG_ASSERT(check <= sizeof(verses_format_buffer));
@@ -183,7 +183,7 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
             }
         }
 
-        UnkBool = Verses[ARMOR_HEAVY] == fixed_t::_0_1;
+        UnkBool = Verses[ARMOR_HEAVY] == fixed_t(0, 1);
 
         return true;
     }

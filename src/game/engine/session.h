@@ -47,7 +47,7 @@ enum GameEnum
     GAME_SKIRMISH,
     GAME_6,
     GAME_7,
-    // GAME_SOLE_SURVIVOR, // TODO, add SS code to allow RA to have a Sole Survivor mode
+    // GAME_SOLE_SURVIVOR, // TODO: Add new code to allow RA to have a Sole Survivor mode?
     GAME_COUNT
 };
 
@@ -104,9 +104,9 @@ struct NodeNameTag
 {
     char Name[12];
     IPXAddressClass Address;
-    HousesType House; // HousesType?
-    PlayerColorType Color; // looks like a PlayerColorType?
-    HousesType AltHouse; // HousesType?
+    HousesType House;
+    PlayerColorType Color;
+    HousesType AltHouse;
 };
 
 class SessionClass

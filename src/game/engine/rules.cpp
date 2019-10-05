@@ -319,7 +319,7 @@ BOOL RulesClass::General(GameINIClass &ini)
         GPSTechLevel = ini.Get_Int("General", "GPSTechLevel", GPSTechLevel);
         UnitCrateType = ini.Get_UnitType("General", "UnitCrateType", UnitCrateType);
 
-        // CCHyper Fixed by from original RA binary, this entry was loaded with Get_Fixed.
+        // BUGFIX: Fixed from original, this entry was loaded with Get_Fixed().
         OreExplosive = ini.Get_Bool("General", "OreExplosive", OreExplosive);
         GapRegenInterval = ini.Get_Fixed("General", "GapRegenInterval", GapRegenInterval);
         TeamDelay = ini.Get_Fixed("General", "TeamDelay", TeamDelay);
@@ -492,9 +492,6 @@ BOOL RulesClass::Heap_Maximums(GameINIClass &ini)
         // Moved, see warhead and weapon headers for more info
         // TODO, move Set_Heap()'s to RTS_Init() in init.cpp'
 
-        //
-        //
-        //
         return true;
     }
 
@@ -593,12 +590,9 @@ BOOL RulesClass::Themes(GameINIClass &ini)
 {
     char entry[INIClass::MAX_LINE_LENGTH];
 
-    if (ini.Find_Section("ThemeControl") != nullptr) {
+    if (ini.Is_Present("ThemeControl")) {
         for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
             const char *theme_name = Theme.Base_Name(theme);
-            // Already found section, so we know it exists
-            // if ( theme_name ? ini.Find_Entry("ThemeControl", theme_name) != nullptr : ini.Find_Section("ThemeControl") !=
-            // nullptr ) {
             if (theme_name && ini.Find_Entry("ThemeControl", theme_name) != nullptr) {
                 ini.Get_String("ThemeControl", theme_name, "", entry, sizeof(entry));
 

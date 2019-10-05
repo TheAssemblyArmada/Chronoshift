@@ -530,7 +530,6 @@ void RadarClass::Radar_Anim()
 
 void RadarClass::Radar_Cursor(BOOL redraw)
 {
-#define RADAR_CURSOR_SIZE 6
     static cell_t _last_pos = -1;
     static int _last_frame = -1;
 
@@ -621,9 +620,6 @@ void RadarClass::Radar_Cursor(BOOL redraw)
 
         RadarCursorRedraw = false;
     }
-
-        // Undefine line length so not misused elsewhere.
-#undef RADAR_CURSOR_SIZE
 }
 
 void RadarClass::Player_Names(BOOL draw)

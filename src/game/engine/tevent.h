@@ -24,8 +24,7 @@
 
 enum TEventType
 {
-    TEVENT_FIRST = 0,
-    TEVENT_NO_EVENT = 0, // "-No Event-"
+    TEVENT_NO_EVENT, // "-No Event-"
     TEVENT_ENTERED_BY, // "Entered by..."
     TEVENT_SPIED_BY, // "Spied by..."
     TEVENT_THIEVED_BY, // "Thieved by..."
@@ -58,6 +57,8 @@ enum TEventType
     TEVENT_LOW_POWER, // "Low Power..."
     TEVENT_ATTACHED_BRIDGE_DESTROYED, // "All bridges destroyed"
     TEVENT_BUILDING_EXISTS, // "Building exists..."
+
+    TEVENT_FIRST = TEVENT_NO_EVENT,
     TEVENT_COUNT
 };
 

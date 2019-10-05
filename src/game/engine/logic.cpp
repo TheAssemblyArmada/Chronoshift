@@ -108,9 +108,6 @@ void LogicClass::AI()
         }
     }
 
-    //
-    //
-    //
     // DEBUG_LOG("LogicClass::AI() - Teams.Count = %d\n", Teams.Count());
     for (int team = 0; team < Teams.Count(); ++team) {
         TeamClass *tptr = Teams[team];

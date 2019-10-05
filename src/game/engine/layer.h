@@ -28,13 +28,15 @@ class ObjectClass;
 
 enum LayerType
 {
-    LAYER_NONE = -1,
-    LAYER_FIRST = 0,
-    LAYER_SURFACE = 0,
+    LAYER_SURFACE,
     LAYER_GROUND,
     LAYER_AIR,
     LAYER_TOP,
+
     LAYER_COUNT,
+
+    LAYER_NONE = -1,
+    LAYER_FIRST = LAYER_SURFACE,
 };
 
 DEFINE_ENUMERATION_OPERATORS(LayerType);

@@ -21,7 +21,8 @@
 #include "house.h"
 #include "mission.h"
 
-#define EVENT_DEBUG_LOG(x, ...) /*if ( g_Debug_Print_Events )*/ \
+#define EVENT_DEBUG_LOG(x, ...) \
+    /*if ( g_Debug_Print_Events )*/ \
     { \
         DEBUG_LOG(x, ##__VA_ARGS__); \
     }
@@ -62,7 +63,11 @@ GameEventClass::EventInfoStruct GameEventClass::EventTypeList[EVENT_COUNT] = {
     { "RETRACT_DRAW", 0 } // No extra data.
 };
 
-GameEventClass::GameEventClass() : m_Type(EVENT_EMPTY), m_EventFrame(g_GameFrame), m_HouseID(0), m_IsExecuted(false)
+GameEventClass::GameEventClass() :
+    m_Type(EVENT_EMPTY),
+    m_EventFrame(g_GameFrame),
+    m_HouseID(0),
+    m_IsExecuted(false)
 {
     // Removed, as this is used at the default constructor, so it will fire a lot of times...
     // EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
@@ -348,7 +353,7 @@ GameEventClass::GameEventClass(AnimType anim, HousesType owner, coord_t coord) :
 
 void GameEventClass::Execute()
 {
-    EVENT_DEBUG_LOG("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, ID:%d).\n",
+    EVENT_DEBUG_LOG("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, HouseID:%d).\n",
         Name_From(m_Type),
         g_GameFrame,
         m_EventFrame,

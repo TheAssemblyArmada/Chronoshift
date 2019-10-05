@@ -12,7 +12,6 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-
 #include "saveload.h"
 #include "gamedebug.h"
 #include "gameoptions.h"
@@ -65,15 +64,12 @@ int Load_Game(int unknown)
 
 int Save_Misc_Values(Pipe &pipe)
 {
-    int house;
-    ObjectClass *obj;
-
-    house = g_PlayerPtr->What_Type();
+    int house = g_PlayerPtr->What_Type();
     pipe.Put(&house, sizeof(house));
     pipe.Put(&g_GameFrame, sizeof(g_GameFrame));
     int objcount = CurrentObjects.Count();
     for (int i = 0; i < objcount; ++i) {
-        obj = CurrentObjects[i];
+        ObjectClass *obj = CurrentObjects[i];
         pipe.Put(&obj, sizeof(obj));
     }
 
@@ -85,13 +81,14 @@ int Save_Misc_Values(Pipe &pipe)
 
 int Load_Misc_Values(Straw &straw)
 {
-    int house, objcount;
-    ObjectClass *obj;
+    int house;
+    int objcount;
     straw.Get(&house, sizeof(house));
     g_PlayerPtr = HouseClass::As_Pointer((HousesType)house);
     straw.Get(&g_GameFrame, sizeof(g_GameFrame));
     straw.Get(&objcount, sizeof(objcount));
     for (int i = 0; i < objcount; ++i) {
+        ObjectClass *obj = nullptr;
         straw.Get(&obj, sizeof(obj));
         CurrentObjects.Add(obj);
     }
@@ -156,6 +153,7 @@ int Get_Savefile_Info(int number, char *savename, unsigned *scenarioidx, HousesT
     if (straw.Get(scenarioidx, sizeof(*scenarioidx)) != sizeof(*scenarioidx)) {
         return false;
     }
+    // BUGFIX: Original code used sizeof(house) instead of sizeof(*house).
     if (straw.Get(house, sizeof(*house)) != sizeof(*house)) {
         return false;
     }
@@ -200,5 +198,4 @@ int Reconcile_Players()
 
 void MPlayer_Save_Message()
 {
-    
 }

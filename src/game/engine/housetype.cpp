@@ -55,6 +55,7 @@ HouseTypeClass::HouseTypeClass(HouseTypeClass const &that) :
     Cost(that.Cost),
     BuildTime(that.BuildTime)
 {
+    memcpy(HouseName, that.HouseName, sizeof(HouseName));
 }
 
 void *HouseTypeClass::operator new(size_t size)
@@ -69,7 +70,7 @@ void HouseTypeClass::operator delete(void *ptr)
 
 BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
 {
-    if (ini.Find_Section(m_Name) == nullptr) {
+    if (!ini.Is_Present(m_Name)) {
         return false;
     }
 
@@ -86,7 +87,7 @@ BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
 
 void HouseTypeClass::Init_Heap()
 {
-    // The order of allocation must follow the order of HouseType enum
+    // The order of allocation must follow the order of HouseType enum.
     new HouseTypeClass(HouseSpain);
     new HouseTypeClass(HouseGreece);
     new HouseTypeClass(HouseUSSR);
@@ -136,9 +137,9 @@ HouseTypeClass &HouseTypeClass::As_Reference(HousesType type)
     return g_HouseTypes[type];
 }
 
-const char * HouseTypeClass::Name_From_Owner(int owner)
+const char *HouseTypeClass::Name_From_Owner(int owner)
 {
-    //TODO: OmniBlade, please implement.
+    //TODO: Inlined function in INI code that converts from OwnerType to house name(s).
     return nullptr;
 }
 

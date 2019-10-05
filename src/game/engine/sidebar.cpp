@@ -51,7 +51,10 @@ void *SidebarClass::SidebarBottomShape = nullptr;
 
 void *SidebarClass::SidebarAddonShape = nullptr;
 
-SidebarClass::SBGadgetClass::SBGadgetClass() : GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false) {}
+SidebarClass::SBGadgetClass::SBGadgetClass() :
+    GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false)
+{
+}
 
 BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
 {
@@ -67,8 +70,7 @@ BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
 }
 
 SidebarClass::StripClass::SelectClass::SelectClass() :
-    ControlClass(CONTROL_SB_SELECT_BUTTON, 0, 0, 62, 48, MOUSE_LEFT_PRESS | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS,
-        false), // maybe CAMEO_WIDTH instead of 62? see above
+    ControlClass(CONTROL_SB_SELECT_BUTTON, 0, 0, 62, 48, MOUSE_LEFT_PRESS | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, false),
     Owner(nullptr),
     Row(0)
 {
@@ -95,14 +97,12 @@ void SidebarClass::StripClass::SelectClass::Set_Owner(StripClass &strip, int row
     YPos = (48 * row) + strip.YPos;
 }
 
-SidebarClass::StripClass::StripClass() : ProgressTimer(noinit)
+SidebarClass::StripClass::StripClass() :
+    ProgressTimer()
 {
-    // Such empty, this is effectively the "NoInitClass" ctor for this class.
 }
 
 SidebarClass::StripClass::StripClass(InitClass const &init) :
-
-    // TODO, one of thse is -1
     XPos(0),
     YPos(0),
     WhichColumn(),
@@ -376,18 +376,11 @@ SidebarClass::SidebarClass() :
     SidebarBit8(false),
     SidebarBit16(false)
 {
-    //this set the window for the strips in DOS
-    //WindowList[WINDOW_SIDEBAR].X = 248;
-    //WindowList[WINDOW_SIDEBAR].Y = 91;
-    //WindowList[WINDOW_SIDEBAR].W = 80;
-    //WindowList[WINDOW_SIDEBAR].H = 96;
-
     InitClass init;
     for (int column = 0; column < COLUMN_COUNT; ++column) {
         // Placement new to perform construction of object array with specific constructor.
         new (&Columns[column]) StripClass(init);
     }
-    //TODO dehardcode positions
     Columns[0].Set_Position(496, 180);
     Columns[1].Set_Position(566, 180);
 }
@@ -409,6 +402,7 @@ void SidebarClass::One_Time()
         SidebarShape = GameFileClass::Retrieve("sidebar.shp");
     }
 
+    // NOTE: Chronoshift hi-res sidebar addition.
     if (SidebarAddonShape == nullptr) {
         SidebarAddonShape = GameFileClass::Retrieve("addon.shp");
     }
@@ -436,7 +430,6 @@ void SidebarClass::Init_IO()
     PowerClass::Init_IO();
 
     if (!g_inMapEditor) {
-        // TODO remove hard coded position constants.
         RepairButton.Set_ID(BUTTON_REPAIR);
         RepairButton.Set_Position(498, 150);
         RepairButton.Set_Sticky(true);
@@ -510,8 +503,8 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                 if (SidebarShape != nullptr) {
                     CC_Draw_Shape(SidebarShape,
                         0,
-                        480, // GVPC Width - Sidebar width
-                        16, // 16, Height of Tabs
+                        480,
+                        16,
                         WINDOW_0,
                         SHAPE_WIN_REL);
                 }
@@ -520,7 +513,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                     CC_Draw_Shape(SidebarMiddleShape,
                         force_redraw ? 0 : 1,
                         480,
-                        176, // Height of tab + 160, height of the first sidebar piece
+                        176, // Height of tab + 160, height of the first sidebar piece.
                         WINDOW_0,
                         SHAPE_WIN_REL);
                 }
@@ -529,7 +522,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                     CC_Draw_Shape(SidebarBottomShape,
                         force_redraw ? 0 : 1,
                         480,
-                        276, // Height of tab + 160 + 100,, height of last piece added on
+                        276, // Height of tab + 160 + 100,, height of last piece added on.
                         WINDOW_0,
                         SHAPE_WIN_REL);
                 }
@@ -538,13 +531,10 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                 if (g_logicPage->Get_Height() > 400) {
                     if (SidebarAddonShape != nullptr) {
                         int addonheight = Get_Build_Frame_Height(SidebarAddonShape);
-
-                        // TODO
-                        // new shape, draw this as the resolution requires the black underneath to be filled with a image.
                         CC_Draw_Shape(SidebarAddonShape,
                             0,
                             480,
-                            400, // Draw after everything else... Sidebar height.
+                            400,
                             WINDOW_0,
                             SHAPE_WIN_REL);
                     }
@@ -554,9 +544,9 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                 SellButton.Draw_Me(true);
                 ZoomButton.Draw_Me(true);
 
-                // for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                //    Columns[column].StripToRedraw = true;
-                //}
+                /*for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
+                    Columns[column].StripToRedraw = true;
+                }*/
 
                 g_logicPage->Unlock();
             }
@@ -825,7 +815,7 @@ BOOL SidebarClass::Activate(int mode)
 
             if (newvalue != prevvalue) {
                 if (newvalue) {
-                    Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, 20, -1);
+                    Set_View_Dimensions(0, 16, 20, -1);
                     SidebarToRedraw = true;
                     Help_Text(TXT_NULL, -1, -1);
                     RepairButton.Unlink();
@@ -846,7 +836,7 @@ BOOL SidebarClass::Activate(int mode)
                     PowerButton.Unlink();
                     Add_A_Button(PowerButton);
                 } else {
-                    Set_View_Dimensions(0, 16 /*TabClass::TabButtonHeight*/, -1, -1);
+                    Set_View_Dimensions(0, 16, -1, -1);
                     Help_Text(TXT_NULL, -1, -1);
                     Remove_A_Button(RepairButton);
                     Remove_A_Button(SellButton);

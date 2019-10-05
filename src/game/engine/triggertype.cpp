@@ -18,8 +18,9 @@
 TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
 #endif
 
-TriggerTypeClass::TriggerTypeClass() : AbstractTypeClass(RTTI_TRIGGERTYPE, g_TriggerTypes.ID(this), 0, "x") {
-
+TriggerTypeClass::TriggerTypeClass() :
+    AbstractTypeClass(RTTI_TRIGGERTYPE, g_TriggerTypes.ID(this), 0, "x")
+{
 }
 
 void TriggerTypeClass::Code_Pointers()

@@ -713,6 +713,7 @@ enum OwnerType
 
 DEFINE_ENUMERATION_OPERATORS(OwnerType);
 
+// Extention of OwnerType.
 enum SideType
 {
     SIDE_NONE = 0,

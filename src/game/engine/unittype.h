@@ -25,32 +25,35 @@
 
 enum UnitType
 {
-    UNIT_NONE = -1,
-    UNIT_FIRST = 0,
-    UNIT_HTANK = 0,
-    UNIT_MTANK = 1,
-    UNIT_MTANK2 = 2,
-    UNIT_LTANK = 3,
-    UNIT_APC = 4,
-    UNIT_MINELAYER = 5,
-    UNIT_JEEP = 6,
-    UNIT_HARVESTER = 7,
-    UNIT_ARTY = 8,
-    UNIT_MRJAMMER = 9,
-    UNIT_MGAPGEN = 10,
-    UNIT_MCV = 11,
-    UNIT_V2RL = 12,
-    UNIT_CARGO_TRUCK = 13,
-    UNIT_ANT1 = 14,
-    UNIT_ANT2 = 15,
-    UNIT_ANT3 = 16,
-    UNIT_CHRONO = 17,
-    UNIT_TESLA = 18,
-    UNIT_MAD_TANK = 19,
-    UNIT_DEMO_TRUCK = 20,
-    UNIT_PHASE = 21,
+    UNIT_HTANK,
+    UNIT_MTANK,
+    UNIT_MTANK2,
+    UNIT_LTANK,
+    UNIT_APC,
+    UNIT_MINELAYER,
+    UNIT_JEEP,
+    UNIT_HARVESTER,
+    UNIT_ARTY,
+    UNIT_MRJAMMER,
+    UNIT_MGAPGEN,
+    UNIT_MCV,
+    UNIT_V2RL,
+    UNIT_CARGO_TRUCK,
+    UNIT_ANT1,
+    UNIT_ANT2,
+    UNIT_ANT3,
+    UNIT_CHRONO,
+    UNIT_TESLA,
+    UNIT_MAD_TANK,
+    UNIT_DEMO_TRUCK,
+    UNIT_PHASE,
+
     UNIT_COUNT,
-    UNIT_NOEXP_COUNT = 14,
+
+    UNIT_NONE = -1,
+    UNIT_FIRST = UNIT_HTANK,
+
+    UNIT_NOEXP_COUNT = 14, // Used for arrays that exclude new expansion units.
     UNIT_NOAM_COUNT = 17,
 };
 
@@ -86,10 +89,10 @@ public:
 
     UnitType What_Type() const { return m_Type; }
 
-    static UnitTypeClass &As_Reference(UnitType type);
-    static UnitType From_Name(const char *name);
     static void One_Time();
     static void Init_Heap();
+    static UnitTypeClass &As_Reference(UnitType type);
+    static UnitType From_Name(const char *name);
     static const char *Name_From(UnitType type) { return As_Reference(type).m_Name; }
 
 private:

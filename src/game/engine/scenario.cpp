@@ -128,6 +128,7 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
     char prefixvalue = '\0';
     char dirvalue = '\0';
     char varvalue = '\0';
+
     ScenarioIndex = index;
 
     switch (player) {

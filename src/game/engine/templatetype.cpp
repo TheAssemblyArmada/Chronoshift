@@ -26,17 +26,7 @@ TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;
 #endif
 
 TemplateTypeClass::TemplateTypeClass(TemplateType type, int theater, const char *name, int uiname) :
-    ObjectTypeClass(RTTI_TEMPLATETYPE,
-    type,
-    false,    //
-    true,    //RadarInvisible
-    false,    //Selectable
-    false,    //LegalTarget
-    true,    //Insignificant
-    true,    //Immune
-    false,    //
-    uiname,
-    name),
+    ObjectTypeClass(RTTI_TEMPLATETYPE, type, false, true, false, false, true, true, false, uiname, name),
     Type(type),
     Theater(theater),
     Width(0),
@@ -52,7 +42,6 @@ TemplateTypeClass::TemplateTypeClass(const TemplateTypeClass &that) :
     Width(that.Width),
     Height(that.Height)
 {
-    
 }
 
 void *TemplateTypeClass::operator new(size_t size)
@@ -69,7 +58,7 @@ void TemplateTypeClass::operator delete(void *ptr)
 
 void TemplateTypeClass::Init_Heap()
 {
-    // Order of creation must match order of TemplateType enum
+    // Order of creation must match order of TemplateType enum.
     new TemplateTypeClass(TemplateClear);
     new TemplateTypeClass(TemplateWater);
     new TemplateTypeClass(TemplateWater2);

@@ -137,5 +137,6 @@ const TerrainTypeClass TerrainTreeClump4(TERRAIN_TREECLUMP4, THEATER_BIT_TEMPERA
 const TerrainTypeClass TerrainTreeClump5(TERRAIN_TREECLUMP5, THEATER_BIT_TEMPERATE | THEATER_BIT_SNOW,
     Coord_From_Pixel_XY(49, 58), true, false, "TC05", TXT_TREE, List001011100110, OList110000011001);
 
+// TOOD: EDWIN addition, will be required for map editor.
 /*const TerrainTypeClass TerrainFlagFly(
-    TERRAIN_FLAGFLY, THEATER_BIT_NONE, Coord_From_Pixel_XY(15, 41), true, false, "FLAGFLY", TXT_NULL, List10, OList01);*/
+    TERRAIN_FLAGFLY, THEATER_BIT_NONE, Coord_From_Pixel_XY(15, 41), true, false, "FLAGFLY", TXT_FLAG_SPOT, List10, OList01);*/

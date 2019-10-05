@@ -12,7 +12,6 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-
 #pragma once
 
 #ifndef LOADDIALOG_H
@@ -38,7 +37,17 @@ public:
     {
     public:
         FileEntryClass() {}
-        FileEntryClass(FileEntryClass const &that) {}
+        FileEntryClass(FileEntryClass const &that)
+        {
+            if (this != &that) {
+                memcpy(Name, that.Name, sizeof(Name));
+                Index = that.Index;
+                House = that.House;
+                Number = that.Number;
+                Timestamp = that.Timestamp;
+                State = that.State;
+            }
+        }
         ~FileEntryClass() {}
 
         char Name[80];

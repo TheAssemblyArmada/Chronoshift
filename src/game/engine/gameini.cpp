@@ -18,9 +18,14 @@
 #include "shapipe.h"
 #include <algorithm>
 
-GameINIClass::GameINIClass() : DigestValid(false) {}
+GameINIClass::GameINIClass() :
+    DigestValid(false)
+{
+}
 
-GameINIClass::~GameINIClass() {}
+GameINIClass::~GameINIClass()
+{
+}
 
 const lepton_t GameINIClass::Get_Lepton(const char *section, const char *entry, const lepton_t defvalue) const
 {

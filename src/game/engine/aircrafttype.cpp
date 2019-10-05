@@ -253,4 +253,3 @@ void AircraftTypeClass::Init_Heap()
     new AircraftTypeClass(AircraftAttackHeli);
     new AircraftTypeClass(AircraftHindHeli);
 }
-

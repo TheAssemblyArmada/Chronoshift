@@ -196,36 +196,52 @@ BOOL FootClass::Unlimbo(coord_t coord, DirType dir)
     return false;
 }
 
-void FootClass::Detach(target_t target, int a2) {}
+void FootClass::Detach(target_t target, int a2)
+{
+}
 
-void FootClass::Detach_All(int a1) {}
+void FootClass::Detach_All(int a1)
+{
+}
 
 BOOL FootClass::Mark(MarkType mark)
 {
     return 0;
 }
 
-void FootClass::Active_Click_With(ActionType action, ObjectClass *object) {}
+void FootClass::Active_Click_With(ActionType action, ObjectClass *object)
+{
+}
 
-void FootClass::Active_Click_With(ActionType action, cell_t cellnum) {}
+void FootClass::Active_Click_With(ActionType action, cell_t cellnum)
+{
+}
 
 DamageResultType FootClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
     return DamageResultType();
 }
 
-void FootClass::Per_Cell_Process(PCPType pcp) {}
+void FootClass::Per_Cell_Process(PCPType pcp)
+{
+}
 
 RadioMessageType FootClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
     return RadioMessageType();
 }
 
-void FootClass::Sell_Back(int a1) {}
+void FootClass::Sell_Back(int a1)
+{
+}
 
-void FootClass::Code_Pointers() {}
+void FootClass::Code_Pointers()
+{
+}
 
-void FootClass::Decode_Pointers() {}
+void FootClass::Decode_Pointers()
+{
+}
 
 int FootClass::Mission_Attack()
 {
@@ -267,14 +283,18 @@ int FootClass::Mission_Enter()
     return 0;
 }
 
-void FootClass::Override_Mission(MissionType mission, int target1, int target2) {}
+void FootClass::Override_Mission(MissionType mission, int target1, int target2)
+{
+}
 
 BOOL FootClass::Restore_Mission()
 {
     return 0;
 }
 
-void FootClass::Stun() {}
+void FootClass::Stun()
+{
+}
 
 void FootClass::Death_Announcement(TechnoClass *killer) const
 {

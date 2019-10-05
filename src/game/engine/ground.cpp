@@ -21,7 +21,13 @@
 GroundClass Ground[LAND_COUNT];
 #endif
 
-const char *GroundTypes[GROUND_COUNT] = { "Foot", "Track", "Wheel", "Winged", "Float" };
+const char *GroundTypes[GROUND_COUNT] = {
+    "Foot",
+    "Track",
+    "Wheel",
+    "Winged",
+    "Float"
+};
 
 GroundType GroundClass::From_Name(const char *name)
 {
