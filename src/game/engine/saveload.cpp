@@ -156,9 +156,7 @@ int Get_Savefile_Info(int number, char *savename, unsigned *scenarioidx, HousesT
     if (straw.Get(scenarioidx, sizeof(*scenarioidx)) != sizeof(*scenarioidx)) {
         return false;
     }
-    // BUGFIX Original programmers almost certainly screwed up sizeof(*house) for sizeof(house) here
-    // TODO should be if (straw.Get(house, sizeof(*house)) != sizeof(*house)) {
-    if (straw.Get(house, 4) != 4) {
+    if (straw.Get(house, sizeof(*house)) != sizeof(*house)) {
         return false;
     }
     int magic;
