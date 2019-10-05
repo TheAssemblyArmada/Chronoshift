@@ -35,6 +35,11 @@ class PowerClass : public RadarClass
     };
 
 public:
+    enum {
+        POWER_MAX_HEIGHT = 108
+    };
+
+public:
     PowerClass();
     PowerClass(const NoInitClass &noinit) : RadarClass(noinit), FlashTimer(noinit) {}
 
@@ -50,8 +55,10 @@ public:
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL PowerToRedraw : 1; // 1
+    BOOL PowerBit2 : 1; // 2
 #else
     bool PowerToRedraw;
+    bool PowerBit2;
 #endif
     TCountDownTimerClass<FrameTimerClass> FlashTimer;
     int Drain;

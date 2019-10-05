@@ -34,7 +34,6 @@ MissionControlClass::MissionControlClass() :
     Rate("0.016"),
     AARate("0.016")
 {
-    
 }
 
 /**
@@ -69,7 +68,7 @@ BOOL MissionControlClass::Read_INI(GameINIClass &ini)
         AARate = ini.Get_Fixed(Name(), "AARate", fixed_t(0, 0));
 
         // Falls back to Rate for AARate if AARate is zero.
-        if (AARate == fixed_t::_0_1) {
+        if (AARate == fixed_t(0, 1)) {
             AARate = Rate;
         }
 

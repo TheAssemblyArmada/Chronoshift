@@ -17,7 +17,17 @@
 #include "gameini.h"
 #include "gamedebug.h"
 
-const char *LandName[LAND_COUNT] = { "Clear", "Road", "Water", "Rock", "Wall", "Ore", "Beach", "Rough", "River" };
+const char *LandName[LAND_COUNT] = {
+    "Clear",
+    "Road",
+    "Water",
+    "Rock",
+    "Wall",
+    "Ore",
+    "Beach",
+    "Rough",
+    "River"
+};
 
 LandType Land_From_Name(const char *name)
 {

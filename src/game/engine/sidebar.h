@@ -26,11 +26,13 @@
 
 enum ColumnType
 {
-    COLUMN_NONE = -1,
-    COLUMN_FIRST = 0,
-    COLUMN_LEFT = 0,
+    COLUMN_LEFT,
     COLUMN_RIGHT,
+
     COLUMN_COUNT,
+
+    COLUMN_NONE = -1,
+    COLUMN_FIRST = COLUMN_LEFT
 };
 
 DEFINE_ENUMERATION_OPERATORS(ColumnType);
@@ -41,9 +43,6 @@ enum SidebarStateType
     SIDEBAR_DEACTIVATE = 0,
     SIDEBAR_ACTIVATE = 1
 };
-
-#define MAX_BUTTONS_PER_COLUMN 75
-//#define ROW_COUNT 4
 
 class SidebarClass : public PowerClass
 {
@@ -65,6 +64,7 @@ class SidebarClass : public PowerClass
     public:
         enum
         {
+            MAX_BUTTONS_PER_COLUMN = 75,
             ROW_COUNT = 4,
         };
 
@@ -149,7 +149,7 @@ class SidebarClass : public PowerClass
         {
             int ID;
             RTTIType Type;
-            int Factory; // ID for a factory instance that is constructing this.
+            int Factory; // ID for a factory instance that is constructing this item.
         };
 
     protected:
@@ -180,7 +180,7 @@ class SidebarClass : public PowerClass
         int field_2D;
         int field_31;
         int CameoCount;
-        SelectButtonType Entries[MAX_BUTTONS_PER_COLUMN]; // 75 camoes per column
+        SelectButtonType Entries[MAX_BUTTONS_PER_COLUMN];
     };
 
 public:
@@ -202,7 +202,7 @@ public:
     BOOL Activate_Upgrade(int state);
     BOOL Activate_Demolish(int state);
     BOOL Add(RTTIType type, int id);
-    BOOL Scroll(BOOL reverse, int column = -1);
+    BOOL Scroll(BOOL reverse, int column = COLUMN_NONE);
     void Recalc();
     BOOL Activate(int mode = SIDEBAR_TOGGLE);
     int Abandon_Production(RTTIType, int);
@@ -248,7 +248,7 @@ protected:
     static void *SidebarMiddleShape;
     static void *SidebarBottomShape;
 #endif
-    static void *SidebarAddonShape; // RAPP addition
+    static void *SidebarAddonShape; // NOTE: Chronoshift addition.
 };
 
 #endif // SIDEBAR_H

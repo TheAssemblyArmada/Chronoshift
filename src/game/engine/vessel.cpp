@@ -39,7 +39,6 @@ VesselClass::VesselClass(VesselType type, int id, HousesType house) :
     m_SecondaryTurretFacing()
 {
     if (m_OwnerHouse != nullptr) {
-        //Set_Player_Owned(); // TODO: Where is this line from?
         m_OwnerHouse->Tracking_Add(this);
     }
 

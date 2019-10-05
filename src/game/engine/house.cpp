@@ -512,11 +512,11 @@ void HouseClass::Silo_Redraw_Check(unsigned ore, unsigned capacity)
     }
 
     for (int i = 0; i < g_Buildings.Count(); ++i) {
-        BuildingClass *bld = &g_Buildings[i];
+        BuildingClass *bptr = &g_Buildings[i];
 
-        if (bld != nullptr && !bld->In_Limbo() && bld->Get_Owner_House() == this) {
-            if (bld->What_Type() == BUILDING_SILO) {
-                bld->Mark(MARK_REDRAW);
+        if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Owner_House() == this) {
+            if (bptr->What_Type() == BUILDING_SILO) {
+                bptr->Mark(MARK_REDRAW);
             }
         }
     }
@@ -1605,37 +1605,37 @@ cell_t HouseClass::Where_To_Go(FootClass *obj) const
  */
 target_t HouseClass::Find_Juicy_Target(coord_t coord) const
 {
-    AbstractClass *aptr = nullptr;
+    AbstractClass *targptr = nullptr;
     int last_dist = 0;
 
     for (int i = 0; i < g_Units.Count(); ++i) {
-        UnitClass *unit = &g_Units[i];
+        UnitClass *uptr = &g_Units[i];
 
         // If we have a valid unit that doesn't belong to an ally, check if its out of the houses zone
         // and thus ripe for the taking.
-        if (unit != nullptr && !unit->In_Limbo() && !Is_Ally(unit)) {
-            if (unit->Get_Owner_House()->Which_Zone(unit) == ZONE_NONE) {
-                int dist = Distance(unit->Center_Coord(), coord);
+        if (uptr != nullptr && !uptr->In_Limbo() && !Is_Ally(uptr)) {
+            if (uptr->Get_Owner_House()->Which_Zone(uptr) == ZONE_NONE) {
+                int dist = Distance(uptr->Center_Coord(), coord);
 
                 // Give anti air units a wide berth.
-                if (unit->Anti_Air()) {
+                if (uptr->Anti_Air()) {
                     dist *= 2;
                 }
 
                 // Prioritise going after those sweet sweet harvesters.
-                if (unit->What_Type() == UNIT_HARVESTER) {
+                if (uptr->What_Type() == UNIT_HARVESTER) {
                     dist /= 2;
                 }
 
                 if (last_dist == 0 || dist < last_dist) {
                     last_dist = dist;
-                    aptr = unit;
+                    targptr = uptr;
                 }
             }
         }
     }
 
-    return aptr != nullptr ? aptr->As_Target() : 0;
+    return targptr != nullptr ? targptr->As_Target() : 0;
 }
 
 /**

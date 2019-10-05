@@ -307,8 +307,7 @@ int BuildingTypeClass::Raw_Cost() const
         case BUILDING_HELIPAD:
             if (Rule.Separate_Aircraft()) {
                 cost -= (AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Get_Cost()
-                            + AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Get_Cost())
-                    / 2;
+                        + AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Get_Cost()) / 2;
             }
 
             break;

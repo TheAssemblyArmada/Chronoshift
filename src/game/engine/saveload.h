@@ -28,6 +28,7 @@ enum
     //DOS
     RADOS_10X_MAGIC_ID = 0x10054DA, // 1.0X DOS, Retail
     RADOS_20X_MAGIC_ID = 0x10054DB, // 2.0X DOS
+
     //Windows 95
     RA95_10X_MAGIC_ID = 0x100616D, // 1.0X, Retail
     RA95_20X_MAGIC_ID = 0x100616E, // 2.0X, RA DEMO 1.19

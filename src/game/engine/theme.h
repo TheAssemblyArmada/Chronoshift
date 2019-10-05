@@ -25,57 +25,54 @@
 
 enum ThemeType
 {
-    THEME_STOP = -3,
-    THEME_NEXT = -2,
+    THEME_BIG_FOOT,
+    THEME_CRUSH,
+    THEME_FAC1,
+    THEME_FAC2,
+    THEME_HELL_MARCH,
+    THEME_RUN1,
+    THEME_SMSH,
+    THEME_TREN,
+    THEME_WORK,
+    THEME_AWAITING,
+    THEME_DENSE_R,
+    THEME_FOGGER,
+    THEME_MUD,
+    THEME_RADIO2,
+    THEME_ROLLOUT,
+    THEME_SNAKE,
+    THEME_TERMINAT,
+    THEME_TWIN,
+    THEME_VECTOR,
+    THEME_MAP,
+    THEME_SCORE,
+    THEME_INTRO,
+    THEME_CREDITS,
+    THEME_2ND_HAND,
+    THEME_ARAZOID,
+    THEME_BACKSTAB,
+    THEME_CHAOS2,
+    THEME_SHUT_IT,
+    THEME_TWIN_MIX,
+    THEME_UNDER3,
+    THEME_VR2,
+    THEME_BOG,
+    THEME_FLOAT_V2,
+    THEME_GLOOM,
+    THEME_GRNDWIRE,
+    THEME_RPT,
+    THEME_SEARCH,
+    THEME_TRACTION,
+    THEME_WASTELAND,
+
+    THEME_COUNT,
 
     THEME_NONE = -1,
+    THEME_NEXT = -2,
+    THEME_STOP = -3,
 
-    THEME_FIRST = 0,
-
-    THEME_BIG_FOOT = 0,
-    THEME_CRUSH = 1,
-    THEME_FAC1 = 2,
-    THEME_FAC2 = 3,
-    THEME_HELL_MARCH = 4,
-    THEME_RUN1 = 5,
-    THEME_SMSH = 6,
-    THEME_TREN = 7,
-    THEME_WORK = 8,
-    THEME_AWAIT = 9,
-    THEME_DENSE_R = 10,
-    THEME_FOGGER1A = 11,
-    THEME_MUD1A = 12,
-    THEME_RADIO2 = 13,
-    THEME_ROLLOUT = 14,
-    THEME_SNAKE = 15,
-    THEME_TERMINAT = 16,
-    THEME_TWIN = 17,
-    THEME_VECTOR1A = 18,
-    THEME_MAP = 19,
-    THEME_SCORE = 20,
-    THEME_INTRO = 21,
-    THEME_CREDITS = 22,
-
-    THEME_2ND_HAND = 23,
-    THEME_ARAZOID = 24,
-    THEME_BACKSTAB = 25,
-    THEME_CHAOS2 = 26,
-    THEME_SHUT_IT = 27,
-    THEME_TWIN_MIX = 28,
-    THEME_UNDER3 = 29,
-    THEME_VR2 = 30,
-    THEME_BOG = 31,
-    THEME_FLOAT_V2 = 32,
-    THEME_GLOOM = 33,
-    THEME_GRNDWIRE = 34,
-    THEME_RPT = 35,
-    THEME_SEARCH = 36,
-    THEME_TRACTION = 37,
-    THEME_WASTELAND = 38,
-
-    THEME_LAST = 38,
-
-    THEME_COUNT = 39
+    THEME_FIRST = THEME_BIG_FOOT,
+    THEME_LAST = (THEME_COUNT - 1)
 };
 
 DEFINE_ENUMERATION_OPERATORS(ThemeType);
@@ -91,8 +88,8 @@ private:
         int Length; // length of the theme (in minutes).
         BOOL IsNormal; // Is this theme available through the in-game theme play list [def = true]?
         BOOL IsRepeat; // Does this track repeat.
-        BOOL IsAvailable; // Is this theme available (scanned and found) [def = false]?
-        int Side; // Which side [or sides] get to hear this theme. (see 'gametypes.h' for all options)
+        BOOL IsAvailable; // Is this theme available (scanned and found)?
+        int Side; // Which side [or sides] get to hear this theme. (see OwnerType for all options)
     };
 
 public:

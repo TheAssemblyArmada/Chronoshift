@@ -87,45 +87,46 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
         if (Scen.Global_Timer_Running()) {
             int frame_time = Scen.Get_Global_Time();
             int total_seconds = frame_time / 15; // Game ticks at 15 frames per logical second (not actual seconds unless at 15 fps).
-            VoxType voctospeak = VOX_NONE;
             int hours = (total_seconds / 60) / 60;
             int minutes = (total_seconds / 60) % 60;
             int seconds = total_seconds % 60;
 
+            VoxType voctospeak = VOX_NONE;
+
             // Speak timer warnings.
-            if (frame_time == 900) {
+            if (frame_time == 900) { // 1 Minute.
                 voctospeak = VOX_TIME_1;
             }
 
-            if (frame_time == 1800) {
+            if (frame_time == 1800) { // 2 Minutes.
                 voctospeak = VOX_TIME_2;
             }
 
-            if (frame_time == 2700) {
+            if (frame_time == 2700) { // 3 Minutes.
                 voctospeak = VOX_TIME_3;
             }
 
-            if (frame_time == 3600) {
+            if (frame_time == 3600) { // 4 Minutes.
                 voctospeak = VOX_TIME_4;
             }
 
-            if (frame_time == 4500) {
+            if (frame_time == 4500) { // 5 Minutes.
                 voctospeak = VOX_TIME_5;
             }
 
-            if (frame_time == 9000) {
+            if (frame_time == 9000) { // 10 Minutes.
                 voctospeak = VOX_TIME_10;
             }
             
-            if (frame_time == 18000) {
+            if (frame_time == 18000) { // 20 Minutes.
                 voctospeak = VOX_TIME_20;
             }
             
-            if (frame_time == 27000) {
+            if (frame_time == 27000) { // 30 Minutes.
                 voctospeak = VOX_TIME_30;
             }
             
-            if (frame_time == 36000) {
+            if (frame_time == 36000) { // 40 Minutes.
                 voctospeak = VOX_TIME_40;
             }
 
@@ -244,7 +245,13 @@ void TabClass::CreditClass::AI(BOOL force_update)
     }
 }
 
-TabClass::TabClass() : CreditDisplay(), TimerFlashTimer(), TabToRedraw(false), CreditsFlashTimer() {}
+TabClass::TabClass() :
+    CreditDisplay(),
+    TimerFlashTimer(),
+    TabToRedraw(false),
+    CreditsFlashTimer()
+{
+}
 
 /**
  * @brief One time load of tab related graphical assets.
@@ -312,7 +319,7 @@ void TabClass::Draw_It(BOOL force_redraw)
     if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
         g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
 
-        // Draw the RA++ background if available.
+        // Draw the new Chronoshift tab background if available.
         if (TabBackgroundShape != nullptr) {
             int distance = g_logicPage->Get_Width() / TAB_WIDTH;
             int framecount = Get_Build_Frame_Count(TabBackgroundShape);

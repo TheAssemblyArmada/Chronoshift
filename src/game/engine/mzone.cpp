@@ -20,7 +20,12 @@
 #include <strings.h>
 #endif
 
-const char *MZoneName[MZONE_COUNT] = { "Normal", "Crusher", "Destroyer", "AmphibiousDestroyer" };
+const char *MZoneName[MZONE_COUNT] = {
+    "Normal",
+    "Crusher",
+    "Destroyer",
+    "AmphibiousDestroyer"
+};
 
 MZoneType MZone_From_Name(const char *name)
 {

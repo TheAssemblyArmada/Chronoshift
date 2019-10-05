@@ -112,7 +112,7 @@ int UnitTypeClass::Max_Pips() const
     // TODO, Maybe set these behaviours with bools in future to remove hard coded unit behaviour?
     switch (m_Type) {
         case UNIT_HARVESTER:
-            return 7;
+            return 7; // Harvester bails.
 
         case UNIT_MINELAYER:
             return Ammo;
@@ -146,11 +146,11 @@ BOOL UnitTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
         reinterpret_cast<BOOL (*)(const UnitTypeClass *, cell_t, HousesType)>(0x00578B50);
     return func(this, cellnum, house);
 #else
-    /*UnitClass *vptr = new UnitClass(m_Type, HOUSES_NONE);
+    /*UnitClass *uptr = new UnitClass(m_Type, HOUSES_NONE);
 
-    if (vptr != nullptr) {
+    if (uptr != nullptr) {
         DirType dir = (DirType)Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
-        return vptr->Unlimbo(Cell_To_Coord(cellnum), dir);
+        return uptr->Unlimbo(Cell_To_Coord(cellnum), dir);
     }*/
 
     return false;

@@ -29,6 +29,9 @@ class TechnoTypeClass;
 
 class FactoryClass
 {
+    enum {
+        MAX_CLOCK_STAGES = 54
+    };
 public:
     FactoryClass();
     ~FactoryClass();

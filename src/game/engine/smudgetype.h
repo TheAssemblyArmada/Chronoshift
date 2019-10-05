@@ -25,31 +25,26 @@
 
 enum SmudgeType
 {
-    SMUDGE_NONE = -1,
-
-    SMUDGE_FIRST = 0,
-
-    SMUDGE_CR1 = 0,
-    SMUDGE_CR2 = 1,
-    SMUDGE_CR3 = 2,
-    SMUDGE_CR4 = 3,
-    SMUDGE_CR5 = 4,
-    SMUDGE_CR6 = 5,
-
-    SMUDGE_SC1 = 6,
-    SMUDGE_SC2 = 7,
-    SMUDGE_SC3 = 8,
-    SMUDGE_SC4 = 9,
-    SMUDGE_SC5 = 10,
-    SMUDGE_SC6 = 11,
-
-    SMUDGE_BIB1 = 12,
-    SMUDGE_BIB2 = 13,
-    SMUDGE_BIB3 = 14,
-
-    SMUDGE_LAST = 14,
+    SMUDGE_CR1,
+    SMUDGE_CR2,
+    SMUDGE_CR3,
+    SMUDGE_CR4,
+    SMUDGE_CR5,
+    SMUDGE_CR6,
+    SMUDGE_SC1,
+    SMUDGE_SC2,
+    SMUDGE_SC3,
+    SMUDGE_SC4,
+    SMUDGE_SC5,
+    SMUDGE_SC6,
+    SMUDGE_BIB1,
+    SMUDGE_BIB2,
+    SMUDGE_BIB3,
 
     SMUDGE_COUNT,
+
+    SMUDGE_NONE = -1,
+    SMUDGE_FIRST = SMUDGE_CR1
 };
 
 DEFINE_ENUMERATION_OPERATORS(SmudgeType);
@@ -81,11 +76,11 @@ public:
     BOOL Is_Crater() { return Crater; }
     BOOL Is_Bib() { return Bib; }
 
-    static SmudgeType From_Name(const char *name);
-    static const char *Name_From(SmudgeType smudge);
     static void Init_Heap();
     static void One_Time() {}
     static void Init(TheaterType theater);
+    static SmudgeType From_Name(const char *name);
+    static const char *Name_From(SmudgeType smudge);
     static SmudgeTypeClass &As_Reference(SmudgeType smudge);
     static SmudgeTypeClass *As_Pointer(SmudgeType smudge);
 

@@ -24,66 +24,71 @@
 
 enum InfantryType
 {
+    INFANTRY_E1, // Rifle Infantry
+    INFANTRY_E2, // Grenadier
+    INFANTRY_E3, // Rocket Soldier
+    INFANTRY_FLAME_TROOPER,
+    INFANTRY_ENGINEER,
+    INFANTRY_TANYA,
+    INFANTRY_SPY,
+    INFANTRY_THIEF,
+    INFANTRY_MEDIC,
+    INFANTRY_GENERAL,
+    INFANTRY_DOG,
+    INFANTRY_C1,
+    INFANTRY_C2,
+    INFANTRY_C3,
+    INFANTRY_C4,
+    INFANTRY_C5,
+    INFANTRY_C6,
+    INFANTRY_C7,
+    INFANTRY_C8,
+    INFANTRY_C9,
+    INFANTRY_C10,
+    INFANTRY_EINSTEIN,
+    INFANTRY_DELPHI,
+    INFANTRY_CHAN,
+    INFANTRY_SHOCK_TROOPER,
+    INFANTRY_MECHANIC,
+
+    INFANTRY_COUNT,
+
     INFANTRY_NONE = -1,
-    INFANTRY_FIRST = 0,
-    INFANTRY_E1 = 0, // Rifle Infantry
-    INFANTRY_E2 = 1, // Grenadier
-    INFANTRY_E3 = 2, // Rocket Soldier
-    INFANTRY_FLAME_TROOPER = 3,
-    INFANTRY_ENGINEER = 4,
-    INFANTRY_TANYA = 5,
-    INFANTRY_SPY = 6,
-    INFANTRY_THIEF = 7,
-    INFANTRY_MEDIC = 8,
-    INFANTRY_GENERAL = 9,
-    INFANTRY_DOG = 10,
-    INFANTRY_C1 = 11,
-    INFANTRY_C2 = 12,
-    INFANTRY_C3 = 13,
-    INFANTRY_C4 = 14,
-    INFANTRY_C5 = 15,
-    INFANTRY_C6 = 16,
-    INFANTRY_C7 = 17,
-    INFANTRY_C8 = 18,
-    INFANTRY_C9 = 19,
-    INFANTRY_C10 = 20,
-    INFANTRY_EINSTEIN = 21,
-    INFANTRY_DELPHI = 22,
-    INFANTRY_CHAN = 23,
-    INFANTRY_SHOCK_TROOPER = 24,
-    INFANTRY_MECHANIC = 25,
-    INFANTRY_COUNT = 26,
-    INFANTRY_NOEXP_COUNT = 24,
+    INFANTRY_FIRST = INFANTRY_E1,
+
+    INFANTRY_NOEXP_COUNT = 24, // Used for arrays that exclude new expansion infantry.
 };
 
 DEFINE_ENUMERATION_OPERATORS(InfantryType);
 
 enum DoType
 {
+    DO_READY,
+    DO_GUARD,
+    DO_PRONE,
+    DO_WALK,
+    DO_FIRE_UP,
+    DO_DOWN,
+    DO_CRAWL,
+    DO_UP,
+    DO_FIRE_PRONE,
+    DO_IDLE1,
+    DO_IDLE2,
+    DO_DIE1,
+    DO_DIE2,
+    DO_DIE3,
+    DO_DIE4,
+    DO_DIE5,
+    DO_16,
+    DO_17,
+    DO_18,
+    DO_19,
+    DO_20,
+
+    DO_COUNT,
+
     DO_NONE = -1,
-    DO_FIRST = 0,
-    DO_READY = 0,
-    DO_GUARD = 1,
-    DO_PRONE = 2,
-    DO_WALK = 3,
-    DO_FIRE_UP = 4,
-    DO_DOWN = 5,
-    DO_CRAWL = 6,
-    DO_UP = 7,
-    DO_FIRE_PRONE = 8,
-    DO_IDLE1 = 9,
-    DO_IDLE2 = 10,
-    DO_DIE1 = 11,
-    DO_DIE2 = 12,
-    DO_DIE3 = 13,
-    DO_DIE4 = 14,
-    DO_DIE5 = 15,
-    DO_16 = 16,
-    DO_17 = 17,
-    DO_18 = 18,
-    DO_19 = 19,
-    DO_20 = 20,
-    DO_COUNT = 21
+    DO_FIRST = DO_READY,
 };
 
 DEFINE_ENUMERATION_OPERATORS(DoType);
@@ -127,9 +132,9 @@ public:
     BOOL Has_Alt_Remap() const { return m_HasAltRemap; }
     const uint8_t *Alt_Remap_Table() const { return m_AltRemap; }
 
+    static void Init_Heap();
     static InfantryTypeClass &As_Reference(InfantryType type);
     static InfantryType From_Name(const char *name);
-    static void Init_Heap();
     static const char *Name_From(InfantryType type) { return As_Reference(type).m_Name; }
 
 private:

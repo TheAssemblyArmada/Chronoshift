@@ -43,6 +43,7 @@ class RadarClass : public DisplayClass
 {
     enum
     {
+        RADAR_CURSOR_SIZE = 6,
         MINI_MAP_CELLS = 400,
     };
 
@@ -163,7 +164,9 @@ protected:
     int MiniMapCellWidth;
     int MiniMapCellHeight;
     cell_t MiniMapCell;
-    char padding[2]; // needed cause someone made MiniMapCell a int but Radar_Position returns it, its a short
+#ifdef GAME_DLL
+    char padding[2]; // needed for DLL builds because original has MiniMapCell a int, but Radar_Position returns it as a short.
+#endif
     TRect<int> MiniMap;
     int MiniMapScale;
     HousesType SpiedHouse;

@@ -20,15 +20,18 @@
 
 #include "always.h"
 
-enum ArmorType {
-    ARMOR_INVALID = -1,
-    ARMOR_FIRST = 0,
-    ARMOR_NONE = 0,
+enum ArmorType
+{
+    ARMOR_NONE,
     ARMOR_WOOD,
     ARMOR_LIGHT,
     ARMOR_HEAVY,
     ARMOR_CONCRETE,
+
     ARMOR_COUNT,
+
+    ARMOR_INVALID = -1,
+    ARMOR_FIRST = ARMOR_NONE,
 };
 
 DEFINE_ENUMERATION_OPERATORS(ArmorType);

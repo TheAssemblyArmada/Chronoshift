@@ -25,18 +25,20 @@
 
 enum WarheadType
 {
-    WARHEAD_NONE = -1,
-    WARHEAD_FIRST = 0,
-    WARHEAD_SA = 0,
-    WARHEAD_HE = 1,
-    WARHEAD_AP = 2,
-    WARHEAD_FIRE = 3,
-    WARHEAD_HOLLOWPOINT = 4,
-    WARHEAD_SUPER = 5,
-    WARHEAD_ORGANIC = 6,
-    WARHEAD_NUKE = 7,
-    WARHEAD_MECHANICAL = 8,
+    WARHEAD_SA,
+    WARHEAD_HE,
+    WARHEAD_AP,
+    WARHEAD_FIRE,
+    WARHEAD_HOLLOWPOINT,
+    WARHEAD_SUPER,
+    WARHEAD_ORGANIC,
+    WARHEAD_NUKE,
+    WARHEAD_MECHANICAL,
+
     WARHEAD_COUNT,
+
+    WARHEAD_NONE = -1,
+    WARHEAD_FIRST = WARHEAD_SA,
 };
 
 DEFINE_ENUMERATION_OPERATORS(WarheadType);
@@ -74,7 +76,7 @@ public:
     static WarheadTypeClass *As_Pointer(WarheadType warhead);
 
 private:
-    int Type;
+    int Type; // WarheadType
     const char *Name;
     int Spread; // damage spread factor[larger means greater spread]. Damage halves every n pixels from center.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -86,7 +88,7 @@ private:
     bool Wall; // Does this warhead damage concrete walls?
     bool Wood; // Does this warhead damage wood walls?
     bool Ore; // Does this warhead destroy ore?
-    bool UnkBool; // Only checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester
+    bool UnkBool; // TODO: Only checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester?
 #endif
     fixed_t Verses[ARMOR_COUNT]; // Damage verses various armor types (as percentage of full damage). eg, Verses[ARMOR_WOOD];
     int Explosion; // Which explosion set to use when warhead of this type impacts.

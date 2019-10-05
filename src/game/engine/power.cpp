@@ -22,8 +22,6 @@
 #include "mixfile.h"
 #include <algorithm>
 
-#define POWER_MAX_HEIGHT 108
-
 #ifndef GAME_DLL
 PowerClass::PowerButtonClass PowerClass::PowerButton;
 void *PowerClass::PowerShape = nullptr;
@@ -50,6 +48,8 @@ BOOL PowerClass::PowerButtonClass::Action(unsigned flags, KeyNumType &key)
 
 PowerClass::PowerClass() :
     RadarClass(),
+    PowerToRedraw(false),
+    PowerBit2(false),
     FlashTimer(),
     Drain(-1),
     Output(-1),
@@ -280,7 +280,7 @@ int PowerClass::Power_Height(int power)
         height += power_left * height_inc / 100;
     }
 
-    return std::clamp(height, 0, POWER_MAX_HEIGHT);
+    return std::clamp(height, 0, int(POWER_MAX_HEIGHT));
 }
 
 void PowerClass::Flash_Power()

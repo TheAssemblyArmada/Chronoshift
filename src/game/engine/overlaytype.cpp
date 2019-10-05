@@ -247,46 +247,20 @@ uint8_t *OverlayTypeClass::Radar_Icon(int frame) const
 #if 0
 BOOL OverlayTypeClass::Read_INI(GameINIClass &ini)
 {
-    //
-    //
-    //
     if (ObjectTypeClass::Read_INI(ini)) {
-        // The land type of this overlay [def = LAND_CLEAR].
         Land = ini.Get_LandType(m_Name, "Land", Land);
-
-        // Strength (hit points) of this overlay.
         OverlayStrength = ini.Get_Int(m_Name, "Strength", OverlayStrength);
-
-        //
         Wall = ini.Get_BOOL(m_Name, "Wall", Wall);
-
-        //
         High = ini.Get_BOOL(m_Name, "High", High);
-
-        // Is this ore or gem [growth (ore only) and graphic logic applies] (def = false)?
         Ore = ini.Get_BOOL(m_Name, "Ore", Ore);
-
-        // Is this overlay a crate (def = false)?
         Crate = ini.Get_BOOL(m_Name, "Crate", Crate);
-
-        //
         DamageLevels = ini.Get_Int(m_Name, "DamageLevels", DamageLevels);
-
-        // Does it have theater specific imagery (def = false)?
         Theater = ini.Get_BOOL(m_Name, "Theater", Theater);
-
-        // <TODO> (def = ANIM_NONE)?
         CellAnim = ini.Get_AnimType(m_Name, "CellAnim", CellAnim);
 
-        //
-        //
-        //
         return true;
     }
 
-    //
-    //
-    //
     return false;
 }
 #endif

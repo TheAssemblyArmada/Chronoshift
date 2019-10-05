@@ -21,9 +21,6 @@
 #include "facing.h"
 #include "gametypes.h"
 
-
-// maybe?
-// https://github.com/Ares-Developers/YRpp/blob/d387fbb9d36e4645d93caf87be502d6d87d042c3/GeneralDefinitions.h#L568
 enum ImpactType
 {
     IMPACT_NONE = -1,

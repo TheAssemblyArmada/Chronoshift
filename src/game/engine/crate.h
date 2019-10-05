@@ -76,11 +76,11 @@ private:
 public:
     static const char *CrateNames[];
 #ifdef GAME_DLL
-    static char *CrateAnims; // TODO should be AnimType *CrateAnims[CRATE_COUNT];
+    static char *CrateAnims;
     static int *CrateShares;
     static int *CrateData;
 #else
-    static char CrateAnims[CRATE_COUNT]; // TODO should be AnimType CrateAnims[CRATE_COUNT];
+    static AnimType CrateAnims[CRATE_COUNT];
     static int CrateShares[CRATE_COUNT];
     static int CrateData[CRATE_COUNT];
 #endif

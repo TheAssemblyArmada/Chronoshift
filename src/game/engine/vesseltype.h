@@ -25,17 +25,20 @@
 
 enum VesselType
 {
-    VESSEL_NONE = -1,
-    VESSEL_FIRST = 0,
-    VESSEL_SUBMARINE = 0,
-    VESSEL_DESTROYER = 1,
-    VESSEL_CRUISER = 2,
-    VESSEL_TRANSPORT = 3,
-    VESSEL_PT_BOAT = 4,
-    VESSEL_MISSILE_SUB = 5,
-    VESSEL_CARRIER = 6,
+    VESSEL_SUBMARINE,
+    VESSEL_DESTROYER,
+    VESSEL_CRUISER,
+    VESSEL_TRANSPORT,
+    VESSEL_PT_BOAT,
+    VESSEL_MISSILE_SUB,
+    VESSEL_CARRIER,
+
     VESSEL_COUNT,
-    VESSEL_NOEXP_COUNT = 5,
+
+    VESSEL_NONE = -1,
+    VESSEL_FIRST = VESSEL_SUBMARINE,
+
+    VESSEL_NOEXP_COUNT = 5, // Used for arrays that exclude new expansion units.
 };
 
 DEFINE_ENUMERATION_OPERATORS(VesselType);
@@ -68,10 +71,10 @@ public:
 
     VesselType What_Type() const { return m_Type; }
 
-    static VesselTypeClass &As_Reference(VesselType type);
-    static VesselType From_Name(const char *name);
     static void One_Time();
     static void Init_Heap();
+    static VesselTypeClass &As_Reference(VesselType type);
+    static VesselType From_Name(const char *name);
     static const char *Name_From(VesselType type) { return As_Reference(type).m_Name; }
 
 private:

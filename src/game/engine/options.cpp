@@ -461,11 +461,6 @@ void OptionsClass::Load_Settings()
 void OptionsClass::Adjust_Palette(
     PaletteClass &src, PaletteClass &dst, fixed_t brightness, fixed_t saturation, fixed_t tint, fixed_t contrast) const
 {
-    // TODO, the original does this, but the check is pointless as references can be assumed never to be null.
-    // if (&src == nullptr || &dst == nullptr) {
-    //     return;
-    // }
-
     for (int index = 0; index < PaletteClass::PALETTE_ENTRIES; ++index) {
         // Index 16 is pure white, we do not want to adjust this.
         if (index == 16) {
@@ -530,10 +525,9 @@ void OptionsClass::Set_Score_Volume(fixed_t volume, BOOL beep)
     Volume = volume;
 
     if (beep) {
-        // TODO requires ThemeClass
-        // if (Theme.Still_Playing()) {
-        //    Sound_Effect(VOC_RABEEP1, fixed_t::_1_1, 1, 0, HOUSES_NONE);
-        //}
+        if (!Theme.Still_Playing()) {
+            Sound_Effect(VOC_RABEEP1, fixed_t(1, 1), 1, 0, HOUSES_NONE);
+        }
     }
 }
 

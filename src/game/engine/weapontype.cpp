@@ -215,9 +215,9 @@ BOOL WeaponTypeClass::Read_INI(GameINIClass &ini)
         Charges = ini.Get_Bool(Name, "Charges", Charges);
         TurboBoost = ini.Get_Bool(Name, "TurboBoost", TurboBoost);
         Warhead = WarheadTypeClass::As_Pointer(ini.Get_WarheadType(
-            Name, "Warhead", (Warhead != nullptr ? WarheadType(Warhead->What_Type()) : WARHEAD_NONE)));
+            Name, "Warhead", (Warhead != nullptr ? Warhead->What_Type() : WARHEAD_NONE)));
         Projectile = BulletTypeClass::As_Pointer(ini.Get_BulletType(
-            Name, "Projectile", (Projectile != nullptr ? BulletType(Projectile->What_Type()) : BULLET_NONE)));
+            Name, "Projectile", (Projectile != nullptr ? Projectile->What_Type() : BULLET_NONE)));
 
         return true;
     }

@@ -21,6 +21,7 @@
 #include "mouse.h"
 #include "msglist.h"
 #include "session.h"
+#include "iomap.h"
 
 #ifndef GAME_DLL
 GadgetClass *GameScreenClass::Buttons = nullptr;
@@ -28,14 +29,12 @@ GraphicViewPortClass *GameScreenClass::ShadowPage = nullptr;
 #endif
 
 GameScreenClass::GameScreenClass() :
-    RedrawFlag(REDRAW_FORCE_MAYBE | REDRAW_2)
+    RedrawFlag(REDRAW_FORCE | REDRAW_2)
 {
-
 }
 
 GameScreenClass::~GameScreenClass()
 {
-    
 }
 
 void GameScreenClass::One_Time()
@@ -60,7 +59,7 @@ void GameScreenClass::Init_Clear()
         g_hidPage.Clear();
     }
 
-    RedrawFlag |= REDRAW_FORCE_MAYBE;
+    RedrawFlag |= REDRAW_FORCE;
 }
 
 void GameScreenClass::Init_IO()
@@ -73,7 +72,7 @@ void GameScreenClass::Flag_To_Redraw(BOOL redraw)
     RedrawFlag |= REDRAW_2;
 
     if (redraw) {
-        RedrawFlag |= REDRAW_FORCE_MAYBE;
+        RedrawFlag |= REDRAW_FORCE;
     }
 }
 
@@ -119,7 +118,7 @@ void GameScreenClass::Remove_A_Button(GadgetClass &gadget)
     Buttons = gadget.Remove();
 }
 
-// TODO This function should probably be bumped up to DisplayClass as it relies on DisplayClass members.
+// TODO: This function should probably be bumped up to DisplayClass as it relies on DisplayClass members.
 void GameScreenClass::Render()
 {
     // This if is only done in EDWIN, so editor only?
@@ -127,10 +126,10 @@ void GameScreenClass::Render()
         RedrawFlag |= REDRAW_2;
     }
 
-    if ((RedrawFlag & REDRAW_FORCE_MAYBE) || (RedrawFlag & REDRAW_2)) {
+    if ((RedrawFlag & REDRAW_FORCE) || (RedrawFlag & REDRAW_2)) {
         GraphicViewPortClass *old = Set_Logic_Page(g_hidPage);
 
-        BOOL to_redraw = (RedrawFlag & REDRAW_FORCE_MAYBE) != 0;
+        BOOL to_redraw = (RedrawFlag & REDRAW_FORCE) != 0;
 
         if (g_inMapEditor && to_redraw) {
             g_hidPage.Clear();
@@ -142,38 +141,25 @@ void GameScreenClass::Render()
             Buttons->Draw_All(false);
         }
 
-        // TODO Requires DisplayClass layer of IOMap.
         if (!g_inMapEditor) {
             if (Session.Get_Messages().Num_Messages() > 0) {
-                //
-                //
-                //
-                // if ( Get_Lepton_X(Loc2) < 128 ) {
-                //    v4 = Get_Lepton_X(Loc2);
-                //} else {
-                //    v4 = Get_Lepton_X(Loc2) + 1;
-                //}
-
-                //
-                //
-                //
-                // Session.Get_Messages().Set_Width(v3 * 24);
+                // Calculate the width of the message buffer based on the current tactical width.
+                Session.Get_Messages().Set_Width(CELL_PIXELS * Lepton_To_Cell_Coord(Map.Get_DisplayWidth()));
             }
 
             Session.Get_Messages().Draw();
         }
 
-        // EDWIN uses a bool param to the function to decide to do this.
         Blit_Display();
-        // Otherwise it does this:
-        //g_mouse->Erase_Mouse(g_hidPage, true);
 
-        RedrawFlag &= ~(REDRAW_FORCE_MAYBE | REDRAW_2); // Clear redraw flags
+        RedrawFlag &= ~(REDRAW_FORCE | REDRAW_2); // Clear any redraw flags.
         Set_Logic_Page(old);
     }
 }
 
-void GameScreenClass::Draw_It(BOOL force_redraw) {}
+void GameScreenClass::Draw_It(BOOL force_redraw)
+{
+}
 
 void GameScreenClass::Blit_Display()
 {
@@ -192,5 +178,4 @@ void GameScreenClass::Blit_Display()
 
 void GameScreenClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    return;
 }

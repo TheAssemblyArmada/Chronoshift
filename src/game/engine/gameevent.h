@@ -220,7 +220,7 @@ private:
     };
 
 private:
-    GameEventType m_Type; // The type for this object (def = EVENT_NONE).
+    GameEventType m_Type; // The type for this object.
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     unsigned int m_EventFrame : 26; //

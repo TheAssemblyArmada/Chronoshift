@@ -32,6 +32,7 @@ class MapClass : public GameScreenClass
 {
     enum
     {
+        ORE_SPREAD_TABLE_SIZE = 64,
         MAP_MAX_CRATES = 256,
     };
 public:
@@ -82,10 +83,10 @@ public:
     ObjectClass *Close_Object(coord_t coord) const;
 
     cell_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
-    int Get_Map_Cell_X() const {return MapCellX; }
-    int Get_Map_Cell_Y() const {return MapCellY; }
-    int Get_Map_Cell_Width() const {return MapCellWidth; }
-    int Get_Map_Cell_Height() const {return MapCellHeight; }
+    int Get_Map_Cell_X() const { return MapCellX; }
+    int Get_Map_Cell_Y() const { return MapCellY; }
+    int Get_Map_Cell_Width() const { return MapCellWidth; }
+    int Get_Map_Cell_Height() const  {return MapCellHeight; }
 
 #ifdef GAME_DLL
     cell_t MapClass::Hook_Pick_Random_Location() { return Pick_Random_Location(); }
@@ -112,10 +113,10 @@ protected:
     int YSize;
     int TotalSize;
     CrateClass Crates[MAP_MAX_CRATES];
-    int16_t OreGrowth[64];
+    int16_t OreGrowth[ORE_SPREAD_TABLE_SIZE];
     int OreGrowthCount;
     int OreGrowthExcess;
-    int16_t OreSpread[64];
+    int16_t OreSpread[ORE_SPREAD_TABLE_SIZE];
     int OreSpreadCount;
     int OreSpreadExcess;
     int16_t OreLogicPos;

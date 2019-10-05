@@ -235,7 +235,9 @@ TextLabelClass *MessageListClass::Add_Message(
     }
 
     if (new_message) {
-        // TODO Sound_Effect();
+
+        // Play notification of new message.
+        Sound_Effect(VOC_INCOMING_MESSAGE);
 
         if (LabelList != nullptr) {
             msglabel->Add_Tail(*LabelList);

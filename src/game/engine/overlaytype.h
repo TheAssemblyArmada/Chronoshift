@@ -26,50 +26,49 @@
 
 enum OverlayType
 {
-    OVERLAY_NONE = -1,
-
-    OVERLAY_FIRST = 0,
-
     // Walls / Fences
-    OVERLAY_SANDBAG = 0,
-    OVERLAY_CYCLONE_FENCE = 1,
-    OVERLAY_BRICK_WALL = 2,
-    OVERLAY_BARB_WIRE = 3,
-    OVERLAY_WOOD_FENCE = 4,
+    OVERLAY_SANDBAG,
+    OVERLAY_CYCLONE_FENCE,
+    OVERLAY_BRICK_WALL,
+    OVERLAY_BARB_WIRE,
+    OVERLAY_WOOD_FENCE,
 
     // Ore and Gems
-    OVERLAY_GOLD_01 = 5,
-    OVERLAY_GOLD_02 = 6,
-    OVERLAY_GOLD_03 = 7,
-    OVERLAY_GOLD_04 = 8,
-    OVERLAY_GEM_01 = 9,
-    OVERLAY_GEM_02 = 10,
-    OVERLAY_GEM_03 = 11,
-    OVERLAY_GEM_04 = 12,
+    OVERLAY_GOLD_01,
+    OVERLAY_GOLD_02,
+    OVERLAY_GOLD_03,
+    OVERLAY_GOLD_04,
+    OVERLAY_GEM_01,
+    OVERLAY_GEM_02,
+    OVERLAY_GEM_03,
+    OVERLAY_GEM_04,
 
     // Village and farmland
-    OVERLAY_V12 = 13,
-    OVERLAY_V13 = 14,
-    OVERLAY_V14 = 15,
-    OVERLAY_V15 = 16,
-    OVERLAY_V16 = 17,
-    OVERLAY_V17 = 18,
-    OVERLAY_V18 = 19,
+    OVERLAY_V12,
+    OVERLAY_V13,
+    OVERLAY_V14,
+    OVERLAY_V15,
+    OVERLAY_V16,
+    OVERLAY_V17,
+    OVERLAY_V18,
 
     // CTF flag base/spot    //Flag Pedestal?
-    OVERLAY_FPLS = 20,
+    OVERLAY_FPLS,
 
     // Crates
-    OVERLAY_WOOD_FENCE_CRATE = 21,
-    OVERLAY_STEEL_CRATE = 22,
+    OVERLAY_WOOD_FENCE_CRATE,
+    OVERLAY_STEEL_CRATE,
 
     // Barbwire fence
-    OVERLAY_FENCE = 23,
+    OVERLAY_FENCE,
 
     // Water wooden crate
-    OVERLAY_WATER_WOOD_CRATE = 24,
+    OVERLAY_WATER_WOOD_CRATE,
 
     OVERLAY_COUNT,
+
+    OVERLAY_NONE = -1,
+    OVERLAY_FIRST = OVERLAY_SANDBAG,
 };
 
 DEFINE_ENUMERATION_OPERATORS(OverlayType);
@@ -121,9 +120,9 @@ public:
 
 private:
     OverlayType Type;
-    LandType Land;
-    int DamageLevels; // think how many damage stages walls have for example.
-    int OverlayStrength;
+    LandType Land; // The land type of this overlay.
+    int DamageLevels; // Number of damage levels [think how many damage stages walls have for example].
+    int OverlayStrength; // Strength (hit points) of this overlay.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL Theater : 1; // 1
     BOOL Wall : 1; // 2
@@ -133,13 +132,13 @@ private:
     BOOL Crate : 1; // 32
     BOOL RadarVisible : 1; // 64
 #else
-    bool Theater;
-    bool Wall;
-    bool High;
-    bool Ore;
+    bool Theater; // Does it have theater specific imagery?
+    bool Wall; // 
+    bool High; // 
+    bool Ore; // Is this ore or gem [growth (ore only) and graphic logic applies]?
     bool Boolean16; // TODO: this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
-    bool Crate;
-    bool RadarVisible;
+    bool Crate; // Is this overlay a crate?
+    bool RadarVisible; // 
 #endif
 };
 

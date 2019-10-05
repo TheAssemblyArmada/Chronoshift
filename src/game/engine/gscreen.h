@@ -29,7 +29,7 @@
 enum RedrawEnum
 {
     REDRAW_0 = 0,
-    REDRAW_FORCE_MAYBE = 1,
+    REDRAW_FORCE = 1,
     REDRAW_2 = 2
 };
 

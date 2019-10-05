@@ -27,6 +27,7 @@
 
 class ObjectClass;
 
+// TODO: Trigger "delayed event" class?
 class TDelayEventClass
 {
 public:

@@ -19,7 +19,10 @@
 TFixedIHeapClass<TeamTypeClass> g_TeamTypes;
 #endif
 
-TeamTypeClass::TeamTypeClass() : AbstractTypeClass(RTTI_TEAMTYPE, g_TeamTypes.ID(this), 0, "") {}
+TeamTypeClass::TeamTypeClass() :
+    AbstractTypeClass(RTTI_TEAMTYPE, g_TeamTypes.ID(this), 0, "")
+{
+}
 
 void *TeamTypeClass::operator new(size_t size)
 {
@@ -31,6 +34,10 @@ void TeamTypeClass::operator delete(void *ptr)
     g_TeamTypes.Free(ptr);
 }
 
-void TeamTypeClass::Code_Pointers() {}
+void TeamTypeClass::Code_Pointers()
+{
+}
 
-void TeamTypeClass::Decode_Pointers() {}
+void TeamTypeClass::Decode_Pointers()
+{
+}

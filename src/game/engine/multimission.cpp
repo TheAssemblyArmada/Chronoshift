@@ -12,7 +12,6 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-
 #include "multimission.h"
 #include <cstring>
     
@@ -30,7 +29,7 @@ MultiMission::MultiMission(const char *filename, const char *description, const 
 
 void MultiMission::Draw_It(int unknown, int xpos, int ypos, int xmax, int ymax, int somestyle, TextPrintType style)
 {
-    //maybe TODO, unused function
+    // empty
 }
 
 void MultiMission::Set_Description(const char *desc)
@@ -49,12 +48,11 @@ void MultiMission::Set_Filename(const char *filename)
 
 void MultiMission::Set_Digest(const char *digest)
 {
-  if (digest != nullptr)
-  {
-    strlcpy(Digest, digest, sizeof(Digest));
-  } else {
-    strcpy(Digest, "NODIGEST");
-  }
+    if (digest != nullptr) {
+        strlcpy(Digest, digest, sizeof(Digest));
+    } else {
+        strcpy(Digest, "NODIGEST");
+    }
 }
 
 

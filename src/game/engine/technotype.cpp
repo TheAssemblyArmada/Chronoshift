@@ -326,7 +326,7 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
         TechLevel = ini.Get_Int(m_Name, "TechLevel", TechLevel);
 
         // MPH
-        // TODO, two versions of code, maybe we need to fix Get_MPH?, see CCINI
+        // TODO, two versions of code, maybe we need to fix Get_MPH?, see GameINIClass
         fixed_t def(MPH, 256);
         int value = ini.Get_MPHType(m_Name, "Speed", MPH);
 
@@ -391,28 +391,29 @@ BOOL TechnoTypeClass::Write_INI(GameINIClass &ini) const
  */
 void TechnoTypeClass::One_Time()
 {
-    // NOTE, Moved from UnitTypeClass as it was actually setting TechnoType statics. Call from UnitTypeClass One_Time().
-    if (!WakeShapes) {
+    // NOTE: Moved from UnitTypeClass as it was actually setting
+    // TechnoType statics. Called from UnitTypeClass One_Time().
+    if (WakeShapes == nullptr) {
         WakeShapes = GameFileClass::Retrieve("wake.shp");
         DEBUG_ASSERT(WakeShapes != nullptr);
     }
-    if (!TurretShapes) {
+    if (TurretShapes == nullptr) {
         TurretShapes = GameFileClass::Retrieve("turr.shp");
         DEBUG_ASSERT(TurretShapes != nullptr);
     }
-    if (!SamShapes) {
+    if (SamShapes == nullptr) {
         SamShapes = GameFileClass::Retrieve("ssam.shp");
         DEBUG_ASSERT(SamShapes != nullptr);
     }
-    if (!MGunShapes) {
+    if (MGunShapes == nullptr) {
         MGunShapes = GameFileClass::Retrieve("mgun.shp");
         DEBUG_ASSERT(MGunShapes != nullptr);
     }
-    if (!LightningShapes) {
+    if (LightningShapes == nullptr) {
         LightningShapes = GameFileClass::Retrieve("litning.shp");
         DEBUG_ASSERT(LightningShapes != nullptr);
     }
-    if (!MissingCameoShape) {
+    if (MissingCameoShape == nullptr) {
         MissingCameoShape = GameFileClass::Retrieve("xxicon.shp");
         DEBUG_ASSERT(MissingCameoShape != nullptr);
     }

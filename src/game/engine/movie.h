@@ -22,9 +22,7 @@
 
 enum MovieType
 {
-    MOVIE_NONE = -1,
-    MOVIE_FIRST = 0,
-    MOVIE_AAGUN = 0,
+    MOVIE_AAGUN,
     MOVIE_MIG,
     MOVIE_SFROZEN,
     MOVIE_AIRFIELD,
@@ -125,7 +123,11 @@ enum MovieType
     MOVIE_SIZZLE2,
     MOVIE_ANTEND,
     MOVIE_ANTINTRO,
-    MOVIE_COUNT
+
+    MOVIE_COUNT,
+
+    MOVIE_NONE = -1,
+    MOVIE_FIRST = MOVIE_AAGUN,
 };
 
 DEFINE_ENUMERATION_OPERATORS(MovieType);
@@ -147,4 +149,4 @@ void Play_SneakPeak();
 
 extern MovieInfoStruct MovieTypes[MOVIE_COUNT];
 
-#endif // _PLAYMOVIE_H_
+#endif // MOVIE_H

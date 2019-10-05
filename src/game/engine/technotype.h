@@ -159,8 +159,8 @@ protected:
     static void *SamShapes;
     static void *MGunShapes;
 #endif
-    static void *LightningShapes; // New with RA++
-    static void *MissingCameoShape; // New with RA++
+    static void *LightningShapes; // NOTE: New addition for Chronoshift.
+    static void *MissingCameoShape; // NOTE: New addition for Chronoshift.
 };
 
 #endif // TECHNOTYPE_H

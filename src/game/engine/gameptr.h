@@ -87,11 +87,9 @@ public:
     }
 
     bool operator==(const T &that) const { return Get_Raw_Pointer() == &that; }
-
     bool operator!=(const T &that) const { return Get_Raw_Pointer() != &that; }
 
     bool Name_Equal(const T &that) const { return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) == 0; }
-
     bool Name_Not_Equal(const T &that) const { return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) != 0; }
 
     bool Is_Valid() const { return g_Heap != nullptr && m_ID != -1; }

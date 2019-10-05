@@ -28,9 +28,7 @@ class ObjectTypeClass;
 
 enum TeamMissionType
 {
-    TMISSION_NONE = -1,
-    TMISSION_FIRST = 0,
-    TMISSION_ATTACK = 0, // "Attack..."
+    TMISSION_ATTACK, // "Attack..."
     TMISSION_ATTACK_WAYPOINT, // "Attack Waypoint..."
     TMISSION_CHANGE_FORMATION, // "Change Formation to..."
     TMISSION_MOVE_TO_WAYPOINT, // "Move to waypoint..."
@@ -47,7 +45,11 @@ enum TeamMissionType
     TMISSION_14, // "Load onto Transport"
     TMISSION_SPY_ON_BUILDING, // "Spy on bldg @ waypt..."
     TMISSION_PATROL_WAYPOINT, // "Patrol to waypoint..."
-    TMISSION_COUNT
+
+    TMISSION_COUNT,
+
+    TMISSION_NONE = -1,
+    TMISSION_FIRST = TMISSION_ATTACK,
 };
 
 DEFINE_ENUMERATION_OPERATORS(TeamMissionType);
@@ -108,10 +110,10 @@ public:
 
     BOOL Avoid_Threats() const { return m_AvoidThreats; }
 
+    static void Init();
+
     static void Read_Scenario_INI(GameINIClass &ini);
     static void Write_Scenario_INI(GameINIClass &ini);
-
-    static void Init();
 
     static TeamMissionType Mission_From_Name(char const *name);
     static char const *Name_From_Mission(TeamMissionType tmission);
@@ -124,15 +126,6 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    /*
-    //map bit, >> 1, as it goes past IsActive.
-    Always take the safest route, even if it’s a detour  1
-    Charge at target ignoring enemy units/enemy fire  	2
-    Team is only used by autocreate AI (produced taskforces) 	4
-    Prebuild teammembers before creating team   	8
-    Automatically reinforce     	16
-    */
-
     BOOL m_IsActive : 1; // 1
     BOOL m_AvoidThreats : 1; // 2
     BOOL m_Suicide : 1; // 4
@@ -141,11 +134,11 @@ protected:
     BOOL m_Reinforce : 1; // 32
 #else
     bool m_IsActive;
-    bool m_AvoidThreats;
-    bool m_Suicide;
-    bool m_Autocreate;
-    bool m_Prebuild;
-    bool m_Reinforce;
+    bool m_AvoidThreats; // Always take the safest route, even if it’s a detour.
+    bool m_Suicide; // Charge at target ignoring enemy units/enemy fire.
+    bool m_Autocreate; // Team is only used by autocreate AI (produced taskforces).
+    bool m_Prebuild; // Prebuild team members before creating.
+    bool m_Reinforce; // Automatically reinforce.
 #endif
     int m_Priority; // 0x29 //confirmed
     uint8_t m_field_2D; // 0x2D

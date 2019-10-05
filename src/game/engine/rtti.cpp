@@ -53,10 +53,6 @@ RTTITypeStruct RTTIName[RTTI_COUNT] = {
     { "UnitType", RTTI_UNITTYPE, "UnitType object" },
     { "Vessel", RTTI_VESSEL, "Vessel object" },
     { "VesselType", RTTI_VESSELTYPE, "VesselType object" },
-    //    { "WeaponType", RTTI_WEAPONTYPE, "WeaponType object" },
-    //    { "WarheadType", RTTI_WARHEADTYPE, "WarheadType object" },
-    //    { "SuperWeapon", RTTI_SUPERWEAPON, "SuperWeapon object" },
-    //    { "SuperWeaponType", RTTI_SUPERWEAPONTYPE, "SuperWeaponType object" }
 };
 
 RTTIType RTTI_From_Name(const char *name)

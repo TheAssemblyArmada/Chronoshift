@@ -26,8 +26,6 @@
 TFixedIHeapClass<FactoryClass> g_Factories;
 #endif
 
-#define MAX_CLOCK_STAGES 54
-
 FactoryClass::FactoryClass() :
     m_ProductionTime(),
     m_RTTI(RTTI_FACTORY),
