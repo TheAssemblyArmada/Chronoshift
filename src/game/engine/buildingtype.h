@@ -236,11 +236,11 @@ public:
     int Storage_Capacity() const { return m_Storage; }
 
     static void One_Time();
+    static void Init_Heap();
+    static void Init(TheaterType theater);
     static BuildingTypeClass &As_Reference(BuildingType type);
     static BuildingTypeClass *As_Pointer(BuildingType type);
     static BuildingType From_Name(const char *name);
-    static void Init(TheaterType theater);
-    static void Init_Heap();
     static const char *Name_From(BuildingType type) { return As_Reference(type).m_Name; }
 
     static void Prep_For_Add();
