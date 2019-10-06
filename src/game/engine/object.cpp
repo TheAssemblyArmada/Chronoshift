@@ -22,7 +22,7 @@
 #include "house.h"
 #include "globals.h"
 #include "session.h"
-//#include "anim.h"
+#include "anim.h"
 #include "special.h"
 #include "tracker.h"
 #include "foot.h"
@@ -855,12 +855,14 @@ void Unselect_All()
 
 void ObjectClass::Shorten_Attached_Anims()
 {
-#ifdef GAME_DLL
-    void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x00423F20);
-    func(this);
-#else
-    // TODO: Requires AnimClass.
-#endif
+    for (int i = 0; i < g_Anims.Count(); ++i) {
+        AnimClass *aptr = &g_Anims[i];
+        if (aptr != nullptr) {
+            if (As_Object(aptr->Attached_To()) == this) {
+                aptr->Set_Loops(0);
+            }
+        }
+    }
 }
 
 void ObjectClass::Detach_This_From_All(target_t object, BOOL unk)

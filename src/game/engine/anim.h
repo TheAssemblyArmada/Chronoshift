@@ -66,7 +66,9 @@ public:
     coord_t Adjust_Coord(coord_t coord);
     static void Do_Atom_Damage(HousesType house, cell_t cell);
 
+    target_t Attached_To() const { return m_AttachedTo; }
     unsigned char Get_Loops() const { return m_Loops; }
+    void Set_Loops(unsigned char loops) { m_Loops = loops; }
     void Make_Invisible() { m_Invisible = true; }
     BOOL Is_Invisible() const { return m_Invisible; }
     unsigned int Get_Loop_Delay() const { return m_LoopDelay; }
