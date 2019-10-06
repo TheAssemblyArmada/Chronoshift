@@ -280,34 +280,30 @@ BOOL FactoryClass::Completed()
     return false;
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F94E8
+ */
 void FactoryClass::Code_Pointers()
 {
-//#ifdef GAME_DLL
-    void (*func)(FactoryClass *) = reinterpret_cast<void (*)(FactoryClass *)>(0x004F94E8);
-    return func(this);
-/*#else
-    // TODO: Requires HouseClass.
     if (m_Object != nullptr) {
-        m_Object = (TechnoClass *)As_Target(m_Object);
+        m_Object = reinterpret_cast<TechnoClass *>(As_Target(m_Object));
     }
     if (m_Owner != nullptr) {
-        m_Owner = m_Owner->Get_Type();
+        m_Owner = (HouseClass *)m_Owner->What_Type();
     }
-#endif*/
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9550
+ */
 void FactoryClass::Decode_Pointers()
 {
-//#ifdef GAME_DLL
-    void (*func)(FactoryClass *) = reinterpret_cast<void (*)(FactoryClass *)>(0x004F9550);
-    return func(this);
-/*#else
-    // TODO: Requires HouseClass.
-    if (Target_Legal(m_Object)) {
-        m_Object = As_Techno(m_Object);
+    if (m_Object != nullptr) {
+        m_Object = As_Techno((uintptr_t)m_Object);
     }
-    if (m_Owner != HOUSES_NONE) {
-        m_Owner = HouseClass::As_Pointer(m_Owner);
-    }
-#endif*/
+    m_Owner = HouseClass::As_Pointer((HousesType)(uintptr_t)m_Owner);
 }

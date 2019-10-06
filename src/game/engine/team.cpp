@@ -15,6 +15,8 @@
  */
 #include "team.h"
 #include "gamedebug.h"
+#include "foot.h"
+#include "target.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TeamClass> g_Teams;
@@ -66,4 +68,28 @@ BOOL TeamClass::Remove(FootClass *object, int a2)
     //DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
     return false;
 #endif
+}
+
+/**
+ * @brief
+ *
+ * @address 0x004F93DC
+ */
+void TeamClass::Code_Pointers()
+{
+    if (m_field_54 != nullptr) {
+        m_field_54 = reinterpret_cast<FootClass *>(m_field_54->As_Target());
+    }
+}
+
+/**
+ * @brief
+ *
+ * @address 0x004F9420
+ */
+void TeamClass::Decode_Pointers()
+{
+    if (m_field_54 != nullptr) {
+        m_field_54 = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)m_field_54));
+    }
 }

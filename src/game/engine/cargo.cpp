@@ -15,7 +15,8 @@
  */
 #include "cargo.h"
 #include "gamedebug.h"
-//#include "foot.h"
+#include "foot.h"
+#include "target.h"
 
 void CargoClass::Attach(FootClass *object)
 {
@@ -79,20 +80,26 @@ FootClass *CargoClass::Detach_Object()
 #endif
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9884
+ */
 void CargoClass::Code_Pointers()
 {
-    // TODO requires FootClass
-#ifdef GAME_DLL
-    void (*func)(CargoClass *) = reinterpret_cast<void (*)(CargoClass *)>(0x004F9884);
-    func(this);
-#endif
+    if (Object != nullptr) {
+        Object = reinterpret_cast<FootClass *>(As_Target(Object));
+    }
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F98C0
+ */
 void CargoClass::Decode_Pointers()
 {
-    // TODO requires FootClass
-#ifdef GAME_DLL
-    void (*func)(CargoClass *) = reinterpret_cast<void (*)(CargoClass *)>(0x004F98C0);
-    func(this);
-#endif
+    if (Object != nullptr) {
+        Object = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)Object));
+    }
 }

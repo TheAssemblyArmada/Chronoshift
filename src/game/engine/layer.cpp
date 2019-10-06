@@ -16,7 +16,7 @@
 #include "layer.h"
 #include "gamedebug.h"
 #include "object.h"
-//#include "target.h"
+#include "target.h"
 
 LayerClass::LayerClass()
 {
@@ -33,22 +33,32 @@ void LayerClass::Init()
     Clear();
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9670
+ */
 void LayerClass::Code_Pointers()
 {
-    /*for (int index = 0; index < Count(); ++index) {
-        ObjectClass *obj = (*this)[index];
+    for (int i = 0; i < Count(); ++i) {
+        ObjectClass *obj = (*this)[i];
         DEBUG_ASSERT(obj != nullptr);
 
-        (*this)[index] = (ObjectClass *)As_Target(obj);
-    }*/
+        (*this)[i] = reinterpret_cast<ObjectClass *>(As_Target(obj));
+    }
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F96CC
+ */
 void LayerClass::Decode_Pointers()
 {
-    /*for (int index = 0; index < Count(); ++index) {
-        (*this)[index] = As_Object((int32_t)((*this)[index]));
-        DEBUG_ASSERT((*this)[index] != nullptr);
-    }*/
+    for (int i = 0; i < Count(); ++i) {
+        (*this)[i] = As_Object((uintptr_t)((*this)[i]));
+        DEBUG_ASSERT((*this)[i] != nullptr);
+    }
 }
 
 BOOL LayerClass::Submit(ObjectClass *object, BOOL sort)

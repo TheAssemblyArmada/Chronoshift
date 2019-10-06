@@ -23,34 +23,26 @@ TriggerTypeClass::TriggerTypeClass() :
 {
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9448
+ */
 void TriggerTypeClass::Code_Pointers()
 {
-#ifdef GAME_DLL
-    void(*func)(TriggerTypeClass *) =
-        reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9448);
-    return func(this);
-#else
-    //TODO: Requires TActionClass and TEventClass
-    //EventOne.Code_Pointers();
-    //EventTwo.Code_Pointers();
-    //ActionOne.Code_Pointers();
-    //ActionTwo.Code_Pointers();
-#endif
+    m_ActionOne.Code_Pointers();
+    m_ActionTwo.Code_Pointers();
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9464
+ */
 void TriggerTypeClass::Decode_Pointers()
 {
-#ifdef GAME_DLL
-    void(*func)(TriggerTypeClass *) =
-        reinterpret_cast<void(*)(TriggerTypeClass *)>(0x004F9464);
-    return func(this);
-#else
-    //TODO: Requires TActionClass and TEventClass
-    //EventOne.Decode_Pointers();
-    //EventTwo.Decode_Pointers();
-    //ActionOne.Decode_Pointers();
-    //ActionTwo.Decode_Pointers();
-#endif
+    m_ActionOne.Decode_Pointers();
+    m_ActionTwo.Decode_Pointers();
 }
 
 TriggerTypeClass *TriggerTypeClass::From_Name(const char *name)

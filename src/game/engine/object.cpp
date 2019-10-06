@@ -805,32 +805,30 @@ BOOL ObjectClass::Revealed(HouseClass *house)
     return house != nullptr;
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F98E0
+ */
 void ObjectClass::Code_Pointers()
 {
-#ifdef GAME_DLL
-    void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F98E0);
-    func(this);
-#else
-    /*if (Next != nullptr) {
-        Next = (ObjectClass *)As_Target((ObjectClass *)Next);
+    if (m_Next != nullptr) {
+        m_Next = reinterpret_cast<ObjectClass *>(m_Next->As_Target());
     }
-
-    AbstractClass::Code_Pointers();*/
-#endif
+    // base class does not provide a Code_Pointers function to call here.
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9924
+ */
 void ObjectClass::Decode_Pointers()
 {
-#ifdef GAME_DLL
-    void(*func)(ObjectClass *) = reinterpret_cast<void(*)(ObjectClass *)>(0x004F9924);
-    func(this);
-#else
-    /*if (Next != nullptr) {
-        Next = As_Object((uintptr_t)Next);
+    if (m_Next != nullptr) {
+        m_Next = As_Object((uintptr_t)m_Next);
     }
-
-    AbstractClass::Code_Pointers();*/
-#endif
+    // base class does not provide a Decode_Pointers function to call here.
 }
 
 void ObjectClass::Move(FacingType facing)
