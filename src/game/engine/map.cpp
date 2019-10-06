@@ -1421,3 +1421,28 @@ ObjectClass *MapClass::Close_Object(coord_t coord) const
 
     return retval;
 }
+
+/**
+ * @brief
+ *
+ * @address 0x004F924C
+ */
+void MapClass::Code_Pointers()
+{
+    for (int i = 0; i < MAP_MAX_AREA; ++i) {
+        (*this)[i].Code_Pointers();
+    }
+    // base class Code_Pointers() is pure virtual, so we don't need to call it here.
+}
+/**
+ * @brief
+ *
+ * @address 0x004F9278
+ */
+void MapClass::Decode_Pointers()
+{
+    for (int i = 0; i < MAP_MAX_AREA; ++i) {
+        (*this)[i].Decode_Pointers();
+    }
+    // base class Decode_Pointers() is pure virtual, so we don't need to call it here.
+}

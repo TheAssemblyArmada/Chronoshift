@@ -46,8 +46,8 @@ public:
     virtual void Detach(ObjectClass *object) override {}
     virtual void Logic_AI() override;
     virtual void Set_Map_Dimensions(int x, int y, int w, int h) override;
-    virtual void Code_Pointers() override {}
-    virtual void Decode_Pointers() override {}
+    virtual void Code_Pointers() override;
+    virtual void Decode_Pointers() override;
 
     CellClass &operator[](int index) { return Array[index]; }
 
