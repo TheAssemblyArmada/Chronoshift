@@ -867,7 +867,7 @@ void Setup_Hooks()
     Hook_Function(0x0056AAB4, *TerrainClass::Unlimbo);
     Hook_Function(0x0056A5AC, *TerrainClass::Hook_Draw_It);
     Hook_Function(0x0056A510, *TerrainClass::Mark);
-    Hook_Function(0x0057AAE8, *TerrainClass::Take_Damage);
+    Hook_Function(0x0056A2FC, *TerrainClass::Take_Damage);
     Hook_Function(0x0056A734, *TerrainClass::Catch_Fire);
     Hook_Function(0x0056A854, *TerrainClass::Fire_Out);
     Hook_Function(0x0056AB08, *TerrainClass::Start_To_Crumble);
