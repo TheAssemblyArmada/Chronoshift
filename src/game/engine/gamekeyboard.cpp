@@ -14,9 +14,12 @@
  *            LICENSE
  */
 #include "gamekeyboard.h"
+#include "anim.h"
+#include "aircraft.h"
 #include "audio.h"
 #include "building.h"
 #include "coord.h"
+#include "damage.h"
 #include "display.h"
 #include "gamedebug.h"
 #include "gameevent.h"
@@ -165,7 +168,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_DebugKeyBailOut()) {
-            // Emergency_Exit(-1);
+            Emergency_Exit(-1);
             key = KN_NONE;
         }
 
@@ -260,12 +263,10 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeySpawnMCV()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires UnitClass.
-                /*UnitClass *uptr = new UnitClass(UNIT_MCV, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(uptr != nullptr);
+                UnitClass *uptr = new UnitClass(UNIT_MCV, g_PlayerPtr->What_Type());
                 if ( uptr != nullptr ) {
                     uptr->Unlimbo(Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y()));
-                }*/
+                }
             }
             key = KN_NONE;
         }
@@ -273,12 +274,10 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeySpawnHarvester()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires UnitClass.
-                /*UnitClass *uptr = new UnitClass(UNIT_HARVESTER, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(uptr != nullptr);
+                UnitClass *uptr = new UnitClass(UNIT_HARVESTER, g_PlayerPtr->What_Type());
                 if ( uptr != nullptr ) {
                     uptr->Unlimbo(Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y()));
-                }*/
+                }
             }
             key = KN_NONE;
         }
@@ -286,13 +285,11 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeySpawnHeli()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires AircraftClass.
-                /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_HELI, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(aptr != nullptr);
+                AircraftClass *aptr = new AircraftClass(AIRCRAFT_HELI, g_PlayerPtr->What_Type());
                 if ( aptr != nullptr ) {
                     aptr->Set_Height(0);
                     aptr->Unlimbo(coord);
-                }*/
+                }
             }
             key = KN_NONE;
         }
@@ -300,13 +297,11 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeySpawnHind()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires AircraftClass.
-                /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_HIND, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(aptr != nullptr);
+                AircraftClass *aptr = new AircraftClass(AIRCRAFT_HIND, g_PlayerPtr->What_Type());
                 if (aptr != nullptr) {
                     aptr->Set_Height(0);
                     aptr->Unlimbo(coord);
-                }*/
+                }
             }
             key = KN_NONE;
         }
@@ -314,13 +309,11 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeySpawnTransport()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires AircraftClass.
-                /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_TRANSPORT, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(aptr != nullptr);
+                AircraftClass *aptr = new AircraftClass(AIRCRAFT_TRANSPORT, g_PlayerPtr->What_Type());
                 if ( aptr != nullptr ) {
                     aptr->Set_Height(0);
                     aptr->Unlimbo(coord);
-                }*/
+                }
             }
             key = KN_NONE;
         }
@@ -328,38 +321,32 @@ void Debug_Keyboard_Process(KeyNumType &key)
         if (justkey == Options.Get_DebugKeyAtomExplosion()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires AnimClass, Explosion_Damage.
-                /*AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
-                DEBUG_ASSERT(aptr != nullptr);
+                AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
                 if ( aptr != nullptr ) {
-                    Explosion_Damage(coord, Rule.AtomDamage, nullptr, WARHEAD_HE);
-                }*/
+                    Explosion_Damage(coord, Rule.Atom_Damage(), nullptr, WARHEAD_HE);
+                }
             }
             key = KN_NONE;
         }
 
-        if (justkey == Options.Get_DebugKeySuperExplosion()) {
+        /*if (justkey == Options.Get_DebugKeySuperExplosion()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires AnimClass, Explosion_Damage.
-                /*AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
-                DEBUG_ASSERT(aptr != nullptr);
+                AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
                 if ( aptr != nullptr ) {
-                    Explosion_Damage(coord, Rule.AtomDamage, nullptr, WARHEAD_HE);
-                }*/
+                    Explosion_Damage(coord, Rule.Atom_Damage(), nullptr, WARHEAD_HE);
+                }
             }
             key = KN_NONE;
-        }
+        }*/
 
         if (justkey == Options.Get_DebugKeyExplosion()) {
             coord_t coord = Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y());
             if (coord) {
-                // TODO: Requires AnimClass, Explosion_Damage.
-                /*AnimClass *aptr = new AnimClass(ANIM_ART_EXP1, coord);
-                DEBUG_ASSERT(aptr != nullptr);
+                AnimClass *aptr = new AnimClass(ANIM_ART_EXP1, coord);
                 if ( aptr != nullptr ) {
                     Explosion_Damage(coord, 250, nullptr, WARHEAD_HE);
-                }*/
+                }
             }
             key = KN_NONE;
         }
@@ -368,7 +355,6 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (CurrentObjects.Count() > 0) {
                 for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     ObjectClass *objptr = CurrentObjects[index];
-                    DEBUG_ASSERT(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             delete objptr;
