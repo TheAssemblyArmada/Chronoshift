@@ -41,6 +41,7 @@ public:
     virtual int Full_Name() const;
     virtual int Get_Ownable() const { return OWNER_ALL; }
 
+    target_t As_Target() const { return ((m_RTTI & 0xFF) << 24) | (m_HeapID & 0xFFFFFF); }
     BOOL Is_TechnoType() const;
     BOOL Is_FootType() const;
     int Get_Heap_ID() const { return m_HeapID; }

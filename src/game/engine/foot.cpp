@@ -235,12 +235,32 @@ void FootClass::Sell_Back(int a1)
 {
 }
 
-void FootClass::Code_Pointers()
+/**
+ * @brief
+ *
+ * @address 0x004F9760
+ */
+void FootClass::Code_Pointers() 
 {
+    if ( m_field_114 != nullptr && m_field_114->Is_Active() ) {
+        m_field_114 = reinterpret_cast<FootClass *>(m_field_114->As_Target());
+    } else {
+        m_field_114 = nullptr;
+    }
+    TechnoClass::Code_Pointers();
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F97B8
+ */
 void FootClass::Decode_Pointers()
 {
+    if ( m_field_114 ) {
+        m_field_114 = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)m_field_114));
+    }
+    TechnoClass::Decode_Pointers();
 }
 
 int FootClass::Mission_Attack()

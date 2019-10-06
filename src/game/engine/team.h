@@ -46,8 +46,8 @@ public:
 
     BOOL Remove(FootClass *object, int a2 = -1);
 
-    void Code_Pointers() {}
-    void Decode_Pointers() {}
+    void Code_Pointers();
+    void Decode_Pointers();
 
     void Force_Active() { m_ForcedActive = true; }
     BOOL Should_Avoid_Threats() const { return m_Type->Avoid_Threats(); }

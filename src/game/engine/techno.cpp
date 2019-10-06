@@ -254,12 +254,26 @@ BOOL TechnoClass::Revealed(HouseClass *house)
     return 0;
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F984C
+ */
 void TechnoClass::Code_Pointers()
 {
+    m_Cargo.Code_Pointers();
+    RadioClass::Code_Pointers();
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9868
+ */
 void TechnoClass::Decode_Pointers()
 {
+    m_Cargo.Decode_Pointers();
+    RadioClass::Decode_Pointers();
 }
 
 void TechnoClass::Override_Mission(MissionType mission, int target1, int target2)

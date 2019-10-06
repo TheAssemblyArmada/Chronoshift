@@ -14,6 +14,8 @@
  *            LICENSE
  */
 #include "teamtype.h"
+#include "target.h"
+#include "objecttype.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TeamTypeClass> g_TeamTypes;
@@ -34,10 +36,26 @@ void TeamTypeClass::operator delete(void *ptr)
     g_TeamTypes.Free(ptr);
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F9340
+ */
 void TeamTypeClass::Code_Pointers()
 {
+    for (int i = 0; i < m_MemberCount; ++i) {
+        m_Content[i].Object = reinterpret_cast<ObjectTypeClass *>(m_Content[i].Object->As_Target());
+    }
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004F939C
+ */
 void TeamTypeClass::Decode_Pointers()
 {
+    for (int i = 0; i < m_MemberCount; ++i) {
+        m_Content[i].Object = reinterpret_cast<ObjectTypeClass *>(As_TechnoType((uintptr_t)m_Content[i].Object));
+    }
 }
