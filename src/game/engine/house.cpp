@@ -3,6 +3,7 @@
  *
  * @author CCHyper
  * @author OmniBlade
+ * @author tomsons26
  *
  * @brief Class holding information on houses.
  *
@@ -36,7 +37,6 @@
 #include "vessel.h"
 #include <algorithm>
 #include <cstdio>
-
 
 using std::max;
 using std::min;
@@ -419,6 +419,60 @@ void HouseClass::operator delete(void *ptr)
     g_Houses.Free(this_ptr);
 }
 
+BOOL HouseClass::Flag_Remove(target_t target, int a2)
+{
+#ifdef GAME_DLL
+    BOOL (*func)(HouseClass *, target_t, int) = reinterpret_cast<BOOL (*)(HouseClass *, target_t, int)>(0x004D7F80);
+    return func(this, target, a2);
+#else
+    return false;
+#endif
+}
+
+BOOL HouseClass::Flag_Attach(cell_t cell, int a2)
+{
+#ifdef GAME_DLL
+    BOOL (*func)(HouseClass *, cell_t, int) = reinterpret_cast<BOOL (*)(HouseClass *, cell_t, int)>(0x004D8070);
+    return func(this, cell, a2);
+#else
+    return false;
+#endif
+}
+
+BOOL HouseClass::Flag_Attach(UnitClass *unit, int a2)
+{
+#ifdef GAME_DLL
+    BOOL (*func)(HouseClass *, UnitClass *, int) = reinterpret_cast<BOOL (*)(HouseClass *, UnitClass *, int)>(0x004D81EC);
+    return func(this, unit, a2);
+#else
+    return false;
+#endif
+}
+
+void HouseClass::MPlayer_Defeated()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D8270);
+    func(this);
+#endif
+}
+
+void HouseClass::Tally_Score()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D8624);
+    func(this);
+#endif
+}
+
+void HouseClass::Blowup_All()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D8814);
+    func(this);
+#endif
+}
+
 /**
  * Sets some initial values for the house.
  *
@@ -527,7 +581,7 @@ void HouseClass::Silo_Redraw_Check(unsigned ore, unsigned capacity)
  *
  * 0x004D2C78
  */
-fixed_t HouseClass::Ore_Fraction()
+fixed_t HouseClass::Ore_Fraction() const
 {
     if (m_Ore > 0) {
         return fixed_t(m_Ore, m_Capacity);
@@ -541,7 +595,7 @@ fixed_t HouseClass::Ore_Fraction()
  *
  * 0x004D8CA8
  */
-fixed_t HouseClass::Power_Fraction()
+fixed_t HouseClass::Power_Fraction() const
 {
     if (m_Power < m_Drain && m_Drain != 0) {
         if (m_Power != 0) {
@@ -552,6 +606,18 @@ fixed_t HouseClass::Power_Fraction()
     }
 
     return fixed_t(1);
+}
+
+void HouseClass::Adjust_Power(int value)
+{
+    m_Power += value;
+    Update_Spied_Power_Plants();
+}
+
+void HouseClass::Adjust_Drain(int value)
+{
+    m_Drain += value;
+    Update_Spied_Power_Plants();
 }
 
 /**
@@ -1221,6 +1287,22 @@ void HouseClass::Sell_Wall(cell_t cellnum)
     }
 }
 
+const BuildingTypeClass *HouseClass::Suggest_New_Building() const
+{
+#ifdef GAME_DLL
+    const BuildingTypeClass *(*func)(const HouseClass *) =
+        reinterpret_cast<const BuildingTypeClass *(*)(const HouseClass *)>(0x004D8F14);
+    return func(this);
+#else
+    return nullptr;
+#endif
+}
+
+void HouseClass::Decode_Pointers()
+{
+    Init_Data(m_Color, m_ActsLike, m_Credits);
+}
+
 /**
  * Find a building matching the required type and zone that belongs to this house.
  *
@@ -1542,6 +1624,72 @@ ZoneType HouseClass::Which_Zone(coord_t coord) const
     return ZONE_NONE;
 }
 
+void HouseClass::Attacked()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D5C1C);
+    func(this);
+#endif
+}
+
+
+const TeamTypeClass *HouseClass::Suggested_New_Team(int a1)
+{
+#ifdef GAME_DLL
+    const TeamTypeClass *(*func)(HouseClass *, int) = reinterpret_cast<const TeamTypeClass *(*)(HouseClass *, int)>(0x004D6560);
+    return func(this, a1);
+#else
+    return nullptr;
+#endif
+}
+
+ProdFailType HouseClass::Begin_Production(RTTIType rtti, int a2)
+{
+#ifdef GAME_DLL
+    ProdFailType (*func)(HouseClass *, RTTIType, int) =
+        reinterpret_cast<ProdFailType (*)(HouseClass *, RTTIType, int)>(0x004D6600);
+    return func(this, rtti, a2);
+#else
+    return ProdFailType();
+#endif
+}
+
+ProdFailType HouseClass::Suspend_Production(RTTIType rtti)
+{
+#ifdef GAME_DLL
+    ProdFailType (*func)(HouseClass *, RTTIType) = reinterpret_cast<ProdFailType (*)(HouseClass *, RTTIType)>(0x004D66D0);
+    return func(this, rtti);
+#else
+    return ProdFailType();
+#endif
+}
+
+ProdFailType HouseClass::Abandon_Production(RTTIType rtti)
+{ 
+#ifdef GAME_DLL
+    ProdFailType (*func)(HouseClass *, RTTIType) = reinterpret_cast<ProdFailType (*)(HouseClass *, RTTIType)>(0x004D671C);
+    return func(this, rtti);
+#else
+    return ProdFailType();
+#endif
+}
+
+void HouseClass::Production_Begun(TechnoClass *object)
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *, TechnoClass *) = reinterpret_cast<void (*)(HouseClass *, TechnoClass *)>(0x004DC93C);
+    func(this, object);
+#endif
+}
+
+void HouseClass::Recalc_Attributes()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004DD0DC);
+    func(this);
+#endif
+}
+
 /**
  * Gets the most extreme cell of a houses zone.
  *
@@ -1683,6 +1831,32 @@ BOOL HouseClass::Is_Hack_Prevented(RTTIType rtti, int id) const
     }
 
     return false;
+}
+
+void HouseClass::Update_Spied_Power_Plants()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004DE710);
+    func(this);
+#endif
+}
+
+void HouseClass::AI()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D4134);
+    func(this);
+#endif
+}
+
+int HouseClass::Expert_AI()
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *) = reinterpret_cast<int (*)(HouseClass *)>(0x004D9610);
+    return func(this);
+#else
+    return 0;
+#endif
 }
 
 /**
@@ -1885,4 +2059,321 @@ BOOL HouseClass::Is_Allowed_To_Ally(HousesType house)
     }
 
     return false;
+}
+
+int HouseClass::AI_Aircraft()
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *) = reinterpret_cast<int (*)(HouseClass *)>(0x004DC770);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Infantry()
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *) = reinterpret_cast<int (*)(HouseClass *)>(0x004DC158);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Vessel()
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *) = reinterpret_cast<int (*)(HouseClass *)>(0x004DBD08);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Unit()
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *) = reinterpret_cast<int (*)(HouseClass *)>(0x004DB7EC);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Building()
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *) = reinterpret_cast<int (*)(HouseClass *)>(0x004DA288);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Raise_Money(UrgencyType urgency)
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *, UrgencyType) = reinterpret_cast<int (*)(HouseClass *, UrgencyType)>(0x004DA22C);
+    return func(this, urgency);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Raise_Power(UrgencyType urgency)
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *, UrgencyType) = reinterpret_cast<int (*)(HouseClass *, UrgencyType)>(0x004DA1D0);
+    return func(this, urgency);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Lower_Power(UrgencyType urgency)
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *, UrgencyType) = reinterpret_cast<int (*)(HouseClass *, UrgencyType)>(0x004DA184);
+    return func(this, urgency);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Build_Engineer(UrgencyType urgency)
+{
+    // empty
+    return 0;
+}
+
+int HouseClass::AI_Fire_Sale(UrgencyType urgency)
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *, UrgencyType) = reinterpret_cast<int (*)(HouseClass *, UrgencyType)>(0x004DA148);
+    return func(this, urgency);
+#else
+    return 0;
+#endif
+}
+
+int HouseClass::AI_Build_Income(UrgencyType urgency)
+{
+    // empty
+    return 0;
+}
+
+int HouseClass::AI_Build_Offense(UrgencyType urgency)
+{
+    // empty
+    return 0;
+}
+
+int HouseClass::AI_Build_Defense(UrgencyType urgency)
+{
+    // empty
+    return 0;
+}
+
+int HouseClass::AI_Build_Power(UrgencyType urgency)
+{
+    // empty
+    return 0;
+}
+
+int HouseClass::AI_Attack(UrgencyType urgency)
+{
+#ifdef GAME_DLL
+    int (*func)(HouseClass *, UrgencyType) = reinterpret_cast<int (*)(HouseClass *, UrgencyType)>(0x004D9DBC);
+    return func(this, urgency);
+#else
+    return 0;
+#endif
+}
+
+UrgencyType HouseClass::Check_Raise_Power()
+{
+#ifdef GAME_DLL
+    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9D54);
+    return func(this);
+#else
+    return UrgencyType();
+#endif
+}
+
+UrgencyType HouseClass::Check_Lower_Power()
+{
+#ifdef GAME_DLL
+    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9D2C);
+    return func(this);
+#else
+    return UrgencyType();
+#endif
+}
+
+UrgencyType HouseClass::Check_Raise_Money()
+{
+#ifdef GAME_DLL
+    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9CCC);
+    return func(this);
+#else
+    return UrgencyType();
+#endif
+}
+
+UrgencyType HouseClass::Check_Build_Engineer()
+{
+    // empty
+    return UrgencyType();
+}
+
+UrgencyType HouseClass::Check_Fire_Sale()
+{
+#ifdef GAME_DLL
+    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9C8C);
+    return func(this);
+#else
+    return UrgencyType();
+#endif
+}
+
+UrgencyType HouseClass::Check_Build_Income()
+{
+    // empty
+    return UrgencyType();
+}
+
+UrgencyType HouseClass::Check_Attack()
+{
+#ifdef GAME_DLL
+    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9C1C);
+    return func(this);
+#else
+    return UrgencyType();
+#endif
+}
+
+UrgencyType HouseClass::Check_Build_Offense()
+{
+    // empty
+    return UrgencyType();
+}
+
+UrgencyType HouseClass::Check_Build_Defense()
+{
+    //empty
+    return UrgencyType();
+}
+
+UrgencyType HouseClass::Check_Build_Power()
+{
+#ifdef GAME_DLL
+    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9B70);
+    return func(this);
+#else
+    return UrgencyType();
+#endif
+}
+
+BOOL HouseClass::Fire_Sale()
+{
+#ifdef GAME_DLL
+    BOOL (*func)(const HouseClass *) = reinterpret_cast<BOOL (*)(const HouseClass *)>(0x004DE178);
+    return func(this);
+#else
+    return false;
+#endif
+}
+
+void HouseClass::Do_All_To_Hunt() const
+{
+#ifdef GAME_DLL
+    void (*func)(const HouseClass *) = reinterpret_cast<void (*)(const HouseClass *)>(0x004DE1FC);
+    func(this);
+#endif
+}
+
+void HouseClass::Super_Weapon_Handler()
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D50D0);
+    func(this);
+#endif
+}
+
+void HouseClass::Special_Weapon_AI(SpecialWeaponType special)
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *, SpecialWeaponType) = reinterpret_cast<void (*)(HouseClass *, SpecialWeaponType)>(0x004D67C4);
+    func(this, special);
+#endif
+}
+
+BOOL HouseClass::Place_Special_Blast(SpecialWeaponType special, cell_t cell)
+{
+#ifdef GAME_DLL
+    BOOL(*func)
+    (HouseClass *, SpecialWeaponType, cell_t) =
+        reinterpret_cast<BOOL (*)(HouseClass *, SpecialWeaponType, cell_t)>(0x004D68CC);
+    return func(this, special, cell);
+#else
+    return false;
+#endif
+}
+
+BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
+{
+#ifdef GAME_DLL
+    BOOL(*func)
+    (HouseClass *, RTTIType, cell_t) = reinterpret_cast<BOOL (*)(HouseClass *, RTTIType, cell_t)>(0x004D7678);
+    return func(this, rtti, cell);
+#else
+    return false;
+#endif
+}
+
+BOOL HouseClass::Manual_Place(BuildingClass *a1, BuildingClass *a2)
+{
+#ifdef GAME_DLL
+    BOOL (*func)
+    (HouseClass *, BuildingClass *, BuildingClass *) =
+        reinterpret_cast<BOOL (*)(HouseClass *, BuildingClass *, BuildingClass *)>(0x004D7A18);
+    return func(this, a1, a2);
+#else
+    return false;
+#endif
+}
+
+void HouseClass::Clobber_All() {}
+
+void HouseClass::Detach(target_t a1, int a2)
+{
+#ifdef GAME_DLL
+    void (*func)(HouseClass *, target_t, int) = reinterpret_cast<void (*)(HouseClass *, target_t, int)>(0x004D7DC4);
+    return func(this, a1, a2);
+#endif
+}
+
+BOOL HouseClass::Does_Enemy_Building_Exist(BuildingType type) const
+{
+    for (HousesType i = HOUSES_FIRST; i < HOUSES_COUNT; ++i) {
+        HouseClass *hptr = HouseClass::As_Pointer(i);
+        if (hptr != nullptr) {
+            if (!Is_Ally(hptr) && (type & m_BScan.m_HumanPrereqs)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+const TechnoTypeClass *HouseClass::Suggest_New_Object(RTTIType rtti, int a2) const
+{
+#ifdef GAME_DLL
+    const TechnoTypeClass *(*func)(const HouseClass *, RTTIType, int) =
+        reinterpret_cast<const TechnoTypeClass *(*)(const HouseClass *, RTTIType, int)>(0x004D7E80);
+    return func(this, rtti, a2);
+#else
+    return nullptr;
+#endif
 }

@@ -39,6 +39,8 @@
 class HouseTypeClass;
 class HouseClass;
 class FootClass;
+class UnitClass;
+class TeamTypeClass;
 class GameINIClass;
 class UnitTrackerClass;
 
@@ -47,6 +49,14 @@ extern HouseClass *&g_PlayerPtr;
 #else
 extern HouseClass *g_PlayerPtr;
 #endif
+
+enum ProdFailType
+{
+    PROD_APPROVED, // ok?
+    PROD_FAIL_1, // guess, invalid type? (rtti?)
+    PROD_FAIL_2, // guess, invalid factory pointer?
+    PROD_REJECTED, // rejected?
+};
 
 struct ZoneInfo
 {
@@ -81,6 +91,7 @@ class HouseClass
 
     struct BuildReqTracker
     {
+        // TODO: Revise these names when we have more information.
         uint32_t m_HaveBuilt;
         uint32_t m_HumanPrereqs;
         uint32_t m_AIPrereqs;
@@ -100,7 +111,6 @@ public:
 #endif
 
     void Init_Data(PlayerColorType color, HousesType house, int credits);
-    const char *Get_Name() const { return m_Type->Get_Name(); }
     void Harvested(unsigned amount);
     void Stole(unsigned amount) { m_Stolen += amount; }
     int Available_Money() const { return m_Credits + m_Ore; }
@@ -108,8 +118,10 @@ public:
     int Adjust_Capacity(int amount, BOOL cap);
     void Refund_Money(unsigned amount) { m_Credits += amount; }
     void Silo_Redraw_Check(unsigned ore, unsigned capacity);
-    fixed_t Ore_Fraction();
-    fixed_t Power_Fraction();
+    fixed_t Ore_Fraction() const;
+    fixed_t Power_Fraction() const;
+    void Adjust_Power(int value);
+    void Adjust_Drain(int value);
     DiffType Assign_Handicap(DiffType diff);
     BOOL Can_Build(TechnoTypeClass *obj, HousesType house);
     void Make_Ally(HousesType type);
@@ -142,11 +154,73 @@ public:
     cell_t Where_To_Go(FootClass *obj) const;
     target_t Find_Juicy_Target(coord_t coord) const;
     BOOL Is_Hack_Prevented(RTTIType rtti, int id) const;
-    BuildingTypeClass *Suggest_Building() const { return &BuildingTypeClass::As_Reference(m_ChosenBuilding); };
+    void Update_Spied_Power_Plants();
+    void Attacked();
+    const TeamTypeClass *Suggested_New_Team(int a1 = 0);
+    ProdFailType Begin_Production(RTTIType rtti, int a2);
+    ProdFailType Suspend_Production(RTTIType rtti);
+    ProdFailType Abandon_Production(RTTIType rtti);
+    void Production_Begun(TechnoClass *object);
+    void Recalc_Attributes();
+    void AI();
+    int Expert_AI();
+    int AI_Aircraft();
+    int AI_Infantry();
+    int AI_Vessel();
+    int AI_Unit();
+    int AI_Building();
+    int AI_Raise_Money(UrgencyType urgency);
+    int AI_Raise_Power(UrgencyType urgency);
+    int AI_Lower_Power(UrgencyType urgency);
+    int AI_Build_Engineer(UrgencyType urgency);
+    int AI_Fire_Sale(UrgencyType urgency);
+    int AI_Build_Income(UrgencyType urgency);
+    int AI_Build_Offense(UrgencyType urgency);
+    int AI_Build_Defense(UrgencyType urgency);
+    int AI_Build_Power(UrgencyType urgency);
+    int AI_Attack(UrgencyType urgency);
+    UrgencyType Check_Raise_Power();
+    UrgencyType Check_Lower_Power();
+    UrgencyType Check_Raise_Money();
+    UrgencyType Check_Build_Engineer();
+    UrgencyType Check_Fire_Sale();
+    UrgencyType Check_Build_Income();
+    UrgencyType Check_Attack();
+    UrgencyType Check_Build_Offense();
+    UrgencyType Check_Build_Defense();
+    UrgencyType Check_Build_Power();
+    BOOL Fire_Sale();
+    void Do_All_To_Hunt() const;
+    void Super_Weapon_Handler();
+    void Special_Weapon_AI(SpecialWeaponType special);
+    BOOL Place_Special_Blast(SpecialWeaponType special, cell_t cell);
+    BOOL Place_Object(RTTIType rtti, cell_t cell);
+    BOOL Manual_Place(BuildingClass *a1, BuildingClass *a2);
+    void Clobber_All();
+    void Detach(target_t a1, int a2);
+    BOOL Does_Enemy_Building_Exist(BuildingType type) const;
+    const TechnoTypeClass *Suggest_New_Object(RTTIType rtti, int a2) const;
+    BOOL Flag_Remove(target_t target, int a2);
+    BOOL Flag_Attach(cell_t cell, int a2);
+    BOOL Flag_Attach(UnitClass *unit, int a2);
+    void MPlayer_Defeated();
+    void Tally_Score();
+    void Blowup_All();
+    const BuildingTypeClass *Suggest_New_Building() const;
+
+    void Code_Pointers() {} // House does not actually save anything to the savegame file.
+    void Decode_Pointers();
+
+    const char *Get_Name() const { return m_Type->Get_Name(); }
+    HousesType What_Type() const { return m_Type->What_Type(); }
+
+    const BuildingTypeClass *Suggest_Building() const { return &BuildingTypeClass::As_Reference(m_ChosenBuilding); }
     int Get_Quantity(AircraftType type) const { return m_AircraftQuantity[type]; }
     int Get_Quantity(BuildingType type) const { return m_BuildingQuantity[type]; }
+    int Get_Quantity(UnitType type) const { return m_UnitQuantity[type]; }
+    int Get_Quantity(InfantryType type) const { return m_InfantryQuantity[type]; }
+    int Get_Quantity(VesselType type) const { return m_VesselQuantity[type]; }
     int Get_Heap_ID() const { return m_HeapID; }
-    HousesType What_Type() const { return m_Type->What_Type(); }
     BOOL Is_Player() const { return this == g_PlayerPtr; }
     DiffType Get_AI_Difficulty() const { return m_AIDifficulty; }
     fixed_t Cost_Multiplier() const { return m_CostMult; }
@@ -177,8 +251,6 @@ public:
     coord_t Base_Center() const { return m_BaseCenter; }
     RegionClass *Threat_Regions() { return m_ThreatRegions; }
     target_t Chrono_Object() const { return m_ChronoObject; }
-    void Code_Pointers() {}
-    void Decode_Pointers() {}
     BOOL Has_Buildings() const { return m_BScan.m_HaveBuilt != 0; }
     BOOL Spied_My_Radar(HousesType house) const { return (m_RadarSpied & (1 << house)) != 0; }
     BOOL Spied_My_Radar(HouseClass *house) const { return Spied_My_Radar(house->What_Type()); }
@@ -187,9 +259,10 @@ public:
     static void Init();
     static HouseClass &As_Reference(HousesType type);
     static HouseClass *As_Pointer(HousesType type);
-    static void Computer_Paranoid();
     static void Read_INI(GameINIClass &ini);
     static void Write_INI(GameINIClass &ini);
+
+    static void Computer_Paranoid();
 
 #ifdef GAME_DLL
     FactoryClass *Hook_Fetch_Factory(RTTIType rtti) { return Fetch_Factory(rtti); }
@@ -258,7 +331,7 @@ private:
 
     BOOL m_AllToLook : 1; // 1
 #else
-    bool m_IsActive; // Is this object allocated and active for use? (def = false)
+    bool m_IsActive; // Is this object allocated and active for use?
                      // NOTE: This should be set to true on class creation.
     bool m_IsHuman; // Is this house controlled by a human player rather than an AI [local or otherwise]?
     bool m_PlayerControl; // Is this house controlled by the human player [the house set to PlayerPtr]?
@@ -302,25 +375,10 @@ private:
     TCountDownTimerClass<FrameTimerClass> m_RepairTime;
     TCountDownTimerClass<FrameTimerClass> m_AlertTime;
     TCountDownTimerClass<FrameTimerClass> m_BorrowedTime;
-    // int m_field_137; // BuildingType's
-    // int m_field_13B; // BuildingType's
-    // int m_field_13F; // BuildingType's       // BScan in EDWIN?
     BuildReqTracker m_BScan;
-    // int m_field_143; // UnitType's
-    // int m_field_147; // UnitType's
-    // int m_field_14B; // UnitType's           // UScan in EDWIN?
     BuildReqTracker m_UScan;
-    // int m_field_14F; // InfantryType's
-    // int m_field_153; // InfantryType's
-    // int m_field_157; // InfantryType's       // IScan in EDWIN?
     BuildReqTracker m_IScan;
-    // int m_field_15B; // AircraftType's
-    // int m_field_15F; // AircraftType's
-    // int m_field_163; // AircraftType's       // AScan in EDWIN?
     BuildReqTracker m_AScan;
-    // int m_field_167; // VesselType's
-    // int m_field_16B; // VesselType's
-    // int m_field_16F; // VesselType's         // VScan in EDWIN?
     BuildReqTracker m_VScan;
     int m_Spent;
     int m_Harvested;
