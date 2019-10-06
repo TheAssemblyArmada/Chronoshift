@@ -695,7 +695,7 @@ void Setup_Hooks()
     Hook_Function(0x004D8CA8, *HouseClass::Init_Data);
     Hook_Function(0x004D5D9C, *HouseClass::Harvested);
     Hook_Function(0x004D5E80, *HouseClass::Adjust_Capacity);
-    Hook_Function(0x004D8CC4, *HouseClass::Power_Fraction);
+    Hook_Function_Const(0x004D8CC4, &HouseClass::Power_Fraction);
     Hook_Function(0x004D658C, *HouseClass::Adjust_Threat);
     Hook_Function(0x004DDBD0, *HouseClass::Hook_Fetch_Factory);
     Hook_Function(0x004DDC58, *HouseClass::Set_Factory);
