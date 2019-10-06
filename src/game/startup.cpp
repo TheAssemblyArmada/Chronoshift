@@ -42,7 +42,7 @@ void Emergency_Exit(int exit_code)
 #endif
 }
 
-void Read_Setup_Options(FileClass *fc)
+void Read_Startup_Options(FileClass *fc)
 {
 #ifdef GAME_DLL
     // TODO Requires GraphicBufferClass, PaletteClass, KeyboardClass

@@ -24,7 +24,7 @@ class FileClass;
 
 void Emergency_Exit(int exit_code);
 BOOL InitDDraw();
-void Read_Setup_Options(FileClass *fc); // Original takes RawFileClass specifically
+void Read_Startup_Options(FileClass *fc); // Original takes RawFileClass specifically
 uint64_t Disk_Space_Available(); // don't hook this, abi does not match.
 
 #ifdef GAME_DLL
