@@ -324,21 +324,51 @@ int main(int argc, char **argv)
         // TODO, original pops up windows message box informing of low space and asking to continue.
     }
 
-    // TODO search for this in a user home folder then in game folder as fallback.
-    RawFileClass opt_fc("redalert.ini");
+    // TODO: Search for this in the user home folder, then in game folder as fallback.
+    RawFileClass settingsfile("chronoshift.ini");
+    INIClass settingsini;
 
-    if (!opt_fc.Is_Available()) {
-        DEBUG_LOG("redalert.ini not found.\n");
+    // If we was unable to find the settings file, copy them from the original
+    // Red Alert's settings file and create a new Chronoshift settings file.
+    if (!settingsfile.Is_Available()) {
 
-        // TODO, just write the user a default redalert.ini instead of exiting.
-        g_keyboard->Get(); // Clear the event queue?
-        delete PlatformTimer;
-        PlatformTimer = nullptr;
+        // Create blank file.
+        settingsfile.Create();
 
-        return 0;
+        if (!settingsfile.Is_Available()) {
+            DEBUG_LOG("Unable to create Chronoshift game settings file!\n");
+            g_keyboard->Get();
+            delete PlatformTimer;
+            PlatformTimer = nullptr;
+            return 0;
+        }
+
+        // Copy settings from original Red Alert file. This also handles the
+        // case where the game requires 'redalert.ini' to exist, otherwise
+        // it will not run (user had to run SETUP.EXE first).
+        RawFileClass redalertfile("redalert.ini");
+        INIClass redalertini;
+        if (!redalertfile.Is_Available()) {
+            DEBUG_LOG("Red Alert settings ini not found, continuing with default settings.\n");
+            settingsini.Put_Int("Sound", "Card", 0);
+            settingsini.Put_Int("Sound", "Port", 0x3F8, INIINTEGER_AS_HEX);
+            settingsini.Put_Int("Sound", "IRQ", 4);
+            settingsini.Put_Int("Sound", "DMA", -1);
+            settingsini.Put_Bool("Options", "HardwareFills", false);
+            settingsini.Put_Bool("Options", "VideoBackBuffer", true);
+            settingsini.Put_Int("Options", "Resolution", 0);
+
+            // Save the settings out to file.
+            settingsini.Save(settingsfile);
+        } else {
+            // Copy the existing settings to the file.
+            redalertini.Save(settingsfile);
+        }
     }
 
-    Read_Setup_Options(&opt_fc);
+    settingsini.Load(settingsfile);
+
+    Read_Startup_Options(&settingsfile);
     
     // NOTE: Original passed in screen dimentions etc, but we handle these
     // inside Create_Main_Window() itself now.
@@ -374,21 +404,18 @@ int main(int argc, char **argv)
     int cd_drive = g_cdList.Reset_And_Get_CD_Drive();
     CDFileClass::Set_CD_Drive(cd_drive);
     // CDFileClass::Set_CD_Drive(g_cdList.Reset_And_Get_CD_Drive());
-    
-    INIClass ini;
-    ini.Load(opt_fc);
 
     if (!Special.Is_First_Run() && Session.Game_To_Play() != GAME_6 && Session.Game_To_Play() != GAME_7) {
-        Special.Set_First_Run(ini.Get_Bool("Intro", "PlayIntro", true));
+        Special.Set_First_Run(settingsini.Get_Bool("Intro", "PlayIntro", true));
     }
 
     if (Special.Is_First_Run()) {
         g_breakoutAllowed = true;
-        ini.Put_Bool("Intro", "PlayIntro", false);
-        ini.Save(opt_fc);
+        settingsini.Put_Bool("Intro", "PlayIntro", false);
+        settingsini.Save(settingsfile);
     }
 
-    g_slowPalette = ini.Get_Bool("Options", "SlowPalette", true);
+    g_slowPalette = settingsini.Get_Bool("Options", "SlowPalette", true);
     
     // TODO set Memory_Error_Exit handler here.
     
