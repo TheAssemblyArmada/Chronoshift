@@ -166,6 +166,9 @@ public:
     void Shimmer();
     void Incoming(coord_t coord, BOOL a2 = false, BOOL a3 = false);
 
+    void Code_Pointers();
+    void Decode_Pointers();
+
 #ifdef GAME_DLL
 public:
     CellClass *Hook_Ctor() { return new (this) CellClass; }

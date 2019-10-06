@@ -1467,3 +1467,41 @@ void CellClass::Incoming(coord_t coord, BOOL a2, BOOL a3)
         }
     }
 }
+
+/**
+ * @brief
+ *
+ * @address 0x004F8EAC
+ */
+void CellClass::Code_Pointers()
+{
+    if (OccupierPtr != nullptr) {
+        OccupierPtr = reinterpret_cast<ObjectClass *>(OccupierPtr->As_Target());
+    }
+    for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
+        if (Overlapper[i] != nullptr && Overlapper[i]->Is_Active()) {
+            Overlapper[i] = reinterpret_cast<ObjectClass *>(Overlapper[i]->As_Target());
+        } else {
+            Overlapper[i] = nullptr;
+        }
+    }
+}
+
+/**
+ * @brief
+ *
+ * @address 0x004F8F2C
+ */
+void CellClass::Decode_Pointers()
+{
+    if (OccupierPtr != nullptr) {
+        OccupierPtr = As_Object((uintptr_t)OccupierPtr);
+        DEBUG_ASSERT(OccupierPtr != nullptr);
+    }
+    for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
+        if (Overlapper[i] != nullptr) {
+            Overlapper[i] = As_Object((uintptr_t)Overlapper[i]);
+            DEBUG_ASSERT(Overlapper[i] != nullptr);
+        }
+    }
+}
