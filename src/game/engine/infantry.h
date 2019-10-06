@@ -48,6 +48,8 @@ class InfantryClass : public FootClass
 
     InfantryType What_Type() const { return m_Type->What_Type(); }
 
+    BOOL Get_Technician() const { return m_Technician; }
+
 private:
     GamePtr<InfantryTypeClass> m_Type;
     DoType m_Doing;

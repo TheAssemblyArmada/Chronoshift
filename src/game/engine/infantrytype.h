@@ -124,6 +124,7 @@ public:
 
     InfantryType What_Type() const { return m_Type; }
 
+    BOOL Is_Civilian() const { return m_IsCivilian; }
     BOOL Has_Alt_Remap() const { return m_HasAltRemap; }
     const uint8_t *Alt_Remap_Table() const { return m_AltRemap; }
 

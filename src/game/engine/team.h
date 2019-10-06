@@ -49,8 +49,10 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    void Force_Active() { m_ForcedActive = true; }
     BOOL Should_Avoid_Threats() const { return m_Type->Avoid_Threats(); }
+
+    void Force_Active() { m_ForcedActive = true; }
+    void Set_Bit2_4(BOOL value) { m_Bit2_4 = value; }
     int Field35() const { return m_field_35; }
 
 private:

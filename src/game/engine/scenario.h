@@ -95,6 +95,8 @@ public:
     void Set_View(int index, cell_t cell) { Views[index] = cell; }
     void Set_Bridge_Count(int count) { BridgeCount = count; }
 
+    BOOL Civ_Evac() const { return CivEvac; }
+
     BOOL Get_field_7CF() const { return field_7CF; }
     BOOL Get_field_7D3() const { return field_7D3; }
 
