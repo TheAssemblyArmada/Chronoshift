@@ -27,7 +27,7 @@ MultiMission::MultiMission(const char *filename, const char *description, const 
     Set_Expansion(isexpansion);
 }
 
-void MultiMission::Draw_It(int unknown, int xpos, int ypos, int xmax, int ymax, int somestyle, TextPrintType style)
+void MultiMission::Draw_It(int index, int xpos, int ypos, int xmax, int ymax, BOOL redraw_entry, TextPrintType style)
 {
     // empty
 }
