@@ -64,6 +64,8 @@ public:
     void Set_Repeat(BOOL repeat) { ScoreRepeats = repeat; }
     void Set_Score_Volume(fixed_t volume, BOOL beep = false);
     void Set_Sound_Volume(fixed_t volume, BOOL beep = false);
+    void Set_Multiplayer_Score_Volume(fixed_t volume) { MultiplayerScoreVolume = volume; }
+
     void Set_Brightness(fixed_t brightness);
     void Set_Saturation(fixed_t saturation);
     void Set_Contrast(fixed_t contrast);
@@ -72,7 +74,9 @@ public:
 
     int Game_Speed() const { return GameSpeed; }
     int Get_Scroll_Rate() const { return ScrollRate; }
+    const fixed_t &Get_Sound_Volume() const { return Volume; }
     const fixed_t &Get_Score_Volume() const { return ScoreVolume; }
+    const fixed_t &Get_Multiplayer_Score_Volume() { return MultiplayerScoreVolume; }
     BOOL Get_Auto_Scroll() const { return AutoScroll; }
     BOOL Get_Repeat() const { return ScoreRepeats; }
     BOOL Get_Shuffle() const { return ScoreShuffles; }
