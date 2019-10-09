@@ -22,10 +22,9 @@
 
 class MultiMission
 {
-
 public:
     MultiMission(const char *filename, const char *description, const char *digest, int isofficial, int isexpansion);
-    void Draw_It(int unknown, int xpos, int ypos, int xmax, int ymax, int somestyle, TextPrintType style);
+    void Draw_It(int index, int xpos, int ypos, int xmax, int ymax, BOOL redraw_entry, TextPrintType style);
     void Set_Description(const char *desc);
     void Set_Filename(const char *filename);
     void Set_Digest(const char *digest);
