@@ -43,15 +43,21 @@ public:
     TListClass(TListClass &that);
     virtual ~TListClass();
 
+    TListClass &operator=(TListClass &that);
+
+    // LinkClass
     virtual LinkClass &Add(LinkClass &that) override;
     virtual LinkClass &Add_Tail(LinkClass &that) override;
     virtual LinkClass &Add_Head(LinkClass &that) override;
+
+    // GadgetClass
     virtual GadgetClass *Remove() override;
     virtual void Flag_To_Redraw() override;
     virtual void Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &peer) override;
     virtual void Set_Position(int x, int y) override;
     virtual BOOL Draw_Me(BOOL redraw) override;
     virtual BOOL Action(unsigned flags, KeyNumType &key) override;
+
     virtual int Add_Item(T item);
     virtual BOOL Add_Scroll_Bar();
     virtual void Insert_Item(T item);
@@ -69,8 +75,6 @@ public:
     virtual void Set_m_Tabs(int *tab_list);
     virtual BOOL Set_View_Index(int index);
     virtual void Step(BOOL step_up);
-
-    TListClass &operator=(TListClass &that);
 
 protected:
     TextPrintType m_TextStyle;
