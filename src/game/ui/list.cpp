@@ -416,6 +416,7 @@ void ListClass::Set_Selected_Index(const char *string)
         for (int index = 0; index < Count(); ++index) {
             if (strcasecmp(Entries[index], string) == 0) {
                 Set_Selected_Index(index);
+                return;
             }
         }
     }
