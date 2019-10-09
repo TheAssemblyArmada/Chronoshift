@@ -38,6 +38,8 @@ public:
     void Set_Toggle_Bool1(BOOL unk) { Toggle_Boolean1 = unk; }
     void Set_Toggle_Disabled(BOOL disabled) { ToggleDisabled = disabled; }
 
+    bool Get_Toggle_State() { return ToggleState; }
+
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL Toggle_Boolean1 : 1; // & 1

@@ -132,6 +132,7 @@ set(GAMEENGINE_SRC
     game/engine/session.cpp
     game/engine/smudgedata.cpp
     game/engine/smudgetype.cpp
+    game/engine/sndctrl.cpp
     game/engine/source.cpp
     game/engine/sidebar.cpp
     game/engine/special.cpp

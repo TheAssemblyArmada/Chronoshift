@@ -107,6 +107,7 @@
 #include "vortex.h"
 #include "wsa.h"
 #include "xordelta.h"
+#include "sndctrl.h"
 #include <malloc.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -889,6 +890,7 @@ void Setup_Hooks()
     Hook_Function(0x0056A854, *TerrainClass::Fire_Out);
     Hook_Function(0x0056AB08, *TerrainClass::Start_To_Crumble);
     Hook_Function(0x0056ABF0, *TerrainClass::Hook_Radar_Icon);
+    Hook_Function(0x00550290, *SoundControlsClass::Process);
 
 #endif
 }

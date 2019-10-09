@@ -25,7 +25,7 @@ class ControlClass : public GadgetClass
 {
 public:
     ControlClass(unsigned input_flag, BOOL sticky = false) : GadgetClass(input_flag, sticky), ID(0), Peer(nullptr) {}
-    ControlClass(unsigned id, int x, int y, int w, int h, unsigned input_flag, BOOL is_sticky);
+    ControlClass(unsigned id, int x, int y, int w, int h, unsigned input_flag, BOOL is_sticky = false);
     ControlClass(ControlClass &that);
     virtual ~ControlClass() {}
 

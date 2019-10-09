@@ -186,7 +186,7 @@ enum TextEnum
     TXT_SUFFLE = 148, // Shuffle
     TXT_REPEAT = 149, // Repeat
     TXT_MUSIC_VOLUME_COLON = 150, // Music volume:
-    TXT_SOUND_VOLUME = 151, // Sound volume:
+    TXT_SOUND_VOLUME_COLON = 151, // Sound volume:
     TXT_ON = 152, // On
     TXT_OFF = 153, // Off
     TXT_MULTIPLAYER_GAME = 154, // Multiplayer Game

@@ -71,7 +71,7 @@ public:
     virtual GadgetClass *Get_Prev() const override;
     virtual GadgetClass *Remove() override;
     virtual KeyNumType Input();
-    virtual void Draw_All(BOOL redraw);
+    virtual void Draw_All(BOOL redraw = true);
     virtual void Delete_List();
     virtual ControlClass *Extract_Gadget(unsigned id);
     virtual void Flag_List_To_Redraw();
