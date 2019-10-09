@@ -239,6 +239,23 @@ void Setup_Hooks()
     Hook_Function(0x004C3EC8, *GadgetClass::Action);
     Hook_Function(0x004C3DB4, *GadgetClass::Clicked_On); // issue
 
+    //link.h
+    Hook_Function(0x004FBC7C, *LinkClass::Zap);
+    Hook_Function(0x004FBCCC, *LinkClass::Head_Of_List);
+    Hook_Function(0x004FBCEC, *LinkClass::Tail_Of_List);
+    Hook_Function(0x004FBD08, *LinkClass::Add);
+    Hook_Function(0x004FBD28, *LinkClass::Add_Head);
+    Hook_Function(0x004FBD4C, *LinkClass::Add_Tail);
+    Hook_Function(0x004FBD74, *LinkClass::Remove);
+
+    //textbtn.h
+    Hook_Function(0x0056BA70, *TextButtonClass::Hook_Ctor1);
+    Hook_Function(0x0056BB64, *TextButtonClass::Hook_Ctor2);
+    Hook_Function(0x0056BC2C, *TextButtonClass::Draw_Me);
+    Hook_Function(0x0056BD74, *TextButtonClass::Draw_Background);
+    Hook_Function(0x0056BDE4, *TextButtonClass::Draw_Text);
+    Hook_Function(0x0056BE50, *TextButtonClass::Set_Style);
+
     // interpolate.h
     Hook_Function(0x005B2DD0, Create_Palette_Interpolation_Table);
     Hook_Function(0x005B2CE0, Read_Interpolation_Palette);

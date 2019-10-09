@@ -40,7 +40,18 @@ public:
     virtual void Set_Style(TextPrintType style) { TextStyle = style; }
     virtual void Draw_Background();
     virtual void Draw_Text(const char *string);
-
+#ifdef GAME_DLL
+public:
+    TextButtonClass *Hook_Ctor1(
+        unsigned id, const char *string, TextPrintType style, int x, int y, int w, int h, BOOL outline)
+    {
+        return new (this) TextButtonClass(id, string, style, x, y, w, h, outline);
+    }
+    TextButtonClass *Hook_Ctor2(unsigned id, int str_id, TextPrintType style, int x, int y, int w, int h, BOOL outline)
+    {
+        return new (this) TextButtonClass(id, str_id, style, x, y, w, h, outline);
+    }
+#endif
 private:
     void Calculate_Button_Size(int w, int h);
 

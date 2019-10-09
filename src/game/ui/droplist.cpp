@@ -40,25 +40,25 @@ DropListClass::DropListClass(DropListClass &that) :
 {
 }
 
-LinkClass &DropListClass::Add(LinkClass &link)
+LinkClass &DropListClass::Add(LinkClass &that)
 {
-    DropButton.Add(link);
+    DropButton.Add(that);
 
-    return LinkClass::Add(link);
+    return LinkClass::Add(that);
 }
 
-LinkClass &DropListClass::Add_Tail(LinkClass &link)
+LinkClass &DropListClass::Add_Tail(LinkClass &that)
 {
-    DropButton.Add_Tail(link);
+    DropButton.Add_Tail(that);
 
-    return LinkClass::Add_Tail(link);
+    return LinkClass::Add_Tail(that);
 }
 
-LinkClass &DropListClass::Add_Head(LinkClass &link)
+LinkClass &DropListClass::Add_Head(LinkClass &that)
 {
-    DropButton.Add_Head(link);
+    DropButton.Add_Head(that);
 
-    return LinkClass::Add_Head(link);
+    return LinkClass::Add_Head(that);
 }
 
 void DropListClass::Zap()

@@ -14,12 +14,14 @@
  *            LICENSE
  */
 #include "link.h"
+#include "gamedebug.h"
 
 /**
  * @brief Add another LinkClass instance as the next link in the chain after this instance.
  */
 LinkClass &LinkClass::Add(LinkClass &that)
 {
+    DEBUG_ASSERT(this != &that);
     LinkClass *next = that.Next;
     that.Next = this;
     Prev = &that;
@@ -37,6 +39,7 @@ LinkClass &LinkClass::Add(LinkClass &that)
  */
 LinkClass &LinkClass::Add_Tail(LinkClass &that)
 {
+    DEBUG_ASSERT(this != &that);
     LinkClass *tail = &that.Tail_Of_List();
     tail->Next = this;
     Next = nullptr;
@@ -50,6 +53,7 @@ LinkClass &LinkClass::Add_Tail(LinkClass &that)
  */
 LinkClass &LinkClass::Add_Head(LinkClass &that)
 {
+    DEBUG_ASSERT(this != &that);
     LinkClass *head = &that.Head_Of_List();
     head->Prev = this;
     Prev = nullptr;
