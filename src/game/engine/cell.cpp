@@ -929,7 +929,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
         }
 
         if (HasFlag) {
-            void *flag_shape = GameFileClass::Retrieve("FLAGFLY.SHP");
+            void *flag_shape = GameFileClass::Retrieve("flagfly.shp");
 
             // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
             // game is on, wrapped so it goes 0 to 13. So when game frame is 14 it will return 0, 15 will return 1 and so on.

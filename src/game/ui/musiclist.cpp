@@ -20,8 +20,8 @@
 #include "remap.h"
 
 MusicListClass::MusicListClass(int id, int x, int y, int w, int h, TextPrintType style) :
-    ListClass(id, x, y, w, h, style | TPF_6PT_GRAD | TPF_NOSHADOW, GameFileClass::Retrieve("BTN-DN.SHP"),
-        GameFileClass::Retrieve("BTN-UP.SHP"))
+    ListClass(id, x, y, w, h, style | TPF_6PT_GRAD | TPF_NOSHADOW, GameFileClass::Retrieve("btn-dn.shp"),
+        GameFileClass::Retrieve("btn-up.shp"))
 {
     // empty
 }
