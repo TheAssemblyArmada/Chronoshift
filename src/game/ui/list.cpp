@@ -45,7 +45,7 @@ ListClass::ListClass(
 
     Scrollbar.Set_XPos(Scrollbar.Get_XPos() - std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
     Scrollbar.Set_YPos(ScrollUpButton.Get_Height() + YPos);
-    Scrollbar.Set_Height(Scrollbar.Get_Height() - ScrollDownButton.Get_Height() + ScrollUpButton.Get_Height());
+    Scrollbar.Set_Height(Scrollbar.Get_Height() - (ScrollDownButton.Get_Height() + ScrollUpButton.Get_Height()));
     Scrollbar.Set_Width(std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
 
     // The nullptr Fancy_Text_Print sets the font pointer and the dimension globals
