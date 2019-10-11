@@ -80,8 +80,8 @@ enum MouseType
 
     MOUSE_EDITOR_BRUSH, // Special case! As we are merging the map editor and the game, and EDWIN
                         // has its own mouse shape, we need to make sure that g_InMapEditor is checked
-                        // for this case and we switch the mouse shape file to EDMOUSE.SHP.
-                        // In EDMOUSE.SHP, the brush has the same frame number as MOUSE_CANT_DEPLOY.
+                        // for this case and we switch the mouse shape file to edmouse.shp.
+                        // In edmouse.shp, the brush has the same frame number as MOUSE_CANT_DEPLOY.
 
     MOUSE_COUNT,
 

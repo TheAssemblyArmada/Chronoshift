@@ -687,7 +687,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 Layers[layer].Render_All(force_redraw);
             }
 
-            // SS does some drawing of FLAGFLY.SHP here after rendering surface
+            // SS does some drawing of flagfly.shp here after rendering surface
             // objects.
 
             Redraw_Shadow();

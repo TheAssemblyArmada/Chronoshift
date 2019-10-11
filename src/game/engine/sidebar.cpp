@@ -593,16 +593,16 @@ void SidebarClass::Reload_Sidebar()
     func(this);
 #elif 0
     // in order of the houses.
-    static char sidebarnames[HOUSES_COUNT][12] = { "SIDE?NA.SHP",
-        "SIDE?NA.SHP",
-        "SIDE?US.SHP",
-        "SIDE?NA.SHP",
-        "SIDE?US.SHP",
-        "SIDE?NA.SHP",
-        "SIDE?NA.SHP",
-        "SIDE?NA.SHP",
-        "SIDE?NA.SHP",
-        "SIDE?US.SHP" };
+    static char sidebarnames[HOUSES_COUNT][12] = { "side?na.shp",
+        "side?na.shp",
+        "side?us.shp",
+        "side?na.shp",
+        "side?us.shp",
+        "side?na.shp",
+        "side?na.shp",
+        "side?na.shp",
+        "side?na.shp",
+        "side?us.shp" };
 
     int side_index;
 

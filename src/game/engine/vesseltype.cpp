@@ -202,11 +202,11 @@ void VesselTypeClass::One_Time()
         // Original has a special case where icon is always loaded for helicarrier?
         // Possibly intended for the "Secret Units" enabling code that was never in any released build.
         if (vessel.TechLevel != -1 /*|| i == VESSEL_CARRIER*/) {
-            snprintf(filename, sizeof(filename), "%.4sICON.SHP", name);
+            snprintf(filename, sizeof(filename), "%.4sicon.shp", name);
             vessel.CameoData = GameFileClass::Retrieve(filename);
         }
 
-        snprintf(filename, sizeof(filename), "%s.SHP", name);
+        snprintf(filename, sizeof(filename), "%s.shp", name);
         vessel.ImageData = GameFileClass::Retrieve(filename);
         vessel.m_UnkInt = 26;
     }

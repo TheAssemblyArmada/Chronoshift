@@ -30,7 +30,7 @@ SliderClass::SliderClass(unsigned id, int x, int y, int w, int h, BOOL no_button
     NoButtons(no_buttons)
 {
     if (!no_buttons) {
-        ButtonPlus = new ShapeButtonClass(id, GameFileClass::Retrieve("BTN-PLUS.SHP"), XPos + Width + 2, YPos);
+        ButtonPlus = new ShapeButtonClass(id, GameFileClass::Retrieve("btn-plus.shp"), XPos + Width + 2, YPos);
 
         if (ButtonPlus) {
             ButtonPlus->Make_Peer(*this);
@@ -38,7 +38,7 @@ SliderClass::SliderClass(unsigned id, int x, int y, int w, int h, BOOL no_button
             ButtonPlus->Flag_To_Redraw();
         }
 
-        ButtonMinus = new ShapeButtonClass(id, GameFileClass::Retrieve("BTN-MINS.SHP"), XPos - 6, YPos);
+        ButtonMinus = new ShapeButtonClass(id, GameFileClass::Retrieve("btn-mins.shp"), XPos - 6, YPos);
 
         if (ButtonMinus) {
             ButtonMinus->Make_Peer(*this);
