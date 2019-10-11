@@ -123,13 +123,13 @@ TListClass<T>::TListClass(
 
     m_Scrollbar.Set_XPos(m_Scrollbar.Get_XPos() - std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
     m_Scrollbar.Set_YPos(m_ScrollUpButton.Get_Height() + YPos);
-    m_Scrollbar.Set_Height(m_Scrollbar.Get_Height() - m_ScrollDownButton.Get_Height() + m_ScrollUpButton.Get_Height());
+    m_Scrollbar.Set_Height(m_Scrollbar.Get_Height() - (m_ScrollDownButton.Get_Height() + m_ScrollUpButton.Get_Height()));
     m_Scrollbar.Set_Width(std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
 
     // The nullptr Fancy_Text_Print sets the font pointer and the dimension globals
     // for the m_YSpacing and m_ThumbSize
     Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
-    m_YSpacing = g_fontm_YSpacing + g_fontHeight - 1;
+    m_YSpacing = g_fontYSpacing + g_fontHeight - 1;
     m_ThumbSize = (h - 1) / m_YSpacing;
 }
 
