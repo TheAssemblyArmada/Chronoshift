@@ -169,6 +169,9 @@ public:
     void Code_Pointers();
     void Decode_Pointers();
 
+public:
+    static cell_t CurrentSelectedCell;
+
 #ifdef GAME_DLL
 public:
     CellClass *Hook_Ctor() { return new (this) CellClass; }
