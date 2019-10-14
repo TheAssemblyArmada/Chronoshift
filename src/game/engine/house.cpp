@@ -1409,6 +1409,7 @@ cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
                     (DirType)Scen.Get_Random_Value(DIR_NORTH, DIR_EAST) - 32,
                     Scen.Get_Random_Value(lower_bound, upper_bound));
             }
+            break;
         }
 
         case ZONE_EAST: {
@@ -1422,6 +1423,7 @@ cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
                     (DirType)Scen.Get_Random_Value(DIR_SOUTH_EAST, DIR_SOUTH_WEST),
                     Scen.Get_Random_Value(lower_bound, upper_bound));
             }
+            break;
         }
 
         case ZONE_SOUTH: {
@@ -1435,6 +1437,7 @@ cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
                     (DirType)Scen.Get_Random_Value(DIR_SOUTH_EAST, DIR_SOUTH_WEST),
                     Scen.Get_Random_Value(lower_bound, upper_bound));
             }
+            break;
         }
 
         case ZONE_WEST: {
@@ -1448,6 +1451,7 @@ cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
                     (DirType)Scen.Get_Random_Value(DIR_SOUTH_WEST, DIR_NORTH_WEST),
                     Scen.Get_Random_Value(lower_bound, upper_bound));
             }
+            break;
         }
 
         default:
