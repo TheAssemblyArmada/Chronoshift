@@ -212,6 +212,7 @@ public:
     // TechnoTypeClass virtuals
     virtual int Raw_Cost() const override;
     virtual BOOL Read_INI(GameINIClass &ini) override;
+    virtual const void *Get_Buildup_Data() { return m_BuildupData; }
 
     int Width() const;
     int Height(BOOL check_bib = false) const;
