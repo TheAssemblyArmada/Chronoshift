@@ -17,5 +17,5 @@
 
 // NOTE: Update this as additional layers of the hierachy are added.
 #ifndef GAME_DLL
-MapEditorClass Map;
+MapEditClass Map;
 #endif

@@ -418,8 +418,8 @@ GameMixFile *&MoviesMix = Make_Global<GameMixFile *>(0x00668174);
 GameMixFile *&ScoreMix = Make_Global<GameMixFile *>(0x0066817C);
 
 // iomap.cpp
-class MapEditorClass;
-MapEditorClass &Map = Make_Global<MapEditorClass>(0x00668250);
+class MapEditClass;
+MapEditClass &Map = Make_Global<MapEditClass>(0x00668250);
 
 // logic.cpp
 #include "logic.h"
