@@ -14,6 +14,7 @@
  */
 #include "mapedit.h"
 #include "globals.h"
+#include "iomap.h"
 #include "cell.h"
 
 /**
@@ -124,6 +125,30 @@ void MapEditClass::Write_INI(GameINIClass &ini)
 BOOL MapEditClass::Add_To_List(ObjectTypeClass *objecttype)
 {
     return false;
+}
+
+/**
+ * @brief Toggles between game and editor mode.
+ *
+ * @address 0x004BBC94 (beta)
+ */
+void MapEditClass::Toggle_Editor_Mode(BOOL editor_mode)
+{
+    if (editor_mode) {
+        g_InMapEditor = true;
+        g_Debug_Unshroud = true;
+        Unselect_All();
+        Map.Activate(0);
+        Map.Init_IO();
+        g_hidPage.Clear();
+    } else {
+        g_InMapEditor = false;
+        g_Debug_Unshroud = false;
+        Unselect_All();
+        Map.Init_IO();
+    }
+    Map.Flag_To_Redraw(true);
+    Map.Render();
 }
 
 /**

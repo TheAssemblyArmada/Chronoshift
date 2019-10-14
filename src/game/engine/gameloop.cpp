@@ -170,9 +170,22 @@ void Debug_Motion_Capture()
 }
 #endif
 
+void Map_Editor_Main_Loop()
+{
+    Map.Render();
+    g_mouse->Erase_Mouse(g_hidPage, true);
+    Process_Input();
+    Call_Back();
+    Color_Cycle();
+}
+
 BOOL Main_Loop()
 {
-    if (GameActive) {
+    if (g_InMapEditor) {
+
+        Map_Editor_Main_Loop();
+
+    } else if (GameActive) {
 
 #ifdef CHRONOSHIFT_DEBUG
 

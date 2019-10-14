@@ -42,6 +42,7 @@ public:
     virtual void Write_INI(GameINIClass &ini) override;
 
     BOOL Add_To_List(ObjectTypeClass *objecttype);
+    static void Toggle_Editor_Mode(BOOL editor_mode);
 
 private:
     BOOL New_Scenario();
@@ -90,7 +91,7 @@ private:
 
 protected:
     // NOTE: All members for this class must be static otherwise it
-    //       it will break the exiting MapIO we hook into in RA!
+    //       it will break the existing MapIO we hook into in RA!
 };
 
-#endif // MAPEDITOR_H
+#endif // MAPEDIT_H

@@ -16,6 +16,7 @@
 #include "theme.h"
 #include "vox.h"
 #include "session.h"
+#include "globals.h"
 
 void IPX_Call_Back()
 {
@@ -29,6 +30,10 @@ void Call_Back()
 {
     Theme.AI();
     Speak_AI();
+
+    if (g_InMapEditor) {
+        return;
+    }
 
     if (Session.Game_To_Play() == GAME_IPX || Session.Game_To_Play() == GAME_INTERNET) {
         IPX_Call_Back();
