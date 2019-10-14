@@ -19,13 +19,13 @@
 #define IOMAP_H
 
 #include "always.h"
-#include "mapeditor.h"
+#include "mapedit.h"
 
 // NOTE: Update this as additional layers of the hierachy are added.
 #ifdef GAME_DLL
-extern MapEditorClass &Map;
+extern MapEditClass &Map;
 #else
-extern MapEditorClass Map;
+extern MapEditClass Map;
 #endif
 
 #endif // IOMAP_H
