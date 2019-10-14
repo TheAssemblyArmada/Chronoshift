@@ -48,6 +48,10 @@ const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
 };
 // clang-format on
 
+// Current selected cell when in map editor mode.
+// @address 006940AC (beta)
+cell_t CellClass::CurrentSelectedCell = -1;
+
 CellClass::CellClass() :
     CellNumber(Map.Cell_Number(this)),
     Bit1(false),
@@ -843,6 +847,12 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 WindowList[WINDOW_TACTICAL].Y,
                 WindowList[WINDOW_TACTICAL].W,
                 WindowList[WINDOW_TACTICAL].H);
+        }
+
+        if (g_InMapEditor) {
+            if (CurrentSelectedCell == CellNumber) {
+                // TODO!
+            }
         }
 
         if (Smudge != SMUDGE_NONE && SmudgeFrame != -1) {
