@@ -465,15 +465,14 @@ public:
     TemplateType Get_Type() const { return Type; }
 
     static TemplateType From_Name(const char *name);
-    static const char *Name_From(TemplateType tem);
-    static TemplateTypeClass *As_Pointer(TemplateType tem);
-    static TemplateTypeClass &As_Reference(TemplateType tem);
+    static const char *Name_From(TemplateType type);
+    static TemplateTypeClass *As_Pointer(TemplateType type);
+    static TemplateTypeClass &As_Reference(TemplateType type);
     static void Init_Heap();
     static void One_Time() {}
     static void Init(TheaterType theater);
 
-    // Functions only for the map editor mode.
-    static void MapEditor_418A1C();
+    static void Prep_For_Add();
 
 private:
     TemplateType Type;

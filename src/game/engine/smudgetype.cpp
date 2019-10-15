@@ -19,6 +19,7 @@
 #include "drawshape.h"
 #include "lists.h"
 #include "mixfile.h"
+#include "iomap.h"
 #include <cstdio>
 
 using std::snprintf;
@@ -132,9 +133,9 @@ SmudgeType SmudgeTypeClass::From_Name(const char *name)
     }
 
     if (name != nullptr) {
-        for (SmudgeType smudge = SMUDGE_FIRST; smudge < SMUDGE_COUNT; ++smudge) {
-            if (strcasecmp(name, Name_From(smudge)) == 0) {
-                return smudge;
+        for (SmudgeType type = SMUDGE_FIRST; type < SMUDGE_COUNT; ++type) {
+            if (strcasecmp(name, Name_From(type)) == 0) {
+                return type;
             }
         }
     }
@@ -142,12 +143,9 @@ SmudgeType SmudgeTypeClass::From_Name(const char *name)
     return SMUDGE_NONE;
 }
 
-const char *SmudgeTypeClass::Name_From(SmudgeType smudge)
+const char *SmudgeTypeClass::Name_From(SmudgeType type)
 {
-    DEBUG_ASSERT(smudge != SMUDGE_NONE);
-    DEBUG_ASSERT(smudge < SMUDGE_COUNT);
-
-    return smudge != SMUDGE_NONE && smudge < SMUDGE_COUNT ? As_Reference(smudge).m_Name : "<none>";
+    return type != SMUDGE_NONE && type < SMUDGE_COUNT ? As_Reference(type).m_Name : "<none>";
 }
 
 void SmudgeTypeClass::Init_Heap()
@@ -188,18 +186,32 @@ void SmudgeTypeClass::Init(TheaterType theater)
     }
 }
 
-SmudgeTypeClass &SmudgeTypeClass::As_Reference(SmudgeType smudge)
+SmudgeTypeClass &SmudgeTypeClass::As_Reference(SmudgeType type)
 {
-    DEBUG_ASSERT(smudge != SMUDGE_NONE);
-    DEBUG_ASSERT(smudge < SMUDGE_COUNT);
+    DEBUG_ASSERT(type != SMUDGE_NONE);
+    DEBUG_ASSERT(type < SMUDGE_COUNT);
 
-    return g_SmudgeTypes[smudge];
+    return g_SmudgeTypes[type];
 }
 
-SmudgeTypeClass *SmudgeTypeClass::As_Pointer(SmudgeType smudge)
+SmudgeTypeClass *SmudgeTypeClass::As_Pointer(SmudgeType type)
 {
-    DEBUG_ASSERT(smudge != SMUDGE_NONE);
-    DEBUG_ASSERT(smudge < SMUDGE_COUNT);
+    return (type < SMUDGE_COUNT) && (type != SMUDGE_NONE) ? &g_SmudgeTypes[type] : nullptr;
+}
 
-    return (smudge < SMUDGE_COUNT) && (smudge != SMUDGE_NONE) ? &g_SmudgeTypes[smudge] : nullptr;
+/**
+ * @brief 
+ *
+ * @address 0x0056DC90 (beta)
+ */
+void SmudgeTypeClass::Prep_For_Add()
+{
+    for (SmudgeType i = SMUDGE_FIRST; i < SMUDGE_COUNT; ++i) {
+        SmudgeTypeClass *stptr = As_Pointer(i);
+        if (stptr != nullptr) {
+            if (stptr->ImageData != nullptr) {
+                Map.Add_To_List(stptr);
+            }
+        }
+    }
 }

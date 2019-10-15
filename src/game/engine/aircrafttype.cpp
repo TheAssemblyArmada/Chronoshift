@@ -18,6 +18,7 @@
 #include "gamefile.h"
 #include "aircraft.h"
 #include "lists.h"
+#include "iomap.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<AircraftTypeClass> g_AircraftTypes;
@@ -193,6 +194,11 @@ AircraftTypeClass &AircraftTypeClass::As_Reference(AircraftType type)
     return g_AircraftTypes[type];
 }
 
+AircraftTypeClass *AircraftTypeClass::As_Pointer(AircraftType type)
+{
+    return (type < AIRCRAFT_COUNT) && (type != AIRCRAFT_NONE) ? &g_AircraftTypes[type] : nullptr;
+}
+
 /**
  * Fetches the type enum value from a name string.
  */
@@ -253,3 +259,21 @@ void AircraftTypeClass::Init_Heap()
     new AircraftTypeClass(AircraftAttackHeli);
     new AircraftTypeClass(AircraftHindHeli);
 }
+
+/**
+ * @brief 
+ *
+ * @address 0x00413C28 (beta)
+ */
+void AircraftTypeClass::Prep_For_Add()
+{
+    for (AircraftType i = AIRCRAFT_FIRST; i < AIRCRAFT_COUNT; ++i) {
+        AircraftTypeClass *atptr = As_Pointer(i);
+        if (atptr != nullptr) {
+            if (atptr->ImageData != nullptr) {
+                Map.Add_To_List(atptr);
+            }
+        }
+    }
+}
+

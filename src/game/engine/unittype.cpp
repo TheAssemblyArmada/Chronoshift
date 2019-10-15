@@ -21,6 +21,7 @@
 #include "globals.h"
 #include "mixfile.h"
 #include "shape.h"
+#include "iomap.h"
 #include <cstdio>
 #include <algorithm>
 
@@ -220,6 +221,11 @@ UnitTypeClass &UnitTypeClass::As_Reference(UnitType type)
     return g_UnitTypes[type];
 }
 
+UnitTypeClass *UnitTypeClass::As_Pointer(UnitType type)
+{
+    return (type < UNIT_COUNT) && (type != UNIT_NONE) ? &g_UnitTypes[type] : nullptr;
+}
+
 /**
  * Fetches the type enum value from a name string.
  *
@@ -236,6 +242,23 @@ UnitType UnitTypeClass::From_Name(const char *name)
     }
 
     return UNIT_NONE;
+}
+
+/**
+ * @brief 
+ *
+ * @address 0x005A5900 (beta)
+ */
+void UnitTypeClass::Prep_For_Add()
+{
+    for (UnitType i = UNIT_FIRST; i < UNIT_COUNT; ++i) {
+        UnitTypeClass *utptr = As_Pointer(i);
+        if (utptr != nullptr) {
+            if (utptr->ImageData != nullptr) {
+                Map.Add_To_List(utptr);
+            }
+        }
+    }
 }
 
 /**
