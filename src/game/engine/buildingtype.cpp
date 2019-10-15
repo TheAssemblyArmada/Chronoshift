@@ -23,6 +23,7 @@
 #include "special.h"
 #include "unittype.h"
 #include "gamefile.h"
+#include "iomap.h"
 #include <algorithm>
 
 #ifndef GAME_DLL
@@ -595,6 +596,11 @@ BuildingTypeClass &BuildingTypeClass::As_Reference(BuildingType type)
     return g_BuildingTypes[type];
 }
 
+BuildingTypeClass *BuildingTypeClass::As_Pointer(BuildingType type)
+{
+    return (type < BUILDING_COUNT) && (type != BUILDING_NONE) ? &g_BuildingTypes[type] : nullptr;
+}
+
 /**
  * Fetches the type enum value from a name string.
  *
@@ -627,4 +633,21 @@ void BuildingTypeClass::Init_Heap()
 #else
     // The order of heap initialisation MUST match the BuildingType enum in buildingtype.h
 #endif
+}
+
+/**
+ * @brief 
+ *
+ * @address 0x00460554 (beta)
+ */
+void BuildingTypeClass::Prep_For_Add()
+{
+    for (BuildingType i = BUILDING_FIRST; i < BUILDING_COUNT; ++i) {
+        BuildingTypeClass *btptr = As_Pointer(i);
+        if (btptr != nullptr) {
+            if (btptr->ImageData != nullptr) {
+                Map.Add_To_List(btptr);
+            }
+        }
+    }
 }

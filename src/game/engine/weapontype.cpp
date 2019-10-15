@@ -176,9 +176,12 @@ const char *WeaponTypeClass::Name_From(WeaponType weapon)
 /**
  * @brief Get reference to object from type enum value.
  */
-WeaponTypeClass &WeaponTypeClass::As_Reference(WeaponType weapon)
+WeaponTypeClass &WeaponTypeClass::As_Reference(WeaponType type)
 {
-    return g_WeaponTypes[weapon];
+    DEBUG_ASSERT(type !=  WEAPON_NONE);
+    DEBUG_ASSERT(type < WEAPON_COUNT);
+
+    return g_WeaponTypes[type];
 }
 
 /**
@@ -186,10 +189,10 @@ WeaponTypeClass &WeaponTypeClass::As_Reference(WeaponType weapon)
  *
  * 0x0058FE44
  */
-WeaponTypeClass *WeaponTypeClass::As_Pointer(WeaponType weapon)
+WeaponTypeClass *WeaponTypeClass::As_Pointer(WeaponType type)
 {
-    if (weapon != WEAPON_NONE && weapon < WEAPON_COUNT) {
-        return &g_WeaponTypes[weapon];
+    if (type != WEAPON_NONE && type < WEAPON_COUNT) {
+        return &g_WeaponTypes[type];
     }
 
     return nullptr;

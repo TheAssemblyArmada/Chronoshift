@@ -75,12 +75,15 @@ const char *TriggerTypeClass::Name_From(TriggerTypeClass *trigger)
     return nullptr;
 }
 
-TriggerTypeClass &TriggerTypeClass::As_Reference(TriggerType trigger)
+TriggerTypeClass &TriggerTypeClass::As_Reference(TriggerType type)
 {
-    return g_TriggerTypes[trigger];
+    DEBUG_ASSERT(type != TRIGGER_NONE);
+    DEBUG_ASSERT(type < g_TriggerTypes.Count());
+
+    return g_TriggerTypes[type];
 }
 
-TriggerTypeClass *TriggerTypeClass::As_Pointer(TriggerType trigger)
+TriggerTypeClass *TriggerTypeClass::As_Pointer(TriggerType type)
 {
-    return trigger != TRIGGER_NONE && trigger < g_TriggerTypes.Count() ? &g_TriggerTypes[trigger] : nullptr;
+    return type != TRIGGER_NONE && type < g_TriggerTypes.Count() ? &g_TriggerTypes[type] : nullptr;
 }

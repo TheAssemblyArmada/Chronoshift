@@ -117,17 +117,20 @@ WarheadType WarheadTypeClass::From_Name(const char *name)
 /**
  * @brief Get string name from type enum value.
  */
-const char *WarheadTypeClass::Name_From(WarheadType warhead)
+const char *WarheadTypeClass::Name_From(WarheadType type)
 {
-    return warhead != WARHEAD_NONE && warhead < WARHEAD_COUNT ? As_Reference(warhead).Name : "<none>";
+    return type != WARHEAD_NONE && type < WARHEAD_COUNT ? As_Reference(type).Name : "<none>";
 }
 
 /**
  * @brief Get reference to object from type enum value.
  */
-WarheadTypeClass &WarheadTypeClass::As_Reference(WarheadType warhead)
+WarheadTypeClass &WarheadTypeClass::As_Reference(WarheadType type)
 {
-    return g_WarheadTypes[warhead];
+    DEBUG_ASSERT(type != WARHEAD_NONE);
+    DEBUG_ASSERT(type < WARHEAD_COUNT);
+
+    return g_WarheadTypes[type];
 }
 
 /**

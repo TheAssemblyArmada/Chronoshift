@@ -109,6 +109,8 @@ public:
     static TerrainTypeClass &As_Reference(TerrainType terrain);
     static TerrainTypeClass *As_Pointer(TerrainType terrain);
 
+    static void Prep_For_Add();
+
 public:
     TerrainType Type; 
     coord_t UnkCoord; // Object bounds perhaps

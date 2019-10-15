@@ -84,6 +84,8 @@ public:
     static SmudgeTypeClass &As_Reference(SmudgeType smudge);
     static SmudgeTypeClass *As_Pointer(SmudgeType smudge);
 
+    static void Prep_For_Add();
+
 private:
     SmudgeType Type;
     int Width;// Width in cells

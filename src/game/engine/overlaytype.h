@@ -118,6 +118,8 @@ public:
     static OverlayTypeClass &As_Reference(OverlayType overlay);
     static OverlayTypeClass *As_Pointer(OverlayType overlay);
 
+    static void Prep_For_Add();
+
 private:
     OverlayType Type;
     LandType Land; // The land type of this overlay.

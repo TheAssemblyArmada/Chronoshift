@@ -74,11 +74,14 @@ public:
     AircraftType What_Type() const { return m_Type; }
 
     static AircraftTypeClass &As_Reference(AircraftType type);
+    static AircraftTypeClass *As_Pointer(AircraftType type);
     static AircraftType From_Name(const char *name);
     static const char *Name_From(AircraftType type) { return As_Reference(type).m_Name; }
 
     static void One_Time();
     static void Init_Heap();
+
+    static void Prep_For_Add();
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

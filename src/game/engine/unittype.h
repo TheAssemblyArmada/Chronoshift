@@ -92,8 +92,11 @@ public:
     static void One_Time();
     static void Init_Heap();
     static UnitTypeClass &As_Reference(UnitType type);
+    static UnitTypeClass *As_Pointer(UnitType type);
     static UnitType From_Name(const char *name);
     static const char *Name_From(UnitType type) { return As_Reference(type).m_Name; }
+
+    static void Prep_For_Add();
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

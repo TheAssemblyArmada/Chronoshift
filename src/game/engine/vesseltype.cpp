@@ -21,6 +21,7 @@
 #include "lists.h"
 #include "mixfile.h"
 #include "scenario.h"
+#include "iomap.h"
 #include <cstdio>
 
 using std::snprintf;
@@ -168,6 +169,11 @@ VesselTypeClass &VesselTypeClass::As_Reference(VesselType type)
     return g_VesselTypes[type];
 }
 
+VesselTypeClass *VesselTypeClass::As_Pointer(VesselType type)
+{
+    return (type < VESSEL_COUNT) && (type != VESSEL_NONE) ? &g_VesselTypes[type] : nullptr;
+}
+
 /**
  * Fetches the type enum value from a name string.
  *
@@ -184,6 +190,23 @@ VesselType VesselTypeClass::From_Name(const char *name)
     }
 
     return VESSEL_NONE;
+}
+
+/**
+ * @brief 
+ *
+ * @address 0x005B1EEC (beta)
+ */
+void VesselTypeClass::Prep_For_Add()
+{
+    for (VesselType i = VESSEL_FIRST; i < VESSEL_COUNT; ++i) {
+        VesselTypeClass *vtptr = As_Pointer(i);
+        if (vtptr != nullptr) {
+            if (vtptr->ImageData != nullptr) {
+                Map.Add_To_List(vtptr);
+            }
+        }
+    }
 }
 
 /**

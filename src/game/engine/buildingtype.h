@@ -230,14 +230,17 @@ public:
 
     static void One_Time();
     static BuildingTypeClass &As_Reference(BuildingType type);
+    static BuildingTypeClass *As_Pointer(BuildingType type);
     static BuildingType From_Name(const char *name);
     static void Init(TheaterType theater);
     static void Init_Heap();
     static const char *Name_From(BuildingType type) { return As_Reference(type).m_Name; }
+
+    static void Prep_For_Add();
     
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_BaseNormal : 1; // & 1Considered for building adjacency checks (def = true)?
+    BOOL m_BaseNormal : 1; // & 1 Considered for building adjacency checks (def = true)?
     BOOL m_Fake : 1; // & 2 Is this a fake structure (def = false)?
     BOOL m_Bib : 1; // & 4 Does the building have a bib built in (def = false)?
     BOOL m_Wall : 1; // & 8 Is this a wall type structure [special rules apply] (def = false)?

@@ -20,6 +20,7 @@
 #include "globals.h"
 #include "lists.h"
 #include "rules.h"
+#include "iomap.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<InfantryTypeClass> g_InfantryTypes;
@@ -221,6 +222,11 @@ InfantryTypeClass &InfantryTypeClass::As_Reference(InfantryType type)
     return g_InfantryTypes[type];
 }
 
+InfantryTypeClass *InfantryTypeClass::As_Pointer(InfantryType type)
+{
+    return (type < INFANTRY_COUNT) && (type != INFANTRY_NONE) ? &g_InfantryTypes[type] : nullptr;
+}
+
 /**
  * Fetches the type enum value from a name string.
  */
@@ -235,6 +241,21 @@ InfantryType InfantryTypeClass::From_Name(const char *name)
     }
 
     return INFANTRY_NONE;
+}
+
+/**
+ * @brief 
+ *
+ * @address 0x004FF9A0 (beta)
+ */
+void InfantryTypeClass::Prep_For_Add()
+{
+    for (InfantryType i = INFANTRY_FIRST; i < INFANTRY_COUNT; ++i) {
+        InfantryTypeClass *itptr = As_Pointer(i);
+        if (itptr != nullptr) {
+            Map.Add_To_List(itptr);
+        }
+    }
 }
 
 /**

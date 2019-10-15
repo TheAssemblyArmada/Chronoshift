@@ -21,6 +21,7 @@
 #include "lists.h"
 #include "mixfile.h"
 #include "shape.h"
+#include "iomap.h"
 #include <cstdio>
 
 using std::snprintf;
@@ -272,9 +273,9 @@ TerrainType TerrainTypeClass::From_Name(const char *name)
     }
 
     if (name != nullptr) {
-        for (TerrainType terrain = TERRAIN_FIRST; terrain < TERRAIN_COUNT; ++terrain) {
-            if (strcasecmp(name, Name_From(terrain)) == 0) {
-                return terrain;
+        for (TerrainType type = TERRAIN_FIRST; type < TERRAIN_COUNT; ++type) {
+            if (strcasecmp(name, Name_From(type)) == 0) {
+                return type;
             }
         }
     }
@@ -284,13 +285,9 @@ TerrainType TerrainTypeClass::From_Name(const char *name)
 /**
  * @brief Get name string from type enum value.
  */
-const char *TerrainTypeClass::Name_From(TerrainType terrain)
+const char *TerrainTypeClass::Name_From(TerrainType type)
 {
-    if (terrain != TERRAIN_NONE && terrain < TERRAIN_COUNT) {
-        return As_Reference(terrain).m_Name;
-    }
-
-    return "<none>";
+    return type != TERRAIN_NONE && type < TERRAIN_COUNT ? As_Reference(type).m_Name : "<none>";
 }
 
 /**
@@ -298,21 +295,35 @@ const char *TerrainTypeClass::Name_From(TerrainType terrain)
  *
  * 0x0055BA88
  */
-TerrainTypeClass &TerrainTypeClass::As_Reference(TerrainType terrain)
+TerrainTypeClass &TerrainTypeClass::As_Reference(TerrainType type)
 {
-    return g_TerrainTypes[terrain];
+    DEBUG_ASSERT(type != TERRAIN_NONE);
+    DEBUG_ASSERT(type < TERRAIN_COUNT);
+
+    return g_TerrainTypes[type];
 }
 
 /**
  * @brief Get pointer to object from type enum value.
  */
-TerrainTypeClass *TerrainTypeClass::As_Pointer(TerrainType terrain)
+TerrainTypeClass *TerrainTypeClass::As_Pointer(TerrainType type)
 {
-    if (terrain != TERRAIN_NONE && terrain < TERRAIN_COUNT) {
-        TerrainTypeClass *ptr = &g_TerrainTypes[terrain];
-        DEBUG_ASSERT(ptr != nullptr);
-        return ptr;
-    }
+    return (type < TERRAIN_COUNT) && (type != TERRAIN_NONE) ? &g_TerrainTypes[type] : nullptr;
+}
 
-    return nullptr;
+/**
+* @brief 
+*
+* @address 0x0057E4C8 (beta)
+*/
+void TerrainTypeClass::Prep_For_Add()
+{
+    for (TerrainType i = TERRAIN_FIRST; i < TERRAIN_COUNT; ++i) {
+        TerrainTypeClass *ttptr = As_Pointer(i);
+        if (ttptr != nullptr) {
+            if (ttptr->ImageData != nullptr) {
+                Map.Add_To_List(ttptr);
+            }
+        }
+    }
 }

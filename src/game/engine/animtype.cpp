@@ -309,9 +309,10 @@ const char *AnimTypeClass::Name_From(AnimType type)
  */
 AnimTypeClass &AnimTypeClass::As_Reference(AnimType type)
 {
-    AnimTypeClass *ptr = &g_AnimTypes[type];
-    DEBUG_ASSERT(ptr != nullptr);
-    return *ptr;
+    DEBUG_ASSERT(type != ANIM_NONE);
+    DEBUG_ASSERT(type < ANIM_COUNT);
+
+    return g_AnimTypes[type];
 }
 
 /**

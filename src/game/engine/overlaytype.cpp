@@ -160,17 +160,31 @@ void OverlayTypeClass::Init(TheaterType theater)
 
 OverlayTypeClass &OverlayTypeClass::As_Reference(OverlayType overlay)
 {
-    DEBUG_ASSERT(overlay < OVERLAY_COUNT);
-
     return g_OverlayTypes[overlay];
 }
 
 OverlayTypeClass *OverlayTypeClass::As_Pointer(OverlayType overlay)
 {
-    DEBUG_ASSERT(overlay != OVERLAY_NONE);
-    DEBUG_ASSERT(overlay < OVERLAY_COUNT);
-
     return overlay < OVERLAY_COUNT && overlay != OVERLAY_NONE ? &g_OverlayTypes[overlay] : nullptr;
+}
+
+/**
+ * @brief 
+ *
+ * @address 0x00549CF8 (beta)
+ */
+void OverlayTypeClass::Prep_For_Add()
+{
+    for (OverlayType i = OVERLAY_FIRST; i < OVERLAY_COUNT; ++i) {
+        OverlayTypeClass *otptr = As_Pointer(i);
+        if (otptr != nullptr) {
+            if (otptr->ImageData != nullptr) {
+                if (!otptr->Wall && (!otptr->Ore || i == OVERLAY_GOLD_01 || i == OVERLAY_GEM_01)) {
+                    Map.Add_To_List(otptr);
+                }
+            }
+        }
+    }
 }
 
 coord_t OverlayTypeClass::Coord_Fixup(coord_t coord) const

@@ -19,6 +19,7 @@
 #include "coord.h"
 #include "gamedebug.h"
 #include "mixfile.h"
+#include "iomap.h"
 #include <algorithm>
 
 #ifndef GAME_DLL
@@ -527,6 +528,23 @@ void TemplateTypeClass::Init(TheaterType theater)
 #endif
 }
 
+/**
+ * @brief 
+ *
+ * @address 0x004B1B80 (beta)
+ */
+void TemplateTypeClass::Prep_For_Add()
+{
+    for (TemplateType i = TEMPLATE_FIRST; i < TEMPLATE_COUNT; ++i) {
+        TemplateTypeClass *ttptr = As_Pointer(i);
+        if (ttptr != nullptr) {
+            if (ttptr->ImageData != nullptr) {
+                Map.Add_To_List(ttptr);
+            }
+        }
+    }
+}
+
 BOOL TemplateTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
     // TODO requires TemplateClass
@@ -628,10 +646,10 @@ TemplateType TemplateTypeClass::From_Name(const char *name)
     }
 
     if (name != nullptr) {
-        for (TemplateType tem = TEMPLATE_FIRST; tem < TEMPLATE_COUNT; ++tem) {
+        for (TemplateType type = TEMPLATE_FIRST; type < TEMPLATE_COUNT; ++type) {
 
-            if (strcasecmp(name, Name_From(tem)) == 0) {
-                return tem;
+            if (strcasecmp(name, Name_From(type)) == 0) {
+                return type;
             }
 
         }
@@ -641,12 +659,9 @@ TemplateType TemplateTypeClass::From_Name(const char *name)
     return TEMPLATE_NONE;
 }
 
-const char *TemplateTypeClass::Name_From(TemplateType tem)
+const char *TemplateTypeClass::Name_From(TemplateType type)
 {
-    DEBUG_ASSERT(tem != TEMPLATE_NONE);
-    DEBUG_ASSERT(tem < TEMPLATE_COUNT);
-
-    return tem != TEMPLATE_NONE && tem < TEMPLATE_COUNT ? As_Reference(tem).m_Name : "<none>";
+    return type != TEMPLATE_NONE && type < TEMPLATE_COUNT ? As_Reference(type).m_Name : "<none>";
 }
 
 
@@ -661,46 +676,20 @@ const int16_t *TemplateTypeClass::Occupy_List(BOOL a1) const
 #endif
 }
 
-TemplateTypeClass *TemplateTypeClass::As_Pointer(TemplateType tem)
+TemplateTypeClass *TemplateTypeClass::As_Pointer(TemplateType type)
 {
-    if (tem != TEMPLATE_NONE && tem < TEMPLATE_COUNT) {
-        TemplateTypeClass *ptr = &g_TemplateTypes[tem];
-        DEBUG_ASSERT(ptr != nullptr);
-        return ptr;
-    }
-
-    return nullptr;
+    return (type < TEMPLATE_COUNT) && (type != TEMPLATE_NONE) ? &g_TemplateTypes[type] : nullptr;
 }
 
-TemplateTypeClass &TemplateTypeClass::As_Reference(TemplateType tem)
+TemplateTypeClass &TemplateTypeClass::As_Reference(TemplateType type)
 {
-    DEBUG_ASSERT(tem != TEMPLATE_NONE);
-    DEBUG_ASSERT(tem < TEMPLATE_COUNT);
+    DEBUG_ASSERT(type != TEMPLATE_NONE);
+    DEBUG_ASSERT(type < TEMPLATE_COUNT);
 
-    TemplateTypeClass *ttypeptr = &g_TemplateTypes[tem];
-    DEBUG_ASSERT(ttypeptr != nullptr);
-
-    return *ttypeptr;
+    return g_TemplateTypes[type];
 }
 
 coord_t TemplateTypeClass::Coord_Fixup(coord_t coord) const
 {
     return Coord_Top_Left(coord);
-}
-
-void TemplateTypeClass::MapEditor_418A1C()
-{
-#if 0 // TODO Requires MapEditor layer of IOMap stack
-    for (TemplateType tem = TEMPLATE_FIRST; tem < TEMPLATE_COUNT; ++tem) {
-        TemplateTypeClass *tptr = As_Pointer(tem);
-        DEBUG_ASSERT(tptr != nullptr);
-        if (tptr != nullptr) {
-            if (tptr->Get_Image_Data() != nullptr) {
-                Map.MapEditorClass_449A29(tptr);
-            }
-        }
-    }
-#else
-
-#endif
 }

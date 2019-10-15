@@ -188,17 +188,20 @@ const char *BulletTypeClass::Name_From(BulletType bullet)
  *
  * 0x00426D04
  */
-BulletTypeClass &BulletTypeClass::As_Reference(BulletType bullet)
+BulletTypeClass &BulletTypeClass::As_Reference(BulletType type)
 {
-    return g_BulletTypes[bullet];
+    DEBUG_ASSERT(type != BULLET_NONE);
+    DEBUG_ASSERT(type < BULLET_COUNT);
+
+    return g_BulletTypes[type];
 }
 
 /**
  * @brief Get pointer to object from enum value.
  */
-BulletTypeClass *BulletTypeClass::As_Pointer(BulletType bullet)
+BulletTypeClass *BulletTypeClass::As_Pointer(BulletType type)
 {
-    return bullet < BULLET_COUNT && bullet != BULLET_NONE ? &g_BulletTypes[bullet] : nullptr;
+    return type < BULLET_COUNT && type != BULLET_NONE ? &g_BulletTypes[type] : nullptr;
 }
 
 /**
