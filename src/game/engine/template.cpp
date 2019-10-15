@@ -29,7 +29,8 @@ TFixedIHeapClass<TemplateClass> g_Templates;
  * 0x0056A1D8
  */
 TemplateClass::TemplateClass(TemplateType type, cell_t cellnum) :
-    ObjectClass(RTTI_TEMPLATE, g_Templates.ID(this)), m_Type(g_TemplateTypes.Ptr(type))
+    ObjectClass(RTTI_TEMPLATE, g_Templates.ID(this)),
+    m_Class(g_TemplateTypes.Ptr(type))
 {
     if (cellnum != -1) {
         Unlimbo(Cell_To_Coord(cellnum));
@@ -93,12 +94,12 @@ BOOL TemplateClass::Mark(MarkType mark)
         return false;
     }
     uint8_t *set = Get_Icon_Set_Map(image);
-    for (int h = 0; m_Type->Get_Height() > h; ++h) {
-        for (int w = 0; m_Type->Get_Width() > w; ++w) {
+    for (int h = 0; m_Class->Get_Height() > h; ++h) {
+        for (int w = 0; m_Class->Get_Width() > w; ++w) {
             cell_t cell = Cell_From_XY(w, h) + Coord_To_Cell(m_Coord);
             if (Map.In_Radar(cell)) {
                 CellClass *cptr = &Map[cell];
-                int icon = h * m_Type->Get_Width() + w;
+                int icon = h * m_Class->Get_Width() + w;
                 if (set[icon] != -1) {
                     if (mark == MARK_REMOVE && !_noup) {
                         if (cptr->Get_Template() == What_Type() && cptr->Get_Icon() == icon) {

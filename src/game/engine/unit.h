@@ -36,7 +36,7 @@ public:
     // ObjectClass
     virtual ActionType What_Action(ObjectClass *object) const override;
     virtual ActionType What_Action(cell_t cellnum) const override;
-    virtual const UnitTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const UnitTypeClass &Class_Of() const override { return *m_Class; }
     virtual coord_t Sort_Y() const override;
     virtual BOOL Limbo() override;
     virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH) override;
@@ -81,10 +81,10 @@ public:
     virtual void Overrun_Cell(cell_t cell, int a2) override;
     virtual BOOL Ok_To_Move(DirType dir) override;
 
-    UnitType What_Type() const { return m_Type->What_Type(); }
+    UnitType What_Type() const { return m_Class->What_Type(); }
 
 private:
-    GamePtr<UnitTypeClass> m_Type;
+    GamePtr<UnitTypeClass> m_Class;
     HousesType m_FlagOwner;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_Bit1 : 1; // 1

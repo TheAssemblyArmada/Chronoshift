@@ -44,7 +44,7 @@ class VesselClass : public DriveClass
     // ObjectClass
     virtual ActionType What_Action(ObjectClass *object) const override;
     virtual ActionType What_Action(cell_t cellnum) const override;
-    virtual const VesselTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const VesselTypeClass &Class_Of() const override { return *m_Class; }
     virtual coord_t Fire_Coord(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual const int16_t *Overlap_List(BOOL a1 = false) const override;
     virtual void Draw_It(int x, int y, WindowNumberType window) const override;
@@ -87,12 +87,12 @@ class VesselClass : public DriveClass
     static void Read_INI(GameINIClass &ini);
     static void Write_INI(GameINIClass &ini);
 
-    VesselType What_Type() const { return m_Type->What_Type(); }
+    VesselType What_Type() const { return m_Class->What_Type(); }
 
     static void Init();
 
 private:
-    GamePtr<VesselTypeClass> m_Type;
+    GamePtr<VesselTypeClass> m_Class;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_ToSelfRepair : 1; // 1
     BOOL m_Repairing : 1; // 2

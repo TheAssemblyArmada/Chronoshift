@@ -31,7 +31,7 @@ TFixedIHeapClass<VesselClass> g_Vessels;
 
 VesselClass::VesselClass(VesselType type, int id, HousesType house) :
     DriveClass(RTTI_VESSEL, g_Vessels.ID(this), house),
-    m_Type(g_VesselTypes.Ptr(type)),
+    m_Class(g_VesselTypes.Ptr(type)),
     m_ToSelfRepair(false),
     m_Repairing(false),
     m_TransportDoorTimer(),
@@ -52,7 +52,7 @@ VesselClass::VesselClass(VesselType type, int id, HousesType house) :
 
 VesselClass::VesselClass(const VesselClass &that) :
     DriveClass(that),
-    m_Type(that.m_Type),
+    m_Class(that.m_Class),
     m_ToSelfRepair(that.m_ToSelfRepair),
     m_Repairing(that.m_Repairing),
     m_TransportDoorTimer(that.m_TransportDoorTimer),
@@ -71,7 +71,7 @@ VesselClass::VesselClass(const NoInitClass &noinit) :
 
 VesselClass::~VesselClass()
 {
-    m_Type = nullptr;
+    m_Class = nullptr;
     if (GameActive) {
         if (m_OwnerHouse != nullptr) {
             m_OwnerHouse->Tracking_Remove(this);

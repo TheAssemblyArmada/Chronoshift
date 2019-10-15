@@ -27,7 +27,7 @@ TFixedIHeapClass<AnimClass> g_Anims;
 AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, unsigned char loop_count /*, BOOL invisible*/) :
     ObjectClass(RTTI_ANIM, g_Anims.ID(this)),
     m_LoopStage(),
-    m_Type(g_AnimTypes.Ptr(type)),
+    m_Class(g_AnimTypes.Ptr(type)),
     m_AttachedTo(0),
     m_Owner(HOUSES_NONE),
     m_Loops(loop_count),
@@ -37,22 +37,22 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
     m_LoopDelay(loop_delay),
     m_field_4A()
 {
-    if (m_Type->Get_End() == -1) {
+    if (m_Class->Get_End() == -1) {
         // seems like this if once had Theater specific art access
-        // g_isTheaterShape = m_Type->Is_Theater();
-        m_Type->Set_End(Get_Build_Frame_Count(m_Type->Get_Image_Data()));
+        // g_isTheaterShape = m_Class->Is_Theater();
+        m_Class->Set_End(Get_Build_Frame_Count(m_Class->Get_Image_Data()));
         //g_isTheaterShape = false;
     }
-    if (m_Type->Get_Loop_End() == -1) {
-        m_Type->Set_End(m_Type->Get_End());
+    if (m_Class->Get_Loop_End() == -1) {
+        m_Class->Set_End(m_Class->Get_End());
     }
-    if (m_Type->Is_Normalized()) {
-        m_LoopStage.Set_Delay(Options.Normalize_Delay(m_Type->Get_Rate()));
+    if (m_Class->Is_Normalized()) {
+        m_LoopStage.Set_Delay(Options.Normalize_Delay(m_Class->Get_Rate()));
     } else {
-        m_LoopStage.Set_Delay(m_Type->Get_Rate());
+        m_LoopStage.Set_Delay(m_Class->Get_Rate());
     }
     m_LoopStage.Set_Stage(0);
-    if (m_Type->Is_Surface()) {
+    if (m_Class->Is_Surface()) {
         Set_Height(256);
     }
     Unlimbo(Adjust_Coord(coord));
@@ -60,7 +60,7 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
         Map.Sight_From(Coord_To_Cell(coord), Rule.Drop_Zone_Radius(), g_PlayerPtr, false);
     }
     // something here has been badly removed, this is how the code is in edwin and RA
-    m_Loops = m_Type->Get_Loop_Count() * std::max<uint8_t>(loop_count, 1);
+    m_Loops = m_Class->Get_Loop_Count() * std::max<uint8_t>(loop_count, 1);
     m_Loops = std::max<uint8_t>(m_Loops, 1); // thats what it is...
     //
     if (m_LoopDelay > 0) {
@@ -70,7 +70,7 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
 
 AnimClass::AnimClass(const AnimClass &that) :
     m_LoopStage(that.m_LoopStage),
-    m_Type(that.m_Type),
+    m_Class(that.m_Class),
     m_AttachedTo(that.m_AttachedTo),
     m_Owner(that.m_Owner),
     m_Loops(that.m_Loops),
@@ -141,7 +141,7 @@ LayerType AnimClass::In_Which_Layer() const
         return LAYER_SURFACE;
     }
 
-    if (m_Type->Is_Surface() || Target_Legal(m_AttachedTo)) {
+    if (m_Class->Is_Surface() || Target_Legal(m_AttachedTo)) {
         return LAYER_GROUND;
     }
 
@@ -264,7 +264,7 @@ void AnimClass::Attach_To(ObjectClass *object)
 
 coord_t AnimClass::Adjust_Coord(coord_t coord)
 {
-    //in TD this function adjusted the coord for Temple silo door
+    // In C&C this function adjusted the coord for Nod Temple silo door.
     return coord;
 }
 

@@ -44,12 +44,12 @@ class InfantryClass : public FootClass
     virtual ~InfantryClass();
 
     // ObjectClass
-    virtual const InfantryTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const InfantryTypeClass &Class_Of() const override { return *m_Class; }
 
-    InfantryType What_Type() const { return m_Type->What_Type(); }
+    InfantryType What_Type() const { return m_Class->What_Type(); }
 
 private:
-    GamePtr<InfantryTypeClass> m_Type;
+    GamePtr<InfantryTypeClass> m_Class;
     DoType m_Doing;
     TCountDownTimerClass<FrameTimerClass> m_StokeTimer;
 #ifndef CHRONOSHIFT_NO_BITFIELDS

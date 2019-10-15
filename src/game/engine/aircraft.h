@@ -33,13 +33,13 @@ public:
     virtual ~AircraftClass();
 
     // ObjectClass
-    virtual const AircraftTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const AircraftTypeClass &Class_Of() const override { return *m_Class; }
 
-    AircraftType What_Type() const { return m_Type->What_Type(); }
+    AircraftType What_Type() const { return m_Class->What_Type(); }
 
 private:
     FlyClass FlyControl;
-    GamePtr<AircraftTypeClass> m_Type;
+    GamePtr<AircraftTypeClass> m_Class;
     FacingClass field_14A;
     void *field_14C;
 #ifndef CHRONOSHIFT_NO_BITFIELDS

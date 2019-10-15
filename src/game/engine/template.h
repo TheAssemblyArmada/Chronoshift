@@ -36,14 +36,14 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
-    virtual const TemplateTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const TemplateTypeClass &Class_Of() const override { return *m_Class; }
     virtual void Draw_It(int x, int y, WindowNumberType window) const override {}
     virtual BOOL Mark(MarkType mark) override;
 
-    TemplateType What_Type() const { return m_Type->Get_Type(); }
+    TemplateType What_Type() const { return m_Class->Get_Type(); }
 
 private:
-    GamePtr<TemplateTypeClass> m_Type;
+    GamePtr<TemplateTypeClass> m_Class;
 };
 
 #ifdef GAME_DLL

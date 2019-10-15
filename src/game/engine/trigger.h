@@ -77,10 +77,12 @@ public:
     BOOL Spring(TEventType tevent, HousesType house, target_t target = 0);
     BOOL Spring(TEventType tevent, cell_t cellnum);
 
-    TEventType EventOne_What_Type() const { return m_Type->Get_Event_One().What_Type(); }
-    TEventType EventTwo_What_Type() const { return m_Type->Get_Event_Two().What_Type(); }
-    TActionType ActionOne_What_Type() const { return m_Type->Get_Action_One().What_Type(); }
-    TActionType ActionTwo_What_Type() const { return m_Type->Get_Action_Two().What_Type(); }
+    TEventType EventOne_What_Type() const { return m_Class->Get_Event_One().What_Type(); }
+    TEventType EventTwo_What_Type() const { return m_Class->Get_Event_Two().What_Type(); }
+    TActionType ActionOne_What_Type() const { return m_Class->Get_Action_One().What_Type(); }
+    TActionType ActionTwo_What_Type() const { return m_Class->Get_Action_Two().What_Type(); }
+
+    const TriggerTypeClass &Class_Of() const { return *m_Class; }
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
@@ -90,7 +92,7 @@ public:
 private:
     RTTIType m_RTTI;
     int m_HeapID;
-    GamePtr<TriggerTypeClass> m_Type;
+    GamePtr<TriggerTypeClass> m_Class;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_IsActive : 1; // 1
 #else
