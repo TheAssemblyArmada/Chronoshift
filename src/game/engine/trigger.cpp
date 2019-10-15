@@ -31,21 +31,21 @@ TFixedIHeapClass<TriggerClass> g_Triggers;
 TriggerClass::TriggerClass(TriggerTypeClass *trigger_type) :
     m_RTTI(RTTI_TRIGGER),
     m_HeapID(g_Triggers.ID(this)),
-    m_Type(trigger_type),
+    m_Class(trigger_type),
     m_IsActive(false),
     m_TDEvent1(),
     m_TDEvent2(),
     m_AttachCount(0),
     m_AttachedCell(0)
 {
-    //m_Type->Get_Event_One().Reset();
-    //m_Type->Get_Event_Two().Reset();
+    //m_Class->Get_Event_One().Reset();
+    //m_Class->Get_Event_Two().Reset();
 }
 
 TriggerClass::TriggerClass(const TriggerClass &that) :
     m_RTTI(that.m_RTTI),
     m_HeapID(that.m_HeapID),
-    m_Type(that.m_Type),
+    m_Class(that.m_Class),
     m_IsActive(that.m_IsActive),
     m_TDEvent1(that.m_TDEvent1),
     m_TDEvent2(that.m_TDEvent2),
@@ -55,7 +55,7 @@ TriggerClass::TriggerClass(const TriggerClass &that) :
 }
 
 TriggerClass::TriggerClass(const NoInitClass &noinit) :
-    m_Type(noinit),
+    m_Class(noinit),
     m_TDEvent1(noinit),
     m_TDEvent2(noinit)
 {
@@ -173,7 +173,7 @@ BOOL TriggerClass::Remove()
         }
     }*/
 
-    HousesType house = m_Type->Get_House();
+    HousesType house = m_Class->Get_House();
     for (int index = 0; index < g_HouseTriggers[house].Count(); ++index) {
         TriggerClass *tptr = g_HouseTriggers[house][index];
         DEBUG_ASSERT(tptr != nullptr);

@@ -32,15 +32,15 @@ public:
     virtual ~BuildingClass();
 
     // ObjectClass
-    virtual const BuildingTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const BuildingTypeClass &Class_Of() const override { return *m_Class; }
 
     // TechnoClass
     virtual void Death_Announcement(TechnoClass *killer) const override;
 
-    BuildingType What_Type() const { return m_Type->What_Type(); }
+    BuildingType What_Type() const { return m_Class->What_Type(); }
 
 private:
-    GamePtr<BuildingTypeClass> m_Type;
+    GamePtr<BuildingTypeClass> m_Class;
     GamePtr<FactoryClass> m_Factory;
     HousesType m_field_D5;
 #ifndef CHRONOSHIFT_NO_BITFIELDS

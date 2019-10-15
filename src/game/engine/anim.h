@@ -47,7 +47,7 @@ public:
 
     // ObjectClass
     virtual LayerType In_Which_Layer() const override;
-    virtual const AnimTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const AnimTypeClass &Class_Of() const override { return *m_Class; }
     virtual void Detach(target_t target, int a2) override;
     virtual BOOL Render(BOOL force_render = false) override;
     virtual const int16_t *Occupy_List(BOOL a1 = false) const override;
@@ -73,7 +73,7 @@ public:
     BOOL Is_Invisible() const { return m_Invisible; }
     unsigned int Get_Loop_Delay() const { return m_LoopDelay; }
 
-    AnimType What_Type() const { return m_Type->What_Type(); }
+    AnimType What_Type() const { return m_Class->What_Type(); }
 
 private:
     void Start();
@@ -81,7 +81,7 @@ private:
 
 protected:
     StageClass m_LoopStage;
-    GamePtr<AnimTypeClass> m_Type;
+    GamePtr<AnimTypeClass> m_Class;
     target_t m_AttachedTo;
     HousesType m_Owner;
     unsigned char m_Loops;

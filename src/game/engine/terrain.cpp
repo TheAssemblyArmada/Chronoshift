@@ -34,11 +34,11 @@ TFixedIHeapClass<TerrainClass> g_Terrains;
 TerrainClass::TerrainClass(TerrainType type, cell_t cellnum) :
     ObjectClass(RTTI_TERRAIN, g_Terrains.ID(this)),
     m_AnimStage(),
-    m_Type(g_TerrainTypes.Ptr(type)),
+    m_Class(g_TerrainTypes.Ptr(type)),
     m_OnFire(false),
     m_Crumbling(false)
 {
-    Set_Health(m_Type->Get_Strength());
+    Set_Health(m_Class->Get_Strength());
     if (cellnum != -1) {
         if (!Unlimbo(Cell_To_Coord(cellnum))) {
             delete this;
@@ -97,7 +97,7 @@ void TerrainClass::operator delete(void *ptr)
 coord_t TerrainClass::Center_Coord() const
 {
     DEBUG_ASSERT(m_IsActive);
-    return Coord_Add(m_Coord, m_Type->Get_UnkCoord());
+    return Coord_Add(m_Coord, m_Class->Get_UnkCoord());
 }
 
 /**
@@ -121,7 +121,7 @@ MoveType TerrainClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
         return MOVE_NO;
     }
     for (const int16_t *list = Occupy_List(); *list != LIST_END; ++list) {
-        if (m_Type->Is_Waterbound()) {
+        if (m_Class->Is_Waterbound()) {
             if (!Map[cellnum + *list].Is_Clear_To_Build(SPEED_FLOAT)) {
                 return MOVE_NO;
             }
@@ -164,7 +164,7 @@ void TerrainClass::AI()
 coord_t TerrainClass::Sort_Y() const
 {
     DEBUG_ASSERT(m_IsActive);
-    return Coord_Add(m_Coord, m_Type->Get_UnkCoord());
+    return Coord_Add(m_Coord, m_Class->Get_UnkCoord());
 }
 
 /**
@@ -263,7 +263,7 @@ DamageResultType TerrainClass::Take_Damage(int &damage, int a2, WarheadType warh
     if (warhead == WARHEAD_SA) {
         return DAMAGE_UNAFFECTED;
     }
-    if (m_Type->Is_Immune()) {
+    if (m_Class->Is_Immune()) {
         return DAMAGE_UNAFFECTED;
     }
     DamageResultType ret = ObjectClass::Take_Damage(damage, a2, warhead, object, a5);
@@ -288,7 +288,7 @@ DamageResultType TerrainClass::Take_Damage(int &damage, int a2, WarheadType warh
  */
 BOOL TerrainClass::Catch_Fire()
 {
-    if (m_OnFire || m_Crumbling || m_Type->Get_Armor() != ARMOR_NONE) {
+    if (m_OnFire || m_Crumbling || m_Class->Get_Armor() != ARMOR_NONE) {
         return false;
     }
     AnimClass *aptr = new AnimClass(ANIM_BURN_BIG, Coord_Add(Sort_Y(), Coord_From_Lepton_XY(0, -80)));
@@ -348,7 +348,7 @@ uint8_t *const TerrainClass::Radar_Icon(short cellnum) const
         uint8_t X;
         uint8_t Y;
     };
-    IconStruct *icon = (IconStruct *)m_Type->Get_Radar_Icon_Data();
+    IconStruct *icon = (IconStruct *)m_Class->Get_Radar_Icon_Data();
     uint8_t *icondata = (uint8_t *)&icon[1];
 
     cell_t cell = Coord_To_Cell(m_Coord);

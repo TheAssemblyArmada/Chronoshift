@@ -50,11 +50,11 @@ public:
     void Decode_Pointers();
 
     void Force_Active() { m_ForcedActive = true; }
-    BOOL Should_Avoid_Threats() const { return m_Type->Avoid_Threats(); }
+    BOOL Should_Avoid_Threats() const { return m_Class->Avoid_Threats(); }
     int Field35() const { return m_field_35; }
 
 private:
-    GamePtr<TeamTypeClass> m_Type;
+    GamePtr<TeamTypeClass> m_Class;
     GamePtr<HouseClass> m_Owner;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS

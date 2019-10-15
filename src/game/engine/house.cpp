@@ -54,7 +54,7 @@ TFixedIHeapClass<HouseClass::BuildChoiceClass> HouseClass::g_BuildChoice;
 HouseClass::HouseClass(HousesType type) :
     m_RTTI(RTTI_HOUSE),
     m_HeapID(g_Houses.ID(this)),
-    m_Type(g_HouseTypes.Ptr(type)),
+    m_Class(g_HouseTypes.Ptr(type)),
     m_AIDifficulty(Scen.Get_AI_Difficulty()),
     m_FirepowerMult("1.0"),
     m_GroundspeedMult("1.0"),
@@ -66,7 +66,7 @@ HouseClass::HouseClass(HousesType type) :
     m_RepairDelay("0.02"),
     m_BuildDelay("0.03"),
     m_Static(),
-    m_ActsLike(m_Type->Get_Type()),
+    m_ActsLike(m_Class->Get_Type()),
     m_IsHuman(false),
     m_PlayerControl(false),
     m_Production(false),
@@ -175,7 +175,7 @@ HouseClass::HouseClass(HousesType type) :
     m_LowPowerSpeechTime(1),
     m_UnkTimer(1),
     m_LowCreditsSpeechTime(1),
-    m_Color(m_Type->Get_Color())
+    m_Color(m_Class->Get_Color())
 {
     memset(m_Zones, 0, sizeof(m_Zones));
     memset(m_UnitsDestroyed, 0, sizeof(m_UnitsDestroyed));
@@ -234,7 +234,7 @@ HouseClass::HouseClass(HousesType type) :
 HouseClass::HouseClass(const HouseClass &that) :
     m_RTTI(that.m_RTTI),
     m_HeapID(that.m_HeapID),
-    m_Type(that.m_Type),
+    m_Class(that.m_Class),
     m_AIDifficulty(that.m_AIDifficulty),
     m_FirepowerMult(that.m_FirepowerMult),
     m_GroundspeedMult(that.m_GroundspeedMult),
@@ -827,10 +827,10 @@ void HouseClass::Make_Enemy(HousesType house)
     HouseClass *hptr = As_Pointer(house);
 
     if (hptr != nullptr && hptr->Is_Ally(this)) {
-        hptr->m_Allies &= ~(1 << m_Type->What_Type());
+        hptr->m_Allies &= ~(1 << m_Class->What_Type());
 
         if (ScenarioInit) {
-            hptr->m_Static.Remove_Ally(m_Type->What_Type());
+            hptr->m_Static.Remove_Ally(m_Class->What_Type());
         }
     }
 
@@ -869,7 +869,7 @@ BOOL HouseClass::Is_Ally(HouseClass *house) const
         return false;
     }
 
-    return Is_Ally(house->m_Type->Get_Type());
+    return Is_Ally(house->m_Class->Get_Type());
 }
 
 /**

@@ -50,7 +50,7 @@ public:
     virtual void AI() override;
 
     // ObjectClass
-    virtual const TerrainTypeClass &Class_Of() const override { return *m_Type; }
+    virtual const TerrainTypeClass &Class_Of() const override { return *m_Class; }
     virtual coord_t Render_Coord() const override { return m_Coord; }
     virtual coord_t Sort_Y() const override;
     virtual BOOL Limbo() override;
@@ -63,16 +63,16 @@ public:
     virtual BOOL Catch_Fire() override;
     virtual void Fire_Out() override;
 
-    TerrainType What_Type() const { return m_Type->Get_Type(); }
+    TerrainType What_Type() const { return m_Class->Get_Type(); }
     uint8_t *const Radar_Icon(short cellnum) const;
 
 private:
-    bool Theater_Allowed() const { return ((1 << Scen.Get_Theater()) & m_Type->Get_Theater()); }
+    bool Theater_Allowed() const { return ((1 << Scen.Get_Theater()) & m_Class->Get_Theater()); }
     void Start_To_Crumble();
 
 private:
     StageClass m_AnimStage;
-    GamePtr<TerrainTypeClass> m_Type;
+    GamePtr<TerrainTypeClass> m_Class;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_OnFire : 1; // & 1
     BOOL m_Crumbling : 1; // & 2

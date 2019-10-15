@@ -211,8 +211,10 @@ public:
     void Code_Pointers() {} // House does not actually save anything to the savegame file.
     void Decode_Pointers();
 
-    const char *Get_Name() const { return m_Type->Get_Name(); }
-    HousesType What_Type() const { return m_Type->What_Type(); }
+    RTTIType What_Am_I() const { return m_RTTI; }
+    int Get_Heap_ID() const { return m_HeapID; }
+    HousesType What_Type() const { return m_Class->What_Type(); }
+    const char *Get_Name() const { return m_Class->Get_Name(); }
 
     const BuildingTypeClass *Suggest_Building() const { return &BuildingTypeClass::As_Reference(m_ChosenBuilding); }
     int Get_Quantity(AircraftType type) const { return m_AircraftQuantity[type]; }
@@ -220,7 +222,6 @@ public:
     int Get_Quantity(UnitType type) const { return m_UnitQuantity[type]; }
     int Get_Quantity(InfantryType type) const { return m_InfantryQuantity[type]; }
     int Get_Quantity(VesselType type) const { return m_VesselQuantity[type]; }
-    int Get_Heap_ID() const { return m_HeapID; }
     BOOL Is_Player() const { return this == g_PlayerPtr; }
     DiffType Get_AI_Difficulty() const { return m_AIDifficulty; }
     fixed_t Cost_Multiplier() const { return m_CostMult; }
@@ -287,7 +288,7 @@ private:
 private:
     RTTIType m_RTTI;
     int m_HeapID;
-    GamePtr<HouseTypeClass> m_Type;
+    GamePtr<HouseTypeClass> m_Class;
     DiffType m_AIDifficulty;
     fixed_t m_FirepowerMult;
     fixed_t m_GroundspeedMult;
