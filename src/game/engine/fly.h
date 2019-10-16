@@ -21,6 +21,8 @@
 #include "facing.h"
 #include "gametypes.h"
 
+class NoInitClass;
+
 enum ImpactType
 {
     IMPACT_NONE = -1,
@@ -36,10 +38,13 @@ class FlyClass
 {
 public:
     FlyClass() : field_0(0), Speed(0) {}
+    FlyClass(const NoInitClass &noinit) {}
 
-    inline uint8_t Get_Speed() { return Speed; }
     ImpactType Physics(unsigned int &somevalue, DirType dir);
     void Fly_Speed(int speed, MPHType mph);
+
+    uint8_t Get_Speed() { return Speed; }
+
     void Code_Pointers(){}
     void Decode_Pointers(){}
 
