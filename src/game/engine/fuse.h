@@ -22,6 +22,7 @@
 #include "gametypes.h"
 
 // forward decs
+class NoInitClass;
 class FileClass;
 
 enum FuseResultType
@@ -35,6 +36,7 @@ class FuseClass
 {
 public:
     FuseClass() : Duration(0), ArmTimer(0), Position(0), ArmDistance(0) {}
+    FuseClass(const NoInitClass &noinit) {}
 
     void Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_time);
     int Fuse_Checkup(coord_t a1);
