@@ -205,7 +205,7 @@ ActionType VesselClass::What_Action(cell_t cellnum) const
     if (action != ACTION_NO_MOVE || Map[cellnum].Get_Land() != LAND_BEACH) {
         if (action == ACTION_NO_MOVE) {
             if (Is_Weapon_Equipped()) {
-                if (Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY)->Get_Projectile()->Get_UnderWater()
+                if (Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY)->Get_Projectile()->Is_UnderWater()
                     && Map[cellnum].Is_Bridge_Here()) {
                     return ACTION_ATTACK;
                 }

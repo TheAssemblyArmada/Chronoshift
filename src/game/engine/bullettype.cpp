@@ -33,28 +33,28 @@ TFixedIHeapClass<BulletTypeClass> g_BulletTypes;
  */
 BulletTypeClass::BulletTypeClass(BulletType bullet, const char *name) :
     ObjectTypeClass(RTTI_BULLETTYPE, bullet, true, true, false, false, true, true, false, TXT_NULL, name),
-    High(false),
-    Shadow(true),
-    Arcing(false),
-    Dropping(false),
-    Inviso(false),
-    Proximity(false),
-    Animates(false),
-    Ranged(false),
-    NoRotate(true),
-    Inaccurate(false),
-    Translucent(false),
-    AntiAir(false),
-    AntiGround(true),
-    AntiSubWarfare(false),
-    Degenerates(false),
-    UnderWater(false),
-    Parachuted(false),
-    Gigundo(false),
-    Type(bullet), // This was originally HeapID and the ctor only took name.
-    ROT(0),
-    Arm(0),
-    Frames(0)
+    m_High(false),
+    m_Shadow(true),
+    m_Arcing(false),
+    m_Dropping(false),
+    m_Inviso(false),
+    m_Proximity(false),
+    m_Animates(false),
+    m_Ranged(false),
+    m_NoRotate(true),
+    m_Inaccurate(false),
+    m_Translucent(false),
+    m_AntiAir(false),
+    m_AntiGround(true),
+    m_AntiSubWarfare(false),
+    m_Degenerates(false),
+    m_UnderWater(false),
+    m_Parachuted(false),
+    m_Gigundo(false),
+    m_Type(bullet), // This was originally HeapID and the ctor only took name.
+    m_ROT(0),
+    m_Arm(0),
+    m_Frames(0)
 {
     // Bit64 = true;    //TS shows what classes set this to true, needs debuging once logics are up and running.
     // Bit128 = false;
@@ -62,28 +62,28 @@ BulletTypeClass::BulletTypeClass(BulletType bullet, const char *name) :
 
 BulletTypeClass::BulletTypeClass(BulletTypeClass const &that) :
     ObjectTypeClass(that),
-    High(that.High),
-    Shadow(that.Shadow),
-    Arcing(that.Arcing),
-    Dropping(that.Dropping),
-    Inviso(that.Inviso),
-    Proximity(that.Proximity),
-    Animates(that.Animates),
-    Ranged(that.Ranged),
-    NoRotate(that.NoRotate),
-    Inaccurate(that.Inaccurate),
-    Translucent(that.Translucent),
-    AntiAir(that.AntiAir),
-    AntiGround(that.AntiGround),
-    AntiSubWarfare(that.AntiSubWarfare),
-    Degenerates(that.Degenerates),
-    UnderWater(that.UnderWater),
-    Parachuted(that.Parachuted),
-    Gigundo(that.Gigundo),
-    Type(that.Type),
-    ROT(that.ROT),
-    Arm(that.Arm),
-    Frames(that.Frames)
+    m_High(that.m_High),
+    m_Shadow(that.m_Shadow),
+    m_Arcing(that.m_Arcing),
+    m_Dropping(that.m_Dropping),
+    m_Inviso(that.m_Inviso),
+    m_Proximity(that.m_Proximity),
+    m_Animates(that.m_Animates),
+    m_Ranged(that.m_Ranged),
+    m_NoRotate(that.m_NoRotate),
+    m_Inaccurate(that.m_Inaccurate),
+    m_Translucent(that.m_Translucent),
+    m_AntiAir(that.m_AntiAir),
+    m_AntiGround(that.m_AntiGround),
+    m_AntiSubWarfare(that.m_AntiSubWarfare),
+    m_Degenerates(that.m_Degenerates),
+    m_UnderWater(that.m_UnderWater),
+    m_Parachuted(that.m_Parachuted),
+    m_Gigundo(that.m_Gigundo),
+    m_Type(that.m_Type),
+    m_ROT(that.m_ROT),
+    m_Arm(that.m_Arm),
+    m_Frames(that.m_Frames)
 {
 }
 
@@ -130,7 +130,7 @@ void BulletTypeClass::One_Time()
     for (BulletType bullet = BULLET_FIRST; bullet < BULLET_COUNT; ++bullet) {
         BulletTypeClass *bptr = As_Pointer(bullet);
 
-        if (!bptr->Inviso) {
+        if (!bptr->m_Inviso) {
             const char *name = bptr->ImageName[0] != '\0' ? bptr->ImageName : bptr->m_Name;
             snprintf(filename, sizeof(filename), "%s.shp", name);
             bptr->ImageData = GameFileClass::Retrieve(filename);
@@ -212,27 +212,27 @@ BulletTypeClass *BulletTypeClass::As_Pointer(BulletType type)
 BOOL BulletTypeClass::Read_INI(GameINIClass &ini)
 {
     if (ObjectTypeClass::Read_INI(ini)) {
-        Arm = ini.Get_Int(Get_Name(), "Arm", Arm);
-        ROT = ini.Get_Int(Get_Name(), "ROT", ROT);
-        Frames = ini.Get_Int(Get_Name(), "Frames", Frames);
-        High = ini.Get_Bool(Get_Name(), "High", High);
-        Shadow = ini.Get_Bool(Get_Name(), "Shadow", Shadow);
-        Arcing = ini.Get_Bool(Get_Name(), "Arcing", Arcing);
-        Dropping = ini.Get_Bool(Get_Name(), "Dropping", Dropping);
-        Inviso = ini.Get_Bool(Get_Name(), "Inviso", Inviso);
-        Proximity = ini.Get_Bool(Get_Name(), "Proximity", Proximity);
-        Animates = ini.Get_Bool(Get_Name(), "Animates", Animates);
-        Ranged = ini.Get_Bool(Get_Name(), "Ranged", Ranged);
-        Inaccurate = ini.Get_Bool(Get_Name(), "Inaccuate", Inaccurate);
-        AntiAir = ini.Get_Bool(Get_Name(), "AA", AntiAir);
-        AntiGround = ini.Get_Bool(Get_Name(), "AG", AntiGround);
-        AntiSubWarfare = ini.Get_Bool(Get_Name(), "ASW", AntiSubWarfare);
-        Degenerates = ini.Get_Bool(Get_Name(), "Degenerates", Degenerates);
-        UnderWater = ini.Get_Bool(Get_Name(), "UnderWater", UnderWater);
-        Parachuted = ini.Get_Bool(Get_Name(), "Parachuted", Parachuted);
-        NoRotate = !ini.Get_Bool(Get_Name(), "Rotates", !NoRotate);
-        Translucent = ini.Get_Bool(Get_Name(), "Translucent", Translucent);
-        Gigundo = ini.Get_Bool(Get_Name(), "Gigundo", Gigundo);
+        m_Arm = ini.Get_Int(Get_Name(), "Arm", m_Arm);
+        m_ROT = ini.Get_Int(Get_Name(), "ROT", m_ROT);
+        m_Frames = ini.Get_Int(Get_Name(), "Frames", m_Frames);
+        m_High = ini.Get_Bool(Get_Name(), "High", m_High);
+        m_Shadow = ini.Get_Bool(Get_Name(), "Shadow", m_Shadow);
+        m_Arcing = ini.Get_Bool(Get_Name(), "Arcing", m_Arcing);
+        m_Dropping = ini.Get_Bool(Get_Name(), "Dropping", m_Dropping);
+        m_Inviso = ini.Get_Bool(Get_Name(), "Inviso", m_Inviso);
+        m_Proximity = ini.Get_Bool(Get_Name(), "Proximity", m_Proximity);
+        m_Animates = ini.Get_Bool(Get_Name(), "Animates", m_Animates);
+        m_Ranged = ini.Get_Bool(Get_Name(), "Ranged", m_Ranged);
+        m_Inaccurate = ini.Get_Bool(Get_Name(), "Inaccuate", m_Inaccurate);
+        m_AntiAir = ini.Get_Bool(Get_Name(), "AA", m_AntiAir);
+        m_AntiGround = ini.Get_Bool(Get_Name(), "AG", m_AntiGround);
+        m_AntiSubWarfare = ini.Get_Bool(Get_Name(), "ASW", m_AntiSubWarfare);
+        m_Degenerates = ini.Get_Bool(Get_Name(), "Degenerates", m_Degenerates);
+        m_UnderWater = ini.Get_Bool(Get_Name(), "UnderWater", m_UnderWater);
+        m_Parachuted = ini.Get_Bool(Get_Name(), "Parachuted", m_Parachuted);
+        m_NoRotate = !ini.Get_Bool(Get_Name(), "Rotates", !m_NoRotate);
+        m_Translucent = ini.Get_Bool(Get_Name(), "Translucent", m_Translucent);
+        m_Gigundo = ini.Get_Bool(Get_Name(), "Gigundo", m_Gigundo);
 
         return true;
     }
