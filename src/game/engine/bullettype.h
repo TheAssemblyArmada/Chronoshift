@@ -71,16 +71,32 @@ public:
     virtual ObjectClass *Create_One_Of(HouseClass *house) const override { return nullptr; }
     virtual BOOL Read_INI(GameINIClass &ini);
 
-    int Get_Type() const { return Type; }
-    BOOL Is_Anti_Air() const { return AntiAir; }
-    BOOL Is_Anti_Ground() const { return AntiGround; }
-    BOOL Is_Inaccurate() const { return Inaccurate; }
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    BOOL Get_UnderWater() const { return UnderWater; }
+    BOOL Get_High() const { return m_High; }
+    BOOL Get_Shadow() const { return m_Shadow; }
+    BOOL Get_Arcing() const { return m_Arcing; }
+    BOOL Is_Dropping() const { return m_Dropping; }
+    BOOL Is_Inviso() const { return m_Inviso; }
+    BOOL Get_Proximity() const { return m_Proximity; }
+    BOOL Get_Animates() const { return m_Animates; }
+    BOOL Is_Ranged() const { return m_Ranged; }
+    BOOL Rotates() const { return !m_NoRotate; }
+    BOOL Is_Inaccurate() const { return m_Inaccurate; }
+    BOOL Is_Translucent() const { return m_Translucent; }
+    BOOL Is_Anti_Air() const { return m_AntiAir; }
+    BOOL Is_Anti_Ground() const { return m_AntiGround; }
+    BOOL Is_Anti_Sub_Warfare() const { return m_AntiSubWarfare; }
+    BOOL Get_Degenerates() const { return m_Degenerates; }
+    BOOL Is_UnderWater() const { return m_UnderWater; }
+    BOOL Get_Parachuted() const { return m_Parachuted; }
+    BOOL Get_Gigundo() const { return m_Gigundo; }
+    uint8_t Get_ROT() const { return m_ROT; }
+    int Get_Arm() const { return m_Arm; }
+    int Get_Frames() const { return m_Frames; }
 
-    BulletType What_Type() const { return Type; }
+    BulletType What_Type() const { return m_Type; }
 
     static void Init_Heap();
     static void One_Time();
@@ -91,48 +107,48 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL High : 1; // Can it fly over walls?
-    BOOL Shadow : 1; // If High, does this bullet need to have a shadow drawn?
-    BOOL Arcing : 1; // Does it have a ballistic trajectory?
-    BOOL Dropping : 1; // Does it fall from a starting height?
-    BOOL Inviso : 1; // Is the projectile invisible as it travels?
-    BOOL Proximity : 1; // Does it blow up when near its target?
-    BOOL Animates : 1; // Does it animate [this means smoke puffs]?
-    BOOL Ranged : 1; // Can it run out of fuel?
-    BOOL NoRotate : 1; // Does the projectile have rotation specific imagery?
-    BOOL Inaccurate : 1; // Is it inherently inaccurate?
-    BOOL Translucent : 1; // Are translucent colors used in artwork?
-    BOOL AntiAir : 1; // Can this weapon fire upon flying aircraft?
-    BOOL AntiGround : 1; // Can this weapon fire upon ground objects?
-    BOOL AntiSubWarfare : 1; // Is this an Anti-Submarine-Warfare projectile?
-    BOOL Degenerates : 1; // Does the bullet strength weaken as it travels?
-    BOOL UnderWater : 1; // Does the projectile travel under water?
-    BOOL Parachuted : 1; // Equipped with a parachute for dropping from plane (def = false)?
-    BOOL Gigundo : 1; // Is the projectile larger than normal?
+    BOOL m_High : 1;
+    BOOL m_Shadow : 1;
+    BOOL m_Arcing : 1;
+    BOOL m_Dropping : 1;
+    BOOL m_Inviso : 1;
+    BOOL m_Proximity : 1;
+    BOOL m_Animates : 1;
+    BOOL m_Ranged : 1;
+    BOOL m_NoRotate : 1;
+    BOOL m_Inaccurate : 1;
+    BOOL m_Translucent : 1;
+    BOOL m_AntiAir : 1;
+    BOOL m_AntiGround : 1;
+    BOOL m_AntiSubWarfare : 1;
+    BOOL m_Degenerates : 1;
+    BOOL m_UnderWater : 1;
+    BOOL m_Parachuted : 1;
+    BOOL m_Gigundo : 1;
 #else
-    bool High; // Can it fly over walls?
-    bool Shadow; // If High, does this bullet need to have a shadow drawn?
-    bool Arcing; // Does it have a ballistic trajectory?
-    bool Dropping; // Does it fall from a starting height?
-    bool Inviso; // Is the projectile invisible as it travels?
-    bool Proximity; // Does it blow up when near its target?
-    bool Animates; // Does it animate [this means smoke puffs]?
-    bool Ranged; // Can it run out of fuel?
-    bool NoRotate; // Does the projectile have rotation specific imagery?
-    bool Inaccurate; // Is it inherently inaccurate?
-    bool Translucent; // Are translucent colors used in artwork?
-    bool AntiAir; // Can this weapon fire upon flying aircraft?
-    bool AntiGround; // Can this weapon fire upon ground objects?
-    bool AntiSubWarfare; // Is this an Anti-Submarine-Warfare projectile?
-    bool Degenerates; // Does the bullet strength weaken as it travels?
-    bool UnderWater; // Does the projectile travel under water?
-    bool Parachuted; // Equipped with a parachute for dropping from plane (def = false)?
-    bool Gigundo; // Is the projectile larger than normal?
+    bool m_High; // Can it fly over walls?
+    bool m_Shadow; // If High, does this bullet need to have a shadow drawn?
+    bool m_Arcing; // Does it have a ballistic trajectory?
+    bool m_Dropping; // Does it fall from a starting height?
+    bool m_Inviso; // Is the projectile invisible as it travels?
+    bool m_Proximity; // Does it blow up when near its target?
+    bool m_Animates; // Does it animate [this means smoke puffs]?
+    bool m_Ranged; // Can it run out of fuel?
+    bool m_NoRotate; // Does the projectile have rotation specific imagery?
+    bool m_Inaccurate; // Is it inherently inaccurate?
+    bool m_Translucent; // Are translucent colors used in artwork?
+    bool m_AntiAir; // Can this weapon fire upon flying aircraft?
+    bool m_AntiGround; // Can this weapon fire upon ground objects?
+    bool m_AntiSubWarfare; // Is this an Anti-Submarine-Warfare projectile?
+    bool m_Degenerates; // Does the bullet strength weaken as it travels?
+    bool m_UnderWater; // Does the projectile travel under water?
+    bool m_Parachuted; // Equipped with a parachute for dropping from plane (def = false)?
+    bool m_Gigundo; // Is the projectile larger than normal?
 #endif
-    BulletType Type;
-    uint8_t ROT; // Rate Of Turn [non zero implies homing].
-    int Arm; // Arming delay.
-    int Frames; // Number of image frames for animation purposes.
+    BulletType m_Type;
+    uint8_t m_ROT; // Rate Of Turn [non zero implies homing].
+    int m_Arm; // Arming delay.
+    int m_Frames; // Number of image frames for animation purposes.
 };
 
 #ifdef GAME_DLL
