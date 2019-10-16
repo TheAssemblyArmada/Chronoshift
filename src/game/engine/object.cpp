@@ -88,6 +88,13 @@ ObjectClass::~ObjectClass()
     m_Next = nullptr;
 }
 
+#ifdef CHRONOSHIFT_DEBUG
+void ObjectClass::Debug_Dump(MonoClass *mono) const
+{
+    AbstractClass::Debug_Dump(mono);
+}
+#endif
+
 const char *ObjectClass::Name() const
 {
     return Class_Of().Get_Name();

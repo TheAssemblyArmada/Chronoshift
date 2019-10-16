@@ -114,7 +114,19 @@ FootClass::FootClass(const FootClass &that) :
     memcpy(m_Paths, that.m_Paths, sizeof(m_Paths));
 }
 
-FootClass::FootClass(const NoInitClass &noinit) : TechnoClass(noinit), m_PathDelay(noinit), m_BaseDefenseDelay(noinit) {}
+FootClass::FootClass(const NoInitClass &noinit) :
+    TechnoClass(noinit),
+    m_PathDelay(noinit),
+    m_BaseDefenseDelay(noinit)
+{
+}
+
+#ifdef CHRONOSHIFT_DEBUG
+void FootClass::Debug_Dump(MonoClass *mono) const
+{
+    TechnoClass::Debug_Dump(mono);
+}
+#endif
 
 FootClass::~FootClass()
 {

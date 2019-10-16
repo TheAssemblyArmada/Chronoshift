@@ -54,6 +54,13 @@ DriveClass::DriveClass(const NoInitClass &noinit) :
 {
 }
 
+#ifdef CHRONOSHIFT_DEBUG
+void DriveClass::Debug_Dump(MonoClass *mono) const
+{
+    FootClass::Debug_Dump(mono);
+}
+#endif
+
 void DriveClass::AI()
 {
 #ifdef GAME_DLL

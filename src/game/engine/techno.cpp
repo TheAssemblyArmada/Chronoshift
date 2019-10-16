@@ -123,6 +123,13 @@ TechnoClass::TechnoClass(const NoInitClass &noinit) :
 {
 }
 
+#ifdef CHRONOSHIFT_DEBUG
+void TechnoClass::Debug_Dump(MonoClass *mono) const
+{
+    RadioClass::Debug_Dump(mono);
+}
+#endif
+
 HousesType TechnoClass::Owner() const
 {
     return HousesType();
