@@ -151,6 +151,7 @@ public:
     int Anti_Armor();
     int Anti_Infantry();
     HouseClass *Get_Owner_House() const { return m_OwnerHouse; }
+    FacingClass &Get_Facing() { return m_Facing; }
     int Get_Price() const { return m_Price; }
     void Set_Price(int price) { m_Price = price; }
 
