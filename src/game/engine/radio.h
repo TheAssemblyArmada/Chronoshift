@@ -32,6 +32,14 @@ public:
     RadioClass(const NoInitClass &noinit) : MissionClass(noinit) {}
     virtual ~RadioClass();
 
+#ifdef CHRONOSHIFT_DEBUG
+#ifdef CHRONOSHIFT_STANDALONE
+    virtual void Debug_Dump(MonoClass *mono) const override;
+#else
+    void Debug_Dump(MonoClass *mono) const;
+#endif
+#endif
+
     virtual BOOL Limbo() override;
     virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target) override;
     virtual void Code_Pointers() override;

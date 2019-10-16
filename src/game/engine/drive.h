@@ -29,6 +29,14 @@ public:
     DriveClass(const NoInitClass &noinit);
     virtual ~DriveClass() {}
 
+#ifdef CHRONOSHIFT_DEBUG
+#ifdef CHRONOSHIFT_STANDALONE
+    virtual void Debug_Dump(MonoClass *mono) const override;
+#else
+    void Debug_Dump(MonoClass *mono) const;
+#endif
+#endif
+
     // AbstractClass
     virtual void AI() override;
 

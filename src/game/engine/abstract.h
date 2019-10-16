@@ -26,6 +26,7 @@
 #include "rtti.h"
 
 class NoInitClass;
+class MonoClass;
 
 class AbstractClass
 {
@@ -35,6 +36,14 @@ public:
     AbstractClass(const AbstractClass &that);
     AbstractClass(const NoInitClass &noinit) {}
     virtual ~AbstractClass() {}
+
+#ifdef CHRONOSHIFT_DEBUG
+#ifdef CHRONOSHIFT_STANDALONE
+    virtual void Debug_Dump(MonoClass *mono) const; // Print and dump debug info the the mono debug handler.
+#else
+    void Debug_Dump(MonoClass *mono) const; // TODO: Remove this prototype when standalone, but retain aboves position in table.
+#endif
+#endif
 
     virtual const char *Name() const { return ""; }
     virtual HousesType Owner() const { return HOUSES_NONE; }

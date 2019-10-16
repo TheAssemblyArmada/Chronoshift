@@ -83,6 +83,13 @@ RadioClass::~RadioClass()
     Radio = nullptr;
 }
 
+#ifdef CHRONOSHIFT_DEBUG
+void RadioClass::Debug_Dump(MonoClass *mono) const
+{
+    MissionClass::Debug_Dump(mono);
+}
+#endif
+
 BOOL RadioClass::Limbo()
 {
     if (!In_Limbo()) {

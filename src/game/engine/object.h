@@ -45,6 +45,14 @@ public:
     ObjectClass(const NoInitClass &noinit) : AbstractClass(noinit) {}
     virtual ~ObjectClass();
 
+#ifdef CHRONOSHIFT_DEBUG
+#ifdef CHRONOSHIFT_STANDALONE
+    virtual void Debug_Dump(MonoClass *mono) const override;
+#else
+    void Debug_Dump(MonoClass *mono) const;
+#endif
+#endif
+
     virtual const char *Name() const override;
     virtual coord_t Center_Coord() const override { return Get_Coord(); }
     virtual coord_t Target_Coord() const override;

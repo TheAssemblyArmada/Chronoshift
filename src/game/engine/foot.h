@@ -50,6 +50,14 @@ public:
     FootClass(const NoInitClass &noinit);
     virtual ~FootClass();
 
+#ifdef CHRONOSHIFT_DEBUG
+#ifdef CHRONOSHIFT_STANDALONE
+    virtual void Debug_Dump(MonoClass *mono) const override;
+#else
+    void Debug_Dump(MonoClass *mono) const;
+#endif
+#endif
+
     // AbstractClass
     virtual MoveType Can_Enter_Cell(cell_t cellnum, FacingType facing = FACING_NONE) const override;
     virtual void AI() override;

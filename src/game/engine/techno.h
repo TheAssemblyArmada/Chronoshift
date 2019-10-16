@@ -60,6 +60,14 @@ public:
     TechnoClass(const NoInitClass &init);
     virtual ~TechnoClass() {}
 
+#ifdef CHRONOSHIFT_DEBUG
+#ifdef CHRONOSHIFT_STANDALONE
+    virtual void Debug_Dump(MonoClass *mono) const override;
+#else
+    void Debug_Dump(MonoClass *mono) const;
+#endif
+#endif
+
     // AbstractClass
     virtual HousesType Owner() const override;
     virtual void AI() override;

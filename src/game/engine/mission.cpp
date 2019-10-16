@@ -55,6 +55,13 @@ MissionClass::MissionClass(RTTIType type, int id) :
 {
 }
 
+#ifdef CHRONOSHIFT_DEBUG
+void MissionClass::Debug_Dump(MonoClass *mono) const
+{
+    ObjectClass::Debug_Dump(mono);
+}
+#endif
+
 /**
  * @brief Gets the current mission this object has.
  *

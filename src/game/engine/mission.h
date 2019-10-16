@@ -31,6 +31,14 @@ public:
     MissionClass(const NoInitClass &noinit) : ObjectClass(noinit), MissionTimer(noinit) {}
     virtual ~MissionClass() {}
 
+#ifdef CHRONOSHIFT_DEBUG
+#ifdef CHRONOSHIFT_STANDALONE
+    virtual void Debug_Dump(MonoClass *mono) const override;
+#else
+    void Debug_Dump(MonoClass *mono) const;
+#endif
+#endif
+
     // ObjectClass virtual functions
     virtual void AI() override;
     virtual MissionType Get_Mission() const override;
