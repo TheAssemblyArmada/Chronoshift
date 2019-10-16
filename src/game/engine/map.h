@@ -70,8 +70,8 @@ public:
     int32_t Cell_Region(cell_t cellnum);
     int Cell_Threat(cell_t cellnum, HousesType house);
     int Zone_Reset(int zones);
-    int Zone_Span(cell_t cell, int zone, MZoneType mzone);
-    cell_t Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZoneType mzone) const;
+    int Zone_Span(cell_t cell, int zone = 0, MZoneType mzone = MZONE_NORMAL);
+    cell_t Nearby_Location(cell_t cellnum, SpeedType speed, int zone = 0, MZoneType mzone = MZONE_NORMAL) const;
     BOOL Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) const;
     int Destroy_Bridge_At(cell_t cellnum);
     void Detach(int32_t target, int a2);
