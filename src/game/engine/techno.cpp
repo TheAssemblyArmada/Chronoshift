@@ -713,7 +713,7 @@ BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
 
 VisualType TechnoClass::Visual_Character(BOOL flag) const
 {
-    DEBUG_ASSERT(Is_Active());
+    DEBUG_ASSERT(m_IsActive);
 
     if (Techno_Class_Of().Is_Invisible() && m_PlayerOwned) {
         return VISUAL_NORMAL;

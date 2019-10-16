@@ -618,7 +618,7 @@ void VesselClass::Write_INI(GameINIClass &ini)
     for (int index = 0; index < g_Vessels.Count(); ++index) {
         VesselClass *thisptr = g_Vessels.Ptr(index);
         if (thisptr != nullptr) {
-            if (thisptr->Is_Active() && thisptr->In_Limbo()) {
+            if (thisptr->m_IsActive && thisptr->In_Limbo()) {
                 snprintf(entrybuff, sizeof(entrybuff), "%d", index);
                 // Format.
                 // [HousesType],[VesselType],[Health],[CellNum],[DirType],[MissionType],[Trigger]

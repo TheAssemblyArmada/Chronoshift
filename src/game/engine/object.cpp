@@ -113,7 +113,7 @@ void ObjectClass::AI()
     void (*func)(ObjectClass *) = reinterpret_cast<void (*)(ObjectClass *)>(0x0051D7F0);
     func(this);
 #else
-    DEBUG_ASSERT(Is_Active());
+    DEBUG_ASSERT(m_IsActive);
 
     AbstractClass::AI();
 
@@ -197,7 +197,7 @@ BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
         Set_Coord(Class_Of().Coord_Fixup(coord));
 
         if (Mark(MARK_PUT)) {
-            if (Is_Active()) {
+            if (m_IsActive) {
                 if (In_Which_Layer() != LAYER_NONE) {
                     Map.Submit(this, In_Which_Layer());
                 }
@@ -221,7 +221,7 @@ void ObjectClass::Detach(target_t target, int a2)
     void(*func)(ObjectClass *, target_t, int) = reinterpret_cast<void(*)(ObjectClass *, target_t, int)>(0x0051DF74);
     func(this, target, a2);
 #else
-    DEBUG_ASSERT(Is_Active());
+    DEBUG_ASSERT(m_IsActive);
 
     //TODO: Requires TriggerClass.
     /*if (AttachedTrigger != nullptr && Target_Get_RTTI(target) == RTTI_TRIGGER) {
@@ -253,7 +253,7 @@ BOOL ObjectClass::Paradrop(coord_t coord)
     return func(this, coord);
 #elif 0
     // Needs AnimClass and Coord_Move
-    DEBUG_ASSERT(Is_Active());
+    DEBUG_ASSERT(m_IsActive);
 
     m_FallingHeight = 256;
     m_IsFalling = true;
@@ -522,7 +522,7 @@ BOOL ObjectClass::Mark(MarkType mark)
     return func(this, mark);
 #elif 0
     // Needs IOMap, DisplayClass
-    if (!Is_Active() || m_InLimbo) {
+    if (!m_IsActive || m_InLimbo) {
         return false;
     }
 
@@ -613,7 +613,7 @@ BOOL ObjectClass::Select()
     return func(this);
 #elif 0
     // TODO Needs TechnoClass, HouseClass, DisplayClass
-    DEBUG_ASSERT(Is_Active());
+    DEBUG_ASSERT(m_IsActive);
 
     if ((g_InMapEditor || !m_Selected) && Class_Of().Is_Selectable()) {
         if (!g_InMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->m_IsALoner) {

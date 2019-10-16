@@ -254,7 +254,7 @@ void FootClass::Sell_Back(int a1)
  */
 void FootClass::Code_Pointers() 
 {
-    if ( m_field_114 != nullptr && m_field_114->Is_Active() ) {
+    if (m_field_114 != nullptr && m_field_114->m_IsActive) {
         m_field_114 = reinterpret_cast<FootClass *>(m_field_114->As_Target());
     } else {
         m_field_114 = nullptr;

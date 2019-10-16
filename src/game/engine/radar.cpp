@@ -835,7 +835,7 @@ BOOL RadarClass::Spy_Next_House()
 
         // Check if house is active and if the PlayerHouse is in the list of
         // houses that have spied upon this house.
-        if (hptr != nullptr && hptr->Is_Active() && hptr != PlayerPtr && hptr->field_2FD[PlayerPtr->What_Type()] == true) {
+        if (hptr != nullptr && hptr->m_IsActive && hptr != PlayerPtr && hptr->field_2FD[PlayerPtr->What_Type()] == true) {
             have_spied = true;
             SpiedHouse = house;
             break;
