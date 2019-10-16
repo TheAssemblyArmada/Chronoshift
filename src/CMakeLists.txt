@@ -233,6 +233,7 @@ set(GAMEENGINE_SRC
     game/ui/colrlist.cpp
     game/ui/controlc.cpp
     game/ui/dialog.cpp
+    game/ui/dial8.cpp
     game/ui/droplist.cpp
     game/ui/edit.cpp
     game/ui/gadget.cpp
@@ -245,6 +246,7 @@ set(GAMEENGINE_SRC
     game/ui/staticbtn.cpp
     game/ui/textbtn.cpp
     game/ui/txtlabel.cpp
+    game/ui/trigauge.cpp
     game/ui/toggle.cpp
     game/ui/msgbox.cpp
 )
