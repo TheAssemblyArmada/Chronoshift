@@ -210,7 +210,7 @@ ObjectClass *As_Object(target_t target)
 
     // DEBUG_ASSERT(objptr != nullptr);
 
-    if (objptr != nullptr && objptr->Is_Active()) {
+    if (objptr != nullptr && objptr->m_IsActive) {
         return objptr;
     }
 
