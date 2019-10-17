@@ -27,7 +27,7 @@ public:
     Base64Straw(StrawControl mode = STRAW_DECODE) : m_mode(mode), m_counter(0) {}
     virtual ~Base64Straw() {}
 
-    virtual int Get(void *source, int slen) override;
+    virtual int Get(void *dest, int slen) override;
 
 private:
     StrawControl m_mode;

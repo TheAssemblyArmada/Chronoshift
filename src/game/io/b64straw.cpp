@@ -21,7 +21,7 @@
 using std::memcpy;
 using std::memmove;
 
-int Base64Straw::Get(void *source, int slen)
+int Base64Straw::Get(void *dest, int slen)
 {
     char *from = nullptr;
     char *destbuffp = nullptr;
@@ -29,22 +29,22 @@ int Base64Straw::Get(void *source, int slen)
     int fromsize = 0;
     int total = 0;
 
-    DEBUG_ASSERT(source != nullptr);
+    DEBUG_ASSERT(dest != nullptr);
     DEBUG_ASSERT(slen > 0);
 
     switch (m_mode) {
         case STRAW_ENCODE:
             from = m_cBuffer;
-            fromsize = sizeof(m_cBuffer);
-            destbuffp = m_pBuffer;
-            outcount = sizeof(m_pBuffer);
+            fromsize = sizeof(m_pBuffer);
+            destbuffp = m_cBuffer;
+            outcount = sizeof(m_cBuffer);
             break;
 
         case STRAW_DECODE:
             from = m_pBuffer;
-            fromsize = sizeof(m_pBuffer);
-            destbuffp = m_cBuffer;
-            outcount = sizeof(m_cBuffer);
+            fromsize = sizeof(m_cBuffer);
+            destbuffp = m_pBuffer;
+            outcount = sizeof(m_pBuffer);
             break;
         default:
             break;
@@ -58,9 +58,9 @@ int Base64Straw::Get(void *source, int slen)
                 tocopy = m_counter;
             }
 
-            memmove(source, destbuffp + outcount - m_counter, tocopy);
+            memmove(dest, &destbuffp[outcount - m_counter], tocopy);
             m_counter -= tocopy;
-            source = static_cast<char *>(source) + tocopy;
+            dest = static_cast<char *>(dest) + tocopy;
             slen -= tocopy;
             total += tocopy;
         }
