@@ -270,7 +270,7 @@ int INIClass::Load(Straw &straw)
 
                             return INI_LOAD_INVALID;
                         }
-                        
+
                         // Is this Name, Value or something?
                         CRC(entryptr->Get_Name());
                         int32_t crc = CRC(entryptr->Get_Name());
@@ -440,13 +440,13 @@ BOOL INIClass::Put_UUBlock(const char *section, void *buffer, int length)
         Base64Straw b64straw(STRAW_ENCODE);
         b64straw.Get_From(&bstraw);
 
-        char block_buff[MAX_UUBLOCK_LINE_LENGTH];
+        char block_buff[MAX_UUBLOCK_LINE_LENGTH + 2];
         char entry_buff[32];
         int entry = 1;
 
         while (true) {
             // Once buffer straw has exhausted all bytes passed in, get will return 0.
-            int bytes = b64straw.Get(block_buff, sizeof(block_buff) - 2);
+            int bytes = b64straw.Get(block_buff, MAX_UUBLOCK_LINE_LENGTH);
             block_buff[bytes] = '\0';
 
             if (bytes == 0) {
@@ -468,7 +468,7 @@ BOOL INIClass::Put_TextBlock(const char *section, const char *text)
     DEBUG_ASSERT(text != nullptr);
 
     char entry[32];
-    char buffer[MAX_TEXTBLOCK_LINE_LENGTH];
+    char buffer[MAX_TEXTBLOCK_LINE_LENGTH + 1];
 
     if (section != nullptr && text != nullptr) {
         // Ensure we have a clear section to put our text block to.
@@ -490,7 +490,7 @@ BOOL INIClass::Put_TextBlock(const char *section, const char *text)
                 break;
             }
 
-            if (block_len >= sizeof(buffer)) {
+            if (block_len >= MAX_TEXTBLOCK_LINE_LENGTH) {
                 while (!isspace(buffer[block_len])) {
                     if (!--block_len) {
                         return true;
@@ -741,10 +741,10 @@ BOOL INIClass::Put_Bool(const char *section, const char *entry, BOOL value)
 {
 
     if (value) {
-        return Put_String(section, entry, "true");
+        return Put_String(section, entry, "yes");
     }
 
-    return Put_String(section, entry, "false");
+    return Put_String(section, entry, "no");
 }
 
 BOOL const INIClass::Get_Bool(const char *section, const char *entry, BOOL defvalue) const
