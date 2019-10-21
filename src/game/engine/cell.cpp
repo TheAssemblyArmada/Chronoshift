@@ -803,10 +803,10 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
         //++CellCount; // Original has a global variable here. Not sure what this is used for.
 
         // TODO
-        // TEMPLATE_ARRO0003 is tile 255, but that value is treated as clear in many vanilla maps, even interior ones so it
-        // cannot be used. Possible solution is to handle this at map load and if no 0xFFFF values found, convert any 0xFF to
-        // 0xFFFF and only handle 0xFFFF here?
-        if (Template != TEMPLATE_NONE && Template != 255 && Template >= TEMPLATE_FIRST && Template < TEMPLATE_COUNT) {
+        // TEMPLATE_ARRO0003 (interior tileset) is tile 255, but that value is treated as clear in many vanilla maps, even
+        // interior ones so it cannot be used. Possible solution is to handle this at map load and if no 0xFFFF values
+        // found, convert any 0xFF to 0xFFFF and only handle 0xFFFF here?
+        if (Template != TEMPLATE_NONE && Template != 255 && Template != TEMPLATE_CLEAR && Template < TEMPLATE_COUNT) {
             tt = &TemplateTypeClass::As_Reference(Template);
             icon_num = Icon;
         } else {
