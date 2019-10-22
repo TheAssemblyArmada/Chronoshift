@@ -619,3 +619,7 @@ PKey &g_publicKey = Make_Global<PKey>(0x00665F68);
 // wsock.cpp
 class WinsockInterfaceClass;
 WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>(0x0069172C);
+
+// basec.cpp
+class BaseClass;
+BaseClass &g_Base = Make_Global<BaseClass>(0x0067F28C);
