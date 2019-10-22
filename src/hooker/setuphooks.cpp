@@ -19,6 +19,7 @@
 #include "alloc.h"
 #include "anim.h"
 #include "animtype.h"
+#include "basec.h"
 #include "bfiofile.h"
 #include "bigcheck.h"
 #include "blitters.h"
@@ -890,8 +891,17 @@ void Setup_Hooks()
     Hook_Function(0x0056A854, *TerrainClass::Fire_Out);
     Hook_Function(0x0056AB08, *TerrainClass::Start_To_Crumble);
     Hook_Function(0x0056ABF0, *TerrainClass::Hook_Radar_Icon);
+
     Hook_Function(0x00550290, *SoundControlsClass::Process);
 
+    Hook_Function_Const(0x004265F8, &BaseClass::Get_Building);
+    //Hook_Function(0x0042674C, static_cast<BaseNodeClass *(*)(BuildingClass *)>(*BaseClass::Get_Node));
+    //Hook_Function(0x004267C4, static_cast<BaseNodeClass *(*)(cell_t)>(*BaseClass::Get_Node));
+    Hook_Function(0x004267F8, *BaseClass::Next_Buildable);
+    Hook_Function(0x00426470, *BaseClass::Load);
+    Hook_Function(0x00426540, *BaseClass::Save);
+    Hook_Function(0x00426858, *BaseClass::Read_INI);
+    Hook_Function(0x00426944, *BaseClass::Write_INI);
 #endif
 }
 
