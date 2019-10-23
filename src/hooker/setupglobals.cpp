@@ -623,3 +623,7 @@ WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>
 // basec.cpp
 class BaseClass;
 BaseClass &g_Base = Make_Global<BaseClass>(0x0067F28C);
+
+// carryover.cpp
+class CarryoverClass;
+CarryoverClass *&g_Carryover = Make_Global<CarryoverClass*>(0x0067F2AC);

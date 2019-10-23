@@ -26,6 +26,7 @@
 #include "building.h"
 #include "buildingtype.h"
 #include "bullettype.h"
+#include "carryover.h"
 #include "cd.h"
 #include "cdfile.h"
 #include "cell.h"
@@ -902,6 +903,10 @@ void Setup_Hooks()
     Hook_Function(0x00426540, *BaseClass::Save);
     Hook_Function(0x00426858, *BaseClass::Read_INI);
     Hook_Function(0x00426944, *BaseClass::Write_INI);
+
+    Hook_Function(0x004624A0, *CarryoverClass::Hook_Ctor);
+    //Hook_Function(0x004625E8, *CarryoverClass::Create);
+
 #endif
 }
 
