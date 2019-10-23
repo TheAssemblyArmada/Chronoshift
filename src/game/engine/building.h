@@ -26,7 +26,7 @@
 class BuildingClass : public TechnoClass
 {
 public:
-    BuildingClass(RTTIType type, int id, HousesType house);
+    BuildingClass(BuildingType type, HousesType house);
     BuildingClass(const BuildingClass &that);
     BuildingClass(const NoInitClass &noinit);
     virtual ~BuildingClass();

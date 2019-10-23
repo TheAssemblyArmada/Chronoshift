@@ -25,7 +25,7 @@
 class UnitClass : public DriveClass
 {
 public:
-    UnitClass(RTTIType type, int id, HousesType house);
+    UnitClass(UnitType type, HousesType house);
     UnitClass(const UnitClass &that);
     UnitClass(const NoInitClass &noinit);
     virtual ~UnitClass();

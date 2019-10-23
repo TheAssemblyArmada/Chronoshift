@@ -20,8 +20,8 @@
 TFixedIHeapClass<BuildingClass> g_Buildings;
 #endif
 
-BuildingClass::BuildingClass(RTTIType type, int id, HousesType house) :
-    TechnoClass(type, id, house)
+BuildingClass::BuildingClass(BuildingType type, HousesType house) :
+    TechnoClass(RTTI_BUILDING, g_Buildings.ID(this), house)
 {
 }
 
