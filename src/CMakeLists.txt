@@ -64,6 +64,7 @@ set(GAMEENGINE_SRC
     game/engine/bullettype.cpp
     game/engine/callback.cpp
     game/engine/cargo.cpp
+    game/engine/carryover.cpp
     game/engine/cell.cpp
     game/engine/cmdline.cpp
     game/engine/coord.cpp
