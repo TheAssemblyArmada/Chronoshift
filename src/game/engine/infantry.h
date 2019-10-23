@@ -38,7 +38,7 @@ DEFINE_ENUMERATION_OPERATORS(FearType);
 class InfantryClass : public FootClass
 {
     public:
-    InfantryClass(RTTIType type, int id, HousesType house);
+    InfantryClass(InfantryType type, HousesType house);
     InfantryClass(const InfantryClass &that);
     InfantryClass(const NoInitClass &noinit);
     virtual ~InfantryClass();

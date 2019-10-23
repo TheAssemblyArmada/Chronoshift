@@ -29,7 +29,7 @@
 TFixedIHeapClass<VesselClass> g_Vessels;
 #endif
 
-VesselClass::VesselClass(VesselType type, int id, HousesType house) :
+VesselClass::VesselClass(VesselType type, HousesType house) :
     DriveClass(RTTI_VESSEL, g_Vessels.ID(this), house),
     m_Class(g_VesselTypes.Ptr(type)),
     m_ToSelfRepair(false),

@@ -25,7 +25,7 @@
 class VesselClass : public DriveClass
 {
     public:
-    VesselClass(VesselType type, int id, HousesType house);
+    VesselClass(VesselType type, HousesType house);
     VesselClass(const VesselClass &that);
     VesselClass(const NoInitClass &noinit);
     virtual ~VesselClass();

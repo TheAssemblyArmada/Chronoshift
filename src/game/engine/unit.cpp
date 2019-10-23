@@ -19,8 +19,8 @@
 TFixedIHeapClass<UnitClass> g_Units;
 #endif
 
-UnitClass::UnitClass(RTTIType type, int id, HousesType house) :
-    DriveClass(type, id, house)
+UnitClass::UnitClass(UnitType type, HousesType house) :
+    DriveClass(RTTI_UNIT, g_Units.ID(this), house)
 {
 }
 

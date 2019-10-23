@@ -19,8 +19,8 @@
 TFixedIHeapClass<InfantryClass> g_Infantry;
 #endif
 
-InfantryClass::InfantryClass(RTTIType type, int id, HousesType house) :
-    FootClass(type, id, house)
+InfantryClass::InfantryClass(InfantryType type, HousesType house) :
+    FootClass(RTTI_INFANTRY, g_Infantry.ID(this), house)
 {
 }
 
