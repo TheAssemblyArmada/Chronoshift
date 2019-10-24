@@ -15,6 +15,7 @@
  */
 #include "keyboard.h"
 #include "gamedebug.h"
+#include "ostimer.h"
 #include <cstring>
 
 using std::memset;
@@ -393,6 +394,14 @@ uint16_t KeyboardClass::Buff_Get()
     }
 
     return key_val;
+}
+
+void KeyboardClass::Wait_For_Input(KeyNumType key)
+{
+    // wait until the user has hit the desired key.
+    while (g_keyboard->Get() != key) {
+        PlatformTimer->Sleep(1);
+    }
 }
 
 BOOL KeyboardClass::Is_Buffer_Full() const
