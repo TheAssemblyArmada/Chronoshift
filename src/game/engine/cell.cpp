@@ -788,10 +788,10 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
     #elif 0*/
     DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
 
-    int icon_num;
+    int icon_num = 0;
     void *fading_table = nullptr;
     ObjectClass *obj = nullptr;
-    TemplateTypeClass *tt;
+    TemplateTypeClass *tt = nullptr;
 
     GraphicViewPortClass dbgcell(g_logicPage->Get_Graphic_Buffer(),
         g_logicPage->Get_XPos() + WindowList[WINDOW_TACTICAL].X,
@@ -814,30 +814,36 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             icon_num = Clear_Icon();
         }
 
-#if 0 // TODO Editor related stuff.
-        if ((g_InMapEditor && Map.field_8567) /*|| Debug_CellPassable*/) {
-            if (!Ground[Land].Is_Buildable() || Ground[Land].Get_Speed(SPEED_FOOT) == fixed_t::_0_1 && obj != nullptr) {
-                fading_table = DisplayClass::FadingRed;
-            }
-        }
-    
-        obj = Cell_Occupier();
-
-        if ((g_InMapEditor
-                && obj != nullptr /*&& obj->Get_Next() != nullptr*/) /*|| Debug_CellOccupied*/) {
-            if (Occupied_By_Foot()) {
-                fading_table = DisplayClass::FadingYellow;
+#ifdef CHRONOSHIFT_DEBUG
+        if (g_Debug_Passable) {
+            // editor version from edwin
+            if (g_InMapEditor) {
+                // impassable
+                if (Ground[Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0) || OccupierPtr != nullptr) {
+                    fading_table = DisplayClass::FadingRed;
+                }
+                // is occupied by multiple objects, could had been for finding overlapping objects?
+                if (OccupierPtr != nullptr && OccupierPtr->Get_Next() != nullptr) {
+                    fading_table = DisplayClass::FadingYellow;
+                }
+            // ingame version from RA beta
+            } else {
+                // impassable
+                if (Ground[Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0)
+                    || OccupierPtr != nullptr && OccupierPtr->What_Am_I() != RTTI_INFANTRY) {
+                    fading_table = DisplayClass::FadingRed;
+                // unit will be very slow on this cell, in a unmodified RA this won't ever be true
+                } else if (Ground[Land].Get_Speed(SPEED_FOOT) <= fixed_t(1, 3)) {
+                    fading_table = DisplayClass::FadingYellow;
+                // fully passable
+                } else {
+                    fading_table = DisplayClass::FadingGreen;
+                }
             }
         }
 #endif
 
         if (tt->Get_Image_Data() != nullptr) {
-            GraphicViewPortClass remap(g_logicPage->Get_Graphic_Buffer(),
-                g_logicPage->Get_XPos() + WindowList[WINDOW_TACTICAL].X,
-                g_logicPage->Get_YPos() + WindowList[WINDOW_TACTICAL].Y,
-                WindowList[WINDOW_TACTICAL].W,
-                WindowList[WINDOW_TACTICAL].H);
-
             g_logicPage->Draw_Stamp(tt->Get_Image_Data(),
                 icon_num,
                 x,
@@ -847,14 +853,28 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 WindowList[WINDOW_TACTICAL].Y,
                 WindowList[WINDOW_TACTICAL].W,
                 WindowList[WINDOW_TACTICAL].H);
+#ifdef CHRONOSHIFT_DEBUG
+            if (g_Debug_Passable) {
+                if (fading_table != nullptr) {
+                    GraphicViewPortClass remap(g_logicPage->Get_Graphic_Buffer(),
+                        g_logicPage->Get_XPos() + WindowList[WINDOW_TACTICAL].X,
+                        g_logicPage->Get_YPos() + WindowList[WINDOW_TACTICAL].Y,
+                        WindowList[WINDOW_TACTICAL].W,
+                        WindowList[WINDOW_TACTICAL].H);
+                    // original line, i think this could result in out of bounds draws so using what edwin does instead
+                    // g_logicPage->Remap(x + Map.Tac_Offset_X(), y + Map.Tac_Offset_Y(), CELL_PIXELS, CELL_PIXELS, (unsigned char *)fading_table);
+                    remap.Remap(x, y, CELL_PIXELS, CELL_PIXELS, (unsigned char *)fading_table);
+                }
+            }
+#endif
         }
-
+#ifdef CHRONOSHIFT_DEBUG
         if (g_InMapEditor) {
             if (CurrentSelectedCell == CellNumber) {
                 // TODO!
             }
         }
-
+#endif
         if (Smudge != SMUDGE_NONE && SmudgeFrame != -1) {
             SmudgeTypeClass::As_Reference(Smudge).Draw_It(x, y, SmudgeFrame);
         }
