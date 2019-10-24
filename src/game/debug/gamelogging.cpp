@@ -364,7 +364,7 @@ void Debug_Log(const char *format, ...)
 #endif
     }
 
-    vsprintf(&DebugBuffer[strlen(DebugBuffer)], Prep_Buffer(format, DebugBuffer), va);
+    vsprintf(DebugBuffer, Prep_Buffer(format, DebugBuffer), va);
 
     if (strlen(DebugBuffer) >= DEBUG_BUFFER_SIZE) {
 #ifdef PLATFORM_WINDOWS
