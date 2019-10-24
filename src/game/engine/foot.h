@@ -123,9 +123,19 @@ public:
     static int Point_Relative_To_Line(int px, int py, int sx, int sy, int ex, int ey);
     PathType *Find_Path_Wrapper(cell_t dest, FacingType *buffer, int length, MoveType move);
 
+    static int Max_Path_Length() { return PATH_LENGTH; }
+
 #ifdef GAME_DLL
     BOOL Hook_Can_Demolish() { return FootClass::Can_Demolish(); }
     coord_t Hook_Sort_Y() { return FootClass::Sort_Y(); }
+#endif
+
+#ifdef CHRONOSHIFT_DEBUG
+private:
+    void Debug_Draw_Map(const char *title, cell_t source, cell_t dest/*, BOOL enter_wait_for_input = false, BOOL exit_wait_for_input = false*/);
+    void Debug_Draw_Path(PathType *path, BOOL draw_tactical = false);
+    void Debug_Plot_Cell(cell_t cell, BOOL a2 = false, int threat_state = -1, uint8_t color = COLOR_TBLACK);
+    void Debug_Print_Steps(const char *text, int score, int steps);
 #endif
 
 protected:

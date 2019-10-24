@@ -113,11 +113,13 @@ void Debug_Keyboard_Process(KeyNumType &key)
                     g_ChronalVortex.Set_Target(nullptr);
                     Sound_Effect(VOC_TESLA1, coord);
                     _vortex_active = true;
+                    Session.Get_Messages().Add_Simple_Message("Debug", "Spawned chronal vortex.", PLAYER_COLOR_LIGHT_BLUE);
                 }
             } else {
                 g_ChronalVortex.Set_Target(nullptr);
                 g_ChronalVortex.Disappear();
                 _vortex_active = false;
+                Session.Get_Messages().Add_Simple_Message("Debug", "Chronal vortex removed.", PLAYER_COLOR_LIGHT_BLUE);
             }
             key = KN_NONE;
         }
@@ -131,6 +133,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyRandomCrate()) {
             Map.Place_Random_Crate();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Placed random crate.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
@@ -203,11 +206,62 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyNavList()) {
             g_Debug_NavList = !g_Debug_NavList;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_NavList ? "NavList debug lines enabled." : "NavList debug lines disabled.", PLAYER_COLOR_LIGHT_BLUE);
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyHeadTo()) {
+            g_Debug_HeadTo = !g_Debug_HeadTo;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_HeadTo ? "HeadTo debug lines enabled." : "HeadTo debug lines disabled.", PLAYER_COLOR_LIGHT_BLUE);
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyNavCom()) {
+            g_Debug_NavCom = !g_Debug_NavCom;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_NavCom ? "NavCom debug lines enabled." : "NavCom debug lines disabled.", PLAYER_COLOR_LIGHT_BLUE);
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyTarCom()) {
+            g_Debug_TarCom = !g_Debug_TarCom;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_TarCom ? "TarCom debug lines enabled." : "TarCom debug lines disabled.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyFindPath()) {
-            g_Debug_Find_Path = !g_Debug_Find_Path;
+            static bool _debug_find_path = true;
+            DEBUG_LOG("Key DebugKeyFindPath pressed.\n");
+            if (_debug_find_path) {
+                ++g_Debug_Find_Path_Mode;
+                if (g_Debug_Find_Path_Mode >= DEBUG_PATH_COUNT) {
+                    g_Debug_Find_Path_Mode = DEBUG_PATH_NONE;
+                    _debug_find_path = false;
+                }
+                switch (g_Debug_Find_Path_Mode) {
+                    default:
+                        Session.Get_Messages().Add_Simple_Message("Debug", "Find path debug disabled.", PLAYER_COLOR_LIGHT_BLUE);
+                        break;
+                    case DEBUG_PATH_AI:
+                        Session.Get_Messages().Add_Simple_Message("Debug", "Find path debug mode is AI only.", PLAYER_COLOR_LIGHT_BLUE);
+                        break;
+                    case DEBUG_PATH_PLAYER:
+                        Session.Get_Messages().Add_Simple_Message("Debug", "Find path debug mode is PLAYER only.", PLAYER_COLOR_LIGHT_BLUE);
+                        break;
+                    case DEBUG_PATH_BOTH:
+                        Session.Get_Messages().Add_Simple_Message("Debug", "Find path debug mode is both AI and PLAYER.", PLAYER_COLOR_LIGHT_BLUE);
+                        break;
+                }
+            } else {
+                _debug_find_path = true;
+                g_Debug_Find_Path_Mode = DEBUG_PATH_NONE;
+            }
+            key = KN_NONE;
+        }
+
+        if (justkey == Options.Get_DebugKeyDrawPaths()) {
+            DEBUG_LOG("Key DebugKeyDrawPaths pressed.\n");
+            g_Debug_Draw_Paths = !g_Debug_Draw_Paths;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_Draw_Paths ? "Draw paths enabled." : "Draw paths disabled.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
@@ -217,10 +271,12 @@ void Debug_Keyboard_Process(KeyNumType &key)
         }
 
         if (justkey == Options.Get_DebugKeyPrevMonoPage()) {
+            Session.Get_Messages().Add_Simple_Message("Debug", "Previous mono page.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyNextMonoPage()) {
+            Session.Get_Messages().Add_Simple_Message("Debug", "Previous next page.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
@@ -264,7 +320,10 @@ void Debug_Keyboard_Process(KeyNumType &key)
                 /*UnitClass *uptr = new UnitClass(UNIT_MCV, g_PlayerPtr->What_Type());
                 DEBUG_ASSERT(uptr != nullptr);
                 if ( uptr != nullptr ) {
-                    uptr->Unlimbo(Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y()));
+                    uptr->Unlimbo(coord);
+                    char textbuff[32];
+                    snprintf(textbuff, sizeof(textbuff), "Spawned MCV at Coord:%d,%d", Coord_Lepton_X(coord), Coord_Lepton_Y(coord));
+                    Session.Get_Messages().Add_Simple_Message("Debug", textbuff, PLAYER_COLOR_LIGHT_BLUE);
                 }*/
             }
             key = KN_NONE;
@@ -277,7 +336,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
                 /*UnitClass *uptr = new UnitClass(UNIT_HARVESTER, g_PlayerPtr->What_Type());
                 DEBUG_ASSERT(uptr != nullptr);
                 if ( uptr != nullptr ) {
-                    uptr->Unlimbo(Map.Pixel_To_Coord(g_wwmouse->Get_Mouse_X(), g_wwmouse->Get_Mouse_Y()));
+                    uptr->Unlimbo(coord);
                 }*/
             }
             key = KN_NONE;
@@ -371,8 +430,11 @@ void Debug_Keyboard_Process(KeyNumType &key)
                     DEBUG_ASSERT(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
+                            const char *obj_name = objptr->Name();
                             delete objptr;
-                            Session.Get_Messages().Add_Simple_Message("Debug", "Object deleted!", PLAYER_COLOR_LIGHT_BLUE);
+                            char textbuff[32];
+                            snprintf(textbuff, sizeof(textbuff), "Object '%s' deleted!", obj_name);
+                            Session.Get_Messages().Add_Simple_Message("Debug", textbuff, PLAYER_COLOR_LIGHT_BLUE);
                         }
                     }
                 }
@@ -401,7 +463,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             RawFileClass scrnfile(filename);
             Write_PCX_File(scrnfile, temp_page, GamePalette);
             char buffer[256];
-            snprintf(buffer, sizeof(buffer), "Screenshot Saved! (%s in your user home directory))", filename);
+            snprintf(buffer, sizeof(buffer), "Screenshot Saved (%s in your user home directory))", filename);
             Session.Get_Messages().Add_Simple_Message("System", buffer, PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
@@ -425,7 +487,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_SONAR_PULSE).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_SONAR_PULSE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_SONAR_PULSE);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted SONAR_PULSE special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -433,7 +496,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_ATOM_BOMB).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_ATOM_BOMB).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_ATOM_BOMB);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted ATOM_BOMB special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -441,7 +505,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_WARP_SPHERE).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_WARP_SPHERE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_WARP_SPHERE);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted WARP_SPHERE special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -449,7 +514,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_BOMB).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_BOMB).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_PARA_BOMB);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted PARA_BOMB special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -457,7 +523,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_INFANTRY).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_PARA_INFANTRY).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_PARA_INFANTRY);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted PARA_INFANTRY special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -465,7 +532,9 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_SPY_PLANE).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_SPY_PLANE).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_SPY_PLANE);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Map.Add(RTTI_SPECIAL, SPECIAL_SPY_PLANE);
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted SPY_PLANE special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -473,7 +542,8 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_IRON_CURTAIN).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_IRON_CURTAIN).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_IRON_CURTAIN);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted IRON_CURTAIN special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
@@ -481,17 +551,20 @@ void Debug_Keyboard_Process(KeyNumType &key)
             g_PlayerPtr->Special_Weapons(SPECIAL_GPS).Enable(true);
             g_PlayerPtr->Special_Weapons(SPECIAL_GPS).Forced_Charge();
             Map.Add(RTTI_SPECIAL, SPECIAL_GPS);
-            // Map.Right_Strip_Flag_To_Redraw();
+            Session.Get_Messages().Add_Simple_Message("Debug", "Granted GPS special.", PLAYER_COLOR_LIGHT_BLUE);
+            //Map.Right_Strip_Flag_To_Redraw();
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyInstantBuild()) {
             g_Debug_InstantBuild = !g_Debug_InstantBuild;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_InstantBuild ? "Instant build enabled." : "Instant build disabled.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyBuildCheat()) {
             g_Debug_BuildCheat = !g_Debug_BuildCheat;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_InstantBuild ? "Build cheat enabled." : "Build cheat disabled.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
@@ -530,15 +603,16 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyStealObject()) {
             if (CurrentObjects.Count() > 0) {
-                for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+                for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
                     DEBUG_ASSERT(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             if (!objptr->Get_Owner_House()->Is_Player()) {
                                 objptr->Captured(g_PlayerPtr);
-                                Session.Get_Messages().Add_Simple_Message(
-                                    "Debug", "Captured object!", PLAYER_COLOR_LIGHT_BLUE);
+                                char textbuff[32];
+                                snprintf(textbuff, sizeof(textbuff), "Captured object '%s'.", objptr->Name());
+                                Session.Get_Messages().Add_Simple_Message("Debug", textbuff, PLAYER_COLOR_LIGHT_BLUE);
                             }
                         }
                     }
@@ -550,17 +624,25 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyToggleDamage()) {
             g_Debug_Damage = !g_Debug_Damage;
+            Session.Get_Messages().Add_Simple_Message("Debug", g_Debug_Damage ? "Damage disabled." : "Damage enabled.", PLAYER_COLOR_LIGHT_BLUE);
             key = KN_NONE;
         }
 
         if (justkey == Options.Get_DebugKeyToggleCloakable()) {
             if (CurrentObjects.Count() > 0) {
-                for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+                for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
                     DEBUG_ASSERT(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             objptr->Set_Cloakable(!objptr->Is_Cloakable());
+                            char textbuff[32];
+                            if (objptr->Is_Cloakable()) {
+                                snprintf(textbuff, sizeof(textbuff), "Object '%s' now has cloaking device.", objptr->Name());
+                            } else {
+                                snprintf(textbuff, sizeof(textbuff), "Object '%s' has had cloaking device removed.", objptr->Name());
+                            }
+                            Session.Get_Messages().Add_Simple_Message("Debug", textbuff, PLAYER_COLOR_LIGHT_BLUE);
                         }
                     }
                 }
@@ -570,13 +652,16 @@ void Debug_Keyboard_Process(KeyNumType &key)
 
         if (justkey == Options.Get_DebugKeyApplyDamage()) {
             if (CurrentObjects.Count() > 0) {
-                for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
+                for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
                     DEBUG_ASSERT(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             int damage = 50;
                             objptr->Take_Damage(damage, 0, WARHEAD_SA);
+                            char textbuff[32];
+                            snprintf(textbuff, sizeof(textbuff), "Applied damage (WARHEAD_SA, 50) to object '%s'.", objptr->Name());
+                            Session.Get_Messages().Add_Simple_Message("Debug", textbuff, PLAYER_COLOR_LIGHT_BLUE);
                         }
                     }
                 }
@@ -636,6 +721,13 @@ void Keyboard_Process(KeyNumType &key)
 {
     KeyNumType justkey = (KeyNumType)(key & ~(KEY_SHIFT_BIT | KEY_CTRL_BIT | KEY_ALT_BIT | KEY_VK_BIT));
     KeyNumType keynum = (KeyNumType)(key & ~(KEY_VK_BIT));
+
+    // skip all mouse input.
+    if (key == KN_LMOUSE /*|| key == KN_MMOUSE*/ || key == KN_RMOUSE) {
+        return;
+    }
+
+    DEBUG_LOG("Keyboard_Process(enter)\n");
 
     if (justkey == Options.Get_KeyEditorToggle()) {
         g_InMapEditor = !g_InMapEditor;

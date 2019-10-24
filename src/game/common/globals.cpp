@@ -82,6 +82,7 @@ void *g_TurretShapes = nullptr;
 void *g_SamShapes = nullptr;
 void *g_MGunShapes = nullptr;
 
+#ifdef CHRONOSHIFT_DEBUG
 BOOL g_Debug_MotionCapture = false;
 BOOL g_Debug_Rotate = false;
 BOOL g_Debug_Quiet = false;
@@ -96,6 +97,7 @@ BOOL g_Debug_Passable = false;
 BOOL g_Debug_Unshroud = false;
 BOOL g_Debug_Threat = false;
 BOOL g_Debug_Find_Path = false;
+BOOL g_Debug_Draw_Paths = false;
 BOOL g_Debug_Check_Map = false;
 BOOL g_Debug_Playtest = false;
 BOOL g_Debug_Heap_Dump = false;
@@ -105,9 +107,6 @@ BOOL g_Debug_Modem_Dump = false;
 BOOL g_Debug_Print_Events = false;
 
 BOOL g_MonoEnabled = false; // Actually a part of MonoClass.
-#endif
-
-int g_mapBinaryVersion; // For handling C&C and Sole Survivor map formats.
 
 BOOL g_Debug_Paused = false;
 BOOL g_Debug_Step = false;
@@ -118,13 +117,22 @@ BOOL g_Debug_GuardRange = false;
 BOOL g_Debug_WeaponRange = false;
 BOOL g_Debug_AttackFriendlies = false;
 BOOL g_Debug_NavList = false;
+BOOL g_Debug_HeadTo = false;
+BOOL g_Debug_NavCom = false;
+BOOL g_Debug_TarCom = false;
 BOOL g_Debug_Damage = false;
 BOOL g_Debug_AIControl = false;
 BOOL g_Debug_InstantBuild = false;
 BOOL g_Debug_BuildCheat = false;
 BOOL g_Debug_CursorCoords = false;
 
+DebugFindPathType g_Debug_Find_Path_Mode = DEBUG_PATH_NONE;
+#endif
+
+int g_mapBinaryVersion; // For handling C&C and Sole Survivor map formats.
+
 BOOL g_Cheat_OreCivilians = false;
 BOOL g_Cheat_TeslaChoppers = false;
 
 BOOL g_ConfirmExit = false;
+#endif

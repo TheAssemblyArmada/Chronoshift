@@ -27,6 +27,7 @@
 #include "tracker.h"
 #include "foot.h"
 #include "target.h"
+#include "display.h"
 #include <algorithm>
 
 #ifndef GAME_DLL
@@ -278,10 +279,6 @@ BOOL ObjectClass::Paradrop(coord_t coord)
 
 BOOL ObjectClass::Render(BOOL force_render)
 {
-/*#ifdef GAME_DLL
-    BOOL(*func)(ObjectClass *, BOOL) = reinterpret_cast<BOOL(*)(ObjectClass *, BOOL)>(0x0051DD34);
-    return func(this, force_render);
-#else*/
     DEBUG_ASSERT(m_IsActive);
 
     coord_t render_coord = Render_Coord();
@@ -307,117 +304,61 @@ BOOL ObjectClass::Render(BOOL force_render)
 
         Draw_It(render_x_pos, render_y_pos, WINDOW_TACTICAL);
 
-        //if (/*g_Debug_Head_To*/) {
+#ifdef CHRONOSHIFT_DEBUG
+        if (m_Selected) {
 
-            if (m_Selected) {
+            int pixel_size = 2; // Pixel plot size.
 
+            // TODO: Move these to FootClass::Render() standalone.
+
+            if (g_Debug_Draw_Paths) {
                 if (Is_Foot()) {
-
                     FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
-
-                    if (foot_thisptr->Head_To()) {
-
-                        int my_x_pos = 0;
-                        int my_y_pos = 0;
-
-                        int headto_x_pos = 0;
-                        int headto_y_pos = 0;
-
-                        int pixel_size = 3;
-
-                        // Draw object coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
-                        my_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_YELLOW);
-
-                        // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->Head_To(), headto_x_pos, headto_y_pos);
-                        headto_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(headto_x_pos - 1, headto_y_pos - 1, pixel_size, COLOR_YELLOW);
-
-                        // Draw connection line.
-                        g_logicPage->Draw_Line(my_x_pos, my_y_pos, headto_x_pos, headto_y_pos, COLOR_YELLOW);
-
-                        //Map.Flag_To_Redraw(true);
-
-                    }
-
-                }
-
-            }
-
-        //}
-
-        //if (/*Special.Bit3_1 || g_Debug_Head_To*/) {
-
-            if (m_Selected) {
-
-                if (Is_Foot()) {
-
-                    FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
-
                     if (foot_thisptr->Head_To()) {
 
                         if (foot_thisptr->Get_Path_Facing(0) != FACING_NONE) {
 
-                            /*int path_x_pos = 0;
-                            int path_y_pos = 0;
+                            int my_x_pos = 0;
+                            int my_y_pos = 0;
 
-                            int path2_x_pos = 0;
-                            int path2_y_pos = 0;
+                            int prev_cell_x_pos = 0;
+                            int prev_cell_y_pos = 0;
 
-                            int pixel_size = 3;
+                            int cell_x_pos = 0;
+                            int cell_y_pos = 0;
 
-                            for (int index = 0; index < ARRAY_SIZE(foot_thisptr->m_Paths); ++index) {
+                            for (int index = 0; index < FootClass::Max_Path_Length() && foot_thisptr->Get_Path_Facing(index) != FACING_NONE; ++index) {
 
-                                if (foot_thisptr->m_Paths[index] == FACING_NONE) {
-                                    break;
+                                FacingType path_facing = foot_thisptr->Get_Path_Facing(index);
+                                cell_t nextcell = Coord_Get_Adjacent(foot_thisptr->Head_To(), path_facing);
+                                coord_t nextcell_coord = Cell_To_Coord(nextcell);
+
+                                if (Map.Coord_To_Pixel(nextcell_coord, cell_x_pos, cell_y_pos) )  {
+                                    cell_y_pos += 16;
+                                    //debug_layer.Put_Fat_Pixel(cell_x_pos - 2, cell_y_pos - 2, pixel_size, COLOR_PINK);
+                                    g_visiblePage.Draw_Line(prev_cell_x_pos, prev_cell_y_pos, cell_x_pos, cell_y_pos, COLOR_PINK);
                                 }
 
-                                cell_t adjcell = Coord_To_Cell(foot_thisptr->Head_To()) + AdjacentCell[foot_thisptr->m_Paths[index]];
-                                coord_t coord = Cell_To_Coord(adjcell);
+                                prev_cell_x_pos = cell_x_pos;
+                                prev_cell_y_pos = cell_y_pos;
 
-                                if (Map.Coord_To_Pixel(coord, path2_x_pos, path2_y_pos) )  {
-
-                                    path2_y_pos += 16;
-
-                                    Fancy_Text_Print()
-                                    g_logicPage->Draw_Line(path_x_pos, path_y_pos, path2_x_pos, path2_y_pos, COLOR_YELLOW);
-                                    g_logicPage->Put_Fat_Pixel(path2_x_pos - 2, path2_y_pos - 2, pixel_size, COLOR_GREEN);
-
-                                }
-
-                                path_x_pos = path2_x_pos;
-                                path_y_pos = path2_y_pos;
+                                /*if (Map.Coord_To_Pixel(foot_thisptr->Center_Coord(), prev_cell_x_pos, prev_cell_y_pos)) {
+                                    prev_cell_y_pos += 16;
+                                    g_visiblePage.Put_Fat_Pixel(prev_cell_x_pos - 1, prev_cell_y_pos - 1, pixel_size, COLOR_PINK);
+                                }*/
 
                             }
-
-                            Map.Coord_To_Pixel(foot_thisptr->m_Coord, path_x_pos, path_y_pos);
-
-                            path_y_pos += 16;
-
-                            g_logicPage->Put_Fat_Pixel(path_x_pos - 1, path_y_pos - 1, pixel_size, COLOR_PINK);*/
 
                             //Map.Flag_To_Redraw(true);
 
                         }
-
                     }
-
                 }
-
             }
 
-        //}
-
-        //if (/*g_Debug_Nav_Com*/) {
-
-            if (m_Selected) {
-
+            if (g_Debug_NavCom) {
                 if (Is_Foot()) {
-
                     FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
-
                     if (Target_Legal(foot_thisptr->Nav_Com())) {
 
                         int my_x_pos = 0;
@@ -426,39 +367,83 @@ BOOL ObjectClass::Render(BOOL force_render)
                         int navcom_x_pos = 0;
                         int navcom_y_pos = 0;
 
-                        int pixel_size = 3;
+                        bool coord1_valid = false;
+                        bool coord2_valid = false;
 
-                        // Draw object coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
-                        my_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_BLUE);
+                        coord_t mycoord = foot_thisptr->Center_Coord();
+                        coord_t navcom_coord = As_Coord(foot_thisptr->Nav_Com());
 
-                        // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(As_Coord(foot_thisptr->Nav_Com()), navcom_x_pos, navcom_y_pos);
-                        navcom_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(navcom_x_pos - 1, navcom_y_pos - 1, pixel_size, COLOR_BLUE);
+                        if (Map.Push_Onto_TacMap(mycoord, navcom_coord)) {
 
-                        // Draw connection line.
-                        g_logicPage->Draw_Line(my_x_pos, my_y_pos, navcom_x_pos, navcom_y_pos, COLOR_BLUE);
+                            // Draw object coord pixel only if it is within the viewport.
+                            Map.Coord_To_Pixel(mycoord, my_x_pos, my_y_pos);
+                            my_y_pos += 16;
+                            g_visiblePage.Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_BLUE);
+                            //coord1_valid = true;
 
-                        //Map.Flag_To_Redraw(true);
+                            // Draw NavCom coord pixel only if it is within the viewport.
+                            Map.Coord_To_Pixel(As_Coord(navcom_coord), navcom_x_pos, navcom_y_pos);
+                            navcom_y_pos += 16;
+                            g_visiblePage.Put_Fat_Pixel(navcom_x_pos - 1, navcom_y_pos - 1, pixel_size, COLOR_BLUE);
+                            //coord2_valid = true;
 
+                            // Draw connection line.
+                            //if (coord1_valid && coord2_valid) {
+                                g_visiblePage.Draw_Line(my_x_pos, my_y_pos, navcom_x_pos, navcom_y_pos, COLOR_BLUE);
+                            //}
+
+                            Map.Redraw_View(true);
+                            Map.Flag_To_Redraw(true);
+                        }
                     }
-
                 }
-
             }
 
-        //}
-
-        //if (/*g_Debug_Tar_Com*/) {
-
-            if (m_Selected) {
-
+            if (g_Debug_HeadTo) {
                 if (Is_Foot()) {
-
                     FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
+                    if (foot_thisptr->Head_To()) {
 
+                        int my_x_pos = 0;
+                        int my_y_pos = 0;
+
+                        int headto_x_pos = 0;
+                        int headto_y_pos = 0;
+
+                        bool coord1_valid = false;
+                        bool coord2_valid = false;
+
+                        coord_t mycoord = foot_thisptr->Center_Coord();
+                        coord_t headto_coord = As_Coord(foot_thisptr->Head_To());
+
+                        // Draw object coord pixel.
+                        if (Map.Coord_To_Pixel(mycoord, my_x_pos, my_y_pos)) {
+                            my_y_pos += 16;
+                            g_visiblePage.Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_YELLOW);
+                            coord1_valid = true;
+                        }
+
+                        // Draw HeadTo coord pixel.
+                        if (Map.Coord_To_Pixel(headto_coord, headto_x_pos, headto_y_pos)) {
+                            headto_y_pos += 16;
+                            g_visiblePage.Put_Fat_Pixel(headto_x_pos - 1, headto_y_pos - 1, pixel_size, COLOR_YELLOW);
+                            coord2_valid = true;
+                        }
+
+                        // Draw connection line.
+                        if (coord1_valid && coord2_valid) {
+                            g_visiblePage.Draw_Line(my_x_pos, my_y_pos, headto_x_pos, headto_y_pos, COLOR_YELLOW);
+                        }
+
+                        //Map.Redraw_View(true);
+                        //Map.Flag_To_Redraw(true);
+                    }
+                }
+            }
+
+            if (g_Debug_TarCom) {
+                if (Is_Foot()) {
+                    FootClass *foot_thisptr = reinterpret_cast<FootClass *>(this);
                     if (Target_Legal(foot_thisptr->Get_TarCom())) {
 
                         int my_x_pos = 0;
@@ -467,37 +452,44 @@ BOOL ObjectClass::Render(BOOL force_render)
                         int tarcom_x_pos = 0;
                         int tarcom_y_pos = 0;
 
-                        int pixel_size = 3;
+                        bool coord1_valid = false;
+                        bool coord2_valid = false;
+
+                        coord_t mycoord = foot_thisptr->Center_Coord();
+                        coord_t tarcom_coord = As_Coord(foot_thisptr->Get_TarCom());
 
                         // Draw object coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
-                        my_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_RED);
+                        if (Map.Coord_To_Pixel(mycoord, my_x_pos, my_y_pos)) {
+                            my_y_pos += 16;
+                            g_visiblePage.Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_RED);
+                            coord1_valid = true;
+                        }
 
-                        // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(As_Coord(foot_thisptr->Get_TarCom()), tarcom_x_pos, tarcom_y_pos);
-                        tarcom_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(tarcom_x_pos - 1, tarcom_y_pos - 1, pixel_size, COLOR_RED);
+                        // Draw TarCom coord pixel.
+                        if (Map.Coord_To_Pixel(tarcom_coord, tarcom_x_pos, tarcom_y_pos)) {
+                            tarcom_y_pos += 16;
+                            g_visiblePage.Put_Fat_Pixel(tarcom_x_pos - 1, tarcom_y_pos - 1, pixel_size, COLOR_RED);
+                            coord2_valid = true;
+                        }
 
                         // Draw connection line.
-                        g_logicPage->Draw_Line(my_x_pos, my_y_pos, tarcom_x_pos, tarcom_y_pos, COLOR_RED);
+                        if (coord1_valid && coord2_valid) {
+                            g_visiblePage.Draw_Line(my_x_pos, my_y_pos, tarcom_x_pos, tarcom_y_pos, COLOR_RED);
+                        }
 
+                        //Map.Redraw_View(true);
                         //Map.Flag_To_Redraw(true);
-
                     }
-
                 }
-
             }
-
-        //}
+        }
+#endif
 
         return true;
 
     }
 
     return false;
-//#endif
 }
 
 const int16_t *ObjectClass::Occupy_List(BOOL a1) const

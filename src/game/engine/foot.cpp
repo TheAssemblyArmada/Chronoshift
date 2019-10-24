@@ -21,8 +21,12 @@
 #include "iomap.h"
 #include "rules.h"
 #include "session.h"
+#include "special.h"
 #include "target.h"
 #include "team.h"
+#include "keyboard.h"
+#include "mouse.h"
+#include "ostimer.h"
 #include <algorithm>
 #include <cstdlib>
 
@@ -30,8 +34,28 @@
 #define PATH_FLAG_BITSIZE 32
 
 #ifdef GAME_DLL
-extern cell_t &StartLocation;
-extern cell_t &DestLocation;
+static cell_t &StartLocation = Make_Global<cell_t>(0x0065D7AE);
+static cell_t &DestLocation = Make_Global<cell_t>(0x0065D7AC);
+
+// Maximum times to retry when met with an obstruction. 
+#define PATH_RETRY_COUNT 400
+
+#ifdef CHRONOSHIFT_DEBUG
+int Debug_X_Pos = 0;
+int Debug_Y_Pos = 16;
+int Debug_Width = 480;
+int Debug_Height = 386;
+
+int Debug_Map_X_Pos = Debug_X_Pos;
+int Debug_Map_Y_Pos = Debug_Y_Pos;
+
+BOOL Debug_Find_Path = false;
+BOOL Debug_Draw_Paths = false;
+
+#define MAP_CELL_PIXEL_SIZE 4 // Size of the pixel representation for a cell when plotting the info on the actual map.
+#define CELL_PIXEL_SIZE 3 // Size of the pixel representation for a cell when plotting the debug map.
+#endif
+
 #else
 static cell_t StartLocation;
 static cell_t DestLocation;
@@ -40,6 +64,7 @@ static cell_t DestLocation;
 static unsigned MainOverlap[512]; // Is this perhaps some map size math?
 static unsigned LeftOverlap[512]; // Is this perhaps some map size math?
 static unsigned RightOverlap[512]; // Is this perhaps some map size math?
+
 static int PathCount;
 
 FootClass::FootClass(RTTIType type, int id, HousesType house) :
@@ -426,10 +451,24 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
         return nullptr;
     }
 
-    int threat;
-    int risk;
-    int threat_state = 0;
+    // Set up initial state of the path
+    cell_t current_cell = Coord_To_Cell(Get_Coord());
+
+#ifdef CHRONOSHIFT_DEBUG
+    if (Debug_Find_Path) {
+        g_mouse->Hide_Mouse();
+        Debug_Draw_Map("Initial Draw", current_cell, dest);
+        // Wait for input, gives the user time to see the final path map.
+        g_keyboard->Wait_For_Input(KN_RETURN);
+        g_mouse->Show_Mouse();
+    }
+#endif
+
     ++PathCount;
+
+    int threat = 0;
+    int risk = 0;
+    int threat_state = 0;
 
     // Are we part of a team and should that team avoid threats?
     if (!m_Team.Is_Valid() || !m_Team->Should_Avoid_Threats()) {
@@ -446,9 +485,6 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
         threat = 0;
     }
-
-    // Set up initial state of the path
-    cell_t current_cell = Coord_To_Cell(Get_Coord());
 
     _path.StartCell = StartLocation = current_cell;
     _path.Score = 0;
@@ -472,7 +508,12 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
         cell_t adj_cell = Cell_Get_Adjacent(current_cell, direction);
         int cell_score = Passable_Cell(adj_cell, direction, threat, move);
 
-        if (cell_score != 0) { // Great, we have a direct move, do the next round.
+        if (cell_score > 0) { // Great, we have a direct move, do the next round.
+
+        #ifdef CHRONOSHIFT_DEBUG
+            Debug_Plot_Cell(adj_cell, true, threat_state);
+        #endif
+
             // DEBUG_LOG("  Cell passable and on direct route, registering cell.\n");
             Register_Cell(&_path, adj_cell, direction, cell_score, move);
             current_cell = adj_cell;
@@ -486,18 +527,36 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
             int left_score = 0;
             PathType *chosen_path = nullptr;
 
+        #ifdef CHRONOSHIFT_DEBUG
+            if (Debug_Find_Path) {
+                g_mouse->Hide_Mouse();
+                Debug_Draw_Map("Walk Through Obstacle", current_cell, dest);
+                // Wait for input, gives the user time to see the final path map.
+                g_keyboard->Wait_For_Input(KN_RETURN);
+                g_mouse->Show_Mouse();
+            }
+        #endif
+
+        #ifdef CHRONOSHIFT_DEBUG
+            Debug_Plot_Cell(adj_cell, false, threat_state);
+        #endif
+
             if (adj_cell == dest) { // Close enough.
                 break;
             }
 
             int i = 0;
-
             while (i < 5) {
                 FacingType next_dir = Direction_To_Facing(Cell_Direction8(adj_cell, dest));
                 adj_cell = Cell_Get_Adjacent(adj_cell, next_dir);
 
                 // If we still don't have passable, see if we are close.
                 if (Passable_Cell(adj_cell, FACING_NONE, threat, move) == 0) {
+
+                #ifdef CHRONOSHIFT_DEBUG
+                    Debug_Plot_Cell(adj_cell, false, threat_state);
+                #endif
+
                     // If we are close, adjust the threat and try again.
                     if (adj_cell == dest) {
                         if (threat == -1) {
@@ -528,6 +587,17 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                     }
                 }
 
+            #ifdef CHRONOSHIFT_DEBUG
+                Debug_Plot_Cell(adj_cell, true, threat_state);
+            #endif
+
+            #ifdef CHRONOSHIFT_DEBUG
+                if (Debug_Find_Path) {
+                    g_mouse->Hide_Mouse();
+                    Debug_Draw_Map("Follow Left Edge", current_cell, adj_cell);
+                }
+            #endif
+
                 memcpy(&left_path, &_path, sizeof(left_path));
                 left_path.Moves = left_moves;
                 left_path.Overlap = LeftOverlap;
@@ -544,6 +614,22 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                     sizeof(left_moves) - 2,
                     move);
 
+            #ifdef CHRONOSHIFT_DEBUG
+                if (Debug_Find_Path) {
+                    Debug_Print_Steps("Left", left_score, left_path.Length);
+                    // Wait for input, gives the user time to see the final path map.
+                    g_keyboard->Wait_For_Input(KN_RETURN);
+                    g_mouse->Show_Mouse();
+                }
+            #endif
+
+            #ifdef CHRONOSHIFT_DEBUG
+                if (Debug_Find_Path) {
+                    g_mouse->Hide_Mouse();
+                    Debug_Draw_Map("Follow Right Edge", current_cell, adj_cell);
+                }
+            #endif
+
                 memcpy(&right_path, &_path, sizeof(right_path));
                 right_path.Moves = right_moves;
                 right_path.Overlap = RightOverlap;
@@ -559,6 +645,15 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                     threat_state,
                     sizeof(right_moves) - 2,
                     move);
+
+            #ifdef CHRONOSHIFT_DEBUG
+                if (Debug_Find_Path) {
+                    Debug_Print_Steps("Right", right_score, right_path.Length);
+                    // Wait for input, gives the user time to see the final path map.
+                    g_keyboard->Wait_For_Input(KN_RETURN);
+                    g_mouse->Show_Mouse();
+                }
+            #endif
 
                 if (left_score != 0 || right_score != 0) {
                     // DEBUG_LOG("  Found a path following an edge.\n");
@@ -634,8 +729,19 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                     _path.UnravelCheckpoint = -1;
 
                     current_cell = adj_cell;
+
+                #ifdef CHRONOSHIFT_DEBUG
+                    if (Debug_Find_Path) {
+                        g_mouse->Hide_Mouse();
+                        Debug_Draw_Map("Walking To Next Obstacle", current_cell, dest);
+                        // Wait for input, gives the user time to see the final path map.
+                        g_keyboard->Wait_For_Input(KN_RETURN);
+                        g_mouse->Show_Mouse();
+                    }
+                #endif
+
                 } else {
-                    // DEBUG_LOG("  Find_Path bailing, mount cound 0 after successful follow edge.\n");
+                    // DEBUG_LOG("  Find_Path bailing: move count is zero after successful follow edge.\n");
                     break;
                 }
             } else {
@@ -648,9 +754,50 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
         _path.Moves[_path.Length++] = FACING_NONE;
     }
 
+#ifdef CHRONOSHIFT_DEBUG
+    if (Debug_Find_Path) {
+        g_mouse->Hide_Mouse();
+        Debug_Draw_Map("Final Generated Path (Before Optimization)", current_cell, dest);
+        Debug_Draw_Path(&_path);
+        // Wait for input, gives the user time to see the final path map.
+        g_keyboard->Wait_For_Input(KN_RETURN);
+        g_mouse->Show_Mouse();
+    }
+#endif
+
     Optimize_Moves(&_path, move);
 
+#ifdef CHRONOSHIFT_DEBUG
+    if (Debug_Find_Path) {
+        g_mouse->Hide_Mouse();
+        Debug_Draw_Map("Final Generated Path (After Optimization)", current_cell, dest);
+        Debug_Draw_Path(&_path);
+        // Wait for input, gives the user time to see the final path map.
+        g_keyboard->Wait_For_Input(KN_RETURN);
+        g_mouse->Show_Mouse();
+    }
+
+    // perform a full redraw of the viewport.
+    if (Debug_Find_Path) {
+        Map.Flag_To_Redraw(true);
+        Map.Render();
+    }
+
+    // Draw the final generated path onto the tactical map using markers.
+    if (Debug_Draw_Paths) {
+        // DEBUG_LOG("Drawing final generated path to tactical map.\n");
+        Debug_Draw_Path(&_path);
+    }
+
+    // perform a full redraw of the viewport.
+    if (Debug_Find_Path || Debug_Draw_Paths) {
+        Map.Flag_To_Redraw(true);
+        Map.Render();
+    }
+#endif
+
     // DEBUG_LOG("Completed Find_Path...\n");
+
     return &_path;
 }
 
@@ -661,6 +808,29 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
  */
 BOOL FootClass::Basic_Path()
 {
+    // preapre debug flags for path generation debug systems.
+#ifdef CHRONOSHIFT_DEBUG
+
+    // falsify the map path drawing flags.
+    Debug_Find_Path = false;
+    Debug_Draw_Paths = false;
+
+    if ((g_Debug_Find_Path_Mode == DEBUG_PATH_AI || g_Debug_Find_Path_Mode == DEBUG_PATH_BOTH) && !m_OwnerHouse->Is_Human() && !m_OwnerHouse->Is_Player()) {
+        Debug_Find_Path = true;
+        Debug_Draw_Paths = m_Selected; // only draw the path when the object is selected.
+    }
+
+    if ((g_Debug_Find_Path_Mode == DEBUG_PATH_PLAYER || g_Debug_Find_Path_Mode == DEBUG_PATH_BOTH) && m_OwnerHouse->Is_Player()) {
+        Debug_Find_Path = true;
+    }
+
+    if (g_Debug_Draw_Paths) {
+        Debug_Draw_Paths = m_Selected; // only draw the path when the object is selected.
+    }
+
+    //}
+#endif
+
     m_Paths[0] = FACING_NONE;
     bool havepath = false;
 
@@ -732,7 +902,7 @@ BOOL FootClass::Basic_Path()
             do {
                 path = Find_Path(navcell, facings, GEN_PATH_LENGTH, m_PathMove);
 
-                if (path != nullptr && path->Score != 0) {
+                if (path != nullptr && path->Score > 0) {
                     //memcpy(&pathobj, path, sizeof(pathobj));
                     pathobj = *path;
                     do_fixup = true;
@@ -785,7 +955,9 @@ BOOL FootClass::Unravel_Loop(PathType *path, cell_t &cell, FacingType &facing, i
                 facing = *(facing_ptr - 1); // field_A a pointer to facing types?
                 path->UnravelCheckpoint = cellnum;
                 path->Length = i;
-
+            #ifdef CHRONOSHIFT_DEBUG
+                Debug_Plot_Cell(cellnum, true, -1, COLOR_CYAN);
+            #endif
                 return true;
             }
 
@@ -794,6 +966,9 @@ BOOL FootClass::Unravel_Loop(PathType *path, cell_t &cell, FacingType &facing, i
 
         path->Score -= Passable_Cell(cellnum, *facing_ptr, -1, move);
         path->Overlap[cellnum / PATH_FLAG_BITSIZE] &= ~(1 << (cellnum % PATH_FLAG_BITSIZE));
+    #ifdef CHRONOSHIFT_DEBUG
+        Debug_Plot_Cell(cellnum, true, -1, COLOR_LTCYAN);
+    #endif
         face = *facing_ptr--;
         cellnum += AdjacentCell[Opposite_Facing(face)];
     }
@@ -826,7 +1001,9 @@ BOOL FootClass::Register_Cell(PathType *path, cell_t cell, FacingType facing, in
         cell_t cellnum = Cell_Get_Adjacent(cell, Opposite_Facing(facing));
         path->Overlap[cellnum / PATH_FLAG_BITSIZE] &= ~(1 << (cellnum % PATH_FLAG_BITSIZE));
         --path->Length;
-
+    #ifdef CHRONOSHIFT_DEBUG
+        Debug_Plot_Cell(cellnum, true, -1, COLOR_BLUE);
+    #endif
         return true;
     }
 
@@ -860,6 +1037,9 @@ BOOL FootClass::Register_Cell(PathType *path, cell_t cell, FacingType facing, in
             path->Score -= Passable_Cell(test_cell, *face_ptr, -1, move);
             // Sole has a -1 before the 1 << while RA doesn't here...
             path->Overlap[test_cell / PATH_FLAG_BITSIZE] &= ~(1 << (test_cell % PATH_FLAG_BITSIZE));
+        #ifdef CHRONOSHIFT_DEBUG
+            Debug_Plot_Cell(test_cell, true, -1, COLOR_LTBLUE);
+        #endif
             ++count;
             ++face_ptr;
         }
@@ -925,12 +1105,21 @@ BOOL FootClass::Follow_Edge(cell_t start, cell_t destination, PathType *path, Fa
                 if (next_adj == destination) {
                     cell_cost = Passable_Cell(next_adj, Facing_Adjust(edge_face, chirality), threat, move);
 
-                    if (cell_cost != 0) {
+                    if (cell_cost > 0) {
+
+                    #ifdef CHRONOSHIFT_DEBUG
+                        Debug_Plot_Cell(next_adj, true, threat_state);
+                    #endif
+
                         edge_face = Facing_Adjust(edge_face, chirality);
                         edge_cell = Cell_Get_Adjacent(curr_cell, edge_face);
 
                         break;
                     }
+
+                #ifdef CHRONOSHIFT_DEBUG
+                    Debug_Plot_Cell(next_adj, false, threat_state);
+                #endif
                 }
 
                 cell_t chk_cell = Cell_Get_Adjacent(curr_cell, edge_face);
@@ -962,10 +1151,19 @@ BOOL FootClass::Follow_Edge(cell_t start, cell_t destination, PathType *path, Fa
             if (!either_side_of_line) {
                 cell_cost = Passable_Cell(edge_cell, edge_face, threat, move);
 
-                if (cell_cost != 0) {
+                if (cell_cost > 0) {
+
+                #ifdef CHRONOSHIFT_DEBUG
+                    Debug_Plot_Cell(edge_cell, true, threat_state);
+                #endif
+
                     break;
                 }
             }
+
+        #ifdef CHRONOSHIFT_DEBUG
+            Debug_Plot_Cell(edge_cell, false, threat_state, (either_side_of_line ? COLOR_BROWN : COLOR_TBLACK));
+        #endif
 
             if (edge_cell == destination) {
                 loop_finished = true;
@@ -993,7 +1191,7 @@ BOOL FootClass::Follow_Edge(cell_t start, cell_t destination, PathType *path, Fa
             }
 
             // If we can't get round the obstruction in 400 moves, give up?
-            if (++path_count == 400) {
+            if (++path_count == PATH_RETRY_COUNT) {
                 return false;
             }
         }
@@ -1296,7 +1494,7 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
         if (num1 != 0) {
             DEBUG_LOG("ERROR: Find_Path_Wrapper Moves don't match\n");
         }
-        int num2 = memcmp(real->Overlap, test_overlap, 2048);
+        int num2 = memcmp(real->Overlap, test_overlap, 512 * 4); // sizeof(OVERLAP_SIZE)?
         if (num2 != 0) {
             DEBUG_LOG("ERROR: Find_Path_Wrapper Overlaps don't match\n");
         }
@@ -1307,3 +1505,216 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
     DEBUG_LOG("***Find_Path_Wrapper exit***\n");
     return real;
 }
+
+#ifdef CHRONOSHIFT_DEBUG
+void FootClass::Debug_Draw_Map(const char *title, cell_t source, cell_t dest/*, BOOL enter_wait_for_input, BOOL exit_wait_for_input*/)
+{
+    //DEBUG_LOG("FootClass::Debug_Draw_Map(%s)(enter) - '%s'\n", Name(), title);
+
+    /*if (enter_wait_for_input) {
+        //DEBUG_LOG("FootClass::Debug_Draw_Map(enter) - Waiting for user input...\n");
+        g_keyboard->Wait_For_Input(KN_RETURN);
+        //DEBUG_LOG("FootClass::Debug_Draw_Map(enter) - Got user input.\n");
+    }*/
+
+    //DEBUG_LOG("FootClass::Debug_Draw_Map() - Drawing map.\n");
+
+    GraphicViewPortClass *prevpage = Set_Logic_Page(g_seenBuff);
+
+    // Clear the visible buffer.
+    //g_visiblePage.Clear();
+    g_seenBuff.Fill_Rect(Debug_X_Pos, Debug_Y_Pos, Debug_X_Pos + Debug_Width, Debug_Y_Pos + Debug_Height, COLOR_BLACK);
+
+    // Print the map title at top center.
+    Fancy_Text_Print(title, Debug_X_Pos + (Debug_Width / 2), Debug_Y_Pos + 10, &WhiteScheme, COLOR_BLACK, TPF_CENTER | TPF_8PT);
+    
+    // print current object info.
+    Fancy_Text_Print("Object: %s", (Debug_X_Pos + Debug_Width) - 90, Debug_Y_Pos + 260, &WhiteScheme, COLOR_BLACK, TPF_LEFT | TPF_8PT, Name());
+    Fancy_Text_Print("Owner: %s", (Debug_X_Pos + Debug_Width) - 90, Debug_Y_Pos + 272, &WhiteScheme, COLOR_BLACK, TPF_LEFT | TPF_8PT, m_OwnerHouse->Is_Player() ? "PLAYER" : "AI");
+
+    Fancy_Text_Print("Source: %dx%d", (Debug_X_Pos + Debug_Width) - 90, Debug_Y_Pos + 296, &WhiteScheme, COLOR_BLACK, TPF_LEFT | TPF_8PT, Cell_Get_X(source), Cell_Get_Y(source));
+    Fancy_Text_Print("Dest:  %dx%d", (Debug_X_Pos + Debug_Width) - 90, Debug_Y_Pos + 304, &WhiteScheme, COLOR_BLACK, TPF_LEFT | TPF_8PT, Cell_Get_X(dest), Cell_Get_Y(dest));
+
+    for (int cell_x = 0; cell_x < MAP_MAX_WIDTH; ++cell_x) {
+
+        for (int cell_y = 0; cell_y < MAP_MAX_HEIGHT; ++cell_y) {
+
+            cell_t curr_cellnum = Cell_From_XY(cell_x, cell_y);
+            CellClass &cell = Map[curr_cellnum];
+
+            ColorType color = COLOR_TBLACK;
+
+            switch (Can_Enter_Cell(curr_cellnum)) {
+                case MOVE_OK: // Passable cells
+                    color = COLOR_GREEN;
+                    break;
+
+                case MOVE_MOVING_BLOCK: // Units, etc
+                    color = COLOR_LTGREEN;
+                    break;
+
+                case MOVE_DESTROYABLE:
+                    color = COLOR_YELLOW;
+                    break;
+
+                case MOVE_TEMP:
+                    color = COLOR_BROWN;
+                    break;
+
+                case MOVE_CLOAK:
+                    color = COLOR_PURPLE;
+                    break;
+
+                case MOVE_NO: // Impassable cells (cliffs, rocks, etc.)
+                              // This also includes water for land objects, and
+                              // land for ships.
+                    color = COLOR_RED;
+                    break;
+
+                default:
+                    break;
+            };
+
+            // If cell is out of current map bounds, colour it grey.
+            if ( !Map.In_Visible_Map(curr_cellnum) ) {
+                color = COLOR_LTGREY;
+            }
+
+            // colour the source cell light blue.
+            if ( curr_cellnum == source ) {
+                color = COLOR_LTBLUE;
+            }
+
+            // colour the destination cell blue.
+            if ( curr_cellnum == dest ) {
+                color = COLOR_BLUE;
+            }
+
+            int cell_pos_x = Debug_Map_X_Pos + (cell_x * CELL_PIXEL_SIZE);
+            int cell_pos_y = Debug_Map_Y_Pos + (cell_y * CELL_PIXEL_SIZE);
+
+            // plot the cell pixel.
+            g_seenBuff.Put_Fat_Pixel(cell_pos_x, cell_pos_y, CELL_PIXEL_SIZE, color);
+        }
+    }
+
+    int legend_ypos = Debug_Y_Pos + 100;
+
+    int legend_block_x_pos = (Debug_X_Pos + Debug_Width) - 14;
+    int legend_text_x_pos = (Debug_X_Pos + Debug_Width) - 18;
+
+    // print the legend info.
+    Fancy_Text_Print("Start Cell", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_LTBLUE);
+    legend_ypos += 12;
+
+    Fancy_Text_Print("Dest Cell", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_BLUE);
+    legend_ypos += 12;
+
+    Fancy_Text_Print("O.O.B. Cells", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_LTGREY);
+    legend_ypos += 20;
+
+    Fancy_Text_Print("OK", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_GREEN);
+    legend_ypos += 12;
+
+    Fancy_Text_Print("Moving Block", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_LTGREEN);
+    legend_ypos += 12;
+
+    Fancy_Text_Print("Destroyable", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_YELLOW);
+    legend_ypos += 12;
+
+    Fancy_Text_Print("Temp", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_BROWN);
+    legend_ypos += 12;
+
+    Fancy_Text_Print("Cloaked", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_PURPLE);
+    legend_ypos += 12;
+
+    Fancy_Text_Print("No", legend_text_x_pos, legend_ypos + 2, &WhiteScheme, COLOR_TBLACK, TPF_RIGHT | TPF_8PT);
+    g_seenBuff.Fill_Rect(legend_block_x_pos, legend_ypos, legend_block_x_pos + 10, legend_ypos + 12, COLOR_RED);
+
+    // print the continue button text.
+    Fancy_Text_Print("Press ENTER", (Debug_X_Pos + Debug_Width) - 90, (Debug_Y_Pos + Debug_Height) - 76, &WhiteScheme, COLOR_TBLACK, TPF_LEFT | TPF_8PT);
+    Fancy_Text_Print("to continue", (Debug_X_Pos + Debug_Width) - 90, (Debug_Y_Pos + Debug_Height) - 60, &WhiteScheme, COLOR_TBLACK, TPF_LEFT | TPF_8PT);
+
+    /*if (exit_wait_for_input) {
+        //DEBUG_LOG("FootClass::Debug_Draw_Map(exit) - Waiting for user input...\n");
+        g_keyboard->Wait_For_Input(KN_RETURN);
+        //DEBUG_LOG("FootClass::Debug_Draw_Map(exit) - Got user input.\n");
+    }*/
+
+    Set_Logic_Page(prevpage);
+
+    //DEBUG_LOG("FootClass::Debug_Draw_Map(exit)\n");
+}
+
+void FootClass::Debug_Draw_Path(PathType *path, BOOL draw_tactical)
+{
+    //DEBUG_LOG("FootClass::Debug_Draw_Path(%s)(enter)\n", Name());
+
+    if (path != nullptr) {
+        cell_t cellnum = path->StartCell;
+        for (int i = 0; i < path->Length; ++i) {
+            cellnum = Cell_Get_Adjacent(cellnum, path->Moves[i]);
+            Debug_Plot_Cell(cellnum, true);
+        }
+    }
+}
+
+void FootClass::Debug_Plot_Cell(cell_t cell, BOOL a2, int threat_state, uint8_t color)
+{
+    //DEBUG_LOG("FootClass::Debug_Plot_Map_Cell(%s)(enter)\n", Name());
+
+    // draw the cell pixel on the debug map
+    if (Debug_Find_Path) {
+        int cell_pos_x = Debug_Map_X_Pos + (Cell_Get_X(cell) * CELL_PIXEL_SIZE) + 1;
+        int cell_pos_y = Debug_Map_Y_Pos + (Cell_Get_Y(cell) * CELL_PIXEL_SIZE) + 1;
+        if (color != COLOR_TBLACK) {
+            g_seenBuff.Put_Fat_Pixel(cell_pos_x, cell_pos_y, 1, color);
+        } else {
+            g_seenBuff.Put_Fat_Pixel(cell_pos_x, cell_pos_y, 1, (a2 ? COLOR_WHITE : COLOR_BLACK));
+        }
+    }
+
+    // draw the cell pixel on the tactical map.
+    if (Debug_Draw_Paths) {
+        int x_pos = 0;
+        int y_pos = 0;
+        coord_t coord = Coord_Centered(Cell_To_Coord(cell));
+        if ( Map.Coord_To_Pixel(coord, x_pos, y_pos) ) {
+            if (threat_state <= 2) {
+                g_seenBuff.Put_Fat_Pixel(x_pos, y_pos, MAP_CELL_PIXEL_SIZE, (a2 ? (threat_state + 9) : COLOR_BLACK));
+                g_seenBuff.Put_Fat_Pixel(x_pos + 1, y_pos + 1, MAP_CELL_PIXEL_SIZE - 1, (a2 ? (threat_state + 9) : COLOR_RED));
+            } else {
+                g_seenBuff.Put_Fat_Pixel(x_pos, y_pos, MAP_CELL_PIXEL_SIZE, (a2 ? (threat_state + 9) : COLOR_BLACK));
+                g_seenBuff.Put_Fat_Pixel(x_pos + 1, y_pos + 1, MAP_CELL_PIXEL_SIZE - 1, (a2 ? COLOR_LTGREEN : COLOR_RED));
+            }
+        }
+    }
+}
+
+void FootClass::Debug_Print_Steps(const char *text, int score, int steps)
+{
+    //DEBUG_LOG("FootClass::Debug_Print_Steps(%s)(enter)\n", Name());
+
+    int text_x_pos = (Debug_X_Pos + Debug_Width) - 100;
+    int text_y_pos = Debug_Y_Pos + 40;
+
+    Fancy_Text_Print(text, text_x_pos, text_y_pos, &WhiteScheme, COLOR_TBLACK, TPF_LEFT | TPF_8PT);
+
+    text_y_pos += 12;
+
+    if (score > 0) {
+        Fancy_Text_Print("Total Steps: %d", text_x_pos, text_y_pos, &WhiteScheme, COLOR_TBLACK, TPF_LEFT | TPF_8PT, steps);
+    } else {
+        Fancy_Text_Print("Total Steps: FAIL!", text_x_pos, text_y_pos, &WhiteScheme, COLOR_TBLACK, TPF_LEFT | TPF_8PT);
+    }
+}
+
+#endif
