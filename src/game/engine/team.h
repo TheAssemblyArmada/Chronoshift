@@ -58,16 +58,16 @@ private:
     GamePtr<HouseClass> m_Owner;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Bit1_1 : 1; // 1
-    BOOL m_Bit1_2 : 1; // 2
-    BOOL m_Bit1_4 : 1; // 4
-    BOOL m_ForcedActive : 1; // 8
-    BOOL m_Bit1_16 : 1; // 16
+    BOOL m_ForcedActive : 1; // 1
+    BOOL m_HasBeen : 1; // 2
+    BOOL m_FullStrength : 1; // 4
+    BOOL m_Understrength : 1; // 8
+    BOOL m_Reforming : 1; // 16
     BOOL m_Bit1_32 : 1; // 32
     BOOL m_Bit1_64 : 1; // 64
     BOOL m_Bit1_128 : 1; // 128
 
-    BOOL m_Bit2_1 : 1; // 1
+    BOOL m_Moving : 1; // 1
     BOOL m_Bit2_2 : 1; // 2
     BOOL m_Bit2_4 : 1; // 4
     BOOL m_Bit2_8 : 1; // 8
@@ -76,16 +76,15 @@ private:
     BOOL m_Bit2_64 : 1; // 64
     BOOL m_Bit2_128 : 1; // 128
 #else
-    bool m_Bit1_1;
-    bool m_Bit1_2;
-    bool m_Bit1_4;
     bool m_ForcedActive;
-    bool m_Bit1_16;
+    bool m_HasBeen;
+    bool m_FullStrength;
+    bool m_Understrength;
+    bool m_Reforming;
     bool m_Bit1_32;
     bool m_Bit1_64;
     bool m_Bit1_128;
-
-    bool m_Bit2_1;
+    bool m_Moving;
     bool m_Bit2_2;
     bool m_Bit2_4;
     bool m_Bit2_8;
@@ -95,19 +94,19 @@ private:
     bool m_Bit2_128;
 #endif
 
-    target_t m_field_21;
+    target_t m_Center;
     target_t m_field_25;
     target_t m_field_29;
-    target_t m_field_2D;
-    int m_field_31;
+    target_t m_Target;
+    int m_Members;
     int m_field_35;
     FormationType m_Formation;
     TCountDownTimerClass<FrameTimerClass> m_field_3A;
     GamePtr<TriggerTypeClass> m_Trigger;
-    int m_field_47;
+    int m_Mission;
     TCountDownTimerClass<FrameTimerClass> m_field_4B;
     FootClass *m_field_54;
-    unsigned char m_field_58[5];
+    unsigned char m_Quantity[5];
 };
 
 #ifdef GAME_DLL

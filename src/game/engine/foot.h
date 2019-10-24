@@ -42,6 +42,7 @@ class FootClass : public TechnoClass
         NAV_LENGTH = 10, // Length of our nav list.
         PATH_LENGTH = 12, // Length of path we store to act on.
         GEN_PATH_LENGTH = 200, // Length of path we actually generate.
+        MAX_TRY = 10,
     };
 
 public:
@@ -138,6 +139,7 @@ protected:
     BOOL m_Firing : 1; // 32
     BOOL m_Rotating : 1; // 64
     BOOL m_Moving : 1; // 128
+
     BOOL m_Bit2_1 : 1; // 1
     BOOL m_InFormation : 1; // 2
     BOOL m_Bit2_4 : 1; // 4
@@ -167,12 +169,12 @@ protected:
     target_t m_SuspendedNavCom;
     target_t m_NavList[NAV_LENGTH];
     GamePtr<TeamClass> m_Team;
-    TeamNumberType m_field_113;
-    FootClass *m_field_114; // Next team member?
+    TeamGroupType m_Group;
+    FootClass *m_Member; // Next linked team member.
     FacingType m_Paths[PATH_LENGTH];
-    MoveType m_PathMove; // The move type the current path was generated with.
+    MoveType m_PathBreak;
     TCountDownTimerClass<FrameTimerClass> m_PathDelay;
-    uint32_t m_field_12E;
+    uint32_t m_Try; // "PathTry"?
     TCountDownTimerClass<FrameTimerClass> m_BaseDefenseDelay;
     SpeedType m_TeamSpeed;
     MPHType m_TeamMaxSpeed;

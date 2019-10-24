@@ -64,11 +64,11 @@ FootClass::FootClass(RTTIType type, int id, HousesType house) :
     m_NavCom(0),
     m_SuspendedNavCom(0),
     m_Team(nullptr),
-    m_field_113(TEAM_NUMBER_NONE),
-    m_field_114(0),
-    m_PathMove(MOVE_CLOAK),
+    m_Group(GROUP_NONE),
+    m_Member(nullptr),
+    m_PathBreak(MOVE_CLOAK),
     m_PathDelay(),
-    m_field_12E(10),
+    m_Try(MAX_TRY),
     m_BaseDefenseDelay(),
     m_TeamSpeed(SPEED_FOOT),
     m_TeamMaxSpeed(MPH_MIN),
@@ -100,11 +100,11 @@ FootClass::FootClass(const FootClass &that) :
     m_NavCom(that.m_NavCom),
     m_SuspendedNavCom(that.m_SuspendedNavCom),
     m_Team(that.m_Team),
-    m_field_113(that.m_field_113),
-    m_field_114(that.m_field_114),
-    m_PathMove(that.m_PathMove),
+    m_Group(that.m_Group),
+    m_Member(that.m_Member),
+    m_PathBreak(that.m_PathBreak),
     m_PathDelay(that.m_PathDelay),
-    m_field_12E(that.m_field_12E),
+    m_Try(that.m_Try),
     m_BaseDefenseDelay(that.m_BaseDefenseDelay),
     m_TeamSpeed(that.m_TeamSpeed),
     m_TeamMaxSpeed(that.m_TeamMaxSpeed),
@@ -254,10 +254,10 @@ void FootClass::Sell_Back(int a1)
  */
 void FootClass::Code_Pointers() 
 {
-    if (m_field_114 != nullptr && m_field_114->m_IsActive) {
-        m_field_114 = reinterpret_cast<FootClass *>(m_field_114->As_Target());
+    if (m_Member != nullptr && m_Member->m_IsActive) {
+        m_Member = reinterpret_cast<FootClass *>(m_Member->As_Target());
     } else {
-        m_field_114 = nullptr;
+        m_Member = nullptr;
     }
     TechnoClass::Code_Pointers();
 }
@@ -269,8 +269,9 @@ void FootClass::Code_Pointers()
  */
 void FootClass::Decode_Pointers()
 {
-    if ( m_field_114 ) {
-        m_field_114 = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)m_field_114));
+    if (m_Member != nullptr) {
+        m_Member = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)m_Member));
+        DEBUG_ASSERT(m_Member != nullptr);
     }
     TechnoClass::Decode_Pointers();
 }
@@ -346,7 +347,7 @@ target_t FootClass::Greatest_Threat(ThreatType threat)
 
 void FootClass::Assign_Destination(target_t dest)
 {
-    m_PathMove = MOVE_CLOAK;
+    m_PathBreak = MOVE_CLOAK;
     m_NavCom = dest;
 }
 
@@ -730,7 +731,7 @@ BOOL FootClass::Basic_Path()
 
             // Do loop at least once to try and get a path, then check our moves.
             do {
-                path = Find_Path(navcell, facings, GEN_PATH_LENGTH, m_PathMove);
+                path = Find_Path(navcell, facings, GEN_PATH_LENGTH, m_PathBreak);
 
                 if (path != nullptr && path->Score != 0) {
                     //memcpy(&pathobj, path, sizeof(pathobj));
@@ -740,8 +741,8 @@ BOOL FootClass::Basic_Path()
                     break;
                 }
 
-                ++m_PathMove;
-            } while (m_PathMove <= move);
+                ++m_PathBreak;
+            } while (m_PathBreak <= move);
 
             // If we found a path within the allowed move types.
             if (do_fixup) {

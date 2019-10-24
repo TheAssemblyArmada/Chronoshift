@@ -151,22 +151,23 @@ enum WarheadExplosionType
     WH_EXPLOSION_NUKE = 6,
 };
 
-// this is temp (made up name) until we work out what it really is
-enum TeamNumberType
+enum TeamGroupType
 {
-    TEAM_NUMBER_NONE = -1,
-    TEAM_NUMBER_FIRST = 0,
-    TEAM_NUMBER_0 = 0,
-    TEAM_NUMBER_1 = 1,
-    TEAM_NUMBER_2 = 2,
-    TEAM_NUMBER_3 = 3,
-    TEAM_NUMBER_4 = 4,
-    TEAM_NUMBER_5 = 5,
-    TEAM_NUMBER_6 = 6,
-    TEAM_NUMBER_7 = 7,
-    TEAM_NUMBER_8 = 8,
-    TEAM_NUMBER_9 = 9,
-    TEAM_NUMBER_COUNT = 10
+    GROUP_0,
+    GROUP_1,
+    GROUP_2,
+    GROUP_3,
+    GROUP_4,
+    GROUP_5,
+    GROUP_6,
+    GROUP_7,
+    GROUP_8,
+    GROUP_9,
+
+    GROUP_COUNT,
+
+    GROUP_FIRST = GROUP_0,
+    GROUP_NONE = -1,
 };
 
 // this is temp (made up name) until we work out what it really is
