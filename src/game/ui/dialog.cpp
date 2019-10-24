@@ -256,7 +256,7 @@ void Simple_Text_Print(
                 break;
         }
 
-        if (xpos < g_logicPage->Get_Width() && ypos < g_logicPage->Get_Height()) {
+        if ((unsigned)xpos < (unsigned)g_logicPage->Get_Width() && (unsigned)ypos < (unsigned)g_logicPage->Get_Height()) {
             g_logicPage->Print(string, xpos, ypos, fgcolor, bgcolor);
         }
     }
