@@ -21,3 +21,5 @@ RemapControlType MetalScheme;
 RemapControlType GreyScheme;
 RemapControlType SidebarScheme;
 #endif
+
+RemapControlType WhiteScheme;

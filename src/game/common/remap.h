@@ -76,4 +76,6 @@ extern RemapControlType GreyScheme;
 extern RemapControlType SidebarScheme;
 #endif
 
+extern RemapControlType WhiteScheme;
+
 #endif // REMAP_H

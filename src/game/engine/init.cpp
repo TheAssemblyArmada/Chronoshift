@@ -438,6 +438,23 @@ void Init_Color_Remaps()
     GreyScheme.WindowPalette[6] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(5, 5)];
     GreyScheme.WindowPalette[7] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(11, 5)];
 
+    // White Scheme
+    for (int i = 0; i < 256; ++i ) {
+        WhiteScheme.RemapPalette[i] = i;
+    }
+
+    // Write small gradient.
+    for (int i = 4; i < 10; ++i) {
+        WhiteScheme.FontPalette[i] = g_sysMemPage.Get_Pixel(1, 10);
+    }
+
+    WhiteScheme.BrightColor = g_sysMemPage.Get_Pixel(1, 10);
+    WhiteScheme.MediumColor = g_sysMemPage.Get_Pixel(1, 10);
+
+    for (int i = 0; i < 8; ++i) {
+        WhiteScheme.WindowPalette[i] = g_sysMemPage.Get_Pixel(1, 10);
+    }
+
     // Metal Scheme
     memset(&MetalScheme, 4, sizeof(RemapControlType));
 
