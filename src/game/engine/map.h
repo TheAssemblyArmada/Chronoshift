@@ -56,6 +56,7 @@ public:
     BOOL Place_Random_Crate_At_Cell(cell_t cellnum);
     BOOL Remove_Crate(cell_t cellnum);
     cell_t Pick_Random_Location() const;
+    BOOL In_Visible_Map(cell_t cellnum) const;
     BOOL In_Radar(cell_t cellnum) const;
     cell_t Clamp_To_Radar(cell_t cellnum) const;
     void Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4);
