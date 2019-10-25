@@ -33,15 +33,16 @@ class DoorClass
         DOOR_CLOSING,
     };
 public:
-    DoorClass() : DoorTimer(), Stage(0), State(DOOR_CLOSED), StageComplete(false) {}
+    DoorClass() : DoorTimer(), Stage(0), State(DOOR_CLOSED), ToRedraw(false) {}
     DoorClass(const NoInitClass &noinit) : DoorTimer(noinit) {}
 
     void AI();
     BOOL Open_Door(int delay, int stages);
     BOOL Close_Door(int delay, int stages);
     int Door_Stage() const;
-    BOOL Get_Stage_Complete() { return StageComplete; }
-    void Set_Stage_Compelte(BOOL complete) { StageComplete = complete; }
+    void Mark_To_Redraw() { ToRedraw = true; }
+    BOOL To_Redraw() { return ToRedraw; }
+    void Clear_To_Redraw() { ToRedraw = false; }
     BOOL Is_Closed() const { return State == DOOR_CLOSED; }
     BOOL Is_Open() const { return State == DOOR_OPEN; }
     BOOL Is_Opening() const { return State == DOOR_OPENING; }
@@ -56,9 +57,9 @@ private:
     int8_t Stage; // Number of stages between end states (open or closed).
     DoorState State; // Current processing state.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL StageComplete : 1;
+    BOOL ToRedraw : 1;
 #else
-    bool StageComplete;
+    bool ToRedraw;
 #endif
 };
 
