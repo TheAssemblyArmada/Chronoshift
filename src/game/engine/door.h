@@ -40,9 +40,9 @@ public:
     BOOL Open_Door(int delay, int stages);
     BOOL Close_Door(int delay, int stages);
     int Door_Stage() const;
-    void Mark_To_Redraw() { ToRedraw = true; }
-    BOOL To_Redraw() { return ToRedraw; }
-    void Clear_To_Redraw() { ToRedraw = false; }
+    void Mark_To_Redraw() const { ToRedraw = true; }
+    BOOL To_Redraw() const { return ToRedraw; }
+    void Clear_To_Redraw() const { ToRedraw = false; }
     BOOL Is_Closed() const { return State == DOOR_CLOSED; }
     BOOL Is_Open() const { return State == DOOR_OPEN; }
     BOOL Is_Opening() const { return State == DOOR_OPENING; }
@@ -57,9 +57,9 @@ private:
     int8_t Stage; // Number of stages between end states (open or closed).
     DoorState State; // Current processing state.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL ToRedraw : 1;
+    mutable BOOL ToRedraw : 1;
 #else
-    bool ToRedraw;
+    mutable bool ToRedraw;
 #endif
 };
 
