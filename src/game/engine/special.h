@@ -36,12 +36,14 @@ public:
         OreSpreads = true;
         Spawned = false;
         Remixes = false;
+        ShowHealth = false;
     }
 
     BOOL Allow_Remixes() const { return Remixes; }
     BOOL Is_Spawned() const { return Spawned; }
     BOOL Is_First_Run() const { return FirstRun; }
     void Set_First_Run(BOOL first_run) { FirstRun = first_run; }
+    BOOL Always_Show_Health() { return ShowHealth; }
 
     uint32_t Pack() const { return SpecialFlags; }
 
@@ -64,6 +66,7 @@ private:
 
             BOOL Spawned : 1; // & 1
             BOOL Remixes : 1; // & 2
+            BOOL ShowHealth : 1; // & 4
 
             //Bit3_1 is debug path finding is C&C Dos.
         };
@@ -79,8 +82,11 @@ private:
     bool ThreePointTurnLogic; // Used in hidden special dialog.
     bool OreGrows; // Set in skirmish menu
     bool OreSpreads; // Set in skirmish menu
+
+    // Chronoshift additions
     bool Spawned; // "About to initialise Winsock" string RA demo, now only skips intro and fades in the menu. For Wchat?
     bool Remixes; // Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
+    bool ShowHealth; // Always show health bars
 #endif
 };
 

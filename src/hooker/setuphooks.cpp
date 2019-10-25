@@ -677,6 +677,7 @@ void Setup_Hooks()
 
     // techno.h
     Hook_Function(0x0056706C, *TechnoClass::Wrap_Techno_Draw_It);
+    Hook_Function(0x005618E4, *TechnoClass::Wrap_Draw_It);
 
     // house.h
     Hook_Function(0x004D5EF4, *HouseClass::Silo_Redraw_Check);

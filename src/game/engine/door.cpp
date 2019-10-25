@@ -36,7 +36,7 @@ void DoorClass::AI()
             }
         }
 
-        ToRedraw = true; // Where does this get set to false or get checked?
+        ToRedraw = true;
     }
 }
 
