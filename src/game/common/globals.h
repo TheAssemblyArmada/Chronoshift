@@ -164,6 +164,7 @@ extern void *&g_TurretShapes;
 extern void *&g_SamShapes;
 extern void *&g_MGunShapes;
 
+#ifdef CHONOSHIFT_DEBUG
 extern BOOL &g_Debug_MotionCapture;
 extern BOOL &g_Debug_Rotate;
 extern BOOL &g_Debug_Quiet;
@@ -185,6 +186,7 @@ extern BOOL &g_Debug_Smart_Print;
 extern BOOL &g_Debug_Trap_Check_Heap;
 extern BOOL &g_Debug_Modem_Dump;
 extern BOOL &g_Debug_Print_Events;
+#endif
 
 extern BOOL &g_MonoEnabled;
 #else
@@ -250,6 +252,7 @@ extern void *g_TurretShapes;
 extern void *g_SamShapes;
 extern void *g_MGunShapes;
 
+#ifdef CHRONOSHIFT_DEBUG
 extern BOOL g_Debug_MotionCapture;
 extern BOOL g_Debug_Rotate;
 extern BOOL g_Debug_Quiet;
@@ -264,6 +267,7 @@ extern BOOL g_Debug_Passable;
 extern BOOL g_Debug_Unshroud;
 extern BOOL g_Debug_Threat;
 extern BOOL g_Debug_Find_Path;
+extern BOOL g_Debug_Draw_Paths;
 extern BOOL g_Debug_Check_Map;
 extern BOOL g_Debug_Playtest;
 extern BOOL g_Debug_Heap_Dump;
@@ -272,25 +276,39 @@ extern BOOL g_Debug_Trap_Check_Heap;
 extern BOOL g_Debug_Modem_Dump;
 extern BOOL g_Debug_Print_Events;
 
-extern BOOL g_MonoEnabled;
-#endif
-
-extern int g_mapBinaryVersion;
-
-extern BOOL g_Debug_Paused;
-extern BOOL g_Debug_Step;
-extern int g_Debug_StepCount;
-
 extern BOOL g_Debug_SightRange;
 extern BOOL g_Debug_GuardRange;
 extern BOOL g_Debug_WeaponRange;
 extern BOOL g_Debug_AttackFriendlies;
 extern BOOL g_Debug_NavList;
+extern BOOL g_Debug_HeadTo;
+extern BOOL g_Debug_NavCom;
+extern BOOL g_Debug_TarCom;
 extern BOOL g_Debug_Damage;
 extern BOOL g_Debug_AIControl;
 extern BOOL g_Debug_InstantBuild;
 extern BOOL g_Debug_BuildCheat;
 extern BOOL g_Debug_CursorCoords;
+
+enum DebugFindPathType {
+    DEBUG_PATH_NONE,
+    DEBUG_PATH_AI,
+    DEBUG_PATH_PLAYER,
+    DEBUG_PATH_BOTH,
+    DEBUG_PATH_COUNT
+};
+DEFINE_ENUMERATION_OPERATORS(DebugFindPathType);
+
+extern DebugFindPathType g_Debug_Find_Path_Mode;
+
+extern BOOL g_Debug_Paused;
+extern BOOL g_Debug_Step;
+extern int g_Debug_StepCount;
+
+extern BOOL g_MonoEnabled;
+#endif
+
+extern int g_mapBinaryVersion;
 
 extern BOOL g_Cheat_OreCivilians;
 extern BOOL g_Cheat_TeslaChoppers;

@@ -146,7 +146,11 @@ public:
     KeyNumType Get_DebugKeyWeaponRange() const { return DebugKeyWeaponRange; }
     KeyNumType Get_DebugKeyAttackFriendlies() const { return DebugKeyAttackFriendlies; }
     KeyNumType Get_DebugKeyFindPath() const { return DebugKeyFindPath; }
+    KeyNumType Get_DebugKeyDrawPaths() const { return DebugKeyDrawPaths; }
     KeyNumType Get_DebugKeyNavList() const { return DebugKeyNavList; }
+    KeyNumType Get_DebugKeyHeadTo() const { return DebugKeyHeadTo; }
+    KeyNumType Get_DebugKeyNavCom() const { return DebugKeyNavCom; }
+    KeyNumType Get_DebugKeyTarCom() const { return DebugKeyTarCom; }
     KeyNumType Get_DebugKeyToggleMono() const { return DebugKeyToggleMono; }
     KeyNumType Get_DebugKeyPrevMonoPage() const { return DebugKeyPrevMonoPage; }
     KeyNumType Get_DebugKeyNextMonoPage() const { return DebugKeyNextMonoPage; }
@@ -290,7 +294,11 @@ private:
     static KeyNumType DebugKeyWeaponRange;
     static KeyNumType DebugKeyAttackFriendlies;
     static KeyNumType DebugKeyFindPath;
+    static KeyNumType DebugKeyDrawPaths;
     static KeyNumType DebugKeyNavList;
+    static KeyNumType DebugKeyHeadTo;
+    static KeyNumType DebugKeyNavCom;
+    static KeyNumType DebugKeyTarCom;
     static KeyNumType DebugKeyToggleMono;
     static KeyNumType DebugKeyPrevMonoPage;
     static KeyNumType DebugKeyNextMonoPage;
@@ -347,7 +355,11 @@ private:
     KeyNumType DebugKeyWeaponRange;
     KeyNumType DebugKeyAttackFriendlies;
     KeyNumType DebugKeyFindPath;
+    KeyNumType DebugKeyDrawPaths;
     KeyNumType DebugKeyNavList;
+    KeyNumType DebugKeyHeadTo;
+    KeyNumType DebugKeyNavCom;
+    KeyNumType DebugKeyTarCom;
     KeyNumType DebugKeyToggleMono;
     KeyNumType DebugKeyPrevMonoPage;
     KeyNumType DebugKeyNextMonoPage;

@@ -40,7 +40,11 @@ KeyNumType OptionsClass::DebugKeyGuardRange = KN_NONE;
 KeyNumType OptionsClass::DebugKeyWeaponRange = KN_NONE;
 KeyNumType OptionsClass::DebugKeyAttackFriendlies = KN_NONE;
 KeyNumType OptionsClass::DebugKeyFindPath = KN_NONE;
+KeyNumType OptionsClass::DebugKeyDrawPaths = KN_NONE;
 KeyNumType OptionsClass::DebugKeyNavList = KN_NONE;
+KeyNumType OptionsClass::DebugKeyHeadTo = KN_NONE;
+KeyNumType OptionsClass::DebugKeyNavCom = KN_NONE;
+KeyNumType OptionsClass::DebugKeyTarCom = KN_NONE;
 KeyNumType OptionsClass::DebugKeyToggleMono = KN_NONE;
 KeyNumType OptionsClass::DebugKeyPrevMonoPage = KN_NONE;
 KeyNumType OptionsClass::DebugKeyNextMonoPage = KN_NONE;
@@ -171,7 +175,11 @@ OptionsClass::OptionsClass() :
     DebugKeyWeaponRange(KN_NONE),
     DebugKeyAttackFriendlies(KN_NONE),
     DebugKeyFindPath(KN_NONE),
+    DebugKeyDrawPaths(KN_NONE),
     DebugKeyNavList(KN_NONE),
+    DebugKeyHeadTo(KN_NONE),
+    DebugKeyNavCom(KN_NONE),
+    DebugKeyTarCom(KN_NONE),
     DebugKeyToggleMono(KN_NONE),
     DebugKeyPrevMonoPage(KN_NONE),
     DebugKeyNextMonoPage(KN_NONE),
@@ -347,6 +355,8 @@ void OptionsClass::Load_Settings()
     CounterstrikeEnabled = ini.Get_Bool("Expansions", "CounterstrikeEnabled", false); // TODO use variable as default when ctor used.
     AftermathEnabled = ini.Get_Bool("Expansions", "AftermathEnabled", false); // TODO use variable as default when ctor used.
 
+    DEBUG_LOG("OptionsClass::Load_Settings() - Loading hotkeys.\n");
+
     KeyForceMove1 = ini.Get_KeyNumType("WinHotkeys", "KeyForceMove1", KeyForceMove1);
     KeyForceMove2 = ini.Get_KeyNumType("WinHotkeys", "KeyForceMove2", KeyForceMove2);
     KeyForceAttack1 = ini.Get_KeyNumType("WinHotkeys", "KeyForceAttack1", KeyForceAttack1);
@@ -400,7 +410,11 @@ void OptionsClass::Load_Settings()
     KeyEditorToggle = ini.Get_KeyNumType("WinHotkeys", "KeyEditorToggle", KeyEditorToggle);
 
 #if defined(CHRONOSHIFT_DEBUG)
+    DEBUG_LOG("OptionsClass::Load_Settings() - Loading debug hotkeys.\n");
+
     DebugKeyToggleDebug = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleDebug", DebugKeyToggleDebug);
+    DEBUG_LOG("OptionsClass::Load_Settings() - DebugKeyToggleDebug is '%d'.\n", DebugKeyToggleDebug);
+
     DebugKeyToggleVortex = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleVortex", DebugKeyToggleVortex);
     DebugKeyForceRedraw = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyForceRedraw", DebugKeyForceRedraw);
     DebugKeyRandomCrate = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyRandomCrate", DebugKeyRandomCrate);
@@ -417,7 +431,11 @@ void OptionsClass::Load_Settings()
     DebugKeyWeaponRange = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyWeaponRange", DebugKeyWeaponRange);
     DebugKeyAttackFriendlies = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyAttackFriendlies", DebugKeyAttackFriendlies);
     DebugKeyFindPath = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyFindPath", DebugKeyFindPath);
+    DebugKeyDrawPaths = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyDrawPaths", DebugKeyDrawPaths);
     DebugKeyNavList = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyNavList", DebugKeyNavList);
+    DebugKeyHeadTo = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyHeadTo", DebugKeyHeadTo);
+    DebugKeyNavCom = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyNavCom", DebugKeyNavCom);
+    DebugKeyTarCom = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyTarCom", DebugKeyTarCom);
     DebugKeyToggleMono = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyToggleMono", DebugKeyToggleMono);
     DebugKeyPrevMonoPage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyPrevMonoPage", DebugKeyPrevMonoPage);
     DebugKeyNextMonoPage = ini.Get_KeyNumType("DebugHotkeys", "DebugKeyNextMonoPage", DebugKeyNextMonoPage);

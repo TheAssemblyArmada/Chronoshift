@@ -346,6 +346,7 @@ public:
     KeyASCIIType To_ASCII(uint16_t keycode);
     BOOL Down(uint16_t keycode);
     BOOL Up(uint16_t keycode);
+    void Wait_For_Input(KeyNumType key);
     void Clear();
     void Set_Initialised(BOOL initialised) { m_Initialised = initialised; }
     int Get_MouseQX() { return m_MouseQX; }

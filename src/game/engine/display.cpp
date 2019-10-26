@@ -1968,6 +1968,25 @@ void DisplayClass::Center_Map(coord_t coord)
 }
 
 /**
+* @brief 
+*
+* SS: 0x0044807C
+*/
+void DisplayClass::Redraw_View(BOOL force)
+{
+    cell_t tl_cell_x = Max((cell_t)0, (cell_t)Coord_Cell_X(DisplayPos));
+    cell_t tl_cell_y = Max((cell_t)0, (cell_t)Coord_Cell_Y(DisplayPos));
+    cell_t br_cell_x = Min((cell_t)(Lepton_To_Cell_Coord(DisplayWidth) + tl_cell_x), (cell_t)(MAP_MAX_WIDTH - 1));
+    cell_t br_cell_y = Min((cell_t)(Lepton_To_Cell_Coord(DisplayHeight) + tl_cell_y), (cell_t)(MAP_MAX_HEIGHT - 1));
+    for (cell_t x = tl_cell_x; x <= br_cell_x ; ++x) {
+        for (cell_t y = tl_cell_y; y <= br_cell_y; ++y) {
+            cell_t cellnum = Cell_From_XY(x, y);
+            Map[cellnum].Redraw_Objects();
+        }
+    }
+}
+
+/**
  * @brief Registers the cell in the band box cursor list, calculates from mouse pos if cell is -1.
  *
  * 0x004AFD40

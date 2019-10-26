@@ -366,6 +366,29 @@ cell_t MapClass::Pick_Random_Location() const
 }
 
 /**
+* @brief Check if a location is within the visable map.
+*
+*/
+BOOL MapClass::In_Visible_Map(cell_t cellnum) const
+{
+
+    if (cellnum <= MAP_MAX_AREA) {
+        if (In_Radar(cellnum)) {
+
+            int cell_x = Cell_Get_X(cellnum);
+            int cell_y = Cell_Get_Y(cellnum);
+
+            if (((unsigned)cell_x >= (unsigned)MapCellX && (unsigned)cell_x <= (unsigned)MapCellX + (unsigned)MapCellWidth)
+             && ((unsigned)cell_y >= (unsigned)MapCellY && (unsigned)cell_x <= (unsigned)MapCellY + (unsigned)MapCellHeight)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
  * @brief Check if a location is within the playable map.
  *
  * 0x004FE8AC
