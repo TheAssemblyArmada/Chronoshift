@@ -149,7 +149,6 @@ public:
     virtual void Assign_Destination(target_t dest);
     virtual void Enter_Idle_Mode(BOOL a1 = false);
 
-    void Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
     BOOL Visually_Unclear() const
     {
         VisualType visual = Visual_Character();
@@ -183,9 +182,9 @@ public:
     CloakState Cloak_State() const { return m_CloakState; }
 
 #ifdef GAME_DLL
-    void Wrap_Techno_Draw_It(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
+    void Wrap_Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
     {
-        TechnoClass::Techno_Draw_It(shape, frame, x, y, window, dir, scale);
+        TechnoClass::Techno_Draw_Object(shape, frame, x, y, window, dir, scale);
     }
     void Wrap_Draw_It(int x, int y, WindowNumberType window)
     {
@@ -194,6 +193,7 @@ public:
 #endif
 
 protected:
+    void Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
     VisualType Visual_Character(BOOL flag = false) const;
 
 private:
