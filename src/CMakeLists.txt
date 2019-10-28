@@ -22,6 +22,7 @@ set(GAMEENGINE_SRC
     game/common/base64.cpp
     game/common/bitarray.cpp
     game/common/buffer.cpp
+    game/common/bench.cpp
     game/common/cpudetect.cpp
     game/common/crc.cpp
     game/common/critsection.cpp
