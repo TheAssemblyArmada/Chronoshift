@@ -676,7 +676,7 @@ void Setup_Hooks()
     Hook_Function(0x00532BA8, *RadioClass::Limbo);
 
     // techno.h
-    Hook_Function(0x0056706C, *TechnoClass::Wrap_Techno_Draw_It);
+    Hook_Function(0x0056706C, *TechnoClass::Wrap_Techno_Draw_Object);
     Hook_Function(0x005618E4, *TechnoClass::Wrap_Draw_It);
 
     // house.h

@@ -207,6 +207,7 @@ int TechnoClass::Exit_Object(TechnoClass *object)
 void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
 {
     m_Door.Clear_To_Redraw();
+
     if (m_Selected || Special.Always_Show_Health()) {
         GraphicViewPortClass rect(g_logicPage->Get_Graphic_Buffer(),
             g_logicPage->Get_XPos() + WindowList[WINDOW_TACTICAL].X,
@@ -232,8 +233,10 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
                 fixed_t health = Health_Ratio();
                 int bar_left = x - dim_w / 2;
                 int bar_top = y - dim_h / 2;
+
                 // fade background of health bar
                 rect.Remap(bar_left + 1, bar_top + 1, dim_w - 1, 2, (unsigned char *)DisplayClass::FadingShade);
+
                 // draw health bar bounding box
                 rect.Draw_Rect(bar_left, bar_top, bar_left + dim_w - 1, bar_top + 3, 12);
                 int health_w = std::clamp((dim_w - 2) * health, 1, dim_w - 2);
@@ -244,10 +247,12 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
                 if (health <= Rule.Condition_Red()) {
                     healthcolor = COLOR_RED;
                 }
+
                 // draw health bar itself
                 rect.Fill_Rect(bar_left + 1, bar_top + 1, bar_left + health_w, bar_top + 2, healthcolor);
             }
         }
+
         // draw selection box
         if (m_Selected) {
             int center_x = dim_w / 2;
@@ -256,14 +261,17 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
             int line_h = dim_h / 5;
 
             int adj_y = 0;
+
             // if we are showing the health bar nudge the selection box a bit
             if (Get_Owner_House()->Is_Ally(g_PlayerPtr) || Rule.Show_Enemy_Health()) {
                 adj_y = 4;
             }
+
             //this seems useless cause we did that already....
             if (m_RTTI == RTTI_VESSEL) {
                 center_x = dim_w / 2;
             }
+
             // left center
             int left = x - center_x;
             // right center
@@ -577,7 +585,7 @@ void TechnoClass::Set_Player_Owned()
     m_PlayerOwned = (m_OwnerHouse == *g_PlayerPtr);
 }
 
-void TechnoClass::Techno_Draw_It(
+void TechnoClass::Techno_Draw_Object(
     const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const
 {
     DEBUG_ASSERT(m_IsActive);
@@ -637,7 +645,8 @@ void TechnoClass::Techno_Draw_It(
                             flags | SHAPE_GHOST | SHAPE_FADING,
                             remap_table,
                             shadow_table,
-                            dir);
+                            dir,
+                            scale);
                         break;
 
                     case VISUAL_INDISTINCT:
@@ -650,7 +659,8 @@ void TechnoClass::Techno_Draw_It(
                             flags | SHAPE_FADING,
                             remap_table,
                             DisplayClass::FadingShade,
-                            dir);
+                            dir,
+                            scale);
                         break;
 
                     case VISUAL_SHADOWY:
@@ -663,7 +673,8 @@ void TechnoClass::Techno_Draw_It(
                             flags | SHAPE_PREDATOR | SHAPE_FADING,
                             nullptr,
                             DisplayClass::FadingShade,
-                            dir);
+                            dir,
+                            scale);
                         break;
 
                     case VISUAL_HIDDEN:
@@ -685,7 +696,8 @@ void TechnoClass::Techno_Draw_It(
                             flags | SHAPE_FADING | SHAPE_PREDATOR,
                             nullptr,
                             DisplayClass::FadingShade,
-                            dir);
+                            dir,
+                            scale);
 
                     } else {
                         CC_Draw_Shape((void *)shape,
@@ -696,7 +708,8 @@ void TechnoClass::Techno_Draw_It(
                             flags | SHAPE_GHOST | SHAPE_FADING,
                             remap_table,
                             shadow_table,
-                            dir);
+                            dir,
+                            scale);
                     }
 
                     if (visual == VISUAL_DARKEN) {
@@ -708,14 +721,15 @@ void TechnoClass::Techno_Draw_It(
                             flags | SHAPE_FADING | SHAPE_PREDATOR,
                             remap_table,
                             DisplayClass::FadingShade,
-                            dir);
+                            dir,
+                            scale);
                     }
                 }
 
                 // This draws for all except VISUAL_NORMAL and VISUAL_HIDDEN, provides predator effect over whatever is drawn
                 // above. This is the major difference between C&C and RA in addition to the stages being more nuanced.
                 if (visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN) {
-                    CC_Draw_Shape((void *)shape, frame, x, y, window, flags | SHAPE_PREDATOR, nullptr, nullptr, dir);
+                    CC_Draw_Shape((void *)shape, frame, x, y, window, flags | SHAPE_PREDATOR, nullptr, nullptr, dir, scale);
                 }
 
                 break;
