@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "foot.h"
+#include "bench.h"
 #include "building.h"
 #include "coord.h"
 #include "gamedebug.h"
@@ -431,6 +432,8 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
     int threat_state = 0;
     ++PathCount;
 
+    BENCHMARK_START(BENCH_FIND_PATH);
+
     // Are we part of a team and should that team avoid threats?
     if (!m_Team.Is_Valid() || !m_Team->Should_Avoid_Threats()) {
         // DEBUG_LOG(" Threat procesing will not be performed for final cell.\n");
@@ -649,6 +652,8 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
     }
 
     Optimize_Moves(&_path, move);
+
+    BENCHMARK_END(BENCH_FIND_PATH);
 
     // DEBUG_LOG("Completed Find_Path...\n");
     return &_path;

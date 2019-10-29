@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "gscreen.h"
+#include "bench.h"
 #include "gadget.h"
 #include "gamedebug.h"
 #include "gbuffer.h"
@@ -127,6 +128,9 @@ void GameScreenClass::Render()
     }
 
     if ((RedrawFlag & REDRAW_FORCE) || (RedrawFlag & REDRAW_2)) {
+
+        BENCHMARK_START(BENCH_FULL_PROCESS);
+
         GraphicViewPortClass *old = Set_Logic_Page(g_hidPage);
 
         BOOL to_redraw = (RedrawFlag & REDRAW_FORCE) != 0;
@@ -154,6 +158,9 @@ void GameScreenClass::Render()
         Blit_Display();
 
         RedrawFlag &= ~(REDRAW_FORCE | REDRAW_2); // Clear any redraw flags.
+
+        BENCHMARK_END(BENCH_FULL_PROCESS);
+
         Set_Logic_Page(old);
     }
 }
@@ -164,6 +171,8 @@ void GameScreenClass::Draw_It(BOOL force_redraw)
 
 void GameScreenClass::Blit_Display()
 {
+    BENCHMARK_START(BENCH_BLIT);
+
     g_mouse->Draw_Mouse(g_hidPage);
 
     g_hidPage.Blit(g_seenBuff,
@@ -175,6 +184,8 @@ void GameScreenClass::Blit_Display()
         g_hidPage.Get_Height());
 
     g_mouse->Erase_Mouse(g_hidPage);
+
+    BENCHMARK_END(BENCH_BLIT);
 }
 
 void GameScreenClass::AI(KeyNumType &key, int mouse_x, int mouse_y)

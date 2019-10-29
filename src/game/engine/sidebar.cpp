@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "sidebar.h"
+#include "bench.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"
@@ -497,6 +498,9 @@ void SidebarClass::Draw_It(BOOL force_redraw)
     PowerClass::Draw_It(force_redraw);
 
     if (!g_InMapEditor) {
+
+        BENCHMARK_START(BENCH_SIDEBAR);
+
         if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && !g_InMapEditor ) {
             SidebarToRedraw = false;
             if (g_logicPage->Lock()) {
@@ -565,6 +569,8 @@ void SidebarClass::Draw_It(BOOL force_redraw)
         }
 
         SidebarToRedraw = false;
+
+        BENCHMARK_END(BENCH_SIDEBAR);
     }
 }
 

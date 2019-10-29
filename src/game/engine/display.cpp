@@ -15,6 +15,7 @@
  */
 #include "display.h"
 #include "aircraft.h"
+#include "bench.h"
 #include "building.h"
 #include "buildingtype.h"
 #include "buffpipe.h"
@@ -464,6 +465,9 @@ void DisplayClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 void DisplayClass::Draw_It(BOOL force_redraw)
 {
     if (DisplayToRedraw || force_redraw) {
+
+        BENCHMARK_START(BENCH_TACTICAL);
+
         DisplayToRedraw = false;
         Refresh_Band();
         g_ChronalVortex.Set_Redraw();
@@ -683,14 +687,19 @@ void DisplayClass::Draw_It(BOOL force_redraw)
         if (g_hidPage.Lock()) {
             g_ChronalVortex.Render();
 
+            BENCHMARK_START(BENCH_OBJECTS);
             for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
                 Layers[layer].Render_All(force_redraw);
             }
 
             // SS does some drawing of flagfly.shp here after rendering surface
             // objects.
+            BENCHMARK_END(BENCH_OBJECTS);
 
+            BENCHMARK_START(BENCH_SHROUD);
             Redraw_Shadow();
+            BENCHMARK_END(BENCH_SHROUD);
+
             g_hidPage.Unlock();
         }
 
@@ -703,6 +712,8 @@ void DisplayClass::Draw_It(BOOL force_redraw)
         }
 
         CellRedraw.Reset();
+
+        BENCHMARK_END(BENCH_TACTICAL);
     }
 }
 
