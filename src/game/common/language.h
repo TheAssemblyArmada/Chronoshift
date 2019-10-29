@@ -795,7 +795,7 @@ extern const char TXT_CHRONOSHIFT_WEBSITE[];
 bool Init_Language();
 const char *Language_Name(const char *filename);
 const char *Get_Language_Char();
-const char *Fetch_String(int str_id);
-const char *Fetch_Mission_String(int str_id);
+const char *Text_String(int str_id);
+const char *Mission_Text_String(int str_id);
 
 #endif // LANGUAGE_H

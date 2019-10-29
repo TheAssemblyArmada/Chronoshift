@@ -106,7 +106,7 @@ const char *ThemeClass::Base_Name(ThemeType theme) const
 const char *ThemeClass::Full_Name(ThemeType theme) const
 {
     if (theme > THEME_NONE && theme < THEME_COUNT) {
-        return Fetch_String(Themes[theme].Name);
+        return Text_String(Themes[theme].Name);
     }
 
     return nullptr;
@@ -370,7 +370,7 @@ ThemeType ThemeClass::From_Name(const char *name) const
         }
 
         for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
-            if (strstr(Fetch_String(Themes[theme].Name), name) != nullptr) {
+            if (strstr(Text_String(Themes[theme].Name), name) != nullptr) {
                 return theme;
             }
         }
@@ -382,7 +382,7 @@ ThemeType ThemeClass::From_Name(const char *name) const
 const char *ThemeClass::Name_From(ThemeType theme)
 {
     if (theme >= THEME_FIRST && theme < THEME_COUNT) {
-        return Fetch_String(Themes[theme].Name);
+        return Text_String(Themes[theme].Name);
     }
 
     return "None";

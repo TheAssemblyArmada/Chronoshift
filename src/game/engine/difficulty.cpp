@@ -52,7 +52,7 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
     bool process = true; // loop while true
     bool to_draw = true;
 
-    strlcpy(strbuff, Fetch_String(TXT_SET_DIFFICULTY), sizeof(strbuff));
+    strlcpy(strbuff, Text_String(TXT_SET_DIFFICULTY), sizeof(strbuff));
 
     // trucante string at "." if arg is true (is this one off mission?)
     if (one_time_mission) {

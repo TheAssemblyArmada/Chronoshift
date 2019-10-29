@@ -69,7 +69,7 @@ void LoadOptionsClass::Fill_List(ListClass *list)
 
     if (OperationMode == MODE_SAVE) {
         file_entry = new FileEntryClass();
-        strcpy(file_entry->Name, Fetch_String(TXT_EMPTY_SLOT));
+        strcpy(file_entry->Name, Text_String(TXT_EMPTY_SLOT));
         file_entry->Timestamp = -1;
         Files.Add(file_entry);
     }
@@ -86,14 +86,14 @@ void LoadOptionsClass::Fill_List(ListClass *list)
                 file_entry = new FileEntryClass();
                 file_entry->Name[0] = 0;
                 if (state == FALSE) {
-                    const char *old = Fetch_String(TXT_OLD_GAME);
+                    const char *old = Text_String(TXT_OLD_GAME);
                     strcpy(file_entry->Name, old); // according to DOS its strcpy here
                     strcat(file_entry->Name, " "); // add space
 
                 } else if (house == HOUSES_USSR || house == HOUSES_UKRAINE) {
-                    sprintf(file_entry->Name, "(%s) ", Fetch_String(TXT_SOVIET));
+                    sprintf(file_entry->Name, "(%s) ", Text_String(TXT_SOVIET));
                 } else {
-                    sprintf(file_entry->Name, "(%s) ", Fetch_String(TXT_ALLIES));
+                    sprintf(file_entry->Name, "(%s) ", Text_String(TXT_ALLIES));
                 }
                 strlcat(file_entry->Name, savename, sizeof(file_entry->Name));
                 file_entry->State = state;

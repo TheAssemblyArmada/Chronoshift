@@ -204,7 +204,7 @@ HouseClass::HouseClass(HousesType type) :
     new (&m_Specials[SPECIAL_GPS])
         SuperClass(Rule.Get_Recharge_GPS() * 900, true, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NO_POWER);
 
-    strlcpy(m_PlayerName, Fetch_String(TXT_COMPUTER), sizeof(m_PlayerName));
+    strlcpy(m_PlayerName, Text_String(TXT_COMPUTER), sizeof(m_PlayerName));
     memset(m_PlayerHandle, 0, sizeof(m_PlayerHandle));
 
     if (Session.Game_To_Play() == GAME_INTERNET) {
@@ -793,7 +793,7 @@ void HouseClass::Make_Ally(HousesType house)
         if (m_IsHuman) {
             // Prepare and queue the display of the "Player has allied with OtherPlayer" message.
             char buff[80];
-            snprintf(buff, sizeof(buff), Fetch_String(TXT_HAS_ALLIED), m_PlayerName, As_Pointer(house)->m_PlayerName);
+            snprintf(buff, sizeof(buff), Text_String(TXT_HAS_ALLIED), m_PlayerName, As_Pointer(house)->m_PlayerName);
             Session.Get_Messages().Add_Message(
                 nullptr, 0, buff, m_Color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, 900 * Rule.Message_Delay());
             Map.Flag_To_Redraw(false);
@@ -837,7 +837,7 @@ void HouseClass::Make_Enemy(HousesType house)
     if (Session.Game_To_Play() != GAME_CAMPAIGN && !ScenarioInit && m_IsHuman) {
         // Prepare and queue the display of the "Player has declared war on OtherPlayer" message.
         char buff[80];
-        snprintf(buff, sizeof(buff), Fetch_String(TXT_AT_WAR), m_PlayerName, As_Pointer(house)->m_PlayerName);
+        snprintf(buff, sizeof(buff), Text_String(TXT_AT_WAR), m_PlayerName, As_Pointer(house)->m_PlayerName);
         Session.Get_Messages().Add_Message(
             nullptr, 0, buff, m_Color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, 900 * Rule.Message_Delay());
         Map.Flag_To_Redraw(false);

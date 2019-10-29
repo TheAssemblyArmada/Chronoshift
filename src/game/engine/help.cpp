@@ -206,7 +206,7 @@ void HelpClass::Set_Text(int string_id)
     if (string_id) {
         HelpTextID = string_id;
         Plain_Text_Print(0, 0, 0, 0, 0, TPF_NOSHADOW | TPF_MAP); // Clears the formatting from previous calls.
-        HelpWidth = String_Pixel_Width(Fetch_String(HelpTextID));
+        HelpWidth = String_Pixel_Width(Text_String(HelpTextID));
 
         if (HelpForceDraw) {
             HelpXPos = HelpMouseXPos - HelpWidth;
@@ -239,7 +239,7 @@ void HelpClass::Set_Text(int string_id)
         }
 
         // Copy list and mark final buffer position as end in case source list is longer than buffer.
-        memcpy(OverlapList, Text_Overlap_List(Fetch_String(HelpTextID), HelpXPos - 1, HelpYPos), sizeof(OverlapList));
+        memcpy(OverlapList, Text_Overlap_List(Text_String(HelpTextID), HelpXPos - 1, HelpYPos), sizeof(OverlapList));
         OverlapList[HELP_OVERLAP_BUFFER - 1] = LIST_END;
     }
 }
