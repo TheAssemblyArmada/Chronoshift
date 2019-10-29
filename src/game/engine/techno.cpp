@@ -235,7 +235,7 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
                 int bar_top = y - dim_h / 2;
 
                 // fade background of health bar
-                rect.Remap(bar_left + 1, bar_top + 1, dim_w - 1, 2, (unsigned char *)DisplayClass::FadingShade);
+                rect.Remap(bar_left + 1, bar_top + 1, dim_w - 1, 2, DisplayClass::FadingShade);
 
                 // draw health bar bounding box
                 rect.Draw_Rect(bar_left, bar_top, bar_left + dim_w - 1, bar_top + 3, 12);

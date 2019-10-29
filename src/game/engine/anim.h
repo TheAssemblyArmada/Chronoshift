@@ -51,7 +51,6 @@ public:
     virtual void Detach(target_t target, int a2) override;
     virtual BOOL Render(BOOL force_render = false) override;
     virtual const int16_t *Occupy_List(BOOL a1 = false) const override;
-    //virtual const int16_t *Overlap_List(BOOL a1 = false) const override; // Move "Anim_Overlap_List" function below to this function.
     virtual void Draw_It(int x_pos, int y_pos, WindowNumberType window) const override;
     virtual BOOL Mark(MarkType mark) override;
     virtual coord_t Sort_Y() const override;
@@ -74,6 +73,31 @@ public:
     unsigned int Get_Loop_Delay() const { return m_LoopDelay; }
 
     AnimType What_Type() const { return m_Class->What_Type(); }
+
+#ifdef GAME_DLL
+    friend void Setup_Hooks();
+
+    coord_t Wrap_Center_Coord()
+    {
+        return AnimClass::Center_Coord();
+    }
+    LayerType Wrap_In_Which_Layer()
+    {
+        return AnimClass::In_Which_Layer();
+    }
+    const int16_t *Wrap_Occupy_List(BOOL a1)
+    {
+        return AnimClass::Occupy_List(a1);
+    }
+    void Wrap_Draw_It(int x_pos, int y_pos, WindowNumberType window)
+    {
+        AnimClass::Draw_It(x_pos, y_pos, window);
+    }
+    coord_t Wrap_Sort_Y()
+    {
+        return AnimClass::Sort_Y();
+    }
+#endif
 
 private:
     void Start();
