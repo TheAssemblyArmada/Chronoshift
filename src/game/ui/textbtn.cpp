@@ -96,7 +96,7 @@ void TextButtonClass::Set_Text(const char *string, BOOL adjust)
 void TextButtonClass::Set_Text(int str_id, BOOL adjust)
 {
     if (str_id) {
-        Set_Text(Fetch_String(str_id), adjust);
+        Set_Text(Text_String(str_id), adjust);
     }
 }
 

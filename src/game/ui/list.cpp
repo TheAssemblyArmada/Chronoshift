@@ -231,8 +231,8 @@ BOOL ListClass::Action(unsigned flags, KeyNumType &key)
 
 int ListClass::Add_Item(int str_id)
 {
-    if (str_id) {
-        Add_Item(Fetch_String((TextEnum)str_id));
+    if (str_id > 0) {
+        Add_Item(Text_String((TextEnum)str_id));
     }
 
     return Count() - 1;

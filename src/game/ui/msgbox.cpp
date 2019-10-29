@@ -37,10 +37,10 @@ using std::memset;
 int MessageBoxClass::Process(
     const int body_text, const int button_1_text, const int button_2_text, const int button_3_text, BOOL shadow_seen)
 {
-    return Process(Fetch_String(body_text),
-        Fetch_String(button_1_text),
-        Fetch_String(button_2_text),
-        Fetch_String(button_3_text),
+    return Process(Text_String(body_text),
+        Text_String(button_1_text),
+        Text_String(button_2_text),
+        Text_String(button_3_text),
         shadow_seen);
 }
 
@@ -53,7 +53,7 @@ int MessageBoxClass::Process(
     const char *body_text, const int button_1_text, const int button_2_text, const int button_3_text, BOOL shadow_seen)
 {
     return Process(
-        body_text, Fetch_String(button_1_text), Fetch_String(button_2_text), Fetch_String(button_3_text), shadow_seen);
+        body_text, Text_String(button_1_text), Text_String(button_2_text), Text_String(button_3_text), shadow_seen);
 }
 
 /**

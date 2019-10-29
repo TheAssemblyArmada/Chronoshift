@@ -287,7 +287,7 @@ void Fancy_Text_Print(
     if (str_id != TXT_NONE) {
         va_list args;
         va_start(args, style);
-        Fancy_Text_Print_VL(Fetch_String(str_id), x, y, remapper, bgcolor, style, args);
+        Fancy_Text_Print_VL(Text_String(str_id), x, y, remapper, bgcolor, style, args);
         va_end(args);
     } else {
         Simple_Text_Print(nullptr, x, y, remapper, bgcolor, style);
@@ -422,7 +422,7 @@ void Plain_Text_Print(int str_id, unsigned x, unsigned y, uint8_t fgcolor, uint8
 
     va_list args;
     va_start(args, style);
-    Fancy_Text_Print_VL(Fetch_String(str_id), x, y, &remapper, bgcolor, style, args);
+    Fancy_Text_Print_VL(Text_String(str_id), x, y, &remapper, bgcolor, style, args);
     va_end(args);
 }
 
@@ -618,7 +618,7 @@ void Draw_Caption(const char *string, int x, int y, int w)
 
 void Draw_Caption(int str_id, int x, int y, int w)
 {
-    Draw_Caption(Fetch_String(str_id), x, y, w);
+    Draw_Caption(Text_String(str_id), x, y, w);
 }
 
 void Dialog_Box(int x_pos, int y_pos, int width, int height)

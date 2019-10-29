@@ -406,7 +406,7 @@ const char *Get_Language_Char()
     return _char;
 }
 
-const char *Fetch_String(int str_id)
+const char *Text_String(int str_id)
 {
     if (str_id >= TXT_ADDITIONAL_FIRST) {
         str_id -= TXT_ADDITIONAL_MAGIC_NUM; // ground the value to be zero based.
@@ -438,7 +438,7 @@ const char *Fetch_String(int str_id)
     return Extract_String(GameStrings, str_id);
 }
 
-const char *Fetch_Mission_String(int str_id)
+const char *Mission_Text_String(int str_id)
 {
     return nullptr;
 }
