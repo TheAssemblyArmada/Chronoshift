@@ -156,11 +156,10 @@ BOOL FootClass::Can_Demolish() const
         case RTTI_VESSEL: // Fall through
         case RTTI_UNIT: // Fall through
         case RTTI_AIRCRAFT:
-            // Handle if we are heading to a building and that building is the
-            // repair depot.
-            if (Radio != nullptr && Radio->What_Am_I() == RTTI_BUILDING) {
-                if (reinterpret_cast<BuildingClass *>(Radio)->What_Type() == BUILDING_FIX) {
-                    if (Distance(Center_Coord(), Radio->Target_Coord()) < 128) {
+            // Handle if we are heading to a building and that building is the repair depot.
+            if (m_Radio != nullptr && m_Radio->What_Am_I() == RTTI_BUILDING) {
+                if (reinterpret_cast<BuildingClass *>(m_Radio)->What_Type() == BUILDING_FIX) {
+                    if (Distance(Center_Coord(), m_Radio->Target_Coord()) < 128) {
                         return true;
                     }
                 }
@@ -184,7 +183,7 @@ coord_t FootClass::Sort_Y() const
         return Get_Coord() + 0x1000000;
     }
 
-    if (Radio != nullptr && Radio->What_Am_I() == RTTI_UNIT && m_Tethered) {
+    if (m_Radio != nullptr && m_Radio->What_Am_I() == RTTI_UNIT && m_Tethered) {
         return Get_Coord() + 0x1000000;
     }
 

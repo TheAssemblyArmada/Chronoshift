@@ -49,12 +49,12 @@ public:
     virtual RadioMessageType Transmit_Message(RadioMessageType message, RadioClass *radio);
 
     // TODO, rename!
-    bool const Radio_Valid() const { return Radio != nullptr; }
+    bool const Radio_Valid() const { return m_Radio != nullptr; }
 
     TechnoClass *Radio_As_Techno() const
     {
         if (Radio_Valid()) {
-            return (TechnoClass *)&Radio;
+            return (TechnoClass *)&m_Radio;
         }
         return nullptr;
     }
@@ -62,7 +62,7 @@ public:
     FootClass *Radio_As_Foot() const
     {
         if (Radio_Valid()) {
-            return (FootClass *)&Radio;
+            return (FootClass *)&m_Radio;
         }
         return nullptr;
     }
@@ -76,10 +76,12 @@ private:
     static const char *Messages[RADIO_COUNT];
 
 protected:
-    RadioMessageType ReceivedMessage; // 0x37    //name subject to change!
-    RadioMessageType TransmittedMessage; // 0x38    //name subject to change!
-    RadioMessageType LastMessage; // 0x39
-    ObjectClass *Radio; // 0x3A
+    //RadioMessageType m_ReceivedMessage;
+    //RadioMessageType m_TransmittedMessage;
+    //RadioMessageType m_LastMessage;
+    RadioMessageType m_MessageHistory[3]; // Seems it was a tracker of the last 3 messages, lets see how this turns out...
+
+    ObjectClass *m_Radio; // 0x3A
 };
 
 #endif // RADIO_H

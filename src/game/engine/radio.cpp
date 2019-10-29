@@ -62,25 +62,29 @@ const char *RadioClass::Messages[RADIO_COUNT] = {
 
 RadioClass::RadioClass(RTTIType type, int id) :
     MissionClass(type, id),
-    ReceivedMessage(RADIO_STATIC),
-    TransmittedMessage(RADIO_STATIC),
-    LastMessage(RADIO_STATIC),
-    Radio(nullptr)
+    /*m_ReceivedMessage(RADIO_STATIC),
+    m_TransmittedMessage(RADIO_STATIC),
+    m_LastMessage(RADIO_STATIC),*/
+    //m_MessageHistory(), // TODO: When fully standalone, uncomment this line and remove the 'for' loop below.
+    m_Radio(nullptr)
 {
+    for (int i = 0; i < ARRAY_SIZE(m_MessageHistory); ++i){
+        m_MessageHistory[i] = RADIO_STATIC;
+    }
 }
 
-RadioClass::RadioClass(RadioClass const &that) :
+RadioClass::RadioClass(const RadioClass &that) :
     MissionClass(that),
-    ReceivedMessage(that.ReceivedMessage),
-    TransmittedMessage(that.TransmittedMessage),
-    LastMessage(that.LastMessage),
-    Radio(that.Radio)
+    /*m_ReceivedMessage(that.m_ReceivedMessage),
+    m_TransmittedMessage(that.m_TransmittedMessage),
+    m_LastMessage(that.m_LastMessage),*/
+    m_Radio(that.m_Radio)
 {
 }
 
 RadioClass::~RadioClass()
 {
-    Radio = nullptr;
+    m_Radio = nullptr;
 }
 
 #ifdef CHRONOSHIFT_DEBUG
@@ -92,7 +96,7 @@ void RadioClass::Debug_Dump(MonoClass *mono) const
 
 BOOL RadioClass::Limbo()
 {
-    if (!In_Limbo()) {
+    if (!m_InLimbo) {
         Transmit_Message(RADIO_OVER_AND_OUT);
     }
 
@@ -110,21 +114,23 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
         reinterpret_cast<RadioMessageType (*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
     return func(radio, message, target);
 #elif 0 // TODO Needs HouseClass.
-    if (message != ReceivedMessage) {
-        LastMessage = TransmittedMessage;
-        TransmittedMessage = ReceivedMessage;
-        ReceivedMessage = message;
+
+    // Basic circular tracker of received message history.
+    if (message != m_MessageHistory[0]) {
+        m_MessageHistory[2] = m_MessageHistory[1];
+        m_MessageHistory[1] = m_MessageHistory[0];
+        m_MessageHistory[0] = message;
     }
 
-    if (Radio != radio || message != RADIO_OVER_AND_OUT) {
-        if (message == RADIO_HELLO && Health > 0) {
-            if ((Radio == nullptr || Radio == radio) && radio != nullptr) {
+    if (m_Radio != radio || message != RADIO_OVER_AND_OUT) {
+        if (message == RADIO_HELLO && m_Health > 0) {
+            if ((m_Radio == nullptr || m_Radio == radio) && radio != nullptr) {
                 TechnoClass *t_radioptr = reinterpret_cast<TechnoClass *>(radio);
                 TechnoClass *t_this = reinterpret_cast<TechnoClass *>(this);
 
                 if (t_radioptr != nullptr && t_this != nullptr) {
                     if (t_radioptr->OwnerHouse->Is_Ally(this) && t_this->OwnerHouse->Is_Ally(t_radioptr)) {
-                        Radio = radio;
+                        m_Radio = radio;
                         return RADIO_ROGER;
                     }
                 }
@@ -138,7 +144,7 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
 
     ObjectClass::Receive_Message(radio, RADIO_OVER_AND_OUT, target);
 
-    Radio = nullptr;
+    m_Radio = nullptr;
 
     return RADIO_ROGER;
 #else
@@ -151,14 +157,14 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-    RadioClass *radioptr = radio == nullptr ? reinterpret_cast<RadioClass *>(Radio) : radio;
+    RadioClass *radioptr = radio == nullptr ? reinterpret_cast<RadioClass *>(m_Radio) : radio;
 
     if (radioptr == nullptr) {
         return RADIO_STATIC;
     }
 
-    if (Radio == radioptr && message == RADIO_OVER_AND_OUT) {
-        Radio = nullptr;
+    if (m_Radio == radioptr && message == RADIO_OVER_AND_OUT) {
+        m_Radio = nullptr;
     }
 
     if (message != RADIO_HELLO) {
@@ -168,7 +174,7 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
     Transmit_Message(RADIO_OVER_AND_OUT);
 
     if (radioptr->Receive_Message(this, message, target) == RADIO_ROGER) {
-        Radio = radioptr;
+        m_Radio = radioptr;
         return RADIO_ROGER;
     }
 
@@ -181,13 +187,13 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioCla
     DEBUG_ASSERT(message != RADIO_NONE);
     DEBUG_ASSERT(message < RADIO_COUNT);
 
-    return Transmit_Message(message, LParam, radio);
+    return Transmit_Message(message, Get_LParam(), radio);
 }
 
 void RadioClass::Code_Pointers()
 {
-    if (Radio != nullptr) {
-        Radio = reinterpret_cast<ObjectClass *>((m_HeapID & 0xFFFFFF) | ((m_RTTI & 0xFF)) << 24);
+    if (m_Radio != nullptr) {
+        m_Radio = reinterpret_cast<ObjectClass *>(m_Radio->As_Target());
     }
 
     MissionClass::Code_Pointers();
@@ -195,8 +201,9 @@ void RadioClass::Code_Pointers()
 
 void RadioClass::Decode_Pointers()
 {
-    if (Radio != nullptr) {
-        Radio = reinterpret_cast<ObjectClass *>(As_Techno((uintptr_t)(Radio)));
+    if (m_Radio != nullptr) {
+        m_Radio = reinterpret_cast<ObjectClass *>(As_Techno((uintptr_t)(m_Radio)));
+        DEBUG_ASSERT(m_Radio != nullptr);
     }
 
     MissionClass::Decode_Pointers();
