@@ -1209,7 +1209,7 @@ const uint8_t *HouseClass::Remap_Table(BOOL alt, RemapType type)
 {
     if (alt) {
         // TODO Make fading table types consistent across project.
-        return (const uint8_t *)DisplayClass::FadingLight;
+        return DisplayClass::FadingLight;
     }
 
     if (type != REMAP_0) {

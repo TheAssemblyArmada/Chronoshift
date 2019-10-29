@@ -908,6 +908,17 @@ void Setup_Hooks()
     Hook_Function(0x004624A0, *CarryoverClass::Hook_Ctor);
     //Hook_Function(0x004625E8, *CarryoverClass::Create);
 
+    //anim.cpp
+    Hook_Function(0x004240C0, *AnimClass::Wrap_Center_Coord);
+    Hook_Function(0x00425610, *AnimClass::Wrap_In_Which_Layer);
+    Hook_Function(0x00425A98, *AnimClass::Detach);
+    Hook_Function(0x0042410C, *AnimClass::Render);
+    Hook_Function(0x004245E8, *AnimClass::Wrap_Occupy_List);
+    Hook_Function(0x0042415C, *AnimClass::Wrap_Draw_It);
+    Hook_Function(0x004242D0, *AnimClass::Mark);
+    Hook_Function(0x00423F64, *AnimClass::Wrap_Sort_Y);
+    Hook_Function(0x004256B8, *AnimClass::Start);
+
 #endif
 }
 
