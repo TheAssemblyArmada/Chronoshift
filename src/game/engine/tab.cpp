@@ -15,6 +15,7 @@
  */
 
 #include "tab.h"
+#include "bench.h"
 #include "dialog.h"
 #include "drawshape.h"
 #include "gamefile.h"
@@ -59,6 +60,9 @@ TabClass::CreditClass::CreditClass() :
 void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 {
     if (force_redraw || CreditToRedraw) {
+
+        BENCHMARK_START(BENCH_TABS);
+
         if (CreditHasChanged) {
             Sound_Effect(CreditHasIncreased ? VOC_MONEY_UP : VOC_MONEY_DOWN, fixed_t::_1_2);
         }
@@ -183,6 +187,8 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 
         CreditToRedraw = false;
         CreditHasChanged = false;
+
+        BENCHMARK_END(BENCH_TABS);
     }
 }
 

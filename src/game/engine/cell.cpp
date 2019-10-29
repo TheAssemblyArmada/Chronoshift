@@ -16,6 +16,7 @@
 #include "cell.h"
 #include "aircraft.h"
 #include "building.h"
+#include "bench.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "gamedebug.h"
@@ -800,6 +801,9 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
         WindowList[WINDOW_TACTICAL].H);
 
     if (!flag) {
+
+        BENCHMARK_START(BENCH_CELL);
+
         //++CellCount; // Original has a global variable here. Not sure what this is used for.
 
         // TODO
@@ -978,6 +982,9 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 (void *)HouseClass::As_Pointer(OwnerHouse)->Remap_Table(false, REMAP_1),
                 DisplayClass::UnitShadow);
         }
+
+        BENCHMARK_END(BENCH_CELL);
+
     }
     //#endif
 }

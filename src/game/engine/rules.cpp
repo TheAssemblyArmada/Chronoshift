@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "rules.h"
+#include "bench.h"
 #include "gameini.h"
 #include "globals.h"
 #include "housetype.h"
@@ -234,6 +235,8 @@ RulesClass::RulesClass() :
 
 BOOL RulesClass::Process(GameINIClass &ini)
 {
+    BENCHMARK_START(BENCH_RULES);
+
     //Aftermath(ini); // General is called standalone from other places in code.
     General(ini);
     MPlayer(ini);
@@ -246,6 +249,8 @@ BOOL RulesClass::Process(GameINIClass &ini)
     IQ(ini);
     Objects(ini);
     Difficulty(ini);
+
+    BENCHMARK_END(BENCH_RULES);
 
     return true;
 }

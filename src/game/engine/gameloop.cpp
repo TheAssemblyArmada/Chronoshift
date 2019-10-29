@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "gameloop.h"
+#include "bench.h"
 #include "callback.h"
 #include "gamekeyboard.h"
 #include "gameoptions.h"
@@ -237,6 +238,7 @@ BOOL Main_Loop()
                     g_Debug_Trap_Check_Heap = true;
                 }
 #endif
+                BENCHMARK_START(BENCH_MAIN);
 
                 if (Theme.What_Is_Playing() == THEME_NONE) {
                     Theme.Play_Next_Song();
@@ -373,6 +375,8 @@ BOOL Main_Loop()
                     Debug_Check_Map();
                     Debug_Motion_Capture();
 #endif
+
+                    BENCHMARK_END(BENCH_MAIN);
 
                     Sync_Delay();
 
