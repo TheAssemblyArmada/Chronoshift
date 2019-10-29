@@ -185,213 +185,217 @@ BOOL Main_Loop()
     if (g_InMapEditor) {
 
         Map_Editor_Main_Loop();
-
-    } else if (GameActive) {
-
-#ifdef CHRONOSHIFT_DEBUG
-
-        // This chunk both handles debug frame stepping after we have flushed all the
-        // requested steps, or if the pause flag has been enabled. The game will continue
-        // to render the last frame and accept input, and the engine will sleep.
-        if (g_Debug_Step && g_Debug_StepCount <= 0 || g_Debug_Paused) {
-
-            // We need this here so the audio stream updates.
-            Call_Back();
-
-            // And this to make sure we still render the game viewport and handle input still.
-            if (!Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
-                if (g_gameInFocus) {
-                    g_mouse->Erase_Mouse(g_hidPage, true);
-                    Process_Input();
-                    Map.Render();
-                }
-            }
-
-            // Force a redraw if there are any pending messages. The debug key system needs this.
-            if (Session.Get_Messages().Manage()) {
-                g_hiddenPage.Clear();
-                Map.Flag_To_Redraw(true);
-            }
-
-            // Yield remaining timeslice to other processes?
-            PlatformTimer->Sleep(1); // why not 0? 1 frees up processor time?
-
-        } else {
-
-            // Run the normal game loop body if frame stepping is disabled or if
-            // we have remaining frames to flush before we go back to a paused state.
-            if (!g_Debug_Step || (g_Debug_Step && g_Debug_StepCount > 0)) {
-#endif
-
-                Check_For_Focus_Loss();
-
-                Reallocate_Big_Shape_Buffer();
-
-                if (g_GameFrame >= Session.Trap_Frame()) {
-                    Session.Trap_Object();
-                }
-
-                Session.Set_Processing_Start_Tick(TickCountTimer.Time());
-
-#ifdef CHRONOSHIFT_DEBUG
-                if (Session.Trap_Check_Heap()) {
-                    g_Debug_Trap_Check_Heap = true;
-                }
-#endif
-                BENCHMARK_START(BENCH_MAIN);
-
-                if (Theme.What_Is_Playing() == THEME_NONE) {
-                    Theme.Play_Next_Song();
-                }
-
-                if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.Game_To_Play() != GAME_SKIRMISH
-                    && Session.Packet_Protocol() == COMPROTO_TWO) {
-                    if (Session.Packet_Protocol() == COMPROTO_ONE && Session.Playback_Game()) {
-                        FrameTimer = 0;
-                    } else {
-                        if (Session.Desired_Frame_Rate() == 0) {
-                            Session.Set_Desired_Frame_Rate(60);
-                        }
-                        FrameTimer = 60 / Session.Desired_Frame_Rate();
-                    }
-                } else {
-                    int game_speed = Options.Game_Speed();
-                    DiffType ai_diff = g_PlayerPtr->Get_AI_Difficulty();
-                    if (game_speed > 0) {
-                        FrameTimer = game_speed + ((ai_diff == DIFF_EASIEST) - (ai_diff == DIFF_NORMAL));
-                    } else {
-                        FrameTimer = game_speed + (ai_diff == DIFF_EASIEST);
-                    }
-                }
-
-                if (!Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
-                    if (g_gameInFocus) {
-                        g_mouse->Erase_Mouse(g_hidPage, true);
-                        Process_Input();
-                        Map.Render();
-                    }
-                }
-
-                if (Session.Record_Game() || Session.Playback_Game()) {
-                    Do_Record_Playback();
-                }
-
-                DisplayClass::Layers[LAYER_GROUND].Sort();
-
-                Logic.AI();
-
-                g_TimeQuake = false;
-
-                if (!g_PendingTimeQuake) {
-                    g_TimeQuakeCenter = 0;
-                }
-
-                // Force a redraw if there are any pending messages to be drawn to the screen.
-                if (Session.Get_Messages().Manage()) {
-                    g_hiddenPage.Clear();
-                    Map.Flag_To_Redraw(true);
-                }
-
-                Session.Tick_Processing_Frame();
-
-                // Session.Update_Processing_Tick_Value(std::min<int>((TickCountTimer.Time() - Session.Processing_Start_Tick()), MAX_PROCESSING_TICKS));
-                Session.Update_Processing_Tick_Value(TickCountTimer.Time() - Session.Processing_Start_Tick());
-
-                Queue_AI();
-
-                // TODO, Requires ScoreClass
-#ifdef GAME_DLL
-                int &score_field_28 = Make_Global<int>(0x006698E4);
-                score_field_28 += 4;
-#else
-                // Score.field_28 += 4;
-#endif
-
-                Call_Back();
-
-                if (g_PlayerWins) {
-                    DEBUG_LOG("Player wins.\n");
-                    if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
-                        Register_Game_End_Time();
-                        Send_Statistics_Packet();
-                    }
-                    g_PlayerLoses = false;
-                    g_PlayerWins = false;
-                    g_PlayerRestarts = false;
-                    g_PlayerAborts = false;
-                    g_mouse->Erase_Mouse(g_hidPage, true);
-                    Map.Help_Text(TXT_NULL);
-                    Do_Win();
-
-                } else if (g_PlayerLoses) {
-                    DEBUG_LOG("Player loses.\n");
-                    if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
-                        Register_Game_End_Time();
-                        Send_Statistics_Packet();
-                    }
-                    g_PlayerLoses = false;
-                    g_PlayerWins = false;
-                    g_PlayerRestarts = false;
-                    g_PlayerAborts = false;
-                    g_mouse->Erase_Mouse(g_hidPage, true);
-                    Map.Help_Text(TXT_NULL);
-                    Do_Lose();
-
-                } else if (g_PlayerRestarts) {
-                    DEBUG_LOG("Player restarted.\n");
-                    g_PlayerLoses = false;
-                    g_PlayerWins = false;
-                    g_PlayerRestarts = false;
-                    g_PlayerAborts = false;
-                    g_mouse->Erase_Mouse(g_hidPage, true);
-                    Map.Help_Text(TXT_NULL);
-                    Do_Restart();
-
-                } else if (g_PlayerAborts) {
-                    DEBUG_LOG("Player aborted.\n");
-                    g_PlayerLoses = false;
-                    g_PlayerWins = false;
-                    g_PlayerRestarts = false;
-                    g_PlayerAborts = false;
-                    g_mouse->Erase_Mouse(g_hidPage, true);
-                    Map.Help_Text(TXT_NULL);
-                    Do_Abort();
-
-                } else if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.Game_To_Play() != GAME_SKIRMISH
-                    && Session.Players_List().Count() == 2 && Scen.Get_field_7CF() && Scen.Get_field_7D3()) {
-                    DEBUG_LOG("Game is a draw.\n");
-                    if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
-                        Register_Game_End_Time();
-                        Send_Statistics_Packet();
-                    }
-                    g_mouse->Erase_Mouse(g_hidPage, true);
-                    Map.Help_Text(TXT_NULL);
-                    Do_Draw();
-
-                } else {
-                    ++g_GameFrame;
-
-#ifdef CHRONOSHIFT_DEBUG
-                    Debug_Check_Map();
-                    Debug_Motion_Capture();
-#endif
-
-                    BENCHMARK_END(BENCH_MAIN);
-
-                    Sync_Delay();
-
-                }
-
-#ifdef CHRONOSHIFT_DEBUG
-                // derecment the step count after we have processed one frame iteration.
-                if (g_Debug_Step && g_Debug_StepCount > 0) {
-                    --g_Debug_StepCount;
-                }
-
-            } // if case
-        } // sleep case
-#endif
     }
+    if (!GameActive) {
+        return false;
+    }
+
+#ifdef CHRONOSHIFT_DEBUG
+    // This chunk both handles debug frame stepping after we have flushed all the
+    // requested steps, or if the pause flag has been enabled. The game will continue
+    // to render the last frame and accept input, and the engine will sleep.
+    if (g_Debug_Step && g_Debug_StepCount <= 0 || g_Debug_Paused) {
+        // We need this here so the audio stream updates.
+        Call_Back();
+
+        // And this to make sure we still render the game viewport and handle input still.
+        if (!Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
+            if (g_gameInFocus) {
+                g_mouse->Erase_Mouse(g_hidPage, true);
+                Process_Input();
+                Map.Render();
+            }
+        }
+
+        // Force a redraw if there are any pending messages. The debug key system needs this.
+        if (Session.Get_Messages().Manage()) {
+            g_hiddenPage.Clear();
+            Map.Flag_To_Redraw(true);
+        }
+
+        // Yield remaining timeslice to other processes?
+        PlatformTimer->Sleep(1); // why not 0? 1 frees up processor time?
+        return !GameActive;
+    }
+    // Run the normal game loop body if frame stepping is disabled or if
+    // we have remaining frames to flush before we go back to a paused state.
+    if (!g_Debug_Step || (g_Debug_Step && g_Debug_StepCount > 0)) {
+#endif
+
+        Check_For_Focus_Loss();
+
+        Reallocate_Big_Shape_Buffer();
+
+        if (g_GameFrame >= Session.Trap_Frame()) {
+            Session.Trap_Object();
+        }
+
+        Session.Set_Processing_Start_Tick(TickCountTimer.Time());
+
+#ifdef CHRONOSHIFT_DEBUG
+        if (Session.Trap_Check_Heap()) {
+            g_Debug_Trap_Check_Heap = true;
+        }
+#endif
+        BENCHMARK_START(BENCH_MAIN);
+
+        if (Theme.What_Is_Playing() == THEME_NONE) {
+            Theme.Play_Next_Song();
+        }
+
+        if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.Game_To_Play() != GAME_SKIRMISH
+            && Session.Packet_Protocol() == COMPROTO_TWO) {
+            if (Session.Packet_Protocol() == COMPROTO_ONE && Session.Playback_Game()) {
+                FrameTimer = 0;
+            } else {
+                if (Session.Desired_Frame_Rate() == 0) {
+                    Session.Set_Desired_Frame_Rate(60);
+                }
+                FrameTimer = 60 / Session.Desired_Frame_Rate();
+            }
+        } else {
+            int game_speed = Options.Game_Speed();
+            DiffType ai_diff = g_PlayerPtr->Get_AI_Difficulty();
+            if (game_speed > 0) {
+                FrameTimer = game_speed + ((ai_diff == DIFF_EASIEST) - (ai_diff == DIFF_NORMAL));
+            } else {
+                FrameTimer = game_speed + (ai_diff == DIFF_EASIEST);
+            }
+        }
+
+        if (!Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
+            if (g_gameInFocus) {
+                g_mouse->Erase_Mouse(g_hidPage, true);
+                Process_Input();
+                Map.Render();
+            }
+        }
+
+        if (Session.Record_Game() || Session.Playback_Game()) {
+            Do_Record_Playback();
+        }
+
+        DisplayClass::Layers[LAYER_GROUND].Sort();
+
+        Logic.AI();
+
+        g_TimeQuake = false;
+
+        if (!g_PendingTimeQuake) {
+            g_TimeQuakeCenter = 0;
+        }
+
+        // Force a redraw if there are any pending messages to be drawn to the screen.
+        if (Session.Get_Messages().Manage()) {
+            g_hiddenPage.Clear();
+            Map.Flag_To_Redraw(true);
+        }
+
+        Session.Tick_Processing_Frame();
+
+        // Session.Update_Processing_Tick_Value(std::min<int>((TickCountTimer.Time() - Session.Processing_Start_Tick()), MAX_PROCESSING_TICKS));
+        Session.Update_Processing_Tick_Value(TickCountTimer.Time() - Session.Processing_Start_Tick());
+
+        Queue_AI();
+
+        // TODO, Requires ScoreClass
+#ifdef GAME_DLL
+        int &score_field_28 = Make_Global<int>(0x006698E4);
+        score_field_28 += 4;
+#else
+        // Score.field_28 += 4;
+#endif
+
+        Call_Back();
+
+        if (g_PlayerWins) {
+            DEBUG_LOG("Player wins.\n");
+            if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
+                Register_Game_End_Time();
+                Send_Statistics_Packet();
+            }
+            g_PlayerLoses = false;
+            g_PlayerWins = false;
+            g_PlayerRestarts = false;
+            g_PlayerAborts = false;
+            g_mouse->Erase_Mouse(g_hidPage, true);
+            Map.Help_Text(TXT_NULL);
+            Do_Win();
+            return !GameActive;
+        }
+
+        if (g_PlayerLoses) {
+            DEBUG_LOG("Player loses.\n");
+            if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
+                Register_Game_End_Time();
+                Send_Statistics_Packet();
+            }
+            g_PlayerLoses = false;
+            g_PlayerWins = false;
+            g_PlayerRestarts = false;
+            g_PlayerAborts = false;
+            g_mouse->Erase_Mouse(g_hidPage, true);
+            Map.Help_Text(TXT_NULL);
+            Do_Lose();
+            return !GameActive;
+        }
+
+        if (g_PlayerRestarts) {
+            DEBUG_LOG("Player restarted.\n");
+            g_PlayerLoses = false;
+            g_PlayerWins = false;
+            g_PlayerRestarts = false;
+            g_PlayerAborts = false;
+            g_mouse->Erase_Mouse(g_hidPage, true);
+            Map.Help_Text(TXT_NULL);
+            Do_Restart();
+            return !GameActive;
+        }
+
+        if (g_PlayerAborts) {
+            DEBUG_LOG("Player aborted.\n");
+            g_PlayerLoses = false;
+            g_PlayerWins = false;
+            g_PlayerRestarts = false;
+            g_PlayerAborts = false;
+            g_mouse->Erase_Mouse(g_hidPage, true);
+            Map.Help_Text(TXT_NULL);
+            Do_Abort();
+            return !GameActive;
+        }
+
+        if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.Game_To_Play() != GAME_SKIRMISH
+            && Session.Players_List().Count() == 2 && Scen.Get_field_7CF() && Scen.Get_field_7D3()) {
+            DEBUG_LOG("Game is a draw.\n");
+            if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
+                Register_Game_End_Time();
+                Send_Statistics_Packet();
+            }
+            g_mouse->Erase_Mouse(g_hidPage, true);
+            Map.Help_Text(TXT_NULL);
+            Do_Draw();
+            return !GameActive;
+        }
+
+        ++g_GameFrame;
+
+#ifdef CHRONOSHIFT_DEBUG
+        Debug_Check_Map();
+        Debug_Motion_Capture();
+#endif
+
+        BENCHMARK_END(BENCH_MAIN);
+
+        Sync_Delay();
+
+#ifdef CHRONOSHIFT_DEBUG
+        // decrement the step count after we have processed one frame iteration.
+        if (g_Debug_Step && g_Debug_StepCount > 0) {
+            --g_Debug_StepCount;
+        }
+
+    } // debug step if case
+#endif
 
     return !GameActive;
 }
