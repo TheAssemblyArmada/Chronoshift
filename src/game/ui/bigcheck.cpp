@@ -22,22 +22,22 @@
 
 BigCheckBoxClass::BigCheckBoxClass(unsigned id, int x, int y, int w, int h, const char *text, TextPrintType style) :
     ToggleClass(id, x, y, w, h),
-    TextStyle(style),
-    TextString(nstrdup(text))
+    m_TextStyle(style),
+    m_TextString(nstrdup(text))
 {
-    ToggleDisabled = true;
+    m_ToggleDisabled = true;
 }
 
 BigCheckBoxClass::BigCheckBoxClass(BigCheckBoxClass &that) :
     ToggleClass(that),
-    TextStyle(that.TextStyle),
-    TextString(nstrdup(that.TextString))
+    m_TextStyle(that.m_TextStyle),
+    m_TextString(nstrdup(that.m_TextString))
 {
 }
 
 BigCheckBoxClass::~BigCheckBoxClass()
 {
-    delete[] TextString;
+    delete[] m_TextString;
 }
 
 BOOL BigCheckBoxClass::Draw_Me(BOOL redraw)
@@ -47,14 +47,14 @@ BOOL BigCheckBoxClass::Draw_Me(BOOL redraw)
 
         int shape_frame = 0;
 
-        if (!IsDisabled) {
-            if (!ToggleState) {
+        if (!m_IsDisabled) {
+            if (!m_ToggleState) {
                 shape_frame = 0; // unchecked
             } else {
                 shape_frame = 1; // checked
             }
         } else {
-            if (!ToggleState) {
+            if (!m_ToggleState) {
                 shape_frame = 2; // disabled unchecked
             } else {
                 shape_frame = 3; // disabled checked
@@ -62,9 +62,9 @@ BOOL BigCheckBoxClass::Draw_Me(BOOL redraw)
         }
 
         void *bigcheckboxshape = GameFileClass::Retrieve("bigcheck.shp");
-        CC_Draw_Shape(bigcheckboxshape, shape_frame, XPos, YPos);
+        CC_Draw_Shape(bigcheckboxshape, shape_frame, m_XPos, m_YPos);
         Conquer_Clip_Text_Print(
-            TextString, XPos + 20, YPos, GadgetClass::Get_Color_Scheme(), 0, TextStyle, Width, nullptr);
+            m_TextString, m_XPos + 20, m_YPos, GadgetClass::Get_Color_Scheme(), 0, m_TextStyle, m_Width, nullptr);
 
         g_mouse->Show_Mouse();
 

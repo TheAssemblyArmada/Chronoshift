@@ -40,44 +40,44 @@ BOOL TriColorGaugeClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
         if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, (XPos + Width), (YPos + Height));
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, (m_XPos + m_Width), (m_YPos + m_Height));
         }
 
-        Draw_Box(XPos, YPos, Width, Height, IsDisabled ? BOX_STYLE_1 : BOX_STYLE_0, true);
+        Draw_Box(m_XPos, m_YPos, m_Width, m_Height, m_IsDisabled ? BOX_STYLE_1 : BOX_STYLE_0, true);
 
-        int vpixel = Value_To_Pixel(Value);
+        int vpixel = Value_To_Pixel(m_Value);
         int ypixel = Value_To_Pixel(m_YellowLimit);
         int rpixel = Value_To_Pixel(m_RedLimit);
 
-        if (Value > m_RedLimit) {
-            if (Value > m_RedLimit && Value <= m_YellowLimit) {
-                if (IsHorizontal) {
-                    g_logicPage->Fill_Rect(rpixel, YPos + 1, vpixel, Height + YPos - 2, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(XPos + 1, YPos + 1, rpixel, Height + YPos - 2, COLOR_PINK);
+        if (m_Value > m_RedLimit) {
+            if (m_Value > m_RedLimit && m_Value <= m_YellowLimit) {
+                if (m_IsHorizontal) {
+                    g_logicPage->Fill_Rect(rpixel, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_YELLOW);
+                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, rpixel, m_Height + m_YPos - 2, COLOR_PINK);
                 } else {
-                    g_logicPage->Fill_Rect(XPos + 1, rpixel, Width + XPos - 2, vpixel, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(XPos + 1, YPos + 1, Width + XPos - 2, rpixel, COLOR_PINK);
+                    g_logicPage->Fill_Rect(m_XPos + 1, rpixel, m_Width + m_XPos - 2, vpixel, COLOR_YELLOW);
+                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, rpixel, COLOR_PINK);
                 }
 
-            } else if (Value > m_YellowLimit && Value <= Maximum) {
-                if (IsHorizontal) {
-                    g_logicPage->Fill_Rect(ypixel, YPos + 1, vpixel, Height + YPos - 2, COLOR_GREEN);
-                    g_logicPage->Fill_Rect(rpixel, YPos + 1, ypixel, Height + YPos - 2, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(XPos + 1, YPos + 1, rpixel, Height + YPos - 2, COLOR_PINK);
+            } else if (m_Value > m_YellowLimit && m_Value <= m_Maximum) {
+                if (m_IsHorizontal) {
+                    g_logicPage->Fill_Rect(ypixel, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_GREEN);
+                    g_logicPage->Fill_Rect(rpixel, m_YPos + 1, ypixel, m_Height + m_YPos - 2, COLOR_YELLOW);
+                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, rpixel, m_Height + m_YPos - 2, COLOR_PINK);
                 } else {
-                    g_logicPage->Fill_Rect(XPos + 1, ypixel, Width + XPos - 2, vpixel, COLOR_GREEN);
-                    g_logicPage->Fill_Rect(XPos + 1, rpixel, Width + XPos - 2, ypixel, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(XPos + 1, YPos + 1, Width + XPos - 2, rpixel, COLOR_PINK);
+                    g_logicPage->Fill_Rect(m_XPos + 1, ypixel, m_Width + m_XPos - 2, vpixel, COLOR_GREEN);
+                    g_logicPage->Fill_Rect(m_XPos + 1, rpixel, m_Width + m_XPos - 2, ypixel, COLOR_YELLOW);
+                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, rpixel, COLOR_PINK);
                 }
             }
 
-        } else if (IsHorizontal) {
-            g_logicPage->Fill_Rect(XPos + 1, YPos + 1, vpixel, Height + YPos - 2, COLOR_PINK);
+        } else if (m_IsHorizontal) {
+            g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_PINK);
         } else {
-            g_logicPage->Fill_Rect(XPos + 1, YPos + 1, Width + XPos - 2, vpixel, COLOR_PINK);
+            g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, vpixel, COLOR_PINK);
         }
 
-        if (UseThumb) {
+        if (m_UseThumb) {
             Draw_Thumb();
         }
 
@@ -98,7 +98,7 @@ BOOL TriColorGaugeClass::Draw_Me(BOOL redraw)
  */
 bool TriColorGaugeClass::Set_Red_Limit(int value)
 {
-    if (value >= 0 && value < Maximum) {
+    if (value >= 0 && value < m_Maximum) {
         m_RedLimit = value;
         Flag_To_Redraw();
         return true;
@@ -114,7 +114,7 @@ bool TriColorGaugeClass::Set_Red_Limit(int value)
  */
 bool TriColorGaugeClass::Set_Yellow_Limit(int value)
 {
-    if (value >= 0 && value < Maximum) {
+    if (value >= 0 && value < m_Maximum) {
         m_YellowLimit = value;
         Flag_To_Redraw();
         return true;

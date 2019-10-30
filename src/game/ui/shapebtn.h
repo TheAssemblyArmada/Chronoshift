@@ -32,7 +32,7 @@ class ShapeButtonClass : public ToggleClass
         SHAPE_DISABLED,
     };
 public:
-    ShapeButtonClass() : ToggleClass(0, 0, 0, INPUT_NONE, false), BooleanOne(false) {}
+    ShapeButtonClass() : ToggleClass(0, 0, 0, INPUT_NONE, false), m_BooleanOne(false) {}
     ShapeButtonClass(unsigned id, void *button_shape, int x, int y);
     ShapeButtonClass(ShapeButtonClass &that);
     virtual ~ShapeButtonClass() {}
@@ -42,16 +42,16 @@ public:
     virtual BOOL Draw_Me(BOOL redraw) override;
     virtual void Set_Shape(void *button_shape);
 
-    void *Get_Shape() const { return ButtonShape; }
-    void Set_Shape_Bool_One(BOOL unk) { BooleanOne = unk; }
+    void *Get_Shape() const { return m_ButtonShape; }
+    void Set_Shape_Bool_One(BOOL unk) { m_BooleanOne = unk; }
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL BooleanOne : 1; // & 1
+    BOOL m_BooleanOne : 1; // & 1
 #else
-    bool BooleanOne;
+    bool m_BooleanOne;
 #endif
-    void *ButtonShape;
+    void *m_ButtonShape;
 };
 
 #endif // SHAPEBTN_H

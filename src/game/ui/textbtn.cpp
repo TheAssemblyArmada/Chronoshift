@@ -20,19 +20,19 @@
 
 TextButtonClass::TextButtonClass() :
     ToggleClass(0, 0, 0, 0, 0),
-    HasOutline(true),
-    FilledBackground(false),
-    HasShadow(false),
-    ButtonText(nullptr)
+    m_HasOutline(true),
+    m_FilledBackground(false),
+    m_HasShadow(false),
+    m_ButtonText(nullptr)
 {
 }
 
 TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType style, int x, int y, int w, int h, BOOL outline) :
     ToggleClass(id, x, y, w, h),
-    HasOutline(outline),
-    FilledBackground(false),
-    HasShadow(false),
-    ButtonText(string)
+    m_HasOutline(outline),
+    m_FilledBackground(false),
+    m_HasShadow(false),
+    m_ButtonText(string)
 {
     Set_Style(style);
     Calculate_Button_Size(w, h);
@@ -40,10 +40,10 @@ TextButtonClass::TextButtonClass(unsigned id, const char *string, TextPrintType 
 
 TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, int x, int y, int w, int h, BOOL outline) :
     ToggleClass(id, x, y, w, h),
-    HasOutline(outline),
-    FilledBackground(false),
-    HasShadow(false),
-    ButtonText(nullptr)
+    m_HasOutline(outline),
+    m_FilledBackground(false),
+    m_HasShadow(false),
+    m_ButtonText(nullptr)
 {
     Set_Style(style);
     Set_Text(str_id, false);
@@ -52,10 +52,10 @@ TextButtonClass::TextButtonClass(unsigned id, int str_id, TextPrintType style, i
 
 TextButtonClass::TextButtonClass(TextButtonClass &that) :
     ToggleClass(that),
-    HasOutline(that.HasOutline),
-    FilledBackground(that.FilledBackground),
-    ButtonText(that.ButtonText),
-    TextStyle(that.TextStyle)
+    m_HasOutline(that.m_HasOutline),
+    m_FilledBackground(that.m_FilledBackground),
+    m_ButtonText(that.m_ButtonText),
+    m_TextStyle(that.m_TextStyle)
 {
 }
 
@@ -63,11 +63,11 @@ BOOL TextButtonClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
         if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos - 1, Height + YPos - 1);
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
         }
 
         Draw_Background();
-        Draw_Text(ButtonText);
+        Draw_Text(m_ButtonText);
 
         if (g_logicPage == &g_seenBuff) {
             g_mouse->Conditional_Show_Mouse();
@@ -81,15 +81,15 @@ BOOL TextButtonClass::Draw_Me(BOOL redraw)
 
 void TextButtonClass::Set_Text(const char *string, BOOL adjust)
 {
-    ButtonText = string;
+    m_ButtonText = string;
     Flag_To_Redraw();
 
     // If adjust is set then we also adjust the width and height for the new
     // text string.
-    if (ButtonText && adjust) {
-        Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, TextStyle);
-        Width = String_Pixel_Width(ButtonText) + 8;
-        Height = g_fontYSpacing + g_fontHeight + 2;
+    if (m_ButtonText && adjust) {
+        Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, m_TextStyle);
+        m_Width = String_Pixel_Width(m_ButtonText) + 8;
+        m_Height = g_fontYSpacing + g_fontHeight + 2;
     }
 }
 
@@ -104,31 +104,31 @@ void TextButtonClass::Draw_Background()
 {
     BoxStyleEnum style;
 
-    if (HasOutline) {
-        g_logicPage->Draw_Rect(XPos - 1, YPos - 1, Width + XPos + 2, Height + YPos + 2, COLOR_BLACK);
+    if (m_HasOutline) {
+        g_logicPage->Draw_Rect(m_XPos - 1, m_YPos - 1, m_Width + m_XPos + 2, m_Height + m_YPos + 2, COLOR_BLACK);
     }
 
     // Select required box style based on button state.
-    if (IsDisabled) {
+    if (m_IsDisabled) {
         style = BOX_STYLE_4;
     } else {
-        if (Toggle_Boolean1) {
+        if (m_Toggle_Boolean1) {
             style = BOX_STYLE_0;
         } else {
             style = BOX_STYLE_1;
         }
     }
 
-    Draw_Box(XPos, YPos, Width, Height, style, true);
+    Draw_Box(m_XPos, m_YPos, m_Width, m_Height, style, true);
 }
 
 void TextButtonClass::Draw_Text(const char *string)
 {
-    TextPrintType style = TextStyle;
+    TextPrintType style = m_TextStyle;
 
-    if (ButtonText != nullptr) {
-        if (!IsDisabled) {
-            if (Toggle_Boolean1 || ToggleState) {
+    if (m_ButtonText != nullptr) {
+        if (!m_IsDisabled) {
+            if (m_Toggle_Boolean1 || m_ToggleState) {
                 style |= TPF_USE_BRIGHT | TPF_USE_GRAD_PAL;
             } else {
                 style |= TPF_USE_MEDIUM | TPF_USE_GRAD_PAL;
@@ -139,7 +139,7 @@ void TextButtonClass::Draw_Text(const char *string)
         style |= TPF_CENTER;
 
         // Print the button text!
-        Fancy_Text_Print(string, (Width / 2) + XPos - 1, YPos + 1, GadgetClass::ColorScheme, COLOR_TBLACK, style);
+        Fancy_Text_Print(string, (m_Width / 2) + m_XPos - 1, m_YPos + 1, GadgetClass::ColorScheme, COLOR_TBLACK, style);
     }
 }
 
@@ -147,14 +147,14 @@ void TextButtonClass::Calculate_Button_Size(int w, int h)
 {
     // If we got invalid width and height values, calc them from string.
     if (w == -1 || h == -1) {
-        Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, TextStyle);
+        Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, m_TextStyle);
 
         if (w == -1) {
-            Width = String_Pixel_Width(ButtonText) + 8;
+            m_Width = String_Pixel_Width(m_ButtonText) + 8;
         }
 
         if (h == -1) {
-            Height = g_fontYSpacing + g_fontHeight + 2;
+            m_Height = g_fontYSpacing + g_fontHeight + 2;
         }
     }
 }

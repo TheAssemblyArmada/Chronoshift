@@ -22,30 +22,30 @@
 
 StaticButtonClass::StaticButtonClass(unsigned id, const char *text, TextPrintType style, int x, int y, int w, int h) :
     GadgetClass(x, y, w, h, INPUT_NONE, false),
-    ButtonText(nullptr),
-    TextStyle(style)
+    m_ButtonText(nullptr),
+    m_TextStyle(style)
 {
     Set_Text(text, false);
 
     // If we got invalid width and height values, calc them from string.
     if (w == -1 || h == -1) {
-        Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, TextStyle);
+        Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
 
         if (w == -1) {
-            Width = String_Pixel_Width(ButtonText);
+            m_Width = String_Pixel_Width(m_ButtonText);
         }
 
         if (h == -1) {
-            Height = g_fontHeight;
+            m_Height = g_fontHeight;
         }
     }
 }
 
 StaticButtonClass::StaticButtonClass(StaticButtonClass &that) :
     GadgetClass(that),
-    DrawBuffer(that.DrawBuffer),
-    ButtonText(that.ButtonText),
-    TextStyle(that.TextStyle)
+    m_DrawBuffer(that.m_DrawBuffer),
+    m_ButtonText(that.m_ButtonText),
+    m_TextStyle(that.m_TextStyle)
 {
 }
 
@@ -53,11 +53,11 @@ BOOL StaticButtonClass::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
         if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos - 1, Height + YPos - 1);
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
         }
 
         Draw_Background();
-        Draw_Text(ButtonText);
+        Draw_Text(m_ButtonText);
 
         if (g_logicPage == &g_seenBuff) {
             g_mouse->Conditional_Show_Mouse();
@@ -71,60 +71,60 @@ BOOL StaticButtonClass::Draw_Me(BOOL redraw)
 
 void StaticButtonClass::Set_Text(const char *string, BOOL adjust)
 {
-    if (ButtonText) {
-        delete[] ButtonText;
-        ButtonText = nullptr;
+    if (m_ButtonText) {
+        delete[] m_ButtonText;
+        m_ButtonText = nullptr;
     }
 
-    ButtonText = nstrdup(string);
+    m_ButtonText = nstrdup(string);
 
     Flag_To_Redraw();
 
     // If adjust is set then we also adjust the width and height for the new
     // text string.
-    if (adjust && ButtonText) {
+    if (adjust && m_ButtonText) {
         Draw_Background();
 
-        Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, TextStyle);
-        Width = String_Pixel_Width(ButtonText) + 8;
-        Height = g_fontYSpacing + g_fontHeight + 2;
+        Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
+        m_Width = String_Pixel_Width(m_ButtonText) + 8;
+        m_Height = g_fontYSpacing + g_fontHeight + 2;
 
         BufferClass buff;
-        DrawBuffer = buff;
+        m_DrawBuffer = buff;
     }
 }
 
 void StaticButtonClass::Draw_Background()
 {
     // If we don't have the buffer allocated already, allocate it and grab whatever is in the viewport to it.
-    if (DrawBuffer.Get_Buffer() == nullptr && Width > 0 && Height > 0) {
-        DrawBuffer.Resize(nullptr, Width * Height);
+    if (m_DrawBuffer.Get_Buffer() == nullptr && m_Width > 0 && m_Height > 0) {
+        m_DrawBuffer.Resize(nullptr, m_Width * m_Height);
 
-        if (DrawBuffer.Get_Buffer() != nullptr) {
-            g_logicPage->To_Buffer(XPos, YPos, Width, Height, DrawBuffer.Get_Buffer(), DrawBuffer.Get_Size());
+        if (m_DrawBuffer.Get_Buffer() != nullptr) {
+            g_logicPage->To_Buffer(m_XPos, m_YPos, m_Width, m_Height, m_DrawBuffer.Get_Buffer(), m_DrawBuffer.Get_Size());
         }
     }
 
     // Draw what we have in the buffer back to the viewport, sampled once, the replaced each draw.
-    if (DrawBuffer.Get_Buffer()) {
-        g_logicPage->From_Buffer(XPos, YPos, Width, Height, DrawBuffer.Get_Buffer());
+    if (m_DrawBuffer.Get_Buffer()) {
+        g_logicPage->From_Buffer(m_XPos, m_YPos, m_Width, m_Height, m_DrawBuffer.Get_Buffer());
     }
 }
 
 void StaticButtonClass::Draw_Text(const char *string)
 {
-    if (ButtonText) {
-        int xpos = XPos;
+    if (m_ButtonText) {
+        int xpos = m_XPos;
 
-        if (TextStyle & TPF_CENTER) {
-            xpos += Width / 2;
+        if (m_TextStyle & TPF_CENTER) {
+            xpos += m_Width / 2;
         }
 
-        if (TextStyle & TPF_RIGHT) {
-            xpos += Width - 1;
+        if (m_TextStyle & TPF_RIGHT) {
+            xpos += m_Width - 1;
         }
 
         // Print the button text!
-        Fancy_Text_Print(string, xpos, YPos, GadgetClass::ColorScheme, COLOR_TBLACK, TextStyle);
+        Fancy_Text_Print(string, xpos, m_YPos, GadgetClass::ColorScheme, COLOR_TBLACK, m_TextStyle);
     }
 }

@@ -38,7 +38,7 @@ public:
     virtual BOOL Action(unsigned flags, KeyNumType &key) override;
     virtual BOOL Set_Maximum(int max) override;
     virtual BOOL Set_Value(int value) override;
-    virtual int Thumb_Pixels() override { return ThumbnailPixels; }
+    virtual int Thumb_Pixels() override { return m_ThumbnailPixels; }
     virtual void Draw_Thumb() override;
     virtual void Set_Thumb_Size(int size);
     virtual BOOL Bump(BOOL bump_up);
@@ -48,30 +48,30 @@ protected:
     void Recalc_Thumb();
 
 protected:
-    ShapeButtonClass *ButtonPlus;
-    ShapeButtonClass *ButtonMinus;
+    ShapeButtonClass *m_ButtonPlus;
+    ShapeButtonClass *m_ButtonMinus;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL NoButtons : 1; // & 1
+    BOOL m_NoButtons : 1; // & 1
 #else
-    bool NoButtons; // 1
+    bool m_NoButtons; // 1
 #endif
-    int BumpSize;
-    int ThumbnailPixels;
-    int ThumbnailSize;
+    int m_BumpSize;
+    int m_ThumbnailPixels;
+    int m_ThumbnailSize;
 };
 
 inline SliderClass &SliderClass::operator=(SliderClass &that)
 {
     if (this != &that) {
         GaugeClass::operator=(that);
-        ButtonPlus = that.ButtonPlus;
-        ButtonMinus = that.ButtonPlus;
-        NoButtons = that.NoButtons;
-        BumpSize = that.BumpSize;
-        ThumbnailPixels = that.ThumbnailPixels;
-        ThumbnailSize = that.ThumbnailSize;
-        ButtonPlus->Make_Peer(*this);
-        ButtonMinus->Make_Peer(*this);
+        m_ButtonPlus = that.m_ButtonPlus;
+        m_ButtonMinus = that.m_ButtonPlus;
+        m_NoButtons = that.m_NoButtons;
+        m_BumpSize = that.m_BumpSize;
+        m_ThumbnailPixels = that.m_ThumbnailPixels;
+        m_ThumbnailSize = that.m_ThumbnailSize;
+        m_ButtonPlus->Make_Peer(*this);
+        m_ButtonMinus->Make_Peer(*this);
     }
 
     return *this;

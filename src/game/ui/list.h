@@ -64,21 +64,21 @@ public:
     ListClass &operator=(ListClass &that);
 
 protected:
-    TextPrintType TextStyle;
-    int *Tabs;
-    DynamicVectorClass<const char *> Entries;
-    int YSpacing; // horziontal line spacing.
-    int ThumbSize; // this visible is a line count/page size.
+    TextPrintType m_TextStyle;
+    int *m_Tabs;
+    DynamicVectorClass<const char *> m_Entries;
+    int m_YSpacing; // horziontal line spacing.
+    int m_ThumbSize; // this visible is a line count/page size.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL HasScrollbar : 1; // & 1
+    BOOL m_HasScrollbar : 1; // & 1
 #else
-    bool HasScrollbar; // Does this List have a scroll bar for scrolling through the entries?
+    bool m_HasScrollbar; // Does this List have a scroll bar for scrolling through the entries?
 #endif
-    ShapeButtonClass ScrollUpButton; // Scroll Up button instance for the scroll bar.
-    ShapeButtonClass ScrollDownButton; // Scroll Down button instance for the scroll bar.
-    SliderClass Scrollbar; // Scroll bar instance for the list.
-    int CurrentIndex;
-    int ViewIndex;
+    ShapeButtonClass m_ScrollUpButton; // Scroll Up button instance for the scroll bar.
+    ShapeButtonClass m_ScrollDownButton; // Scroll Down button instance for the scroll bar.
+    SliderClass m_Scrollbar; // Scroll bar instance for the list.
+    int m_CurrentIndex;
+    int m_ViewIndex;
 };
 
 void Clear_Listbox(ListClass *list);
@@ -88,20 +88,20 @@ inline ListClass &ListClass::operator=(ListClass &that)
 {
     if (this != &that) {
         ControlClass::operator=(that);
-        TextStyle = that.TextStyle;
-        Tabs = that.Tabs;
-        Entries = that.Entries;
-        YSpacing = that.YSpacing;
-        ThumbSize = that.ThumbSize;
-        HasScrollbar = that.HasScrollbar;
-        ScrollUpButton = that.ScrollUpButton;
-        ScrollDownButton = that.ScrollDownButton;
-        Scrollbar = that.Scrollbar;
-        CurrentIndex = that.CurrentIndex;
-        ViewIndex = that.ViewIndex;
-        ScrollUpButton.Make_Peer(*this);
-        ScrollDownButton.Make_Peer(*this);
-        Scrollbar.Make_Peer(*this);
+        m_TextStyle = that.m_TextStyle;
+        m_Tabs = that.m_Tabs;
+        m_Entries = that.m_Entries;
+        m_YSpacing = that.m_YSpacing;
+        m_ThumbSize = that.m_ThumbSize;
+        m_HasScrollbar = that.m_HasScrollbar;
+        m_ScrollUpButton = that.m_ScrollUpButton;
+        m_ScrollDownButton = that.m_ScrollDownButton;
+        m_Scrollbar = that.m_Scrollbar;
+        m_CurrentIndex = that.m_CurrentIndex;
+        m_ViewIndex = that.m_ViewIndex;
+        m_ScrollUpButton.Make_Peer(*this);
+        m_ScrollDownButton.Make_Peer(*this);
+        m_Scrollbar.Make_Peer(*this);
     }
 
     return *this;

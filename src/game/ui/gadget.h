@@ -84,7 +84,7 @@ public:
     virtual void Clear_Focus();
     virtual BOOL Has_Focus();
     virtual BOOL Is_List_To_Redraw();
-    virtual BOOL Is_To_Redraw() { return ToRedraw; }
+    virtual BOOL Is_To_Redraw() { return m_ToRedraw; }
     virtual void Set_Position(int x, int y);
     virtual BOOL Draw_Me(BOOL redraw);
     virtual void Sticky_Process(unsigned flags);
@@ -94,15 +94,15 @@ public:
     GadgetClass &operator=(GadgetClass &that);
 
     void Set_Size(int w, int h);
-    void Set_XPos(int x) { XPos = x; }
-    void Set_YPos(int y) { YPos = y; }
-    void Set_Width(int w) { Width = w; }
-    void Set_Height(int h) { Height = h; }
-    void Set_Sticky(BOOL sticky) { IsSticky = sticky; }
-    int Get_XPos() { return XPos; }
-    int Get_YPos() { return YPos; }
-    int Get_Width() { return Width; }
-    int Get_Height() { return Height; }
+    void Set_XPos(int x) { m_XPos = x; }
+    void Set_YPos(int y) { m_YPos = y; }
+    void Set_Width(int w) { m_Width = w; }
+    void Set_Height(int h) { m_Height = h; }
+    void Set_Sticky(BOOL sticky) { m_IsSticky = sticky; }
+    int Get_XPos() { return m_XPos; }
+    int Get_YPos() { return m_YPos; }
+    int Get_Width() { return m_Width; }
+    int Get_Height() { return m_Height; }
 
     static RemapControlType *Get_Color_Scheme() { return ColorScheme; }
     static void Set_Color_Scheme(RemapControlType *remap) { ColorScheme = remap; }
@@ -121,22 +121,22 @@ protected:
 #endif
 
 protected:
-    int XPos;
-    int YPos;
-    int Width;
-    int Height;
+    int m_XPos;
+    int m_YPos;
+    int m_Width;
+    int m_Height;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL ToRedraw : 1; // & 1
-    BOOL IsSticky : 1; // & 2
-    BOOL IsDisabled : 1; // & 4
+    BOOL m_ToRedraw : 1; // & 1
+    BOOL m_IsSticky : 1; // & 2
+    BOOL m_IsDisabled : 1; // & 4
 #else
-    bool ToRedraw;
-    bool IsSticky;
-    bool IsDisabled;
+    bool m_ToRedraw;
+    bool m_IsSticky;
+    bool m_IsDisabled;
 #endif
 
-    unsigned InputFlag;
+    unsigned m_InputFlag;
 };
 
 #endif // GADGET_H

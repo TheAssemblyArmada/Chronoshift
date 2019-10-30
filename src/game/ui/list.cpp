@@ -26,52 +26,52 @@
 ListClass::ListClass(
     int id, int x, int y, int w, int h, TextPrintType text_style, void *up_btn_shape, void *down_btn_shape) :
     ControlClass(id, x, y, w, h, MOUSE_LEFT_PRESS | MOUSE_LEFT_RLSE | KEYBOARD_INPUT /*261*/, false),
-    TextStyle(text_style),
-    Tabs(nullptr),
-    Entries(),
-    YSpacing(0),
-    ThumbSize(0),
-    HasScrollbar(false),
-    ScrollUpButton(0, up_btn_shape, x + w, y),
-    ScrollDownButton(0, down_btn_shape, x + w, y + h),
-    Scrollbar(0, x + w, y, 0, h, 1),
-    CurrentIndex(0),
-    ViewIndex(0)
+    m_TextStyle(text_style),
+    m_Tabs(nullptr),
+    m_Entries(),
+    m_YSpacing(0),
+    m_ThumbSize(0),
+    m_HasScrollbar(false),
+    m_ScrollUpButton(0, up_btn_shape, x + w, y),
+    m_ScrollDownButton(0, down_btn_shape, x + w, y + h),
+    m_Scrollbar(0, x + w, y, 0, h, 1),
+    m_CurrentIndex(0),
+    m_ViewIndex(0)
 {
     // set position
-    ScrollUpButton.Set_XPos(ScrollUpButton.Get_XPos() - ScrollUpButton.Get_Width());
-    ScrollDownButton.Set_XPos(ScrollDownButton.Get_XPos() - ScrollDownButton.Get_Width());
-    ScrollDownButton.Set_YPos(ScrollDownButton.Get_YPos() - ScrollDownButton.Get_Height());
+    m_ScrollUpButton.Set_XPos(m_ScrollUpButton.Get_XPos() - m_ScrollUpButton.Get_Width());
+    m_ScrollDownButton.Set_XPos(m_ScrollDownButton.Get_XPos() - m_ScrollDownButton.Get_Width());
+    m_ScrollDownButton.Set_YPos(m_ScrollDownButton.Get_YPos() - m_ScrollDownButton.Get_Height());
 
-    Scrollbar.Set_XPos(Scrollbar.Get_XPos() - std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
-    Scrollbar.Set_YPos(ScrollUpButton.Get_Height() + YPos);
-    Scrollbar.Set_Height(Scrollbar.Get_Height() - (ScrollDownButton.Get_Height() + ScrollUpButton.Get_Height()));
-    Scrollbar.Set_Width(std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
+    m_Scrollbar.Set_XPos(m_Scrollbar.Get_XPos() - std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
+    m_Scrollbar.Set_YPos(m_ScrollUpButton.Get_Height() + m_YPos);
+    m_Scrollbar.Set_Height(m_Scrollbar.Get_Height() - (m_ScrollDownButton.Get_Height() + m_ScrollUpButton.Get_Height()));
+    m_Scrollbar.Set_Width(std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
 
     // The nullptr Fancy_Text_Print sets the font pointer and the dimension globals
     // for the YSpacing and ThumbSize
-    Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, TextStyle);
-    YSpacing = g_fontYSpacing + g_fontHeight - 1;
-    ThumbSize = (h - 1) / YSpacing;
+    Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
+    m_YSpacing = g_fontYSpacing + g_fontHeight - 1;
+    m_ThumbSize = (h - 1) / m_YSpacing;
 }
 
 ListClass::ListClass(ListClass &that) :
     ControlClass(that),
-    TextStyle(that.TextStyle),
-    Tabs(that.Tabs),
-    Entries(that.Entries),
-    YSpacing(that.YSpacing),
-    ThumbSize(that.ThumbSize),
-    HasScrollbar(that.HasScrollbar),
-    ScrollUpButton(that.ScrollUpButton),
-    ScrollDownButton(that.ScrollDownButton),
-    Scrollbar(that.Scrollbar),
-    CurrentIndex(that.CurrentIndex),
-    ViewIndex(that.ViewIndex)
+    m_TextStyle(that.m_TextStyle),
+    m_Tabs(that.m_Tabs),
+    m_Entries(that.m_Entries),
+    m_YSpacing(that.m_YSpacing),
+    m_ThumbSize(that.m_ThumbSize),
+    m_HasScrollbar(that.m_HasScrollbar),
+    m_ScrollUpButton(that.m_ScrollUpButton),
+    m_ScrollDownButton(that.m_ScrollDownButton),
+    m_Scrollbar(that.m_Scrollbar),
+    m_CurrentIndex(that.m_CurrentIndex),
+    m_ViewIndex(that.m_ViewIndex)
 {
-    ScrollUpButton.Make_Peer(*this);
-    ScrollDownButton.Make_Peer(*this);
-    Scrollbar.Make_Peer(*this);
+    m_ScrollUpButton.Make_Peer(*this);
+    m_ScrollDownButton.Make_Peer(*this);
+    m_Scrollbar.Make_Peer(*this);
 }
 
 ListClass::~ListClass()
@@ -81,10 +81,10 @@ ListClass::~ListClass()
 
 LinkClass &ListClass::Add(LinkClass &that)
 {
-    if (HasScrollbar) {
-        ScrollUpButton.Add(that);
-        ScrollDownButton.Add(that);
-        Scrollbar.Add(that);
+    if (m_HasScrollbar) {
+        m_ScrollUpButton.Add(that);
+        m_ScrollDownButton.Add(that);
+        m_Scrollbar.Add(that);
     }
 
     return LinkClass::Add(that);
@@ -94,10 +94,10 @@ LinkClass &ListClass::Add_Tail(LinkClass &that)
 {
     LinkClass::Add_Tail(that);
 
-    if (HasScrollbar) {
-        ScrollUpButton.Add_Tail(that);
-        ScrollDownButton.Add_Tail(that);
-        Scrollbar.Add_Tail(that);
+    if (m_HasScrollbar) {
+        m_ScrollUpButton.Add_Tail(that);
+        m_ScrollDownButton.Add_Tail(that);
+        m_Scrollbar.Add_Tail(that);
     }
 
     return Head_Of_List();
@@ -105,10 +105,10 @@ LinkClass &ListClass::Add_Tail(LinkClass &that)
 
 LinkClass &ListClass::Add_Head(LinkClass &that)
 {
-    if (HasScrollbar) {
-        ScrollUpButton.Add_Head(that);
-        ScrollDownButton.Add_Head(that);
-        Scrollbar.Add_Head(that);
+    if (m_HasScrollbar) {
+        m_ScrollUpButton.Add_Head(that);
+        m_ScrollDownButton.Add_Head(that);
+        m_Scrollbar.Add_Head(that);
     }
 
     return LinkClass::Add_Head(that);
@@ -116,10 +116,10 @@ LinkClass &ListClass::Add_Head(LinkClass &that)
 
 GadgetClass *ListClass::Remove()
 {
-    if (HasScrollbar) {
-        ScrollUpButton.Remove();
-        ScrollDownButton.Remove();
-        Scrollbar.Remove();
+    if (m_HasScrollbar) {
+        m_ScrollUpButton.Remove();
+        m_ScrollDownButton.Remove();
+        m_Scrollbar.Remove();
     }
 
     return GadgetClass::Remove();
@@ -127,10 +127,10 @@ GadgetClass *ListClass::Remove()
 
 void ListClass::Flag_To_Redraw()
 {
-    if (HasScrollbar) {
-        ScrollUpButton.Flag_To_Redraw();
-        ScrollDownButton.Flag_To_Redraw();
-        Scrollbar.Flag_To_Redraw();
+    if (m_HasScrollbar) {
+        m_ScrollUpButton.Flag_To_Redraw();
+        m_ScrollDownButton.Flag_To_Redraw();
+        m_Scrollbar.Flag_To_Redraw();
     }
 
     GadgetClass::Flag_To_Redraw();
@@ -139,51 +139,51 @@ void ListClass::Flag_To_Redraw()
 void ListClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &peer)
 {
     if (flags & MOUSE_LEFT_RLSE) {
-        if (&ScrollUpButton == &peer) {
+        if (&m_ScrollUpButton == &peer) {
             Step(true); // step up
         }
 
-        if (&ScrollDownButton == &peer) {
+        if (&m_ScrollDownButton == &peer) {
             Step(false); // step down
         }
     }
 
-    if (&Scrollbar == &peer) {
-        Set_View_Index(Scrollbar.Get_Value());
+    if (&m_Scrollbar == &peer) {
+        Set_View_Index(m_Scrollbar.Get_Value());
     }
 }
 
 void ListClass::Set_Position(int x, int y)
 {
     // Set scroll up button position.
-    ScrollUpButton.Set_XPos(x + Width - ScrollUpButton.Get_Width());
-    ScrollUpButton.Set_YPos(y);
+    m_ScrollUpButton.Set_XPos(x + m_Width - m_ScrollUpButton.Get_Width());
+    m_ScrollUpButton.Set_YPos(y);
 
     // Set scroll down button position.
-    ScrollDownButton.Set_XPos(x + Width - ScrollDownButton.Get_Width());
-    ScrollDownButton.Set_YPos(y + Height - ScrollDownButton.Get_Height());
+    m_ScrollDownButton.Set_XPos(x + m_Width - m_ScrollDownButton.Get_Width());
+    m_ScrollDownButton.Set_YPos(y + m_Height - m_ScrollDownButton.Get_Height());
 
     // Set scroll bar position.
-    Scrollbar.Set_XPos(x + Width - std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
-    Scrollbar.Set_YPos(y + ScrollUpButton.Get_Height());
-    Scrollbar.Set_Width(std::max(ScrollUpButton.Get_Width(), ScrollDownButton.Get_Width()));
-    Scrollbar.Set_Height(Height - (ScrollDownButton.Get_Height() + ScrollUpButton.Get_Height()));
+    m_Scrollbar.Set_XPos(x + m_Width - std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
+    m_Scrollbar.Set_YPos(y + m_ScrollUpButton.Get_Height());
+    m_Scrollbar.Set_Width(std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
+    m_Scrollbar.Set_Height(m_Height - (m_ScrollDownButton.Get_Height() + m_ScrollUpButton.Get_Height()));
 }
 
 BOOL ListClass::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
         if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos, Height + YPos);
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
-        Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_4, 1);
+        Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_4, 1);
 
-        if (Entries.Count()) {
-            for (int index = 0; index < ThumbSize; ++index) {
-                if (Entries.Count() > index + ViewIndex) {
-                    BOOL redraw_entry = index + ViewIndex == Current_Index();
-                    Draw_Entry(index + ViewIndex, XPos + 1, YPos + index * YSpacing + 1, Width - 2, redraw_entry);
+        if (m_Entries.Count()) {
+            for (int index = 0; index < m_ThumbSize; ++index) {
+                if (m_Entries.Count() > index + m_ViewIndex) {
+                    BOOL redraw_entry = index + m_ViewIndex == Current_Index();
+                    Draw_Entry(index + m_ViewIndex, m_XPos + 1, m_YPos + index * m_YSpacing + 1, m_Width - 2, redraw_entry);
                 }
             }
         }
@@ -218,11 +218,11 @@ BOOL ListClass::Action(unsigned flags, KeyNumType &key)
             flags &= ~KEYBOARD_INPUT;
         }
     } else {
-        CurrentIndex = ViewIndex + (g_mouse->Get_Mouse_Y() - YPos) / YSpacing;
-        CurrentIndex = std::min(CurrentIndex, Entries.Count() - 1);
+        m_CurrentIndex = m_ViewIndex + (g_mouse->Get_Mouse_Y() - m_YPos) / m_YSpacing;
+        m_CurrentIndex = std::min(m_CurrentIndex, m_Entries.Count() - 1);
 
-        if (CurrentIndex == -1) {
-            CurrentIndex = 0;
+        if (m_CurrentIndex == -1) {
+            m_CurrentIndex = 0;
         }
     }
 
@@ -241,15 +241,15 @@ int ListClass::Add_Item(int str_id)
 int ListClass::Add_Item(const char *string)
 {
     if (string) {
-        Entries.Add(string);
+        m_Entries.Add(string);
         Flag_To_Redraw();
 
-        if (Count() > ThumbSize) {
+        if (Count() > m_ThumbSize) {
             Add_Scroll_Bar();
         }
 
-        if (HasScrollbar) {
-            Scrollbar.Set_Maximum(Count());
+        if (m_HasScrollbar) {
+            m_Scrollbar.Set_Maximum(Count());
         }
     }
 
@@ -260,30 +260,30 @@ BOOL ListClass::Add_Scroll_Bar()
 {
     // Does this list instance have a scroll bar?
     // If not, lets add it!
-    if (!HasScrollbar) {
-        HasScrollbar = true;
+    if (!m_HasScrollbar) {
+        m_HasScrollbar = true;
 
         // Set the flag to redraw the gadget.
         Flag_To_Redraw();
 
         // Recalculate the list width to exclude the soon to be
         // added scroll bar's width.
-        Width -= Scrollbar.Get_Width();
-        ScrollUpButton.Make_Peer(*this);
-        ScrollDownButton.Make_Peer(*this);
-        Scrollbar.Make_Peer(*this);
-        ScrollUpButton.Add(*this);
-        ScrollDownButton.Add(*this);
-        Scrollbar.Add(*this);
+        m_Width -= m_Scrollbar.Get_Width();
+        m_ScrollUpButton.Make_Peer(*this);
+        m_ScrollDownButton.Make_Peer(*this);
+        m_Scrollbar.Make_Peer(*this);
+        m_ScrollUpButton.Add(*this);
+        m_ScrollDownButton.Add(*this);
+        m_Scrollbar.Add(*this);
 
         // Set the redraw flag on the scroll bar gadgets.
-        ScrollUpButton.Flag_To_Redraw();
-        ScrollDownButton.Flag_To_Redraw();
-        Scrollbar.Flag_To_Redraw();
+        m_ScrollUpButton.Flag_To_Redraw();
+        m_ScrollDownButton.Flag_To_Redraw();
+        m_Scrollbar.Flag_To_Redraw();
 
-        Scrollbar.Set_Maximum(Count());
-        Scrollbar.Set_Thumb_Size(ThumbSize);
-        Scrollbar.Set_Value(ViewIndex);
+        m_Scrollbar.Set_Maximum(Count());
+        m_Scrollbar.Set_Thumb_Size(m_ThumbSize);
+        m_Scrollbar.Set_Value(m_ViewIndex);
 
         // We sucessfully added the scroll bar!
         return true;
@@ -296,8 +296,8 @@ BOOL ListClass::Add_Scroll_Bar()
 void ListClass::Bump(BOOL bump_up)
 {
     // the code actually does use Step(), is this a error? needs testing and maybe changing to Bump()
-    if (HasScrollbar && Scrollbar.Step(bump_up)) {
-        ViewIndex = Scrollbar.Get_Value();
+    if (m_HasScrollbar && m_Scrollbar.Step(bump_up)) {
+        m_ViewIndex = m_Scrollbar.Get_Value();
         Flag_To_Redraw();
     }
 }
@@ -305,18 +305,18 @@ void ListClass::Bump(BOOL bump_up)
 int ListClass::Count() const
 {
     // Return the number of active entries in the vector array.
-    return Entries.Count();
+    return m_Entries.Count();
 }
 
 int ListClass::Current_Index() const
 {
-    return CurrentIndex;
+    return m_CurrentIndex;
 }
 
 const char *ListClass::Current_Item() const
 {
     if (Count() > Current_Index()) {
-        return Entries[Current_Index()];
+        return m_Entries[Current_Index()];
     }
 
     return nullptr;
@@ -325,7 +325,7 @@ const char *ListClass::Current_Item() const
 const char *ListClass::Get_Item(int string_index) const
 {
     if (Count()) {
-        return Entries[std::min(string_index, Count() - 1)];
+        return m_Entries[std::min(string_index, Count() - 1)];
     }
 
     return nullptr;
@@ -333,8 +333,8 @@ const char *ListClass::Get_Item(int string_index) const
 
 int ListClass::Step_Selected_Index(int index)
 {
-    int curr_idx = CurrentIndex;
-    Set_Selected_Index(index + CurrentIndex);
+    int curr_idx = m_CurrentIndex;
+    Set_Selected_Index(index + m_CurrentIndex);
 
     return curr_idx;
 }
@@ -342,32 +342,32 @@ int ListClass::Step_Selected_Index(int index)
 void ListClass::Remove_Item(int string_index)
 {
     if (Count() > string_index) {
-        Entries.Delete(string_index);
+        m_Entries.Delete(string_index);
 
-        if (Count() <= ThumbSize) {
+        if (Count() <= m_ThumbSize) {
             Remove_Scroll_Bar();
         }
 
-        if (HasScrollbar) {
-            Scrollbar.Set_Maximum(Count());
+        if (m_HasScrollbar) {
+            m_Scrollbar.Set_Maximum(Count());
         }
 
         if (Count() <= Current_Index()) {
-            --CurrentIndex;
+            --m_CurrentIndex;
             if (Current_Index() < 0) {
-                CurrentIndex = 0;
+                m_CurrentIndex = 0;
             }
         }
 
-        if (Count() <= ViewIndex) {
-            --ViewIndex;
+        if (Count() <= m_ViewIndex) {
+            --m_ViewIndex;
 
-            if (ViewIndex < 0) {
-                ViewIndex = 0;
+            if (m_ViewIndex < 0) {
+                m_ViewIndex = 0;
             }
 
-            if (HasScrollbar) {
-                Scrollbar.Step(true);
+            if (m_HasScrollbar) {
+                m_Scrollbar.Step(true);
             }
         }
     }
@@ -375,7 +375,7 @@ void ListClass::Remove_Item(int string_index)
 
 void ListClass::Remove_Item(const char *string)
 {
-    int id = Entries.ID(string);
+    int id = m_Entries.ID(string);
 
     if (string && id != -1) {
         Remove_Item(id);
@@ -386,18 +386,18 @@ BOOL ListClass::Remove_Scroll_Bar()
 {
     // Does this list instance have a scroll bar?
     // If so, lets remove it!
-    if (HasScrollbar) {
+    if (m_HasScrollbar) {
         // Recalculate the list width to include the soon to be
         // removed scroll bar's width.
-        Width += Scrollbar.Get_Width();
+        m_Width += m_Scrollbar.Get_Width();
 
         // Remove the attached scroll bar.
-        Scrollbar.Remove();
-        HasScrollbar = false;
+        m_Scrollbar.Remove();
+        m_HasScrollbar = false;
 
         // Remove the attached scroll control buttons.
-        ScrollUpButton.Remove();
-        ScrollDownButton.Remove();
+        m_ScrollUpButton.Remove();
+        m_ScrollDownButton.Remove();
 
         // Set the redraw flag on the list gadget.
         Flag_To_Redraw();
@@ -414,7 +414,7 @@ void ListClass::Set_Selected_Index(const char *string)
 {
     if (string && Count() > 0) {
         for (int index = 0; index < Count(); ++index) {
-            if (strcasecmp(Entries[index], string) == 0) {
+            if (strcasecmp(m_Entries[index], string) == 0) {
                 Set_Selected_Index(index);
                 return;
             }
@@ -424,40 +424,40 @@ void ListClass::Set_Selected_Index(const char *string)
 
 void ListClass::Set_Selected_Index(int string_index)
 {
-    if ((unsigned)string_index >= (unsigned)Entries.Count()) {
-        CurrentIndex = 0;
+    if ((unsigned)string_index >= (unsigned)m_Entries.Count()) {
+        m_CurrentIndex = 0;
     } else {
-        CurrentIndex = string_index;
+        m_CurrentIndex = string_index;
         Flag_To_Redraw();
 
-        if (CurrentIndex < ViewIndex) {
-            Set_View_Index(CurrentIndex);
+        if (m_CurrentIndex < m_ViewIndex) {
+            Set_View_Index(m_CurrentIndex);
         }
 
-        if (ThumbSize + ViewIndex <= CurrentIndex) {
-            Set_View_Index(CurrentIndex - (ThumbSize - 1));
+        if (m_ThumbSize + m_ViewIndex <= m_CurrentIndex) {
+            Set_View_Index(m_CurrentIndex - (m_ThumbSize - 1));
         }
     }
 }
 
 void ListClass::Set_Tabs(int *tab_list)
 {
-    Tabs = tab_list;
+    m_Tabs = tab_list;
 }
 
 BOOL ListClass::Set_View_Index(int index)
 {
-    int new_index = std::clamp(index, 0, std::max(Entries.Count() - ThumbSize, 0));
+    int new_index = std::clamp(index, 0, std::max(m_Entries.Count() - m_ThumbSize, 0));
 
-    if (new_index == ViewIndex) {
+    if (new_index == m_ViewIndex) {
         return false;
     }
 
-    ViewIndex = new_index;
+    m_ViewIndex = new_index;
     Flag_To_Redraw();
 
-    if (HasScrollbar) {
-        Scrollbar.Set_Value(ViewIndex);
+    if (m_HasScrollbar) {
+        m_Scrollbar.Set_Value(m_ViewIndex);
     }
 
     return true;
@@ -465,26 +465,26 @@ BOOL ListClass::Set_View_Index(int index)
 
 void ListClass::Step(BOOL step_up)
 {
-    if (HasScrollbar && Scrollbar.Step(step_up)) {
-        ViewIndex = Scrollbar.Get_Value();
+    if (m_HasScrollbar && m_Scrollbar.Step(step_up)) {
+        m_ViewIndex = m_Scrollbar.Get_Value();
         Flag_To_Redraw();
     }
 }
 
 void ListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL redraw)
 {
-    int style = TextStyle;
+    int style = m_TextStyle;
 
     if (redraw) {
         style |= TPF_USE_BRIGHT;
-        g_logicPage->Fill_Rect(x, y, x_max + x - 1, YSpacing + y - 1, GadgetClass::ColorScheme->WindowPalette[0]);
+        g_logicPage->Fill_Rect(x, y, x_max + x - 1, m_YSpacing + y - 1, GadgetClass::ColorScheme->WindowPalette[0]);
     } else {
         if (!(style & TPF_USE_GRAD_PAL)) {
             style |= TPF_USE_MEDIUM;
         }
     }
 
-    Conquer_Clip_Text_Print(Entries[index], x, y, GadgetClass::ColorScheme, 0, (TextPrintType)style, x_max, Tabs);
+    Conquer_Clip_Text_Print(m_Entries[index], x, y, GadgetClass::ColorScheme, 0, (TextPrintType)style, x_max, m_Tabs);
 }
 
 void Clear_Listbox(ListClass *list)

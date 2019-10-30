@@ -38,20 +38,20 @@ public:
 
     StaticButtonClass &operator=(StaticButtonClass &that);
     
-    void Set_Style(TextPrintType style) { TextStyle = style; }
+    void Set_Style(TextPrintType style) { m_TextStyle = style; }
 
 protected:
-    BufferClass DrawBuffer;
-    char *ButtonText;
-    TextPrintType TextStyle;
+    BufferClass m_DrawBuffer;
+    char *m_ButtonText;
+    TextPrintType m_TextStyle;
 };
 
 inline StaticButtonClass &StaticButtonClass::operator=(StaticButtonClass &that)
 {
     if (this != &that) {
-        DrawBuffer = that.DrawBuffer;
-        ButtonText = that.ButtonText;
-        TextStyle = that.TextStyle;
+        m_DrawBuffer = that.m_DrawBuffer;
+        m_ButtonText = that.m_ButtonText;
+        m_TextStyle = that.m_TextStyle;
     }
 
     return *this;

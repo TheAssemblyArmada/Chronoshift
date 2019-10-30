@@ -22,13 +22,13 @@
 LinkClass &LinkClass::Add(LinkClass &that)
 {
     DEBUG_ASSERT(this != &that);
-    LinkClass *next = that.Next;
-    that.Next = this;
-    Prev = &that;
-    Next = next;
+    LinkClass *next = that.m_Next;
+    that.m_Next = this;
+    m_Prev = &that;
+    m_Next = next;
 
     if (next != nullptr) {
-        next->Prev = this;
+        next->m_Prev = this;
     }
 
     return Head_Of_List();
@@ -41,9 +41,9 @@ LinkClass &LinkClass::Add_Tail(LinkClass &that)
 {
     DEBUG_ASSERT(this != &that);
     LinkClass *tail = &that.Tail_Of_List();
-    tail->Next = this;
-    Next = nullptr;
-    Prev = tail;
+    tail->m_Next = this;
+    m_Next = nullptr;
+    m_Prev = tail;
 
     return Head_Of_List();
 }
@@ -55,9 +55,9 @@ LinkClass &LinkClass::Add_Head(LinkClass &that)
 {
     DEBUG_ASSERT(this != &that);
     LinkClass *head = &that.Head_Of_List();
-    head->Prev = this;
-    Prev = nullptr;
-    Next = head;
+    head->m_Prev = this;
+    m_Prev = nullptr;
+    m_Next = head;
 
     return *this;
 }
@@ -68,12 +68,12 @@ LinkClass &LinkClass::Add_Head(LinkClass &that)
 LinkClass &LinkClass::Head_Of_List()
 {
     // Check we aren't at the head node already.
-    if (Prev != nullptr) {
+    if (m_Prev != nullptr) {
         LinkClass *entry;
 
         // Search back through the list until we find a node without a previous
         // node.
-        for (entry = Prev; entry->Prev != nullptr; entry = entry->Prev)
+        for (entry = m_Prev; entry->m_Prev != nullptr; entry = entry->m_Prev)
             ;
 
         return *entry;
@@ -88,12 +88,12 @@ LinkClass &LinkClass::Head_Of_List()
 LinkClass &LinkClass::Tail_Of_List()
 {
     // Check we aren't at the tail node already.
-    if (Next != nullptr) {
+    if (m_Next != nullptr) {
         LinkClass *entry;
 
         // Search forward through the list until we find a node without a
         // previous node.
-        for (entry = Next; entry->Next != nullptr; entry = entry->Next)
+        for (entry = m_Next; entry->m_Next != nullptr; entry = entry->m_Next)
             ;
 
         return *entry;
@@ -107,8 +107,8 @@ LinkClass &LinkClass::Tail_Of_List()
  */
 void LinkClass::Zap()
 {
-    Prev = nullptr;
-    Next = nullptr;
+    m_Prev = nullptr;
+    m_Next = nullptr;
 }
 
 /**
@@ -143,12 +143,12 @@ LinkClass *LinkClass::Remove()
 void LinkClass::Unlink()
 {
     // Remove self from linked list and closes the gap?
-    if (Prev != nullptr) {
-        Prev->Next = Next;
+    if (m_Prev != nullptr) {
+        m_Prev->m_Next = m_Next;
     }
 
-    if (Next != nullptr) {
-        Next->Prev = Prev;
+    if (m_Next != nullptr) {
+        m_Next->m_Prev = m_Prev;
     }
 
     // Zap the pointers.

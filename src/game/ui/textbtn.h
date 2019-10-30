@@ -37,7 +37,7 @@ public:
     virtual BOOL Draw_Me(BOOL redraw) override;
     virtual void Set_Text(const char *string, BOOL adjust = true);
     virtual void Set_Text(int str_id, BOOL adjust = true);
-    virtual void Set_Style(TextPrintType style) { TextStyle = style; }
+    virtual void Set_Style(TextPrintType style) { m_TextStyle = style; }
     virtual void Draw_Background();
     virtual void Draw_Text(const char *string);
 #ifdef GAME_DLL
@@ -57,16 +57,16 @@ private:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL HasOutline : 1; // & 1
-    BOOL FilledBackground : 1; // & 2
-    BOOL HasShadow : 1; // & 4
+    BOOL m_HasOutline : 1; // & 1
+    BOOL m_FilledBackground : 1; // & 2
+    BOOL m_HasShadow : 1; // & 4
 #else
-    bool HasOutline;
-    bool FilledBackground;
-    bool HasShadow;
+    bool m_HasOutline;
+    bool m_FilledBackground;
+    bool m_HasShadow;
 #endif
-    const char *ButtonText;
-    TextPrintType TextStyle;
+    const char *m_ButtonText;
+    TextPrintType m_TextStyle;
 };
 
 
@@ -74,11 +74,11 @@ inline TextButtonClass &TextButtonClass::operator=(TextButtonClass &that)
 {
     if (this != &that) {
         ToggleClass::operator=(that);
-        FilledBackground = that.FilledBackground;
-        HasShadow = that.HasShadow;
-        HasOutline = that.HasOutline;
-        ButtonText = that.ButtonText;
-        TextStyle = that.TextStyle;
+        m_FilledBackground = that.m_FilledBackground;
+        m_HasShadow = that.m_HasShadow;
+        m_HasOutline = that.m_HasOutline;
+        m_ButtonText = that.m_ButtonText;
+        m_TextStyle = that.m_TextStyle;
     }
 
     return *this;

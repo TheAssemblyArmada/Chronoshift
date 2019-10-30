@@ -29,8 +29,8 @@ using std::memcpy;
 Dial8Class::Dial8Class(unsigned id, int x, int y, int w, int h, DirType direction) :
     ControlClass(id, x, y, w, h, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE, true)
 {
-    m_Center.x = Width / 2 + XPos;
-    m_Center.y = Height / 2 + YPos;
+    m_Center.x = m_Width / 2 + m_XPos;
+    m_Center.y = m_Height / 2 + m_YPos;
 
     // Set the initial direction.
     Set_Direction(direction);
@@ -159,7 +159,7 @@ BOOL Dial8Class::Draw_Me(BOOL redraw)
         }
 
         // Draw bevelled box.
-        Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_0, true);
+        Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_0, true);
 
         // Draw 3x3 boxes at compass points.
         for (int i = 0; i < FACING_COUNT; ++i) {

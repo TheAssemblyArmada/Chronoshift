@@ -49,7 +49,7 @@ public:
     virtual BOOL Draw_Me(BOOL redraw) override;
     virtual BOOL Action(unsigned flags, KeyNumType &key) override;
     virtual void Set_Text(char *text, int max_len);
-    virtual char *Get_Text() { return Text; }
+    virtual char *Get_Text() { return m_Text; }
     virtual void Draw_Background();
     virtual void Draw_Text(const char *text);
     virtual int Handle_Key(KeyASCIIType keycode);
@@ -57,26 +57,26 @@ public:
     EditClass &operator=(EditClass &that);
 
 protected:
-    TextPrintType TextStyle;
-    EditStyleType EditStyle;
-    char *Text;
-    int MaxTextLength;
-    int TextLength;
-    RemapControlType *ColorScheme;
-    int IgnoreInput;
+    TextPrintType m_TextStyle;
+    EditStyleType m_EditStyle;
+    char *m_Text;
+    int m_MaxTextLength;
+    int m_TextLength;
+    RemapControlType *m_ColorScheme;
+    int m_IgnoreInput;
 };
 
 inline EditClass &EditClass::operator=(EditClass &that)
 {
     if (this != &that) {
         ControlClass::operator=(that);
-        TextStyle = that.TextStyle;
-        EditStyle = that.EditStyle;
-        Text = that.Text;
-        MaxTextLength = that.MaxTextLength;
-        TextLength = that.TextLength;
-        ColorScheme = that.ColorScheme;
-        IgnoreInput = that.IgnoreInput;
+        m_TextStyle = that.m_TextStyle;
+        m_EditStyle = that.m_EditStyle;
+        m_Text = that.m_Text;
+        m_MaxTextLength = that.m_MaxTextLength;
+        m_TextLength = that.m_TextLength;
+        m_ColorScheme = that.m_ColorScheme;
+        m_IgnoreInput = that.m_IgnoreInput;
     }
 
     return *this;

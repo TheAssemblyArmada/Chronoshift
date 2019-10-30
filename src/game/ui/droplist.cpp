@@ -20,43 +20,43 @@
 DropListClass::DropListClass(int id, char *text_buff, int text_size, TextPrintType style, int x, int y, int w, int h,
     void *up_btn_shape, void *down_btn_shape) :
     EditClass(id, text_buff, text_size, style, x, y, w, 18, EDIT_TEXT | EDIT_NUMS | EDIT_SYMS),
-    IsExpanded(false),
-    DropHeight(h),
-    DropButton(0, down_btn_shape, w + x, y),
-    DropList(0, x, y + Get_Build_Frame_Height(down_btn_shape), w + Get_Build_Frame_Width(down_btn_shape), h, style,
+    m_IsExpanded(false),
+    m_DropHeight(h),
+    m_DropButton(0, down_btn_shape, w + x, y),
+    m_DropList(0, x, y + Get_Build_Frame_Height(down_btn_shape), w + Get_Build_Frame_Width(down_btn_shape), h, style,
         up_btn_shape, down_btn_shape)
 {
-    Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, TextStyle); // EDWIN doesnt do this...
-    DropButton.Make_Peer(*this);
-    DropList.Make_Peer(*this);
+    Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle); // EDWIN doesnt do this...
+    m_DropButton.Make_Peer(*this);
+    m_DropList.Make_Peer(*this);
 }
 
 DropListClass::DropListClass(DropListClass &that) :
     EditClass(that),
-    IsExpanded(that.IsExpanded),
-    DropHeight(that.DropHeight),
-    DropButton(that.DropButton),
-    DropList(that.DropList)
+    m_IsExpanded(that.m_IsExpanded),
+    m_DropHeight(that.m_DropHeight),
+    m_DropButton(that.m_DropButton),
+    m_DropList(that.m_DropList)
 {
 }
 
 LinkClass &DropListClass::Add(LinkClass &that)
 {
-    DropButton.Add(that);
+    m_DropButton.Add(that);
 
     return LinkClass::Add(that);
 }
 
 LinkClass &DropListClass::Add_Tail(LinkClass &that)
 {
-    DropButton.Add_Tail(that);
+    m_DropButton.Add_Tail(that);
 
     return LinkClass::Add_Tail(that);
 }
 
 LinkClass &DropListClass::Add_Head(LinkClass &that)
 {
-    DropButton.Add_Head(that);
+    m_DropButton.Add_Head(that);
 
     return LinkClass::Add_Head(that);
 }
@@ -64,26 +64,26 @@ LinkClass &DropListClass::Add_Head(LinkClass &that)
 void DropListClass::Zap()
 {
     Collapse();
-    DropList.Zap();
-    DropButton.Zap();
+    m_DropList.Zap();
+    m_DropButton.Zap();
     LinkClass::Zap();
 }
 
 GadgetClass *DropListClass::Remove()
 {
-    if (IsExpanded) {
+    if (m_IsExpanded) {
         Collapse();
     }
 
-    DropButton.Remove();
+    m_DropButton.Remove();
 
     return GadgetClass::Remove();
 }
 
 void DropListClass::Flag_To_Redraw()
 {
-    if (IsExpanded) {
-        DropList.Flag_To_Redraw();
+    if (m_IsExpanded) {
+        m_DropList.Flag_To_Redraw();
     }
 
     GadgetClass::Flag_To_Redraw();
@@ -91,19 +91,19 @@ void DropListClass::Flag_To_Redraw()
 
 void DropListClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &peer)
 {
-    if (&peer == &DropButton && flags & MOUSE_LEFT_RLSE) {
-        if (IsExpanded) {
+    if (&peer == &m_DropButton && flags & MOUSE_LEFT_RLSE) {
+        if (m_IsExpanded) {
             Collapse();
-            key = (KeyNumType)(ID | KN_BUTTON);
+            key = (KeyNumType)(m_ID | KN_BUTTON);
         } else {
             Expand();
         }
     }
 
-    if (&peer == &DropList) {
-        strncpy(Text, DropList.Current_Item(), MaxTextLength);
+    if (&peer == &m_DropList) {
+        strncpy(m_Text, m_DropList.Current_Item(), m_MaxTextLength);
         Flag_To_Redraw();
-        key = (KeyNumType)(ID | KN_BUTTON);
+        key = (KeyNumType)(m_ID | KN_BUTTON);
     }
 }
 
@@ -115,44 +115,44 @@ void DropListClass::Clear_Focus()
 void DropListClass::Set_Position(int x, int y)
 {
     GadgetClass::Set_Position(x, y);
-    DropList.Set_Position(x, y + Get_Build_Frame_Height(DropButton.Get_Shape()));
-    DropButton.Set_Position(x + Width, y);
+    m_DropList.Set_Position(x, y + Get_Build_Frame_Height(m_DropButton.Get_Shape()));
+    m_DropButton.Set_Position(x + m_Width, y);
 }
 
 int DropListClass::Add_Item(const char *string)
 {
-    strncpy(Text, string, MaxTextLength);
+    strncpy(m_Text, string, m_MaxTextLength);
     Flag_To_Redraw();
 
-    return DropList.Add_Item(string);
+    return m_DropList.Add_Item(string);
 }
 
 const char *DropListClass::Current_Item() const
 {
-    return DropList.Current_Item();
+    return m_DropList.Current_Item();
 }
 
 int DropListClass::Current_Index()
 {
-    return DropList.Current_Index();
+    return m_DropList.Current_Index();
 }
 
 void DropListClass::Set_Selected_Index(int string_index)
 {
-    if (string_index > DropList.Count()) {
-        *Text = '\0';
+    if (string_index > m_DropList.Count()) {
+        *m_Text = '\0';
     } else {
-        DropList.Set_Selected_Index(string_index);
-        const char *item = DropList.Get_Item(Current_Index());
-        strcpy(Text, item);
+        m_DropList.Set_Selected_Index(string_index);
+        const char *item = m_DropList.Get_Item(Current_Index());
+        strcpy(m_Text, item);
     }
 }
 
 void DropListClass::Set_Selected_Index(const char *string)
 {
     if (string) {
-        for (int i = 0; i < DropList.Count(); ++i) {
-            const char *item = DropList.Get_Item(i);
+        for (int i = 0; i < m_DropList.Count(); ++i) {
+            const char *item = m_DropList.Get_Item(i);
 
             if (strcasecmp(string, item) == 0) {
                 Set_Selected_Index(i);
@@ -165,31 +165,31 @@ void DropListClass::Set_Selected_Index(const char *string)
 
 int DropListClass::Count() const
 {
-    return DropList.Count();
+    return m_DropList.Count();
 }
 
 const char *DropListClass::Get_Item(int const string_index) const
 {
-    return DropList.Get_Item(string_index);
+    return m_DropList.Get_Item(string_index);
 }
 
 void DropListClass::Expand()
 {
-    if (!IsExpanded) {
-        DropList.Set_XPos(XPos);
-        DropList.Set_YPos(YPos + 18);
-        DropList.Set_Width(Width);
-        DropList.Set_Height(DropHeight);
-        DropList.Add(Head_Of_List());
-        DropList.Flag_To_Redraw();
-        IsExpanded = true;
+    if (!m_IsExpanded) {
+        m_DropList.Set_XPos(m_XPos);
+        m_DropList.Set_YPos(m_YPos + 18);
+        m_DropList.Set_Width(m_Width);
+        m_DropList.Set_Height(m_DropHeight);
+        m_DropList.Add(Head_Of_List());
+        m_DropList.Flag_To_Redraw();
+        m_IsExpanded = true;
     }
 }
 
 void DropListClass::Collapse()
 {
-    if (IsExpanded) {
-        DropList.Remove();
-        IsExpanded = false;
+    if (m_IsExpanded) {
+        m_DropList.Remove();
+        m_IsExpanded = false;
     }
 }

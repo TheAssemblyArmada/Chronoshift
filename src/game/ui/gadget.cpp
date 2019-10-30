@@ -25,33 +25,33 @@ GadgetClass *GadgetClass::LastList = nullptr;
 GadgetClass *GadgetClass::Focused = nullptr;
 #endif
 
-GadgetClass::GadgetClass(unsigned input_flag, BOOL sticky) : XPos(0), YPos(0), Width(0), Height(0), IsSticky(sticky) {}
+GadgetClass::GadgetClass(unsigned input_flag, BOOL sticky) : m_XPos(0), m_YPos(0), m_Width(0), m_Height(0), m_IsSticky(sticky) {}
 
 GadgetClass::GadgetClass(int x, int y, int w, int h, unsigned input_flag, BOOL sticky) :
-    XPos(x),
-    YPos(y),
-    Width(w),
-    Height(h),
-    ToRedraw(false),
-    IsSticky(sticky),
-    IsDisabled(false),
-    InputFlag(input_flag)
+    m_XPos(x),
+    m_YPos(y),
+    m_Width(w),
+    m_Height(h),
+    m_ToRedraw(false),
+    m_IsSticky(sticky),
+    m_IsDisabled(false),
+    m_InputFlag(input_flag)
 {
     if (sticky) {
-        InputFlag |= (MOUSE_LEFT_PRESS | MOUSE_LEFT_RLSE);
+        m_InputFlag |= (MOUSE_LEFT_PRESS | MOUSE_LEFT_RLSE);
     }
 }
 
 GadgetClass::GadgetClass(GadgetClass &that) :
     LinkClass(that),
-    XPos(that.XPos),
-    YPos(that.YPos),
-    Width(that.Width),
-    Height(that.Height),
-    ToRedraw(that.ToRedraw),
-    IsSticky(that.IsSticky),
-    IsDisabled(that.IsDisabled),
-    InputFlag(that.InputFlag)
+    m_XPos(that.m_XPos),
+    m_YPos(that.m_YPos),
+    m_Width(that.m_Width),
+    m_Height(that.m_Height),
+    m_ToRedraw(that.m_ToRedraw),
+    m_IsSticky(that.m_IsSticky),
+    m_IsDisabled(that.m_IsDisabled),
+    m_InputFlag(that.m_InputFlag)
 {
 }
 
@@ -78,14 +78,14 @@ GadgetClass &GadgetClass::operator=(GadgetClass &that)
 {
     if (this != &that) {
         LinkClass::operator=(that);
-        XPos = that.XPos;
-        YPos = that.YPos;
-        Width = that.Width;
-        Height = that.Height;
-        ToRedraw = that.ToRedraw;
-        IsSticky = that.IsSticky;
-        IsDisabled = that.IsDisabled;
-        InputFlag = that.InputFlag;
+        m_XPos = that.m_XPos;
+        m_YPos = that.m_YPos;
+        m_Width = that.m_Width;
+        m_Height = that.m_Height;
+        m_ToRedraw = that.m_ToRedraw;
+        m_IsSticky = that.m_IsSticky;
+        m_IsDisabled = that.m_IsDisabled;
+        m_InputFlag = that.m_InputFlag;
     }
 
     return *this;
@@ -203,7 +203,7 @@ KeyNumType GadgetClass::Input()
                 for (GadgetClass *entry = this; entry; entry = entry->Get_Next()) {
                     entry->Draw_Me(not_last_list);
 
-                    if (!entry->IsDisabled && entry != Focused
+                    if (!entry->m_IsDisabled && entry != Focused
                         && entry->Clicked_On(key_press, press_flags, mouse_x, mouse_y)) {
                         entry->Draw_Me(false);
                         return key_press;
@@ -216,7 +216,7 @@ KeyNumType GadgetClass::Input()
                 // DEBUG_LOG("Calling entry->Clicked_On\n");
                 entry->Draw_Me(not_last_list);
 
-                if (!entry->IsDisabled && entry->Clicked_On(key_press, press_flags, mouse_x, mouse_y)) {
+                if (!entry->m_IsDisabled && entry->Clicked_On(key_press, press_flags, mouse_x, mouse_y)) {
                     entry->Draw_Me(false);
                     return key_press;
                 }
@@ -278,15 +278,15 @@ void GadgetClass::Flag_List_To_Redraw()
 
 void GadgetClass::Disable()
 {
-    IsDisabled = true;
-    ToRedraw = true;
+    m_IsDisabled = true;
+    m_ToRedraw = true;
     Clear_Focus();
 }
 
 void GadgetClass::Enable()
 {
-    IsDisabled = false;
-    ToRedraw = true;
+    m_IsDisabled = false;
+    m_ToRedraw = true;
     Clear_Focus();
 }
 
@@ -297,7 +297,7 @@ unsigned GadgetClass::Get_ID() const
 
 void GadgetClass::Flag_To_Redraw()
 {
-    ToRedraw = true;
+    m_ToRedraw = true;
 }
 
 void GadgetClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &peer)
@@ -312,7 +312,7 @@ void GadgetClass::Set_Focus()
         Focused->Clear_Focus();
     }
 
-    InputFlag |= KEYBOARD_INPUT;
+    m_InputFlag |= KEYBOARD_INPUT;
 
     Focused = this;
 }
@@ -320,7 +320,7 @@ void GadgetClass::Set_Focus()
 void GadgetClass::Clear_Focus()
 {
     if (this == Focused) {
-        InputFlag &= ~KEYBOARD_INPUT;
+        m_InputFlag &= ~KEYBOARD_INPUT;
         Focused = nullptr;
     }
 }
@@ -333,7 +333,7 @@ BOOL GadgetClass::Has_Focus()
 BOOL GadgetClass::Is_List_To_Redraw()
 {
     for (GadgetClass *gadget = this; gadget != nullptr; gadget = gadget->Get_Next()) {
-        if (gadget->ToRedraw) {
+        if (gadget->m_ToRedraw) {
             return true;
         }
     }
@@ -343,20 +343,20 @@ BOOL GadgetClass::Is_List_To_Redraw()
 
 void GadgetClass::Set_Position(int x, int y)
 {
-    XPos = x;
-    YPos = y;
+    m_XPos = x;
+    m_YPos = y;
 }
 
 void GadgetClass::Set_Size(int w, int h)
 {
-    Width = w;
-    Height = h;
+    m_Width = w;
+    m_Height = h;
 }
 
 BOOL GadgetClass::Draw_Me(BOOL redraw)
 {
-    if (redraw || ToRedraw) {
-        ToRedraw = false;
+    if (redraw || m_ToRedraw) {
+        m_ToRedraw = false;
 
         return true;
     }
@@ -366,14 +366,14 @@ BOOL GadgetClass::Draw_Me(BOOL redraw)
 
 void GadgetClass::Sticky_Process(unsigned flags)
 {
-    if (IsSticky && (flags & MOUSE_LEFT_PRESS)) {
+    if (m_IsSticky && (flags & MOUSE_LEFT_PRESS)) {
         StuckOn = this;
 
         return;
     }
 
     if (this == StuckOn && (flags & MOUSE_LEFT_RLSE)) {
-        ToRedraw = true;
+        m_ToRedraw = true;
         StuckOn = nullptr;
 
         return;
@@ -383,7 +383,7 @@ void GadgetClass::Sticky_Process(unsigned flags)
 BOOL GadgetClass::Action(unsigned flags, KeyNumType &key)
 {
     if (flags != INPUT_NONE) {
-        ToRedraw = true;
+        m_ToRedraw = true;
         Sticky_Process(flags);
 
         return true;
@@ -394,11 +394,11 @@ BOOL GadgetClass::Action(unsigned flags, KeyNumType &key)
 
 BOOL GadgetClass::Clicked_On(KeyNumType &key, unsigned flags, int x, int y)
 {
-    unsigned masked_flags = InputFlag & flags;
+    unsigned masked_flags = m_InputFlag & flags;
 
     if (this == StuckOn || (masked_flags & KEYBOARD_INPUT) != 0
-        || ((masked_flags != INPUT_NONE) && (unsigned int)(x - XPos) < (unsigned int)Width
-               && (unsigned int)(y - YPos) < (unsigned int)Height)) {
+        || ((masked_flags != INPUT_NONE) && (unsigned int)(x - m_XPos) < (unsigned int)m_Width
+               && (unsigned int)(y - m_YPos) < (unsigned int)m_Height)) {
         return Action(masked_flags, key);
     }
 

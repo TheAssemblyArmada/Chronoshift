@@ -35,20 +35,20 @@ public:
     void Turn_On();
     void Turn_Off();
 
-    void Set_Toggle_Bool1(BOOL unk) { Toggle_Boolean1 = unk; }
-    void Set_Toggle_Disabled(BOOL disabled) { ToggleDisabled = disabled; }
+    void Set_Toggle_Bool1(BOOL unk) { m_Toggle_Boolean1 = unk; }
+    void Set_Toggle_Disabled(BOOL disabled) { m_ToggleDisabled = disabled; }
 
-    bool Get_Toggle_State() { return ToggleState; }
+    bool Get_Toggle_State() { return m_ToggleState; }
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Toggle_Boolean1 : 1; // & 1
-    BOOL ToggleState : 1; // & 2
-    BOOL ToggleDisabled : 1; // & 4
+    BOOL m_Toggle_Boolean1 : 1; // & 1
+    BOOL m_ToggleState : 1; // & 2
+    BOOL m_ToggleDisabled : 1; // & 4
 #else
-    bool Toggle_Boolean1;
-    bool ToggleState;
-    bool ToggleDisabled;
+    bool m_Toggle_Boolean1;
+    bool m_ToggleState;
+    bool m_ToggleDisabled;
 #endif
 };
 
@@ -56,9 +56,9 @@ inline ToggleClass &ToggleClass::operator=(ToggleClass &that)
 {
     if (this != &that) {
         ControlClass::operator=(that);
-        Toggle_Boolean1 = that.Toggle_Boolean1;
-        ToggleState = that.ToggleState;
-        ToggleDisabled = that.ToggleDisabled;
+        m_Toggle_Boolean1 = that.m_Toggle_Boolean1;
+        m_ToggleState = that.m_ToggleState;
+        m_ToggleDisabled = that.m_ToggleDisabled;
     }
 
     return *this;
