@@ -1312,3 +1312,23 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
     DEBUG_LOG("***Find_Path_Wrapper exit***\n");
     return real;
 }
+
+BOOL FootClass::Is_Allowed_To_Leave_Map() const
+{
+#ifdef GAME_DLL
+    BOOL (*func)(const FootClass *) = reinterpret_cast<BOOL (*)(const FootClass *)>(0x004C36A4);
+    return func(this);
+#else
+    if(!m_LockedOnMap) {
+        return false;
+    }
+    if(!m_IsALoner && Mission != MISSION_RETREAT) {
+        /*
+        if(!m_Team->Is_Leaving_Map()) {
+            return false;
+        }
+        */
+    }
+    return true;
+#endif
+}

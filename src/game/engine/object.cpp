@@ -15,6 +15,7 @@
  */
 #include "object.h"
 #include "coord.h"
+#include "infantry.h"
 #include "iomap.h"
 #include "rules.h"
 #include "logic.h"
@@ -878,4 +879,45 @@ void ObjectClass::Detach_This_From_All(target_t object, BOOL unk)
 #else
     // TODO: Requires Detach function in TeamClass, TeamTypeClass, HouseClass, Object classes, MapClass, VortexClass
 #endif
+}
+
+/**
+ * @brief
+ *
+ * @address 0x0041CB90
+ */
+BOOL ObjectClass::Counts_As_Civ_Evac()
+{
+    if (What_Am_I() != RTTI_INFANTRY) {
+        return false;
+    }
+
+    InfantryClass *ithis = reinterpret_cast<InfantryClass *>(this);
+
+    if (ithis->What_Type() == INFANTRY_EINSTEIN) {
+        return true;
+    }
+    if (ithis->What_Type() == INFANTRY_GENERAL) {
+        return true;
+    }
+    if (ithis->What_Type() == INFANTRY_DELPHI) {
+        return true;
+    }
+    if (ithis->What_Type() == INFANTRY_CHAN) {
+        return true;
+    }
+
+    //auto evac Tanya
+    if (Scen.Evacuate_Civilians()) {
+        if (ithis->What_Type() == INFANTRY_TANYA) {
+            return true;
+        }
+    }
+    if (!ithis->Class_Of().Is_Civilian()) {
+        return false;
+    }
+    if (ithis->Is_Technician()) {
+        return false;
+    }
+    return true;
 }

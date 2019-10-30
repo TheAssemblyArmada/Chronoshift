@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "infantry.h"
+#include "scenario.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<InfantryClass> g_Infantry;

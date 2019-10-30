@@ -52,6 +52,8 @@ public:
     void Force_Active() { m_ForcedActive = true; }
     BOOL Should_Avoid_Threats() const { return m_Class->Avoid_Threats(); }
     int Field35() const { return m_field_35; }
+    bool Get_Bit2_4() const { return m_Bit2_4; }
+    void Set_Bit2_4(bool state) { m_Bit2_4 = state; }
 
 private:
     GamePtr<TeamTypeClass> m_Class;

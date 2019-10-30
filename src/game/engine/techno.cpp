@@ -140,6 +140,10 @@ HousesType TechnoClass::Owner() const
 
 void TechnoClass::AI()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005643C8, void, TechnoClass *);
+    func(this);
+#endif
 }
 
 BOOL TechnoClass::Is_Player_Army() const
