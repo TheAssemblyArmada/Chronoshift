@@ -71,6 +71,10 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
+
+    BOOL Has_Rotors() const { return m_Rotors; }
+    BOOL Is_Airplane() const { return m_Airplane; }
+
     AircraftType What_Type() const { return m_Type; }
 
     static AircraftTypeClass &As_Reference(AircraftType type);

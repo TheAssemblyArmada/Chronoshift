@@ -37,7 +37,7 @@ DEFINE_ENUMERATION_OPERATORS(FearType);
 
 class InfantryClass : public FootClass
 {
-    public:
+public:
     InfantryClass(InfantryType type, HousesType house);
     InfantryClass(const InfantryClass &that);
     InfantryClass(const NoInitClass &noinit);
@@ -45,6 +45,8 @@ class InfantryClass : public FootClass
 
     // ObjectClass
     virtual const InfantryTypeClass &Class_Of() const override { return *m_Class; }
+
+    BOOL Is_Technician() { return m_Technician; }
 
     InfantryType What_Type() const { return m_Class->What_Type(); }
 

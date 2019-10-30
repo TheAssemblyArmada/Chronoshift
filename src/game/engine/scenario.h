@@ -96,6 +96,7 @@ public:
 
     BOOL Get_field_7CF() const { return field_7CF; }
     BOOL Get_field_7D3() const { return field_7D3; }
+    BOOL Evacuate_Civilians() const { return CivEvac; }
 
 #ifdef GAME_DLL
     void Hook_Set_Scenario_Name1(const char *scen_name) { Set_Scenario_Name(scen_name); }

@@ -69,6 +69,8 @@ public:
     int Get_TechLevel() const { return m_TechLevel; }
     uint32_t Get_Prerequisites() const { return m_Prerequisite; }
     MZoneType Get_Movement_Zone() const { return m_MovementZone; }
+    int Get_ROT_Count() const { return m_ROTCount; }
+    MPHType Get_MPH() const { return m_MPH; }
 
     WeaponTypeClass *Get_Weapon(WeaponSlotType weapon) const
     {

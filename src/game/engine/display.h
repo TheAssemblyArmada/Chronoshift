@@ -131,6 +131,7 @@ public:
     int Tac_Offset_X() const { return m_TacOffsetX; }
     int Tac_Offset_Y() const { return m_TacOffsetY; }
     coord_t New_Pos() const { return m_DisplayNewPos; }
+    void Display_To_Redraw() { m_DisplayToRedraw = true; }
     BOOL To_Redraw() const { return m_DisplayToRedraw; }
     BOOL Repair_Mode() const { return m_DisplayRepairMode; }
     BOOL Sell_Mode() const { return m_DisplaySellMode; }

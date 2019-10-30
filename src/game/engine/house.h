@@ -256,6 +256,8 @@ public:
     BOOL Spied_My_Radar(HousesType house) const { return (m_RadarSpied & (1 << house)) != 0; }
     BOOL Spied_My_Radar(HouseClass *house) const { return Spied_My_Radar(house->What_Type()); }
 
+    void Civilians_Evacuated(bool state) { m_CivEvac = state; }
+
     static void One_Time();
     static void Init();
     static HouseClass &As_Reference(HousesType type);
@@ -280,6 +282,11 @@ public:
     BOOL Hook_Is_No_Yak_Mig() { return Is_No_Yak_Mig(); }
     BOOL Hook_Is_Hack_Prevented(RTTIType rtti, int id) { return Is_Hack_Prevented(rtti, id); }
 #endif
+
+    const fixed_t &Get_Groundspeed_Multiplier() const { return m_GroundspeedMult; }
+    const fixed_t &Get_Airspeed_Multiplier() const { return m_AirspeedMult; }
+    const fixed_t &Get_ROF_Multiplier() const { return m_ROFMult; }
+    const fixed_t &Get_Cost_Multiplier() const { return m_CostMult; }
 
 private:
     BOOL Is_Allowed_To_Ally(HousesType house);

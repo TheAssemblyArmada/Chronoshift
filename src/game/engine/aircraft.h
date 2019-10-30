@@ -84,26 +84,62 @@ public:
     AircraftType What_Type() const { return m_Class->What_Type(); }
 
 private:
-    FlyClass FlyControl;
+    int Shape_Number() const;
+    void Draw_Rotors(int x, int y, WindowNumberType window) const;
+    void Rotation_AI();
+    void Movement_AI();
+    BOOL Landing_Takeoff_AI();
+    BOOL Edge_Of_World_AI();
+    BOOL Process_Take_Off();
+
+#ifdef GAME_DLL
+    friend void Setup_Hooks();
+
+public:
+    void Hook_Draw_It(int x, int y, WindowNumberType window)
+    {
+        AircraftClass::Draw_It(x, y, window);
+    }
+    MoveType Hook_Can_Enter_Cell(cell_t cellnum, FacingType facing)
+    {
+        return AircraftClass::Can_Enter_Cell(cellnum, facing);
+    }
+    DirType Hook_Desired_Load_Dir(ObjectClass *object, cell_t &cellnum)
+    {
+        return AircraftClass::Desired_Load_Dir(object, cellnum);
+    }
+    int Hook_Pip_Count()
+    {
+        return AircraftClass::Pip_Count();
+    }
+
+#endif
+
+private:
+    FlyClass m_FlyControl;
     GamePtr<AircraftTypeClass> m_Class;
     FacingClass m_BDir;
-    void *field_14C;
+#ifdef GAME_DLL
+    BOOL m_field_14C;
+#else
+    bool m_field_14C; // could be HasCargo?
+#endif
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Bit1 : 1; // 1
-    BOOL m_Bit2 : 1; // 2
+    BOOL m_IsLanding : 1; // 1
+    BOOL m_IsTakingOff : 1; // 2
     BOOL m_Bit4 : 1; // 4
     BOOL m_Bit8 : 1; // 8
     BOOL m_Bit16 : 1; // 16
 #else
-    bool m_Bit1;
-    bool m_Bit2;
+    bool m_IsLanding;
+    bool m_IsTakingOff;
     bool m_Bit4;
     bool m_Bit8;
     bool m_Bit16;
 #endif
-    uint8_t field_154;
-    BasicTimerClass<FrameTimerClass> field_155;
-    uint8_t field_15E;
+    uint8_t m_field_154; // Looks like jitter or jitter level used in Draw_It in TD.
+    TCountDownTimerClass<FrameTimerClass> m_LookDelayTimer;
+    uint8_t m_field_15E; // Attk in mono info.
 };
 
 #ifdef GAME_DLL

@@ -43,7 +43,7 @@ public:
     ImpactType Physics(unsigned int &somevalue, DirType dir);
     void Fly_Speed(int speed, MPHType mph);
 
-    uint8_t Get_Speed() { return m_Speed; }
+    uint8_t Get_Speed() const { return m_Speed; }
 
     void Code_Pointers(){}
     void Decode_Pointers(){}

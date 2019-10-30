@@ -117,6 +117,8 @@ public:
     cell_t Safety_Point(cell_t start_cell, cell_t end_cell, int start, int end);
     int Passable_Cell(cell_t cell, FacingType facing, int threat, MoveType move);
 
+    BOOL Is_Allowed_To_Leave_Map() const;
+
     coord_t Head_To() const { return m_HeadTo; }
     FacingType Get_Path_Facing(int index) const { return m_Paths[index]; }
     target_t Nav_Com() const { return m_NavCom; }
@@ -128,6 +130,9 @@ public:
     BOOL Hook_Can_Demolish() { return FootClass::Can_Demolish(); }
     coord_t Hook_Sort_Y() { return FootClass::Sort_Y(); }
 #endif
+
+    const fixed_t &Get_Speed_Multiplier() const { return m_SpeedMult; }
+    TeamClass *Get_Team() const { return m_Team; }
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

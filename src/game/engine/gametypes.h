@@ -400,9 +400,9 @@ enum MarkType
     MARK_REMOVE,
     MARK_PUT,
     MARK_REDRAW,
-    MARK_3,         // TODO: choose a name; this one adds content?
-    MARK_4,         // TODO: choose a name; MARK_OVERLAP_PUT?
-    MARK_5,         // TODO: choose a name; MARK_OVERLAP_REMOVE?
+    MARK_3,         // TODO: choose a name; this one adds content? could be refresh/update, see FootClass::Mark
+    MARK_4,         // TODO: choose a name; MARK_OVERLAP_PUT?, ObjectClass::Mark calls Overlap_Down
+    MARK_5,         // TODO: choose a name; MARK_OVERLAP_REMOVE?, ObjectClass::Mark calls Overlap_Up
     MARK_COUNT,
 };
 

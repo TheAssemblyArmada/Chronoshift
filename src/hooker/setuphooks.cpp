@@ -919,6 +919,22 @@ void Setup_Hooks()
     Hook_Function(0x00423F64, *AnimClass::Wrap_Sort_Y);
     Hook_Function(0x004256B8, *AnimClass::Start);
 
+    // aircraft.cpp
+    Hook_Function(0x00421918, *AircraftClass::Hook_Can_Enter_Cell);
+    Hook_Function(0x0041E0E8, *AircraftClass::AI);
+    Hook_Function(0x0041EA98, *AircraftClass::Hook_Sort_Y);
+    //Hook_Function(0x0041D25C, *AircraftClass::Hook_Draw_It);
+    Hook_Function(0x00423C38, *AircraftClass::Look);
+    Hook_Function(0x00421464, *AircraftClass::Hook_Desired_Load_Dir);
+    Hook_Function(0x00421D04, *AircraftClass::Hook_Pip_Count);
+    Hook_Function(0x00423154, *AircraftClass::Response_Select);
+    Hook_Function(0x004230FC, *AircraftClass::Response_Move);
+    Hook_Function(0x004230A4, *AircraftClass::Response_Attack);
+    Hook_Function(0x00423B60, *AircraftClass::Assign_Destination);
+    //Hook_Function(0x0042263C, *AircraftClass::Set_Speed);
+    Hook_Function(0x00423958, *AircraftClass::Movement_AI);
+    Hook_Function(0x0042381C, *AircraftClass::Edge_Of_World_AI);
+
 #endif
 }
 
