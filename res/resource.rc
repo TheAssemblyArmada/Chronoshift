@@ -1,0 +1,10 @@
+#include    "resource.h"
+
+//
+// This file should be included in the sources of the Windows build to add the icons
+// Icon file to use should be specified here, default should be IDI_ICON1
+//
+
+IDI_ICON1          ICON    "chronoshift.ico"
+IDI_SOVIET_ICON    ICON    "soviet.ico"
+IDI_ALIIED_ICON    ICON    "allied.ico"
