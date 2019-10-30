@@ -17,17 +17,17 @@
 
 ControlClass::ControlClass(unsigned id, int x, int y, int w, int h, unsigned input_flag, BOOL is_sticky) :
     GadgetClass(x, y, w, h, input_flag, is_sticky),
-    ID(id),
-    Peer(nullptr)
+    m_ID(id),
+    m_Peer(nullptr)
 {
 }
 
-ControlClass::ControlClass(ControlClass &that) : GadgetClass(that), ID(that.ID), Peer(that.Peer) {}
+ControlClass::ControlClass(ControlClass &that) : GadgetClass(that), m_ID(that.m_ID), m_Peer(that.m_Peer) {}
 
 BOOL ControlClass::Draw_Me(BOOL redraw)
 {
-    if (Peer) {
-        Peer->Draw_Me(false);
+    if (m_Peer) {
+        m_Peer->Draw_Me(false);
     }
 
     return GadgetClass::Draw_Me(redraw);
@@ -36,15 +36,15 @@ BOOL ControlClass::Draw_Me(BOOL redraw)
 BOOL ControlClass::Action(unsigned flags, KeyNumType &key)
 {
     if (flags) {
-        if (ID) {
-            key = (KeyNumType)(ID | KN_BUTTON);
+        if (m_ID) {
+            key = (KeyNumType)(m_ID | KN_BUTTON);
         } else {
             key = KN_NONE;
         }
     }
 
-    if (Peer) {
-        Peer->Peer_To_Peer(flags, key, *this);
+    if (m_Peer) {
+        m_Peer->Peer_To_Peer(flags, key, *this);
     }
 
     return GadgetClass::Action(flags, key);

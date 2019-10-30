@@ -21,11 +21,11 @@
 CheckListClass::CheckListClass(
     unsigned id, int x, int y, int w, int h, TextPrintType style, void *up_btn_shape, void *down_btn_shape) :
     ListClass(id, x, y, w, h, style, up_btn_shape, down_btn_shape),
-    IgnoreInput(0)
+    m_IgnoreInput(0)
 {
 }
 
-CheckListClass::CheckListClass(CheckListClass &that) : ListClass(that), IgnoreInput(that.IgnoreInput) {}
+CheckListClass::CheckListClass(CheckListClass &that) : ListClass(that), m_IgnoreInput(that.m_IgnoreInput) {}
 
 CheckListClass::~CheckListClass() {}
 
@@ -50,7 +50,7 @@ const char *CheckListClass::Current_Item() const
     CheckListItemClass *checkitem = (CheckListItemClass *)ListClass::Current_Item();
 
     if (checkitem) {
-        return checkitem->ItemString;
+        return checkitem->m_ItemString;
     }
 
     return nullptr;
@@ -61,7 +61,7 @@ const char *CheckListClass::Get_Item(int index) const
     CheckListItemClass *checkitem = (CheckListItemClass *)ListClass::Get_Item(index);
 
     if (checkitem) {
-        return checkitem->ItemString;
+        return checkitem->m_ItemString;
     }
 
     return nullptr;
@@ -77,7 +77,7 @@ void CheckListClass::Remove_Item(const char *string)
     for (int i = 0; i < Count(); ++i) {
         CheckListItemClass *checkitem = (CheckListItemClass *)ListClass::Get_Item(i);
 
-        if (checkitem != nullptr && strcasecmp(checkitem->ItemString, string) == 0) {
+        if (checkitem != nullptr && strcasecmp(checkitem->m_ItemString, string) == 0) {
             ListClass::Remove_Item(i);
             delete checkitem;
 
@@ -91,7 +91,7 @@ void CheckListClass::Set_Selected_Index(const char *string)
     for (int i = 0; i < Count(); ++i) {
         CheckListItemClass *checkitem = (CheckListItemClass *)ListClass::Get_Item(i);
 
-        if (checkitem != nullptr && strcasecmp(checkitem->ItemString, string) == 0) {
+        if (checkitem != nullptr && strcasecmp(checkitem->m_ItemString, string) == 0) {
             Set_Selected_Index(i);
 
             return;
@@ -104,8 +104,8 @@ void CheckListClass::Check_Item(int index, BOOL check_state)
     CheckListItemClass *checkitem = (CheckListItemClass *)ListClass::Get_Item(index);
     
     if (checkitem) {
-        if (check_state != checkitem->IsChecked) {
-            checkitem->IsChecked = check_state;
+        if (check_state != checkitem->m_IsChecked) {
+            checkitem->m_IsChecked = check_state;
             Flag_To_Redraw();
         }
     }
@@ -116,7 +116,7 @@ BOOL CheckListClass::Is_Checked(int index) const
     CheckListItemClass *checkitem = (CheckListItemClass *)ListClass::Get_Item(index);
 
     if (checkitem) {
-        return checkitem->IsChecked;
+        return checkitem->m_IsChecked;
     }
 
     return false;
@@ -124,15 +124,15 @@ BOOL CheckListClass::Is_Checked(int index) const
 
 BOOL CheckListClass::Action(unsigned flags, KeyNumType &key)
 {
-    if (IgnoreInput) {
+    if (m_IgnoreInput) {
         return false;
     }
 
     BOOL retval = ListClass::Action(flags, key);
 
     if (flags & MOUSE_LEFT_PRESS) {
-        BOOL state = CheckListClass::Is_Checked(CurrentIndex);
-        CheckListClass::Check_Item(CurrentIndex, state == 0);
+        BOOL state = CheckListClass::Is_Checked(m_CurrentIndex);
+        CheckListClass::Check_Item(m_CurrentIndex, state == 0);
     }
 
     return retval;
@@ -149,24 +149,24 @@ void CheckListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL redraw)
         if (checkitem) {
             memset(stringbuff, 0, sizeof(stringbuff));
 
-            if (checkitem->IsChecked) {
+            if (checkitem->m_IsChecked) {
                 stringbuff[0] = '\x03'; // This is a tick in some WW fonts
             } else {
                 stringbuff[0] = ' '; // A space
             }
 
             stringbuff[1] = ' '; // Another space
-            snprintf(&stringbuff[2], sizeof(stringbuff) - 2, "%s", checkitem->ItemString);
-            style = TextStyle;
+            snprintf(&stringbuff[2], sizeof(stringbuff) - 2, "%s", checkitem->m_ItemString);
+            style = m_TextStyle;
 
             if (redraw) {
                 style |= TPF_USE_BRIGHT;
-                g_logicPage->Fill_Rect(x, y, x_max + x - 1, YSpacing + y - 1, GadgetClass::ColorScheme->WindowPalette[0]);
+                g_logicPage->Fill_Rect(x, y, x_max + x - 1, m_YSpacing + y - 1, GadgetClass::ColorScheme->WindowPalette[0]);
             } else if (!(style & TPF_USE_GRAD_PAL)) {
                 style |= TPF_USE_MEDIUM;
             }
 
-            Conquer_Clip_Text_Print(stringbuff, x, y, GadgetClass::ColorScheme, 0, style, x_max, Tabs);
+            Conquer_Clip_Text_Print(stringbuff, x, y, GadgetClass::ColorScheme, 0, style, x_max, m_Tabs);
         }
     }
 }

@@ -21,15 +21,15 @@
 
 ShapeButtonClass::ShapeButtonClass(unsigned id, void *button_shape, int x, int y) :
     ToggleClass(id, x, y, INPUT_NONE, false),
-    BooleanOne(false)
+    m_BooleanOne(false)
 {
     Set_Shape(button_shape);
 }
 
 ShapeButtonClass::ShapeButtonClass(ShapeButtonClass &that) :
     ToggleClass(that),
-    BooleanOne(that.BooleanOne),
-    ButtonShape(that.ButtonShape)
+    m_BooleanOne(that.m_BooleanOne),
+    m_ButtonShape(that.m_ButtonShape)
 {
 }
 
@@ -37,8 +37,8 @@ ShapeButtonClass &ShapeButtonClass::operator=(ShapeButtonClass &that)
 {
     if (this != &that) {
         ToggleClass::operator=(that);
-        BooleanOne = that.BooleanOne;
-        ButtonShape = that.ButtonShape;
+        m_BooleanOne = that.m_BooleanOne;
+        m_ButtonShape = that.m_ButtonShape;
     }
 
     return *this;
@@ -46,25 +46,25 @@ ShapeButtonClass &ShapeButtonClass::operator=(ShapeButtonClass &that)
 
 BOOL ShapeButtonClass::Draw_Me(BOOL redraw)
 {
-    if (!ToggleClass::Draw_Me(redraw) || ButtonShape == nullptr) {
+    if (!ToggleClass::Draw_Me(redraw) || m_ButtonShape == nullptr) {
         return false;
     }
 
     if (g_logicPage == &g_seenBuff) {
-        g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos - 1, Height + YPos - 1);
+        g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
     }
 
     int shape_frame = SHAPE_DEFAULT;
 
-    if (IsDisabled) {
+    if (m_IsDisabled) {
         shape_frame = SHAPE_DISABLED;
-    } else if (BooleanOne) {
-        shape_frame = ToggleState ? SHAPE_ENABLED : SHAPE_DEFAULT;
+    } else if (m_BooleanOne) {
+        shape_frame = m_ToggleState ? SHAPE_ENABLED : SHAPE_DEFAULT;
     } else {
-        shape_frame = Toggle_Boolean1 ? SHAPE_ENABLED : SHAPE_DEFAULT;
+        shape_frame = m_Toggle_Boolean1 ? SHAPE_ENABLED : SHAPE_DEFAULT;
     }
 
-    CC_Draw_Shape(ButtonShape, shape_frame, XPos, YPos);
+    CC_Draw_Shape(m_ButtonShape, shape_frame, m_XPos, m_YPos);
 
     if (g_logicPage == &g_seenBuff) {
         g_mouse->Conditional_Show_Mouse();
@@ -77,10 +77,10 @@ void ShapeButtonClass::Set_Shape(void *button_shape)
 {
     DEBUG_ASSERT(Get_Build_Frame_Count(button_shape) > 0);
 
-    ButtonShape = button_shape;
+    m_ButtonShape = button_shape;
 
-    if (ButtonShape != nullptr) {
-        Width = Get_Build_Frame_Width(ButtonShape);
-        Height = Get_Build_Frame_Height(ButtonShape);
+    if (m_ButtonShape != nullptr) {
+        m_Width = Get_Build_Frame_Width(m_ButtonShape);
+        m_Height = Get_Build_Frame_Height(m_ButtonShape);
     }
 }

@@ -29,32 +29,32 @@ using std::strlen;
 EditClass::EditClass(int id, char *textbuffer, int bufferlength, TextPrintType text_style, int x, int y, int w, int h,
     EditStyleType edit_style) :
     ControlClass(id, x, y, w, h, MOUSE_LEFT_PRESS, false),
-    TextStyle(text_style & (~TPF_CENTER)),
-    EditStyle(edit_style),
-    Text(textbuffer),
-    MaxTextLength(bufferlength - 1),
-    TextLength(strlen(textbuffer)),
-    ColorScheme(GadgetClass::ColorScheme)
+    m_TextStyle(text_style & (~TPF_CENTER)),
+    m_EditStyle(edit_style),
+    m_Text(textbuffer),
+    m_MaxTextLength(bufferlength - 1),
+    m_TextLength(strlen(textbuffer)),
+    m_ColorScheme(GadgetClass::ColorScheme)
 {
     Flag_To_Redraw();
     Set_Text(textbuffer, bufferlength);
 
     if (w == -1 || h == -1) {
-        Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, TextStyle);
+        Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
         if (h == -1) {
-            Height = g_fontHeight + 1;
+            m_Height = g_fontHeight + 1;
         }
 
         if (w == -1) {
-            if (strlen(Text) == 0) {
-                Width = (MaxTextLength + 1) * (g_fontXSpacing + Char_Pixel_Width('X')) + 2;
+            if (strlen(m_Text) == 0) {
+                m_Width = (m_MaxTextLength + 1) * (g_fontXSpacing + Char_Pixel_Width('X')) + 2;
             } else {
-                Width = String_Pixel_Width(Text) + 6;
+                m_Width = String_Pixel_Width(m_Text) + 6;
             }
         }
     }
 
-    IgnoreInput = 0;
+    m_IgnoreInput = 0;
 }
 
 EditClass::~EditClass()
@@ -66,21 +66,21 @@ EditClass::~EditClass()
 
 EditClass::EditClass(EditClass &that) :
     ControlClass(that),
-    TextStyle(that.TextStyle),
-    EditStyle(that.EditStyle),
-    Text(that.Text),
-    MaxTextLength(that.MaxTextLength),
-    TextLength(that.TextLength),
-    ColorScheme(that.ColorScheme),
-    IgnoreInput(that.IgnoreInput)
+    m_TextStyle(that.m_TextStyle),
+    m_EditStyle(that.m_EditStyle),
+    m_Text(that.m_Text),
+    m_MaxTextLength(that.m_MaxTextLength),
+    m_TextLength(that.m_TextLength),
+    m_ColorScheme(that.m_ColorScheme),
+    m_IgnoreInput(that.m_IgnoreInput)
 {
 }
 
 void EditClass::Set_Text(char *text, int max_len)
 {
-    MaxTextLength = max_len - 1;
-    Text = text;
-    TextLength = strlen(text);
+    m_MaxTextLength = max_len - 1;
+    m_Text = text;
+    m_TextLength = strlen(text);
     Flag_To_Redraw();
 }
 
@@ -88,11 +88,11 @@ BOOL EditClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
         if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos, Height + YPos);
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
         Draw_Background();
-        Draw_Text(Text);
+        Draw_Text(m_Text);
 
         if (g_logicPage == &g_seenBuff) {
             g_mouse->Conditional_Show_Mouse();
@@ -108,7 +108,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
 {
     KeyASCIIType character;
 
-    if (IgnoreInput) {
+    if (m_IgnoreInput) {
         return false;
     }
 
@@ -152,7 +152,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
 
 void EditClass::Draw_Background()
 {
-    Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_4, true);
+    Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_4, true);
 }
 
 void EditClass::Draw_Text(const char *text)
@@ -160,16 +160,16 @@ void EditClass::Draw_Text(const char *text)
     TextPrintType style = Has_Focus() ? TPF_USE_BRIGHT : TPF_NONE;
 
     // Draw the current text
-    Conquer_Clip_Text_Print(text, XPos + 1, YPos + 1, ColorScheme, 0, TextStyle | style, Width - 2, nullptr);
+    Conquer_Clip_Text_Print(text, m_XPos + 1, m_YPos + 1, m_ColorScheme, 0, m_TextStyle | style, m_Width - 2, nullptr);
 
     // If the control has focus and it will fit in the space, draw an underscore
     // to represent the text cursor
-    if (Has_Focus() && (int)strlen(text) < MaxTextLength) {
+    if (Has_Focus() && (int)strlen(text) < m_MaxTextLength) {
         int text_width = String_Pixel_Width(text);
         int cursor_width = String_Pixel_Width("_");
-        if (cursor_width + text_width < Width - 2) {
+        if (cursor_width + text_width < m_Width - 2) {
             Conquer_Clip_Text_Print(
-                "_", XPos + 1 + text_width, YPos + 1, ColorScheme, 0, TextStyle | style, Width - 2, nullptr);
+                "_", m_XPos + 1 + text_width, m_YPos + 1, m_ColorScheme, 0, m_TextStyle | style, m_Width - 2, nullptr);
         }
     }
 }
@@ -182,9 +182,9 @@ int EditClass::Handle_Key(KeyASCIIType character)
         }
     } else {
         if (character == KA_BACKSPACE) {
-            if (TextLength) {
-                --TextLength;
-                Text[TextLength] = '\0';
+            if (m_TextLength) {
+                --m_TextLength;
+                m_Text[m_TextLength] = '\0';
                 Flag_To_Redraw();
             }
 
@@ -198,16 +198,16 @@ int EditClass::Handle_Key(KeyASCIIType character)
         }
     }
 
-    if (String_Pixel_Width(Text) + Char_Pixel_Width(character) < (Width - 2) && TextLength < MaxTextLength
-        && (isprint(character) || character == KA_SPACE) && (character != KA_SPACE || TextLength)) {
-        if (EditStyle & EDIT_UPPER && isalpha(character)) {
+    if (String_Pixel_Width(m_Text) + Char_Pixel_Width(character) < (m_Width - 2) && m_TextLength < m_MaxTextLength
+        && (isprint(character) || character == KA_SPACE) && (character != KA_SPACE || m_TextLength)) {
+        if (m_EditStyle & EDIT_UPPER && isalpha(character)) {
             character = (KeyASCIIType)toupper(character);
         }
 
-        if (EditStyle & EDIT_NUMS && isdigit(character) || EditStyle & EDIT_TEXT && isalpha(character)
-            || EditStyle & EDIT_SYMS && !(isalnum(character)) || character == KA_SPACE) {
-            Text[TextLength++] = character;
-            Text[TextLength] = '\0';
+        if (m_EditStyle & EDIT_NUMS && isdigit(character) || m_EditStyle & EDIT_TEXT && isalpha(character)
+            || m_EditStyle & EDIT_SYMS && !(isalnum(character)) || character == KA_SPACE) {
+            m_Text[m_TextLength++] = character;
+            m_Text[m_TextLength] = '\0';
             Flag_To_Redraw();
 
             return true;
@@ -219,10 +219,10 @@ int EditClass::Handle_Key(KeyASCIIType character)
 
 void EditClass::Set_Focus()
 {
-    TextLength = 0;
+    m_TextLength = 0;
 
-    if (Text != nullptr) {
-        TextLength = (int)strlen(Text);
+    if (m_Text != nullptr) {
+        m_TextLength = (int)strlen(m_Text);
     }
 
     GadgetClass::Set_Focus();

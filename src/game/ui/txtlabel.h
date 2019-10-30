@@ -36,35 +36,35 @@ public:
     TextLabelClass &operator=(TextLabelClass &that);
     
     void Set_Style(TextPrintType style);
-    void Set_Lifetime(unsigned lifetime) { Lifetime = lifetime; }
+    void Set_Lifetime(unsigned lifetime) { m_Lifetime = lifetime; }
     void Set_Label_ID(int id) { ID = id; }
-    void Set_Remap(RemapControlType *remap) { Remap = remap; }
-    void Set_Max_Width(int max) { MaxWidth = max; }
+    void Set_Remap(RemapControlType *remap) { m_Remap = remap; }
+    void Set_Max_Width(int max) { m_MaxWidth = max; }
     char *Get_Text() { return LabelText; }
-    TextPrintType Get_Style() { return TextStyle; }
-    unsigned Get_Lifetime() { return Lifetime; }
+    TextPrintType Get_Style() { return m_TextStyle; }
+    unsigned Get_Lifetime() { return m_Lifetime; }
     int Get_Label_ID() { return ID; }
-    RemapControlType *Get_Remap() { return Remap; }
+    RemapControlType *Get_Remap() { return m_Remap; }
 
 protected:
-    unsigned Lifetime;
+    unsigned m_Lifetime;
     int ID;
-    TextPrintType TextStyle;
+    TextPrintType m_TextStyle;
     char *LabelText;
-    RemapControlType *Remap;
-    int MaxWidth;
+    RemapControlType *m_Remap;
+    int m_MaxWidth;
 };
 
 inline TextLabelClass &TextLabelClass::operator=(TextLabelClass &that)
 {
     if (this != &that) {
         GadgetClass::operator=(that);
-        Lifetime = that.Lifetime;
+        m_Lifetime = that.m_Lifetime;
         ID = that.ID;
-        TextStyle = that.TextStyle;
+        m_TextStyle = that.m_TextStyle;
         LabelText = that.LabelText;
-        Remap = that.Remap;
-        MaxWidth = that.MaxWidth;
+        m_Remap = that.m_Remap;
+        m_MaxWidth = that.m_MaxWidth;
     }
 
     return *this;

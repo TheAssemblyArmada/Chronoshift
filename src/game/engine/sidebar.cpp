@@ -94,8 +94,8 @@ void SidebarClass::StripClass::SelectClass::Set_Owner(StripClass &strip, int row
 {
     Owner = &strip;
     Row = row;
-    XPos = strip.XPos;
-    YPos = (48 * row) + strip.YPos;
+    m_XPos = strip.XPos;
+    m_YPos = (48 * row) + strip.YPos;
 }
 
 SidebarClass::StripClass::StripClass() :

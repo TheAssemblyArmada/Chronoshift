@@ -41,7 +41,7 @@ enum MsgBoxReturnType
 class MessageBoxClass
 {
 public:
-    MessageBoxClass(int caption = TXT_NULL) : CaptionText(caption) {}
+    MessageBoxClass(int caption = TXT_NULL) : m_CaptionText(caption) {}
     ~MessageBoxClass() {}
 
     int Process(const int body_text, const int button_1_text = TXT_OK, const int button_2_text = TXT_NULL,
@@ -65,7 +65,7 @@ public:
 #endif
 
 private:
-    int CaptionText;
+    int m_CaptionText;
 };
 
 #endif // MSGBOX_H

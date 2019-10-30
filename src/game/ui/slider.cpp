@@ -25,66 +25,66 @@
 
 SliderClass::SliderClass(unsigned id, int x, int y, int w, int h, BOOL no_buttons) :
     GaugeClass(id, x, y, w, h),
-    ButtonPlus(nullptr),
-    ButtonMinus(nullptr),
-    NoButtons(no_buttons)
+    m_ButtonPlus(nullptr),
+    m_ButtonMinus(nullptr),
+    m_NoButtons(no_buttons)
 {
     if (!no_buttons) {
-        ButtonPlus = new ShapeButtonClass(id, GameFileClass::Retrieve("btn-plus.shp"), XPos + Width + 2, YPos);
+        m_ButtonPlus = new ShapeButtonClass(id, GameFileClass::Retrieve("btn-plus.shp"), m_XPos + m_Width + 2, m_YPos);
 
-        if (ButtonPlus) {
-            ButtonPlus->Make_Peer(*this);
-            ButtonPlus->Add(*this);
-            ButtonPlus->Flag_To_Redraw();
+        if (m_ButtonPlus) {
+            m_ButtonPlus->Make_Peer(*this);
+            m_ButtonPlus->Add(*this);
+            m_ButtonPlus->Flag_To_Redraw();
         }
 
-        ButtonMinus = new ShapeButtonClass(id, GameFileClass::Retrieve("btn-mins.shp"), XPos - 6, YPos);
+        m_ButtonMinus = new ShapeButtonClass(id, GameFileClass::Retrieve("btn-mins.shp"), m_XPos - 6, m_YPos);
 
-        if (ButtonMinus) {
-            ButtonMinus->Make_Peer(*this);
-            ButtonMinus->Add(*this);
-            ButtonMinus->Flag_To_Redraw();
+        if (m_ButtonMinus) {
+            m_ButtonMinus->Make_Peer(*this);
+            m_ButtonMinus->Add(*this);
+            m_ButtonMinus->Flag_To_Redraw();
         }
     }
 
     Set_Thumb_Size(1);
     Recalc_Thumb();
 
-    FillGauge = false;
+    m_FillGauge = false;
 }
 
 SliderClass::SliderClass(SliderClass &that) :
     GaugeClass(that),
-    ButtonPlus(that.ButtonPlus),
-    ButtonMinus(that.ButtonMinus),
-    NoButtons(that.NoButtons),
-    BumpSize(that.BumpSize),
-    ThumbnailPixels(that.ThumbnailPixels),
-    ThumbnailSize(that.ThumbnailSize)
+    m_ButtonPlus(that.m_ButtonPlus),
+    m_ButtonMinus(that.m_ButtonMinus),
+    m_NoButtons(that.m_NoButtons),
+    m_BumpSize(that.m_BumpSize),
+    m_ThumbnailPixels(that.m_ThumbnailPixels),
+    m_ThumbnailSize(that.m_ThumbnailSize)
 {
 }
 
 SliderClass::~SliderClass()
 {
-    if (ButtonPlus != nullptr) {
-        delete ButtonPlus;
-        ButtonPlus = nullptr;
+    if (m_ButtonPlus != nullptr) {
+        delete m_ButtonPlus;
+        m_ButtonPlus = nullptr;
     }
 
-    if (ButtonMinus != nullptr) {
-        delete ButtonMinus;
-        ButtonMinus = nullptr;
+    if (m_ButtonMinus != nullptr) {
+        delete m_ButtonMinus;
+        m_ButtonMinus = nullptr;
     }
 }
 
 void SliderClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &peer)
 {
     if (flags & MOUSE_LEFT_RLSE) {
-        if (&peer == ButtonPlus) {
+        if (&peer == m_ButtonPlus) {
             Step(false);
         }
 
-        if (&peer == ButtonMinus) {
+        if (&peer == m_ButtonMinus) {
             Step(true);
         }
     }
@@ -92,12 +92,12 @@ void SliderClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &pe
 
 BOOL SliderClass::Draw_Me(BOOL redraw)
 {
-    if (NoButtons && ControlClass::Draw_Me(redraw)) {
+    if (m_NoButtons && ControlClass::Draw_Me(redraw)) {
         if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos, Height + YPos);
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
-        Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_0, true);
+        Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_0, true);
         Draw_Thumb();
 
         if (&g_seenBuff == g_logicPage) {
@@ -116,18 +116,18 @@ BOOL SliderClass::Action(unsigned flags, KeyNumType &key)
         int mouse_pos;
         int gadget_pos;
 
-        if (IsHorizontal) {
+        if (m_IsHorizontal) {
             mouse_pos = g_mouse->Get_Mouse_X();
-            gadget_pos = XPos;
+            gadget_pos = m_XPos;
         } else {
             mouse_pos = g_mouse->Get_Mouse_Y();
-            gadget_pos = YPos;
+            gadget_pos = m_YPos;
         }
 
-        gadget_pos += ThumbnailSize + 1;
+        gadget_pos += m_ThumbnailSize + 1;
 
         if (mouse_pos >= gadget_pos) {
-            if (mouse_pos <= ThumbnailPixels + gadget_pos) {
+            if (mouse_pos <= m_ThumbnailPixels + gadget_pos) {
                 GaugeClass::Action(flags, key);
                 key = KN_NONE;
 
@@ -164,7 +164,7 @@ BOOL SliderClass::Set_Maximum(int max)
 
 BOOL SliderClass::Set_Value(int value)
 {
-    if (GaugeClass::Set_Value(std::min(value, Maximum - BumpSize))) {
+    if (GaugeClass::Set_Value(std::min(value, m_Maximum - m_BumpSize))) {
         Recalc_Thumb();
 
         return true;
@@ -175,40 +175,40 @@ BOOL SliderClass::Set_Value(int value)
 
 void SliderClass::Draw_Thumb()
 {
-    if (IsHorizontal) {
-        Draw_Box(ThumbnailSize + XPos, YPos, ThumbnailPixels, Height, BOX_STYLE_1, true);
+    if (m_IsHorizontal) {
+        Draw_Box(m_ThumbnailSize + m_XPos, m_YPos, m_ThumbnailPixels, m_Height, BOX_STYLE_1, true);
     } else {
-        Draw_Box(XPos, ThumbnailSize + YPos, Width, ThumbnailPixels, BOX_STYLE_1, true);
+        Draw_Box(m_XPos, m_ThumbnailSize + m_YPos, m_Width, m_ThumbnailPixels, BOX_STYLE_1, true);
     }
 }
 
 void SliderClass::Set_Thumb_Size(int size)
 {
-    BumpSize = std::clamp(size, 1, Maximum);
+    m_BumpSize = std::clamp(size, 1, m_Maximum);
     Recalc_Thumb();
 }
 
 BOOL SliderClass::Bump(BOOL bump_up)
 {
     if (bump_up) {
-        return Set_Value(Value - BumpSize);
+        return Set_Value(m_Value - m_BumpSize);
     }
 
-    return Set_Value(Value + BumpSize);
+    return Set_Value(m_Value + m_BumpSize);
 }
 
 BOOL SliderClass::Step(BOOL step_up)
 {
     if (step_up) {
-        return Set_Value(Value - 1);
+        return Set_Value(m_Value - 1);
     }
 
-    return Set_Value(Value + 1);
+    return Set_Value(m_Value + 1);
 }
 
 void SliderClass::Recalc_Thumb()
 {
-    int length = IsHorizontal ? Width : Height;
-    ThumbnailPixels = std::max(4, length * fixed_t(BumpSize, Maximum));
-    ThumbnailSize = std::min(length - ThumbnailPixels, length * fixed_t(Value, Maximum));
+    int length = m_IsHorizontal ? m_Width : m_Height;
+    m_ThumbnailPixels = std::max(4, length * fixed_t(m_BumpSize, m_Maximum));
+    m_ThumbnailSize = std::min(length - m_ThumbnailPixels, length * fixed_t(m_Value, m_Maximum));
 }

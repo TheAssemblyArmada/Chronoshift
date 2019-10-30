@@ -48,18 +48,18 @@ public:
     virtual void Set_Selected_Style(SelectEnum select_style, RemapControlType *remap);
 
 protected:
-    DynamicVectorClass<RemapControlType *> RemapList;
-    SelectEnum SelectStyle;
-    RemapControlType *RemapType;
+    DynamicVectorClass<RemapControlType *> m_RemapList;
+    SelectEnum m_SelectStyle;
+    RemapControlType *m_RemapType;
 };
 
 inline ColorListClass &ColorListClass::operator=(ColorListClass &that)
 {
     if (this != &that) {
         ListClass::operator=(that);
-        RemapList = that.RemapList;
-        SelectStyle = that.SelectStyle;
-        RemapType = that.RemapType;
+        m_RemapList = that.m_RemapList;
+        m_SelectStyle = that.m_SelectStyle;
+        m_RemapType = that.m_RemapType;
     }
 
     return *this;

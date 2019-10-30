@@ -28,10 +28,10 @@ public:
     class CheckListItemClass
     {
     public:
-        CheckListItemClass(const char *string, BOOL state = false) : ItemString(string), IsChecked(state) {}
+        CheckListItemClass(const char *string, BOOL state = false) : m_ItemString(string), m_IsChecked(state) {}
 
-        const char *ItemString;
-        BOOL IsChecked;
+        const char *m_ItemString;
+        BOOL m_IsChecked;
     };
 
 public:
@@ -58,14 +58,14 @@ public:
     BOOL Is_Checked(int index) const;
 
 protected:
-    BOOL IgnoreInput;
+    BOOL m_IgnoreInput;
 };
 
 inline CheckListClass &CheckListClass::operator=(CheckListClass &that)
 {
     if (this != &that) {
         ListClass::operator=(that);
-        IgnoreInput = that.IgnoreInput;
+        m_IgnoreInput = that.m_IgnoreInput;
     }
 
     return *this;

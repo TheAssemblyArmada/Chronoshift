@@ -34,29 +34,29 @@ public:
     virtual BOOL Action(unsigned flags, KeyNumType &key) override;
     virtual BOOL Set_Maximum(int max);
     virtual BOOL Set_Value(int value);
-    virtual int const Get_Value() const { return Value; }
+    virtual int const Get_Value() const { return m_Value; }
     virtual void Use_Thumb(BOOL use_thumb);
     virtual int Thumb_Pixels() { return DefaultThumbSize; }
     virtual void Draw_Thumb();
     virtual int Pixel_To_Value(int pixel);
     virtual int Value_To_Pixel(int value);
 
-    int const Get_Maximum() const { return Maximum; }
+    int const Get_Maximum() const { return m_Maximum; }
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL FillGauge : 1; // & 1
-    BOOL UseThumb : 1; // & 2
-    BOOL IsHorizontal : 1; // & 4
+    BOOL m_FillGauge : 1; // & 1
+    BOOL m_UseThumb : 1; // & 2
+    BOOL m_IsHorizontal : 1; // & 4
 #else
-    bool FillGauge;
-    bool UseThumb;
-    bool IsHorizontal;
+    bool m_FillGauge;
+    bool m_UseThumb;
+    bool m_IsHorizontal;
 #endif
 
-    int Maximum;
-    int Value;
-    int LastPos;
+    int m_Maximum;
+    int m_Value;
+    int m_LastPos;
 
     static const int DefaultThumbSize;
 };
@@ -65,12 +65,12 @@ inline GaugeClass &GaugeClass::operator=(GaugeClass &that)
 {
     if (this != &that) {
         ControlClass::operator=(that);
-        FillGauge = that.FillGauge;
-        UseThumb = that.UseThumb;
-        IsHorizontal = that.IsHorizontal;
-        Maximum = that.Maximum;
-        Value = that.Value;
-        LastPos = that.LastPos;
+        m_FillGauge = that.m_FillGauge;
+        m_UseThumb = that.m_UseThumb;
+        m_IsHorizontal = that.m_IsHorizontal;
+        m_Maximum = that.m_Maximum;
+        m_Value = that.m_Value;
+        m_LastPos = that.m_LastPos;
     }
 
     return *this;

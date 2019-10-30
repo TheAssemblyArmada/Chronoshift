@@ -23,12 +23,12 @@
 class LinkClass
 {
 public:
-    LinkClass() : Next(nullptr), Prev(nullptr) {}
-    LinkClass(LinkClass &that) : Next(nullptr), Prev(nullptr) { Add(that); }
+    LinkClass() : m_Next(nullptr), m_Prev(nullptr) {}
+    LinkClass(LinkClass &that) : m_Next(nullptr), m_Prev(nullptr) { Add(that); }
     virtual ~LinkClass() { Remove(); }
 
-    virtual LinkClass *Get_Next() const { return Next; }
-    virtual LinkClass *Get_Prev() const { return Prev; }
+    virtual LinkClass *Get_Next() const { return m_Next; }
+    virtual LinkClass *Get_Prev() const { return m_Prev; }
     virtual LinkClass &Add(LinkClass &that);
     virtual LinkClass &Add_Tail(LinkClass &that);
     virtual LinkClass &Add_Head(LinkClass &that);
@@ -42,8 +42,8 @@ public:
     int Count();
 
 protected:
-    LinkClass *Next;
-    LinkClass *Prev;
+    LinkClass *m_Next;
+    LinkClass *m_Prev;
 };
 
 

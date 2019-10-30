@@ -33,16 +33,16 @@ public:
     BigCheckBoxClass & operator=(BigCheckBoxClass &that);
 
 protected:
-    TextPrintType TextStyle;
-    const char *TextString;
+    TextPrintType m_TextStyle;
+    const char *m_TextString;
 };
 
 inline BigCheckBoxClass &BigCheckBoxClass::operator=(BigCheckBoxClass &that)
 {
     if (this != &that) {
         ToggleClass::operator=(that);
-        TextStyle = that.TextStyle;
-        TextString = that.TextString;
+        m_TextStyle = that.m_TextStyle;
+        m_TextString = that.m_TextString;
     }
 
     return *this;

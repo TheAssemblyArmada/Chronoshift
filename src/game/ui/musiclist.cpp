@@ -28,14 +28,14 @@ MusicListClass::MusicListClass(int id, int x, int y, int w, int h, TextPrintType
 
 void MusicListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL selected)
 {
-    TextPrintType style = TextStyle;
+    TextPrintType style = m_TextStyle;
     RemapControlType *remapper = Get_Color_Scheme();
-    const char *entry = Entries[index] + 1;
+    const char *entry = m_Entries[index] + 1;
 
     if (style & TPF_6PT_GRAD) {
         if (selected) {
             style |= TPF_USE_BRIGHT;
-            g_logicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + YSpacing) - 1), remapper->WindowPalette[0]);
+            g_logicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + m_YSpacing) - 1), remapper->WindowPalette[0]);
         } else if (!(style & TPF_USE_GRAD_PAL)) {
             style |= TPF_USE_MEDIUM;
         }
@@ -43,5 +43,5 @@ void MusicListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL selecte
         remapper = (selected ? &ColorRemaps[REMAP_10] : &ColorRemaps[REMAP_5]);
     }
 
-    Conquer_Clip_Text_Print(entry, x, y, remapper, COLOR_TBLACK, style, x_max, Tabs);
+    Conquer_Clip_Text_Print(entry, x, y, remapper, COLOR_TBLACK, style, x_max, m_Tabs);
 }

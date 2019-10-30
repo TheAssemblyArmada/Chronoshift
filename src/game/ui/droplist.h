@@ -55,25 +55,25 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL IsExpanded : 1; // & 1
+    BOOL m_IsExpanded : 1; // & 1
 #else
-    bool IsExpanded;
+    bool m_IsExpanded;
 #endif
-    int DropHeight;
-    ShapeButtonClass DropButton;
-    ListClass DropList;
+    int m_DropHeight;
+    ShapeButtonClass m_DropButton;
+    ListClass m_DropList;
 };
 
 inline DropListClass &DropListClass::operator=(DropListClass &that)
 {
     if (this != &that) {
         EditClass::operator=(that);
-        IsExpanded = that.IsExpanded;
-        DropHeight = that.DropHeight;
-        DropButton = that.DropButton;
-        DropList = that.DropList;
-        DropButton.Make_Peer(*this);
-        DropList.Make_Peer(*this);
+        m_IsExpanded = that.m_IsExpanded;
+        m_DropHeight = that.m_DropHeight;
+        m_DropButton = that.m_DropButton;
+        m_DropList = that.m_DropList;
+        m_DropButton.Make_Peer(*this);
+        m_DropList.Make_Peer(*this);
     }
 
     return *this;

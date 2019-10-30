@@ -18,33 +18,33 @@
 
 TextLabelClass::TextLabelClass(char *text, int x, int y, RemapControlType *remap, TextPrintType style) :
     GadgetClass(x, y, 1, 1, INPUT_NONE, false),
-    Lifetime(0),
+    m_Lifetime(0),
     ID(0),
-    TextStyle(style),
+    m_TextStyle(style),
     LabelText(text),
-    Remap(remap),
-    MaxWidth(-1)
+    m_Remap(remap),
+    m_MaxWidth(-1)
 {
 }
 
 TextLabelClass::TextLabelClass(TextLabelClass &that) :
     GadgetClass(that),
-    Lifetime(that.Lifetime),
+    m_Lifetime(that.m_Lifetime),
     ID(that.ID),
-    TextStyle(that.TextStyle),
+    m_TextStyle(that.m_TextStyle),
     LabelText(that.LabelText),
-    Remap(that.Remap),
-    MaxWidth(that.MaxWidth)
+    m_Remap(that.m_Remap),
+    m_MaxWidth(that.m_MaxWidth)
 {
 }
 
 BOOL TextLabelClass::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
-        if (MaxWidth == -1) {
-            Simple_Text_Print(LabelText, XPos, YPos, Remap, 0, TextStyle);
+        if (m_MaxWidth == -1) {
+            Simple_Text_Print(LabelText, m_XPos, m_YPos, m_Remap, 0, m_TextStyle);
         } else {
-            Conquer_Clip_Text_Print(LabelText, XPos, YPos, Remap, 0, TextStyle, MaxWidth, nullptr);
+            Conquer_Clip_Text_Print(LabelText, m_XPos, m_YPos, m_Remap, 0, m_TextStyle, m_MaxWidth, nullptr);
         }
 
         return true;
@@ -55,5 +55,5 @@ BOOL TextLabelClass::Draw_Me(BOOL redraw)
 
 void TextLabelClass::Set_Style(TextPrintType style)
 {
-    TextStyle = style;
+    m_TextStyle = style;
 }

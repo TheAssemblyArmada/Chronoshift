@@ -29,20 +29,20 @@ GaugeClass::GaugeClass(unsigned id, int x, int y, int w, int h) :
     Set_Maximum(255);
     Set_Value(0);
 
-    UseThumb = true;
-    IsHorizontal = w > h;
-    FillGauge = true;
-    LastPos = 0;
+    m_UseThumb = true;
+    m_IsHorizontal = w > h;
+    m_FillGauge = true;
+    m_LastPos = 0;
 }
 
 GaugeClass::GaugeClass(GaugeClass &that) :
     ControlClass(that),
-    FillGauge(that.FillGauge),
-    UseThumb(that.UseThumb),
-    IsHorizontal(that.IsHorizontal),
-    Maximum(that.Maximum),
-    Value(that.Value),
-    LastPos(that.LastPos)
+    m_FillGauge(that.m_FillGauge),
+    m_UseThumb(that.m_UseThumb),
+    m_IsHorizontal(that.m_IsHorizontal),
+    m_Maximum(that.m_Maximum),
+    m_Value(that.m_Value),
+    m_LastPos(that.m_LastPos)
 {
 }
 
@@ -50,28 +50,28 @@ BOOL GaugeClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
         if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, XPos + Width, YPos + Height);
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_XPos + m_Width, m_YPos + m_Height);
         }
 
-        Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_0, true);
+        Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_0, true);
 
-        if (FillGauge) {
-            int pval = Value_To_Pixel(Value);
+        if (m_FillGauge) {
+            int pval = Value_To_Pixel(m_Value);
 
-            if (IsHorizontal) {
-                if (pval >= XPos + 1) {
+            if (m_IsHorizontal) {
+                if (pval >= m_XPos + 1) {
                     g_logicPage->Fill_Rect(
-                        XPos + 1, YPos + 1, pval, YPos + Height - 2, GadgetClass::ColorScheme->WindowPalette[5]);
+                        m_XPos + 1, m_YPos + 1, pval, m_YPos + m_Height - 2, GadgetClass::ColorScheme->WindowPalette[5]);
                 }
             } else {
-                if (pval >= YPos + 1) {
+                if (pval >= m_YPos + 1) {
                     g_logicPage->Fill_Rect(
-                        XPos + 1, YPos + 1, XPos + Width - 2, pval, GadgetClass::ColorScheme->WindowPalette[5]);
+                        m_XPos + 1, m_YPos + 1, m_XPos + m_Width - 2, pval, GadgetClass::ColorScheme->WindowPalette[5]);
                 }
             }
         }
 
-        if (UseThumb) {
+        if (m_UseThumb) {
             Draw_Thumb();
         }
 
@@ -87,7 +87,7 @@ BOOL GaugeClass::Draw_Me(BOOL redraw)
 
 BOOL GaugeClass::Action(unsigned flags, KeyNumType &key)
 {
-    if (!UseThumb) {
+    if (!m_UseThumb) {
         return false;
     }
 
@@ -98,36 +98,36 @@ BOOL GaugeClass::Action(unsigned flags, KeyNumType &key)
         int mousepos;
 
         if (flags & MOUSE_LEFT_PRESS) {
-            int pixelval = Value_To_Pixel(Value);
-            mousepos = IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+            int pixelval = Value_To_Pixel(m_Value);
+            mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
 
             if (mousepos <= pixelval) {
-                LastPos = 0;
+                m_LastPos = 0;
             } else {
                 mousepos -= pixelval;
                 if (mousepos >= Thumb_Pixels()) {
-                    LastPos = mousepos;
+                    m_LastPos = mousepos;
                 } else {
-                    LastPos = 0;
+                    m_LastPos = 0;
                 }
             }
 
-            mousepos = IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
-            valpixel = Pixel_To_Value(mousepos - LastPos);
+            mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+            valpixel = Pixel_To_Value(mousepos - m_LastPos);
 
-            for (int i = valpixel; i < Value;) {
-                if (LastPos <= 0) {
+            for (int i = valpixel; i < m_Value;) {
+                if (m_LastPos <= 0) {
                     break;
                 }
 
-                --LastPos;
-                mousepos = IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
-                i = Pixel_To_Value(mousepos - LastPos);
+                --m_LastPos;
+                mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+                i = Pixel_To_Value(mousepos - m_LastPos);
             }
         }
 
-        mousepos = IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
-        valpixel = Pixel_To_Value(mousepos - LastPos);
+        mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+        valpixel = Pixel_To_Value(mousepos - m_LastPos);
 
         if (!Set_Value(valpixel)) {
             ControlClass::Action(INPUT_NONE, key);
@@ -142,8 +142,8 @@ BOOL GaugeClass::Action(unsigned flags, KeyNumType &key)
 
 BOOL GaugeClass::Set_Maximum(int max)
 {
-    if (max != Maximum) {
-        Maximum = max;
+    if (max != m_Maximum) {
+        m_Maximum = max;
         Flag_To_Redraw();
 
         return true;
@@ -154,10 +154,10 @@ BOOL GaugeClass::Set_Maximum(int max)
 
 BOOL GaugeClass::Set_Value(int value)
 {
-    value = std::clamp(value, 0, Maximum);
+    value = std::clamp(value, 0, m_Maximum);
 
-    if (value != Value) {
-        Value = value;
+    if (value != m_Value) {
+        m_Value = value;
         Flag_To_Redraw();
 
         return true;
@@ -168,23 +168,23 @@ BOOL GaugeClass::Set_Value(int value)
 
 void GaugeClass::Use_Thumb(BOOL use_thumb)
 {
-    UseThumb = use_thumb;
+    m_UseThumb = use_thumb;
 }
 
 void GaugeClass::Draw_Thumb()
 {
-    int start_pixel = Value_To_Pixel(Value);
+    int start_pixel = Value_To_Pixel(m_Value);
 
-    if (start_pixel + 4 > Value_To_Pixel(Maximum)) {
-        start_pixel = Value_To_Pixel(Maximum) - 2;
+    if (start_pixel + 4 > Value_To_Pixel(m_Maximum)) {
+        start_pixel = Value_To_Pixel(m_Maximum) - 2;
     }
 
-    start_pixel = std::max(XPos, start_pixel);
+    start_pixel = std::max(m_XPos, start_pixel);
 
-    if (IsHorizontal) {
-        Draw_Box(start_pixel, YPos, Thumb_Pixels(), Height, BOX_STYLE_1, true);
+    if (m_IsHorizontal) {
+        Draw_Box(start_pixel, m_YPos, Thumb_Pixels(), m_Height, BOX_STYLE_1, true);
     } else {
-        Draw_Box(XPos, start_pixel, Width, Thumb_Pixels(), BOX_STYLE_1, true);
+        Draw_Box(m_XPos, start_pixel, m_Width, Thumb_Pixels(), BOX_STYLE_1, true);
     }
 }
 
@@ -193,18 +193,18 @@ int GaugeClass::Pixel_To_Value(int pixel)
     int offset;
     int max;
 
-    if (IsHorizontal) {
-        offset = pixel - (XPos + 1);
-        max = Width - 2;
+    if (m_IsHorizontal) {
+        offset = pixel - (m_XPos + 1);
+        max = m_Width - 2;
     } else {
-        offset = pixel - (YPos + 1);
-        max = Height - 2;
+        offset = pixel - (m_YPos + 1);
+        max = m_Height - 2;
     }
 
     int value = std::clamp(offset, 0, max);
     fixed_t fval(value, max);
 
-    return Maximum * fval;
+    return m_Maximum * fval;
 }
 
 int GaugeClass::Value_To_Pixel(int value)
@@ -212,15 +212,15 @@ int GaugeClass::Value_To_Pixel(int value)
     int offset;
     int max;
 
-    if (IsHorizontal) {
-        max = Width - 2;
-        offset = XPos;
+    if (m_IsHorizontal) {
+        max = m_Width - 2;
+        offset = m_XPos;
     } else {
-        max = Height - 2;
-        offset = YPos;
+        max = m_Height - 2;
+        offset = m_YPos;
     }
 
-    fixed_t result(value, Maximum);
+    fixed_t result(value, m_Maximum);
 
     return offset + (max * result);
 }

@@ -194,7 +194,7 @@ int MessageBoxClass::Process(
     }
 
     Dialog_Box(xpos, ypos, formatted_width, formatted_height);
-    Draw_Caption(CaptionText, xpos, ypos, formatted_width);
+    Draw_Caption(m_CaptionText, xpos, ypos, formatted_width);
     Fancy_Text_Print(buffer, adj_xpos, ypos + 40, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, style);
 
     if (button_head) {
@@ -220,7 +220,7 @@ int MessageBoxClass::Process(
             if (redraw) {
                 g_mouse->Hide_Mouse();
                 Dialog_Box(xpos, ypos, formatted_width, formatted_height);
-                Draw_Caption(CaptionText, xpos, ypos, formatted_width);
+                Draw_Caption(m_CaptionText, xpos, ypos, formatted_width);
                 Fancy_Text_Print(buffer, adj_xpos, ypos + 30, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, style);
 
                 if (button_head) {
