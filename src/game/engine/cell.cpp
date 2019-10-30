@@ -54,35 +54,35 @@ const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
 cell_t CellClass::CurrentSelectedCell = -1;
 
 CellClass::CellClass() :
-    CellNumber(Map.Cell_Number(this)),
-    Bit1(false),
-    PlacementCheck(false),
-    Visible(false),
-    Revealed(false),
-    Bit16(false),
-    Bit32(false),
-    HasFlag(false),
-    Bit128(false),
-    field_A(0),
-    CellTag(-1), // TODO, should be default GamePtr Ctor.
-    Template(TEMPLATE_NONE),
-    Icon(0),
-    Overlay(OVERLAY_NONE),
-    OverlayFrame(0),
-    Smudge(SMUDGE_NONE),
-    SmudgeFrame(0),
-    OwnerHouse(HOUSES_NONE),
-    field_18(HOUSES_NONE),
-    OccupierPtr(nullptr),
-    OccupantBit(OCCUPANT_NONE),
-    Land(LAND_CLEAR)
+    m_CellNumber(Map.Cell_Number(this)),
+    m_Bit1(false),
+    m_PlacementCheck(false),
+    m_Visible(false),
+    m_Revealed(false),
+    m_Bit16(false),
+    m_Bit32(false),
+    m_HasFlag(false),
+    m_Bit128(false),
+    m_field_A(0),
+    m_CellTag(-1), // TODO, should be default GamePtr Ctor.
+    m_Template(TEMPLATE_NONE),
+    m_Icon(0),
+    m_Overlay(OVERLAY_NONE),
+    m_OverlayFrame(0),
+    m_Smudge(SMUDGE_NONE),
+    m_SmudgeFrame(0),
+    m_OwnerHouse(HOUSES_NONE),
+    m_field_18(HOUSES_NONE),
+    m_OccupierPtr(nullptr),
+    m_OccupantBit(OCCUPANT_NONE),
+    m_Land(LAND_CLEAR)
 {
     for (int i = 0; i < MZONE_COUNT; ++i) {
-        Zones[i] = 0;
+        m_Zones[i] = 0;
     }
 
     for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
-        Overlapper[i] = nullptr;
+        m_Overlapper[i] = nullptr;
     }
 }
 
@@ -137,12 +137,12 @@ int CellClass::Cell_Color(BOOL none) const
  */
 TechnoClass *CellClass::Cell_Techno(int x, int y) const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     coord_t coord = Coord_From_Pixel_XY(x, y);
     ObjectClass *object = nullptr;
 
-    for (ObjectClass *obj = OccupierPtr; obj != nullptr; obj = obj->Get_Next()) {
+    for (ObjectClass *obj = m_OccupierPtr; obj != nullptr; obj = obj->Get_Next()) {
         uint32_t sdistance = 0;
 
         if (obj->Is_Techno()) {
@@ -167,9 +167,9 @@ TechnoClass *CellClass::Cell_Techno(int x, int y) const
  */
 ObjectClass *CellClass::Cell_Find_Object(RTTIType type) const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    for (ObjectClass *object = OccupierPtr; object != nullptr; object = object->Get_Next()) {
+    for (ObjectClass *object = m_OccupierPtr; object != nullptr; object = object->Get_Next()) {
         if (object->What_Am_I() == type) {
             return object;
         }
@@ -263,20 +263,20 @@ ObjectClass *CellClass::Cell_Object(int x, int y) const
  */
 void CellClass::Recalc_Attributes()
 {
-    if (g_lastTheater != THEATER_INTERIOR || (Template != TEMPLATE_NONE && Template >= TEMPLATE_FIRST)) {
-        if (Overlay == OVERLAY_NONE || (Land = OverlayTypeClass::As_Reference(Overlay).Get_Land(), Land == LAND_CLEAR)) {
+    if (g_lastTheater != THEATER_INTERIOR || (m_Template != TEMPLATE_NONE && m_Template >= TEMPLATE_FIRST)) {
+        if (m_Overlay == OVERLAY_NONE || (m_Land = OverlayTypeClass::As_Reference(m_Overlay).Get_Land(), m_Land == LAND_CLEAR)) {
             // TODO Bug TEMPLATE_ARRO0003 can only be land type LAND_CLEAR because it is 0xFF, the value that was
             // TEMPLATE_NONE in the TD and SS map formats due to lower number of templates and using uint8_t to hold the
             // value.
-            if (Template == TEMPLATE_NONE || Template == 0xFF) {
-                Land = LAND_CLEAR;
+            if (m_Template == TEMPLATE_NONE || m_Template == 0xFF) {
+                m_Land = LAND_CLEAR;
             } else {
-                Land = TemplateTypeClass::As_Reference(Template).Land_Type(Icon);
+                m_Land = TemplateTypeClass::As_Reference(m_Template).Land_Type(m_Icon);
             }
         }
 
     } else {
-        Land = LAND_ROCK;
+        m_Land = LAND_ROCK;
     }
 }
 
@@ -287,11 +287,11 @@ void CellClass::Recalc_Attributes()
  */
 BOOL CellClass::Can_Ore_Grow() const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     if (Rule.Ore_Grows()) {
         if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.MPlayer_Ore_Growth()) {
-            if (Land == LAND_ORE && OverlayFrame < ORESTAGE_FULLGROWN) { // see OreStageEnum?
+            if (m_Land == LAND_ORE && m_OverlayFrame < ORESTAGE_FULLGROWN) { // see OreStageEnum?
                 return Contains_Ore();
             }
         }
@@ -307,11 +307,11 @@ BOOL CellClass::Can_Ore_Grow() const
  */
 BOOL CellClass::Can_Ore_Spread() const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     if (Rule.Ore_Spreads()) {
         if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.MPlayer_Ore_Growth()) {
-            if (Land == LAND_ORE && OverlayFrame > ORESTAGE_SPREADING) { // see OreStageEnum?
+            if (m_Land == LAND_ORE && m_OverlayFrame > ORESTAGE_SPREADING) { // see OreStageEnum?
                 return Contains_Ore();
             }
         }
@@ -327,9 +327,9 @@ BOOL CellClass::Can_Ore_Spread() const
  */
 BOOL CellClass::Can_Ore_Germinate() const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (!Map.In_Radar(CellNumber)) {
+    if (!Map.In_Radar(m_CellNumber)) {
         return false;
     }
     if (Is_Bridge_Here()) {
@@ -346,8 +346,8 @@ BOOL CellClass::Can_Ore_Germinate() const
     if (bptr != nullptr && reinterpret_cast<const BuildingTypeClass &>(bptr->Class_Of()).Is_Invisible()) {
         return false;
     }
-    if (Ground[Land].Is_Buildable()) {
-        return Overlay == OVERLAY_NONE;
+    if (Ground[m_Land].Is_Buildable()) {
+        return m_Overlay == OVERLAY_NONE;
     }
     return false;
 }
@@ -359,10 +359,10 @@ BOOL CellClass::Can_Ore_Germinate() const
  */
 BOOL CellClass::Grow_Ore()
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     if (Can_Ore_Grow()) {
-        ++OverlayFrame;
+        ++m_OverlayFrame;
         Redraw_Objects();
 
         return true;
@@ -393,9 +393,9 @@ BOOL CellClass::Spread_Ore(BOOL force)
 
             if (cell.Can_Ore_Germinate()) {
                 OverlayType overlay = (OverlayType)Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04);
-                OverlayClass *optr = new OverlayClass(overlay, cell.CellNumber, OwnerHouse);
+                OverlayClass *optr = new OverlayClass(overlay, cell.m_CellNumber, m_OwnerHouse);
                 DEBUG_ASSERT(optr != nullptr);
-                OverlayFrame = 0;
+                m_OverlayFrame = 0;
 
                 return true;
             }
@@ -415,7 +415,7 @@ BOOL CellClass::Spread_Ore(BOOL force)
  */
 CellClass &CellClass::Adjacent_Cell(FacingType facing)
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
     // DEBUG_ASSERT(facing < FACING_COUNT);
 
     static const cell_t AdjacentCell[FACING_COUNT] = {
@@ -430,11 +430,11 @@ CellClass &CellClass::Adjacent_Cell(FacingType facing)
     };
 
     if (facing < FACING_COUNT) {
-        DEBUG_ASSERT_PRINT(uint16_t(CellNumber + AdjacentCell[facing]) <= MAP_MAX_AREA,
+        DEBUG_ASSERT_PRINT(uint16_t(m_CellNumber + AdjacentCell[facing]) <= MAP_MAX_AREA,
             "Attempting to get adjacent cell outside valid map.\n");
 
         // This logic relies on map cells being held in a contiguous area of memory, which in MapClass they are.
-        if (uint16_t(CellNumber + AdjacentCell[facing]) <= MAP_MAX_AREA) {
+        if (uint16_t(m_CellNumber + AdjacentCell[facing]) <= MAP_MAX_AREA) {
             return this[AdjacentCell[facing]];
         }
     }
@@ -449,7 +449,7 @@ CellClass &CellClass::Adjacent_Cell(FacingType facing)
  */
 BOOL CellClass::Is_Bridge_Here() const
 {
-    switch (Template) {
+    switch (m_Template) {
         case TEMPLATE_BRIDGE1: // Intentional fall through
         case TEMPLATE_BRIDGE1D:
         case TEMPLATE_BRIDGE2:
@@ -482,15 +482,15 @@ BOOL CellClass::Is_Bridge_Here() const
  */
 void CellClass::Redraw_Objects(BOOL force)
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     // Check if we are even visible first, then check if already flagged for a redraw.
-    if (Map.In_View(CellNumber)) {
-        if (force || !Map.Is_Cell_Flagged(CellNumber)) {
-            Map.Flag_Cell(CellNumber);
+    if (Map.In_View(m_CellNumber)) {
+        if (force || !Map.Is_Cell_Flagged(m_CellNumber)) {
+            Map.Flag_Cell(m_CellNumber);
 
             // Loop through occupiers and if active mark them for redraw.
-            for (ObjectClass *optr = OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
+            for (ObjectClass *optr = m_OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
                 DEBUG_ASSERT(optr->Is_Active());
                 if (!optr->Is_Active()) {
                     break;
@@ -503,13 +503,13 @@ void CellClass::Redraw_Objects(BOOL force)
             }
 
             // Loop through overlappers and if active mark them for redraw.
-            for (int i = 0; i < ARRAY_SIZE(Overlapper); ++i) {
-                if (Overlapper[i] != nullptr) {
-                    DEBUG_ASSERT(Overlapper[i]->Is_Active());
-                    if (Overlapper[i]->Is_Active()) {
-                        Overlapper[i]->Mark(MARK_REDRAW);
+            for (int i = 0; i < ARRAY_SIZE(m_Overlapper); ++i) {
+                if (m_Overlapper[i] != nullptr) {
+                    DEBUG_ASSERT(m_Overlapper[i]->Is_Active());
+                    if (m_Overlapper[i]->Is_Active()) {
+                        m_Overlapper[i]->Mark(MARK_REDRAW);
                     } else {
-                        Overlapper[i] = nullptr;
+                        m_Overlapper[i] = nullptr;
                     }
                 }
             }
@@ -524,7 +524,7 @@ void CellClass::Redraw_Objects(BOOL force)
  */
 BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     if (ScenarioInit) {
         return true;
@@ -534,21 +534,21 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
         return false;
     }
 
-    if (HasFlag) {
+    if (m_HasFlag) {
         return false;
     }
 
-    if ((Overlay != OVERLAY_NONE && OverlayFrame != -1)
-        && (!g_InMapEditor || Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(Overlay).Is_Wall())) {
+    if ((m_Overlay != OVERLAY_NONE && m_OverlayFrame != -1)
+        && (!g_InMapEditor || m_Overlay == OVERLAY_FPLS || OverlayTypeClass::As_Reference(m_Overlay).Is_Wall())) {
         return false;
     }
 
-    if ((Smudge != SMUDGE_NONE && SmudgeFrame != -1) && SmudgeTypeClass::As_Reference(Smudge).Is_Bib()) {
+    if ((m_Smudge != SMUDGE_NONE && m_SmudgeFrame != -1) && SmudgeTypeClass::As_Reference(m_Smudge).Is_Bib()) {
         return false;
     }
 
     if (speed != SPEED_NONE) {
-        if (Ground[Land].Get_Speed(speed) == fixed_t::_0_1) {
+        if (Ground[m_Land].Get_Speed(speed) == fixed_t::_0_1) {
             return false;
         }
 
@@ -559,7 +559,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
         return false;
     }
 
-    return Ground[Land].Is_Buildable();
+    return Ground[m_Land].Is_Buildable();
 }
 
 /**
@@ -749,18 +749,18 @@ void CellClass::Overlap_Down(ObjectClass *object)
  */
 void CellClass::Overlap_Up(ObjectClass *object)
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
     DEBUG_ASSERT(object->Is_Active());
 
-    for (int i = 0; i < ARRAY_SIZE(Overlapper); ++i) {
-        if (Overlapper[i] == object) {
-            Overlapper[i] = nullptr;
+    for (int i = 0; i < ARRAY_SIZE(m_Overlapper); ++i) {
+        if (m_Overlapper[i] == object) {
+            m_Overlapper[i] = nullptr;
             break;
         }
     }
 
     if (g_InMapEditor) {
-        Map.Radar_Pixel(CellNumber);
+        Map.Radar_Pixel(m_CellNumber);
     }
 }
 
@@ -771,8 +771,8 @@ void CellClass::Overlap_Up(ObjectClass *object)
  */
 int CellClass::Clear_Icon() const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
-    return ((CellNumber >> 5) & 0xC) | (CellNumber & 0x3);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    return ((m_CellNumber >> 5) & 0xC) | (m_CellNumber & 0x3);
 }
 
 /**
@@ -787,7 +787,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             reinterpret_cast<void (*)(const CellClass *, int, int, BOOL)>(0x0049F5F8);
         func(this, x, y, unk_bool);
     #elif 0*/
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     int icon_num = 0;
     void *fading_table = nullptr;
@@ -810,9 +810,9 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
         // TEMPLATE_ARRO0003 (interior tileset) is tile 255, but that value is treated as clear in many vanilla maps, even
         // interior ones so it cannot be used. Possible solution is to handle this at map load and if no 0xFFFF values
         // found, convert any 0xFF to 0xFFFF and only handle 0xFFFF here?
-        if (Template != TEMPLATE_NONE && Template != 255 && Template != TEMPLATE_CLEAR && Template < TEMPLATE_COUNT) {
-            tt = &TemplateTypeClass::As_Reference(Template);
-            icon_num = Icon;
+        if (m_Template != TEMPLATE_NONE && m_Template != 255 && m_Template != TEMPLATE_CLEAR && m_Template < TEMPLATE_COUNT) {
+            tt = &TemplateTypeClass::As_Reference(m_Template);
+            icon_num = m_Icon;
         } else {
             tt = &TemplateTypeClass::As_Reference(TEMPLATE_CLEAR);
             icon_num = Clear_Icon();
@@ -823,21 +823,21 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             // editor version from edwin
             if (g_InMapEditor) {
                 // impassable
-                if (Ground[Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0) || OccupierPtr != nullptr) {
+                if (Ground[m_Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0) || m_OccupierPtr != nullptr) {
                     fading_table = DisplayClass::FadingRed;
                 }
                 // is occupied by multiple objects, could had been for finding overlapping objects?
-                if (OccupierPtr != nullptr && OccupierPtr->Get_Next() != nullptr) {
+                if (m_OccupierPtr != nullptr && m_OccupierPtr->Get_Next() != nullptr) {
                     fading_table = DisplayClass::FadingYellow;
                 }
             // ingame version from RA beta
             } else {
                 // impassable
-                if (Ground[Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0)
-                    || OccupierPtr != nullptr && OccupierPtr->What_Am_I() != RTTI_INFANTRY) {
+                if (Ground[m_Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0)
+                    || m_OccupierPtr != nullptr && m_OccupierPtr->What_Am_I() != RTTI_INFANTRY) {
                     fading_table = DisplayClass::FadingRed;
                 // unit will be very slow on this cell, in a unmodified RA this won't ever be true
-                } else if (Ground[Land].Get_Speed(SPEED_FOOT) <= fixed_t(1, 3)) {
+                } else if (Ground[m_Land].Get_Speed(SPEED_FOOT) <= fixed_t(1, 3)) {
                     fading_table = DisplayClass::FadingYellow;
                 // fully passable
                 } else {
@@ -874,23 +874,23 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
         }
 #ifdef CHRONOSHIFT_DEBUG
         if (g_InMapEditor) {
-            if (CurrentSelectedCell == CellNumber) {
+            if (CurrentSelectedCell == m_CellNumber) {
                 // TODO!
             }
         }
 #endif
-        if (Smudge != SMUDGE_NONE && SmudgeFrame != -1) {
-            SmudgeTypeClass::As_Reference(Smudge).Draw_It(x, y, SmudgeFrame);
+        if (m_Smudge != SMUDGE_NONE && m_SmudgeFrame != -1) {
+            SmudgeTypeClass::As_Reference(m_Smudge).Draw_It(x, y, m_SmudgeFrame);
         }
 
-        if (Overlay != OVERLAY_NONE && OverlayFrame != -1) {
+        if (m_Overlay != OVERLAY_NONE && m_OverlayFrame != -1) {
             // TODO this looks like a hack in the original code, since OverlayTypeClass::Draw_It doesn't
             // clip to the tactical view as it should.
-            // OverlayTypeClass::As_Reference(Overlay).Draw_It(x, y, OverlayFrame);
-            OverlayTypeClass &otc = OverlayTypeClass::As_Reference(Overlay);
+            // OverlayTypeClass::As_Reference(m_Overlay).Draw_It(x, y, m_OverlayFrame);
+            OverlayTypeClass &otc = OverlayTypeClass::As_Reference(m_Overlay);
             g_isTheaterShape = otc.Is_Theater();
             CC_Draw_Shape(otc.Get_Image_Data(),
-                OverlayFrame,
+                m_OverlayFrame,
                 x + 12,
                 y + 12,
                 WINDOW_TACTICAL,
@@ -900,7 +900,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             g_isTheaterShape = false;
         }
 
-        if (PlacementCheck) {
+        if (m_PlacementCheck) {
             SpeedType speed = SPEED_NONE;
 
             if (Map.Pending_ObjectType() != nullptr && Map.Pending_ObjectType()->What_Am_I() == RTTI_BUILDING) {
@@ -962,7 +962,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
 #endif
         }
 
-        if (HasFlag) {
+        if (m_HasFlag) {
             void *flag_shape = GameFileClass::Retrieve("flagfly.shp");
 
             // 'flag_frame' will be the number of frames in the shape sequence, so it draws it based on what frame the
@@ -979,7 +979,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 flag_y,
                 WINDOW_TACTICAL,
                 SHAPE_SHADOW | SHAPE_FADING | SHAPE_CENTER,
-                (void *)HouseClass::As_Pointer(OwnerHouse)->Remap_Table(false, REMAP_1),
+                (void *)HouseClass::As_Pointer(m_OwnerHouse)->Remap_Table(false, REMAP_1),
                 DisplayClass::UnitShadow);
         }
 
@@ -996,7 +996,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
  */
 void CellClass::Concrete_Calc()
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     static FacingType _even[] = {
         FACING_NORTH, FACING_SOUTH, FACING_SOUTH_WEST, FACING_WEST, FACING_NORTH_WEST, FACING_NORTH
@@ -1017,19 +1017,19 @@ void CellClass::Concrete_Calc()
  */
 void CellClass::Wall_Update()
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     static FacingType _offsets[] = { FACING_NORTH, FACING_EAST, FACING_SOUTH, FACING_WEST, FACING_NONE };
 
     for (int index = 0; index < ARRAY_SIZE(_offsets); ++index) {
         CellClass &adjcell = Adjacent_Cell(_offsets[index]);
 
-        if (adjcell.Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(adjcell.Overlay).Is_Wall()) {
+        if (adjcell.m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(adjcell.m_Overlay).Is_Wall()) {
             int neighbour_mask = 0;
 
             // Identify neighbour cells that are the same overlay.
             for (int j = 0; j < ARRAY_SIZE(_offsets) - 1; ++j) {
-                if (adjcell.Adjacent_Cell(_offsets[j]).Overlay == adjcell.Overlay) {
+                if (adjcell.Adjacent_Cell(_offsets[j]).m_Overlay == adjcell.m_Overlay) {
                     neighbour_mask |= (1 << j);
                 }
             }
@@ -1037,47 +1037,47 @@ void CellClass::Wall_Update()
             // What is going on here? Okay, the & 0xF0 masks it to be either 0, 16 or 32 in practice which determines if its
             // a damaged state or not, then the | adds the frame offset based on the adjacent cells as determined by the loop
             // above.
-            adjcell.OverlayFrame = (adjcell.OverlayFrame & 0xF0) | neighbour_mask;
+            adjcell.m_OverlayFrame = (adjcell.m_OverlayFrame & 0xF0) | neighbour_mask;
 
-            // OverlayFrame checked against here are blanks in the art
+            // m_OverlayFrame checked against here are blanks in the art
             // Frame 48 for BRIK is after the first damage state set
-            if (adjcell.Overlay == OVERLAY_BRICK_WALL && adjcell.OverlayFrame == 48) {
-                adjcell.OverlayFrame = 0;
-                adjcell.Overlay = OVERLAY_NONE;
-                adjcell.OwnerHouse = HOUSES_NONE; // C&C DOS sets this, bug fix perhaps?
-                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
+            if (adjcell.m_Overlay == OVERLAY_BRICK_WALL && adjcell.m_OverlayFrame == 48) {
+                adjcell.m_OverlayFrame = 0;
+                adjcell.m_Overlay = OVERLAY_NONE;
+                adjcell.m_OwnerHouse = HOUSES_NONE; // C&C DOS sets this, bug fix perhaps?
+                Detach_This_From_All(As_Target(adjcell.m_CellNumber), true);
             }
 
             // Frame 16 for SBAG is after the nondamaged set
-            if (adjcell.Overlay == OVERLAY_SANDBAG && adjcell.OverlayFrame == 16) {
-                adjcell.OverlayFrame = 0;
-                adjcell.Overlay = OVERLAY_NONE;
-                adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
+            if (adjcell.m_Overlay == OVERLAY_SANDBAG && adjcell.m_OverlayFrame == 16) {
+                adjcell.m_OverlayFrame = 0;
+                adjcell.m_Overlay = OVERLAY_NONE;
+                adjcell.m_OwnerHouse = HOUSES_NONE;
+                Detach_This_From_All(As_Target(adjcell.m_CellNumber), true);
             }
 
             // Frame 32 for CYCL is after the first damage state set
-            if (adjcell.Overlay == OVERLAY_CYCLONE_FENCE && OverlayFrame == 32) {
-                adjcell.OverlayFrame = 0;
-                adjcell.Overlay = OVERLAY_NONE;
-                adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
+            if (adjcell.m_Overlay == OVERLAY_CYCLONE_FENCE && m_OverlayFrame == 32) {
+                adjcell.m_OverlayFrame = 0;
+                adjcell.m_Overlay = OVERLAY_NONE;
+                adjcell.m_OwnerHouse = HOUSES_NONE;
+                Detach_This_From_All(As_Target(adjcell.m_CellNumber), true);
             }
 
             // Frame 16 for FENC is after the nondamaged set, on a 0 basis frame 32 doesn't exist, some hack for older art?
-            if (adjcell.Overlay == OVERLAY_FENCE && (adjcell.OverlayFrame == 16 || adjcell.OverlayFrame == 32)) {
-                adjcell.OverlayFrame = 0;
-                adjcell.Overlay = OVERLAY_NONE;
-                adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
+            if (adjcell.m_Overlay == OVERLAY_FENCE && (adjcell.m_OverlayFrame == 16 || adjcell.m_OverlayFrame == 32)) {
+                adjcell.m_OverlayFrame = 0;
+                adjcell.m_Overlay = OVERLAY_NONE;
+                adjcell.m_OwnerHouse = HOUSES_NONE;
+                Detach_This_From_All(As_Target(adjcell.m_CellNumber), true);
             }
 
             // Frame 16 for SBAG is after the nondamaged set
-            if (adjcell.Overlay == OVERLAY_BARB_WIRE && adjcell.OverlayFrame == 16) {
-                adjcell.OverlayFrame = 0;
-                adjcell.Overlay = OVERLAY_NONE;
-                adjcell.OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.CellNumber), true);
+            if (adjcell.m_Overlay == OVERLAY_BARB_WIRE && adjcell.m_OverlayFrame == 16) {
+                adjcell.m_OverlayFrame = 0;
+                adjcell.m_Overlay = OVERLAY_NONE;
+                adjcell.m_OwnerHouse = HOUSES_NONE;
+                Detach_This_From_All(As_Target(adjcell.m_CellNumber), true);
             }
 
             adjcell.Recalc_Attributes();
@@ -1093,9 +1093,9 @@ void CellClass::Wall_Update()
  */
 coord_t CellClass::Cell_Coord() const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    return Cell_To_Coord(CellNumber);
+    return Cell_To_Coord(m_CellNumber);
 }
 
 /**
@@ -1105,20 +1105,20 @@ coord_t CellClass::Cell_Coord() const
  */
 int CellClass::Reduce_Ore(int reduction)
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (reduction > 0 && Land == LAND_ORE) {
+    if (reduction > 0 && m_Land == LAND_ORE) {
         // If we have a greater reduction than we have frames, set to -1 and return the frame we were on as the reduction,
         // else reduce by reduction
-        if (OverlayFrame + 1 <= reduction) {
-            int oldframe = OverlayFrame;
-            Overlay = OVERLAY_NONE;
-            OverlayFrame = -1;
+        if (m_OverlayFrame + 1 <= reduction) {
+            int oldframe = m_OverlayFrame;
+            m_Overlay = OVERLAY_NONE;
+            m_OverlayFrame = -1;
             Recalc_Attributes();
 
             return oldframe;
         } else {
-            OverlayFrame -= reduction;
+            m_OverlayFrame -= reduction;
 
             return reduction;
         }
@@ -1134,10 +1134,10 @@ int CellClass::Reduce_Ore(int reduction)
  */
 BOOL CellClass::Reduce_Wall(int damage)
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (Overlay != OVERLAY_NONE) {
-        OverlayTypeClass &overlay = OverlayTypeClass::As_Reference(Overlay);
+    if (m_Overlay != OVERLAY_NONE) {
+        OverlayTypeClass &overlay = OverlayTypeClass::As_Reference(m_Overlay);
         bool is_reduced = false;
 
         // This looks like it tests if an overlay was reduced by the value in damage. -1 skips the check and auto destroys
@@ -1151,13 +1151,13 @@ BOOL CellClass::Reduce_Wall(int damage)
         }
 
         if (is_reduced) {
-            OverlayFrame += 16;
+            m_OverlayFrame += 16;
 
-            if ((damage == -1) || (OverlayFrame / 16) >= overlay.Get_Damage_Levels()
-                || ((OverlayFrame / 16) == (overlay.Get_Damage_Levels() - 1) && (OverlayFrame % 16) == 0)) {
-                OwnerHouse = HOUSES_NONE;
-                Overlay = OVERLAY_NONE;
-                OverlayFrame = -1;
+            if ((damage == -1) || (m_OverlayFrame / 16) >= overlay.Get_Damage_Levels()
+                || ((m_OverlayFrame / 16) == (overlay.Get_Damage_Levels() - 1) && (m_OverlayFrame % 16) == 0)) {
+                m_OwnerHouse = HOUSES_NONE;
+                m_Overlay = OVERLAY_NONE;
+                m_OverlayFrame = -1;
                 Recalc_Attributes();
                 Redraw_Objects(0);
                 Adjacent_Cell(FACING_NORTH).Wall_Update();
@@ -1191,17 +1191,17 @@ BOOL CellClass::Reduce_Wall(int damage)
 BOOL CellClass::Is_Clear_To_Move(
     SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     if (speed == SPEED_WINGED) {
         return true;
     }
 
-    if (zone != -1 && Zones[mzone] != zone) {
+    if (zone != -1 && m_Zones[mzone] != zone) {
         return false;
     }
 
-    uint32_t occupier = OccupantBit;
+    uint32_t occupier = m_OccupantBit;
 
     // Mask out infantry so they are ignored.
     if (ignore_crushable) {
@@ -1218,11 +1218,11 @@ BOOL CellClass::Is_Clear_To_Move(
         return false;
     }
 
-    LandType land = Land;
+    LandType land = m_Land;
 
-    if (Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(Overlay).Is_Wall()) {
+    if (m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(m_Overlay).Is_Wall()) {
         if (mzone != MZONE_DESTROYER
-            && (mzone != MZONE_CRUSHER || !OverlayTypeClass::As_Reference(Overlay).Is_Crushable())) {
+            && (mzone != MZONE_CRUSHER || !OverlayTypeClass::As_Reference(m_Overlay).Is_Crushable())) {
             return false;
         }
 
@@ -1247,22 +1247,22 @@ int CellClass::Ore_Adjust(BOOL randomize)
     static int _adj[] = { 0, 1, 3, 4, 6, 7, 8, 10, 11 };
     static int _adjgem[] = { 0, 0, 0, 1, 1, 1, 2, 2, 2 };
 
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(Overlay).Get_Land() == LAND_ORE) {
+    if (m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(m_Overlay).Get_Land() == LAND_ORE) {
         int value = 0;
         int adjustment = 0;
         bool is_gems = false;
 
         if (randomize) {
-            switch (Overlay) {
+            switch (m_Overlay) {
                 case OVERLAY_GOLD_01:
                 case OVERLAY_GOLD_02:
                 case OVERLAY_GOLD_03:
                 case OVERLAY_GOLD_04: // Fallthrough
                     is_gems = false;
                     value = Rule.Get_Gold_Value();
-                    Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04));
+                    m_Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04));
                     break;
 
                 case OVERLAY_GEM_01:
@@ -1271,7 +1271,7 @@ int CellClass::Ore_Adjust(BOOL randomize)
                 case OVERLAY_GEM_04: // Fallthrough
                     is_gems = true;
                     value = Rule.Get_Gem_Value() * 4;
-                    Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GEM_01, OVERLAY_GEM_04));
+                    m_Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GEM_01, OVERLAY_GEM_04));
                     break;
 
                 default:
@@ -1279,12 +1279,12 @@ int CellClass::Ore_Adjust(BOOL randomize)
             }
         }
 
-        int frame = OverlayFrame;
+        int frame = m_OverlayFrame;
 
         for (FacingType facing = FACING_NORTH; facing < FACING_COUNT; ++facing) {
             CellClass const &cell = Adjacent_Cell(facing);
 
-            if (cell.Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(cell.Overlay).Get_Land() == LAND_ORE) {
+            if (cell.m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(cell.m_Overlay).Get_Land() == LAND_ORE) {
                 ++adjustment;
             }
         }
@@ -1293,17 +1293,17 @@ int CellClass::Ore_Adjust(BOOL randomize)
         DEBUG_ASSERT(adjustment < ARRAY_SIZE(_adjgem));
 
         if (is_gems) {
-            OverlayFrame = std::max(2, _adjgem[adjustment]);
+            m_OverlayFrame = std::max(2, _adjgem[adjustment]);
         } else {
-            OverlayFrame = _adj[adjustment];
+            m_OverlayFrame = _adj[adjustment];
         }
 
         // This is done in edwin but not final game?
-        // if (OverlayFrame != frame) {
+        // if (m_OverlayFrame != frame) {
         //    Redraw_Objects();
         //}
 
-        return value * (OverlayFrame + 1);
+        return value * (m_OverlayFrame + 1);
     }
 
     return 0;
@@ -1314,7 +1314,7 @@ int CellClass::Ore_Adjust(BOOL randomize)
  */
 coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 {
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     // clang-format off
     static char _sequence[][4] = {
@@ -1336,7 +1336,7 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
     int spotindex = Spot_Index(coord);
 
     // If we have a unit or terrain object, return is 0;
-    if (!skip_occupied && ((OccupantBit & OCCUPANT_UNIT) != 0 || (OccupantBit & OCCUPANT_TERRAIN) != 0)) {
+    if (!skip_occupied && ((m_OccupantBit & OCCUPANT_UNIT) != 0 || (m_OccupantBit & OCCUPANT_TERRAIN) != 0)) {
         return 0;
     }
 
@@ -1352,7 +1352,7 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
     if (spotindex > 0) {
         spots = _sequence[spotindex];
     } else {
-        spots = _alternate[Scen.Get_Random_Value((OccupantBit & 1) == 0, 3)];
+        spots = _alternate[Scen.Get_Random_Value((m_OccupantBit & 1) == 0, 3)];
     }
 
     // From our possible spots list, find a free one, if not, return 0.
@@ -1460,7 +1460,7 @@ BOOL CellClass::Save(Pipe &pipe) const
  */
 void CellClass::Adjust_Threat(HousesType house, int threat)
 {
-    int region = Map.Cell_Region(CellNumber);
+    int region = Map.Cell_Region(m_CellNumber);
     for (HousesType i = HOUSES_FIRST; i < HOUSES_COUNT; ++i) {
         if (i != house) {
             HouseClass *hptr = HouseClass::As_Pointer(i);
@@ -1483,7 +1483,7 @@ void CellClass::Adjust_Threat(HousesType house, int threat)
  */
 void CellClass::Shimmer()
 {
-    for (ObjectClass *optr = OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
+    for (ObjectClass *optr = m_OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
         optr->Do_Shimmer();
     }
 }
@@ -1495,7 +1495,7 @@ void CellClass::Shimmer()
  */
 void CellClass::Incoming(coord_t coord, BOOL a2, BOOL a3)
 {
-    for (ObjectClass *optr = OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
+    for (ObjectClass *optr = m_OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
         if (a3 || Rule.Player_Scatter()
             || (optr->Is_Techno()
                 && Rule.IQ_Controls().Scatter
@@ -1512,14 +1512,14 @@ void CellClass::Incoming(coord_t coord, BOOL a2, BOOL a3)
  */
 void CellClass::Code_Pointers()
 {
-    if (OccupierPtr != nullptr) {
-        OccupierPtr = reinterpret_cast<ObjectClass *>(OccupierPtr->As_Target());
+    if (m_OccupierPtr != nullptr) {
+        m_OccupierPtr = reinterpret_cast<ObjectClass *>(m_OccupierPtr->As_Target());
     }
     for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
-        if (Overlapper[i] != nullptr && Overlapper[i]->Is_Active()) {
-            Overlapper[i] = reinterpret_cast<ObjectClass *>(Overlapper[i]->As_Target());
+        if (m_Overlapper[i] != nullptr && m_Overlapper[i]->Is_Active()) {
+            m_Overlapper[i] = reinterpret_cast<ObjectClass *>(m_Overlapper[i]->As_Target());
         } else {
-            Overlapper[i] = nullptr;
+            m_Overlapper[i] = nullptr;
         }
     }
 }
@@ -1531,14 +1531,14 @@ void CellClass::Code_Pointers()
  */
 void CellClass::Decode_Pointers()
 {
-    if (OccupierPtr != nullptr) {
-        OccupierPtr = As_Object((uintptr_t)OccupierPtr);
-        DEBUG_ASSERT(OccupierPtr != nullptr);
+    if (m_OccupierPtr != nullptr) {
+        m_OccupierPtr = As_Object((uintptr_t)m_OccupierPtr);
+        DEBUG_ASSERT(m_OccupierPtr != nullptr);
     }
     for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
-        if (Overlapper[i] != nullptr) {
-            Overlapper[i] = As_Object((uintptr_t)Overlapper[i]);
-            DEBUG_ASSERT(Overlapper[i] != nullptr);
+        if (m_Overlapper[i] != nullptr) {
+            m_Overlapper[i] = As_Object((uintptr_t)m_Overlapper[i]);
+            DEBUG_ASSERT(m_Overlapper[i] != nullptr);
         }
     }
 }
