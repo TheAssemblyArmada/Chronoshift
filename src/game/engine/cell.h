@@ -74,10 +74,10 @@ public:
     CellClass();
     CellClass(const CellClass &that) {}
     CellClass(const NoInitClass &noinit) {}
-    ~CellClass() { OccupierPtr = nullptr; } // Null the pointer in memory, but object still exists
+    ~CellClass() { m_OccupierPtr = nullptr; } // Null the pointer in memory, but object still exists
 
     BOOL operator==(const CellClass &that) const;
-    BOOL operator!=(const CellClass &that) const { return !(CellNumber == that.CellNumber); }
+    BOOL operator!=(const CellClass &that) const { return !(m_CellNumber == that.m_CellNumber); }
 
     int Cell_Color(BOOL none = false) const;
     ObjectClass *Cell_Find_Object(RTTIType type) const;
@@ -116,51 +116,51 @@ public:
     BOOL Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const;
     int Ore_Adjust(BOOL randomize);
     coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const;
-    BOOL Is_Spot_Free(int spotindex) const { return ((1 << spotindex) & OccupantBit) == 0; }
+    BOOL Is_Spot_Free(int spotindex) const { return ((1 << spotindex) & m_OccupantBit) == 0; }
     BOOL Goodie_Check(FootClass *foot);
     BOOL Should_Save() const;
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
-    BOOL Has_Bib() const { return Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Reference(Smudge).Is_Bib(); }
-    void Clear_Occupant_Bit(CellOccupantEnum bit) { OccupantBit &= ~bit; }
-    void Set_Occupant_Bit(CellOccupantEnum bit) { OccupantBit |= bit; }
+    BOOL Has_Bib() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Reference(m_Smudge).Is_Bib(); }
+    void Clear_Occupant_Bit(CellOccupantEnum bit) { m_OccupantBit &= ~bit; }
+    void Set_Occupant_Bit(CellOccupantEnum bit) { m_OccupantBit |= bit; }
 
-    cell_t Cell_Number() const { return CellNumber; }
-    int8_t Get_Zone(MZoneType mzone) const { return Zones[mzone]; }
-    void Set_Zone(MZoneType mzone, int8_t zone) { Zones[mzone] = zone; }
-    BOOL Get_Placement_Check() const { return PlacementCheck; }
-    void Set_Placement_Check(BOOL check) { PlacementCheck = check; }
-    BOOL Is_Visible() const { return Visible; }
-    void Set_Visible(BOOL value) { Visible = value; }
-    BOOL Is_Revealed() const { return Revealed; }
-    void Set_Revealed(BOOL value) { Revealed = value; }
-    BOOL Get_Bit1() const { return Bit1; }
-    void Set_Bit1(BOOL value) { Bit1 = value; }
-    BOOL Get_Bit16() const { return Bit16; }
-    void Set_Bit16(BOOL value) { Bit16 = value; }
-    BOOL Get_Bit32() const { return Bit32; }
-    void Set_Bit32(BOOL value) { Bit32 = value; }
-    BOOL Get_Bit128() const { return Bit128; }
-    void Set_Bit128(BOOL value) { Bit128 = value; }
-    TemplateType Get_Template() const { return Template; }
-    void Set_Template(TemplateType temp) { Template = temp; }
-    uint8_t Get_Icon() const { return Icon; }
-    void Set_Icon(uint8_t icon) { Icon = icon; }
-    OverlayType Get_Overlay() const { return Overlay; }
-    void Set_Overlay(OverlayType overlay) { Overlay = overlay; }
-    int8_t Get_Overlay_Frame() const { return OverlayFrame; }
-    void Set_Overlay_Frame(int8_t frame) { OverlayFrame = frame; }
-    SmudgeType Get_Smudge() const { return Smudge; }
-    void Set_Smudge(SmudgeType smudge) { Smudge = smudge; }
-    uint8_t Get_Smudge_Frame() const { return SmudgeFrame; }
-    void Set_Smudge_Frame(int8_t frame) { SmudgeFrame = frame; }
-    HousesType Owner() const { return OwnerHouse; }
-    void Set_Owner(HousesType owner) { OwnerHouse = owner; }
-    ObjectClass *Get_Overlapper(int index) { return Overlapper[index]; }
-    ObjectClass *Get_Occupier() const { return OccupierPtr; }
-    LandType Get_Land() const { return Land; }
-    void Set_Land(LandType land) { Land = land; }
-    uint16_t Get_Field_A() const { return field_A; }
+    cell_t Cell_Number() const { return m_CellNumber; }
+    int8_t Get_Zone(MZoneType mzone) const { return m_Zones[mzone]; }
+    void Set_Zone(MZoneType mzone, int8_t zone) { m_Zones[mzone] = zone; }
+    BOOL Get_Placement_Check() const { return m_PlacementCheck; }
+    void Set_Placement_Check(BOOL check) { m_PlacementCheck = check; }
+    BOOL Is_Visible() const { return m_Visible; }
+    void Set_Visible(BOOL value) { m_Visible = value; }
+    BOOL Is_Revealed() const { return m_Revealed; }
+    void Set_Revealed(BOOL value) { m_Revealed = value; }
+    BOOL Get_Bit1() const { return m_Bit1; }
+    void Set_Bit1(BOOL value) { m_Bit1 = value; }
+    BOOL Get_Bit16() const { return m_Bit16; }
+    void Set_Bit16(BOOL value) { m_Bit16 = value; }
+    BOOL Get_Bit32() const { return m_Bit32; }
+    void Set_Bit32(BOOL value) { m_Bit32 = value; }
+    BOOL Get_Bit128() const { return m_Bit128; }
+    void Set_Bit128(BOOL value) { m_Bit128 = value; }
+    TemplateType Get_Template() const { return m_Template; }
+    void Set_Template(TemplateType temp) { m_Template = temp; }
+    uint8_t Get_Icon() const { return m_Icon; }
+    void Set_Icon(uint8_t icon) { m_Icon = icon; }
+    OverlayType Get_Overlay() const { return m_Overlay; }
+    void Set_Overlay(OverlayType overlay) { m_Overlay = overlay; }
+    int8_t Get_Overlay_Frame() const { return m_OverlayFrame; }
+    void Set_Overlay_Frame(int8_t frame) { m_OverlayFrame = frame; }
+    SmudgeType Get_Smudge() const { return m_Smudge; }
+    void Set_Smudge(SmudgeType smudge) { m_Smudge = smudge; }
+    uint8_t Get_Smudge_Frame() const { return m_SmudgeFrame; }
+    void Set_Smudge_Frame(int8_t frame) { m_SmudgeFrame = frame; }
+    HousesType Owner() const { return m_OwnerHouse; }
+    void Set_Owner(HousesType owner) { m_OwnerHouse = owner; }
+    ObjectClass *Get_Overlapper(int index) { return m_Overlapper[index]; }
+    ObjectClass *Get_Occupier() const { return m_OccupierPtr; }
+    LandType Get_Land() const { return m_Land; }
+    void Set_Land(LandType land) { m_Land = land; }
+    uint16_t Get_Field_A() const { return m_field_A; }
     static int Spot_Index(coord_t coord);
     void Adjust_Threat(HousesType house, int threat);
     void Shimmer();
@@ -186,62 +186,63 @@ public:
 #endif
 
 private:
-    cell_t CellNumber;
+    cell_t m_CellNumber;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Bit1 : 1; // 1
-    BOOL PlacementCheck : 1; // 2
-    BOOL Visible : 1; // 4 // Is this cell at least partly visible due ot being next to a revealed or visible cell.
-    BOOL Revealed : 1; // 8 // Is this cell fully revealed and thus has no shroud at all.
-    BOOL Bit16 : 1; // 16    //Could be HasWaypoint?  HasCellTag?
-    BOOL Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
-    BOOL HasFlag : 1; // 64
-    BOOL Bit128 : 1; // 128 // HasFlag in C&C relates to Region here. Look like it marks a cell to advance shroud.
+    BOOL m_Bit1 : 1; // 1
+    BOOL m_PlacementCheck : 1; // 2
+    BOOL m_Visible : 1; // 4 // Is this cell at least partly visible due ot being next to a revealed or visible cell.
+    BOOL m_Revealed : 1; // 8 // Is this cell fully revealed and thus has no shroud at all.
+    BOOL m_Bit16 : 1; // 16    //Could be HasWaypoint?  HasCellTag?
+    BOOL m_Bit32 : 1; // 32    //MarkedOnRadar? IsWaypoint in C&C ? does the radar cursor cover this cell?
+    BOOL m_HasFlag : 1; // 64
+    BOOL m_Bit128 : 1; // 128 // HasFlag in C&C relates to Region here. Look like it marks a cell to advance shroud.
 #else
-    bool Bit1;
-    bool PlacementCheck;
-    bool Visible; // Is this cell at least partly visible due ot being next to a revealed or visible cell.
-    bool Revealed; // Is this cell fully revealed and thus has no shroud at all.
-    bool Bit16; // Could be HasWaypoint?  HasCellTag?
-    bool Bit32; // MarkedOnRadar?  appears to be IsWaypoint in C&C     //does the radar cursor cover this cell?
-    bool HasFlag;
-    bool Bit128; // HasFlag in C&C
+    bool m_Bit1;
+    bool m_PlacementCheck;
+    bool m_Visible; // Is this cell at least partly visible due ot being next to a revealed or visible cell.
+    bool m_Revealed; // Is this cell fully revealed and thus has no shroud at all.
+    bool m_Bit16; // Could be HasWaypoint?  HasCellTag?
+    bool m_Bit32; // MarkedOnRadar?  appears to be IsWaypoint in C&C     //does the radar cursor cover this cell?
+    bool m_HasFlag;
+    bool m_Bit128; // HasFlag in C&C
 #endif
 
-    int8_t Zones[MZONE_COUNT]; // field_6
-    uint16_t field_A;
-    int CellTag; // GamePtr<TriggerClass> CellTag; // Needs TriggerClass
-    TemplateType Template;
-    uint8_t Icon;
-    OverlayType Overlay;
-    int8_t OverlayFrame;
-    SmudgeType Smudge;
-    int8_t SmudgeFrame;
-    HousesType OwnerHouse;
-    HousesType field_18;
-    ObjectClass *OccupierPtr;
-    ObjectClass *Overlapper[OVERLAPPER_COUNT];
-    uint32_t OccupantBit;
-    LandType Land;
+    int8_t m_Zones[MZONE_COUNT]; // field_6
+    uint16_t m_field_A;
+    int m_CellTag; // GamePtr<TriggerClass> CellTag; // Needs TriggerClass
+    TemplateType m_Template;
+    uint8_t m_Icon;
+    OverlayType m_Overlay;
+    int8_t m_OverlayFrame;
+    SmudgeType m_Smudge;
+    int8_t m_SmudgeFrame;
+    HousesType m_OwnerHouse;
+    HousesType m_field_18;
+    ObjectClass *m_OccupierPtr;
+    ObjectClass *m_Overlapper[OVERLAPPER_COUNT];
+    uint32_t m_OccupantBit;
+    LandType m_Land;
     static const coord_t StoppingCoordAbs[CELL_SPOT_COUNT];
 };
 
 inline BOOL CellClass::Contains_Ore() const
 {
-    return Overlay == OVERLAY_GOLD_01 || Overlay == OVERLAY_GOLD_02 || Overlay == OVERLAY_GOLD_03
-        || Overlay == OVERLAY_GOLD_04;
+    return m_Overlay == OVERLAY_GOLD_01 || m_Overlay == OVERLAY_GOLD_02 || m_Overlay == OVERLAY_GOLD_03
+        || m_Overlay == OVERLAY_GOLD_04;
 }
 
 inline BOOL CellClass::operator==(CellClass const &that) const
 {
-    return CellNumber == that.CellNumber && Bit1 == that.Bit1 && PlacementCheck == that.PlacementCheck
-        && Visible == that.Visible && Revealed == that.Revealed && Bit16 == that.Bit16 && Bit32 == that.Bit32
-        && HasFlag == that.HasFlag && Bit128 == that.Bit128 && field_A == that.field_A && CellTag == that.CellTag
-        && Template == that.Template && Icon == that.Icon && Overlay == that.Overlay && OverlayFrame == that.OverlayFrame
-        && Smudge == that.Smudge && SmudgeFrame == that.SmudgeFrame && OwnerHouse == that.OwnerHouse
-        && field_18 == that.field_18 && OccupierPtr == that.OccupierPtr && OccupantBit == that.OccupantBit
-        && Land == that.Land && memcmp(Zones, that.Zones, sizeof(Zones)) == 0
-        && memcmp(Overlapper, that.Overlapper, sizeof(Overlapper)) == 0;
+    return m_CellNumber == that.m_CellNumber && m_Bit1 == that.m_Bit1 && m_PlacementCheck == that.m_PlacementCheck
+        && m_Visible == that.m_Visible && m_Revealed == that.m_Revealed && m_Bit16 == that.m_Bit16 && m_Bit32 == that.m_Bit32
+        && m_HasFlag == that.m_HasFlag && m_Bit128 == that.m_Bit128 && m_field_A == that.m_field_A
+        && m_CellTag == that.m_CellTag && m_Template == that.m_Template && m_Icon == that.m_Icon
+        && m_Overlay == that.m_Overlay && m_OverlayFrame == that.m_OverlayFrame && m_Smudge == that.m_Smudge
+        && m_SmudgeFrame == that.m_SmudgeFrame && m_OwnerHouse == that.m_OwnerHouse && m_field_18 == that.m_field_18
+        && m_OccupierPtr == that.m_OccupierPtr && m_OccupantBit == that.m_OccupantBit && m_Land == that.m_Land
+        && memcmp(m_Zones, that.m_Zones, sizeof(m_Zones)) == 0
+        && memcmp(m_Overlapper, that.m_Overlapper, sizeof(m_Overlapper)) == 0;
 }
 
 #endif // CELL_H
