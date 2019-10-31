@@ -113,42 +113,42 @@ const char *Name_From_Direction(DirType dir);
 class FacingClass
 {
 public:
-    FacingClass() : Current(DIR_NORTH), Desired(DIR_NORTH) {}
-    FacingClass(const DirType dir) : Current(dir), Desired(dir) {}
-    FacingClass(const DirType current, DirType desired) : Current(current), Desired(desired) {}
-    FacingClass(const FacingClass &that) : Current(that.Current), Desired(that.Desired) {}
+    FacingClass() : m_Current(DIR_NORTH), m_Desired(DIR_NORTH) {}
+    FacingClass(const DirType dir) : m_Current(dir), m_Desired(dir) {}
+    FacingClass(const DirType current, DirType desired) : m_Current(current), m_Desired(desired) {}
+    FacingClass(const FacingClass &that) : m_Current(that.m_Current), m_Desired(that.m_Desired) {}
     FacingClass(const NoInitClass &noinit) {}
     ~FacingClass() {}
 
     FacingClass &operator=(const FacingClass &that)
     {
         if (this != &that) {
-            Current = that.Current;
-            Desired = that.Desired;
+            m_Current = that.m_Current;
+            m_Desired = that.m_Desired;
         }
         return *this;
     }
 
     void operator=(const DirType dir)
     {
-        Current = dir;
-        Desired = dir;
+        m_Current = dir;
+        m_Desired = dir;
     }
 
     void operator=(const FacingType facing)
     {
-        Current = Facing_To_Direction(facing);
-        Desired = Facing_To_Direction(facing);
+        m_Current = Facing_To_Direction(facing);
+        m_Desired = Facing_To_Direction(facing);
     }
 
     BOOL Set_Current(const DirType dir);
     BOOL Set_Desired(const DirType dir);
-    DirType Get_Current() const { return Current; }
-    DirType Get_Desired() const { return Desired; }
+    DirType Get_Current() const { return m_Current; }
+    DirType Get_Desired() const { return m_Desired; }
     BOOL Rotation_Adjust(int adjust);
 
-    BOOL Has_Changed() const { return Current != Desired; }
-    BOOL Has_Not_Changed() const { return Current == Desired; }
+    BOOL Has_Changed() const { return m_Current != m_Desired; }
+    BOOL Has_Not_Changed() const { return m_Current == m_Desired; }
 
 public:
     static uint8_t const Facing8[256];
@@ -163,8 +163,8 @@ public:
     static int8_t const Rotation64[256];
 
 private:
-    DirType Current;
-    DirType Desired;
+    DirType m_Current;
+    DirType m_Desired;
 };
 
 // sub_41B710 in SS

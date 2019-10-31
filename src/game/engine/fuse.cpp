@@ -30,15 +30,15 @@ void FuseClass::Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_tim
         duration = 255;
     }
 
-    Duration = duration;
+    m_Duration = duration;
 
     if (arm_time >= 255) {
         arm_time = 255;
     }
 
-    ArmTimer = arm_time;
-    Position = arm_pos;
-    ArmDistance = Distance(pos, arm_pos);
+    m_ArmTimer = arm_time;
+    m_Position = arm_pos;
+    m_ArmDistance = Distance(pos, arm_pos);
 }
 
 /**
@@ -46,28 +46,28 @@ void FuseClass::Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_tim
  */
 int FuseClass::Fuse_Checkup(coord_t pos)
 {
-    if (Duration > 0) {
-        --Duration;
+    if (m_Duration > 0) {
+        --m_Duration;
     }
 
-    if (ArmTimer > 0) {
-        --ArmTimer;
+    if (m_ArmTimer > 0) {
+        --m_ArmTimer;
     } else {
-        if (Duration == 0) {
+        if (m_Duration == 0) {
             return FUSE_1;
         }
 
-        int dist = Distance(pos, Position);
+        int dist = Distance(pos, m_Position);
 
         if (dist < 16) {
             return FUSE_1;
         }
 
-        if (dist < 256 && dist > ArmDistance) {
+        if (dist < 256 && dist > m_ArmDistance) {
             return FUSE_1;
         }
 
-        ArmDistance = dist;
+        m_ArmDistance = dist;
     }
 
     return FUSE_0;
@@ -78,10 +78,10 @@ int FuseClass::Fuse_Checkup(coord_t pos)
  */
 void FuseClass::Fuse_Write(FileClass &file)
 {
-    file.Write(&Duration, sizeof(Duration));
-    file.Write(&ArmTimer, sizeof(ArmTimer));
-    file.Write(&Position, sizeof(Position));
-    file.Write(&ArmDistance, sizeof(ArmDistance));
+    file.Write(&m_Duration, sizeof(m_Duration));
+    file.Write(&m_ArmTimer, sizeof(m_ArmTimer));
+    file.Write(&m_Position, sizeof(m_Position));
+    file.Write(&m_ArmDistance, sizeof(m_ArmDistance));
 }
 
 /**
@@ -89,8 +89,8 @@ void FuseClass::Fuse_Write(FileClass &file)
  */
 void FuseClass::Fuse_Read(FileClass &file)
 {
-    file.Read(&Duration, sizeof(Duration));
-    file.Read(&ArmTimer, sizeof(ArmTimer));
-    file.Read(&Position, sizeof(Position));
-    file.Read(&ArmDistance, sizeof(ArmDistance));
+    file.Read(&m_Duration, sizeof(m_Duration));
+    file.Read(&m_ArmTimer, sizeof(m_ArmTimer));
+    file.Read(&m_Position, sizeof(m_Position));
+    file.Read(&m_ArmDistance, sizeof(m_ArmDistance));
 }

@@ -26,9 +26,9 @@ class FootClass;
 class CargoClass
 {
 public:
-    CargoClass() : Count(0), Object(nullptr) {}
+    CargoClass() : m_Count(0), m_Object(nullptr) {}
     CargoClass(const NoInitClass &noinit) {}
-    ~CargoClass() { Object = nullptr; }
+    ~CargoClass() { m_Object = nullptr; }
 
     void AI() {}
     void Attach(FootClass *object);
@@ -36,12 +36,12 @@ public:
     FootClass *Detach_Object();
     void Code_Pointers();
     void Decode_Pointers();
-    int Cargo_Count() const { return Count; }
+    int Cargo_Count() const { return m_Count; }
     BOOL Has_Cargo() const { return Attached_Object() != nullptr; }
 
 private:
-    uint8_t Count;
-    FootClass *Object;
+    uint8_t m_Count;
+    FootClass *m_Object;
 };
 
 #endif // CARGO_H

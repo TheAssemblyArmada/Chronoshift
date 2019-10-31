@@ -35,7 +35,7 @@ enum FuseResultType
 class FuseClass
 {
 public:
-    FuseClass() : Duration(0), ArmTimer(0), Position(0), ArmDistance(0) {}
+    FuseClass() : m_Duration(0), m_ArmTimer(0), m_Position(0), m_ArmDistance(0) {}
     FuseClass(const NoInitClass &noinit) {}
 
     void Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_time);
@@ -48,10 +48,10 @@ public:
     void Fuse_Read(FileClass &file);
 
 private:
-    uint8_t Duration;
-    uint8_t ArmTimer;
-    coord_t Position;
-    int16_t ArmDistance;
+    uint8_t m_Duration;
+    uint8_t m_ArmTimer;
+    coord_t m_Position;
+    int16_t m_ArmDistance;
 };
 
 #endif // FUSE_H
