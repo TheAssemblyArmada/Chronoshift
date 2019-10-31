@@ -35,9 +35,9 @@ public:
     void To_PC_Format();
 
 private:
-    unsigned int *Total; //unsigned int Total[512]; in YR
-    int Count;
-    BOOL IsNetworkFormat;
+    unsigned int *m_Total; //unsigned int Total[512]; in YR
+    int m_Count;
+    BOOL m_IsNetworkFormat;
 };
 
 #endif // UTRACKER_H

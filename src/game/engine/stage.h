@@ -24,21 +24,21 @@
 class StageClass
 {
 public:
-    StageClass() : Stage(0), Timer(0), Delay(0) {}
-    StageClass(const NoInitClass &noinit) : Timer(noinit) {}
+    StageClass() : m_Stage(0), m_Timer(0), m_Delay(0) {}
+    StageClass(const NoInitClass &noinit) : m_Timer(noinit) {}
     StageClass &operator=(StageClass &that);
 
-    int Get_Stage() const { return Stage; }
-    void Set_Stage(int stage) { Stage = stage; }
-    int Get_Delay() const { return Delay; }
+    int Get_Stage() const { return m_Stage; }
+    void Set_Stage(int stage) { m_Stage = stage; }
+    int Get_Delay() const { return m_Delay; }
     void Set_Delay(int delay);
     BOOL Stage_Changed();
     void Reset();
 
 private:
-    int Stage; // Current stage we are at.
-    TCountDownTimerClass<FrameTimerClass> Timer; // Countdown timer, 0 indicates time to go to next stage.
-    int Delay; // Delay in frames to the next stage transition.
+    int m_Stage; // Current stage we are at.
+    TCountDownTimerClass<FrameTimerClass> m_Timer; // Countdown timer, 0 indicates time to go to next stage.
+    int m_Delay; // Delay in frames to the next stage transition.
 };
 
 /**
@@ -46,8 +46,8 @@ private:
  */
 inline void StageClass::Set_Delay(int delay)
 {
-    Timer = delay;
-    Delay = delay;
+    m_Timer = delay;
+    m_Delay = delay;
 }
 
 /**
@@ -55,9 +55,9 @@ inline void StageClass::Set_Delay(int delay)
  */
 inline BOOL StageClass::Stage_Changed()
 {
-    if (Timer.Time() <= 0 && Delay > 0) {
-        ++Stage;
-        Timer = Delay;
+    if (m_Timer.Time() <= 0 && m_Delay > 0) {
+        ++m_Stage;
+        m_Timer = m_Delay;
 
         return true;
     }
@@ -70,17 +70,17 @@ inline BOOL StageClass::Stage_Changed()
  */
 inline void StageClass::Reset()
 {
-    Stage = 0;
-    Timer = 0;
-    Delay = 0;
+    m_Stage = 0;
+    m_Timer = 0;
+    m_Delay = 0;
 }
 
 inline StageClass &StageClass::operator=(StageClass &that)
 {
     if (this != &that) {
-        Stage = that.Stage;
-        Timer = that.Timer;
-        Delay = that.Delay;
+        m_Stage = that.m_Stage;
+        m_Timer = that.m_Timer;
+        m_Delay = that.m_Delay;
     }
 
     return *this;

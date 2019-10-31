@@ -22,24 +22,24 @@ class NoInitClass;
 class RegionClass
 {
     public:
-        RegionClass() : Value(0) {}
+        RegionClass() : m_Value(0) {}
         RegionClass(const RegionClass &that) {}
         RegionClass(const NoInitClass &noinit) {}
         ~RegionClass() {}
 
-        int Get_Value() const { return Value; }
+        int Get_Value() const { return m_Value; }
         
         void Adjust_Value(int value, bool a2)
         {
             if ( a2 ) {
-                Value -= value;
+                m_Value -= value;
             } else {
-                Value += value;
+                m_Value += value;
             }
         }
 
     private:
-        int Value;
+        int m_Value;
 };
 
 #endif // REGION_H

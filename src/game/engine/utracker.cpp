@@ -20,53 +20,53 @@ using std::memset;
 
 UnitTrackerClass::UnitTrackerClass(int count)
 {
-    IsNetworkFormat = 0;
-    Total = new unsigned int[count];
-    Count = count;
+    m_IsNetworkFormat = 0;
+    m_Total = new unsigned int[count];
+    m_Count = count;
     Clear_Unit_Total();
 }
 
 UnitTrackerClass::~UnitTrackerClass()
 {
-    delete[] Total;
+    delete[] m_Total;
 }
 
 void UnitTrackerClass::Increment_Unit_Total(int unit)
 {
-    ++Total[unit];
+    ++m_Total[unit];
 }
 
 void UnitTrackerClass::Decrement_Unit_Total(int unit)
 {
-    --Total[unit];
+    --m_Total[unit];
 }
 
 unsigned int *UnitTrackerClass::Get_All_Totals()
 {
-    return Total;
+    return m_Total;
 }
 
 void UnitTrackerClass::Clear_Unit_Total()
 {
-    memset(Total, 0, sizeof(*Total) * Count);
+    memset(m_Total, 0, sizeof(*m_Total) * m_Count);
 }
 
 void UnitTrackerClass::To_Network_Format()
 {
-    if (!IsNetworkFormat) {
-        for (int i = 0; i < Count; ++i) {
-            Total[i] = htobe32(Total[i]);
+    if (!m_IsNetworkFormat) {
+        for (int i = 0; i < m_Count; ++i) {
+            m_Total[i] = htobe32(m_Total[i]);
         }
     }
-    IsNetworkFormat = true;
+    m_IsNetworkFormat = true;
 }
 
 void UnitTrackerClass::To_PC_Format()
 {
-    if (IsNetworkFormat) {
-        for (int i = 0; i < Count; ++i) {
-            Total[i] = be32toh(Total[i]);
+    if (m_IsNetworkFormat) {
+        for (int i = 0; i < m_Count; ++i) {
+            m_Total[i] = be32toh(m_Total[i]);
         }
     }
-    IsNetworkFormat = false;
+    m_IsNetworkFormat = false;
 }

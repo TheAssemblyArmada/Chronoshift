@@ -20,23 +20,23 @@
  */
 void DoorClass::AI()
 {
-    if (DoorTimer.Stage_Changed()) {
-        if (DoorTimer.Get_Stage() >= Stage) {
-            DoorTimer.Set_Delay(0);
+    if (m_DoorTimer.Stage_Changed()) {
+        if (m_DoorTimer.Get_Stage() >= m_Stage) {
+            m_DoorTimer.Set_Delay(0);
 
-            switch (State) {
+            switch (m_State) {
                 case DOOR_OPENING:
-                    State = DOOR_OPEN;
+                    m_State = DOOR_OPEN;
                     break;
                 case DOOR_CLOSING:
-                    State = DOOR_CLOSED;
+                    m_State = DOOR_CLOSED;
                     break;
                 default:
                     break;
             }
         }
 
-        ToRedraw = true;
+        m_ToRedraw = true;
     }
 }
 
@@ -45,14 +45,14 @@ void DoorClass::AI()
  */
 BOOL DoorClass::Open_Door(int delay, int stages)
 {
-    if (State != DOOR_CLOSED && State != DOOR_CLOSING) {
+    if (m_State != DOOR_CLOSED && m_State != DOOR_CLOSING) {
         return false;
     }
 
-    State = DOOR_OPENING;
-    Stage = stages - 1;
-    DoorTimer.Set_Stage(0);
-    DoorTimer.Set_Delay(delay);
+    m_State = DOOR_OPENING;
+    m_Stage = stages - 1;
+    m_DoorTimer.Set_Stage(0);
+    m_DoorTimer.Set_Delay(delay);
 
     return true;
 }
@@ -62,14 +62,14 @@ BOOL DoorClass::Open_Door(int delay, int stages)
  */
 BOOL DoorClass::Close_Door(int delay, int stages)
 {
-    if (State != DOOR_OPEN && State != DOOR_OPENING) {
+    if (m_State != DOOR_OPEN && m_State != DOOR_OPENING) {
         return false;
     }
 
-    State = DOOR_CLOSING;
-    Stage = stages - 1;
-    DoorTimer.Set_Stage(0);
-    DoorTimer.Set_Delay(delay);
+    m_State = DOOR_CLOSING;
+    m_Stage = stages - 1;
+    m_DoorTimer.Set_Stage(0);
+    m_DoorTimer.Set_Delay(delay);
 
     return true;
 }
@@ -79,13 +79,13 @@ BOOL DoorClass::Close_Door(int delay, int stages)
  */
 int DoorClass::Door_Stage() const
 {
-    switch (State) {
+    switch (m_State) {
         case DOOR_CLOSING:
-            return Stage - 1 - DoorTimer.Get_Stage();
+            return m_Stage - 1 - m_DoorTimer.Get_Stage();
         case DOOR_OPENING:
-            return DoorTimer.Get_Stage();
+            return m_DoorTimer.Get_Stage();
         case DOOR_OPEN:
-            return Stage - 1;
+            return m_Stage - 1;
         case DOOR_CLOSED: // fallthrough, returns 0.
         default:
             break;

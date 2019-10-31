@@ -33,33 +33,33 @@ class DoorClass
         DOOR_CLOSING,
     };
 public:
-    DoorClass() : DoorTimer(), Stage(0), State(DOOR_CLOSED), ToRedraw(false) {}
-    DoorClass(const NoInitClass &noinit) : DoorTimer(noinit) {}
+    DoorClass() : m_DoorTimer(), m_Stage(0), m_State(DOOR_CLOSED), m_ToRedraw(false) {}
+    DoorClass(const NoInitClass &noinit) : m_DoorTimer(noinit) {}
 
     void AI();
     BOOL Open_Door(int delay, int stages);
     BOOL Close_Door(int delay, int stages);
     int Door_Stage() const;
-    void Mark_To_Redraw() const { ToRedraw = true; }
-    BOOL To_Redraw() const { return ToRedraw; }
-    void Clear_To_Redraw() const { ToRedraw = false; }
-    BOOL Is_Closed() const { return State == DOOR_CLOSED; }
-    BOOL Is_Open() const { return State == DOOR_OPEN; }
-    BOOL Is_Opening() const { return State == DOOR_OPENING; }
-    BOOL Is_Closing() const { return State == DOOR_CLOSING; }
+    void Mark_To_Redraw() const { m_ToRedraw = true; }
+    BOOL To_Redraw() const { return m_ToRedraw; }
+    void Clear_To_Redraw() const { m_ToRedraw = false; }
+    BOOL Is_Closed() const { return m_State == DOOR_CLOSED; }
+    BOOL Is_Open() const { return m_State == DOOR_OPEN; }
+    BOOL Is_Opening() const { return m_State == DOOR_OPENING; }
+    BOOL Is_Closing() const { return m_State == DOOR_CLOSING; }
 
 #ifdef GAME_DLL
     int Hook_Door_Stage() { return DoorClass::Door_Stage(); }
 #endif
 
 private:
-    StageClass DoorTimer;
-    int8_t Stage; // Number of stages between end states (open or closed).
-    DoorState State; // Current processing state.
+    StageClass m_DoorTimer;
+    int8_t m_Stage; // Number of stages between end states (open or closed).
+    DoorState m_State; // Current processing state.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    mutable BOOL ToRedraw : 1;
+    mutable BOOL m_ToRedraw : 1;
 #else
-    mutable bool ToRedraw;
+    mutable bool m_ToRedraw;
 #endif
 };
 

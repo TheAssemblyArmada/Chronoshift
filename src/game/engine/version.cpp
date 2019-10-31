@@ -29,33 +29,33 @@ VersionClass g_version;
 #endif
 
 VersionClass::VersionClass() :
-    m_versionNumber(0),
-    m_majorVersion(0),
-    m_minorVersion(0),
-    m_minVersion(0),
-    m_maxVersion(0),
-    m_versionSet(false),
-    m_majorSet(false),
-    m_minorSet(false),
-    m_fileRead(false)
+    m_VersionNumber(0),
+    m_MajorVersion(0),
+    m_MinorVersion(0),
+    m_MinVersion(0),
+    m_MaxVersion(0),
+    m_VersionSet(false),
+    m_MajorSet(false),
+    m_MinorSet(false),
+    m_FileRead(false)
 {
-    m_fileVersionName[0] = '\0';
-    m_versionString[0] = '\0';
+    m_FileVersionName[0] = '\0';
+    m_VersionString[0] = '\0';
 }
 
 int VersionClass::Version_Number()
 {
-    if (!m_fileRead) {
+    if (!m_FileRead) {
         Read_Text_String();
-        m_fileRead = true;
+        m_FileRead = true;
     }
 
-    if (!m_versionSet) {
-        m_versionNumber = (Major_Version() << 16) | Minor_Version();
-        m_versionSet = true;
+    if (!m_VersionSet) {
+        m_VersionNumber = (Major_Version() << 16) | Minor_Version();
+        m_VersionSet = true;
     }
 
-    return m_versionNumber;
+    return m_VersionNumber;
 }
 
 const char *VersionClass::Version_Name()
@@ -70,9 +70,9 @@ const char *VersionClass::Version_Name()
         minor >>= 4;
     }
 
-    snprintf(m_versionString, sizeof(m_versionString), "%x.%x", Major_Version(), minor);
+    snprintf(m_VersionString, sizeof(m_VersionString), "%x.%x", Major_Version(), minor);
 
-    return m_versionString;
+    return m_VersionString;
 }
 
 const char *VersionClass::Version_String()
@@ -81,9 +81,9 @@ const char *VersionClass::Version_String()
     static BOOL _done;
 
     if (!_done) {
-        if (!m_fileRead) {
+        if (!m_FileRead) {
             Read_Text_String();
-            m_fileRead = true;
+            m_FileRead = true;
         }
 
         snprintf(_buffer, sizeof(_buffer), "%d.%02d", Major_Version(), Minor_Version());
@@ -101,9 +101,9 @@ const char *VersionClass::Version_String()
         strlcat(_buffer, "\r", sizeof(_buffer));
         strlcat(_buffer, g_gitShortSHA1, sizeof(_buffer));
 
-        if (strlen(m_fileVersionName) > 0) {
+        if (strlen(m_FileVersionName) > 0) {
             strlcat(_buffer, "\r", sizeof(_buffer));
-            strlcat(_buffer, m_fileVersionName, sizeof(_buffer));
+            strlcat(_buffer, m_FileVersionName, sizeof(_buffer));
         }
     }
 
@@ -131,29 +131,29 @@ CommProtocolEnum VersionClass::Version_Protocol(unsigned version)
 
 void VersionClass::Init_Clipping()
 {
-    m_minVersion = Min_Version();
-    m_maxVersion = Max_Version();
+    m_MinVersion = Min_Version();
+    m_MaxVersion = Max_Version();
 }
 
 int VersionClass::Clip_Version(unsigned min, unsigned max)
 {
-    if (min > m_maxVersion) {
+    if (min > m_MaxVersion) {
         return -1;
     }
 
-    if (max < m_minVersion) {
+    if (max < m_MinVersion) {
         return 0;
     }
 
-    if (min > m_minVersion) {
-        m_minVersion = min;
+    if (min > m_MinVersion) {
+        m_MinVersion = min;
     }
 
-    if (max < m_maxVersion) {
-        m_maxVersion = max;
+    if (max < m_MaxVersion) {
+        m_MaxVersion = max;
     }
 
-    return m_maxVersion;
+    return m_MaxVersion;
 }
 
 int VersionClass::Min_Version()
@@ -171,45 +171,45 @@ void VersionClass::Read_Text_String()
     RawFileClass fc("version.txt");
 
     if (fc.Is_Available(false)) {
-        fc.Read(m_fileVersionName, sizeof(m_fileVersionName));
-        m_fileVersionName[sizeof(m_fileVersionName) - 1] = '\0';
+        fc.Read(m_FileVersionName, sizeof(m_FileVersionName));
+        m_FileVersionName[sizeof(m_FileVersionName) - 1] = '\0';
 
-        while (m_fileVersionName[strlen(m_fileVersionName) - 1] == '\r') {
-            m_fileVersionName[strlen(m_fileVersionName) - 1] = '\0';
+        while (m_FileVersionName[strlen(m_FileVersionName) - 1] == '\r') {
+            m_FileVersionName[strlen(m_FileVersionName) - 1] = '\0';
         }
     } else {
-        m_fileVersionName[0] = '\0';
+        m_FileVersionName[0] = '\0';
     }
 }
 
 int VersionClass::Minor_Version()
 {
-    if (!m_fileRead) {
+    if (!m_FileRead) {
         Read_Text_String();
-        m_fileRead = true;
+        m_FileRead = true;
     }
 
-    if (!m_minorSet) {
-        m_minorVersion = g_minorVersion;
-        m_minorSet = true;
+    if (!m_MinorSet) {
+        m_MinorVersion = g_minorVersion;
+        m_MinorSet = true;
     }
 
-    return m_minorVersion;
+    return m_MinorVersion;
 }
 
 int VersionClass::Major_Version()
 {
-    if (!m_fileRead) {
+    if (!m_FileRead) {
         Read_Text_String();
-        m_fileRead = true;
+        m_FileRead = true;
     }
 
-    if (!m_majorSet) {
-        m_majorVersion = g_majorVersion;
-        m_majorSet = true;
+    if (!m_MajorSet) {
+        m_MajorVersion = g_majorVersion;
+        m_MajorSet = true;
     }
 
-    return m_majorVersion;
+    return m_MajorVersion;
 }
 
 const char *Version_Name() { return g_version.Version_String(); }
