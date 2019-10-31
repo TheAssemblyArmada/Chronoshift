@@ -63,11 +63,11 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
     BOOL Read_INI(GameINIClass &ini);
-    const char *Get_Name() const { return Name; }
-    int Get_Spread() const { return Spread; }
-    WarheadType What_Type() const { return (WarheadType)Type; }
-    BOOL Is_Wall_Destroyer() const { return Wall; }
-    const fixed_t &Get_Verses(ArmorType armor) const { return Verses[armor]; }
+    const char *Get_Name() const { return m_Name; }
+    int Get_Spread() const { return m_Spread; }
+    WarheadType What_Type() const { return (WarheadType)m_Type; }
+    BOOL Is_Wall_Destroyer() const { return m_Wall; }
+    const fixed_t &Get_Verses(ArmorType armor) const { return m_Verses[armor]; }
 
     static void Init_Heap();
     static WarheadType From_Name(const char *name);
@@ -76,23 +76,23 @@ public:
     static WarheadTypeClass *As_Pointer(WarheadType warhead);
 
 private:
-    int Type; // WarheadType
-    const char *Name;
-    int Spread; // damage spread factor[larger means greater spread]. Damage halves every n pixels from center.
+    int m_Type; // WarheadType
+    const char *m_Name;
+    int m_Spread; // damage spread factor[larger means greater spread]. Damage halves every n pixels from center.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Wall : 1;
-    BOOL Wood : 1;
-    BOOL Ore : 1;
-    BOOL UnkBool : 1;
+    BOOL m_Wall : 1;
+    BOOL m_Wood : 1;
+    BOOL m_Ore : 1;
+    BOOL m_UnkBool : 1;
 #else
-    bool Wall; // Does this warhead damage concrete walls?
-    bool Wood; // Does this warhead damage wood walls?
-    bool Ore; // Does this warhead destroy ore?
-    bool UnkBool; // TODO: Only checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester?
+    bool m_Wall; // Does this warhead damage concrete walls?
+    bool m_Wood; // Does this warhead damage wood walls?
+    bool m_m_Ore; // Does this warhead destroy ore?
+    bool m_UnkBool; // TODO: Only checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester?
 #endif
-    fixed_t Verses[ARMOR_COUNT]; // Damage verses various armor types (as percentage of full damage). eg, Verses[ARMOR_WOOD];
-    int Explosion; // Which explosion set to use when warhead of this type impacts.
-    int Death; // Which infantry death animation to use.
+    fixed_t m_Verses[ARMOR_COUNT]; // Damage verses various armor types (as percentage of full damage). eg, Verses[ARMOR_WOOD];
+    int m_Explosion; // Which explosion set to use when warhead of this type impacts.
+    int m_Death; // Which infantry death animation to use.
 };
 
 #ifdef GAME_DLL

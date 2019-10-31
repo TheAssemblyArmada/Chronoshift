@@ -104,13 +104,13 @@ public:
     BOOL Read_INI(GameINIClass &ini);
     ThreatType Allowed_Threats() const;
     BOOL Is_Wall_Destroyer() const;
-    WarheadTypeClass *Get_Warhead() const { return Warhead; }
-    BulletTypeClass *Get_Projectile() const { return Projectile; }
-    const char *Get_Name() const { return Name; }
-    WeaponType What_Type() const { return (WeaponType)Type; }
-    int Get_Damage() const { return Damage; }
-    lepton_t Get_Range() const { return Range; }
-    int Get_ROF() const { return ROF; }
+    WarheadTypeClass *Get_Warhead() const { return m_Warhead; }
+    BulletTypeClass *Get_Projectile() const { return m_Projectile; }
+    const char *Get_Name() const { return m_Name; }
+    WeaponType What_Type() const { return (WeaponType)m_Type; }
+    int Get_Damage() const { return m_Damage; }
+    lepton_t Get_Range() const { return m_Range; }
+    int Get_ROF() const { return m_ROF; }
 
     static void Init_Heap();
     static WeaponType From_Name(const char *name);
@@ -119,28 +119,28 @@ public:
     static WeaponTypeClass *As_Pointer(WeaponType weapon);
 
 private:
-    int Type; // WeaponType
-    const char *Name;
+    int m_Type; // WeaponType
+    const char *m_Name;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL TurboBoost : 1;
-    BOOL Supress : 1;
-    BOOL Camera : 1;
-    BOOL Charges : 1;
+    BOOL m_TurboBoost : 1;
+    BOOL m_Supress : 1;
+    BOOL m_Camera : 1;
+    BOOL m_Charges : 1;
 #else
-    bool TurboBoost; // Should the weapon get a boosted speed bonus when firing upon aircraft?
-    bool Supress; // Should nearby friendly buildings be scanned for and if found, discourage firing on target?
-    bool Camera; // Reveals area around firer ?
-    bool Charges; // Does it have charge-up-before-firing logic?
+    bool m_TurboBoost; // Should the weapon get a boosted speed bonus when firing upon aircraft?
+    bool m_Supress; // Should nearby friendly buildings be scanned for and if found, discourage firing on target?
+    bool m_Camera; // Reveals area around firer ?
+    bool m_Charges; // Does it have charge-up-before-firing logic?
 #endif
-    int Burst; // Number of rapid succession shots from this weapon (def = 1)
-    BulletTypeClass *Projectile; // Projectile characteristic to use
-    int Damage; // The amount of damage (unattenuated) dealt with every bullet
-    MPHType Speed; // Speed of projectile to target (100 is maximum)
-    WarheadTypeClass *Warhead; // Warhead to attach to projectile
-    int ROF; // Delay between shots in ticks [15 = 1 second at middle speed setting]
-    lepton_t Range; // Maximum cell range in leptons
-    VocType Report; // Sound to play when firing
-    AnimType Anim; // Animation to display as a firing effect
+    int m_Burst; // Number of rapid succession shots from this weapon (def = 1)
+    BulletTypeClass *m_Projectile; // Projectile characteristic to use
+    int m_Damage; // The amount of damage (unattenuated) dealt with every bullet
+    MPHType m_Speed; // Speed of projectile to target (100 is maximum)
+    WarheadTypeClass *m_Warhead; // Warhead to attach to projectile
+    int m_ROF; // Delay between shots in ticks [15 = 1 second at middle speed setting]
+    lepton_t m_Range; // Maximum cell range in leptons
+    VocType m_Report; // Sound to play when firing
+    AnimType m_Anim; // Animation to display as a firing effect
 };
 
 #ifdef GAME_DLL
