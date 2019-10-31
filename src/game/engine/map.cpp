@@ -100,15 +100,15 @@ const int MapClass::RadiusCount[] = {
 // clang-format on
 
 MapClass::MapClass() :
-    MapCellX(0),
-    MapCellY(0),
-    MapCellWidth(0),
-    MapCellHeight(0),
-    TotalValue(0),
-    Array(),
-    XSize(0),
-    YSize(0),
-    TotalSize(0)
+    m_MapCellX(0),
+    m_MapCellY(0),
+    m_MapCellWidth(0),
+    m_MapCellHeight(0),
+    m_TotalValue(0),
+    m_Array(),
+    m_XSize(0),
+    m_YSize(0),
+    m_TotalSize(0)
 {
 }
 
@@ -120,14 +120,14 @@ MapClass::MapClass() :
 void MapClass::One_Time()
 {
     GameScreenClass::One_Time();
-    XSize = MAP_MAX_WIDTH;
-    YSize = MAP_MAX_HEIGHT;
-    TotalSize = YSize * XSize;
+    m_XSize = MAP_MAX_WIDTH;
+    m_YSize = MAP_MAX_HEIGHT;
+    m_TotalSize = m_YSize * m_XSize;
     Alloc_Cells();
 
     // Placement new init the crates array.
     for (int i = 0; i < MAP_MAX_CRATES; ++i) {
-        new (&Crates[i]) CrateClass;
+        new (&m_Crates[i]) CrateClass;
     }
 }
 
@@ -140,14 +140,14 @@ void MapClass::Init_Clear()
 {
     GameScreenClass::Init_Clear();
     Init_Cells();
-    OreLogicPos = 0;
-    OreGrowthCount = 0;
-    OreGrowthExcess = 0;
-    OreSpreadCount = 0;
-    OreSpreadExcess = 0;
+    m_OreLogicPos = 0;
+    m_OreGrowthCount = 0;
+    m_OreGrowthExcess = 0;
+    m_OreSpreadCount = 0;
+    m_OreSpreadExcess = 0;
 
     for (int i = 0; i < MAP_MAX_CRATES; ++i) {
-        Crates[i].Init_Clear();
+        m_Crates[i].Init_Clear();
     }
 }
 
@@ -159,8 +159,8 @@ void MapClass::Init_Clear()
 void MapClass::Alloc_Cells()
 {
     // Reconstruct the vector (incase it has garbage in it from a save load) and then resize to total cell count.
-    new (&Array) VectorClass<CellClass>;
-    Array.Resize(TotalSize);
+    new (&m_Array) VectorClass<CellClass>;
+    m_Array.Resize(m_TotalSize);
 }
 
 /**
@@ -171,7 +171,7 @@ void MapClass::Alloc_Cells()
 void MapClass::Free_Cells()
 {
     // Clear all cells in the vector.
-    Array.Clear();
+    m_Array.Clear();
 }
 
 /**
@@ -182,11 +182,11 @@ void MapClass::Free_Cells()
 void MapClass::Init_Cells()
 {
     // Reset the total cell count
-    TotalValue = 0;
+    m_TotalValue = 0;
 
     // Loop through the whole vector and call the the constructor for each cell with placement new.
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-        new (&Array[cellnum]) CellClass;
+        new (&m_Array[cellnum]) CellClass;
     }
 }
 
@@ -198,10 +198,10 @@ void MapClass::Init_Cells()
 void MapClass::Logic_AI()
 {
     if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.MPlayer_Goodies_Allowed()) {
-        for (int i = 0; i < ARRAY_SIZE(Crates); ++i) {
-            if (Crates[i].Get_Cell() != -1) {
-                if (Crates[i].Timer_Expired()) {
-                    Crates[i].Remove_It();
+        for (int i = 0; i < ARRAY_SIZE(m_Crates); ++i) {
+            if (m_Crates[i].Get_Cell() != -1) {
+                if (m_Crates[i].Timer_Expired()) {
+                    m_Crates[i].Remove_It();
                     Place_Random_Crate();
                 }
             }
@@ -214,30 +214,30 @@ void MapClass::Logic_AI()
         int index;
 
         // Build lists of cells that need growth and spreading applied to them.
-        for (index = OreLogicPos; index < MAP_MAX_AREA; ++index) {
+        for (index = m_OreLogicPos; index < MAP_MAX_AREA; ++index) {
             if (In_Radar(index)) {
-                if (Array[index].Can_Ore_Grow()) {
-                    if (Scen.Get_Random_Value(0, OreGrowthExcess) <= OreGrowthCount) {
-                        if (OreGrowthCount >= ARRAY_SIZE(OreGrowth)) {
-                            OreGrowth[Scen.Get_Random_Value(0, OreGrowthCount - 1)] = index;
+                if (m_Array[index].Can_Ore_Grow()) {
+                    if (Scen.Get_Random_Value(0, m_OreGrowthExcess) <= m_OreGrowthCount) {
+                        if (m_OreGrowthCount >= ARRAY_SIZE(m_OreGrowth)) {
+                            m_OreGrowth[Scen.Get_Random_Value(0, m_OreGrowthCount - 1)] = index;
                         } else {
-                            OreGrowth[OreGrowthCount++] = index;
+                            m_OreGrowth[m_OreGrowthCount++] = index;
                         }
                     }
 
-                    ++OreGrowthExcess;
+                    ++m_OreGrowthExcess;
                 }
 
-                if (Array[index].Can_Ore_Spread()) {
-                    if (Scen.Get_Random_Value(0, OreSpreadExcess) <= OreSpreadCount) {
-                        if (OreSpreadCount >= ARRAY_SIZE(OreSpread)) {
-                            OreSpread[Scen.Get_Random_Value(0, OreSpreadCount - 1)] = index;
+                if (m_Array[index].Can_Ore_Spread()) {
+                    if (Scen.Get_Random_Value(0, m_OreSpreadExcess) <= m_OreSpreadCount) {
+                        if (m_OreSpreadCount >= ARRAY_SIZE(m_OreSpread)) {
+                            m_OreSpread[Scen.Get_Random_Value(0, m_OreSpreadCount - 1)] = index;
                         } else {
-                            OreSpread[OreSpreadCount++] = index;
+                            m_OreSpread[m_OreSpreadCount++] = index;
                         }
                     }
 
-                    ++OreSpreadExcess;
+                    ++m_OreSpreadExcess;
                 }
             }
 
@@ -246,25 +246,25 @@ void MapClass::Logic_AI()
             }
         }
 
-        OreLogicPos = index;
+        m_OreLogicPos = index;
 
         // If we've finished marking the whole map, reset our logic position and action what we marked.
-        if (OreLogicPos >= MAP_MAX_AREA) {
-            OreLogicPos = 0;
+        if (m_OreLogicPos >= MAP_MAX_AREA) {
+            m_OreLogicPos = 0;
 
-            for (int index = 0; index < OreGrowthCount; ++index) {
-                Array[OreGrowth[index]].Grow_Ore();
+            for (int index = 0; index < m_OreGrowthCount; ++index) {
+                m_Array[m_OreGrowth[index]].Grow_Ore();
             }
 
-            OreGrowthCount = 0;
-            OreGrowthExcess = 0;
+            m_OreGrowthCount = 0;
+            m_OreGrowthExcess = 0;
 
-            for (int index = 0; index < OreSpreadCount; ++index) {
-                Array[OreSpread[index]].Spread_Ore(false);
+            for (int index = 0; index < m_OreSpreadCount; ++index) {
+                m_Array[m_OreSpread[index]].Spread_Ore(false);
             }
 
-            OreSpreadCount = 0;
-            OreSpreadExcess = 0;
+            m_OreSpreadCount = 0;
+            m_OreSpreadExcess = 0;
         }
     }
 }
@@ -276,10 +276,10 @@ void MapClass::Logic_AI()
  */
 void MapClass::Set_Map_Dimensions(int x, int y, int w, int h)
 {
-    MapCellX = x;
-    MapCellY = y;
-    MapCellWidth = w;
-    MapCellHeight = h;
+    m_MapCellX = x;
+    m_MapCellY = y;
+    m_MapCellWidth = w;
+    m_MapCellHeight = h;
 }
 
 /**
@@ -291,15 +291,15 @@ BOOL MapClass::Place_Random_Crate()
 {
     for (int i = 0; i < MAP_MAX_CRATES; ++i) {
         // Check if current crate cell is invalid and thus instance can be used for new crate.
-        if (Crates[i].Get_Cell() == -1) {
+        if (m_Crates[i].Get_Cell() == -1) {
             // Try to place crate up to 1000 times, return result of final attempt if all others fail.
             for (int i = 0; i < 1000; ++i) {
-                if (Crates[i].Create_Crate(Pick_Random_Location())) {
+                if (m_Crates[i].Create_Crate(Pick_Random_Location())) {
                     return true;
                 }
             }
 
-            return Crates[i].Create_Crate(Pick_Random_Location());
+            return m_Crates[i].Create_Crate(Pick_Random_Location());
         }
     }
 
@@ -310,15 +310,15 @@ BOOL MapClass::Place_Random_Crate_At_Cell(cell_t cellnum)
 {
     for (int i = 0; i < MAP_MAX_CRATES; ++i) {
         // Check if current crate cell is invalid and thus instance can be used for new crate.
-        if (Crates[i].Get_Cell() == -1) {
+        if (m_Crates[i].Get_Cell() == -1) {
             // Try to place crate up to 1000 times, return result of final attempt if all others fail.
             for (int i = 0; i < 1000; ++i) {
-                if (Crates[i].Create_Crate(cellnum)) {
+                if (m_Crates[i].Create_Crate(cellnum)) {
                     return true;
                 }
             }
 
-            return Crates[i].Create_Crate(cellnum);
+            return m_Crates[i].Create_Crate(cellnum);
         }
     }
 
@@ -334,13 +334,13 @@ BOOL MapClass::Remove_Crate(cell_t cellnum)
 {
     if (Session.Game_To_Play() != GAME_CAMPAIGN) {
         for (int index = 0; index < MAP_MAX_CRATES; ++index) {
-            if (Crates[index].Get_Cell() != -1 && Crates[index].Get_Cell() == cellnum) {
-                return Crates[index].Remove_It();
+            if (m_Crates[index].Get_Cell() != -1 && m_Crates[index].Get_Cell() == cellnum) {
+                return m_Crates[index].Remove_It();
             }
         }
     }
 
-    CellClass &cell = Array[cellnum];
+    CellClass &cell = m_Array[cellnum];
 
     if (cell.Get_Overlay() != OVERLAY_NONE) {
         if (OverlayTypeClass::As_Reference(cell.Get_Overlay()).Is_Crate()) {
@@ -362,7 +362,7 @@ BOOL MapClass::Remove_Crate(cell_t cellnum)
 cell_t MapClass::Pick_Random_Location() const
 {
     return Cell_From_XY(
-        MapCellX + Scen.Get_Random_Value(0, MapCellWidth - 1), MapCellY + Scen.Get_Random_Value(0, MapCellHeight - 1));
+        m_MapCellX + Scen.Get_Random_Value(0, m_MapCellWidth - 1), m_MapCellY + Scen.Get_Random_Value(0, m_MapCellHeight - 1));
 }
 
 /**
@@ -377,8 +377,8 @@ BOOL MapClass::In_Radar(cell_t cellnum) const
         unsigned cell_y = Cell_Get_Y(cellnum);
 
         // Treat as unsigned to check value is within both bounds for only one check by using unsigned underflow behaviour.
-        if ((cell_x - (unsigned)MapCellX) < (unsigned)MapCellWidth
-            && (cell_y - (unsigned)MapCellY) < (unsigned)MapCellHeight) {
+        if ((cell_x - (unsigned)m_MapCellX) < (unsigned)m_MapCellWidth
+            && (cell_y - (unsigned)m_MapCellY) < (unsigned)m_MapCellHeight) {
             return true;
         }
     }
@@ -393,8 +393,8 @@ cell_t MapClass::Clamp_To_Radar(cell_t cellnum) const
 {
     unsigned cell_x = Cell_Get_X(cellnum);
     unsigned cell_y = Cell_Get_Y(cellnum);
-    cell_x = clamp<unsigned>(cell_x, MapCellX, MapCellWidth);
-    cell_y = clamp<unsigned>(cell_y, MapCellY, MapCellHeight);
+    cell_x = clamp<unsigned>(cell_x, m_MapCellX, m_MapCellWidth);
+    cell_y = clamp<unsigned>(cell_y, m_MapCellY, m_MapCellHeight);
 
     return Cell_From_XY(cell_x, cell_y);
 }
@@ -435,7 +435,7 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
                 // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
                 // radius, not radius * 256.
                 if (Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
-                    if (!Array[offset_cellnum].Is_Visible()) {
+                    if (!m_Array[offset_cellnum].Is_Visible()) {
                         Map.Map_Cell(offset_cellnum, house);
                     }
                 }
@@ -568,7 +568,7 @@ void MapClass::Place_Down(cell_t cellnum, ObjectClass *object)
                 cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[occupy_cell];
+                    CellClass &cell = m_Array[occupy_cell];
                     cell.Occupy_Down(object);
                     cell.Recalc_Attributes();
                     cell.Redraw_Objects(false);
@@ -582,7 +582,7 @@ void MapClass::Place_Down(cell_t cellnum, ObjectClass *object)
                 cell_t overlap_cell = cellnum + *list_ptr++;
 
                 if (overlap_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[overlap_cell];
+                    CellClass &cell = m_Array[overlap_cell];
                     cell.Overlap_Down(object);
                     cell.Redraw_Objects(false);
                 }
@@ -612,7 +612,7 @@ void MapClass::Pick_Up(cell_t cellnum, ObjectClass *object)
                 cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[occupy_cell];
+                    CellClass &cell = m_Array[occupy_cell];
                     cell.Occupy_Up(object);
                     cell.Recalc_Attributes();
                     cell.Redraw_Objects(false);
@@ -626,7 +626,7 @@ void MapClass::Pick_Up(cell_t cellnum, ObjectClass *object)
                 cell_t overlap_cell = cellnum + *list_ptr++;
 
                 if (overlap_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[overlap_cell];
+                    CellClass &cell = m_Array[overlap_cell];
                     cell.Overlap_Up(object);
                     cell.Redraw_Objects(false);
                 }
@@ -656,7 +656,7 @@ void MapClass::Overlap_Down(cell_t cellnum, ObjectClass *object)
                 cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[occupy_cell];
+                    CellClass &cell = m_Array[occupy_cell];
                     cell.Overlap_Down(object);
                     cell.Redraw_Objects(false);
                 }
@@ -686,7 +686,7 @@ void MapClass::Overlap_Up(cell_t cellnum, ObjectClass *object)
                 cell_t occupy_cell = cellnum + *list_ptr++;
 
                 if (occupy_cell < MAP_MAX_AREA) {
-                    CellClass &cell = Array[occupy_cell];
+                    CellClass &cell = m_Array[occupy_cell];
                     cell.Overlap_Up(object);
                     cell.Redraw_Objects(false);
                 }
@@ -704,11 +704,11 @@ int MapClass::Overpass()
 {
     int retval = 0;
 
-    if (MapCellHeight > 0) {
-        for (int y = 0; y < MapCellHeight; ++y) {
-            for (int x = 0; x < MapCellWidth; ++x) {
-                cell_t cellnum = Cell_From_XY(MapCellX + x, MapCellY + y);
-                CellClass &cell = Array[cellnum];
+    if (m_MapCellHeight > 0) {
+        for (int y = 0; y < m_MapCellHeight; ++y) {
+            for (int x = 0; x < m_MapCellWidth; ++x) {
+                cell_t cellnum = Cell_From_XY(m_MapCellX + x, m_MapCellY + y);
+                CellClass &cell = m_Array[cellnum];
                 retval += cell.Ore_Adjust(true);
                 cell.Recalc_Attributes();
             }
@@ -738,10 +738,10 @@ int MapClass::Cell_Region(cell_t cellnum)
 int MapClass::Cell_Threat(cell_t cellnum, HousesType house)
 {
     RegionClass *house_regions = HouseClass::As_Pointer(house)->Threat_Regions();
-    int retval = house_regions[Cell_Region(Array[cellnum].Cell_Number())].Get_Value();
+    int retval = house_regions[Cell_Region(m_Array[cellnum].Cell_Number())].Get_Value();
 
     if (retval == 0) {
-        if (Array[cellnum].Get_Bit128()) {
+        if (m_Array[cellnum].Get_Bit128()) {
             return 1;
         }
     }
@@ -757,8 +757,8 @@ int MapClass::Cell_Threat(cell_t cellnum, HousesType house)
 int MapClass::Zone_Reset(int zones)
 {
     // Loop through and reset every cells movement zones to 0.
-    for (int index = 0; index < Array.Length(); ++index) {
-        CellClass &cell = Array[index];
+    for (int index = 0; index < m_Array.Length(); ++index) {
+        CellClass &cell = m_Array[index];
 
         if (zones & (1 << MZONE_NORMAL)) {
             cell.Set_Zone(MZONE_NORMAL, 0);
@@ -838,15 +838,15 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
     SpeedType speed = (mzone == MZONE_AMPHIBIOUS_DESTROYER ? SPEED_FLOAT : SPEED_TRACK);
 
     // Check the cell coords are within the visible part of the map
-    if (cell_y >= MapCellY && cell_y < (MapCellHeight + MapCellY) && cell_x >= MapCellX
-        && cell_x < (MapCellWidth + MapCellX)) {
+    if (cell_y >= m_MapCellY && cell_y < (m_MapCellHeight + m_MapCellY) && cell_x >= m_MapCellX
+        && cell_x < (m_MapCellWidth + m_MapCellX)) {
         int retval = 0;
         int left_pos;
 
         // Scan backwards from cell coord to edge of map until we find a cell that is already marked for this zone or can't
         // be moved to and record the pos.
-        for (left_pos = cell_x; left_pos >= MapCellX; --left_pos) {
-            CellClass &cell = Array[Cell_From_XY(left_pos, cell_y)];
+        for (left_pos = cell_x; left_pos >= m_MapCellX; --left_pos) {
+            CellClass &cell = m_Array[Cell_From_XY(left_pos, cell_y)];
 
             // Check if clear to move, ignoring units, buildings and infantry.
             if (cell.Get_Zone(mzone) != 0 || !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
@@ -859,13 +859,13 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
             }
         }
 
-        left_pos = std::max(left_pos, MapCellX);
+        left_pos = std::max(left_pos, m_MapCellX);
 
         int right_pos;
 
         // Scan forward to other edge of the map doing the same.
-        for (right_pos = cell_x; right_pos < MapCellWidth + MapCellX; ++right_pos) {
-            CellClass &cell = Array[Cell_From_XY(right_pos, cell_y)];
+        for (right_pos = cell_x; right_pos < m_MapCellWidth + m_MapCellX; ++right_pos) {
+            CellClass &cell = m_Array[Cell_From_XY(right_pos, cell_y)];
 
             // Check if clear to move, ignoring units, buildings and infantry.
             if (cell.Get_Zone(mzone) != 0 || !cell.Is_Clear_To_Move(speed, true, true, -1, mzone)) {
@@ -874,11 +874,11 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
             }
         }
 
-        right_pos = std::min(right_pos, MapCellWidth + MapCellX - 1);
+        right_pos = std::min(right_pos, m_MapCellWidth + m_MapCellX - 1);
 
         // Set all the cells between the two positions to our zone value for this movement zone.
         for (int i = left_pos; i <= right_pos; ++i) {
-            Array[Cell_From_XY(i, cell_y)].Set_Zone(mzone, zone);
+            m_Array[Cell_From_XY(i, cell_y)].Set_Zone(mzone, zone);
             ++retval;
         }
 
@@ -913,10 +913,10 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
     int cell_y = Cell_Get_Y(cellnum);
 
     // Calculate the bounds of the area we want to check
-    int left = cell_x - MapCellX;
-    int right = MapCellWidth - left - 1;
-    int top = cell_y - MapCellY;
-    int bottom = MapCellHeight - top - 1;
+    int left = cell_x - m_MapCellX;
+    int right = m_MapCellWidth - left - 1;
+    int top = cell_y - m_MapCellY;
+    int bottom = m_MapCellHeight - top - 1;
 
     for (int i = 0; i < 64; ++i) {
         for (int j = -i; j <= i; ++j) {
@@ -924,7 +924,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
                 cell_t near_cellnum = Cell_From_XY(j + cell_x, cell_y - i);
 
                 if (Map.In_Radar(near_cellnum)) {
-                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                    if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
                 }
@@ -938,7 +938,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
                 cell_t near_cellnum = Cell_From_XY(cell_x + j, i + cell_y);
 
                 if (Map.In_Radar(near_cellnum)) {
-                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                    if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
                 }
@@ -958,7 +958,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
                 cell_t near_cellnum = Cell_From_XY(cell_x - i, k + cell_y);
 
                 if (Map.In_Radar(near_cellnum)) {
-                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                    if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
                 }
@@ -972,7 +972,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
                 cell_t near_cellnum = Cell_From_XY(cell_x + i, cell_y + k);
 
                 if (Map.In_Radar(near_cellnum)) {
-                    if (Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+                    if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
                 }
@@ -1061,7 +1061,7 @@ void MapClass::Detach(int32_t target, int a2)
         }
 
         for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-            CellClass &cell = Array[cellnum];
+            CellClass &cell = m_Array[cellnum];
 
             if (cell.CellTag == As_Trigger(target)) {
                 cell.CellTag = nullptr;
@@ -1083,7 +1083,7 @@ int MapClass::Intact_Bridge_Count() const
     // We loop through the cell array and only consider the 4 templates that have both bridge ends in the template (so not
     // the long bridges)
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-        const CellClass &cell = Array[cellnum];
+        const CellClass &cell = m_Array[cellnum];
 
         switch (cell.Get_Template()) {
             case TEMPLATE_BRIDGE1: // Fall through on intact bridge templates
@@ -1113,7 +1113,7 @@ int MapClass::Intact_Bridge_Count() const
 void MapClass::Shroud_The_Map()
 {
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-        CellClass &cell = Array[cellnum];
+        CellClass &cell = m_Array[cellnum];
 
         if (cell.Is_Visible() || cell.Is_Revealed()) {
             cell.Redraw_Objects();
@@ -1121,7 +1121,7 @@ void MapClass::Shroud_The_Map()
             int xpos = Cell_Get_X(cellnum);
             int ypos = Cell_Get_Y(cellnum);
 
-            if (xpos >= MapCellX && xpos < MapCellWidth + MapCellX && ypos >= MapCellY && ypos < MapCellHeight + MapCellY) {
+            if (xpos >= m_MapCellX && xpos < m_MapCellWidth + m_MapCellX && ypos >= m_MapCellY && ypos < m_MapCellHeight + m_MapCellY) {
                 cell.Set_Visible(false);
                 cell.Set_Revealed(false);
             }
@@ -1155,13 +1155,13 @@ int MapClass::Write_Binary(Pipe &pipe)
 
     // Writes for INIFormat = 3 only, Tile first, then the sub cell (Icon).
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-        uint16_t temp = Array[cellnum].Get_Template();
+        uint16_t temp = m_Array[cellnum].Get_Template();
         temp = htole16(temp);
         total += lcw.Put(&temp, sizeof(temp));
     }
 
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-        uint8_t temp = Array[cellnum].Get_Icon();
+        uint8_t temp = m_Array[cellnum].Get_Icon();
         total += lcw.Put(&temp, sizeof(temp));
     }
 
@@ -1183,7 +1183,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
         case INIFORMAT_0: // Covers both TD and SS maps, .BIN files
             // TD and SS both "blank" the map cell array first.
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-                CellClass &cell = Array[cellnum];
+                CellClass &cell = m_Array[cellnum];
 
                 cell.Set_Template(TEMPLATE_NONE);
                 cell.Set_Icon(0);
@@ -1198,7 +1198,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
 
                 while (straw.Get(coord, sizeof(coord)) > 0 && straw.Get(icon, sizeof(icon)) > 0) {
                     DEBUG_ASSERT((coord[0] * coord[1]) < MAP_MAX_AREA);
-                    CellClass &cell = Array[coord[0] * coord[1]];
+                    CellClass &cell = m_Array[coord[0] * coord[1]];
 
                     if (icon[0] == 0xFF) {
                         cell.Set_Template(TEMPLATE_NONE);
@@ -1215,7 +1215,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
                 // Handle TD maps being loaded into larger array than the original. Like blitting a region in a buffer.
                 for (int h = 0; h < MAPTD_MAX_HEIGHT; ++h) {
                     for (int w = 0; w < MAPTD_MAX_WIDTH; ++w) {
-                        CellClass &cell = Array[Cell_From_XY(w, h)];
+                        CellClass &cell = m_Array[Cell_From_XY(w, h)];
                         uint8_t icon[2];
                         straw.Get(icon, sizeof(icon));
 
@@ -1239,7 +1239,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
         case INIFORMAT_1: // Handles old MapPack data layout, similar to TD layout
         case INIFORMAT_2: // Fall through
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-                CellClass &cell = Array[cellnum];
+                CellClass &cell = m_Array[cellnum];
 
                 uint16_t temp;
                 uint8_t icon;
@@ -1262,7 +1262,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
 
         case INIFORMAT_3: // Handles newest MapPack layout, RA default.
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-                CellClass &cell = Array[cellnum];
+                CellClass &cell = m_Array[cellnum];
 
                 uint16_t temp;
                 lcw.Get(&temp, 2);
@@ -1271,7 +1271,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
             }
 
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-                CellClass &cell = Array[cellnum];
+                CellClass &cell = m_Array[cellnum];
 
                 uint8_t icon;
                 lcw.Get(&icon, 1);
@@ -1297,10 +1297,10 @@ BOOL MapClass::Read_Binary(Straw &straw)
 BOOL MapClass::Validate()
 {
     // Some static pointer in CellClass in the original, not clear what it is for...
-    // CellClass::BlubCell = &Array[797];
+    // CellClass::BlubCell = &m_Array[797];
 
     for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-        CellClass &cell = Array[cellnum];
+        CellClass &cell = m_Array[cellnum];
 
         if (cell.Get_Template() < TEMPLATE_NONE && cell.Get_Template() >= TEMPLATE_COUNT) {
             return false;
@@ -1393,7 +1393,7 @@ ObjectClass *MapClass::Close_Object(coord_t coord) const
         cell_t offset_cell = _offsets[i] + target_cell;
 
         if (In_Radar(offset_cell)) {
-            const CellClass &cell = Array[offset_cell];
+            const CellClass &cell = m_Array[offset_cell];
 
             for (ObjectClass *obj = cell.Get_Occupier(); obj != nullptr; obj = obj->Get_Next()) {
                 if (!obj->Is_Techno() || reinterpret_cast<TechnoClass *>(obj)->Is_Player_Owned()

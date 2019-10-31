@@ -48,19 +48,19 @@ BOOL PowerClass::PowerButtonClass::Action(unsigned flags, KeyNumType &key)
 
 PowerClass::PowerClass() :
     RadarClass(),
-    PowerToRedraw(false),
-    PowerBit2(false),
-    FlashTimer(),
-    Drain(-1),
-    Output(-1),
-    NewDrainHeight(0),
-    NewOutputHeight(0),
-    DrainHeight(0),
-    OutputHeight(0),
-    DrainMod(0),
-    OutputMod(0),
-    OutputInc(0),
-    DrainInc(0)
+    m_PowerToRedraw(false),
+    m_PowerBit2(false),
+    m_FlashTimer(),
+    m_Drain(-1),
+    m_Output(-1),
+    m_NewDrainHeight(0),
+    m_NewOutputHeight(0),
+    m_DrainHeight(0),
+    m_OutputHeight(0),
+    m_DrainMod(0),
+    m_OutputMod(0),
+    m_OutputInc(0),
+    m_DrainInc(0)
 {
     return;
 }
@@ -82,17 +82,17 @@ void PowerClass::Init_Clear()
 {
     RadarClass::Init_Clear();
 
-    Drain = -1;
-    Output = -1;
-    NewDrainHeight = 0;
-    NewOutputHeight = 0;
-    DrainHeight = 0;
-    OutputHeight = 0;
-    OutputMod = 0;
-    DrainMod = 0;
-    DrainInc = 0;
+    m_Drain = -1;
+    m_Output = -1;
+    m_NewDrainHeight = 0;
+    m_NewOutputHeight = 0;
+    m_DrainHeight = 0;
+    m_OutputHeight = 0;
+    m_OutputMod = 0;
+    m_DrainMod = 0;
+    m_DrainInc = 0;
 
-    FlashTimer.Reset();
+    m_FlashTimer.Reset();
 }
 
 void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
@@ -105,60 +105,60 @@ void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 #endif
     /*
     if (Map.Is_Sidebar_Drawn()) {
-        int prev_drain = DrainHeight;
-        int prev_output = OutputHeight;
+        int prev_drain = m_DrainHeight;
+        int prev_output = m_OutputHeight;
 
         // Work out if output has changed and needs updating.
-        if (PlayerPtr->Power != Output) {
-            NewOutputHeight = Power_Height(PlayerPtr->Power);
-            Output = PlayerPtr->Power;
+        if (PlayerPtr->Power != m_Output) {
+            m_NewOutputHeight = Power_Height(PlayerPtr->Power);
+            m_Output = PlayerPtr->Power;
 
-            if (NewOutputHeight == OutputHeight) {
-                OutputMod = 0;
+            if (m_NewOutputHeight == m_OutputHeight) {
+                m_OutputMod = 0;
             } else {
-                OutputMod = 12;
-                OutputInc = NewOutputHeight < OutputHeight ? -1 : 1;
+                m_OutputMod = 12;
+                m_OutputInc = m_NewOutputHeight < m_OutputHeight ? -1 : 1;
             }
         }
 
         // Work out if drain has changed and needs updating.
-        if (PlayerPtr->Drain != Drain) {
-            NewDrainHeight = Power_Height(PlayerPtr->Drain);
-            Drain = PlayerPtr->Drain;
+        if (PlayerPtr->m_Drain != m_Drain) {
+            m_NewDrainHeight = Power_Height(PlayerPtr->m_Drain);
+            m_Drain = PlayerPtr->m_Drain;
 
-            if (NewDrainHeight == DrainHeight) {
-                DrainMod = 0;
+            if (m_NewDrainHeight == m_DrainHeight) {
+                m_DrainMod = 0;
             } else {
-                DrainMod = 12;
-                DrainInc = NewDrainHeight < DrainHeight ? -1 : 1;
+                m_DrainMod = 12;
+                m_DrainInc = m_NewDrainHeight < m_DrainHeight ? -1 : 1;
             }
         }
 
         // Wobble when settling at new drain level after gaining/loosing some power draining structure.
-        if (DrainMod > 0 && DrainHeight == NewDrainHeight) {
-            PowerToRedraw = true;
+        if (m_DrainMod > 0 && m_DrainHeight == m_NewDrainHeight) {
+            m_PowerToRedraw = true;
             Flag_To_Redraw();
-            --DrainMod;
-        } else if (DrainHeight != NewDrainHeight) {
-            DrainHeight += DrainInc;
+            --m_DrainMod;
+        } else if (m_DrainHeight != m_NewDrainHeight) {
+            m_DrainHeight += m_DrainInc;
         }
 
         // Wobble when settling at new output level after gaining/loosing some power generating structure.
-        if (OutputMod > 0 && OutputHeight == NewOutputHeight) {
-            PowerToRedraw = true;
+        if (m_OutputMod > 0 && m_OutputHeight == m_NewOutputHeight) {
+            m_PowerToRedraw = true;
             Flag_To_Redraw();
-            --OutputMod;
-        } else if (OutputHeight != NewOutputHeight) {
-            OutputHeight += OutputInc;
+            --m_OutputMod;
+        } else if (m_OutputHeight != m_NewOutputHeight) {
+            m_OutputHeight += m_OutputInc;
         }
 
-        if (prev_drain != DrainHeight || prev_output != OutputHeight) {
-            PowerToRedraw = true;
+        if (prev_drain != m_DrainHeight || prev_output != m_OutputHeight) {
+            m_PowerToRedraw = true;
             Flag_To_Redraw();
         }
 
-        if (!FlashTimer.Has_Expired()) {
-            PowerToRedraw = true;
+        if (!m_FlashTimer.Has_Expired()) {
+            m_PowerToRedraw = true;
             Flag_To_Redraw();
         }
     }
@@ -177,8 +177,8 @@ void PowerClass::Draw_It(BOOL force_redraw)
     /*
     static int _modtable[] = { 0, -1, 0, 1, 0, -1, -2, -1, 0, 1, 2, 1, 0 };
 
-    if ((PowerToRedraw || force_redraw) && Map.Is_Sidebar_Drawn()) {
-        PowerToRedraw = false;
+    if ((m_PowerToRedraw || force_redraw) && Map.Is_Sidebar_Drawn()) {
+        m_PowerToRedraw = false;
 
         ShapeFlags flags = SHAPE_NORMAL;
 
@@ -188,9 +188,9 @@ void PowerClass::Draw_It(BOOL force_redraw)
         int drain_height = 0;
 
         // If timer is set, flash the bar red?
-        if (!FlashTimer.Has_Expired() && FlashTimer.Time() > 1) {
+        if (!m_FlashTimer.Has_Expired() && m_FlashTimer.Time() > 1) {
             // If remaining time mod 3 is odd?
-            if ((FlashTimer.Time() % 3) & 1) {
+            if ((m_FlashTimer.Time() % 3) & 1) {
                 flags |= SHAPE_FADING;
                 fadingtable = DisplayClass::FadingRed;
             }
@@ -200,16 +200,16 @@ void PowerClass::Draw_It(BOOL force_redraw)
         CC_Draw_Shape(PowerBarShape, 0, PowerButton.Get_XPos(), 176, WINDOW_0, flags | SHAPE_WIN_REL, fadingtable);
         CC_Draw_Shape(PowerBarShape, 1, PowerButton.Get_XPos(), 288, WINDOW_0, flags | SHAPE_WIN_REL, fadingtable);
 
-        if (OutputHeight == NewOutputHeight) {
-            output_height = OutputHeight + _modtable[OutputMod] * OutputInc;
+        if (m_OutputHeight == m_NewOutputHeight) {
+            output_height = m_OutputHeight + _modtable[m_OutputMod] * m_OutputInc;
         } else {
-            output_height = OutputHeight;
+            output_height = m_OutputHeight;
         }
 
-        if (DrainHeight == NewDrainHeight) {
-            drain_height = DrainHeight + _modtable[DrainMod] * DrainInc;
+        if (m_DrainHeight == m_NewDrainHeight) {
+            drain_height = m_DrainHeight + _modtable[m_DrainMod] * m_DrainInc;
         } else {
-            drain_height = DrainHeight;
+            drain_height = m_DrainHeight;
         }
 
         output_height = Clamp(output_height, 0, POWER_MAX_HEIGHT);
@@ -243,7 +243,7 @@ void PowerClass::Draw_It(BOOL force_redraw)
         // Draw the power level indicator.
         CC_Draw_Shape(
             PowerShape, 0, PowerButton.Get_XPos() + 2, (drain_height + 4) - 351, WINDOW_0, flags | SHAPE_WIN_REL);
-        PowerToRedraw = false;
+        m_PowerToRedraw = false;
     }
 
     RadarClass::Draw_It(force_redraw);
@@ -256,7 +256,7 @@ void PowerClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 
     if (list != nullptr) {
         if (*list == LIST_START) {
-            PowerToRedraw = true;
+            m_PowerToRedraw = true;
             Flag_To_Redraw();
         }
     }
@@ -285,7 +285,7 @@ int PowerClass::Power_Height(int power)
 
 void PowerClass::Flash_Power()
 {
-    FlashTimer.Reset(15);
-    PowerToRedraw = true;
+    m_FlashTimer.Reset(15);
+    m_PowerToRedraw = true;
     Flag_To_Redraw();
 }

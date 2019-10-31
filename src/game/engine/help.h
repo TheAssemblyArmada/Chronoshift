@@ -33,7 +33,7 @@ public:
 
 public:
     HelpClass();
-    HelpClass(const NoInitClass &noinit) : TabClass(noinit), CountDownTimer(noinit) {}
+    HelpClass(const NoInitClass &noinit) : TabClass(noinit), m_CountDownTimer(noinit) {}
 
     virtual void Init_Clear() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
@@ -43,8 +43,8 @@ public:
     virtual void Set_Tactical_Position(coord_t location) override;
 
     const int16_t *Overlap_List() const;
-    void Set_Cost(int cost) { HelpCost = cost; }
-    void Set_Text_Color(uint8_t color) { HelpTextColor = color; }
+    void Set_Cost(int cost) { m_HelpCost = cost; }
+    void Set_Text_Color(uint8_t color) { m_HelpTextColor = color; }
 
 #ifdef GAME_DLL
     const int16_t *Hook_Overlap_List()
@@ -57,23 +57,23 @@ private:
     void Set_Text(int string_id);   
 
 protected:
-    int HelpUnkInt1;
-    int HelpUnkInt2;
-    int HelpUnkInt3;
+    int m_HelpUnkInt1;
+    int m_HelpUnkInt2;
+    int m_HelpUnkInt3;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL HelpForceDraw : 1; // 1
+    BOOL m_HelpForceDraw : 1; // 1
 #else
-    bool HelpForceDraw;
+    bool m_HelpForceDraw;
 #endif
-    int HelpCost;
-    int HelpMouseXPos;
-    int HelpMouseYPos;
-    int32_t HelpXPos;
-    int32_t HelpYPos;
-    int HelpWidth;
-    int HelpTextID; // TextEnum is but setting it offsets alignment
-    int HelpTextColor; // should just be unsigned chat but it offsets alignment
-    TCountDownTimerClass<SystemTimerClass> CountDownTimer;
+    int m_HelpCost;
+    int m_HelpMouseXPos;
+    int m_HelpMouseYPos;
+    int32_t m_HelpXPos;
+    int32_t m_HelpYPos;
+    int m_HelpWidth;
+    int m_HelpTextID; // TextEnum is but setting it offsets alignment
+    int m_HelpTextColor; // should just be unsigned chat but it offsets alignment
+    TCountDownTimerClass<SystemTimerClass> m_CountDownTimer;
 
 private:
 #ifdef GAME_DLL

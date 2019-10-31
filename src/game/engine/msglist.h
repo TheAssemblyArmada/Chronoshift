@@ -64,34 +64,34 @@ private:
     int Trim_Message(char *reserve, char *msg, int trim_start, int trim_end, BOOL trim_right);
 
 private:
-    TextLabelClass *LabelList;
-    int XPos;
-    int YPos;
-    int FreeSlots;
-    int MaxChars;
-    int MessageHeight;
+    TextLabelClass *m_LabelList;
+    int m_XPos;
+    int m_YPos;
+    int m_FreeSlots;
+    int m_MaxChars;
+    int m_MessageHeight;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Concatenate : 1; // & 1
-    BOOL Editing : 1; // & 2
-    BOOL EditAsMessage : 1; // & 4
+    BOOL m_Concatenate : 1; // & 1
+    BOOL m_Editing : 1; // & 2
+    BOOL m_EditAsMessage : 1; // & 4
 #else
-    bool Concatenate; // 1
-    bool Editing; // 2
-    bool EditAsMessage; // 4
+    bool m_Concatenate; // 1
+    bool m_Editing; // 2
+    bool m_EditAsMessage; // 4
 #endif
-    int EditXPos;
-    int EditYPos;
-    TextLabelClass *EditingLabel;
-    char EditBuffer[MAX_MESSAGE_LENGTH];
-    char ReserveBuffer[MAX_MESSAGE_LENGTH];
-    int EditPos;
-    int EditStart;
-    char EditCursor;
-    int EditTrimStart;
-    int EditTrimEnd;
-    int Width;
-    char MessageBuffers[MAX_MESSAGES][MAX_MESSAGE_LENGTH];
-    bool SlotAvailable[MAX_MESSAGES];
+    int m_EditXPos;
+    int m_EditYPos;
+    TextLabelClass *m_EditingLabel;
+    char m_EditBuffer[MAX_MESSAGE_LENGTH];
+    char m_ReserveBuffer[MAX_MESSAGE_LENGTH];
+    int m_EditPos;
+    int m_EditStart;
+    char m_EditCursor;
+    int m_EditTrimStart;
+    int m_EditTrimEnd;
+    int m_Width;
+    char m_MessageBuffers[MAX_MESSAGES][MAX_MESSAGE_LENGTH];
+    bool m_SlotAvailable[MAX_MESSAGES];
 
 private:
     static int MaxMessageWidth;

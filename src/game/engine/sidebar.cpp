@@ -72,8 +72,8 @@ BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
 
 SidebarClass::StripClass::SelectClass::SelectClass() :
     ControlClass(CONTROL_SB_SELECT_BUTTON, 0, 0, 62, 48, MOUSE_LEFT_PRESS | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, false),
-    Owner(nullptr),
-    Row(0)
+    m_Owner(nullptr),
+    m_Row(0)
 {
 }
 
@@ -92,38 +92,38 @@ BOOL SidebarClass::StripClass::SelectClass::Action(unsigned flags, KeyNumType &k
 
 void SidebarClass::StripClass::SelectClass::Set_Owner(StripClass &strip, int row)
 {
-    Owner = &strip;
-    Row = row;
-    m_XPos = strip.XPos;
-    m_YPos = (48 * row) + strip.YPos;
+    m_Owner = &strip;
+    m_Row = row;
+    m_XPos = strip.m_XPos;
+    m_YPos = (48 * row) + strip.m_YPos;
 }
 
 SidebarClass::StripClass::StripClass() :
-    ProgressTimer()
+    m_ProgressTimer()
 {
 }
 
 SidebarClass::StripClass::StripClass(InitClass const &init) :
-    XPos(0),
-    YPos(0),
-    WhichColumn(),
-    StripToRedraw(true),
-    Strip_Boolean2(false),
-    Strip_Boolean4(false),
-    Strip_Boolean8(false),
-    Strip_Boolean16(false),
-    Strip_Boolean32(false),
-    field_21(-1),
-    CurrentRow(0),
-    RowStartIndex(0),
-    field_2D(0),
-    field_31(0),
-    CameoCount(0)
+    m_XPos(0),
+    m_YPos(0),
+    m_WhichColumn(),
+    m_StripToRedraw(true),
+    m_Strip_Boolean2(false),
+    m_Strip_Boolean4(false),
+    m_Strip_Boolean8(false),
+    m_Strip_Boolean16(false),
+    m_Strip_Boolean32(false),
+    m_field_21(-1),
+    m_CurrentRow(0),
+    m_RowStartIndex(0),
+    m_field_2D(0),
+    m_field_31(0),
+    m_CameoCount(0)
 {
     for (int i = 0; i < MAX_BUTTONS_PER_COLUMN; ++i) {
-        Entries[i].ID = 0;
-        Entries[i].Type = RTTI_NONE;
-        Entries[i].Factory = -1;
+        m_Entries[i].ID = 0;
+        m_Entries[i].Type = RTTI_NONE;
+        m_Entries[i].Factory = -1;
     }
 }
 
@@ -154,45 +154,45 @@ void *SidebarClass::StripClass::Get_Special_Cameo(SpecialWeaponType super)
 
 void SidebarClass::StripClass::Init_Clear()
 {
-    field_21 = -1;
-    CurrentRow = 0;
-    field_2D = 0;
-    CameoCount = 0;
-    Strip_Boolean2 = false;
-    Strip_Boolean4 = false;
-    Strip_Boolean8 = false;
+    m_field_21 = -1;
+    m_CurrentRow = 0;
+    m_field_2D = 0;
+    m_CameoCount = 0;
+    m_Strip_Boolean2 = false;
+    m_Strip_Boolean4 = false;
+    m_Strip_Boolean8 = false;
 
     // Reset all the cameo entries
     for (int i = 0; i < MAX_BUTTONS_PER_COLUMN; ++i) {
-        Entries[i].ID = 0;
-        Entries[i].Type = RTTI_NONE;
-        Entries[i].Factory = -1;
+        m_Entries[i].ID = 0;
+        m_Entries[i].Type = RTTI_NONE;
+        m_Entries[i].Factory = -1;
     }
 }
 
 void SidebarClass::StripClass::Init_IO(int column)
 {
     if (!g_InMapEditor) {
-        WhichColumn = column;
+        m_WhichColumn = column;
 
-        UpButton[WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_LEFT);
-        UpButton[WhichColumn].Set_XPos(XPos + 4);
-        UpButton[WhichColumn].Set_YPos(YPos + 194);
-        UpButton[WhichColumn].Set_Shape(GameFileClass::Retrieve("stripup.shp"));
-        UpButton[WhichColumn].Set_Sticky(true);
+        UpButton[m_WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_LEFT);
+        UpButton[m_WhichColumn].Set_XPos(m_XPos + 4);
+        UpButton[m_WhichColumn].Set_YPos(m_YPos + 194);
+        UpButton[m_WhichColumn].Set_Shape(GameFileClass::Retrieve("stripup.shp"));
+        UpButton[m_WhichColumn].Set_Sticky(true);
 
-        DownButton[WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_RIGHT);
-        DownButton[WhichColumn].Set_XPos(XPos + 36);
-        DownButton[WhichColumn].Set_YPos(YPos + 194);
-        DownButton[WhichColumn].Set_Shape(GameFileClass::Retrieve("stripdn.shp"));
-        DownButton[WhichColumn].Set_Sticky(true);
+        DownButton[m_WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_RIGHT);
+        DownButton[m_WhichColumn].Set_XPos(m_XPos + 36);
+        DownButton[m_WhichColumn].Set_YPos(m_YPos + 194);
+        DownButton[m_WhichColumn].Set_Shape(GameFileClass::Retrieve("stripdn.shp"));
+        DownButton[m_WhichColumn].Set_Sticky(true);
 
         for (int index = 0; index < ROW_COUNT; ++index) {
-            SelectButton[WhichColumn][index].Set_ID(220);
-            SelectButton[WhichColumn][index].Set_Size(64, 48);
-            SelectButton[WhichColumn][index].Set_XPos(XPos);
-            SelectButton[WhichColumn][index].Set_YPos(YPos + index * 48);
-            SelectButton[WhichColumn][index].Set_Owner(*this, index);
+            SelectButton[m_WhichColumn][index].Set_ID(220);
+            SelectButton[m_WhichColumn][index].Set_Size(64, 48);
+            SelectButton[m_WhichColumn][index].Set_XPos(m_XPos);
+            SelectButton[m_WhichColumn][index].Set_YPos(m_YPos + index * 48);
+            SelectButton[m_WhichColumn][index].Set_Owner(*this, index);
         }
     }
 }
@@ -230,24 +230,24 @@ void SidebarClass::StripClass::Reload_LogoShapes()
 
 void SidebarClass::StripClass::Activate()
 {
-    UpButton[WhichColumn].Unlink();
-    DownButton[WhichColumn].Unlink();
-    Map.Add_A_Button(UpButton[WhichColumn]);
-    Map.Add_A_Button(DownButton[WhichColumn]);
+    UpButton[m_WhichColumn].Unlink();
+    DownButton[m_WhichColumn].Unlink();
+    Map.Add_A_Button(UpButton[m_WhichColumn]);
+    Map.Add_A_Button(DownButton[m_WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-        SelectButton[WhichColumn][index].Unlink();
-        Map.Add_A_Button(SelectButton[WhichColumn][index]);
+        SelectButton[m_WhichColumn][index].Unlink();
+        Map.Add_A_Button(SelectButton[m_WhichColumn][index]);
     }
 }
 
 void SidebarClass::StripClass::Deactivate()
 {
-    Map.Remove_A_Button(UpButton[WhichColumn]);
-    Map.Remove_A_Button(DownButton[WhichColumn]);
+    Map.Remove_A_Button(UpButton[m_WhichColumn]);
+    Map.Remove_A_Button(DownButton[m_WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-        Map.Remove_A_Button(SelectButton[WhichColumn][index]);
+        Map.Remove_A_Button(SelectButton[m_WhichColumn][index]);
     }
 }
 
@@ -257,12 +257,12 @@ BOOL SidebarClass::StripClass::Add(RTTIType type, int id)
     DEBUG_ASSERT(type < RTTI_COUNT);
 
     // Check our cameo count isn't greater than we have space for. If it is, return false.
-    if (CameoCount < MAX_BUTTONS_PER_COLUMN) {
+    if (m_CameoCount < MAX_BUTTONS_PER_COLUMN) {
         // If the list already has at least 1 cameo in it, check we aren't trying to add the same one again, if we are,
         // return false.
-        if (CameoCount > 0) {
+        if (m_CameoCount > 0) {
             for (int index = 0; index < MAX_BUTTONS_PER_COLUMN; ++index) {
-                if (Entries[index].Type == type && Entries[index].ID == id) {
+                if (m_Entries[index].Type == type && m_Entries[index].ID == id) {
                     return false;
                 }
             }
@@ -272,10 +272,10 @@ BOOL SidebarClass::StripClass::Add(RTTIType type, int id)
             Speak(VOX_NEW_OPTIONS);
         }
 
-        Entries[CameoCount].Type = type;
-        Entries[CameoCount].ID = id;
-        ++CameoCount;
-        StripToRedraw = true;
+        m_Entries[m_CameoCount].Type = type;
+        m_Entries[m_CameoCount].ID = id;
+        ++m_CameoCount;
+        m_StripToRedraw = true;
 
         return true;
     }
@@ -287,18 +287,18 @@ BOOL SidebarClass::StripClass::Scroll(BOOL reverse)
 {
     if (reverse) {
         // We can't go below 0 for the current row, so check and if we are trying to, just return false.
-        if (CurrentRow == 0) {
+        if (m_CurrentRow == 0) {
             return false;
         }
 
-        --RowStartIndex;
+        --m_RowStartIndex;
     } else {
         // We can't go beyond the count of cameos we have, so again return false if we try.
-        if (CurrentRow + ROW_COUNT >= CameoCount) {
+        if (m_CurrentRow + ROW_COUNT >= m_CameoCount) {
             return false;
         }
 
-        ++RowStartIndex;
+        ++m_RowStartIndex;
     }
 
     return true;
@@ -306,7 +306,7 @@ BOOL SidebarClass::StripClass::Scroll(BOOL reverse)
 
 void SidebarClass::StripClass::Flag_To_Redraw()
 {
-    StripToRedraw = true;
+    m_StripToRedraw = true;
     Map.Flag_To_Redraw();
 }
 
@@ -345,10 +345,10 @@ BOOL SidebarClass::StripClass::Recalc()
 
 BOOL SidebarClass::StripClass::Factory_Link(int factory_id, RTTIType type, int id)
 {
-    for (int index = 0; index < CameoCount; ++index) {
-        if (Entries[index].Type == type && Entries[index].ID == id) {
-            Entries[index].Factory = factory_id;
-            Strip_Boolean2 = true;
+    for (int index = 0; index < m_CameoCount; ++index) {
+        if (m_Entries[index].Type == type && m_Entries[index].ID == id) {
+            m_Entries[index].Factory = factory_id;
+            m_Strip_Boolean2 = true;
             Flag_To_Redraw();
 
             return true;
@@ -371,19 +371,19 @@ int SidebarClass::StripClass::Abandon_Production(int unk1)
 
 SidebarClass::SidebarClass() :
     PowerClass(),
-    SidebarIsDrawn(false),
-    SidebarToRedraw(true),
-    SidebarBit4(false),
-    SidebarBit8(false),
-    SidebarBit16(false)
+    m_SidebarIsDrawn(false),
+    m_SidebarToRedraw(true),
+    m_SidebarBit4(false),
+    m_SidebarBit8(false),
+    m_SidebarBit16(false)
 {
     InitClass init;
     for (int column = 0; column < COLUMN_COUNT; ++column) {
         // Placement new to perform construction of object array with specific constructor.
-        new (&Columns[column]) StripClass(init);
+        new (&m_Columns[column]) StripClass(init);
     }
-    Columns[0].Set_Position(496, 180);
-    Columns[1].Set_Position(566, 180);
+    m_Columns[0].Set_Position(496, 180);
+    m_Columns[1].Set_Position(566, 180);
 }
 
 void SidebarClass::One_Time()
@@ -396,7 +396,7 @@ void SidebarClass::One_Time()
     WindowList[WINDOW_SIDEBAR].H = 192;
 
     for (int column = 0; column < COLUMN_COUNT; ++column) {
-        Columns[column].One_Time(column);
+        m_Columns[column].One_Time(column);
     }
 
     if (SidebarShape == nullptr) {
@@ -412,14 +412,14 @@ void SidebarClass::One_Time()
 void SidebarClass::Init_Clear()
 {
     PowerClass::Init_Clear();
-    SidebarToRedraw = true;
+    m_SidebarToRedraw = true;
     if (!g_InMapEditor) {
-        SidebarBit4 = false;
-        SidebarBit8 = false;
-        SidebarBit16 = false;
+        m_SidebarBit4 = false;
+        m_SidebarBit8 = false;
+        m_SidebarBit16 = false;
 
         for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-            Columns[column].Init_Clear();
+            m_Columns[column].Init_Clear();
         }
 
         Activate(0);
@@ -453,18 +453,18 @@ void SidebarClass::Init_IO()
         ZoomButton.Set_Toggle_Bool1(false);
         ZoomButton.Set_Shape(GameFileClass::Retrieve("map.shp"));
 
-        if ((RadarActive && Is_Zoomable()) || Session.Game_To_Play() != GAME_CAMPAIGN) {
+        if ((m_RadarActive && Is_Zoomable()) || Session.Game_To_Play() != GAME_CAMPAIGN) {
             ZoomButton.Enable();
         } else {
             ZoomButton.Disable();
         }
 
         for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-            Columns[column].Init_IO(column);
+            m_Columns[column].Init_IO(column);
         }
 
-        if (SidebarIsDrawn) {
-            SidebarIsDrawn = false;
+        if (m_SidebarIsDrawn) {
+            m_SidebarIsDrawn = false;
             Activate(1);
         }
     }
@@ -478,7 +478,7 @@ void SidebarClass::Init_Theater(TheaterType theater)
         Reload_Sidebar();
 
         for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-            Columns[column].Init_Theater(theater);
+            m_Columns[column].Init_Theater(theater);
         }
     }
 }
@@ -501,8 +501,8 @@ void SidebarClass::Draw_It(BOOL force_redraw)
 
         BENCHMARK_START(BENCH_SIDEBAR);
 
-        if (SidebarIsDrawn && (SidebarToRedraw || force_redraw) && !g_InMapEditor ) {
-            SidebarToRedraw = false;
+        if (m_SidebarIsDrawn && (m_SidebarToRedraw || force_redraw) && !g_InMapEditor ) {
+            m_SidebarToRedraw = false;
             if (g_logicPage->Lock()) {
                 if (SidebarShape != nullptr) {
                     CC_Draw_Shape(SidebarShape,
@@ -549,26 +549,26 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                 ZoomButton.Draw_Me(true);
 
                 /*for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                    Columns[column].StripToRedraw = true;
+                    m_Columns[column].m_StripToRedraw = true;
                 }*/
 
                 g_logicPage->Unlock();
             }
         }
 
-        if (SidebarIsDrawn) {
+        if (m_SidebarIsDrawn) {
             for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                Columns[column].Draw_It(force_redraw);
+                m_Columns[column].Draw_It(force_redraw);
             }
 
-            if (SidebarToRedraw || force_redraw) {
+            if (m_SidebarToRedraw || force_redraw) {
                 RepairButton.Draw_Me(true);
                 SellButton.Draw_Me(true);
                 ZoomButton.Draw_Me(true);
             }
         }
 
-        SidebarToRedraw = false;
+        m_SidebarToRedraw = false;
 
         BENCHMARK_END(BENCH_SIDEBAR);
     }
@@ -580,10 +580,10 @@ void SidebarClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
     if (list != nullptr) {
         if (list[0] == LIST_START) {
             for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                Columns[column].StripToRedraw = true;
+                m_Columns[column].m_StripToRedraw = true;
             }
 
-            SidebarToRedraw = true;
+            m_SidebarToRedraw = true;
             Flag_To_Redraw();
         }
     }
@@ -658,28 +658,28 @@ int SidebarClass::Which_Column(RTTIType type)
 
 BOOL SidebarClass::Factory_Link(int factory_id, RTTIType type, int id)
 {
-    return Columns[Which_Column(type)].Factory_Link(factory_id, type, id);
+    return m_Columns[Which_Column(type)].Factory_Link(factory_id, type, id);
 }
 
 BOOL SidebarClass::Activate_Repair(int state)
 {
-    bool to_redraw = SidebarToRedraw;
+    bool to_redraw = m_SidebarToRedraw;
 
     if (state == -1) {
-        state = (SidebarBit4 == 0);
+        state = (m_SidebarBit4 == 0);
     }
 
     if (state == 1) {
-        SidebarBit4 = true;
+        m_SidebarBit4 = true;
     } else {
-        SidebarBit4 = false;
+        m_SidebarBit4 = false;
     }
 
-    if (SidebarToRedraw != to_redraw) {
+    if (m_SidebarToRedraw != to_redraw) {
         Flag_To_Redraw();
-        SidebarToRedraw = true;
+        m_SidebarToRedraw = true;
 
-        if (!SidebarBit4) {
+        if (!m_SidebarBit4) {
             Help_Text(TXT_NONE);
             Set_Default_Mouse(MOUSE_POINTER);
         }
@@ -690,23 +690,23 @@ BOOL SidebarClass::Activate_Repair(int state)
 
 BOOL SidebarClass::Activate_Upgrade(int state) // Actually Sell?
 {
-    bool to_redraw = SidebarToRedraw;
+    bool to_redraw = m_SidebarToRedraw;
 
     if (state == -1) {
-        state = (SidebarBit8 == 0);
+        state = (m_SidebarBit8 == 0);
     }
 
     if (state == 1) {
-        SidebarBit8 = true;
+        m_SidebarBit8 = true;
     } else {
-        SidebarBit8 = false;
+        m_SidebarBit8 = false;
     }
 
-    if (SidebarToRedraw != to_redraw) {
+    if (m_SidebarToRedraw != to_redraw) {
         Flag_To_Redraw();
-        SidebarToRedraw = true;
+        m_SidebarToRedraw = true;
 
-        if (!SidebarBit8) {
+        if (!m_SidebarBit8) {
             Set_Default_Mouse(MOUSE_POINTER);
         }
     }
@@ -716,23 +716,23 @@ BOOL SidebarClass::Activate_Upgrade(int state) // Actually Sell?
 
 BOOL SidebarClass::Activate_Demolish(int state) // Actually Zoom?
 {
-    bool to_redraw = SidebarToRedraw;
+    bool to_redraw = m_SidebarToRedraw;
 
     if (state == -1) {
-        state = (SidebarBit16 == 0);
+        state = (m_SidebarBit16 == 0);
     }
 
     if (state == 1) {
-        SidebarBit16 = true;
+        m_SidebarBit16 = true;
     } else {
-        SidebarBit16 = false;
+        m_SidebarBit16 = false;
     }
 
-    if (SidebarToRedraw != to_redraw) {
+    if (m_SidebarToRedraw != to_redraw) {
         Flag_To_Redraw();
-        SidebarToRedraw = true;
+        m_SidebarToRedraw = true;
 
-        if (!SidebarBit16) {
+        if (!m_SidebarBit16) {
             Set_Default_Mouse(MOUSE_POINTER);
         }
     }
@@ -747,9 +747,9 @@ BOOL SidebarClass::Add(RTTIType item, int id)
     }
 
     // get Left or Right strip and add the "item", based on return value of Which_Column().
-    if (Columns[Which_Column(item)].Add(item, id)) {
+    if (m_Columns[Which_Column(item)].Add(item, id)) {
         Activate(1);
-        SidebarToRedraw = true;
+        m_SidebarToRedraw = true;
         Flag_To_Redraw();
 
         return true;
@@ -763,7 +763,7 @@ BOOL SidebarClass::Scroll(BOOL reverse, int column)
     BOOL scroll_result;
 
     if (column == COLUMN_NONE) {
-        scroll_result = (Columns[COLUMN_LEFT].Scroll(reverse) || Columns[COLUMN_RIGHT].Scroll(reverse));
+        scroll_result = (m_Columns[COLUMN_LEFT].Scroll(reverse) || m_Columns[COLUMN_RIGHT].Scroll(reverse));
 
         if (!scroll_result) {
             Sound_Effect(VOC_SCOLDY1);
@@ -773,19 +773,19 @@ BOOL SidebarClass::Scroll(BOOL reverse, int column)
             return false;
         }
 
-        SidebarToRedraw = true;
+        m_SidebarToRedraw = true;
         Flag_To_Redraw();
 
         return true;
     }
 
-    scroll_result = Columns[column].Scroll(reverse);
+    scroll_result = m_Columns[column].Scroll(reverse);
 
     if (!scroll_result) {
         return false;
     }
 
-    SidebarToRedraw = true;
+    m_SidebarToRedraw = true;
     Flag_To_Redraw();
 
     return true;
@@ -796,7 +796,7 @@ void SidebarClass::Recalc()
     BOOL recalculated = false;
 
     for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-        recalculated = Columns[column].Recalc();
+        recalculated = m_Columns[column].Recalc();
 
         if (recalculated) {
             break;
@@ -804,25 +804,25 @@ void SidebarClass::Recalc()
     }
 
     if (recalculated) {
-        SidebarToRedraw = true;
+        m_SidebarToRedraw = true;
         Flag_To_Redraw();
     }
 }
 
 BOOL SidebarClass::Activate(int mode)
 {
-    bool prevvalue = SidebarIsDrawn;
+    bool prevvalue = m_SidebarIsDrawn;
 
     if (!g_InMapEditor) {
         if (!Session.Playback_Game()) {
-            SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? !SidebarIsDrawn : mode == SIDEBAR_ACTIVATE);
+            m_SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? !m_SidebarIsDrawn : mode == SIDEBAR_ACTIVATE);
 
-            bool newvalue = SidebarIsDrawn;
+            bool newvalue = m_SidebarIsDrawn;
 
             if (newvalue != prevvalue) {
                 if (newvalue) {
                     Set_View_Dimensions(0, 16, 20, -1);
-                    SidebarToRedraw = true;
+                    m_SidebarToRedraw = true;
                     Help_Text(TXT_NULL, -1, -1);
                     RepairButton.Unlink();
                     Add_A_Button(RepairButton);
@@ -832,7 +832,7 @@ BOOL SidebarClass::Activate(int mode)
                     Add_A_Button(ZoomButton);
 
                     for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                        Columns[column].Activate();
+                        m_Columns[column].Activate();
                     }
 
                     Background.Unlink();
@@ -849,7 +849,7 @@ BOOL SidebarClass::Activate(int mode)
                     Remove_A_Button(ZoomButton);
 
                     for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
-                        Columns[column].Deactivate();
+                        m_Columns[column].Deactivate();
                     }
 
                     Remove_A_Button(Background);
@@ -866,26 +866,26 @@ BOOL SidebarClass::Activate(int mode)
 
 int SidebarClass::Abandon_Production(RTTIType type, int unk2)
 {
-    return Columns[Which_Column(type)].Abandon_Production(unk2);
+    return m_Columns[Which_Column(type)].Abandon_Production(unk2);
 }
 
 void SidebarClass::Zoom_Mode_Control()
 {
-    if (!RadarActive) {
+    if (!m_RadarActive) {
         if (Session.Game_To_Play() != GAME_CAMPAIGN) {
-            Player_Names(!RadarDrawNames);
+            Player_Names(!m_RadarDrawNames);
         }
-    } else if (RadarZoomed || Session.Game_To_Play() == GAME_CAMPAIGN) {
-        if (RadarZoomed || !Spy_Next_House()) {
-            Zoom_Mode(Coord_To_Cell(DisplayPos));
+    } else if (m_RadarZoomed || Session.Game_To_Play() == GAME_CAMPAIGN) {
+        if (m_RadarZoomed || !Spy_Next_House()) {
+            Zoom_Mode(Coord_To_Cell(m_DisplayPos));
         }
-    } else if (!RadarDrawNames && !RadarZoomed) {
+    } else if (!m_RadarDrawNames && !m_RadarZoomed) {
         Player_Names(true);
     } else {
         Player_Names(false);
 
         if (!Spy_Next_House()) {
-            Zoom_Mode(Coord_To_Cell(DisplayPos));
+            Zoom_Mode(Coord_To_Cell(m_DisplayPos));
         }
     }
 }

@@ -42,12 +42,12 @@ void *TabClass::TabBackgroundShape = nullptr;
  * 0x004ACB90
  */
 TabClass::CreditClass::CreditClass() :
-    Available(0),
-    Credits(0),
-    CreditToRedraw(false),
-    CreditHasIncreased(false),
-    CreditHasChanged(false),
-    TicksToNextRecalc(0)
+    m_Available(0),
+    m_Credits(0),
+    m_CreditToRedraw(false),
+    m_CreditHasIncreased(false),
+    m_CreditHasChanged(false),
+    m_TicksToNextRecalc(0)
 {
     return;
 }
@@ -59,12 +59,12 @@ TabClass::CreditClass::CreditClass() :
  */
 void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 {
-    if (force_redraw || CreditToRedraw) {
+    if (force_redraw || m_CreditToRedraw) {
 
         BENCHMARK_START(BENCH_TABS);
 
-        if (CreditHasChanged) {
-            Sound_Effect(CreditHasIncreased ? VOC_MONEY_UP : VOC_MONEY_DOWN, fixed_t::_1_2);
+        if (m_CreditHasChanged) {
+            Sound_Effect(m_CreditHasIncreased ? VOC_MONEY_UP : VOC_MONEY_DOWN, fixed_t::_1_2);
         }
 
         TabClass::Draw_Credits_Tab();
@@ -77,7 +77,7 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
                 &MetalScheme,
                 0,
                 TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
-                Credits);
+                m_Credits);
         } else {
             Fancy_Text_Print("%d",
                 g_seenBuff.Get_Width() - (TAB_WIDTH / 2),
@@ -85,7 +85,7 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
                 &MetalScheme,
                 0,
                 TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
-                Credits);
+                m_Credits);
         }
 
         if (Scen.Global_Timer_Running()) {
@@ -136,7 +136,7 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 
             if (voctospeak != VOX_NONE) {
                 Speak(voctospeak);
-                Map.TimerFlashTimer = 7;
+                Map.m_TimerFlashTimer = 7;
             }
 
             // Print the time.
@@ -185,8 +185,8 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
             }
         }
 
-        CreditToRedraw = false;
-        CreditHasChanged = false;
+        m_CreditToRedraw = false;
+        m_CreditHasChanged = false;
 
         BENCHMARK_END(BENCH_TABS);
     }
@@ -202,60 +202,60 @@ void TabClass::CreditClass::AI(BOOL force_update)
     static int _last = 0;
 
     if (g_InMapEditor) {
-        Available = std::max(0, Map.TotalValue);
+        m_Available = std::max(0, Map.m_TotalValue);
 
-        if (Credits != Available) {
-            CreditHasChanged = false;
-            Credits = Available;
-            CreditToRedraw = true;
+        if (m_Credits != m_Available) {
+            m_CreditHasChanged = false;
+            m_Credits = m_Available;
+            m_CreditToRedraw = true;
             Map.Flag_To_Redraw();
         }
     } else if (force_update || g_GameFrame != _last) {
         _last = g_GameFrame;
-        Available = std::max(0, g_PlayerPtr->Available_Money());
+        m_Available = std::max(0, g_PlayerPtr->Available_Money());
 
         if (!Scen.Global_Timer().Expired()) {
-            CreditToRedraw = true;
+            m_CreditToRedraw = true;
             Map.Flag_To_Redraw();
         }
 
-        if (Credits != Available) {
+        if (m_Credits != m_Available) {
             if (force_update) {
-                CreditHasChanged = false;
-                Credits = Available;
+                m_CreditHasChanged = false;
+                m_Credits = m_Available;
             } else {
-                if (TicksToNextRecalc) {
-                    --TicksToNextRecalc;
+                if (m_TicksToNextRecalc) {
+                    --m_TicksToNextRecalc;
                 }
 
-                if (TicksToNextRecalc == 0) {
-                    TicksToNextRecalc = Available - Credits <= 0 ? 3 : 1;
-                    int unk = std::clamp((unsigned)std::abs(Available - Credits) / 8, 1u, 143u);
+                if (m_TicksToNextRecalc == 0) {
+                    m_TicksToNextRecalc = m_Available - m_Credits <= 0 ? 3 : 1;
+                    int unk = std::clamp((unsigned)std::abs(m_Available - m_Credits) / 8, 1u, 143u);
 
-                    if (Credits > Available) {
+                    if (m_Credits > m_Available) {
                         unk = -unk;
                     }
 
-                    Credits += unk;
+                    m_Credits += unk;
 
-                    if (Credits - unk != Credits) {
-                        CreditHasChanged = true;
-                        CreditHasIncreased = unk > 0;
+                    if (m_Credits - unk != m_Credits) {
+                        m_CreditHasChanged = true;
+                        m_CreditHasIncreased = unk > 0;
                     }
                 }
             }
 
-            CreditToRedraw = true;
+            m_CreditToRedraw = true;
             Map.Flag_To_Redraw();
         }
     }
 }
 
 TabClass::TabClass() :
-    CreditDisplay(),
-    TimerFlashTimer(),
-    TabToRedraw(false),
-    CreditsFlashTimer()
+    m_CreditDisplay(),
+    m_TimerFlashTimer(),
+    m_TabToRedraw(false),
+    m_CreditsFlashTimer()
 {
 }
 
@@ -304,12 +304,12 @@ void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
         Override_Mouse_Shape(MOUSE_POINTER, 0);
     }
 
-    if (CreditsFlashTimer == 1) {
-        TabToRedraw = true;
+    if (m_CreditsFlashTimer == 1) {
+        m_TabToRedraw = true;
         Flag_To_Redraw(0);
     }
 
-    CreditDisplay.AI(0);
+    m_CreditDisplay.AI(0);
     SidebarClass::AI(key, mouse_x, mouse_y);
 }
 
@@ -322,7 +322,7 @@ void TabClass::Draw_It(BOOL force_redraw)
 {
     SidebarClass::Draw_It(force_redraw);
 
-    if ((force_redraw || TabToRedraw) && g_logicPage->Lock()) {
+    if ((force_redraw || m_TabToRedraw) && g_logicPage->Lock()) {
         g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
 
         // Draw the new Chronoshift tab background if available.
@@ -372,9 +372,9 @@ void TabClass::Draw_It(BOOL force_redraw)
         g_logicPage->Unlock();
     }
 
-    CreditDisplay.Graphic_Logic(force_redraw || TabToRedraw);
+    m_CreditDisplay.Graphic_Logic(force_redraw || m_TabToRedraw);
 
-    TabToRedraw = false;
+    m_TabToRedraw = false;
 }
 
 /**
@@ -384,9 +384,9 @@ void TabClass::Draw_It(BOOL force_redraw)
  */
 void TabClass::Flash_Money()
 {
-    TabToRedraw = true;
+    m_TabToRedraw = true;
     Flag_To_Redraw();
-    CreditsFlashTimer = 7;
+    m_CreditsFlashTimer = 7;
 }
 
 /**
@@ -400,7 +400,7 @@ void TabClass::Draw_Credits_Tab()
     int width = g_logicPage->Get_Width();
 
     if (Options.Sidebar_Toggle_Allowed()) {
-        if (Map.CreditsFlashTimer > 1) {
+        if (Map.m_CreditsFlashTimer > 1) {
             tabframe = 4;
         } else {
             tabframe = 2;
@@ -408,7 +408,7 @@ void TabClass::Draw_Credits_Tab()
 
         CC_Draw_Shape(TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
     } else {
-        if (Map.CreditsFlashTimer > 1) {
+        if (Map.m_CreditsFlashTimer > 1) {
             tabframe = 8;
         } else {
             tabframe = 6;
@@ -419,7 +419,7 @@ void TabClass::Draw_Credits_Tab()
 
     if (Scen.Global_Timer_Running()) {
         if (Scen.Get_Global_Time() >= 900 * Rule.Get_Timer_Warning()) {
-            tabframe = Map.TimerFlashTimer > 0 ? 4 : 2;
+            tabframe = Map.m_TimerFlashTimer > 0 ? 4 : 2;
         } else {
             tabframe = 4;
         }

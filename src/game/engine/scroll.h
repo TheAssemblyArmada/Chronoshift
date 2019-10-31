@@ -41,11 +41,11 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Autoscroll : 1; // 1
+    BOOL m_Autoscroll : 1; // 1
 #else
-    bool Autoscroll;
+    bool m_Autoscroll;
 #endif
-    int ScrollUnkInt; // is this a rate of sorts?
+    int m_ScrollUnkInt; // is this a rate of sorts?
 
 private:
 #ifdef GAME_DLL

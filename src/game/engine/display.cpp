@@ -172,7 +172,7 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
             }
         }
 
-        switch (Map.PendingSuper) {
+        switch (Map.m_PendingSuper) {
             case SPECIAL_ATOM_BOMB:
                 action = ACTION_NUKE;
                 break;
@@ -262,27 +262,27 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
 }
 
 DisplayClass::DisplayClass() :
-    DisplayPos(0),
-    DisplayWidth(0),
-    DisplayHeight(0),
-    DisplayCursorStart(0),
-    DisplayCursorEnd(0),
-    DisplayCursorOccupy(nullptr),
-    PassedProximityCheck(false),
-    PendingObjectPtr(nullptr),
-    PendingObjectTypePtr(nullptr),
-    PendingObjectOwner(HOUSES_NONE),
-    TacOffsetX(0),
-    TacOffsetY(0),
-    DisplayNewPos(0),
-    DisplayToRedraw(true),
-    DisplayRepairMode(false),
-    DisplaySellMode(false),
-    DisplayBit8(false),
-    DisplayBit16(false),
-    RedrawShadow(false),
-    PendingSuper(SPECIAL_NONE),
-    BandBox(0, 0, 0, 0)
+    m_DisplayPos(0),
+    m_DisplayWidth(0),
+    m_DisplayHeight(0),
+    m_DisplayCursorStart(0),
+    m_DisplayCursorEnd(0),
+    m_DisplayCursorOccupy(nullptr),
+    m_PassedProximityCheck(false),
+    m_PendingObjectPtr(nullptr),
+    m_PendingObjectTypePtr(nullptr),
+    m_PendingObjectOwner(HOUSES_NONE),
+    m_TacOffsetX(0),
+    m_TacOffsetY(0),
+    m_DisplayNewPos(0),
+    m_DisplayToRedraw(true),
+    m_DisplayRepairMode(false),
+    m_DisplaySellMode(false),
+    m_DisplayBit8(false),
+    m_DisplayBit16(false),
+    m_RedrawShadow(false),
+    m_PendingSuper(SPECIAL_NONE),
+    m_BandBox(0, 0, 0, 0)
 {
     ShadowShapes = nullptr;
     TransIconset = nullptr;
@@ -297,17 +297,17 @@ DisplayClass::DisplayClass() :
 void DisplayClass::Init_Clear()
 {
     MapClass::Init_Clear();
-    PendingObjectPtr = 0;
-    PendingObjectTypePtr = 0;
-    PendingObjectOwner = HOUSES_NONE;
-    DisplayCursorOccupy = 0;
-    PendingSuper = SPECIAL_NONE;
-    DisplayToRedraw = true;
-    DisplayRepairMode = false;
-    DisplaySellMode = false;
-    DisplayBit8 = false;
-    DisplayBit16 = false;
-    RedrawShadow = true;
+    m_PendingObjectPtr = 0;
+    m_PendingObjectTypePtr = 0;
+    m_PendingObjectOwner = HOUSES_NONE;
+    m_DisplayCursorOccupy = 0;
+    m_PendingSuper = SPECIAL_NONE;
+    m_DisplayToRedraw = true;
+    m_DisplayRepairMode = false;
+    m_DisplaySellMode = false;
+    m_DisplayBit8 = false;
+    m_DisplayBit16 = false;
+    m_RedrawShadow = true;
 
     for (int i = 0; i < LAYER_COUNT; ++i) {
         Layers[i].Init();
@@ -451,10 +451,10 @@ void DisplayClass::Init_Theater(TheaterType theater)
  */
 void DisplayClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    if (DisplayBit8) {
-        if (g_mouse->Get_Mouse_X() < TacOffsetX || g_mouse->Get_Mouse_Y() < TacOffsetY
-            || g_mouse->Get_Mouse_X() >= CELL_PIXELS * DisplayHeight + 128 + TacOffsetX
-            || g_mouse->Get_Mouse_Y() >= CELL_PIXELS * DisplayWidth + 128 + TacOffsetY) {
+    if (m_DisplayBit8) {
+        if (g_mouse->Get_Mouse_X() < m_TacOffsetX || g_mouse->Get_Mouse_Y() < m_TacOffsetY
+            || g_mouse->Get_Mouse_X() >= CELL_PIXELS * m_DisplayHeight + 128 + m_TacOffsetX
+            || g_mouse->Get_Mouse_Y() >= CELL_PIXELS * m_DisplayWidth + 128 + m_TacOffsetY) {
             Mouse_Left_Release(-1, g_mouse->Get_Mouse_X(), g_mouse->Get_Mouse_Y());
         }
     }
@@ -464,74 +464,74 @@ void DisplayClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
 void DisplayClass::Draw_It(BOOL force_redraw)
 {
-    if (DisplayToRedraw || force_redraw) {
+    if (m_DisplayToRedraw || force_redraw) {
 
         BENCHMARK_START(BENCH_TACTICAL);
 
-        DisplayToRedraw = false;
+        m_DisplayToRedraw = false;
         Refresh_Band();
         g_ChronalVortex.Set_Redraw();
         int msg_count = Session.Get_Messages().Num_Messages();
 
         // If we have messages to draw, redraw the relevant rows of cells
         if (msg_count > 0) {
-            cell_t cell = Coord_To_Cell(DisplayPos);
-            cell_t ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1;
+            cell_t cell = Coord_To_Cell(m_DisplayPos);
+            cell_t ecell = cell + Lepton_To_Cell_Coord(m_DisplayWidth) + 1;
 
             for (; cell < ecell; ++cell) {
-                Array[cell].Redraw_Objects();
+                m_Array[cell].Redraw_Objects();
             }
 
-            cell = Coord_To_Cell(DisplayPos) + MAP_MAX_WIDTH;
-            ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + MAP_MAX_WIDTH;
+            cell = Coord_To_Cell(m_DisplayPos) + MAP_MAX_WIDTH;
+            ecell = cell + Lepton_To_Cell_Coord(m_DisplayWidth) + 1 + MAP_MAX_WIDTH;
 
             for (; cell < ecell; ++cell) {
-                Array[cell].Redraw_Objects();
+                m_Array[cell].Redraw_Objects();
             }
 
             if (msg_count > 1) {
-                cell = Coord_To_Cell(DisplayPos) + (MAP_MAX_WIDTH * 2);
-                ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 2);
+                cell = Coord_To_Cell(m_DisplayPos) + (MAP_MAX_WIDTH * 2);
+                ecell = cell + Lepton_To_Cell_Coord(m_DisplayWidth) + 1 + (MAP_MAX_WIDTH * 2);
 
                 for (; cell < ecell; ++cell) {
-                    Array[cell].Redraw_Objects();
+                    m_Array[cell].Redraw_Objects();
                 }
             }
 
             if (msg_count > 2) {
-                cell = Coord_To_Cell(DisplayPos) + (MAP_MAX_WIDTH * 3);
-                ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 3);
+                cell = Coord_To_Cell(m_DisplayPos) + (MAP_MAX_WIDTH * 3);
+                ecell = cell + Lepton_To_Cell_Coord(m_DisplayWidth) + 1 + (MAP_MAX_WIDTH * 3);
 
                 for (; cell < ecell; ++cell) {
-                    Array[cell].Redraw_Objects();
+                    m_Array[cell].Redraw_Objects();
                 }
             }
 
             if (msg_count > 3) {
-                cell = Coord_To_Cell(DisplayPos) + (MAP_MAX_WIDTH * 4);
-                ecell = cell + Lepton_To_Cell_Coord(DisplayWidth) + 1 + (MAP_MAX_WIDTH * 4);
+                cell = Coord_To_Cell(m_DisplayPos) + (MAP_MAX_WIDTH * 4);
+                ecell = cell + Lepton_To_Cell_Coord(m_DisplayWidth) + 1 + (MAP_MAX_WIDTH * 4);
 
                 for (; cell < ecell; ++cell) {
-                    Array[cell].Redraw_Objects();
+                    m_Array[cell].Redraw_Objects();
                 }
             }
         }
 
-        if (Lepton_To_Pixel(Coord_Lepton_X(DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_X(DisplayPos))
-            && Lepton_To_Pixel(Coord_Lepton_Y(DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_Y(DisplayPos))) {
+        if (Lepton_To_Pixel(Coord_Lepton_X(m_DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_X(m_DisplayPos))
+            && Lepton_To_Pixel(Coord_Lepton_Y(m_DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_Y(m_DisplayPos))) {
             ++ScenarioInit;
 
-            if (DisplayNewPos != DisplayPos) {
-                Set_Tactical_Position(DisplayNewPos);
+            if (m_DisplayNewPos != m_DisplayPos) {
+                Set_Tactical_Position(m_DisplayNewPos);
             }
 
             --ScenarioInit;
 
         } else {
-            int x_move_dist = Lepton_To_Pixel(Coord_Lepton_X(DisplayPos)) - Lepton_To_Pixel(Coord_Lepton_X(DisplayNewPos));
-            int y_move_dist = Lepton_To_Pixel(Coord_Lepton_Y(DisplayPos)) - Lepton_To_Pixel(Coord_Lepton_Y(DisplayNewPos));
-            int width_remain = Lepton_To_Pixel(DisplayWidth) - std::abs(x_move_dist);
-            int height_remain = Lepton_To_Pixel(DisplayHeight) - std::abs(y_move_dist);
+            int x_move_dist = Lepton_To_Pixel(Coord_Lepton_X(m_DisplayPos)) - Lepton_To_Pixel(Coord_Lepton_X(m_DisplayNewPos));
+            int y_move_dist = Lepton_To_Pixel(Coord_Lepton_Y(m_DisplayPos)) - Lepton_To_Pixel(Coord_Lepton_Y(m_DisplayNewPos));
+            int width_remain = Lepton_To_Pixel(m_DisplayWidth) - std::abs(x_move_dist);
+            int height_remain = Lepton_To_Pixel(m_DisplayHeight) - std::abs(y_move_dist);
 
             // Check if we'v moved more than 1 screen away and so need to redraw
             // everything.
@@ -546,7 +546,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
 
             // If we haven't moved at all redraw?
             if (force_redraw
-                || (Lepton_To_Pixel(DisplayWidth) == width_remain && Lepton_To_Pixel(DisplayHeight) == height_remain)) {
+                || (Lepton_To_Pixel(m_DisplayWidth) == width_remain && Lepton_To_Pixel(m_DisplayHeight) == height_remain)) {
                 force_redraw = true;
             } else {
                 // Do a block blit of anything still in view.
@@ -555,18 +555,18 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 if (g_hidPage.In_Video_Memory()) {
                     g_mouse->Hide_Mouse();
 
-                    int src_x = TacOffsetX + -std::min(0, x_move_dist);
-                    int src_y = -std::min(0, y_move_dist) + TacOffsetY;
-                    int dst_x = std::max(0, x_move_dist) + TacOffsetX;
-                    int dst_y = TacOffsetY + std::max(0, y_move_dist);
+                    int src_x = m_TacOffsetX + -std::min(0, x_move_dist);
+                    int src_y = -std::min(0, y_move_dist) + m_TacOffsetY;
+                    int dst_x = std::max(0, x_move_dist) + m_TacOffsetX;
+                    int dst_y = m_TacOffsetY + std::max(0, y_move_dist);
 
                     g_seenBuff.Blit(g_hidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
                     g_mouse->Show_Mouse();
                 } else {
-                    int src_x = TacOffsetX + -std::min(0, x_move_dist);
-                    int src_y = -std::min(0, y_move_dist) + TacOffsetY;
-                    int dst_x = std::max(0, x_move_dist) + TacOffsetX;
-                    int dst_y = TacOffsetY + std::max(0, y_move_dist);
+                    int src_x = m_TacOffsetX + -std::min(0, x_move_dist);
+                    int src_y = -std::min(0, y_move_dist) + m_TacOffsetY;
+                    int dst_x = std::max(0, x_move_dist) + m_TacOffsetX;
+                    int dst_y = m_TacOffsetY + std::max(0, y_move_dist);
 
                     g_hidPage.Blit(g_hidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
                 }
@@ -576,7 +576,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
             y_move_dist = std::max(0, y_move_dist);
 
             ++ScenarioInit;
-            Set_Tactical_Position(DisplayNewPos);
+            Set_Tactical_Position(m_DisplayNewPos);
             --ScenarioInit;
 
             // If we aren't forcing a complete redraw, then redraw around the edges of the moved section.
@@ -585,21 +585,21 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 height_remain -= 24;
 
                 if (std::abs(x_move_dist) >= 37 || std::abs(y_move_dist) >= 37) {
-                    int x_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_X(DisplayPos));
-                    int y_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_Y(DisplayPos));
+                    int x_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_X(m_DisplayPos));
+                    int y_pixel = -Lepton_To_Pixel(Coord_Sub_Cell_Y(m_DisplayPos));
                     width_remain -= CELL_PIXELS;
                     height_remain -= CELL_PIXELS;
 
-                    for (int j = y_pixel; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
-                        for (int k = x_pixel; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
+                    for (int j = y_pixel; Lepton_To_Pixel(m_DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
+                        for (int k = x_pixel; Lepton_To_Pixel(m_DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
                             if (k <= x_move_dist || width_remain + x_move_dist <= k || j <= y_move_dist
                                 || height_remain + y_move_dist <= j) {
-                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
-                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(m_DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(m_DisplayWidth) - 1);
+                                cell_t click_cell = Click_Cell_Calc(x_check + m_TacOffsetX, y_check + m_TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    Array[click_cell].Redraw_Objects(true);
+                                    m_Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
@@ -609,34 +609,34 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                     int x_move_fudge = std::abs(x_move_dist) < 16 ? 1 : 2;
                     int y_move_fudge = std::abs(y_move_dist) < 16 ? 1 : 2;
 
-                    int x_pixel2 = -Lepton_To_Pixel(Coord_Sub_Cell_X(DisplayPos));
-                    int y_pixel2 = -Lepton_To_Pixel(Coord_Sub_Cell_Y(DisplayPos));
+                    int x_pixel2 = -Lepton_To_Pixel(Coord_Sub_Cell_X(m_DisplayPos));
+                    int y_pixel2 = -Lepton_To_Pixel(Coord_Sub_Cell_Y(m_DisplayPos));
 
                     if (move_up) {
                         for (int j = y_pixel2; y_pixel2 + CELL_PIXELS * y_move_fudge >= j; j += CELL_PIXELS) {
-                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
-                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
-                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+                            for (int k = x_pixel2; Lepton_To_Pixel(m_DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(m_DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(m_DisplayWidth) - 1);
+                                cell_t click_cell = Click_Cell_Calc(x_check + m_TacOffsetX, y_check + m_TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    Array[click_cell].Redraw_Objects(true);
+                                    m_Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
                     }
 
                     if (move_down) {
-                        for (int j = Lepton_To_Pixel(DisplayHeight) - CELL_PIXELS * y_move_fudge;
-                             Lepton_To_Pixel(DisplayHeight) + 72 >= j;
+                        for (int j = Lepton_To_Pixel(m_DisplayHeight) - CELL_PIXELS * y_move_fudge;
+                             Lepton_To_Pixel(m_DisplayHeight) + 72 >= j;
                              j += CELL_PIXELS) {
-                            for (int k = x_pixel2; Lepton_To_Pixel(DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
-                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
-                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+                            for (int k = x_pixel2; Lepton_To_Pixel(m_DisplayWidth) + CELL_PIXELS * 2 >= k; k += CELL_PIXELS) {
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(m_DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(m_DisplayWidth) - 1);
+                                cell_t click_cell = Click_Cell_Calc(x_check + m_TacOffsetX, y_check + m_TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    Array[click_cell].Redraw_Objects(true);
+                                    m_Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
@@ -644,29 +644,29 @@ void DisplayClass::Draw_It(BOOL force_redraw)
 
                     if (move_left) {
                         for (int k = x_pixel2; x_pixel2 + CELL_PIXELS * x_move_fudge >= k; k += CELL_PIXELS) {
-                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
-                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
-                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+                            for (int j = y_pixel2; Lepton_To_Pixel(m_DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(m_DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(m_DisplayWidth) - 1);
+                                cell_t click_cell = Click_Cell_Calc(x_check + m_TacOffsetX, y_check + m_TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    Array[click_cell].Redraw_Objects(true);
+                                    m_Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
                     }
 
                     if (move_right) {
-                        for (int k = Lepton_To_Pixel(DisplayWidth) - x_move_fudge * CELL_PIXELS;
-                             Lepton_To_Pixel(DisplayWidth) + 72 >= k;
+                        for (int k = Lepton_To_Pixel(m_DisplayWidth) - x_move_fudge * CELL_PIXELS;
+                             Lepton_To_Pixel(m_DisplayWidth) + 72 >= k;
                              k += CELL_PIXELS) {
-                            for (int j = y_pixel2; Lepton_To_Pixel(DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
-                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(DisplayHeight) - 1);
-                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-                                cell_t click_cell = Click_Cell_Calc(x_check + TacOffsetX, y_check + TacOffsetY);
+                            for (int j = y_pixel2; Lepton_To_Pixel(m_DisplayHeight) + CELL_PIXELS * 2 >= j; j += CELL_PIXELS) {
+                                int y_check = std::clamp(j, 0, Lepton_To_Pixel(m_DisplayHeight) - 1);
+                                int x_check = std::clamp(k, 0, Lepton_To_Pixel(m_DisplayWidth) - 1);
+                                cell_t click_cell = Click_Cell_Calc(x_check + m_TacOffsetX, y_check + m_TacOffsetY);
 
                                 if (click_cell > 0) {
-                                    Array[click_cell].Redraw_Objects(true);
+                                    m_Array[click_cell].Redraw_Objects(true);
                                 }
                             }
                         }
@@ -703,11 +703,11 @@ void DisplayClass::Draw_It(BOOL force_redraw)
             g_hidPage.Unlock();
         }
 
-        if (DisplayBit8) {
-            g_logicPage->Draw_Rect(TacOffsetX + BandBox.Get_Left(),
-                TacOffsetY + BandBox.Get_Top(),
-                TacOffsetX + BandBox.Get_Right(),
-                TacOffsetY + BandBox.Get_Bottom(),
+        if (m_DisplayBit8) {
+            g_logicPage->Draw_Rect(m_TacOffsetX + m_BandBox.Get_Left(),
+                m_TacOffsetY + m_BandBox.Get_Top(),
+                m_TacOffsetX + m_BandBox.Get_Right(),
+                m_TacOffsetY + m_BandBox.Get_Bottom(),
                 15);
         }
 
@@ -719,8 +719,8 @@ void DisplayClass::Draw_It(BOOL force_redraw)
 
 void DisplayClass::Code_Pointers()
 {
-    if (PendingObjectPtr != nullptr) {
-        PendingObjectPtr = reinterpret_cast<ObjectClass *>((uintptr_t)PendingObjectPtr->As_Target());
+    if (m_PendingObjectPtr != nullptr) {
+        m_PendingObjectPtr = reinterpret_cast<ObjectClass *>((uintptr_t)m_PendingObjectPtr->As_Target());
     }
 
     MapClass::Code_Pointers();
@@ -728,8 +728,8 @@ void DisplayClass::Code_Pointers()
 
 void DisplayClass::Decode_Pointers()
 {
-    if ((uintptr_t)PendingObjectPtr != 0) {
-        PendingObjectPtr = As_Object((uintptr_t)PendingObjectPtr);
+    if ((uintptr_t)m_PendingObjectPtr != 0) {
+        m_PendingObjectPtr = As_Object((uintptr_t)m_PendingObjectPtr);
     }
 
     MapClass::Decode_Pointers();
@@ -823,12 +823,12 @@ BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
 
 cell_t DisplayClass::Click_Cell_Calc(int x, int y) const
 {
-    int xpos = (lepton_t)Pixel_To_Lepton(x - TacOffsetX);
-    int ypos = (lepton_t)Pixel_To_Lepton(y - TacOffsetY);
+    int xpos = (lepton_t)Pixel_To_Lepton(x - m_TacOffsetX);
+    int ypos = (lepton_t)Pixel_To_Lepton(y - m_TacOffsetY);
 
-    if (xpos < DisplayWidth && ypos < DisplayHeight) {
-        return Coord_To_Cell(Coord_From_Lepton_XY(xpos + Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos)),
-            ypos + Lepton_Round_To_Pixel(Coord_Lepton_Y(DisplayPos))));
+    if (xpos < m_DisplayWidth && ypos < m_DisplayHeight) {
+        return Coord_To_Cell(Coord_From_Lepton_XY(xpos + Lepton_Round_To_Pixel(Coord_Lepton_X(m_DisplayPos)),
+            ypos + Lepton_Round_To_Pixel(Coord_Lepton_Y(m_DisplayPos))));
     }
 
     return -1;
@@ -846,7 +846,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
         // accordingly.
         FacingType face = Direction_To_Facing(dir);
 
-        if (Coord_Cell_To_Lepton(MapCellX) == Coord_Lepton_X(DisplayPos) && face != FACING_WEST) {
+        if (Coord_Cell_To_Lepton(m_MapCellX) == Coord_Lepton_X(m_DisplayPos) && face != FACING_WEST) {
             if (face == FACING_SOUTH_WEST) {
                 dir = DIR_SOUTH;
             }
@@ -856,7 +856,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             }
         }
 
-        if (Coord_Cell_To_Lepton(MapCellY) == Coord_Lepton_Y(DisplayPos) && face != FACING_NORTH) {
+        if (Coord_Cell_To_Lepton(m_MapCellY) == Coord_Lepton_Y(m_DisplayPos) && face != FACING_NORTH) {
             if (face == FACING_NORTH_WEST) {
                 dir = DIR_WEST;
             }
@@ -866,9 +866,9 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             }
         }
 
-        int16_t view_edge = DisplayWidth + Coord_Lepton_X(DisplayPos);
+        int16_t view_edge = m_DisplayWidth + Coord_Lepton_X(m_DisplayPos);
 
-        if (view_edge == Coord_Cell_To_Lepton(MapCellWidth + MapCellX) && face != FACING_EAST) {
+        if (view_edge == Coord_Cell_To_Lepton(m_MapCellWidth + m_MapCellX) && face != FACING_EAST) {
             if (face == FACING_NORTH_EAST) {
                 dir = DIR_NORTH;
             }
@@ -878,9 +878,9 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             }
         }
 
-        view_edge = DisplayHeight + Coord_Lepton_Y(DisplayPos);
+        view_edge = m_DisplayHeight + Coord_Lepton_Y(m_DisplayPos);
 
-        if (Coord_Cell_To_Lepton(MapCellHeight + MapCellY) == view_edge && face != FACING_SOUTH) {
+        if (Coord_Cell_To_Lepton(m_MapCellHeight + m_MapCellY) == view_edge && face != FACING_SOUTH) {
             if (face == FACING_SOUTH_EAST) {
                 dir = DIR_EAST;
             }
@@ -890,16 +890,16 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
             }
         }
 
-        coord_t new_pos = Coord_Move(DisplayPos, dir, distance);
-        int x_pos = Coord_Lepton_X(new_pos) - Coord_Cell_To_Lepton(MapCellX);
-        int y_pos = Coord_Lepton_Y(new_pos) - Coord_Cell_To_Lepton(MapCellY);
+        coord_t new_pos = Coord_Move(m_DisplayPos, dir, distance);
+        int x_pos = Coord_Lepton_X(new_pos) - Coord_Cell_To_Lepton(m_MapCellX);
+        int y_pos = Coord_Lepton_Y(new_pos) - Coord_Cell_To_Lepton(m_MapCellY);
 
         bool confined = Confine_Rect(x_pos,
             y_pos,
-            DisplayWidth,
-            DisplayHeight,
-            Coord_Cell_To_Lepton(MapCellWidth),
-            Coord_Cell_To_Lepton(MapCellHeight));
+            m_DisplayWidth,
+            m_DisplayHeight,
+            Coord_Cell_To_Lepton(m_MapCellWidth),
+            Coord_Cell_To_Lepton(m_MapCellHeight));
 
         if (x_pos < 0) {
             x_pos = 0;
@@ -912,18 +912,18 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
         }
 
         coord_t pos_coord =
-            Coord_From_Lepton_XY(x_pos + Coord_Cell_To_Lepton(MapCellX), y_pos + Coord_Cell_To_Lepton(MapCellY));
+            Coord_From_Lepton_XY(x_pos + Coord_Cell_To_Lepton(m_MapCellX), y_pos + Coord_Cell_To_Lepton(m_MapCellY));
 
         // Update distance if the move was constrained.
         if (confined) {
-            distance = Distance(DisplayPos, pos_coord);
+            distance = Distance(m_DisplayPos, pos_coord);
         }
 
         // If we actually moved, redraw.
-        if (distance != 0 && pos_coord != DisplayPos) {
+        if (distance != 0 && pos_coord != m_DisplayPos) {
             if (redraw) {
                 Set_Tactical_Position(pos_coord);
-                DisplayToRedraw = true;
+                m_DisplayToRedraw = true;
                 Flag_To_Redraw();
                 Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
                 Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
@@ -960,7 +960,7 @@ void DisplayClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
             cell_t refresh_cell = cellnum + tmp_list[i];
 
             if (In_Radar(refresh_cell)) {
-                Array[refresh_cell].Redraw_Objects();
+                m_Array[refresh_cell].Redraw_Objects();
             }
         }
     }
@@ -974,30 +974,30 @@ void DisplayClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
 {
     if (w == -1) {
-        DisplayWidth = Pixel_To_Lepton(g_seenBuff.Get_Width() - x);
+        m_DisplayWidth = Pixel_To_Lepton(g_seenBuff.Get_Width() - x);
     } else {
-        DisplayWidth = w * 256;
+        m_DisplayWidth = w * 256;
     }
 
     if (h == -1) {
-        DisplayHeight = Pixel_To_Lepton(g_seenBuff.Get_Height() - y);
+        m_DisplayHeight = Pixel_To_Lepton(g_seenBuff.Get_Height() - y);
     } else {
-        DisplayHeight = h * 256;
+        m_DisplayHeight = h * 256;
     }
 
-    int x_pos = Coord_Lepton_X(DisplayPos) - (MapCellX * 256);
-    int y_pos = Coord_Lepton_Y(DisplayPos) - (MapCellY * 256);
+    int x_pos = Coord_Lepton_X(m_DisplayPos) - (m_MapCellX * 256);
+    int y_pos = Coord_Lepton_Y(m_DisplayPos) - (m_MapCellY * 256);
 
-    Confine_Rect(x_pos, y_pos, DisplayWidth, DisplayHeight, MapCellWidth * 256, MapCellHeight * 256);
+    Confine_Rect(x_pos, y_pos, m_DisplayWidth, m_DisplayHeight, m_MapCellWidth * 256, m_MapCellHeight * 256);
 
-    coord_t tacpos_coord = Coord_From_Lepton_XY(x_pos + (MapCellX * 256), y_pos + (MapCellY * 256));
+    coord_t tacpos_coord = Coord_From_Lepton_XY(x_pos + (m_MapCellX * 256), y_pos + (m_MapCellY * 256));
 
     Set_Tactical_Position(tacpos_coord);
-    TacOffsetX = x;
-    TacOffsetY = y;
+    m_TacOffsetX = x;
+    m_TacOffsetY = y;
 
-    WindowList[WINDOW_TACTICAL].W = Lepton_To_Pixel(DisplayWidth);
-    WindowList[WINDOW_TACTICAL].H = Lepton_To_Pixel(DisplayHeight);
+    WindowList[WINDOW_TACTICAL].W = Lepton_To_Pixel(m_DisplayWidth);
+    WindowList[WINDOW_TACTICAL].H = Lepton_To_Pixel(m_DisplayHeight);
     WindowList[WINDOW_TACTICAL].X = x;
     WindowList[WINDOW_TACTICAL].Y = y;
 
@@ -1006,13 +1006,13 @@ void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
         Change_Window(WINDOW_TACTICAL);
     }
 
-    DisplayToRedraw = true;
+    m_DisplayToRedraw = true;
     Flag_To_Redraw();
 
-    TacticalButton.Set_XPos(TacOffsetX);
-    TacticalButton.Set_YPos(TacOffsetY);
-    TacticalButton.Set_Width(Lepton_To_Pixel(DisplayWidth));
-    TacticalButton.Set_Height(Lepton_To_Pixel(DisplayHeight));
+    TacticalButton.Set_XPos(m_TacOffsetX);
+    TacticalButton.Set_YPos(m_TacOffsetY);
+    TacticalButton.Set_Width(Lepton_To_Pixel(m_DisplayWidth));
+    TacticalButton.Set_Height(Lepton_To_Pixel(m_DisplayHeight));
 }
 
 /**
@@ -1023,24 +1023,24 @@ void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
 void DisplayClass::Set_Tactical_Position(coord_t location)
 {
     // TODO This function will probably need adjustment to handle tactical view bigger than map for small maps.
-    int x_pos = Coord_Lepton_X(location) - Coord_Cell_To_Lepton(MapCellX);
-    int y_pos = Coord_Lepton_Y(location) - Coord_Cell_To_Lepton(MapCellY);
+    int x_pos = Coord_Lepton_X(location) - Coord_Cell_To_Lepton(m_MapCellX);
+    int y_pos = Coord_Lepton_Y(location) - Coord_Cell_To_Lepton(m_MapCellY);
 
     // Ensures our x and y positions are within the map
     Confine_Rect(
-        x_pos, y_pos, DisplayWidth, DisplayHeight, Coord_Cell_To_Lepton(MapCellWidth), Coord_Cell_To_Lepton(MapCellHeight));
+        x_pos, y_pos, m_DisplayWidth, m_DisplayHeight, Coord_Cell_To_Lepton(m_MapCellWidth), Coord_Cell_To_Lepton(m_MapCellHeight));
 
-    int16_t y_coord = Coord_Cell_To_Lepton(MapCellY) + y_pos;
-    int16_t x_coord = Coord_Cell_To_Lepton(MapCellX) + x_pos;
+    int16_t y_coord = Coord_Cell_To_Lepton(m_MapCellY) + y_pos;
+    int16_t x_coord = Coord_Cell_To_Lepton(m_MapCellX) + x_pos;
 
-    DisplayNewPos = Coord_From_Lepton_XY(x_coord, y_coord);
+    m_DisplayNewPos = Coord_From_Lepton_XY(x_coord, y_coord);
 
     // Update the display position if needed
     if (ScenarioInit) {
-        DisplayPos = Coord_From_Lepton_XY(x_coord, y_coord);
+        m_DisplayPos = Coord_From_Lepton_XY(x_coord, y_coord);
     }
 
-    DisplayToRedraw = true;
+    m_DisplayToRedraw = true;
     Flag_To_Redraw();
 }
 
@@ -1052,25 +1052,25 @@ void DisplayClass::Set_Tactical_Position(coord_t location)
 void DisplayClass::Flag_Cell(cell_t cellnum)
 {
     CellRedraw[cellnum] = true;
-    DisplayToRedraw = true;
+    m_DisplayToRedraw = true;
     Flag_To_Redraw();
 }
 
 void DisplayClass::Mouse_Right_Press()
 {
-    if (PendingObjectPtr != nullptr && PendingObjectPtr->Is_Techno()) {
-        PendingObjectPtr = nullptr;
-        PendingObjectTypePtr = nullptr;
-        PendingObjectOwner = HOUSES_NONE;
+    if (m_PendingObjectPtr != nullptr && m_PendingObjectPtr->Is_Techno()) {
+        m_PendingObjectPtr = nullptr;
+        m_PendingObjectTypePtr = nullptr;
+        m_PendingObjectOwner = HOUSES_NONE;
         Set_Cursor_Shape();
-    } else if (DisplayRepairMode) {
-        DisplayRepairMode = false;
-    } else if (DisplaySellMode) {
-        DisplaySellMode = false;
-    } else if (PendingSuper == SPECIAL_NONE) {
+    } else if (m_DisplayRepairMode) {
+        m_DisplayRepairMode = false;
+    } else if (m_DisplaySellMode) {
+        m_DisplaySellMode = false;
+    } else if (m_PendingSuper == SPECIAL_NONE) {
         Unselect_All();
     } else {
-        PendingSuper = SPECIAL_NONE;
+        m_PendingSuper = SPECIAL_NONE;
     }
 
     Set_Default_Mouse(MOUSE_POINTER, Map.Mouse_In_Radar());
@@ -1078,12 +1078,12 @@ void DisplayClass::Mouse_Right_Press()
 
 void DisplayClass::Mouse_Left_Press(int mouse_x, int mouse_y)
 {
-    if (!DisplayRepairMode && !DisplaySellMode && PendingSuper == SPECIAL_NONE && PendingObjectTypePtr == nullptr) {
-        BandBox.m_left = mouse_x;
-        BandBox.m_top = mouse_y;
-        BandBox.m_right = mouse_x;
-        BandBox.m_bottom = mouse_y;
-        DisplayBit16 = true;
+    if (!m_DisplayRepairMode && !m_DisplaySellMode && m_PendingSuper == SPECIAL_NONE && m_PendingObjectTypePtr == nullptr) {
+        m_BandBox.m_left = mouse_x;
+        m_BandBox.m_top = mouse_y;
+        m_BandBox.m_right = mouse_x;
+        m_BandBox.m_bottom = mouse_y;
+        m_DisplayBit16 = true;
     }
 }
 
@@ -1097,7 +1097,7 @@ void DisplayClass::Mouse_Left_Up(
 {
     target_t target = 0;
 
-    DisplayBit16 = false;
+    m_DisplayBit16 = false;
 
     if (object != nullptr) {
         target = As_Target(object);
@@ -1371,7 +1371,7 @@ void DisplayClass::Mouse_Left_Up(
                 color = COLOR_LTGREY;
             }
         } else {
-            CellClass &cell = Array[cellnum];
+            CellClass &cell = m_Array[cellnum];
 
             if (cell.Get_Land() == LAND_ORE) {
                 color = COLOR_YELLOW;
@@ -1385,22 +1385,22 @@ void DisplayClass::Mouse_Left_Up(
 
 void DisplayClass::Mouse_Left_Held(int mouse_x, int mouse_y)
 {
-    if (DisplayBit8) {
-        if (mouse_x != BandBox.m_right || mouse_y != BandBox.m_bottom) {
+    if (m_DisplayBit8) {
+        if (mouse_x != m_BandBox.m_right || mouse_y != m_BandBox.m_bottom) {
             Refresh_Band();
             // Need confirming, check between sole and ra!
-            BandBox.m_right = std::clamp(mouse_x, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-            BandBox.m_bottom = std::clamp(mouse_y, 0, Lepton_To_Pixel(DisplayHeight) - 1);
-            DisplayToRedraw = true;
+            m_BandBox.m_right = std::clamp(mouse_x, 0, Lepton_To_Pixel(m_DisplayWidth) - 1);
+            m_BandBox.m_bottom = std::clamp(mouse_y, 0, Lepton_To_Pixel(m_DisplayHeight) - 1);
+            m_DisplayToRedraw = true;
             Flag_To_Redraw();
         }
-    } else if (DisplayBit16) {
+    } else if (m_DisplayBit16) {
         // Ensure we actually drew a bandbox of usable size?
-        if (std::abs(BandBox.m_left - mouse_x) > 4 || std::abs(BandBox.m_top - mouse_y) > 4) {
-            DisplayBit8 = true;
-            BandBox.m_right = std::clamp(mouse_x, 0, Lepton_To_Pixel(DisplayWidth) - 1);
-            BandBox.m_bottom = std::clamp(mouse_y, 0, Lepton_To_Pixel(DisplayHeight) - 1);
-            DisplayToRedraw = true;
+        if (std::abs(m_BandBox.m_left - mouse_x) > 4 || std::abs(m_BandBox.m_top - mouse_y) > 4) {
+            m_DisplayBit8 = true;
+            m_BandBox.m_right = std::clamp(mouse_x, 0, Lepton_To_Pixel(m_DisplayWidth) - 1);
+            m_BandBox.m_bottom = std::clamp(mouse_y, 0, Lepton_To_Pixel(m_DisplayHeight) - 1);
+            m_DisplayToRedraw = true;
             Flag_To_Redraw();
 
             Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
@@ -1434,10 +1434,10 @@ void DisplayClass::Write_INI(GameINIClass &ini)
     ini.Clear(_map_section_name);
 
     ini.Put_TheaterType(_map_section_name, "Theater", Scen.Get_Theater());
-    ini.Put_Int(_map_section_name, "X", MapCellX);
-    ini.Put_Int(_map_section_name, "Y", MapCellY);
-    ini.Put_Int(_map_section_name, "Width", MapCellWidth);
-    ini.Put_Int(_map_section_name, "Height", MapCellHeight);
+    ini.Put_Int(_map_section_name, "X", m_MapCellX);
+    ini.Put_Int(_map_section_name, "Y", m_MapCellY);
+    ini.Put_Int(_map_section_name, "Width", m_MapCellWidth);
+    ini.Put_Int(_map_section_name, "Height", m_MapCellHeight);
 
     char buffer[16];
     for ( int i = 0; i < WAYPOINT_COUNT; ++i ) {
@@ -1464,11 +1464,11 @@ void DisplayClass::Write_INI(GameINIClass &ini)
  */
 coord_t DisplayClass::Pixel_To_Coord(int x, int y)
 {
-    int x_pos = Pixel_To_Lepton(x - TacOffsetX);
-    int y_pos = Pixel_To_Lepton(y - TacOffsetY);
+    int x_pos = Pixel_To_Lepton(x - m_TacOffsetX);
+    int y_pos = Pixel_To_Lepton(y - m_TacOffsetY);
 
-    if (x_pos < DisplayWidth && y_pos < DisplayHeight) {
-        return Coord_From_Lepton_XY(x_pos + Coord_Lepton_X(DisplayPos), y_pos + Coord_Lepton_Y(DisplayPos));
+    if (x_pos < m_DisplayWidth && y_pos < m_DisplayHeight) {
+        return Coord_From_Lepton_XY(x_pos + Coord_Lepton_X(m_DisplayPos), y_pos + Coord_Lepton_Y(m_DisplayPos));
     }
 
     return 0;
@@ -1484,23 +1484,23 @@ void DisplayClass::Set_Cursor_Shape(int16_t *list)
 {
     static int16_t tmp_list[60] = { 0 };
 
-    if (DisplayCursorOccupy != nullptr) {
-        Cursor_Mark(DisplayCursorStart + DisplayCursorEnd, false);
+    if (m_DisplayCursorOccupy != nullptr) {
+        Cursor_Mark(m_DisplayCursorStart + m_DisplayCursorEnd, false);
     }
 
-    DisplayCursorEnd = 0;
+    m_DisplayCursorEnd = 0;
 
     if (list != nullptr) {
         int x;
         int y;
 
         List_Copy(tmp_list, list, ARRAY_SIZE(tmp_list));
-        DisplayCursorOccupy = tmp_list;
+        m_DisplayCursorOccupy = tmp_list;
         Get_Occupy_Dimensions(x, y, tmp_list);
-        DisplayCursorEnd = -Cell_From_XY(x / 2, y / 2);
-        Cursor_Mark(DisplayCursorStart + DisplayCursorEnd, true);
+        m_DisplayCursorEnd = -Cell_From_XY(x / 2, y / 2);
+        Cursor_Mark(m_DisplayCursorStart + m_DisplayCursorEnd, true);
     } else {
-        DisplayCursorOccupy = nullptr;
+        m_DisplayCursorOccupy = nullptr;
     }
 }
 
@@ -1511,11 +1511,11 @@ void DisplayClass::Set_Cursor_Shape(int16_t *list)
  */
 void DisplayClass::Refresh_Band()
 {
-    if (DisplayBit8) {
-        int box_x = BandBox.m_left + TacOffsetX;
-        int box_y = BandBox.m_top + TacOffsetY;
-        int box_w = BandBox.m_right + TacOffsetX;
-        int box_h = BandBox.m_bottom + TacOffsetY;
+    if (m_DisplayBit8) {
+        int box_x = m_BandBox.m_left + m_TacOffsetX;
+        int box_y = m_BandBox.m_top + m_TacOffsetY;
+        int box_w = m_BandBox.m_right + m_TacOffsetX;
+        int box_h = m_BandBox.m_bottom + m_TacOffsetY;
 
         if (box_x > box_w) {
             std::swap(box_x, box_w);
@@ -1527,33 +1527,33 @@ void DisplayClass::Refresh_Band()
 
         // This loop should redraw the left and right side of the selection band.
         for (int i = box_y; i <= (box_h + CELL_PIXELS); i += CELL_PIXELS) {
-            int b_pxl = Lepton_To_Pixel(DisplayHeight) + TacOffsetY;
+            int b_pxl = Lepton_To_Pixel(m_DisplayHeight) + m_TacOffsetY;
             cell_t click_cell = Click_Cell_Calc(box_x, std::clamp(i, 0, b_pxl));
 
             if (click_cell != -1) {
-                Array[click_cell].Redraw_Objects();
+                m_Array[click_cell].Redraw_Objects();
             }
 
             click_cell = Click_Cell_Calc(box_w, std::clamp(i, 0, b_pxl));
 
             if (click_cell != -1) {
-                Array[click_cell].Redraw_Objects();
+                m_Array[click_cell].Redraw_Objects();
             }
         }
 
         // This loop should redraw the top and bottom side of the selection band.
         for (int i = box_x; i < (box_w + CELL_PIXELS); i += CELL_PIXELS) {
-            int b_pxl = Lepton_To_Pixel(DisplayWidth) + TacOffsetX;
+            int b_pxl = Lepton_To_Pixel(m_DisplayWidth) + m_TacOffsetX;
             cell_t click_cell = Click_Cell_Calc(std::clamp(i, 0, b_pxl), box_y);
 
             if (click_cell != -1) {
-                Array[click_cell].Redraw_Objects();
+                m_Array[click_cell].Redraw_Objects();
             }
 
             click_cell = Click_Cell_Calc(std::clamp(i, 0, b_pxl), box_h);
 
             if (click_cell != -1) {
-                Array[click_cell].Redraw_Objects();
+                m_Array[click_cell].Redraw_Objects();
             }
         }
 
@@ -1569,7 +1569,7 @@ void DisplayClass::Cursor_Mark(cell_t cellnum, BOOL flag)
         return;
     }
 
-    for (int16_t *offsets = DisplayCursorOccupy; *offsets != LIST_END; ++offsets) {
+    for (int16_t *offsets = m_DisplayCursorOccupy; *offsets != LIST_END; ++offsets) {
         cell_t offset_cell = cellnum + *offsets;
 
         if (MapClass::In_Radar(offset_cell)) {
@@ -1579,8 +1579,8 @@ void DisplayClass::Cursor_Mark(cell_t cellnum, BOOL flag)
         }
     }
 
-    if (PendingObjectPtr != nullptr) {
-        for (const int16_t *overlap = PendingObjectPtr->Overlap_List(); *overlap != LIST_END; ++overlap) {
+    if (m_PendingObjectPtr != nullptr) {
+        for (const int16_t *overlap = m_PendingObjectPtr->Overlap_List(); *overlap != LIST_END; ++overlap) {
             int16_t offset_cell = cellnum + *overlap;
 
             if (MapClass::In_Radar(offset_cell)) {
@@ -1638,7 +1638,7 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
     if (string != nullptr) {
         int count = 60;
         int str_width = String_Pixel_Width(string) + CELL_PIXELS;
-        int width = TacOffsetX + Lepton_To_Pixel(DisplayWidth);
+        int width = m_TacOffsetX + Lepton_To_Pixel(m_DisplayWidth);
 
         if (str_width + x >= width) {
             str_width = width - x;
@@ -1649,7 +1649,7 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
 
         if (width >= x) {
             cell_t click_cell = Click_Cell_Calc(x, y - 1);
-            int height = std::clamp(y + 24, TacOffsetY, TacOffsetY + (Lepton_To_Pixel(DisplayHeight) - 1));
+            int height = std::clamp(y + 24, m_TacOffsetY, m_TacOffsetY + (Lepton_To_Pixel(m_DisplayHeight) - 1));
             cell_t offset_click = Click_Cell_Calc(str_width + x - 1, height);
 
             if (click_cell == -1) {
@@ -1660,7 +1660,7 @@ const int16_t *DisplayClass::Text_Overlap_List(const char *string, int x, int y)
                 // If we have two valid cells locations, iterate through the cells between them.
                 for (int i = Cell_Get_Y(click_cell); i <= Cell_Get_Y(offset_click); ++i) {
                     for (int j = Cell_Get_X(click_cell); j <= Cell_Get_X(offset_click); ++j) {
-                        cell_t current_cell = Coord_To_Cell(DisplayPos);
+                        cell_t current_cell = Coord_To_Cell(m_DisplayPos);
                         *w_list = Cell_From_XY(j, i) - current_cell;
                         --count;
                         ++w_list;
@@ -1773,7 +1773,7 @@ void DisplayClass::Remove(ObjectClass *object, LayerType layer)
 
 ObjectClass *DisplayClass::Cell_Object(cell_t cellnum, int x, int y) const
 {
-    return Array[cellnum].Cell_Object(x, y);
+    return m_Array[cellnum].Cell_Object(x, y);
 }
 
 /**
@@ -1785,10 +1785,10 @@ void DisplayClass::Select_These(coord_t start, coord_t finish)
 {
     // Calc X and Y start and end points for select rectangle
     // based on input coords.
-    lepton_t x1 = Coord_Lepton_X(start) + Coord_Lepton_X(DisplayPos);
-    lepton_t y1 = Coord_Lepton_Y(start) + Coord_Lepton_Y(DisplayPos);
-    lepton_t x2 = Coord_Lepton_X(finish) + Coord_Lepton_X(DisplayPos);
-    lepton_t y2 = Coord_Lepton_Y(finish) + Coord_Lepton_Y(DisplayPos);
+    lepton_t x1 = Coord_Lepton_X(start) + Coord_Lepton_X(m_DisplayPos);
+    lepton_t y1 = Coord_Lepton_Y(start) + Coord_Lepton_Y(m_DisplayPos);
+    lepton_t x2 = Coord_Lepton_X(finish) + Coord_Lepton_X(m_DisplayPos);
+    lepton_t y2 = Coord_Lepton_Y(finish) + Coord_Lepton_Y(m_DisplayPos);
 
     if (x1 > x2) {
         std::swap(x1, x2);
@@ -1868,11 +1868,11 @@ void DisplayClass::Select_These(coord_t start, coord_t finish)
  */
 void DisplayClass::Sell_Mode_Control(int mode)
 {
-    bool flag = DisplaySellMode;
+    bool flag = m_DisplaySellMode;
 
     switch (mode) {
         case MODE_CONTROL_TOGGLE:
-            flag = !DisplaySellMode;
+            flag = !m_DisplaySellMode;
             break;
 
         case MODE_CONTROL_OFF:
@@ -1887,14 +1887,14 @@ void DisplayClass::Sell_Mode_Control(int mode)
             break;
     }
 
-    if (flag != DisplaySellMode && PendingObjectTypePtr == nullptr) {
-        DisplayRepairMode = false;
+    if (flag != m_DisplaySellMode && m_PendingObjectTypePtr == nullptr) {
+        m_DisplayRepairMode = false;
 
         if (flag && g_PlayerPtr->Has_Buildings()) {
-            DisplaySellMode = true;
+            m_DisplaySellMode = true;
             Unselect_All();
         } else {
-            DisplaySellMode = false;
+            m_DisplaySellMode = false;
             Revert_Mouse_Shape();
         }
     }
@@ -1907,11 +1907,11 @@ void DisplayClass::Sell_Mode_Control(int mode)
  */
 void DisplayClass::Repair_Mode_Control(int mode)
 {
-    bool flag = DisplayRepairMode;
+    bool flag = m_DisplayRepairMode;
 
     switch (mode) {
         case MODE_CONTROL_TOGGLE:
-            flag = !DisplayRepairMode;
+            flag = !m_DisplayRepairMode;
             break;
 
         case MODE_CONTROL_OFF:
@@ -1926,14 +1926,14 @@ void DisplayClass::Repair_Mode_Control(int mode)
             break;
     }
 
-    if (flag != DisplayRepairMode && PendingObjectTypePtr == nullptr) {
-        DisplaySellMode = false;
+    if (flag != m_DisplayRepairMode && m_PendingObjectTypePtr == nullptr) {
+        m_DisplaySellMode = false;
 
         if (flag && g_PlayerPtr->Has_Buildings()) {
-            DisplayRepairMode = true;
+            m_DisplayRepairMode = true;
             Unselect_All();
         } else {
-            DisplayRepairMode = false;
+            m_DisplayRepairMode = false;
             Revert_Mouse_Shape();
         }
     }
@@ -1972,8 +1972,8 @@ void DisplayClass::Center_Map(coord_t coord)
 
     // Only bother setting the position if we have a coord from somewhere. SS doesn't do the min X/Y checks
     if (coord_set) {
-        int16_t x_lep = std::max((int16_t)(x - DisplayWidth / 2), Coord_Cell_To_Lepton(MapCellX));
-        int16_t y_lep = std::max((int16_t)(y - DisplayHeight / 2), Coord_Cell_To_Lepton(MapCellY));
+        int16_t x_lep = std::max((int16_t)(x - m_DisplayWidth / 2), Coord_Cell_To_Lepton(m_MapCellX));
+        int16_t y_lep = std::max((int16_t)(y - m_DisplayHeight / 2), Coord_Cell_To_Lepton(m_MapCellY));
         Set_Tactical_Position(Coord_From_Lepton_XY(x_lep, y_lep));
     }
 }
@@ -1991,44 +1991,44 @@ cell_t DisplayClass::Set_Cursor_Pos(cell_t cell)
         cell = Click_Cell_Calc(g_mouse->Get_Mouse_X(), g_mouse->Get_Mouse_Y());
     }
 
-    if (DisplayCursorOccupy != nullptr) {
+    if (m_DisplayCursorOccupy != nullptr) {
         int occupy_x;
         int occupy_y;
 
-        Get_Occupy_Dimensions(occupy_x, occupy_y, DisplayCursorOccupy);
+        Get_Occupy_Dimensions(occupy_x, occupy_y, m_DisplayCursorOccupy);
 
-        int cell_x = std::max(Cell_Get_X(DisplayCursorEnd + cell), Coord_Cell_X(DisplayPos));
-        int cell_y = std::max(Cell_Get_Y(DisplayCursorEnd + cell), Coord_Cell_Y(DisplayPos));
+        int cell_x = std::max(Cell_Get_X(m_DisplayCursorEnd + cell), Coord_Cell_X(m_DisplayPos));
+        int cell_y = std::max(Cell_Get_Y(m_DisplayCursorEnd + cell), Coord_Cell_Y(m_DisplayPos));
 
-        if (cell_x + occupy_x >= Coord_Lepton_X(DisplayPos) + Lepton_To_Cell_Coord(DisplayWidth)) {
-            cell_x = Coord_Lepton_X(DisplayPos) + cell_x - occupy_x;
+        if (cell_x + occupy_x >= Coord_Lepton_X(m_DisplayPos) + Lepton_To_Cell_Coord(m_DisplayWidth)) {
+            cell_x = Coord_Lepton_X(m_DisplayPos) + cell_x - occupy_x;
         }
 
-        if (cell_y + occupy_y >= Coord_Lepton_Y(DisplayPos) + Lepton_To_Cell_Coord(DisplayHeight)) {
-            cell_y = Coord_Lepton_Y(DisplayPos) + cell_y - occupy_y;
+        if (cell_y + occupy_y >= Coord_Lepton_Y(m_DisplayPos) + Lepton_To_Cell_Coord(m_DisplayHeight)) {
+            cell_y = Coord_Lepton_Y(m_DisplayPos) + cell_y - occupy_y;
         }
 
-        retval = Cell_From_XY(cell_x, cell_y) - DisplayCursorEnd;
+        retval = Cell_From_XY(cell_x, cell_y) - m_DisplayCursorEnd;
 
-        if (retval != DisplayCursorStart) {
-            if (DisplayCursorOccupy != nullptr) {
-                if (retval != DisplayCursorStart && DisplayCursorStart != -1) {
-                    Cursor_Mark(DisplayCursorStart + DisplayCursorEnd, false);
+        if (retval != m_DisplayCursorStart) {
+            if (m_DisplayCursorOccupy != nullptr) {
+                if (retval != m_DisplayCursorStart && m_DisplayCursorStart != -1) {
+                    Cursor_Mark(m_DisplayCursorStart + m_DisplayCursorEnd, false);
                 }
 
                 if (retval != -1) {
-                    Cursor_Mark(retval + DisplayCursorEnd, true);
+                    Cursor_Mark(retval + m_DisplayCursorEnd, true);
                 }
             }
 
-            PassedProximityCheck = Passes_Proximity_Check(
-                PendingObjectTypePtr, PendingObjectOwner, DisplayCursorOccupy, DisplayCursorEnd + retval);
+            m_PassedProximityCheck = Passes_Proximity_Check(
+                m_PendingObjectTypePtr, m_PendingObjectOwner, m_DisplayCursorOccupy, m_DisplayCursorEnd + retval);
 
-            std::swap(DisplayCursorStart, retval);
+            std::swap(m_DisplayCursorStart, retval);
         }
     } else {
-        retval = DisplayCursorStart;
-        DisplayCursorStart = cell;
+        retval = m_DisplayCursorStart;
+        m_DisplayCursorStart = cell;
     }
 
     return retval;
@@ -2052,15 +2052,15 @@ void DisplayClass::Check_Proximity(ObjectTypeClass *object, HousesType house, ce
         cell_t adj_cell = Cell_Get_Adjacent(cell, i);
         if (In_Radar(adj_cell)) {
             // is the adjacent cell a Wall or Bib owned by this house?
-            if (bld->Is_Wall() || Array[adj_cell].Has_Bib()) {
-                if (Array[adj_cell].Owner() == house) {
+            if (bld->Is_Wall() || m_Array[adj_cell].Has_Bib()) {
+                if (m_Array[adj_cell].Owner() == house) {
                     passes = 1;
                     return;
                 }
             }
 
             // is the adjacent cell a building owned by this house and is BaseNormal?
-            BuildingClass *tptr = (BuildingClass *)Array[adj_cell].Cell_Techno();
+            BuildingClass *tptr = (BuildingClass *)m_Array[adj_cell].Cell_Techno();
             if (tptr != nullptr && tptr->What_Am_I() == RTTI_BUILDING && tptr->Get_Owner_House()->What_Type() == house) {
                 if (tptr->Class_Of().Base_Normal()) {
                     passes = 1;
@@ -2073,14 +2073,14 @@ void DisplayClass::Check_Proximity(ObjectTypeClass *object, HousesType house, ce
             for (FacingType j = FACING_NORTH; j < FACING_COUNT; ++j) {
                 cell_t next_cell = Cell_Get_Adjacent(adj_cell, j);
                 // is the cell next to the adjacent cell a Wall or Bib owned by this house?
-                if (bld->Is_Wall() || Array[next_cell].Has_Bib()) {
-                    if (Array[next_cell].Owner() == house) {
+                if (bld->Is_Wall() || m_Array[next_cell].Has_Bib()) {
+                    if (m_Array[next_cell].Owner() == house) {
                         passes = 1;
                         return;
                     }
                 }
                 // is the cell next to the adjacent cell a building owned by this house and is BaseNormal?
-                BuildingClass *tptr2 = (BuildingClass *)Array[next_cell].Cell_Techno();
+                BuildingClass *tptr2 = (BuildingClass *)m_Array[next_cell].Cell_Techno();
                 if (tptr2 != nullptr && tptr2->What_Am_I() == RTTI_BUILDING
                     && tptr2->Get_Owner_House()->What_Type() == house) {
                     if (tptr2->Class_Of().Base_Normal()) {
@@ -2164,26 +2164,26 @@ BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType ho
  */
 void DisplayClass::Redraw_Icons()
 {
-    RedrawShadow = false;
+    m_RedrawShadow = false;
 
     // Iterate over all cells currently in view and check if it needs to be redrawn.
-    for (int16_t y = -Coord_Sub_Cell_Y(DisplayPos); y <= DisplayHeight; y += 256) {
-        for (int16_t x = -Coord_Sub_Cell_X(DisplayPos); x <= DisplayWidth; x += 256) {
-            cell_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(x, y)));
+    for (int16_t y = -Coord_Sub_Cell_Y(m_DisplayPos); y <= m_DisplayHeight; y += 256) {
+        for (int16_t x = -Coord_Sub_Cell_X(m_DisplayPos); x <= m_DisplayWidth; x += 256) {
+            cell_t cellnum = Coord_To_Cell(Coord_Add(m_DisplayPos, Coord_From_Lepton_XY(x, y)));
             coord_t coord = Cell_To_Coord(cellnum) & 0xFF00FF00;
             int draw_x = 0;
             int draw_y = 0;
 
             // Check conditions for current position warrant attempting a redraw.
             if (In_View(cellnum) && Is_Cell_Flagged(cellnum) && Coord_To_Pixel(coord, draw_x, draw_y)) {
-                CellClass &cell = Array[Coord_To_Cell(coord)];
+                CellClass &cell = m_Array[Coord_To_Cell(coord)];
 
                 if (cell.Is_Visible() || DebugUnshroud) {
                     cell.Draw_It(draw_x, draw_y);
                 }
 
                 if (!cell.Is_Revealed() && !DebugUnshroud) {
-                    RedrawShadow = true;
+                    m_RedrawShadow = true;
                 }
             }
         }
@@ -2197,17 +2197,17 @@ void DisplayClass::Redraw_Icons()
  */
 void DisplayClass::Redraw_Shadow()
 {
-    if (RedrawShadow) {
+    if (m_RedrawShadow) {
         // Iterate over every position within the tactical view and evaluate for a shadow redraw.
-        for (int16_t y = -Coord_Sub_Cell_Y(DisplayPos); y <= DisplayHeight; y += 256) {
-            for (int16_t x = -Coord_Sub_Cell_X(DisplayPos); x <= DisplayWidth; x += 256) {
-                cell_t cellnum = Coord_To_Cell(Coord_Add(DisplayPos, Coord_From_Lepton_XY(x, y)));
+        for (int16_t y = -Coord_Sub_Cell_Y(m_DisplayPos); y <= m_DisplayHeight; y += 256) {
+            for (int16_t x = -Coord_Sub_Cell_X(m_DisplayPos); x <= m_DisplayWidth; x += 256) {
+                cell_t cellnum = Coord_To_Cell(Coord_Add(m_DisplayPos, Coord_From_Lepton_XY(x, y)));
                 coord_t coord = Coord_Top_Left(Cell_To_Coord(cellnum));
                 int draw_x = 0;
                 int draw_y = 0;
 
                 if (In_View(cellnum) && Is_Cell_Flagged(cellnum) && Coord_To_Pixel(coord, draw_x, draw_y)) {
-                    CellClass &cell = Array[Coord_To_Cell(coord)];
+                    CellClass &cell = m_Array[Coord_To_Cell(coord)];
 
                     if (!cell.Is_Revealed()) {
                         int frame = SHADOW_FULL;
@@ -2223,14 +2223,14 @@ void DisplayClass::Redraw_Shadow()
                             int w = CELL_PIXELS;
                             int h = CELL_PIXELS;
 
-                            int x_clip = Lepton_To_Pixel(DisplayWidth);
-                            int y_clip = Lepton_To_Pixel(DisplayHeight);
+                            int x_clip = Lepton_To_Pixel(m_DisplayWidth);
+                            int y_clip = Lepton_To_Pixel(m_DisplayHeight);
 
                             if (Clip_Rect(draw_x, draw_y, w, h, x_clip, y_clip) >= 0) {
-                                g_logicPage->Fill_Rect(draw_x + TacOffsetX,
-                                    draw_y + TacOffsetY,
-                                    w + draw_x + TacOffsetX - 1,
-                                    h + draw_y + TacOffsetY - 1,
+                                g_logicPage->Fill_Rect(draw_x + m_TacOffsetX,
+                                    draw_y + m_TacOffsetY,
+                                    w + draw_x + m_TacOffsetX - 1,
+                                    h + draw_y + m_TacOffsetY - 1,
                                     12);
                             }
                         }
@@ -2254,12 +2254,12 @@ BOOL DisplayClass::In_View(cell_t cellnum) const
     }
 
     uint32_t cell = Coord_Top_Left(Cell_To_Coord(cellnum));
-    uint32_t loc1 = Coord_Top_Left(DisplayPos);
+    uint32_t loc1 = Coord_Top_Left(m_DisplayPos);
 
-    // Makes use of unsigned underflow to detect if we are greater than DisplayPos but within display dimensions in two
+    // Makes use of unsigned underflow to detect if we are greater than m_DisplayPos but within display dimensions in two
     // compares.
-    if ((uint16_t)Coord_Lepton_X(cell) - (uint32_t)Coord_Lepton_X(loc1) <= (uint32_t)DisplayWidth + 255) {
-        if ((uint16_t)Coord_Lepton_Y(cell) - (uint32_t)Coord_Lepton_Y(loc1) <= (uint32_t)DisplayHeight + 255) {
+    if ((uint16_t)Coord_Lepton_X(cell) - (uint32_t)Coord_Lepton_X(loc1) <= (uint32_t)m_DisplayWidth + 255) {
+        if ((uint16_t)Coord_Lepton_Y(cell) - (uint32_t)Coord_Lepton_Y(loc1) <= (uint32_t)m_DisplayHeight + 255) {
             return true;
         }
     }
@@ -2275,12 +2275,12 @@ BOOL DisplayClass::In_View(cell_t cellnum) const
 BOOL DisplayClass::Coord_To_Pixel(coord_t coord, int &x, int &y) const
 {
     if (coord != 0) {
-        int16_t view_x = Lepton_Round_To_Pixel(Coord_Lepton_X(DisplayPos));
-        int16_t view_y = Lepton_Round_To_Pixel(Coord_Lepton_Y(DisplayPos));
+        int16_t view_x = Lepton_Round_To_Pixel(Coord_Lepton_X(m_DisplayPos));
+        int16_t view_y = Lepton_Round_To_Pixel(Coord_Lepton_Y(m_DisplayPos));
         int16_t lep_x = Lepton_Round_To_Pixel(Coord_Lepton_X(coord)) + 512 - view_x;
         int16_t lep_y = Lepton_Round_To_Pixel(Coord_Lepton_Y(coord)) + 512 - view_y;
 
-        if (lep_x <= (DisplayWidth + 1024) && lep_y <= (DisplayHeight + 1024)) {
+        if (lep_x <= (m_DisplayWidth + 1024) && lep_y <= (m_DisplayHeight + 1024)) {
             x = Lepton_To_Pixel(lep_x) - CELL_PIXELS * 2;
             y = Lepton_To_Pixel(lep_y) - CELL_PIXELS * 2;
 
@@ -2298,11 +2298,11 @@ BOOL DisplayClass::Coord_To_Pixel(coord_t coord, int &x, int &y) const
  */
 coord_t DisplayClass::Pixel_To_Coord(int x, int y) const
 {
-    int x_pos = Pixel_To_Lepton(x - TacOffsetX);
-    int y_pos = Pixel_To_Lepton(y - TacOffsetY);
+    int x_pos = Pixel_To_Lepton(x - m_TacOffsetX);
+    int y_pos = Pixel_To_Lepton(y - m_TacOffsetY);
 
-    if (x_pos < DisplayWidth && y_pos < DisplayHeight) {
-        return Coord_From_Lepton_XY(x_pos + Coord_Lepton_X(DisplayPos), y_pos + Coord_Lepton_Y(DisplayPos));
+    if (x_pos < m_DisplayWidth && y_pos < m_DisplayHeight) {
+        return Coord_From_Lepton_XY(x_pos + Coord_Lepton_X(m_DisplayPos), y_pos + Coord_Lepton_Y(m_DisplayPos));
     }
 
     return 0;
@@ -2358,7 +2358,7 @@ int DisplayClass::Cell_Shadow(cell_t cellnum) const
     // Check we are in bounds, SS checks all 4 map bounds, RA only checks right edge bound with if ( cell_x - 1 < 127 ).
     if (cell_x >= 1 && cell_x < 127 && cell_y >= 1 && cell_y < 127) { // SS extended check.
         // Use pointer here rather than reference as we are going to do some pointer arithmetic on it.
-        CellClass const *cell = &Array[cellnum];
+        CellClass const *cell = &m_Array[cellnum];
 
         // If we aren't at least partly revealed, then no need to do anything else
         if (!cell->Is_Revealed() && !cell->Is_Visible()) {
@@ -2436,10 +2436,10 @@ BOOL DisplayClass::Push_Onto_TacMap(coord_t &coord1, coord_t &coord2)
     int coord1_y = Coord_Lepton_Y(coord1);
     int coord2_x = Coord_Lepton_X(coord2);
     int coord2_y = Coord_Lepton_Y(coord2);
-    int start_x = Coord_Lepton_X(DisplayPos);
-    int start_y = Coord_Lepton_Y(DisplayPos);
-    int end_x = start_x + DisplayWidth;
-    int end_y = start_y + DisplayHeight;
+    int start_x = Coord_Lepton_X(m_DisplayPos);
+    int start_y = Coord_Lepton_Y(m_DisplayPos);
+    int end_x = start_x + m_DisplayWidth;
+    int end_y = start_y + m_DisplayHeight;
 
     // Check trivial case where a coord is not within view
     if ((coord1_x < start_x && coord2_x < start_x) || (coord1_x > end_x && coord2_x > end_x)
@@ -2472,7 +2472,7 @@ cell_t DisplayClass::Calculated_Cell(
     }
 
     if (use_zone && cell_num != -1) {
-        zone = Array[cell_num].Get_Zone(mzone);
+        zone = m_Array[cell_num].Get_Zone(mzone);
     }
 
     bool y_clipped = false;
@@ -2484,32 +2484,32 @@ cell_t DisplayClass::Calculated_Cell(
     // If we have a cell number from either the parameters or a waypoint, calculate an x and y position and ensure its within
     // the visible map. We also work out which edges we should clip to, x (east and west) or y (north and south).
     if (cell_num != -1) {
-        int x_pos = std::min(Cell_Get_X(cell_num) - MapCellX, MapCellWidth + MapCellX - Cell_Get_X(cell_num));
+        int x_pos = std::min(Cell_Get_X(cell_num) - m_MapCellX, m_MapCellWidth + m_MapCellX - Cell_Get_X(cell_num));
 
-        int y_pos = std::min(Cell_Get_Y(cell_num) - MapCellY, MapCellHeight + MapCellY - Cell_Get_Y(cell_num));
+        int y_pos = std::min(Cell_Get_Y(cell_num) - m_MapCellY, m_MapCellHeight + m_MapCellY - Cell_Get_Y(cell_num));
 
         if (x_pos > y_pos) {
             y_clipped = true;
             x_clipped = false;
 
-            if (MapCellHeight / 2 <= Cell_Get_Y(cell_num) - MapCellY) {
-                y = MapCellHeight;
+            if (m_MapCellHeight / 2 <= Cell_Get_Y(cell_num) - m_MapCellY) {
+                y = m_MapCellHeight;
             } else {
                 y = -1;
             }
 
-            x = Cell_Get_X(cell_num) - MapCellX;
+            x = Cell_Get_X(cell_num) - m_MapCellX;
         } else {
             y_clipped = false;
             x_clipped = true;
 
-            if (MapCellWidth / 2 <= Cell_Get_X(cell_num) - MapCellX) {
-                x = MapCellWidth;
+            if (m_MapCellWidth / 2 <= Cell_Get_X(cell_num) - m_MapCellX) {
+                x = m_MapCellWidth;
             } else {
                 x = -1;
             }
 
-            y = Cell_Get_Y(cell_num) - MapCellY;
+            y = Cell_Get_Y(cell_num) - m_MapCellY;
         }
     }
 
@@ -2518,19 +2518,19 @@ cell_t DisplayClass::Calculated_Cell(
     if (!x_clipped && !y_clipped) {
         switch (source) {
             case SOURCE_EAST:
-                x = MapCellWidth;
-                y = Scen.Get_Random_Value(0, MapCellHeight - 1);
+                x = m_MapCellWidth;
+                y = Scen.Get_Random_Value(0, m_MapCellHeight - 1);
                 break;
 
             case SOURCE_SOUTH:
                 y_clipped = true;
-                x = Scen.Get_Random_Value(0, MapCellWidth - 1);
-                y = MapCellWidth;
+                x = Scen.Get_Random_Value(0, m_MapCellWidth - 1);
+                y = m_MapCellWidth;
                 break;
 
             case SOURCE_WEST:
                 x = -1;
-                y = Scen.Get_Random_Value(0, MapCellHeight - 1);
+                y = Scen.Get_Random_Value(0, m_MapCellHeight - 1);
                 break;
 
             default:
@@ -2539,14 +2539,14 @@ cell_t DisplayClass::Calculated_Cell(
     }
 
     // Test cells along the left and right edges first.
-    if (x_clipped && MapCellHeight > 0) {
+    if (x_clipped && m_MapCellHeight > 0) {
         // Depending on edge, offset cell is always 1 cell toward the center of the map, applies to Y dimension as well
         // below.
-        int offset = x <= MapCellX ? 1 : -1;
+        int offset = x <= m_MapCellX ? 1 : -1;
         int ny = y;
 
-        for (int i = 0; i < MapCellHeight; ++i) {
-            cell_t test_cell = Cell_From_XY(MapCellX + x, MapCellY + (ny % MapCellHeight));
+        for (int i = 0; i < m_MapCellHeight; ++i) {
+            cell_t test_cell = Cell_From_XY(m_MapCellX + x, m_MapCellY + (ny % m_MapCellHeight));
 
             if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
                 return test_cell;
@@ -2555,12 +2555,12 @@ cell_t DisplayClass::Calculated_Cell(
             ++ny;
         }
 
-        if (y_clipped && MapCellWidth > 0) {
-            offset = y <= MapCellY ? 128 : -128;
+        if (y_clipped && m_MapCellWidth > 0) {
+            offset = y <= m_MapCellY ? 128 : -128;
             int nx = x;
 
-            for (int i = 0; i < MapCellWidth; ++i) {
-                cell_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
+            for (int i = 0; i < m_MapCellWidth; ++i) {
+                cell_t test_cell = Cell_From_XY(m_MapCellX + (nx % m_MapCellWidth), m_MapCellY + y);
 
                 if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
                     return test_cell;
@@ -2569,12 +2569,12 @@ cell_t DisplayClass::Calculated_Cell(
                 ++nx;
             }
         }
-    } else if (y_clipped && MapCellWidth > 0) {
-        int offset = y <= MapCellY ? 128 : -128;
+    } else if (y_clipped && m_MapCellWidth > 0) {
+        int offset = y <= m_MapCellY ? 128 : -128;
         int nx = x;
 
-        for (int i = 0; i < MapCellWidth; ++i) {
-            cell_t test_cell = Cell_From_XY(MapCellX + (nx % MapCellWidth), MapCellY + y);
+        for (int i = 0; i < m_MapCellWidth; ++i) {
+            cell_t test_cell = Cell_From_XY(m_MapCellX + (nx % m_MapCellWidth), m_MapCellY + y);
 
             if (Good_Reinforcement_Cell(test_cell, test_cell + offset, speed, zone, mzone)) {
                 return test_cell;
@@ -2584,7 +2584,7 @@ cell_t DisplayClass::Calculated_Cell(
         }
     }
 
-    return Cell_From_XY(MapCellX + x, MapCellY + y);
+    return Cell_From_XY(m_MapCellX + x, m_MapCellY + y);
 }
 
 /**
@@ -2594,12 +2594,12 @@ cell_t DisplayClass::Calculated_Cell(
  */
 BOOL DisplayClass::Good_Reinforcement_Cell(cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone) const
 {
-    if (Array[cell1].Is_Clear_To_Move(speed, false, false, zone, mzone)
-        && Array[cell2].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
-        if (Array[cell1].Cell_Techno() != nullptr) {
+    if (m_Array[cell1].Is_Clear_To_Move(speed, false, false, zone, mzone)
+        && m_Array[cell2].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
+        if (m_Array[cell1].Cell_Techno() != nullptr) {
             return false;
         } else {
-            return Array[cell2].Cell_Techno() == nullptr;
+            return m_Array[cell2].Cell_Techno() == nullptr;
         }
     }
 
@@ -2619,7 +2619,7 @@ coord_t DisplayClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 
     cell_t cellnum = Coord_To_Cell(coord);
 
-    return Array[cellnum].Closest_Free_Spot(coord, skip_occupied);
+    return m_Array[cellnum].Closest_Free_Spot(coord, skip_occupied);
 }
 
 /**
@@ -2699,7 +2699,7 @@ void DisplayClass::Encroach_Shadow()
         // Check every cell and mark unrevealed cells
         for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
             if (In_Radar(cellnum)) {
-                CellClass &cell = Array[cellnum];
+                CellClass &cell = m_Array[cellnum];
 
                 if (!cell.Is_Revealed()) {
                     if (cell.Is_Visible()) {
@@ -2711,7 +2711,7 @@ void DisplayClass::Encroach_Shadow()
 
         for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
             if (In_Radar(cellnum)) {
-                CellClass &cell = Array[cellnum];
+                CellClass &cell = m_Array[cellnum];
 
                 if (cell.Get_Bit128()) {
                     cell.Set_Bit128(false);
@@ -2734,9 +2734,9 @@ void DisplayClass::Encroach_Shadow()
 void DisplayClass::Shroud_Cell(cell_t cellnum)
 {
     // If player has GPS or has units in the cell, then don't do anything.
-    if (!g_PlayerPtr->Is_Map_Clear() || (Array[cellnum].Get_Field_A() & (1 << g_PlayerPtr->What_Type()))) {
+    if (!g_PlayerPtr->Is_Map_Clear() || (m_Array[cellnum].Get_Field_A() & (1 << g_PlayerPtr->What_Type()))) {
         if (In_Radar(cellnum)) {
-            CellClass &cell = Array[cellnum];
+            CellClass &cell = m_Array[cellnum];
 
             if (cell.Is_Visible()) {
                 cell.Set_Visible(false);
@@ -2747,10 +2747,10 @@ void DisplayClass::Shroud_Cell(cell_t cellnum)
                     cell_t adjcell = Cell_Get_Adjacent(cellnum, facing);
 
                     if (adjcell != cellnum) {
-                        Array[adjcell].Set_Revealed(false);
+                        m_Array[adjcell].Set_Revealed(false);
                     }
 
-                    Array[adjcell].Redraw_Objects();
+                    m_Array[adjcell].Redraw_Objects();
                 }
             }
         }
@@ -2821,8 +2821,8 @@ void DisplayClass::Flag_All_Cells_To_Redraw()
 
 void DisplayClass::Reset_Pending_Object()
 {
-    PendingObjectPtr = nullptr;
-    PendingObjectTypePtr = nullptr;
-    PendingObjectOwner = HOUSES_NONE;
-    PendingSuper = SPECIAL_NONE;
+    m_PendingObjectPtr = nullptr;
+    m_PendingObjectTypePtr = nullptr;
+    m_PendingObjectOwner = HOUSES_NONE;
+    m_PendingSuper = SPECIAL_NONE;
 }

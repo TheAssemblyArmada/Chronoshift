@@ -117,24 +117,24 @@ public:
     void Flag_All_Cells_To_Redraw();
     static BOOL Is_Cell_Flagged(cell_t cellnum) { return CellRedraw.Is_True(cellnum); }
 
-    lepton_t Get_DisplayWidth() const { return DisplayWidth; }
-    lepton_t Get_DisplayHeight() const { return DisplayHeight; }
-    cell_t Get_Cursor_Start() const { return DisplayCursorStart; }
-    cell_t Get_Cursor_End() const { return DisplayCursorEnd; }
-    BOOL Passed_Proximity_Check() const { return PassedProximityCheck; }
-    ObjectClass *Pending_Object() const { return PendingObjectPtr; }
-    ObjectTypeClass *Pending_ObjectType() const { return PendingObjectTypePtr; }
-    HousesType Pending_Object_Owner() const { return PendingObjectOwner; }
-    SpecialWeaponType Pending_Super() const { return PendingSuper; }
-    void Set_Pending_Super(SpecialWeaponType type) { PendingSuper = type; }
+    lepton_t Get_DisplayWidth() const { return m_DisplayWidth; }
+    lepton_t Get_DisplayHeight() const { return m_DisplayHeight; }
+    cell_t Get_Cursor_Start() const { return m_DisplayCursorStart; }
+    cell_t Get_Cursor_End() const { return m_DisplayCursorEnd; }
+    BOOL Passed_Proximity_Check() const { return m_PassedProximityCheck; }
+    ObjectClass *Pending_Object() const { return m_PendingObjectPtr; }
+    ObjectTypeClass *Pending_ObjectType() const { return m_PendingObjectTypePtr; }
+    HousesType Pending_Object_Owner() const { return m_PendingObjectOwner; }
+    SpecialWeaponType Pending_Super() const { return m_PendingSuper; }
+    void Set_Pending_Super(SpecialWeaponType type) { m_PendingSuper = type; }
     void Reset_Pending_Object();
-    int Tac_Offset_X() const { return TacOffsetX; }
-    int Tac_Offset_Y() const { return TacOffsetY; }
-    coord_t New_Pos() const { return DisplayNewPos; }
-    BOOL To_Redraw() const { return DisplayToRedraw; }
-    BOOL Repair_Mode() const { return DisplayRepairMode; }
-    BOOL Sell_Mode() const { return DisplaySellMode; }
-    BOOL Bit_8() const { return DisplayBit8; }
+    int Tac_Offset_X() const { return m_TacOffsetX; }
+    int Tac_Offset_Y() const { return m_TacOffsetY; }
+    coord_t New_Pos() const { return m_DisplayNewPos; }
+    BOOL To_Redraw() const { return m_DisplayToRedraw; }
+    BOOL Repair_Mode() const { return m_DisplayRepairMode; }
+    BOOL Sell_Mode() const { return m_DisplaySellMode; }
+    BOOL Bit_8() const { return m_DisplayBit8; }
 
 private:
     // This only seems to be used by DisplayClass, so made it a static helper of this class.
@@ -142,37 +142,37 @@ private:
     void Check_Proximity(ObjectTypeClass *object, HousesType house, cell_t cell, int &passes, bool &outside_radar) const;
   
  protected:
-    coord_t DisplayPos; // Coord of top left of tactical display within the map.
-    lepton_t DisplayWidth; // Width of display in leptons.
-    lepton_t DisplayHeight; // Height of display in leptons.
-    cell_t DisplayCursorStart;
-    cell_t DisplayCursorEnd;
-    int16_t *DisplayCursorOccupy;
-    BOOL PassedProximityCheck;
-    ObjectClass *PendingObjectPtr;
-    ObjectTypeClass *PendingObjectTypePtr;
-    HousesType PendingObjectOwner;
-    int TacOffsetX;
-    int TacOffsetY;
-    coord_t DisplayNewPos;
+    coord_t m_DisplayPos; // Coord of top left of tactical display within the map.
+    lepton_t m_DisplayWidth; // Width of display in leptons.
+    lepton_t m_DisplayHeight; // Height of display in leptons.
+    cell_t m_DisplayCursorStart;
+    cell_t m_DisplayCursorEnd;
+    int16_t *m_DisplayCursorOccupy;
+    BOOL m_PassedProximityCheck;
+    ObjectClass *m_PendingObjectPtr;
+    ObjectTypeClass *m_PendingObjectTypePtr;
+    HousesType m_PendingObjectOwner;
+    int m_TacOffsetX;
+    int m_TacOffsetY;
+    coord_t m_DisplayNewPos;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL DisplayToRedraw : 1; // 1
-    BOOL DisplayRepairMode : 1; // 2
-    BOOL DisplaySellMode : 1; // 4
-    BOOL DisplayBit8 : 1; // 8 This is Bit32 in SS. passes proximity check/can place?
-    BOOL DisplayBit16 : 1; // 16
-    BOOL RedrawShadow : 1; // 32 this is Bit128 in SS
+    BOOL m_DisplayToRedraw : 1; // 1
+    BOOL m_DisplayRepairMode : 1; // 2
+    BOOL m_DisplaySellMode : 1; // 4
+    BOOL m_DisplayBit8 : 1; // 8 This is Bit32 in SS. passes proximity check/can place?
+    BOOL m_DisplayBit16 : 1; // 16
+    BOOL m_RedrawShadow : 1; // 32 this is Bit128 in SS
 #else
-    bool DisplayToRedraw;
-    bool DisplayRepairMode;
-    bool DisplaySellMode;
-    bool DisplayBit8; // This is Bit32 in SS. passes proximity check/can place? Could also be if mouse is pressed/dragging a
+    bool m_DisplayToRedraw;
+    bool m_DisplayRepairMode;
+    bool m_DisplaySellMode;
+    bool m_DisplayBit8; // This is Bit32 in SS. passes proximity check/can place? Could also be if mouse is pressed/dragging a
                       // band box?
-    bool DisplayBit16;
-    bool RedrawShadow; // this is Bit128 in SS
+    bool m_DisplayBit16;
+    bool m_RedrawShadow; // this is Bit128 in SS
 #endif
-    SpecialWeaponType PendingSuper; // Current superweapon selected to fire.
-    TRect<int> BandBox; // Dimensions of the selection band box.
+    SpecialWeaponType m_PendingSuper; // Current superweapon selected to fire.
+    TRect<int> m_BandBox; // Dimensions of the selection band box.
 
 public:
 #ifdef GAME_DLL

@@ -52,16 +52,16 @@ DEFINE_ENUMERATION_OPERATORS(CrateType);
 class CrateClass
 {
 public:
-    CrateClass() : Cell(-1) {}
+    CrateClass() : m_Cell(-1) {}
 
     BOOL Remove_It();
     BOOL Create_Crate(cell_t cell);
-    cell_t Get_Cell() { return Cell; }
-    BOOL Timer_Expired() { return CrateTimer.Time() <= 0; }
+    cell_t Get_Cell() { return m_Cell; }
+    BOOL Timer_Expired() { return m_CrateTimer.Time() <= 0; }
     void Init_Clear()
     {
-        Cell = -1;
-        CrateTimer.Stop();
+        m_Cell = -1;
+        m_CrateTimer.Stop();
     }
 
     static BOOL Put_Crate(cell_t &cell);
@@ -70,8 +70,8 @@ public:
     static const char *Name_From(CrateType crate) { return CrateNames[crate]; }
 
 private:
-    TCountDownTimerClass<FrameTimerClass> CrateTimer;
-    cell_t Cell;
+    TCountDownTimerClass<FrameTimerClass> m_CrateTimer;
+    cell_t m_Cell;
 
 public:
     static const char *CrateNames[];
