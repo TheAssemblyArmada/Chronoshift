@@ -26,36 +26,36 @@ TFixedIHeapClass<HouseTypeClass> g_HouseTypes;
 HouseTypeClass::HouseTypeClass(HousesType type, const char *name, int uiname, const char *suffix, int lemon_factor,
     PlayerColorType color, char prefix) :
     AbstractTypeClass(RTTI_HOUSETYPE, type, uiname, name),
-    Type(type),
-    LemonFactor(lemon_factor),
-    Color(color),
-    Prefix(prefix),
-    Firepower(1, 1),
-    Groundspeed(1, 1),
-    Airspeed(1, 1),
-    Armor(1, 1),
-    ROF(1, 1),
-    Cost(1, 1),
-    BuildTime(1, 1)
+    m_Type(type),
+    m_LemonFactor(lemon_factor),
+    m_Color(color),
+    m_Prefix(prefix),
+    m_Firepower(1, 1),
+    m_Groundspeed(1, 1),
+    m_Airspeed(1, 1),
+    m_Armor(1, 1),
+    m_ROF(1, 1),
+    m_Cost(1, 1),
+    m_BuildTime(1, 1)
 {
-    strlcpy(HouseName, suffix, 3);
+    strlcpy(m_HouseName, suffix, 3);
 }
 
 HouseTypeClass::HouseTypeClass(HouseTypeClass const &that) :
     AbstractTypeClass(that),
-    Type(that.Type),
-    LemonFactor(that.LemonFactor),
-    Color(that.Color),
-    Prefix(that.Prefix),
-    Firepower(that.Firepower),
-    Groundspeed(that.Groundspeed),
-    Airspeed(that.Airspeed),
-    Armor(that.Armor),
-    ROF(that.ROF),
-    Cost(that.Cost),
-    BuildTime(that.BuildTime)
+    m_Type(that.m_Type),
+    m_LemonFactor(that.m_LemonFactor),
+    m_Color(that.m_Color),
+    m_Prefix(that.m_Prefix),
+    m_Firepower(that.m_Firepower),
+    m_Groundspeed(that.m_Groundspeed),
+    m_Airspeed(that.m_Airspeed),
+    m_Armor(that.m_Armor),
+    m_ROF(that.m_ROF),
+    m_Cost(that.m_Cost),
+    m_BuildTime(that.m_BuildTime)
 {
-    memcpy(HouseName, that.HouseName, sizeof(HouseName));
+    memcpy(m_HouseName, that.m_HouseName, sizeof(m_HouseName));
 }
 
 void *HouseTypeClass::operator new(size_t size)
@@ -74,13 +74,13 @@ BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
         return false;
     }
 
-    Firepower = ini.Get_Fixed(m_Name, "Firepower", Firepower);
-    Groundspeed = ini.Get_Fixed(m_Name, "Groundspeed", Groundspeed);
-    Airspeed = ini.Get_Fixed(m_Name, "Airspeed", Airspeed);
-    Armor = ini.Get_Fixed(m_Name, "Armor", Armor);
-    ROF = ini.Get_Fixed(m_Name, "ROF", ROF);
-    Cost = ini.Get_Fixed(m_Name, "Cost", Cost);
-    BuildTime = ini.Get_Fixed(m_Name, "BuildTime", BuildTime);
+    m_Firepower = ini.Get_Fixed(m_Name, "Firepower", m_Firepower);
+    m_Groundspeed = ini.Get_Fixed(m_Name, "Groundspeed", m_Groundspeed);
+    m_Airspeed = ini.Get_Fixed(m_Name, "Airspeed", m_Airspeed);
+    m_Armor = ini.Get_Fixed(m_Name, "Armor", m_Armor);
+    m_ROF = ini.Get_Fixed(m_Name, "ROF", m_ROF);
+    m_Cost = ini.Get_Fixed(m_Name, "Cost", m_Cost);
+    m_BuildTime = ini.Get_Fixed(m_Name, "BuildTime", m_BuildTime);
 
     return true;
 }

@@ -18,56 +18,56 @@
 #include "scenario.h"
 
 HouseStaticClass::HouseStaticClass() :
-    IQ(0),
-    TechLevel(1),
-    Allies(0),
-    MaxUnit(Rule.Max_Unit() / 6),
-    MaxBuilding(Rule.Max_Building() / 6),
-    MaxInfantry(Rule.Max_Infantry() / 6),
-    MaxVessel(Rule.Max_Vessel() / 6),
-    MaxAircraft(Rule.Max_Unit() / 6),
-    Credits(0),
-    Edge(SOURCE_NORTH)
+    m_IQ(0),
+    m_TechLevel(1),
+    m_Allies(0),
+    m_MaxUnit(Rule.Max_Unit() / 6),
+    m_MaxBuilding(Rule.Max_Building() / 6),
+    m_MaxInfantry(Rule.Max_Infantry() / 6),
+    m_MaxVessel(Rule.Max_Vessel() / 6),
+    m_MaxAircraft(Rule.Max_Unit() / 6),
+    m_Credits(0),
+    m_Edge(SOURCE_NORTH)
 {
 }
 
 HouseStaticClass::HouseStaticClass(const HouseStaticClass &that) :
-    IQ(that.IQ),
-    TechLevel(that.TechLevel),
-    Allies(that.Allies),
-    MaxUnit(that.MaxUnit),
-    MaxBuilding(that.MaxBuilding),
-    MaxInfantry(that.MaxInfantry),
-    MaxVessel(that.MaxVessel),
-    MaxAircraft(that.MaxAircraft),
-    Credits(that.Credits),
-    Edge(that.Edge)
+    m_IQ(that.m_IQ),
+    m_TechLevel(that.m_TechLevel),
+    m_Allies(that.m_Allies),
+    m_MaxUnit(that.m_MaxUnit),
+    m_MaxBuilding(that.m_MaxBuilding),
+    m_MaxInfantry(that.m_MaxInfantry),
+    m_MaxVessel(that.m_MaxVessel),
+    m_MaxAircraft(that.m_MaxAircraft),
+    m_Credits(that.m_Credits),
+    m_Edge(that.m_Edge)
 {
 }
 
 bool HouseStaticClass::Read_INI(GameINIClass &ini, char const *section)
 {
     if (ini.Section_Present(section)) {
-        MaxBuilding = ini.Get_Int(section, "MaxBuilding", MaxBuilding);
-        MaxUnit = ini.Get_Int(section, "MaxUnit", MaxUnit);
-        MaxInfantry = ini.Get_Int(section, "MaxInfantry", MaxInfantry);
-        MaxAircraft = ini.Get_Int(section, "MaxAircraft", MaxAircraft);
-        MaxVessel = ini.Get_Int(section, "MaxVessel", MaxVessel);
+        m_MaxBuilding = ini.Get_Int(section, "MaxBuilding", m_MaxBuilding);
+        m_MaxUnit = ini.Get_Int(section, "MaxUnit", m_MaxUnit);
+        m_MaxInfantry = ini.Get_Int(section, "MaxInfantry", m_MaxInfantry);
+        m_MaxAircraft = ini.Get_Int(section, "MaxAircraft", m_MaxAircraft);
+        m_MaxVessel = ini.Get_Int(section, "MaxVessel", m_MaxVessel);
 
-        if (MaxVessel <= 0) {
-            MaxVessel = MaxUnit;
+        if (m_MaxVessel <= 0) {
+            m_MaxVessel = m_MaxUnit;
         }
 
-        TechLevel = ini.Get_Int(section, "TechLevel", TechLevel);
+        m_TechLevel = ini.Get_Int(section, "TechLevel", m_TechLevel);
 
-        Credits = (ini.Get_Int(section, "Credits", Credits) * 100);
+        m_Credits = (ini.Get_Int(section, "Credits", m_Credits) * 100);
 
-        IQ = ini.Get_Int(section, "IQ", IQ);
-        if (IQ > Rule.IQ_Controls().MaxIQLevels) {
-            IQ = 1;
+        m_IQ = ini.Get_Int(section, "IQ", m_IQ);
+        if (m_IQ > Rule.IQ_Controls().MaxIQLevels) {
+            m_IQ = 1;
         }
 
-        Edge = ini.Get_SourceType(section, "Edge", SOURCE_NORTH);
+        m_Edge = ini.Get_SourceType(section, "Edge", SOURCE_NORTH);
 
         return true;
     }
@@ -81,40 +81,40 @@ void HouseStaticClass::Write_INI(GameINIClass &ini, char const *section)
         // Default instance for comparison purposes.
         HouseStaticClass statichouse;
 
-        if (Credits != statichouse.Credits) {
-            ini.Put_Int(section, "Credits", (Credits / 100));
+        if (m_Credits != statichouse.m_Credits) {
+            ini.Put_Int(section, "Credits", (m_Credits / 100));
         }
 
-        if (Edge != statichouse.Edge) {
-            ini.Put_SourceType(section, "Edge", Edge);
+        if (m_Edge != statichouse.m_Edge) {
+            ini.Put_SourceType(section, "Edge", m_Edge);
         }
 
-        if (MaxBuilding > 0 && MaxBuilding != statichouse.MaxBuilding) {
-            ini.Put_Int(section, "MaxBuilding", MaxBuilding);
+        if (m_MaxBuilding > 0 && m_MaxBuilding != statichouse.m_MaxBuilding) {
+            ini.Put_Int(section, "MaxBuilding", m_MaxBuilding);
         }
 
-        if (MaxUnit > 0 && MaxUnit != statichouse.MaxUnit) {
-            ini.Put_Int(section, "MaxUnit", MaxUnit);
+        if (m_MaxUnit > 0 && m_MaxUnit != statichouse.m_MaxUnit) {
+            ini.Put_Int(section, "MaxUnit", m_MaxUnit);
         }
 
-        if (MaxInfantry > 0 && MaxInfantry != statichouse.MaxInfantry) {
-            ini.Put_Int(section, "MaxInfantry", MaxInfantry);
+        if (m_MaxInfantry > 0 && m_MaxInfantry != statichouse.m_MaxInfantry) {
+            ini.Put_Int(section, "MaxInfantry", m_MaxInfantry);
         }
 
-        if (MaxAircraft > 0 && MaxAircraft != statichouse.MaxAircraft) {
-            ini.Put_Int(section, "MaxAircraft", MaxAircraft);
+        if (m_MaxAircraft > 0 && m_MaxAircraft != statichouse.m_MaxAircraft) {
+            ini.Put_Int(section, "MaxAircraft", m_MaxAircraft);
         }
 
-        if (MaxVessel > 0 && MaxVessel != statichouse.MaxVessel) {
-            ini.Put_Int(section, "MaxAircraft", MaxVessel);
+        if (m_MaxVessel > 0 && m_MaxVessel != statichouse.m_MaxVessel) {
+            ini.Put_Int(section, "MaxAircraft", m_MaxVessel);
         }
 
-        if (IQ != statichouse.IQ) {
-            ini.Put_Int(section, "IQ", IQ);
+        if (m_IQ != statichouse.m_IQ) {
+            ini.Put_Int(section, "IQ", m_IQ);
         }
 
-        if (Edge != statichouse.Edge) {
-            ini.Put_Int(section, "Edge", Edge);
+        if (m_Edge != statichouse.m_Edge) {
+            ini.Put_Int(section, "Edge", m_Edge);
         }
     }
 }

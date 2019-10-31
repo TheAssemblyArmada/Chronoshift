@@ -42,17 +42,17 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    HousesType Get_Type() const { return Type; }
-    PlayerColorType Get_Color() const { return Color; }
-    char Get_Prefix() const { return Prefix; }
-    HousesType What_Type() const { return Type; }
-    const fixed_t &Get_Firepower() const { return Firepower; }
-    const fixed_t &Get_Groundspeed() const { return Groundspeed; }
-    const fixed_t &Get_Airspeed() const { return Airspeed; }
-    const fixed_t &Get_Armor() const { return Armor; }
-    const fixed_t &Get_ROF() const { return ROF; }
-    const fixed_t &Get_Cost() const { return Cost; }
-    const fixed_t &Get_BuildTime() const { return BuildTime; }
+    HousesType Get_Type() const { return m_Type; }
+    PlayerColorType Get_Color() const { return m_Color; }
+    char Get_Prefix() const { return m_Prefix; }
+    HousesType What_Type() const { return m_Type; }
+    const fixed_t &Get_Firepower() const { return m_Firepower; }
+    const fixed_t &Get_Groundspeed() const { return m_Groundspeed; }
+    const fixed_t &Get_Airspeed() const { return m_Airspeed; }
+    const fixed_t &Get_Armor() const { return m_Armor; }
+    const fixed_t &Get_ROF() const { return m_ROF; }
+    const fixed_t &Get_Cost() const { return m_Cost; }
+    const fixed_t &Get_BuildTime() const { return m_BuildTime; }
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
@@ -71,18 +71,18 @@ public:
     static BOOL Is_Multiplayer_House(HousesType type);
 
 private:
-    HousesType Type;
-    char HouseName[256];
-    int LemonFactor;
-    PlayerColorType Color; // Color to use when displaying objects owned by this country.
-    char Prefix;
-    fixed_t Firepower; // Multiplier to firepower for all weapons [larger means more damage]
-    fixed_t Groundspeed; // Multiplier to speed for all ground units [larger means faster]
-    fixed_t Airspeed; // Multiplier to speed for all air units [larger means faster]
-    fixed_t Armor; // Multiplier to armor damage for all units and buildings [larger means more damage]
-    fixed_t ROF; // Multiplier to Rate Of Fire for all weapons [larger means slower ROF]
-    fixed_t Cost; // Multiplier to cost for all units and buildings [larger means costlier]
-    fixed_t BuildTime; // Multiplier to general object build time [larger means longer to build]
+    HousesType m_Type;
+    char m_HouseName[256];
+    int m_LemonFactor;
+    PlayerColorType m_Color; // Color to use when displaying objects owned by this country.
+    char m_Prefix;
+    fixed_t m_Firepower; // Multiplier to firepower for all weapons [larger means more damage]
+    fixed_t m_Groundspeed; // Multiplier to speed for all ground units [larger means faster]
+    fixed_t m_Airspeed; // Multiplier to speed for all air units [larger means faster]
+    fixed_t m_Armor; // Multiplier to armor damage for all units and buildings [larger means more damage]
+    fixed_t m_ROF; // Multiplier to Rate Of Fire for all weapons [larger means slower ROF]
+    fixed_t m_Cost; // Multiplier to cost for all units and buildings [larger means costlier]
+    fixed_t m_BuildTime; // Multiplier to general object build time [larger means longer to build]
 };
 
 #ifdef GAME_DLL
