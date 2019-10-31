@@ -27,8 +27,8 @@ TCountDownTimerClass<SystemTimerClass> ScrollClass::ScrollingCounter;
  * 0x00547018
  */
 ScrollClass::ScrollClass() :
-    Autoscroll(true),
-    ScrollUnkInt(0)
+    m_Autoscroll(true),
+    m_ScrollUnkInt(0)
 {
     ScrollingCounter = 1;
 }
@@ -79,14 +79,14 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
     static DirType _direction = DIR_NONE;
 
-    if (!DisplayBit8) {
+    if (!m_DisplayBit8) {
         int vp_w = g_seenBuff.Get_Width();
         int vp_h = g_seenBuff.Get_Height();
 
         bool at_edge = (mouse_x <= 0 || mouse_y <= 0 || vp_w - 1 <= mouse_x || vp_h - 1 <= mouse_y);
         bool edge_scrolling = false;
 
-        if (ScrollUnkInt != 0 || at_edge) {
+        if (m_ScrollUnkInt != 0 || at_edge) {
             if (at_edge) {
                 edge_scrolling = true;
 
@@ -126,11 +126,11 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
             FacingType scroll_facing = Direction_To_Facing(_direction);
 
-            int rate_index = g_InMapEditor ? Options.Get_Scroll_Rate() + 1 : (8 - ScrollUnkInt);
+            int rate_index = g_InMapEditor ? Options.Get_Scroll_Rate() + 1 : (8 - m_ScrollUnkInt);
 
             if (rate_index < (Options.Get_Scroll_Rate() + 1)) {
                 rate_index = (Options.Get_Scroll_Rate() + 1);
-                ScrollUnkInt = 8 - (Options.Get_Scroll_Rate() + 1);
+                m_ScrollUnkInt = 8 - (Options.Get_Scroll_Rate() + 1);
             }
 
             // if the right mouse button is down, half the scroll speed.
@@ -147,7 +147,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             if (Scroll_Map(_direction, distance, false)) {
                 Override_Mouse_Shape(_scroll_mouse[scroll_facing]);
 
-                if (g_keyboard->Down(KN_LMOUSE) || Autoscroll) {
+                if (g_keyboard->Down(KN_LMOUSE) || m_Autoscroll) {
                     distance = _rate[rate_index];
                     Scroll_Map(_direction, distance, true);
 
@@ -156,7 +156,7 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                     } else {
                         if (edge_scrolling && ScrollingCounter == 0) {
                             ScrollingCounter = 1;
-                            ++ScrollUnkInt;
+                            ++m_ScrollUnkInt;
                         }
                     }
                 }
@@ -166,10 +166,10 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
         }
 
         if (!g_InMapEditor && !edge_scrolling && ScrollingCounter == 0) {
-            --ScrollUnkInt;
+            --m_ScrollUnkInt;
 
-            if (ScrollUnkInt < 0) {
-                ++ScrollUnkInt;
+            if (m_ScrollUnkInt < 0) {
+                ++m_ScrollUnkInt;
             }
 
             ScrollingCounter = 1;
@@ -186,12 +186,12 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
  */
 BOOL ScrollClass::Set_Autoscroll(int mode)
 {
-    BOOL old = Autoscroll;
+    BOOL old = m_Autoscroll;
 
     if (mode == SCROLLMODE_TOGGLE) {
-        Autoscroll = !Autoscroll;
+        m_Autoscroll = !m_Autoscroll;
     } else {
-        Autoscroll = mode == SCROLLMODE_AUTO;
+        m_Autoscroll = mode == SCROLLMODE_AUTO;
     }
 
     return old;

@@ -37,7 +37,7 @@ class MapClass : public GameScreenClass
     };
 public:
     MapClass();
-    MapClass(const NoInitClass &noinit) : GameScreenClass(noinit), Array(noinit) {}
+    MapClass(const NoInitClass &noinit) : GameScreenClass(noinit), m_Array(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;
@@ -50,7 +50,7 @@ public:
     virtual void Code_Pointers() override;
     virtual void Decode_Pointers() override;
 
-    CellClass &operator[](int index) { return Array[index]; }
+    CellClass &operator[](int index) { return m_Array[index]; }
 
     BOOL Place_Random_Crate();
     BOOL Place_Random_Crate_At_Cell(cell_t cellnum);
@@ -82,11 +82,11 @@ public:
     BOOL Validate();
     ObjectClass *Close_Object(coord_t coord) const;
 
-    cell_t Cell_Number(CellClass *cell) { return Array.ID(cell); }
-    int Get_Map_Cell_X() const { return MapCellX; }
-    int Get_Map_Cell_Y() const { return MapCellY; }
-    int Get_Map_Cell_Width() const { return MapCellWidth; }
-    int Get_Map_Cell_Height() const  {return MapCellHeight; }
+    cell_t Cell_Number(CellClass *cell) { return m_Array.ID(cell); }
+    int Get_Map_Cell_X() const { return m_MapCellX; }
+    int Get_Map_Cell_Y() const { return m_MapCellY; }
+    int Get_Map_Cell_Width() const { return m_MapCellWidth; }
+    int Get_Map_Cell_Height() const  {return m_MapCellHeight; }
 
 #ifdef GAME_DLL
     cell_t MapClass::Hook_Pick_Random_Location() { return Pick_Random_Location(); }
@@ -103,23 +103,23 @@ public:
 #endif
 
 protected:
-    int MapCellX;
-    int MapCellY;
-    int MapCellWidth;
-    int MapCellHeight;
-    int TotalValue;
-    VectorClass<CellClass> Array;
-    int XSize;
-    int YSize;
-    int TotalSize;
-    CrateClass Crates[MAP_MAX_CRATES];
-    int16_t OreGrowth[ORE_SPREAD_TABLE_SIZE];
-    int OreGrowthCount;
-    int OreGrowthExcess;
-    int16_t OreSpread[ORE_SPREAD_TABLE_SIZE];
-    int OreSpreadCount;
-    int OreSpreadExcess;
-    int16_t OreLogicPos;
+    int m_MapCellX;
+    int m_MapCellY;
+    int m_MapCellWidth;
+    int m_MapCellHeight;
+    int m_TotalValue;
+    VectorClass<CellClass> m_Array;
+    int m_XSize;
+    int m_YSize;
+    int m_TotalSize;
+    CrateClass m_Crates[MAP_MAX_CRATES];
+    int16_t m_OreGrowth[ORE_SPREAD_TABLE_SIZE];
+    int m_OreGrowthCount;
+    int m_OreGrowthExcess;
+    int16_t m_OreSpread[ORE_SPREAD_TABLE_SIZE];
+    int m_OreSpreadCount;
+    int m_OreSpreadExcess;
+    int16_t m_OreLogicPos;
 
 private:
     static const int RadiusOffset[];

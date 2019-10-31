@@ -80,8 +80,8 @@ class SidebarClass : public PowerClass
             void Set_Owner(StripClass &strip, int row);
 
         protected:
-            StripClass *Owner;
-            int Row;
+            StripClass *m_Owner;
+            int m_Row;
         };
 
     public:
@@ -108,8 +108,8 @@ class SidebarClass : public PowerClass
 
         void Set_Position(int x, int y)
         {
-            XPos = x;
-            YPos = y;
+            m_XPos = x;
+            m_YPos = y;
         }
 
     private:
@@ -153,34 +153,34 @@ class SidebarClass : public PowerClass
         };
 
     protected:
-        StageClass ProgressTimer; // 0x0
-        int XPos; // 0x11 -658
-        int YPos; // 0x15 -654
-        int WhichColumn; // 0x19 -650
+        StageClass m_ProgressTimer; // 0x0
+        int m_XPos; // 0x11 -658
+        int m_YPos; // 0x15 -654
+        int m_WhichColumn; // 0x19 -650
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-        BOOL StripToRedraw : 1; // 1
-        BOOL Strip_Boolean2 : 1; // 2
-        BOOL Strip_Boolean4 : 1; // 4    // related to some direction?
-        BOOL Strip_Boolean8 : 1; // 8    // Flags if the icons are scrolling?
-        BOOL Strip_Boolean16 : 1; // 16
-        BOOL Strip_Boolean32 : 1; // 32
+        BOOL m_StripToRedraw : 1; // 1
+        BOOL m_Strip_Boolean2 : 1; // 2
+        BOOL m_Strip_Boolean4 : 1; // 4    // related to some direction?
+        BOOL m_Strip_Boolean8 : 1; // 8    // Flags if the icons are scrolling?
+        BOOL m_Strip_Boolean16 : 1; // 16
+        BOOL m_Strip_Boolean32 : 1; // 32
 #else
         // bitfield 0x1D
-        bool StripToRedraw; // 1
-        bool Strip_Boolean2; // 2
-        bool Strip_Boolean4; // 4    // related to some direction?
-        bool Strip_Boolean8; // 8    // Flags if the icons are scrolling?
-        bool Strip_Boolean16; // 16
-        bool Strip_Boolean32; // 32
+        bool m_StripToRedraw; // 1
+        bool m_Strip_Boolean2; // 2
+        bool m_Strip_Boolean4; // 4    // related to some direction?
+        bool m_Strip_Boolean8; // 8    // Flags if the icons are scrolling?
+        bool m_Strip_Boolean16; // 16
+        bool m_Strip_Boolean32; // 32
 #endif
 
-        int field_21; // Icon with build clock active?
-        int CurrentRow;
-        int RowStartIndex; //  scroll position, which row is topmost visible
-        int field_2D;
-        int field_31;
-        int CameoCount;
-        SelectButtonType Entries[MAX_BUTTONS_PER_COLUMN];
+        int m_field_21; // Icon with build clock active?
+        int m_CurrentRow;
+        int m_RowStartIndex; //  scroll position, which row is topmost visible
+        int m_field_2D;
+        int m_field_31;
+        int m_CameoCount;
+        SelectButtonType m_Entries[MAX_BUTTONS_PER_COLUMN];
     };
 
 public:
@@ -208,25 +208,25 @@ public:
     int Abandon_Production(RTTIType, int);
     void Zoom_Mode_Control();
 
-    BOOL Is_Sidebar_Drawn() const { return SidebarIsDrawn; }
+    BOOL Is_Sidebar_Drawn() const { return m_SidebarIsDrawn; }
     void Disable_Zoom_Button() { ZoomButton.Disable(); }
     void Enable_Zoom_Button() { ZoomButton.Enable(); }
 
 protected:
-    StripClass Columns[COLUMN_COUNT];
+    StripClass m_Columns[COLUMN_COUNT];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL SidebarIsDrawn : 1; // 1
-    BOOL SidebarToRedraw : 1; // 2 
-    BOOL SidebarBit4 : 1; // 4
-    BOOL SidebarBit8 : 1; // 8
-    BOOL SidebarBit16 : 1; // 16
+    BOOL m_SidebarIsDrawn : 1; // 1
+    BOOL m_SidebarToRedraw : 1; // 2 
+    BOOL m_SidebarBit4 : 1; // 4
+    BOOL m_SidebarBit8 : 1; // 8
+    BOOL m_SidebarBit16 : 1; // 16
 #else
     // bitfield 0x15F6
-    bool SidebarIsDrawn; // when set to false, the sidebar is not drawn.(related to the sidebar TAB hidding in C&C)
-    bool SidebarToRedraw; // buttons to redraw?
-    bool SidebarBit4; // repair active
-    bool SidebarBit8; // upgrade active
-    bool SidebarBit16; // demolish active
+    bool m_SidebarIsDrawn; // when set to false, the sidebar is not drawn.(related to the sidebar TAB hidding in C&C)
+    bool m_SidebarToRedraw; // buttons to redraw?
+    bool m_SidebarBit4; // repair active
+    bool m_SidebarBit8; // upgrade active
+    bool m_SidebarBit16; // demolish active
 #endif
 
 #ifdef GAME_DLL

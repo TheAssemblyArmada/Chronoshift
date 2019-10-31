@@ -109,69 +109,69 @@ public:
 #endif
 
 protected:
-    int RadarButtonXPos;
-    int MinRadarX;
-    int RadarButtonYPos;
-    int MinRadarY;
-    int RadarButtonWidth;
-    int RadarButtonHeight;
-    int MaxRadarWidth;
-    int MaxRadarHeight;
-    int field_CA8;
-    int field_CAC;
+    int m_RadarButtonXPos;
+    int m_MinRadarX;
+    int m_RadarButtonYPos;
+    int m_MinRadarY;
+    int m_RadarButtonWidth;
+    int m_RadarButtonHeight;
+    int m_MaxRadarWidth;
+    int m_MaxRadarHeight;
+    int m_field_CA8;
+    int m_field_CAC;
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL RadarToRedraw : 1; // 1
-    BOOL RadarCursorRedraw : 1; // 2
-    BOOL RadarExists : 1; // 4
-    BOOL RadarActive : 1; // 8
-    BOOL RadarActivating : 1; // 16
-    BOOL RadarDeactivating : 1; // 32
-    BOOL RadarJammed : 1; // 64
-    BOOL RadarPulseActive : 1; // 128
+    BOOL m_RadarToRedraw : 1; // 1
+    BOOL m_RadarCursorRedraw : 1; // 2
+    BOOL m_RadarExists : 1; // 4
+    BOOL m_RadarActive : 1; // 8
+    BOOL m_RadarActivating : 1; // 16
+    BOOL m_RadarDeactivating : 1; // 32
+    BOOL m_RadarJammed : 1; // 64
+    BOOL m_RadarPulseActive : 1; // 128
 
-    BOOL RadarZoomed : 1; // 1
-    BOOL RadarDrawNames : 1; // 2
-    BOOL RadarDrawSpiedInfo : 1; // 4
-    BOOL RadarBit2_8 : 1; // 8
-    BOOL RadarBit2_16 : 1; // 16
-    BOOL RadarBit2_32 : 1; // 32
-    BOOL RadarBit2_64 : 1; // 64
-    BOOL RadarBit2_128 : 1; // 128
+    BOOL m_RadarZoomed : 1; // 1
+    BOOL m_RadarDrawNames : 1; // 2
+    BOOL m_RadarDrawSpiedInfo : 1; // 4
+    BOOL m_RadarBit2_8 : 1; // 8
+    BOOL m_RadarBit2_16 : 1; // 16
+    BOOL m_RadarBit2_32 : 1; // 32
+    BOOL m_RadarBit2_64 : 1; // 64
+    BOOL m_RadarBit2_128 : 1; // 128
 #else
-    bool RadarToRedraw;
-    bool RadarCursorRedraw;
-    bool RadarExists;
-    bool RadarActive;
-    bool RadarActivating;
-    bool RadarDeactivating;
-    bool RadarJammed;
-    bool RadarPulseActive;
-    bool RadarZoomed;
-    bool RadarDrawNames;
-    bool RadarDrawSpiedInfo;
-    bool RadarBit2_8;
-    bool RadarBit2_16;
-    bool RadarBit2_32;
-    bool RadarBit2_64;
-    bool RadarBit2_128;
+    bool m_RadarToRedraw;
+    bool m_RadarCursorRedraw;
+    bool m_RadarExists;
+    bool m_RadarActive;
+    bool m_RadarActivating;
+    bool m_RadarDeactivating;
+    bool m_RadarJammed;
+    bool m_RadarPulseActive;
+    bool m_RadarZoomed;
+    bool m_RadarDrawNames;
+    bool m_RadarDrawSpiedInfo;
+    bool m_RadarBit2_8;
+    bool m_RadarBit2_16;
+    bool m_RadarBit2_32;
+    bool m_RadarBit2_64;
+    bool m_RadarBit2_128;
 #endif
-    int RadarPulseFrame;
-    int RadarCursorFrame; // bytes relating to region box focus in animation.
-    int RadarAnimFrame;
-    int MiniMapXOffset;
-    int MiniMapYOffset;
-    int MiniMapCellWidth;
-    int MiniMapCellHeight;
-    cell_t MiniMapCell;
+    int m_RadarPulseFrame;
+    int m_RadarCursorFrame; // bytes relating to region box focus in animation.
+    int m_RadarAnimFrame;
+    int m_MiniMapXOffset;
+    int m_MiniMapYOffset;
+    int m_MiniMapCellWidth;
+    int m_MiniMapCellHeight;
+    cell_t m_MiniMapCell;
 #ifdef GAME_DLL
-    char padding[2]; // needed for DLL builds because original has MiniMapCell a int, but Radar_Position returns it as a short.
+    char padding[2]; // needed for DLL builds because original has m_MiniMapCell a int, but Radar_Position returns it as a short.
 #endif
-    TRect<int> MiniMap;
-    int MiniMapScale;
-    HousesType SpiedHouse;
-    int MiniMapCellCount;
-    cell_t MiniMapCells[MINI_MAP_CELLS];
+    TRect<int> m_MiniMap;
+    int m_MiniMapScale;
+    HousesType m_SpiedHouse;
+    int m_MiniMapCellCount;
+    cell_t m_MiniMapCells[MINI_MAP_CELLS];
     static GraphicBufferClass IconStage;
 
 #ifdef GAME_DLL

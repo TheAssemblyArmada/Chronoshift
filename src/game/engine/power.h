@@ -41,7 +41,7 @@ public:
 
 public:
     PowerClass();
-    PowerClass(const NoInitClass &noinit) : RadarClass(noinit), FlashTimer(noinit) {}
+    PowerClass(const NoInitClass &noinit) : RadarClass(noinit), m_FlashTimer(noinit) {}
 
     virtual void One_Time() override;
     virtual void Init_Clear() override;
@@ -54,23 +54,23 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL PowerToRedraw : 1; // 1
-    BOOL PowerBit2 : 1; // 2
+    BOOL m_PowerToRedraw : 1; // 1
+    BOOL m_PowerBit2 : 1; // 2
 #else
-    bool PowerToRedraw;
-    bool PowerBit2;
+    bool m_PowerToRedraw;
+    bool m_PowerBit2;
 #endif
-    TCountDownTimerClass<FrameTimerClass> FlashTimer;
-    int Drain;
-    int Output;
-    int NewDrainHeight;
-    int NewOutputHeight;
-    int DrainHeight;
-    int OutputHeight;
-    int DrainMod;
-    int OutputMod;
-    int16_t OutputInc;
-    int16_t DrainInc;
+    TCountDownTimerClass<FrameTimerClass> m_FlashTimer;
+    int m_Drain;
+    int m_Output;
+    int m_NewDrainHeight;
+    int m_NewOutputHeight;
+    int m_DrainHeight;
+    int m_OutputHeight;
+    int m_DrainMod;
+    int m_OutputMod;
+    int16_t m_OutputInc;
+    int16_t m_DrainInc;
 
 #ifdef GAME_DLL
     static PowerButtonClass &PowerButton;

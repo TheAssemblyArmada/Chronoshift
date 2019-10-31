@@ -60,26 +60,26 @@ class TabClass : public SidebarClass
 
         void Graphic_Logic(BOOL force_redraw = false);
         void AI(BOOL force_update = false);
-        void Set_Available(int avail) { Available = avail; }
+        void Set_Available(int avail) { m_Available = avail; }
 
     protected:
-        int Available;
-        int Credits;
+        int m_Available;
+        int m_Credits;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-        BOOL CreditToRedraw : 1; // & 1
-        BOOL CreditHasIncreased : 1; // & 2
-        BOOL CreditHasChanged : 1; // & 4
+        BOOL m_CreditToRedraw : 1; // & 1
+        BOOL m_CreditHasIncreased : 1; // & 2
+        BOOL m_CreditHasChanged : 1; // & 4
 #else
-        bool CreditToRedraw;
-        bool CreditHasIncreased;
-        bool CreditHasChanged;
+        bool m_CreditToRedraw;
+        bool m_CreditHasIncreased;
+        bool m_CreditHasChanged;
 #endif
-        int TicksToNextRecalc;
+        int m_TicksToNextRecalc;
     };
 
 public:
     TabClass();
-    TabClass(const NoInitClass &noinit) : SidebarClass(noinit), CreditDisplay(noinit), TimerFlashTimer(noinit), CreditsFlashTimer(noinit) {}
+    TabClass(const NoInitClass &noinit) : SidebarClass(noinit), m_CreditDisplay(noinit), m_TimerFlashTimer(noinit), m_CreditsFlashTimer(noinit) {}
 
     virtual void One_Time() override;
     virtual void AI(KeyNumType &key, int mouse_x, int mouse_y) override;
@@ -94,14 +94,14 @@ private:
     static void Draw_Credits_Tab();
 
 protected:
-    CreditClass CreditDisplay;
-    TCountDownTimerClass<FrameTimerClass> TimerFlashTimer;
+    CreditClass m_CreditDisplay;
+    TCountDownTimerClass<FrameTimerClass> m_TimerFlashTimer;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL TabToRedraw : 1; // 1
+    BOOL m_TabToRedraw : 1; // 1
 #else
-    bool TabToRedraw;
+    bool m_TabToRedraw;
 #endif
-    TCountDownTimerClass<FrameTimerClass> CreditsFlashTimer;
+    TCountDownTimerClass<FrameTimerClass> m_CreditsFlashTimer;
 
 private:
 #ifdef GAME_DLL

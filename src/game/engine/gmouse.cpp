@@ -249,7 +249,7 @@ BOOL GameMouseClass::Load(Straw &straw)
                     return false;
                 }
 
-                if (!Array[cell_num].Load(straw)) {
+                if (!m_Array[cell_num].Load(straw)) {
                     return false;
                 }
             }
@@ -281,7 +281,7 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
 
     // Count how many cells have state that needs saving.
     for (cell_t i = 0; i < MAP_MAX_AREA; ++i) {
-        if (Array[i].Should_Save()) {
+        if (m_Array[i].Should_Save()) {
             ++saved_cells;
         }
     }
@@ -291,9 +291,9 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
 
     // Save the cells that need saving.
     for (cell_t i = 0; i < MAP_MAX_AREA; ++i) {
-        if (Array[i].Should_Save()) {
+        if (m_Array[i].Should_Save()) {
             pipe.Put(&i, sizeof(i));
-            Array[i].Save(pipe);
+            m_Array[i].Save(pipe);
             --saved_cells;
         }
     }

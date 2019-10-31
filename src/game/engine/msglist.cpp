@@ -32,27 +32,27 @@ using std::strncpy;
 int MessageListClass::MaxMessageWidth = 640;
 
 MessageListClass::MessageListClass() :
-    LabelList(nullptr),
-    XPos(0),
-    YPos(0),
-    FreeSlots(0),
-    MaxChars(0),
-    MessageHeight(0),
-    Concatenate(false),
-    Editing(false),
-    EditAsMessage(false),
-    EditXPos(0),
-    EditYPos(0),
-    EditingLabel(nullptr),
-    EditPos(0),
-    EditStart(0),
-    EditCursor('\0'),
-    EditTrimStart(0),
-    EditTrimEnd(0),
-    Width(0)
+    m_LabelList(nullptr),
+    m_XPos(0),
+    m_YPos(0),
+    m_FreeSlots(0),
+    m_MaxChars(0),
+    m_MessageHeight(0),
+    m_Concatenate(false),
+    m_Editing(false),
+    m_EditAsMessage(false),
+    m_EditXPos(0),
+    m_EditYPos(0),
+    m_EditingLabel(nullptr),
+    m_EditPos(0),
+    m_EditStart(0),
+    m_EditCursor('\0'),
+    m_EditTrimStart(0),
+    m_EditTrimEnd(0),
+    m_Width(0)
 {
     for (int i = 0; i < MAX_MESSAGES; ++i) {
-        SlotAvailable[i] = true;
+        m_SlotAvailable[i] = true;
     }
 }
 
@@ -67,49 +67,49 @@ MessageListClass::~MessageListClass()
 void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int height, int edit_x, int edit_y, BOOL concatenate,
     int trim_start, int trim_end, int width)
 {
-    Width = width;
+    m_Width = width;
 
-    for (TextLabelClass *label = LabelList; label != nullptr; label = LabelList) {
-        LabelList = (TextLabelClass *)label->Remove();
+    for (TextLabelClass *label = m_LabelList; label != nullptr; label = m_LabelList) {
+        m_LabelList = (TextLabelClass *)label->Remove();
         delete label;
     }
 
-    LabelList = nullptr;
+    m_LabelList = nullptr;
 
     for (int i = 0; i < MAX_MESSAGES; ++i) {
-        SlotAvailable[i] = true;
+        m_SlotAvailable[i] = true;
     }
 
-    if (Editing && EditingLabel != nullptr) {
-        delete EditingLabel;
+    if (m_Editing && m_EditingLabel != nullptr) {
+        delete m_EditingLabel;
     }
 
-    EditingLabel = nullptr;
-    XPos = x;
-    YPos = y;
-    FreeSlots = std::min((int)MAX_MESSAGES, max_lines);
-    MaxChars = std::min(120, max_chars);
-    MessageHeight = height;
-    Concatenate = concatenate;
+    m_EditingLabel = nullptr;
+    m_XPos = x;
+    m_YPos = y;
+    m_FreeSlots = std::min((int)MAX_MESSAGES, max_lines);
+    m_MaxChars = std::min(120, max_chars);
+    m_MessageHeight = height;
+    m_Concatenate = concatenate;
 
     if (edit_x != -1 && edit_y != -1) {
-        EditXPos = edit_x;
-        EditYPos = edit_y;
-        EditAsMessage = false;
+        m_EditXPos = edit_x;
+        m_EditYPos = edit_y;
+        m_EditAsMessage = false;
     } else {
-        EditXPos = x;
-        EditYPos = y;
-        EditAsMessage = true;
+        m_EditXPos = x;
+        m_EditYPos = y;
+        m_EditAsMessage = true;
     }
 
-    EditBuffer[0] = '\0';
-    ReserveBuffer[0] = '\0';
-    EditPos = 0;
-    EditStart = 0;
-    EditCursor = '\0';
-    EditTrimStart = trim_start;
-    EditTrimEnd = trim_end >= MaxChars ? MaxChars - 1 : trim_end;
-    EditTrimStart = trim_start >= EditTrimEnd ? EditTrimEnd - 1 : trim_start;
+    m_EditBuffer[0] = '\0';
+    m_ReserveBuffer[0] = '\0';
+    m_EditPos = 0;
+    m_EditStart = 0;
+    m_EditCursor = '\0';
+    m_EditTrimStart = trim_start;
+    m_EditTrimEnd = trim_end >= m_MaxChars ? m_MaxChars - 1 : trim_end;
+    m_EditTrimStart = trim_start >= m_EditTrimEnd ? m_EditTrimEnd - 1 : trim_start;
 }
 
 /**
@@ -117,27 +117,27 @@ void MessageListClass::Init(int x, int y, int max_lines, int max_chars, int heig
  */
 void MessageListClass::Reset()
 {
-    for (TextLabelClass *label = LabelList; label != nullptr; label = LabelList) {
-        LabelList = (TextLabelClass *)label->Remove();
+    for (TextLabelClass *label = m_LabelList; label != nullptr; label = m_LabelList) {
+        m_LabelList = (TextLabelClass *)label->Remove();
         delete label;
     }
 
-    LabelList = nullptr;
+    m_LabelList = nullptr;
 
-    for (int i = 0; i < FreeSlots; ++i) {
-        SlotAvailable[i] = true;
-        // MessageBuffers[i][0] = '\0';
+    for (int i = 0; i < m_FreeSlots; ++i) {
+        m_SlotAvailable[i] = true;
+        // m_MessageBuffers[i][0] = '\0';
     }
 
-    if (Editing) {
-        if (EditingLabel != nullptr) {
-            delete EditingLabel;
+    if (m_Editing) {
+        if (m_EditingLabel != nullptr) {
+            delete m_EditingLabel;
         }
 
-        EditingLabel = nullptr;
+        m_EditingLabel = nullptr;
     }
 
-    Editing = false;
+    m_Editing = false;
 }
 
 /**
@@ -158,7 +158,7 @@ TextLabelClass *MessageListClass::Add_Message(
     int break_pos = 0;
     char saved_char = '\0';
 
-    if (String_Pixel_Width(msgbuff) >= (Width - 8)) {
+    if (String_Pixel_Width(msgbuff) >= (m_Width - 8)) {
         char longbuff[152];
 
         if (player != nullptr) {
@@ -174,7 +174,7 @@ TextLabelClass *MessageListClass::Add_Message(
             strncpy(msgp, message, to_copy);
             longbuff[last_pos] = '\0';
 
-            if (String_Pixel_Width(longbuff) >= Width - 8) {
+            if (String_Pixel_Width(longbuff) >= m_Width - 8) {
                 break_pos = last_pos - 1;
                 break;
             }
@@ -190,20 +190,20 @@ TextLabelClass *MessageListClass::Add_Message(
         }
     }
 
-    if (FreeSlots > 0) {
+    if (m_FreeSlots > 0) {
         // Make some space if we would go over the number of free buffers.
-        if (Num_Messages() + 1 > FreeSlots) {
-            if (LabelList == nullptr) {
+        if (Num_Messages() + 1 > m_FreeSlots) {
+            if (m_LabelList == nullptr) {
                 return nullptr;
             }
 
-            TextLabelClass *last = LabelList;
-            LabelList = reinterpret_cast<TextLabelClass *>(LabelList->Remove());
+            TextLabelClass *last = m_LabelList;
+            m_LabelList = reinterpret_cast<TextLabelClass *>(m_LabelList->Remove());
 
             // Find the index of the buffer we are freeing.
             for (int i = 0; i < MAX_MESSAGES; ++i) {
-                if (MessageBuffers[i] == last->Get_Text()) {
-                    SlotAvailable[i] = true;
+                if (m_MessageBuffers[i] == last->Get_Text()) {
+                    m_SlotAvailable[i] = true;
                 }
             }
 
@@ -211,7 +211,7 @@ TextLabelClass *MessageListClass::Add_Message(
         }
     }
 
-    TextLabelClass *msglabel = new TextLabelClass(msgbuff, XPos, YPos, &ColorRemaps[color], style);
+    TextLabelClass *msglabel = new TextLabelClass(msgbuff, m_XPos, m_YPos, &ColorRemaps[color], style);
 
     if (lifetime == -1) {
         msglabel->Set_Lifetime(0);
@@ -224,12 +224,12 @@ TextLabelClass *MessageListClass::Add_Message(
 
     // Use next free slot.
     for (int i = 0; i < MAX_MESSAGES; ++i) {
-        if (SlotAvailable[i]) {
-            SlotAvailable[i] = false;
-            memset(MessageBuffers[i], 0, sizeof(MessageBuffers[i]));
-            strcpy(MessageBuffers[i], msgbuff);
+        if (m_SlotAvailable[i]) {
+            m_SlotAvailable[i] = false;
+            memset(m_MessageBuffers[i], 0, sizeof(m_MessageBuffers[i]));
+            strcpy(m_MessageBuffers[i], msgbuff);
             new_message = true;
-            msglabel->Set_Text(MessageBuffers[i]);
+            msglabel->Set_Text(m_MessageBuffers[i]);
             break;
         }
     }
@@ -239,10 +239,10 @@ TextLabelClass *MessageListClass::Add_Message(
         // Play notification of new message.
         Sound_Effect(VOC_INCOMING_MESSAGE);
 
-        if (LabelList != nullptr) {
-            msglabel->Add_Tail(*LabelList);
+        if (m_LabelList != nullptr) {
+            msglabel->Add_Tail(*m_LabelList);
         } else {
-            LabelList = msglabel;
+            m_LabelList = msglabel;
         }
 
         Compute_Y();
@@ -273,7 +273,7 @@ TextLabelClass *MessageListClass::Add_Simple_Message(const char *player, const c
  */
 char *MessageListClass::Get_Message(int id)
 {
-    TextLabelClass *label = LabelList;
+    TextLabelClass *label = m_LabelList;
 
     if (label != nullptr) {
         while (label->Get_Label_ID() != id) {
@@ -295,7 +295,7 @@ char *MessageListClass::Get_Message(int id)
  */
 TextLabelClass *MessageListClass::Get_Label(int id)
 {
-    TextLabelClass *label = LabelList;
+    TextLabelClass *label = m_LabelList;
 
     if (label != nullptr) {
         while (label->Get_Label_ID() != id) {
@@ -317,14 +317,14 @@ TextLabelClass *MessageListClass::Get_Label(int id)
  */
 BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int lifetime)
 {
-    if (msg == nullptr || !Concatenate) {
+    if (msg == nullptr || !m_Concatenate) {
         return false;
     }
 
     bool found = false;
     TextLabelClass *label;
 
-    for (label = LabelList; label != nullptr; label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
+    for (label = m_LabelList; label != nullptr; label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
         if (id == label->Get_Label_ID() && memcmp(label->Get_Text(), msg, strlen(msg)) == 0) {
             found = true;
 
@@ -335,19 +335,19 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int li
     if (found) {
         char *label_sub_str = &label->Get_Text()[strlen(msg) + 1];
 
-        if (strlen(to_concat) + strlen(label_sub_str) >= (unsigned)MaxChars) {
-            int required = std::max(strlen(to_concat) + strlen(label_sub_str) - MaxChars, strlen(label_sub_str));
+        if (strlen(to_concat) + strlen(label_sub_str) >= (unsigned)m_MaxChars) {
+            int required = std::max(strlen(to_concat) + strlen(label_sub_str) - m_MaxChars, strlen(label_sub_str));
 
-            Trim_Message(nullptr, label_sub_str, strlen(to_concat) + strlen(label_sub_str) - MaxChars, required, 0);
+            Trim_Message(nullptr, label_sub_str, strlen(to_concat) + strlen(label_sub_str) - m_MaxChars, required, 0);
         } else {
-            char *new_str = new char[MaxChars + 1];
+            char *new_str = new char[m_MaxChars + 1];
             int width_diff = String_Pixel_Width(label->Get_Text()) - String_Pixel_Width(label_sub_str);
 
             Fancy_Text_Print(nullptr, 0, 0, label->Get_Remap(), COLOR_TBLACK, label->Get_Style());
             strcpy(new_str, label_sub_str);
             strcpy(&new_str[strlen(new_str)], to_concat);
 
-            for (int i = width_diff + String_Pixel_Width(new_str); i < Width - 8;
+            for (int i = width_diff + String_Pixel_Width(new_str); i < m_Width - 8;
                  i = width_diff + String_Pixel_Width(new_str)) {
                 int sub_st_len = std::min(strlen(label_sub_str), (size_t)10u);
                 Trim_Message(nullptr, label_sub_str, 10, sub_st_len, 0);
@@ -377,8 +377,8 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int li
  */
 void MessageListClass::Set_Edit_Focus()
 {
-    if (Editing) {
-        EditingLabel->Set_Focus();
+    if (m_Editing) {
+        m_EditingLabel->Set_Focus();
     }
 }
 
@@ -387,8 +387,8 @@ void MessageListClass::Set_Edit_Focus()
  */
 bool MessageListClass::Has_Edit_Focus()
 {
-    if (Editing) {
-        return EditingLabel->Has_Focus();
+    if (m_Editing) {
+        return m_EditingLabel->Has_Focus();
     }
 
     return false;
@@ -399,25 +399,25 @@ bool MessageListClass::Has_Edit_Focus()
  */
 TextLabelClass *MessageListClass::Add_Edit(PlayerColorType player, TextPrintType style, char *string, char cursor, int width)
 {
-    if (Editing) {
-        EditingLabel->Set_Focus();
+    if (m_Editing) {
+        m_EditingLabel->Set_Focus();
 
         return nullptr;
     }
 
-    if (EditAsMessage) {
-        if (Num_Messages() + 1 > FreeSlots) {
-            if (LabelList == nullptr) {
+    if (m_EditAsMessage) {
+        if (Num_Messages() + 1 > m_FreeSlots) {
+            if (m_LabelList == nullptr) {
                 return nullptr;
             }
 
-            TextLabelClass *last = LabelList;
-            LabelList = reinterpret_cast<TextLabelClass *>(LabelList->Remove());
+            TextLabelClass *last = m_LabelList;
+            m_LabelList = reinterpret_cast<TextLabelClass *>(m_LabelList->Remove());
 
             // Find the index of the buffer we are freeing.
             for (int i = 0; i < MAX_MESSAGES; ++i) {
-                if (MessageBuffers[i] == last->Get_Text()) {
-                    SlotAvailable[i] = true;
+                if (m_MessageBuffers[i] == last->Get_Text()) {
+                    m_SlotAvailable[i] = true;
                 }
             }
 
@@ -426,29 +426,29 @@ TextLabelClass *MessageListClass::Add_Edit(PlayerColorType player, TextPrintType
     }
 
     const char *existing = string != nullptr ? string : "";
-    EditCursor = cursor;
-    memset(EditBuffer, 0, sizeof(EditBuffer));
-    strlcpy(EditBuffer, existing, sizeof(EditBuffer));
-    ReserveBuffer[0] = '\0';
-    EditStart = strlen(existing);
-    EditPos = strlen(existing);
+    m_EditCursor = cursor;
+    memset(m_EditBuffer, 0, sizeof(m_EditBuffer));
+    strlcpy(m_EditBuffer, existing, sizeof(m_EditBuffer));
+    m_ReserveBuffer[0] = '\0';
+    m_EditStart = strlen(existing);
+    m_EditPos = strlen(existing);
 
-    EditingLabel = new TextLabelClass(EditBuffer, EditXPos, EditYPos, &ColorRemaps[player], style);
-    Width = width;
+    m_EditingLabel = new TextLabelClass(m_EditBuffer, m_EditXPos, m_EditYPos, &ColorRemaps[player], style);
+    m_Width = width;
 
-    if (EditingLabel != nullptr) {
-        Editing = true;
-        EditingLabel->Set_Focus();
+    if (m_EditingLabel != nullptr) {
+        m_Editing = true;
+        m_EditingLabel->Set_Focus();
     } else {
-        Editing = false;
+        m_Editing = false;
     }
 
-    if (EditAsMessage) {
+    if (m_EditAsMessage) {
         Compute_Y();
-        --FreeSlots;
+        --m_FreeSlots;
     }
 
-    return EditingLabel;
+    return m_EditingLabel;
 }
 
 /**
@@ -456,19 +456,19 @@ TextLabelClass *MessageListClass::Add_Edit(PlayerColorType player, TextPrintType
  */
 void MessageListClass::Remove_Edit()
 {
-    if (!Editing) {
+    if (!m_Editing) {
         return;
     }
 
-    Editing = false;
+    m_Editing = false;
 
-    if (EditingLabel != nullptr) {
-        delete EditingLabel;
+    if (m_EditingLabel != nullptr) {
+        delete m_EditingLabel;
     }
 
-    if (EditAsMessage) {
+    if (m_EditAsMessage) {
         Compute_Y();
-        ++FreeSlots;
+        ++m_FreeSlots;
     }
 }
 
@@ -477,7 +477,7 @@ void MessageListClass::Remove_Edit()
  */
 char *MessageListClass::Get_Edit_Buf()
 {
-    return &EditBuffer[EditStart];
+    return &m_EditBuffer[m_EditStart];
 }
 
 /**
@@ -485,8 +485,8 @@ char *MessageListClass::Get_Edit_Buf()
  */
 void MessageListClass::Set_Edit_Color(PlayerColorType player)
 {
-    if (Editing) {
-        EditingLabel->Set_Remap(&ColorRemaps[player]);
+    if (m_Editing) {
+        m_EditingLabel->Set_Remap(&ColorRemaps[player]);
     }
 }
 
@@ -498,15 +498,15 @@ BOOL MessageListClass::Manage()
     bool message_removed = false;
 
     // Iterate through the message list and remove any messages that have past their delay.
-    for (TextLabelClass *label = LabelList; label != nullptr;) {
+    for (TextLabelClass *label = m_LabelList; label != nullptr;) {
         if (label->Get_Lifetime() != 0 && TickCountTimer > label->Get_Lifetime()) {
             TextLabelClass *next = reinterpret_cast<TextLabelClass *>(label->Get_Next());
-            LabelList = reinterpret_cast<TextLabelClass *>(label->Remove());
+            m_LabelList = reinterpret_cast<TextLabelClass *>(label->Remove());
 
             // Mark shot being freed up as available.
             for (int i = 0; i < MAX_MESSAGES; ++i) {
-                if (label->Get_Text() == MessageBuffers[i]) {
-                    SlotAvailable[i] = true;
+                if (label->Get_Text() == m_MessageBuffers[i]) {
+                    m_SlotAvailable[i] = true;
                 }
             }
 
@@ -541,7 +541,7 @@ int MessageListClass::Input(KeyNumType &key)
         return 0;
     }
 
-    if (!Editing) {
+    if (!m_Editing) {
         return 0;
     }
 
@@ -564,23 +564,23 @@ int MessageListClass::Input(KeyNumType &key)
 
     switch (ascii_char) {
         case KA_BACKSPACE:
-            if (EditPos > EditStart) {
-                EditBuffer[--EditPos] = '\0';
+            if (m_EditPos > m_EditStart) {
+                m_EditBuffer[--m_EditPos] = '\0';
                 ret_val = 2;
             }
 
             key = KN_NONE;
-            EditingLabel->Set_Focus();
+            m_EditingLabel->Set_Focus();
 
             break;
         case KA_RETURN:
-            if (EditPos == EditStart) {
+            if (m_EditPos == m_EditStart) {
                 key = KN_NONE;
                 ret_val = 0;
             } else {
-                if (EditPos - EditStart < MaxChars - 1) {
-                    EditBuffer[EditPos++] = ' ';
-                    EditBuffer[EditPos] = '\0';
+                if (m_EditPos - m_EditStart < m_MaxChars - 1) {
+                    m_EditBuffer[m_EditPos++] = ' ';
+                    m_EditBuffer[m_EditPos] = '\0';
                 }
 
                 Remove_Edit();
@@ -597,29 +597,29 @@ int MessageListClass::Input(KeyNumType &key)
 
             break;
         default:
-            EditingLabel->Set_Focus();
+            m_EditingLabel->Set_Focus();
 
             if (isprint(raw_char)) {
                 bool too_long = false;
 
-                if (EditPos - EditStart >= MaxChars - 1) {
+                if (m_EditPos - m_EditStart >= m_MaxChars - 1) {
                     too_long = true;
                 } else {
-                    EditBuffer[EditPos++] = raw_char;
-                    EditBuffer[EditPos] = '\0';
-                    Fancy_Text_Print(nullptr, 0, 0, EditingLabel->Get_Remap(), COLOR_TBLACK, EditingLabel->Get_Style());
+                    m_EditBuffer[m_EditPos++] = raw_char;
+                    m_EditBuffer[m_EditPos] = '\0';
+                    Fancy_Text_Print(nullptr, 0, 0, m_EditingLabel->Get_Remap(), COLOR_TBLACK, m_EditingLabel->Get_Style());
                     ret_val = 1;
 
-                    if (String_Pixel_Width(EditBuffer) >= Width - 10) {
+                    if (String_Pixel_Width(m_EditBuffer) >= m_Width - 10) {
                         too_long = true;
                         ret_val = 0;
-                        EditBuffer[--EditPos] = '\0';
+                        m_EditBuffer[--m_EditPos] = '\0';
                     }
 
                     if (too_long) {
-                        EditPos -= Trim_Message(ReserveBuffer, &EditBuffer[EditStart], EditTrimStart, EditTrimEnd, true);
-                        EditBuffer[EditPos++] = raw_char;
-                        EditBuffer[EditPos] = '\0';
+                        m_EditPos -= Trim_Message(m_ReserveBuffer, &m_EditBuffer[m_EditStart], m_EditTrimStart, m_EditTrimEnd, true);
+                        m_EditBuffer[m_EditPos++] = raw_char;
+                        m_EditBuffer[m_EditPos] = '\0';
                         ret_val = 4;
                     }
                 }
@@ -638,23 +638,23 @@ int MessageListClass::Input(KeyNumType &key)
  */
 void MessageListClass::Draw()
 {
-    if (Editing) {
+    if (m_Editing) {
         if (g_logicPage == &g_seenBuff) {
             g_mouse->Hide_Mouse();
         }
 
-        EditingLabel->Draw_Me(true);
+        m_EditingLabel->Draw_Me(true);
 
         // Handle if we have an edit cursor to draw.
-        if (EditCursor != '\0' && EditPos - EditStart < MaxChars - 1) {
-            if (EditingLabel->Has_Focus()) {
-                char cursor[2] = { EditCursor, '\0' };
+        if (m_EditCursor != '\0' && m_EditPos - m_EditStart < m_MaxChars - 1) {
+            if (m_EditingLabel->Has_Focus()) {
+                char cursor[2] = { m_EditCursor, '\0' };
                 Fancy_Text_Print(cursor,
-                    EditingLabel->Get_XPos() + String_Pixel_Width(EditingLabel->Get_Text()),
-                    EditingLabel->Get_YPos(),
-                    EditingLabel->Get_Remap(),
+                    m_EditingLabel->Get_XPos() + String_Pixel_Width(m_EditingLabel->Get_Text()),
+                    m_EditingLabel->Get_YPos(),
+                    m_EditingLabel->Get_Remap(),
                     COLOR_TBLACK,
-                    EditingLabel->Get_Style());
+                    m_EditingLabel->Get_Style());
             }
         }
 
@@ -663,12 +663,12 @@ void MessageListClass::Draw()
         }
     }
 
-    if (LabelList != nullptr) {
+    if (m_LabelList != nullptr) {
         if (g_logicPage == &g_seenBuff) {
             g_mouse->Hide_Mouse();
         }
 
-        LabelList->Draw_All(true);
+        m_LabelList->Draw_All(true);
 
         if (g_logicPage == &g_seenBuff) {
             g_mouse->Show_Mouse();
@@ -682,14 +682,14 @@ void MessageListClass::Draw()
 int MessageListClass::Num_Messages()
 {
     int count = 0;
-    TextLabelClass *label = LabelList;
+    TextLabelClass *label = m_LabelList;
 
     while (label != nullptr) {
         ++count;
         label = reinterpret_cast<TextLabelClass *>(label->Get_Next());
     }
 
-    if (Editing && EditAsMessage) {
+    if (m_Editing && m_EditAsMessage) {
         ++count;
     }
 
@@ -701,13 +701,13 @@ int MessageListClass::Num_Messages()
  */
 void MessageListClass::Set_Width(int width)
 {
-    for (TextLabelClass *label = LabelList; label != nullptr;
+    for (TextLabelClass *label = m_LabelList; label != nullptr;
          label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
         label->Set_Max_Width(width);
     }
 
-    if (Editing) {
-        EditingLabel->Set_Max_Width(width);
+    if (m_Editing) {
+        m_EditingLabel->Set_Max_Width(width);
     }
 }
 
@@ -779,15 +779,15 @@ void MessageListClass::Compute_Y()
 {
     int ypos = 0;
 
-    if (Editing && EditAsMessage) {
-        ypos = MessageHeight + YPos;
+    if (m_Editing && m_EditAsMessage) {
+        ypos = m_MessageHeight + m_YPos;
     } else {
-        ypos = YPos;
+        ypos = m_YPos;
     }
 
-    for (TextLabelClass *label = LabelList; label != nullptr;
+    for (TextLabelClass *label = m_LabelList; label != nullptr;
          label = reinterpret_cast<TextLabelClass *>(label->Get_Next())) {
         label->Set_YPos(ypos);
-        ypos += MessageHeight;
+        ypos += m_MessageHeight;
     }
 }

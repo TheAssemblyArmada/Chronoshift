@@ -168,7 +168,7 @@ public:
                                                    // virtual table, so no negative runtime impact.
 
 protected:
-    int RedrawFlag;
+    int m_RedrawFlag;
 
 private:
 #ifdef GAME_DLL

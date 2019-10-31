@@ -45,11 +45,11 @@ const char *CrateClass::CrateNames[] = { "Money",
 
 BOOL CrateClass::Remove_It()
 {
-    if (Cell == -1) {
+    if (m_Cell == -1) {
         return false;
     }
 
-    Get_Crate(Cell);
+    Get_Crate(m_Cell);
     Init_Clear();
 
     return true;

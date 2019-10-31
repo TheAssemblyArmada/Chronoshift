@@ -30,7 +30,7 @@ GraphicViewPortClass *GameScreenClass::ShadowPage = nullptr;
 #endif
 
 GameScreenClass::GameScreenClass() :
-    RedrawFlag(REDRAW_FORCE | REDRAW_2)
+    m_RedrawFlag(REDRAW_FORCE | REDRAW_2)
 {
 }
 
@@ -60,7 +60,7 @@ void GameScreenClass::Init_Clear()
         g_hidPage.Clear();
     }
 
-    RedrawFlag |= REDRAW_FORCE;
+    m_RedrawFlag |= REDRAW_FORCE;
 }
 
 void GameScreenClass::Init_IO()
@@ -70,10 +70,10 @@ void GameScreenClass::Init_IO()
 
 void GameScreenClass::Flag_To_Redraw(BOOL redraw)
 {
-    RedrawFlag |= REDRAW_2;
+    m_RedrawFlag |= REDRAW_2;
 
     if (redraw) {
-        RedrawFlag |= REDRAW_FORCE;
+        m_RedrawFlag |= REDRAW_FORCE;
     }
 }
 
@@ -124,16 +124,16 @@ void GameScreenClass::Render()
 {
     // This if is only done in EDWIN, so editor only?
     if (g_InMapEditor && Buttons != nullptr && Buttons->Is_List_To_Redraw()) {
-        RedrawFlag |= REDRAW_2;
+        m_RedrawFlag |= REDRAW_2;
     }
 
-    if ((RedrawFlag & REDRAW_FORCE) || (RedrawFlag & REDRAW_2)) {
+    if ((m_RedrawFlag & REDRAW_FORCE) || (m_RedrawFlag & REDRAW_2)) {
 
         BENCHMARK_START(BENCH_FULL_PROCESS);
 
         GraphicViewPortClass *old = Set_Logic_Page(g_hidPage);
 
-        BOOL to_redraw = (RedrawFlag & REDRAW_FORCE) != 0;
+        BOOL to_redraw = (m_RedrawFlag & REDRAW_FORCE) != 0;
 
         if (g_InMapEditor && to_redraw) {
             g_hidPage.Clear();
@@ -157,7 +157,7 @@ void GameScreenClass::Render()
 
         Blit_Display();
 
-        RedrawFlag &= ~(REDRAW_FORCE | REDRAW_2); // Clear any redraw flags.
+        m_RedrawFlag &= ~(REDRAW_FORCE | REDRAW_2); // Clear any redraw flags.
 
         BENCHMARK_END(BENCH_FULL_PROCESS);
 
