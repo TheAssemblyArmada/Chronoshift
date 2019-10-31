@@ -59,23 +59,23 @@ private:
     int Major_Version();
 
 private:
-    int m_versionNumber;
-    int16_t m_majorVersion;
-    int16_t m_minorVersion;
-    char m_versionString[30];
-    char m_fileVersionName[16];
-    unsigned m_minVersion;
-    unsigned m_maxVersion;
+    int m_VersionNumber;
+    int16_t m_MajorVersion;
+    int16_t m_MinorVersion;
+    char m_VersionString[30];
+    char m_FileVersionName[16];
+    unsigned m_MinVersion;
+    unsigned m_MaxVersion;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_versionSet : 1; // & 1
-    BOOL m_majorSet : 1; // & 2
-    BOOL m_minorSet : 1; // & 4
-    BOOL m_fileRead : 1; // & 8
+    BOOL m_VersionSet : 1; // & 1
+    BOOL m_MajorSet : 1; // & 2
+    BOOL m_MinorSet : 1; // & 4
+    BOOL m_FileRead : 1; // & 8
 #else
-    bool m_versionSet;
-    bool m_majorSet;
-    bool m_minorSet;
-    bool m_fileRead;
+    bool m_VersionSet;
+    bool m_MajorSet;
+    bool m_MinorSet;
+    bool m_FileRead;
 #endif
 };
 

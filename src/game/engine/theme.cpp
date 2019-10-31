@@ -122,14 +122,14 @@ void ThemeClass::AI()
     if (!DebugQuiet) {
         if (ScoresPresent && Options.Get_Score_Volume() != 0) {
             if (!Still_Playing()) {
-                if (QueuedTheme != THEME_NONE) {
-                    if (QueuedTheme == THEME_NEXT) {
-                        QueuedTheme = Next_Song(CurrentTheme);
-                        DEBUG_LOG("ThemeClass::AI(Next song = %d : %s)\n", QueuedTheme, Base_Name(QueuedTheme));
+                if (m_QueuedTheme != THEME_NONE) {
+                    if (m_QueuedTheme == THEME_NEXT) {
+                        m_QueuedTheme = Next_Song(m_CurrentTheme);
+                        DEBUG_LOG("ThemeClass::AI(Next song = %d : %s)\n", m_QueuedTheme, Base_Name(m_QueuedTheme));
                     }
 
-                    Play_Song(QueuedTheme);
-                    QueuedTheme = THEME_NEXT;
+                    Play_Song(m_QueuedTheme);
+                    m_QueuedTheme = THEME_NEXT;
                 }
             }
         }
@@ -190,14 +190,14 @@ void ThemeClass::Queue_Song(ThemeType theme)
     DEBUG_ASSERT(theme < THEME_COUNT);
 
     if (ScoresPresent && !DebugQuiet && Options.Get_Score_Volume() != 0) {
-        if (QueuedTheme == THEME_NONE || QueuedTheme == THEME_NEXT || theme == THEME_NONE || theme == THEME_STOP) {
-            QueuedTheme = theme;
+        if (m_QueuedTheme == THEME_NONE || m_QueuedTheme == THEME_NEXT || theme == THEME_NONE || theme == THEME_STOP) {
+            m_QueuedTheme = theme;
 
-            DEBUG_LOG("ThemeClass::Queue_Song(%d : %s)\n", QueuedTheme, Base_Name(QueuedTheme));
+            DEBUG_LOG("ThemeClass::Queue_Song(%d : %s)\n", m_QueuedTheme, Base_Name(m_QueuedTheme));
 
             if (Still_Playing()) {
-                DEBUG_LOG("ThemeClass::Queue_Song() - Fading out %s\n", Base_Name(CurrentTheme));
-                Fade_Sample(ThemeHandle, 60);
+                DEBUG_LOG("ThemeClass::Queue_Song() - Fading out %s\n", Base_Name(m_CurrentTheme));
+                Fade_Sample(m_ThemeHandle, 60);
             }
         }
     }
@@ -214,16 +214,16 @@ int ThemeClass::Play_Song(ThemeType theme)
 
     if (ScoresPresent && !DebugQuiet && Options.Get_Score_Volume() != 0) {
         Stop();
-        CurrentTheme = theme;
+        m_CurrentTheme = theme;
 
         if (theme != THEME_NONE && theme != THEME_STOP) {
             StreamLowImpact = true;
-            ThemeHandle = File_Stream_Sample_Vol(Theme_File_Name(theme), 256, true);
+            m_ThemeHandle = File_Stream_Sample_Vol(Theme_File_Name(theme), 256, true);
             StreamLowImpact = false;
         }
     }
 
-    return ThemeHandle;
+    return m_ThemeHandle;
 }
 
 /**
@@ -277,11 +277,11 @@ int ThemeClass::Track_Length(ThemeType theme) const
  */
 void ThemeClass::Stop()
 {
-    if (ScoresPresent && !DebugQuiet && ThemeHandle != -1) {
-        Stop_Sample(ThemeHandle);
-        ThemeHandle = -1;
-        CurrentTheme = THEME_NONE;
-        QueuedTheme = THEME_NONE;
+    if (ScoresPresent && !DebugQuiet && m_ThemeHandle != -1) {
+        Stop_Sample(m_ThemeHandle);
+        m_ThemeHandle = -1;
+        m_CurrentTheme = THEME_NONE;
+        m_QueuedTheme = THEME_NONE;
     }
 }
 
@@ -292,11 +292,11 @@ void ThemeClass::Stop()
  */
 void ThemeClass::Suspend()
 {
-    if (ScoresPresent && !DebugQuiet && ThemeHandle != -1) {
-        Stop_Sample(ThemeHandle);
-        ThemeHandle = -1;
-        QueuedTheme = CurrentTheme;
-        CurrentTheme = THEME_NONE;
+    if (ScoresPresent && !DebugQuiet && m_ThemeHandle != -1) {
+        Stop_Sample(m_ThemeHandle);
+        m_ThemeHandle = -1;
+        m_QueuedTheme = m_CurrentTheme;
+        m_CurrentTheme = THEME_NONE;
     }
 }
 
@@ -307,8 +307,8 @@ void ThemeClass::Suspend()
  */
 BOOL ThemeClass::Still_Playing() const
 {
-    if (ScoresPresent && ThemeHandle != -1 && !DebugQuiet) {
-        return Sample_Status(ThemeHandle);
+    if (ScoresPresent && m_ThemeHandle != -1 && !DebugQuiet) {
+        return Sample_Status(m_ThemeHandle);
     }
 
     return false;
@@ -417,7 +417,7 @@ void ThemeClass::Set_Theme_Data(ThemeType theme, int scenario, int side)
 
 void ThemeClass::Play_Prev()
 {
-    ThemeType theme = CurrentTheme;
+    ThemeType theme = m_CurrentTheme;
     while (theme >= THEME_FIRST) {
         --theme;
 
@@ -434,7 +434,7 @@ void ThemeClass::Play_Prev()
 
 void ThemeClass::Play_Next()
 {
-    ThemeType theme = CurrentTheme;
+    ThemeType theme = m_CurrentTheme;
     while (theme < THEME_COUNT) {
         ++theme;
 

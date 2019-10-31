@@ -93,7 +93,7 @@ private:
     };
 
 public:
-    ThemeClass() : ThemeHandle(-1), CurrentTheme(THEME_NONE), QueuedTheme(THEME_NONE) {}
+    ThemeClass() : m_ThemeHandle(-1), m_CurrentTheme(THEME_NONE), m_QueuedTheme(THEME_NONE) {}
     ~ThemeClass();
 
     void AI();
@@ -126,8 +126,8 @@ public:
     void Play_Next();
 
     ThemeType Get_Random_Theme() const { return ThemeType(g_nonCriticalRandom(THEME_FIRST, THEME_LAST)); }
-    ThemeType What_Is_Playing() { return CurrentTheme; }
-    ThemeType What_Is_Queued() { return QueuedTheme; }
+    ThemeType What_Is_Playing() { return m_CurrentTheme; }
+    ThemeType What_Is_Queued() { return m_QueuedTheme; }
 
     int Max_Themes() const { return THEME_COUNT; }
 
@@ -135,9 +135,9 @@ public:
     static const char *Theme_File_Name(ThemeType theme);
 
 private:
-    int ThemeHandle;
-    ThemeType CurrentTheme;
-    ThemeType QueuedTheme;
+    int m_ThemeHandle;
+    ThemeType m_CurrentTheme;
+    ThemeType m_QueuedTheme;
 #ifdef GAME_DLL
     static ThemeControl *Themes;
 #else
