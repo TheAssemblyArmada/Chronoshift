@@ -96,10 +96,10 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    uint32_t Get_Theater() const { return Theater; }
-    TerrainType Get_Type() const { return Type; }
-    coord_t Get_UnkCoord() const { return UnkCoord; }
-    bool Is_Waterbound() const { return WaterBound; }
+    uint32_t Get_Theater() const { return m_Theater; }
+    TerrainType Get_Type() const { return m_Type; }
+    coord_t Get_UnkCoord() const { return m_UnkCoord; }
+    bool Is_Waterbound() const { return m_WaterBound; }
 
     static void Init_Heap();
     static void One_Time() {}
@@ -112,16 +112,16 @@ public:
     static void Prep_For_Add();
 
 public:
-    TerrainType Type; 
-    coord_t UnkCoord; // Object bounds perhaps
-    uint32_t Theater; // Bitfield of which theaters this terrain is allowed to appear in.
+    TerrainType m_Type; 
+    coord_t m_UnkCoord; // Object bounds perhaps
+    uint32_t m_Theater; // Bitfield of which theaters this terrain is allowed to appear in.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL WaterBound : 1; // & 1
+    BOOL m_WaterBound : 1; // & 1
 #else
-    bool WaterBound; // Is the terrain only allowed on the water (def = false)?
+    bool m_WaterBound; // Is the terrain only allowed on the water (def = false)?
 #endif
-    const int16_t *OccupyList;
-    const int16_t *OverlapList;
+    const int16_t *m_OccupyList;
+    const int16_t *m_OverlapList;
 };
 
 #ifdef GAME_DLL

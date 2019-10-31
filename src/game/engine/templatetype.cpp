@@ -28,20 +28,20 @@ TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;
 
 TemplateTypeClass::TemplateTypeClass(TemplateType type, int theater, const char *name, int uiname) :
     ObjectTypeClass(RTTI_TEMPLATETYPE, type, false, true, false, false, true, true, false, uiname, name),
-    Type(type),
-    Theater(theater),
-    Width(0),
-    Height(0)
+    m_Type(type),
+    m_Theater(theater),
+    m_Width(0),
+    m_Height(0)
 {
     
 }
 
 TemplateTypeClass::TemplateTypeClass(const TemplateTypeClass &that) :
     ObjectTypeClass(that),
-    Type(that.Type),
-    Theater(that.Theater),
-    Width(that.Width),
-    Height(that.Height)
+    m_Type(that.m_Type),
+    m_Theater(that.m_Theater),
+    m_Width(that.m_Width),
+    m_Height(that.m_Height)
 {
 }
 
@@ -503,8 +503,8 @@ void TemplateTypeClass::Init(TheaterType theater)
     for (TemplateType i = TEMPLATE_FIRST; i < TEMPLATE_COUNT; ++i) {
         TemplateTypeClass &tem = As_Reference(i);
 
-        if (((1 << theater) & tem.Theater) != 0) {
-            const char *name = tem.ImageName[0] != '\0' ? tem.ImageName : tem.m_Name;
+        if (((1 << theater) & tem.m_Theater) != 0) {
+            const char *name = tem.m_ImageName[0] != '\0' ? tem.m_ImageName : tem.m_Name;
 
             sprintf(buffer, "%s.%s", name, TheaterTypeClass::As_Reference(theater).FileExt);
             tem.ImageData = GameFileClass::Retrieve(buffer);
@@ -554,7 +554,7 @@ BOOL TemplateTypeClass::Create_And_Place(int16_t cellnum, HousesType house) cons
 #elif 0
     DEBUG_ASSERT(this != nullptr);
 
-    TemplateClass *tptr = new TemplateClass(Type, cellnum);
+    TemplateClass *tptr = new TemplateClass(m_Type, cellnum);
     DEBUG_ASSERT(tptr != nullptr);
 
     return tptr != nullptr;
@@ -573,7 +573,7 @@ ObjectClass *TemplateTypeClass::Create_One_Of(HouseClass *house) const
     DEBUG_ASSERT(this != nullptr);
     //DEBUG_ASSERT(house != nullptr);
 
-    TemplateClass *tptr = new TemplateClass(Type);
+    TemplateClass *tptr = new TemplateClass(m_Type);
     DEBUG_ASSERT(tptr != nullptr);
 
     return tptr;
