@@ -37,12 +37,12 @@ TFixedIHeapClass<TerrainTypeClass> g_TerrainTypes;
 TerrainTypeClass::TerrainTypeClass(TerrainType type, int theater, uint32_t a3, BOOL immune, BOOL waterbound,
     const char *name, int uiname, const int16_t *occupy_list, const int16_t *overlap_list) :
     ObjectTypeClass(RTTI_TERRAINTYPE, type, true, true, false, false, true, immune, true, uiname, name),
-    Type(type),
-    UnkCoord(a3),
-    Theater(theater),
-    WaterBound(waterbound),
-    OccupyList(occupy_list),
-    OverlapList(overlap_list)
+    m_Type(type),
+    m_UnkCoord(a3),
+    m_Theater(theater),
+    m_WaterBound(waterbound),
+    m_OccupyList(occupy_list),
+    m_OverlapList(overlap_list)
 {
     m_Strength = 800;
     m_Armor = ARMOR_WOOD;
@@ -53,12 +53,12 @@ TerrainTypeClass::TerrainTypeClass(TerrainType type, int theater, uint32_t a3, B
  */
 TerrainTypeClass::TerrainTypeClass(TerrainTypeClass const &that) :
     ObjectTypeClass(that),
-    Type(that.Type),
-    UnkCoord(that.UnkCoord),
-    Theater(that.Theater),
-    WaterBound(that.WaterBound),
-    OccupyList(that.OccupyList),
-    OverlapList(that.OverlapList)
+    m_Type(that.m_Type),
+    m_UnkCoord(that.m_UnkCoord),
+    m_Theater(that.m_Theater),
+    m_WaterBound(that.m_WaterBound),
+    m_OccupyList(that.m_OccupyList),
+    m_OverlapList(that.m_OverlapList)
 {
 }
 
@@ -67,8 +67,8 @@ TerrainTypeClass::TerrainTypeClass(TerrainTypeClass const &that) :
  */
 TerrainTypeClass::~TerrainTypeClass()
 {
-    OccupyList = nullptr;
-    OverlapList = nullptr;
+    m_OccupyList = nullptr;
+    m_OverlapList = nullptr;
 }
 
 /**
@@ -96,8 +96,8 @@ const int16_t *TerrainTypeClass::Occupy_List(BOOL a1) const
 {
     static int16_t _simple[] = { LIST_END };
 
-    if (OccupyList != nullptr) {
-        return OccupyList;
+    if (m_OccupyList != nullptr) {
+        return m_OccupyList;
     }
 
     return _simple;
@@ -112,8 +112,8 @@ const int16_t *TerrainTypeClass::Overlap_List() const
 {
     static const int16_t _simple[] = { LIST_END };
 
-    if (OverlapList != nullptr) {
-        return OverlapList;
+    if (m_OverlapList != nullptr) {
+        return m_OverlapList;
     }
 
     return _simple;
@@ -133,7 +133,7 @@ BOOL TerrainTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
         reinterpret_cast<BOOL (*)(const TerrainTypeClass *, cell_t, HousesType)>(0x0055B9E4);
     return func(this, cellnum, house);
 #elif 0
-    return new TerrainClass(Type, Cell_To_Coord(cellnum)) != nullptr;
+    return new TerrainClass(m_Type, Cell_To_Coord(cellnum)) != nullptr;
 #else
     return false;
 #endif
@@ -154,7 +154,7 @@ ObjectClass *TerrainTypeClass::Create_One_Of(HouseClass *house) const
 #elif 0
     DEBUG_ASSERT(house != nullptr);
 
-    return new TerrainClass(Type);
+    return new TerrainClass(m_Type);
 #else
     return nullptr;
 #endif
@@ -239,7 +239,7 @@ void TerrainTypeClass::Init(TheaterType theater)
             terrain.m_ImageData = nullptr;
 
             // TODO, im pretty certain, but needs checking
-            if (terrain.Theater & (1 << theater)) {
+            if (terrain.m_Theater & (1 << theater)) {
                 snprintf(filename,
                     sizeof(filename),
                     "%s.%s",

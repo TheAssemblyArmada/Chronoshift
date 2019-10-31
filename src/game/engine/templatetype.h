@@ -459,10 +459,10 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    int Get_Width() { return Width; }
-    int Get_Height() { return Height; }
+    int Get_Width() { return m_Width; }
+    int Get_Height() { return m_Height; }
 
-    TemplateType Get_Type() const { return Type; }
+    TemplateType Get_Type() const { return m_Type; }
 
     static TemplateType From_Name(const char *name);
     static const char *Name_From(TemplateType type);
@@ -475,10 +475,10 @@ public:
     static void Prep_For_Add();
 
 private:
-    TemplateType Type;
-    int Theater;
-    int Width;
-    int Height;
+    TemplateType m_Type;
+    int m_Theater;
+    int m_Width;
+    int m_Height;
 };
 
 #ifdef GAME_DLL
