@@ -27,7 +27,7 @@ int SHAStraw::Get(void *buffer, int length)
 
     if (buffer && length > 0) {
         retval = Straw::Get(buffer, length);
-        m_sha1.Hash(buffer, retval);
+        m_SHA1.Hash(buffer, retval);
     }
 
     return retval;
@@ -40,5 +40,5 @@ int SHAStraw::Get(void *buffer, int length)
 */
 int SHAStraw::Result(void *data)
 {
-    return m_sha1.Result(data);
+    return m_SHA1.Result(data);
 }

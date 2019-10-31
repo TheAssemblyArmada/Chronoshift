@@ -53,30 +53,30 @@ public:
 #endif
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_bufferAllocated : 1; // & 1
-    BOOL m_bufferedFileAvailable : 1; // & 2
-    BOOL m_bufferedFileOpen : 1; // & 4
-    BOOL m_bufferFull : 1; // & 8
-    BOOL m_uncommited : 1; // & 0x10
-    BOOL m_buffered : 1; // & 0x20
+    BOOL m_BufferAllocated : 1; // & 1
+    BOOL m_BufferedFileAvailable : 1; // & 2
+    BOOL m_BufferedFileOpen : 1; // & 4
+    BOOL m_BufferFull : 1; // & 8
+    BOOL m_Uncommited : 1; // & 0x10
+    BOOL m_Buffered : 1; // & 0x20
 #else
-    bool m_bufferAllocated;
-    bool m_bufferedFileAvailable;
-    bool m_bufferedFileOpen;
-    bool m_bufferFull;
-    bool m_uncommited;
-    bool m_buffered;
+    bool m_BufferAllocated;
+    bool m_BufferedFileAvailable;
+    bool m_BufferedFileOpen;
+    bool m_BufferFull;
+    bool m_Uncommited;
+    bool m_Buffered;
 #endif
-    int m_bufferedRights; // Duplicate of Rights member inherited from RawFile???
-    void *m_buffer; // 0x2C
-    int m_bufferedSize; // Looks like this is the current size of the buffer??
-    int m_bufferPosition; // fairly sure this keeps track of the pos in buffer
-    int m_bufferStart; // Position in file that we have cached up to?
-    int m_uncommitedStart;
-    int m_uncommitedEnd;
-    int m_bufferedFileSize; // This appears to actually be the backing file size
-    int m_bufferedBiasStart; // Again, isn't this already inherited from RawFile?
-    int m_bufferedFileStart; // position in the file when we opened it.
+    int m_BufferedRights; // Duplicate of Rights member inherited from RawFile???
+    void *m_Buffer; // 0x2C
+    int m_BufferedSize; // Looks like this is the current size of the buffer??
+    int m_BufferPosition; // fairly sure this keeps track of the pos in buffer
+    int m_BufferStart; // Position in file that we have cached up to?
+    int m_UncommitedStart;
+    int m_UncommitedEnd;
+    int m_BufferedFileSize; // This appears to actually be the backing file size
+    int m_BufferedBiasStart; // Again, isn't this already inherited from RawFile?
+    int m_BufferedFileStart; // position in the file when we opened it.
 };
 
 #endif // BFIOFILECLASS_H

@@ -33,26 +33,26 @@ public:
     virtual BOOL Create() override;
     virtual BOOL Delete() override;
     virtual BOOL Is_Available(BOOL forced = false) override;
-    virtual BOOL Is_Open() const override { return IsOpen; }
+    virtual BOOL Is_Open() const override { return m_IsOpen; }
     virtual BOOL Open(const char *filename, int rights = FM_READ) override;
     virtual BOOL Open(int rights = FM_READ) override;
     virtual int Read(void *buffer, int length) override;
     virtual off_t Seek(off_t offset, int whence = FS_SEEK_CURRENT) override;
     virtual off_t Size() override;
     virtual int Write(const void *buffer, int size) override;
-    virtual void Close() override { IsOpen = false; };
+    virtual void Close() override { m_IsOpen = false; };
     virtual time_t Get_Date_Time() override;
     virtual BOOL Set_Date_Time(time_t date_time) override;
     virtual void Error(int error, BOOL can_retry = false, const char *filename = nullptr) override;
 
 private:
-    char *Buffer;
-    int BufferSize;
-    int BufferAvailable;
-    int BufferOffset;
-    int BufferRights;
-    BOOL IsOpen;
-    BOOL IsAllocated;
+    char *m_Buffer;
+    int m_BufferSize;
+    int m_BufferAvailable;
+    int m_BufferOffset;
+    int m_BufferRights;
+    BOOL m_IsOpen;
+    BOOL m_IsAllocated;
 };
 
 #endif // RAMFILE_H

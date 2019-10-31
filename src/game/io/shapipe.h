@@ -25,14 +25,14 @@
 class SHAPipe : public Pipe
 {
 public:
-    SHAPipe() : Pipe(), m_sha1() {}
+    SHAPipe() : Pipe(), m_SHA1() {}
     virtual ~SHAPipe() {}
 
     virtual int Put(const void *buffer, int length) override;
-    int const Result(void *data) { return m_sha1.Result(data); }
+    int const Result(void *data) { return m_SHA1.Result(data); }
 
 protected:
-    SHAEngine m_sha1;
+    SHAEngine m_SHA1;
 
 };
 

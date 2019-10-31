@@ -24,26 +24,26 @@ using std::memcpy;
 using std::memmove;
 
 LCWPipe::LCWPipe(PipeControl mode, int size) :
-    m_mode(mode),
-    m_dataInBuffer(0),
-    m_inBuffer(nullptr),
-    m_outBuffer(nullptr),
-    m_blockSize(size),
-    m_maxBlockSize(LCW_Worst_Case(size))
+    m_Mode(mode),
+    m_DataInBuffer(0),
+    m_InBuffer(nullptr),
+    m_OutBuffer(nullptr),
+    m_BlockSize(size),
+    m_MaxBlockSize(LCW_Worst_Case(size))
 {
-    m_inBuffer = new uint8_t[m_maxBlockSize + m_blockSize];
-    m_outBuffer = new uint8_t[m_maxBlockSize + m_blockSize];
+    m_InBuffer = new uint8_t[m_MaxBlockSize + m_BlockSize];
+    m_OutBuffer = new uint8_t[m_MaxBlockSize + m_BlockSize];
 
-    m_compressedBytes = -1;
+    m_CompressedBytes = -1;
 }
 
 LCWPipe::~LCWPipe()
 {
-    delete[] m_inBuffer;
-    m_inBuffer = nullptr;
+    delete[] m_InBuffer;
+    m_InBuffer = nullptr;
 
-    delete[] m_outBuffer;
-    m_outBuffer = nullptr;
+    delete[] m_OutBuffer;
+    m_OutBuffer = nullptr;
 }
 
 /**
@@ -61,23 +61,23 @@ int LCWPipe::Put(const void *buffer, int length)
         return Pipe::Put(buffer, length);
     }
 
-    if (m_mode == PIPE_UNCOMPRESS) {
+    if (m_Mode == PIPE_UNCOMPRESS) {
         while (length > 0) {
-            if (m_compressedBytes == -1) {
-                int datasize = std::min(length, 4 - m_dataInBuffer);
+            if (m_CompressedBytes == -1) {
+                int datasize = std::min(length, 4 - m_DataInBuffer);
 
-                memcpy(m_inBuffer + m_dataInBuffer, src, datasize);
+                memcpy(m_InBuffer + m_DataInBuffer, src, datasize);
                 src += datasize;
-                m_dataInBuffer += datasize;
+                m_DataInBuffer += datasize;
                 length -= datasize;
 
-                if (m_dataInBuffer == 4) {
+                if (m_DataInBuffer == 4) {
                     int16_t tmp;
-                    memcpy(&tmp, m_inBuffer, sizeof(tmp));
-                    m_compressedBytes = le16toh(tmp);
-                    memcpy(&tmp, m_inBuffer + sizeof(tmp), sizeof(tmp));
-                    m_uncompressedBytes = le16toh(tmp);
-                    m_dataInBuffer = 0;
+                    memcpy(&tmp, m_InBuffer, sizeof(tmp));
+                    m_CompressedBytes = le16toh(tmp);
+                    memcpy(&tmp, m_InBuffer + sizeof(tmp), sizeof(tmp));
+                    m_UncompressedBytes = le16toh(tmp);
+                    m_DataInBuffer = 0;
                 }
             }
 
@@ -85,61 +85,61 @@ int LCWPipe::Put(const void *buffer, int length)
                 break;
             }
 
-            int bytesloaded = std::min(length, m_compressedBytes - m_dataInBuffer);
+            int bytesloaded = std::min(length, m_CompressedBytes - m_DataInBuffer);
 
-            memmove(m_inBuffer + m_dataInBuffer, src, bytesloaded);
-            m_dataInBuffer += bytesloaded;
+            memmove(m_InBuffer + m_DataInBuffer, src, bytesloaded);
+            m_DataInBuffer += bytesloaded;
             length -= bytesloaded;
             src += bytesloaded;
 
-            if (m_dataInBuffer == m_compressedBytes) {
-                LCW_Uncomp(m_inBuffer, m_outBuffer, 0);
-                putbytes += Pipe::Put(m_outBuffer, m_uncompressedBytes);
-                m_dataInBuffer = 0;
-                m_compressedBytes = -1;
+            if (m_DataInBuffer == m_CompressedBytes) {
+                LCW_Uncomp(m_InBuffer, m_OutBuffer, 0);
+                putbytes += Pipe::Put(m_OutBuffer, m_UncompressedBytes);
+                m_DataInBuffer = 0;
+                m_CompressedBytes = -1;
             }
         }
     } else {
-        if (m_dataInBuffer > 0) {
-            int datasize = std::min(length, m_blockSize - m_dataInBuffer);
+        if (m_DataInBuffer > 0) {
+            int datasize = std::min(length, m_BlockSize - m_DataInBuffer);
 
-            memmove(m_inBuffer + m_dataInBuffer, src, datasize);
+            memmove(m_InBuffer + m_DataInBuffer, src, datasize);
             src += datasize;
-            m_dataInBuffer += datasize;
+            m_DataInBuffer += datasize;
             length -= datasize;
 
-            if (m_dataInBuffer == m_blockSize) {
-                int bytescompressed = LCW_Comp(m_inBuffer, m_outBuffer, m_blockSize);
-                m_compressedBytes = bytescompressed;
-                m_uncompressedBytes = m_blockSize;
-                putbytes = Pipe::Put(&m_compressedBytes, 2);
-                putbytes += Pipe::Put(&m_uncompressedBytes, 2);
-                putbytes += Pipe::Put(m_outBuffer, bytescompressed);
-                m_dataInBuffer = 0;
+            if (m_DataInBuffer == m_BlockSize) {
+                int bytescompressed = LCW_Comp(m_InBuffer, m_OutBuffer, m_BlockSize);
+                m_CompressedBytes = bytescompressed;
+                m_UncompressedBytes = m_BlockSize;
+                putbytes = Pipe::Put(&m_CompressedBytes, 2);
+                putbytes += Pipe::Put(&m_UncompressedBytes, 2);
+                putbytes += Pipe::Put(m_OutBuffer, bytescompressed);
+                m_DataInBuffer = 0;
             }
         }
 
-        while (length >= m_blockSize) {
-            int outbytes = LCW_Comp(src, m_outBuffer, m_blockSize);
-            m_uncompressedBytes = m_blockSize;
-            src += m_blockSize;
-            length -= m_blockSize;
-            m_compressedBytes = outbytes;
+        while (length >= m_BlockSize) {
+            int outbytes = LCW_Comp(src, m_OutBuffer, m_BlockSize);
+            m_UncompressedBytes = m_BlockSize;
+            src += m_BlockSize;
+            length -= m_BlockSize;
+            m_CompressedBytes = outbytes;
 
             //
             // On disk format is little endian so need to convert.
             //
-            int16_t tmp = htole16(m_compressedBytes);
+            int16_t tmp = htole16(m_CompressedBytes);
             putbytes += Pipe::Put(&tmp, sizeof(tmp));
-            tmp = htole16(m_uncompressedBytes);
+            tmp = htole16(m_UncompressedBytes);
             putbytes += Pipe::Put(&tmp, sizeof(tmp));
 
-            putbytes += Pipe::Put(m_outBuffer, outbytes);
+            putbytes += Pipe::Put(m_OutBuffer, outbytes);
         }
 
         if (length > 0) {
-            memmove(m_inBuffer, src, length);
-            m_dataInBuffer = length;
+            memmove(m_InBuffer, src, length);
+            m_DataInBuffer = length;
         }
     }
 
@@ -151,45 +151,45 @@ int LCWPipe::Put(const void *buffer, int length)
  */
 int LCWPipe::Flush()
 {
-    DEBUG_ASSERT(m_inBuffer != nullptr);
+    DEBUG_ASSERT(m_InBuffer != nullptr);
 
     int putbytes = 0;
 
-    if (m_dataInBuffer > 0) {
-        if (m_mode == PIPE_UNCOMPRESS) {
-            if (m_compressedBytes == -1) {
-                putbytes += Pipe::Put(m_inBuffer, m_dataInBuffer);
+    if (m_DataInBuffer > 0) {
+        if (m_Mode == PIPE_UNCOMPRESS) {
+            if (m_CompressedBytes == -1) {
+                putbytes += Pipe::Put(m_InBuffer, m_DataInBuffer);
 
-                m_dataInBuffer = 0;
+                m_DataInBuffer = 0;
             }
 
-            if (m_dataInBuffer > 0) {
+            if (m_DataInBuffer > 0) {
                 // On disk format is little endian so need to convert.
-                int16_t tmp = htole16(m_compressedBytes);
+                int16_t tmp = htole16(m_CompressedBytes);
                 putbytes += Pipe::Put(&tmp, sizeof(tmp));
-                tmp = htole16(m_uncompressedBytes);
+                tmp = htole16(m_UncompressedBytes);
                 putbytes += Pipe::Put(&tmp, sizeof(tmp));
 
-                putbytes += Pipe::Put(m_inBuffer, m_dataInBuffer);
+                putbytes += Pipe::Put(m_InBuffer, m_DataInBuffer);
 
-                m_dataInBuffer = 0;
-                m_compressedBytes = -1;
+                m_DataInBuffer = 0;
+                m_CompressedBytes = -1;
             }
         } else {
-            int outsize = LCW_Comp(m_inBuffer, m_outBuffer, m_dataInBuffer);
+            int outsize = LCW_Comp(m_InBuffer, m_OutBuffer, m_DataInBuffer);
 
-            m_uncompressedBytes = m_dataInBuffer;
-            m_compressedBytes = outsize;
+            m_UncompressedBytes = m_DataInBuffer;
+            m_CompressedBytes = outsize;
 
             // On disk format is little endian so need to convert.
-            int16_t tmp = htole16(m_compressedBytes);
+            int16_t tmp = htole16(m_CompressedBytes);
             putbytes += Pipe::Put(&tmp, sizeof(tmp));
-            tmp = htole16(m_uncompressedBytes);
+            tmp = htole16(m_UncompressedBytes);
             putbytes += Pipe::Put(&tmp, sizeof(tmp));
 
-            putbytes += Pipe::Put(m_outBuffer, outsize);
+            putbytes += Pipe::Put(m_OutBuffer, outsize);
 
-            m_dataInBuffer = 0;
+            m_DataInBuffer = 0;
         }
     }
 

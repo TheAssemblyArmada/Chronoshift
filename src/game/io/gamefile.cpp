@@ -31,7 +31,7 @@ extern ARRAY_DEC(GameFileClass, g_handles, 10);
 GameFileClass g_handles[FILE_HANDLE_COUNT];
 #endif
 
-GameFileClass::GameFileClass(const char *filename) : m_fileBuffer()
+GameFileClass::GameFileClass(const char *filename) : m_FileBuffer()
 {
     CDFileClass::Set_Name(filename);
 }
@@ -65,11 +65,11 @@ int GameFileClass::Read(void *buffer, int length)
     }
 
     if (Is_Cached()) {
-        length = std::min((int)m_fileBuffer.Get_Size() - m_cachePosition, length);
+        length = std::min((int)m_FileBuffer.Get_Size() - m_CachePosition, length);
 
         if (length > 0) {
-            memmove(buffer, (m_fileBuffer.Get_Buffer() + m_cachePosition), length);
-            m_cachePosition += length;
+            memmove(buffer, (m_FileBuffer.Get_Buffer() + m_CachePosition), length);
+            m_CachePosition += length;
         }
 
         if (opened) {
@@ -93,20 +93,20 @@ off_t GameFileClass::Seek(off_t offset, int whence)
     if (Is_Cached()) {
         switch (whence) {
             case FS_SEEK_START:
-                m_cachePosition = 0;
+                m_CachePosition = 0;
                 break;
 
             case FS_SEEK_CURRENT:
                 break;
 
             case FS_SEEK_END:
-                m_cachePosition = m_fileBuffer.Get_Size();
+                m_CachePosition = m_FileBuffer.Get_Size();
                 break;
         }
 
-        m_cachePosition = std::min(std::max(int(offset + m_cachePosition), 0), m_fileBuffer.Get_Size());
+        m_CachePosition = std::min(std::max(int(offset + m_CachePosition), 0), m_FileBuffer.Get_Size());
 
-        return m_cachePosition;
+        return m_CachePosition;
     }
 
     return BufferIOFileClass::Seek(offset, whence);
@@ -116,7 +116,7 @@ off_t GameFileClass::Size()
 {
     // if Buffer is valid, return buffer Size.
     if (Is_Cached()) {
-        return m_fileBuffer.Get_Size();
+        return m_FileBuffer.Get_Size();
     }
 
     // if BufferIO is available, return Size().
@@ -155,8 +155,8 @@ BOOL GameFileClass::Is_Open() const
 
 void GameFileClass::Close()
 {
-    m_fileBuffer.Reset();
-    m_cachePosition = 0;
+    m_FileBuffer.Reset();
+    m_CachePosition = 0;
 
     return BufferIOFileClass::Close();
 }
@@ -198,11 +198,11 @@ BOOL GameFileClass::Open(int mode)
 
         Seek(0, FS_SEEK_START);
     } else {
-        if (m_fileBuffer.Get_Buffer() == nullptr) {
-            new(&m_fileBuffer) BufferClass(cachedfile, filesize);
+        if (m_FileBuffer.Get_Buffer() == nullptr) {
+            new(&m_FileBuffer) BufferClass(cachedfile, filesize);
         }
 
-        m_cachePosition = 0;
+        m_CachePosition = 0;
     }
 
     return true;

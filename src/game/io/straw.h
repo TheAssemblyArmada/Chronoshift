@@ -45,8 +45,8 @@ enum Base64Pipe::CodeControl {
 class Straw
 {
 public:
-    Straw() : m_chainTo(nullptr), m_chainFrom(nullptr) {}
-    Straw(Straw const &that) : m_chainTo(that.m_chainTo), m_chainFrom(that.m_chainFrom) {}
+    Straw() : m_ChainTo(nullptr), m_ChainFrom(nullptr) {}
+    Straw(Straw const &that) : m_ChainTo(that.m_ChainTo), m_ChainFrom(that.m_ChainFrom) {}
     virtual ~Straw();
 
     Straw &operator=(Straw &that);
@@ -55,16 +55,16 @@ public:
     virtual int Get(void *source, int length);
 
 protected:
-    Straw *m_chainTo;
-    Straw *m_chainFrom;
+    Straw *m_ChainTo;
+    Straw *m_ChainFrom;
 
 };
 
 inline Straw &Straw::operator=(Straw &that)
 {
     if (this != &that) {
-        m_chainTo = that.m_chainTo;
-        m_chainFrom = that.m_chainFrom;
+        m_ChainTo = that.m_ChainTo;
+        m_ChainFrom = that.m_ChainFrom;
     }
 
     return *this;

@@ -21,56 +21,56 @@
 using std::strcmp;
 
 BufferIOFileClass::BufferIOFileClass() :
-    m_bufferAllocated(false),
-    m_bufferedFileAvailable(false),
-    m_bufferedFileOpen(false),
-    m_bufferFull(false),
-    m_uncommited(false),
-    m_buffered(false),
-    m_bufferedRights(FM_CLOSED),
-    m_buffer(nullptr),
-    m_bufferedSize(0),
-    m_bufferPosition(0),
-    m_bufferStart(0),
-    m_uncommitedStart(-1),
-    m_uncommitedEnd(-1),
-    m_bufferedFileSize(0),
-    m_bufferedBiasStart(0),
-    m_bufferedFileStart(0)
+    m_BufferAllocated(false),
+    m_BufferedFileAvailable(false),
+    m_BufferedFileOpen(false),
+    m_BufferFull(false),
+    m_Uncommited(false),
+    m_Buffered(false),
+    m_BufferedRights(FM_CLOSED),
+    m_Buffer(nullptr),
+    m_BufferedSize(0),
+    m_BufferPosition(0),
+    m_BufferStart(0),
+    m_UncommitedStart(-1),
+    m_UncommitedEnd(-1),
+    m_BufferedFileSize(0),
+    m_BufferedBiasStart(0),
+    m_BufferedFileStart(0)
 {
 }
 
 BufferIOFileClass::BufferIOFileClass(const char *filename) :
-    m_bufferAllocated(false),
-    m_bufferedFileAvailable(false),
-    m_bufferedFileOpen(false),
-    m_bufferFull(false),
-    m_uncommited(false),
-    m_buffered(false),
-    m_bufferedRights(FM_CLOSED),
-    m_buffer(nullptr),
-    m_bufferedSize(0),
-    m_bufferPosition(0),
-    m_bufferStart(0),
-    m_uncommitedStart(-1),
-    m_uncommitedEnd(-1),
-    m_bufferedFileSize(0),
-    m_bufferedBiasStart(0),
-    m_bufferedFileStart(0)
+    m_BufferAllocated(false),
+    m_BufferedFileAvailable(false),
+    m_BufferedFileOpen(false),
+    m_BufferFull(false),
+    m_Uncommited(false),
+    m_Buffered(false),
+    m_BufferedRights(FM_CLOSED),
+    m_Buffer(nullptr),
+    m_BufferedSize(0),
+    m_BufferPosition(0),
+    m_BufferStart(0),
+    m_UncommitedStart(-1),
+    m_UncommitedEnd(-1),
+    m_BufferedFileSize(0),
+    m_BufferedBiasStart(0),
+    m_BufferedFileStart(0)
 {
     BufferIOFileClass::Set_Name(filename);
 }
 
 BOOL BufferIOFileClass::Cache(int size, void *buffer)
 {
-    if (m_buffer) {
+    if (m_Buffer) {
         return size == 0 && buffer == nullptr;
     }
 
     if (Is_Available()) {
-        m_bufferedFileSize = Size();
+        m_BufferedFileSize = Size();
     } else {
-        m_bufferedFileSize = 0;
+        m_BufferedFileSize = 0;
     }
 
     if (size > 0) {
@@ -81,66 +81,66 @@ BOOL BufferIOFileClass::Cache(int size, void *buffer)
                 Error(9);
             }
         }
-        m_bufferedSize = size;
+        m_BufferedSize = size;
     } else {
-        m_bufferedSize = m_bufferedFileSize;
+        m_BufferedSize = m_BufferedFileSize;
     }
 
-    if ((size || buffer == nullptr) && m_bufferedSize > 0) {
+    if ((size || buffer == nullptr) && m_BufferedSize > 0) {
         if (buffer) {
-            m_buffer = buffer;
+            m_Buffer = buffer;
         } else {
-            m_buffer = new char[m_bufferedSize];
+            m_Buffer = new char[m_BufferedSize];
         }
 
-        if (m_buffer == nullptr) {
+        if (m_Buffer == nullptr) {
             Error(5);
             return false;
         }
 
-        m_bufferAllocated = true;
-        m_bufferedFileOpen = false;
-        m_bufferPosition = 0;
-        m_bufferStart = 0;
-        m_uncommitedStart = -1;
-        m_uncommitedEnd = -1;
-        m_bufferedBiasStart = 0;
-        m_bufferedFileStart = 0;
+        m_BufferAllocated = true;
+        m_BufferedFileOpen = false;
+        m_BufferPosition = 0;
+        m_BufferStart = 0;
+        m_UncommitedStart = -1;
+        m_UncommitedEnd = -1;
+        m_BufferedBiasStart = 0;
+        m_BufferedFileStart = 0;
 
-        if (m_bufferedFileSize > 0) {
+        if (m_BufferedFileSize > 0) {
             bool opened = false;
             int startpos = 0;
 
-            int sizetocache = std::min(m_bufferedFileSize, m_bufferedSize);
+            int sizetocache = std::min(m_BufferedFileSize, m_BufferedSize);
 
             if (Is_Open()) {
                 startpos = Tell();
 
                 if (Is_Open()) {
-                    m_bufferedFileStart = RawFileClass::Tell();
+                    m_BufferedFileStart = RawFileClass::Tell();
                 } else {
-                    m_bufferedFileStart = startpos;
+                    m_BufferedFileStart = startpos;
                 }
 
-                if (m_bufferedFileSize > m_bufferedSize) {
-                    m_bufferStart = startpos;
+                if (m_BufferedFileSize > m_BufferedSize) {
+                    m_BufferStart = startpos;
                 } else {
                     if (startpos > 0)
                         Seek(0, FS_SEEK_START);
 
-                    m_bufferPosition = startpos;
+                    m_BufferPosition = startpos;
                 }
 
-                m_bufferedBiasStart = startpos;
+                m_BufferedBiasStart = startpos;
 
             } else {
                 if (Open()) {
-                    m_bufferedFileStart = RawFileClass::Tell();
+                    m_BufferedFileStart = RawFileClass::Tell();
                     opened = true;
                 }
             }
 
-            if (Read(m_buffer, sizetocache) != sizetocache) {
+            if (Read(m_Buffer, sizetocache) != sizetocache) {
                 Error(21);
             }
 
@@ -150,10 +150,10 @@ BOOL BufferIOFileClass::Cache(int size, void *buffer)
                 RawFileClass::Tell();
             }
 
-            m_bufferFull = true;
+            m_BufferFull = true;
         }
 
-        m_buffered = true;
+        m_Buffered = true;
 
         return true;
     }
@@ -163,39 +163,39 @@ BOOL BufferIOFileClass::Cache(int size, void *buffer)
 
 void BufferIOFileClass::Free()
 {
-    if (m_buffer) {
-        if (m_bufferAllocated) {
-            delete[] static_cast<char *>(m_buffer);
-            m_bufferAllocated = false;
+    if (m_Buffer) {
+        if (m_BufferAllocated) {
+            delete[] static_cast<char *>(m_Buffer);
+            m_BufferAllocated = false;
         }
 
-        m_buffer = nullptr;
+        m_Buffer = nullptr;
     }
 
-    m_bufferedFileAvailable = false;
-    m_bufferedFileOpen = false;
-    m_uncommited = false;
-    m_bufferedSize = 0;
-    m_buffered = false;
+    m_BufferedFileAvailable = false;
+    m_BufferedFileOpen = false;
+    m_Uncommited = false;
+    m_BufferedSize = 0;
+    m_Buffered = false;
 }
 
 BOOL BufferIOFileClass::Commit()
 {
-    if (m_buffered && m_uncommited) {
-        int writesize = m_uncommitedEnd - m_uncommitedStart;
+    if (m_Buffered && m_Uncommited) {
+        int writesize = m_UncommitedEnd - m_UncommitedStart;
 
-        if (m_bufferedFileOpen) {
-            RawFileClass::Seek(m_uncommitedStart + m_bufferedFileStart + m_bufferStart, FS_SEEK_START);
-            RawFileClass::Write(m_buffer, writesize);
-            RawFileClass::Seek(m_bufferedFileStart + m_bufferedBiasStart, FS_SEEK_START);
+        if (m_BufferedFileOpen) {
+            RawFileClass::Seek(m_UncommitedStart + m_BufferedFileStart + m_BufferStart, FS_SEEK_START);
+            RawFileClass::Write(m_Buffer, writesize);
+            RawFileClass::Seek(m_BufferedFileStart + m_BufferedBiasStart, FS_SEEK_START);
         } else {
             RawFileClass::Open(FM_WRITE);
-            RawFileClass::Seek(m_uncommitedStart + m_bufferStart + m_bufferedFileStart, FS_SEEK_START);
-            RawFileClass::Write(m_buffer, writesize);
+            RawFileClass::Seek(m_UncommitedStart + m_BufferStart + m_BufferedFileStart, FS_SEEK_START);
+            RawFileClass::Write(m_Buffer, writesize);
             RawFileClass::Close();
         }
 
-        m_uncommited = false;
+        m_Uncommited = false;
 
         return true;
     }
@@ -205,13 +205,13 @@ BOOL BufferIOFileClass::Commit()
 
 const char *BufferIOFileClass::Set_Name(const char *filename)
 {
-    if (File_Name() != nullptr && m_buffered) {
+    if (File_Name() != nullptr && m_Buffered) {
         if (strcmp(filename, File_Name()) == 0) {
             return File_Name();
         }
 
         Commit();
-        m_bufferFull = false;
+        m_BufferFull = false;
     }
 
     RawFileClass::Set_Name(filename);
@@ -221,7 +221,7 @@ const char *BufferIOFileClass::Set_Name(const char *filename)
 
 BOOL BufferIOFileClass::Is_Available(BOOL forced)
 {
-    if (m_buffered) {
+    if (m_Buffered) {
         return true;
     }
 
@@ -230,7 +230,7 @@ BOOL BufferIOFileClass::Is_Available(BOOL forced)
 
 BOOL BufferIOFileClass::Is_Open() const
 {
-    if (m_bufferedFileAvailable && m_buffered) {
+    if (m_BufferedFileAvailable && m_Buffered) {
         return true;
     }
 
@@ -248,40 +248,40 @@ BOOL BufferIOFileClass::Open(int rights)
 {
     BufferIOFileClass::Close();
 
-    if (m_buffered) {
-        m_bufferedRights = rights;
+    if (m_Buffered) {
+        m_BufferedRights = rights;
 
-        if (rights == FM_READ && m_bufferedFileSize <= m_bufferedSize) {
-            m_bufferedFileOpen = false;
+        if (rights == FM_READ && m_BufferedFileSize <= m_BufferedSize) {
+            m_BufferedFileOpen = false;
 
         } else {
             if (rights == FM_WRITE) {
                 RawFileClass::Open(rights);
                 RawFileClass::Close();
-                m_bufferedFileStart = 0;
+                m_BufferedFileStart = 0;
             }
 
-            if (m_bufferedFileStart) {
-                m_buffered = false;
+            if (m_BufferedFileStart) {
+                m_Buffered = false;
                 Open(rights);
-                m_buffered = true;
+                m_Buffered = true;
             } else {
                 RawFileClass::Open(rights);
             }
 
-            m_bufferedFileOpen = true;
+            m_BufferedFileOpen = true;
 
-            if (m_bufferedRights == FM_WRITE) {
-                m_bufferedFileSize = 0;
+            if (m_BufferedRights == FM_WRITE) {
+                m_BufferedFileSize = 0;
             }
         }
 
-        m_bufferPosition = 0;
-        m_bufferStart = 0;
-        m_uncommitedStart = -1;
-        m_uncommitedEnd = -1;
-        m_bufferedBiasStart = 0;
-        m_bufferedFileAvailable = true;
+        m_BufferPosition = 0;
+        m_BufferStart = 0;
+        m_UncommitedStart = -1;
+        m_UncommitedEnd = -1;
+        m_BufferedBiasStart = 0;
+        m_BufferedFileAvailable = true;
 
         return true;
     }
@@ -300,90 +300,90 @@ int BufferIOFileClass::Write(const void *buffer, int length)
         if (!Open(FM_WRITE)) {
             return 0;
         } else {
-            m_bufferedFileStart = Tell();
+            m_BufferedFileStart = Tell();
             opened = true;
         }
     }
 
-    if (m_buffered) {
+    if (m_Buffered) {
         int totalwrite = 0;
 
-        if (m_bufferedRights == FM_READ) {
+        if (m_BufferedRights == FM_READ) {
             Error(13);
 
         } else {
             while (length) {
-                movedsize = std::min(length, (m_bufferedSize - m_bufferPosition));
+                movedsize = std::min(length, (m_BufferedSize - m_BufferPosition));
 
-                if (movedsize != m_bufferedSize && !m_bufferFull) {
-                    if (m_bufferedFileSize >= m_bufferedSize) {
-                        readsize = m_bufferedSize;
-                        m_bufferStart = m_bufferedBiasStart;
+                if (movedsize != m_BufferedSize && !m_BufferFull) {
+                    if (m_BufferedFileSize >= m_BufferedSize) {
+                        readsize = m_BufferedSize;
+                        m_BufferStart = m_BufferedBiasStart;
                     } else {
-                        readsize = m_bufferedFileSize;
-                        m_bufferStart = 0;
+                        readsize = m_BufferedFileSize;
+                        m_BufferStart = 0;
                     }
 
-                    if (m_bufferedFileStart) {
-                        m_buffered = false;
-                        Seek(m_bufferedBiasStart, FS_SEEK_START);
-                        Read(m_buffer, m_bufferedSize);
-                        Seek(m_bufferedBiasStart, FS_SEEK_START);
-                        m_buffered = true;
+                    if (m_BufferedFileStart) {
+                        m_Buffered = false;
+                        Seek(m_BufferedBiasStart, FS_SEEK_START);
+                        Read(m_Buffer, m_BufferedSize);
+                        Seek(m_BufferedBiasStart, FS_SEEK_START);
+                        m_Buffered = true;
                     } else {
-                        RawFileClass::Seek(m_bufferStart, FS_SEEK_START);
-                        RawFileClass::Read(m_buffer, readsize);
+                        RawFileClass::Seek(m_BufferStart, FS_SEEK_START);
+                        RawFileClass::Read(m_Buffer, readsize);
                     }
 
-                    m_bufferPosition = 0;
-                    m_uncommitedStart = -1;
-                    m_uncommitedEnd = -1;
-                    m_bufferFull = true;
+                    m_BufferPosition = 0;
+                    m_UncommitedStart = -1;
+                    m_UncommitedEnd = -1;
+                    m_BufferFull = true;
                 }
 
-                memmove(static_cast<char *>(m_buffer) + m_bufferPosition,
+                memmove(static_cast<char *>(m_Buffer) + m_BufferPosition,
                     static_cast<const char *>(buffer) + totalwrite,
                     movedsize);
 
-                m_uncommited = true;
+                m_Uncommited = true;
                 totalwrite += movedsize;
                 length -= movedsize;
 
-                if (m_uncommitedStart == -1) {
-                    m_uncommitedStart = m_bufferPosition;
-                    m_uncommitedEnd = m_bufferPosition;
+                if (m_UncommitedStart == -1) {
+                    m_UncommitedStart = m_BufferPosition;
+                    m_UncommitedEnd = m_BufferPosition;
                 } else {
-                    if (m_uncommitedStart > m_bufferPosition) {
-                        m_uncommitedStart = m_bufferPosition;
+                    if (m_UncommitedStart > m_BufferPosition) {
+                        m_UncommitedStart = m_BufferPosition;
                     }
                 }
             }
 
-            m_bufferPosition += movedsize;
-            m_uncommitedEnd = std::max(m_uncommitedEnd, m_bufferPosition);
-            m_bufferedBiasStart = m_bufferPosition + m_bufferStart;
-            m_bufferedFileSize = std::max(m_bufferedFileSize, m_bufferedBiasStart);
+            m_BufferPosition += movedsize;
+            m_UncommitedEnd = std::max(m_UncommitedEnd, m_BufferPosition);
+            m_BufferedBiasStart = m_BufferPosition + m_BufferStart;
+            m_BufferedFileSize = std::max(m_BufferedFileSize, m_BufferedBiasStart);
 
-            if (m_bufferPosition == m_bufferedSize) {
+            if (m_BufferPosition == m_BufferedSize) {
                 Commit();
-                m_bufferPosition = 0;
-                m_bufferStart = m_bufferedBiasStart;
-                m_uncommitedStart = -1;
-                m_uncommitedEnd = -1;
+                m_BufferPosition = 0;
+                m_BufferStart = m_BufferedBiasStart;
+                m_UncommitedStart = -1;
+                m_UncommitedEnd = -1;
 
-                if (length && m_bufferedFileSize > m_bufferedBiasStart) {
-                    if (m_bufferedFileStart) {
-                        m_buffered = false;
-                        Seek(m_bufferedBiasStart, FS_SEEK_START);
-                        Read(m_buffer, m_bufferedSize);
-                        Seek(m_bufferedBiasStart, FS_SEEK_START);
-                        m_buffered = true;
+                if (length && m_BufferedFileSize > m_BufferedBiasStart) {
+                    if (m_BufferedFileStart) {
+                        m_Buffered = false;
+                        Seek(m_BufferedBiasStart, FS_SEEK_START);
+                        Read(m_Buffer, m_BufferedSize);
+                        Seek(m_BufferedBiasStart, FS_SEEK_START);
+                        m_Buffered = true;
                     } else {
-                        RawFileClass::Seek(m_bufferedBiasStart, FS_SEEK_START);
-                        RawFileClass::Read(m_buffer, m_bufferedSize);
+                        RawFileClass::Seek(m_BufferedBiasStart, FS_SEEK_START);
+                        RawFileClass::Read(m_Buffer, m_BufferedSize);
                     }
                 } else {
-                    m_bufferFull = false;
+                    m_BufferFull = false;
                 }
             }
         }
@@ -409,81 +409,81 @@ int BufferIOFileClass::Read(void *buffer, int size)
     BOOL opened = false;
 
     if (!Is_Open() && Open(FM_READ)) {
-        m_bufferedFileStart = RawFileClass::Tell();
+        m_BufferedFileStart = RawFileClass::Tell();
         opened = true;
     }
 
-    if (m_buffered) {
+    if (m_Buffered) {
         int totalread = 0;
 
-        if (m_bufferedRights == FM_WRITE) {
+        if (m_BufferedRights == FM_WRITE) {
             Error(13);
 
         } else {
             while (size > 0) {
-                movedsize = std::min(size, (m_bufferedSize - m_bufferPosition));
+                movedsize = std::min(size, (m_BufferedSize - m_BufferPosition));
 
-                if (!m_bufferFull) {
-                    if (m_bufferedFileSize >= m_bufferedSize) {
-                        readsize = m_bufferedSize;
-                        m_bufferStart = m_bufferedBiasStart;
+                if (!m_BufferFull) {
+                    if (m_BufferedFileSize >= m_BufferedSize) {
+                        readsize = m_BufferedSize;
+                        m_BufferStart = m_BufferedBiasStart;
                     } else {
-                        readsize = m_bufferedFileSize;
-                        m_bufferStart = 0;
+                        readsize = m_BufferedFileSize;
+                        m_BufferStart = 0;
                     }
 
-                    if (m_bufferedFileStart) {
-                        m_buffered = false;
-                        Seek(m_bufferedBiasStart, FS_SEEK_START);
-                        Read(m_buffer, m_bufferedSize);
-                        Seek(m_bufferedBiasStart, FS_SEEK_START);
-                        m_buffered = true;
+                    if (m_BufferedFileStart) {
+                        m_Buffered = false;
+                        Seek(m_BufferedBiasStart, FS_SEEK_START);
+                        Read(m_Buffer, m_BufferedSize);
+                        Seek(m_BufferedBiasStart, FS_SEEK_START);
+                        m_Buffered = true;
 
                     } else {
-                        RawFileClass::Seek(m_bufferStart, FS_SEEK_START);
-                        RawFileClass::Read(m_buffer, readsize);
+                        RawFileClass::Seek(m_BufferStart, FS_SEEK_START);
+                        RawFileClass::Read(m_Buffer, readsize);
                     }
 
-                    m_bufferPosition = 0;
-                    m_uncommitedStart = -1;
-                    m_uncommitedEnd = -1;
-                    m_bufferFull = true;
+                    m_BufferPosition = 0;
+                    m_UncommitedStart = -1;
+                    m_UncommitedEnd = -1;
+                    m_BufferFull = true;
                 }
 
                 memmove(
-                    static_cast<char *>(buffer) + totalread, static_cast<char *>(m_buffer) + m_bufferPosition, movedsize);
+                    static_cast<char *>(buffer) + totalread, static_cast<char *>(m_Buffer) + m_BufferPosition, movedsize);
 
                 totalread += movedsize;
                 size -= movedsize;
 
-                m_bufferPosition += movedsize;
-                m_bufferedBiasStart = m_bufferPosition + m_bufferStart;
+                m_BufferPosition += movedsize;
+                m_BufferedBiasStart = m_BufferPosition + m_BufferStart;
 
-                if (m_bufferPosition == m_bufferedSize) {
+                if (m_BufferPosition == m_BufferedSize) {
                     Commit();
-                    m_bufferPosition = 0;
-                    m_bufferStart = m_bufferedBiasStart;
-                    m_uncommitedStart = -1;
-                    m_uncommitedEnd = -1;
+                    m_BufferPosition = 0;
+                    m_BufferStart = m_BufferedBiasStart;
+                    m_UncommitedStart = -1;
+                    m_UncommitedEnd = -1;
 
-                    if (size && m_bufferedFileSize > m_bufferedBiasStart) {
-                        if (m_bufferedFileStart) {
-                            m_buffered = false;
-                            Seek(m_bufferedBiasStart, FS_SEEK_START);
-                            Read(m_buffer, m_bufferedSize);
-                            Seek(m_bufferedBiasStart, FS_SEEK_START);
-                            m_buffered = true;
+                    if (size && m_BufferedFileSize > m_BufferedBiasStart) {
+                        if (m_BufferedFileStart) {
+                            m_Buffered = false;
+                            Seek(m_BufferedBiasStart, FS_SEEK_START);
+                            Read(m_Buffer, m_BufferedSize);
+                            Seek(m_BufferedBiasStart, FS_SEEK_START);
+                            m_Buffered = true;
 
                         } else {
                             // DEBUG_SAY("BufferIOFileClass::Read(%s) - Calling RawFileClass::Seek()\n", File_Name());
-                            RawFileClass::Seek(m_bufferedBiasStart, FS_SEEK_START);
+                            RawFileClass::Seek(m_BufferedBiasStart, FS_SEEK_START);
 
                             // DEBUG_SAY("BufferIOFileClass::Read(%s) - Calling RawFileClass::Read()\n", File_Name());
-                            RawFileClass::Read(m_buffer, m_bufferedSize);
+                            RawFileClass::Read(m_Buffer, m_BufferedSize);
                         }
 
                     } else {
-                        m_bufferFull = false;
+                        m_BufferFull = false;
                     }
                 }
             }
@@ -503,58 +503,58 @@ int BufferIOFileClass::Read(void *buffer, int size)
 
 off_t BufferIOFileClass::Seek(off_t offset, int whence)
 {
-    if (m_buffered) {
+    if (m_Buffered) {
         BOOL offset_adjusted = false;
 
         if (whence == FS_SEEK_START) {
-            m_bufferedBiasStart = 0;
+            m_BufferedBiasStart = 0;
         } else {
             if (whence == FS_SEEK_END) {
-                m_bufferedBiasStart = m_bufferedFileSize;
+                m_BufferedBiasStart = m_BufferedFileSize;
             }
         }
 
-        if (m_bufferedFileStart && offset >= m_bufferedFileStart) {
-            offset = offset - m_bufferedFileStart;
+        if (m_BufferedFileStart && offset >= m_BufferedFileStart) {
+            offset = offset - m_BufferedFileStart;
             offset_adjusted = true;
         }
 
-        m_bufferedBiasStart += offset;
+        m_BufferedBiasStart += offset;
 
-        if (m_biasStart < 0) {
-            m_bufferedBiasStart = 0;
+        if (m_BiasStart < 0) {
+            m_BufferedBiasStart = 0;
         }
 
-        if (m_bufferedBiasStart > m_bufferedFileSize) {
-            m_bufferedBiasStart = m_bufferedFileSize;
+        if (m_BufferedBiasStart > m_BufferedFileSize) {
+            m_BufferedBiasStart = m_BufferedFileSize;
         }
 
-        if (m_bufferedFileSize > m_bufferedSize) {
-            if (m_bufferedBiasStart >= m_bufferStart && m_bufferedSize + m_bufferStart > m_bufferedBiasStart) {
-                m_bufferPosition = m_bufferedBiasStart - m_bufferStart;
+        if (m_BufferedFileSize > m_BufferedSize) {
+            if (m_BufferedBiasStart >= m_BufferStart && m_BufferedSize + m_BufferStart > m_BufferedBiasStart) {
+                m_BufferPosition = m_BufferedBiasStart - m_BufferStart;
 
             } else {
                 Commit();
 
-                if (m_bufferedFileStart) {
-                    m_buffered = false;
-                    Seek(m_bufferedBiasStart, FS_SEEK_START);
-                    m_buffered = true;
+                if (m_BufferedFileStart) {
+                    m_Buffered = false;
+                    Seek(m_BufferedBiasStart, FS_SEEK_START);
+                    m_Buffered = true;
 
                 } else {
-                    RawFileClass::Seek(m_bufferedBiasStart, FS_SEEK_START);
+                    RawFileClass::Seek(m_BufferedBiasStart, FS_SEEK_START);
                 }
-                m_bufferFull = false;
+                m_BufferFull = false;
             }
         } else {
-            m_bufferPosition = m_bufferedBiasStart;
+            m_BufferPosition = m_BufferedBiasStart;
         }
 
-        if (m_bufferedFileStart && offset_adjusted) {
-            return m_bufferedFileStart + m_bufferedBiasStart;
+        if (m_BufferedFileStart && offset_adjusted) {
+            return m_BufferedFileStart + m_BufferedBiasStart;
         }
 
-        return m_bufferedBiasStart;
+        return m_BufferedBiasStart;
     }
 
     return RawFileClass::Seek(offset, whence);
@@ -562,8 +562,8 @@ off_t BufferIOFileClass::Seek(off_t offset, int whence)
 
 off_t BufferIOFileClass::Size()
 {
-    if (m_bufferedFileAvailable && m_buffered) {
-        return m_bufferedFileSize;
+    if (m_BufferedFileAvailable && m_Buffered) {
+        return m_BufferedFileSize;
     }
 
     return RawFileClass::Size();
@@ -571,25 +571,25 @@ off_t BufferIOFileClass::Size()
 
 void BufferIOFileClass::Close()
 {
-    if (m_buffered) {
+    if (m_Buffered) {
         BufferIOFileClass::Commit();
 
-        if (m_bufferedFileOpen) {
-            if (m_bufferedFileStart) {
-                m_buffered = false;
+        if (m_BufferedFileOpen) {
+            if (m_BufferedFileStart) {
+                m_Buffered = false;
 
                 Close();
 
-                m_buffered = true;
-                m_bufferedFileOpen = false;
-                m_bufferedFileAvailable = false;
+                m_Buffered = true;
+                m_BufferedFileOpen = false;
+                m_BufferedFileAvailable = false;
             }
 
             RawFileClass::Close();
-            m_bufferedFileOpen = false;
+            m_BufferedFileOpen = false;
         }
 
-        m_bufferedFileAvailable = false;
+        m_BufferedFileAvailable = false;
 
     } else {
         RawFileClass::Close();

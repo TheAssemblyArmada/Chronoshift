@@ -22,11 +22,11 @@ using std::memmove;
 
 BlowStraw::~BlowStraw()
 {
-    if (m_blowFish != nullptr) {
-        delete m_blowFish;
+    if (m_BlowFish != nullptr) {
+        delete m_BlowFish;
     }
 
-    m_blowFish = nullptr;
+    m_BlowFish = nullptr;
 }
 
 /**
@@ -40,7 +40,7 @@ int BlowStraw::Get(void *buffer, int length)
 
     // If no Blowfish instance has been allocated, just pass through to the
     // normal behaviour of the chained Straw.
-    if (m_blowFish != nullptr) {
+    if (m_BlowFish != nullptr) {
         int getcount = 0;
         char *buf = static_cast<char *>(buffer);
 
@@ -51,10 +51,10 @@ int BlowStraw::Get(void *buffer, int length)
             // If data was carried over from the last round, then just pass it
             // to the buffer as it was either a full block or the data source
             // can't retrieve any more data.
-            if (m_carryOver > 0) {
-                int to_copy = std::min(length, m_carryOver); // length >= m_carryOver ? m_carryOver : length;
-                memmove(buf, &m_currentBlock[BF_BLOCKSIZE - m_carryOver], to_copy);
-                m_carryOver -= to_copy;
+            if (m_Carryover > 0) {
+                int to_copy = std::min(length, m_Carryover); // length >= m_Carryover ? m_Carryover : length;
+                memmove(buf, &m_CurrentBlock[BF_BLOCKSIZE - m_Carryover], to_copy);
+                m_Carryover -= to_copy;
                 buf += to_copy;
                 length -= to_copy;
                 getcount += to_copy;
@@ -65,7 +65,7 @@ int BlowStraw::Get(void *buffer, int length)
             }
 
             // Fetch a block worth of data to process.
-            int blocklen = Straw::Get(m_currentBlock, BF_BLOCKSIZE);
+            int blocklen = Straw::Get(m_CurrentBlock, BF_BLOCKSIZE);
 
             if (blocklen == 0) {
                 break;
@@ -75,16 +75,16 @@ int BlowStraw::Get(void *buffer, int length)
             // then the Chained Straw can't get any more data so we just prepare
             // to pass it unchanged into the destination.
             if (blocklen == BF_BLOCKSIZE) {
-                if (m_mode == STRAW_DECRYPT) {
-                    m_blowFish->Decrypt(m_currentBlock, BF_BLOCKSIZE, m_currentBlock);
+                if (m_Mode == STRAW_DECRYPT) {
+                    m_BlowFish->Decrypt(m_CurrentBlock, BF_BLOCKSIZE, m_CurrentBlock);
                 } else {
-                    m_blowFish->Encrypt(m_currentBlock, BF_BLOCKSIZE, m_currentBlock);
+                    m_BlowFish->Encrypt(m_CurrentBlock, BF_BLOCKSIZE, m_CurrentBlock);
                 }
             } else {
-                memmove(&m_currentBlock[8 - blocklen], m_currentBlock, blocklen);
+                memmove(&m_CurrentBlock[8 - blocklen], m_CurrentBlock, blocklen);
             }
 
-            m_carryOver = blocklen;
+            m_Carryover = blocklen;
         }
 
         return getcount;
@@ -99,13 +99,13 @@ int BlowStraw::Get(void *buffer, int length)
 void BlowStraw::Key(void *key, int length)
 {
     // If we haven't got a Blowfish instance, create one to accept the key.
-    if (m_blowFish == nullptr) {
-        m_blowFish = new BlowfishEngine();
+    if (m_BlowFish == nullptr) {
+        m_BlowFish = new BlowfishEngine();
     }
 
     // Once we have our Blowfish instance, submit the key to prepare it for
     // encrypt/decrypt operations.
-    if (m_blowFish != nullptr) {
-        m_blowFish->Submit_Key(key, length);
+    if (m_BlowFish != nullptr) {
+        m_BlowFish->Submit_Key(key, length);
     }
 }

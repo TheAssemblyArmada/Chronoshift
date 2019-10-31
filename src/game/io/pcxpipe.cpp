@@ -24,29 +24,29 @@ using std::memcpy;
 
 PCXPipe::PCXPipe(PipeControl mode, int size) :
     Pipe(),
-    Mode(mode),
-    LineLength(size),
-    Carryover(0),
-    Remaining(0),
-    InBuffer(nullptr),
-    OutBuffer(nullptr)
+    m_Mode(mode),
+    m_LineLength(size),
+    m_Carryover(0),
+    m_Remaining(0),
+    m_InBuffer(nullptr),
+    m_OutBuffer(nullptr)
 {
     // Must be less than half of int max
-    DEBUG_ASSERT(LineLength < (INT_MAX / 2) && LineLength > 0);
+    DEBUG_ASSERT(m_LineLength < (INT_MAX / 2) && m_LineLength > 0);
 
-    if (Mode == PIPE_ENCODE) {
-        InBuffer = new uint8_t[LineLength];
-        OutBuffer = new uint8_t[2 * LineLength];
+    if (m_Mode == PIPE_ENCODE) {
+        m_InBuffer = new uint8_t[m_LineLength];
+        m_OutBuffer = new uint8_t[2 * m_LineLength];
     } else {
-        InBuffer = new uint8_t[2 * LineLength];
-        OutBuffer = new uint8_t[LineLength];
+        m_InBuffer = new uint8_t[2 * m_LineLength];
+        m_OutBuffer = new uint8_t[m_LineLength];
     }
 }
 
 PCXPipe::~PCXPipe()
 {
-    delete[] InBuffer;
-    delete[] OutBuffer;
+    delete[] m_InBuffer;
+    delete[] m_OutBuffer;
 }
 
 /**
@@ -61,34 +61,34 @@ int PCXPipe::Put(const void *buffer, int length)
     }
 
     while (length > 0) {
-        if (Carryover) {
-            int to_copy = std::min(Carryover, length);
-            bytes_put += Pipe::Put(OutBuffer + (LineLength - Carryover), to_copy);
+        if (m_Carryover) {
+            int to_copy = std::min(m_Carryover, length);
+            bytes_put += Pipe::Put(m_OutBuffer + (m_LineLength - m_Carryover), to_copy);
             length -= to_copy;
-            Carryover -= to_copy;
+            m_Carryover -= to_copy;
         }
 
         if (length < 0) {
             break;
         }
 
-        if (Mode == PIPE_ENCODE) {
+        if (m_Mode == PIPE_ENCODE) {
             // Read in bytes and encode
-            uint8_t *in_buff = InBuffer;
-            memcpy(in_buff + Remaining, buffer, LineLength - Remaining);
-            buffer = static_cast<const uint8_t *>(buffer) + LineLength - Remaining;
-            int enc = PCX_Encode((const void **)&in_buff, LineLength, OutBuffer, 2 * LineLength);
+            uint8_t *in_buff = m_InBuffer;
+            memcpy(in_buff + m_Remaining, buffer, m_LineLength - m_Remaining);
+            buffer = static_cast<const uint8_t *>(buffer) + m_LineLength - m_Remaining;
+            int enc = PCX_Encode((const void **)&in_buff, m_LineLength, m_OutBuffer, 2 * m_LineLength);
 
             // Calculate remaining decoded bytes (if any) and move to start of buffer.
-            Remaining = LineLength - (in_buff - InBuffer);
-            if (Remaining > 0) {
-                memmove(InBuffer, in_buff, Remaining);
+            m_Remaining = m_LineLength - (in_buff - m_InBuffer);
+            if (m_Remaining > 0) {
+                memmove(m_InBuffer, in_buff, m_Remaining);
             }
 
             int to_copy = std::min(enc, length);
-            bytes_put += Pipe::Put(OutBuffer, to_copy);
-            length -= LineLength - Remaining;
-            Carryover = enc - to_copy;
+            bytes_put += Pipe::Put(m_OutBuffer, to_copy);
+            length -= m_LineLength - m_Remaining;
+            m_Carryover = enc - to_copy;
 
         } else {
             // TODO Writing to RLE decoded format not supported yet
@@ -108,21 +108,21 @@ int PCXPipe::Flush()
     int len = 0;
     int rlelen = 0;
 
-    if (Carryover) {
-        len += Pipe::Put(OutBuffer + (LineLength - Carryover), Carryover);
+    if (m_Carryover) {
+        len += Pipe::Put(m_OutBuffer + (m_LineLength - m_Carryover), m_Carryover);
     }
 
-    while (Remaining) {
-        if (Mode == PIPE_ENCODE) {
-            buff = OutBuffer;
-            uint8_t *in_buff = InBuffer;
-            rlelen = PCX_Encode((const void **)&in_buff, Remaining, OutBuffer, 2 * LineLength);
+    while (m_Remaining) {
+        if (m_Mode == PIPE_ENCODE) {
+            buff = m_OutBuffer;
+            uint8_t *in_buff = m_InBuffer;
+            rlelen = PCX_Encode((const void **)&in_buff, m_Remaining, m_OutBuffer, 2 * m_LineLength);
             len = Pipe::Put(buff, rlelen);
-            Remaining -= (in_buff - InBuffer);
+            m_Remaining -= (in_buff - m_InBuffer);
         } else {
             // TODO proper implementation of decoding to dest.
-            len += Pipe::Put(InBuffer, Remaining);
-            Remaining = 0;
+            len += Pipe::Put(m_InBuffer, m_Remaining);
+            m_Remaining = 0;
         }
     }
 

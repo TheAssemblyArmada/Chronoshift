@@ -64,16 +64,16 @@ struct MIXHeaderStruct
 
 struct FileInfoStruct
 {
-    int32_t m_crc; // The hash ID of The File, derived from the name of the file
-    int32_t m_offset; // Offset Of The FIle From The Start Of The Body
-    int32_t m_size; // Size Of The File
+    int32_t m_CRC; // The hash ID of The File, derived from the name of the file
+    int32_t m_Offset; // Offset Of The FIle From The Start Of The Body
+    int32_t m_Size; // Size Of The File
 };
 #pragma pack(pop)
 
 inline int FileInfo_Compare(const void *info1, const void *info2)
 {
-    if (static_cast<const FileInfoStruct *>(info1)->m_crc >= static_cast<const FileInfoStruct *>(info2)->m_crc) {
-        return static_cast<const FileInfoStruct *>(info1)->m_crc > static_cast<const FileInfoStruct *>(info2)->m_crc ? 1 : 0;
+    if (static_cast<const FileInfoStruct *>(info1)->m_CRC >= static_cast<const FileInfoStruct *>(info2)->m_CRC) {
+        return static_cast<const FileInfoStruct *>(info1)->m_CRC > static_cast<const FileInfoStruct *>(info2)->m_CRC ? 1 : 0;
     }
 
     return -1;
@@ -94,10 +94,10 @@ public:
 
     bool Cache(BufferClass *buffer = nullptr);
     void Invalidate_Cache();
-    char *Get_Filename() const { return m_fileName; }
-    int Get_File_Count() const { return m_fileCount; }
-    uint32_t Get_Size() const { return m_fileSize; }
-    const FileInfoStruct *Get_Index() const { return m_fileIndex; }
+    char *Get_Filename() const { return m_FileName; }
+    int Get_File_Count() const { return m_FileCount; }
+    uint32_t Get_Size() const { return m_FileSize; }
+    const FileInfoStruct *Get_Index() const { return m_FileIndex; }
 
     static void Discard_Cache(const char *filename);
     static void *Retrieve(const char *filename);
@@ -119,21 +119,21 @@ private:
     };
 
 private:
-    char *m_fileName;
+    char *m_FileName;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_hasChecksum : 1;
-    BOOL m_isEncrypted : 1;
-    BOOL m_isAllocated : 1;
+    BOOL m_HasChecksum : 1;
+    BOOL m_IsEncrypted : 1;
+    BOOL m_IsAllocated : 1;
 #else
-    bool m_hasChecksum;
-    bool m_isEncrypted;
-    bool m_isAllocated;
+    bool m_HasChecksum;
+    bool m_IsEncrypted;
+    bool m_IsAllocated;
 #endif
-    int m_fileCount;
-    int m_fileSize; // size of the body, not including this header and the index.
-    int m_fileStart;
-    FileInfoStruct *m_fileIndex;
-    uint8_t *m_fileCache;
+    int m_FileCount;
+    int m_FileSize; // size of the body, not including this header and the index.
+    int m_FileStart;
+    FileInfoStruct *m_FileIndex;
+    uint8_t *m_FileCache;
 // A linked list of all currently indexed mix files for the program
 #ifdef GAME_DLL
     static List<MixFileClass<FC> *> &s_mixList;
@@ -150,15 +150,15 @@ List<MixFileClass<FC> *> MixFileClass<FC>::s_mixList;
 
 template<class FC>
 MixFileClass<FC>::MixFileClass(const char *filename, PKey *key) :
-    m_fileName(nullptr),
-    m_hasChecksum(false),
-    m_isEncrypted(false),
-    m_isAllocated(false),
-    m_fileCount(0),
-    m_fileSize(0),
-    m_fileStart(0),
-    m_fileIndex(nullptr),
-    m_fileCache(nullptr)
+    m_FileName(nullptr),
+    m_HasChecksum(false),
+    m_IsEncrypted(false),
+    m_IsAllocated(false),
+    m_FileCount(0),
+    m_FileSize(0),
+    m_FileStart(0),
+    m_FileIndex(nullptr),
+    m_FileCache(nullptr)
 {
     DEBUG_ASSERT(filename != nullptr);
     DEBUG_ASSERT(key != nullptr);
@@ -175,15 +175,15 @@ MixFileClass<FC>::MixFileClass(const char *filename, PKey *key) :
 
 template<class FC>
 MixFileClass<FC>::MixFileClass(FC &file, PKey *key) :
-    m_fileName(nullptr),
-    m_hasChecksum(false),
-    m_isEncrypted(false),
-    m_isAllocated(false),
-    m_fileCount(0),
-    m_fileSize(0),
-    m_fileStart(0),
-    m_fileIndex(nullptr),
-    m_fileCache(nullptr)
+    m_FileName(nullptr),
+    m_HasChecksum(false),
+    m_IsEncrypted(false),
+    m_IsAllocated(false),
+    m_FileCount(0),
+    m_FileSize(0),
+    m_FileStart(0),
+    m_FileIndex(nullptr),
+    m_FileCache(nullptr)
 {
     DEBUG_ASSERT(key != nullptr);
 
@@ -194,7 +194,7 @@ template<class FC>
 void MixFileClass<FC>::Load_File(FC &file, PKey *key)
 {
     // Store the filename for the mix file.
-    m_fileName = strdup(file.File_Name());
+    m_FileName = strdup(file.File_Name());
 
     if (file.Is_Available()) {
         // CryptRandom is a global instance of RandomStraw, see extern above.
@@ -221,12 +221,12 @@ void MixFileClass<FC>::Load_File(FC &file, PKey *key)
             straw_to_use->Get(reinterpret_cast<uint8_t *>(&tmp_header.file_size) + 2, 2);
         } else {
             unsigned int flags = le32toh(file_flags.flags);
-            m_hasChecksum = (flags & HAS_CHECKSUM) ? true : false;
-            m_isEncrypted = (flags & IS_ENCRYPTED) ? true : false;
+            m_HasChecksum = (flags & HAS_CHECKSUM) ? true : false;
+            m_IsEncrypted = (flags & IS_ENCRYPTED) ? true : false;
 
             // If encrypted, set the PKStraw key and set it as the Straw we are
             // using.
-            if (m_isEncrypted) {
+            if (m_IsEncrypted) {
                 DEBUG_ASSERT(key != nullptr);
                 pkstrw.Key(key);
                 pkstrw.Get_From(&filestrw);
@@ -237,21 +237,21 @@ void MixFileClass<FC>::Load_File(FC &file, PKey *key)
             straw_to_use->Get(&tmp_header, sizeof(MIXHeaderStruct));
         }
 
-        m_fileCount = le16toh(tmp_header.file_count);
-        m_fileSize = le32toh(tmp_header.file_size);
-        m_fileIndex = new FileInfoStruct[m_fileCount];
+        m_FileCount = le16toh(tmp_header.file_count);
+        m_FileSize = le32toh(tmp_header.file_size);
+        m_FileIndex = new FileInfoStruct[m_FileCount];
 
-        if (m_fileIndex) {
-            straw_to_use->Get(m_fileIndex, sizeof(FileInfoStruct) * m_fileCount);
-            m_fileStart = file.Seek(0, FS_SEEK_CURRENT) + file.Get_Bias_Start();
+        if (m_FileIndex) {
+            straw_to_use->Get(m_FileIndex, sizeof(FileInfoStruct) * m_FileCount);
+            m_FileStart = file.Seek(0, FS_SEEK_CURRENT) + file.Get_Bias_Start();
 
 #if defined(SYSTEM_BIG_ENDIAN)
             // Mix files are a little endian file format, so when we load on a
             // big endian system, we need to byte swap everything in the index
-            for (int index = 0; index < m_fileCount; ++index) {
-                m_fileIndex[index].m_crc = le32toh(m_fileIndex[index].m_crc);
-                m_fileIndex[index].m_offset = le32toh(m_fileIndex[index].m_offset);
-                m_fileIndex[index].m_size = le32toh(m_fileIndex[index].m_size);
+            for (int index = 0; index < m_FileCount; ++index) {
+                m_FileIndex[index].m_CRC = le32toh(m_FileIndex[index].m_CRC);
+                m_FileIndex[index].m_Offset = le32toh(m_FileIndex[index].m_Offset);
+                m_FileIndex[index].m_Size = le32toh(m_FileIndex[index].m_Size);
             }
 #endif // !SYSTEM_BIG_ENDIAN
 
@@ -264,17 +264,17 @@ void MixFileClass<FC>::Load_File(FC &file, PKey *key)
 template<class FC>
 MixFileClass<FC>::~MixFileClass()
 {
-    if (m_fileName) {
-        free((void *)m_fileName);
+    if (m_FileName) {
+        free((void *)m_FileName);
     }
 
-    m_fileName = nullptr;
+    m_FileName = nullptr;
 
-    if (m_fileIndex) {
-        delete[] m_fileIndex;
+    if (m_FileIndex) {
+        delete[] m_FileIndex;
     }
 
-    m_fileIndex = nullptr;
+    m_FileIndex = nullptr;
 
     Invalidate_Cache();
     Unlink();
@@ -312,7 +312,7 @@ MixFileClass<FC> *MixFileClass<FC>::Finder(const char *filename)
 
     for (file = s_mixList.First(); file != nullptr && file->Is_Valid();
          file = reinterpret_cast<MixFileClass *>(file->Next())) {
-        _splitpath(file->m_fileName, nullptr, nullptr, fname, ext);
+        _splitpath(file->m_FileName, nullptr, nullptr, fname, ext);
         _makepath(dest, nullptr, nullptr, fname, ext);
         if (strcasecmp(dest, filename) == 0) {
             return file;
@@ -325,7 +325,7 @@ MixFileClass<FC> *MixFileClass<FC>::Finder(const char *filename)
 
     for (file = s_mixList.First(); file != nullptr && file->Is_Valid();
          file = reinterpret_cast<MixFileClass *>(file->Next())) {
-        strlcpy(path, file->m_fileName, PATH_MAX);
+        strlcpy(path, file->m_FileName, PATH_MAX);
         dest = basename(path);
         if (dest && strcasecmp(dest, filename) == 0) {
             return file;
@@ -365,22 +365,22 @@ bool MixFileClass<FC>::Cache(BufferClass *buffer)
     SHAEngine::SHADigest file_checksum;
 
     // Check if the Mix file has already been cached.
-    if (m_fileCache != nullptr) {
+    if (m_FileCache != nullptr) {
         return true;
     }
 
     // Does the passed buffer have enough space to use? If not allocate our own.
-    if (buffer == nullptr || ((buff_size = buffer->Get_Size()) != 0 && buff_size < m_fileSize)) {
-        uint8_t *cache_buffer = new uint8_t[m_fileSize];
-        m_fileCache = cache_buffer;
-        m_isAllocated = true;
+    if (buffer == nullptr || ((buff_size = buffer->Get_Size()) != 0 && buff_size < m_FileSize)) {
+        uint8_t *cache_buffer = new uint8_t[m_FileSize];
+        m_FileCache = cache_buffer;
+        m_IsAllocated = true;
     } else {
-        m_fileCache = buffer->Get_Buffer();
+        m_FileCache = buffer->Get_Buffer();
     }
 
     // Check we now have a valid m_fileCache pointer and we are good to go.
-    if (m_fileCache != nullptr) {
-        FC mixfile(m_fileName);
+    if (m_FileCache != nullptr) {
+        FC mixfile(m_FileName);
         FileStraw filestrw(&mixfile);
         SHAStraw shastrw;
         Straw *straw_to_use;
@@ -388,7 +388,7 @@ bool MixFileClass<FC>::Cache(BufferClass *buffer)
         // If the file has a checksum, then the last 20 bytes are a SHA1 digest.
         // Set our Straw to be a SHAStraw that will calculate the digest on the
         // file as we load it so we can compare to the stored value.
-        if (m_hasChecksum) {
+        if (m_HasChecksum) {
             shastrw.Get_From(&filestrw);
             straw_to_use = &shastrw;
         } else {
@@ -397,23 +397,23 @@ bool MixFileClass<FC>::Cache(BufferClass *buffer)
 
         mixfile.Open(FM_READ);
         mixfile.Bias(0, -1);
-        mixfile.Seek(m_fileStart, FS_SEEK_START);
+        mixfile.Seek(m_FileStart, FS_SEEK_START);
 
         // Load the file using our chosen Straw, if we don't read enough bytes
         // then something went wrong, so cleanup and abort.
-        if (straw_to_use->Get(m_fileCache, m_fileSize) == m_fileSize) {
+        if (straw_to_use->Get(m_FileCache, m_FileSize) == m_FileSize) {
             // If we have a checksum, read the remaining bytes for comparison
             // If the two digests don't match, something is wrong so cleanup and
             // abort.
-            if (m_hasChecksum) {
+            if (m_HasChecksum) {
                 filestrw.Get(&file_checksum, sizeof(SHAEngine::SHADigest));
                 shastrw.Result(&computed_checksum);
 
                 if (memcmp(&computed_checksum, &file_checksum, sizeof(SHAEngine::SHADigest))) {
-                    DEBUG_LOG("Mixfile checksum doesn't match calculated for %s\n", m_fileName);
+                    DEBUG_LOG("Mixfile checksum doesn't match calculated for %s\n", m_FileName);
 
-                    delete m_fileCache;
-                    m_fileCache = nullptr;
+                    delete m_FileCache;
+                    m_FileCache = nullptr;
 
                     return false;
                 }
@@ -422,15 +422,15 @@ bool MixFileClass<FC>::Cache(BufferClass *buffer)
             return true;
 
         } else {
-            delete m_fileCache;
-            m_fileCache = nullptr;
+            delete m_FileCache;
+            m_FileCache = nullptr;
             mixfile.Error(21);
 
             return false;
         }
     }
 
-    m_isAllocated = false;
+    m_IsAllocated = false;
 
     return false;
 }
@@ -456,12 +456,12 @@ void MixFileClass<FC>::Discard_Cache(const char *filename)
 template<class FC>
 void MixFileClass<FC>::Invalidate_Cache()
 {
-    if (m_fileCache && m_isAllocated) {
-        delete[] m_fileCache;
+    if (m_FileCache && m_IsAllocated) {
+        delete[] m_FileCache;
     }
 
-    m_fileCache = nullptr;
-    m_isAllocated = false;
+    m_FileCache = nullptr;
+    m_IsAllocated = false;
 }
 
 /**
@@ -487,7 +487,7 @@ BOOL MixFileClass<FC>::Offset(
     FileInfoStruct entry;
 
     // If the filename is valid, generate a hash based on the filename so we
-    entry.m_crc = Calculate_CRC(strupr(fname), strlen(fname));
+    entry.m_CRC = Calculate_CRC(strupr(fname), strlen(fname));
 
     // Iterate over the list of loaded MixFileClass' and search them until
     // we find one that has the file or we reach the end of the list.
@@ -495,7 +495,7 @@ BOOL MixFileClass<FC>::Offset(
          tmp_mix = tmp_mix->Next()) {
         // compare the current entry with the entry we need.
         FileInfoStruct *entry_pointer =
-            (FileInfoStruct *)bsearch(&entry, tmp_mix->m_fileIndex, tmp_mix->m_fileCount, sizeof(entry), FileInfo_Compare);
+            (FileInfoStruct *)bsearch(&entry, tmp_mix->m_FileIndex, tmp_mix->m_FileCount, sizeof(entry), FileInfo_Compare);
         if (entry_pointer != nullptr) {
             // If we found the mix containing the file, now we fill in any pointers
             // we were passed as arguments.
@@ -507,7 +507,7 @@ BOOL MixFileClass<FC>::Offset(
 
             // If we have specified a destination for the size, set it.
             if (file_size != nullptr) {
-                *file_size = entry_pointer->m_size;
+                *file_size = entry_pointer->m_Size;
             }
 
             // Make sure the output pointer is null? I guess it just makes sure if
@@ -518,20 +518,20 @@ BOOL MixFileClass<FC>::Offset(
 
             // If we have specified a destination for the offset, set it.
             if (file_offset != nullptr) {
-                *file_offset = entry_pointer->m_offset;
+                *file_offset = entry_pointer->m_Offset;
             }
 
             // If the Mix is cached and we were provided a pointer for the files
             // position in memory, we set it here.
-            if (cachedfile != nullptr && tmp_mix->m_fileCache) {
-                *cachedfile = entry_pointer->m_offset + tmp_mix->m_fileCache;
+            if (cachedfile != nullptr && tmp_mix->m_FileCache) {
+                *cachedfile = entry_pointer->m_Offset + tmp_mix->m_FileCache;
             }
 
             // If the Mix isn't cached and we have a pointer for the offset in the
             // file, add the offset to the start of the Mix file in the actual file
             // stored on disk (handles nested Mix files).
-            if (file_offset != nullptr && tmp_mix->m_fileCache == nullptr) {
-                *file_offset += tmp_mix->m_fileStart;
+            if (file_offset != nullptr && tmp_mix->m_FileCache == nullptr) {
+                *file_offset += tmp_mix->m_FileStart;
             }
 
             return true;

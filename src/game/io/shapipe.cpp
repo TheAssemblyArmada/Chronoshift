@@ -22,7 +22,7 @@
 */
 int SHAPipe::Put(const void *buffer, int length)
 {
-    m_sha1.Hash(buffer, length);
+    m_SHA1.Hash(buffer, length);
 
     return Pipe::Put(buffer, length);
 }

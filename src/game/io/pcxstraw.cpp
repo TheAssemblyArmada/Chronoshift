@@ -24,32 +24,32 @@ using std::memcpy;
 
 PCXStraw::PCXStraw(StrawControl mode, unsigned pitch, unsigned width) :
     Straw(),
-    Mode(mode),
-    LinePitch(pitch),
-    LineWidth(width),
-    Carryover(0),
-    Remaining(0),
-    InBuffer(nullptr),
-    OutBuffer(nullptr)
+    m_Mode(mode),
+    m_LinePitch(pitch),
+    m_LineWidth(width),
+    m_Carryover(0),
+    m_Remaining(0),
+    m_InBuffer(nullptr),
+    m_OutBuffer(nullptr)
 {
     // Must be less than half of int max
-    DEBUG_ASSERT(LinePitch < (INT_MAX / 2) && LinePitch > 0);
+    DEBUG_ASSERT(m_LinePitch < (INT_MAX / 2) && m_LinePitch > 0);
 
-    LineWidth = std::min(LineWidth, LinePitch);
+    m_LineWidth = std::min(m_LineWidth, m_LinePitch);
 
-    if (Mode == STRAW_ENCODE) {
-        InBuffer = new uint8_t[LinePitch];
-        OutBuffer = new uint8_t[2 * LinePitch];
+    if (m_Mode == STRAW_ENCODE) {
+        m_InBuffer = new uint8_t[m_LinePitch];
+        m_OutBuffer = new uint8_t[2 * m_LinePitch];
     } else {
-        InBuffer = new uint8_t[2 * LinePitch];
-        OutBuffer = new uint8_t[LinePitch];
+        m_InBuffer = new uint8_t[2 * m_LinePitch];
+        m_OutBuffer = new uint8_t[m_LinePitch];
     }
 }
 
 PCXStraw::~PCXStraw()
 {
-    delete[] InBuffer;
-    delete[] OutBuffer;
+    delete[] m_InBuffer;
+    delete[] m_OutBuffer;
 }
 
 /**
@@ -66,12 +66,12 @@ int PCXStraw::Get(void *buffer, int length)
 
     while (length > 0) {
         // Handle where we have carryover from the encode/decode
-        if (Carryover > 0) {
-            int to_copy = std::min(Carryover, length);
-            memcpy(buffer, OutBuffer + (LinePitch - Carryover), to_copy);
+        if (m_Carryover > 0) {
+            int to_copy = std::min(m_Carryover, length);
+            memcpy(buffer, m_OutBuffer + (m_LinePitch - m_Carryover), to_copy);
             buffer = static_cast<char *>(buffer) + to_copy;
             length -= to_copy;
-            Carryover -= to_copy;
+            m_Carryover -= to_copy;
             bytes_read += to_copy;
         }
 
@@ -79,33 +79,33 @@ int PCXStraw::Get(void *buffer, int length)
             break;
         }
 
-        if (Mode == STRAW_DECODE) {
+        if (m_Mode == STRAW_DECODE) {
             // Read in worstcase number of bytes and decode
-            uint8_t *in_buff = InBuffer;
-            retrieved = Straw::Get(in_buff + Remaining, 2 * LinePitch - Remaining);
-            int decoded = PCX_Decode((void const **)&in_buff, 2 * LinePitch, OutBuffer, LinePitch);
-            if (decoded != LinePitch) {
+            uint8_t *in_buff = m_InBuffer;
+            retrieved = Straw::Get(in_buff + m_Remaining, 2 * m_LinePitch - m_Remaining);
+            int decoded = PCX_Decode((void const **)&in_buff, 2 * m_LinePitch, m_OutBuffer, m_LinePitch);
+            if (decoded != m_LinePitch) {
                 DEBUG_LOG("PCXStraw failed to decode an entire line\n");
                 break;
             }
 
             // Calculate remaining encoded bytes (if any) and move to start of buffer.
-            Remaining = 2 * LinePitch - (in_buff - InBuffer);
+            m_Remaining = 2 * m_LinePitch - (in_buff - m_InBuffer);
 
-            if (Remaining > 0) {
-                memmove(InBuffer, in_buff, Remaining);
+            if (m_Remaining > 0) {
+                memmove(m_InBuffer, in_buff, m_Remaining);
             }
 
-            int to_copy = std::min(LineWidth, length);
+            int to_copy = std::min(m_LineWidth, length);
 
-            memcpy(buffer, OutBuffer, to_copy);
+            memcpy(buffer, m_OutBuffer, to_copy);
             buffer = static_cast<char *>(buffer) + to_copy;
             length -= to_copy;
             bytes_read += to_copy;
-            Carryover = LineWidth - to_copy;
+            m_Carryover = m_LineWidth - to_copy;
 
             // Are we out of data to handle? If so, exit loop and return.
-            if (!retrieved && !Remaining && !Carryover) {
+            if (!retrieved && !m_Remaining && !m_Carryover) {
                 break;
             }
         } else {

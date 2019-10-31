@@ -39,14 +39,14 @@ public:
     int Plain_Key_Length() const;
 
 private:
-    BOOL m_changeKey;
-    Straw &m_cryptRandom;
-    BlowPipe m_blowFish;
-    PipeControl m_mode;
-    PKey *m_rsaKey;
-    int m_cryptoBuffer[256];
-    int m_encryptedKeyLength;
-    int m_carryOver;
+    BOOL m_ChangeKey;
+    Straw &m_CryptRandom;
+    BlowPipe m_BlowFish;
+    PipeControl m_Mode;
+    PKey *m_RSAKey;
+    int m_CryptoBuffer[256];
+    int m_EncryptedKeyLength;
+    int m_Carryover;
 };
 
 #endif // PKPIPE_H

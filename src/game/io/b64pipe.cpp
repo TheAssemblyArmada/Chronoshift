@@ -37,33 +37,33 @@ int Base64Pipe::Put(const void *source, int slen)
     if (source && slen > 0) {
         int result = 0;
 
-        switch (m_mode) {
+        switch (m_Mode) {
             case PIPE_ENCODE:
-                incount = sizeof(m_pBuffer);
-                srcbuffp = m_pBuffer;
-                destbuffp = m_cBuffer;
-                outcount = sizeof(m_cBuffer);
+                incount = sizeof(m_PBuffer);
+                srcbuffp = m_PBuffer;
+                destbuffp = m_CBuffer;
+                outcount = sizeof(m_CBuffer);
                 break;
 
             case PIPE_DECODE:
-                incount = sizeof(m_cBuffer);
-                srcbuffp = m_cBuffer;
-                destbuffp = m_pBuffer;
-                outcount = sizeof(m_pBuffer);
+                incount = sizeof(m_CBuffer);
+                srcbuffp = m_CBuffer;
+                destbuffp = m_PBuffer;
+                outcount = sizeof(m_PBuffer);
                 break;
 
             default:
                 break;
         }
 
-        if (m_counter > 0) {
-            int cpylen = std::min(slen, incount - m_counter);
-            memcpy(srcbuffp + m_counter, source, cpylen);
-            m_counter += cpylen;
+        if (m_Counter > 0) {
+            int cpylen = std::min(slen, incount - m_Counter);
+            memcpy(srcbuffp + m_Counter, source, cpylen);
+            m_Counter += cpylen;
             slen -= cpylen;
 
-            if (m_counter == incount) {
-                if (m_mode == PIPE_DECODE) {
+            if (m_Counter == incount) {
+                if (m_Mode == PIPE_DECODE) {
                     b64len = Base64_Decode(srcbuffp, incount, destbuffp, outcount);
                 } else {
                     b64len = Base64_Encode(srcbuffp, incount, destbuffp, outcount);
@@ -71,12 +71,12 @@ int Base64Pipe::Put(const void *source, int slen)
 
                 source = static_cast<const char *>(source) + cpylen;
                 result += Pipe::Put(destbuffp, b64len);
-                m_counter = 0;
+                m_Counter = 0;
             }
         }
 
         for (; slen >= incount; slen -= incount) {
-            b64len = m_mode == PIPE_DECODE ? Base64_Decode(source, incount, destbuffp, outcount) :
+            b64len = m_Mode == PIPE_DECODE ? Base64_Decode(source, incount, destbuffp, outcount) :
                                              Base64_Encode(source, incount, destbuffp, outcount);
 
             source = static_cast<const char *>(source) + incount;
@@ -85,7 +85,7 @@ int Base64Pipe::Put(const void *source, int slen)
 
         if (slen > 0) {
             memmove(srcbuffp, source, slen);
-            m_counter = slen;
+            m_Counter = slen;
         }
 
         return result;
@@ -100,17 +100,17 @@ int Base64Pipe::Flush()
     int len = 0;
     int b64len = 0;
 
-    if (m_counter > 0) {
-        if (m_mode == PIPE_DECODE) {
-            buff = m_pBuffer;
-            b64len = Base64_Decode(m_cBuffer, m_counter, m_pBuffer, sizeof(m_pBuffer));
+    if (m_Counter > 0) {
+        if (m_Mode == PIPE_DECODE) {
+            buff = m_PBuffer;
+            b64len = Base64_Decode(m_CBuffer, m_Counter, m_PBuffer, sizeof(m_PBuffer));
         } else {
-            buff = m_cBuffer;
-            b64len = Base64_Encode(m_pBuffer, m_counter, m_cBuffer, sizeof(m_cBuffer));
+            buff = m_CBuffer;
+            b64len = Base64_Encode(m_PBuffer, m_Counter, m_CBuffer, sizeof(m_CBuffer));
         }
 
         len = Pipe::Put(buff, b64len);
-        m_counter = 0;
+        m_Counter = 0;
     }
 
     return len + Pipe::Flush();

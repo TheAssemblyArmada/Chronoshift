@@ -25,16 +25,16 @@
 class BufferPipe : public Pipe
 {
 public:
-    BufferPipe(void *buffer, int length) : m_buffer(buffer, length), m_index(0) {}
+    BufferPipe(void *buffer, int length) : m_Buffer(buffer, length), m_Index(0) {}
     virtual ~BufferPipe() {}
 
     virtual int Put(const void *buffer, int length) override;
 
-    bool Is_Valid() { return m_buffer.Is_Valid(); }
+    bool Is_Valid() { return m_Buffer.Is_Valid(); }
 
 private:
-    BufferClass m_buffer;
-    int m_index;
+    BufferClass m_Buffer;
+    int m_Index;
 };
 
 #endif // BUFFPIPE_H

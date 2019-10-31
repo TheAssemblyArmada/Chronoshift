@@ -21,28 +21,28 @@
 using std::memmove;
 
 RAMFileClass::RAMFileClass() :
-    Buffer(nullptr),
-    BufferSize(0),
-    BufferAvailable(0),
-    BufferOffset(0),
-    BufferRights(FM_READ),
-    IsOpen(false),
-    IsAllocated(false)
+    m_Buffer(nullptr),
+    m_BufferSize(0),
+    m_BufferAvailable(0),
+    m_BufferOffset(0),
+    m_BufferRights(FM_READ),
+    m_IsOpen(false),
+    m_IsAllocated(false)
 {
 }
 
 RAMFileClass::RAMFileClass(void *data, int size) :
-    Buffer((char *)data),
-    BufferSize(size),
-    BufferAvailable(0),
-    BufferOffset(0),
-    BufferRights(FM_READ),
-    IsOpen(false),
-    IsAllocated(false)
+    m_Buffer((char *)data),
+    m_BufferSize(size),
+    m_BufferAvailable(0),
+    m_BufferOffset(0),
+    m_BufferRights(FM_READ),
+    m_IsOpen(false),
+    m_IsAllocated(false)
 {
     if (!data && size > 0) {
-        Buffer = new char[size];
-        IsAllocated = true;
+        m_Buffer = new char[size];
+        m_IsAllocated = true;
     }
 }
 
@@ -50,12 +50,12 @@ RAMFileClass::~RAMFileClass()
 {
     Close();
 
-    IsOpen = false;
+    m_IsOpen = false;
 
-    if (IsAllocated) {
-        delete[] Buffer;
-        Buffer = nullptr;
-        IsAllocated = false;
+    if (m_IsAllocated) {
+        delete[] m_Buffer;
+        m_Buffer = nullptr;
+        m_IsAllocated = false;
     }
 }
 
@@ -72,7 +72,7 @@ const char *RAMFileClass::Set_Name(const char *filename)
 BOOL RAMFileClass::Create()
 {
     if (!Is_Open()) {
-        BufferAvailable = 0;
+        m_BufferAvailable = 0;
         return true;
     }
 
@@ -82,7 +82,7 @@ BOOL RAMFileClass::Create()
 BOOL RAMFileClass::Delete()
 {
     if (!Is_Open()) {
-        BufferAvailable = 0;
+        m_BufferAvailable = 0;
         return true;
     }
 
@@ -96,16 +96,16 @@ BOOL RAMFileClass::Is_Available(BOOL forced)
 
 BOOL RAMFileClass::Open(int rights)
 {
-    if (Buffer != nullptr || !Is_Open()) {
-        BufferOffset = 0;
-        BufferRights = rights;
-        IsOpen = true;
+    if (m_Buffer != nullptr || !Is_Open()) {
+        m_BufferOffset = 0;
+        m_BufferRights = rights;
+        m_IsOpen = true;
 
         // Treat as newly created file?
         if (rights == FM_WRITE) {
-            BufferAvailable = 0;
+            m_BufferAvailable = 0;
         } else {
-            BufferRights = FM_READ | FM_WRITE;
+            m_BufferRights = FM_READ | FM_WRITE;
         }
 
         return Is_Open();
@@ -123,11 +123,11 @@ int RAMFileClass::Read(void *buffer, int size)
 {
     DEBUG_ASSERT(buffer != nullptr);
 
-    if (Buffer && buffer && size) {
+    if (m_Buffer && buffer && size) {
         BOOL opened = false;
 
         if (Is_Open()) {
-            if (!(BufferRights & FM_READ)) {
+            if (!(m_BufferRights & FM_READ)) {
                 return 0;
             }
         } else {
@@ -135,10 +135,10 @@ int RAMFileClass::Read(void *buffer, int size)
             opened = true;
         }
 
-        size = std::min((int)(BufferSize - BufferOffset), size);
-        memmove(buffer, Buffer + BufferOffset, size);
-        BufferOffset += size;
-        BufferAvailable = std::max(BufferOffset, BufferAvailable);
+        size = std::min((int)(m_BufferSize - m_BufferOffset), size);
+        memmove(buffer, m_Buffer + m_BufferOffset, size);
+        m_BufferOffset += size;
+        m_BufferAvailable = std::max(m_BufferOffset, m_BufferAvailable);
 
         if (opened) {
             Close();
@@ -151,44 +151,44 @@ int RAMFileClass::Read(void *buffer, int size)
 
 off_t RAMFileClass::Seek(off_t offset, int whence)
 {
-    if (Buffer && Is_Open()) {
-        int buffer_end = BufferAvailable;
+    if (m_Buffer && Is_Open()) {
+        int buffer_end = m_BufferAvailable;
 
-        if (BufferRights & FM_WRITE) {
-            buffer_end = BufferSize;
+        if (m_BufferRights & FM_WRITE) {
+            buffer_end = m_BufferSize;
         }
 
         switch (whence) {
             case FS_SEEK_START:
-                BufferOffset = offset;
+                m_BufferOffset = offset;
                 break;
 
             case FS_SEEK_CURRENT:
-                BufferOffset += offset;
+                m_BufferOffset += offset;
                 break;
 
             case FS_SEEK_END:
-                BufferOffset = buffer_end + offset;
+                m_BufferOffset = buffer_end + offset;
                 break;
 
             default:
                 break;
         }
 
-        BufferOffset = std::min(std::max(BufferOffset, 0), buffer_end);
-        BufferAvailable = std::max(BufferAvailable, BufferOffset);
+        m_BufferOffset = std::min(std::max(m_BufferOffset, 0), buffer_end);
+        m_BufferAvailable = std::max(m_BufferAvailable, m_BufferOffset);
 
-        return BufferOffset;
+        return m_BufferOffset;
     }
-    return BufferOffset;
+    return m_BufferOffset;
 }
 
 off_t RAMFileClass::Size()
 {
-    DEBUG_ASSERT_PRINT(Buffer != nullptr, "Buffer is NULL while retrieving the size!");
+    DEBUG_ASSERT_PRINT(m_Buffer != nullptr, "m_Buffer is NULL while retrieving the size!");
 
-    if (Buffer != nullptr) {
-        return BufferAvailable;
+    if (m_Buffer != nullptr) {
+        return m_BufferAvailable;
     }
 
     return 0;
@@ -199,12 +199,12 @@ int RAMFileClass::Write(const void *buffer, int size)
     DEBUG_ASSERT(buffer != nullptr);
     DEBUG_ASSERT(size > 0);
 
-    if (Buffer && buffer && size) {
+    if (m_Buffer && buffer && size) {
         BOOL opened = false;
 
         if (Is_Open()) {
             // If we don't have the write bit set, return 0 as can't write any
-            if (!(BufferRights & FM_WRITE)) {
+            if (!(m_BufferRights & FM_WRITE)) {
                 return 0;
             }
         } else {
@@ -213,10 +213,10 @@ int RAMFileClass::Write(const void *buffer, int size)
         }
 
         // Adjust size if we are trying to write out of bounds
-        size = std::min(size, BufferSize - BufferOffset);
-        memmove(Buffer + BufferOffset, buffer, size);
-        BufferOffset += size;
-        BufferAvailable = std::max(BufferAvailable, BufferOffset);
+        size = std::min(size, m_BufferSize - m_BufferOffset);
+        memmove(m_Buffer + m_BufferOffset, buffer, size);
+        m_BufferOffset += size;
+        m_BufferAvailable = std::max(m_BufferAvailable, m_BufferOffset);
 
         if (opened) {
             Close();

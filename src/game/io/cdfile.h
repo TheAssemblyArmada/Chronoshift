@@ -29,17 +29,17 @@ private:
     // linked drive list
     struct SearchDriveType
     {
-        SearchDriveType() : m_next(nullptr), m_path(nullptr) {}
-        SearchDriveType(SearchDriveType *next, const char *path) : m_next(next), m_path(path) {}
+        SearchDriveType() : m_Next(nullptr), m_Path(nullptr) {}
+        SearchDriveType(SearchDriveType *next, const char *path) : m_Next(next), m_Path(path) {}
         ~SearchDriveType()
         {
-            if (m_path != nullptr) {
-                free((void *)m_path);
+            if (m_Path != nullptr) {
+                free((void *)m_Path);
             }
         }
 
-        SearchDriveType *m_next;
-        const char *m_path;
+        SearchDriveType *m_Next;
+        const char *m_Path;
     };
 public:
     CDFileClass();
@@ -49,7 +49,7 @@ public:
     virtual const char *Set_Name(const char *filename) override;
     virtual BOOL Open(int rights) override;
     virtual BOOL Open(const char *filename, int rights) override;
-    void Disable_Search_Drives(bool disable) { m_disableSearchDrives = disable; }
+    void Disable_Search_Drives(bool disable) { m_DisableSearchDrives = disable; }
 
     static void Refresh_Search_Drives();
     static int Set_Search_Drives(const char *path);
@@ -63,9 +63,9 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_disableSearchDrives : 1;
+    BOOL m_DisableSearchDrives : 1;
 #else
-    bool m_disableSearchDrives;
+    bool m_DisableSearchDrives;
 #endif
 
 private:

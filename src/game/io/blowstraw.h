@@ -24,7 +24,7 @@
 class BlowStraw : public Straw
 {
 public:
-    BlowStraw(StrawControl mode = STRAW_DECRYPT) : m_blowFish(nullptr), m_carryOver(0), m_mode(mode) {}
+    BlowStraw(StrawControl mode = STRAW_DECRYPT) : m_BlowFish(nullptr), m_Carryover(0), m_Mode(mode) {}
     virtual ~BlowStraw();
 
     virtual int Get(void *buffer, int length) override;
@@ -32,10 +32,10 @@ public:
     void Key(void *key, int key_size);
 
 private:
-    BlowfishEngine *m_blowFish;
-    char m_currentBlock[BF_BLOCKSIZE];
-    int m_carryOver;
-    StrawControl m_mode;
+    BlowfishEngine *m_BlowFish;
+    char m_CurrentBlock[BF_BLOCKSIZE];
+    int m_Carryover;
+    StrawControl m_Mode;
 };
 
 #endif // BLOWSTRAW_H

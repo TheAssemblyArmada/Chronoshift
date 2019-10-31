@@ -24,17 +24,17 @@
 class Base64Pipe : public Pipe
 {
 public:
-    Base64Pipe(PipeControl control = PIPE_ENCODE) : m_mode(control), m_counter(0) {}
+    Base64Pipe(PipeControl control = PIPE_ENCODE) : m_Mode(control), m_Counter(0) {}
     virtual ~Base64Pipe() {}
 
     virtual int Flush() override;
     virtual int Put(const void *source, int slen) override;
 
 private:
-    PipeControl m_mode;
-    int m_counter;
-    char m_cBuffer[4];
-    char m_pBuffer[3];
+    PipeControl m_Mode;
+    int m_Counter;
+    char m_CBuffer[4];
+    char m_PBuffer[3];
 };
 
 #endif // BASE64PIPE_H

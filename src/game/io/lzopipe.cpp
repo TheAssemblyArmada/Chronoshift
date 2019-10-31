@@ -28,26 +28,26 @@ using std::memcpy;
 #endif
 
 LZOPipe::LZOPipe(PipeControl mode, int size) :
-    m_mode(mode),
-    m_dataInBuffer(0),
-    m_inBuffer(nullptr),
-    m_outBuffer(nullptr),
-    m_blockSize(size),
-    m_maxBlockSize(size),
-    m_compressedBytes(-1),
-    m_uncompressedBytes(0)
+    m_Mode(mode),
+    m_DataInBuffer(0),
+    m_InBuffer(nullptr),
+    m_OutBuffer(nullptr),
+    m_BlockSize(size),
+    m_MaxBlockSize(size),
+    m_CompressedBytes(-1),
+    m_UncompressedBytes(0)
 {
-    m_inBuffer = new uint8_t[m_maxBlockSize + m_blockSize];
-    m_outBuffer = new uint8_t[m_maxBlockSize + m_blockSize];
+    m_InBuffer = new uint8_t[m_MaxBlockSize + m_BlockSize];
+    m_OutBuffer = new uint8_t[m_MaxBlockSize + m_BlockSize];
 }
 
 LZOPipe::~LZOPipe()
 {
-    delete[] m_inBuffer;
-    m_inBuffer = nullptr;
+    delete[] m_InBuffer;
+    m_InBuffer = nullptr;
 
-    delete[] m_outBuffer;
-    m_outBuffer = nullptr;
+    delete[] m_OutBuffer;
+    m_OutBuffer = nullptr;
 }
 
 /**
@@ -61,27 +61,27 @@ int LZOPipe::Put(const void *source, int length)
         return Pipe::Put(source, length);
     }
 
-    DEBUG_ASSERT(m_inBuffer != nullptr);
+    DEBUG_ASSERT(m_InBuffer != nullptr);
 
     uint8_t const *src = static_cast<uint8_t const *>(source);
 
-    if (m_mode == PIPE_UNCOMPRESS) {
+    if (m_Mode == PIPE_UNCOMPRESS) {
         while (length > 0) {
-            if (m_compressedBytes == -1) {
-                int datasize = std::min(length, 4 - m_dataInBuffer);
+            if (m_CompressedBytes == -1) {
+                int datasize = std::min(length, 4 - m_DataInBuffer);
 
-                memcpy(m_inBuffer + m_dataInBuffer, src, datasize);
+                memcpy(m_InBuffer + m_DataInBuffer, src, datasize);
                 src += datasize;
-                m_dataInBuffer += datasize;
+                m_DataInBuffer += datasize;
                 length -= datasize;
 
                 // On disk format is little endian so need to convert.
-                if (m_dataInBuffer == 4) {
+                if (m_DataInBuffer == 4) {
                     int16_t tmp[2];
-                    memcpy(tmp, m_inBuffer, sizeof(tmp));
-                    m_compressedBytes = le16toh(tmp[0]);
-                    m_uncompressedBytes = le16toh(tmp[1]);
-                    m_dataInBuffer = 0;
+                    memcpy(tmp, m_InBuffer, sizeof(tmp));
+                    m_CompressedBytes = le16toh(tmp[0]);
+                    m_UncompressedBytes = le16toh(tmp[1]);
+                    m_DataInBuffer = 0;
                 }
             }
 
@@ -89,78 +89,78 @@ int LZOPipe::Put(const void *source, int length)
                 break;
             }
 
-            int bytesloaded = std::min(length, m_compressedBytes - m_dataInBuffer);
+            int bytesloaded = std::min(length, m_CompressedBytes - m_DataInBuffer);
 
-            memcpy(m_inBuffer + m_dataInBuffer, src, bytesloaded);
-            m_dataInBuffer += bytesloaded;
+            memcpy(m_InBuffer + m_DataInBuffer, src, bytesloaded);
+            m_DataInBuffer += bytesloaded;
             length -= bytesloaded;
             src += bytesloaded;
 
             // If we have a complete compressed chunk, decompress it.
-            if (m_dataInBuffer == m_compressedBytes) {
+            if (m_DataInBuffer == m_CompressedBytes) {
                 lzo_uint outsize = 4;
-                lzo1x_decompress(m_inBuffer, m_compressedBytes, m_outBuffer, &outsize, nullptr);
-                putbytes += Pipe::Put(m_outBuffer, m_uncompressedBytes);
-                m_dataInBuffer = 0;
-                m_compressedBytes = -1;
+                lzo1x_decompress(m_InBuffer, m_CompressedBytes, m_OutBuffer, &outsize, nullptr);
+                putbytes += Pipe::Put(m_OutBuffer, m_UncompressedBytes);
+                m_DataInBuffer = 0;
+                m_CompressedBytes = -1;
             }
         }
     } else {
         // Check if we already have some buffered data that wasn't enough for a
         // whole compressed chunk.
-        if (m_dataInBuffer > 0) {
-            int datasize = std::min(length, m_blockSize - m_dataInBuffer);
+        if (m_DataInBuffer > 0) {
+            int datasize = std::min(length, m_BlockSize - m_DataInBuffer);
 
-            memcpy(m_inBuffer + m_dataInBuffer, src, datasize);
+            memcpy(m_InBuffer + m_DataInBuffer, src, datasize);
             src += datasize;
-            m_dataInBuffer += datasize;
+            m_DataInBuffer += datasize;
             length -= datasize;
 
             // When we have enough data buffered for a complete chunk, proceed
             // to compress.
-            if (m_dataInBuffer == m_blockSize) {
+            if (m_DataInBuffer == m_BlockSize) {
                 lzo_uint outsize = 4;
                 uint8_t *workmem = new uint8_t[0x10000];
-                lzo1x_1_compress(m_inBuffer, m_dataInBuffer, m_outBuffer, &outsize, workmem);
+                lzo1x_1_compress(m_InBuffer, m_DataInBuffer, m_OutBuffer, &outsize, workmem);
                 delete[] workmem;
-                m_uncompressedBytes = m_blockSize;
-                m_compressedBytes = outsize;
+                m_UncompressedBytes = m_BlockSize;
+                m_CompressedBytes = outsize;
                 
                 // On disk format is little endian so need to convert.
                 int16_t tmp[2];
-                tmp[0] = htole16(m_compressedBytes);
-                tmp[1] = htole16(m_uncompressedBytes);
+                tmp[0] = htole16(m_CompressedBytes);
+                tmp[1] = htole16(m_UncompressedBytes);
                 putbytes += Pipe::Put(tmp, sizeof(tmp));
-                putbytes += Pipe::Put(m_outBuffer, outsize);
-                m_dataInBuffer = 0;
+                putbytes += Pipe::Put(m_OutBuffer, outsize);
+                m_DataInBuffer = 0;
             }
         }
 
         // While we have more data than our block size, loop and keep
         // compressing in chunks.
-        while (length >= m_blockSize) {
+        while (length >= m_BlockSize) {
             lzo_uint outsize = 4;
             uint8_t *workmem = new uint8_t[0x10000];
-            lzo1x_1_compress(src, m_blockSize, m_outBuffer, &outsize, workmem);
+            lzo1x_1_compress(src, m_BlockSize, m_OutBuffer, &outsize, workmem);
             delete[] workmem;
-            m_uncompressedBytes = m_blockSize;
-            m_compressedBytes = outsize;
-            src += m_blockSize;
-            length -= m_blockSize;
+            m_UncompressedBytes = m_BlockSize;
+            m_CompressedBytes = outsize;
+            src += m_BlockSize;
+            length -= m_BlockSize;
             
             // On disk format is little endian so need to convert.
             int16_t tmp[2];
-            tmp[0] = htole16(m_compressedBytes);
-            tmp[1] = htole16(m_uncompressedBytes);
+            tmp[0] = htole16(m_CompressedBytes);
+            tmp[1] = htole16(m_UncompressedBytes);
             putbytes += Pipe::Put(tmp, sizeof(tmp));
-            putbytes += Pipe::Put(m_outBuffer, outsize);
+            putbytes += Pipe::Put(m_OutBuffer, outsize);
         }
 
         // If we still have data left but not enough for a block, buffer it for
         // the next call or flush.
         if (length > 0) {
-            memcpy(m_inBuffer, src, length);
-            m_dataInBuffer = length;
+            memcpy(m_InBuffer, src, length);
+            m_DataInBuffer = length;
         }
     }
 
@@ -174,40 +174,40 @@ int LZOPipe::Flush()
 {
     int putbytes = 0;
 
-    if (m_dataInBuffer > 0) {
-        if (m_mode == PIPE_UNCOMPRESS) {
-            if (m_compressedBytes == -1) {
-                putbytes = Pipe::Put(m_inBuffer, m_dataInBuffer);
-                m_dataInBuffer = 0;
+    if (m_DataInBuffer > 0) {
+        if (m_Mode == PIPE_UNCOMPRESS) {
+            if (m_CompressedBytes == -1) {
+                putbytes = Pipe::Put(m_InBuffer, m_DataInBuffer);
+                m_DataInBuffer = 0;
             }
 
-            if (m_dataInBuffer > 0) {
+            if (m_DataInBuffer > 0) {
                 // On disk format is little endian so need to convert.
                 int16_t tmp[2];
-                tmp[0] = htole16(m_compressedBytes);
-                tmp[1] = htole16(m_uncompressedBytes);
+                tmp[0] = htole16(m_CompressedBytes);
+                tmp[1] = htole16(m_UncompressedBytes);
                 putbytes += Pipe::Put(tmp, sizeof(tmp));
-                putbytes += Pipe::Put(m_inBuffer, m_dataInBuffer);
-                m_dataInBuffer = 0;
-                m_compressedBytes = -1;
+                putbytes += Pipe::Put(m_InBuffer, m_DataInBuffer);
+                m_DataInBuffer = 0;
+                m_CompressedBytes = -1;
             }
 
         } else {
             lzo_uint outsize = 4;
             uint8_t *workmem = new uint8_t[0x10000];
-            lzo1x_1_compress(m_inBuffer, m_dataInBuffer, m_outBuffer, &outsize, workmem);
+            lzo1x_1_compress(m_InBuffer, m_DataInBuffer, m_OutBuffer, &outsize, workmem);
             delete[] workmem;
 
-            m_compressedBytes = outsize;
-            m_uncompressedBytes = m_dataInBuffer;
+            m_CompressedBytes = outsize;
+            m_UncompressedBytes = m_DataInBuffer;
             
             // On disk format is little endian so need to convert.
             int16_t tmp[2];
-            tmp[0] = htole16(m_compressedBytes);
-            tmp[1] = htole16(m_uncompressedBytes);
+            tmp[0] = htole16(m_CompressedBytes);
+            tmp[1] = htole16(m_UncompressedBytes);
             putbytes += Pipe::Put(tmp, sizeof(tmp));
-            putbytes += Pipe::Put(m_outBuffer, outsize);
-            m_dataInBuffer = 0;
+            putbytes += Pipe::Put(m_OutBuffer, outsize);
+            m_DataInBuffer = 0;
         }
     }
 

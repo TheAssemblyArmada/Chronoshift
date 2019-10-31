@@ -31,12 +31,12 @@ public:
     virtual int Put(const void *buffer, int length) override;
 
 private:
-    PipeControl Mode;
-    int LineLength;
-    int Carryover;
-    int Remaining;
-    uint8_t *InBuffer;
-    uint8_t *OutBuffer;
+    PipeControl m_Mode;
+    int m_LineLength;
+    int m_Carryover;
+    int m_Remaining;
+    uint8_t *m_InBuffer;
+    uint8_t *m_OutBuffer;
 };
 
 #endif // PCXPIPE_H

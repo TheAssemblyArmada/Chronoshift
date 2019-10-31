@@ -19,15 +19,15 @@
 #include <algorithm>
 
 PKStraw::PKStraw(StrawControl mode, Straw &rstraw) :
-    m_changeKey(true),
-    m_cryptRandom(rstraw),
-    m_blowFish(mode),
-    m_mode(mode),
-    m_rsaKey(nullptr),
-    m_encryptedKeyLength(0),
-    m_carryOver(0)
+    m_ChangeKey(true),
+    m_CryptRandom(rstraw),
+    m_BlowFish(mode),
+    m_Mode(mode),
+    m_RSAKey(nullptr),
+    m_EncryptedKeyLength(0),
+    m_Carryover(0)
 {
-    Get_From(&m_blowFish);
+    Get_From(&m_BlowFish);
 }
 
 /**
@@ -42,14 +42,14 @@ int PKStraw::Get(void *buffer, int length)
     char *outbuff = static_cast<char *>(buffer);
     int getcount = 0;
 
-    if (buffer == nullptr || length < 1 || m_rsaKey == nullptr) {
+    if (buffer == nullptr || length < 1 || m_RSAKey == nullptr) {
         Straw::Get(buffer, length);
     }
 
     // If we have a key change, then we need to get a new key from the
     // stream and decrypt it, or else generate one depending on the mode.
-    if (m_changeKey) {
-        if (m_mode == STRAW_DECRYPT) {
+    if (m_ChangeKey) {
+        if (m_Mode == STRAW_DECRYPT) {
             // Retrieve the cypher text version of the blowfish key from the
             // stream.
             int bytes_retrieved = Straw::Get(byte_buff, Encrypted_Key_Length());
@@ -61,34 +61,34 @@ int PKStraw::Get(void *buffer, int length)
                 return 0;
             }
 
-            m_rsaKey->Decrypt(byte_buff, bytes_retrieved, m_cryptoBuffer);
+            m_RSAKey->Decrypt(byte_buff, bytes_retrieved, m_CryptoBuffer);
 
             // Set Blowfish key on the underlying straw.
-            m_blowFish.Key(m_cryptoBuffer, BF_MAX_KEY_LENGTH);
+            m_BlowFish.Key(m_CryptoBuffer, BF_MAX_KEY_LENGTH);
         } else {
             // This generates the blowfish key for making a mix file header
             memset(byte_buff, 0, sizeof(byte_buff));
-            m_cryptRandom.Get(byte_buff, BF_MAX_KEY_LENGTH);
+            m_CryptRandom.Get(byte_buff, BF_MAX_KEY_LENGTH);
 
             // Encrypt the generated key with RSA.
-            m_carryOver = m_rsaKey->Encrypt(byte_buff, Plain_Key_Length(), m_cryptoBuffer);
-            m_encryptedKeyLength = m_carryOver;
+            m_Carryover = m_RSAKey->Encrypt(byte_buff, Plain_Key_Length(), m_CryptoBuffer);
+            m_EncryptedKeyLength = m_Carryover;
 
             // Set Blowfish key on the underlying straw.
-            m_blowFish.Key(byte_buff, BF_MAX_KEY_LENGTH);
+            m_BlowFish.Key(byte_buff, BF_MAX_KEY_LENGTH);
         }
 
-        m_changeKey = false;
+        m_ChangeKey = false;
     }
 
     // If there is data waiting to be sent to the output buffer, send it now.
-    if (m_carryOver > 0) {
-        int tocopy = std::min(length, m_carryOver); // length >= m_carryOver ? m_carryOver : length;
+    if (m_Carryover > 0) {
+        int tocopy = std::min(length, m_Carryover); // length >= m_carryOver ? m_carryOver : length;
 
-        memmove(outbuff, &m_cryptoBuffer[m_encryptedKeyLength - m_carryOver], tocopy);
+        memmove(outbuff, &m_CryptoBuffer[m_EncryptedKeyLength - m_Carryover], tocopy);
 
         outbuff += tocopy;
-        m_carryOver -= tocopy;
+        m_Carryover -= tocopy;
         length -= tocopy;
         getcount += tocopy;
     }
@@ -101,8 +101,8 @@ int PKStraw::Get(void *buffer, int length)
 */
 void PKStraw::Get_From(Straw *straw)
 {
-    m_blowFish.Get_From(straw);
-    Straw::Get_From(&m_blowFish);
+    m_BlowFish.Get_From(straw);
+    Straw::Get_From(&m_BlowFish);
 }
 
 /**
@@ -110,16 +110,16 @@ void PKStraw::Get_From(Straw *straw)
 */
 void PKStraw::Key(PKey *key)
 {
-    m_rsaKey = key;
+    m_RSAKey = key;
 
     // Check if the Key is valid so we can flag for a key change.
-    if (m_rsaKey != nullptr) {
-        m_changeKey = true;
+    if (m_RSAKey != nullptr) {
+        m_ChangeKey = true;
     }
 
     // Reset Blowfish.
-    m_encryptedKeyLength = 0;
-    m_carryOver = 0;
+    m_EncryptedKeyLength = 0;
+    m_Carryover = 0;
 }
 
 /**
@@ -127,8 +127,8 @@ void PKStraw::Key(PKey *key)
 */
 int PKStraw::Encrypted_Key_Length() const
 {
-    if (m_rsaKey) {
-        return (((m_rsaKey->Get_Key_Length() - 1) / 8 + 1) * (55 / ((m_rsaKey->Get_Key_Length() - 1) / 8) + 1));
+    if (m_RSAKey) {
+        return (((m_RSAKey->Get_Key_Length() - 1) / 8 + 1) * (55 / ((m_RSAKey->Get_Key_Length() - 1) / 8) + 1));
     }
 
     return 0;
@@ -139,8 +139,8 @@ int PKStraw::Encrypted_Key_Length() const
 */
 int PKStraw::Plain_Key_Length() const
 {
-    if (m_rsaKey) {
-        return ((m_rsaKey->Get_Key_Length() - 1) / 8 * (55 / ((m_rsaKey->Get_Key_Length() - 1) / 8) + 1));
+    if (m_RSAKey) {
+        return ((m_RSAKey->Get_Key_Length() - 1) / 8 * (55 / ((m_RSAKey->Get_Key_Length() - 1) / 8) + 1));
     }
 
     return 0;
