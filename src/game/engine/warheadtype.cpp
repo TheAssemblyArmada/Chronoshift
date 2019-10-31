@@ -29,33 +29,33 @@ TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;
  * 0x0058F9D8 Prototypes don't match but it fulfills same purpose, do not hook.
  */
 WarheadTypeClass::WarheadTypeClass(WarheadType warhead, const char *name) :
-    Type(warhead),
-    Name(name),
-    Spread(1),
-    Wall(false),
-    Wood(false),
-    Ore(false),
-    UnkBool(false),
-    Explosion(0),
-    Death(0)
+    m_Type(warhead),
+    m_Name(name),
+    m_Spread(1),
+    m_Wall(false),
+    m_Wood(false),
+    m_Ore(false),
+    m_UnkBool(false),
+    m_Explosion(0),
+    m_Death(0)
 {
     for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
-        Verses[armor] = fixed_t(1, 1);
+        m_Verses[armor] = fixed_t(1, 1);
     }
 }
 
 WarheadTypeClass::WarheadTypeClass(WarheadTypeClass const &that) :
-    Type(that.Type),
-    Name(that.Name),
-    Spread(that.Spread),
-    Wall(that.Wall),
-    Wood(that.Wood),
-    Ore(that.Ore),
-    UnkBool(that.UnkBool),
-    Explosion(that.Explosion),
-    Death(that.Death)
+    m_Type(that.m_Type),
+    m_Name(that.m_Name),
+    m_Spread(that.m_Spread),
+    m_Wall(that.m_Wall),
+    m_Wood(that.m_Wood),
+    m_Ore(that.m_Ore),
+    m_UnkBool(that.m_UnkBool),
+    m_Explosion(that.m_Explosion),
+    m_Death(that.m_Death)
 {
-    memcpy(Verses, that.Verses, sizeof(Verses));
+    memcpy(m_Verses, that.m_Verses, sizeof(m_Verses));
 }
 
 /**
@@ -119,7 +119,7 @@ WarheadType WarheadTypeClass::From_Name(const char *name)
  */
 const char *WarheadTypeClass::Name_From(WarheadType type)
 {
-    return type != WARHEAD_NONE && type < WARHEAD_COUNT ? As_Reference(type).Name : "<none>";
+    return type != WARHEAD_NONE && type < WARHEAD_COUNT ? As_Reference(type).m_Name : "<none>";
 }
 
 /**
@@ -157,13 +157,13 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
     char verses_buffer[128];
     char verses_format_buffer[128];
 
-    if (ini.Find_Section(Name) != nullptr) {
-        Spread = ini.Get_Int(Name, "Spread", Spread);
-        Wall = ini.Get_Bool(Name, "Wall", Wall);
-        Wood = ini.Get_Bool(Name, "Wood", Wood);
-        Ore = ini.Get_Bool(Name, "Ore", Ore);
-        Explosion = ini.Get_Int(Name, "Explosion", Explosion);
-        Death = ini.Get_Int(Name, "InfDeath", Death);
+    if (ini.Find_Section(m_Name) != nullptr) {
+        m_Spread = ini.Get_Int(m_Name, "Spread", m_Spread);
+        m_Wall = ini.Get_Bool(m_Name, "Wall", m_Wall);
+        m_Wood = ini.Get_Bool(m_Name, "Wood", m_Wood);
+        m_Ore = ini.Get_Bool(m_Name, "Ore", m_Ore);
+        m_Explosion = ini.Get_Int(m_Name, "Explosion", m_Explosion);
+        m_Death = ini.Get_Int(m_Name, "InfDeath", m_Death);
 
         // NOTE: If you add or remove from the ArmorTypes, you need to change VERSUS_FORMAT!
         // Build the verses format based on the armor count.
@@ -177,16 +177,16 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
             }
         }
 
-        if (ini.Get_String(Name, "Verses", verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
+        if (ini.Get_String(m_Name, "Verses", verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
             char *value = strtok(verses_buffer, ",");
             for (ArmorType armor = ARMOR_FIRST; (armor < ARMOR_COUNT) && (value != nullptr); ++armor) {
                 DEBUG_ASSERT(value != nullptr);
-                Verses[armor] = fixed_t(value);
+                m_Verses[armor] = fixed_t(value);
                 value = strtok(nullptr, ",");
             }
         }
 
-        UnkBool = Verses[ARMOR_HEAVY] == fixed_t(0, 1);
+        m_UnkBool = m_Verses[ARMOR_HEAVY] == fixed_t(0, 1);
 
         return true;
     }

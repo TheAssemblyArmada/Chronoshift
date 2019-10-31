@@ -31,47 +31,47 @@ TFixedIHeapClass<WeaponTypeClass> g_WeaponTypes;
  * 0x0058FD98 Prototypes don't match but it fulfills same purpose, do not hook.
  */
 WeaponTypeClass::WeaponTypeClass(WeaponType weapon, const char *name) :
-    Type(weapon),
-    Name(name),
-    TurboBoost(false),
-    Supress(false),
-    Camera(false),
-    Charges(false),
-    Burst(1),
-    Projectile(nullptr),
-    Damage(0),
-    Speed(MPH_MIN),
-    Warhead(nullptr),
-    ROF(0),
-    Range(0),
-    Report(VOC_NONE),
-    Anim(ANIM_NONE)
+    m_Type(weapon),
+    m_Name(name),
+    m_TurboBoost(false),
+    m_Supress(false),
+    m_Camera(false),
+    m_Charges(false),
+    m_Burst(1),
+    m_Projectile(nullptr),
+    m_Damage(0),
+    m_Speed(MPH_MIN),
+    m_Warhead(nullptr),
+    m_ROF(0),
+    m_Range(0),
+    m_Report(VOC_NONE),
+    m_Anim(ANIM_NONE)
 {
 }
 
 WeaponTypeClass::~WeaponTypeClass()
 {
-    Name = nullptr;
-    Projectile = nullptr;
-    Warhead = nullptr;
+    m_Name = nullptr;
+    m_Projectile = nullptr;
+    m_Warhead = nullptr;
 }
 
 WeaponTypeClass::WeaponTypeClass(WeaponTypeClass const &that) :
-    Type(that.Type),
-    Name(that.Name),
-    TurboBoost(that.TurboBoost),
-    Supress(that.Supress),
-    Camera(that.Camera),
-    Charges(that.Charges),
-    Burst(that.Burst),
-    Projectile(that.Projectile),
-    Damage(that.Damage),
-    Speed(that.Speed),
-    Warhead(that.Warhead),
-    ROF(that.ROF),
-    Range(that.Range),
-    Report(that.Report),
-    Anim(that.Anim)
+    m_Type(that.m_Type),
+    m_Name(that.m_Name),
+    m_TurboBoost(that.m_TurboBoost),
+    m_Supress(that.m_Supress),
+    m_Camera(that.m_Camera),
+    m_Charges(that.m_Charges),
+    m_Burst(that.m_Burst),
+    m_Projectile(that.m_Projectile),
+    m_Damage(that.m_Damage),
+    m_Speed(that.m_Speed),
+    m_Warhead(that.m_Warhead),
+    m_ROF(that.m_ROF),
+    m_Range(that.m_Range),
+    m_Report(that.m_Report),
+    m_Anim(that.m_Anim)
 {
 }
 
@@ -170,7 +170,7 @@ WeaponType WeaponTypeClass::From_Name(const char *name)
  */
 const char *WeaponTypeClass::Name_From(WeaponType weapon)
 {
-    return weapon != WEAPON_NONE && weapon < WEAPON_COUNT ? As_Reference(weapon).Name : "<none>";
+    return weapon != WEAPON_NONE && weapon < WEAPON_COUNT ? As_Reference(weapon).m_Name : "<none>";
 }
 
 /**
@@ -205,22 +205,22 @@ WeaponTypeClass *WeaponTypeClass::As_Pointer(WeaponType type)
  */
 BOOL WeaponTypeClass::Read_INI(GameINIClass &ini)
 {
-    if (ini.Find_Section(Name) != nullptr) {
-        Supress = ini.Get_Bool(Name, "Supress", Supress);
-        Burst = ini.Get_Int(Name, "Burst", Burst);
-        Damage = ini.Get_Int(Name, "Damage", Damage);
-        Speed = ini.Get_MPHType(Name, "Speed", Speed);
-        ROF = ini.Get_Int(Name, "ROF", ROF);
-        Range = ini.Get_Lepton(Name, "Range", Range);
-        Report = ini.Get_VocType(Name, "Report", Report);
-        Anim = ini.Get_AnimType(Name, "Anim", Anim);
-        Camera = ini.Get_Bool(Name, "Camera", Camera);
-        Charges = ini.Get_Bool(Name, "Charges", Charges);
-        TurboBoost = ini.Get_Bool(Name, "TurboBoost", TurboBoost);
-        Warhead = WarheadTypeClass::As_Pointer(ini.Get_WarheadType(
-            Name, "Warhead", (Warhead != nullptr ? Warhead->What_Type() : WARHEAD_NONE)));
-        Projectile = BulletTypeClass::As_Pointer(ini.Get_BulletType(
-            Name, "Projectile", (Projectile != nullptr ? Projectile->What_Type() : BULLET_NONE)));
+    if (ini.Find_Section(m_Name) != nullptr) {
+        m_Supress = ini.Get_Bool(m_Name, "Supress", m_Supress);
+        m_Burst = ini.Get_Int(m_Name, "Burst", m_Burst);
+        m_Damage = ini.Get_Int(m_Name, "Damage", m_Damage);
+        m_Speed = ini.Get_MPHType(m_Name, "Speed", m_Speed);
+        m_ROF = ini.Get_Int(m_Name, "ROF", m_ROF);
+        m_Range = ini.Get_Lepton(m_Name, "Range", m_Range);
+        m_Report = ini.Get_VocType(m_Name, "Report", m_Report);
+        m_Anim = ini.Get_AnimType(m_Name, "Anim", m_Anim);
+        m_Camera = ini.Get_Bool(m_Name, "Camera", m_Camera);
+        m_Charges = ini.Get_Bool(m_Name, "Charges", m_Charges);
+        m_TurboBoost = ini.Get_Bool(m_Name, "TurboBoost", m_TurboBoost);
+        m_Warhead = WarheadTypeClass::As_Pointer(ini.Get_WarheadType(
+            m_Name, "Warhead", (m_Warhead != nullptr ? m_Warhead->What_Type() : WARHEAD_NONE)));
+        m_Projectile = BulletTypeClass::As_Pointer(ini.Get_BulletType(
+            m_Name, "Projectile", (m_Projectile != nullptr ? m_Projectile->What_Type() : BULLET_NONE)));
 
         return true;
     }
@@ -237,11 +237,11 @@ ThreatType WeaponTypeClass::Allowed_Threats() const
 {
     ThreatType threat = THREAT_ANY;
 
-    if (Projectile->Is_Anti_Air()) {
+    if (m_Projectile->Is_Anti_Air()) {
         threat = THREAT_AIRCRAFT;
     }
 
-    if (Projectile->Is_Anti_Ground()) {
+    if (m_Projectile->Is_Anti_Ground()) {
         threat |= (THREAT_INFANTRY | THREAT_VEHICLE | THREAT_BUILDING | THREAT_VESSEL);
     }
 
@@ -255,5 +255,5 @@ ThreatType WeaponTypeClass::Allowed_Threats() const
  */
 BOOL WeaponTypeClass::Is_Wall_Destroyer() const
 {
-    return Warhead != nullptr && Warhead->Is_Wall_Destroyer();
+    return m_Warhead != nullptr && m_Warhead->Is_Wall_Destroyer();
 }
