@@ -149,10 +149,10 @@ void OverlayTypeClass::Init(TheaterType theater)
                 "%s.%s",
                 overlay.m_Name,
                 overlay.Theater ? g_theaters[theater].ext : "shp");
-            overlay.ImageData = GameFileClass::Retrieve(filename);
+            overlay.m_ImageData = GameFileClass::Retrieve(filename);
 
             g_isTheaterShape = overlay.Theater;
-            overlay.RadarIconData = Get_Radar_Icon(overlay.ImageData, 0, -1, 3);
+            overlay.m_RadarIconData = Get_Radar_Icon(overlay.m_ImageData, 0, -1, 3);
             g_isTheaterShape = false;
         }
     }
@@ -178,7 +178,7 @@ void OverlayTypeClass::Prep_For_Add()
     for (OverlayType i = OVERLAY_FIRST; i < OVERLAY_COUNT; ++i) {
         OverlayTypeClass *otptr = As_Pointer(i);
         if (otptr != nullptr) {
-            if (otptr->ImageData != nullptr) {
+            if (otptr->m_ImageData != nullptr) {
                 if (!otptr->Wall && (!otptr->Ore || i == OVERLAY_GOLD_01 || i == OVERLAY_GEM_01)) {
                     Map.Add_To_List(otptr);
                 }
@@ -232,9 +232,9 @@ const int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
 
 void OverlayTypeClass::Draw_It(int x, int y, int frame) const
 {
-    if (ImageData != nullptr) {
+    if (m_ImageData != nullptr) {
         g_isTheaterShape = Theater;
-        CC_Draw_Shape(ImageData,
+        CC_Draw_Shape(m_ImageData,
             frame,
             x + Map.Tac_Offset_X() + 12,
             y + Map.Tac_Offset_Y() + 12,
@@ -248,11 +248,11 @@ void OverlayTypeClass::Draw_It(int x, int y, int frame) const
 
 uint8_t *OverlayTypeClass::Radar_Icon(int frame) const
 {
-    if (RadarIconData != nullptr) {
+    if (m_RadarIconData != nullptr) {
         // TODO, correct casting, find out what stuct it is casting to.
         // Each radar icon is 3 x 3 bytes (hence 9 * frame number to get to relevant frame).
         // + 2 appears to account for some kind of header for when the data is generated.
-        return (static_cast<uint8_t *>(RadarIconData) + 9 * frame + 2);
+        return (static_cast<uint8_t *>(m_RadarIconData) + 9 * frame + 2);
     }
 
     return nullptr;

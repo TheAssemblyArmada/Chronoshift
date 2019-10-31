@@ -141,7 +141,7 @@ coord_t BuildingTypeClass::Coord_Fixup(coord_t coord) const
  */
 int BuildingTypeClass::Full_Name() const
 {
-    if (g_InMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type < BUILDING_V01 || m_Type > BUILDING_V37) {
+    if (g_InMapEditor || !m_IsNominal || Rule.Named_Civilians() || m_Type < BUILDING_V01 || m_Type > BUILDING_V37) {
         return AbstractTypeClass::Full_Name();
     }
 
@@ -545,15 +545,15 @@ void BuildingTypeClass::One_Time()
     for (BuildingType i = BUILDING_FIRST; i < BUILDING_COUNT; ++i) {
         BuildingTypeClass &building = As_Reference(i);
 
-        char const *name = (building.ImageName[0] != '\0' ? building.ImageName : building.Get_Name());
+        char const *name = (building.m_ImageName[0] != '\0' ? building.m_ImageName : building.Get_Name());
 
-        if (building.TechLevel != -1) {
+        if (building.m_TechLevel != -1) {
             sprintf(filename, "%.4sicon.shp", name);
-            building.CameoData = GameFileClass::Retrieve(filename);
+            building.m_CameoData = GameFileClass::Retrieve(filename);
         }
 
         sprintf(filename, "%s.shp", name);
-        building.ImageData = GameFileClass::Retrieve(filename);
+        building.m_ImageData = GameFileClass::Retrieve(filename);
 
         sprintf(filename, "%.4smake.shp", name);
         building.m_BuildupData = GameFileClass::Retrieve(filename);
@@ -645,7 +645,7 @@ void BuildingTypeClass::Prep_For_Add()
     for (BuildingType i = BUILDING_FIRST; i < BUILDING_COUNT; ++i) {
         BuildingTypeClass *btptr = As_Pointer(i);
         if (btptr != nullptr) {
-            if (btptr->ImageData != nullptr) {
+            if (btptr->m_ImageData != nullptr) {
                 Map.Add_To_List(btptr);
             }
         }

@@ -40,86 +40,86 @@ TechnoTypeClass::TechnoTypeClass(RTTIType type, int id, int ui_name, const char 
     BOOL remapable, BOOL unk1, int rot_count, SpeedType speed) :
     ObjectTypeClass(
         type, id, true, radar_invisible, selectable, legal_target, insignificant, is_immune, unk1, ui_name, name),
-    Remap(altremap),
-    DoubleOwned(false),
-    IsInvisible(false),
-    IsLeader(false),
-    IsScanner(false),
-    IsNominal(nominal),
-    IsTheater(theater),
-    IsTurretEquipped(turret),
-    IsRepairable(true),
-    IsCrewed(false),
-    IsRemapable(remapable),
-    Cloakable(false),
-    IsSelfHealing(false),
-    Explodes(false),
-    MovementZone(MZONE_NORMAL),
-    GuardRange(0),
-    Passengers(0),
-    Sight(0),
-    Cost(0),
-    TechLevel(-1),
-    Prerequisite(0),
-    ThreatPosed(0),
-    ThreatPoints(0),
-    MPH((MPHType)0),
-    Speed(speed),
-    Ammo(-1),
-    Owner(OWNER_NONE),
-    CameoData(nullptr),
-    ROTCount(rot_count),
-    ROT(0),
-    Primary(nullptr),
-    Secondary(nullptr),
-    FireOffsetZ(fire_offset_z),
-    PrimaryFireOffsetX(pri_fire_off_x),
-    PrimaryFireOffsetY(pri_fire_off_y),
-    SecondaryFireOffsetX(sec_fire_off_x),
-    SecondaryFireOffsetY(sec_fire_off_y),
-    Points(0)
+    m_Remap(altremap),
+    m_DoubleOwned(false),
+    m_IsInvisible(false),
+    m_IsLeader(false),
+    m_IsScanner(false),
+    m_IsNominal(nominal),
+    m_IsTheater(theater),
+    m_IsTurretEquipped(turret),
+    m_IsRepairable(true),
+    m_IsCrewed(false),
+    m_IsRemapable(remapable),
+    m_Cloakable(false),
+    m_IsSelfHealing(false),
+    m_Explodes(false),
+    m_MovementZone(MZONE_NORMAL),
+    m_GuardRange(0),
+    m_Passengers(0),
+    m_Sight(0),
+    m_Cost(0),
+    m_TechLevel(-1),
+    m_Prerequisite(0),
+    m_ThreatPosed(0),
+    m_ThreatPoints(0),
+    m_MPH((MPHType)0),
+    m_Speed(speed),
+    m_Ammo(-1),
+    m_Owner(OWNER_NONE),
+    m_CameoData(nullptr),
+    m_ROTCount(rot_count),
+    m_ROT(0),
+    m_Primary(nullptr),
+    m_Secondary(nullptr),
+    m_FireOffsetZ(fire_offset_z),
+    m_PrimaryFireOffsetX(pri_fire_off_x),
+    m_PrimaryFireOffsetY(pri_fire_off_y),
+    m_SecondaryFireOffsetX(sec_fire_off_x),
+    m_SecondaryFireOffsetY(sec_fire_off_y),
+    m_Points(0)
 {
 }
 
 TechnoTypeClass::TechnoTypeClass(const TechnoTypeClass &that) :
     ObjectTypeClass(that),
-    Remap(that.Remap),
-    DoubleOwned(that.DoubleOwned),
-    IsInvisible(that.IsInvisible),
-    IsLeader(that.IsLeader),
-    IsScanner(that.IsScanner),
-    IsNominal(that.IsNominal),
-    IsTheater(that.IsTheater),
-    IsTurretEquipped(that.IsTurretEquipped),
-    IsRepairable(that.IsRepairable),
-    IsCrewed(that.IsCrewed),
-    IsRemapable(that.IsRemapable),
-    Cloakable(that.Cloakable),
-    IsSelfHealing(that.IsSelfHealing),
-    Explodes(that.Explodes),
-    MovementZone(that.MovementZone),
-    GuardRange(that.GuardRange),
-    Passengers(that.Passengers),
-    Sight(that.Sight),
-    Cost(that.Cost),
-    TechLevel(that.TechLevel),
-    Prerequisite(that.Prerequisite),
-    ThreatPosed(that.ThreatPosed),
-    ThreatPoints(that.ThreatPoints),
-    MPH(that.MPH),
-    Speed(that.Speed),
-    Owner(that.Owner),
-    CameoData(that.CameoData),
-    ROTCount(that.ROTCount),
-    ROT(that.ROT),
-    Primary(that.Primary),
-    Secondary(that.Secondary),
-    FireOffsetZ(that.FireOffsetZ),
-    PrimaryFireOffsetX(that.PrimaryFireOffsetX),
-    PrimaryFireOffsetY(that.PrimaryFireOffsetY),
-    SecondaryFireOffsetX(that.SecondaryFireOffsetX),
-    SecondaryFireOffsetY(that.SecondaryFireOffsetY),
-    Points(that.Points)
+    m_Remap(that.m_Remap),
+    m_DoubleOwned(that.m_DoubleOwned),
+    m_IsInvisible(that.m_IsInvisible),
+    m_IsLeader(that.m_IsLeader),
+    m_IsScanner(that.m_IsScanner),
+    m_IsNominal(that.m_IsNominal),
+    m_IsTheater(that.m_IsTheater),
+    m_IsTurretEquipped(that.m_IsTurretEquipped),
+    m_IsRepairable(that.m_IsRepairable),
+    m_IsCrewed(that.m_IsCrewed),
+    m_IsRemapable(that.m_IsRemapable),
+    m_Cloakable(that.m_Cloakable),
+    m_IsSelfHealing(that.m_IsSelfHealing),
+    m_Explodes(that.m_Explodes),
+    m_MovementZone(that.m_MovementZone),
+    m_GuardRange(that.m_GuardRange),
+    m_Passengers(that.m_Passengers),
+    m_Sight(that.m_Sight),
+    m_Cost(that.m_Cost),
+    m_TechLevel(that.m_TechLevel),
+    m_Prerequisite(that.m_Prerequisite),
+    m_ThreatPosed(that.m_ThreatPosed),
+    m_ThreatPoints(that.m_ThreatPoints),
+    m_MPH(that.m_MPH),
+    m_Speed(that.m_Speed),
+    m_Owner(that.m_Owner),
+    m_CameoData(that.m_CameoData),
+    m_ROTCount(that.m_ROTCount),
+    m_ROT(that.m_ROT),
+    m_Primary(that.m_Primary),
+    m_Secondary(that.m_Secondary),
+    m_FireOffsetZ(that.m_FireOffsetZ),
+    m_PrimaryFireOffsetX(that.m_PrimaryFireOffsetX),
+    m_PrimaryFireOffsetY(that.m_PrimaryFireOffsetY),
+    m_SecondaryFireOffsetX(that.m_SecondaryFireOffsetX),
+    m_SecondaryFireOffsetY(that.m_SecondaryFireOffsetY),
+    m_Points(that.m_Points)
 {
 }
 
@@ -127,43 +127,43 @@ TechnoTypeClass &TechnoTypeClass::operator=(TechnoTypeClass &that)
 {
     if (this != &that) {
         ObjectTypeClass::operator=(that);
-        Remap = that.Remap;
-        DoubleOwned = that.DoubleOwned;
-        IsInvisible = that.IsInvisible;
-        IsLeader = that.IsLeader;
-        IsScanner = that.IsScanner;
-        IsNominal = that.IsNominal;
-        IsTheater = that.IsTheater;
-        IsTurretEquipped = that.IsTurretEquipped;
-        IsRepairable = that.IsRepairable;
-        IsCrewed = that.IsCrewed;
-        IsRemapable = that.IsRemapable;
-        Cloakable = that.Cloakable;
-        IsSelfHealing = that.IsSelfHealing;
-        Explodes = that.Explodes;
-        MovementZone = that.MovementZone;
-        GuardRange = that.GuardRange;
-        Passengers = that.Passengers;
-        Sight = that.Sight;
-        Cost = that.Cost;
-        TechLevel = that.TechLevel;
-        Prerequisite = that.Prerequisite;
-        ThreatPosed = that.ThreatPosed;
-        ThreatPoints = that.ThreatPoints;
-        MPH = that.MPH;
-        Speed = that.Speed;
-        Owner = that.Owner;
-        CameoData = that.CameoData;
-        ROTCount = that.ROTCount;
-        ROT = that.ROT;
-        Primary = that.Primary;
-        Secondary = that.Secondary;
-        FireOffsetZ = that.FireOffsetZ;
-        PrimaryFireOffsetX = that.PrimaryFireOffsetX;
-        PrimaryFireOffsetY = that.PrimaryFireOffsetY;
-        SecondaryFireOffsetX = that.SecondaryFireOffsetX;
-        SecondaryFireOffsetY = that.SecondaryFireOffsetY;
-        Points = that.Points;
+        m_Remap = that.m_Remap;
+        m_DoubleOwned = that.m_DoubleOwned;
+        m_IsInvisible = that.m_IsInvisible;
+        m_IsLeader = that.m_IsLeader;
+        m_IsScanner = that.m_IsScanner;
+        m_IsNominal = that.m_IsNominal;
+        m_IsTheater = that.m_IsTheater;
+        m_IsTurretEquipped = that.m_IsTurretEquipped;
+        m_IsRepairable = that.m_IsRepairable;
+        m_IsCrewed = that.m_IsCrewed;
+        m_IsRemapable = that.m_IsRemapable;
+        m_Cloakable = that.m_Cloakable;
+        m_IsSelfHealing = that.m_IsSelfHealing;
+        m_Explodes = that.m_Explodes;
+        m_MovementZone = that.m_MovementZone;
+        m_GuardRange = that.m_GuardRange;
+        m_Passengers = that.m_Passengers;
+        m_Sight = that.m_Sight;
+        m_Cost = that.m_Cost;
+        m_TechLevel = that.m_TechLevel;
+        m_Prerequisite = that.m_Prerequisite;
+        m_ThreatPosed = that.m_ThreatPosed;
+        m_ThreatPoints = that.m_ThreatPoints;
+        m_MPH = that.m_MPH;
+        m_Speed = that.m_Speed;
+        m_Owner = that.m_Owner;
+        m_CameoData = that.m_CameoData;
+        m_ROTCount = that.m_ROTCount;
+        m_ROT = that.m_ROT;
+        m_Primary = that.m_Primary;
+        m_Secondary = that.m_Secondary;
+        m_FireOffsetZ = that.m_FireOffsetZ;
+        m_PrimaryFireOffsetX = that.m_PrimaryFireOffsetX;
+        m_PrimaryFireOffsetY = that.m_PrimaryFireOffsetY;
+        m_SecondaryFireOffsetX = that.m_SecondaryFireOffsetX;
+        m_SecondaryFireOffsetY = that.m_SecondaryFireOffsetY;
+        m_Points = that.m_Points;
     }
 
     return *this;
@@ -181,7 +181,7 @@ BOOL TechnoTypeClass::Is_Two_Shooter() const
     BOOL (*func)(const TechnoTypeClass *) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *)>(0x005698E8);
     return func(this);
 #elif 0
-    return Primary != nullptr && (Primary == Secondary || Primary->Burst > 1);
+    return m_Primary != nullptr && (m_Primary == m_Secondary || m_Primary->Burst > 1);
 #else
     return false;
 #endif
@@ -205,12 +205,12 @@ BOOL TechnoTypeClass::Legal_Placement(cell_t cellnum) const
             CellClass &cell = Map[offset_cellnum];
 
             if (What_Am_I() == RTTI_BUILDINGTYPE) {
-                if (!cell.Is_Clear_To_Build(Speed)) {
+                if (!cell.Is_Clear_To_Build(m_Speed)) {
                     return false;
                 }
 
             } else {
-                if (!cell.Is_Clear_To_Move(Speed, false, false, -1, MZONE_NORMAL)) {
+                if (!cell.Is_Clear_To_Move(m_Speed, false, false, -1, MZONE_NORMAL)) {
                     return false;
                 }
             }
@@ -229,11 +229,11 @@ BOOL TechnoTypeClass::Legal_Placement(cell_t cellnum) const
  */
 int TechnoTypeClass::Get_Ownable() const
 {
-    if (DoubleOwned && Session.Game_To_Play() != GAME_CAMPAIGN) {
-        return Owner | (SIDE_ALLIES | SIDE_SOVIET);
+    if (m_DoubleOwned && Session.Game_To_Play() != GAME_CAMPAIGN) {
+        return m_Owner | (SIDE_ALLIES | SIDE_SOVIET);
     }
 
-    return Owner;
+    return m_Owner;
 }
 
 /**
@@ -243,7 +243,7 @@ int TechnoTypeClass::Get_Ownable() const
  */
 int TechnoTypeClass::Time_To_Build() const
 {
-    return fixed_t(900, 1000) * Cost * Rule.Get_Build_Speed();
+    return fixed_t(900, 1000) * m_Cost * Rule.Get_Build_Speed();
 }
 
 /**
@@ -253,8 +253,8 @@ int TechnoTypeClass::Time_To_Build() const
  */
 void *TechnoTypeClass::Get_Cameo_Data() const
 {
-    if (CameoData != nullptr) {
-        return CameoData;
+    if (m_CameoData != nullptr) {
+        return m_CameoData;
     }
 
     // Enhancement backported from TS.
@@ -273,14 +273,14 @@ void *TechnoTypeClass::Get_Cameo_Data() const
 int TechnoTypeClass::Repair_Cost() const
 {
     if (Is_FootType()) {
-        return (Raw_Cost() / (Strength / Rule.Get_Unit_Repair_Step()))
+        return (Raw_Cost() / (m_Strength / Rule.Get_Unit_Repair_Step()))
             * Rule.Get_Unit_Repair_Percent(); // this code check if the result is greater than 1(.0), if so,
                                               // forces 1, see for TS/RA2 version
                                               // http://dc.strategy-x.com/src2/TechnoTypeClass/GetRepairStepCost.cpp needs
                                               // recoding for use with fixed *see (U)RepairPercent type.
     }
 
-    return (Raw_Cost() / (Strength / Rule.Get_Repair_Step()))
+    return (Raw_Cost() / (m_Strength / Rule.Get_Repair_Step()))
         * Rule.Get_Repair_Percent(); // same as above, but this is normal repair percent for buildings.
 }
 
@@ -312,23 +312,23 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
     return func(this, ini);
 #elif 0
     if (ObjectTypeClass::Read_INI(ini)) {
-        DoubleOwned = ini.Get_Bool(m_Name, "DoubleOwned", DoubleOwned);
-        GuardRange = ini.Get_Lepton(m_Name, "GuardRange", GuardRange);
-        Explodes = ini.Get_Bool(m_Name, "Explodes", Explodes);
-        Primary =
-            WeaponTypeClass::As_Pointer(ini.Get_WeaponType(m_Name, "Primary", (Primary ? Primary->Type : WEAPON_NONE)));
-        Secondary = WeaponTypeClass::As_Pointer(
-            ini.Get_WeaponType(m_Name, "Secondary", (Secondary ? Secondary->Type : WEAPON_NONE)));
-        Cloakable = ini.Get_Bool(m_Name, "Cloakable", Cloakable);
-        IsScanner = ini.Get_Bool(m_Name, "Sensors", IsScanner);
-        Prerequisite = ini.Get_Buildings(m_Name, "Prerequisite", Prerequisite);
-        Sight = ini.Get_Int(m_Name, "Sight", Sight);
-        TechLevel = ini.Get_Int(m_Name, "TechLevel", TechLevel);
+        m_DoubleOwned = ini.Get_Bool(m_Name, "DoubleOwned", m_DoubleOwned);
+        m_GuardRange = ini.Get_Lepton(m_Name, "GuardRange", m_GuardRange);
+        m_Explodes = ini.Get_Bool(m_Name, "Explodes", m_Explodes);
+        m_Primary =
+            WeaponTypeClass::As_Pointer(ini.Get_WeaponType(m_Name, "Primary", (m_Primary ? m_Primary->m_Type : WEAPON_NONE)));
+        m_Secondary = WeaponTypeClass::As_Pointer(
+            ini.Get_WeaponType(m_Name, "Secondary", (m_Secondary ? m_Secondary->m_Type : WEAPON_NONE)));
+        m_Cloakable = ini.Get_Bool(m_Name, "Cloakable", m_Cloakable);
+        m_IsScanner = ini.Get_Bool(m_Name, "Sensors", m_IsScanner);
+        m_Prerequisite = ini.Get_Buildings(m_Name, "Prerequisite", m_Prerequisite);
+        m_Sight = ini.Get_Int(m_Name, "Sight", m_Sight);
+        m_TechLevel = ini.Get_Int(m_Name, "TechLevel", m_TechLevel);
 
         // MPH
         // TODO, two versions of code, maybe we need to fix Get_MPH?, see GameINIClass
-        fixed_t def(MPH, 256);
-        int value = ini.Get_MPHType(m_Name, "Speed", MPH);
+        fixed_t def(m_MPH, 256);
+        int value = ini.Get_MPHType(m_Name, "Speed", m_MPH);
 
         if (value != -1) {
             value = Bound(value, 0, 100);
@@ -339,33 +339,33 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
                 retval = -1;
             }
 
-            MPH = (MPHType)retval;
+            m_MPH = (MPHType)retval;
         }
 
-        Cost = ini.Get_Int(m_Name, "Cost", Cost);
-        Ammo = ini.Get_Int(m_Name, "Ammo", Ammo);
-        Points = ini.Get_Int(m_Name, "Points", Points);
+        m_Cost = ini.Get_Int(m_Name, "Cost", m_Cost);
+        m_Ammo = ini.Get_Int(m_Name, "Ammo", m_Ammo);
+        m_Points = ini.Get_Int(m_Name, "Points", m_Points);
         Owner = ini.Get_Owners(m_Name, "Owner", Owner);
-        IsCrewed = ini.Get_Bool(m_Name, "Crewed", IsCrewed);
-        IsRepairable = ini.Get_Bool(m_Name, "Repairable", IsRepairable);
-        IsInvisible = ini.Get_Bool(m_Name, "Invisible", IsInvisible);
-        IsSelfHealing = ini.Get_Bool(m_Name, "SelfHealing", IsSelfHealing);
-        ROT = ini.Get_Int(m_Name, "ROT", ROT);
-        Passengers = ini.Get_Int(m_Name, "Passengers", Passengers);
+        m_IsCrewed = ini.Get_Bool(m_Name, "Crewed", m_IsCrewed);
+        m_IsRepairable = ini.Get_Bool(m_Name, "Repairable", m_IsRepairable);
+        m_IsInvisible = ini.Get_Bool(m_Name, "Invisible", m_IsInvisible);
+        m_IsSelfHealing = ini.Get_Bool(m_Name, "SelfHealing", m_IsSelfHealing);
+        m_ROT = ini.Get_Int(m_Name, "ROT", m_ROT);
+        m_Passengers = ini.Get_Int(m_Name, "Passengers", m_Passengers);
         
-        ThreatPoints = Points;
+        m_ThreatPoints = m_Points;
 
-        if (Primary != nullptr && Primary->Damage > 0) {
-            IsLeader = true;
+        if (m_Primary != nullptr && m_Primary->Damage > 0) {
+            m_IsLeader = true;
         } else {
-            IsLeader = false;
+            m_IsLeader = false;
         }
-        if (Primary && Primary->Warhead && Primary->Warhead->Wall) { // need confirming
-            MovementZone = MZONE_DESTROYER;
+        if (m_Primary && m_Primary->Warhead && m_Primary->Warhead->m_Wall) { // need confirming
+            m_MovementZone = MZONE_DESTROYER;
         }
 
-        if (Speed == SPEED_FLOAT) {
-            MovementZone = MZONE_AMPHIBIOUS_DESTROYER;
+        if (m_Speed == SPEED_FLOAT) {
+            m_MovementZone = MZONE_AMPHIBIOUS_DESTROYER;
         }
 
         return true;

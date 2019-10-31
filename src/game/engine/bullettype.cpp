@@ -131,9 +131,9 @@ void BulletTypeClass::One_Time()
         BulletTypeClass *bptr = As_Pointer(bullet);
 
         if (!bptr->m_Inviso) {
-            const char *name = bptr->ImageName[0] != '\0' ? bptr->ImageName : bptr->m_Name;
+            const char *name = bptr->m_ImageName[0] != '\0' ? bptr->m_ImageName : bptr->m_Name;
             snprintf(filename, sizeof(filename), "%s.shp", name);
-            bptr->ImageData = GameFileClass::Retrieve(filename);
+            bptr->m_ImageData = GameFileClass::Retrieve(filename);
         }
     }
 }

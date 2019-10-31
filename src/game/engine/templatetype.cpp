@@ -538,7 +538,7 @@ void TemplateTypeClass::Prep_For_Add()
     for (TemplateType i = TEMPLATE_FIRST; i < TEMPLATE_COUNT; ++i) {
         TemplateTypeClass *ttptr = As_Pointer(i);
         if (ttptr != nullptr) {
-            if (ttptr->ImageData != nullptr) {
+            if (ttptr->m_ImageData != nullptr) {
                 Map.Add_To_List(ttptr);
             }
         }

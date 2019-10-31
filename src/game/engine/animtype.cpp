@@ -113,7 +113,7 @@ BOOL AnimTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
 #if 0
     coord_t coord = Cell_To_Coord(cellnum);
-    AnimClass *aptr = new AnimClass(Type, coord);
+    AnimClass *aptr = new AnimClass(m_Type, coord);
     DEBUG_ASSERT(aptr != nullptr);
 
     return aptr != nullptr;
@@ -130,7 +130,7 @@ BOOL AnimTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 ObjectClass *AnimTypeClass::Create_One_Of(HouseClass *house) const
 {
 #if 0
-    AnimClass *aptr = new AnimClass(Type, 0);
+    AnimClass *aptr = new AnimClass(m_Type, 0);
     DEBUG_ASSERT(aptr != nullptr);
     return aptr;
 #else
@@ -240,9 +240,9 @@ void AnimTypeClass::One_Time()
 
     for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
         AnimTypeClass *aptr = As_Pointer(type);
-        const char *name = aptr->ImageName[0] != '\0' ? aptr->ImageName : aptr->m_Name;
+        const char *name = aptr->m_ImageName[0] != '\0' ? aptr->m_ImageName : aptr->m_Name;
         snprintf(filename, sizeof(filename), "%s.shp", name);
-        aptr->ImageData = GameFileClass::Retrieve(filename);
+        aptr->m_ImageData = GameFileClass::Retrieve(filename);
 
     }
 }
@@ -262,11 +262,11 @@ void AnimTypeClass::Init(TheaterType theater)
     if (theater != g_lastTheater) {
         for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
             AnimTypeClass *atptr = As_Pointer(type);
-            const char *name = atptr->ImageName[0] != '\0' ? atptr->ImageName : atptr->m_Name;
+            const char *name = atptr->m_ImageName[0] != '\0' ? atptr->m_ImageName : atptr->m_Name;
             // TODO: Change the theater info to lower case and standardise on that?
             const char *ext = atptr->m_Theater ? g_theaters[theater].ext : "shp";
             snprintf(filename, sizeof(filename), "%s.%s", name, ext);
-            atptr->ImageData = GameFileClass::Retrieve(filename);
+            atptr->m_ImageData = GameFileClass::Retrieve(filename);
         }
 
     }

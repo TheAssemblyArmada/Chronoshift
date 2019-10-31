@@ -26,48 +26,48 @@ void *ObjectTypeClass::PipShapes = nullptr;
 ObjectTypeClass::ObjectTypeClass(RTTIType type, int id, BOOL unk1, BOOL radar_invisible, BOOL selectable,
     BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL unk2, int ui_name, const char *name) :
     AbstractTypeClass(type, id, ui_name, name),
-    Crushable(false),
-    RadarInvisible(radar_invisible),
-    Selectable(selectable),
-    LegalTarget(legal_target),
-    Insignificant(insignificant),
-    Immune(is_immune),
-    Bit64(unk1),
-    Bit128(unk2),
-    Armor(ARMOR_NONE),
-    Strength(0),
-    ImageData(nullptr),
-    FrameDimensions(nullptr),
-    RadarIconData(nullptr)
+    m_Crushable(false),
+    m_RadarInvisible(radar_invisible),
+    m_Selectable(selectable),
+    m_LegalTarget(legal_target),
+    m_Insignificant(insignificant),
+    m_Immune(is_immune),
+    m_Bit64(unk1),
+    m_Bit128(unk2),
+    m_Armor(ARMOR_NONE),
+    m_Strength(0),
+    m_ImageData(nullptr),
+    m_FrameDimensions(nullptr),
+    m_RadarIconData(nullptr)
 {
 }
 
 ObjectTypeClass::ObjectTypeClass(const ObjectTypeClass &that) :
     AbstractTypeClass(that),
-    Crushable(that.Crushable),
-    RadarInvisible(that.RadarInvisible),
-    Selectable(that.Selectable),
-    LegalTarget(that.LegalTarget),
-    Insignificant(that.Insignificant),
-    Immune(that.Immune),
-    Bit64(that.Bit64),
-    Bit128(that.Bit128),
-    Armor(that.Armor),
-    Strength(that.Strength),
-    ImageData(that.ImageData),
-    FrameDimensions(that.FrameDimensions),
-    RadarIconData(that.RadarIconData)
+    m_Crushable(that.m_Crushable),
+    m_RadarInvisible(that.m_RadarInvisible),
+    m_Selectable(that.m_Selectable),
+    m_LegalTarget(that.m_LegalTarget),
+    m_Insignificant(that.m_Insignificant),
+    m_Immune(that.m_Immune),
+    m_Bit64(that.m_Bit64),
+    m_Bit128(that.m_Bit128),
+    m_Armor(that.m_Armor),
+    m_Strength(that.m_Strength),
+    m_ImageData(that.m_ImageData),
+    m_FrameDimensions(that.m_FrameDimensions),
+    m_RadarIconData(that.m_RadarIconData)
 {
-    memcpy(ImageName, that.ImageName, sizeof(ImageName));
+    memcpy(m_ImageName, that.m_ImageName, sizeof(m_ImageName));
 }
 
 ObjectTypeClass::~ObjectTypeClass()
 {
-    ImageData = nullptr;
-    RadarIconData = nullptr;
+    m_ImageData = nullptr;
+    m_RadarIconData = nullptr;
     
-    if (FrameDimensions != nullptr) {
-        delete[] FrameDimensions;
+    if (m_FrameDimensions != nullptr) {
+        delete[] m_FrameDimensions;
     }
 }
 
@@ -118,7 +118,7 @@ BuildingClass *ObjectTypeClass::Who_Can_Build_Me(BOOL a1, BOOL a2, HousesType ho
  BOOL ObjectTypeClass::Read_INI(GameINIClass &ini)
  {
      if (ini.Find_Section(m_Name)) {
-         ini.Get_String(m_Name, "Image", "none", ImageName, sizeof(ImageName));
+         ini.Get_String(m_Name, "Image", "none", m_ImageName, sizeof(m_ImageName));
 
          return true;
      }

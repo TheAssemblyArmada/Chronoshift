@@ -86,7 +86,7 @@ void AircraftTypeClass::operator delete(void *ptr)
  */
 int AircraftTypeClass::Max_Pips() const
 {
-    return Primary != nullptr ? 5 : Max_Passengers();
+    return m_Primary != nullptr ? 5 : Max_Passengers();
 }
 
 /**
@@ -226,12 +226,12 @@ void AircraftTypeClass::One_Time()
 
     for (AircraftType i = AIRCRAFT_FIRST; i < AIRCRAFT_COUNT; ++i) {
         AircraftTypeClass &type = As_Reference(i);
-        const char *name = type.ImageName[0] != '\0' ? type.ImageName : type.m_Name;
+        const char *name = type.m_ImageName[0] != '\0' ? type.m_ImageName : type.m_Name;
 
         snprintf(buffer, sizeof(buffer), "%.4sicon.shp", name);
-        type.CameoData = GameFileClass::Retrieve(buffer);
+        type.m_CameoData = GameFileClass::Retrieve(buffer);
         snprintf(buffer, sizeof(buffer), "%s.shp", name);
-        type.ImageData = GameFileClass::Retrieve(buffer);
+        type.m_ImageData = GameFileClass::Retrieve(buffer);
     }
 
     if (g_LeftRotorData == nullptr) {
@@ -270,7 +270,7 @@ void AircraftTypeClass::Prep_For_Add()
     for (AircraftType i = AIRCRAFT_FIRST; i < AIRCRAFT_COUNT; ++i) {
         AircraftTypeClass *atptr = As_Pointer(i);
         if (atptr != nullptr) {
-            if (atptr->ImageData != nullptr) {
+            if (atptr->m_ImageData != nullptr) {
                 Map.Add_To_List(atptr);
             }
         }
