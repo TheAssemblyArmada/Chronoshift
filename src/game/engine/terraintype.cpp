@@ -44,8 +44,8 @@ TerrainTypeClass::TerrainTypeClass(TerrainType type, int theater, uint32_t a3, B
     OccupyList(occupy_list),
     OverlapList(overlap_list)
 {
-    Strength = 800;
-    Armor = ARMOR_WOOD;
+    m_Strength = 800;
+    m_Armor = ARMOR_WOOD;
 }
 
 /**
@@ -236,7 +236,7 @@ void TerrainTypeClass::Init(TheaterType theater)
     if (theater != g_lastTheater) {
         for (TerrainType i = TERRAIN_FIRST; i < TERRAIN_COUNT; ++i) {
             TerrainTypeClass &terrain = As_Reference(i);
-            terrain.ImageData = nullptr;
+            terrain.m_ImageData = nullptr;
 
             // TODO, im pretty certain, but needs checking
             if (terrain.Theater & (1 << theater)) {
@@ -245,14 +245,14 @@ void TerrainTypeClass::Init(TheaterType theater)
                     "%s.%s",
                     /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.m_Name,
                     /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_theaters[theater].ext);
-                terrain.ImageData = GameFileClass::Retrieve(filename);
+                terrain.m_ImageData = GameFileClass::Retrieve(filename);
                 g_isTheaterShape = true;
 
-                if (terrain.RadarIconData != nullptr) {
-                    delete[] static_cast<char *>(terrain.RadarIconData);
+                if (terrain.m_RadarIconData != nullptr) {
+                    delete[] static_cast<char *>(terrain.m_RadarIconData);
                 }
 
-                terrain.RadarIconData = Get_Radar_Icon(terrain.ImageData, 0, 1, 3);
+                terrain.m_RadarIconData = Get_Radar_Icon(terrain.m_ImageData, 0, 1, 3);
                 g_isTheaterShape = false;
             }
         }
@@ -321,7 +321,7 @@ void TerrainTypeClass::Prep_For_Add()
     for (TerrainType i = TERRAIN_FIRST; i < TERRAIN_COUNT; ++i) {
         TerrainTypeClass *ttptr = As_Pointer(i);
         if (ttptr != nullptr) {
-            if (ttptr->ImageData != nullptr) {
+            if (ttptr->m_ImageData != nullptr) {
                 Map.Add_To_List(ttptr);
             }
         }

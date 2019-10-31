@@ -44,8 +44,8 @@ VesselTypeClass::VesselTypeClass(VesselType type, int uiname, const char *name, 
     m_ExplosionAnim(death_anim),
     m_UnkInt(0)
 {
-    IsScanner = true;
-    IsCrewed = false;
+    m_IsScanner = true;
+    m_IsCrewed = false;
 }
 
 /**
@@ -202,7 +202,7 @@ void VesselTypeClass::Prep_For_Add()
     for (VesselType i = VESSEL_FIRST; i < VESSEL_COUNT; ++i) {
         VesselTypeClass *vtptr = As_Pointer(i);
         if (vtptr != nullptr) {
-            if (vtptr->ImageData != nullptr) {
+            if (vtptr->m_ImageData != nullptr) {
                 Map.Add_To_List(vtptr);
             }
         }
@@ -220,17 +220,17 @@ void VesselTypeClass::One_Time()
 
     for (VesselType i = VESSEL_FIRST; i < VESSEL_COUNT; ++i) {
         VesselTypeClass &vessel = As_Reference(i);
-        const char *name = vessel.ImageName[0] != '\0' ? vessel.ImageName : vessel.m_Name;
+        const char *name = vessel.m_ImageName[0] != '\0' ? vessel.m_ImageName : vessel.m_Name;
 
         // Original has a special case where icon is always loaded for helicarrier?
         // Possibly intended for the "Secret Units" enabling code that was never in any released build.
-        if (vessel.TechLevel != -1 /*|| i == VESSEL_CARRIER*/) {
+        if (vessel.m_TechLevel != -1 /*|| i == VESSEL_CARRIER*/) {
             snprintf(filename, sizeof(filename), "%.4sicon.shp", name);
-            vessel.CameoData = GameFileClass::Retrieve(filename);
+            vessel.m_CameoData = GameFileClass::Retrieve(filename);
         }
 
         snprintf(filename, sizeof(filename), "%s.shp", name);
-        vessel.ImageData = GameFileClass::Retrieve(filename);
+        vessel.m_ImageData = GameFileClass::Retrieve(filename);
         vessel.m_UnkInt = 26;
     }
 }

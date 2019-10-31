@@ -636,7 +636,7 @@ BOOL ObjectClass::Select()
 
                 TechnoClass *tptr = reinterpret_cast<TechnoClass *>(this);
 
-                if ((tptr != nullptr && tptr->Class_Of().IsLeader)) {
+                if ((tptr != nullptr && tptr->Class_Of().m_IsLeader)) {
                     CurrentObjects.Add_Head(tptr);
                 } else {
                     CurrentObjects.Add(this);

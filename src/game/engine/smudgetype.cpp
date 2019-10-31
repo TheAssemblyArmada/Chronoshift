@@ -179,9 +179,9 @@ void SmudgeTypeClass::Init(TheaterType theater)
     if (theater != g_lastTheater) {
         for (SmudgeType i = SMUDGE_FIRST; i < SMUDGE_COUNT; ++i) {
             SmudgeTypeClass &smudge = As_Reference(i);
-            const char *name = smudge.ImageName[0] != '\0' ? smudge.ImageName : smudge.m_Name;
+            const char *name = smudge.m_ImageName[0] != '\0' ? smudge.m_ImageName : smudge.m_Name;
             snprintf(filename, sizeof(filename), "%s.%s", name, g_theaters[theater].ext);
-            smudge.ImageData = GameFileClass::Retrieve(filename);
+            smudge.m_ImageData = GameFileClass::Retrieve(filename);
         }
     }
 }
@@ -209,7 +209,7 @@ void SmudgeTypeClass::Prep_For_Add()
     for (SmudgeType i = SMUDGE_FIRST; i < SMUDGE_COUNT; ++i) {
         SmudgeTypeClass *stptr = As_Pointer(i);
         if (stptr != nullptr) {
-            if (stptr->ImageData != nullptr) {
+            if (stptr->m_ImageData != nullptr) {
                 Map.Add_To_List(stptr);
             }
         }

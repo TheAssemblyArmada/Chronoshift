@@ -58,7 +58,7 @@ UnitTypeClass::UnitTypeClass(UnitType type, int uiname, const char *name, AnimTy
     m_ExplosionAnim(death_anim),
     m_UnkInt(0)
 {
-    Speed = SPEED_WHEEL;
+    m_Speed = SPEED_WHEEL;
 }
 
 /**
@@ -116,7 +116,7 @@ int UnitTypeClass::Max_Pips() const
             return 7; // Harvester bails.
 
         case UNIT_MINELAYER:
-            return Ammo;
+            return m_Ammo;
 
         default:
             return Max_Passengers();
@@ -195,10 +195,10 @@ BOOL UnitTypeClass::Read_INI(GameINIClass &ini)
         // m_IsRadarJammer = ini.Get_Bool(m_Name, "IsRadarJammer", m_IsRadarJammer);
         // m_IsMobileGapGen = ini.Get_Bool(m_Name, "IsMobileGapGen", m_IsMobileGapGen);
         m_NoMovingFire = ini.Get_Bool(m_Name, "NoMovingFire", m_NoMovingFire);
-        Speed = ini.Get_Bool(m_Name, "Tracked", Speed == SPEED_TRACK) ? SPEED_TRACK : SPEED_FOOT;
+        m_Speed = ini.Get_Bool(m_Name, "Tracked", m_Speed == SPEED_TRACK) ? SPEED_TRACK : SPEED_FOOT;
 
-        if (MovementZone == MZONE_NORMAL && m_Crusher) {
-            MovementZone = MZONE_CRUSHER;
+        if (m_MovementZone == MZONE_NORMAL && m_Crusher) {
+            m_MovementZone = MZONE_CRUSHER;
         }
 
         return true;
@@ -254,7 +254,7 @@ void UnitTypeClass::Prep_For_Add()
     for (UnitType i = UNIT_FIRST; i < UNIT_COUNT; ++i) {
         UnitTypeClass *utptr = As_Pointer(i);
         if (utptr != nullptr) {
-            if (utptr->ImageData != nullptr) {
+            if (utptr->m_ImageData != nullptr) {
                 Map.Add_To_List(utptr);
             }
         }
@@ -272,17 +272,17 @@ void UnitTypeClass::One_Time()
 
     for (UnitType i = UNIT_FIRST; i < UNIT_COUNT; ++i) {
         UnitTypeClass &unit = As_Reference(i);
-        const char *name = unit.ImageName[0] != '\0' ? unit.ImageName : unit.Get_Name();
+        const char *name = unit.m_ImageName[0] != '\0' ? unit.m_ImageName : unit.Get_Name();
 
         snprintf(buffer, sizeof(buffer), "%.4sicon.shp", name);
-        unit.CameoData = GameFileClass::Retrieve(buffer);
+        unit.m_CameoData = GameFileClass::Retrieve(buffer);
         snprintf(buffer, sizeof(buffer), "%s.shp", name);
-        unit.ImageData = GameFileClass::Retrieve(buffer);
+        unit.m_ImageData = GameFileClass::Retrieve(buffer);
 
         int big_dimension = 0;
 
-        if (unit.ImageData != nullptr) {
-            big_dimension = std::max(std::max(0, (int)Get_Build_Frame_Width(unit.ImageData)), (int)Get_Build_Frame_Height(unit.ImageData));
+        if (unit.m_ImageData != nullptr) {
+            big_dimension = std::max(std::max(0, (int)Get_Build_Frame_Width(unit.m_ImageData)), (int)Get_Build_Frame_Height(unit.m_ImageData));
         }
 
         unit.m_UnkInt = std::max(big_dimension, 8);

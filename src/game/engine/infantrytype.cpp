@@ -51,9 +51,9 @@ InfantryTypeClass::InfantryTypeClass(InfantryType type, int uiname, const char *
     m_AltRemap(alt_remap)
 {
     // Set techno flags that don't get set by the TechnoTypeClass ctor.
-    Crushable = true;
-    IsScanner = true;
-    IsRepairable = false;
+    m_Crushable = true;
+    m_IsScanner = true;
+    m_IsRepairable = false;
 }
 
 /**
@@ -103,7 +103,7 @@ void InfantryTypeClass::operator delete(void *ptr)
  */
 int InfantryTypeClass::Full_Name() const
 {
-    if (g_InMapEditor || !IsNominal || Rule.Named_Civilians() || m_Type == INFANTRY_C10 || m_Type == INFANTRY_EINSTEIN
+    if (g_InMapEditor || !m_IsNominal || Rule.Named_Civilians() || m_Type == INFANTRY_C10 || m_Type == INFANTRY_EINSTEIN
         || m_Type == INFANTRY_DELPHI) {
         return AbstractTypeClass::Full_Name();
     }
@@ -200,7 +200,7 @@ BOOL InfantryTypeClass::Read_INI(GameINIClass &ini)
 
         // Dogs can't be leaders.
         if (m_IsCanine) {
-            IsLeader = false;
+            m_IsLeader = false;
         }
 
         return true;
