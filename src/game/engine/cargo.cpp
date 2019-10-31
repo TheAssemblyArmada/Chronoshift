@@ -54,8 +54,8 @@ void CargoClass::Attach(FootClass *object)
 
 FootClass *CargoClass::Attached_Object() const
 {
-    if (Object != nullptr) {
-        return Object;
+    if (m_Object != nullptr) {
+        return m_Object;
     }
 
     return nullptr;
@@ -69,9 +69,9 @@ FootClass *CargoClass::Detach_Object()
 #else
     /*FootClass *object = Attached_Object();
     if (object != nullptr) {
-        Object = object->Get_Next();
+        m_Object = object->Get_Next();
         object->Next = nullptr;
-        --Count;
+        --m_Count;
 
         return object;
     }*/
@@ -87,8 +87,8 @@ FootClass *CargoClass::Detach_Object()
  */
 void CargoClass::Code_Pointers()
 {
-    if (Object != nullptr) {
-        Object = reinterpret_cast<FootClass *>(As_Target(Object));
+    if (m_Object != nullptr) {
+        m_Object = reinterpret_cast<FootClass *>(As_Target(m_Object));
     }
 }
 
@@ -99,7 +99,7 @@ void CargoClass::Code_Pointers()
  */
 void CargoClass::Decode_Pointers()
 {
-    if (Object != nullptr) {
-        Object = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)Object));
+    if (m_Object != nullptr) {
+        m_Object = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)m_Object));
     }
 }

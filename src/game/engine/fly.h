@@ -37,20 +37,20 @@ enum ImpactType
 class FlyClass
 {
 public:
-    FlyClass() : field_0(0), Speed(0) {}
+    FlyClass() : m_field_0(0), m_Speed(0) {}
     FlyClass(const NoInitClass &noinit) {}
 
     ImpactType Physics(unsigned int &somevalue, DirType dir);
     void Fly_Speed(int speed, MPHType mph);
 
-    uint8_t Get_Speed() { return Speed; }
+    uint8_t Get_Speed() { return m_Speed; }
 
     void Code_Pointers(){}
     void Decode_Pointers(){}
 
 private:
-    int field_0;
-    uint8_t Speed;
+    int m_field_0;
+    uint8_t m_Speed;
 };
 
 #endif // FLY_H

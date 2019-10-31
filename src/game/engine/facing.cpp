@@ -121,8 +121,8 @@ const char *FacingNameAbbreviation[FACING_COUNT] = {
 
 BOOL FacingClass::Set_Current(DirType dir)
 {
-    if (dir != Current) {
-        Current = dir;
+    if (dir != m_Current) {
+        m_Current = dir;
 
         return true;
     }
@@ -132,8 +132,8 @@ BOOL FacingClass::Set_Current(DirType dir)
 
 BOOL FacingClass::Set_Desired(DirType dir)
 {
-    if (dir != Desired) {
-        Desired = dir;
+    if (dir != m_Desired) {
+        m_Desired = dir;
 
         return true;
     }
@@ -144,23 +144,23 @@ BOOL FacingClass::Set_Desired(DirType dir)
 BOOL FacingClass::Rotation_Adjust(int adjust)
 {
     if (Has_Changed()) {
-        DirType curr = Current;
-        int diff = (int8_t)(Desired - Current); // Fixes watcom optimising DirType to uint8_t and failing diff check.
+        DirType curr = m_Current;
+        int diff = (int8_t)(m_Desired - m_Current); // Fixes watcom optimising DirType to uint8_t and failing diff check.
 
         adjust = std::min(adjust, 127);
 
         if (std::abs(diff) >= adjust) {
             if (diff >= 0) {
-                Current += adjust;
+                m_Current += adjust;
             } else {
-                Current -= adjust;
+                m_Current -= adjust;
             }
 
         } else {
-            Current = Desired;
+            m_Current = m_Desired;
         }
 
-        return Facing32[Current] != Facing32[curr];
+        return Facing32[m_Current] != Facing32[curr];
     }
 
     return false;

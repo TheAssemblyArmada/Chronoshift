@@ -20,13 +20,13 @@
  */
 BOOL FlasherClass::Process()
 {
-    if (Frames > 0) {
-        --Frames;
-        Flashed = false;
+    if (m_Frames > 0) {
+        --m_Frames;
+        m_Flashed = false;
 
         // Check if we are on an odd frame and if so, set the status to flashed.
-        if ((unsigned)Frames % 2) {
-            Flashed = true;
+        if ((unsigned)m_Frames % 2) {
+            m_Flashed = true;
         }
 
         return true;

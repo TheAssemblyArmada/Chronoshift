@@ -25,30 +25,30 @@ class NoInitClass;
 class FlasherClass
 {
 public:
-    FlasherClass() : Frames(0), Flashed(false) {}
-    FlasherClass(const FlasherClass &that) : Frames(that.Frames), Flashed(that.Flashed) {}
+    FlasherClass() : m_Frames(0), m_Flashed(false) {}
+    FlasherClass(const FlasherClass &that) : m_Frames(that.m_Frames), m_Flashed(that.m_Flashed) {}
     FlasherClass(const NoInitClass &noinit) {}
 
     void Flash(int flash_frames, bool flash);
-    BOOL Get_Flashed() { return Flashed; }
+    BOOL Get_Flashed() { return m_Flashed; }
     BOOL Process();
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    unsigned int Frames : 7;
-    BOOL Flashed : 1;
+    unsigned int m_Frames : 7;
+    BOOL m_Flashed : 1;
 #else
-    unsigned int Frames; // Number of frames to flash for.
-    bool Flashed; // Is current frame a flash frame?
+    unsigned int m_Frames; // Number of frames to flash for.
+    bool m_Flashed; // Is current frame a flash frame?
 #endif
 };
 
 inline void FlasherClass::Flash(int flash_frames, bool flash)
 {
-    Frames = flash_frames;
-    Flashed = flash;
+    m_Frames = flash_frames;
+    m_Flashed = flash;
 }
 
 #endif // FLASHER_H
