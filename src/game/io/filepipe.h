@@ -26,20 +26,20 @@ class FileClass;
 class FilePipe : public Pipe
 {
 public:
-    FilePipe() : m_file(nullptr), m_hasOpened(false) {}
-    FilePipe(FileClass &file) : m_file(&file), m_hasOpened(false) {}
-    FilePipe(FileClass *file) : m_file(file), m_hasOpened(false) {}
+    FilePipe() : m_File(nullptr), m_HasOpened(false) {}
+    FilePipe(FileClass &file) : m_File(&file), m_HasOpened(false) {}
+    FilePipe(FileClass *file) : m_File(file), m_HasOpened(false) {}
     virtual ~FilePipe();
 
     virtual int Put(const void *buffer, int length) override;
     virtual int End() override;
 
 private:
-    bool Valid_File() { return m_file != nullptr; };
+    bool Valid_File() { return m_File != nullptr; };
 
 private:
-    FileClass *m_file;
-    BOOL m_hasOpened;
+    FileClass *m_File;
+    BOOL m_HasOpened;
 };
 
 #endif // FILEPIPE_H

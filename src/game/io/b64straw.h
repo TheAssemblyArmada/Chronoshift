@@ -24,16 +24,16 @@
 class Base64Straw : public Straw
 {
 public:
-    Base64Straw(StrawControl mode = STRAW_DECODE) : m_mode(mode), m_counter(0) {}
+    Base64Straw(StrawControl mode = STRAW_DECODE) : m_Mode(mode), m_Counter(0) {}
     virtual ~Base64Straw() {}
 
     virtual int Get(void *dest, int slen) override;
 
 private:
-    StrawControl m_mode;
-    int m_counter;
-    char m_cBuffer[4];
-    char m_pBuffer[3];
+    StrawControl m_Mode;
+    int m_Counter;
+    char m_CBuffer[4];
+    char m_PBuffer[3];
 };
 
 #endif // B64STRAW_H

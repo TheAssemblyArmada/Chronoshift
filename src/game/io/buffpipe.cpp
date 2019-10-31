@@ -22,23 +22,23 @@
 */
 int BufferPipe::Put(const void *buffer, int length)
 {
-    if (!m_buffer.Get_Buffer() || !buffer || length <= 0) {
+    if (!m_Buffer.Get_Buffer() || !buffer || length <= 0) {
         return 0;
     }
 
-    int buff_size = m_buffer.Get_Size();
+    int buff_size = m_Buffer.Get_Size();
     int size = length;
 
     if (buff_size) {
-        buff_size -= m_index;
+        buff_size -= m_Index;
         size = std::min(size, buff_size);
     }
 
     if (size > 0) {
-        memmove(m_buffer.Get_Buffer() + m_index, buffer, size);
+        memmove(m_Buffer.Get_Buffer() + m_Index, buffer, size);
     }
 
-    m_index += size;
+    m_Index += size;
 
     return size;
 }

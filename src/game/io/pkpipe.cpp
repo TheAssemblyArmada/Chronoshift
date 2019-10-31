@@ -20,13 +20,13 @@
 #include <algorithm>
 
 PKPipe::PKPipe(PipeControl mode, Straw &rstraw) :
-    m_changeKey(true),
-    m_cryptRandom(rstraw),
-    m_blowFish(PIPE_ENCRYPT),
-    m_mode(mode),
-    m_rsaKey(nullptr),
-    m_encryptedKeyLength(0),
-    m_carryOver(0)
+    m_ChangeKey(true),
+    m_CryptRandom(rstraw),
+    m_BlowFish(PIPE_ENCRYPT),
+    m_Mode(mode),
+    m_RSAKey(nullptr),
+    m_EncryptedKeyLength(0),
+    m_Carryover(0)
 {
 }
 
@@ -37,7 +37,7 @@ int PKPipe::Put(const void *buffer, int length)
 {
     // If we don't have a valid RSA key, just pass the data through to the next
     // pipe unchanged.
-    if (buffer == nullptr || length < 1 || m_rsaKey == nullptr) {
+    if (buffer == nullptr || length < 1 || m_RSAKey == nullptr) {
         return Pipe::Put(buffer, length);
     }
 
@@ -48,34 +48,34 @@ int PKPipe::Put(const void *buffer, int length)
     // If a key change has been flagged, we either need to generate and
     // encrypt a new Blowfish key or decrypt the existing one depending on
     // the mode we are using.
-    if (m_changeKey) {
-        if (m_mode == PIPE_DECRYPT) {
-            int to_copy = std::min(length, m_carryOver); // m_carryOver >= length ? length : m_carryOver;
+    if (m_ChangeKey) {
+        if (m_Mode == PIPE_DECRYPT) {
+            int to_copy = std::min(length, m_Carryover); // m_carryOver >= length ? length : m_carryOver;
 
-            memcpy(&m_cryptoBuffer[m_encryptedKeyLength - m_carryOver], inbuff, to_copy);
+            memcpy(&m_CryptoBuffer[m_EncryptedKeyLength - m_Carryover], inbuff, to_copy);
             inbuff += to_copy;
 
             // This can't be right?
-            bool bytes_remain = m_carryOver == to_copy;
+            bool bytes_remain = m_Carryover == to_copy;
 
             length -= to_copy;
-            m_carryOver -= to_copy;
+            m_Carryover -= to_copy;
 
             if (!bytes_remain) {
                 return putcount + Pipe::Put(inbuff, length);
             }
 
-            m_rsaKey->Decrypt(m_cryptoBuffer, m_encryptedKeyLength, byte_buff);
+            m_RSAKey->Decrypt(m_CryptoBuffer, m_EncryptedKeyLength, byte_buff);
         } else {
             memset(byte_buff, 0, sizeof(byte_buff));
-            m_cryptRandom.Get(byte_buff, BF_MAX_KEY_LENGTH);
+            m_CryptRandom.Get(byte_buff, BF_MAX_KEY_LENGTH);
 
-            putcount += Pipe::Put(m_cryptoBuffer, m_rsaKey->Encrypt(byte_buff, BF_MAX_KEY_LENGTH, m_cryptoBuffer));
+            putcount += Pipe::Put(m_CryptoBuffer, m_RSAKey->Encrypt(byte_buff, BF_MAX_KEY_LENGTH, m_CryptoBuffer));
         }
 
         // Set the Blowfish key and then flag we have done the key change.
-        m_blowFish.Key(byte_buff, BF_MAX_KEY_LENGTH);
-        m_changeKey = false;
+        m_BlowFish.Key(byte_buff, BF_MAX_KEY_LENGTH);
+        m_ChangeKey = false;
     }
 
     return putcount + Pipe::Put(inbuff, length);
@@ -86,8 +86,8 @@ int PKPipe::Put(const void *buffer, int length)
 */
 void PKPipe::Put_To(Pipe *pipe)
 {
-    m_blowFish.Put_To(pipe);
-    Pipe::Put_To(&m_blowFish);
+    m_BlowFish.Put_To(pipe);
+    Pipe::Put_To(&m_BlowFish);
 }
 
 /**
@@ -95,25 +95,25 @@ void PKPipe::Put_To(Pipe *pipe)
 */
 void PKPipe::Key(PKey *key)
 {
-    if (!m_rsaKey) {
+    if (!m_RSAKey) {
         Flush();
-        m_changeKey = false;
+        m_ChangeKey = false;
     }
 
-    m_rsaKey = key;
+    m_RSAKey = key;
 
     // Check if the Key is valid so we can flag for a key change.
     if (key) {
-        m_changeKey = true;
+        m_ChangeKey = true;
 
         // Why is m_carryOver set like this? Its not used in the encryption code.
-        if (m_mode == PIPE_ENCRYPT) {
-            m_carryOver = Encrypted_Key_Length();
+        if (m_Mode == PIPE_ENCRYPT) {
+            m_Carryover = Encrypted_Key_Length();
         } else {
-            m_carryOver = 1;
+            m_Carryover = 1;
         }
 
-        m_encryptedKeyLength = m_carryOver;
+        m_EncryptedKeyLength = m_Carryover;
     }
 }
 
@@ -122,8 +122,8 @@ void PKPipe::Key(PKey *key)
 */
 int PKPipe::Encrypted_Key_Length() const
 {
-    if (m_rsaKey) {
-        return m_rsaKey->Cipher_Text_Block_Size() * (55 / m_rsaKey->Cipher_Text_Block_Size());
+    if (m_RSAKey) {
+        return m_RSAKey->Cipher_Text_Block_Size() * (55 / m_RSAKey->Cipher_Text_Block_Size());
     }
 
     return 0;
@@ -134,8 +134,8 @@ int PKPipe::Encrypted_Key_Length() const
 */
 int PKPipe::Plain_Key_Length() const
 {
-    if (m_rsaKey) {
-        return m_rsaKey->Clear_Text_Block_Size() * (55 / m_rsaKey->Cipher_Text_Block_Size());
+    if (m_RSAKey) {
+        return m_RSAKey->Clear_Text_Block_Size() * (55 / m_RSAKey->Cipher_Text_Block_Size());
     }
 
     return 0;

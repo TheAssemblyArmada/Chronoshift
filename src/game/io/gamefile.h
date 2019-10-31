@@ -30,7 +30,7 @@ typedef MixFileClass<GameFileClass> GameMixFile;
 class GameFileClass : public CDFileClass
 {
 public:
-    GameFileClass() : m_fileBuffer() {}
+    GameFileClass() : m_FileBuffer() {}
     GameFileClass(const char *filename);
     virtual ~GameFileClass() {};
 
@@ -47,8 +47,8 @@ public:
     virtual BOOL Set_Date_Time(time_t date_time) override;
     virtual void Error(int error, BOOL can_retry = false, const char *filename = nullptr) override;
 
-    BOOL Is_Cached() const { return m_fileBuffer.Get_Buffer() != nullptr; }
-    void Reset_Cache_Buffer() { m_fileBuffer.Reset(); m_cachePosition = 0; }
+    BOOL Is_Cached() const { return m_FileBuffer.Get_Buffer() != nullptr; }
+    void Reset_Cache_Buffer() { m_FileBuffer.Reset(); m_CachePosition = 0; }
 
     static void *Retrieve(char const *filename);
     static int Retrieve_Size(char const *filename);
@@ -63,8 +63,8 @@ public:
     BOOL Hook_Open(int rights) { return GameFileClass::Open(rights); }
 #endif
 private:
-    BufferClass m_fileBuffer;
-    int m_cachePosition;
+    BufferClass m_FileBuffer;
+    int m_CachePosition;
 };
 
 // Wrappers for old stype IO.

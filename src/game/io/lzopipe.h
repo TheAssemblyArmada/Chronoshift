@@ -31,14 +31,14 @@ public:
     virtual int Put(const void *source, int length);
 
 private:
-    PipeControl m_mode;
-    int m_dataInBuffer;
-    uint8_t *m_inBuffer;
-    uint8_t *m_outBuffer;
-    int m_blockSize;
-    int m_maxBlockSize;
-    int16_t m_compressedBytes;
-    int16_t m_uncompressedBytes;
+    PipeControl m_Mode;
+    int m_DataInBuffer;
+    uint8_t *m_InBuffer;
+    uint8_t *m_OutBuffer;
+    int m_BlockSize;
+    int m_MaxBlockSize;
+    int16_t m_CompressedBytes;
+    int16_t m_UncompressedBytes;
 };
 
 #endif // LZOPIPE_H

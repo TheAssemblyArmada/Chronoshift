@@ -30,14 +30,14 @@ public:
     virtual int Get(void *buffer, int length) override;
 
 private:
-    StrawControl m_mode;
-    int m_carryover;
-    uint8_t *m_inBuffer;
-    uint8_t *m_outBuffer;
-    int m_blockSize;
-    int m_compressedBlockSize;
-    int16_t m_compressedBytes;
-    int16_t m_uncompressedBytes;
+    StrawControl m_Mode;
+    int m_Carryover;
+    uint8_t *m_InBuffer;
+    uint8_t *m_OutBuffer;
+    int m_BlockSize;
+    int m_CompressedBlockSize;
+    int16_t m_CompressedBytes;
+    int16_t m_UncompressedBytes;
 };
 
 #endif // LZOSTRAW_H

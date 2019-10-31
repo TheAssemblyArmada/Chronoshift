@@ -25,16 +25,16 @@
 class BufferStraw : public Straw
 {
 public:
-    BufferStraw(void *buffer, int length) : m_buffer((uint8_t *)buffer, length), m_index(0) {}
+    BufferStraw(void *buffer, int length) : m_Buffer((uint8_t *)buffer, length), m_Index(0) {}
     virtual ~BufferStraw() {}
 
     virtual int Get(void *buffer, int length) override;
 
-    bool Is_Valid() { return m_buffer.Is_Valid(); }
+    bool Is_Valid() { return m_Buffer.Is_Valid(); }
 
 private:
-    BufferClass m_buffer;
-    int m_index;
+    BufferClass m_Buffer;
+    int m_Index;
 };
 
 #endif // BUFFSTRAW_H

@@ -26,19 +26,19 @@ class FileClass;
 class FileStraw : public Straw
 {
 public:
-    FileStraw() : m_file(nullptr), m_hasOpened(false) {}
-    FileStraw(FileClass &file) : m_file(&file), m_hasOpened(false) {}
-    FileStraw(FileClass *file) : m_file(file), m_hasOpened(false) {}
+    FileStraw() : m_File(nullptr), m_HasOpened(false) {}
+    FileStraw(FileClass &file) : m_File(&file), m_HasOpened(false) {}
+    FileStraw(FileClass *file) : m_File(file), m_HasOpened(false) {}
     virtual ~FileStraw();
 
     virtual int Get(void *buffer, int length) override;
 
 private:
-    bool Valid_File() { return m_file != nullptr; }
+    bool Valid_File() { return m_File != nullptr; }
 
 private:
-    FileClass *m_file;
-    BOOL m_hasOpened;
+    FileClass *m_File;
+    BOOL m_HasOpened;
 };
 
 #endif // FILESTRAW_H

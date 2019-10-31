@@ -51,9 +51,9 @@ int CDFileClass::s_lastCDDrive;
 #endif
 const char *CDFileClass::s_pathSeperator = ";";
 
-CDFileClass::CDFileClass() : m_disableSearchDrives(false) {}
+CDFileClass::CDFileClass() : m_DisableSearchDrives(false) {}
 
-CDFileClass::CDFileClass(char *filename) : m_disableSearchDrives(false)
+CDFileClass::CDFileClass(char *filename) : m_DisableSearchDrives(false)
 {
     CDFileClass::Set_Name(filename);
 }
@@ -67,7 +67,7 @@ const char *CDFileClass::Set_Name(const char *filename)
 
     BufferIOFileClass::Set_Name(filename);
 
-    if (m_disableSearchDrives || s_first == nullptr || BufferIOFileClass::Is_Available()) {
+    if (m_DisableSearchDrives || s_first == nullptr || BufferIOFileClass::Is_Available()) {
         return File_Name();
     }
 
@@ -75,7 +75,7 @@ const char *CDFileClass::Set_Name(const char *filename)
 
     while (true) {
         // make full or relivent file path.
-        snprintf(path_buffer, sizeof(path_buffer), "%s%s", s_first->m_path, filename);
+        snprintf(path_buffer, sizeof(path_buffer), "%s%s", s_first->m_Path, filename);
 
         BufferIOFileClass::Set_Name(path_buffer);
 
@@ -83,7 +83,7 @@ const char *CDFileClass::Set_Name(const char *filename)
             break;
         }
 
-        drive = drive->m_next;
+        drive = drive->m_Next;
 
         if (drive == nullptr) {
             BufferIOFileClass::Set_Name(filename);
@@ -110,10 +110,10 @@ BOOL CDFileClass::Open(const char *filename, int rights)
     BufferIOFileClass::Close();
 
     if (!filename) {
-        Error(1, 0, m_filename);
+        Error(1, 0, m_Filename);
     }
 
-    if (m_disableSearchDrives || rights == FM_WRITE) {
+    if (m_DisableSearchDrives || rights == FM_WRITE) {
         BufferIOFileClass::Set_Name(filename);
     } else {
         Set_Name(filename);
@@ -227,11 +227,11 @@ void CDFileClass::Add_Search_Drive(const char *path)
         // Traverse linked list to end and add new node
         SearchDriveType *i = s_first;
 
-        while (i->m_next != nullptr) {
-            i = i->m_next;
+        while (i->m_Next != nullptr) {
+            i = i->m_Next;
         }
 
-        i->m_next = entry;
+        i->m_Next = entry;
 
     } else {
         s_first = entry;
@@ -256,7 +256,7 @@ void CDFileClass::Clear_Search_Drives()
 
     while (entry != nullptr) {
         // delete the current 'entry' and set it to the next pointer in the list
-        SearchDriveType *next = entry->m_next;
+        SearchDriveType *next = entry->m_Next;
         delete entry;
         entry = next;
     }

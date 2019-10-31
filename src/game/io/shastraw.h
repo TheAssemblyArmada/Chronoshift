@@ -25,7 +25,7 @@
 class SHAStraw : public Straw
 {
 public:
-    SHAStraw() : m_sha1() {}
+    SHAStraw() : m_SHA1() {}
     virtual ~SHAStraw() {}
 
     virtual int Get(void *buffer, int length) override;
@@ -33,7 +33,7 @@ public:
     int Result(void *data);
 
 protected:
-    SHAEngine m_sha1; // A instance of the SHA-1 Engine class.
+    SHAEngine m_SHA1; // A instance of the SHA-1 Engine class.
 };
 
 #endif // SHASTRAW_H

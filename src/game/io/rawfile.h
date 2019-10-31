@@ -30,15 +30,15 @@ public:
     RawFileClass(const char *filename);
 
     virtual ~RawFileClass() { Reset(); };
-    virtual const char *File_Name() const { return m_filename; };
+    virtual const char *File_Name() const { return m_Filename; };
     virtual const char *Set_Name(const char *filename);
     virtual BOOL Create();
     virtual BOOL Delete();
     virtual BOOL Is_Available(BOOL forced = false);
 #ifdef PLATFORM_WINDOWS
-    virtual BOOL Is_Open() const { return m_handle != (HANDLE)(LONG_PTR)-1; };
+    virtual BOOL Is_Open() const { return m_Handle != (HANDLE)(LONG_PTR)-1; };
 #else
-    virtual BOOL Is_Open() const { return m_handle != -1; };
+    virtual BOOL Is_Open() const { return m_Handle != -1; };
 #endif
     virtual BOOL Open(const char *filename, int rights = FM_READ);
     virtual BOOL Open(int rights = FM_READ);
@@ -52,11 +52,11 @@ public:
     virtual void Error(int error, BOOL can_retry = false, const char *filename = nullptr);
 
     void Bias(int start, int length = -1);
-    int Get_Bias_Start() const { return m_biasStart; }
+    int Get_Bias_Start() const { return m_BiasStart; }
 #ifdef PLATFORM_WINDOWS
-    HANDLE Get_File_Handle() { return m_handle; }
+    HANDLE Get_File_Handle() { return m_Handle; }
 #else
-    int Get_File_Handle() { return m_handle; }
+    int Get_File_Handle() { return m_Handle; }
 #endif
 
 private:
@@ -68,17 +68,17 @@ private:
 #endif
 
 protected:
-    int m_rights; // This is the current rights to this file.
-    int m_biasStart; // Offset from true start to treat as start of file
-    int m_biasLength; // Logical length of file.
+    int m_Rights; // This is the current rights to this file.
+    int m_BiasStart; // Offset from true start to treat as start of file
+    int m_BiasLength; // Logical length of file.
 #ifdef PLATFORM_WINDOWS
-    HANDLE m_handle;
+    HANDLE m_Handle;
 #else
-    int m_handle;
+    int m_Handle;
 #endif
-    char *m_filename;
-    time_t m_dateTime;
-    BOOL m_isAllocated;
+    char *m_Filename;
+    time_t m_DateTime;
+    BOOL m_IsAllocated;
 };
 
 #endif // _RAWFILECLASS_H

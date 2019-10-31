@@ -31,13 +31,13 @@ public:
     virtual int Get(void *buffer, int length) override;
 
 private:
-    StrawControl Mode;
-    int LinePitch;
-    int LineWidth;
-    int Carryover;
-    int Remaining;
-    uint8_t *InBuffer;
-    uint8_t *OutBuffer;
+    StrawControl m_Mode;
+    int m_LinePitch;
+    int m_LineWidth;
+    int m_Carryover;
+    int m_Remaining;
+    uint8_t *m_InBuffer;
+    uint8_t *m_OutBuffer;
 };
 
 #endif // _RLESTRAW_H_

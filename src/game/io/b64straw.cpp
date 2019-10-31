@@ -32,34 +32,34 @@ int Base64Straw::Get(void *dest, int slen)
     DEBUG_ASSERT(dest != nullptr);
     DEBUG_ASSERT(slen > 0);
 
-    switch (m_mode) {
+    switch (m_Mode) {
         case STRAW_ENCODE:
-            from = m_cBuffer;
-            fromsize = sizeof(m_pBuffer);
-            destbuffp = m_cBuffer;
-            outcount = sizeof(m_cBuffer);
+            from = m_CBuffer;
+            fromsize = sizeof(m_PBuffer);
+            destbuffp = m_CBuffer;
+            outcount = sizeof(m_CBuffer);
             break;
 
         case STRAW_DECODE:
-            from = m_pBuffer;
-            fromsize = sizeof(m_cBuffer);
-            destbuffp = m_pBuffer;
-            outcount = sizeof(m_pBuffer);
+            from = m_PBuffer;
+            fromsize = sizeof(m_CBuffer);
+            destbuffp = m_PBuffer;
+            outcount = sizeof(m_PBuffer);
             break;
         default:
             break;
     }
 
     while (slen > 0) {
-        if (m_counter > 0) {
+        if (m_Counter > 0) {
             int tocopy = slen;
 
-            if (slen >= m_counter) {
-                tocopy = m_counter;
+            if (slen >= m_Counter) {
+                tocopy = m_Counter;
             }
 
-            memmove(dest, &destbuffp[outcount - m_counter], tocopy);
-            m_counter -= tocopy;
+            memmove(dest, &destbuffp[outcount - m_Counter], tocopy);
+            m_Counter -= tocopy;
             dest = static_cast<char *>(dest) + tocopy;
             slen -= tocopy;
             total += tocopy;
@@ -71,10 +71,10 @@ int Base64Straw::Get(void *dest, int slen)
 
         int slen2 = Straw::Get(from, fromsize);
 
-        m_counter = m_mode == STRAW_DECODE ? Base64_Decode(from, slen2, destbuffp, outcount) :
+        m_Counter = m_Mode == STRAW_DECODE ? Base64_Decode(from, slen2, destbuffp, outcount) :
                                             Base64_Encode(from, slen2, destbuffp, outcount);
 
-        if (m_counter <= 0) {
+        if (m_Counter <= 0) {
             break;
         }
     }

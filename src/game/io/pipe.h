@@ -33,8 +33,8 @@ enum PipeControl
 class Pipe
 {
 public:
-    Pipe() : m_chainTo(nullptr), m_chainFrom(nullptr) {}
-    Pipe(Pipe const &that) : m_chainTo(that.m_chainTo), m_chainFrom(that.m_chainFrom) {}
+    Pipe() : m_ChainTo(nullptr), m_ChainFrom(nullptr) {}
+    Pipe(Pipe const &that) : m_ChainTo(that.m_ChainTo), m_ChainFrom(that.m_ChainFrom) {}
     virtual ~Pipe();
 
     Pipe &operator=(Pipe &that);
@@ -45,15 +45,15 @@ public:
     virtual int Put(const void *source, int length);
 
 protected:
-    Pipe *m_chainTo;
-    Pipe *m_chainFrom;
+    Pipe *m_ChainTo;
+    Pipe *m_ChainFrom;
 };
 
 inline Pipe &Pipe::operator=(Pipe &that)
 {
     if (this != &that) {
-        m_chainTo = that.m_chainTo;
-        m_chainFrom = that.m_chainFrom;
+        m_ChainTo = that.m_ChainTo;
+        m_ChainFrom = that.m_ChainFrom;
     }
     return *this;
 }

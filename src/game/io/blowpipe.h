@@ -24,7 +24,7 @@
 class BlowPipe : public Pipe
 {
 public:
-    BlowPipe(PipeControl mode = PIPE_ENCRYPT) : m_blowFish(nullptr), m_carryOver(0), m_mode(mode) {}
+    BlowPipe(PipeControl mode = PIPE_ENCRYPT) : m_BlowFish(nullptr), m_Carryover(0), m_Mode(mode) {}
     virtual ~BlowPipe();
 
     virtual int Flush() override;
@@ -33,10 +33,10 @@ public:
     void Key(void *key, int key_size);
 
 private:
-    BlowfishEngine *m_blowFish;
-    char m_currentBlock[BF_BLOCKSIZE];
-    int m_carryOver;
-    PipeControl m_mode;
+    BlowfishEngine *m_BlowFish;
+    char m_CurrentBlock[BF_BLOCKSIZE];
+    int m_Carryover;
+    PipeControl m_Mode;
 };
 
 #endif // BLOWPIPE_H

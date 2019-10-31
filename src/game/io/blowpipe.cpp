@@ -21,11 +21,11 @@ using std::memset;
 
 BlowPipe::~BlowPipe()
 {
-    if (m_blowFish != nullptr) {
-        delete m_blowFish;
+    if (m_BlowFish != nullptr) {
+        delete m_BlowFish;
     }
 
-    m_blowFish = nullptr;
+    m_BlowFish = nullptr;
 }
 
 /**
@@ -38,23 +38,23 @@ int BlowPipe::Flush()
     // RA BlowPipe doesn't pad and encrypt the last block of data, but BlowStraw
     // code will keep fetching in blocks of 8 until it gets EOF so for data such
     // as the mix header, it needs to be padded for correct operation.
-    if (m_carryOver != 0 && m_blowFish != nullptr) {
-        memset(&m_currentBlock[m_carryOver], 0, BF_BLOCKSIZE - m_carryOver);
+    if (m_Carryover != 0 && m_BlowFish != nullptr) {
+        memset(&m_CurrentBlock[m_Carryover], 0, BF_BLOCKSIZE - m_Carryover);
 
-        if (m_mode == PIPE_DECRYPT) {
-            m_blowFish->Decrypt(m_currentBlock, BF_BLOCKSIZE, m_currentBlock);
+        if (m_Mode == PIPE_DECRYPT) {
+            m_BlowFish->Decrypt(m_CurrentBlock, BF_BLOCKSIZE, m_CurrentBlock);
         } else {
-            m_blowFish->Encrypt(m_currentBlock, BF_BLOCKSIZE, m_currentBlock);
+            m_BlowFish->Encrypt(m_CurrentBlock, BF_BLOCKSIZE, m_CurrentBlock);
         }
 
-        putcount += Pipe::Put(m_currentBlock, BF_BLOCKSIZE);
+        putcount += Pipe::Put(m_CurrentBlock, BF_BLOCKSIZE);
     }
 
     // clear the carryover bytes
-    m_carryOver = 0;
+    m_Carryover = 0;
 
-    if (m_chainTo != nullptr) {
-        return m_chainTo->Flush() + putcount;
+    if (m_ChainTo != nullptr) {
+        return m_ChainTo->Flush() + putcount;
     }
 
     return putcount;
@@ -67,43 +67,43 @@ int BlowPipe::Put(const void *buffer, int length)
 {
     // If a blowfish instance hasn't been allocated yet, just pass it through to
     // the next Pipe in the chain (if any).
-    if (buffer && length >= 1 && m_blowFish != nullptr) {
+    if (buffer && length >= 1 && m_BlowFish != nullptr) {
         char *buf = static_cast<char *>(const_cast<void *>(buffer));
         int putcount = 0;
 
         // If there is carried over data that didn't exactly fill a Blowfish
         // block, then make it up to a full block with the new data and encrypt.
-        if (m_carryOver) {
-            int rsize = std::min(BF_BLOCKSIZE - m_carryOver, length);
+        if (m_Carryover) {
+            int rsize = std::min(BF_BLOCKSIZE - m_Carryover, length);
 
-            memmove(&m_currentBlock[m_carryOver], buf, rsize);
+            memmove(&m_CurrentBlock[m_Carryover], buf, rsize);
             buf += rsize;
-            m_carryOver += rsize;
+            m_Carryover += rsize;
             length -= rsize;
 
             // Make sure the extra data was enough to get us to the block size.
-            if (m_carryOver == BF_BLOCKSIZE) {
-                if (m_mode == PIPE_DECRYPT) {
-                    m_blowFish->Decrypt(m_currentBlock, BF_BLOCKSIZE, m_currentBlock);
+            if (m_Carryover == BF_BLOCKSIZE) {
+                if (m_Mode == PIPE_DECRYPT) {
+                    m_BlowFish->Decrypt(m_CurrentBlock, BF_BLOCKSIZE, m_CurrentBlock);
                 } else {
-                    m_blowFish->Encrypt(m_currentBlock, BF_BLOCKSIZE, m_currentBlock);
+                    m_BlowFish->Encrypt(m_CurrentBlock, BF_BLOCKSIZE, m_CurrentBlock);
                 }
 
-                putcount = Pipe::Put(m_currentBlock, BF_BLOCKSIZE);
-                m_carryOver = 0;
+                putcount = Pipe::Put(m_CurrentBlock, BF_BLOCKSIZE);
+                m_Carryover = 0;
             }
         }
 
         // While we have more data than the block size, keep encrypting it in
         // blocks and writing it to the next Pipe in the chain.
         while (length >= BF_BLOCKSIZE) {
-            if (m_mode == PIPE_DECRYPT) {
-                m_blowFish->Decrypt(buf, BF_BLOCKSIZE, m_currentBlock);
+            if (m_Mode == PIPE_DECRYPT) {
+                m_BlowFish->Decrypt(buf, BF_BLOCKSIZE, m_CurrentBlock);
             } else {
-                m_blowFish->Encrypt(buf, BF_BLOCKSIZE, m_currentBlock);
+                m_BlowFish->Encrypt(buf, BF_BLOCKSIZE, m_CurrentBlock);
             }
 
-            putcount += Pipe::Put(m_currentBlock, BF_BLOCKSIZE);
+            putcount += Pipe::Put(m_CurrentBlock, BF_BLOCKSIZE);
 
             buf += BF_BLOCKSIZE;
             length -= BF_BLOCKSIZE;
@@ -113,8 +113,8 @@ int BlowPipe::Put(const void *buffer, int length)
         // block, load it into the buffer and make a note of how much we have
         // for either the next Put call or for Flush.
         if (length > 0) {
-            memmove(m_currentBlock, buf, length);
-            m_carryOver = length;
+            memmove(m_CurrentBlock, buf, length);
+            m_Carryover = length;
         }
 
         return putcount;
@@ -129,13 +129,13 @@ int BlowPipe::Put(const void *buffer, int length)
 void BlowPipe::Key(void *key, int length)
 {
     // If we haven't got a Blowfish instance, create one to accept the key.
-    if (m_blowFish == nullptr) {
-        m_blowFish = new BlowfishEngine();
+    if (m_BlowFish == nullptr) {
+        m_BlowFish = new BlowfishEngine();
     }
 
     // Once we have our Blowfish instance, submit the key to prepare it for
     // encrypt/decrypt operations.
-    if (m_blowFish != nullptr) {
-        m_blowFish->Submit_Key(key, length);
+    if (m_BlowFish != nullptr) {
+        m_BlowFish->Submit_Key(key, length);
     }
 }

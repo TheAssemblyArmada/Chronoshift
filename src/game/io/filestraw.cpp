@@ -18,10 +18,10 @@
 
 FileStraw::~FileStraw()
 {
-    if (Valid_File() && m_hasOpened) {
-        m_file->Close();
-        m_hasOpened = false;
-        m_file = nullptr;
+    if (Valid_File() && m_HasOpened) {
+        m_File->Close();
+        m_HasOpened = false;
+        m_File = nullptr;
     }
 }
 
@@ -31,13 +31,13 @@ FileStraw::~FileStraw()
 int FileStraw::Get(void *buffer, int length)
 {
     if (Valid_File() && buffer && length > 0) {
-        if (!m_file->Is_Open()) {
-            if (m_file->Is_Available()) {
-                m_hasOpened = m_file->Open(FM_READ);
+        if (!m_File->Is_Open()) {
+            if (m_File->Is_Available()) {
+                m_HasOpened = m_File->Open(FM_READ);
             }
         }
 
-        return m_file->Read(buffer, length);
+        return m_File->Read(buffer, length);
     }
 
     return 0;

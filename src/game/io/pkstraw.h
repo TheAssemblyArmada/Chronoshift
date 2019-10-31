@@ -40,14 +40,14 @@ public:
     int Plain_Key_Length() const;
 
 private:
-    BOOL m_changeKey;
-    Straw &m_cryptRandom;
-    BlowStraw m_blowFish;
-    StrawControl m_mode;
-    PKey *m_rsaKey;
-    char m_cryptoBuffer[256];
-    int m_encryptedKeyLength;
-    int m_carryOver;
+    BOOL m_ChangeKey;
+    Straw &m_CryptRandom;
+    BlowStraw m_BlowFish;
+    StrawControl m_Mode;
+    PKey *m_RSAKey;
+    char m_CryptoBuffer[256];
+    int m_EncryptedKeyLength;
+    int m_Carryover;
 };
 
 #endif // PKSTRAW_H

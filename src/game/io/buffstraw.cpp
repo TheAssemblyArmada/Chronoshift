@@ -22,22 +22,22 @@
 */
 int BufferStraw::Get(void *buffer, int length)
 {
-    if (!m_buffer.Get_Buffer() || !buffer || length <= 0) {
+    if (!m_Buffer.Get_Buffer() || !buffer || length <= 0) {
         return 0;
     }
 
-    int read_len = m_buffer.Get_Size();
+    int read_len = m_Buffer.Get_Size();
 
     if (read_len) {
-        read_len -= m_index;
+        read_len -= m_Index;
         read_len = std::min(length, read_len);
     }
 
     if (read_len > 0) {
-        memmove(buffer, m_buffer.Get_Buffer() + m_index, read_len);
+        memmove(buffer, m_Buffer.Get_Buffer() + m_Index, read_len);
     }
 
-    m_index += read_len;
+    m_Index += read_len;
 
     return read_len;
 }

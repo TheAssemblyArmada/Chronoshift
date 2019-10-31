@@ -18,13 +18,13 @@
 
 FilePipe::~FilePipe()
 {
-    if (Valid_File() && m_hasOpened) {
+    if (Valid_File() && m_HasOpened) {
         // Close the file if it is open.
-        m_file->Close();
+        m_File->Close();
 
         // Reset members.
-        m_hasOpened = false;
-        m_file = nullptr;
+        m_HasOpened = false;
+        m_File = nullptr;
     }
 }
 
@@ -35,9 +35,9 @@ int FilePipe::End()
 {
     int retval = Flush();
 
-    if (Valid_File() && m_hasOpened) {
-        m_file->Close();
-        m_hasOpened = false;
+    if (Valid_File() && m_HasOpened) {
+        m_File->Close();
+        m_HasOpened = false;
     }
 
     return retval;
@@ -49,19 +49,19 @@ int FilePipe::End()
 int FilePipe::Put(const void *buffer, int length)
 {
     if (Valid_File() && buffer != nullptr && length > 0) {
-        if (!m_file->Is_Open()) {
+        if (!m_File->Is_Open()) {
             // If file doesn't exist open it?
-            if (!m_file->Is_Available()) {
-                m_file->Open(FM_WRITE);
+            if (!m_File->Is_Available()) {
+                m_File->Open(FM_WRITE);
             } else {
                 // open it anyhow to overwrite?
-                m_file->Open(FM_WRITE);
+                m_File->Open(FM_WRITE);
             }
 
-            m_hasOpened = true;
+            m_HasOpened = true;
         }
 
-        return m_file->Write(buffer, length);
+        return m_File->Write(buffer, length);
     }
 
     return 0;

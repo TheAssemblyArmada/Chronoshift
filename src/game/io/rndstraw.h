@@ -43,13 +43,13 @@ public:
     void Scramble_Seed();
 
 private:
-    int m_currentSeedBits;
-    int m_currentRandoms;
-    RNG m_randomArray[32];
+    int m_CurrentSeedBits;
+    int m_CurrentRandoms;
+    RNG m_RandomArray[32];
 };
 
 template<class RNG>
-RandomStraw<RNG>::RandomStraw() : m_currentSeedBits(0), m_currentRandoms(0)
+RandomStraw<RNG>::RandomStraw() : m_CurrentSeedBits(0), m_CurrentRandoms(0)
 {
     Reset();
 }
@@ -70,8 +70,8 @@ int RandomStraw<RNG>::Get(void *buffer, int length)
 
     if (buffer != nullptr && length > 0) {
         for (int i = 0; i < length; ++i) {
-            *buff++ = m_randomArray[m_currentRandoms++]();
-            m_currentRandoms &= ARRAY_SIZE(m_randomArray) - 1;
+            *buff++ = m_RandomArray[m_CurrentRandoms++]();
+            m_CurrentRandoms &= ARRAY_SIZE(m_RandomArray) - 1;
         }
 
         return length;
@@ -83,19 +83,19 @@ int RandomStraw<RNG>::Get(void *buffer, int length)
 template<class RNG>
 void RandomStraw<RNG>::Reset()
 {
-    m_currentSeedBits = 0;
-    m_currentRandoms = 0;
+    m_CurrentSeedBits = 0;
+    m_CurrentRandoms = 0;
 
-    for (int index = 0; index < ARRAY_SIZE(m_randomArray); ++index) {
-        new (&m_randomArray[index]) RNG;
+    for (int index = 0; index < ARRAY_SIZE(m_RandomArray); ++index) {
+        new (&m_RandomArray[index]) RNG;
     }
 }
 
 template<class RNG>
 int RandomStraw<RNG>::Seed_Bits_Needed() const
 {
-    if (m_currentSeedBits < 2048) { // 2048 bits, is this a RSA/SHA key size?
-        return m_currentSeedBits - 2048;
+    if (m_CurrentSeedBits < 2048) { // 2048 bits, is this a RSA/SHA key size?
+        return m_CurrentSeedBits - 2048;
     }
 
     return 0;
@@ -106,12 +106,12 @@ void RandomStraw<RNG>::Seed_Bit(int value)
 {
     // Is the value a odd number? (1, 3, 5 etc.)
     if (value & 1) {
-        *(reinterpret_cast<uint8_t *>(m_randomArray) + (m_currentSeedBits / 8 & 0xFF)) ^= 1 << (m_currentSeedBits & 7);
+        *(reinterpret_cast<uint8_t *>(m_RandomArray) + (m_CurrentSeedBits / 8 & 0xFF)) ^= 1 << (m_CurrentSeedBits & 7);
     }
 
-    ++m_currentSeedBits;
+    ++m_CurrentSeedBits;
 
-    if (m_currentSeedBits == 2048) {
+    if (m_CurrentSeedBits == 2048) {
         Scramble_Seed();
     }
 }
@@ -124,13 +124,13 @@ void RandomStraw<RNG>::Scramble_Seed()
     int sz = 0;
     char buff[20];
 
-    for (int i = 0; i < sizeof(m_randomArray); ++i) {
-        char *arrayp = reinterpret_cast<char *>(m_randomArray);
-        sha.Hash(m_randomArray, sizeof(m_randomArray));
+    for (int i = 0; i < sizeof(m_RandomArray); ++i) {
+        char *arrayp = reinterpret_cast<char *>(m_RandomArray);
+        sha.Hash(m_RandomArray, sizeof(m_RandomArray));
         sha.Result(buff);
 
-        if (sizeof(m_randomArray) - i <= ARRAY_SIZE(buff)) {
-            sz = sizeof(m_randomArray) - i;
+        if (sizeof(m_RandomArray) - i <= ARRAY_SIZE(buff)) {
+            sz = sizeof(m_RandomArray) - i;
         } else {
             sz = ARRAY_SIZE(buff);
         }

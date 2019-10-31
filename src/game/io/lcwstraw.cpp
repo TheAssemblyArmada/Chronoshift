@@ -23,26 +23,26 @@
 using std::memcpy;
 
 LCWStraw::LCWStraw(StrawControl mode, int size) :
-    m_mode(mode),
-    m_carryOver(0),
-    m_inBuffer(nullptr),
-    m_outBuffer(nullptr),
-    m_blockSize(size),
-    m_compressedBlockSize(LCW_Worst_Case(size)),
-    m_compressedBytes(0),
-    m_uncompressedBytes(0)
+    m_Mode(mode),
+    m_Carryover(0),
+    m_InBuffer(nullptr),
+    m_OutBuffer(nullptr),
+    m_BlockSize(size),
+    m_CompressedBlockSize(LCW_Worst_Case(size)),
+    m_CompressedBytes(0),
+    m_UncompressedBytes(0)
 {
-    m_inBuffer = new uint8_t[m_compressedBlockSize + m_blockSize];
-    m_outBuffer = new uint8_t[m_compressedBlockSize + m_blockSize];
+    m_InBuffer = new uint8_t[m_CompressedBlockSize + m_BlockSize];
+    m_OutBuffer = new uint8_t[m_CompressedBlockSize + m_BlockSize];
 }
 
 LCWStraw::~LCWStraw()
 {
-    delete[] m_inBuffer;
-    m_inBuffer = nullptr;
+    delete[] m_InBuffer;
+    m_InBuffer = nullptr;
 
-    delete[] m_outBuffer;
-    m_outBuffer = nullptr;
+    delete[] m_OutBuffer;
+    m_OutBuffer = nullptr;
 }
 
 /**
@@ -50,7 +50,7 @@ LCWStraw::~LCWStraw()
  */
 int LCWStraw::Get(void *buffer, int length)
 {
-    DEBUG_ASSERT_PRINT(m_inBuffer != nullptr, "m_inBuffer is a null pointer.\n");
+    DEBUG_ASSERT_PRINT(m_InBuffer != nullptr, "m_InBuffer is a null pointer.\n");
 
     int bytesread = 0;
     uint8_t *dst = static_cast<uint8_t *>(buffer);
@@ -60,16 +60,16 @@ int LCWStraw::Get(void *buffer, int length)
     }
 
     while (length > 0) {
-        if (m_carryOver > 0) {
-            int datasize = std::min(m_carryOver, length);
+        if (m_Carryover > 0) {
+            int datasize = std::min(m_Carryover, length);
 
-            uint8_t *srcbuff = m_mode == STRAW_UNCOMPRESS ? m_outBuffer + m_uncompressedBytes - m_carryOver :
-                                                            m_outBuffer + m_compressedBytes - m_carryOver + 4;
+            uint8_t *srcbuff = m_Mode == STRAW_UNCOMPRESS ? m_OutBuffer + m_UncompressedBytes - m_Carryover :
+                                                            m_OutBuffer + m_CompressedBytes - m_Carryover + 4;
 
             memcpy(dst, srcbuff, datasize);
             dst += datasize;
             length -= datasize;
-            m_carryOver -= datasize;
+            m_Carryover -= datasize;
             bytesread += datasize;
         }
 
@@ -77,7 +77,7 @@ int LCWStraw::Get(void *buffer, int length)
             break;
         }
 
-        if (m_mode == STRAW_UNCOMPRESS) {
+        if (m_Mode == STRAW_UNCOMPRESS) {
             // LCW stream format compresses in blocks, with the compressed and
             // uncompressed sizes of the blocks recorded just before the
             // compressed data itself.
@@ -87,38 +87,38 @@ int LCWStraw::Get(void *buffer, int length)
                 break;
             }
 
-            m_compressedBytes = le16toh(tmp);
+            m_CompressedBytes = le16toh(tmp);
 
             if (Straw::Get(&tmp, sizeof(tmp)) != sizeof(tmp)) {
                 break;
             }
 
-            m_uncompressedBytes = le16toh(tmp);
+            m_UncompressedBytes = le16toh(tmp);
 
-            if (Straw::Get(m_inBuffer, m_compressedBytes) != m_compressedBytes) {
+            if (Straw::Get(m_InBuffer, m_CompressedBytes) != m_CompressedBytes) {
                 break;
             }
 
-            LCW_Uncomp(m_inBuffer, m_outBuffer, m_uncompressedBytes);
-            m_carryOver = m_uncompressedBytes;
+            LCW_Uncomp(m_InBuffer, m_OutBuffer, m_UncompressedBytes);
+            m_Carryover = m_UncompressedBytes;
         } else {
-            m_uncompressedBytes = Straw::Get(m_inBuffer, m_blockSize);
+            m_UncompressedBytes = Straw::Get(m_InBuffer, m_BlockSize);
 
-            if (!m_uncompressedBytes) {
+            if (!m_UncompressedBytes) {
                 break;
             }
 
             // Compress to m_outBuffer, offset by 4 to make room for block header
-            m_compressedBytes = LCW_Comp(m_inBuffer, m_outBuffer + 4, m_uncompressedBytes);
+            m_CompressedBytes = LCW_Comp(m_InBuffer, m_OutBuffer + 4, m_UncompressedBytes);
 
             // Create block header. On disk format is little endian so need to
             // convert.
-            int16_t tmp = htole16(m_compressedBytes);
-            memcpy(m_outBuffer, &tmp, sizeof(tmp));
-            tmp = htole16(m_uncompressedBytes);
-            memcpy(m_outBuffer, &tmp, sizeof(tmp));
+            int16_t tmp = htole16(m_CompressedBytes);
+            memcpy(m_OutBuffer, &tmp, sizeof(tmp));
+            tmp = htole16(m_UncompressedBytes);
+            memcpy(m_OutBuffer, &tmp, sizeof(tmp));
 
-            m_carryOver = m_compressedBytes + 4;
+            m_Carryover = m_CompressedBytes + 4;
         }
     }
 

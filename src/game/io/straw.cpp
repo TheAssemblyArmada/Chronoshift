@@ -18,42 +18,42 @@
 
 Straw::~Straw()
 {
-    if (m_chainTo != nullptr) {
-        m_chainTo->m_chainFrom = m_chainFrom;
+    if (m_ChainTo != nullptr) {
+        m_ChainTo->m_ChainFrom = m_ChainFrom;
     }
 
-    if (m_chainFrom != nullptr) {
-        m_chainFrom->Get_From(m_chainTo);
+    if (m_ChainFrom != nullptr) {
+        m_ChainFrom->Get_From(m_ChainTo);
     }
 
-    m_chainTo = nullptr;
-    m_chainFrom = nullptr;
+    m_ChainTo = nullptr;
+    m_ChainFrom = nullptr;
 }
 
 void Straw::Get_From(Straw *straw)
 {
-    if (m_chainTo != straw) {
-        if (straw != nullptr && straw->m_chainFrom != nullptr) {
-            straw->m_chainFrom->Get_From(nullptr);
-            straw->m_chainFrom = nullptr;
+    if (m_ChainTo != straw) {
+        if (straw != nullptr && straw->m_ChainFrom != nullptr) {
+            straw->m_ChainFrom->Get_From(nullptr);
+            straw->m_ChainFrom = nullptr;
         }
 
-        if (m_chainTo != nullptr) {
-            m_chainTo->m_chainFrom = nullptr;
+        if (m_ChainTo != nullptr) {
+            m_ChainTo->m_ChainFrom = nullptr;
         }
 
-        m_chainTo = straw;
+        m_ChainTo = straw;
 
         if (straw) {
-            straw->m_chainFrom = this;
+            straw->m_ChainFrom = this;
         }
     }
 }
 
 int Straw::Get(void *source, int length)
 {
-    if (m_chainTo != nullptr) {
-        return m_chainTo->Get(source, length);
+    if (m_ChainTo != nullptr) {
+        return m_ChainTo->Get(source, length);
     }
 
     return 0;

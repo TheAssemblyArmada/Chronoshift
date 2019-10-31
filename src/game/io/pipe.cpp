@@ -18,35 +18,35 @@
 
 Pipe::~Pipe()
 {
-    if (m_chainTo != nullptr) {
-        m_chainTo->m_chainFrom = m_chainFrom;
+    if (m_ChainTo != nullptr) {
+        m_ChainTo->m_ChainFrom = m_ChainFrom;
     }
 
-    if (m_chainFrom != nullptr) {
-        m_chainFrom->Put_To(m_chainTo);
+    if (m_ChainFrom != nullptr) {
+        m_ChainFrom->Put_To(m_ChainTo);
     }
 
-    m_chainTo = nullptr;
-    m_chainFrom = nullptr;
+    m_ChainTo = nullptr;
+    m_ChainFrom = nullptr;
 }
 
 void Pipe::Put_To(Pipe *pipe)
 {
-    if (m_chainTo != pipe) {
-        if (pipe != nullptr && pipe->m_chainFrom != nullptr) {
-            pipe->m_chainFrom->Put_To(nullptr);
-            pipe->m_chainFrom = nullptr;
+    if (m_ChainTo != pipe) {
+        if (pipe != nullptr && pipe->m_ChainFrom != nullptr) {
+            pipe->m_ChainFrom->Put_To(nullptr);
+            pipe->m_ChainFrom = nullptr;
         }
 
-        if (m_chainTo != nullptr) {
-            m_chainTo->m_chainFrom = nullptr;
-            m_chainTo->Flush();
+        if (m_ChainTo != nullptr) {
+            m_ChainTo->m_ChainFrom = nullptr;
+            m_ChainTo->Flush();
         }
 
-        m_chainTo = pipe;
+        m_ChainTo = pipe;
 
         if (pipe != nullptr) {
-            pipe->m_chainFrom = this;
+            pipe->m_ChainFrom = this;
         }
     }
 }
@@ -56,8 +56,8 @@ int Pipe::Put(const void *source, int length)
     DEBUG_ASSERT(source != nullptr);
     DEBUG_ASSERT(length > 0);
 
-    if (m_chainTo != nullptr) {
-        return m_chainTo->Put(source, length);
+    if (m_ChainTo != nullptr) {
+        return m_ChainTo->Put(source, length);
     }
 
     return length;
@@ -65,8 +65,8 @@ int Pipe::Put(const void *source, int length)
 
 int Pipe::Flush()
 {
-    if (m_chainTo != nullptr) {
-        return m_chainTo->Flush();
+    if (m_ChainTo != nullptr) {
+        return m_ChainTo->Flush();
     }
 
     return 0;
