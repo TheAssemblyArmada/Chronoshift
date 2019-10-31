@@ -73,8 +73,8 @@ public:
     virtual const int16_t *Overlap_List() const override;
     virtual void Draw_It(int x, int y, int frame) const;
 
-    BOOL Is_Crater() { return Crater; }
-    BOOL Is_Bib() { return Bib; }
+    BOOL Is_Crater() { return m_Crater; }
+    BOOL Is_Bib() { return m_Bib; }
 
     static void Init_Heap();
     static void One_Time() {}
@@ -87,15 +87,15 @@ public:
     static void Prep_For_Add();
 
 private:
-    SmudgeType Type;
-    int Width;// Width in cells
-    int Height; // Height in cells
+    SmudgeType m_Type;
+    int m_Width;// Width in cells
+    int m_Height; // Height in cells
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Crater : 1; // 1 Crater smudges
-    BOOL Bib : 1; //2 Burn and Bib smudges
+    BOOL m_Crater : 1; // 1 Crater smudges
+    BOOL m_Bib : 1; //2 Burn and Bib smudges
 #else
-    bool Crater; // Crater smudges
-    bool Bib; // Burn and Bib smudges
+    bool m_Crater; // Crater smudges
+    bool m_Bib; // Burn and Bib smudges
 #endif
 };
 

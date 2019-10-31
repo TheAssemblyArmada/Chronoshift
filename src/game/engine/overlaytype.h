@@ -101,14 +101,14 @@ public:
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
-    LandType Get_Land() const { return Land; }
-    int Get_Damage_Levels() const { return DamageLevels; }
-    int Get_Overlay_Strength() const { return OverlayStrength; }
-    BOOL Is_Wall() const { return Wall; }
-    BOOL Is_Crate() const { return Crate; }
-    BOOL Is_Radar_Visible() const { return RadarVisible; }
-    BOOL Is_Ore() const { return Ore; }
-    BOOL Is_Theater() const { return Theater; }
+    LandType Get_Land() const { return m_Land; }
+    int Get_Damage_Levels() const { return m_DamageLevels; }
+    int Get_Overlay_Strength() const { return m_OverlayStrength; }
+    BOOL Is_Wall() const { return m_Wall; }
+    BOOL Is_Crate() const { return m_Crate; }
+    BOOL Is_Radar_Visible() const { return m_RadarVisible; }
+    BOOL Is_Ore() const { return m_Ore; }
+    BOOL Is_Theater() const { return m_Theater; }
 
     static void Init_Heap();
     static void Init(TheaterType theater);
@@ -121,26 +121,26 @@ public:
     static void Prep_For_Add();
 
 private:
-    OverlayType Type;
-    LandType Land; // The land type of this overlay.
-    int DamageLevels; // Number of damage levels [think how many damage stages walls have for example].
-    int OverlayStrength; // Strength (hit points) of this overlay.
+    OverlayType m_Type;
+    LandType m_Land; // The land type of this overlay.
+    int m_DamageLevels; // Number of damage levels [think how many damage stages walls have for example].
+    int m_OverlayStrength; // Strength (hit points) of this overlay.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL Theater : 1; // 1
-    BOOL Wall : 1; // 2
-    BOOL High : 1; // 4
-    BOOL Ore : 1; // 8
-    BOOL Boolean16 : 1; // 16
-    BOOL Crate : 1; // 32
-    BOOL RadarVisible : 1; // 64
+    BOOL m_Theater : 1; // 1
+    BOOL m_Wall : 1; // 2
+    BOOL m_High : 1; // 4
+    BOOL m_Ore : 1; // 8
+    BOOL m_Boolean16 : 1; // 16
+    BOOL m_Crate : 1; // 32
+    BOOL m_RadarVisible : 1; // 64
 #else
-    bool Theater; // Does it have theater specific imagery?
-    bool Wall; // 
-    bool High; // 
-    bool Ore; // Is this ore or gem [growth (ore only) and graphic logic applies]?
-    bool Boolean16; // TODO: this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
-    bool Crate; // Is this overlay a crate?
-    bool RadarVisible; // 
+    bool m_Theater; // Does it have theater specific imagery?
+    bool m_Wall; // 
+    bool m_High; // 
+    bool m_Ore; // Is this ore or gem [growth (ore only) and graphic logic applies]?
+    bool m_Boolean16; // TODO: this is checked in Explosion_Damage() if warhead has wall or wood to see if destroyed.
+    bool m_Crate; // Is this overlay a crate?
+    bool m_RadarVisible; // 
 #endif
 };
 

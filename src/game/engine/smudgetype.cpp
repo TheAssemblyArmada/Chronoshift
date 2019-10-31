@@ -31,21 +31,21 @@ TFixedIHeapClass<SmudgeTypeClass> g_SmudgeTypes;
 SmudgeTypeClass::SmudgeTypeClass(
     SmudgeType smudge, const char *name, int uiname, int width, int height, BOOL bib, BOOL crater) :
     ObjectTypeClass(RTTI_SMUDGETYPE, smudge, true, true, false, false, true, true, false, uiname, name),
-    Type(smudge),
-    Width(width),
-    Height(height),
-    Crater(crater),
-    Bib(bib)
+    m_Type(smudge),
+    m_Width(width),
+    m_Height(height),
+    m_Crater(crater),
+    m_Bib(bib)
 {
 }
 
 SmudgeTypeClass::SmudgeTypeClass(SmudgeTypeClass const &that) :
     ObjectTypeClass(that),
-    Type(that.Type),
-    Width(that.Width),
-    Height(that.Height),
-    Crater(that.Crater),
-    Bib(that.Bib)
+    m_Type(that.m_Type),
+    m_Width(that.m_Width),
+    m_Height(that.m_Height),
+    m_Crater(that.m_Crater),
+    m_Bib(that.m_Bib)
 {
 }
 
@@ -70,7 +70,7 @@ BOOL SmudgeTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 #elif 0
     DEBUG_ASSERT(this != nullptr);
 
-    return new SmudgeClass(Type, Cell_To_Coord(cellnum), house) != nullptr;
+    return new SmudgeClass(m_Type, Cell_To_Coord(cellnum), house) != nullptr;
 #else
     return false;
 #endif
@@ -86,7 +86,7 @@ ObjectClass *SmudgeTypeClass::Create_One_Of(HouseClass *house) const
     DEBUG_ASSERT(this != nullptr);
     // DEBUG_ASSERT(house != nullptr);
 
-    SmudgeClass *sptr = new SmudgeClass(Type);
+    SmudgeClass *sptr = new SmudgeClass(m_Type);
     DEBUG_ASSERT(sptr != nullptr);
     return sptr;
 #else
@@ -99,8 +99,8 @@ const int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const
     static int16_t _occupy[32];
 
     int16_t *list = _occupy;
-    for (int i = 0; i < Width; ++i) {
-        for (int j = 0; j < Height; ++j) {
+    for (int i = 0; i < m_Width; ++i) {
+        for (int j = 0; j < m_Height; ++j) {
             *list++ = j * 128 + i;
         }
     }
