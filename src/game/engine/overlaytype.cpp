@@ -34,33 +34,33 @@ OverlayTypeClass::OverlayTypeClass(OverlayType overlay, const char *name, int ui
     int strength, BOOL radar_visible, BOOL a8, BOOL legal_target, BOOL crushable, BOOL ore, BOOL high, BOOL theater,
     BOOL wall, BOOL crate) :
     ObjectTypeClass(RTTI_OVERLAYTYPE, overlay, crushable, true, false, legal_target, true, false, false, uiname, name),
-    Type(overlay),
-    Land(land),
-    DamageLevels(damage_levels),
-    OverlayStrength(strength),
-    Theater(theater),
-    Wall(wall),
-    High(high),
-    Ore(ore),
-    Boolean16(a8),
-    Crate(crate),
-    RadarVisible(radar_visible)
+    m_Type(overlay),
+    m_Land(land),
+    m_DamageLevels(damage_levels),
+    m_OverlayStrength(strength),
+    m_Theater(theater),
+    m_Wall(wall),
+    m_High(high),
+    m_Ore(ore),
+    m_Boolean16(a8),
+    m_Crate(crate),
+    m_RadarVisible(radar_visible)
 {
 }
 
 OverlayTypeClass::OverlayTypeClass(const OverlayTypeClass &that) :
     ObjectTypeClass(that),
-    Type(that.Type),
-    Land(that.Land),
-    DamageLevels(that.DamageLevels),
-    OverlayStrength(that.OverlayStrength),
-    Theater(that.Theater),
-    Wall(that.Wall),
-    High(that.High),
-    Ore(that.Ore),
-    Boolean16(that.Boolean16),
-    Crate(that.Crate),
-    RadarVisible(that.RadarVisible)
+    m_Type(that.m_Type),
+    m_Land(that.m_Land),
+    m_DamageLevels(that.m_DamageLevels),
+    m_OverlayStrength(that.m_OverlayStrength),
+    m_Theater(that.m_Theater),
+    m_Wall(that.m_Wall),
+    m_High(that.m_High),
+    m_Ore(that.m_Ore),
+    m_Boolean16(that.m_Boolean16),
+    m_Crate(that.m_Crate),
+    m_RadarVisible(that.m_RadarVisible)
 {
 }
 
@@ -148,10 +148,10 @@ void OverlayTypeClass::Init(TheaterType theater)
                 sizeof(filename),
                 "%s.%s",
                 overlay.m_Name,
-                overlay.Theater ? g_theaters[theater].ext : "shp");
+                overlay.m_Theater ? g_theaters[theater].ext : "shp");
             overlay.m_ImageData = GameFileClass::Retrieve(filename);
 
-            g_isTheaterShape = overlay.Theater;
+            g_isTheaterShape = overlay.m_Theater;
             overlay.m_RadarIconData = Get_Radar_Icon(overlay.m_ImageData, 0, -1, 3);
             g_isTheaterShape = false;
         }
@@ -179,7 +179,7 @@ void OverlayTypeClass::Prep_For_Add()
         OverlayTypeClass *otptr = As_Pointer(i);
         if (otptr != nullptr) {
             if (otptr->m_ImageData != nullptr) {
-                if (!otptr->Wall && (!otptr->Ore || i == OVERLAY_GOLD_01 || i == OVERLAY_GEM_01)) {
+                if (!otptr->m_Wall && (!otptr->m_Ore || i == OVERLAY_GOLD_01 || i == OVERLAY_GEM_01)) {
                     Map.Add_To_List(otptr);
                 }
             }
@@ -201,7 +201,7 @@ BOOL OverlayTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 #elif 0
     DEBUG_ASSERT(this != nullptr);
 
-    return new OverlayClass(Type, cellnum, house) != nullptr;
+    return new OverlayClass(m_Type, cellnum, house) != nullptr;
 #else
     return false;
 #endif
@@ -217,7 +217,7 @@ ObjectClass *OverlayTypeClass::Create_One_Of(HouseClass *house) const
     DEBUG_ASSERT(this != nullptr);
     DEBUG_ASSERT(house != nullptr);
 
-    return new OverlayClass(Type);
+    return new OverlayClass(m_Type);
 #else
     return nullptr;
 #endif
@@ -233,7 +233,7 @@ const int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
 void OverlayTypeClass::Draw_It(int x, int y, int frame) const
 {
     if (m_ImageData != nullptr) {
-        g_isTheaterShape = Theater;
+        g_isTheaterShape = m_Theater;
         CC_Draw_Shape(m_ImageData,
             frame,
             x + Map.Tac_Offset_X() + 12,
@@ -262,14 +262,14 @@ uint8_t *OverlayTypeClass::Radar_Icon(int frame) const
 BOOL OverlayTypeClass::Read_INI(GameINIClass &ini)
 {
     if (ObjectTypeClass::Read_INI(ini)) {
-        Land = ini.Get_LandType(m_Name, "Land", Land);
-        OverlayStrength = ini.Get_Int(m_Name, "Strength", OverlayStrength);
-        Wall = ini.Get_BOOL(m_Name, "Wall", Wall);
-        High = ini.Get_BOOL(m_Name, "High", High);
-        Ore = ini.Get_BOOL(m_Name, "Ore", Ore);
-        Crate = ini.Get_BOOL(m_Name, "Crate", Crate);
-        DamageLevels = ini.Get_Int(m_Name, "DamageLevels", DamageLevels);
-        Theater = ini.Get_BOOL(m_Name, "Theater", Theater);
+        m_Land = ini.Get_LandType(m_Name, "Land", m_Land);
+        m_OverlayStrength = ini.Get_Int(m_Name, "Strength", m_OverlayStrength);
+        m_Wall = ini.Get_BOOL(m_Name, "Wall", m_Wall);
+        m_High = ini.Get_BOOL(m_Name, "High", m_High);
+        m_Ore = ini.Get_BOOL(m_Name, "Ore", m_Ore);
+        m_Crate = ini.Get_BOOL(m_Name, "Crate", m_Crate);
+        m_DamageLevels = ini.Get_Int(m_Name, "DamageLevels", m_DamageLevels);
+        m_Theater = ini.Get_BOOL(m_Name, "Theater", m_Theater);
         CellAnim = ini.Get_AnimType(m_Name, "CellAnim", CellAnim);
 
         return true;
