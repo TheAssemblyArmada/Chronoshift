@@ -28,20 +28,20 @@ class HSVClass;
 class RGBClass
 {
 public:
-    RGBClass(uint8_t red = 0, uint8_t green = 0, uint8_t blue = 0) : m_red(red), m_grn(green), m_blu(blue) {}
-    RGBClass(RGBClass const &that) : m_red(that.m_red), m_grn(that.m_grn), m_blu(that.m_blu) {}
+    RGBClass(uint8_t red = 0, uint8_t green = 0, uint8_t blue = 0) : m_Red(red), m_Grn(green), m_Blu(blue) {}
+    RGBClass(RGBClass const &that) : m_Red(that.m_Red), m_Grn(that.m_Grn), m_Blu(that.m_Blu) {}
 
     bool operator==(RGBClass const &that) const;
     bool operator!=(RGBClass const &that) const { return !(*this == that); }
     RGBClass &operator=(RGBClass const &that);
     operator HSVClass();
 
-    uint8_t Get_Red() const { return m_red; }
-    uint8_t Get_Green() const { return m_grn; }
-    uint8_t Get_Blue() const { return m_blu; }
-    void Set_Red(uint8_t red) { m_red = red; }
-    void Set_Green(uint8_t green) { m_grn = green; }
-    void Set_Blue(uint8_t blue) { m_blu = blue; }
+    uint8_t Get_Red() const { return m_Red; }
+    uint8_t Get_Green() const { return m_Grn; }
+    uint8_t Get_Blue() const { return m_Blu; }
+    void Set_Red(uint8_t red) { m_Red = red; }
+    void Set_Green(uint8_t green) { m_Grn = green; }
+    void Set_Blue(uint8_t blue) { m_Blu = blue; }
 
     void Adjust(int adjustment, const RGBClass &that);
     int const Difference(RGBClass const &that) const;
@@ -56,17 +56,17 @@ public:
     static RGBClass const WhiteColor;
 
 private:
-    uint8_t m_red;
-    uint8_t m_grn;
-    uint8_t m_blu;
+    uint8_t m_Red;
+    uint8_t m_Grn;
+    uint8_t m_Blu;
 };
 
 inline RGBClass &RGBClass::operator=(RGBClass const &that)
 {
     if (this != &that) {
-        m_red = that.m_red;
-        m_grn = that.m_grn;
-        m_blu = that.m_blu;
+        m_Red = that.m_Red;
+        m_Grn = that.m_Grn;
+        m_Blu = that.m_Blu;
     }
 
     return *this;
@@ -74,7 +74,7 @@ inline RGBClass &RGBClass::operator=(RGBClass const &that)
 
 inline bool RGBClass::operator==(RGBClass const &that) const
 {
-    return m_red == that.m_red && m_grn == that.m_grn && m_grn == that.m_grn;
+    return m_Red == that.m_Red && m_Grn == that.m_Grn && m_Grn == that.m_Grn;
 }
 
 #endif // RGB_H

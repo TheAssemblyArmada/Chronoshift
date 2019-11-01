@@ -35,11 +35,11 @@ public:
     int Get_Mouse_X();
     int Get_Mouse_Y();
     void Get_Mouse_XY(int &x_pos, int &y_pos);
-    GraphicViewPortClass *Get_Screen() { return m_screen; }
+    GraphicViewPortClass *Get_Screen() { return m_Screen; }
     void Set_Mouse_X(int x);
     void Set_Mouse_Y(int y);
     BOOL Set_Mouse_XY(int x, int y);
-    int Get_Mouse_State() { return m_state; }
+    int Get_Mouse_State() { return m_State; }
     void Block_Mouse(GraphicBufferClass *gbuffer);
     void Unblock_Mouse(GraphicBufferClass *gbuffer);
     void Set_Cursor_Clip();
@@ -54,50 +54,50 @@ public:
     void Conditional_Show_Mouse();
     void Draw_Mouse(GraphicViewPortClass &scr);
     void Erase_Mouse(GraphicViewPortClass &scr, bool forced = false);
-    uint8_t *Get_Image_Buff() { return m_mouseCursor; }
-    int Get_Max_Width() { return m_maxWidth; }
-    int Get_Max_Height() { return m_maxHeight; }
-    int Get_Cursor_Width() { return m_cursorWidth; }
-    void Set_Cursor_Width(int width) { m_cursorWidth = width; }
-    int Get_Cursor_Height() { return m_cursorHeight; }
-    void Set_Cursor_Height(int height) { m_cursorHeight = height; }
-    int Get_Hotspot_X() { return m_mouseHotX; }
-    void Set_Hotspot_X(int x_pos) { m_mouseHotX = x_pos; }
-    int Get_Hotspot_Y() { return m_mouseHotY; }
-    void Set_Hotspot_Y(int y_pos) { m_mouseHotY = y_pos; }
-    void *Get_Frame_Pointer() { return m_prevCursor; }
-    void Set_Frame_Pointer(void *frame) { m_prevCursor = frame; }
+    uint8_t *Get_Image_Buff() { return m_MouseCursor; }
+    int Get_Max_Width() { return m_MaxWidth; }
+    int Get_Max_Height() { return m_MaxHeight; }
+    int Get_Cursor_Width() { return m_CursorWidth; }
+    void Set_Cursor_Width(int width) { m_CursorWidth = width; }
+    int Get_Cursor_Height() { return m_CursorHeight; }
+    void Set_Cursor_Height(int height) { m_CursorHeight = height; }
+    int Get_Hotspot_X() { return m_MouseHotX; }
+    void Set_Hotspot_X(int x_pos) { m_MouseHotX = x_pos; }
+    int Get_Hotspot_Y() { return m_MouseHotY; }
+    void Set_Hotspot_Y(int y_pos) { m_MouseHotY = y_pos; }
+    void *Get_Frame_Pointer() { return m_PrevCursor; }
+    void Set_Frame_Pointer(void *frame) { m_PrevCursor = frame; }
 
 private:
-    uint8_t *m_mouseCursor;
-    int m_mouseHotX;
-    int m_mouseHotY;
-    int m_cursorWidth;
-    int m_cursorHeight;
-    uint8_t *m_mouseBuffer;
-    int m_buffX;
-    int m_buffY;
-    int m_maxWidth;
-    int m_maxHeight;
-    int m_mouseCXLeft;
-    int m_mouseCYUpper;
-    int m_mouseCXRight;
-    int m_mouseCYLower;
-    uint8_t m_cFlags;
-    uint8_t m_cCount;
-    GraphicViewPortClass *m_screen;
-    void *m_prevCursor;
-    int m_mouseUpdate;
-    int m_state;
-    uint8_t *m_eraseBuffer;
-    int m_eraseBuffX;
-    int m_eraseBuffY;
-    int m_eraseBuffHotX;
-    int m_eraseBuffHotY;
-    int m_eraseFlags;
+    uint8_t *m_MouseCursor;
+    int m_MouseHotX;
+    int m_MouseHotY;
+    int m_CursorWidth;
+    int m_CursorHeight;
+    uint8_t *m_MouseBuffer;
+    int m_BuffX;
+    int m_BuffY;
+    int m_MaxWidth;
+    int m_MaxHeight;
+    int m_MouseCXLeft;
+    int m_MouseCYUpper;
+    int m_MouseCXRight;
+    int m_MouseCYLower;
+    uint8_t m_CFlags;
+    uint8_t m_CCount;
+    GraphicViewPortClass *m_Screen;
+    void *m_PrevCursor;
+    int m_MouseUpdate;
+    int m_State;
+    uint8_t *m_EraseBuffer;
+    int m_EraseBuffX;
+    int m_EraseBuffY;
+    int m_EraseBuffHotX;
+    int m_EraseBuffHotY;
+    int m_EraseFlags;
 #ifdef PLATFORM_WINDOWS
-    CRITICAL_SECTION m_mouseCritSec;
-    MMRESULT m_timerHandle;
+    CRITICAL_SECTION m_MouseCritSec;
+    MMRESULT m_TimerHandle;
 #endif
 };
 

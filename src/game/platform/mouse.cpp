@@ -53,51 +53,51 @@ void CALLBACK Process_Mouse(UINT uDelay, UINT uResolution, DWORD_PTR fptc, DWORD
 #endif
 
 MouseClass::MouseClass(GraphicViewPortClass *scr, int width, int height) :
-    m_mouseCursor(new uint8_t[width * height]),
-    m_mouseHotX(0),
-    m_mouseHotY(0),
-    m_cursorWidth(0),
-    m_cursorHeight(0),
-    m_mouseBuffer(new uint8_t[width * height]),
-    m_buffX(-1),
-    m_buffY(-1),
-    m_maxWidth(width),
-    m_maxHeight(height),
-    m_mouseCXLeft(0),
-    m_mouseCYUpper(0),
-    m_mouseCXRight(0),
-    m_mouseCYLower(0),
-    m_cFlags(0),
-    m_cCount(0),
-    m_screen(scr),
-    m_prevCursor(nullptr),
-    m_mouseUpdate(0),
-    m_state(1),
-    m_eraseBuffer(new uint8_t[width * height]),
-    m_eraseBuffX(-1),
-    m_eraseBuffY(-1),
-    m_eraseBuffHotX(-1),
-    m_eraseBuffHotY(-1),
-    m_eraseFlags(0)
+    m_MouseCursor(new uint8_t[width * height]),
+    m_MouseHotX(0),
+    m_MouseHotY(0),
+    m_CursorWidth(0),
+    m_CursorHeight(0),
+    m_MouseBuffer(new uint8_t[width * height]),
+    m_BuffX(-1),
+    m_BuffY(-1),
+    m_MaxWidth(width),
+    m_MaxHeight(height),
+    m_MouseCXLeft(0),
+    m_MouseCYUpper(0),
+    m_MouseCXRight(0),
+    m_MouseCYLower(0),
+    m_CFlags(0),
+    m_CCount(0),
+    m_Screen(scr),
+    m_PrevCursor(nullptr),
+    m_MouseUpdate(0),
+    m_State(1),
+    m_EraseBuffer(new uint8_t[width * height]),
+    m_EraseBuffX(-1),
+    m_EraseBuffY(-1),
+    m_EraseBuffHotX(-1),
+    m_EraseBuffHotY(-1),
+    m_EraseFlags(0)
 {
 #ifdef PLATFORM_WINDOWS
-    InitializeCriticalSection(&m_mouseCritSec);
+    InitializeCriticalSection(&m_MouseCritSec);
     timeBeginPeriod(MOUSE_UPDATE_FREQ);
-    m_timerHandle = timeSetEvent(MOUSE_UPDATE_FREQ, 1, ::Process_Mouse, 0, TIME_PERIODIC);
+    m_TimerHandle = timeSetEvent(MOUSE_UPDATE_FREQ, 1, ::Process_Mouse, 0, TIME_PERIODIC);
 #endif
     Set_Cursor_Clip();
 }
 
 MouseClass::~MouseClass()
 {
-    ++m_mouseUpdate;
-    delete[] m_mouseCursor;
-    delete[] m_mouseBuffer;
-    delete[] m_eraseBuffer;
+    ++m_MouseUpdate;
+    delete[] m_MouseCursor;
+    delete[] m_MouseBuffer;
+    delete[] m_EraseBuffer;
 
 #ifdef PLATFORM_WINDOWS
-    if (m_timerHandle != 0) {
-        timeKillEvent(m_timerHandle);
+    if (m_TimerHandle != 0) {
+        timeKillEvent(m_TimerHandle);
     }
 
     timeEndPeriod(MOUSE_UPDATE_FREQ);
@@ -188,18 +188,18 @@ BOOL MouseClass::Set_Mouse_XY(int x_pos, int y_pos)
 
 void MouseClass::Block_Mouse(GraphicBufferClass *gbuffer)
 {
-    if (m_screen->Get_Graphic_Buffer() == gbuffer) {
+    if (m_Screen->Get_Graphic_Buffer() == gbuffer) {
 #ifdef PLATFORM_WINDOWS
-        EnterCriticalSection(&m_mouseCritSec);
+        EnterCriticalSection(&m_MouseCritSec);
 #endif
     }
 }
 
 void MouseClass::Unblock_Mouse(GraphicBufferClass *gbuffer)
 {
-    if (m_screen->Get_Graphic_Buffer() == gbuffer) {
+    if (m_Screen->Get_Graphic_Buffer() == gbuffer) {
 #ifdef PLATFORM_WINDOWS
-        LeaveCriticalSection(&m_mouseCritSec);
+        LeaveCriticalSection(&m_MouseCritSec);
 #endif
     }
 }
@@ -209,11 +209,11 @@ void MouseClass::Set_Cursor_Clip()
 #ifdef PLATFORM_WINDOWS
     RECT cliprect;
 
-    if (m_screen) {
+    if (m_Screen) {
         cliprect.left = 0;
         cliprect.top = 0;
-        cliprect.right = m_screen->Get_Width();
-        cliprect.bottom = m_screen->Get_Height();
+        cliprect.right = m_Screen->Get_Width();
+        cliprect.bottom = m_Screen->Get_Height();
 
         ClipCursor(&cliprect);
     }
@@ -229,26 +229,26 @@ void MouseClass::Clear_Cursor_Clip()
 
 void MouseClass::Process_Mouse()
 {
-    if (m_screen != nullptr && m_state <= 0 && !m_mouseUpdate && !m_eraseFlags && g_gameInFocus && m_screen->Get_LockCount() == 0) {
+    if (m_Screen != nullptr && m_State <= 0 && !m_MouseUpdate && !m_EraseFlags && g_gameInFocus && m_Screen->Get_LockCount() == 0) {
         int cur_x;
         int cur_y;
 
         Get_Mouse_XY(cur_x, cur_y);
        
-        if (cur_x != m_buffX || cur_y != m_buffY) {
-            if (m_screen->Lock()) {
+        if (cur_x != m_BuffX || cur_y != m_BuffY) {
+            if (m_Screen->Lock()) {
                 Low_Hide_Mouse();
 
-                if ((m_cFlags & 1) && cur_x >= m_mouseCXLeft && cur_x <= m_mouseCXRight && cur_y >= m_mouseCYUpper
-                    && cur_y <= m_mouseCYLower) {
-                    m_cFlags |= 2;
+                if ((m_CFlags & 1) && cur_x >= m_MouseCXLeft && cur_x <= m_MouseCXRight && cur_y >= m_MouseCYUpper
+                    && cur_y <= m_MouseCYLower) {
+                    m_CFlags |= 2;
                 }
 
-                if (!(m_cFlags & 2)) {
+                if (!(m_CFlags & 2)) {
                     Low_Show_Mouse(cur_x, cur_y);
                 }
 
-                m_screen->Unlock();
+                m_Screen->Unlock();
             }
         }
     }
@@ -256,12 +256,12 @@ void MouseClass::Process_Mouse()
 
 void *MouseClass::Set_Cursor(int hotspot_x, int hotspot_y, void *cursor)
 {
-    if (cursor && cursor != m_prevCursor) {
-        ++m_mouseUpdate;
+    if (cursor && cursor != m_PrevCursor) {
+        ++m_MouseUpdate;
         Hide_Mouse();
         void *retval = Mouse_Set_Cursor(*this, hotspot_x, hotspot_y, cursor);
         Show_Mouse();
-        --m_mouseUpdate;
+        --m_MouseUpdate;
 
         return retval;
     }
@@ -271,39 +271,39 @@ void *MouseClass::Set_Cursor(int hotspot_x, int hotspot_y, void *cursor)
 
 void MouseClass::Low_Hide_Mouse()
 {
-    if (m_state == 0) {
-        if (m_buffX != -1 || m_buffY != -1) {
-            if (m_screen->Lock()) {
+    if (m_State == 0) {
+        if (m_BuffX != -1 || m_BuffY != -1) {
+            if (m_Screen->Lock()) {
                 // DEBUG_LOG("Erasing mouse at X %d, Y %d, HotX %d, HotY %d\n", m_buffX, m_buffY, m_mouseHotX,
                 // m_mouseHotY);
-                Mouse_Shadow_Buffer(*this, *m_screen, m_mouseBuffer, m_buffX, m_buffY, m_mouseHotX, m_mouseHotY, false);
-                m_screen->Unlock();
+                Mouse_Shadow_Buffer(*this, *m_Screen, m_MouseBuffer, m_BuffX, m_BuffY, m_MouseHotX, m_MouseHotY, false);
+                m_Screen->Unlock();
             }
         }
 
-        m_buffX = -1;
-        m_buffY = -1;
+        m_BuffX = -1;
+        m_BuffY = -1;
     }
 
-    ++m_state;
+    ++m_State;
 }
 
 void MouseClass::Hide_Mouse()
 {
     // DEBUG_LOG("MouseClass::Hide_Mouse()\n");
-    ++m_mouseUpdate;
+    ++m_MouseUpdate;
     Low_Hide_Mouse();
-    --m_mouseUpdate;
+    --m_MouseUpdate;
 }
 
 void MouseClass::Low_Show_Mouse(int x_pos, int y_pos)
 {
-    if (m_state != 0 && (--m_state) == 0 && m_screen->Lock()) {
-        Mouse_Shadow_Buffer(*this, *m_screen, m_mouseBuffer, x_pos, y_pos, m_mouseHotX, m_mouseHotY, true);
-        Mouse_Draw(*this, *m_screen, x_pos, y_pos);
-        m_buffX = x_pos;
-        m_buffY = y_pos;
-        m_screen->Unlock();
+    if (m_State != 0 && (--m_State) == 0 && m_Screen->Lock()) {
+        Mouse_Shadow_Buffer(*this, *m_Screen, m_MouseBuffer, x_pos, y_pos, m_MouseHotX, m_MouseHotY, true);
+        Mouse_Draw(*this, *m_Screen, x_pos, y_pos);
+        m_BuffX = x_pos;
+        m_BuffY = y_pos;
+        m_Screen->Unlock();
     }
 }
 
@@ -315,120 +315,120 @@ void MouseClass::Show_Mouse()
 
     Get_Mouse_XY(x_pos, y_pos);
 
-    --m_mouseUpdate;
+    --m_MouseUpdate;
     Low_Show_Mouse(x_pos, y_pos);
-    ++m_mouseUpdate;
+    ++m_MouseUpdate;
 }
 
 void MouseClass::Conditional_Hide_Mouse(int x_pos, int y_pos, int width, int height)
 {
-    ++m_mouseUpdate;
+    ++m_MouseUpdate;
 
     // this looks like the hotspot calculation
-    x_pos = std::max(0, x_pos - m_cursorWidth - m_mouseHotX);
-    y_pos = std::max(0, y_pos - m_cursorHeight - m_mouseHotY);
-    width = std::min(width + m_mouseHotX, m_screen->Get_Width());
-    height = std::min(height + m_mouseHotY, m_screen->Get_Height());
+    x_pos = std::max(0, x_pos - m_CursorWidth - m_MouseHotX);
+    y_pos = std::max(0, y_pos - m_CursorHeight - m_MouseHotY);
+    width = std::min(width + m_MouseHotX, m_Screen->Get_Width());
+    height = std::min(height + m_MouseHotY, m_Screen->Get_Height());
 
-    if (m_cCount) {
-        m_mouseCXLeft = std::min(x_pos, m_mouseCXLeft);
-        m_mouseCYUpper = std::min(y_pos, m_mouseCYUpper);
-        m_mouseCXRight = std::max(width, m_mouseCXRight);
-        m_mouseCYLower = std::max(height, m_mouseCYLower);
+    if (m_CCount) {
+        m_MouseCXLeft = std::min(x_pos, m_MouseCXLeft);
+        m_MouseCYUpper = std::min(y_pos, m_MouseCYUpper);
+        m_MouseCXRight = std::max(width, m_MouseCXRight);
+        m_MouseCYLower = std::max(height, m_MouseCYLower);
     } else {
-        m_mouseCXLeft = x_pos;
-        m_mouseCYUpper = y_pos;
-        m_mouseCXRight = width;
-        m_mouseCYLower = height;
+        m_MouseCXLeft = x_pos;
+        m_MouseCYUpper = y_pos;
+        m_MouseCXRight = width;
+        m_MouseCYLower = height;
     }
 
-    if (!(m_cFlags & 2)) {
-        if (m_buffX >= m_mouseCXLeft && m_buffX <= m_mouseCXRight && m_buffY >= m_mouseCYUpper
-            && m_buffY <= m_mouseCYLower) {
+    if (!(m_CFlags & 2)) {
+        if (m_BuffX >= m_MouseCXLeft && m_BuffX <= m_MouseCXRight && m_BuffY >= m_MouseCYUpper
+            && m_BuffY <= m_MouseCYLower) {
             Low_Hide_Mouse();
-            m_cFlags |= 2;
+            m_CFlags |= 2;
         }
     }
 
-    m_cFlags |= 1;
-    ++m_cCount;
-    --m_mouseUpdate;
+    m_CFlags |= 1;
+    ++m_CCount;
+    --m_MouseUpdate;
 }
 
 void MouseClass::Conditional_Show_Mouse()
 {
     // open dune has a idle sleep here waiting.
     // https://github.com/OpenDUNE/OpenDUNE/blob/master/src/gui/gui.c#L3849
-    ++m_mouseUpdate;
+    ++m_MouseUpdate;
 
-    if (m_cCount) {
-        --m_cCount;
+    if (m_CCount) {
+        --m_CCount;
 
-        if (!m_cCount) {
-            if (m_cFlags & 2) {
+        if (!m_CCount) {
+            if (m_CFlags & 2) {
                 Show_Mouse();
             }
 
-            m_cFlags = 0;
+            m_CFlags = 0;
         }
     }
 
-    --m_mouseUpdate;
+    --m_MouseUpdate;
 }
 
 void MouseClass::Draw_Mouse(GraphicViewPortClass &viewport)
 {
-    if (!m_state) {
-        ++m_mouseUpdate;
+    if (!m_State) {
+        ++m_MouseUpdate;
 
         int cur_x;
         int cur_y;
 
         Get_Mouse_XY(cur_x, cur_y);
 
-        if (m_cFlags & 1 && cur_x >= m_mouseCXLeft && cur_x <= m_mouseCXRight && cur_y >= m_mouseCYUpper && cur_y <= m_mouseCYLower) {
+        if (m_CFlags & 1 && cur_x >= m_MouseCXLeft && cur_x <= m_MouseCXRight && cur_y >= m_MouseCYUpper && cur_y <= m_MouseCYLower) {
             Hide_Mouse();
-            m_cFlags |= 2;
+            m_CFlags |= 2;
         } else {
-            m_eraseFlags = 1;
+            m_EraseFlags = 1;
 
             if (viewport.Lock()) {
-                Mouse_Shadow_Buffer(*this, viewport, m_eraseBuffer, cur_x, cur_y, m_mouseHotX, m_mouseHotY, true);
-                memcpy(m_mouseBuffer, m_eraseBuffer, m_maxHeight * m_maxWidth);
+                Mouse_Shadow_Buffer(*this, viewport, m_EraseBuffer, cur_x, cur_y, m_MouseHotX, m_MouseHotY, true);
+                memcpy(m_MouseBuffer, m_EraseBuffer, m_MaxHeight * m_MaxWidth);
                 Mouse_Draw(*this, viewport, cur_x, cur_y);
 
-                m_eraseBuffX = cur_x;
-                m_buffX = cur_x;
-                m_eraseBuffY = cur_y;
-                m_buffY = cur_y;
-                m_eraseBuffHotX = m_mouseHotX;
-                m_eraseBuffHotY = m_mouseHotY;
+                m_EraseBuffX = cur_x;
+                m_BuffX = cur_x;
+                m_EraseBuffY = cur_y;
+                m_BuffY = cur_y;
+                m_EraseBuffHotX = m_MouseHotX;
+                m_EraseBuffHotY = m_MouseHotY;
 
                 viewport.Unlock();
             }
         }
 
-        --m_mouseUpdate;
+        --m_MouseUpdate;
     }
 }
 
 void MouseClass::Erase_Mouse(GraphicViewPortClass &viewport, bool erase)
 {
-    if (!erase || m_eraseBuffX != -1 || m_eraseBuffY != -1) {
-        ++m_mouseUpdate;
+    if (!erase || m_EraseBuffX != -1 || m_EraseBuffY != -1) {
+        ++m_MouseUpdate;
 
-        if (erase && (m_eraseBuffX != -1 || m_eraseBuffY != -1)) {
+        if (erase && (m_EraseBuffX != -1 || m_EraseBuffY != -1)) {
             if (viewport.Lock()) {
                 Mouse_Shadow_Buffer(
-                    *this, viewport, m_eraseBuffer, m_eraseBuffX, m_eraseBuffY, m_eraseBuffHotX, m_eraseBuffHotY, false);
+                    *this, viewport, m_EraseBuffer, m_EraseBuffX, m_EraseBuffY, m_EraseBuffHotX, m_EraseBuffHotY, false);
                 viewport.Unlock();
             }
 
-            m_eraseBuffX = -1;
-            m_eraseBuffY = -1;
+            m_EraseBuffX = -1;
+            m_EraseBuffY = -1;
         }
 
-        --m_mouseUpdate;
-        m_eraseFlags = 0;
+        --m_MouseUpdate;
+        m_EraseFlags = 0;
     }
 }

@@ -26,21 +26,21 @@ void RGBClass::Adjust(int adjustment, const RGBClass &that)
 {
     int tmp;
 
-    tmp = adjustment * (that.m_red - m_red);
-    m_red += (((tmp & 0xFF000000) >> 24) + tmp) >> 8;
+    tmp = adjustment * (that.m_Red - m_Red);
+    m_Red += (((tmp & 0xFF000000) >> 24) + tmp) >> 8;
 
-    tmp = adjustment * (that.m_grn - m_grn);
-    m_grn += (((tmp & 0xFF000000) >> 24) + tmp) >> 8;
+    tmp = adjustment * (that.m_Grn - m_Grn);
+    m_Grn += (((tmp & 0xFF000000) >> 24) + tmp) >> 8;
 
-    tmp = adjustment * (that.m_blu - m_blu);
-    m_blu += (((tmp & 0xFF000000) >> 24) + tmp) >> 8;
+    tmp = adjustment * (that.m_Blu - m_Blu);
+    m_Blu += (((tmp & 0xFF000000) >> 24) + tmp) >> 8;
 }
 
 int const RGBClass::Difference(RGBClass const &that) const
 {
-    int red = m_red - that.m_red;
-    int green = m_grn - that.m_grn;
-    int blue = m_grn - that.m_blu;
+    int red = m_Red - that.m_Red;
+    int green = m_Grn - that.m_Grn;
+    int blue = m_Grn - that.m_Blu;
 
     red = std::abs(red);
     green = std::abs(green);
@@ -51,9 +51,9 @@ int const RGBClass::Difference(RGBClass const &that) const
 
 RGBClass RGBClass::Average(RGBClass const &that) const
 {
-    int red = m_red + that.m_red;
-    int green = m_grn + that.m_grn;
-    int blue = m_blu + that.m_blu;
+    int red = m_Red + that.m_Red;
+    int green = m_Grn + that.m_Grn;
+    int blue = m_Blu + that.m_Blu;
 
     RGBClass ret((red / 2), (green / 2), (blue / 2));
 
@@ -73,9 +73,9 @@ void RGBClass::Set(int index)
 
 RGBClass::operator HSVClass()
 {
-    int red = Expand_VGA(m_red);
-    int green = Expand_VGA(m_grn);
-    int blue = Expand_VGA(m_blu);
+    int red = Expand_VGA(m_Red);
+    int green = Expand_VGA(m_Grn);
+    int blue = Expand_VGA(m_Blu);
 
     int saturation = 0;
     unsigned hue = 0;

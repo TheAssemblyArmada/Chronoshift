@@ -43,22 +43,22 @@ class GraphicBufferClass;
 class BitmapClass
 {
 public:
-    BitmapClass(int w, int h, void *bitmap) : m_width(w), m_height(h), m_data(bitmap) {}
-    BitmapClass(const BitmapClass &that) : m_width(that.m_width), m_height(that.m_height), m_data(that.m_data){};
+    BitmapClass(int w, int h, void *bitmap) : m_Width(w), m_Height(h), m_Data(bitmap) {}
+    BitmapClass(const BitmapClass &that) : m_Width(that.m_Width), m_Height(that.m_Height), m_Data(that.m_Data){};
 
     void Set_Dimensions(int w, int h)
     {
-        m_width = w;
-        m_height = h;
+        m_Width = w;
+        m_Height = h;
     }
-    int Get_Width() { return m_width; }
-    int Get_Height() { return m_height; }
-    void *Get_Bitmap() { return m_data; }
+    int Get_Width() { return m_Width; }
+    int Get_Height() { return m_Height; }
+    void *Get_Bitmap() { return m_Data; }
 
 private:
-    int m_width;
-    int m_height;
-    void *m_data;
+    int m_Width;
+    int m_Height;
+    void *m_Data;
 };
 
 class GraphicViewPortClass
@@ -72,22 +72,22 @@ public:
     BOOL Change(int x, int y, int w, int h);
     BOOL Lock();
     BOOL Unlock();
-    void *Get_Offset() { return m_offset; }
-    int Get_XAdd() { return m_xAdd; }
-    int Get_XPos() { return m_xPos; }
-    int Get_YPos() { return m_yPos; }
-    int Get_Width() { return m_width; }
-    int Get_Height() { return m_height; }
-    int Get_Pitch() { return m_pitch; }
-    int Get_LockCount() { return m_lockCount; }
+    void *Get_Offset() { return m_Offset; }
+    int Get_XAdd() { return m_XAdd; }
+    int Get_XPos() { return m_XPos; }
+    int Get_YPos() { return m_YPos; }
+    int Get_Width() { return m_Width; }
+    int Get_Height() { return m_Height; }
+    int Get_Pitch() { return m_Pitch; }
+    int Get_LockCount() { return m_LockCount; }
     int Get_Full_Pitch() { return Get_Pitch() + Get_XAdd() + Get_Width(); }
-    BOOL In_Video_Memory() { return m_inVideoMemory; }
-    GraphicBufferClass *Get_Graphic_Buffer() { return m_graphicBuff; }
+    BOOL In_Video_Memory() { return m_InVideoMemory; }
+    GraphicBufferClass *Get_Graphic_Buffer() { return m_GraphicBuff; }
 
     void Set_XY_Pos(int x, int y)
     {
-        m_xPos = x;
-        m_yPos = y;
+        m_XPos = x;
+        m_YPos = y;
     }
     void Put_Pixel(int x, int y, unsigned char value);
     void Put_Fat_Pixel(int x, int y, int size, unsigned char value);
@@ -124,16 +124,16 @@ private:
         GraphicViewPortClass &view, int src_x, int src_y, int dst_x, int dst_y, int w, int h, BOOL use_keysrc = false);
 
 protected:
-    void *m_offset;
-    int m_width;
-    int m_height;
-    int m_xAdd;
-    int m_xPos;
-    int m_yPos;
-    int m_pitch;
-    GraphicBufferClass *m_graphicBuff;
-    BOOL m_inVideoMemory;
-    int m_lockCount;
+    void *m_Offset;
+    int m_Width;
+    int m_Height;
+    int m_XAdd;
+    int m_XPos;
+    int m_YPos;
+    int m_Pitch;
+    GraphicBufferClass *m_GraphicBuff;
+    BOOL m_InVideoMemory;
+    int m_LockCount;
 };
 
 class GraphicBufferClass : public GraphicViewPortClass
@@ -145,11 +145,11 @@ public:
     GraphicBufferClass(int w, int h, GBCEnum mode = GBC_NONE);
     ~GraphicBufferClass();
 
-    BufferClass *Get_GBuffer() { return &m_graphicBuffer; }
+    BufferClass *Get_GBuffer() { return &m_GraphicBuffer; }
 
     void DD_Init(GBCEnum mode);
 #ifdef BUILD_WITH_DDRAW
-    LPDIRECTDRAWSURFACE Get_DD_Surface() { return m_videoSurface; }
+    LPDIRECTDRAWSURFACE Get_DD_Surface() { return m_VideoSurface; }
 #endif
 
     void Attach_DD_Surface(GraphicBufferClass *buffer);
@@ -166,10 +166,10 @@ public:
     static int TotalLocks;
 
 private:
-    BufferClass m_graphicBuffer;
+    BufferClass m_GraphicBuffer;
 #ifdef BUILD_WITH_DDRAW
-    LPDIRECTDRAWSURFACE m_videoSurface;
-    DDSURFACEDESC m_surfaceInfo;
+    LPDIRECTDRAWSURFACE m_VideoSurface;
+    DDSURFACEDESC m_SurfaceInfo;
 #endif
 };
 

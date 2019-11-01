@@ -29,12 +29,12 @@ void HSVClass::Adjust(int adjust, HSVClass const &that)
 {
     int tmp;
 
-    tmp = adjust * (that.m_val - m_val);
-    m_val += (tmp - (tmp >> 31 << 8)) >> 8;
-    tmp = adjust * (that.m_sat - m_sat);
-    m_sat += (tmp - (tmp >> 31 << 8)) >> 8;
-    tmp = adjust * (that.m_hue - m_hue);
-    m_hue += (tmp - (tmp >> 31 << 8)) >> 8;
+    tmp = adjust * (that.m_Val - m_Val);
+    m_Val += (tmp - (tmp >> 31 << 8)) >> 8;
+    tmp = adjust * (that.m_Sat - m_Sat);
+    m_Sat += (tmp - (tmp >> 31 << 8)) >> 8;
+    tmp = adjust * (that.m_Hue - m_Hue);
+    m_Hue += (tmp - (tmp >> 31 << 8)) >> 8;
 }
 
 /**
@@ -46,13 +46,13 @@ void HSVClass::Adjust(fixed_t brightness, fixed_t saturation, fixed_t tint, fixe
     //int tmp = ((std::clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256));
     //int v12 = (tmp / 128) + 128;
 
-    int v = std::clamp((((std::clamp(((brightness * 256) * m_val) / 128, 0, 255) - 128) * (contrast * 256)) / 128) + 128, 0, 255);
-    int s = std::clamp(((saturation * 256) * m_sat) / 128, 0, 255);
-    int h = std::clamp(((tint * 256) * m_hue) / 128, 0, 255);
+    int v = std::clamp((((std::clamp(((brightness * 256) * m_Val) / 128, 0, 255) - 128) * (contrast * 256)) / 128) + 128, 0, 255);
+    int s = std::clamp(((saturation * 256) * m_Sat) / 128, 0, 255);
+    int h = std::clamp(((tint * 256) * m_Hue) / 128, 0, 255);
 
-    m_hue = h;
-    m_sat = s;
-    m_val = v;
+    m_Hue = h;
+    m_Sat = s;
+    m_Val = v;
 }
 
 /**
@@ -62,9 +62,9 @@ void HSVClass::Adjust(fixed_t brightness, fixed_t saturation, fixed_t tint, fixe
  */
 int const HSVClass::Difference(HSVClass const &that) const
 {
-    int hue = m_hue - that.m_hue;
-    int saturation = m_sat - that.m_sat;
-    int value = m_val - that.m_val;
+    int hue = m_Hue - that.m_Hue;
+    int saturation = m_Sat - that.m_Sat;
+    int value = m_Val - that.m_Val;
 
     hue = std::abs(hue);
     saturation = std::abs(saturation);
@@ -80,14 +80,14 @@ int const HSVClass::Difference(HSVClass const &that) const
  */
 HSVClass::operator RGBClass() const
 {
-    if (m_sat == 0) {
+    if (m_Sat == 0) {
         // Achromatic (grey)
-        return RGBClass(RGBClass::Contract_VGA(m_val), RGBClass::Contract_VGA(m_val), RGBClass::Contract_VGA(m_val));
+        return RGBClass(RGBClass::Contract_VGA(m_Val), RGBClass::Contract_VGA(m_Val), RGBClass::Contract_VGA(m_Val));
     }
 
-    int saturation = m_sat;
-    int value = m_val;
-    int hue = m_hue * 6; // scale to full range.
+    int saturation = m_Sat;
+    int value = m_Val;
+    int hue = m_Hue * 6; // scale to full range.
     int q = (hue / 255);
     int tmp[7];
 

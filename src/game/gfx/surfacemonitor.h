@@ -40,15 +40,15 @@ public:
     void Restore_Surfaces();
     void Set_Surface_Focus(bool focus);
     void Release();
-    BOOL Surfaces_Restored() const { return m_surfacesRestored; }
-    void Clear_Surfaces_Restored() { m_surfacesRestored = false; }
+    BOOL Surfaces_Restored() const { return m_SurfacesRestored; }
+    void Clear_Surfaces_Restored() { m_SurfacesRestored = false; }
 
 private:
-    BOOL m_surfacesRestored;
+    BOOL m_SurfacesRestored;
 #ifdef BUILD_WITH_DDRAW
-    LPDIRECTDRAWSURFACE m_surface[SURFACE_COUNT];
+    LPDIRECTDRAWSURFACE m_Surface[SURFACE_COUNT];
 #endif
-    BOOL m_inFocus;
+    BOOL m_InFocus;
 };
 
 #ifdef GAME_DLL
