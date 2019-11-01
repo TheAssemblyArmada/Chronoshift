@@ -25,11 +25,11 @@ SurfaceMonitorClass::SurfaceMonitorClass()
 {
 #ifdef BUILD_WITH_DDRAW
     for (int i = 0; i < SURFACE_COUNT; ++i) {
-        m_surface[i] = nullptr;
+        m_Surface[i] = nullptr;
     }
 #endif
-    m_inFocus = false;
-    m_surfacesRestored = false;
+    m_InFocus = false;
+    m_SurfacesRestored = false;
 }
 
 SurfaceMonitorClass::~SurfaceMonitorClass()
@@ -41,9 +41,9 @@ SurfaceMonitorClass::~SurfaceMonitorClass()
 void SurfaceMonitorClass::Add_Surface(LPDIRECTDRAWSURFACE new_surface)
 {
     if (!Got_Surface_Already(new_surface)) {
-        for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
-            if (m_surface[i] == nullptr) {
-                m_surface[i] = new_surface;
+        for (int i = 0; i < ARRAY_SIZE(m_Surface); ++i) {
+            if (m_Surface[i] == nullptr) {
+                m_Surface[i] = new_surface;
                 return;
             }
         }
@@ -52,9 +52,9 @@ void SurfaceMonitorClass::Add_Surface(LPDIRECTDRAWSURFACE new_surface)
 
 void SurfaceMonitorClass::Remove_Surface(LPDIRECTDRAWSURFACE old_surface)
 {
-    for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
-        if (m_surface[i] == old_surface) {
-            m_surface[i] = nullptr;
+    for (int i = 0; i < ARRAY_SIZE(m_Surface); ++i) {
+        if (m_Surface[i] == old_surface) {
+            m_Surface[i] = nullptr;
             return;
         }
     }
@@ -62,8 +62,8 @@ void SurfaceMonitorClass::Remove_Surface(LPDIRECTDRAWSURFACE old_surface)
 
 bool SurfaceMonitorClass::Got_Surface_Already(LPDIRECTDRAWSURFACE test_surface)
 {
-    for (int i = 0; i < ARRAY_SIZE(m_surface); ++i) {
-        if (m_surface[i] == test_surface) {
+    for (int i = 0; i < ARRAY_SIZE(m_Surface); ++i) {
+        if (m_Surface[i] == test_surface) {
             return true;
         }
     }
@@ -73,10 +73,10 @@ bool SurfaceMonitorClass::Got_Surface_Already(LPDIRECTDRAWSURFACE test_surface)
 
 void SurfaceMonitorClass::Restore_Surfaces()
 {
-    if (m_inFocus) {
+    if (m_InFocus) {
 #ifdef BUILD_WITH_DDRAW
         for (int i = 0; i < SURFACE_COUNT; ++i) {
-            if (m_surface[i] && m_surface[i]->Restore()) {
+            if (m_Surface[i] && m_Surface[i]->Restore()) {
                 if (MiscFocusLoss != nullptr) {
                     MiscFocusLoss();
                 }
@@ -87,23 +87,23 @@ void SurfaceMonitorClass::Restore_Surfaces()
         if (MiscFocusRestore != nullptr) {
             MiscFocusRestore();
         }
-        m_surfacesRestored = true;
+        m_SurfacesRestored = true;
         Set_Palette(g_currentPalette);
     }
 }
 
 void SurfaceMonitorClass::Set_Surface_Focus(bool in_focus)
 {
-    m_inFocus = in_focus;
+    m_InFocus = in_focus;
 }
 
 void SurfaceMonitorClass::Release()
 {
 #ifdef BUILD_WITH_DDRAW
     for (int i = 0; i < SURFACE_COUNT; ++i) {
-        if (m_surface[i]) {
-            m_surface[i]->Release();
-            m_surface[i] = nullptr;
+        if (m_Surface[i]) {
+            m_Surface[i]->Release();
+            m_Surface[i] = nullptr;
         }
     }
 #endif

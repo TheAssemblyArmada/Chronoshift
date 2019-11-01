@@ -33,17 +33,17 @@ PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g
 
 PaletteClass::PaletteClass(const RGBClass &rgb)
 {
-    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_palette); ++index) {
-        m_palette[index].Set_Red(rgb.Get_Red());
-        m_palette[index].Set_Green(rgb.Get_Green());
-        m_palette[index].Set_Blue(rgb.Get_Blue());
+    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_Palette); ++index) {
+        m_Palette[index].Set_Red(rgb.Get_Red());
+        m_Palette[index].Set_Green(rgb.Get_Green());
+        m_Palette[index].Set_Blue(rgb.Get_Blue());
     }
 }
 
 bool PaletteClass::operator==(PaletteClass &pal) const
 {
     if (this != &pal) {
-        return memcmp(m_palette, pal.m_palette, sizeof(m_palette)) == 0;
+        return memcmp(m_Palette, pal.m_Palette, sizeof(m_Palette)) == 0;
     }
 
     return true;
@@ -52,7 +52,7 @@ bool PaletteClass::operator==(PaletteClass &pal) const
 PaletteClass &PaletteClass::operator=(PaletteClass &pal)
 {
     if (this != &pal) {
-        memcpy(m_palette, pal.m_palette, sizeof(m_palette));
+        memcpy(m_Palette, pal.m_Palette, sizeof(m_Palette));
     }
 
     return *this;
@@ -60,32 +60,32 @@ PaletteClass &PaletteClass::operator=(PaletteClass &pal)
 
 void PaletteClass::Adjust(int adj)
 {
-    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_palette); ++index) {
-        m_palette[index].Adjust(adj, RGBClass::BlackColor);
+    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_Palette); ++index) {
+        m_Palette[index].Adjust(adj, RGBClass::BlackColor);
     }
 }
 
 void PaletteClass::Adjust(int adj, PaletteClass &pal)
 {
-    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_palette); ++index) {
-        m_palette[index].Adjust(adj, (pal.m_palette[index]));
+    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_Palette); ++index) {
+        m_Palette[index].Adjust(adj, (pal.m_Palette[index]));
     }
 }
 
 void PaletteClass::Partial_Adjust(int adj, char *data)
 {
-    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_palette); ++index) {
+    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_Palette); ++index) {
         if (data[index]) {
-            m_palette[index].Adjust(adj, RGBClass::BlackColor);
+            m_Palette[index].Adjust(adj, RGBClass::BlackColor);
         }
     }
 }
 
 void PaletteClass::Partial_Adjust(int adj, PaletteClass &pal, char *data)
 {
-    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_palette); ++index) {
+    for (int index = 0; index < ARRAY_SIZE(PaletteClass::m_Palette); ++index) {
         if (data[index]) {
-            m_palette[index].Adjust(adj, pal.m_palette[index]);
+            m_Palette[index].Adjust(adj, pal.m_Palette[index]);
         }
     }
 }
@@ -96,8 +96,8 @@ int PaletteClass::Closest_Color(RGBClass &rgb) const
     int index = 0;
     int prevdiff = -1;
 
-    for (int i = 0; i < ARRAY_SIZE(PaletteClass::m_palette); ++i) {
-        difference = rgb.Difference(m_palette[i]);
+    for (int i = 0; i < ARRAY_SIZE(PaletteClass::m_Palette); ++i) {
+        difference = rgb.Difference(m_Palette[i]);
 
         if (prevdiff == -1 || difference < prevdiff) {
             prevdiff = difference;
@@ -120,9 +120,9 @@ void PaletteClass::Set(int fading_steps, void (*callback)())
     while (timer.Time() > 0) {
         adjpal = tmppal;
         int remaining = timer.Time();
-        adjpal.Adjust(((fading_steps - remaining) * ARRAY_SIZE(PaletteClass::m_palette)) / fading_steps, *this);
+        adjpal.Adjust(((fading_steps - remaining) * ARRAY_SIZE(PaletteClass::m_Palette)) / fading_steps, *this);
         remaining = timer.Time();
-        Set_Palette((uint8_t *)adjpal.m_palette);
+        Set_Palette((uint8_t *)adjpal.m_Palette);
 
         int i = timer.Time();
         while (i == remaining && remaining > 0) {
@@ -134,5 +134,5 @@ void PaletteClass::Set(int fading_steps, void (*callback)())
         }
     }
 
-    Set_Palette((uint8_t *)m_palette);
+    Set_Palette((uint8_t *)m_Palette);
 }

@@ -33,8 +33,8 @@ public:
 public:
     PaletteClass(const RGBClass &rgb = RGBClass::BlackColor);
 
-    RGBClass &operator[](int index) { return m_palette[index]; }
-    const RGBClass &operator[](int index) const { return m_palette[index]; }
+    RGBClass &operator[](int index) { return m_Palette[index]; }
+    const RGBClass &operator[](int index) const { return m_Palette[index]; }
 
     bool operator==(PaletteClass &pal) const;
     PaletteClass &operator=(PaletteClass &pal);
@@ -52,7 +52,7 @@ public:
     static PaletteClass &CurrentPalette;
 
 private:
-    RGBClass m_palette[PALETTE_ENTRIES];
+    RGBClass m_Palette[PALETTE_ENTRIES];
 };
 
 #ifdef GAME_DLL
