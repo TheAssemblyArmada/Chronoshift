@@ -28,208 +28,208 @@ RulesClass Rule;
 #endif
 
 RulesClass::RulesClass() :
-    TurboBoost("1.5"),
-    AttackInterval("3.0"),
-    AttackDelay("5.0"),
-    PowerEmergency("0.75"),
-    BadgerBombCount(1),
-    AirstripRatio("0.12"),
-    AirstripLimit(5),
-    HelipadRatio("0.12"),
-    HelipadLimit(5),
-    TeslaRatio("0.16"),
-    TeslaLimit(10),
-    AARatio("0.14"),
-    AALimit(10),
-    DefenseRatio("0.5"),
-    DefenseLimit(40),
-    WarRatio("0.1"),
-    WarLimit(2),
-    BarracksRatio("0.16"),
-    BarracksLimit(2),
-    RefineryLimit(4),
-    RefineryRatio("0.16"),
-    BaseSizeAdd(3),
-    PowerSurplus(50),
-    InfantryReserve(2000),
-    InfantryBaseMult(2),
-    ChronoDuration("3.0"),
-    WaterCrateChance("0.2"),
-    SoloCrateMoney(2000),
-    GPSTechLevel(0),
-    UnitCrateType(UNIT_NONE),
-    PatrolScan("0.016"),
-    TeamDelay("0.6"),
-    SubmergeDelay("0.00"),
-    GameSpeedBias("1.0"),
-    BaseBias("1.0"),
-    VortexRange(2560), // 10 cells in leptons
-    VortexSpeed(MPHType(10)),
-    VortexDamage(200),
-    VortexChance("0.2"),
-    ExpSpread("0.5"),
-    FireSupress(256), // 1 cell in leptons
-    ParaTech(10),
-    SpyPlaneTech(10),
-    ParabombTech(10),
-    SilverCrate(CRATE_HEAL_BASE),
-    WoodCrate(CRATE_MONEY),
-    WaterCrate(CRATE_MONEY),
-    CrateMinimum(1),
-    CrateMaximum(255),
-    LZScanRadius(4096),        //16 cells in leptons
-    MPlayerMoney(3000),
-    MPlayerMaxMoney(10000),
-    MPlayerShadowGrow(true),
-    MPlayerBases(true),
-    MPlayerOreGrows(true),
-    MPlayerCrates(true),
-    MPlayerAIPlayers(false),
-    MPlayerCaptureTheFlag(false),
-    DropZoneRadius(1024), // 4 cells in leptons
-    MessageDelay("0.6"),
-    SavourDelay("0.03"),
-    AVMineDamage(1200),
-    APMineDamage(1000),
-    Players(8),
-    BaseDefenseDelay("0.25"),
-    SuspendPriority(20),
-    SuspendDelay("2.0"),
-    SurvivorRate("0.5"),
-    ReloadRate("0.05"),
-    AutocreateTime("5.0"),
-    BuildupTime("0.05"),
-    OreTruckRate(2),
-    AtomDamage(1000),
-    Paranoid(true),
-    CurleyShuffle(false),
-    FlashLowPower(true),
-    CompEasyBonus(true),
-    FineDiffControl(false),
-    OreExplosive(false),
-    EnemyHealth(true),
-    MCVUndeploy(false),
-    AllyReveal(true),
-    SeparateAircraft(false),
-    TreeTargeting(false),
-    MineAware(true),
-    OreGrows(true),
-    OreSpreads(true),
-    NamedCivilians(false),
-    PlayerAutoCrush(false),
-    PlayerReturnFire(false),
-    PlayerScatter(false),
-    ChronoKillCargo(true),
-    SecretUnitsEnabled(false),
-    NewUnitsEnabled(false),
-    ProneDamage("0.5"),
-    QuakeDamage("0.33"),
-    QuakeChance("0.2"),
-    GrowthRate("2.0"),
-    ShroudRate("4.0"),
-    CrateRegen("10.0"),
-    TimerWarning("2.0"),
-    RechargeSonar("14.0"),
-    RechargeChrono("3.0"),
-    RechargeParaBomb("14.0"),
-    RechargeParatrooper("2.0"),
-    RechargeParaSaboteur("14.0"),
-    RechargeSpyPlane("2.0"),
-    RechargeIronCurtain("14.0"),
-    RechargeGPS("1.0"),    
-    RechargeNuke("14.0"),
-    SpeakDelay("2.0"),
-    DamageDelay("1.0"),
-    Gravity(3),
-    GapRadius(10),
-    GapRegenInterval("0.1"),
-    RadarJamRadius(2560), // 10 cells in leptons
-    Incoming(MPHType(0)),
-    MinDamage(1),
-    MaxDamage(1000),
-    RepairStep(5),
-    RepairPercent("0.25"),
-    URepairStep(5),
-    URepairPercent("0.25"),
-    RepairRate("0.016"),
-    ConditionGreen("1.0"),
-    ConditionYellow("0.50"),
-    ConditionRed("0.25"),
-    IdleActionFrequency("0.083"),
-    BailCount(28),
-    GoldValue(35),
-    GemValue(110),
-    MaxAircraft(100),
-    MaxAnim(100),
-    MaxBuilding(500),
-    MaxBullet(40),
-    MaxFactory(20),
-    MaxInfantry(500),
-    MaxOverlay(1),
-    MaxSmudge(1),
-    MaxTeam(60),
-    MaxTeamType(60),
-    MaxTemplate(1),
-    MaxTerrain(500),
-    MaxTrigger(60),
-    MaxUnit(500),
-    MaxVessel(100),
-    MaxProjectile(20),
-    MaxWeapon(20),
-    MaxWarhead(20),
-    MaxTrigType(80),
-    CloseEnough(640), // 2.5 cells in leptons
-    Stray(512),// 2 cells in leptons
-    Crush(384), // .5 cells in leptons
-    CrateRadius(640), // 2.5 cells in leptons
-    HomingScatter(512), //2 cells in leptons
-    BallisticScatter(256), //1 cells in leptons
-    RefundPercent("0.5"),
-    IronCurtain("0.5"),
-    BridgeStrength(1000),
-    BuildSpeed("1.0"),
-    C4Delay("0.03"),
-    CreditReserve(1000),
-    PathDelay("0.016"),
-    MovieTime("0.25"),
-    ChronoTechLevel(1),
-    OreNearScan(1536), //6 cells in leptons
-    OreFarScan(8192) //32 cells in leptons
+    m_TurboBoost("1.5"),
+    m_AttackInterval("3.0"),
+    m_AttackDelay("5.0"),
+    m_PowerEmergency("0.75"),
+    m_BadgerBombCount(1),
+    m_AirstripRatio("0.12"),
+    m_AirstripLimit(5),
+    m_HelipadRatio("0.12"),
+    m_HelipadLimit(5),
+    m_TeslaRatio("0.16"),
+    m_TeslaLimit(10),
+    m_AARatio("0.14"),
+    m_AALimit(10),
+    m_DefenseRatio("0.5"),
+    m_DefenseLimit(40),
+    m_WarRatio("0.1"),
+    m_WarLimit(2),
+    m_BarracksRatio("0.16"),
+    m_BarracksLimit(2),
+    m_RefineryLimit(4),
+    m_RefineryRatio("0.16"),
+    m_BaseSizeAdd(3),
+    m_PowerSurplus(50),
+    m_InfantryReserve(2000),
+    m_InfantryBaseMult(2),
+    m_ChronoDuration("3.0"),
+    m_WaterCrateChance("0.2"),
+    m_SoloCrateMoney(2000),
+    m_GPSTechLevel(0),
+    m_UnitCrateType(UNIT_NONE),
+    m_PatrolScan("0.016"),
+    m_TeamDelay("0.6"),
+    m_SubmergeDelay("0.00"),
+    m_GameSpeedBias("1.0"),
+    m_BaseBias("1.0"),
+    m_VortexRange(2560), // 10 cells in leptons
+    m_VortexSpeed(MPHType(10)),
+    m_VortexDamage(200),
+    m_VortexChance("0.2"),
+    m_ExpSpread("0.5"),
+    m_FireSupress(256), // 1 cell in leptons
+    m_ParaTech(10),
+    m_SpyPlaneTech(10),
+    m_ParabombTech(10),
+    m_SilverCrate(CRATE_HEAL_BASE),
+    m_WoodCrate(CRATE_MONEY),
+    m_WaterCrate(CRATE_MONEY),
+    m_CrateMinimum(1),
+    m_CrateMaximum(255),
+    m_LZScanRadius(4096),        //16 cells in leptons
+    m_MPlayerMoney(3000),
+    m_MPlayerMaxMoney(10000),
+    m_MPlayerShadowGrow(true),
+    m_MPlayerBases(true),
+    m_MPlayerOreGrows(true),
+    m_MPlayerCrates(true),
+    m_MPlayerAIPlayers(false),
+    m_MPlayerCaptureTheFlag(false),
+    m_DropZoneRadius(1024), // 4 cells in leptons
+    m_MessageDelay("0.6"),
+    m_SavourDelay("0.03"),
+    m_AVMineDamage(1200),
+    m_APMineDamage(1000),
+    m_Players(8),
+    m_BaseDefenseDelay("0.25"),
+    m_SuspendPriority(20),
+    m_SuspendDelay("2.0"),
+    m_SurvivorRate("0.5"),
+    m_ReloadRate("0.05"),
+    m_AutocreateTime("5.0"),
+    m_BuildupTime("0.05"),
+    m_OreTruckRate(2),
+    m_AtomDamage(1000),
+    m_Paranoid(true),
+    m_CurleyShuffle(false),
+    m_FlashLowPower(true),
+    m_CompEasyBonus(true),
+    m_FineDiffControl(false),
+    m_OreExplosive(false),
+    m_EnemyHealth(true),
+    m_MCVUndeploy(false),
+    m_AllyReveal(true),
+    m_SeparateAircraft(false),
+    m_TreeTargeting(false),
+    m_MineAware(true),
+    m_OreGrows(true),
+    m_OreSpreads(true),
+    m_NamedCivilians(false),
+    m_PlayerAutoCrush(false),
+    m_PlayerReturnFire(false),
+    m_PlayerScatter(false),
+    m_ChronoKillCargo(true),
+    m_SecretUnitsEnabled(false),
+    m_NewUnitsEnabled(false),
+    m_ProneDamage("0.5"),
+    m_QuakeDamage("0.33"),
+    m_QuakeChance("0.2"),
+    m_GrowthRate("2.0"),
+    m_ShroudRate("4.0"),
+    m_CrateRegen("10.0"),
+    m_TimerWarning("2.0"),
+    m_RechargeSonar("14.0"),
+    m_RechargeChrono("3.0"),
+    m_RechargeParaBomb("14.0"),
+    m_RechargeParatrooper("2.0"),
+    m_RechargeParaSaboteur("14.0"),
+    m_RechargeSpyPlane("2.0"),
+    m_RechargeIronCurtain("14.0"),
+    m_RechargeGPS("1.0"),    
+    m_RechargeNuke("14.0"),
+    m_SpeakDelay("2.0"),
+    m_DamageDelay("1.0"),
+    m_Gravity(3),
+    m_GapRadius(10),
+    m_GapRegenInterval("0.1"),
+    m_RadarJamRadius(2560), // 10 cells in leptons
+    m_Incoming(MPHType(0)),
+    m_MinDamage(1),
+    m_MaxDamage(1000),
+    m_RepairStep(5),
+    m_RepairPercent("0.25"),
+    m_URepairStep(5),
+    m_URepairPercent("0.25"),
+    m_RepairRate("0.016"),
+    m_ConditionGreen("1.0"),
+    m_ConditionYellow("0.50"),
+    m_ConditionRed("0.25"),
+    m_IdleActionFrequency("0.083"),
+    m_BailCount(28),
+    m_GoldValue(35),
+    m_GemValue(110),
+    m_MaxAircraft(100),
+    m_MaxAnim(100),
+    m_MaxBuilding(500),
+    m_MaxBullet(40),
+    m_MaxFactory(20),
+    m_MaxInfantry(500),
+    m_MaxOverlay(1),
+    m_MaxSmudge(1),
+    m_MaxTeam(60),
+    m_MaxTeamType(60),
+    m_MaxTemplate(1),
+    m_MaxTerrain(500),
+    m_MaxTrigger(60),
+    m_MaxUnit(500),
+    m_MaxVessel(100),
+    m_MaxProjectile(20),
+    m_MaxWeapon(20),
+    m_MaxWarhead(20),
+    m_MaxTrigType(80),
+    m_CloseEnough(640), // 2.5 cells in leptons
+    m_Stray(512),// 2 cells in leptons
+    m_Crush(384), // .5 cells in leptons
+    m_CrateRadius(640), // 2.5 cells in leptons
+    m_HomingScatter(512), //2 cells in leptons
+    m_BallisticScatter(256), //1 cells in leptons
+    m_RefundPercent("0.5"),
+    m_IronCurtain("0.5"),
+    m_BridgeStrength(1000),
+    m_BuildSpeed("1.0"),
+    m_C4Delay("0.03"),
+    m_CreditReserve(1000),
+    m_PathDelay("0.016"),
+    m_MovieTime("0.25"),
+    m_ChronoTechLevel(1),
+    m_OreNearScan(1536), //6 cells in leptons
+    m_OreFarScan(8192) //32 cells in leptons
 #ifndef GAME_DLL
     ,
-    ChronoTankDuration("0.0"),
-    MTankDistance(30),
-    CarrierLaunchDelay(60),
-    QuakeUnitDamage("0.5"),
-    QuakeVesselDamage("0.5"),
-    QuakeBuildingDamage("0.25"),
-    QuakeInfantryDamage(0),
-    QuakeDelay(120),
-    CloakDelay("0.02")
+    m_ChronoTankDuration("0.0"),
+    m_MTankDistance(30),
+    m_CarrierLaunchDelay(60),
+    m_QuakeUnitDamage("0.5"),
+    m_QuakeVesselDamage("0.5"),
+    m_QuakeBuildingDamage("0.25"),
+    m_QuakeInfantryDamage(0),
+    m_QuakeDelay(120),
+    m_CloakDelay("0.02")
 #endif
 {
-    IQControls.MaxIQLevels = 5;
-    IQControls.SuperWeapons = 4;
-    IQControls.Production = 5;
-    IQControls.GuardArea = 4;
-    IQControls.RepairSell = 3;
-    IQControls.AutoCrush = 2;
-    IQControls.Scatter = 3;
-    IQControls.ContentScan = 4;
-    IQControls.Aircraft = 4;
-    IQControls.Harvester = 3;
-    IQControls.SellBack = 2;
+    m_IQControls.m_MaxIQLevels = 5;
+    m_IQControls.m_SuperWeapons = 4;
+    m_IQControls.m_Production = 5;
+    m_IQControls.m_GuardArea = 4;
+    m_IQControls.m_RepairSell = 3;
+    m_IQControls.m_AutoCrush = 2;
+    m_IQControls.m_Scatter = 3;
+    m_IQControls.m_ContentScan = 4;
+    m_IQControls.m_Aircraft = 4;
+    m_IQControls.m_Harvester = 3;
+    m_IQControls.m_SellBack = 2;
 
 #ifdef GAME_DLL
-    ChronoTankDuration = "0.0";
-    MTankDistance = 30;
-    CarrierLaunchDelay = 60;
-    QuakeUnitDamage = "0.5";
-    QuakeVesselDamage = "0.5";
-    QuakeBuildingDamage = "0.25";
-    QuakeInfantryDamage = 0;
-    QuakeDelay = 120;
-    CloakDelay = "0.02";
+    m_ChronoTankDuration = "0.0";
+    m_MTankDistance = 30;
+    m_CarrierLaunchDelay = 60;
+    m_QuakeUnitDamage = "0.5";
+    m_QuakeVesselDamage = "0.5";
+    m_QuakeBuildingDamage = "0.25";
+    m_QuakeInfantryDamage = 0;
+    m_QuakeDelay = 120;
+    m_CloakDelay = "0.02";
 #endif
 }
 
@@ -273,27 +273,27 @@ BOOL RulesClass::Aftermath(GameINIClass &ini)
 {
     if (ini.Find_Section("Aftermath") != nullptr) {
         // i think they made these global so they didnt break save games...
-        NewUnitsEnabled = ini.Get_Bool("Aftermath", "NewUnitsEnabled", false);
+        m_NewUnitsEnabled = ini.Get_Bool("Aftermath", "NewUnitsEnabled", false);
 
 #ifdef GAME_DLL
-        OrigNewUnitsEnabled = NewUnitsEnabled;
+        m_OrigNewUnitsEnabled = m_NewUnitsEnabled;
 #endif
 
-        MTankDistance = ini.Get_Int("Aftermath", "MTankDistance", MTankDistance);
-        QuakeUnitDamage = ini.Get_Fixed("Aftermath", "QuakeUnitDamage", QuakeUnitDamage);
-        QuakeVesselDamage = ini.Get_Fixed("Aftermath", "QuakeVesselDamage", QuakeVesselDamage);
+        m_MTankDistance = ini.Get_Int("Aftermath", "MTankDistance", m_MTankDistance);
+        m_QuakeUnitDamage = ini.Get_Fixed("Aftermath", "QuakeUnitDamage", m_QuakeUnitDamage);
+        m_QuakeVesselDamage = ini.Get_Fixed("Aftermath", "QuakeVesselDamage", m_QuakeVesselDamage);
 
-        if (QuakeVesselDamage <= (fixed_t)0) {
-            QuakeVesselDamage = QuakeUnitDamage;
+        if (m_QuakeVesselDamage <= (fixed_t)0) {
+            m_QuakeVesselDamage = m_QuakeUnitDamage;
         }
 
-        QuakeBuildingDamage = ini.Get_Fixed("Aftermath", "QuakeBuildingDamage", QuakeBuildingDamage);
-        QuakeInfantryDamage = ini.Get_Int("Aftermath", "QuakeInfantryDamage", QuakeInfantryDamage);
-        QuakeDelay = ini.Get_Int("Aftermath", "QuakeDelay", QuakeDelay);
-        ChronoTankDuration = ini.Get_Fixed("Aftermath", "ChronoTankDuration", ChronoTankDuration);
-        CarrierLaunchDelay = ini.Get_Int("Aftermath", "CarrierLaunchDelay", CarrierLaunchDelay);
-        EngineerDamage = ini.Get_Fixed("Aftermath", "EngineerDamage", EngineerDamage);
-        EngineerCaptureLevel = ini.Get_Fixed("Aftermath", "EngineerCaptureLevel", EngineerCaptureLevel);
+        m_QuakeBuildingDamage = ini.Get_Fixed("Aftermath", "QuakeBuildingDamage", m_QuakeBuildingDamage);
+        m_QuakeInfantryDamage = ini.Get_Int("Aftermath", "QuakeInfantryDamage", m_QuakeInfantryDamage);
+        m_QuakeDelay = ini.Get_Int("Aftermath", "QuakeDelay", m_QuakeDelay);
+        m_ChronoTankDuration = ini.Get_Fixed("Aftermath", "ChronoTankDuration", m_ChronoTankDuration);
+        m_CarrierLaunchDelay = ini.Get_Int("Aftermath", "CarrierLaunchDelay", m_CarrierLaunchDelay);
+        m_EngineerDamage = ini.Get_Fixed("Aftermath", "EngineerDamage", m_EngineerDamage);
+        m_EngineerCaptureLevel = ini.Get_Fixed("Aftermath", "EngineerCaptureLevel", m_EngineerCaptureLevel);
 
         return true;
     }
@@ -311,113 +311,113 @@ BOOL RulesClass::General(GameINIClass &ini)
     Aftermath(ini);
 
     if (ini.Find_Section("General") != nullptr) {
-        TurboBoost = ini.Get_Fixed("General", "TurboBoost", TurboBoost);
-        BadgerBombCount = ini.Get_Int("General", "BadgerBombCount", BadgerBombCount);
-        CurleyShuffle = ini.Get_Bool("General", "CurleyShuffle", CurleyShuffle);
-        FlashLowPower = ini.Get_Bool("General", "FlashLowPower", FlashLowPower);
-        ChronoKillCargo = ini.Get_Bool("General", "ChronoKillCargo", ChronoKillCargo);
-        ChronoDuration = ini.Get_Fixed("General", "ChronoDuration", ChronoDuration);
-        FineDiffControl = ini.Get_Bool("General", "FineDiffControl", FineDiffControl);
-        WaterCrateChance = ini.Get_Fixed("General", "WaterCrateChance", WaterCrateChance);
-        SoloCrateMoney = ini.Get_Int("General", "SoloCrateMoney", SoloCrateMoney);
-        ParabombTech = ini.Get_Int("General", "ParabombTech", ParabombTech);
-        GPSTechLevel = ini.Get_Int("General", "GPSTechLevel", GPSTechLevel);
-        UnitCrateType = ini.Get_UnitType("General", "UnitCrateType", UnitCrateType);
+        m_TurboBoost = ini.Get_Fixed("General", "TurboBoost", m_TurboBoost);
+        m_BadgerBombCount = ini.Get_Int("General", "BadgerBombCount", m_BadgerBombCount);
+        m_CurleyShuffle = ini.Get_Bool("General", "CurleyShuffle", m_CurleyShuffle);
+        m_FlashLowPower = ini.Get_Bool("General", "FlashLowPower", m_FlashLowPower);
+        m_ChronoKillCargo = ini.Get_Bool("General", "ChronoKillCargo", m_ChronoKillCargo);
+        m_ChronoDuration = ini.Get_Fixed("General", "ChronoDuration", m_ChronoDuration);
+        m_FineDiffControl = ini.Get_Bool("General", "FineDiffControl", m_FineDiffControl);
+        m_WaterCrateChance = ini.Get_Fixed("General", "WaterCrateChance", m_WaterCrateChance);
+        m_SoloCrateMoney = ini.Get_Int("General", "SoloCrateMoney", m_SoloCrateMoney);
+        m_ParabombTech = ini.Get_Int("General", "ParabombTech", m_ParabombTech);
+        m_GPSTechLevel = ini.Get_Int("General", "GPSTechLevel", m_GPSTechLevel);
+        m_UnitCrateType = ini.Get_UnitType("General", "UnitCrateType", m_UnitCrateType);
 
         // BUGFIX: Fixed from original, this entry was loaded with Get_Fixed().
-        OreExplosive = ini.Get_Bool("General", "OreExplosive", OreExplosive);
-        GapRegenInterval = ini.Get_Fixed("General", "GapRegenInterval", GapRegenInterval);
-        TeamDelay = ini.Get_Fixed("General", "TeamDelay", TeamDelay);
-        SubmergeDelay = ini.Get_Fixed("General", "SubmergeDelay", SubmergeDelay);
-        CloakDelay = ini.Get_Fixed("General", "CloakDelay", CloakDelay);
-        GameSpeedBias = ini.Get_Fixed("General", "GameSpeedBias", GameSpeedBias);
+        m_OreExplosive = ini.Get_Bool("General", "OreExplosive", m_OreExplosive);
+        m_GapRegenInterval = ini.Get_Fixed("General", "GapRegenInterval", m_GapRegenInterval);
+        m_TeamDelay = ini.Get_Fixed("General", "TeamDelay", m_TeamDelay);
+        m_SubmergeDelay = ini.Get_Fixed("General", "SubmergeDelay", m_SubmergeDelay);
+        m_CloakDelay = ini.Get_Fixed("General", "CloakDelay", m_CloakDelay);
+        m_GameSpeedBias = ini.Get_Fixed("General", "GameSpeedBias", m_GameSpeedBias);
 
         // Original doesn't appear to load this, rule.ini value loaded as 16th of lepton?
-        // LZScanRadius = ini.Get_Lepton("General", "LZScanRadius", LZScanRadius);
+        // m_LZScanRadius = ini.Get_Lepton("General", "LZScanRadius", m_LZScanRadius);
 
-        BaseBias = ini.Get_Fixed("General", "BaseBias", BaseBias);
-        ExpSpread = ini.Get_Fixed("General", "ExpSpread", ExpSpread);
-        FireSupress = ini.Get_Lepton("General", "FireSupress", FireSupress);
-        ParaTech = ini.Get_Int("General", "ParaTech", ParaTech);
-        SpyPlaneTech = ini.Get_Int("General", "SpyPlaneTech", SpyPlaneTech);
-        SilverCrate = ini.Get_CrateType("General", "SilverCrate", SilverCrate);
-        WoodCrate = ini.Get_CrateType("General", "WoodCrate", WoodCrate);
-        WaterCrate = ini.Get_CrateType("General", "WaterCrate", WaterCrate);
-        CrateMinimum = ini.Get_Int("General", "CrateMinimum", CrateMinimum);
-        CrateMaximum = ini.Get_Int("General", "CrateMaximum", CrateMaximum);
-        PlayerScatter = ini.Get_Bool("General", "PlayerScatter", PlayerScatter);
-        PlayerReturnFire = ini.Get_Bool("General", "PlayerReturnFire", PlayerReturnFire);
-        PlayerAutoCrush = ini.Get_Bool("General", "PlayerAutoCrush", PlayerAutoCrush);
-        NamedCivilians = ini.Get_Bool("General", "NamedCivilians", NamedCivilians);
-        OreGrows = ini.Get_Bool("General", "OreGrows", OreGrows);
-        OreSpreads = ini.Get_Bool("General", "OreSpreads", OreSpreads);
-        MineAware = ini.Get_Bool("General", "MineAware", MineAware);
-        TreeTargeting = ini.Get_Bool("General", "TreeTargeting", TreeTargeting);
-        SeparateAircraft = ini.Get_Bool("General", "SeparateAircraft", SeparateAircraft);
-        DropZoneRadius = ini.Get_Lepton("General", "DropZoneRadius", DropZoneRadius);
-        MessageDelay = ini.Get_Fixed("General", "MessageDelay", MessageDelay);
-        SavourDelay = ini.Get_Fixed("General", "SavourDelay", SavourDelay);
-        AVMineDamage = ini.Get_Int("General", "AVMineDamage", AVMineDamage);
-        APMineDamage = ini.Get_Int("General", "APMineDamage", APMineDamage);
-        BaseDefenseDelay = ini.Get_Fixed("General", "BaseDefenseDelay", BaseDefenseDelay);
-        SuspendPriority = ini.Get_Int("General", "SuspendPriority", SuspendPriority);
-        SuspendDelay = ini.Get_Fixed("General", "SuspendDelay", SuspendDelay);
-        SurvivorRate = ini.Get_Fixed("General", "SurvivorRate", SurvivorRate);
-        RadarJamRadius = ini.Get_Lepton("General", "RadarJamRadius", RadarJamRadius);
-        ReloadRate = ini.Get_Fixed("General", "ReloadRate", ReloadRate);
-        IdleActionFrequency = ini.Get_Fixed("General", "IdleActionFrequency", IdleActionFrequency);
-        BuildupTime = ini.Get_Fixed("General", "BuildupTime", BuildupTime);
-        OreTruckRate = ini.Get_Int("General", "OreTruckRate", OreTruckRate);
-        AtomDamage = ini.Get_Int("General", "AtomDamage", AtomDamage);
-        BailCount = ini.Get_Int("General", "BailCount", BailCount);
-        BallisticScatter = ini.Get_Lepton("General", "BallisticScatter", BallisticScatter);
-        BridgeStrength = ini.Get_Int("General", "BridgeStrength", BridgeStrength);
-        BuildSpeed = ini.Get_Fixed("General", "BuildSpeed", BuildSpeed);
-        ConditionGreen = ini.Get_Fixed("General", "ConditionGreen", ConditionGreen);
-        ConditionYellow = ini.Get_Fixed("General", "ConditionYellow", ConditionYellow);
-        ConditionRed = ini.Get_Fixed("General", "ConditionRed", ConditionRed);
-        CrateRadius = ini.Get_Lepton("General", "CrateRadius", CrateRadius);
-        Crush = ini.Get_Lepton("General", "Crush", Crush);
-        DamageDelay = ini.Get_Fixed("General", "DamageDelay", DamageDelay);
-        GapRadius = ini.Get_Int("General", "GapRadius", GapRadius);
-        GemValue = ini.Get_Int("General", "GemValue", GemValue);
-        GoldValue = ini.Get_Int("General", "GoldValue", GoldValue);
-        GrowthRate = ini.Get_Fixed("General", "GrowthRate", GrowthRate);
-        HomingScatter = ini.Get_Lepton("General", "HomingScatter", HomingScatter);
-        Incoming = ini.Get_MPHType("General", "Incoming", Incoming);
-        IronCurtain = ini.Get_Fixed("General", "IronCurtain", IronCurtain);
-        AllyReveal = ini.Get_Bool("General", "AllyReveal", AllyReveal);
-        EnemyHealth = ini.Get_Bool("General", "EnemyHealth", EnemyHealth);
-        MCVUndeploy = ini.Get_Bool("General", "MCVUndeploy", MCVUndeploy);
-        MaxDamage = ini.Get_Int("General", "MaxDamage", MaxDamage);
-        MinDamage = ini.Get_Int("General", "MinDamage", MinDamage);
-        ProneDamage = ini.Get_Fixed("General", "ProneDamage", ProneDamage);
-        QuakeDamage = ini.Get_Fixed("General", "QuakeDamage", QuakeDamage);
-        QuakeChance = ini.Get_Fixed("General", "QuakeChance", QuakeChance);
-        RefundPercent = ini.Get_Fixed("General", "RefundPercent", RefundPercent);
-        RepairPercent = ini.Get_Fixed("General", "RepairPercent", RepairPercent);
-        RepairStep = ini.Get_Int("General", "RepairStep", RepairStep);
-        URepairPercent = ini.Get_Fixed("General", "URepairPercent", URepairPercent);
-        URepairStep = ini.Get_Int("General", "URepairStep", URepairStep);
-        RepairRate = ini.Get_Fixed("General", "RepairRate", RepairRate);
-        ShroudRate = ini.Get_Fixed("General", "ShroudRate", ShroudRate);
-        SpeakDelay = ini.Get_Fixed("General", "SpeakDelay", SpeakDelay);
-        Stray = ini.Get_Lepton("General", "Stray", Stray);
-        CloseEnough = ini.Get_Lepton("General", "CloseEnough", CloseEnough);
-        TimerWarning = ini.Get_Fixed("General", "TimerWarning", TimerWarning);
-        MovieTime = ini.Get_Fixed("General", "MovieTime", MovieTime);
-        C4Delay = ini.Get_Fixed("General", "C4Delay", C4Delay);
-        ChronoTechLevel = ini.Get_Int("General", "ChronoTechLevel", ChronoTechLevel);
-        CrateRegen = ini.Get_Fixed("General", "CrateRegen", CrateRegen);
-        VortexRange = ini.Get_Lepton("General", "VortexRange", VortexRange);
-        VortexSpeed = ini.Get_MPHType("General", "VortexSpeed", VortexSpeed);
-        VortexDamage = ini.Get_Int("General", "VortexDamage", VortexDamage);
-        VortexChance = ini.Get_Fixed("General", "VortexChance", VortexChance);
+        m_BaseBias = ini.Get_Fixed("General", "BaseBias", m_BaseBias);
+        m_ExpSpread = ini.Get_Fixed("General", "ExpSpread", m_ExpSpread);
+        m_FireSupress = ini.Get_Lepton("General", "FireSupress", m_FireSupress);
+        m_ParaTech = ini.Get_Int("General", "ParaTech", m_ParaTech);
+        m_SpyPlaneTech = ini.Get_Int("General", "SpyPlaneTech", m_SpyPlaneTech);
+        m_SilverCrate = ini.Get_CrateType("General", "SilverCrate", m_SilverCrate);
+        m_WoodCrate = ini.Get_CrateType("General", "WoodCrate", m_WoodCrate);
+        m_WaterCrate = ini.Get_CrateType("General", "WaterCrate", m_WaterCrate);
+        m_CrateMinimum = ini.Get_Int("General", "CrateMinimum", m_CrateMinimum);
+        m_CrateMaximum = ini.Get_Int("General", "CrateMaximum", m_CrateMaximum);
+        m_PlayerScatter = ini.Get_Bool("General", "PlayerScatter", m_PlayerScatter);
+        m_PlayerReturnFire = ini.Get_Bool("General", "PlayerReturnFire", m_PlayerReturnFire);
+        m_PlayerAutoCrush = ini.Get_Bool("General", "PlayerAutoCrush", m_PlayerAutoCrush);
+        m_NamedCivilians = ini.Get_Bool("General", "NamedCivilians", m_NamedCivilians);
+        m_OreGrows = ini.Get_Bool("General", "OreGrows", m_OreGrows);
+        m_OreSpreads = ini.Get_Bool("General", "OreSpreads", m_OreSpreads);
+        m_MineAware = ini.Get_Bool("General", "MineAware", m_MineAware);
+        m_TreeTargeting = ini.Get_Bool("General", "TreeTargeting", m_TreeTargeting);
+        m_SeparateAircraft = ini.Get_Bool("General", "SeparateAircraft", m_SeparateAircraft);
+        m_DropZoneRadius = ini.Get_Lepton("General", "DropZoneRadius", m_DropZoneRadius);
+        m_MessageDelay = ini.Get_Fixed("General", "MessageDelay", m_MessageDelay);
+        m_SavourDelay = ini.Get_Fixed("General", "SavourDelay", m_SavourDelay);
+        m_AVMineDamage = ini.Get_Int("General", "AVMineDamage", m_AVMineDamage);
+        m_APMineDamage = ini.Get_Int("General", "APMineDamage", m_APMineDamage);
+        m_BaseDefenseDelay = ini.Get_Fixed("General", "BaseDefenseDelay", m_BaseDefenseDelay);
+        m_SuspendPriority = ini.Get_Int("General", "SuspendPriority", m_SuspendPriority);
+        m_SuspendDelay = ini.Get_Fixed("General", "SuspendDelay", m_SuspendDelay);
+        m_SurvivorRate = ini.Get_Fixed("General", "SurvivorRate", m_SurvivorRate);
+        m_RadarJamRadius = ini.Get_Lepton("General", "RadarJamRadius", m_RadarJamRadius);
+        m_ReloadRate = ini.Get_Fixed("General", "ReloadRate", m_ReloadRate);
+        m_IdleActionFrequency = ini.Get_Fixed("General", "IdleActionFrequency", m_IdleActionFrequency);
+        m_BuildupTime = ini.Get_Fixed("General", "BuildupTime", m_BuildupTime);
+        m_OreTruckRate = ini.Get_Int("General", "OreTruckRate", m_OreTruckRate);
+        m_AtomDamage = ini.Get_Int("General", "AtomDamage", m_AtomDamage);
+        m_BailCount = ini.Get_Int("General", "BailCount", m_BailCount);
+        m_BallisticScatter = ini.Get_Lepton("General", "BallisticScatter", m_BallisticScatter);
+        m_BridgeStrength = ini.Get_Int("General", "BridgeStrength", m_BridgeStrength);
+        m_BuildSpeed = ini.Get_Fixed("General", "BuildSpeed", m_BuildSpeed);
+        m_ConditionGreen = ini.Get_Fixed("General", "ConditionGreen", m_ConditionGreen);
+        m_ConditionYellow = ini.Get_Fixed("General", "ConditionYellow", m_ConditionYellow);
+        m_ConditionRed = ini.Get_Fixed("General", "ConditionRed", m_ConditionRed);
+        m_CrateRadius = ini.Get_Lepton("General", "CrateRadius", m_CrateRadius);
+        m_Crush = ini.Get_Lepton("General", "Crush", m_Crush);
+        m_DamageDelay = ini.Get_Fixed("General", "DamageDelay", m_DamageDelay);
+        m_GapRadius = ini.Get_Int("General", "GapRadius", m_GapRadius);
+        m_GemValue = ini.Get_Int("General", "GemValue", m_GemValue);
+        m_GoldValue = ini.Get_Int("General", "GoldValue", m_GoldValue);
+        m_GrowthRate = ini.Get_Fixed("General", "GrowthRate", m_GrowthRate);
+        m_HomingScatter = ini.Get_Lepton("General", "HomingScatter", m_HomingScatter);
+        m_Incoming = ini.Get_MPHType("General", "Incoming", m_Incoming);
+        m_IronCurtain = ini.Get_Fixed("General", "IronCurtain", m_IronCurtain);
+        m_AllyReveal = ini.Get_Bool("General", "AllyReveal", m_AllyReveal);
+        m_EnemyHealth = ini.Get_Bool("General", "EnemyHealth", m_EnemyHealth);
+        m_MCVUndeploy = ini.Get_Bool("General", "MCVUndeploy", m_MCVUndeploy);
+        m_MaxDamage = ini.Get_Int("General", "MaxDamage", m_MaxDamage);
+        m_MinDamage = ini.Get_Int("General", "MinDamage", m_MinDamage);
+        m_ProneDamage = ini.Get_Fixed("General", "ProneDamage", m_ProneDamage);
+        m_QuakeDamage = ini.Get_Fixed("General", "QuakeDamage", m_QuakeDamage);
+        m_QuakeChance = ini.Get_Fixed("General", "QuakeChance", m_QuakeChance);
+        m_RefundPercent = ini.Get_Fixed("General", "RefundPercent", m_RefundPercent);
+        m_RepairPercent = ini.Get_Fixed("General", "RepairPercent", m_RepairPercent);
+        m_RepairStep = ini.Get_Int("General", "RepairStep", m_RepairStep);
+        m_URepairPercent = ini.Get_Fixed("General", "URepairPercent", m_URepairPercent);
+        m_URepairStep = ini.Get_Int("General", "URepairStep", m_URepairStep);
+        m_RepairRate = ini.Get_Fixed("General", "RepairRate", m_RepairRate);
+        m_ShroudRate = ini.Get_Fixed("General", "ShroudRate", m_ShroudRate);
+        m_SpeakDelay = ini.Get_Fixed("General", "SpeakDelay", m_SpeakDelay);
+        m_Stray = ini.Get_Lepton("General", "Stray", m_Stray);
+        m_CloseEnough = ini.Get_Lepton("General", "CloseEnough", m_CloseEnough);
+        m_TimerWarning = ini.Get_Fixed("General", "TimerWarning", m_TimerWarning);
+        m_MovieTime = ini.Get_Fixed("General", "MovieTime", m_MovieTime);
+        m_C4Delay = ini.Get_Fixed("General", "C4Delay", m_C4Delay);
+        m_ChronoTechLevel = ini.Get_Int("General", "ChronoTechLevel", m_ChronoTechLevel);
+        m_CrateRegen = ini.Get_Fixed("General", "CrateRegen", m_CrateRegen);
+        m_VortexRange = ini.Get_Lepton("General", "VortexRange", m_VortexRange);
+        m_VortexSpeed = ini.Get_MPHType("General", "VortexSpeed", m_VortexSpeed);
+        m_VortexDamage = ini.Get_Int("General", "VortexDamage", m_VortexDamage);
+        m_VortexChance = ini.Get_Fixed("General", "VortexChance", m_VortexChance);
 
         // Set variables within the vortex class global instance.
-        g_ChronalVortex.Set_Range(VortexRange / 256);
-        g_ChronalVortex.Set_Speed(VortexSpeed);
-        g_ChronalVortex.Set_Damage(VortexDamage);
+        g_ChronalVortex.Set_Range(m_VortexRange / 256);
+        g_ChronalVortex.Set_Speed(m_VortexSpeed);
+        g_ChronalVortex.Set_Damage(m_VortexDamage);
 
         return true;
     }
@@ -431,14 +431,14 @@ BOOL RulesClass::General(GameINIClass &ini)
 BOOL RulesClass::MPlayer(GameINIClass &ini)
 {
     if (ini.Find_Section("MultiplayerDefaults") != nullptr) {
-        MPlayerMoney = ini.Get_Int("MultiplayerDefaults", "Money", MPlayerMoney);
-        MPlayerMaxMoney = ini.Get_Int("MultiplayerDefaults", "MaxMoney", MPlayerMaxMoney);
-        MPlayerShadowGrow = ini.Get_Bool("MultiplayerDefaults", "ShadowGrow", MPlayerShadowGrow);
-        MPlayerBases = ini.Get_Bool("MultiplayerDefaults", "Bases", MPlayerBases);
-        MPlayerOreGrows = ini.Get_Bool("MultiplayerDefaults", "OreGrows", MPlayerOreGrows);
-        MPlayerCrates = ini.Get_Bool("MultiplayerDefaults", "Crates", MPlayerCrates);
-        MPlayerAIPlayers = ini.Get_Bool("MultiplayerDefaults", "AIPlayers", MPlayerAIPlayers);
-        MPlayerCaptureTheFlag = ini.Get_Bool("MultiplayerDefaults", "CaptureTheFlag", MPlayerCaptureTheFlag);
+        m_MPlayerMoney = ini.Get_Int("MultiplayerDefaults", "Money", m_MPlayerMoney);
+        m_MPlayerMaxMoney = ini.Get_Int("MultiplayerDefaults", "MaxMoney", m_MPlayerMaxMoney);
+        m_MPlayerShadowGrow = ini.Get_Bool("MultiplayerDefaults", "ShadowGrow", m_MPlayerShadowGrow);
+        m_MPlayerBases = ini.Get_Bool("MultiplayerDefaults", "Bases", m_MPlayerBases);
+        m_MPlayerOreGrows = ini.Get_Bool("MultiplayerDefaults", "OreGrows", m_MPlayerOreGrows);
+        m_MPlayerCrates = ini.Get_Bool("MultiplayerDefaults", "Crates", m_MPlayerCrates);
+        m_MPlayerAIPlayers = ini.Get_Bool("MultiplayerDefaults", "AIPlayers", m_MPlayerAIPlayers);
+        m_MPlayerCaptureTheFlag = ini.Get_Bool("MultiplayerDefaults", "CaptureTheFlag", m_MPlayerCaptureTheFlag);
 
         return true;
     }
@@ -449,15 +449,15 @@ BOOL RulesClass::MPlayer(GameINIClass &ini)
 BOOL RulesClass::Recharge(GameINIClass &ini)
 {
     if (ini.Find_Section("Recharge") != nullptr) {
-        RechargeSonar = ini.Get_Fixed("Recharge", "Sonar", RechargeSonar);
-        RechargeChrono = ini.Get_Fixed("Recharge", "Chrono", RechargeChrono);
-        RechargeParaBomb = ini.Get_Fixed("Recharge", "ParaBomb", RechargeParaBomb);
-        RechargeParatrooper = ini.Get_Fixed("Recharge", "Paratrooper", RechargeParatrooper);
-        RechargeParaSaboteur = ini.Get_Fixed("Recharge", "Saboteur", RechargeParaSaboteur);
-        RechargeSpyPlane = ini.Get_Fixed("Recharge", "SpyPlane", RechargeSpyPlane);
-        RechargeIronCurtain = ini.Get_Fixed("Recharge", "IronCurtain", RechargeIronCurtain);
-        RechargeGPS = ini.Get_Fixed("Recharge", "GPS", RechargeGPS);
-        RechargeNuke = ini.Get_Fixed("Recharge", "Nuke", RechargeNuke);
+        m_RechargeSonar = ini.Get_Fixed("Recharge", "Sonar", m_RechargeSonar);
+        m_RechargeChrono = ini.Get_Fixed("Recharge", "Chrono", m_RechargeChrono);
+        m_RechargeParaBomb = ini.Get_Fixed("Recharge", "ParaBomb", m_RechargeParaBomb);
+        m_RechargeParatrooper = ini.Get_Fixed("Recharge", "Paratrooper", m_RechargeParatrooper);
+        m_RechargeParaSaboteur = ini.Get_Fixed("Recharge", "Saboteur", m_RechargeParaSaboteur);
+        m_RechargeSpyPlane = ini.Get_Fixed("Recharge", "SpyPlane", m_RechargeSpyPlane);
+        m_RechargeIronCurtain = ini.Get_Fixed("Recharge", "IronCurtain", m_RechargeIronCurtain);
+        m_RechargeGPS = ini.Get_Fixed("Recharge", "GPS", m_RechargeGPS);
+        m_RechargeNuke = ini.Get_Fixed("Recharge", "Nuke", m_RechargeNuke);
 
         return true;
     }
@@ -473,26 +473,26 @@ BOOL RulesClass::Heap_Maximums(GameINIClass &ini)
     return func(this, ini);
 #elif 0
     if (ini.Find_Section("Maximums") != nullptr) {
-        Players = ini.Get_Int("Maximums", "Players", Players);
-        MaxAircraft = ini.Get_Int("Maximums", "Aircraft", MaxAircraft);
-        MaxAnim = ini.Get_Int("Maximums", "Anim", MaxAnim);
-        MaxBuilding = ini.Get_Int("Maximums", "Building", MaxBuilding);
-        MaxBullet = ini.Get_Int("Maximums", "Bullet", MaxBullet);
-        MaxFactory = ini.Get_Int("Maximums", "Factory", MaxFactory);
-        MaxInfantry = ini.Get_Int("Maximums", "Infantry", MaxInfantry);
-        MaxOverlay = ini.Get_Int("Maximums", "Overlay", MaxOverlay);
-        MaxSmudge = ini.Get_Int("Maximums", "Smudge", MaxSmudge);
-        MaxTeam = ini.Get_Int("Maximums", "Team", MaxTeam);
-        MaxTeamType = ini.Get_Int("Maximums", "TeamType", MaxTeamType);
-        MaxTemplate = ini.Get_Int("Maximums", "Template", MaxTemplate);
-        MaxTerrain = ini.Get_Int("Maximums", "Terrain", MaxTerrain);
-        MaxTrigger = ini.Get_Int("Maximums", "Trigger", MaxTrigger);
-        MaxUnit = ini.Get_Int("Maximums", "Unit", MaxUnit);
-        MaxVessel = ini.Get_Int("Maximums", "Vessel", MaxVessel);
-        MaxProjectile = ini.Get_Int("Maximums", "Projectile", MaxProjectile);
-        MaxWeapon = ini.Get_Int("Maximums", "Weapon", MaxWeapon);
-        MaxWarhead = ini.Get_Int("Maximums", "Warhead", MaxWarhead);
-        MaxTrigType = ini.Get_Int("Maximums", "TrigType", MaxTrigType);
+        m_Players = ini.Get_Int("Maximums", "Players", m_Players);
+        m_MaxAircraft = ini.Get_Int("Maximums", "Aircraft", m_MaxAircraft);
+        m_MaxAnim = ini.Get_Int("Maximums", "Anim", m_MaxAnim);
+        m_MaxBuilding = ini.Get_Int("Maximums", "Building", m_MaxBuilding);
+        m_MaxBullet = ini.Get_Int("Maximums", "Bullet", m_MaxBullet);
+        m_MaxFactory = ini.Get_Int("Maximums", "Factory", m_MaxFactory);
+        m_MaxInfantry = ini.Get_Int("Maximums", "Infantry", m_MaxInfantry);
+        m_MaxOverlay = ini.Get_Int("Maximums", "Overlay", m_MaxOverlay);
+        m_MaxSmudge = ini.Get_Int("Maximums", "Smudge", m_MaxSmudge);
+        m_MaxTeam = ini.Get_Int("Maximums", "Team", m_MaxTeam);
+        m_MaxTeamType = ini.Get_Int("Maximums", "TeamType", m_MaxTeamType);
+        m_MaxTemplate = ini.Get_Int("Maximums", "Template", m_MaxTemplate);
+        m_MaxTerrain = ini.Get_Int("Maximums", "Terrain", m_MaxTerrain);
+        m_MaxTrigger = ini.Get_Int("Maximums", "Trigger", m_MaxTrigger);
+        m_MaxUnit = ini.Get_Int("Maximums", "Unit", m_MaxUnit);
+        m_MaxVessel = ini.Get_Int("Maximums", "Vessel", m_MaxVessel);
+        m_MaxProjectile = ini.Get_Int("Maximums", "Projectile", m_MaxProjectile);
+        m_MaxWeapon = ini.Get_Int("Maximums", "Weapon", m_MaxWeapon);
+        m_MaxWarhead = ini.Get_Int("Maximums", "Warhead", m_MaxWarhead);
+        m_MaxTrigType = ini.Get_Int("Maximums", "TrigType", m_MaxTrigType);
 
         // Moved, see warhead and weapon headers for more info
         // TODO, move Set_Heap()'s to RTS_Init() in init.cpp'
@@ -509,37 +509,37 @@ BOOL RulesClass::Heap_Maximums(GameINIClass &ini)
 BOOL RulesClass::AI(GameINIClass &ini)
 {
     if (ini.Find_Section("AI") != nullptr) {
-        AttackInterval = ini.Get_Fixed("AI", "AttackInterval", AttackInterval);
-        AttackDelay = ini.Get_Fixed("AI", "AttackDelay", AttackDelay);
-        PatrolScan = ini.Get_Fixed("AI", "PatrolScan", PatrolScan);
-        CreditReserve = ini.Get_Int("AI", "CreditReserve", CreditReserve);
-        PathDelay = ini.Get_Fixed("AI", "PathDelay", PathDelay);
-        OreNearScan = ini.Get_Lepton("AI", "OreNearScan", OreNearScan);
-        OreFarScan = ini.Get_Lepton("AI", "OreFarScan", OreFarScan);
-        AutocreateTime = ini.Get_Fixed("AI", "AutocreateTime", AutocreateTime);
-        InfantryReserve = ini.Get_Int("AI", "InfantryReserve", InfantryReserve);
-        InfantryBaseMult = ini.Get_Int("AI", "InfantryBaseMult", InfantryBaseMult);
-        PowerSurplus = ini.Get_Int("AI", "PowerSurplus", PowerSurplus);
-        BaseSizeAdd = ini.Get_Int("AI", "BaseSizeAdd", BaseSizeAdd);
-        RefineryRatio = ini.Get_Fixed("AI", "RefineryRatio", RefineryRatio);
-        RefineryLimit = ini.Get_Int("AI", "RefineryLimit", RefineryLimit);
-        BarracksRatio = ini.Get_Fixed("AI", "BarracksRatio", BarracksRatio);
-        BarracksLimit = ini.Get_Int("AI", "BarracksLimit", BarracksLimit);
-        WarRatio = ini.Get_Fixed("AI", "WarRatio", WarRatio);
-        WarLimit = ini.Get_Int("AI", "WarLimit", WarLimit);
-        DefenseRatio = ini.Get_Fixed("AI", "DefenseRatio", DefenseRatio);
-        DefenseLimit = ini.Get_Int("AI", "DefenseLimit", DefenseLimit);
-        AARatio = ini.Get_Fixed("AI", "AARatio", AARatio);
-        AALimit = ini.Get_Int("AI", "AALimit", AALimit);
-        TeslaRatio = ini.Get_Fixed("AI", "TeslaRatio", TeslaRatio);
-        TeslaLimit = ini.Get_Int("AI", "TeslaLimit", TeslaLimit);
-        HelipadRatio = ini.Get_Fixed("AI", "HelipadRatio", HelipadRatio);
-        HelipadLimit = ini.Get_Int("AI", "HelipadLimit", HelipadLimit);
-        AirstripRatio = ini.Get_Fixed("AI", "AirstripRatio", AirstripRatio);
-        AirstripLimit = ini.Get_Int("AI", "AirstripLimit", AirstripLimit);
-        CompEasyBonus = ini.Get_Bool("AI", "CompEasyBonus", CompEasyBonus);
-        Paranoid = ini.Get_Bool("AI", "Paranoid", Paranoid);
-        PowerEmergency = ini.Get_Fixed("AI", "PowerEmergency", PowerEmergency);
+        m_AttackInterval = ini.Get_Fixed("AI", "AttackInterval", m_AttackInterval);
+        m_AttackDelay = ini.Get_Fixed("AI", "AttackDelay", m_AttackDelay);
+        m_PatrolScan = ini.Get_Fixed("AI", "PatrolScan", m_PatrolScan);
+        m_CreditReserve = ini.Get_Int("AI", "CreditReserve", m_CreditReserve);
+        m_PathDelay = ini.Get_Fixed("AI", "PathDelay", m_PathDelay);
+        m_OreNearScan = ini.Get_Lepton("AI", "OreNearScan", m_OreNearScan);
+        m_OreFarScan = ini.Get_Lepton("AI", "OreFarScan", m_OreFarScan);
+        m_AutocreateTime = ini.Get_Fixed("AI", "AutocreateTime", m_AutocreateTime);
+        m_InfantryReserve = ini.Get_Int("AI", "InfantryReserve", m_InfantryReserve);
+        m_InfantryBaseMult = ini.Get_Int("AI", "InfantryBaseMult", m_InfantryBaseMult);
+        m_PowerSurplus = ini.Get_Int("AI", "PowerSurplus", m_PowerSurplus);
+        m_BaseSizeAdd = ini.Get_Int("AI", "BaseSizeAdd", m_BaseSizeAdd);
+        m_RefineryRatio = ini.Get_Fixed("AI", "RefineryRatio", m_RefineryRatio);
+        m_RefineryLimit = ini.Get_Int("AI", "RefineryLimit", m_RefineryLimit);
+        m_BarracksRatio = ini.Get_Fixed("AI", "BarracksRatio", m_BarracksRatio);
+        m_BarracksLimit = ini.Get_Int("AI", "BarracksLimit", m_BarracksLimit);
+        m_WarRatio = ini.Get_Fixed("AI", "WarRatio", m_WarRatio);
+        m_WarLimit = ini.Get_Int("AI", "WarLimit", m_WarLimit);
+        m_DefenseRatio = ini.Get_Fixed("AI", "DefenseRatio", m_DefenseRatio);
+        m_DefenseLimit = ini.Get_Int("AI", "DefenseLimit", m_DefenseLimit);
+        m_AARatio = ini.Get_Fixed("AI", "AARatio", m_AARatio);
+        m_AALimit = ini.Get_Int("AI", "AALimit", m_AALimit);
+        m_TeslaRatio = ini.Get_Fixed("AI", "TeslaRatio", m_TeslaRatio);
+        m_TeslaLimit = ini.Get_Int("AI", "TeslaLimit", m_TeslaLimit);
+        m_HelipadRatio = ini.Get_Fixed("AI", "HelipadRatio", m_HelipadRatio);
+        m_HelipadLimit = ini.Get_Int("AI", "HelipadLimit", m_HelipadLimit);
+        m_AirstripRatio = ini.Get_Fixed("AI", "AirstripRatio", m_AirstripRatio);
+        m_AirstripLimit = ini.Get_Int("AI", "AirstripLimit", m_AirstripLimit);
+        m_CompEasyBonus = ini.Get_Bool("AI", "CompEasyBonus", m_CompEasyBonus);
+        m_Paranoid = ini.Get_Bool("AI", "Paranoid", m_Paranoid);
+        m_PowerEmergency = ini.Get_Fixed("AI", "PowerEmergency", m_PowerEmergency);
     }
 
     return false;
@@ -620,17 +620,17 @@ BOOL RulesClass::Themes(GameINIClass &ini)
 BOOL RulesClass::IQ(GameINIClass &ini)
 {
     if (ini.Find_Section("IQ") != nullptr) {
-        IQControls.MaxIQLevels = ini.Get_Int("IQ", "MaxIQLevels", IQControls.MaxIQLevels);
-        IQControls.SuperWeapons = ini.Get_Int("IQ", "SuperWeapons", IQControls.SuperWeapons);
-        IQControls.Production = ini.Get_Int("IQ", "Production", IQControls.Production);
-        IQControls.GuardArea = ini.Get_Int("IQ", "GuardArea", IQControls.GuardArea);
-        IQControls.RepairSell = ini.Get_Int("IQ", "RepairSell", IQControls.RepairSell);
-        IQControls.AutoCrush = ini.Get_Int("IQ", "AutoCrush", IQControls.AutoCrush);
-        IQControls.Scatter = ini.Get_Int("IQ", "Scatter", IQControls.Scatter);
-        IQControls.ContentScan = ini.Get_Int("IQ", "ContentScan", IQControls.ContentScan);
-        IQControls.Aircraft = ini.Get_Int("IQ", "Aircraft", IQControls.Aircraft);
-        IQControls.Harvester = ini.Get_Int("IQ", "Harvester", IQControls.Harvester);
-        IQControls.SellBack = ini.Get_Int("IQ", "SellBack", IQControls.SellBack);
+        m_IQControls.m_MaxIQLevels = ini.Get_Int("IQ", "MaxIQLevels", m_IQControls.m_MaxIQLevels);
+        m_IQControls.m_SuperWeapons = ini.Get_Int("IQ", "SuperWeapons", m_IQControls.m_SuperWeapons);
+        m_IQControls.m_Production = ini.Get_Int("IQ", "Production", m_IQControls.m_Production);
+        m_IQControls.m_GuardArea = ini.Get_Int("IQ", "GuardArea", m_IQControls.m_GuardArea);
+        m_IQControls.m_RepairSell = ini.Get_Int("IQ", "RepairSell", m_IQControls.m_RepairSell);
+        m_IQControls.m_AutoCrush = ini.Get_Int("IQ", "AutoCrush", m_IQControls.m_AutoCrush);
+        m_IQControls.m_Scatter = ini.Get_Int("IQ", "Scatter", m_IQControls.m_Scatter);
+        m_IQControls.m_ContentScan = ini.Get_Int("IQ", "ContentScan", m_IQControls.m_ContentScan);
+        m_IQControls.m_Aircraft = ini.Get_Int("IQ", "Aircraft", m_IQControls.m_Aircraft);
+        m_IQControls.m_Harvester = ini.Get_Int("IQ", "Harvester", m_IQControls.m_Harvester);
+        m_IQControls.m_SellBack = ini.Get_Int("IQ", "SellBack", m_IQControls.m_SellBack);
 
         return true;
     }
@@ -693,9 +693,9 @@ BOOL RulesClass::Objects(GameINIClass &ini)
 
 BOOL RulesClass::Difficulty(GameINIClass &ini)
 {
-    Difficulty_Get(ini, Difficulties[0], "Easy");
-    Difficulty_Get(ini, Difficulties[1], "Normal");
-    Difficulty_Get(ini, Difficulties[2], "Difficult");
+    Difficulty_Get(ini, m_Difficulties[0], "Easy");
+    Difficulty_Get(ini, m_Difficulties[1], "Normal");
+    Difficulty_Get(ini, m_Difficulties[2], "Difficult");
 
     return true;
 }

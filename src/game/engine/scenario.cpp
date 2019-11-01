@@ -27,53 +27,53 @@ ScenarioClass Scen;
 #endif
 
 ScenarioClass::ScenarioClass() :
-    SyncRandom(),
-    HumanDifficulty(DIFF_NONE),
-    AIDifficulty(DIFF_NONE),
-    ElapsedTimer(),
-    GlobalTimer(),
-    ScenarioIndex(-1),
-    Theater(THEATER_NONE),
-    IntroMovie(MOVIE_NONE),
-    BriefMovie(MOVIE_NONE),
-    WinMovie(MOVIE_NONE),
-    LoseMovie(MOVIE_NONE),
-    ActionMovie(MOVIE_NONE),
-    TransitTheme(THEME_NONE),
-    SomeHouse(HOUSES_NONE),
-    CarryOverMoney(0),
-    CarryOverMoneyAmount(0),
-    CarryOverCap(0),
-    CarryOverPercent(0),
-    BridgeCount(0),
-    CarryOverTime(0),
-    _DestroyBridges(false),
-    _GlobalsChanged(false),
-    ToCarryOver(false),
-    ToInherit(false),
-    CivEvac(false),
-    FadeOutBW(false),
-    FadeInBW(false),
-    EndOfGame(false),
-    TimerInherit(false),
-    NoSpyPlane(false),
-    SkipScore(false),
-    OneTimeOnly(false),
-    SkipMapSelect(false),
-    TruckCrate(false),
-    FillSilos(false),
-    FadeTimer(),
-    AutoSonarTime()
+    m_SyncRandom(),
+    m_HumanDifficulty(DIFF_NONE),
+    m_AIDifficulty(DIFF_NONE),
+    m_ElapsedTimer(),
+    m_GlobalTimer(),
+    m_ScenarioIndex(-1),
+    m_Theater(THEATER_NONE),
+    m_IntroMovie(MOVIE_NONE),
+    m_BriefMovie(MOVIE_NONE),
+    m_WinMovie(MOVIE_NONE),
+    m_LoseMovie(MOVIE_NONE),
+    m_ActionMovie(MOVIE_NONE),
+    m_TransitTheme(THEME_NONE),
+    m_SomeHouse(HOUSES_NONE),
+    m_CarryOverMoney(0),
+    m_CarryOverMoneyAmount(0),
+    m_CarryOverCap(0),
+    m_CarryOverPercent(0),
+    m_BridgeCount(0),
+    m_CarryOverTime(0),
+    m_DestroyBridges(false),
+    m_GlobalsChanged(false),
+    m_ToCarryOver(false),
+    m_ToInherit(false),
+    m_CivEvac(false),
+    m_FadeOutBW(false),
+    m_FadeInBW(false),
+    m_EndOfGame(false),
+    m_TimerInherit(false),
+    m_NoSpyPlane(false),
+    m_SkipScore(false),
+    m_OneTimeOnly(false),
+    m_SkipMapSelect(false),
+    m_TruckCrate(false),
+    m_FillSilos(false),
+    m_FadeTimer(),
+    m_AutoSonarTimer()
 {
-    for (int index = 0; index < ARRAY_SIZE(Waypoints); ++index) {
-        Waypoints[index] = -1;
+    for (int index = 0; index < ARRAY_SIZE(m_Waypoints); ++index) {
+        m_Waypoints[index] = -1;
     }
 
-    ScenarioName[0] = '\0';
-    ScenarioDescription[0] = '\0';
-    BriefingText[0] = '\0';
-    memset(GlobalVariables, 0, sizeof(GlobalVariables));
-    memset(Views, 0, sizeof(Views));
+    m_ScenarioName[0] = '\0';
+    m_ScenarioDescription[0] = '\0';
+    m_BriefingText[0] = '\0';
+    memset(m_GlobalVariables, 0, sizeof(m_GlobalVariables));
+    memset(m_Views, 0, sizeof(m_Views));
 }
 
 /**
@@ -89,15 +89,15 @@ void ScenarioClass::Set_Scenario_Name(const char *scen_name)
         return;
     }
 
-    strlcpy(ScenarioName, scen_name, sizeof(ScenarioName));
-    DEBUG_LOG("Set_Scenario_Name() - ScenarioName set to '%s'\n", ScenarioName);
+    strlcpy(m_ScenarioName, scen_name, sizeof(m_ScenarioName));
+    DEBUG_LOG("Set_Scenario_Name() - ScenarioName set to '%s'\n", m_ScenarioName);
 
     // Get the number part of the scenario name and calculate the ScenarioIndex.
-    memcpy(buffer, &ScenarioName[3], sizeof(buffer));
+    memcpy(buffer, &m_ScenarioName[3], sizeof(buffer));
     buffer[2] = '\0';
 
     if (buffer[0] <= '9' && buffer[1] <= '9') {
-        ScenarioIndex = atoi(buffer);
+        m_ScenarioIndex = atoi(buffer);
     } else {
         char digit1;
         char digit2;
@@ -114,7 +114,7 @@ void ScenarioClass::Set_Scenario_Name(const char *scen_name)
             digit2 = buffer[1] - '0';
         }
 
-        ScenarioIndex = digit2 + 36 * digit1;
+        m_ScenarioIndex = digit2 + 36 * digit1;
     }
 }
 
@@ -129,7 +129,7 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
     char dirvalue = '\0';
     char varvalue = '\0';
 
-    ScenarioIndex = index;
+    m_ScenarioIndex = index;
 
     switch (player) {
         case SCEN_PLAYER_SPAIN:
@@ -226,8 +226,8 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
         char remainder = (index % '$');
         char index2 = remainder >= 10 ? remainder + '7' : remainder + '0';
 
-        snprintf(ScenarioName,
-            sizeof(ScenarioName),
+        snprintf(m_ScenarioName,
+            sizeof(m_ScenarioName),
             "sc%c%c%c%c%c.ini",
             tolower(prefixvalue),
             tolower(index / '$' + 'A'),
@@ -235,8 +235,8 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
             tolower(dirvalue),
             tolower(varvalue));
     } else {
-        snprintf(ScenarioName,
-            sizeof(ScenarioName),
+        snprintf(m_ScenarioName,
+            sizeof(m_ScenarioName),
             "sc%c%02d%c%c.ini",
             tolower(prefixvalue),
             index,
@@ -252,9 +252,9 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
  */
 void ScenarioClass::Do_BW_Fade()
 {
-    FadeOutBW = true;
-    FadeInBW = false;
-    FadeTimer = 15;
+    m_FadeOutBW = true;
+    m_FadeInBW = false;
+    m_FadeTimer = 15;
 }
 
 /**
@@ -264,38 +264,38 @@ void ScenarioClass::Do_BW_Fade()
  */
 void ScenarioClass::Do_Fade_AI()
 {
-    if (FadeInBW) {
-        if (FadeTimer <= 0) {
-            FadeInBW = false;
+    if (m_FadeInBW) {
+        if (m_FadeTimer <= 0) {
+            m_FadeInBW = false;
         }
 
         Options.Adjust_Palette(OriginalPalette,
             GamePalette,
             Options.Get_Brightness(),
-            Options.Get_Saturation() * fixed_t((15 - FadeTimer), 15),
+            Options.Get_Saturation() * fixed_t((15 - m_FadeTimer), 15),
             Options.Get_Tint(),
             Options.Get_Contrast());
 
         GamePalette.Set();
     }
 
-    if (FadeOutBW) {
-        if (FadeTimer <= 0) {
-            FadeOutBW = false;
+    if (m_FadeOutBW) {
+        if (m_FadeTimer <= 0) {
+            m_FadeOutBW = false;
         }
 
         Options.Adjust_Palette(OriginalPalette,
             GamePalette,
             Options.Get_Brightness(),
-            Options.Get_Saturation() * fixed_t(FadeTimer, 15),
+            Options.Get_Saturation() * fixed_t(m_FadeTimer, 15),
             Options.Get_Tint(),
             Options.Get_Contrast());
 
         GamePalette.Set();
 
-        if (!FadeOutBW) {
-            FadeInBW = true;
-            FadeTimer = 15;
+        if (!m_FadeOutBW) {
+            m_FadeInBW = true;
+            m_FadeTimer = 15;
         }
     }
 }

@@ -506,7 +506,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
                 g_PlayerPtr->Set_Production(true);
                 g_PlayerPtr->Set_Autocreate(true);
 
-                g_PlayerPtr->Set_IQ_Level(Rule.IQ_Controls().MaxIQLevels);
+                g_PlayerPtr->Set_IQ_Level(Rule.IQ_Controls().m_MaxIQLevels);
                 g_PlayerPtr->Set_AI_Difficulty(DIFF_HARDEST);
 
                 Session.Get_Messages().Add_Simple_Message(

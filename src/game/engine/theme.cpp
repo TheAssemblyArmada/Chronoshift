@@ -343,7 +343,7 @@ BOOL ThemeClass::Is_Allowed(ThemeType theme) const
         }
     }
 
-    if (Session.Game_To_Play() == GAME_CAMPAIGN || Scen.ScenarioIndex >= Themes[theme].Scenario) {
+    if (Session.Game_To_Play() == GAME_CAMPAIGN || Scen.m_ScenarioIndex >= Themes[theme].Scenario) {
         return true;
     }
 

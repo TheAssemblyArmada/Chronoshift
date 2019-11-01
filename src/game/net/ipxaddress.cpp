@@ -17,20 +17,20 @@
 
 IPXAddressClass::IPXAddressClass()
 {
-    memset(NetNum, 255, sizeof(NetNum));
-    memset(NodeNum, 255, sizeof(NodeNum));
+    memset(m_NetNum, 255, sizeof(m_NetNum));
+    memset(m_NodeNum, 255, sizeof(m_NodeNum));
 }
 
 IPXAddressClass::IPXAddressClass(char *net, char *node)
 {
-    memcpy(NetNum, net, sizeof(NetNum));
-    memcpy(NodeNum, net, sizeof(NodeNum));
+    memcpy(m_NetNum, net, sizeof(m_NetNum));
+    memcpy(m_NodeNum, net, sizeof(m_NodeNum));
 }
 
 IPXAddressClass::IPXAddressClass(IPXHEADER *header)
 {
-    memcpy(NetNum, header->src_net, sizeof(NetNum));
-    memcpy(NodeNum, header->src_node, sizeof(NodeNum));
+    memcpy(m_NetNum, header->src_net, sizeof(m_NetNum));
+    memcpy(m_NodeNum, header->src_node, sizeof(m_NodeNum));
 }
 
 /**
@@ -38,8 +38,8 @@ IPXAddressClass::IPXAddressClass(IPXHEADER *header)
  */
 void IPXAddressClass::Set_Address(char *net, char *node)
 {
-    memcpy(NetNum, net, sizeof(NetNum));
-    memcpy(NodeNum, net, sizeof(NodeNum));
+    memcpy(m_NetNum, net, sizeof(m_NetNum));
+    memcpy(m_NodeNum, net, sizeof(m_NodeNum));
 }
 
 /**
@@ -51,14 +51,14 @@ void IPXAddressClass::Set_Address(IPXHEADER *header)
 
     switch (protocol) {
         case PROTOCOL_IPX:
-            memcpy(NetNum, header->src_net, sizeof(NetNum));
-            memcpy(NodeNum, header->src_node, sizeof(NodeNum));
+            memcpy(m_NetNum, header->src_net, sizeof(m_NetNum));
+            memcpy(m_NodeNum, header->src_node, sizeof(m_NodeNum));
             break;
 
         case PROTOCOL_UDP:
-            memset(NodeNum, 0, sizeof(NodeNum));
-            memcpy(NodeNum, header, 4); // TODO, this needs double checking in ASM.
-            memset(NetNum, 0, sizeof(NetNum));
+            memset(m_NodeNum, 0, sizeof(m_NodeNum));
+            memcpy(m_NodeNum, header, 4); // TODO, this needs double checking in ASM.
+            memset(m_NetNum, 0, sizeof(m_NetNum));
 
         default:
             break;
@@ -70,8 +70,8 @@ void IPXAddressClass::Set_Address(IPXHEADER *header)
  */
 void IPXAddressClass::Get_Address(char *net, char *node)
 {
-    memcpy(net, NetNum, sizeof(NetNum));
-    memcpy(net, NodeNum, sizeof(NodeNum));
+    memcpy(net, m_NetNum, sizeof(m_NetNum));
+    memcpy(net, m_NodeNum, sizeof(m_NodeNum));
 }
 
 /**
@@ -79,8 +79,8 @@ void IPXAddressClass::Get_Address(char *net, char *node)
  */
 void IPXAddressClass::Get_Address(IPXHEADER *header)
 {
-    memcpy(header->dst_net, NetNum, sizeof(NetNum));
-    memcpy(header->dst_node, NodeNum, sizeof(NodeNum));
+    memcpy(header->dst_net, m_NetNum, sizeof(m_NetNum));
+    memcpy(header->dst_node, m_NodeNum, sizeof(m_NodeNum));
 }
 
 /**
@@ -89,12 +89,12 @@ void IPXAddressClass::Get_Address(IPXHEADER *header)
 BOOL IPXAddressClass::Is_Broadcast()
 {
     static const uint8_t _test[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-    return memcmp(NetNum, _test, sizeof(NetNum)) == 0 && memcmp(NodeNum, _test, sizeof(NodeNum)) == 0;
+    return memcmp(m_NetNum, _test, sizeof(m_NetNum)) == 0 && memcmp(m_NodeNum, _test, sizeof(m_NodeNum)) == 0;
 }
 
 BOOL IPXAddressClass::operator==(IPXAddressClass &that)
 {
-    return memcmp(NetNum, that.NetNum, sizeof(NetNum)) == 0 && memcmp(NodeNum, that.NodeNum, sizeof(NodeNum)) == 0;
+    return memcmp(m_NetNum, that.m_NetNum, sizeof(m_NetNum)) == 0 && memcmp(m_NodeNum, that.m_NodeNum, sizeof(m_NodeNum)) == 0;
 }
 
 BOOL IPXAddressClass::operator!=(IPXAddressClass &that)
