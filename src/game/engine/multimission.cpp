@@ -35,33 +35,33 @@ void MultiMission::Draw_It(int index, int xpos, int ypos, int xmax, int ymax, BO
 void MultiMission::Set_Description(const char *desc)
 {
     if (desc != nullptr){
-        strlcpy(Description, desc, sizeof(Description));
+        strlcpy(m_Description, desc, sizeof(m_Description));
     }
 }
 
 void MultiMission::Set_Filename(const char *filename)
 {
     if (filename != nullptr){
-        strlcpy(Filename, filename, sizeof(Filename));
+        strlcpy(m_Filename, filename, sizeof(m_Filename));
     }
 }
 
 void MultiMission::Set_Digest(const char *digest)
 {
     if (digest != nullptr) {
-        strlcpy(Digest, digest, sizeof(Digest));
+        strlcpy(m_Digest, digest, sizeof(m_Digest));
     } else {
-        strcpy(Digest, "NODIGEST");
+        strcpy(m_Digest, "NODIGEST");
     }
 }
 
 
 void MultiMission::Set_Official(int official)
 {
-    IsOfficial = official;
+    m_IsOfficial = official;
 }
 
 void MultiMission::Set_Expansion(int expansion)
 {
-    IsExpansion = expansion;
+    m_IsExpansion = expansion;
 }

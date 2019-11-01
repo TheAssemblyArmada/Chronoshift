@@ -1498,7 +1498,7 @@ void CellClass::Incoming(coord_t coord, BOOL a2, BOOL a3)
     for (ObjectClass *optr = m_OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
         if (a3 || Rule.Player_Scatter()
             || (optr->Is_Techno()
-                && Rule.IQ_Controls().Scatter
+                && Rule.IQ_Controls().m_Scatter
                     <= reinterpret_cast<TechnoClass *>(optr)->Get_Owner_House()->Get_Current_IQ())) {
             optr->Scatter(coord, a2, a3);
         }

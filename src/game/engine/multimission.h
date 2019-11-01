@@ -31,11 +31,11 @@ public:
     void Set_Official(int official);
     void Set_Expansion(int expansion);
 private:
-    char Description[44];
-    char Filename[512];
-    char Digest[32];
-    int IsOfficial;
-    int IsExpansion;
+    char m_Description[44];
+    char m_Filename[512];
+    char m_Digest[32];
+    int m_IsOfficial;
+    int m_IsExpansion;
 };
 
 #endif //MULTIMISSION_H

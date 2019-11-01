@@ -70,33 +70,33 @@ public:
     void Do_BW_Fade();
     void Do_Fade_AI();
     BOOL Set_Global_To(int global, BOOL value);
-    int Get_Random_Value(int min, int max) { return SyncRandom(min, max); }
-    void Set_Random_Seed(int seed) { SyncRandom = seed; }
+    int Get_Random_Value(int min, int max) { return m_SyncRandom(min, max); }
+    void Set_Random_Seed(int seed) { m_SyncRandom = seed; }
 
-    DiffType Get_Human_Difficulty() const { return HumanDifficulty; }
-    DiffType Get_AI_Difficulty() const { return AIDifficulty; }
-    void Set_Difficulties(DiffType human, DiffType ai) { HumanDifficulty = human; AIDifficulty = ai; }
-    TCountDownTimerClass<FrameTimerClass> &Elapsed_Timer() { return ElapsedTimer; }
-    int Get_Elapsed_Time() { return ElapsedTimer.Time(); }
-    TCountDownTimerClass<FrameTimerClass> &Global_Timer() { return GlobalTimer; }
-    int Get_Global_Time() { return GlobalTimer.Time(); }
-    BOOL Global_Timer_Running() { return GlobalTimer != 0; }
-    TCountDownTimerClass<FrameTimerClass> &Some_Timer() { return SomeTimer; }
-    int Get_Scenario_Index() const { return ScenarioIndex; }
-    TheaterType Get_Theater() const { return Theater; }
-    void Set_Theater(TheaterType theater) { Theater = theater; }
-    const char *Scenario_Name() const { return ScenarioName; }
-    const char *Scenario_Description() const { return ScenarioDescription; }
-    cell_t Get_Waypoint(int waypoint_num) const { return Waypoints[waypoint_num]; }
-    void Set_Waypoint(int waypoint_num, cell_t cell) { Waypoints[waypoint_num] = cell; }
-    void Set_Carry_Over_Money(fixed_t value) { CarryOverMoney = value; }
-    cell_t Get_View(int index) const { return Views[index]; }
-    void Set_View(int index, cell_t cell) { Views[index] = cell; }
-    void Set_Bridge_Count(int count) { BridgeCount = count; }
+    DiffType Get_Human_Difficulty() const { return m_HumanDifficulty; }
+    DiffType Get_AI_Difficulty() const { return m_AIDifficulty; }
+    void Set_Difficulties(DiffType human, DiffType ai) { m_HumanDifficulty = human; m_AIDifficulty = ai; }
+    TCountDownTimerClass<FrameTimerClass> &Elapsed_Timer() { return m_ElapsedTimer; }
+    int Get_Elapsed_Time() { return m_ElapsedTimer.Time(); }
+    TCountDownTimerClass<FrameTimerClass> &Global_Timer() { return m_GlobalTimer; }
+    int Get_Global_Time() { return m_GlobalTimer.Time(); }
+    BOOL Global_Timer_Running() { return m_GlobalTimer != 0; }
+    TCountDownTimerClass<FrameTimerClass> &Some_Timer() { return m_SomeTimer; }
+    int Get_Scenario_Index() const { return m_ScenarioIndex; }
+    TheaterType Get_Theater() const { return m_Theater; }
+    void Set_Theater(TheaterType theater) { m_Theater = theater; }
+    const char *Scenario_Name() const { return m_ScenarioName; }
+    const char *Scenario_Description() const { return m_ScenarioDescription; }
+    cell_t Get_Waypoint(int waypoint_num) const { return m_Waypoints[waypoint_num]; }
+    void Set_Waypoint(int waypoint_num, cell_t cell) { m_Waypoints[waypoint_num] = cell; }
+    void Set_Carry_Over_Money(fixed_t value) { m_CarryOverMoney = value; }
+    cell_t Get_View(int index) const { return m_Views[index]; }
+    void Set_View(int index, cell_t cell) { m_Views[index] = cell; }
+    void Set_Bridge_Count(int count) { m_BridgeCount = count; }
 
-    BOOL Get_field_7CF() const { return field_7CF; }
-    BOOL Get_field_7D3() const { return field_7D3; }
-    BOOL Evacuate_Civilians() const { return CivEvac; }
+    BOOL Get_field_7CF() const { return m_field_7CF; }
+    BOOL Get_field_7D3() const { return m_field_7D3; }
+    BOOL Evacuate_Civilians() const { return m_CivEvac; }
 
 #ifdef GAME_DLL
     void Hook_Set_Scenario_Name1(const char *scen_name) { Set_Scenario_Name(scen_name); }
@@ -108,71 +108,71 @@ public:
 #endif
 
 private:
-    RandomClass SyncRandom;
-    DiffType HumanDifficulty;
-    DiffType AIDifficulty;
-    TCountDownTimerClass<FrameTimerClass> ElapsedTimer;
-    cell_t Waypoints[WAYPOINT_COUNT]; // 98 = unknown, 99 = unknown, 100 = Home cell, 101 = Super cell.
-    TCountDownTimerClass<FrameTimerClass> GlobalTimer;
-    TCountDownTimerClass<FrameTimerClass> SomeTimer;
-    int ScenarioIndex;
-    TheaterType Theater;
-    char ScenarioName[512];
-    char ScenarioDescription[44];
-    MovieType IntroMovie;
-    MovieType BriefMovie;
-    MovieType WinMovie;
-    MovieType LoseMovie;
-    MovieType ActionMovie;
-    char BriefingText[1024];
-    ThemeType TransitTheme;
-    HousesType SomeHouse;
-    fixed_t CarryOverMoney;
-    int CarryOverMoneyAmount;
-    int CarryOverCap;
-    int CarryOverPercent;
-    int GlobalVariables[30];
-    cell_t Views[VIEW_COUNT];
-    int BridgeCount;
-    int CarryOverTime;
+    RandomClass m_SyncRandom;
+    DiffType m_HumanDifficulty;
+    DiffType m_AIDifficulty;
+    TCountDownTimerClass<FrameTimerClass> m_ElapsedTimer;
+    cell_t m_Waypoints[WAYPOINT_COUNT]; // 98 = unknown, 99 = unknown, 100 = Home cell, 101 = Super cell.
+    TCountDownTimerClass<FrameTimerClass> m_GlobalTimer;
+    TCountDownTimerClass<FrameTimerClass> m_SomeTimer;
+    int m_ScenarioIndex;
+    TheaterType m_Theater;
+    char m_ScenarioName[512];
+    char m_ScenarioDescription[44];
+    MovieType m_IntroMovie;
+    MovieType m_BriefMovie;
+    MovieType m_WinMovie;
+    MovieType m_LoseMovie;
+    MovieType m_ActionMovie;
+    char m_BriefingText[1024];
+    ThemeType m_TransitTheme;
+    HousesType m_SomeHouse;
+    fixed_t m_CarryOverMoney;
+    int m_CarryOverMoneyAmount;
+    int m_CarryOverCap;
+    int m_CarryOverPercent;
+    int m_GlobalVariables[30];
+    cell_t m_Views[VIEW_COUNT];
+    int m_BridgeCount;
+    int m_CarryOverTime;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL _DestroyBridges : 1; // & 1 BridgeDestroyed?
-    BOOL _GlobalsChanged : 1; // & 2 VariablesChanged?
-    BOOL ToCarryOver : 1; // & 4
-    BOOL ToInherit : 1; // & 8
-    BOOL CivEvac : 1; // & 16
-    BOOL FadeOutBW : 1; // & 32
-    BOOL FadeInBW : 1; // & 64
-    BOOL EndOfGame : 1; // & 128
+    BOOL m_DestroyBridges : 1; // & 1 BridgeDestroyed?
+    BOOL m_GlobalsChanged : 1; // & 2 VariablesChanged?
+    BOOL m_ToCarryOver : 1; // & 4
+    BOOL m_ToInherit : 1; // & 8
+    BOOL m_CivEvac : 1; // & 16
+    BOOL m_FadeOutBW : 1; // & 32
+    BOOL m_FadeInBW : 1; // & 64
+    BOOL m_EndOfGame : 1; // & 128
 
-    BOOL TimerInherit : 1; // & 1
-    BOOL NoSpyPlane : 1; // & 2
-    BOOL SkipScore : 1; // & 4
-    BOOL OneTimeOnly : 1; // & 8
-    BOOL SkipMapSelect : 1; // & 16
-    BOOL TruckCrate : 1; // & 32
-    BOOL FillSilos : 1; // & 64
+    BOOL m_TimerInherit : 1; // & 1
+    BOOL m_NoSpyPlane : 1; // & 2
+    BOOL m_SkipScore : 1; // & 4
+    BOOL m_OneTimeOnly : 1; // & 8
+    BOOL m_SkipMapSelect : 1; // & 16
+    BOOL m_TruckCrate : 1; // & 32
+    BOOL m_FillSilos : 1; // & 64
 #else
-    bool _DestroyBridges; // BridgeDestroyed?
-    bool _GlobalsChanged; // VariablesChanged?
-    bool ToCarryOver;
-    bool ToInherit;
-    bool CivEvac;
-    bool FadeOutBW;
-    bool FadeInBW;
-    bool EndOfGame;
-    bool TimerInherit;
-    bool NoSpyPlane;
-    bool SkipScore;
-    bool OneTimeOnly;
-    bool SkipMapSelect;
-    bool TruckCrate;
-    bool FillSilos;
+    bool m_DestroyBridges; // BridgeDestroyed?
+    bool m_GlobalsChanged; // VariablesChanged?
+    bool m_ToCarryOver;
+    bool m_ToInherit;
+    bool m_CivEvac;
+    bool m_FadeOutBW;
+    bool m_FadeInBW;
+    bool m_EndOfGame;
+    bool m_TimerInherit;
+    bool m_NoSpyPlane;
+    bool m_SkipScore;
+    bool m_OneTimeOnly;
+    bool m_SkipMapSelect;
+    bool m_TruckCrate;
+    bool m_FillSilos;
 #endif
-    TCountDownTimerClass<FrameTimerClass> FadeTimer;
-    TCountDownTimerClass<FrameTimerClass> AutoSonarTime;
-    BOOL field_7CF; // These two are related to proposing a game draw within onlined games.
-    BOOL field_7D3;
+    TCountDownTimerClass<FrameTimerClass> m_FadeTimer;
+    TCountDownTimerClass<FrameTimerClass> m_AutoSonarTimer;
+    BOOL m_field_7CF; // These two are related to proposing a game draw within onlined games.
+    BOOL m_field_7D3;
 };
 
 #ifdef GAME_DLL

@@ -63,7 +63,7 @@ bool HouseStaticClass::Read_INI(GameINIClass &ini, char const *section)
         m_Credits = (ini.Get_Int(section, "Credits", m_Credits) * 100);
 
         m_IQ = ini.Get_Int(section, "IQ", m_IQ);
-        if (m_IQ > Rule.IQ_Controls().MaxIQLevels) {
+        if (m_IQ > Rule.IQ_Controls().m_MaxIQLevels) {
             m_IQ = 1;
         }
 

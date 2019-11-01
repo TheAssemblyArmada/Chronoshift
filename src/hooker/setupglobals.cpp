@@ -465,19 +465,19 @@ GraphicBufferClass &RadarClass::TileStage = Make_Global<GraphicBufferClass>(0x00
 
 // rules.cpp
 #include "rules.h"
-fixed_t &RulesClass::EngineerDamage = Make_Global<fixed_t>(0x00665E02);
-fixed_t &RulesClass::EngineerCaptureLevel = Make_Global<fixed_t>(0x00665E04);
-fixed_t &RulesClass::ChronoTankDuration = Make_Global<fixed_t>(0x00665E00);
-int &RulesClass::MTankDistance = Make_Global<int>(0x006016A4);
-int &RulesClass::CarrierLaunchDelay = Make_Global<int>(0x006016A8);
-fixed_t &RulesClass::QuakeUnitDamage = Make_Global<fixed_t>(0x00665DF8);
-fixed_t RulesClass::QuakeVesselDamage = (fixed_t)0;
-fixed_t &RulesClass::QuakeBuildingDamage = Make_Global<fixed_t>(0x00665DFA);
-int &RulesClass::QuakeInfantryDamage = Make_Global<int>(0x006016AC);
-int &RulesClass::QuakeDelay = Make_Global<int>(0x00665DFC);
-BOOL &RulesClass::OrigNewUnitsEnabled = Make_Global<BOOL>(0x00665DE0);
-BOOL &RulesClass::OrigSecretUnitsEnabled = Make_Global<BOOL>(0x00665DE4);
-fixed_t RulesClass::CloakDelay;
+fixed_t &RulesClass::m_EngineerDamage = Make_Global<fixed_t>(0x00665E02);
+fixed_t &RulesClass::m_EngineerCaptureLevel = Make_Global<fixed_t>(0x00665E04);
+fixed_t &RulesClass::m_ChronoTankDuration = Make_Global<fixed_t>(0x00665E00);
+int &RulesClass::m_MTankDistance = Make_Global<int>(0x006016A4);
+int &RulesClass::m_CarrierLaunchDelay = Make_Global<int>(0x006016A8);
+fixed_t &RulesClass::m_QuakeUnitDamage = Make_Global<fixed_t>(0x00665DF8);
+fixed_t RulesClass::m_QuakeVesselDamage = (fixed_t)0;
+fixed_t &RulesClass::m_QuakeBuildingDamage = Make_Global<fixed_t>(0x00665DFA);
+int &RulesClass::m_QuakeInfantryDamage = Make_Global<int>(0x006016AC);
+int &RulesClass::m_QuakeDelay = Make_Global<int>(0x00665DFC);
+BOOL &RulesClass::m_OrigNewUnitsEnabled = Make_Global<BOOL>(0x00665DE0);
+BOOL &RulesClass::m_OrigSecretUnitsEnabled = Make_Global<BOOL>(0x00665DE4);
+fixed_t RulesClass::m_CloakDelay;
 RulesClass &Rule = Make_Global<RulesClass>(0x00666704);
 
 // scenario.cpp

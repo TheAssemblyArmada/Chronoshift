@@ -56,8 +56,8 @@ public:
     BOOL operator<=(IPXAddressClass &that);
 
 private:
-    uint8_t NetNum[4];
-    uint8_t NodeNum[6];
+    uint8_t m_NetNum[4];
+    uint8_t m_NodeNum[6];
 };
 
 #endif // IPXADDRESS_H

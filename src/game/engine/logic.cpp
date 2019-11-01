@@ -81,24 +81,24 @@ void LogicClass::AI()
             // DEBUG_LOG("LogicClass::AI() - LogicTrigger %d:'%s' is valid, about to check global status\n", LogicTriggerID,
             // LogicTriggers[LogicTriggerID]->ObjectType->Get_Name());
 
-            if ((!Scen._GlobalsChanged || !trigger->Spring(TEVENT_GLOBAL_SET)) && !trigger->Spring(TEVENT_GLOBAL_CLEAR)
+            if ((!Scen.m_GlobalsChanged || !trigger->Spring(TEVENT_GLOBAL_SET)) && !trigger->Spring(TEVENT_GLOBAL_CLEAR)
 
-                && (!Scen._DestroyBridges || !trigger->Spring(TEVENT_ATTACHED_BRIDGE_DESTROYED))
+                && (!Scen.m_DestroyBridges || !trigger->Spring(TEVENT_ATTACHED_BRIDGE_DESTROYED))
                 && !trigger->Spring(TEVENT_ELAPSED_TIME)) {
-                if (Scen.GlobalTimer.Has_Expired()) {
+                if (Scen.m_GlobalTimer.Has_Expired()) {
                     trigger->Spring(TEVENT_TIMER_EXPIRED);
                 }
             }
         }
     }
 
-    if (Scen.GlobalTimer.Has_Expired()) {
-        Scen.GlobalTimer.Stop();
+    if (Scen.m_GlobalTimer.Has_Expired()) {
+        Scen.m_GlobalTimer.Stop();
         Map.Flag_To_Redraw();
     }
 
-    Scen._DestroyBridges = false;
-    Scen._GlobalsChanged = false;
+    Scen.m_DestroyBridges = false;
+    Scen.m_GlobalsChanged = false;
 
     if (Special.Bools.ShroudGrows && Rule.ShroudRate > 0) {
         if (Scen.SomeScenarioTimer.Has_Expired()) {
