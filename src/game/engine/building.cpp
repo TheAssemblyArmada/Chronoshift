@@ -36,7 +36,11 @@ BuildingClass::BuildingClass(const NoInitClass &noinit) :
 }
 
 BuildingClass::~BuildingClass()
+{}
+
+const BuildingTypeClass &BuildingClass::Class_Of() const
 {
+    return *m_Class;
 }
 
 void BuildingClass::Death_Announcement(TechnoClass *killer) const

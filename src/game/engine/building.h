@@ -32,7 +32,7 @@ public:
     virtual ~BuildingClass();
 
     // ObjectClass
-    virtual const BuildingTypeClass &Class_Of() const override { return *m_Class; }
+    virtual const BuildingTypeClass &Class_Of() const override;
 
     // TechnoClass
     virtual void Death_Announcement(TechnoClass *killer) const override;

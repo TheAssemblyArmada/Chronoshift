@@ -20,9 +20,8 @@
 
 #include "always.h"
 #include "fixed.h"
+#include "team.h"
 #include "techno.h"
-
-class TeamClass;
 
 struct PathType
 {
@@ -132,7 +131,7 @@ public:
 #endif
 
     const fixed_t &Get_Speed_Multiplier() const { return m_SpeedMult; }
-    TeamClass *Get_Team() const { return m_Team; }
+    const GamePtr<TeamClass> &Get_Team() const { return m_Team; }
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

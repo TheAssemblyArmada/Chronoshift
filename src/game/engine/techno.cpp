@@ -586,7 +586,7 @@ void TechnoClass::Enter_Idle_Mode(BOOL a1)
 
 void TechnoClass::Set_Player_Owned()
 {
-    m_PlayerOwned = (m_OwnerHouse == *g_PlayerPtr);
+    m_PlayerOwned = (m_OwnerHouse == g_PlayerPtr);
 }
 
 void TechnoClass::Techno_Draw_Object(
