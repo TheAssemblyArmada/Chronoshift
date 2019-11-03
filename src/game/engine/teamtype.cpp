@@ -16,6 +16,7 @@
 #include "teamtype.h"
 #include "target.h"
 #include "objecttype.h"
+#include "triggertype.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TeamTypeClass> g_TeamTypes;

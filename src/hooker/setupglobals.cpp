@@ -366,10 +366,10 @@ template<>
 FixedIHeapClass *const GamePtr<VesselClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DC8C);
 template<>
 FixedIHeapClass *const GamePtr<VesselTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DF38);
-template<>
-FixedIHeapClass *const GamePtr<WarheadTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x00691600);
-template<>
-FixedIHeapClass *const GamePtr<WeaponTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0069164C);
+// template<>
+// FixedIHeapClass *const GamePtr<WarheadTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x00691600);
+// template<>
+// FixedIHeapClass *const GamePtr<WeaponTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0069164C);
 
 // getcd.cpp
 class GetCDClass;

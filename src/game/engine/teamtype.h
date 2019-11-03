@@ -19,12 +19,15 @@
 #define TEAMTYPE_H
 
 #include "always.h"
+#include "abstracttype.h"
+#include "gameptr.h"
 #include "gametypes.h"
-#include "triggertype.h"
 
 class HouseClass;
 class TeamClass;
 class ObjectTypeClass;
+class TriggerTypeClass;
+class GameINIClass;
 
 enum TeamMissionType
 {

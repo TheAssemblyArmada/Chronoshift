@@ -25,13 +25,13 @@
 #include "flasher.h"
 #include "gameptr.h"
 #include "gametypes.h"
+#include "house.h"
 #include "infantrytype.h"
 #include "radio.h"
 #include "stage.h"
 #include "ttimer.h"
 
 class BulletClass;
-class HouseClass;
 
 enum CloakState
 {
@@ -157,7 +157,7 @@ public:
     int Anti_Air();
     int Anti_Armor();
     int Anti_Infantry();
-    HouseClass *Get_Owner_House() const { return m_OwnerHouse; }
+    const GamePtr<HouseClass> &Get_Owner_House() const { return m_OwnerHouse; }
     FacingClass &Get_Facing() { return m_Facing; }
     int Get_Price() const { return m_Price; }
     void Set_Price(int price) { m_Price = price; }
