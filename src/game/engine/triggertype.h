@@ -70,10 +70,10 @@ public:
     void Code_Pointers();
     void Decode_Pointers();
 
-    TEventClass Get_Event_One() const { return m_EventOne; }
-    TEventClass Get_Event_Two() const { return m_EventTwo; }
-    TActionClass Get_Action_One() const { return m_ActionOne; }
-    TActionClass Get_Action_Two() const { return m_ActionTwo; }
+    const TEventClass &Get_Event_One() const { return m_EventOne; }
+    const TEventClass &Get_Event_Two() const { return m_EventTwo; }
+    const TActionClass &Get_Action_One() const { return m_ActionOne; }
+    const TActionClass &Get_Action_Two() const { return m_ActionTwo; }
 
     HousesType Get_House() const { return m_House; }
 

@@ -663,7 +663,7 @@ BOOL AircraftClass::Edge_Of_World_AI()
         FootClass *obj = reinterpret_cast<FootClass *>(m_Cargo.Detach_Object());
 
         if (obj->Counts_As_Civ_Evac()) {
-            obj->Get_Owner_House()->Civilians_Evacuated(true);
+            obj->Get_Owner_House()->Set_Civilians_Evacuated(true);
         }
 
         if (obj->Get_Team()) {

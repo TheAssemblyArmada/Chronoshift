@@ -60,9 +60,9 @@ DEFINE_ENUMERATION_OPERATORS(TeamMissionType);
 class TeamMissionClass
 {
 public:
-    TeamMissionClass(void) : m_TMission(TMISSION_NONE) {}
+    TeamMissionClass() : m_TMission(TMISSION_NONE) {}
     TeamMissionClass(TeamMissionType mission, int value = 0) : m_TMission(mission) {}
-    ~TeamMissionClass(void) {}
+    ~TeamMissionClass() {}
 
 protected:
     TeamMissionType m_TMission; // 0x00
@@ -99,10 +99,10 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
-    void Build_INI_Entry(char const *);
-    void Fill_In(char const *, char const *);
-    TeamClass *const Create_One_Of() const;
-    void const Destroy_All_Of() const;
+    void Build_INI_Entry(const char *);
+    void Fill_In(const char *, const char *);
+    TeamClass * Create_One_Of() const;
+    void Destroy_All_Of() const;
     NeedType TeamMission_Needs(TeamMissionType tmission);
     bool Validate() { return false; }
 
@@ -118,13 +118,12 @@ public:
     static void Read_Scenario_INI(GameINIClass &ini);
     static void Write_Scenario_INI(GameINIClass &ini);
 
-    static TeamMissionType Mission_From_Name(char const *name);
-    static char const *Name_From_Mission(TeamMissionType tmission);
-    static TeamTypeClass &As_Reference(char const *name);
-    static TeamTypeClass *As_Pointer(char const *name);
-    static TeamTypeClass *From_Name(char *name);
-    static char const *Name_From(TeamTypeClass *team);
-
+    static TeamMissionType Mission_From_Name(const char *name);
+    static const char *Name_From_Mission(TeamMissionType tmission);
+    static TeamTypeClass &As_Reference(const char *name);
+    static TeamTypeClass *As_Pointer(const char *name);
+    static TeamTypeClass *From_Name(const char *name);
+    static const char *Name_From(TeamTypeClass *team);
     static TeamTypeClass *Suggested_New_Team(HouseClass *house, long, long, long, long, int);
 
 protected:
@@ -159,9 +158,9 @@ protected:
 private:
     struct TMissionInfoStruct
     {
-        char const *Name;
-        char const *Description;
-        char const *ExpectedValue; // TODO: Rename this.
+        const char *Name;
+        const char *Description;
+        const char *ExpectedValue; // TODO: Rename this.
     };
 
     static TMissionInfoStruct TMissions[TMISSION_COUNT];

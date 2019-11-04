@@ -14,9 +14,14 @@
  *            LICENSE
  */
 #include "teamtype.h"
-#include "target.h"
 #include "objecttype.h"
+#include "target.h"
 #include "triggertype.h"
+#include <cstring>
+
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TeamTypeClass> g_TeamTypes;
@@ -59,4 +64,20 @@ void TeamTypeClass::Decode_Pointers()
     for (int i = 0; i < m_MemberCount; ++i) {
         m_Content[i].Object = reinterpret_cast<ObjectTypeClass *>(As_TechnoType((uintptr_t)m_Content[i].Object));
     }
+}
+
+TeamTypeClass *TeamTypeClass::From_Name(const char *name)
+{
+    for (int i = 0; i < g_TeamTypes.Count(); ++i) {
+        if (strcasecmp(g_TeamTypes[i].Get_Name(), name) == 0) {
+            return &g_TeamTypes[i];
+        }
+    }
+
+    return nullptr;
+}
+
+const char *TeamTypeClass::Name_From(TeamTypeClass *team)
+{
+    return team->Get_Name();
 }

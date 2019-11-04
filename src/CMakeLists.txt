@@ -152,6 +152,7 @@ set(GAMEENGINE_SRC
     game/engine/terrain.cpp
     game/engine/terraindata.cpp
     game/engine/terraintype.cpp
+    game/engine/tevent.cpp
     game/engine/theater.cpp
     game/engine/theme.cpp
     game/engine/tracker.cpp

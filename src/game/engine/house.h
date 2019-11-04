@@ -237,8 +237,12 @@ public:
     void Set_Production(BOOL value) { m_Production = value; }
     BOOL Autocreate_Teams() const { return m_Autocreate; }
     void Set_Autocreate(BOOL value) { m_Autocreate = value; }
+    BOOL Is_Discovered() const { return m_Discovered; }
+    void Set_Discovered(BOOL value) { m_Discovered = value; }
     BOOL Is_Defeated() const { return m_Defeated; }
     void Set_Defeated(BOOL value) { m_Defeated = value; }
+    BOOL Is_Infiltrated() const { return m_Infiltrated; }
+    void Set_Infiltrated(BOOL value) { m_Infiltrated = value; }
     BOOL Is_Map_Clear() const { return m_MapIsClear; }
     void Set_Map_Clear(BOOL value) { m_MapIsClear = value; }
     int Get_Current_IQ() const { return m_CurrentIQ; }
@@ -255,9 +259,25 @@ public:
     BOOL Has_Buildings() const { return m_BScan.m_HaveBuilt != 0; }
     BOOL Spied_My_Radar(HousesType house) const { return (m_RadarSpied & (1 << house)) != 0; }
     BOOL Spied_My_Radar(HouseClass *house) const { return Spied_My_Radar(house->What_Type()); }
-
-    void Civilians_Evacuated(bool state) { m_CivEvac = state; }
-
+    uint32_t Get_BScan_Built() const { return m_BScan.m_HaveBuilt; }
+    uint32_t Get_UScan_Built() const { return m_UScan.m_HaveBuilt; }
+    uint32_t Get_IScan_Built() const { return m_IScan.m_HaveBuilt; }
+    uint32_t Get_AScan_Built() const { return m_AScan.m_HaveBuilt; }
+    uint32_t Get_VScan_Built() const { return m_VScan.m_HaveBuilt; }
+    uint32_t Get_BScan_Human() const { return m_BScan.m_HumanPrereqs; }
+    uint32_t Get_UScan_Human() const { return m_UScan.m_HumanPrereqs; }
+    uint32_t Get_IScan_Human() const { return m_IScan.m_HumanPrereqs; }
+    uint32_t Get_AScan_Human() const { return m_AScan.m_HumanPrereqs; }
+    uint32_t Get_VScan_Human() const { return m_VScan.m_HumanPrereqs; }
+    void Set_Civilians_Evacuated(BOOL state) { m_CivEvac = state; }
+    BOOL Civilians_Evacuated() const { return m_CivEvac; }
+    int Buildings_Lost() { return m_BuildingsLost; }
+    int Units_Lost() { return m_UnitsLost; }
+    BuildingType Just_Building() const { return m_JustBuilding; }
+    InfantryType Just_Infantry() const { return m_JustInfantry; }
+    UnitType Just_Unit() const { return m_JustUnit; }
+    AircraftType Just_Aircraft() const { return m_JustAircraft; }
+    VesselType Just_Vessel() const { return m_JustVessel; }
     static void One_Time();
     static void Init();
     static HouseClass &As_Reference(HousesType type);
