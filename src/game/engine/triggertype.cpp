@@ -12,7 +12,8 @@
  *            2 of the License, or (at your option) any later version.
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
- */#include "triggertype.h"
+ */
+#include "triggertype.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;

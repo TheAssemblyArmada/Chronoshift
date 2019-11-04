@@ -324,20 +324,18 @@ DEFINE_ENUMERATION_OPERATORS(RadioMessageType);
 enum AttachType
 {
     ATTACH_NONE = 0,
-    ATTACH_1 = 1, // 1 ??
-    ATTACH_2 = 2, // 2 ??
-    ATTACH_4 = 4, // 4 seems to be attatch to MapTriggers
-    ATTACH_8 = 8, // 8 seems to be attatch to HouseTriggers
-    ATTACH_16 = 16 // 16 seems to be attatch to LogicTriggers
+    ATTACH_CELL = 1 << 0,
+    ATTACH_OBJECT = 1 << 1,
+    ATTACH_MAP = 1 << 2,
+    ATTACH_HOUSE = 1 << 3,
+    ATTACH_LOGIC = 1 << 4,
 };
 
 DEFINE_ENUMERATION_BITWISE_OPERATORS(AttachType);
 
-//TODO: Will need looking into to really confirm, but credit to tomsons for the list.
 enum NeedType
 {
-    NEED_NONE = 0,
-    NEED_FIRST = 0,
+    NEED_NOTHING,
     NEED_THEME,
     NEED_MOVIE,             //see MovieType
     NEED_SOUND,
@@ -359,6 +357,7 @@ enum NeedType
     NEED_MISSION,          //see MissionType
     NEED_CELL,
     NEED_COUNT,
+    NEED_FIRST = 0,
 };
 
 DEFINE_ENUMERATION_OPERATORS(NeedType);

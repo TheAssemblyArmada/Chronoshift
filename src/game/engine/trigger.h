@@ -27,29 +27,6 @@
 
 class ObjectClass;
 
-// TODO: Trigger "delayed event" class?
-class TDelayEventClass
-{
-public:
-    TDelayEventClass() : m_Bit1(false), m_DelayTimer() {}
-    TDelayEventClass(const TDelayEventClass &that) : m_Bit1(that.m_Bit1), m_DelayTimer(that.m_DelayTimer) {}
-    TDelayEventClass(const NoInitClass &noinit) {}
-    ~TDelayEventClass() {}
-
-    BOOL Get_Bit1() const { return m_Bit1; }
-    void Set_Bit1(BOOL value) { m_Bit1 = value; }
-    TCountDownTimerClass<FrameTimerClass> &Get_Delay_Timer() { return m_DelayTimer; }
-    void Set_Delay_Timer(int value) { m_DelayTimer = value; }
-
-private:
-#ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Bit1 : 1; // 1
-#else
-    bool m_Bit1;
-#endif
-    TCountDownTimerClass<FrameTimerClass> m_DelayTimer;
-};
-
 class TriggerClass
 {
 public:

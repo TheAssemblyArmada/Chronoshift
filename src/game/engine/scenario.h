@@ -92,8 +92,9 @@ public:
     void Set_Carry_Over_Money(fixed_t value) { m_CarryOverMoney = value; }
     cell_t Get_View(int index) const { return m_Views[index]; }
     void Set_View(int index, cell_t cell) { m_Views[index] = cell; }
+    int Get_Bridge_Count() const { return m_BridgeCount; }
     void Set_Bridge_Count(int count) { m_BridgeCount = count; }
-
+    BOOL Get_Global(int index) const { return m_GlobalVariables[index]; }
     BOOL Get_field_7CF() const { return m_field_7CF; }
     BOOL Get_field_7D3() const { return m_field_7D3; }
     BOOL Evacuate_Civilians() const { return m_CivEvac; }

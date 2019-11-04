@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief 
+ * @brief Classes holding event information for the trigger system.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -19,8 +19,16 @@
 #define TEVENT_H
 
 #include "always.h"
+#include "aircrafttype.h"
+#include "buildingtype.h"
 #include "gameptr.h"
+#include "infantrytype.h"
 #include "teamtype.h"
+#include "ttimer.h"
+#include "unittype.h"
+#include "vesseltype.h"
+
+class TeamTypeClass;
 
 enum TEventType
 {
@@ -33,52 +41,106 @@ enum TEventType
     TEVENT_ATTACKED, // "Attacked by anybody"
     TEVENT_DESTROYED, // "Destroyed by anybody"
     TEVENT_ANY, // "Any Event"
-    TEVENT_DESTORYED_ALL_UNITS, // "Destroyed, Units, All..."
-    TEVENT_DESTORYED_ALL_BUILDINGS, // "Destroyed, Buildings, All..."
+    TEVENT_DESTROYED_ALL_UNITS, // "Destroyed, Units, All..."
+    TEVENT_DESTROYED_ALL_BUILDINGS, // "Destroyed, Buildings, All..."
     TEVENT_DESTROYED_ALL, // "Destroyed, All..."
     TEVENT_CREDIT_EXCEED, // "Credits exceed (x100)..."
     TEVENT_ELAPSED_TIME, // "Elapsed Time (1/10th min)..."
     TEVENT_TIMER_EXPIRED, // "Mission Timer Expired"
-    TEVENT_15, // "Destroyed, Buildings, #..."
-    TEVENT_16, // "Destroyed, Units, #..."
+    TEVENT_DESTROYED_BUILDINGS, // "Destroyed, Buildings, #..."
+    TEVENT_DESTROYED_UNITS, // "Destroyed, Units, #..."
     TEVENT_NO_FACTORIES, // "No Factories left"
-    TEVENT_18, // "Civilians Evacuated"
+    TEVENT_CIVS_EVACUATED, // "Civilians Evacuated"
     TEVENT_BUILD_BUILDING, // "Build Building Type..."
     TEVENT_BUILD_UNIT, // "Build Unit Type..."
     TEVENT_BUILD_INFANTRY, // "Build Infantry Type..."
     TEVENT_BUILD_AIRCRAFT, // "Build Aircraft Type..."
-    TEVENT_23, // "Leaves map (team)..."
-    TEVENT_24, // "Zone Entry by..."
-    TEVENT_25, // "Crosses Horizontal Line..."
-    TEVENT_26, // "Crosses Vertical Line..."
+    TEVENT_LEAVES_MAP, // "Leaves map (team)..."
+    TEVENT_ZONE_ENTERED, // "Zone Entry by..."
+    TEVENT_CROSSED_HORIZ_LINE, // "Crosses Horizontal Line..."
+    TEVENT_CROSSED_VERT_LINE, // "Crosses Vertical Line..."
     TEVENT_GLOBAL_SET, // "Global is set..."
     TEVENT_GLOBAL_CLEAR, // "Global is clear..."
-    TEVENT_29, // "Destroyed, Fakes, All..."
+    TEVENT_DESTROYED_ALL_FAKES, // "Destroyed, Fakes, All..."
     TEVENT_LOW_POWER, // "Low Power..."
     TEVENT_ATTACHED_BRIDGE_DESTROYED, // "All bridges destroyed"
     TEVENT_BUILDING_EXISTS, // "Building exists..."
-
+    TEVENT_COUNT,
     TEVENT_FIRST = TEVENT_NO_EVENT,
-    TEVENT_COUNT
 };
 
 DEFINE_ENUMERATION_OPERATORS(TEventType);
 
+class ObjectClass;
+
+class TDelayEventClass
+{
+public:
+    TDelayEventClass() : m_Bit1(false), m_DelayTimer() {}
+    TDelayEventClass(const TDelayEventClass &that) : m_Bit1(that.m_Bit1), m_DelayTimer(that.m_DelayTimer) {}
+    TDelayEventClass(const NoInitClass &noinit) {}
+    ~TDelayEventClass() {}
+
+    BOOL Get_Bit1() const { return m_Bit1; }
+    void Set_Bit1(BOOL value) { m_Bit1 = value; }
+    TCountDownTimerClass<FrameTimerClass> &Get_Delay_Timer() { return m_DelayTimer; }
+    BOOL Timer_Expired() { return m_DelayTimer.Expired(); }
+    void Set_Delay_Timer(int value) { m_DelayTimer = value; }
+
+private:
+#ifndef CHRONOSHIFT_NO_BITFIELDS
+    BOOL m_Bit1 : 1; // 1
+#else
+    bool m_Bit1;
+#endif
+    TCountDownTimerClass<FrameTimerClass> m_DelayTimer;
+};
+
+
 class TEventClass
 {
 public:
-    TEventClass() : m_Type(TEVENT_NO_EVENT), m_TeamType(nullptr), m_Value2(0) {}
+    TEventClass() : m_Type(TEVENT_NO_EVENT), m_TeamType(nullptr), m_IntegerValue(0) {}
     ~TEventClass() { m_TeamType = nullptr; }
+
+    BOOL operator()(TDelayEventClass &tdevent, TEventType tevent, HousesType house, ObjectClass *object, BOOL a5);
+
+    void Reset(TDelayEventClass &tdevent) const;
+    void Build_INI_Entry(char *entry_buffer) const;
+    void Read_INI();
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
     TEventType What_Type() const { return m_Type; }
 
+    static TEventType Event_From_Name(const char *name);
+    static const char *Name_From_Event(TEventType tevent);
+    static NeedType Event_Needs(TEventType tevent);
+    static AttachType Attaches_To(TEventType tevent);
+
+
 protected:
     TEventType m_Type;
     GamePtr<TeamTypeClass> m_TeamType;
-    int m_Value2; // 
+    union
+    {
+        int m_IntegerValue;
+        HousesType m_House;
+        BuildingType m_Building;
+        UnitType m_Unit;
+        InfantryType m_Infantry;
+        AircraftType m_Aircraft;
+    };
+
+private:
+    struct EventTextStruct
+    {
+        const char *m_Name;
+        const char *m_Description;
+    };
+
+    static const EventTextStruct s_EventText[TEVENT_COUNT];
 };
 
 #endif // TEVENT_H
