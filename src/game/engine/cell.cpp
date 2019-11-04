@@ -1057,7 +1057,7 @@ void CellClass::Wall_Update()
             }
 
             // Frame 32 for CYCL is after the first damage state set
-            if (adjcell.m_Overlay == OVERLAY_CYCLONE_FENCE && m_OverlayFrame == 32) {
+            if (adjcell.m_Overlay == OVERLAY_CYCLONE_FENCE && adjcell.m_OverlayFrame == 32) {
                 adjcell.m_OverlayFrame = 0;
                 adjcell.m_Overlay = OVERLAY_NONE;
                 adjcell.m_OwnerHouse = HOUSES_NONE;
