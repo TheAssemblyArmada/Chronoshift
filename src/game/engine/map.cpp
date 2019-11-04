@@ -431,7 +431,7 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
 
             // If the cell we are considering is within the map and the distance in the X axis is less than radius, calc
             // actual distance.
-            if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
+            if ((uint16_t)offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                 // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
                 // radius, not radius * 256.
                 if (Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
