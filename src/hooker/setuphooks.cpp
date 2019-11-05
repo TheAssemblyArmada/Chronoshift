@@ -934,6 +934,13 @@ void Setup_Hooks()
     //Hook_Function(0x0042263C, *AircraftClass::Set_Speed);
     Hook_Function(0x00423958, *AircraftClass::Movement_AI);
     Hook_Function(0x0042381C, *AircraftClass::Edge_Of_World_AI);
+    
+    // object.cpp
+    Hook_Function(0x0051DDE8, *ObjectClass::Limbo);
+    Hook_Function(0x0051DF74, *ObjectClass::Detach);
+    Hook_Function(0x0051DFDC, *ObjectClass::Detach_All);
+    Hook_Function(0x0051E5C0, *ObjectClass::Paradrop);
+    Hook_Function(0x0051E690, *ObjectClass::Attach_Trigger);
 
 #endif
 }
