@@ -37,7 +37,7 @@ public:
     void Code_Pointers();
     void Decode_Pointers();
     int Cargo_Count() const { return m_Count; }
-    BOOL Has_Cargo() const { return Attached_Object() != nullptr; }
+    BOOL Has_Cargo() const { return m_Object != nullptr; }
 
 private:
     uint8_t m_Count;

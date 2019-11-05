@@ -935,6 +935,10 @@ void Setup_Hooks()
     Hook_Function(0x00423958, *AircraftClass::Movement_AI);
     Hook_Function(0x0042381C, *AircraftClass::Edge_Of_World_AI);
 
+    // cargo.cpp
+    Hook_Function(0x004623D0, *CargoClass::Attach);
+    Hook_Function(0x00462448, *CargoClass::Detach_Object);
+
 #endif
 }
 
