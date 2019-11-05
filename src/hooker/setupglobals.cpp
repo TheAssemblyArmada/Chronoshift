@@ -357,6 +357,8 @@ FixedIHeapClass *const GamePtr<TerrainClass>::g_Heap = Make_Pointer<FixedIHeapCl
 template<>
 FixedIHeapClass *const GamePtr<TerrainTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DFD0);
 template<>
+FixedIHeapClass *const GamePtr<TriggerClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DBF4);
+template<>
 FixedIHeapClass *const GamePtr<TriggerTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DCD8);
 template<>
 FixedIHeapClass *const GamePtr<UnitClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DC40);

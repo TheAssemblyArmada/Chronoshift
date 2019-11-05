@@ -60,6 +60,7 @@ template<> FixedIHeapClass *const GamePtr<TeamClass>::g_Heap = &g_Teams;
 template<> FixedIHeapClass *const GamePtr<TeamTypeClass>::g_Heap = &g_TeamTypes;
 template<> FixedIHeapClass *const GamePtr<TemplateTypeClass>::g_Heap = &g_TemplateTypes;
 template<> FixedIHeapClass *const GamePtr<TerrainTypeClass>::g_Heap = &g_TerrainTypes;
+template<> FixedIHeapClass *const GamePtr<TriggerClass>::g_Heap = &g_Triggers;
 template<> FixedIHeapClass *const GamePtr<TriggerTypeClass>::g_Heap = &g_TriggerTypes;
 template<> FixedIHeapClass *const GamePtr<UnitClass>::g_Heap = &g_Units;
 template<> FixedIHeapClass *const GamePtr<UnitTypeClass>::g_Heap = &g_UnitTypes;

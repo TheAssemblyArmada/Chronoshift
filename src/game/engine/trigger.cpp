@@ -35,7 +35,7 @@ TriggerClass::TriggerClass(TriggerTypeClass *trigger_type) :
     m_IsActive(false),
     m_TDEvent1(),
     m_TDEvent2(),
-    m_AttachCount(0),
+    m_RefCount(0),
     m_AttachedCell(0)
 {
     //m_Class->Get_Event_One().Reset();
@@ -49,7 +49,7 @@ TriggerClass::TriggerClass(const TriggerClass &that) :
     m_IsActive(that.m_IsActive),
     m_TDEvent1(that.m_TDEvent1),
     m_TDEvent2(that.m_TDEvent2),
-    m_AttachCount(that.m_AttachCount),
+    m_RefCount(that.m_RefCount),
     m_AttachedCell(that.m_AttachedCell)
 {
 }

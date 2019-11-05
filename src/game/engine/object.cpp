@@ -50,6 +50,11 @@ ObjectClass::ObjectClass() :
 {
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051D750
+ */
 ObjectClass::ObjectClass(RTTIType type, int id) :
     AbstractClass(type, id),
     m_IsDown(false),
@@ -84,6 +89,11 @@ ObjectClass::ObjectClass(ObjectClass const &that) :
 {
 }
 
+/**
+ * @brief
+ *
+ * @address 0x00423D30
+ */
 ObjectClass::~ObjectClass()
 {
     m_Next = nullptr;
@@ -96,11 +106,21 @@ void ObjectClass::Debug_Dump(MonoClass *mono) const
 }
 #endif
 
+/**
+ * @brief
+ *
+ * @address 0x0051D7CC
+ */
 const char *ObjectClass::Name() const
 {
     return Class_Of().Get_Name();
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051D988
+ */
 coord_t ObjectClass::Target_Coord() const
 {
     coord_t coord = Center_Coord();
@@ -154,30 +174,29 @@ void ObjectClass::AI()
 #endif
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E5C0
+ */
 BOOL ObjectClass::Limbo()
 {
-#ifdef GAME_DLL
-    BOOL (*func)(ObjectClass *) = reinterpret_cast<BOOL (*)(ObjectClass *)>(0x0051DDE8);
-    return func(this);
-#else
-    if (GameActive && !m_InLimbo) {
-        Unselect();
-        Detach_All();
-        Mark(MARK_REMOVE);
-        Map.Remove(this, In_Which_Layer());
+    if (!GameActive || m_InLimbo) {
+        return false;
+    }
+    Unselect();
+    Detach_All(true);
+    Mark(MARK_REMOVE);
+    Map.Remove(this, In_Which_Layer());
 
-        if (Class_Of().Get_Bit64()) {
-            Logic.Remove(this);
-        }
-
-        Hidden();
-        m_InLimbo = true;
-
-        return true;
+    if (Class_Of().Get_Bit64()) {
+        Logic.Remove(this);
     }
 
-    return false;
-#endif
+    Hidden();
+    m_InLimbo = true;
+    m_ToDisplay = false;
+    return true;
 }
 
 BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
@@ -216,65 +235,53 @@ BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
 #endif
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051DDC0
+ */
 void ObjectClass::Detach(target_t target, int a2)
 {
-#ifdef GAME_DLL
-    void(*func)(ObjectClass *, target_t, int) = reinterpret_cast<void(*)(ObjectClass *, target_t, int)>(0x0051DF74);
-    func(this, target, a2);
-#else
-    DEBUG_ASSERT(m_IsActive);
-
-    //TODO: Requires TriggerClass.
-    /*if (AttachedTrigger != nullptr && Target_Get_RTTI(target) == RTTI_TRIGGER) {
-        if (AttachedTrigger->As_Target() == target) {
+    if (m_AttachedTrigger != nullptr && Target_Get_RTTI(target) == RTTI_TRIGGER) {
+        if (m_AttachedTrigger->As_Target() == target) {
             Attach_Trigger(nullptr);
         }
-    }*/
-#endif
+    }
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051DFDC
+ */
 void ObjectClass::Detach_All(int a1)
 {
-#ifdef GAME_DLL
-    void(*func)(ObjectClass *, int) = reinterpret_cast<void(*)(ObjectClass *, int)>(0x0051DFDC);
-    func(this, a1);
-#elif 0
-    if (a1 || Owner() != PlayerPtr->What_Type()) {
+    if (a1 || Owner() != g_PlayerPtr->What_Type()) {
         Unselect();
     }
 
-    Detach_This_From_All(As_Target(this), a1);
-#endif
+    Detach_This_From_All(As_Target(), a1);
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E5C0
+ */
 BOOL ObjectClass::Paradrop(coord_t coord)
 {
-#ifdef GAME_DLL
-    BOOL(*func)(ObjectClass *, coord_t) = reinterpret_cast<BOOL(*)(ObjectClass *, coord_t)>(0x0051E5C0);
-    return func(this, coord);
-#elif 0
-    // Needs AnimClass and Coord_Move
-    DEBUG_ASSERT(m_IsActive);
-
-    m_FallingHeight = 256;
+    m_Height = 256;
     m_IsFalling = true;
 
-    if (Unlimbo(coord, DIR_SOUTH)) {
-        AnimClass *anim = nullptr;
-        coord_t coord = Coord_Move(Center_Coord(), DIR_NORTH, Get_Height() + 48);
-
-        if (What_Am_I() == RTTI_BULLET) {
-            anim = new AnimClass(ANIM_PARABOMB, coord, 0, 1, true);   //args needs checking
-        } else {
-            anim = new AnimClass(ANIM_PARACHUTE, coord, 0, 1, true);   //args needs checking
-        }
-
+    if (!Unlimbo(coord, DIR_SOUTH)) {
+        return false;
+    }
+    coord_t anim_coord = Coord_Move(Center_Coord(), DIR_NORTH, Get_Height() + 48);
+    AnimClass *anim = new AnimClass((What_Am_I() == RTTI_BULLET ? ANIM_PARABOMB : ANIM_PARACHUTE), coord);
+    if (anim != nullptr) {
         anim->Attach_To(this);
     }
-    return false;
-#else
-    return false;
-#endif
+    return true;
 }
 
 BOOL ObjectClass::Render(BOOL force_render)
@@ -501,16 +508,31 @@ BOOL ObjectClass::Render(BOOL force_render)
 //#endif
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E71C
+ */
 const int16_t *ObjectClass::Occupy_List(BOOL a1) const
 {
     return Class_Of().Occupy_List();
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E734
+ */
 const int16_t *ObjectClass::Overlap_List(BOOL a1) const
 {
     return Class_Of().Overlap_List();
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E77C
+ */
 fixed_t ObjectClass::Health_Ratio() const
 {
     return fixed_t(m_Health, Class_Of().Get_Strength());
@@ -599,6 +621,11 @@ BOOL ObjectClass::Mark(MarkType mark)
 #endif
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051DDC0
+ */
 void ObjectClass::Mark_For_Redraw()
 {
     if (!m_ToDisplay) {
@@ -625,7 +652,7 @@ BOOL ObjectClass::Select()
             if (Map.PendingObjTypePtr == nullptr) {
                 if (CurrentObjects.Count() > 0) {
                     HouseClass *objowner = HouseClass::As_Pointer(Owner());
-                    HouseClass *current = HouseClass::As_Pointer(CurrentObjects[0]->Owner());
+                    HouseClass *current = HouseClass::As_Pointer(CurrentObjects.Fetch_Head()->Owner());
 
                     // Check if this objects player control matches the current
                     // selected player control or if the current selected isn't
@@ -664,6 +691,11 @@ BOOL ObjectClass::Select()
 #endif
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051DB48
+ */
 void ObjectClass::Unselect()
 {
     // If selected, process unselection.
@@ -675,12 +707,11 @@ void ObjectClass::Unselect()
             Mark(MARK_5);
         }
 
+        m_Selected = false;
+
         if (In_Which_Layer() == LAYER_GROUND) {
             Mark(MARK_4);
         }
-
-        // Set this object to unselected now we have performed the necessary tasks.
-        m_Selected = false;
     }
 }
 
@@ -790,11 +821,21 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
 #endif
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E748
+ */
 BuildingClass *ObjectClass::Who_Can_Build_Me(BOOL a1, BOOL a2) const
 {
     return Class_Of().Who_Can_Build_Me(a1, a2, Owner());
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E054
+ */
 RadioMessageType ObjectClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
     switch (message) {
@@ -808,6 +849,11 @@ RadioMessageType ObjectClass::Receive_Message(RadioClass *radio, RadioMessageTyp
     return RADIO_STATIC;
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051E5AC
+ */
 BOOL ObjectClass::Revealed(HouseClass *house)
 {
     return house != nullptr;
@@ -839,26 +885,41 @@ void ObjectClass::Decode_Pointers()
     // base class does not provide a Decode_Pointers function to call here.
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0051DABC
+ */
 void ObjectClass::Move(FacingType facing)
 {
     Mark(MARK_REMOVE);
 
     coord_t adj = Coord_Get_Adjacent(Get_Coord(), facing);
 
-    if (!Can_Enter_Cell(Coord_To_Cell(adj))) {
-        Set_Coord(adj);
+    if (Can_Enter_Cell(Coord_To_Cell(adj)) == MOVE_OK) {
+        m_Coord = adj;
     }
 
     Mark(MARK_PUT);
 }
 
+/**
+ * @brief
+ *
+ * @address 0x004A9414
+ */
 void Unselect_All()
 {
     while (CurrentObjects.Count() > 0) {
-        CurrentObjects[0]->Unselect();
+        CurrentObjects.Fetch_Head()->Unselect();
     }
 }
 
+/**
+ * @brief
+ *
+ * @address 0x00423F20
+ */
 void ObjectClass::Shorten_Attached_Anims()
 {
     for (int i = 0; i < g_Anims.Count(); ++i) {
@@ -920,4 +981,23 @@ BOOL ObjectClass::Counts_As_Civ_Evac()
         return false;
     }
     return true;
+}
+
+/**
+ * @brief
+ *
+ * @address 0x0051E690
+ */
+BOOL ObjectClass::Attach_Trigger(TriggerClass *trigger)
+{
+    if (m_AttachedTrigger != nullptr) {
+        trigger->Release_Ref();
+        m_AttachedTrigger = nullptr;
+    }
+    if (trigger != nullptr) {
+        m_AttachedTrigger = trigger;
+        trigger->Add_Ref();
+        return true;
+    }
+    return false;
 }

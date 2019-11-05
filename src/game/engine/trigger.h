@@ -84,6 +84,9 @@ public:
 
     const TriggerTypeClass &Class_Of() const { return *m_Class; }
 
+    void Add_Ref() { ++m_RefCount; }
+    void Release_Ref() { --m_RefCount; }
+
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
@@ -100,7 +103,7 @@ private:
 #endif
     TDelayEventClass m_TDEvent1; // 0x0D
     TDelayEventClass m_TDEvent2; // 0x01A
-    int m_AttachCount; // 0x27 // TODO: Name guessed.
+    int m_RefCount; // could be attach count, or instance count?"
     cell_t m_AttachedCell; // 0x2B // TODO: Name guessed.
 };
 
