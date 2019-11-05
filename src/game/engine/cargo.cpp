@@ -18,66 +18,61 @@
 #include "foot.h"
 #include "target.h"
 
+/**
+ * @brief
+ *
+ * @address 0x004623D0
+ */
 void CargoClass::Attach(FootClass *object)
 {
-    // TODO Needs FootClass
-#ifdef GAME_DLL
-    void (*func)(CargoClass *, FootClass *) = reinterpret_cast<void (*)(CargoClass *, FootClass *)>(0x004623D0);
-    func(this, object);
-#else
-    /*if (object != nullptr) {
+    if (object != nullptr) {
+
         object->Limbo();
-
-        // finding the last object in the list?
-        ObjectClass *next_obj = nullptr;
-        for (next_obj = object->Next; next_obj->Next; next_obj = next_obj->Next);
-
-        if (next_obj != nullptr) { // temp
-            next_obj->Next = Object;
+        ObjectClass *obj = nullptr;
+        for (obj = object->Get_Next(); obj != nullptr && obj->Get_Next(); obj = obj->Get_Next());
+        if (obj != nullptr) {
+            obj->Set_Next(m_Object);
         } else {
-            object->Next = Object;
+            object->Set_Next(m_Object);
         }
 
-        Object = object;
-
-        // empty loop for checking how many linked objects?
-        // It must use something like next object, otherwise if foot->Next was
-        // valid it would keep looping forever
-        if (Object != nullptr) {
-            // for ( Count = 0; object->Next; ++Count );
-            for (Count = 0, next_obj = object->Next; next_obj->Next; ++Count, next_obj = next_obj->Next)
-                ;
+        m_Object = object;
+        m_Count = 0;
+        for (obj = object; obj != nullptr; obj = obj->Get_Next()) {
+            ++m_Count;
         }
-    }*/
-#endif
+    }
 }
 
+/**
+ * @brief
+ *
+ * @address 0x0046247C
+ */
 FootClass *CargoClass::Attached_Object() const
 {
-    if (m_Object != nullptr) {
+    if (Has_Cargo()) {
         return m_Object;
     }
 
     return nullptr;
 }
 
+/**
+ * @brief
+ *
+ * @address 0x00462448
+ */
 FootClass *CargoClass::Detach_Object()
 {
-#ifdef GAME_DLL
-    FootClass *(*func)(CargoClass *) = reinterpret_cast<FootClass *(*)(CargoClass *)>(0x004623D0);
-    return func(this);
-#else
-    /*FootClass *object = Attached_Object();
+    FootClass *object = Attached_Object();
     if (object != nullptr) {
-        m_Object = object->Get_Next();
-        object->Next = nullptr;
+        m_Object = reinterpret_cast<FootClass *>(object->Get_Next());
+        object->Set_Next(nullptr);
         --m_Count;
-
         return object;
-    }*/
-
+    }
     return nullptr;
-#endif
 }
 
 /**
