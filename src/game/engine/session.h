@@ -158,13 +158,19 @@ public:
     void MPlayer_Clear_Game_Name() { m_MPlayerGameName[0] = '\0'; }
 
     GameFileClass &Recording_File() { return m_RecordFile; }
+    BOOL Attraction_Allowed() const { return m_AllowAttract; }
+    void Set_Allow_Attraction(BOOL onoff) { m_AllowAttract = onoff; }
     BOOL Record_Game() const { return m_RecordGame; }
     void Set_Record_Game(BOOL onoff) { m_RecordGame = onoff; }
     BOOL Playback_Game() const { return m_PlaybackGame; }
     void Set_Playback_Game(BOOL onoff) { m_PlaybackGame = onoff; }
-    BOOL Attraction_Allowed() const { return m_AllowAttract; }
-    void Set_Allow_Attraction(BOOL onoff) { m_AllowAttract = onoff; }
     BOOL Super_Record_Game() const { return m_SuperRecord; }
+    void Set_Super_Record_Game(BOOL onoff) { m_SuperRecord = onoff; }
+
+    BOOL Net_Protect_Enabled() const { return m_NetProtect; }
+    void Set_Net_Protect(BOOL onoff) { m_NetProtect = onoff; }
+    BOOL Net_Stealth_Enabled() const { return m_NetStealth; }
+    void Set_Net_Stealth(BOOL onoff) { m_NetStealth = onoff; }
 
     DynamicVectorClass<NodeNameTag *> &Games_List() { return m_Games; }
     DynamicVectorClass<NodeNameTag *> &Players_List() { return m_Players; }
