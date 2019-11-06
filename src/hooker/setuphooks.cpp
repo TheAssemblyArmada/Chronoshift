@@ -676,8 +676,27 @@ void Setup_Hooks()
     Hook_Function(0x00532BA8, *RadioClass::Limbo);
 
     // techno.h
-    Hook_Function(0x0056706C, *TechnoClass::Wrap_Techno_Draw_Object);
-    Hook_Function(0x005618E4, *TechnoClass::Wrap_Draw_It);
+    Hook_Function(0x0056706C, *TechnoClass::Hook_Techno_Draw_Object);
+    Hook_Function(0x005618E4, *TechnoClass::Hook_Draw_It);
+    Hook_Function(0x00566154, *TechnoClass::Hook_Can_Repair);
+    Hook_Function(0x005660C0, *TechnoClass::Hook_Can_Player_Fire);
+    Hook_Function(0x00561444, *TechnoClass::Hidden);
+    Hook_Function(0x0056950C, *TechnoClass::Look);
+    Hook_Function(0x00561480, *TechnoClass::Mark);
+    Hook_Function(0x005643B4, *TechnoClass::Clicked_As_Target);
+    Hook_Function(0x00564C34, *TechnoClass::Select);
+    Hook_Function(0x005661A0, *TechnoClass::Hook_Weapon_Range);
+    Hook_Function(0x00561870, *TechnoClass::Per_Cell_Process);
+    Hook_Function(0x005661E8, *TechnoClass::Override_Mission);
+    Hook_Function(0x0056621C, *TechnoClass::Restore_Mission);
+    Hook_Function(0x00560C9C, *TechnoClass::Hook_How_Many_Survivors);
+    Hook_Function(0x00569220, *TechnoClass::Hook_Find_Exit_Cell);
+    Hook_Function(0x00566134, *TechnoClass::Hook_Is_Weapon_Equipped);
+    Hook_Function(0x00564F3C, *TechnoClass::Stun);
+    Hook_Function(0x0056624C, *TechnoClass::Renovate);
+    Hook_Function(0x0056733C, *TechnoClass::Hook_Remap_Table);
+    Hook_Function(0x005686C0, *TechnoClass::Hook_Is_Ready_To_Random_Animate);
+    Hook_Function(0x00566EFC, *TechnoClass::Hook_Visual_Character);
 
     // house.h
     Hook_Function(0x004D5EF4, *HouseClass::Silo_Redraw_Check);

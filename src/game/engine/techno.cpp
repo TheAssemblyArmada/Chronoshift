@@ -22,9 +22,12 @@
 #include "globals.h"
 #include "house.h"
 #include "remap.h"
+#include "infantrytype.h"
+#include "iomap.h"
 #include "rules.h"
 #include "weapontype.h"
 #include "special.h"
+#include "scenario.h"
 #include <algorithm>
 
 using std::min;
@@ -33,6 +36,11 @@ int const TechnoClass::BodyShape32[32] = {
     0, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
 };
 
+/**
+ *
+ *
+ * @address 0x00560DC8
+ */
 TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     RadioClass(type, house),
     m_Flasher(),
@@ -111,6 +119,11 @@ TechnoClass::TechnoClass(const TechnoClass &that) :
 {
 }
 
+/**
+ *
+ *
+ * @address 0x004CDAA0
+ */
 TechnoClass::TechnoClass(const NoInitClass &noinit) : 
     RadioClass(noinit),
     m_Flasher(noinit),
@@ -133,9 +146,14 @@ void TechnoClass::Debug_Dump(MonoClass *mono) const
 }
 #endif
 
+/**
+ *
+ *
+ * @address 0x00564358
+ */
 HousesType TechnoClass::Owner() const
 {
-    return HousesType();
+    return m_OwnerHouse->What_Type();
 }
 
 void TechnoClass::AI()
@@ -161,24 +179,59 @@ ActionType TechnoClass::What_Action(cell_t cellnum) const
     return ActionType();
 }
 
+/**
+ *
+ *
+ * @address 0x00568574
+ */
 int TechnoClass::Get_Ownable() const
 {
-    return 0;
+    return Techno_Class_Of().Get_Ownable();
 }
 
+/**
+ *
+ *
+ * @address 0x00566154
+ */
 BOOL TechnoClass::Can_Repair() const
 {
-    return 0;
+    if (m_RTTI != RTTI_BUILDING) {
+        return false;
+    }
+    if (!Techno_Class_Of().Is_Repairable()) {
+        return false;
+    }
+    if (m_Health != Techno_Class_Of().Get_Strength()) {
+        return true;
+    }
+    return false;
 }
 
+/**
+ *
+ *
+ * @address 0x005660C0
+ */
 BOOL TechnoClass::Can_Player_Fire() const
 {
-    return 0;
+    if(!m_OwnerHouse->Player_Has_Control()) {
+        return false;
+    }
+    if (Is_Techno() && Is_Weapon_Equipped()) {
+        return true;
+    }
+    return false;
 }
 
+/**
+ *
+ *
+ * @address 0x00566088
+ */
 BOOL TechnoClass::Can_Player_Move() const
 {
-    return 0;
+    return m_OwnerHouse->Player_Has_Control();
 }
 
 coord_t TechnoClass::Fire_Coord(WeaponSlotType weapon) const
@@ -199,15 +252,33 @@ void TechnoClass::Record_The_Kill(TechnoClass *object)
 {
 }
 
+/**
+ *
+ *
+ * @address 0x00566EE8
+ */
 void TechnoClass::Do_Shimmer()
 {
+    //this function is quite different in TD
+
+    Do_Uncloak();
 }
 
+/**
+ *
+ *
+ * @address 0x005686B4
+ */
 int TechnoClass::Exit_Object(TechnoClass *object)
 {
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x005618E4
+ */
 void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
 {
     m_Door.Clear_To_Redraw();
@@ -233,7 +304,7 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
 
         // draw health bar
         if (m_Health > 0) {
-            if (Get_Owner_House()->Is_Ally(g_PlayerPtr) || Rule.Show_Enemy_Health()) {
+            if (m_OwnerHouse->Is_Ally(g_PlayerPtr) || Rule.Show_Enemy_Health()) {
                 fixed_t health = Health_Ratio();
                 int bar_left = x - dim_w / 2;
                 int bar_top = y - dim_h / 2;
@@ -267,7 +338,7 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
             int adj_y = 0;
 
             // if we are showing the health bar nudge the selection box a bit
-            if (Get_Owner_House()->Is_Ally(g_PlayerPtr) || Rule.Show_Enemy_Health()) {
+            if (m_OwnerHouse->Is_Ally(g_PlayerPtr) || Rule.Show_Enemy_Health()) {
                 adj_y = 4;
             }
 
@@ -310,33 +381,81 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
             rect.Draw_Line(left, bottom, h_l, bottom, COLOR_WHITE);
             rect.Draw_Line(left, bottom, left, v_b, COLOR_WHITE);
 
-            if (Get_Owner_House()->Is_Ally(g_PlayerPtr) || Get_Owner_House()->Spied_My_Radar(g_PlayerPtr)) {
+            if (m_OwnerHouse->Is_Ally(g_PlayerPtr) || m_OwnerHouse->Spied_My_Radar(g_PlayerPtr)) {
                 Draw_Pips((x - center_x) + 5, (y + center_y) - 3, window);
             }
         }
     }
 }
 
+/**
+ *
+ *
+ * @address 0x00561444
+ */
 void TechnoClass::Hidden()
 {
+    if (m_PlayerAware && !m_OwnerHouse->Is_Human()) {
+        m_PlayerAware = false;
+    }
 }
 
+/**
+ *
+ *
+ * @address 0x0056950C
+ */
 void TechnoClass::Look(BOOL a1)
 {
+    int sight = Techno_Class_Of().Get_Sight();
+    if (sight > 0) {
+        Map.Sight_From(Get_Cell(), sight, m_OwnerHouse, a1);
+    }
 }
 
+/**
+ *
+ *
+ * @address 0x00561480
+ */
 BOOL TechnoClass::Mark(MarkType mark)
 {
-    return 0;
+    if (!ObjectClass::Mark(mark)) {
+        return false;
+    }
+    if (m_Tethered) {
+        Transmit_Message(RADIO_WE_BUMPED);
+    }
+    return true;
 }
 
-void TechnoClass::Clicked_As_Target(int a1)
+/**
+ *
+ *
+ * @address 0x005643B4
+ */
+void TechnoClass::Clicked_As_Target(int flash_frames)
 {
+    m_Flasher.Flash(flash_frames, true);
 }
 
+/**
+ *
+ *
+ * @address 0x00564C34
+ */
 BOOL TechnoClass::Select()
 {
-    return 0;
+    if (!m_PlayerAware && (!m_OwnerHouse->Player_Has_Control() && !g_Debug_Unshroud)) {
+        return false;
+    }
+    if (ObjectClass::Select()) {
+        if (m_OwnerHouse->Player_Has_Control() && g_AllowVoice) {
+            Response_Select();
+        }
+        return true;
+    }
+    return false;
 }
 
 BOOL TechnoClass::In_Range(coord_t a1, WeaponSlotType weapon) const
@@ -344,8 +463,20 @@ BOOL TechnoClass::In_Range(coord_t a1, WeaponSlotType weapon) const
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x005661A0
+ */
 int TechnoClass::Weapon_Range(WeaponSlotType weapon) const
 {
+    if (weapon != WEAPON_SLOT_NONE && weapon < WEAPON_SLOT_COUNT) {
+        const WeaponTypeClass *wtptr = Techno_Class_Of().Get_Weapon(weapon);
+
+        if (wtptr != nullptr) {
+            return wtptr->Get_Range();
+        }
+    }
     return 0;
 }
 
@@ -359,8 +490,24 @@ int TechnoClass::Value() const
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x00561870
+ */
 void TechnoClass::Per_Cell_Process(PCPType pcp)
 {
+    if (pcp == PCP_2) {
+        cell_t cell = Get_Cell();
+        if (!m_LockedOnMap && Map.In_Radar(cell)) {
+            m_LockedOnMap = true;
+        }
+        if (!m_PlayerAware) {
+            if (Map[cell].Is_Revealed()) {
+                Revealed(g_PlayerPtr);
+            }
+        }
+    }
 }
 
 RadioMessageType TechnoClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
@@ -374,7 +521,7 @@ BOOL TechnoClass::Revealed(HouseClass *house)
 }
 
 /**
- * @brief
+ *
  *
  * @address 0x004F984C
  */
@@ -385,7 +532,7 @@ void TechnoClass::Code_Pointers()
 }
 
 /**
- * @brief
+ *
  *
  * @address 0x004F9868
  */
@@ -395,20 +542,47 @@ void TechnoClass::Decode_Pointers()
     RadioClass::Decode_Pointers();
 }
 
+/**
+ *
+ *
+ * @address 0x005661E8
+ */
 void TechnoClass::Override_Mission(MissionType mission, int target1, int target2)
 {
+    m_SuspendedTarCom = m_TarCom;
+    MissionClass::Override_Mission(mission);
+    Assign_Target(target1);
 }
 
+/**
+ *
+ *
+ * @address 0x0056621C
+ */
 BOOL TechnoClass::Restore_Mission()
 {
-    return 0;
+    if(!MissionClass::Restore_Mission()){
+        return false;
+    }
+    Assign_Target(m_SuspendedTarCom);
+    return true;
 }
 
+/**
+ *
+ *
+ * @address 0x00560C9C
+ */
 int TechnoClass::How_Many_Survivors() const
 {
-    return 0;
+    return Techno_Class_Of().Is_Crewed() ? 1 : 0;
 }
 
+/**
+ *
+ *
+ * @address 0x00423E00
+ */
 DirType TechnoClass::Turret_Facing() const
 {
     return m_Facing.Get_Current();
@@ -419,15 +593,20 @@ BuildingClass *TechnoClass::Find_Docking_Bay(BuildingType building, int a2) cons
     return nullptr;
 }
 
+/**
+ *
+ *
+ * @address 0x00569220
+ */
 cell_t TechnoClass::Find_Exit_Cell(TechnoClass *object) const
 {
-    return cell_t();
+    return Coord_To_Cell(Docking_Coord());
 }
 
 /**
  * Get the desired direction to face to load up.
  *
- * 0x005685C4
+ * @address 0x005685C4
  */
 DirType TechnoClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) const
 {
@@ -439,7 +618,7 @@ DirType TechnoClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) cons
 /**
  * Get the direction we are currently able to fire in.
  *
- * 0x005685E0
+ * @address 0x005685E0
  */
 DirType TechnoClass::Fire_Direction() const
 {
@@ -451,14 +630,24 @@ InfantryType TechnoClass::Crew_Type() const
     return InfantryType();
 }
 
+/**
+ *
+ *
+ * @address 0x00560D1C
+ */
 BOOL TechnoClass::Is_Allowed_To_Recloak() const
 {
-    return 0;
+    return true;
 }
 
+/**
+ *
+ *
+ * @address 0x00566134
+ */
 BOOL TechnoClass::Is_Weapon_Equipped() const
 {
-    return 0;
+    return Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) != nullptr;
 }
 
 int TechnoClass::Rearm_Delay(int a1, int a2) const
@@ -476,25 +665,48 @@ int TechnoClass::Threat_Range(int a1) const
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x005685F8
+ */
 void TechnoClass::Response_Select()
 {
+    //empty
 }
 
+/**
+ *
+ *
+ * @address 0x00568600
+ */
 void TechnoClass::Response_Move()
 {
+    //empty
 }
 
+/**
+ *
+ *
+ * @address 0x00568600
+ */
 void TechnoClass::Response_Attack()
 {
+    //empty
 }
 
 void TechnoClass::Player_Assign_Mission(MissionType mission, target_t target, target_t dest)
 {
 }
 
+/**
+ *
+ *
+ * @address 0x00423E20
+ */
 int TechnoClass::Made_A_Kill()
 {
-    return 0;
+    return ++m_KillCount;
 }
 
 BOOL TechnoClass::Target_Something_Nearby(ThreatType threat)
@@ -502,8 +714,18 @@ BOOL TechnoClass::Target_Something_Nearby(ThreatType threat)
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x00564F3C
+ */
 void TechnoClass::Stun()
 {
+    Assign_Target(0);
+    Assign_Destination(0);
+    Transmit_Message(RADIO_OVER_AND_OUT);
+    Detach_All(true);
+    Unselect();
 }
 
 BOOL TechnoClass::In_Range(target_t target, WeaponSlotType weapon) const
@@ -545,13 +767,31 @@ BOOL TechnoClass::Electric_Zap(target_t target, BOOL a2, coord_t a3, uint8_t *a4
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x0056624C
+ */
 void TechnoClass::Renovate()
 {
+    Mark(MARK_REDRAW);
+    m_Health = Techno_Class_Of().Get_Strength();
+    if (What_Am_I() == RTTI_BUILDING) {
+        Repair(0);
+    }
 }
 
+/**
+ *
+ *
+ * @address 0x0056733C
+ */
 uint8_t *TechnoClass::Remap_Table() const
 {
-    return nullptr;
+    if (Techno_Class_Of().Is_Remapable()) {
+        return (uint8_t *)m_OwnerHouse->Remap_Table(m_Flasher.Get_Flashed(), Techno_Class_Of().Get_Remap());
+    }
+    return ColorRemaps[REMAP_0].RemapPalette;
 }
 
 void TechnoClass::Draw_Pips(int x, int y, WindowNumberType window) const
@@ -566,29 +806,61 @@ void TechnoClass::Do_Cloak()
 {
 }
 
-bool TechnoClass::Is_Ready_To_Random_Animate() const
+/**
+ *
+ *
+ * @address 0x005686C0
+ */
+BOOL TechnoClass::Is_Ready_To_Random_Animate() const
+{
+    return m_IdleActionTimer.Expired();
+}
+
+/**
+ *
+ *
+ * @address 0x00423E40
+ */
+BOOL TechnoClass::Random_Animate()
 {
     return false;
 }
 
-bool TechnoClass::Random_Animate()
-{
-    return false;
-}
-
+/**
+ *
+ *
+ * @address 0x00568700
+ */
 void TechnoClass::Assign_Destination(target_t dest)
 {
+    // empty
 }
 
+/**
+ *
+ *
+ * @address 0x00568708
+ */
 void TechnoClass::Enter_Idle_Mode(BOOL a1)
 {
+    // empty
 }
 
+/**
+ *
+ *
+ *
+ */
 void TechnoClass::Set_Player_Owned()
 {
     m_PlayerOwned = (m_OwnerHouse == g_PlayerPtr);
 }
 
+/**
+ *
+ *
+ * @address 0x0056706C
+ */
 void TechnoClass::Techno_Draw_Object(
     const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const
 {
@@ -829,6 +1101,11 @@ BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
 #endif
 }
 
+/**
+ *
+ *
+ * @address 0x00566EFC
+ */
 VisualType TechnoClass::Visual_Character(BOOL flag) const
 {
     DEBUG_ASSERT(m_IsActive);
@@ -837,47 +1114,48 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
         return VISUAL_NORMAL;
     }
 
-    if (!Techno_Class_Of().Is_Invisible() || m_PlayerOwned || g_InMapEditor) {
-        if (m_CloakState == CLOAK_UNCLOAKED || g_InMapEditor) {
+    if (Techno_Class_Of().Is_Invisible() && !m_PlayerOwned && !g_InMapEditor) {
+        return VISUAL_HIDDEN;
+    }
+    if (m_CloakState == CLOAK_UNCLOAKED || g_InMapEditor) {
+        return VISUAL_NORMAL;
+    }
+
+    if (m_CloakState == CLOAK_CLOAKED) {
+        if (!flag && m_PlayerOwned) {
+            return VISUAL_SHADOWY;
+        }
+    } else {
+        int32_t value = m_CloakingStage.Get_Stage();
+
+        if (m_CloakState == CLOAK_UNCLOAKING) {
+            value = 38 - m_CloakingStage.Get_Stage();
+        }
+
+        if (value <= 0) {
             return VISUAL_NORMAL;
         }
 
-        if (m_CloakState == CLOAK_CLOAKED) {
-            if (!flag && m_PlayerOwned) {
-                return VISUAL_SHADOWY;
-            }
-        } else {
-            int32_t value = m_CloakingStage.Get_Stage();
+        int stage = fixed_t(value, 38) * 256;
 
-            if (m_CloakState == CLOAK_UNCLOAKING) {
-                value = 38 - m_CloakingStage.Get_Stage();
-            }
+        if (stage < 64) {
+            return VISUAL_INDISTINCT;
+        }
 
-            if (value <= 0) {
-                return VISUAL_NORMAL;
-            }
+        if (stage < 128) {
+            return VISUAL_DARKEN;
+        }
 
-            int stage = fixed_t(value, 38) * 256;
+        if (stage < 192) {
+            return VISUAL_SHADOWY;
+        }
 
-            if (stage < 64) {
-                return VISUAL_INDISTINCT;
-            }
+        if (!flag && m_PlayerOwned) {
+            return VISUAL_SHADOWY;
+        }
 
-            if (stage < 128) {
-                return VISUAL_DARKEN;
-            }
-
-            if (stage < 192) {
-                return VISUAL_SHADOWY;
-            }
-
-            if (!flag && m_PlayerOwned) {
-                return VISUAL_SHADOWY;
-            }
-
-            if (stage < 255) {
-                return VISUAL_RIPPLE;
-            }
+        if (stage < 255) {
+            return VISUAL_RIPPLE;
         }
     }
 

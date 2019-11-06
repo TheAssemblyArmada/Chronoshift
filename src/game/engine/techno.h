@@ -90,7 +90,7 @@ public:
     virtual void Hidden() override;
     virtual void Look(BOOL a1 = false) override;
     virtual BOOL Mark(MarkType mark) override;
-    virtual void Clicked_As_Target(int a1) override;
+    virtual void Clicked_As_Target(int flash_frames) override;
     virtual BOOL Select() override;
     virtual BOOL In_Range(coord_t a1, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual int Weapon_Range(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
@@ -144,8 +144,8 @@ public:
     virtual void Draw_Pips(int x, int y, WindowNumberType window) const;
     virtual void Do_Uncloak();
     virtual void Do_Cloak();
-    virtual bool Is_Ready_To_Random_Animate() const;
-    virtual bool Random_Animate();
+    virtual BOOL Is_Ready_To_Random_Animate() const;
+    virtual BOOL Random_Animate();
     virtual void Assign_Destination(target_t dest);
     virtual void Enter_Idle_Mode(BOOL a1 = false);
 
@@ -182,13 +182,51 @@ public:
     CloakState Cloak_State() const { return m_CloakState; }
 
 #ifdef GAME_DLL
-    void Wrap_Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
+    friend void Setup_Hooks(void);
+
+    void Hook_Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale)
     {
         TechnoClass::Techno_Draw_Object(shape, frame, x, y, window, dir, scale);
     }
-    void Wrap_Draw_It(int x, int y, WindowNumberType window)
+    void Hook_Draw_It(int x, int y, WindowNumberType window)
     {
         TechnoClass::Draw_It(x, y, window);
+    }
+    VisualType Hook_Visual_Character(BOOL flag)
+    {
+        return TechnoClass::Visual_Character(flag);
+    }
+    BOOL Hook_Can_Repair()
+    {
+        return TechnoClass::Can_Repair();
+    }
+    BOOL Hook_Can_Player_Fire()
+    {
+        return TechnoClass::Can_Player_Fire();
+    }
+    int Hook_Weapon_Range(WeaponSlotType weapon)
+    {
+        return TechnoClass::Weapon_Range(weapon);
+    }
+    int Hook_How_Many_Survivors()
+    {
+        return TechnoClass::How_Many_Survivors();
+    }
+    BOOL Hook_Is_Weapon_Equipped()
+    {
+        return TechnoClass::Is_Weapon_Equipped();
+    }
+    cell_t Hook_Find_Exit_Cell(TechnoClass *object)
+    {
+        return TechnoClass::Find_Exit_Cell(object);
+    }
+    uint8_t *Hook_Remap_Table()
+    {
+        return TechnoClass::Remap_Table();
+    }
+    BOOL Hook_Is_Ready_To_Random_Animate()
+    {
+        return TechnoClass::Is_Ready_To_Random_Animate();
     }
 #endif
 

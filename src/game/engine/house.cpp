@@ -1212,11 +1212,10 @@ const uint8_t *HouseClass::Remap_Table(BOOL alt, RemapType type)
         return DisplayClass::FadingLight;
     }
 
-    if (type != REMAP_0) {
-        return ColorRemaps[m_Color].RemapPalette;
+    if (type == REMAP_0) {
+        return nullptr;
     }
-
-    return nullptr;
+    return ColorRemaps[m_Color].RemapPalette;
 }
 
 /**

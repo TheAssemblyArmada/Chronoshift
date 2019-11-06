@@ -61,11 +61,15 @@ public:
     BOOL Is_Invisible() const { return m_IsInvisible; }
     BOOL Is_Cloakable() const { return m_Cloakable; }
     BOOL Is_Turret_Equipped() const { return m_IsTurretEquipped; }
+    BOOL Is_Crewed() const { return m_IsCrewed; }
+    BOOL Is_Repairable() const { return m_IsRepairable; }
+    BOOL Is_Remapable() const { return m_IsRemapable; }
     int Get_Cost() const { return m_Cost; }
     SpeedType Get_Speed() const { return m_Speed; }
     int Get_Ammo() const { return m_Ammo; }
     RemapType Get_Remap() const { return m_Remap; }
     int Get_Sight() const { return m_Sight; }
+    int Get_Guard_Range() const { return m_GuardRange; }
     int Get_TechLevel() const { return m_TechLevel; }
     uint32_t Get_Prerequisites() const { return m_Prerequisite; }
     MZoneType Get_Movement_Zone() const { return m_MovementZone; }

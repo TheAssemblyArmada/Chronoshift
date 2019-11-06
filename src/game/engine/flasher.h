@@ -30,7 +30,7 @@ public:
     FlasherClass(const NoInitClass &noinit) {}
 
     void Flash(int flash_frames, bool flash);
-    BOOL Get_Flashed() { return m_Flashed; }
+    BOOL Get_Flashed() const { return m_Flashed; }
     BOOL Process();
     void Code_Pointers() {}
     void Decode_Pointers() {}
