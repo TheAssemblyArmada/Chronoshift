@@ -1,6 +1,7 @@
 /**
  * @file
  *
+ * @author CCHyper
  * @author OmniBlade
  *
  * @brief Command line parser.
