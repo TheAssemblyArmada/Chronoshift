@@ -174,9 +174,7 @@ const int16_t *AircraftTypeClass::Occupy_List(BOOL recalc) const
  */
 const int16_t *AircraftTypeClass::Overlap_List() const
 {
-    static const int16_t _list[] = {
-        -127, -1, -128, -1, -129, -1, -1, -1, -255, 0, -129, 0, -128, 0, -127, 0, -1, -129, 0, 0, LIST_END
-    };
+    static const int16_t _list[] = { -127, -128, -129, -1, 1, 127, 128, 129, LIST_END };
 
     return _list;
 }
