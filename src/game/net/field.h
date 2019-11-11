@@ -35,27 +35,27 @@ enum FieldDataType
 class FieldClass
 {
 public:
-    FieldClass(char *fieldname, uint8_t data);
-    FieldClass(char *fieldname, bool data);
-    FieldClass(char *fieldname, int16_t data);
-    FieldClass(char *fieldname, uint16_t data);
-    FieldClass(char *fieldname, int32_t data);
-    FieldClass(char *fieldname, uint32_t data);
-    FieldClass(char *fieldname, char *data);
-    FieldClass(char *fieldname, void *data, int size);
+    FieldClass(char *id, uint8_t data);
+    FieldClass(char *id, bool data);
+    FieldClass(char *id, int16_t data);
+    FieldClass(char *id, uint16_t data);
+    FieldClass(char *id, int32_t data);
+    FieldClass(char *id, uint32_t data);
+    FieldClass(char *id, char *data);
+    FieldClass(char *id, void *data, int size);
     ~FieldClass()
     {
-        delete[] m_data;
-        m_data = nullptr;
+        delete[] m_Data;
+        m_Data = nullptr;
     }
     void Host_To_Net();
     void Net_To_Host();
 
 protected:
-    char m_name[4];
-    int16_t m_type;
-    int16_t m_size;
-    char *m_data;
-    int32_t m_unknown; // whatever it is its used in PacketClass::Find_Field
+    char m_ID[4];
+    int16_t m_DataType;
+    int16_t m_Size;
+    char *m_Data;
+    FieldClass *m_Next;
 };
 #endif // FIELD_H

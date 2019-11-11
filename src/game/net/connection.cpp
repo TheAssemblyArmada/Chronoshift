@@ -151,7 +151,7 @@ BOOL ConnectionClass::Receive_Packet(void *data, int32_t datalen)
                     RQEntry qentry = m_CommBuffer->Get_Receive(i);
                     
                     if (qentry) {
-                        PacketHeader *qbuff = reinterpret_cast<PacketHeader *>(qentry->m_DataBuffer);
+                        PacketHeader *qbuff = reinterpret_cast<PacketHeader *>(qentry->m_Buffer);
                         
                         if (qbuff->Command == COMMAND_ADATA) {
                             uint32_t queued_packet = le32toh(qbuff->Number);
@@ -187,7 +187,7 @@ BOOL ConnectionClass::Receive_Packet(void *data, int32_t datalen)
                             RQEntry qentry = m_CommBuffer->Get_Receive(i);
 
                             if (qentry) {
-                                PacketHeader *qbuff = reinterpret_cast<PacketHeader *>(qentry->m_DataBuffer);
+                                PacketHeader *qbuff = reinterpret_cast<PacketHeader *>(qentry->m_Buffer);
 
                                 if (qbuff->Command == COMMAND_ADATA) {
                                     int32_t next_packet = m_QueuedSeqenceNum + 1;
@@ -219,10 +219,10 @@ BOOL ConnectionClass::Receive_Packet(void *data, int32_t datalen)
         SQEntry qentry = m_CommBuffer->Get_Send(j);
 
         if (qentry) {
-            PacketHeader *qbuff = reinterpret_cast<PacketHeader *>(qentry->m_DataBuffer);
+            PacketHeader *qbuff = reinterpret_cast<PacketHeader *>(qentry->m_Buffer);
 
             if (packet_num == le32toh(qbuff->Number) && qbuff->Command == COMMAND_ADATA) {
-                qentry->m_Flags |= COMM_FLAG_SNDACK;
+                qentry->m_Flags |= FLAG_SEND_ISACK;
                 return true;
             }
         }
@@ -248,19 +248,19 @@ BOOL ConnectionClass::Get_Packet(void *data, int32_t *datalen)
         qentry = m_CommBuffer->Get_Receive(i);
 
         if (qentry!= nullptr) {
-            if (!(qentry->m_Flags & COMM_FLAG_SNDACK)) {
-                uint8_t *qbuff = qentry->m_DataBuffer;
+            if (!(qentry->m_Flags & FLAG_RECEIVE_ISREAD)) {
+                uint8_t *qbuff = qentry->m_Buffer;
 
                 if (!*(qbuff + 2)) {
                     int next_packet = m_RecvSequenceNum + 1;
 
                     if (next_packet == *(uint32_t *)(qbuff + 3)) {
                         m_RecvSequenceNum = next_packet;
-                        int qdata_len = qentry->m_DataLength - 7;
-                        qentry->m_Flags |= COMM_FLAG_SNDACK;
+                        int qdata_len = qentry->m_BufLen - 7;
+                        qentry->m_Flags |= FLAG_RECEIVE_ISREAD;
 
                         if (qdata_len > 0) {
-                            memcpy(data, qentry->m_DataBuffer + 7, qdata_len);
+                            memcpy(data, qentry->m_Buffer + 7, qdata_len);
                         }
 
                         *datalen = qdata_len;
@@ -276,11 +276,11 @@ BOOL ConnectionClass::Get_Packet(void *data, int32_t *datalen)
         }
     }
 
-    qentry->m_Flags |= 0x2;
-    int buff_datalen = qentry->m_DataLength - 7;
+    qentry->m_Flags |= FLAG_RECEIVE_ISREAD;
+    int buff_datalen = qentry->m_BufLen - 7;
 
     if (buff_datalen > 0) {
-        memcpy(data, qentry->m_DataBuffer + 7, buff_datalen);
+        memcpy(data, qentry->m_Buffer + 7, buff_datalen);
     }
 
     *datalen = buff_datalen;
@@ -311,10 +311,10 @@ BOOL ConnectionClass::Service_Send_Queue()
     for (int i = 0; i < m_CommBuffer->Num_Send(); ++i) {
         SQEntry entry = m_CommBuffer->Get_Send(i);
 
-        if (entry->m_Flags & 2) {
-            if (*(entry->m_DataBuffer + 2) == COMMAND_ADATA) {
+        if (entry->m_Flags & FLAG_SEND_ISACK) {
+            if (*(entry->m_Buffer + 2) == COMMAND_ADATA) {
                 // Record delay between send and ack.
-                m_CommBuffer->Add_Delay(Time() - entry->m_InitialSendTime);
+                m_CommBuffer->Add_Delay(Time() - entry->m_FirstTime);
             }
 
             m_CommBuffer->UnQueue_Send(0, 0, i--, 0, 0);
@@ -325,28 +325,28 @@ BOOL ConnectionClass::Service_Send_Queue()
     for (int i = 0; i < m_CommBuffer->Num_Send(); ++i) {
         SQEntry entry = m_CommBuffer->Get_Send(i);
 
-        if (!(entry->m_Flags & 2)) {
+        if (!(entry->m_Flags & FLAG_SEND_ISACK)) {
             uint32_t cur_time = Time();
 
-            if ((cur_time - entry->m_LastSendTime) > m_SendRetryDelay) {
-                Send(entry->m_DataBuffer, entry->m_DataLength, entry->m_AckToConnectionBuffer, entry->m_AckToConnectionLength);
-                entry->m_LastSendTime = cur_time;
+            if ((cur_time - entry->m_LastTime) > m_SendRetryDelay) {
+                Send(entry->m_Buffer, entry->m_BufLen, entry->m_ExtraBuffer, entry->m_ExtraLen);
+                entry->m_LastTime = cur_time;
 
-                if (!entry->m_AckToConnection) {
-                    entry->m_InitialSendTime = cur_time;
+                if (!entry->m_SendCount) {
+                    entry->m_FirstTime = cur_time;
 
-                    if (*(entry->m_DataBuffer + 2) == COMMAND_DATA) {
-                        entry->m_Flags |= 0x2;
+                    if (*(entry->m_Buffer + 2) == COMMAND_DATA) {
+                        entry->m_Flags |= FLAG_SEND_ISACK;
                     }
                 }
 
-                ++entry->m_AckToConnection;
+                ++entry->m_SendCount;
 
-                if (m_SendMaxRetries != INT32_MAX && entry->m_AckToConnection > m_SendMaxRetries) {
+                if (m_SendMaxRetries != INT32_MAX && entry->m_SendCount > m_SendMaxRetries) {
                     failed = true;
                 }
 
-                if (m_SendRetryTimeout != INT32_MAX && (entry->m_LastSendTime - entry->m_InitialSendTime) > m_SendRetryTimeout) {
+                if (m_SendRetryTimeout != INT32_MAX && (entry->m_LastTime - entry->m_FirstTime) > m_SendRetryTimeout) {
                     failed = true;
                 }
             }
@@ -366,10 +366,10 @@ BOOL ConnectionClass::Service_Receive_Queue()
     for (int i = 0; i < m_CommBuffer->Num_Receive(); ++i) {
         RQEntry entry = m_CommBuffer->Get_Receive(i);
 
-        if (entry->m_Flags & 2) {
-            if (*(entry->m_DataBuffer + 2) == 1) {
+        if (entry->m_Flags & FLAG_RECEIVE_ISREAD) {
+            if (*(entry->m_Buffer + 2) == 1) {
                 m_CommBuffer->UnQueue_Receive(0, 0, i--, 0, 0);
-            } else if (*(uint32_t *)(entry->m_DataBuffer + 3) < m_QueuedSeqenceNum) {
+            } else if (*(uint32_t *)(entry->m_Buffer + 3) < m_QueuedSeqenceNum) {
                 m_CommBuffer->UnQueue_Receive(0, 0, i--, 0, 0);
             }
         }
