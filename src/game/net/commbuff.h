@@ -19,82 +19,88 @@
 
 #include "always.h"
 
-#define COMM_FLAG_INUSE 1
-#define COMM_FLAG_SNDACK 2
-#define COMM_FLAG_RECACK 4
+//these were bits originally but to ensure the same packing across compilers we made it bit masks
+enum CommFlags {
+    FLAG_SEND_ISACTIVE = 1 << 0,
+    FLAG_SEND_ISACK = 1 << 1,
+    FLAG_RECEIVE_ISACTIVE = 1 << 0,
+    FLAG_RECEIVE_ISREAD = 1 << 1,
+    FLAG_RECEIVE_ISACK = 1 << 2
+};
 
 class CommBufferClass
 {
 public:
     struct SendQueueType
     {
-        uint32_t m_Flags;
-        uint32_t m_InitialSendTime; // first send time?
-        uint32_t m_LastSendTime; // last send attempt time if not acked?
-        uint32_t m_AckToConnection;
-        int32_t m_DataLength;
-        uint8_t *m_DataBuffer;
-        int32_t m_AckToConnectionLength;
-        uint8_t *m_AckToConnectionBuffer;
+        uint32_t m_Flags; // See CommFlags above.
+        uint32_t m_FirstTime; // first send time?
+        uint32_t m_LastTime; // last send attempt time if not acked?
+        uint32_t m_SendCount;
+        int32_t m_BufLen;
+        uint8_t *m_Buffer;
+        int32_t m_ExtraLen;
+        uint8_t *m_ExtraBuffer;
     };
 
     struct ReceiveQueueType
     {
-        uint32_t m_Flags;
-        int32_t m_DataLength;
-        uint8_t *m_DataBuffer;
-        int32_t m_AckToConnectionLength;
-        uint8_t *m_AckToConnectionBuffer;
+        uint32_t m_Flags; // See CommFlags above.
+        int32_t m_BufLen;
+        uint8_t *m_Buffer;
+        int32_t m_ExtraLen;
+        uint8_t *m_ExtraBuffer;
     };
 
 public:
-    CommBufferClass(int snd_buff_size, int rcv_buff_size, int buff1_size, int buff2_size);
+    CommBufferClass(int num_send, int num_receive, int max_len, int extra_len);
     virtual ~CommBufferClass();
 
     void Init();
     void Init_Send_Queue();
-    int Queue_Send(void *src, int src_len, void *buff2, int buff2_len);
-    int UnQueue_Send(void *dst, int *dst_len, int index, void *buff2, int *buff2_len);
+    void Init_Receive_Queue();
+    int Queue_Send(void *packet, int buf_len, void *extra_buf, int extra_len);
+    int UnQueue_Send(void *buf, int *buf_len, int index, void *extra_buf, int *extra_len);
     SendQueueType *Get_Send(int index);
-    int Num_Send() { return m_SendQueuePos; }
-    int Max_Send() { return m_SendQueueLength; }
+    int Num_Send() { return m_SendCount; }
+    int Max_Send() { return m_MaxSend; }
     void Grow_Send(int amount);
-    int Queue_Receive(void *src, int src_len, void *buff2, int buff2_len);
-    int UnQueue_Receive(void *dst, int *dst_len, int index, void *buff2, int *buff2_len);
+    int Queue_Receive(void *buf, int buf_len, void *extra_buf, int extra_len);
+    int UnQueue_Receive(void *buf, int *buf_len, int index, void *extra_buf, int *extra_len);
     ReceiveQueueType *Get_Receive(int index);
-    int Num_Receive() { return m_RecvQueuePos; }
-    int Max_Receive() { return m_RecvQueueLength; }
+    int Num_Receive() { return m_ReceiveCount; }
+    int Max_Receive() { return m_MaxReceive; }
     void Grow_Receive(int amount);
     void Add_Delay(uint32_t delay);
-    uint32_t Avg_Response_Time() { return m_AvgResponse; }
-    uint32_t Max_Response_Time() { return m_MaxResponse; }
+    uint32_t Avg_Response_Time() { return m_MeanDelay; }
+    uint32_t Max_Response_Time() { return m_MaxDelay; }
     void Reset_Response_Time();
     void Configure_Debug(int debug1, int debug2, char **debug3, int debug4, int debug5);
     void Mono_Debug_Print(int clear);
     void Mono_Debug_Print2(int clear);
 
 protected:
-    int m_SendQueueLength; // How many send queue objects does this buffer instance supports
-    int m_RecvQueueLength; // How many recv queue objects does this buffer instance supports
-    int m_MaxPacketSize; // Length of the first buffer in the Queue types
-    int m_MaxAckPacketSize; // Length of the second buffer in the Queue types
-    int m_Delay; // Related to delay somehow?
-    int m_ResponseCount; // Used in calculating average response?
-    uint32_t m_AvgResponse;
-    uint32_t m_MaxResponse;
+    int32_t m_MaxSend; // How many send queue objects does this buffer instance supports
+    int32_t m_MaxReceive; // How many recv queue objects does this buffer instance supports
+    int32_t m_MaxPacketSize; // Length of the first buffer in the Queue types
+    int32_t m_MaxExtraSize; // Length of the second buffer in the Queue types
+    uint32_t m_DelaySum; // Related to delay somehow?
+    uint32_t m_NumDelay; // Used in calculating average response?
+    uint32_t m_MeanDelay;
+    uint32_t m_MaxDelay;
     SendQueueType *m_SendQueue;
-    int m_SendQueuePos;
-    int m_SendQueuedCounter; // Always counts up? Count of total items processed?
-    uint32_t *m_SendIndex;
-    ReceiveQueueType *m_RecvQueue;
-    int m_RecvQueuePos;
-    int m_RecvQueuedCounter; // Always counts up? Count of total items processed?
-    uint32_t *m_RecvIndex;
-    int m_Debug1;
-    int m_Debug2;
+    int32_t m_SendCount;
+    uint32_t m_SendTotal; // Always counts up? Count of total items processed?
+    int32_t *m_SendIndex;
+    ReceiveQueueType *m_ReceiveQueue;
+    int32_t m_ReceiveCount;
+    uint32_t m_ReceiveTotal; // Always counts up? Count of total items processed?
+    int32_t *m_ReceiveIndex;
+    int32_t m_Debug1;
+    int32_t m_Debug2;
     char **m_Debug3;
-    int m_Debug4;
-    int m_Debug5;
+    int32_t m_Debug4;
+    int32_t m_Debug5;
 };
 
 #endif // COMMBUFF_H
