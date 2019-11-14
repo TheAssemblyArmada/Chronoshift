@@ -25,7 +25,7 @@ TriggerTypeClass::TriggerTypeClass() :
 }
 
 /**
- * @brief
+ * Encodes pointers for serialisation.
  *
  * @address 0x004F9448
  */
@@ -36,7 +36,7 @@ void TriggerTypeClass::Code_Pointers()
 }
 
 /**
- * @brief
+ * Decodes pointers for deserialisation.
  *
  * @address 0x004F9464
  */
@@ -44,6 +44,17 @@ void TriggerTypeClass::Decode_Pointers()
 {
     m_ActionOne.Decode_Pointers();
     m_ActionTwo.Decode_Pointers();
+}
+
+TriggerClass *TriggerTypeClass::Find_Or_Make()
+{
+    // Find or make is a free function in original, but takes TriggerTypeClass so makes sense as a member.
+#ifdef GAME_DLL
+    TriggerClass *(*func)(TriggerTypeClass *) = reinterpret_cast<TriggerClass *(*)(TriggerTypeClass *)>(0x0056D248);
+    return func(this);
+#else
+    return nullptr;
+#endif
 }
 
 TriggerTypeClass *TriggerTypeClass::From_Name(const char *name)

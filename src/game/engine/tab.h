@@ -86,6 +86,7 @@ public:
     virtual void Draw_It(BOOL force_redraw) override;
 
     void Flash_Money();
+    void Set_Tab_Redraw(BOOL value) { m_TabToRedraw = value; }
 
     static void Hilite_Tab(int tab);
 

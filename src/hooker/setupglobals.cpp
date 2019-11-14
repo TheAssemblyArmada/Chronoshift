@@ -219,6 +219,7 @@ void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
 void *&g_TurretShapes = Make_Global<void *>(0x0068D2E0);
 void *&g_SamShapes = Make_Global<void *>(0x0068D2E4);
 void *&g_MGunShapes = Make_Global<void *>(0x0068D2E8);
+const char **g_TutorialText = Make_Pointer<const char *>(0x00666304);
 BOOL &g_Debug_MotionCapture = Make_Global<BOOL>(0x0065D7C4);
 BOOL &g_Debug_Rotate = Make_Global<BOOL>(0x0065D7C8);
 BOOL &g_Debug_Quiet = Make_Global<BOOL>(0x0065D7CC);
