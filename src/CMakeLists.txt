@@ -141,6 +141,7 @@ set(GAMEENGINE_SRC
     game/engine/special.cpp
     game/engine/super.cpp
     game/engine/tab.cpp
+    game/engine/taction.cpp
     game/engine/target.cpp
     game/engine/techno.cpp
     game/engine/technotype.cpp

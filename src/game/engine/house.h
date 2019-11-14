@@ -237,6 +237,8 @@ public:
     void Set_Production(BOOL value) { m_Production = value; }
     BOOL Autocreate_Teams() const { return m_Autocreate; }
     void Set_Autocreate(BOOL value) { m_Autocreate = value; }
+    BOOL Auto_Base_AI() const { return m_AutoBaseAI; }
+    void Set_Auto_Base_AI(BOOL value) { m_AutoBaseAI = value; }
     BOOL Is_Discovered() const { return m_Discovered; }
     void Set_Discovered(BOOL value) { m_Discovered = value; }
     BOOL Is_Defeated() const { return m_Defeated; }
@@ -245,8 +247,12 @@ public:
     void Set_Infiltrated(BOOL value) { m_Infiltrated = value; }
     BOOL Is_Map_Clear() const { return m_MapIsClear; }
     void Set_Map_Clear(BOOL value) { m_MapIsClear = value; }
+    BOOL Visionary() const { return m_Visionary; }
+    void Set_Visionary(BOOL value) { m_Visionary = value; }
     int Get_Current_IQ() const { return m_CurrentIQ; }
     void Set_IQ_Level(int value) { m_CurrentIQ = value; }
+    UrgencyType Get_Smarties() const { return m_Smarties; }
+    void Set_Smarties(UrgencyType value) { m_Smarties = value; }
     SuperClass &Special_Weapons(SpecialWeaponType type) { return m_Specials[type]; }
     int Currently_Owned_Unit_Count() const { return m_CurrentUnitCount; }
     int Currently_Owned_Building_Count() const { return m_CurrentBuildingCount; }
@@ -278,6 +284,9 @@ public:
     UnitType Just_Unit() const { return m_JustUnit; }
     AircraftType Just_Aircraft() const { return m_JustAircraft; }
     VesselType Just_Vessel() const { return m_JustVessel; }
+    void Enable_Superweapon(SpecialWeaponType type, BOOL one_time) { m_Specials[type].Enable(one_time); }
+    void Set_Preferred_Target(QuarryType target) { m_PreferredTarget = target; }
+
     static void One_Time();
     static void Init();
     static HouseClass &As_Reference(HousesType type);

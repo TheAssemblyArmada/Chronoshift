@@ -81,6 +81,7 @@ void *g_WakeShapes = nullptr;
 void *g_TurretShapes = nullptr;
 void *g_SamShapes = nullptr;
 void *g_MGunShapes = nullptr;
+const char *g_TutorialText[TUTORIAL_TEXT_COUNT];
 
 BOOL g_Debug_MotionCapture = false;
 BOOL g_Debug_Rotate = false;

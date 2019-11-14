@@ -80,7 +80,10 @@ public:
     int Get_Elapsed_Time() { return m_ElapsedTimer.Time(); }
     TCountDownTimerClass<FrameTimerClass> &Global_Timer() { return m_GlobalTimer; }
     int Get_Global_Time() { return m_GlobalTimer.Time(); }
-    BOOL Global_Timer_Running() { return m_GlobalTimer != 0; }
+    void Set_Global_Time(int value) { m_GlobalTimer.Set(value); }
+    BOOL Global_Timer_Running() const { return m_GlobalTimer.Started(); }
+    void Start_Global_Timer() { return m_GlobalTimer.Start(); }
+    void Stop_Global_Timer() { return m_GlobalTimer.Stop(); }
     TCountDownTimerClass<FrameTimerClass> &Some_Timer() { return m_SomeTimer; }
     int Get_Scenario_Index() const { return m_ScenarioIndex; }
     TheaterType Get_Theater() const { return m_Theater; }

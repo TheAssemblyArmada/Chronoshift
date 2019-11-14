@@ -84,6 +84,8 @@
 #define GAME_TICKS_PER_SECOND 15
 #define GAME_TICKS_PER_MINUTE GAME_TICKS_PER_SECOND * 60
 
+#define TUTORIAL_TEXT_COUNT 225
+
 #ifdef PLATFORM_WINDOWS
 #ifdef GAME_DLL
 extern HWND &MainWindow;
@@ -163,6 +165,7 @@ extern void *&g_WakeShapes;
 extern void *&g_TurretShapes;
 extern void *&g_SamShapes;
 extern void *&g_MGunShapes;
+extern const char **g_TutorialText;
 
 extern BOOL &g_Debug_MotionCapture;
 extern BOOL &g_Debug_Rotate;
@@ -249,6 +252,7 @@ extern void *g_WakeShapes;
 extern void *g_TurretShapes;
 extern void *g_SamShapes;
 extern void *g_MGunShapes;
+extern const char *g_TutorialText[TUTORIAL_TEXT_COUNT];
 
 extern BOOL g_Debug_MotionCapture;
 extern BOOL g_Debug_Rotate;

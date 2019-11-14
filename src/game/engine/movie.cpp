@@ -207,8 +207,8 @@ MovieInfoStruct *MovieInfo_From_Movie(MovieType movie)
 void Play_Movie(MovieType movie, ThemeType theme, BOOL a3)
 {
 #ifdef GAME_DLL
-    void (*func)() = reinterpret_cast<void (*)()>(0x004A88AC);
-    func();
+    void (*func)(MovieType, ThemeType, BOOL) = reinterpret_cast<void (*)(MovieType, ThemeType, BOOL)>(0x004A8DCC);
+    func(movie, theme, a3);
 #endif
 }
 

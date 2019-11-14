@@ -211,12 +211,13 @@ public:
     BOOL Is_Sidebar_Drawn() const { return m_SidebarIsDrawn; }
     void Disable_Zoom_Button() { ZoomButton.Disable(); }
     void Enable_Zoom_Button() { ZoomButton.Enable(); }
+    void Flag_Strip_Redraw(ColumnType strip) { m_Columns[strip].Flag_To_Redraw(); }
 
 protected:
     StripClass m_Columns[COLUMN_COUNT];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_SidebarIsDrawn : 1; // 1
-    BOOL m_SidebarToRedraw : 1; // 2 
+    BOOL m_SidebarToRedraw : 1; // 2
     BOOL m_SidebarBit4 : 1; // 4
     BOOL m_SidebarBit8 : 1; // 8
     BOOL m_SidebarBit16 : 1; // 16

@@ -42,8 +42,47 @@ void TeamTypeClass::operator delete(void *ptr)
     g_TeamTypes.Free(ptr);
 }
 
+void TeamTypeClass::Build_INI_Entry(char *entry_buffer) {}
+
+TeamClass *TeamTypeClass::Create_One_Of() const
+{
+#ifdef GAME_DLL
+    TeamClass *(*func)(const TeamTypeClass *) = reinterpret_cast<TeamClass *(*)(const TeamTypeClass *)>(0x005600C4);
+    return func(this);
+#else 
+    return nullptr;
+#endif
+}
+
+void TeamTypeClass::Destroy_All_Of() const
+{
+#ifdef GAME_DLL
+    void (*func)(const TeamTypeClass *) = reinterpret_cast<void (*)(const TeamTypeClass *)>(0x00560114);
+    func(this);
+#endif
+}
+
+NeedType TeamTypeClass::TeamMission_Needs(TeamMissionType tmission)
+{
+    return NeedType();
+}
+
+// TODO Verify return.
+// This was a free function in original game, but makes more sense as a member.
+BOOL TeamTypeClass::Do_Reinforcements()
+{
+#ifdef GAME_DLL
+    BOOL (*func)(const TeamTypeClass *) = reinterpret_cast<BOOL (*)(const TeamTypeClass *)>(0x00533178);
+    return func(this);
+#else
+    return false;
+#endif
+}
+
+void TeamTypeClass::Detach(target_t target, int a2) {}
+
 /**
- * @brief
+ * Encodes pointers for serialisation.
  *
  * @address 0x004F9340
  */
@@ -55,7 +94,7 @@ void TeamTypeClass::Code_Pointers()
 }
 
 /**
- * @brief
+ * Decodes pointers for deserialisation.
  *
  * @address 0x004F939C
  */

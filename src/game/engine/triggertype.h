@@ -24,6 +24,8 @@
 #include "taction.h"
 #include "tevent.h"
 
+class TriggerClass;
+
 // This enum is just for casting the TriggerType heap indexes.
 enum TriggerType
 {
@@ -69,12 +71,11 @@ public:
 
     void Code_Pointers();
     void Decode_Pointers();
-
+    TriggerClass *Find_Or_Make();
     const TEventClass &Get_Event_One() const { return m_EventOne; }
     const TEventClass &Get_Event_Two() const { return m_EventTwo; }
     const TActionClass &Get_Action_One() const { return m_ActionOne; }
     const TActionClass &Get_Action_Two() const { return m_ActionTwo; }
-
     HousesType Get_House() const { return m_House; }
 
     static TriggerTypeClass *From_Name(const char *name);

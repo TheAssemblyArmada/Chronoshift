@@ -25,6 +25,7 @@
 
 class HouseClass;
 class TeamClass;
+class FootClass;
 class ObjectTypeClass;
 class TriggerTypeClass;
 class GameINIClass;
@@ -99,25 +100,23 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
-    void Build_INI_Entry(const char *);
+    void Build_INI_Entry(char *entry_buffer);
     void Fill_In(const char *, const char *);
-    TeamClass * Create_One_Of() const;
+    TeamClass *Create_One_Of() const;
     void Destroy_All_Of() const;
     NeedType TeamMission_Needs(TeamMissionType tmission);
-    bool Validate() { return false; }
-
+    BOOL Do_Reinforcements();
     void Detach(target_t target, int a2);
 
     void Code_Pointers();
     void Decode_Pointers();
 
+    BOOL Validate() { return false; }
     BOOL Avoid_Threats() const { return m_AvoidThreats; }
 
     static void Init();
-
     static void Read_Scenario_INI(GameINIClass &ini);
     static void Write_Scenario_INI(GameINIClass &ini);
-
     static TeamMissionType Mission_From_Name(const char *name);
     static const char *Name_From_Mission(TeamMissionType tmission);
     static TeamTypeClass &As_Reference(const char *name);

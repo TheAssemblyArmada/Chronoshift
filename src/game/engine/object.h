@@ -116,7 +116,7 @@ public:
 
     ObjectClass *Get_Next() { return m_Next; }
     void Set_Next(ObjectClass *next) { m_Next = next; }
-    GamePtr<TriggerClass> Get_Attached_Trigger() const { return m_AttachedTrigger; }
+    const GamePtr<TriggerClass> &Get_Attached_Trigger() const { return m_AttachedTrigger; }
     void Invalidate_Attached_Trigger() { m_AttachedTrigger = nullptr; }
     BOOL In_Limbo() const { return m_InLimbo; }
     int16_t Get_Health() const { return m_Health; }
