@@ -212,7 +212,7 @@ public:
     // TechnoTypeClass virtuals
     virtual int Raw_Cost() const override;
     virtual BOOL Read_INI(GameINIClass &ini) override;
-    virtual const void *Get_Buildup_Data() { return m_BuildupData; }
+    virtual void *Get_Buildup_Data() const { return m_BuildupData; }
 
     int Width() const;
     int Height(BOOL check_bib = false) const;
@@ -223,6 +223,7 @@ public:
 
     BuildingType What_Type() const { return m_Type; }
     RTTIType Factory_Type() const { return m_FactoryType; }
+    BOOL Is_Fake() const { return m_Fake; }
     BOOL Base_Normal() const { return m_BaseNormal; }
     BOOL Unsellable() const { return m_Unsellable; }
     BOOL Is_Wall() const { return m_Wall; }

@@ -697,6 +697,7 @@ void Setup_Hooks()
     Hook_Function(0x0056733C, *TechnoClass::Hook_Remap_Table);
     Hook_Function(0x005686C0, *TechnoClass::Hook_Is_Ready_To_Random_Animate);
     Hook_Function(0x00566EFC, *TechnoClass::Hook_Visual_Character);
+    Hook_Function(0x005673AC, *TechnoClass::Detach);
 
     // house.h
     Hook_Function(0x004D5EF4, *HouseClass::Silo_Redraw_Check);
@@ -751,6 +752,12 @@ void Setup_Hooks()
     Hook_Function(0x004C0570, *FootClass::Passable_Cell);
     Hook_Function(0x004BF470, *FootClass::Point_Relative_To_Line);
     Hook_Function(0x004C09E4, *FootClass::Basic_Path);
+    Hook_Function(0x004C08D0, *FootClass::Mark);
+    Hook_Function(0x004C33C4, *FootClass::Sell_Back);
+    Hook_Function(0x004F97B8, *FootClass::Mission_Attack);
+    Hook_Function(0x004C2B98, *FootClass::Override_Mission);
+    Hook_Function(0x004C2BCC, *FootClass::Restore_Mission);
+    Hook_Function(0x004C160C, *FootClass::Stun);
 
     // abstract.h
     Hook_Function(0x004CD8E0, *AbstractClass::Hook_Ctor_NoInit);
@@ -953,6 +960,9 @@ void Setup_Hooks()
     //Hook_Function(0x0042263C, *AircraftClass::Set_Speed);
     Hook_Function(0x00423958, *AircraftClass::Movement_AI);
     Hook_Function(0x0042381C, *AircraftClass::Edge_Of_World_AI);
+    Hook_Function(0x00420208, *AircraftClass::Hook_Active_Click_With);
+    Hook_Function(0x004202A8, *AircraftClass::Hook_Player_Assign_Mission);
+    Hook_Function(0x0041E9F4, *AircraftClass::Is_LZ_Clear);
     
     // object.cpp
     Hook_Function(0x0051DDE8, *ObjectClass::Limbo);
@@ -965,6 +975,14 @@ void Setup_Hooks()
     Hook_Function(0x004623D0, *CargoClass::Attach);
     Hook_Function(0x00462448, *CargoClass::Detach_Object);
 
+    // crate.cpp
+    Hook_Function(0x0045DE68, *CrateClass::Get_Crate);
+
+    // building.cpp
+    Hook_Function(0x0045DE68, *BuildingClass::Hook_Death_Announcement);
+    Hook_Function(0x0045E3E4, *BuildingClass::Detach);
+    Hook_Function(0x0046072C, *BuildingClass::Hook_Value);
+    Hook_Function(0x004606D0, *BuildingClass::Hook_Get_Image_Data);
 #endif
 }
 

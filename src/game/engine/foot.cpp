@@ -20,6 +20,7 @@
 #include "gamedebug.h"
 #include "globals.h"
 #include "iomap.h"
+#include "missioncontrol.h"
 #include "rules.h"
 #include "session.h"
 #include "target.h"
@@ -216,17 +217,49 @@ void FootClass::Detach_All(int a1)
 {
 }
 
+/**
+ *
+ *
+ * 0x004C08D0
+ */
 BOOL FootClass::Mark(MarkType mark)
 {
-    return 0;
+    if (!TechnoClass::Mark(mark)) {
+        return false;
+    }
+    cell_t cell = Get_Cell();
+    switch (mark) {
+        case MARK_REMOVE:
+            Map.Pick_Up(cell, this);
+            return true;
+        case MARK_PUT:
+            Map.Place_Down(cell, this);
+            return true;
+        case MARK_REDRAW:
+            Map.Refresh_Cells(cell, Overlap_List(true));
+            Map.Refresh_Cells(cell, Occupy_List());
+            return true;
+        default:
+            Map.Refresh_Cells(cell, Overlap_List());
+            Map.Refresh_Cells(cell, Occupy_List());
+            return true;
+    }
 }
 
 void FootClass::Active_Click_With(ActionType action, ObjectClass *object)
 {
+#ifdef GAME_DLL
+    void (*func)(FootClass *, ActionType, ObjectClass *) = reinterpret_cast<void (*)(FootClass *, ActionType, ObjectClass *)>(0x004C1E30);
+    func(this, action, object);
+#endif
 }
 
 void FootClass::Active_Click_With(ActionType action, cell_t cellnum)
 {
+#ifdef GAME_DLL
+    void (*func)(FootClass *, ActionType, cell_t) = reinterpret_cast<void (*)(FootClass *, ActionType, cell_t)>(0x004C2280);
+    func(this, action, cellnum);
+#endif
 }
 
 DamageResultType FootClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
@@ -243,8 +276,24 @@ RadioMessageType FootClass::Receive_Message(RadioClass *radio, RadioMessageType 
     return RadioMessageType();
 }
 
+/**
+ *
+ *
+ * @address 0x004C33C4
+ */
 void FootClass::Sell_Back(int a1)
 {
+    if (a1) {
+        if (m_OwnerHouse == g_PlayerPtr) {
+            Speak(VOX_UNIT_SOLD);
+            Sound_Effect(VOC_CASHTURN);
+        }
+
+        m_OwnerHouse->Refund_Money(Refund_Amount());
+        Stun();
+        Limbo();
+        delete this;
+    }
 }
 
 /**
@@ -276,9 +325,19 @@ void FootClass::Decode_Pointers()
     TechnoClass::Decode_Pointers();
 }
 
+/**
+ *
+ *
+ * @address 0x004F97B8
+ */
 int FootClass::Mission_Attack()
 {
-    return 0;
+    if (m_TarCom != 0) {
+        Approach_Target();
+    } else {
+        Enter_Idle_Mode();
+    }
+    return (900 * MissionControlClass::MissionControl[Mission].Rate) + Scen.Get_Random_Value(0, 2);
 }
 
 int FootClass::Mission_Capture()
@@ -316,17 +375,43 @@ int FootClass::Mission_Enter()
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x004C2B98
+ */
 void FootClass::Override_Mission(MissionType mission, int target1, int target2)
 {
+    m_SuspendedNavCom = m_NavCom;
+    TechnoClass::Override_Mission(mission, target1, target2);
+    Assign_Destination(target2);
 }
 
+/**
+ *
+ *
+ * @address 0x004C2BCC
+ */
 BOOL FootClass::Restore_Mission()
 {
-    return 0;
+    if (!TechnoClass::Restore_Mission()) {
+        return false;
+    }
+    Assign_Destination(m_SuspendedNavCom);
+    return true;
 }
 
+/**
+ *
+ *
+ * @address 0x004C160C
+ */
 void FootClass::Stun()
 {
+    Assign_Destination(0);
+    m_Paths[0] = FACING_NONE;
+    Stop_Driver();
+    TechnoClass::Stun();
 }
 
 void FootClass::Death_Announcement(TechnoClass *killer) const
@@ -1331,4 +1416,14 @@ BOOL FootClass::Is_Allowed_To_Leave_Map() const
     }
     return true;
 #endif
+}
+
+/**
+ *
+ *
+ * 0x004C37A0
+ */
+BOOL FootClass::Is_On_Priority_Mission()
+{
+    return Mission == MISSION_ENTER;
 }

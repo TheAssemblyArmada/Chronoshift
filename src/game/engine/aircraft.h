@@ -73,6 +73,7 @@ public:
     virtual void Response_Select() final;
     virtual void Response_Move() final;
     virtual void Response_Attack() final;
+    virtual void Player_Assign_Mission(MissionType mission, target_t target = 0, target_t dest = 0) final;
     virtual FireErrorType Can_Fire(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const final;
     virtual BulletClass *Fire_At(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) final;
     virtual void Assign_Destination(target_t dest) final;
@@ -91,6 +92,7 @@ private:
     BOOL Landing_Takeoff_AI();
     BOOL Edge_Of_World_AI();
     BOOL Process_Take_Off();
+    BOOL Is_LZ_Clear(target_t landing_zone);
 
 #ifdef GAME_DLL
     friend void Setup_Hooks();
@@ -112,6 +114,17 @@ public:
     {
         return AircraftClass::Pip_Count();
     }
+
+    void Hook_Active_Click_With(ActionType action, ObjectClass *object)
+    {
+        AircraftClass::Active_Click_With(action, object);
+    }
+
+    void Hook_Player_Assign_Mission(MissionType mission, target_t target, target_t dest)
+    {
+        AircraftClass::Player_Assign_Mission(mission, target, dest);
+    }
+
 
 #endif
 

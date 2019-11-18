@@ -32,12 +32,28 @@ public:
     virtual ~BuildingClass();
 
     // ObjectClass
-    virtual const BuildingTypeClass &Class_Of() const override;
+    virtual void *Get_Image_Data() const final;
+    virtual const BuildingTypeClass &Class_Of() const final;
+    virtual BOOL Can_Player_Move() const final;
+    virtual void Detach(target_t target, int a2) final;
+    virtual void Fire_Out() final {}
+    virtual int Value() const final;
 
     // TechnoClass
-    virtual void Death_Announcement(TechnoClass *killer) const override;
+    virtual void Death_Announcement(TechnoClass *killer) const final;
 
     BuildingType What_Type() const { return m_Class->What_Type(); }
+
+
+#ifdef GAME_DLL
+    friend void Setup_Hooks();
+
+public:
+    void Hook_Death_Announcement(TechnoClass *killer) { BuildingClass::Death_Announcement(killer); }
+    int Hook_Value() { return BuildingClass::Value(); }
+    void *Hook_Get_Image_Data() { return BuildingClass::Get_Image_Data(); }
+#endif
+
 
 private:
     GamePtr<BuildingTypeClass> m_Class;

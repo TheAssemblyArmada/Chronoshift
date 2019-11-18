@@ -58,6 +58,7 @@ public:
     BOOL Legal_Placement(cell_t cellnum) const;
     BOOL Is_Nominal() const { return m_IsNominal; }
     int Get_ThreatPosed() const { return m_ThreatPosed; }
+    int Get_ThreatPoints() const { return m_ThreatPoints; }
     BOOL Is_Invisible() const { return m_IsInvisible; }
     BOOL Is_Cloakable() const { return m_Cloakable; }
     BOOL Is_Turret_Equipped() const { return m_IsTurretEquipped; }

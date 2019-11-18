@@ -244,8 +244,25 @@ BOOL TechnoClass::Unlimbo(coord_t coord, DirType dir)
     return 0;
 }
 
+/**
+ *
+ *
+ * @address 0x005673AC
+ */
 void TechnoClass::Detach(target_t target, int a2)
 {
+    ObjectClass::Detach(target, a2);
+    if (SuspendedMission != MISSION_NONE && m_SuspendedTarCom == target) {
+        SuspendedMission = MISSION_NONE;
+        m_SuspendedTarCom = 0;
+    }
+    if (m_TarCom == target) {
+        Assign_Target(0);
+        Restore_Mission();
+    }
+    if (a2 && m_Radio != nullptr && m_Radio->As_Target() == target) {
+        Transmit_Message(RADIO_OVER_AND_OUT);
+    }
 }
 
 void TechnoClass::Record_The_Kill(TechnoClass *object)

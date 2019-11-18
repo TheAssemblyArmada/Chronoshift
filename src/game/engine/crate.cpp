@@ -14,6 +14,8 @@
  *            LICENSE
  */
 #include "crate.h"
+#include "cell.h"
+#include "iomap.h"
 #include "gamedebug.h"
 #include "scenario.h"
 
@@ -88,14 +90,17 @@ BOOL CrateClass::Put_Crate(cell_t &cell)
 
 BOOL CrateClass::Get_Crate(cell_t cell)
 {
-    // TODO Requires MapClass, CellClass and ScenarioClass to actuall implement the functions.
-#ifdef GAME_DLL
-    BOOL (*func)(cell_t) = reinterpret_cast<BOOL (*)(cell_t)>(0x004ACB1C);
-    return func(cell);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    if (Map.In_Radar(cell)) {
+        CellClass &cptr = Map[cell];
+        OverlayType overlay = cptr.Get_Overlay();
+        if (overlay == OVERLAY_WOOD_CRATE || overlay == OVERLAY_STEEL_CRATE || overlay == OVERLAY_WATER_WOOD_CRATE) {
+            cptr.Set_Overlay(OVERLAY_NONE);
+            cptr.Set_Overlay_Frame(0);
+            cptr.Redraw_Objects();
+            return true;
+        }
+    }
     return false;
-#endif
 }
 
 CrateType CrateClass::From_Name(const char *name)

@@ -56,7 +56,7 @@ enum OverlayType
     OVERLAY_FPLS,
 
     // Crates
-    OVERLAY_WOOD_FENCE_CRATE,
+    OVERLAY_WOOD_CRATE,
     OVERLAY_STEEL_CRATE,
 
     // Barbwire fence

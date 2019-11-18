@@ -22,6 +22,8 @@
 #include "iomap.h"
 #include "session.h"
 #include "team.h"
+#include "target.h"
+#include "queue.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<AircraftClass> g_Aircraft;
@@ -260,12 +262,27 @@ void AircraftClass::Look(BOOL a1)
     }
 }
 
+/**
+ *
+ *
+ * @address 0x00420208
+ */
 void AircraftClass::Active_Click_With(ActionType action, ObjectClass *object)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00420208, void, AircraftClass *, ActionType, ObjectClass *);
-    func(this, action, object);
-#endif
+    action = What_Action(object);
+    switch (action) {
+        case ACTION_ENTER:
+            Player_Assign_Mission(MISSION_ENTER, 0, object->As_Target());
+            break;
+        case ACTION_SELF:
+            Player_Assign_Mission(MISSION_UNLOAD);
+            break;
+        case ACTION_NO_MOVE:
+            return;
+        default:
+            break;
+    }
+    FootClass::Active_Click_With(action, object);
 }
 
 /**
@@ -520,6 +537,23 @@ void AircraftClass::Response_Attack()
     }
 }
 
+/**
+ *
+ *
+ * @address 0x004202A8
+ */
+void AircraftClass::Player_Assign_Mission(MissionType mission, target_t target, target_t dest)
+{
+    if (g_AllowVoice) {
+        if (mission == MISSION_ATTACK) {
+            Response_Attack();
+        } else {
+            Response_Move();
+        }
+    }
+    Queue_Mission(TargetClass(this), mission, target, dest);
+}
+
 FireErrorType AircraftClass::Can_Fire(target_t target, WeaponSlotType weapon) const
 {
 #ifdef GAME_DLL
@@ -687,4 +721,46 @@ BOOL AircraftClass::Process_Take_Off()
 #else
     return false;
 #endif
+}
+
+/**
+ *
+ *
+ * @address 0x0041E9F4
+ */
+BOOL AircraftClass::Is_LZ_Clear(target_t lzone)
+{
+/*
+    if (lzone == 0) {
+        return false;
+    }
+    cell_t cell = As_Cell(lzone);
+    if (!Map.In_Radar(cell)) {
+        return false;
+    }
+    ObjectClass *optr = Map[cell].Cell_Object();
+    if (optr != nullptr && optr != this) {
+        if (m_Radio == nullptr || m_Radio != optr) {
+            return false;
+        }
+    } else if (!Map[cell].Is_Clear_To_Move(SPEED_TRACK)) {
+        return false;
+    }
+    return true;
+*/
+    if (!Target_Legal(lzone)) {
+        return false;
+    }
+    cell_t cell = As_Cell(lzone);
+    if (!Map.In_Radar(cell)) {
+        return false;
+    }
+    ObjectClass *optr = Map[cell].Cell_Object();
+    if (optr != nullptr) {
+        if (optr == this) {
+            return true;
+        }
+        return Radio_Valid() && m_Radio == optr;
+    }
+    return Map[cell].Is_Clear_To_Move(SPEED_TRACK);
 }
