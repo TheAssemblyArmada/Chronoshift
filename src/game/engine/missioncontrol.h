@@ -25,6 +25,7 @@
 class MissionControlClass
 {
     friend class MissionClass;
+    friend class FootClass;
 
 public:
     MissionControlClass();

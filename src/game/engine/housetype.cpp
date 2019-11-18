@@ -23,6 +23,11 @@
 TFixedIHeapClass<HouseTypeClass> g_HouseTypes;
 #endif
 
+/**
+ *
+ *
+ * 0x004CB774
+ */
 HouseTypeClass::HouseTypeClass(HousesType type, const char *name, int uiname, const char *suffix, int lemon_factor,
     PlayerColorType color, char prefix) :
     AbstractTypeClass(RTTI_HOUSETYPE, type, uiname, name),
@@ -41,6 +46,11 @@ HouseTypeClass::HouseTypeClass(HousesType type, const char *name, int uiname, co
     strlcpy(m_HouseName, suffix, 3);
 }
 
+/**
+ *
+ *
+ * 0x004CD380
+ */
 HouseTypeClass::HouseTypeClass(HouseTypeClass const &that) :
     AbstractTypeClass(that),
     m_Type(that.m_Type),
@@ -58,16 +68,31 @@ HouseTypeClass::HouseTypeClass(HouseTypeClass const &that) :
     memcpy(m_HouseName, that.m_HouseName, sizeof(m_HouseName));
 }
 
+/**
+ *
+ *
+ * 0x004CB820
+ */
 void *HouseTypeClass::operator new(size_t size)
 {
     return g_HouseTypes.Allocate();
 }
 
+/**
+ *
+ *
+ * 0x004CB834
+ */
 void HouseTypeClass::operator delete(void *ptr)
 {
     g_HouseTypes.Free(ptr);
 }
 
+/**
+ *
+ *
+ * 0x004CD174
+ */
 BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
 {
     if (!ini.Is_Present(m_Name)) {
@@ -85,6 +110,21 @@ BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
     return true;
 }
 
+/**
+ *
+ *
+ * 0x004CD154
+ */
+uint8_t *HouseTypeClass::Remap_Table()
+{
+    return ColorRemaps[m_Color].RemapPalette;
+}
+
+/**
+ *
+ *
+ * 0x004CB84C
+ */
 void HouseTypeClass::Init_Heap()
 {
     // The order of allocation must follow the order of HouseType enum.
@@ -121,6 +161,11 @@ const char *HouseTypeClass::Name_From(HousesType type)
     return "None";
 }
 
+/**
+ *
+ *
+ * 0x004CD0E4
+ */
 HousesType HouseTypeClass::From_Name(const char *name)
 {
     for (HousesType type = HOUSES_FIRST; type < HOUSES_COUNT; ++type) {
@@ -132,6 +177,11 @@ HousesType HouseTypeClass::From_Name(const char *name)
     return HOUSES_NONE;
 }
 
+/**
+ *
+ *
+ * 0x004CD13C
+ */
 HouseTypeClass &HouseTypeClass::As_Reference(HousesType type)
 {
     DEBUG_ASSERT(type != HOUSES_NONE);
@@ -146,6 +196,11 @@ const char *HouseTypeClass::Name_From_Owner(int owner)
     return nullptr;
 }
 
+/**
+ *
+ *
+ * 0x004AB5FC
+ */
 int HouseTypeClass::Owner_From_Name(const char *name)
 {
     if (strcasecmp(name, "soviet") == 0) {

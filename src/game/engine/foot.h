@@ -117,6 +117,7 @@ public:
     int Passable_Cell(cell_t cell, FacingType facing, int threat, MoveType move);
 
     BOOL Is_Allowed_To_Leave_Map() const;
+    BOOL Is_On_Priority_Mission();
 
     coord_t Head_To() const { return m_HeadTo; }
     FacingType Get_Path_Facing(int index) const { return m_Paths[index]; }

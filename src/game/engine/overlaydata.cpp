@@ -102,7 +102,7 @@ const OverlayTypeClass OverlayV18(
 const OverlayTypeClass OverlayFlagSpot(
     OVERLAY_FPLS, "FPLS", TXT_FLAG_SPOT, LAND_CLEAR, 0, 0, true, false, false, false, false, false, false, false, false);
 
-const OverlayTypeClass OverlayWoodCrate(OVERLAY_WOOD_FENCE_CRATE, "WCRATE", TXT_WOOD_CRATE, LAND_CLEAR, 0, 0, false, false,
+const OverlayTypeClass OverlayWoodCrate(OVERLAY_WOOD_CRATE, "WCRATE", TXT_WOOD_CRATE, LAND_CLEAR, 0, 0, false, false,
     false, false, false, false, false, false, true);
 
 const OverlayTypeClass OverlayWaterCrate(OVERLAY_WATER_WOOD_CRATE, "WWCRATE", TXT_WATER_CRATE, LAND_WATER, 0, 0, false,

@@ -59,15 +59,9 @@ SidebarClass::SBGadgetClass::SBGadgetClass() :
 
 BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
 {
-    // TODO, needs HelpClass, MouseClass, TechnoClass.
-#ifdef GAME_DLL
-    BOOL(*func)
-    (const SBGadgetClass *, unsigned, KeyNumType &) =
-        reinterpret_cast<BOOL (*)(const SBGadgetClass *, unsigned, KeyNumType &)>(0x0054F380);
-    return func(this, flags, key);
-#else
-    return false;
-#endif
+    Map.Help_Text(TXT_NULL);
+    Map.Override_Mouse_Shape(MOUSE_POINTER);
+    return true;
 }
 
 SidebarClass::StripClass::SelectClass::SelectClass() :
