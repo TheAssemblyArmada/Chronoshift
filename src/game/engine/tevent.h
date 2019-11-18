@@ -108,6 +108,7 @@ public:
     void Reset(TDelayEventClass &tdevent) const;
     void Build_INI_Entry(char *entry_buffer) const;
     void Read_INI();
+    AttachType Attaches_To();
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
@@ -123,15 +124,7 @@ public:
 protected:
     TEventType m_Type;
     GamePtr<TeamTypeClass> m_TeamType;
-    union
-    {
-        int m_IntegerValue;
-        HousesType m_House;
-        BuildingType m_Building;
-        UnitType m_Unit;
-        InfantryType m_Infantry;
-        AircraftType m_Aircraft;
-    };
+    int m_IntegerValue;
 
 private:
     struct EventTextStruct

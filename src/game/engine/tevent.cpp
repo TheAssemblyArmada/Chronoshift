@@ -119,7 +119,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
                 return false;
             }
 
-            if (object == nullptr || object->Owner() != m_House) {
+            if (object == nullptr || object->Owner() != (HousesType)m_IntegerValue) {
                 return false;
             }
 
@@ -132,7 +132,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
 
             return true;
         case TEVENT_THIEVED_BY:
-            hc = HouseClass::As_Pointer(m_House);
+            hc = HouseClass::As_Pointer((HousesType)m_IntegerValue);
 
             if (hc == nullptr) {
                 return true;
@@ -146,7 +146,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
 
             return true;
         case TEVENT_HOUSE_DISCOVERED:
-            hc = HouseClass::As_Pointer(m_House);
+            hc = HouseClass::As_Pointer((HousesType)m_IntegerValue);
 
             if (hc == nullptr) {
                 return true;
@@ -168,7 +168,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
         case TEVENT_ANY:
             return true;
         case TEVENT_DESTROYED_ALL_UNITS: // Only seems to count infantry and units.
-            hc = HouseClass::As_Pointer(m_House);
+            hc = HouseClass::As_Pointer((HousesType)m_IntegerValue);
 
             if (hc == nullptr) {
                 return true;
@@ -176,7 +176,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
 
             return hc->Get_IScan_Human() == 0 && hc->Get_UScan_Human() == 0;
         case TEVENT_DESTROYED_ALL_BUILDINGS:
-            hc = HouseClass::As_Pointer(m_House);
+            hc = HouseClass::As_Pointer((HousesType)m_IntegerValue);
 
             if (hc == nullptr) {
                 return true;
@@ -184,13 +184,14 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
 
             return hc->Get_BScan_Human() == 0;
         case TEVENT_DESTROYED_ALL:
-            hc = HouseClass::As_Pointer(m_House);
+            hc = HouseClass::As_Pointer((HousesType)m_IntegerValue);
 
             if (hc == nullptr) {
                 return true;
             }
 
-            return hc->Get_VScan_Human() == 0 && hc->Get_IScan_Human() == 0 && hc->Get_UScan_Human() == 0 && hc->Get_BScan_Human() == 0;
+            return hc->Get_VScan_Human() == 0 && hc->Get_IScan_Human() == 0 && hc->Get_UScan_Human() == 0
+                && hc->Get_BScan_Human() == 0;
         case TEVENT_CREDIT_EXCEED:
             hc = HouseClass::As_Pointer(house);
 
@@ -244,7 +245,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
                 return true;
             }
 
-            if (hc->Just_Building() == m_Building) {
+            if (hc->Just_Building() == (BuildingType)m_IntegerValue) {
                 tdevent.Set_Bit1(true);
                 return true;
             }
@@ -257,7 +258,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
                 return true;
             }
 
-            if (hc->Just_Unit() == m_Unit) {
+            if (hc->Just_Unit() == (UnitType)m_IntegerValue) {
                 tdevent.Set_Bit1(true);
                 return true;
             }
@@ -270,7 +271,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
                 return true;
             }
 
-            if (hc->Just_Infantry() == m_Infantry) {
+            if (hc->Just_Infantry() == (InfantryType)m_IntegerValue) {
                 tdevent.Set_Bit1(true);
                 return true;
             }
@@ -283,7 +284,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
                 return true;
             }
 
-            if (hc->Just_Aircraft() == m_Aircraft) {
+            if (hc->Just_Aircraft() == (AircraftType)m_IntegerValue) {
                 tdevent.Set_Bit1(true);
                 return true;
             }
@@ -297,7 +298,8 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
             }
 
             for (int i = 0; i < g_Teams.Count(); ++i) {
-                if (g_Teams[i].Get_Class() == m_TeamType && g_Teams[i].Get_field_54() == nullptr && g_Teams[i].Get_Bit2_4()) {
+                if (g_Teams[i].Get_Class() == m_TeamType && g_Teams[i].Get_field_54() == nullptr
+                    && g_Teams[i].Get_Bit2_4()) {
                     tdevent.Set_Bit1(true);
                     return true;
                 }
@@ -317,7 +319,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
                 return true;
             }
 
-            hc = HouseClass::As_Pointer(m_House);
+            hc = HouseClass::As_Pointer((HousesType)m_IntegerValue);
 
             if (hc == nullptr) {
                 return true;
@@ -338,7 +340,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
                 return true;
             }
 
-            if ((hc->Get_BScan_Human() & (1 << m_House)) != 0) {
+            if ((hc->Get_BScan_Human() & (1 << (m_IntegerValue & 0xFF))) != 0) {
                 return true;
             }
 
@@ -405,6 +407,88 @@ void TEventClass::Read_INI()
             m_IntegerValue = atoi(strtok(nullptr, ","));
             break;
     }
+}
+
+/**
+ * Previously a global function taking TEventType, but makes more sense as member.
+ * @return A bitfield describing what this event can attach to.
+ */
+AttachType TEventClass::Attaches_To()
+{
+    AttachType ret = ATTACH_NONE;
+
+    switch (m_Type) {
+        case TEVENT_NO_EVENT:
+        case TEVENT_ENTERED_BY:
+        case TEVENT_DISCOVERED_BY_PLAYER:
+        case TEVENT_ANY:
+        case TEVENT_ZONE_ENTERED:
+        case TEVENT_CROSSED_HORIZ_LINE:
+        case TEVENT_CROSSED_VERT_LINE:
+            ret |= ATTACH_CELL;
+        default:
+            break;
+    }
+
+    switch (m_Type) {
+        case TEVENT_NO_EVENT:
+        case TEVENT_ENTERED_BY:
+        case TEVENT_SPIED_BY:
+        case TEVENT_DISCOVERED_BY_PLAYER:
+        case TEVENT_ATTACKED:
+        case TEVENT_DESTROYED:
+        case TEVENT_ANY:
+            ret |= ATTACH_OBJECT;
+        default:
+            break;
+    }
+
+    switch (m_Type) {
+        case TEVENT_ANY:
+        case TEVENT_ZONE_ENTERED:
+            ret |= ATTACH_MAP;
+        default:
+            break;
+    }
+
+    switch (m_Type) {
+        case TEVENT_THIEVED_BY:
+        case TEVENT_HOUSE_DISCOVERED:
+        case TEVENT_ANY:
+        case TEVENT_DESTROYED_ALL_UNITS:
+        case TEVENT_DESTROYED_ALL_BUILDINGS:
+        case TEVENT_DESTROYED_ALL:
+        case TEVENT_CREDIT_EXCEED:
+        case TEVENT_DESTROYED_BUILDINGS:
+        case TEVENT_DESTROYED_UNITS:
+        case TEVENT_NO_FACTORIES:
+        case TEVENT_CIVS_EVACUATED:
+        case TEVENT_BUILD_BUILDING:
+        case TEVENT_BUILD_UNIT:
+        case TEVENT_BUILD_INFANTRY:
+        case TEVENT_BUILD_AIRCRAFT:
+        case TEVENT_DESTROYED_ALL_FAKES:
+        case TEVENT_LOW_POWER:
+        case TEVENT_BUILDING_EXISTS:
+            ret |= ATTACH_HOUSE;
+        default:
+            break;
+    }
+
+    switch (m_Type) {
+        case TEVENT_ANY:
+        case TEVENT_ELAPSED_TIME:
+        case TEVENT_TIMER_EXPIRED:
+        case TEVENT_LEAVES_MAP:
+        case TEVENT_GLOBAL_SET:
+        case TEVENT_GLOBAL_CLEAR:
+        case TEVENT_ATTACHED_BRIDGE_DESTROYED:
+            ret |= ATTACH_LOGIC;
+        default:
+            break;
+    }
+
+    return ret;
 }
 
 TEventType TEventClass::Event_From_Name(const char *name)
