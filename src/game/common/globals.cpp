@@ -39,7 +39,7 @@ char *VCRFontPtr = nullptr;
 char *TypeFontPtr = nullptr;
 BOOL g_AllowVoice = true;
 BOOL GameActive = false;
-BOOL ScenarioInit;
+int ScenarioInit;
 BOOL DebugUnshroud = false;
 BOOL DebugQuiet = false;
 BOOL ScoresPresent = false;

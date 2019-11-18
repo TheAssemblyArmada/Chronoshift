@@ -121,6 +121,7 @@ set(GAMEENGINE_SRC
     game/engine/objecttype.cpp
     game/engine/options.cpp
     game/engine/overlaydata.cpp
+    game/engine/overlay.cpp
     game/engine/overlaytype.cpp
     game/engine/picture.cpp
     game/engine/power.cpp
