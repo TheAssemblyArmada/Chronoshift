@@ -79,6 +79,7 @@
 #include "mouseshape.h"
 #include "msgbox.h"
 #include "msglist.h"
+#include "overlay.h"
 #include "options.h"
 #include "ostimer.h"
 #include "power.h"
@@ -1027,6 +1028,9 @@ void Setup_Hooks()
     Hook_Function(0x0058D26C, *VesselClass::Edge_Of_World_AI);
     Hook_Function(0x0058C23C, *VesselClass::Transport_Open_Door);
     Hook_Function(0x0058C26C, *VesselClass::Transport_Close_Door);
+
+    // overlay.cpp
+    Hook_Function(0x00526D64, *OverlayClass::Mark);
 #endif
 }
 
@@ -1075,6 +1079,7 @@ ASSERT_SIZEOF(MessageListClass, 0x9AB);
 ASSERT_SIZEOF(ObjectClass, 0x27);
 ASSERT_SIZEOF(ObjectTypeClass, 0x138);
 ASSERT_SIZEOF(OptionsClass, 0x7C);
+ASSERT_SIZEOF(OverlayClass, 0x2B);
 ASSERT_SIZEOF(OverlayTypeClass, 0x146);
 ASSERT_SIZEOF(PowerClass, 0x103E);
 ASSERT_SIZEOF(RadarClass, 0x100D);

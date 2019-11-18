@@ -176,7 +176,7 @@ char *&VCRFontPtr = Make_Global<char *>(0x0066994C);
 char *&TypeFontPtr = Make_Global<char *>(0x00669934);
 BOOL &g_AllowVoice = Make_Global<BOOL>(0x006016C0);
 BOOL &GameActive = Make_Global<BOOL>(0x00669924);
-BOOL &ScenarioInit = Make_Global<BOOL>(0x00669914);
+int &ScenarioInit = Make_Global<int>(0x00669914);
 BOOL &DebugUnshroud = Make_Global<BOOL>(0x0065D7F0);
 BOOL &DebugQuiet = Make_Global<BOOL>(0x0065D7CC);
 BOOL &ScoresPresent = Make_Global<BOOL>(0x006680C0);
@@ -321,6 +321,7 @@ GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
 #include "terrain.h"
 #include "terraintype.h"
 #include "unittype.h"
+#include "overlay.h"
 #include "vesseltype.h"
 template<>
 FixedIHeapClass *const GamePtr<AircraftTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DDBC);
@@ -344,6 +345,8 @@ template<>
 FixedIHeapClass *const GamePtr<InfantryClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065D9E0);
 template<>
 FixedIHeapClass *const GamePtr<InfantryTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DE08);
+template<>
+FixedIHeapClass *const GamePtr<OverlayClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DA2C);
 template<>
 FixedIHeapClass *const GamePtr<OverlayTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065E01C);
 template<>
@@ -444,6 +447,9 @@ DynamicVectorClass<ObjectClass *> &CurrentObjects = Make_Global<DynamicVectorCla
 // objecttypes.cpp
 void *&ObjectTypeClass::SelectShapes = Make_Global<void *>(0x006857A8);
 void *&ObjectTypeClass::PipShapes = Make_Global<void *>(0x006857AC);
+
+// overlay.cpp
+TFixedIHeapClass<OverlayClass> &g_Overlays = Make_Global<TFixedIHeapClass<OverlayClass> >(0x0065DA2C);
 
 // overlaytype.cpp
 TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes = Make_Global<TFixedIHeapClass<OverlayTypeClass> >(0x0065E01C);

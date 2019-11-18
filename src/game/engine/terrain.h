@@ -34,7 +34,7 @@ public:
     TerrainClass(TerrainType type, cell_t cellnum);
     TerrainClass(const TerrainClass &that);
     TerrainClass(const NoInitClass &noinit) : ObjectClass(noinit) {}
-    ~TerrainClass();
+    virtual ~TerrainClass();
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
