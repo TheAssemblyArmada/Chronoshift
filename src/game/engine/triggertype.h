@@ -22,6 +22,7 @@
 #include "abstracttype.h"
 #include "housetype.h"
 #include "taction.h"
+#include "target.h"
 #include "tevent.h"
 
 class TriggerClass;
@@ -34,7 +35,7 @@ enum TriggerType
 
 DEFINE_ENUMERATION_OPERATORS(TriggerType);
 
-enum TriggerStateType
+enum PersistanceType
 {
     STATE_NONE = -1,
     STATE_VOLATILE = 0, // Will only ever be activated once.
@@ -42,24 +43,31 @@ enum TriggerStateType
     STATE_PERSISTANT, // Will continue to repeat itself whenever its trigger event is true.
 };
 
-enum TEventWhenType
+enum EventLinkType
 {
     /*
     When 0, only the first trigger event (part 5) must be true for the trigger to be activated.
     When 1, the first (part 5) and second (part 8) must both be true for the trigger to be activated.
     When 2, either the first trigger event or the second trigger event must be true, whichever comes first.
-    When 3, either the first trigger event or the second trigger event must be true. See the upcoming summary (next) for
-            further details on how this operates.
+    When 3, either the first trigger event or the second trigger event must be true.
+            First event triggers first action, second triggers second action.
+            Ignores action link.
     */
+    EVLINK_SINGLE,
+    EVLINK_AND,
+    EVLINK_OR,
+    EVLINK_LINKED,
 };
 
-enum TActionWhenType
+enum ActionLinkType
 {
     /*
     When 0, only one trigger action is activated when the event is triggered. See the summary (next) for which trigger action
             is activated, and when.
     When 1, both trigger actions are activated when the event is triggered.
     */
+    ACTLINK_SINGLE,
+    ACTLINK_AND,
 };
 
 class TriggerTypeClass : public AbstractTypeClass
@@ -69,21 +77,33 @@ public:
     TriggerTypeClass(const NoInitClass &noinit) : AbstractTypeClass(noinit) {}
     ~TriggerTypeClass() {}
 
+    void *operator new(size_t size);
+    void *operator new(size_t size, void *ptr) { return ptr; }
+    void operator delete(void *ptr);
+#ifndef COMPILER_WATCOM // Watcom doesn't like this, MSVC/GCC does.
+    void operator delete(void *ptr, void *place) {}
+#endif
+
     void Code_Pointers();
     void Decode_Pointers();
     TriggerClass *Find_Or_Make();
+    void Detach(target_t target, int unk);
+    AttachType Attaches_To();
     const TEventClass &Get_Event_One() const { return m_EventOne; }
     const TEventClass &Get_Event_Two() const { return m_EventTwo; }
     const TActionClass &Get_Action_One() const { return m_ActionOne; }
     const TActionClass &Get_Action_Two() const { return m_ActionTwo; }
     HousesType Get_House() const { return m_House; }
+    target_t As_Target() const { return Make_Target(RTTI_TRIGGERTYPE, m_HeapID); }
 
     static TriggerTypeClass *From_Name(const char *name);
     static const char *Name_From(TriggerType trigger);
     static const char *Name_From(TriggerTypeClass *trigger);
-
     static TriggerTypeClass &As_Reference(TriggerType trigger);
     static TriggerTypeClass *As_Pointer(TriggerType trigger);
+
+private:
+    void Fill_In(const char *name, char *options);
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -92,14 +112,14 @@ protected:
     bool m_IsActive;
 #endif
 
-    TriggerStateType m_State;
+    PersistanceType m_State;
     HousesType m_House;
     TEventClass m_EventOne;
     TEventClass m_EventTwo;
-    TEventWhenType m_TrigEventWhen;
+    EventLinkType m_EventLinkage;
     TActionClass m_ActionOne;
     TActionClass m_ActionTwo;
-    TActionWhenType m_TrigActionWhen;
+    ActionLinkType m_ActionLinkage;
 };
 
 #ifdef GAME_DLL

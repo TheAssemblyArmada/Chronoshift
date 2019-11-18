@@ -14,6 +14,13 @@
  *            LICENSE
  */
 #include "triggertype.h"
+#include <cstring>
+
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
+using std::strtok;
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
@@ -25,12 +32,40 @@ TriggerTypeClass::TriggerTypeClass() :
 }
 
 /**
+ * @address 0x0056D3F0
+ */
+void *TriggerTypeClass::operator new(size_t size)
+{
+    TriggerTypeClass *this_ptr = g_TriggerTypes.Alloc();
+    DEBUG_ASSERT(this_ptr != nullptr);
+    if (this_ptr != nullptr) {
+        this_ptr->m_IsActive = true;
+    }
+    return this_ptr;
+}
+
+/**
+ * @address 0x0056D410
+ */
+void TriggerTypeClass::operator delete(void *ptr)
+{
+    TriggerTypeClass *this_ptr = static_cast<TriggerTypeClass *>(ptr);
+    DEBUG_ASSERT(this_ptr != nullptr);
+    if (this_ptr != nullptr) {
+        this_ptr->m_IsActive = false;
+    }
+    g_TriggerTypes.Free(this_ptr);
+}
+
+/**
  * Encodes pointers for serialisation.
  *
  * @address 0x004F9448
  */
 void TriggerTypeClass::Code_Pointers()
 {
+    m_EventOne.Code_Pointers();
+    m_EventTwo.Code_Pointers();
     m_ActionOne.Code_Pointers();
     m_ActionTwo.Code_Pointers();
 }
@@ -42,6 +77,8 @@ void TriggerTypeClass::Code_Pointers()
  */
 void TriggerTypeClass::Decode_Pointers()
 {
+    m_EventOne.Decode_Pointers();
+    m_EventTwo.Decode_Pointers();
     m_ActionOne.Decode_Pointers();
     m_ActionTwo.Decode_Pointers();
 }
@@ -55,6 +92,23 @@ TriggerClass *TriggerTypeClass::Find_Or_Make()
 #else
     return nullptr;
 #endif
+}
+
+void TriggerTypeClass::Detach(target_t target, int unk)
+{
+    m_ActionOne.Detach(target);
+    m_ActionTwo.Detach(target);
+}
+
+AttachType TriggerTypeClass::Attaches_To()
+{
+    AttachType ret = m_EventOne.Attaches_To();
+
+    if (m_EventLinkage != EVLINK_SINGLE) {
+        ret |= m_EventTwo.Attaches_To();
+    }
+
+    return ret;
 }
 
 TriggerTypeClass *TriggerTypeClass::From_Name(const char *name)
@@ -98,4 +152,17 @@ TriggerTypeClass &TriggerTypeClass::As_Reference(TriggerType type)
 TriggerTypeClass *TriggerTypeClass::As_Pointer(TriggerType type)
 {
     return type != TRIGGER_NONE && type < g_TriggerTypes.Count() ? &g_TriggerTypes[type] : nullptr;
+}
+
+void TriggerTypeClass::Fill_In(const char *name, char *options)
+{
+    strlcpy(m_Name, name, sizeof(m_Name));
+    m_State = PersistanceType(atoi(strtok(options, ",")));
+    m_House = HousesType(atoi(strtok(nullptr, ",")));
+    m_EventLinkage = EventLinkType(atoi(strtok(nullptr, ",")));
+    m_ActionLinkage = ActionLinkType(atoi(strtok(nullptr, ",")));
+    m_EventOne.Read_INI();
+    m_EventTwo.Read_INI();
+    m_ActionOne.Read_INI();
+    m_ActionTwo.Read_INI();
 }
