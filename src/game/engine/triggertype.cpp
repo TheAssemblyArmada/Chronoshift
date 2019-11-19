@@ -15,29 +15,30 @@
  */
 #include "triggertype.h"
 #include "gameini.h"
-#include <cstring>
+#include "globals.h"
 #include <cstdio>
+#include <cstring>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
 
-using std::strtok;
 using std::sprintf;
 using std::strcat;
+using std::strtok;
+using std::free;
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
 #endif
 
-TriggerTypeClass::TriggerTypeClass() : 
+TriggerTypeClass::TriggerTypeClass() :
     AbstractTypeClass(RTTI_TRIGGERTYPE, g_TriggerTypes.ID(this), 0, "x"),
     m_State(STATE_VOLATILE),
     m_House(HOUSES_NONE),
     m_EventLinkage(EVLINK_SINGLE),
     m_ActionLinkage(ACTLINK_SINGLE)
 {
-    // TODO verify the default member values.
 }
 
 /**
@@ -46,10 +47,11 @@ TriggerTypeClass::TriggerTypeClass() :
 void *TriggerTypeClass::operator new(size_t size)
 {
     TriggerTypeClass *this_ptr = g_TriggerTypes.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
+
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
+
     return this_ptr;
 }
 
@@ -59,10 +61,11 @@ void *TriggerTypeClass::operator new(size_t size)
 void TriggerTypeClass::operator delete(void *ptr)
 {
     TriggerTypeClass *this_ptr = static_cast<TriggerTypeClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
+    
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }
+
     g_TriggerTypes.Free(this_ptr);
 }
 
@@ -153,8 +156,26 @@ void TriggerTypeClass::Read_INI(GameINIClass &ini)
         tt->Fill_In(entry, buff);
     }
 
-    // Original code sweeps through if NewINIFormat < 2 and calls From_Name on all the strdup entries,
-    // then frees them. Call to From_Name moved to TActionClass Read_INI and strdup/free requirement removed.
+    // Hack to ensure strings can be converted to heap ID after parsing all triggers.
+    if (g_iniFormat < 2) {
+        for (int i = 0; i < g_TriggerTypes.Count(); ++i) {
+            // Recover string pointer.
+            char *name = reinterpret_cast<char *>(g_TriggerTypes[i].m_ActionOne.m_TriggerType.Get_ID());
+
+            if (name != nullptr) {
+                g_TriggerTypes[i].m_ActionOne.m_TriggerType = From_Name(name);
+                free(name);
+            }
+
+            // Recover string pointer.
+            name = reinterpret_cast<char *>(g_TriggerTypes[i].m_ActionTwo.m_TriggerType.Get_ID());
+
+            if (name != nullptr) {
+                g_TriggerTypes[i].m_ActionTwo.m_TriggerType = From_Name(name);
+                free(name);
+            }
+        }
+    }
 }
 
 /**

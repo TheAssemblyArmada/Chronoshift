@@ -103,14 +103,15 @@ public:
     bool Is_Valid() const { return g_Heap != nullptr && m_ID != -1; }
     bool Has_Valid_ID() const { return m_ID != -1; }
     void Invalidate() { m_ID = -1; }
-    void Set_ID(int32_t id) { m_ID = id; }
+    void Set_ID(intptr_t id) { m_ID = id; }
+    intptr_t Get_ID() const { return m_ID; }
 
 protected:
     T *Get_Raw_Pointer() const { return (T *)(&(*g_Heap)[m_ID]); }
     const T *Get_Raw_Const_Pointer() const { return (T *)(&(*g_Heap)[m_ID]); }
 
 private:
-    int32_t m_ID;
+    intptr_t m_ID;
     static FixedIHeapClass *const g_Heap;
 };
 

@@ -73,6 +73,8 @@ DEFINE_ENUMERATION_OPERATORS(TActionType);
 
 class TActionClass
 {
+    friend class TriggerTypeClass;
+
 public:
     TActionClass() : m_Type(TACTION_NO_ACTION), m_TeamType(nullptr), m_TriggerType(nullptr), m_IntegerValue(0) {}
     ~TActionClass()
