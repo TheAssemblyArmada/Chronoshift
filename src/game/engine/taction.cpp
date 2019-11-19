@@ -444,7 +444,10 @@ void TActionClass::Read_INI()
             m_TeamType = TeamTypeClass::From_Name(strtok(nullptr, ","));
             // Original code appears to do this which is abusing pointer as int.
             // Bad juju and not portable to 64bit. Fortunately no maps use this format.
-            m_TriggerType.Set_ID((uintptr_t)strdup(strtok(nullptr, ",")));
+            // m_TriggerType.Set_ID((uintptr_t)strdup(strtok(nullptr, ",")));
+            // TriggerTypeClass Read_INI calls From_Name on it then frees it,
+            // probably done to avoid class linkage?
+            m_TriggerType = TriggerTypeClass::From_Name(strtok(nullptr, ","));
             m_IntegerValue = atoi(strtok(nullptr, ","));
             break;
 

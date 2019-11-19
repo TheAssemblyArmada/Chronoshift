@@ -25,6 +25,7 @@
 #include "target.h"
 #include "tevent.h"
 
+class GameINIClass;
 class TriggerClass;
 
 // This enum is just for casting the TriggerType heap indexes.
@@ -83,7 +84,6 @@ public:
 #ifndef COMPILER_WATCOM // Watcom doesn't like this, MSVC/GCC does.
     void operator delete(void *ptr, void *place) {}
 #endif
-
     void Code_Pointers();
     void Decode_Pointers();
     TriggerClass *Find_Or_Make();
@@ -95,7 +95,10 @@ public:
     const TActionClass &Get_Action_Two() const { return m_ActionTwo; }
     HousesType Get_House() const { return m_House; }
     target_t As_Target() const { return Make_Target(RTTI_TRIGGERTYPE, m_HeapID); }
-
+    
+    static void Init();
+    static void Read_INI(GameINIClass &ini);
+    static void Write_INI(GameINIClass &ini);
     static TriggerTypeClass *From_Name(const char *name);
     static const char *Name_From(TriggerType trigger);
     static const char *Name_From(TriggerTypeClass *trigger);
@@ -104,6 +107,7 @@ public:
 
 private:
     void Fill_In(const char *name, char *options);
+    void Build_INI_Entry(char *buffer);
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
