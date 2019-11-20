@@ -76,6 +76,8 @@ public:
     virtual BOOL Set_View_Index(int index);
     virtual void Step(BOOL step_up);
 
+    T *Get_Entries() { return &m_Entries[0]; }
+
 protected:
     TextPrintType m_TextStyle;
     int *m_Tabs;
@@ -122,7 +124,7 @@ TListClass<T>::TListClass(
     m_ScrollDownButton.Set_YPos(m_ScrollDownButton.Get_YPos() - m_ScrollDownButton.Get_Height());
 
     m_Scrollbar.Set_XPos(m_Scrollbar.Get_XPos() - std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
-    m_Scrollbar.Set_YPos(m_ScrollUpButton.Get_Height() + YPos);
+    m_Scrollbar.Set_YPos(m_ScrollUpButton.Get_Height() + m_YPos);
     m_Scrollbar.Set_Height(m_Scrollbar.Get_Height() - (m_ScrollDownButton.Get_Height() + m_ScrollUpButton.Get_Height()));
     m_Scrollbar.Set_Width(std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
 
@@ -297,18 +299,18 @@ template<typename T>
 void TListClass<T>::Set_Position(int x, int y)
 {
     // Set scroll up button position.
-    m_ScrollUpButton.Set_XPos(x + Width - m_ScrollUpButton.Get_Width());
+    m_ScrollUpButton.Set_XPos(x + m_Width - m_ScrollUpButton.Get_Width());
     m_ScrollUpButton.Set_YPos(y);
 
     // Set scroll down button position.
-    m_ScrollDownButton.Set_XPos(x + Width - m_ScrollDownButton.Get_Width());
-    m_ScrollDownButton.Set_YPos(y + Height - m_ScrollDownButton.Get_Height());
+    m_ScrollDownButton.Set_XPos(x + m_Width - m_ScrollDownButton.Get_Width());
+    m_ScrollDownButton.Set_YPos(y + m_Height - m_ScrollDownButton.Get_Height());
 
     // Set scroll bar position.
-    m_Scrollbar.Set_XPos(x + Width - std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
+    m_Scrollbar.Set_XPos(x + m_Width - std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
     m_Scrollbar.Set_YPos(y + m_ScrollUpButton.Get_Height());
     m_Scrollbar.Set_Width(std::max(m_ScrollUpButton.Get_Width(), m_ScrollDownButton.Get_Width()));
-    m_Scrollbar.Set_Height(Height - (m_ScrollDownButton.Get_Height() + m_ScrollUpButton.Get_Height()));
+    m_Scrollbar.Set_Height(m_Height - (m_ScrollDownButton.Get_Height() + m_ScrollUpButton.Get_Height()));
 }
 
 /**
@@ -322,19 +324,19 @@ BOOL TListClass<T>::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
         if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Hide_Mouse(XPos, YPos, Width + XPos, Height + YPos);
+            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
-        Draw_Box(XPos, YPos, Width, Height, BOX_STYLE_4, 1);
+        Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_4, 1);
 
         if (m_Entries.Count()) {
             for (int index = 0; index < m_ThumbSize; ++index) {
                 if (m_Entries.Count() > index + m_ViewIndex) {
                     BOOL redraw_entry = index + m_ViewIndex == Current_Index();
                     m_Entries[index + m_ViewIndex]->Draw_It(index + m_ViewIndex,
-                        XPos + 1,
-                        YPos + index * m_YSpacing + 1,
-                        Width - 2,
+                        m_XPos + 1,
+                        m_YPos + index * m_YSpacing + 1,
+                        m_Width - 2,
                         m_YSpacing,
                         redraw_entry,
                         m_TextStyle);
@@ -379,7 +381,7 @@ BOOL TListClass<T>::Action(unsigned flags, KeyNumType &key)
             flags &= ~KEYBOARD_INPUT;
         }
     } else {
-        m_CurrentIndex = m_ViewIndex + (g_mouse->Get_Mouse_Y() - YPos) / m_YSpacing;
+        m_CurrentIndex = m_ViewIndex + (g_mouse->Get_Mouse_Y() - m_YPos) / m_YSpacing;
         m_CurrentIndex = std::min(m_CurrentIndex, m_Entries.Count() - 1);
 
         if (m_CurrentIndex == -1) {
@@ -429,7 +431,7 @@ BOOL TListClass<T>::Add_Scroll_Bar()
 
         // Recalculate the list width to exclude the soon to be
         // added scroll bar's width.
-        Width -= m_Scrollbar.Get_Width();
+        m_Width -= m_Scrollbar.Get_Width();
         m_ScrollUpButton.Make_Peer(*this);
         m_ScrollDownButton.Make_Peer(*this);
         m_Scrollbar.Make_Peer(*this);
@@ -623,7 +625,7 @@ BOOL TListClass<T>::Remove_Scroll_Bar()
     if (m_HasScrollbar) {
         // Recalculate the list width to include the soon to be
         // removed scroll bar's width.
-        Width += m_Scrollbar.Get_Width();
+        m_Width += m_Scrollbar.Get_Width();
 
         // Remove the attached scroll bar.
         m_Scrollbar.Remove();
