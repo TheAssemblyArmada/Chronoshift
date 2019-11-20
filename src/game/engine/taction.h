@@ -19,6 +19,7 @@
 #define TACTION_H
 
 #include "always.h"
+#include "dialog.h"
 #include "gameptr.h"
 #include "gametypes.h"
 
@@ -76,11 +77,9 @@ class TActionClass
     friend class TriggerTypeClass;
 
 public:
-    TActionClass() : m_Type(TACTION_NO_ACTION), m_TeamType(nullptr), m_TriggerType(nullptr), m_IntegerValue(0) {}
+    TActionClass() : m_Type(TACTION_NO_ACTION), m_TeamType(nullptr), m_TriggerType(nullptr), m_Value(-1) {}
     ~TActionClass()
     {
-        m_TeamType = nullptr;
-        m_TriggerType = nullptr;
     }
 
     BOOL operator()(HousesType house, ObjectClass *object, int trigger_id, cell_t cell_num);
@@ -88,7 +87,8 @@ public:
     void Detach(target_t target);
     void Build_INI_Entry(char *entry_buffer) const;
     void Read_INI();
-
+    NeedType Action_Needs() { return Action_Needs(m_Type); }
+    
     void Code_Pointers() {}
     void Decode_Pointers() {}
 
@@ -102,7 +102,7 @@ protected:
     TActionType m_Type;
     GamePtr<TeamTypeClass> m_TeamType;
     GamePtr<TriggerTypeClass> m_TriggerType;
-    int32_t m_IntegerValue;
+    int32_t m_Value;
 
 private:
     struct ActionTextStruct
@@ -112,6 +112,24 @@ private:
     };
 
     static ActionTextStruct s_ActionText[TACTION_COUNT];
+};
+
+class ActionChoiceClass
+{
+public:
+    ActionChoiceClass(TActionType action) : m_Action(action) {}
+
+    void Draw_It(int index, int x, int y, int x_max, int y_max, BOOL selected, TextPrintType style) const;
+    const char *Get_Name() const { return TActionClass::Name_From_Action(m_Action); }
+    TActionType Get_Action() const { return m_Action; }
+
+    static int Comp(const void *a, const void *b);
+
+private:
+    TActionType m_Action;
+
+public:
+    static ActionChoiceClass s_ActionChoices[TACTION_COUNT];
 };
 
 #endif // TACTION_H

@@ -3,8 +3,9 @@
  *
  * @author CCHyper
  * @author OmniBlade
+ * @author tomsons26
  *
- * @brief
+ * @brief Class holding information for scripted events in scenarios.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -39,10 +40,14 @@ DEFINE_ENUMERATION_OPERATORS(TriggerType);
 enum PersistanceType
 {
     STATE_NONE = -1,
-    STATE_VOLATILE = 0, // Will only ever be activated once.
+    STATE_VOLATILE, // Will only ever be activated once.
     STATE_SEMI_PERSISTANT, // Will only trigger once the trigger event has all conditions have been met.
     STATE_PERSISTANT, // Will continue to repeat itself whenever its trigger event is true.
+    STATE_COUNT,
+    STATE_FIRST = 0,
 };
+
+DEFINE_ENUMERATION_OPERATORS(PersistanceType);
 
 enum EventLinkType
 {
@@ -89,6 +94,8 @@ public:
     TriggerClass *Find_Or_Make();
     void Detach(target_t target, int unk);
     AttachType Attaches_To();
+    BOOL Edit();
+    void Draw_It(int index, int x, int y, int x_max, int y_max, BOOL selected, TextPrintType style);
     const TEventClass &Get_Event_One() const { return m_EventOne; }
     const TEventClass &Get_Event_Two() const { return m_EventTwo; }
     const TActionClass &Get_Action_One() const { return m_ActionOne; }
@@ -108,6 +115,7 @@ public:
 private:
     void Fill_In(const char *name, char *options);
     void Build_INI_Entry(char *buffer);
+    const char *Description();
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
