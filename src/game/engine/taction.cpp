@@ -18,6 +18,7 @@
 #include "anim.h"
 #include "building.h"
 #include "coord.h"
+#include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "house.h"
@@ -43,6 +44,44 @@
 #include <cstdio>
 
 using std::sprintf;
+
+ActionChoiceClass ActionChoiceClass::s_ActionChoices[TACTION_COUNT] = { ActionChoiceClass(TACTION_NO_ACTION),
+    ActionChoiceClass(TACTION_WINNER_IS),
+    ActionChoiceClass(TACTION_LOSER_IS),
+    ActionChoiceClass(TACTION_PROD_BEGIN),
+    ActionChoiceClass(TACTION_CREATE_TEAM),
+    ActionChoiceClass(TACTION_DESTROY_ALL_TEAMS),
+    ActionChoiceClass(TACTION_ALL_TO_HUNT),
+    ActionChoiceClass(TACTION_REINFORCE_TEAM),
+    ActionChoiceClass(TACTION_DROP_FLARE),
+    ActionChoiceClass(TACTION_FIRE_SALE),
+    ActionChoiceClass(TACTION_PLAY_MOVIE),
+    ActionChoiceClass(TACTION_DISPLAY_TEXT),
+    ActionChoiceClass(TACTION_DESTROY_TRIGGER),
+    ActionChoiceClass(TACTION_ENABLE_AUTOCREATE),
+    ActionChoiceClass(TACTION_CHANGE_HOUSE),
+    ActionChoiceClass(TACTION_ALLOW_WIN),
+    ActionChoiceClass(TACTION_REVEAL_MAP),
+    ActionChoiceClass(TACTION_REVEAL_WAYPOINT),
+    ActionChoiceClass(TACTION_REVEAL_WAYPOINT_ZONE),
+    ActionChoiceClass(TACTION_PLAY_SOUND_EFFECT),
+    ActionChoiceClass(TACTION_PLAY_MUSIC_THEME),
+    ActionChoiceClass(TACTION_PLAY_SPEECH),
+    ActionChoiceClass(TACTION_FORCE_TRIGGER),
+    ActionChoiceClass(TACTION_TIMER_START),
+    ActionChoiceClass(TACTION_TIMER_STOP),
+    ActionChoiceClass(TACTION_TIMER_EXTEND),
+    ActionChoiceClass(TACTION_TIMER_REDUCE),
+    ActionChoiceClass(TACTION_TIMER_SET),
+    ActionChoiceClass(TACTION_GLOBAL_SET),
+    ActionChoiceClass(TACTION_GLOBAL_CLEAR),
+    ActionChoiceClass(TACTION_AUTO_BASE_AI),
+    ActionChoiceClass(TACTION_GROW_SHROUD),
+    ActionChoiceClass(TACTION_DESTROY_ATTACHED),
+    ActionChoiceClass(TACTION_ONE_TIME_SUPER),
+    ActionChoiceClass(TACTION_REPEATING_SUPER),
+    ActionChoiceClass(TACTION_PREFERRED_TARGET),
+    ActionChoiceClass(TACTION_LAUNCH_NUKES) };
 
 TActionClass::ActionTextStruct TActionClass::s_ActionText[TACTION_COUNT] = {
     { "-No Action-",
@@ -138,7 +177,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
     switch (m_Type) {
         case TACTION_WINNER_IS:
-            if (g_PlayerPtr->What_Type() != (HousesType)m_IntegerValue) {
+            if (g_PlayerPtr->What_Type() != (HousesType)m_Value) {
                 g_PlayerPtr->Flag_To_Lose();
             } else {
                 g_PlayerPtr->Flag_To_Win();
@@ -146,7 +185,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_LOSER_IS:
-            if (g_PlayerPtr->What_Type() == (HousesType)m_IntegerValue) {
+            if (g_PlayerPtr->What_Type() == (HousesType)m_Value) {
                 g_PlayerPtr->Flag_To_Lose();
             } else {
                 g_PlayerPtr->Flag_To_Win();
@@ -154,8 +193,8 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_PROD_BEGIN:
-            if ((HousesType)m_IntegerValue != HOUSES_NONE) {
-                HouseClass::As_Pointer((HousesType)m_IntegerValue)->Set_Production(true);
+            if ((HousesType)m_Value != HOUSES_NONE) {
+                HouseClass::As_Pointer((HousesType)m_Value)->Set_Production(true);
             }
 
             return true;
@@ -170,26 +209,26 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_ALL_TO_HUNT:
-            HouseClass::As_Pointer((HousesType)m_IntegerValue)->Do_All_To_Hunt();
+            HouseClass::As_Pointer((HousesType)m_Value)->Do_All_To_Hunt();
 
             return true;
         case TACTION_REINFORCE_TEAM:
             return m_TeamType->Do_Reinforcements();
 
         case TACTION_DROP_FLARE:
-            new AnimClass(ANIM_LZ_SMOKE, Cell_To_Coord(Scen.Get_Waypoint(m_IntegerValue)));
+            new AnimClass(ANIM_LZ_SMOKE, Cell_To_Coord(Scen.Get_Waypoint(m_Value)));
 
             return true;
         case TACTION_FIRE_SALE:
-            if ((HousesType)m_IntegerValue != HOUSES_NONE) {
-                HouseClass::As_Pointer((HousesType)m_IntegerValue)->Set_Smarties(URGENCY_FIRE_SALE);
+            if ((HousesType)m_Value != HOUSES_NONE) {
+                HouseClass::As_Pointer((HousesType)m_Value)->Set_Smarties(URGENCY_FIRE_SALE);
             }
 
             return true;
         case TACTION_PLAY_MOVIE:
             g_wwmouse->Hide_Mouse();
             g_seenBuff.Clear();
-            Play_Movie((MovieType)m_IntegerValue);
+            Play_Movie((MovieType)m_Value);
             GamePalette.Set();
             Map.Flag_To_Redraw(true);
             g_wwmouse->Show_Mouse();
@@ -198,7 +237,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
         case TACTION_DISPLAY_TEXT:
             Session.Get_Messages().Add_Message(nullptr,
                 0,
-                g_TutorialText[m_IntegerValue],
+                g_TutorialText[m_Value],
                 PLAYER_COLOR_GREEN,
                 TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL,
                 900 * Rule.Message_Delay());
@@ -216,8 +255,8 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_ENABLE_AUTOCREATE:
-            if ((HousesType)m_IntegerValue != HOUSES_NONE) {
-                HouseClass::As_Pointer((HousesType)m_IntegerValue)->Set_Autocreate(true);
+            if ((HousesType)m_Value != HOUSES_NONE) {
+                HouseClass::As_Pointer((HousesType)m_Value)->Set_Autocreate(true);
             }
 
             return true;
@@ -237,13 +276,13 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
         case TACTION_REVEAL_WAYPOINT:
             if (!g_PlayerPtr->Visionary()) {
                 // TODO gap radius is used here, but really it should be a separate constant as in later games.
-                Map.Sight_From(Scen.Get_Waypoint(m_IntegerValue), Rule.Gap_Radius(), g_PlayerPtr, false);
+                Map.Sight_From(Scen.Get_Waypoint(m_Value), Rule.Gap_Radius(), g_PlayerPtr, false);
             }
 
             return true;
         case TACTION_REVEAL_WAYPOINT_ZONE:
             if (!g_PlayerPtr->Visionary()) {
-                uint8_t zone = Map[Scen.Get_Waypoint(m_IntegerValue)].Get_Zone(MZONE_CRUSHER);
+                uint8_t zone = Map[Scen.Get_Waypoint(m_Value)].Get_Zone(MZONE_CRUSHER);
 
                 for (cell_t i = 0; i < MAP_MAX_AREA; ++i) {
                     if (Map[i].Get_Zone(MZONE_CRUSHER) == zone) {
@@ -254,15 +293,15 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_PLAY_SOUND_EFFECT:
-            Sound_Effect((VocType)m_IntegerValue);
+            Sound_Effect((VocType)m_Value);
 
             return true;
         case TACTION_PLAY_MUSIC_THEME:
-            Theme.Queue_Song((ThemeType)m_IntegerValue);
+            Theme.Queue_Song((ThemeType)m_Value);
 
             return true;
         case TACTION_PLAY_SPEECH:
-            Speak((VoxType)m_IntegerValue);
+            Speak((VoxType)m_Value);
 
             return true;
         case TACTION_FORCE_TRIGGER:
@@ -288,33 +327,33 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_TIMER_EXTEND:
-            Scen.Set_Global_Time(Scen.Get_Global_Time() + 90 * m_IntegerValue);
+            Scen.Set_Global_Time(Scen.Get_Global_Time() + 90 * m_Value);
             Map.Set_Tab_Redraw(true);
             Map.Flag_To_Redraw();
 
             return true;
         case TACTION_TIMER_REDUCE:
-            Scen.Set_Global_Time(std::max(Scen.Get_Global_Time() - 90 * m_IntegerValue, 0));
+            Scen.Set_Global_Time(std::max(Scen.Get_Global_Time() - 90 * m_Value, 0));
             Map.Set_Tab_Redraw(true);
             Map.Flag_To_Redraw();
 
             return true;
         case TACTION_TIMER_SET:
-            Scen.Set_Global_Time(90 * m_IntegerValue);
+            Scen.Set_Global_Time(90 * m_Value);
             Map.Set_Tab_Redraw(true);
             Map.Flag_To_Redraw();
 
             return true;
         case TACTION_GLOBAL_SET:
-            Scen.Set_Global_To(m_IntegerValue, true);
+            Scen.Set_Global_To(m_Value, true);
 
             return true;
         case TACTION_GLOBAL_CLEAR:
-            Scen.Set_Global_To(m_IntegerValue, false);
+            Scen.Set_Global_To(m_Value, false);
 
             return true;
         case TACTION_AUTO_BASE_AI:
-            hp->Set_Auto_Base_AI(m_IntegerValue != 0);
+            hp->Set_Auto_Base_AI(m_Value != 0);
 
             return true;
         case TACTION_GROW_SHROUD:
@@ -372,17 +411,17 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
             return ret;
         case TACTION_ONE_TIME_SUPER:
         case TACTION_REPEATING_SUPER:
-            hp->Enable_Superweapon((SpecialWeaponType)m_IntegerValue, m_Type == TACTION_ONE_TIME_SUPER);
+            hp->Enable_Superweapon((SpecialWeaponType)m_Value, m_Type == TACTION_ONE_TIME_SUPER);
 
             if (hp == g_PlayerPtr) {
-                Map.Add(RTTI_SPECIAL, (SpecialWeaponType)m_IntegerValue);
+                Map.Add(RTTI_SPECIAL, (SpecialWeaponType)m_Value);
                 Map.Flag_Strip_Redraw(COLUMN_RIGHT);
             }
 
             return true;
         case TACTION_PREFERRED_TARGET:
             if (hp != nullptr) {
-                hp->Set_Preferred_Target((QuarryType)m_IntegerValue);
+                hp->Set_Preferred_Target((QuarryType)m_Value);
             }
 
             return true;
@@ -429,7 +468,7 @@ void TActionClass::Build_INI_Entry(char *entry_buffer) const
         m_Type,
         g_TeamTypes.Logical_ID(m_TeamType),
         g_TriggerTypes.Logical_ID(m_TriggerType),
-        m_IntegerValue);
+        m_Value);
 }
 
 /**
@@ -444,14 +483,14 @@ void TActionClass::Read_INI()
             m_TeamType = TeamTypeClass::From_Name(strtok(nullptr, ","));
             // Hack to hold name as cannot get heap ID until after all tiggers are parsed.
             m_TriggerType.Set_ID((uintptr_t)strdup(strtok(nullptr, ",")));
-            m_IntegerValue = atoi(strtok(nullptr, ","));
+            m_Value = atoi(strtok(nullptr, ","));
             break;
 
         default: // Format 2 and upwards.
             m_Type = (TActionType)atoi(strtok(nullptr, ","));
             m_TeamType.Set_ID(atoi(strtok(nullptr, ",")));
             m_TriggerType.Set_ID(atoi(strtok(nullptr, ",")));
-            m_IntegerValue = atoi(strtok(nullptr, ","));
+            m_Value = atoi(strtok(nullptr, ","));
 
             break;
     };
@@ -542,4 +581,29 @@ NeedType TActionClass::Action_Needs(TActionType taction)
     }
 
     return NEED_NOTHING;
+}
+
+void ActionChoiceClass::Draw_It(int index, int x, int y, int x_max, int y_max, BOOL selected, TextPrintType style) const
+{
+    static int _tabs[] = { 13, 40 };
+    RemapControlType *remapper = GadgetClass::Get_Color_Scheme();
+
+    if ((style & TPF_FONTS) == TPF_6PT_GRAD || (style & TPF_FONTS) == TPF_EDITOR) {
+        if (selected) {
+            style |= TPF_USE_BRIGHT;
+            g_logicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + y_max) - 1), remapper->WindowPalette[0]);
+        } else if (!(style & TPF_USE_GRAD_PAL)) {
+            style |= TPF_USE_MEDIUM;
+        }
+    } else {
+        remapper = (selected ? &ColorRemaps[REMAP_10] : &ColorRemaps[REMAP_5]);
+    }
+
+    Conquer_Clip_Text_Print(TActionClass::Name_From_Action(m_Action), x, y, remapper, COLOR_TBLACK, style, x_max, _tabs);
+}
+
+int ActionChoiceClass::Comp(const void *a, const void *b)
+{
+    return strcasecmp(TActionClass::Name_From_Action((*(const ActionChoiceClass **)a)->m_Action),
+        TActionClass::Name_From_Action((*(const ActionChoiceClass **)b)->m_Action));
 }
