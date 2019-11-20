@@ -19,7 +19,7 @@
 
 DropListClass::DropListClass(int id, char *text_buff, int text_size, TextPrintType style, int x, int y, int w, int h,
     void *up_btn_shape, void *down_btn_shape) :
-    EditClass(id, text_buff, text_size, style, x, y, w, 18, EDIT_TEXT | EDIT_NUMS | EDIT_SYMS),
+    EditClass(id, text_buff, text_size, style, x, y, w, 18, EDIT_NONE),
     m_IsExpanded(false),
     m_DropHeight(h),
     m_DropButton(0, down_btn_shape, w + x, y),
