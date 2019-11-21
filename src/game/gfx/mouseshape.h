@@ -24,12 +24,23 @@
 // Header for each frame in the old SHP format... only used for mouse now.
 struct MouseShapeFrameHeader
 {
-    uint16_t flags;
-    uint8_t lines;
+    //"MAKESHAPE_NORMAL"   0
+    //"MAKESHAPE_COMPACT"  1
+    //"MAKESHAPE_NOCOMP"   2
+    //"MAKESHAPE_VARIABLE" 4
+    uint16_t flags; // flag 1 specifies that a 16 byte color table follows the header.
+                    // flag 2 specifies that this frame doesn't have LCW compression,
+                    // this frame would only have RLE compression.
+                    // flag 4 specifies a custom length color table follows the header.
+    uint8_t height; //height after RLE compression?
     uint16_t width;
-    uint8_t height; // always same as lines?
-    uint16_t compressed_size;
-    uint16_t uncompressed_size;
+    uint8_t original_height; // original frame height without any compression.
+    uint16_t shape_size; // full frame size including this header.
+    uint16_t data_length; // uncompressed size, frame size minus header if flag 2 is specified.
+    //
+    // Following this is optional data, in Dune 2 this was used to specify remap indexes.
+    // If flag 1 is set then a uint8_t color_table[16] follows.
+    // if flag 4 is set then a uint8_t color_table_size and uint8_t color_table[color_table_size] follows.
 };
 
 // Header for the old SHP format... only used for mouse now. Offset values need +2 to get actual frame pos.

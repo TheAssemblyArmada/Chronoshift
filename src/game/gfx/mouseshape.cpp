@@ -26,7 +26,7 @@ uint8_t g_mouseShapeBuffer[65000]; // Original code shares the global ShapeBuffe
 
 int Get_Shape_Uncomp_Size(void *shape)
 {
-    return static_cast<MouseShapeFrameHeader *>(shape)->uncompressed_size;
+    return static_cast<MouseShapeFrameHeader *>(shape)->data_length;
 }
 
 int Extract_Shape_Count(void *shape)
@@ -54,19 +54,19 @@ int Get_Shape_Width(void *shape)
 
 int Get_Shape_Height(void *shape)
 {
-    return static_cast<MouseShapeFrameHeader *>(shape)->lines;
+    return static_cast<MouseShapeFrameHeader *>(shape)->height;
 }
 
 int Restore_Shape_Height(void *shape)
 {
-    int oldheight = static_cast<MouseShapeFrameHeader *>(shape)->lines;
-    static_cast<MouseShapeFrameHeader *>(shape)->lines = static_cast<MouseShapeFrameHeader *>(shape)->height;
+    int oldheight = static_cast<MouseShapeFrameHeader *>(shape)->height;
+    static_cast<MouseShapeFrameHeader *>(shape)->height = static_cast<MouseShapeFrameHeader *>(shape)->original_height;
     return oldheight;
 }
 
 int Get_Shape_Original_Height(void *shape)
 {
-    return static_cast<MouseShapeFrameHeader *>(shape)->height;
+    return static_cast<MouseShapeFrameHeader *>(shape)->original_height;
 }
 
 void __cdecl Mouse_Shadow_Buffer(MouseClass &mouse, GraphicViewPortClass &viewport, void *buffer, int x_pos, int y_pos, int hspot_x, int hspot_y, BOOL save)
