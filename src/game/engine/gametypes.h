@@ -181,27 +181,6 @@ enum TeamEventType
     TEAM_EVENT_COUNT = 4
 };
 
-enum QuarryType
-{
-    QUARRY_NONE = -1,
-    QUARRY_FIRST = 0,
-    QUARRY_NA = 0,
-    QUARRY_ANYTHING,
-    QUARRY_ANY_BUILDING,
-    QUARRY_HARVESTERS,
-    QUARRY_INFANTRY,
-    QUARRY_ANY_VEHICLES,
-    QUARRY_ANY_VESSEL,
-    QUARRY_FACTORIES,
-    QUARRY_BASE_DEFENSES,
-    QUARRY_BASE_THREATS,
-    QUARRY_POWER_FACILITIES,
-    QUARRY_FAKE_BUILDINGS,
-    QUARRY_COUNT
-};
-
-DEFINE_ENUMERATION_BITWISE_OPERATORS(QuarryType);
-
 // threat type is in fact linked to Quarry, these all do not seems right...
 enum ThreatType
 {
