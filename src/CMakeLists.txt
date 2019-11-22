@@ -124,6 +124,7 @@ set(GAMEENGINE_SRC
     game/engine/overlaytype.cpp
     game/engine/picture.cpp
     game/engine/power.cpp
+    game/engine/quarry.cpp
     game/engine/queue.cpp
     game/engine/radio.cpp
     game/engine/radar.cpp

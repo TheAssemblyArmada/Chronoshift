@@ -30,6 +30,7 @@
 #include "heap.h"
 #include "housestatic.h"
 #include "infantrytype.h"
+#include "quarry.h"
 #include "region.h"
 #include "super.h"
 #include "ttimer.h"
