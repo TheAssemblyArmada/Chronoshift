@@ -19,6 +19,15 @@
 
 #define MAX_CLOCK_STAGES 54
 
+const char *SuperClass::s_SuperNames[] = { "Sonar Pulse",
+    "Atomic Bomb",
+    "Chronosphere",
+    "Para Bombs",
+    "Paratroopers",
+    "Spy Plane",
+    "Iron Curtain",
+    "GPS Satellite" };
+
 SuperClass::SuperClass(int recharge_time, BOOL is_powered, VoxType charging, VoxType recharge, VoxType impatient, VoxType suspend) : 
     m_IsPowered(is_powered),
     m_IsEnabled(false),

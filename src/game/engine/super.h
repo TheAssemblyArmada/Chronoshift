@@ -19,6 +19,7 @@
 #define SUPER_H
 
 #include "always.h"
+#include "gametypes.h"
 #include "ttimer.h"
 #include "vox.h"
 
@@ -53,6 +54,8 @@ public:
     bool Is_Fully_Charged() const { return m_FullyCharged; }
     bool Ready_To_Fire() const { return m_IsEnabled && m_FullyCharged; }
 
+    static const char *Name_From(SpecialWeaponType type) { return s_SuperNames[type]; }
+
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_IsPowered : 1; // 1
@@ -73,6 +76,7 @@ private:
     VoxType m_SuspendVoice; // Voice to use when special weapon charging is suspended.
     int m_RechargeTime; // Time in minutes to recharge this special.
 
+    static const char *s_SuperNames[];
 #ifdef GAME_DLL
 public:
     int Hook_Anim_Stage() { return SuperClass::Anim_Stage(); }
