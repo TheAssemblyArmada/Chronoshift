@@ -738,6 +738,13 @@ void Setup_Hooks()
     Hook_Function(0x004DE094, *HouseClass::Hook_Is_No_Yak_Mig);
     Hook_Function(0x004DE154, *HouseClass::Hook_Is_Hack_Prevented);
     Hook_Function(0x004DDCFC, *HouseClass::Read_INI);
+    Hook_Function(0x004D92B0, *HouseClass::Recalc_Center);
+    Hook_Function(0x004DA184, *HouseClass::AI_Lower_Power);
+    Hook_Function(0x004DA148, *HouseClass::AI_Fire_Sale);
+    Hook_Function(0x004D9D54, *HouseClass::Check_Raise_Power);
+    Hook_Function(0x004DE178, *HouseClass::Fire_Sale);
+    Hook_Function(0x004D7DC4, *HouseClass::Detach);
+    //Hook_Function_Const(0x004D7E80, &HouseClass::Suggest_New_Object);//can't hook cause of defarg
 
     // foot.h
     Hook_Function(0x004C3328, *FootClass::Hook_Can_Demolish);
@@ -963,6 +970,7 @@ void Setup_Hooks()
     Hook_Function(0x00420208, *AircraftClass::Hook_Active_Click_With);
     Hook_Function(0x004202A8, *AircraftClass::Hook_Player_Assign_Mission);
     Hook_Function(0x0041E9F4, *AircraftClass::Is_LZ_Clear);
+    Hook_Function_Const(0x0042063C, &AircraftClass::Pose_Dir);
     
     // object.cpp
     Hook_Function(0x0051DDE8, *ObjectClass::Limbo);
@@ -983,6 +991,42 @@ void Setup_Hooks()
     Hook_Function(0x0045E3E4, *BuildingClass::Detach);
     Hook_Function(0x0046072C, *BuildingClass::Hook_Value);
     Hook_Function(0x004606D0, *BuildingClass::Hook_Get_Image_Data);
+    Hook_Function(0x00458760, *BuildingClass::Hook_Active_Click_With_Obj);
+    Hook_Function(0x00458850, *BuildingClass::Hook_Active_Click_With_Cell);
+    Hook_Function(0x0045523C, *BuildingClass::Hook_Draw_It);
+    Hook_Function(0x0045E320, *BuildingClass::Power_Output);
+    Hook_Function(0x00459880, *BuildingClass::Limbo);
+
+    // unit.cpp
+    Hook_Function(0x00581730, *UnitClass::Limbo);
+    Hook_Function(0x0057B40C, *UnitClass::Hook_Active_Click_With_Obj);
+    Hook_Function(0x0057B4B0, *UnitClass::Hook_Active_Click_With_Cell);
+    Hook_Function(0x0057FD4C, *UnitClass::Mission_Move);
+    Hook_Function(0x00580290, *UnitClass::Hook_Crew_Type);
+    Hook_Function(0x0057F398, *UnitClass::Start_Driver);
+    Hook_Function(0x005808D8, *UnitClass::Offload_Ore_Bail);
+    Hook_Function(0x00579EEC, *UnitClass::Edge_Of_World_AI);
+    Hook_Function(0x0057FF98, *UnitClass::Flag_Attach);
+    Hook_Function(0x0057FFD0, *UnitClass::Flag_Remove);
+    Hook_Function(0x00580218, *UnitClass::APC_Close_Door);
+    Hook_Function(0x00580238, *UnitClass::APC_Open_Door);
+    Hook_Function(0x0058143C, *UnitClass::Credit_Load);
+    Hook_Function(0x0057CFA0, *UnitClass::Goto_Ore);
+    Hook_Function(0x005804E8, *UnitClass::Ok_To_Move);
+
+    // vessel.cpp
+    Hook_Function(0x0058A634, *VesselClass::AI);
+    Hook_Function(0x0058B5C4, *VesselClass::Hook_Fire_Coord);
+    Hook_Function(0x0058AD00, *VesselClass::Hook_Active_Click_With_Obj);
+    Hook_Function(0x0058AD3C, *VesselClass::Hook_Active_Click_With_Cell);
+    Hook_Function(0x004CDE80, *VesselClass::Hook_Turret_Facing);
+    Hook_Function(0x0058C91C, *VesselClass::Hook_Is_Allowed_To_Recloak);
+    Hook_Function(0x0058C654, *VesselClass::Assign_Destination);
+    Hook_Function(0x0058D498, *VesselClass::Fire_At);
+    Hook_Function_Const(0x0058A040, &VesselClass::Shape_Number);
+    Hook_Function(0x0058D26C, *VesselClass::Edge_Of_World_AI);
+    Hook_Function(0x0058C23C, *VesselClass::Transport_Open_Door);
+    Hook_Function(0x0058C26C, *VesselClass::Transport_Close_Door);
 #endif
 }
 

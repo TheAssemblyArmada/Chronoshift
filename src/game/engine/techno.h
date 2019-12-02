@@ -119,7 +119,7 @@ public:
     virtual BOOL Is_Weapon_Equipped() const;
     virtual fixed_t Ore_Load() const { return fixed_t::_0_1; }
     virtual int Pip_Count() const { return 0; }
-    virtual int Rearm_Delay(int a1, int a2) const;
+    virtual int Rearm_Delay(BOOL a1, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
     virtual int Refund_Amount() const;
     virtual int Risk() const { return Techno_Class_Of().Get_ThreatPosed(); }
     virtual int Threat_Range(int a1) const;
@@ -231,10 +231,13 @@ public:
 #endif
 
 protected:
-    void Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const;
+    void Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir = DIR_NORTH, int scale = 256) const;
     VisualType Visual_Character(BOOL flag = false) const;
+    void Kill_Cargo(TechnoClass * object);
+    WeaponSlotType What_Weapon_Should_I_Use(target_t target) const;
+    int Combat_Damage(WeaponSlotType weapon = WEAPON_SLOT_NONE) const;
+    cell_t Nearby_Location(TechnoClass *techno) const;
 
-private:
     const TechnoTypeClass &Techno_Class_Of() const { return reinterpret_cast<const TechnoTypeClass &>(Class_Of()); }
 
 protected:

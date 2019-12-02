@@ -32,6 +32,7 @@
 #include "scenario.h"
 #include "session.h"
 #include "target.h"
+#include "teamtype.h"
 #include "unit.h"
 #include "utracker.h"
 #include "vessel.h"
@@ -429,7 +430,7 @@ BOOL HouseClass::Flag_Remove(target_t target, int a2)
 #endif
 }
 
-BOOL HouseClass::Flag_Attach(cell_t cell, int a2)
+BOOL HouseClass::Flag_Attach(cell_t cell, BOOL a2)
 {
 #ifdef GAME_DLL
     BOOL (*func)(HouseClass *, cell_t, int) = reinterpret_cast<BOOL (*)(HouseClass *, cell_t, int)>(0x004D8070);
@@ -439,14 +440,19 @@ BOOL HouseClass::Flag_Attach(cell_t cell, int a2)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL HouseClass::Flag_Attach(UnitClass *unit, int a2)
 {
-#ifdef GAME_DLL
-    BOOL (*func)(HouseClass *, UnitClass *, int) = reinterpret_cast<BOOL (*)(HouseClass *, UnitClass *, int)>(0x004D81EC);
-    return func(this, unit, a2);
-#else
+    if (unit != nullptr && !unit->In_Limbo()) {
+        Flag_Remove(m_FlagHolder, a2);
+        unit->Flag_Attach(What_Type());
+        m_FlagHolder = unit->As_Target();
+        return true;
+    }
     return false;
-#endif
 }
 
 void HouseClass::MPlayer_Defeated()
@@ -608,12 +614,20 @@ fixed_t HouseClass::Power_Fraction() const
     return fixed_t(1);
 }
 
+/**
+ *
+ *
+ */
 void HouseClass::Adjust_Power(int value)
 {
     m_Power += value;
     Update_Spied_Power_Plants();
 }
 
+/**
+ *
+ *
+ */
 void HouseClass::Adjust_Drain(int value)
 {
     m_Drain += value;
@@ -1288,13 +1302,10 @@ void HouseClass::Sell_Wall(cell_t cellnum)
 
 const BuildingTypeClass *HouseClass::Suggest_New_Building() const
 {
-#ifdef GAME_DLL
-    const BuildingTypeClass *(*func)(const HouseClass *) =
-        reinterpret_cast<const BuildingTypeClass *(*)(const HouseClass *)>(0x004D8F14);
-    return func(this);
-#else
+    if (m_ChosenBuilding != BUILDING_NONE) {
+        return BuildingTypeClass::As_Pointer(m_ChosenBuilding);
+    }
     return nullptr;
-#endif
 }
 
 void HouseClass::Decode_Pointers()
@@ -1631,7 +1642,6 @@ void HouseClass::Attacked()
 #endif
 }
 
-
 const TeamTypeClass *HouseClass::Suggested_New_Team(int a1)
 {
 #ifdef GAME_DLL
@@ -1846,6 +1856,68 @@ void HouseClass::AI()
     void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D4134);
     func(this);
 #endif
+}
+
+/**
+ *
+ *
+ */
+void HouseClass::Recalc_Center()
+{
+    m_BaseCenter = 0;
+    m_Radius = 0;
+
+    for (int i = 0; i < ZONE_COUNT; ++i) {
+        m_Zones[i].Air = 0;
+        m_Zones[i].Armor = 0;
+        m_Zones[i].Infantry = 0;
+    }
+    if (m_CurrentBuildingCount > 0) {
+        int coord_x = 0;
+        int coord_y = 0;
+        int calc = 0;
+
+        for (int i = 0; i < g_Buildings.Count(); ++i) {
+            BuildingClass *bptr = &g_Buildings[i];
+            if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Owner_House() == this && bptr->Get_Health() > 0) {
+                int cost = bptr->Class_Of().Get_Cost() / 1000 + 1;
+                for (int k = 0; k < cost; ++k) {
+                    coord_x += Coord_Lepton_X(bptr->Center_Coord());
+                    coord_y += Coord_Lepton_Y(bptr->Center_Coord());
+                    ++calc;
+                }
+            }
+        }
+
+        if (calc > 0) {
+            m_BaseCenter = Coord_From_Lepton_XY(coord_x, coord_y);
+        }
+
+        if (calc > 1) {
+            int dist = 0;
+            for (int i = 0; i < g_Buildings.Count(); ++i) {
+                BuildingClass *bptr = &g_Buildings[i];
+                if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Owner_House() == this && bptr->Get_Health() > 0) {
+                    dist += Distance(m_BaseCenter, bptr->Center_Coord());
+                }
+            }
+            m_Radius = std::max(dist / calc, 512);
+
+            for (int i = 0; i < g_Buildings.Count(); ++i) {
+                BuildingClass *bptr = &g_Buildings[i];
+                if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Owner_House() == this && bptr->Get_Health() > 0) {
+                    ZoneType zone = Which_Zone(bptr);
+                    if (zone != ZONE_NONE) {
+                        m_Zones[zone].Air += bptr->Anti_Armor();
+                        m_Zones[zone].Armor += bptr->Anti_Air();
+                        m_Zones[zone].Infantry += bptr->Anti_Infantry();
+                    }
+                }
+            }
+        } else {
+            m_Radius = 512;
+        }
+    }
 }
 
 int HouseClass::Expert_AI()
@@ -2130,50 +2202,83 @@ int HouseClass::AI_Raise_Power(UrgencyType urgency)
 #endif
 }
 
+/**
+ *
+ *
+ */
 int HouseClass::AI_Lower_Power(UrgencyType urgency)
 {
-#ifdef GAME_DLL
-    int (*func)(HouseClass *, UrgencyType) = reinterpret_cast<int (*)(HouseClass *, UrgencyType)>(0x004DA184);
-    return func(this, urgency);
-#else
-    return 0;
-#endif
+    BuildingClass *bptr = Find_Building(BUILDING_POWR, ZONE_NONE);
+    if (bptr != nullptr) {
+        bptr->Sell_Back(1);
+        return true;
+    }
+    bptr = Find_Building(BUILDING_APWR, ZONE_NONE);
+    if (bptr != nullptr) {
+        bptr->Sell_Back(1);
+        return true;
+    }
+    return false;
 }
 
+/**
+ *
+ *
+ */
 int HouseClass::AI_Build_Engineer(UrgencyType urgency)
 {
     // empty
     return 0;
 }
 
+/**
+ *
+ *
+ */
 int HouseClass::AI_Fire_Sale(UrgencyType urgency)
 {
-#ifdef GAME_DLL
-    int (*func)(HouseClass *, UrgencyType) = reinterpret_cast<int (*)(HouseClass *, UrgencyType)>(0x004DA148);
-    return func(this, urgency);
-#else
+    if (m_CurrentBuildingCount > 0 && urgency == URGENCY_FIRE_SALE) {
+        Fire_Sale();
+        Do_All_To_Hunt();
+        return 1;
+    }
     return 0;
-#endif
 }
 
+/**
+ *
+ *
+ */
 int HouseClass::AI_Build_Income(UrgencyType urgency)
 {
     // empty
     return 0;
 }
 
+/**
+ *
+ *
+ */
 int HouseClass::AI_Build_Offense(UrgencyType urgency)
 {
     // empty
     return 0;
 }
 
+/**
+ *
+ *
+ */
 int HouseClass::AI_Build_Defense(UrgencyType urgency)
 {
     // empty
     return 0;
 }
 
+/**
+ *
+ *
+ */
 int HouseClass::AI_Build_Power(UrgencyType urgency)
 {
     // empty
@@ -2190,14 +2295,19 @@ int HouseClass::AI_Attack(UrgencyType urgency)
 #endif
 }
 
+/**
+ *
+ *
+ */
 UrgencyType HouseClass::Check_Raise_Power()
 {
-#ifdef GAME_DLL
-    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9D54);
-    return func(this);
-#else
-    return UrgencyType();
-#endif
+    if (Power_Fraction() < Rule.Power_Emergency() && m_Drain - 400 > m_Power) {
+        if (m_Smarties == URGENCY_3) {
+            return URGENCY_3;
+        }
+        return URGENCY_LOW_POWER;
+    }
+    return URGENCY_NOTHING;
 }
 
 UrgencyType HouseClass::Check_Lower_Power()
@@ -2220,10 +2330,14 @@ UrgencyType HouseClass::Check_Raise_Money()
 #endif
 }
 
+/**
+ *
+ *
+ */
 UrgencyType HouseClass::Check_Build_Engineer()
 {
     // empty
-    return UrgencyType();
+    return URGENCY_NOTHING;
 }
 
 UrgencyType HouseClass::Check_Fire_Sale()
@@ -2236,10 +2350,14 @@ UrgencyType HouseClass::Check_Fire_Sale()
 #endif
 }
 
+/**
+ *
+ *
+ */
 UrgencyType HouseClass::Check_Build_Income()
 {
     // empty
-    return UrgencyType();
+    return URGENCY_NOTHING;
 }
 
 UrgencyType HouseClass::Check_Attack()
@@ -2255,13 +2373,13 @@ UrgencyType HouseClass::Check_Attack()
 UrgencyType HouseClass::Check_Build_Offense()
 {
     // empty
-    return UrgencyType();
+    return URGENCY_NOTHING;
 }
 
 UrgencyType HouseClass::Check_Build_Defense()
 {
     //empty
-    return UrgencyType();
+    return URGENCY_NOTHING;
 }
 
 UrgencyType HouseClass::Check_Build_Power()
@@ -2274,14 +2392,22 @@ UrgencyType HouseClass::Check_Build_Power()
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL HouseClass::Fire_Sale()
 {
-#ifdef GAME_DLL
-    BOOL (*func)(const HouseClass *) = reinterpret_cast<BOOL (*)(const HouseClass *)>(0x004DE178);
-    return func(this);
-#else
+    if (m_CurrentBuildingCount > 0) {
+        for (int i = 0; i < g_Buildings.Count(); ++i) {
+            BuildingClass *bptr = &g_Buildings[i];
+            if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Owner_House() == this && bptr->Get_Health() > 0) {
+                bptr->Sell_Back(1);
+            }
+        }
+        return true;
+    }
     return false;
-#endif
 }
 
 void HouseClass::Do_All_To_Hunt() const
@@ -2343,16 +2469,32 @@ BOOL HouseClass::Manual_Place(BuildingClass *a1, BuildingClass *a2)
 #endif
 }
 
-void HouseClass::Clobber_All() {}
-
-void HouseClass::Detach(target_t a1, int a2)
+void HouseClass::Clobber_All()
 {
 #ifdef GAME_DLL
-    void (*func)(HouseClass *, target_t, int) = reinterpret_cast<void (*)(HouseClass *, target_t, int)>(0x004D7DC4);
-    return func(this, a1, a2);
+    void (*func)(HouseClass *) = reinterpret_cast<void (*)(HouseClass *)>(0x004D7B10);
+    func(this);
 #endif
 }
 
+/**
+ *
+ *
+ */
+void HouseClass::Detach(target_t a1, int a2)
+{
+    if (a1 == m_LastCapBldTarget) {
+        m_LastCapBldTarget = 0;
+    }
+    if (Target_Get_RTTI(a1) == RTTI_TRIGGER) {
+        g_HouseTriggers[m_HeapID].Delete(As_Trigger(a1));
+    }
+}
+
+/**
+ *
+ *
+ */
 BOOL HouseClass::Does_Enemy_Building_Exist(BuildingType type) const
 {
     for (HousesType i = HOUSES_FIRST; i < HOUSES_COUNT; ++i) {
@@ -2366,13 +2508,49 @@ BOOL HouseClass::Does_Enemy_Building_Exist(BuildingType type) const
     return false;
 }
 
-const TechnoTypeClass *HouseClass::Suggest_New_Object(RTTIType rtti, int a2) const
+/**
+ *
+ *
+ */
+const TechnoTypeClass *HouseClass::Suggest_New_Object(RTTIType rtti, BOOL is_kennel) const
 {
-#ifdef GAME_DLL
-    const TechnoTypeClass *(*func)(const HouseClass *, RTTIType, int) =
-        reinterpret_cast<const TechnoTypeClass *(*)(const HouseClass *, RTTIType, int)>(0x004D7E80);
-    return func(this, rtti, a2);
-#else
+    switch (rtti) {
+        case RTTI_AIRCRAFT:
+        case RTTI_AIRCRAFTTYPE: // Fallthrough
+            if (m_ChosenAircraft != AIRCRAFT_NONE) {
+                return reinterpret_cast<TechnoTypeClass *>(&AircraftTypeClass::As_Reference(m_ChosenAircraft));
+            }
+        case RTTI_BUILDING:
+        case RTTI_BUILDINGTYPE: // Fallthrough
+            if (m_ChosenBuilding != BUILDING_NONE) {
+                return reinterpret_cast<TechnoTypeClass *>(&BuildingTypeClass::As_Reference(m_ChosenBuilding));
+            }
+        case RTTI_INFANTRY:
+        case RTTI_INFANTRYTYPE: // Fallthrough
+            if (m_ChosenInfantry != INFANTRY_NONE) {
+                // disallow barracks to produce dogs
+                if (!is_kennel && m_ChosenInfantry == INFANTRY_DOG) {
+                    return nullptr;
+                }
+
+                // disallow kennel's to produce anything that isn't a dog
+                if (is_kennel && m_ChosenInfantry != INFANTRY_DOG) {
+                    return nullptr;
+                }
+                return reinterpret_cast<TechnoTypeClass *>(&InfantryTypeClass::As_Reference(m_ChosenInfantry));
+            }
+        case RTTI_UNIT:
+        case RTTI_UNITTYPE: // Fallthrough
+            if (m_ChosenUnit != UNIT_NONE) {
+                return reinterpret_cast<TechnoTypeClass *>(&UnitTypeClass::As_Reference(m_ChosenUnit));
+            }
+        case RTTI_VESSEL:
+        case RTTI_VESSELTYPE: // Fallthrough
+            if (m_ChosenVessel != VESSEL_NONE) {
+                return reinterpret_cast<TechnoTypeClass *>(&VesselTypeClass::As_Reference(m_ChosenVessel));
+            }
+        default:
+            break;
+    }
     return nullptr;
-#endif
 }

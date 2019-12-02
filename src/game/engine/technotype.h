@@ -61,6 +61,7 @@ public:
     int Get_ThreatPoints() const { return m_ThreatPoints; }
     BOOL Is_Invisible() const { return m_IsInvisible; }
     BOOL Is_Cloakable() const { return m_Cloakable; }
+    BOOL Is_Theater() const { return m_IsTheater; }
     BOOL Is_Turret_Equipped() const { return m_IsTurretEquipped; }
     BOOL Is_Crewed() const { return m_IsCrewed; }
     BOOL Is_Repairable() const { return m_IsRepairable; }
@@ -90,6 +91,22 @@ public:
                 break;
         };
         return wptr;
+    }
+
+    inline void Get_Fire_Offsets(WeaponSlotType weapon, int &x, int &y, int &z) const
+    {
+        switch (weapon) {
+            default:
+            case WEAPON_SLOT_PRIMARY:
+                x = m_PrimaryFireOffsetX;
+                y = m_PrimaryFireOffsetY;
+                break;
+            case WEAPON_SLOT_SECONDARY:
+                x = m_SecondaryFireOffsetX;
+                y = m_SecondaryFireOffsetY;
+                break;
+        };
+        z = m_FireOffsetZ;
     }
 
     TechnoClass *Techno_Create_One_Of(HouseClass *house) const

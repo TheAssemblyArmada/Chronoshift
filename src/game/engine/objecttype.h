@@ -100,6 +100,7 @@ protected:
     mutable TRect<int> *m_FrameDimensions; // Mutable as only lazy caches information, not changeable state.
     void *m_RadarIconData;
 
+public:
 #ifdef GAME_DLL
     static void *&SelectShapes;
     static void *&PipShapes;

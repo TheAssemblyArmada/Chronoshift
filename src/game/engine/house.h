@@ -164,6 +164,7 @@ public:
     void Production_Begun(TechnoClass *object);
     void Recalc_Attributes();
     void AI();
+    void Recalc_Center();
     int Expert_AI();
     int AI_Aircraft();
     int AI_Infantry();
@@ -200,9 +201,9 @@ public:
     void Clobber_All();
     void Detach(target_t a1, int a2);
     BOOL Does_Enemy_Building_Exist(BuildingType type) const;
-    const TechnoTypeClass *Suggest_New_Object(RTTIType rtti, int a2) const;
+    const TechnoTypeClass *Suggest_New_Object(RTTIType rtti, BOOL is_kennel = false) const;
     BOOL Flag_Remove(target_t target, int a2);
-    BOOL Flag_Attach(cell_t cell, int a2);
+    BOOL Flag_Attach(cell_t cell, BOOL a2 = false);
     BOOL Flag_Attach(UnitClass *unit, int a2);
     void MPlayer_Defeated();
     void Tally_Score();
@@ -287,6 +288,7 @@ public:
     VesselType Just_Vessel() const { return m_JustVessel; }
     void Enable_Superweapon(SpecialWeaponType type, BOOL one_time) { m_Specials[type].Enable(one_time); }
     void Set_Preferred_Target(QuarryType target) { m_PreferredTarget = target; }
+    BOOL Flag_To_Recalc() { return m_RecalcNeeded = true; }
 
     static void One_Time();
     static void Init();

@@ -14,6 +14,11 @@
  *            LICENSE
  */
 #include "unit.h"
+#include "scenario.h"
+#include "team.h"
+#include "iomap.h"
+#include "rules.h"
+#include "target.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<UnitClass> g_Units;
@@ -68,24 +73,28 @@ ActionType UnitClass::What_Action(cell_t cellnum) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 coord_t UnitClass::Sort_Y() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x005799E0, coord_t, const UnitClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    return m_Coord + 0x800000;
 }
 
+/**
+ *
+ *
+ */
 BOOL UnitClass::Limbo()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00581730, BOOL, UnitClass *);
-    return func(this);
-#else
-    return false;
-#endif
+    if (!DriveClass::Limbo()) {
+        return false;
+    }
+    if (m_FlagOwner != HOUSES_NONE) {
+        HouseClass::As_Pointer(m_FlagOwner)->Flag_Attach(Get_Cell());
+    }
+    return true;
 }
 
 BOOL UnitClass::Unlimbo(coord_t coord, DirType dir)
@@ -116,20 +125,37 @@ void UnitClass::Draw_It(int x_pos, int y_pos, WindowNumberType window) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 void UnitClass::Active_Click_With(ActionType action, ObjectClass *object)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0057B40C, void, UnitClass *, ActionType, ObjectClass *);
-    func(this, action, object);
-#endif
+    if (What_Action(object) != action) {
+        action = What_Action(object);
+        if (action == ACTION_CAPTURE || action == ACTION_SABOTAGE) {
+            action = ACTION_ATTACK;
+        }
+        if (action == ACTION_ENTER) {
+            action = ACTION_MOVE;
+        }
+    }
+    if (object != this || action != ACTION_NO_MOVE) {
+        if (What_Type() != UNIT_MAD_TANK || !m_IsDumping && !m_ToScatter) {
+            DriveClass::Active_Click_With(action, object);
+        }
+    }
 }
 
+/**
+ *
+ *
+ */
 void UnitClass::Active_Click_With(ActionType action, cell_t cellnum)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0057B4B0, void, UnitClass *, ActionType, cell_t);
-    func(this, action, cellnum);
-#endif
+    if (What_Type() != UNIT_MAD_TANK || !m_IsDumping && !m_ToScatter) {
+        DriveClass::Active_Click_With(action, cellnum);
+    }
 }
 
 DamageResultType UnitClass::Take_Damage(
@@ -209,14 +235,16 @@ int UnitClass::Mission_Hunt()
 #endif
 }
 
+/**
+ *
+ *
+ */
 int UnitClass::Mission_Move()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0057FD4C, int, UnitClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    if (m_Door.Is_Closed()) {
+        APC_Close_Door();
+    }
+    return DriveClass::Mission_Move();
 }
 
 int UnitClass::Mission_Unload()
@@ -269,14 +297,20 @@ DirType UnitClass::Fire_Direction() const
 #endif
 }
 
+/**
+ *
+ *
+ */
 InfantryType UnitClass::Crew_Type() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00580290, InfantryType, const UnitClass *);
-    return func(this);
-#else
-    return INFANTRY_NONE;
-#endif
+    if (Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) != nullptr) {
+        return DriveClass::Crew_Type();
+    }
+
+    if (Scen.Get_Random_Value(0, 99) < 50) {
+        return INFANTRY_C1;
+    }
+    return INFANTRY_C7;
 }
 
 fixed_t UnitClass::Ore_Load() const
@@ -345,24 +379,32 @@ void UnitClass::Enter_Idle_Mode(BOOL a1)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL UnitClass::Start_Driver(coord_t &dest)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0057F398, BOOL, UnitClass *, coord_t &);
-    return func(this, dest);
-#else
+    if (!DriveClass::Start_Driver(dest)) {
+        return false;
+    }
+    if (m_IsActive) {
+        Mark_Track(dest, MARK_PUT);
+        return true;
+    }
     return false;
-#endif
 }
 
+/**
+ *
+ *
+ */
 BOOL UnitClass::Offload_Ore_Bail()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x005808D8, BOOL, UnitClass *);
-    return func(this);
-#else
+    if (m_BailCount != 0) {
+        --m_BailCount;
+    }
     return false;
-#endif
 }
 
 void UnitClass::Approach_Target()
@@ -381,12 +423,168 @@ void UnitClass::Overrun_Cell(cell_t cell, int a2)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL UnitClass::Ok_To_Move(DirType dir)
 {
+    if (!Class_Of().Is_Bit32()) {
+        return false;
+    }
+    if (m_Rotating) {
+        return false;
+    }
+    if (dir - m_TurretFacing.Get_Current() != 0) {
+        m_TurretFacing.Set_Desired(dir);
+        return false;
+    }
+    return true;
+}
+
+/**
+ *
+ *
+ */
+BOOL UnitClass::Edge_Of_World_AI()
+{
+    if (Mission == MISSION_GUARD && !Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
+        if (m_Team != nullptr) {
+            m_Team->Set_Bit2_4(true);
+        }
+        Stun();
+        delete this;
+        return true;
+    }
+    return false;
+}
+
+/**
+ *
+ *
+ */
+BOOL UnitClass::Flag_Attach(HousesType house)
+{
+    if (house != HOUSES_NONE && m_FlagOwner == HOUSES_NONE) {
+        m_FlagOwner = house;
+        Mark(MARK_REDRAW);
+        return true;
+    }
+    return false;
+}
+
+/**
+ *
+ *
+ */
+BOOL UnitClass::Flag_Remove()
+{
+    if (m_FlagOwner != HOUSES_NONE) {
+        m_FlagOwner = HOUSES_NONE;
+        Mark(MARK_REDRAW);
+        return true;
+    }
+    return false;
+}
+
+/**
+ *
+ *
+ */
+void UnitClass::APC_Close_Door()
+{
+    m_Door.Close_Door(10, 2);
+}
+
+/**
+ *
+ *
+ */
+void UnitClass::APC_Open_Door()
+{
+    int delay;
+
+    if (!m_Moving && !m_Rotating) {
+        DirType dir = m_Facing.Get_Current();
+        if (dir == DIR_NORTH_WEST || dir == DIR_NORTH_EAST) {
+            delay = 10;
+        } else {
+            delay = 1;
+        }
+        m_Door.Open_Door(delay, 2);
+    }
+}
+
+/**
+ *
+ *
+ */
+int UnitClass::Credit_Load()
+{
+    return Rule.Get_Gold_Value() * m_Gold + Rule.Get_Gem_Value() * m_Gems;
+}
+
+BOOL UnitClass::Ore_Check(short &cellnum, int a2, int a3)
+{
 #ifdef GAME_DLL
-    DEFINE_CALL(func, 0x005804E8, BOOL, UnitClass *, DirType);
-    return func(this, dir);
+    DEFINE_CALL(func, 0x0057CD9C, BOOL, UnitClass *, short &, int, int);
+    return func(this, cellnum, a2, a3);
 #else
+    /*
+    cell_t check_cell;
+
+    if (Scen.Game_To_Play() == GAME_CAMPAIGN && m_PlayerOwned && !Map[check_cell].Is_Visible()) {
+        return false;
+    }
+
+    cell_t cell = Get_Cell();
+    CellClass *cptr = &Map[cell];
+    if (cptr->Get_Zone(MZONE_NORMAL) == Class_Of().Get_Movement_Zone() && !Cell_Techno(0, 0) && Map[check_cell].Get_Land() ==
+    LAND_ORE) { return true;
+    }
+    */
     return false;
 #endif
+}
+
+/**
+ * Finds nearest ore location and directs the unit to it, return value is if its on ore already.
+ *
+ */
+BOOL UnitClass::Goto_Ore(int scan_radius)
+{
+    if (Target_Legal(m_NavCom)) {
+        return false;
+    }
+
+    // is the cell im under ore?
+    cell_t cellnum = Center_Cell();
+    if (Map[cellnum].Get_Land() == LAND_ORE) {
+        return true;
+    }
+
+    for (int i = 1; i < scan_radius; ++i) {
+        for (int j = -i; j <= i; ++j) {
+            if (Ore_Check(cellnum, j, -i)) {
+                Assign_Destination(::As_Target(cellnum));
+                return false;
+            }
+
+            if (Ore_Check(cellnum, j, i)) {
+                Assign_Destination(::As_Target(cellnum));
+                return false;
+            }
+
+            if (Ore_Check(cellnum, -i, j)) {
+                Assign_Destination(::As_Target(cellnum));
+                return false;
+            }
+
+            if (Ore_Check(cellnum, i, j)) {
+                Assign_Destination(::As_Target(cellnum));
+                return false;
+            }
+        }
+    }
+    return false;
 }

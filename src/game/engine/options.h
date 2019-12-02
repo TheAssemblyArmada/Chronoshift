@@ -125,6 +125,8 @@ public:
     KeyNumType Get_KeyStop() const { return KeyStop; }
     KeyNumType Get_KeyGuard() const { return KeyGuard; }
     KeyNumType Get_KeyScatter() const { return KeyScatter; }
+    KeyNumType Get_KeyQueueMove1() const { return KeyQueueMove1; }
+    KeyNumType Get_KeyQueueMove2() const { return KeyQueueMove2; }
 
     KeyNumType Get_KeyEditorToggle() const { return KeyEditorToggle; }
 

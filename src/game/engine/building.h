@@ -36,6 +36,10 @@ public:
     virtual const BuildingTypeClass &Class_Of() const final;
     virtual BOOL Can_Player_Move() const final;
     virtual void Detach(target_t target, int a2) final;
+    virtual void Draw_It(int x, int y, WindowNumberType window) final;
+    virtual void Active_Click_With(ActionType action, ObjectClass *object) final;
+    virtual void Active_Click_With(ActionType action, cell_t cellnum) final;
+    virtual BOOL Limbo() final;
     virtual void Fire_Out() final {}
     virtual int Value() const final;
 
@@ -43,6 +47,9 @@ public:
     virtual void Death_Announcement(TechnoClass *killer) const final;
 
     BuildingType What_Type() const { return m_Class->What_Type(); }
+
+    int Shape_Number();
+    int Power_Output();
 
 
 #ifdef GAME_DLL
@@ -52,6 +59,18 @@ public:
     void Hook_Death_Announcement(TechnoClass *killer) { BuildingClass::Death_Announcement(killer); }
     int Hook_Value() { return BuildingClass::Value(); }
     void *Hook_Get_Image_Data() { return BuildingClass::Get_Image_Data(); }
+    void Hook_Draw_It(int x, int y, WindowNumberType window)
+    {
+        BuildingClass::Draw_It(x, y, window);
+    }
+    void Hook_Active_Click_With_Obj(ActionType action, ObjectClass *object)
+    {
+        BuildingClass::Active_Click_With(action, object);
+    }
+    void Hook_Active_Click_With_Cell(ActionType action, cell_t cellnum)
+    {
+        BuildingClass::Active_Click_With(action, cellnum);
+    }
 #endif
 
 
@@ -65,12 +84,14 @@ private:
     BOOL m_Bit4 : 1; // 4
     BOOL m_Bit8 : 1; // 8
     BOOL m_Bit16 : 1; // 16
+    BOOL m_Bit32 : 1; // 32
 #else
     bool m_Bit1;
     bool m_Bit2;
     bool m_Bit4;
     bool m_Bit8;
     bool m_Bit16;
+    bool m_Bit32;
 #endif
     TCountDownTimerClass<FrameTimerClass> m_C4FuseTimer;
     BStateType m_CurrentState;
