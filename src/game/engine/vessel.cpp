@@ -114,15 +114,7 @@ MoveType VesselClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 
 void VesselClass::AI()
 {
-    DEBUG_ASSERT(m_IsActive);
-
-#ifdef GAME_DLL
-    void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058A634);
-    return func(this);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-    
-    /*if (Not_On_A_Mission()) {
+    if (Not_On_A_Mission()) {
         Enter_Idle_Mode();
     }
 
@@ -143,10 +135,10 @@ void VesselClass::AI()
     if (What_Type() == VESSEL_CARRIER) {
         if (m_Cargo.Cargo_Count()) {
             if (m_field_145.Expired()) {
-                // TODO
-                for ( ObjectClass *cargoptr = m_Cargo.Attached_Object(); cargoptr != nullptr; cargoptr = cargoptr->Get_Next().Get_Pointer() ) {
+                m_field_145 = 900 * Rule.Reload_Rate();
+                for (ObjectClass *optr = m_Cargo.Attached_Object(); optr != nullptr; optr = optr->Get_Next()) {
                     target_t tmptarget = 0;
-                    cargoptr->Receive_Message(this, RADIO_RELOAD, tmptarget);
+                    optr->Receive_Message(this, RADIO_RELOAD, tmptarget);
                 }
             }
         }
@@ -155,12 +147,10 @@ void VesselClass::AI()
     DriveClass::AI();
 
     if (m_IsActive) {
-
         Rotation_AI();
         Combat_AI();
 
         if (!Edge_Of_World_AI()) {
-
             if (Class_Of().Max_Passengers() > 0 && !m_Door.Is_Closed() && Get_Mission() != MISSION_UNLOAD
                 && Transmit_Message(RADIO_NEED_A_LIFT) != RADIO_ROGER) {
                 if (m_TransportDoorTimer.Expired()) {
@@ -174,9 +164,7 @@ void VesselClass::AI()
 
             Repair_AI();
         }
-
-    }*/
-#endif
+    }
 }
 
 ActionType VesselClass::What_Action(ObjectClass *object) const
@@ -192,33 +180,29 @@ ActionType VesselClass::What_Action(ObjectClass *object) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 ActionType VesselClass::What_Action(cell_t cellnum) const
 {
-    DEBUG_ASSERT(m_IsActive);
-
-#ifdef GAME_DLL
-    ActionType (*func)(const VesselClass *, cell_t) = reinterpret_cast<ActionType (*)(const VesselClass *, cell_t)>(0x0058AAA0);
-    return func(this, cellnum);
-#else
     ActionType action = DriveClass::What_Action(cellnum);
-
-    if (action != ACTION_NO_MOVE || Map[cellnum].Get_Land() != LAND_BEACH) {
-        if (action == ACTION_NO_MOVE) {
-            if (Is_Weapon_Equipped()) {
-                if (Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY)->Get_Projectile()->Is_UnderWater()
-                    && Map[cellnum].Is_Bridge_Here()) {
-                    return ACTION_ATTACK;
-                }
-            }
+    if (action == ACTION_NO_MOVE) {
+        if (Map[cellnum].Get_Land() == LAND_BEACH) {
+            return ACTION_MOVE;
         }
-
-        return action;
+        if (Is_Weapon_Equipped() && Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY)->Get_Projectile()->Is_UnderWater()
+            && Map[cellnum].Is_Bridge_Here()) {
+            return ACTION_ATTACK;
+        }
     }
-
-    return ACTION_MOVE;
-#endif
+    return action;  
 }
 
+/**
+ *
+ *
+ */
 coord_t VesselClass::Fire_Coord(WeaponSlotType weapon) const
 {
     DEBUG_ASSERT(m_IsActive);
@@ -287,17 +271,24 @@ void VesselClass::Draw_It(int x, int y, WindowNumberType window) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 void VesselClass::Active_Click_With(ActionType action, ObjectClass *object)
 {
-    DEBUG_ASSERT(m_IsActive);
-
-    if (What_Action(object) == ACTION_ENTER) {
+    action = What_Action(object);
+    if (action == ACTION_ENTER) {
         DriveClass::Active_Click_With(ACTION_MOVE, object);
     } else {
         DriveClass::Active_Click_With(action, object);
     }
 }
 
+/**
+ *
+ *
+ */
 void VesselClass::Active_Click_With(ActionType action, cell_t cellnum)
 {
     DEBUG_ASSERT(m_IsActive);
@@ -369,6 +360,10 @@ int VesselClass::Mission_Unload()
 #endif
 }
 
+/**
+ *
+ *
+ */
 DirType VesselClass::Turret_Facing() const
 {
     DEBUG_ASSERT(m_IsActive);
@@ -389,6 +384,10 @@ DirType VesselClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) cons
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL VesselClass::Is_Allowed_To_Recloak() const
 {
     DEBUG_ASSERT(m_IsActive);
@@ -422,29 +421,55 @@ target_t VesselClass::Greatest_Threat(ThreatType threat)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BulletClass *VesselClass::Fire_At(target_t target, WeaponSlotType weapon)
 {
-    DEBUG_ASSERT(m_IsActive);
-
-#ifdef GAME_DLL
-    BulletClass *(*func)(VesselClass *, target_t, WeaponSlotType) = reinterpret_cast<BulletClass * (*)(VesselClass *, target_t, WeaponSlotType)>(0x0058D498);
-    return func(this, target, weapon);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-    return nullptr;
-#endif
+    if (What_Type() == VESSEL_CARRIER) {
+        m_RearmTimer = Rule.Carrier_Launch_Delay();
+        FootClass *fptr = m_Cargo.Detach_Object();
+        if (fptr != nullptr) {
+            ++ScenarioInit;
+            fptr->Unlimbo(Center_Coord());
+            --ScenarioInit;
+            fptr->Assign_Mission(MISSION_ATTACK);
+            fptr->Assign_Target(m_TarCom);
+            fptr->Commence();
+            if (m_Cargo.Cargo_Count() == 0) {
+                Assign_Target(0);
+            }
+        }
+        return nullptr;
+    }
+    return DriveClass::Fire_At(target, weapon);
 }
 
+/**
+ *
+ *
+ */
 void VesselClass::Assign_Destination(target_t dest)
 {
-    DEBUG_ASSERT(m_IsActive);
+    if (dest != m_NavCom) {
+        if (m_Radio != nullptr) {
+            if (Class_Of().Max_Passengers() > 0 && m_Radio->What_Am_I() == RTTI_INFANTRY
+                || m_Radio->What_Am_I() == RTTI_UNIT) {
+                target_t dest = 0;
+                Transmit_Message(RADIO_MOVE_TO_LOCATION, dest);
+                Transmit_Message(RADIO_OVER_AND_OUT);
+                if (!m_Door.Is_Closed()) {
+                    Transport_Close_Door();
+                }
+            }
+        }
 
-#ifdef GAME_DLL
-    void (*func)(VesselClass *, target_t) = reinterpret_cast<void (*)(VesselClass *, target_t)>(0x0058C654);
-    return func(this, dest);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-#endif
+        if (!m_Door.Is_Closed()) {
+            Transport_Close_Door();
+        }
+        DriveClass::Assign_Destination(dest);
+    }
 }
 
 void VesselClass::Enter_Idle_Mode(BOOL a1)
@@ -459,22 +484,23 @@ void VesselClass::Enter_Idle_Mode(BOOL a1)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL VesselClass::Start_Driver(coord_t &dest)
 {
-    DEBUG_ASSERT(m_IsActive);
-
-#ifdef GAME_DLL
-    BOOL (*func)(VesselClass *, coord_t &) = reinterpret_cast<BOOL (*)(VesselClass *, coord_t &)>(0x0058CC9C);
-    return func(this, dest);
-#else
     if (DriveClass::Start_Driver(dest) && m_IsActive) {
         Mark_Track(dest, MARK_PUT);
         return true;
     }
     return false;
-#endif
 }
 
+/**
+ *
+ *
+ */
 int VesselClass::Shape_Number() const
 {
     int frame = 0;
@@ -555,31 +581,27 @@ void VesselClass::Repair_AI()
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL VesselClass::Edge_Of_World_AI()
 {
-    DEBUG_ASSERT(m_IsActive);
-
-#ifdef GAME_DLL
-    BOOL (*func)(VesselClass *) = reinterpret_cast<BOOL (*)(VesselClass *)>(0x0058D14C);
-    return func(this);
-#else
-    if (m_Moving || Map.In_Radar(Get_Cell()) || !m_LockedOnMap) {
-        return false;
+    if (!m_Moving && !Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
+        if (m_Team != nullptr) {
+            m_Team->Set_Bit2_4(true);
+        }
+        Stun();
+        delete this;
+        return true;
     }
-
-    // TODO: Requires TeamClass.
-    /*if (m_Team != nullptr) {
-        m_Team->Bit2_4 = true;
-    }*/
-
-    Stun();
-
-    delete this;
-
-    return true;
-#endif
+    return false;
 }
 
+/**
+ *
+ *
+ */
 void VesselClass::Transport_Open_Door()
 {
     DEBUG_ASSERT(m_IsActive);
@@ -589,6 +611,10 @@ void VesselClass::Transport_Open_Door()
     }
 }
 
+/**
+ *
+ *
+ */
 void VesselClass::Transport_Close_Door()
 {
     DEBUG_ASSERT(m_IsActive);
@@ -623,16 +649,16 @@ void VesselClass::Write_INI(GameINIClass &ini)
                 // Format.
                 // [HousesType],[VesselType],[Health],[CellNum],[DirType],[MissionType],[Trigger]
                 snprintf(valuebuff,
-                         sizeof(valuebuff),
-                         "%s,%s,%d,%u,%d,%s,%s",
-                         thisptr->m_OwnerHouse->Get_Name(),
-                         thisptr->Name(),
-                         thisptr->Health_Ratio() * 256,
-                         thisptr->Get_Cell(),
-                         thisptr->m_Facing.Get_Current(),
-                         MissionClass::Name_From(thisptr->Get_Mission()),
-                         ""//(thisptr->m_AttachedTrigger->Name()) // TODO: Requires TriggerClass.
-                         );
+                    sizeof(valuebuff),
+                    "%s,%s,%d,%u,%d,%s,%s",
+                    thisptr->m_OwnerHouse->Get_Name(),
+                    thisptr->Name(),
+                    thisptr->Health_Ratio() * 256,
+                    thisptr->Get_Cell(),
+                    thisptr->m_Facing.Get_Current(),
+                    MissionClass::Name_From(thisptr->Get_Mission()),
+                    "" //(thisptr->m_AttachedTrigger->Name()) // TODO: Requires TriggerClass.
+                );
                 ini.Put_String("SHIPS", entrybuff, valuebuff);
             }
         }

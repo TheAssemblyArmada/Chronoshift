@@ -171,7 +171,7 @@ public:
     bool Player_Auto_Crush() const { return m_PlayerAutoCrush; }
     bool Player_Return_Fire() const { return m_PlayerReturnFire; }
     bool Player_Scatter() const { return m_PlayerScatter; }
-    bool Chrono_Kill_Cargo() const { return m_ChronoKillCargo; }
+    bool Chrono_Kills_Cargo() const { return m_ChronoKillCargo; }
     bool Secret_Units_Enabled() const { return m_SecretUnitsEnabled; }
     bool New_Units_Enabled() const { return m_NewUnitsEnabled; }
     const fixed_t &Prone_Damage() const { return m_ProneDamage; }

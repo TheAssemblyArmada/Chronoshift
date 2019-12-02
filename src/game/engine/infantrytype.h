@@ -41,7 +41,7 @@ enum InfantryType
     INFANTRY_C4,
     INFANTRY_C5,
     INFANTRY_C6,
-    INFANTRY_C7,
+    INFANTRY_C7, // Technician
     INFANTRY_C8,
     INFANTRY_C9,
     INFANTRY_C10,

@@ -82,6 +82,9 @@ void *g_TurretShapes = nullptr;
 void *g_SamShapes = nullptr;
 void *g_MGunShapes = nullptr;
 const char *g_TutorialText[TUTORIAL_TEXT_COUNT];
+BOOL g_FormMove = false;
+SpeedType g_FormSpeed = SPEED_NONE;
+MPHType g_FormMaxSpeed = MPH_MAX;
 
 BOOL g_Debug_MotionCapture = false;
 BOOL g_Debug_Rotate = false;

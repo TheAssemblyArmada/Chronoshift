@@ -141,7 +141,8 @@ private:
     // This only seems to be used by DisplayClass, so made it a static helper of this class.
     static int __cdecl Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, int clip_h);
     void Check_Proximity(ObjectTypeClass *object, HousesType house, cell_t cell, int &passes, bool &outside_radar) const;
-  
+    BOOL Is_Spot_Free(coord_t coord) const;
+
  protected:
     coord_t m_DisplayPos; // Coord of top left of tactical display within the map.
     lepton_t m_DisplayWidth; // Width of display in leptons.

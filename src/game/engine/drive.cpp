@@ -14,10 +14,13 @@
  *            LICENSE
  */
 #include "drive.h"
-#include "scenario.h"
-#include "globals.h"
-#include "target.h"
 #include "gametypes.h"
+#include "globals.h"
+#include "iomap.h"
+#include "rules.h"
+#include "scenario.h"
+#include "target.h"
+#include "unit.h"
 #include "voc.h"
 
 DriveClass::DriveClass(RTTIType type, int id, HousesType house) :
@@ -113,49 +116,46 @@ void DriveClass::Per_Cell_Process(PCPType pcp)
 //#endif
 }
 
+/**
+ *
+ *
+ */
 void DriveClass::Response_Select()
 {
-/*#ifdef GAME_DLL
-    void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x00423154);
-    func(this);
-#else*/
     static VocType _response[] = {
         VOC_VEHIC1, VOC_REPORT1, VOC_YESSIR1, VOC_AWAIT1
     };
     if (g_AllowVoice) {
         Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
-//#endif
 }
 
+/**
+ *
+ *
+ */
 void DriveClass::Response_Move()
 {
-/*#ifdef GAME_DLL
-    void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x004230FC);
-    func(this);
-#else*/
     static VocType _response[] = {
         VOC_ACKNO, VOC_AFFIRM1
     };
     if (g_AllowVoice) {
         Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
-//#endif
 }
 
+/**
+ *
+ *
+ */
 void DriveClass::Response_Attack()
 {
-    /*#ifdef GAME_DLL
-    void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x004230A4);
-    func(this);
-#else*/
     static VocType _response[] = {
         VOC_AFFIRM1, VOC_ACKNO
     };
     if (g_AllowVoice) {
         Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
-//#endif
 }
 
 void DriveClass::Assign_Destination(target_t dest)
@@ -168,12 +168,12 @@ void DriveClass::Assign_Destination(target_t dest)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL DriveClass::Stop_Driver()
 {
-/*#ifdef GAME_DLL
-    BOOL (*func)(DriveClass *) = reinterpret_cast<BOOL (*)(DriveClass *)>(0x004B64B8);
-    return func(this);
-#else*/
     if (m_HeadTo) {
         if (m_IsDown) {
             Mark(MARK_REMOVE);
@@ -184,7 +184,6 @@ BOOL DriveClass::Stop_Driver()
         }
     }
     return FootClass::Stop_Driver();
-//#endif
 }
 
 void DriveClass::Fixup_Path(PathType *path)
@@ -228,15 +227,46 @@ void DriveClass::Do_Turn(DirType dir)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL DriveClass::Teleport_To(cell_t cell)
 {
-#ifdef GAME_DLL
-    BOOL (*func)(DriveClass *, short) = reinterpret_cast<BOOL (*)(DriveClass *, cell_t)>(0x004B653C);
-    return func(this, cell);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
-    return false;
-#endif
+    DEBUG_ASSERT(Valid_Cell(cell));
+
+    if (Rule.Chrono_Kills_Cargo()) {
+        Kill_Cargo(nullptr);
+    }
+    Stop_Driver();
+
+    Force_Track(-1, 0);
+
+    m_Facing.Set_Current(m_Facing.Get_Desired());
+
+    Transmit_Message(RADIO_OVER_AND_OUT);
+
+    Assign_Destination(0);
+    Assign_Target(0);
+
+    Assign_Mission(MISSION_NONE);
+    Commence();
+
+    Mark(MARK_REMOVE);
+
+    UnitClass *uptr = reinterpret_cast<UnitClass *>(this);
+    if (m_RTTI == RTTI_UNIT && uptr->Flag_Owner() != HOUSES_NONE) {
+        // needs used housetype member verification
+        HouseClass::As_Pointer(uptr->Flag_Owner())->Flag_Attach(Get_Cell());
+    }
+    if (Can_Enter_Cell(cell)) {
+        // needs speed access verification
+        cell = Map.Nearby_Location(cell, Techno_Class_Of().Get_Speed());
+    }
+    // set coord code needs verification
+    m_Coord = Cell_To_Coord(cell);
+    Mark(MARK_PUT);
+    return true;
 }
 
 void DriveClass::Force_Track(int track, coord_t coord)

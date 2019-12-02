@@ -81,23 +81,50 @@ public:
     virtual void Overrun_Cell(cell_t cell, int a2) override;
     virtual BOOL Ok_To_Move(DirType dir) override;
 
+    BOOL Edge_Of_World_AI();
+    BOOL Flag_Attach(HousesType house);
+    BOOL Flag_Remove();
+    void APC_Close_Door();
+    void APC_Open_Door();
+    int Credit_Load();
+    BOOL Ore_Check(short &cellnum, int a2, int a3);
+    BOOL Goto_Ore(int scan_radius);
+
     UnitType What_Type() const { return m_Class->What_Type(); }
+
+    HousesType Flag_Owner() const { return m_FlagOwner; }
+
+#ifdef GAME_DLL
+    friend void Setup_Hooks();
+
+public:
+    void Hook_Active_Click_With_Obj(ActionType action, ObjectClass *object)
+    {
+        UnitClass::Active_Click_With(action, object);
+    }
+    void Hook_Active_Click_With_Cell(ActionType action, cell_t cellnum)
+    {
+        UnitClass::Active_Click_With(action, cellnum);
+    }
+    InfantryType Hook_Crew_Type()
+    {
+        return UnitClass::Crew_Type();
+    }
+#endif
 
 private:
     GamePtr<UnitTypeClass> m_Class;
     HousesType m_FlagOwner;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Bit1 : 1; // 1
-    BOOL m_Bit2 : 1; // 2
-    BOOL m_Bit4 : 1; // 4
-    BOOL m_Bit8 : 1; // 8
-    BOOL m_Bit16 : 1; // 16
+    BOOL m_IsDumping : 1; // 1
+    int m_Gold : 5; // 2
+    int m_Gems : 5;
+    BOOL m_ToScatter : 1;
 #else
-    bool m_Bit1;
-    bool m_Bit2;
-    bool m_Bit4;
-    bool m_Bit8;
-    bool m_Bit16;
+    bool m_IsDumping;
+    int m_Gold;
+    int m_Gems;
+    bool m_ToScatter;
 #endif
     unsigned int m_BailCount;
     unsigned int m_GapGenCellTracker;

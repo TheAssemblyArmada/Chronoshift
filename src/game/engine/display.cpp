@@ -2826,3 +2826,15 @@ void DisplayClass::Reset_Pending_Object()
     m_PendingObjectOwner = HOUSES_NONE;
     m_PendingSuper = SPECIAL_NONE;
 }
+
+/**
+ *
+ *
+ */
+BOOL DisplayClass::Is_Spot_Free(coord_t coord) const
+{
+    if (coord & 0x80008000) {
+        return false;
+    }
+    return Map[Coord_To_Cell(coord)].Is_Spot_Free(CellClass::Spot_Index(coord));
+}

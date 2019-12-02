@@ -136,14 +136,25 @@ ActionType AircraftClass::What_Action(ObjectClass *object) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 ActionType AircraftClass::What_Action(cell_t cellnum) const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00420588, ActionType, const AircraftClass *, cell_t);
-    return func(this, cellnum);
-#else
-    return ACTION_NONE;
-#endif
+    ActionType action = FootClass::What_Action(cellnum);
+    if (action == ACTION_MOVE) {
+        return ACTION_NO_MOVE;
+    }
+    if (action == ACTION_ATTACK) {
+        if (Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr) {
+            return ACTION_NONE;
+        }
+    }
+    if (Class_Of().Is_Airplane() && action == ACTION_MOVE) {
+        return ACTION_NO_MOVE;
+    }
+    return action;
 }
 
 LayerType AircraftClass::In_Which_Layer() const
@@ -232,7 +243,7 @@ void AircraftClass::Draw_It(int x, int y, WindowNumberType window) const
                 SHAPE_PREDATOR | SHAPE_FADING | SHAPE_CENTER | SHAPE_VIEWPORT_REL,
                 DisplayClass::FadingShade);
         }
-        Techno_Draw_Object(image, frame, x, jitter + y, window, rot, 256);
+        Techno_Draw_Object(image, frame, x, jitter + y, window, rot);
 
         if (m_Class->Has_Rotors()) {
             Draw_Rotors(x, jitter + y, window);
@@ -763,4 +774,19 @@ BOOL AircraftClass::Is_LZ_Clear(target_t lzone)
         return Radio_Valid() && m_Radio == optr;
     }
     return Map[cell].Is_Clear_To_Move(SPEED_TRACK);
+}
+
+/**
+ *
+ *
+ */
+DirType AircraftClass::Pose_Dir() const
+{
+    if (What_Type() == AIRCRAFT_TRANSPORT) {
+        return DIR_NORTH;
+    }
+    if (Class_Of().Is_Airplane()){
+        return DIR_EAST;
+    }
+    return DIR_NORTH_EAST;
 }

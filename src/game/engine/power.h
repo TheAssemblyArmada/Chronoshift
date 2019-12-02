@@ -52,6 +52,8 @@ public:
     int Power_Height(int power);
     void Flash_Power();
 
+    void Flag_Power_To_Redraw() { m_PowerToRedraw = true; }
+
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_PowerToRedraw : 1; // 1

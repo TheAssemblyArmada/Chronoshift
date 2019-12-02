@@ -230,6 +230,10 @@ public:
     int Adjacency() const { return m_Adjacency; }
     void Init_Anim(BStateType bstate, int start_frame, int frame_count, int delay);
 
+    int Power_Output() const { return m_Power; }
+    int Power_Drain() const { return m_Drain; }
+    int Storage_Capacity() const { return m_Storage; }
+
     static void One_Time();
     static BuildingTypeClass &As_Reference(BuildingType type);
     static BuildingTypeClass *As_Pointer(BuildingType type);
@@ -278,6 +282,7 @@ private:
     const int16_t *m_OverlapList;
     void *m_BuildupData;
 
+public:
 #ifdef GAME_DLL
     static void *&g_WarFactoryOverlay;
     static void *&g_LightningShapes;

@@ -91,6 +91,32 @@ class VesselClass : public DriveClass
 
     static void Init();
 
+#ifdef GAME_DLL
+    friend void Setup_Hooks();
+
+public:
+    coord_t Hook_Fire_Coord(WeaponSlotType weapon)
+    {
+        return VesselClass::Fire_Coord(weapon);
+    }
+    void Hook_Active_Click_With_Obj(ActionType action, ObjectClass *object)
+    {
+        VesselClass::Active_Click_With(action, object);
+    }
+    void Hook_Active_Click_With_Cell(ActionType action, cell_t cellnum)
+    {
+        VesselClass::Active_Click_With(action, cellnum);
+    }
+    DirType Hook_Turret_Facing()
+    {
+        return VesselClass::Turret_Facing();
+    }
+    BOOL Hook_Is_Allowed_To_Recloak()
+    {
+        return VesselClass::Is_Allowed_To_Recloak();
+    }
+#endif
+
 private:
     GamePtr<VesselTypeClass> m_Class;
 #ifndef CHRONOSHIFT_NO_BITFIELDS

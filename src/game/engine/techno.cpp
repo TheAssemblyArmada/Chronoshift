@@ -18,16 +18,21 @@
 #include "coord.h"
 #include "display.h"
 #include "drawshape.h"
+#include "foot.h"
+#include "gameoptions.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "house.h"
-#include "remap.h"
 #include "infantrytype.h"
 #include "iomap.h"
+#include "keyboard.h"
+#include "queue.h"
+#include "remap.h"
 #include "rules.h"
-#include "weapontype.h"
-#include "special.h"
 #include "scenario.h"
+#include "special.h"
+#include "target.h"
+#include "weapontype.h"
 #include <algorithm>
 
 using std::min;
@@ -234,14 +239,43 @@ BOOL TechnoClass::Can_Player_Move() const
     return m_OwnerHouse->Player_Has_Control();
 }
 
+/**
+ *
+ *
+ */
 coord_t TechnoClass::Fire_Coord(WeaponSlotType weapon) const
 {
-    return coord_t();
+    DirType dir = Turret_Facing();
+
+    int x, y, z;
+    Techno_Class_Of().Get_Fire_Offsets(weapon, x, y, z);
+    z += m_Height;
+
+    coord_t coord = Coord_Move(Center_Coord(), DIR_NORTH, z);
+
+    if (m_Bit2_16) {
+        coord = Coord_Move(coord, dir + 64, y);
+    } else {
+        coord = Coord_Move(coord, dir - 64, y);
+    }
+
+    return Coord_Move(coord, dir, x);
 }
 
+/**
+ *
+ *
+ */
 BOOL TechnoClass::Unlimbo(coord_t coord, DirType dir)
 {
-    return 0;
+    if (!RadioClass::Unlimbo(coord, dir)) {
+        return false;
+    }
+    m_Facing = dir;
+    Enter_Idle_Mode(true);
+    Commence();
+    m_LockedOnMap = Map.In_Radar(Get_Cell());
+    return true;
 }
 
 /**
@@ -499,12 +533,22 @@ int TechnoClass::Weapon_Range(WeaponSlotType weapon) const
 
 DamageResultType TechnoClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00566438, DamageResultType, TechnoClass *, int &, int, WarheadType, TechnoClass *, BOOL);
+    return func(this, damage, a2, warhead, object, a5);
+#else
     return DamageResultType();
+#endif
 }
 
 int TechnoClass::Value() const
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x0056756C, int, const TechnoClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 /**
@@ -529,12 +573,53 @@ void TechnoClass::Per_Cell_Process(PCPType pcp)
 
 RadioMessageType TechnoClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005614C0, RadioMessageType, TechnoClass *, RadioClass *, RadioMessageType, target_t &);
+    return func(this, radio, message, target);
+#else
     return RadioMessageType();
+#endif
 }
 
+/**
+ *
+ *
+ */
 BOOL TechnoClass::Revealed(HouseClass *house)
 {
-    return 0;
+    if (house == g_PlayerPtr && m_PlayerAware) {
+        return false;
+    }
+
+    if (house != g_PlayerPtr) {
+        if (m_AIAware) {
+            return false;
+        }
+        m_AIAware = true;
+    }
+
+    if (!RadioClass::Revealed(house)) {
+        return false;
+    }
+
+    if (!house->Is_Human() && Mission == MISSION_AMBUSH) {
+        Assign_Mission(MISSION_HUNT);
+    }
+
+    if (house == g_PlayerPtr) {
+        m_PlayerAware = true;
+        if (!m_PlayerOwned) {
+            if (ScenarioInit == 0 && m_AttachedTrigger != nullptr) {
+                m_AttachedTrigger->Spring(TEVENT_DISCOVERED_BY_PLAYER, this);
+            }
+            m_OwnerHouse->Set_Discovered(true);
+            return true;
+        }
+        Look();
+        return true;
+    }
+    m_AIAware = true;
+    return true;
 }
 
 /**
@@ -642,9 +727,25 @@ DirType TechnoClass::Fire_Direction() const
     return Turret_Facing();
 }
 
+/**
+ *
+ *
+ */
 InfantryType TechnoClass::Crew_Type() const
 {
-    return InfantryType();
+    if (!Techno_Class_Of().Is_Crewed()) {
+        return INFANTRY_NONE;
+    }
+    if (m_OwnerHouse->Acts_Like() == HOUSES_NEUTRAL) {
+        return (InfantryType)Scen.Get_Random_Value(INFANTRY_C1, INFANTRY_C9);
+    }
+    if (Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr && Scen.Get_Random_Value(0, 99) < 50){
+        if (Scen.Get_Random_Value(0, 99) < 50) {
+            return INFANTRY_C1;
+        }
+        return INFANTRY_C7;
+    }
+    return INFANTRY_E1;
 }
 
 /**
@@ -667,9 +768,20 @@ BOOL TechnoClass::Is_Weapon_Equipped() const
     return Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) != nullptr;
 }
 
-int TechnoClass::Rearm_Delay(int a1, int a2) const
+/**
+ *
+ *
+ */
+int TechnoClass::Rearm_Delay(BOOL a1, WeaponSlotType weapon) const
 {
-    return 0;
+    if (m_RTTI == RTTI_BUILDING && m_Ammo > 1) {
+        return 1;
+    }
+    WeaponTypeClass *wptr = Techno_Class_Of().Get_Weapon(weapon);
+    if (a1 && wptr != nullptr) {
+        return m_OwnerHouse->Get_ROF_Multiplier() * wptr->Get_ROF();
+    }
+    return 3;
 }
 
 int TechnoClass::Refund_Amount() const
@@ -712,8 +824,28 @@ void TechnoClass::Response_Attack()
     //empty
 }
 
+/**
+ *
+ *
+ */
 void TechnoClass::Player_Assign_Mission(MissionType mission, target_t target, target_t dest)
 {
+    if (g_AllowVoice) {
+        if (mission == MISSION_ATTACK) {
+            Response_Attack();
+        } else {
+            Response_Move();
+        }
+    }
+    if (g_FormMove) {
+        Queue_Mission_Formation(TargetClass(this), mission, target, dest, g_FormSpeed, g_FormMaxSpeed);
+    } else {
+        if (mission == MISSION_MOVE && g_keyboard->Down(Options.Get_KeyQueueMove1())
+            || g_keyboard->Down(Options.Get_KeyQueueMove1())) {
+            mission = MISSION_QMOVE;
+        }
+        Queue_Mission(TargetClass(this), mission, target, dest);
+    }
 }
 
 /**
@@ -726,9 +858,24 @@ int TechnoClass::Made_A_Kill()
     return ++m_KillCount;
 }
 
+/**
+ *
+ *
+ */
 BOOL TechnoClass::Target_Something_Nearby(ThreatType threat)
 {
-    return 0;
+    threat = threat & (THREAT_2 | THREAT_1);
+    if (Target_Legal(m_TarCom)) {
+        if (threat & THREAT_1) {
+            if (In_Range(What_Weapon_Should_I_Use(m_TarCom))) {
+                Assign_Target(0);
+            }
+        }
+    }
+    if (!Target_Legal(m_TarCom)) {
+        Assign_Target(Greatest_Threat(threat));
+    }
+    return Target_Legal(m_TarCom);
 }
 
 /**
@@ -767,21 +914,40 @@ target_t TechnoClass::Greatest_Threat(ThreatType threat)
 
 void TechnoClass::Assign_Target(target_t target)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00564F98, void, TechnoClass *, target_t);
+    func(this, target);
+#endif
 }
 
 BulletClass *TechnoClass::Fire_At(target_t target, WeaponSlotType weapon)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005652F8, BulletClass *, TechnoClass *, target_t, WeaponSlotType);
+    return func(this, target, weapon);
+#else
     return nullptr;
+#endif
 }
 
 BOOL TechnoClass::Captured(HouseClass *house)
 {
-    return 0;
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00566290, BOOL, TechnoClass *, HouseClass *);
+    return func(this, house);
+#else
+    return false;
+#endif
 }
 
 BOOL TechnoClass::Electric_Zap(target_t target, BOOL a2, coord_t a3, uint8_t *a4)
 {
-    return 0;
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005650B0, BOOL, TechnoClass *, target_t, BOOL, coord_t, uint8_t *);
+    return func(this, target, a2, a3, a4);
+#else
+    return false;
+#endif
 }
 
 /**
@@ -813,14 +979,26 @@ uint8_t *TechnoClass::Remap_Table() const
 
 void TechnoClass::Draw_Pips(int x, int y, WindowNumberType window) const
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00568710, void, const TechnoClass *, int, int, WindowNumberType);
+    func(this, x, y, window);
+#endif
 }
 
 void TechnoClass::Do_Uncloak()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00566D88, void, TechnoClass *);
+    func(this);
+#endif
 }
 
 void TechnoClass::Do_Cloak()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00566E34, void, TechnoClass *);
+    func(this);
+#endif
 }
 
 /**
@@ -864,7 +1042,6 @@ void TechnoClass::Enter_Idle_Mode(BOOL a1)
 }
 
 /**
- *
  *
  *
  */
@@ -1108,14 +1285,27 @@ int TechnoClass::Anti_Infantry()
     return effectiveness / 50;
 }
 
+/**
+ *
+ *
+ */
 BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
 {
-#ifdef GAME_DLL
-    BOOL (*func)(const TechnoClass *, cell_t) = reinterpret_cast<BOOL (*)(const TechnoClass *, cell_t)>(0x00560A58);
-    return func(this, cell);
-#else
-    return 0;
-#endif
+    if (m_RTTI == RTTI_INFANTRY){
+        return false;
+    }
+    if (Map.In_Radar(cell)) {
+        if (Map[cell].Get_Overlay() == OVERLAY_FPLS) {
+            return false;
+        }
+        const TechnoTypeClass *ttptr = &Techno_Class_Of();
+        return Map[cell].Is_Clear_To_Move(ttptr->Get_Speed(),
+            true,
+            true,
+            -1,
+            ttptr->Get_Speed() == SPEED_FLOAT ? MZONE_AMPHIBIOUS_DESTROYER : MZONE_NORMAL);
+    }
+    return false;
 }
 
 /**
@@ -1177,4 +1367,75 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
     }
 
     return VISUAL_HIDDEN;
+}
+
+/**
+ *
+ *
+ */
+void TechnoClass::Kill_Cargo(TechnoClass *object)
+{
+    while (m_Cargo.Has_Cargo()) {
+        FootClass *ptr = m_Cargo.Detach_Object();
+        if (ptr != nullptr) {
+            ptr->Record_The_Kill(object);
+            delete ptr;
+        }
+    }
+}
+
+WeaponSlotType TechnoClass::What_Weapon_Should_I_Use(target_t target) const
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00560B14, WeaponSlotType, const TechnoClass *, target_t);
+    return func(this, target);
+#else
+    return WeaponSlotType();
+#endif
+}
+
+/**
+ *
+ *
+ */
+int TechnoClass::Combat_Damage(WeaponSlotType weapon) const
+{
+    const TechnoTypeClass *ttptr = &Techno_Class_Of();
+    int weapons = 0;
+    int damage = 0;
+    WeaponTypeClass *wptr = nullptr;
+    if (weapon == WEAPON_SLOT_PRIMARY || weapon == WEAPON_SLOT_NONE) {
+        wptr = ttptr->Get_Weapon(WEAPON_SLOT_PRIMARY);
+        if (wptr != nullptr) {
+            damage = wptr->Get_Damage();
+            ++weapons;
+        }
+    }
+    if (weapon == WEAPON_SLOT_SECONDARY || weapon == WEAPON_SLOT_NONE) {
+        wptr = ttptr->Get_Weapon(WEAPON_SLOT_SECONDARY);
+        if (wptr != nullptr) {
+            damage += wptr->Get_Damage();
+            ++weapons;
+        }
+    }
+    if (weapons > 1) {
+        return damage / weapons;
+    }
+    return damage;
+}
+
+/**
+ *
+ *
+ */
+cell_t TechnoClass::Nearby_Location(TechnoClass *techno) const
+{
+    const TechnoTypeClass *ttptr = &Techno_Class_Of();
+    SpeedType speed = ttptr->Get_Speed();
+    if (speed == SPEED_WINGED) {
+        speed = SPEED_TRACK;
+    }
+    cell_t cell = Coord_To_Cell(techno != nullptr ? techno->Center_Coord() : Center_Coord());
+    MZoneType mzone = ttptr->Get_Movement_Zone();
+    return Map.Nearby_Location(cell, speed, Map[cell].Get_Zone(mzone), mzone);
 }

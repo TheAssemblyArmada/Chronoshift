@@ -89,6 +89,8 @@ public:
 
     UnitType What_Type() const { return m_Type; }
 
+    BOOL Is_Bit32() const { return m_Bit32; }
+
     static void One_Time();
     static void Init_Heap();
     static UnitTypeClass &As_Reference(UnitType type);
@@ -100,17 +102,18 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_CrateGoodie : 1;
-    BOOL m_Crusher : 1;
-    BOOL m_Harvester : 1;
-    BOOL m_TurretSpins : 1;
-    BOOL m_Bit16 : 1;
-    BOOL m_Bit32 : 1;
-    BOOL m_IsLarge : 1;
-    BOOL m_IsViceroid : 1;
-    BOOL m_IsRadarJammer : 1;
-    BOOL m_IsMobileGapGen : 1;
-    BOOL m_NoMovingFire : 1;
+    BOOL m_CrateGoodie : 1; // 1
+    BOOL m_Crusher : 1; // 2
+    BOOL m_Harvester : 1; // 4
+    BOOL m_TurretSpins : 1; // 8
+    BOOL m_Bit16 : 1; // 16
+    BOOL m_Bit32 : 1; // 32
+    BOOL m_IsLarge : 1; // 64
+    BOOL m_IsViceroid : 1; // 128
+
+    BOOL m_IsRadarJammer : 1; // 1
+    BOOL m_IsMobileGapGen : 1; // 2
+    BOOL m_NoMovingFire : 1; // 4
 #else
     bool m_CrateGoodie;
     bool m_Crusher; // Is this vehicle able to crush infantry (def = false)?
