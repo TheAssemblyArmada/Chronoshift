@@ -20,6 +20,7 @@
 #include "alloc.h"
 #include "anim.h"
 #include "animtype.h"
+#include "audio.h"
 #include "basec.h"
 #include "bfiofile.h"
 #include "bigcheck.h"
@@ -121,6 +122,23 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#define DIRECTSOUND_VERSION 0x0600
+// These includes must not be resorted.
+// clang-format off
+#include <mmsystem.h>
+#include <dsound.h>
+// clang-format on
+
+struct SampleTrackerType;
+
+// Forward declare some internal audio functions.
+BOOL Attempt_Audio_Restore(LPDIRECTSOUNDBUFFER sound_buffer);
+void CALLBACK Sound_Timer_Callback(UINT uID = 0, UINT uMsg = 0, DWORD_PTR dwUser = 0, DWORD_PTR dw1 = 0, DWORD_PTR dw2 = 0);
+int Simple_Copy(void **source, int *ssize, void **alternate, int *altsize, void **dest, int size);
+int Sample_Copy(SampleTrackerType *st, void **source, int *ssize, void **alternate, int *altsize, void *dest, int size,
+    SoundCompressType sound_comp, void *trailer, int16_t *trailersize);
+void Maintenance_Callback();
 
 void Setup_Hooks()
 {
@@ -1185,6 +1203,41 @@ void Setup_Hooks()
     Hook_Function(0x005D8AD8, &ADPCM_Stream_Init);
     Hook_Function(0x005D8B15, &ADPCM_Decompress);
     Hook_Function(0x005E0377, &ADPCM_Decompress); // Optimised for mono 16bit in original code.
+
+    // audio.cpp
+    Hook_Function(0x005D82E8, Init_Locked_Data);
+    Hook_Function(0x005BDE70, File_Callback);
+    Hook_Function(0x005BE170, Stream_Sample_Vol);
+    Hook_Function(0x005BE240, File_Stream_Sample);
+    Hook_Function(0x005BE250, File_Stream_Preload);
+    Hook_Function(0x005BE430, File_Stream_Sample_Vol);
+    Hook_Function(0x005BE560, Sound_Callback);
+    Hook_Function(0x005BE780, Sample_Read);
+    Hook_Function(0x005BE800, Sound_Timer_Callback);
+    Hook_Function(0x005BE830, Sound_Thread);
+    Hook_Function(0x005BE8D0, Set_Primary_Buffer_Format);
+    Hook_Function(0x005BE930, Audio_Init);
+    Hook_Function(0x005BED80, Sound_End);
+    Hook_Function(0x005BEEA0, Stop_Sample);
+    Hook_Function(0x005BEFB0, Sample_Status);
+    Hook_Function(0x005BF050, Is_Sample_Playing);
+    Hook_Function(0x005BF0A0, Stop_Sample_Playing);
+    Hook_Function(0x005BF0E0, Get_Free_Sample_Handle);
+    Hook_Function(0x005BF200, Play_Sample);
+    Hook_Function(0x005BF220, Attempt_Audio_Restore);
+    Hook_Function(0x005BF280, Convert_HMI_To_Direct_Sound_Volume);
+    Hook_Function(0x005BF2E0, Play_Sample_Handle);
+    Hook_Function(0x005BF8E0, Restore_Sound_Buffers);
+    Hook_Function(0x005BF920, Set_Sound_Vol);
+    Hook_Function(0x005BF940, Set_Score_Vol);
+    Hook_Function(0x005BF9B0, Fade_Sample);
+    Hook_Function(0x005BFA70, Start_Primary_Sound_Buffer);
+    Hook_Function(0x005BFAE0, Stop_Primary_Sound_Buffer);
+    Hook_Function(0x005BFB30, Suspend_Audio_Thread);
+    Hook_Function(0x005BFB60, Resume_Audio_Thread);
+    Hook_Function(0x005D8360, Simple_Copy);
+    Hook_Function(0x005D8440, Sample_Copy);
+    Hook_Function(0x005D8670, Maintenance_Callback);
 #endif
 }
 
@@ -1269,6 +1322,9 @@ ASSERT_SIZEOF(VesselClass, 0x178);
 ASSERT_SIZEOF(VesselTypeClass, 0x19E);
 ASSERT_SIZEOF(WarheadTypeClass, 0x22);
 ASSERT_SIZEOF(WeaponTypeClass, 0x26);
+ASSERT_SIZEOF(ADPCMStreamType, 0x3C);
+//ASSERT_SIZEOF(SampleTrackerType, 0xEF);
+//ASSERT_SIZEOF(LockedDataType, 0x4CD);
 //
 #pragma message("Done Checking Type Sizes!")
 #endif

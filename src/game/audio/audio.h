@@ -1,113 +1,99 @@
+/**
+ * @file
+ *
+ * @author CCHyper
+ * @author OmniBlade
+ * @author tomsons26
+ *
+ * @brief Game audio engine.
+ *
+ * @copyright Chronoshift is free software: you can redistribute it and/or
+ *            modify it under the terms of the GNU General Public License
+ *            as published by the Free Software Foundation, either version
+ *            2 of the License, or (at your option) any later version.
+ *            A full copy of the GNU General Public License can be found in
+ *            LICENSE
+ */
 #pragma once
 
 #ifndef AUDIO_H
 #define AUDIO_H
 
 #include "always.h"
+#include "adpcm.h"
+#include "gamefile.h"
 
 #define PAN_LEFT 32767
 #define PAN_CENTER 0
 #define PAN_RIGHT -32767
 
-enum {
+enum
+{
     INVALID_AUDIO_HANDLE = -1,
 };
 
-inline void Sound_Callback()
+#pragma pack(push, 1)
+struct AUDHeaderStruct
 {
-#ifdef GAME_DLL
-    void (*call_Sound_Callback)() = reinterpret_cast<void (*)()>(0x005BE560);
-    call_Sound_Callback();
-#endif
-}
+    uint16_t m_Rate; // Frequency rate of the sound data
+    uint32_t m_Size; // Size of the packed data in the file, filesize - header
+    uint32_t m_UncompSize; // Size of the uncompressed stream
+    uint8_t m_Flags; // see SChannelFlag.
+    uint8_t m_Compression; // see SCompressType.
+};
 
-inline void Set_Score_Vol(int vol)
+struct AUDChunkHeaderStruct
 {
-#ifdef GAME_DLL
-    void (*call_set_Score)(int) = reinterpret_cast<void (*)(int)>(0x005BF940);
-    call_set_Score(vol);
-#endif
-}
+    uint16_t m_Size; // Size of the chunk
+    uint16_t m_OutSize; // Decompressed size of the chunk data
+    uint32_t m_MagicID; // In little endian format.
+};
+#pragma pack(pop)
 
-inline void Stop_Sample(int sample)
+enum SoundCompressType
 {
-#ifdef GAME_DLL
-    void (*call_Stop_Sample)(int) = reinterpret_cast<void (*)(int)>(0x005BEEA0);
-    call_Stop_Sample(sample);
-#endif
-}
+    COMP_NONE = 0,
+    COMP_ZAP = 1,
+    COMP_ADPCM = 99
+};
 
-inline void Fade_Sample(int sample, int fade)
-{
-#ifdef GAME_DLL
-    void (*call_Fade_Sample)(int, int) = reinterpret_cast<void (*)(int, int)>(0x005BF9B0);
-    call_Fade_Sample(sample, fade);
-#endif
-}
+typedef void (*AudioFocusCallback)();
+typedef BOOL (*AudioStreamCallback)(int16_t, int16_t *, void **, int *);
 
-inline int Sample_Status(int sample)
-{
-#ifdef GAME_DLL
-    int (*call_Sample_Status)(int) = reinterpret_cast<int (*)(int)>(0x005BEFB0);
-    return call_Sample_Status(sample);
-#else
-    return 0;
-#endif
-}
-
-inline int File_Stream_Sample_Vol(const char *name, int vol, BOOL unk)
-{
-#ifdef GAME_DLL
-    int (*call_File_Stream_Sample_Vol)(const char *, int, BOOL) =
-        reinterpret_cast<int (*)(const char *, int, BOOL)>(0x005BE430);
-    return call_File_Stream_Sample_Vol(name, vol, unk);
-#else
-    return 0;
-#endif
-}
-
-inline void Stop_Primary_Sound_Buffer()
-{
-#ifdef GAME_DLL
-    void (*func)() = reinterpret_cast<void (*)()>(0x005BFAE0);
-    func();
-#endif
-}
-
-inline void Start_Primary_Sound_Buffer(BOOL unk)
-{
-#ifdef GAME_DLL
-    void (*func)(BOOL) = reinterpret_cast<void (*)(BOOL)>(0x005BFA70);
-    func(unk);
-#endif
-}
-
-inline BOOL Audio_Init(void *unk1, int unk2, int unk3, int unk4, int unk5)
-{
-#ifdef GAME_DLL
-    BOOL (*func)(void *, int, int, int, int) = reinterpret_cast<BOOL (*)(void *, int, int, int, int)>(0x005BE930);
-    return func(unk1, unk2, unk3, unk4, unk5);
-#else
-    return false;
-#endif
-}
-
-inline void Sound_End()
-{
-#ifdef GAME_DLL
-    void (*func)() = reinterpret_cast<void (*)()>(0x005BED80);
-    func();
-#endif
-}
-
-inline int Play_Sample(void *sample, int priority, int volume, short panloc)
-{
-#ifdef GAME_DLL
-    int (*func)(void *, int, int, short) = reinterpret_cast<int (*)(void *, int, int, short)>(0x005BF200);
-    return func(sample, priority, volume, panloc);
-#else
-    return 0;
-#endif
-}
+void Init_Locked_Data();
+BOOL File_Callback(int16_t id, int16_t *odd, void **buffer, int *size);
+int __cdecl Stream_Sample_Vol(void *buffer, int size, AudioStreamCallback callback, int volume, int handle);
+int File_Stream_Sample(char const *filename, BOOL real_time_start);
+void File_Stream_Preload(int handle);
+int File_Stream_Sample_Vol(const char *filename, int volume, BOOL real_time_start);
+void Sound_Callback();
+void *Load_Sample(char *filename);
+int Load_Sample_Into_Buffer(char *filename, void *buffer, int size);
+int Sample_Read(int handle, void *buffer, int size);
+void Free_Sample(void *sample);
+void Sound_Thread(void *a1);
+BOOL Set_Primary_Buffer_Format();
+int Print_Sound_Error(char *sound_error, void *window);
+BOOL Audio_Init(void *window, int bits_per_sample, BOOL stereo, int rate, BOOL reverse_channels);
+void Sound_End();
+void Stop_Sample(int index);
+BOOL Sample_Status(int index);
+int Is_Sample_Playing(void *sample);
+void Stop_Sample_Playing(void *sample);
+int Get_Free_Sample_Handle(int priority);
+int Play_Sample(void *sample, int priority, int volume, int16_t panloc);
+int Convert_HMI_To_Direct_Sound_Volume(int vol);
+int Play_Sample_Handle(void *a1, int a2, int a3, int16_t a4, int a5);
+void Restore_Sound_Buffers();
+int Set_Sound_Vol(int vol);
+int Set_Score_Vol(int vol);
+void Fade_Sample(int index, int ticks);
+void Unfade_Sample(int index, int ticks);
+int Get_Digi_Handle();
+unsigned Sample_Length(void *sample);
+int Start_Primary_Sound_Buffer(BOOL forced);
+void Stop_Primary_Sound_Buffer();
+void Suspend_Audio_Thread();
+void Resume_Audio_Thread();
 
 #endif // AUDIO_H

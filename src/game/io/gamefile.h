@@ -67,6 +67,8 @@ private:
     int m_CachePosition;
 };
 
+#define INVALID_FILE_HANDLE -1
+
 // Wrappers for old stype IO.
 int Open_File(const char *filename, int mode);
 void Close_File(int handle);

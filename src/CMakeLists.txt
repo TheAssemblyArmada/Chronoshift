@@ -19,6 +19,7 @@ set(GAMEENGINE_SRC
     game/main.cpp
     game/startup.cpp
     game/audio/adpcm.cpp
+    game/audio/audio.cpp
     game/common/base64.cpp
     game/common/bitarray.cpp
     game/common/buffer.cpp

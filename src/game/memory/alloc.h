@@ -30,6 +30,8 @@ enum MemoryFlagType
     MEM_LOCK = 0x10
 };
 
+DEFINE_ENUMERATION_BITWISE_OPERATORS(MemoryFlagType);
+
 typedef void(*memerrorhandler_t)();
 typedef void (*memexithandler_t)(const char *);
 
