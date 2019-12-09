@@ -653,3 +653,36 @@ CarryoverClass *&g_Carryover = Make_Global<CarryoverClass*>(0x0067F2AC);
 //ego.cpp
 class EgoClass;
 DynamicVectorClass<EgoClass *> &g_EgoList = Make_Global<DynamicVectorClass<EgoClass *> >(0x00658830);
+
+// audio.cpp
+#define DIRECTSOUND_VERSION 0x0600
+// These includes must not be resorted.
+// clang-format off
+#include <mmsystem.h>
+#include <dsound.h>
+// clang-format on
+struct LockedDataType;
+BOOL &g_ReverseChannels = Make_Global<BOOL>(0x006ABFDC);
+LockedDataType &g_LockedData = Make_Global<LockedDataType>(0x006EC4D8);
+#ifdef BUILD_WITH_DSOUND
+LPDIRECTSOUND &g_SoundObject = Make_Global<LPDIRECTSOUND>(0x006ABFE0);
+LPDIRECTSOUNDBUFFER &g_DumpBuffer = Make_Global<LPDIRECTSOUNDBUFFER>(0x006ABFBC);
+LPDIRECTSOUNDBUFFER &g_PrimaryBufferPtr = Make_Global<LPDIRECTSOUNDBUFFER>(0x006ABFE4);
+WAVEFORMATEX &g_DsBuffFormat = Make_Global<WAVEFORMATEX>(0x006ABFEC);
+WAVEFORMATEX &g_PrimaryBuffFormat = Make_Global<WAVEFORMATEX>(0x006AC014);
+DSBUFFERDESC &g_BufferDesc = Make_Global<DSBUFFERDESC>(0x006AC000);
+DSBUFFERDESC &g_PrimaryBufferDesc = Make_Global<DSBUFFERDESC>(0x006AC028);
+CRITICAL_SECTION &g_GlobalAudioCriticalSection = Make_Global<CRITICAL_SECTION>(0x006AC03C);
+#endif
+void *&g_SoundThreadHandle = Make_Global<void *>(0x006ABFC0);
+BOOL &g_SoundThreadActive = Make_Global<BOOL>(0x006ABFC4);
+BOOL &g_StartingFileStream = Make_Global<BOOL>(0x006ABFC8);
+MemoryFlagType &g_StreamBufferFlag = Make_Global<MemoryFlagType>(0x006ABFD0);
+int &g_Misc = Make_Global<int>(0x006ABFD4);
+#ifdef BUILD_WITH_DSOUND
+UINT &g_SoundTimerHandle = Make_Global<UINT>(0x006ABFE8);
+#endif
+void *&g_FileStreamBuffer = Make_Global<void *>(0x006AC054);
+BOOL volatile &g_AudioDone = Make_Global<BOOL>(0x006AC05C);
+int16_t &g_SoundType = Make_Global<int16_t>(0x006ABFD8);
+int16_t &g_SampleType = Make_Global<int16_t>(0x006ABFDA);
