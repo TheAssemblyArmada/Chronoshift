@@ -91,6 +91,7 @@
 #include "shapebtn.h"
 #include "sidebar.h"
 #include "slider.h"
+#include "smudge.h"
 #include "super.h"
 #include "surfacemonitor.h"
 #include "team.h"
@@ -1027,6 +1028,11 @@ void Setup_Hooks()
     Hook_Function(0x0058D26C, *VesselClass::Edge_Of_World_AI);
     Hook_Function(0x0058C23C, *VesselClass::Transport_Open_Door);
     Hook_Function(0x0058C26C, *VesselClass::Transport_Close_Door);
+
+    // smudge.cpp
+    Hook_Function(0x0054FCF0, *SmudgeClass::Mark);
+    Hook_Function(0x0054FFAC, *SmudgeClass::Disown);
+    Hook_Function(0x005500B0, *SmudgeClass::Read_INI);
 #endif
 }
 

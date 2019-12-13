@@ -73,8 +73,12 @@ public:
     virtual const int16_t *Overlap_List() const override;
     virtual void Draw_It(int x, int y, int frame) const;
 
-    BOOL Is_Crater() { return m_Crater; }
-    BOOL Is_Bib() { return m_Bib; }
+    int Get_Width() const { return m_Width; }
+    int Get_Height() const { return m_Height; }
+    BOOL Is_Crater() const { return m_Crater; }
+    BOOL Is_Bib() const { return m_Bib; }
+
+    SmudgeType What_Type() const { return m_Type; }
 
     static void Init_Heap();
     static void One_Time() {}

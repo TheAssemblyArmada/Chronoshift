@@ -322,6 +322,7 @@ GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
 #include "terraintype.h"
 #include "unittype.h"
 #include "vesseltype.h"
+#include "smudge.h"
 template<>
 FixedIHeapClass *const GamePtr<AircraftTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DDBC);
 template<>
@@ -346,6 +347,8 @@ template<>
 FixedIHeapClass *const GamePtr<InfantryTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DE08);
 template<>
 FixedIHeapClass *const GamePtr<OverlayTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065E01C);
+template<>
+FixedIHeapClass *const GamePtr<SmudgeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065DA78);
 template<>
 FixedIHeapClass *const GamePtr<SmudgeTypeClass>::g_Heap = Make_Pointer<FixedIHeapClass>(0x0065E068);
 template<>
@@ -514,6 +517,10 @@ ShapeButtonClass &SidebarClass::ZoomButton = Make_Global<ShapeButtonClass>(0x006
 void *&SidebarClass::SidebarShape = Make_Global<void *>(0x00689F0C);
 void *&SidebarClass::SidebarMiddleShape = Make_Global<void *>(0x00689F10);
 void *&SidebarClass::SidebarBottomShape = Make_Global<void *>(0x00689F14);
+
+// smudge.cpp
+#include "smudge.h"
+TFixedIHeapClass<SmudgeClass> &g_Smudges = Make_Global<TFixedIHeapClass<SmudgeClass> >(0x0065DA78);
 
 // smudgetype.cpp
 #include "smudgetype.h"

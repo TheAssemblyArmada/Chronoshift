@@ -121,7 +121,9 @@ public:
     BOOL Should_Save() const;
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
-    BOOL Has_Bib() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Reference(m_Smudge).Is_Bib(); }
+    BOOL Has_Crater() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Pointer(m_Smudge)->Is_Crater(); }
+    BOOL Has_Bib() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Pointer(m_Smudge)->Is_Bib(); }
+    BOOL Has_Wall() { return m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Pointer(m_Overlay)->Is_Wall(); }
     void Clear_Occupant_Bit(CellOccupantEnum bit) { m_OccupantBit &= ~bit; }
     void Set_Occupant_Bit(CellOccupantEnum bit) { m_OccupantBit |= bit; }
 
@@ -140,6 +142,7 @@ public:
     void Set_Bit16(BOOL value) { m_Bit16 = value; }
     BOOL Get_Bit32() const { return m_Bit32; }
     void Set_Bit32(BOOL value) { m_Bit32 = value; }
+    BOOL Has_Flag() const { return m_HasFlag; }
     BOOL Get_Bit128() const { return m_Bit128; }
     void Set_Bit128(BOOL value) { m_Bit128 = value; }
     TemplateType Get_Template() const { return m_Template; }
