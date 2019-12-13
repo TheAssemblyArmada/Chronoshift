@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "smudgetype.h"
+#include "smudge.h"
 #include "smudgedata.h"
 #include "gamefile.h"
 #include "drawshape.h"
@@ -30,7 +31,7 @@ TFixedIHeapClass<SmudgeTypeClass> g_SmudgeTypes;
 
 SmudgeTypeClass::SmudgeTypeClass(
     SmudgeType smudge, const char *name, int uiname, int width, int height, BOOL bib, BOOL crater) :
-    ObjectTypeClass(RTTI_SMUDGETYPE, smudge, true, true, false, false, true, true, false, uiname, name),
+    ObjectTypeClass(RTTI_SMUDGETYPE, smudge, false, true, false, false, true, true, false, uiname, name),
     m_Type(smudge),
     m_Width(width),
     m_Height(height),
@@ -63,35 +64,12 @@ void SmudgeTypeClass::operator delete(void *ptr)
 
 BOOL SmudgeTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-    // TODO requires SmudgeClass
-#ifdef GAME_DLL
-    BOOL(*func)(const SmudgeTypeClass*, cell_t, HousesType) = reinterpret_cast<BOOL(*)(const SmudgeTypeClass*, cell_t, HousesType)>(0x00549E50);
-    return func(this, cellnum, house);
-#elif 0
-    DEBUG_ASSERT(this != nullptr);
-
     return new SmudgeClass(m_Type, Cell_To_Coord(cellnum), house) != nullptr;
-#else
-    return false;
-#endif
 }
 
 ObjectClass *SmudgeTypeClass::Create_One_Of(HouseClass *house) const
 {
-    // TODO requires OverlayClass
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const SmudgeTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const SmudgeTypeClass*, HouseClass*)>(0x00549EB0);
-    return func(this, house);
-#elif 0
-    DEBUG_ASSERT(this != nullptr);
-    // DEBUG_ASSERT(house != nullptr);
-
-    SmudgeClass *sptr = new SmudgeClass(m_Type);
-    DEBUG_ASSERT(sptr != nullptr);
-    return sptr;
-#else
-    return nullptr;
-#endif
+    return new SmudgeClass(m_Type);
 }
 
 const int16_t *SmudgeTypeClass::Occupy_List(BOOL a1) const

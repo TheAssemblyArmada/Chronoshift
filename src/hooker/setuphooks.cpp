@@ -92,6 +92,7 @@
 #include "shapebtn.h"
 #include "sidebar.h"
 #include "slider.h"
+#include "smudge.h"
 #include "super.h"
 #include "surfacemonitor.h"
 #include "team.h"
@@ -1031,6 +1032,11 @@ void Setup_Hooks()
 
     // overlay.cpp
     Hook_Function(0x00526D64, *OverlayClass::Mark);
+
+    // smudge.cpp
+    Hook_Function(0x0054FCF0, *SmudgeClass::Mark);
+    Hook_Function(0x0054FFAC, *SmudgeClass::Disown);
+    Hook_Function(0x005500B0, *SmudgeClass::Read_INI);
 #endif
 }
 
@@ -1089,6 +1095,7 @@ ASSERT_SIZEOF(ScrollClass, 0x1661);
 ASSERT_SIZEOF(ShapeButtonClass, 0x38);
 ASSERT_SIZEOF(SidebarClass, 0x15FA);
 ASSERT_SIZEOF(SliderClass, 0x54);
+ASSERT_SIZEOF(SmudgeClass, 0x2B);
 ASSERT_SIZEOF(SmudgeTypeClass, 0x145);
 ASSERT_SIZEOF(SuperClass, 0x19);
 ASSERT_SIZEOF(TabClass, 0x1620);
