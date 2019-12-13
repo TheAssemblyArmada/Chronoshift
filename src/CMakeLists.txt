@@ -135,6 +135,7 @@ set(GAMEENGINE_SRC
     game/engine/scroll.cpp
     game/engine/scenario.cpp
     game/engine/session.cpp
+    game/engine/smudge.cpp
     game/engine/smudgedata.cpp
     game/engine/smudgetype.cpp
     game/engine/sndctrl.cpp

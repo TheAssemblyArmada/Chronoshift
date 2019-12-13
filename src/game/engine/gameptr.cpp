@@ -29,6 +29,7 @@
 #include "infantrytype.h"
 #include "overlay.h"
 #include "overlaytype.h"
+#include "smudge.h"
 #include "smudgetype.h"
 #include "team.h"
 #include "teamtype.h"
@@ -57,6 +58,7 @@ template<> FixedIHeapClass *const GamePtr<InfantryClass>::g_Heap = &g_Infantry;
 template<> FixedIHeapClass *const GamePtr<InfantryTypeClass>::g_Heap = &g_InfantryTypes;
 template<> FixedIHeapClass *const GamePtr<OverlayClass>::g_Heap = &g_Overlays;
 template<> FixedIHeapClass *const GamePtr<OverlayTypeClass>::g_Heap = &g_OverlayTypes;
+template<> FixedIHeapClass *const GamePtr<SmudgeClass>::g_Heap = &g_Smudges;
 template<> FixedIHeapClass *const GamePtr<SmudgeTypeClass>::g_Heap = &g_SmudgeTypes;
 template<> FixedIHeapClass *const GamePtr<TeamClass>::g_Heap = &g_Teams;
 template<> FixedIHeapClass *const GamePtr<TeamTypeClass>::g_Heap = &g_TeamTypes;
