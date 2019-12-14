@@ -70,10 +70,10 @@ inline PKey &PKey::operator=(PKey const &that)
 
 // RSA keys
 #ifdef GAME_DLL
-extern PKey &g_publicKey;
+extern PKey &g_PublicKey;
 #else
-extern PKey g_publicKey;
+extern PKey g_PublicKey;
 #endif
-extern PKey g_privateKey;
+extern PKey g_PrivateKey;
 
 #endif // PK_H

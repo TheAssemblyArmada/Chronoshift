@@ -105,7 +105,7 @@ void Process_Input()
     int mouse_x = 0;
     int mouse_y = 0;
 
-    Map.Input(key, mouse_x, mouse_y);
+    g_Map.Input(key, mouse_x, mouse_y);
 
     if (key != KN_NONE) {
         Keyboard_Process(key);
@@ -122,26 +122,26 @@ void Color_Cycle()
 
 void Sync_Delay()
 {
-    g_SpareTicks += FrameTimer.Time();
+    g_SpareTicks += g_FrameTimer.Time();
 
-    while (FrameTimer.Time() > 0) {
+    while (g_FrameTimer.Time() > 0) {
 
         Color_Cycle();
 
         Call_Back();
 
-        /*if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.Game_To_Play() != GAME_SKIRMISH) {
-            PlatformTimer->Sleep(4);
+        /*if (g_Session.Game_To_Play() != GAME_CAMPAIGN && g_Session.Game_To_Play() != GAME_SKIRMISH) {
+            g_PlatformTimer->Sleep(4);
         }*/
 
         if (g_SpecialDialog == SPECIAL_DLG_NONE) {
-            g_mouse->Erase_Mouse(g_hidPage, true);
+            g_Mouse->Erase_Mouse(g_HidPage, true);
             Process_Input();
-            Map.Render();
+            g_Map.Render();
         }
 
         // Yield remaining timeslice to other processes?
-        PlatformTimer->Sleep(1); // why not 0? 1 Frees up processor time?
+        g_PlatformTimer->Sleep(1); // why not 0? 1 Frees up processor time?
     }
 
     Color_Cycle();
@@ -153,12 +153,12 @@ void Sync_Delay()
 void Debug_Check_Map()
 {
     if (g_Debug_Check_Map) {
-        if (!Map.Validate()) {
+        if (!g_Map.Validate()) {
             MessageBoxClass errormsgbox;
             if (!errormsgbox.Process("Map Error!", "Continue", "Stop")) {
-                GameActive = false;
+                g_GameActive = false;
             }
-            Map.Validate();
+            g_Map.Validate();
         }
     }
 }
@@ -173,8 +173,8 @@ void Debug_Motion_Capture()
 
 void Map_Editor_Main_Loop()
 {
-    Map.Render();
-    g_mouse->Erase_Mouse(g_hidPage, true);
+    g_Map.Render();
+    g_Mouse->Erase_Mouse(g_HidPage, true);
     Process_Input();
     Call_Back();
     Color_Cycle();
@@ -186,7 +186,7 @@ BOOL Main_Loop()
 
         Map_Editor_Main_Loop();
     }
-    if (!GameActive) {
+    if (!g_GameActive) {
         return false;
     }
 
@@ -199,23 +199,23 @@ BOOL Main_Loop()
         Call_Back();
 
         // And this to make sure we still render the game viewport and handle input still.
-        if (!Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
-            if (g_gameInFocus) {
-                g_mouse->Erase_Mouse(g_hidPage, true);
+        if (!g_Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
+            if (g_GameInFocus) {
+                g_Mouse->Erase_Mouse(g_HidPage, true);
                 Process_Input();
-                Map.Render();
+                g_Map.Render();
             }
         }
 
         // Force a redraw if there are any pending messages. The debug key system needs this.
-        if (Session.Get_Messages().Manage()) {
-            g_hiddenPage.Clear();
-            Map.Flag_To_Redraw(true);
+        if (g_Session.Get_Messages().Manage()) {
+            g_HiddenPage.Clear();
+            g_Map.Flag_To_Redraw(true);
         }
 
         // Yield remaining timeslice to other processes?
-        PlatformTimer->Sleep(1); // why not 0? 1 frees up processor time?
-        return !GameActive;
+        g_PlatformTimer->Sleep(1); // why not 0? 1 frees up processor time?
+        return !g_GameActive;
     }
     // Run the normal game loop body if frame stepping is disabled or if
     // we have remaining frames to flush before we go back to a paused state.
@@ -226,58 +226,58 @@ BOOL Main_Loop()
 
         Reallocate_Big_Shape_Buffer();
 
-        if (g_GameFrame >= Session.Trap_Frame()) {
-            Session.Trap_Object();
+        if (g_GameFrame >= g_Session.Trap_Frame()) {
+            g_Session.Trap_Object();
         }
 
-        Session.Set_Processing_Start_Tick(TickCountTimer.Time());
+        g_Session.Set_Processing_Start_Tick(g_TickCountTimer.Time());
 
 #ifdef CHRONOSHIFT_DEBUG
-        if (Session.Trap_Check_Heap()) {
+        if (g_Session.Trap_Check_Heap()) {
             g_Debug_Trap_Check_Heap = true;
         }
 #endif
         BENCHMARK_START(BENCH_MAIN);
 
-        if (Theme.What_Is_Playing() == THEME_NONE) {
-            Theme.Play_Next_Song();
+        if (g_Theme.What_Is_Playing() == THEME_NONE) {
+            g_Theme.Play_Next_Song();
         }
 
-        if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.Game_To_Play() != GAME_SKIRMISH
-            && Session.Packet_Protocol() == COMPROTO_TWO) {
-            if (Session.Packet_Protocol() == COMPROTO_ONE && Session.Playback_Game()) {
-                FrameTimer = 0;
+        if (g_Session.Game_To_Play() != GAME_CAMPAIGN && g_Session.Game_To_Play() != GAME_SKIRMISH
+            && g_Session.Packet_Protocol() == COMPROTO_TWO) {
+            if (g_Session.Packet_Protocol() == COMPROTO_ONE && g_Session.Playback_Game()) {
+                g_FrameTimer = 0;
             } else {
-                if (Session.Desired_Frame_Rate() == 0) {
-                    Session.Set_Desired_Frame_Rate(60);
+                if (g_Session.Desired_Frame_Rate() == 0) {
+                    g_Session.Set_Desired_Frame_Rate(60);
                 }
-                FrameTimer = 60 / Session.Desired_Frame_Rate();
+                g_FrameTimer = 60 / g_Session.Desired_Frame_Rate();
             }
         } else {
-            int game_speed = Options.Game_Speed();
+            int game_speed = g_Options.Game_Speed();
             DiffType ai_diff = g_PlayerPtr->Get_AI_Difficulty();
             if (game_speed > 0) {
-                FrameTimer = game_speed + ((ai_diff == DIFF_EASIEST) - (ai_diff == DIFF_NORMAL));
+                g_FrameTimer = game_speed + ((ai_diff == DIFF_EASIEST) - (ai_diff == DIFF_NORMAL));
             } else {
-                FrameTimer = game_speed + (ai_diff == DIFF_EASIEST);
+                g_FrameTimer = game_speed + (ai_diff == DIFF_EASIEST);
             }
         }
 
-        if (!Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
-            if (g_gameInFocus) {
-                g_mouse->Erase_Mouse(g_hidPage, true);
+        if (!g_Session.Playback_Game() && g_SpecialDialog == SPECIAL_DLG_NONE) {
+            if (g_GameInFocus) {
+                g_Mouse->Erase_Mouse(g_HidPage, true);
                 Process_Input();
-                Map.Render();
+                g_Map.Render();
             }
         }
 
-        if (Session.Record_Game() || Session.Playback_Game()) {
+        if (g_Session.Record_Game() || g_Session.Playback_Game()) {
             Do_Record_Playback();
         }
 
-        DisplayClass::Layers[LAYER_GROUND].Sort();
+        DisplayClass::s_Layers[LAYER_GROUND].Sort();
 
-        Logic.AI();
+        g_Logic.AI();
 
         g_TimeQuake = false;
 
@@ -286,15 +286,15 @@ BOOL Main_Loop()
         }
 
         // Force a redraw if there are any pending messages to be drawn to the screen.
-        if (Session.Get_Messages().Manage()) {
-            g_hiddenPage.Clear();
-            Map.Flag_To_Redraw(true);
+        if (g_Session.Get_Messages().Manage()) {
+            g_HiddenPage.Clear();
+            g_Map.Flag_To_Redraw(true);
         }
 
-        Session.Tick_Processing_Frame();
+        g_Session.Tick_Processing_Frame();
 
-        // Session.Update_Processing_Tick_Value(std::min<int>((TickCountTimer.Time() - Session.Processing_Start_Tick()), MAX_PROCESSING_TICKS));
-        Session.Update_Processing_Tick_Value(TickCountTimer.Time() - Session.Processing_Start_Tick());
+        // g_Session.Update_Processing_Tick_Value(std::min<int>((g_TickCountTimer.Time() - g_Session.Processing_Start_Tick()), MAX_PROCESSING_TICKS));
+        g_Session.Update_Processing_Tick_Value(g_TickCountTimer.Time() - g_Session.Processing_Start_Tick());
 
         Queue_AI();
 
@@ -310,7 +310,7 @@ BOOL Main_Loop()
 
         if (g_PlayerWins) {
             DEBUG_LOG("Player wins.\n");
-            if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
                 Register_Game_End_Time();
                 Send_Statistics_Packet();
             }
@@ -318,15 +318,15 @@ BOOL Main_Loop()
             g_PlayerWins = false;
             g_PlayerRestarts = false;
             g_PlayerAborts = false;
-            g_mouse->Erase_Mouse(g_hidPage, true);
-            Map.Help_Text(TXT_NULL);
+            g_Mouse->Erase_Mouse(g_HidPage, true);
+            g_Map.Help_Text(TXT_NULL);
             Do_Win();
-            return !GameActive;
+            return !g_GameActive;
         }
 
         if (g_PlayerLoses) {
             DEBUG_LOG("Player loses.\n");
-            if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
                 Register_Game_End_Time();
                 Send_Statistics_Packet();
             }
@@ -334,10 +334,10 @@ BOOL Main_Loop()
             g_PlayerWins = false;
             g_PlayerRestarts = false;
             g_PlayerAborts = false;
-            g_mouse->Erase_Mouse(g_hidPage, true);
-            Map.Help_Text(TXT_NULL);
+            g_Mouse->Erase_Mouse(g_HidPage, true);
+            g_Map.Help_Text(TXT_NULL);
             Do_Lose();
-            return !GameActive;
+            return !g_GameActive;
         }
 
         if (g_PlayerRestarts) {
@@ -346,10 +346,10 @@ BOOL Main_Loop()
             g_PlayerWins = false;
             g_PlayerRestarts = false;
             g_PlayerAborts = false;
-            g_mouse->Erase_Mouse(g_hidPage, true);
-            Map.Help_Text(TXT_NULL);
+            g_Mouse->Erase_Mouse(g_HidPage, true);
+            g_Map.Help_Text(TXT_NULL);
             Do_Restart();
-            return !GameActive;
+            return !g_GameActive;
         }
 
         if (g_PlayerAborts) {
@@ -358,23 +358,23 @@ BOOL Main_Loop()
             g_PlayerWins = false;
             g_PlayerRestarts = false;
             g_PlayerAborts = false;
-            g_mouse->Erase_Mouse(g_hidPage, true);
-            Map.Help_Text(TXT_NULL);
+            g_Mouse->Erase_Mouse(g_HidPage, true);
+            g_Map.Help_Text(TXT_NULL);
             Do_Abort();
-            return !GameActive;
+            return !g_GameActive;
         }
 
-        if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.Game_To_Play() != GAME_SKIRMISH
-            && Session.Players_List().Count() == 2 && Scen.Get_field_7CF() && Scen.Get_field_7D3()) {
+        if (g_Session.Game_To_Play() != GAME_CAMPAIGN && g_Session.Game_To_Play() != GAME_SKIRMISH
+            && g_Session.Players_List().Count() == 2 && g_Scen.Get_field_7CF() && g_Scen.Get_field_7D3()) {
             DEBUG_LOG("Game is a draw.\n");
-            if (Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
                 Register_Game_End_Time();
                 Send_Statistics_Packet();
             }
-            g_mouse->Erase_Mouse(g_hidPage, true);
-            Map.Help_Text(TXT_NULL);
+            g_Mouse->Erase_Mouse(g_HidPage, true);
+            g_Map.Help_Text(TXT_NULL);
             Do_Draw();
-            return !GameActive;
+            return !g_GameActive;
         }
 
         ++g_GameFrame;
@@ -397,5 +397,5 @@ BOOL Main_Loop()
     } // debug step if case
 #endif
 
-    return !GameActive;
+    return !g_GameActive;
 }

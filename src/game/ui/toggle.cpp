@@ -35,8 +35,8 @@ ToggleClass::ToggleClass(ToggleClass &that) :
 BOOL ToggleClass::Action(unsigned flags, KeyNumType &key)
 {
     if (!flags) {
-        if (((unsigned)g_mouse->Get_Mouse_X() - m_XPos) < (unsigned)m_Width
-            && ((unsigned)g_mouse->Get_Mouse_Y() - m_YPos) < (unsigned)m_Height) {
+        if (((unsigned)g_Mouse->Get_Mouse_X() - m_XPos) < (unsigned)m_Width
+            && ((unsigned)g_Mouse->Get_Mouse_Y() - m_YPos) < (unsigned)m_Height) {
             if (!m_Toggle_Boolean1) {
                 m_Toggle_Boolean1 = true;
                 Flag_To_Redraw();
@@ -62,8 +62,8 @@ BOOL ToggleClass::Action(unsigned flags, KeyNumType &key)
     if (flags & MOUSE_LEFT_RLSE) {
         if (m_Toggle_Boolean1) {
             if (m_ToggleDisabled) {
-                if (((unsigned)g_mouse->Get_Mouse_X() - m_XPos) < (unsigned)m_Width
-                    && ((unsigned)g_mouse->Get_Mouse_Y() - m_YPos) < (unsigned)m_Height) {
+                if (((unsigned)g_Mouse->Get_Mouse_X() - m_XPos) < (unsigned)m_Width
+                    && ((unsigned)g_Mouse->Get_Mouse_Y() - m_YPos) < (unsigned)m_Height) {
                     m_ToggleState = (m_ToggleState == false);
                 }
             }

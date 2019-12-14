@@ -233,7 +233,7 @@ void TerrainTypeClass::Init(TheaterType theater)
 
     char filename[512];
 
-    if (theater != g_lastTheater) {
+    if (theater != g_LastTheater) {
         for (TerrainType i = TERRAIN_FIRST; i < TERRAIN_COUNT; ++i) {
             TerrainTypeClass &terrain = As_Reference(i);
             terrain.m_ImageData = nullptr;
@@ -244,16 +244,16 @@ void TerrainTypeClass::Init(TheaterType theater)
                     sizeof(filename),
                     "%s.%s",
                     /*terrain.ImageName[0] != '\0' ? terrain.ImageName :*/ terrain.m_Name,
-                    /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_theaters[theater].ext);
+                    /*i == TERRAIN_FLAGFLY ? "shp" :*/ g_Theaters[theater].ext);
                 terrain.m_ImageData = GameFileClass::Retrieve(filename);
-                g_isTheaterShape = true;
+                g_IsTheaterShape = true;
 
                 if (terrain.m_RadarIconData != nullptr) {
                     delete[] static_cast<char *>(terrain.m_RadarIconData);
                 }
 
                 terrain.m_RadarIconData = Get_Radar_Icon(terrain.m_ImageData, 0, 1, 3);
-                g_isTheaterShape = false;
+                g_IsTheaterShape = false;
             }
         }
     }
@@ -322,7 +322,7 @@ void TerrainTypeClass::Prep_For_Add()
         TerrainTypeClass *ttptr = As_Pointer(i);
         if (ttptr != nullptr) {
             if (ttptr->m_ImageData != nullptr) {
-                Map.Add_To_List(ttptr);
+                g_Map.Add_To_List(ttptr);
             }
         }
     }

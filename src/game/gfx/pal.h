@@ -20,9 +20,9 @@
 #include "always.h"
 
 #ifdef GAME_DLL
-extern uint8_t *g_currentPalette;
+extern uint8_t *g_CurrentPalette;
 #else
-extern uint8_t g_currentPalette[];
+extern uint8_t g_CurrentPalette[];
 #endif
 
 void Set_Palette(void *pal);

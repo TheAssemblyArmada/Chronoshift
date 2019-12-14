@@ -51,7 +51,7 @@ ListClass::ListClass(
     // The nullptr Fancy_Text_Print sets the font pointer and the dimension globals
     // for the YSpacing and ThumbSize
     Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
-    m_YSpacing = g_fontYSpacing + g_fontHeight - 1;
+    m_YSpacing = g_FontYSpacing + g_FontHeight - 1;
     m_ThumbSize = (h - 1) / m_YSpacing;
 }
 
@@ -173,8 +173,8 @@ void ListClass::Set_Position(int x, int y)
 BOOL ListClass::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
-        if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
+        if (&g_SeenBuff == g_LogicPage) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
         Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_4, 1);
@@ -188,8 +188,8 @@ BOOL ListClass::Draw_Me(BOOL redraw)
             }
         }
 
-        if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Show_Mouse();
+        if (&g_SeenBuff == g_LogicPage) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;
@@ -218,7 +218,7 @@ BOOL ListClass::Action(unsigned flags, KeyNumType &key)
             flags &= ~KEYBOARD_INPUT;
         }
     } else {
-        m_CurrentIndex = m_ViewIndex + (g_mouse->Get_Mouse_Y() - m_YPos) / m_YSpacing;
+        m_CurrentIndex = m_ViewIndex + (g_Mouse->Get_Mouse_Y() - m_YPos) / m_YSpacing;
         m_CurrentIndex = std::min(m_CurrentIndex, m_Entries.Count() - 1);
 
         if (m_CurrentIndex == -1) {
@@ -477,14 +477,14 @@ void ListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL redraw)
 
     if (redraw) {
         style |= TPF_USE_BRIGHT;
-        g_logicPage->Fill_Rect(x, y, x_max + x - 1, m_YSpacing + y - 1, GadgetClass::ColorScheme->WindowPalette[0]);
+        g_LogicPage->Fill_Rect(x, y, x_max + x - 1, m_YSpacing + y - 1, GadgetClass::s_ColorScheme->WindowPalette[0]);
     } else {
         if (!(style & TPF_USE_GRAD_PAL)) {
             style |= TPF_USE_MEDIUM;
         }
     }
 
-    Conquer_Clip_Text_Print(m_Entries[index], x, y, GadgetClass::ColorScheme, 0, (TextPrintType)style, x_max, m_Tabs);
+    Conquer_Clip_Text_Print(m_Entries[index], x, y, GadgetClass::s_ColorScheme, 0, (TextPrintType)style, x_max, m_Tabs);
 }
 
 void Clear_Listbox(ListClass *list)

@@ -140,7 +140,7 @@ void OverlayTypeClass::Init(TheaterType theater)
 
     char filename[512];
 
-    if (theater != g_lastTheater) {
+    if (theater != g_LastTheater) {
         for (OverlayType i = OVERLAY_FIRST; i < OVERLAY_COUNT; ++i) {
             OverlayTypeClass &overlay = As_Reference(i);
 
@@ -148,12 +148,12 @@ void OverlayTypeClass::Init(TheaterType theater)
                 sizeof(filename),
                 "%s.%s",
                 overlay.m_Name,
-                overlay.m_Theater ? g_theaters[theater].ext : "shp");
+                overlay.m_Theater ? g_Theaters[theater].ext : "shp");
             overlay.m_ImageData = GameFileClass::Retrieve(filename);
 
-            g_isTheaterShape = overlay.m_Theater;
+            g_IsTheaterShape = overlay.m_Theater;
             overlay.m_RadarIconData = Get_Radar_Icon(overlay.m_ImageData, 0, -1, 3);
-            g_isTheaterShape = false;
+            g_IsTheaterShape = false;
         }
     }
 }
@@ -180,7 +180,7 @@ void OverlayTypeClass::Prep_For_Add()
         if (otptr != nullptr) {
             if (otptr->m_ImageData != nullptr) {
                 if (!otptr->m_Wall && (!otptr->m_Ore || i == OVERLAY_GOLD_01 || i == OVERLAY_GEM_01)) {
-                    Map.Add_To_List(otptr);
+                    g_Map.Add_To_List(otptr);
                 }
             }
         }
@@ -233,16 +233,16 @@ const int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
 void OverlayTypeClass::Draw_It(int x, int y, int frame) const
 {
     if (m_ImageData != nullptr) {
-        g_isTheaterShape = m_Theater;
+        g_IsTheaterShape = m_Theater;
         CC_Draw_Shape(m_ImageData,
             frame,
-            x + Map.Tac_Offset_X() + 12,
-            y + Map.Tac_Offset_Y() + 12,
+            x + g_Map.Tac_Offset_X() + 12,
+            y + g_Map.Tac_Offset_Y() + 12,
             WINDOW_0,
             SHAPE_GHOST | SHAPE_WIN_REL | SHAPE_CENTER,
             0,
-            DisplayClass::UnitShadow);
-        g_isTheaterShape = false;
+            DisplayClass::s_UnitShadow);
+        g_IsTheaterShape = false;
     }
 }
 

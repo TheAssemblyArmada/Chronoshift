@@ -26,9 +26,9 @@
 
 #ifdef GAME_DLL
 #include "hooker.h"
-extern ARRAY_DEC(GameFileClass, g_handles, 10);
+extern ARRAY_DEC(GameFileClass, g_Handles, 10);
 #else
-GameFileClass g_handles[FILE_HANDLE_COUNT];
+GameFileClass g_Handles[FILE_HANDLE_COUNT];
 #endif
 
 GameFileClass::GameFileClass(const char *filename) : m_FileBuffer()
@@ -40,7 +40,7 @@ void GameFileClass::Error(int error, BOOL can_retry, const char *filename)
 {
     RawFileClass::Error(error, can_retry, filename);
 
-    if (!Force_CD_Available(g_requiredCD)) {
+    if (!Force_CD_Available(g_RequiredCD)) {
         Emergency_Exit(0xFF);
     }
 }
@@ -301,7 +301,7 @@ int Open_File(const char *filename, int mode)
 {
     int handle = 0;
 
-    while (g_handles[handle].Is_Open()) {
+    while (g_Handles[handle].Is_Open()) {
         ++handle;
 
         if (handle >= FILE_HANDLE_COUNT) {
@@ -309,7 +309,7 @@ int Open_File(const char *filename, int mode)
         }
     }
 
-    if (!g_handles[handle].Open(filename)) {
+    if (!g_Handles[handle].Open(filename)) {
         return -1;
     }
 
@@ -319,14 +319,14 @@ int Open_File(const char *filename, int mode)
 void Close_File(int handle)
 {
     if (handle != -1) {
-        g_handles[handle].Close();
+        g_Handles[handle].Close();
     }
 }
 
 int Read_File(int handle, void *buffer, unsigned length)
 {
-    if (handle != -1 && g_handles[handle].Is_Open()) {
-        return g_handles[handle].Read(buffer, length);
+    if (handle != -1 && g_Handles[handle].Is_Open()) {
+        return g_Handles[handle].Read(buffer, length);
     }
 
     return 0;
@@ -334,8 +334,8 @@ int Read_File(int handle, void *buffer, unsigned length)
 
 int Write_File(int handle, const void *buffer, unsigned length)
 {
-    if (handle != -1 && g_handles[handle].Is_Open()) {
-        return g_handles[handle].Write(buffer, length);
+    if (handle != -1 && g_Handles[handle].Is_Open()) {
+        return g_Handles[handle].Write(buffer, length);
     }
 
     return 0;
@@ -343,8 +343,8 @@ int Write_File(int handle, const void *buffer, unsigned length)
 
 unsigned File_Size(int handle)
 {
-    if (handle != -1 && g_handles[handle].Is_Open()) {
-        return g_handles[handle].Size();
+    if (handle != -1 && g_Handles[handle].Is_Open()) {
+        return g_Handles[handle].Size();
     }
 
     return 0;
@@ -352,8 +352,8 @@ unsigned File_Size(int handle)
 
 unsigned Seek_File(int handle, off_t offset, int whence)
 {
-    if (handle != -1 && g_handles[handle].Is_Open()) {
-        return g_handles[handle].Seek(offset, whence);
+    if (handle != -1 && g_Handles[handle].Is_Open()) {
+        return g_Handles[handle].Seek(offset, whence);
     }
 
     return 0;

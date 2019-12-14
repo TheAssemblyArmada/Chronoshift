@@ -406,8 +406,8 @@ BOOL TriggerTypeClass::Edit()
 
     // Populate the lists.
     for (ThemeType i = THEME_FIRST; i < THEME_COUNT; ++i) {
-        act_one_theme_edit.Add_Item(Theme.Full_Name(i));
-        act_two_theme_edit.Add_Item(Theme.Full_Name(i));
+        act_one_theme_edit.Add_Item(g_Theme.Full_Name(i));
+        act_two_theme_edit.Add_Item(g_Theme.Full_Name(i));
     }
 
     if (m_ActionOne.Action_Needs() != NEED_THEME) {
@@ -828,8 +828,8 @@ BOOL TriggerTypeClass::Edit()
     while (process) {
         Call_Back();
 
-        if (to_draw && g_logicPage->Lock()) {
-            g_mouse->Hide_Mouse();
+        if (to_draw && g_LogicPage->Lock()) {
+            g_Mouse->Hide_Mouse();
             Dialog_Box(0, 0, 420, 220);
             Draw_Caption(TXT_DEBUG_TRIGGER_EDITOR, 0, 0, 420);
             Fancy_Text_Print("Trigger Event:",
@@ -865,32 +865,32 @@ BOOL TriggerTypeClass::Edit()
 
             // Draw linkage indicator for linked event state
             if (event_linkage == EVLINK_LINKED) {
-                g_logicPage->Draw_Line(event_one_list.Get_XPos() - 1,
+                g_LogicPage->Draw_Line(event_one_list.Get_XPos() - 1,
                     event_one_list.Get_YPos() + 3,
                     event_one_list.Get_XPos() - 4,
                     event_one_list.Get_YPos() + 3,
                     COLOR_WHITE);
-                g_logicPage->Draw_Line(event_one_list.Get_XPos() - 4,
+                g_LogicPage->Draw_Line(event_one_list.Get_XPos() - 4,
                     event_one_list.Get_YPos() + 3,
                     act_one_list.Get_XPos() - 4,
                     act_one_list.Get_YPos() + 3,
                     COLOR_WHITE);
-                g_logicPage->Draw_Line(act_one_list.Get_XPos() - 1,
+                g_LogicPage->Draw_Line(act_one_list.Get_XPos() - 1,
                     act_one_list.Get_YPos() + 3,
                     act_one_list.Get_XPos() - 4,
                     act_one_list.Get_YPos() + 3,
                     COLOR_WHITE);
-                g_logicPage->Draw_Line(event_two_list.Get_XPos() - 1,
+                g_LogicPage->Draw_Line(event_two_list.Get_XPos() - 1,
                     event_two_list.Get_YPos() + 3,
                     event_two_list.Get_XPos() - 10,
                     event_two_list.Get_YPos() + 3,
                     COLOR_WHITE);
-                g_logicPage->Draw_Line(event_two_list.Get_XPos() - 10,
+                g_LogicPage->Draw_Line(event_two_list.Get_XPos() - 10,
                     event_two_list.Get_YPos() + 3,
                     act_two_list.Get_XPos() - 10,
                     act_two_list.Get_YPos() + 3,
                     COLOR_WHITE);
-                g_logicPage->Draw_Line(act_two_list.Get_XPos() - 1,
+                g_LogicPage->Draw_Line(act_two_list.Get_XPos() - 1,
                     act_two_list.Get_YPos() + 3,
                     act_two_list.Get_XPos() - 10,
                     act_two_list.Get_YPos() + 3,
@@ -1177,9 +1177,9 @@ BOOL TriggerTypeClass::Edit()
             act_one_vox_edit.Collapse();
             act_two_vox_edit.Collapse();
             gadget_list.Flag_List_To_Redraw();
-            g_mouse->Show_Mouse();
+            g_Mouse->Show_Mouse();
             to_draw = false;
-            g_logicPage->Unlock();
+            g_LogicPage->Unlock();
         }
 
         KeyNumType input = gadget_list.Input();
@@ -1516,12 +1516,12 @@ void TriggerTypeClass::Draw_It(int index, int x, int y, int x_max, int y_max, BO
     if ((style & TPF_FONTS) == TPF_6PT_GRAD || (style & TPF_FONTS) == TPF_EDITOR) {
         if (selected) {
             style |= TPF_USE_BRIGHT;
-            g_logicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + y_max) - 1), remapper->WindowPalette[0]);
+            g_LogicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + y_max) - 1), remapper->WindowPalette[0]);
         } else if (!(style & TPF_USE_GRAD_PAL)) {
             style |= TPF_USE_MEDIUM;
         }
     } else {
-        remapper = (selected ? &ColorRemaps[REMAP_10] : &ColorRemaps[REMAP_5]);
+        remapper = (selected ? &g_ColorRemaps[REMAP_10] : &g_ColorRemaps[REMAP_5]);
     }
 
     Conquer_Clip_Text_Print(Description(), x, y, remapper, COLOR_TBLACK, style, x_max, _tabs);
@@ -1552,7 +1552,7 @@ void TriggerTypeClass::Read_INI(GameINIClass &ini)
     }
 
     // Hack to ensure strings can be converted to heap ID after parsing all triggers.
-    if (g_iniFormat < 2) {
+    if (g_INIFormat < 2) {
         for (int i = 0; i < g_TriggerTypes.Count(); ++i) {
             // Recover string pointer.
             char *name = reinterpret_cast<char *>(g_TriggerTypes[i].m_ActionOne.m_TriggerType.Get_ID());

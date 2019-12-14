@@ -260,7 +260,7 @@ public:
         int RawSize;
     };
 
-    static EventInfoStruct EventTypeList[EVENT_COUNT];
+    static EventInfoStruct s_EventTypeList[EVENT_COUNT];
     static char const *Name_From(GameEventType type);
     static GameEventType From_Name(char const *name);
 };

@@ -20,7 +20,7 @@
 #include "memrev.h"
 #include <string.h>
 
-const uint32_t BlowfishEngine::Blowfish_p_init[BF_ROUNDS + 2] = {
+const uint32_t BlowfishEngine::s_Blowfish_p_init[BF_ROUNDS + 2] = {
     0x243f6a88,
     0x85a308d3,
     0x13198a2e,
@@ -40,7 +40,7 @@ const uint32_t BlowfishEngine::Blowfish_p_init[BF_ROUNDS + 2] = {
     0x9216d5d9,
     0x8979fb1b };
 
-const uint32_t BlowfishEngine::Blowfish_s_init[4][256] = { 
+const uint32_t BlowfishEngine::s_Blowfish_s_init[4][256] = { 
     { 0xd1310ba6,
         0x98dfb5ac,
         0x2ffd72db,
@@ -1088,9 +1088,9 @@ void BlowfishEngine::Submit_Key(void *key, int length)
     DEBUG_ASSERT_PRINT(length <= BF_MAX_KEY_LENGTH,
         "Key length %d exceeds maximum key length %d for Blowfish.\n", length, BF_MAX_KEY_LENGTH);
 
-    memcpy(m_pBoxEnc, Blowfish_p_init, sizeof(m_pBoxEnc));
-    memcpy(m_pBoxDec, Blowfish_p_init, sizeof(m_pBoxDec));
-    memcpy(m_sBox, Blowfish_s_init, sizeof(m_sBox));
+    memcpy(m_pBoxEnc, s_Blowfish_p_init, sizeof(m_pBoxEnc));
+    memcpy(m_pBoxDec, s_Blowfish_p_init, sizeof(m_pBoxDec));
+    memcpy(m_sBox, s_Blowfish_s_init, sizeof(m_sBox));
 
     if (key && length) {
         // Xor key string into encryption key vector

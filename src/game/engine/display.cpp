@@ -50,29 +50,29 @@
 using std::snprintf;
 
 #ifndef GAME_DLL
-LayerClass DisplayClass::Layers[LAYER_COUNT];
-DisplayClass::TacticalClass DisplayClass::TacticalButton;
-uint8_t DisplayClass::FadingBrighten[256];
-uint8_t DisplayClass::FadingShade[256];
-uint8_t DisplayClass::FadingWayDark[256];
-uint8_t DisplayClass::FadingLight[256];
-uint8_t DisplayClass::FadingGreen[256];
-uint8_t DisplayClass::FadingYellow[256];
-uint8_t DisplayClass::FadingRed[256];
-uint8_t DisplayClass::TranslucentTable[14][256];
-uint8_t DisplayClass::WhiteTranslucentTable[2][256];
-uint8_t DisplayClass::MouseTranslucentTable[5][256];
-uint8_t DisplayClass::ShadowTrans[5][256];
-uint8_t DisplayClass::UnitShadow[2][256];
-uint8_t DisplayClass::UnitShadowAir[2][256];
-uint8_t DisplayClass::SpecialGhost[2][256];
-void *DisplayClass::TransIconset = nullptr;
-void *DisplayClass::ShadowShapes = nullptr;
-BufferClass *DisplayClass::TheaterBuffer = nullptr;
-BooleanVectorClass DisplayClass::CellRedraw;
+LayerClass DisplayClass::s_Layers[LAYER_COUNT];
+DisplayClass::TacticalClass DisplayClass::s_TacticalButton;
+uint8_t DisplayClass::s_FadingBrighten[256];
+uint8_t DisplayClass::s_FadingShade[256];
+uint8_t DisplayClass::s_FadingWayDark[256];
+uint8_t DisplayClass::s_FadingLight[256];
+uint8_t DisplayClass::s_FadingGreen[256];
+uint8_t DisplayClass::s_FadingYellow[256];
+uint8_t DisplayClass::s_FadingRed[256];
+uint8_t DisplayClass::s_TranslucentTable[14][256];
+uint8_t DisplayClass::s_WhiteTranslucentTable[2][256];
+uint8_t DisplayClass::s_MouseTranslucentTable[5][256];
+uint8_t DisplayClass::s_ShadowTrans[5][256];
+uint8_t DisplayClass::s_UnitShadow[2][256];
+uint8_t DisplayClass::s_UnitShadowAir[2][256];
+uint8_t DisplayClass::s_SpecialGhost[2][256];
+void *DisplayClass::s_TransIconset = nullptr;
+void *DisplayClass::s_ShadowShapes = nullptr;
+BufferClass *DisplayClass::s_TheaterBuffer = nullptr;
+BooleanVectorClass DisplayClass::s_CellRedraw;
 #endif
 
-char DisplayClass::FadingWhite[256];
+char DisplayClass::s_FadingWhite[256];
 
 #define SHADOW_CLEAR -1
 #define SHADOW_FULL -2
@@ -93,34 +93,34 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
     int y;
 
     if (flags & (MOUSE_LEFT_RLSE | MOUSE_LEFT_PRESS | MOUSE_RIGHT_RLSE | MOUSE_RIGHT_PRESS)) {
-        x = g_keyboard->Get_MouseQX();
-        y = g_keyboard->Get_MouseQY();
+        x = g_Keyboard->Get_MouseQX();
+        y = g_Keyboard->Get_MouseQY();
     } else {
-        x = g_mouse->Get_Mouse_X();
-        y = g_mouse->Get_Mouse_Y();
+        x = g_Mouse->Get_Mouse_X();
+        y = g_Mouse->Get_Mouse_Y();
     }
 
-    bool at_edge = x == 0 || y == 0 || x == g_seenBuff.Get_Width() - 1 || y == g_seenBuff.Get_Height() - 1;
-    coord_t coord = Map.Pixel_To_Coord(x, y);
+    bool at_edge = x == 0 || y == 0 || x == g_SeenBuff.Get_Width() - 1 || y == g_SeenBuff.Get_Height() - 1;
+    coord_t coord = g_Map.Pixel_To_Coord(x, y);
     cell_t cell = Coord_To_Cell(coord);
 
     if (coord == 0) {
         return GadgetClass::Action(flags, key);
     }
 
-    bool shrouded = !Map[cell].Is_Visible() && !g_Debug_Unshroud;
-    int mouse_vpx = x - Map.Tac_Offset_X();
-    int mouse_vpy = y - Map.Tac_Offset_Y();
+    bool shrouded = !g_Map[cell].Is_Visible() && !g_Debug_Unshroud;
+    int mouse_vpx = x - g_Map.Tac_Offset_X();
+    int mouse_vpy = y - g_Map.Tac_Offset_Y();
 
-    if (cell != Map.Get_Cursor_Start()) {
-        Map.Set_Cursor_Pos(cell);
+    if (cell != g_Map.Get_Cursor_Start()) {
+        g_Map.Set_Cursor_Pos(cell);
     }
 
     // Work out what object if any is near the cursor.
     TechnoClass *close_tech = nullptr;
 
     if (!shrouded) {
-        ObjectClass *obj = Map.Close_Object(coord);
+        ObjectClass *obj = g_Map.Close_Object(coord);
 
         if (obj != nullptr && obj->Is_Techno()) {
             close_tech = reinterpret_cast<TechnoClass *>(obj);
@@ -146,7 +146,7 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
             action = ACTION_SELECT;
         }
 
-        if (Map.Repair_Mode()) {
+        if (g_Map.Repair_Mode()) {
             if (close_tech != nullptr && close_tech->Owner() == g_PlayerPtr->What_Type() && close_tech->Can_Repair()) {
                 action = ACTION_REPAIR;
             } else {
@@ -154,7 +154,7 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
             }
         }
 
-        if (Map.Sell_Mode()) {
+        if (g_Map.Sell_Mode()) {
             if (close_tech != nullptr && close_tech->Owner() == g_PlayerPtr->What_Type() && close_tech->Can_Demolish()) {
                 if (close_tech->What_Am_I() == RTTI_BUILDING) {
                     action = ACTION_SELL;
@@ -162,9 +162,9 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
                     action = ACTION_SELL_UNIT;
                 }
             } else {
-                if (Map[cell].Get_Overlay() != OVERLAY_NONE
-                    && OverlayTypeClass::As_Reference(Map[cell].Get_Overlay()).Is_Wall()
-                    && Map[cell].Owner() == g_PlayerPtr->What_Type()) {
+                if (g_Map[cell].Get_Overlay() != OVERLAY_NONE
+                    && OverlayTypeClass::As_Reference(g_Map[cell].Get_Overlay()).Is_Wall()
+                    && g_Map[cell].Owner() == g_PlayerPtr->What_Type()) {
                     action = ACTION_SELL;
                 } else {
                     action = ACTION_NO_SELL;
@@ -172,7 +172,7 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
             }
         }
 
-        switch (Map.m_PendingSuper) {
+        switch (g_Map.m_PendingSuper) {
             case SPECIAL_ATOM_BOMB:
                 action = ACTION_NUKE;
                 break;
@@ -212,7 +212,7 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
                     }
                 } else {
                     action = ACTION_NO_MOVE;
-                    Map.Set_Pending_Super(SPECIAL_NONE);
+                    g_Map.Set_Pending_Super(SPECIAL_NONE);
                 }
             }
 
@@ -224,38 +224,38 @@ BOOL DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType &key)
                 break;
         }
 
-        if (Map.Pending_ObjectType() != nullptr) {
+        if (g_Map.Pending_ObjectType() != nullptr) {
             action = ACTION_NONE;
         }
     }
 
-    if (cell != Map.Get_Cursor_Start()) {
-        Map.Set_Cursor_Pos(cell);
+    if (cell != g_Map.Get_Cursor_Start()) {
+        g_Map.Set_Cursor_Pos(cell);
     }
 
     if (flags & MOUSE_RIGHT_PRESS) {
-        Map.Mouse_Right_Press();
+        g_Map.Mouse_Right_Press();
     }
 
-    if ((flags & MOUSE_LEFT_UP) && Map.Bit_8()) {
+    if ((flags & MOUSE_LEFT_UP) && g_Map.Bit_8()) {
         flags |= MOUSE_LEFT_RLSE;
     }
 
     if (!at_edge && (flags & MOUSE_LEFT_UP)) {
-        Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
+        g_Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
     }
 
     if (flags & MOUSE_LEFT_RLSE) {
-        Map.Mouse_Left_Release(cell, mouse_vpx, mouse_vpy, close_tech, action);
+        g_Map.Mouse_Left_Release(cell, mouse_vpx, mouse_vpy, close_tech, action);
     }
 
     if (!at_edge && (flags & MOUSE_LEFT_PRESS)) {
-        Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
-        Map.Mouse_Left_Press(mouse_vpx, mouse_vpy);
+        g_Map.Mouse_Left_Up(cell, shrouded, close_tech, action);
+        g_Map.Mouse_Left_Press(mouse_vpx, mouse_vpy);
     }
 
     if ((flags & MOUSE_LEFT_HELD) != 0) {
-        Map.Mouse_Left_Held(mouse_vpx, mouse_vpy);
+        g_Map.Mouse_Left_Held(mouse_vpx, mouse_vpy);
     }
 
     return GadgetClass::Action(flags, key);
@@ -284,8 +284,8 @@ DisplayClass::DisplayClass() :
     m_PendingSuper(SPECIAL_NONE),
     m_BandBox(0, 0, 0, 0)
 {
-    ShadowShapes = nullptr;
-    TransIconset = nullptr;
+    s_ShadowShapes = nullptr;
+    s_TransIconset = nullptr;
     Set_View_Dimensions(0, 8, 13, 8);
 }
 
@@ -310,7 +310,7 @@ void DisplayClass::Init_Clear()
     m_RedrawShadow = true;
 
     for (int i = 0; i < LAYER_COUNT; ++i) {
-        Layers[i].Init();
+        s_Layers[i].Init();
     }
 }
 
@@ -324,17 +324,17 @@ void DisplayClass::One_Time()
     MapClass::One_Time();
 
     // Resize the cell redraw vector to cover the map.
-    CellRedraw.Resize(MAP_MAX_AREA);
+    s_CellRedraw.Resize(MAP_MAX_AREA);
 
     for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
-        Layers[layer].One_Time();
+        s_Layers[layer].One_Time();
     }
 
-    TransIconset = GameFileClass::Retrieve("trans.icn");
-    DEBUG_ASSERT(TransIconset != nullptr);
+    s_TransIconset = GameFileClass::Retrieve("trans.icn");
+    DEBUG_ASSERT(s_TransIconset != nullptr);
 
-    ShadowShapes = GameFileClass::Retrieve("shadow.shp");
-    DEBUG_ASSERT(ShadowShapes != nullptr);
+    s_ShadowShapes = GameFileClass::Retrieve("shadow.shp");
+    DEBUG_ASSERT(s_ShadowShapes != nullptr);
 
     Set_View_Dimensions(0, 16);
 }
@@ -349,8 +349,8 @@ void DisplayClass::Init_IO()
     MapClass::Init_IO();
 
     if (!g_InMapEditor) {
-        TacticalButton.Zap();
-        Add_A_Button(TacticalButton);
+        s_TacticalButton.Zap();
+        Add_A_Button(s_TacticalButton);
     }
 }
 
@@ -394,54 +394,54 @@ void DisplayClass::Init_Theater(TheaterType theater)
     static const TLucentType _ushadow_cols_snow[] = { { 4, 12, 75, 0 } };
 
     MapClass::Init_Theater(theater);
-    Scen.Set_Theater(theater);
+    g_Scen.Set_Theater(theater);
 
     char mix_name[32];
-    snprintf(mix_name, sizeof(mix_name), "%s.mix", g_theaters[theater].data);
+    snprintf(mix_name, sizeof(mix_name), "%s.mix", g_Theaters[theater].data);
 
     // Does the theater we want to initialise match the last one loaded? If so we don't need to do anything.
-    if (Scen.Get_Theater() != g_lastTheater) {
+    if (g_Scen.Get_Theater() != g_LastTheater) {
         if (_theater_data != nullptr) {
             delete _theater_data;
         }
 
-        _theater_data = new GameMixFile(mix_name, &g_publicKey);
-        _theater_data->Cache(TheaterBuffer);
+        _theater_data = new GameMixFile(mix_name, &g_PublicKey);
+        _theater_data->Cache(s_TheaterBuffer);
     }
 
     char pal_name[32];
-    snprintf(pal_name, sizeof(pal_name), "%s.pal", g_theaters[theater].data);
+    snprintf(pal_name, sizeof(pal_name), "%s.pal", g_Theaters[theater].data);
 
-    GamePalette = *static_cast<PaletteClass *>(GameFileClass::Retrieve(pal_name));
-    OriginalPalette = GamePalette;
+    g_GamePalette = *static_cast<PaletteClass *>(GameFileClass::Retrieve(pal_name));
+    g_OriginalPalette = g_GamePalette;
 
-    Build_Fading_Table(GamePalette, FadingGreen, 3, 110);
-    Build_Fading_Table(GamePalette, FadingYellow, 5, 140);
-    Build_Fading_Table(GamePalette, FadingRed, 8, 140);
-    Build_Fading_Table(GamePalette, FadingWhite, 15, 120);
+    Build_Fading_Table(g_GamePalette, s_FadingGreen, 3, 110);
+    Build_Fading_Table(g_GamePalette, s_FadingYellow, 5, 140);
+    Build_Fading_Table(g_GamePalette, s_FadingRed, 8, 140);
+    Build_Fading_Table(g_GamePalette, s_FadingWhite, 15, 120);
 
-    Build_Translucent_Table(GamePalette, _mouse_cols, ARRAY_SIZE(_mouse_cols), MouseTranslucentTable);
-    Build_Translucent_Table(GamePalette, _magic_cols, ARRAY_SIZE(_magic_cols), TranslucentTable);
-    Build_Translucent_Table(GamePalette, _white_cols, ARRAY_SIZE(_white_cols), WhiteTranslucentTable);
-    Build_Translucent_Table(GamePalette, _shadow_cols, ARRAY_SIZE(_shadow_cols), ShadowTrans);
+    Build_Translucent_Table(g_GamePalette, _mouse_cols, ARRAY_SIZE(_mouse_cols), s_MouseTranslucentTable);
+    Build_Translucent_Table(g_GamePalette, _magic_cols, ARRAY_SIZE(_magic_cols), s_TranslucentTable);
+    Build_Translucent_Table(g_GamePalette, _white_cols, ARRAY_SIZE(_white_cols), s_WhiteTranslucentTable);
+    Build_Translucent_Table(g_GamePalette, _shadow_cols, ARRAY_SIZE(_shadow_cols), s_ShadowTrans);
 
-    Conquer_Build_Translucent_Table(GamePalette, _ushadow_cols_air, ARRAY_SIZE(_ushadow_cols_air), UnitShadowAir);
+    Conquer_Build_Translucent_Table(g_GamePalette, _ushadow_cols_air, ARRAY_SIZE(_ushadow_cols_air), s_UnitShadowAir);
 
     if (theater == THEATER_SNOW) {
-        Conquer_Build_Translucent_Table(GamePalette, _ushadow_cols_snow, ARRAY_SIZE(_ushadow_cols_snow), UnitShadow);
-        Conquer_Build_Fading_Table(GamePalette, FadingShade, 12, 75);
+        Conquer_Build_Translucent_Table(g_GamePalette, _ushadow_cols_snow, ARRAY_SIZE(_ushadow_cols_snow), s_UnitShadow);
+        Conquer_Build_Fading_Table(g_GamePalette, s_FadingShade, 12, 75);
     } else {
-        Conquer_Build_Translucent_Table(GamePalette, _ushadow_cols, ARRAY_SIZE(_ushadow_cols), UnitShadow);
-        Conquer_Build_Fading_Table(GamePalette, FadingShade, 12, 130);
+        Conquer_Build_Translucent_Table(g_GamePalette, _ushadow_cols, ARRAY_SIZE(_ushadow_cols), s_UnitShadow);
+        Conquer_Build_Fading_Table(g_GamePalette, s_FadingShade, 12, 130);
     }
 
-    Conquer_Build_Fading_Table(GamePalette, FadingLight, 15, 85);
-    Conquer_Build_Fading_Table(GamePalette, SpecialGhost[1], 12, 100);
-    memset(SpecialGhost, 0, 256);
-    Make_Fading_Table(GamePalette, FadingBrighten, 15, 25);
-    Make_Fading_Table(GamePalette, FadingWayDark, 13, 192);
+    Conquer_Build_Fading_Table(g_GamePalette, s_FadingLight, 15, 85);
+    Conquer_Build_Fading_Table(g_GamePalette, s_SpecialGhost[1], 12, 100);
+    memset(s_SpecialGhost, 0, 256);
+    Make_Fading_Table(g_GamePalette, s_FadingBrighten, 15, 25);
+    Make_Fading_Table(g_GamePalette, s_FadingWayDark, 13, 192);
 
-    Options.Fixup_Palette();
+    g_Options.Fixup_Palette();
 }
 
 /**
@@ -452,10 +452,10 @@ void DisplayClass::Init_Theater(TheaterType theater)
 void DisplayClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
     if (m_DisplayBit8) {
-        if (g_mouse->Get_Mouse_X() < m_TacOffsetX || g_mouse->Get_Mouse_Y() < m_TacOffsetY
-            || g_mouse->Get_Mouse_X() >= CELL_PIXELS * m_DisplayHeight + 128 + m_TacOffsetX
-            || g_mouse->Get_Mouse_Y() >= CELL_PIXELS * m_DisplayWidth + 128 + m_TacOffsetY) {
-            Mouse_Left_Release(-1, g_mouse->Get_Mouse_X(), g_mouse->Get_Mouse_Y());
+        if (g_Mouse->Get_Mouse_X() < m_TacOffsetX || g_Mouse->Get_Mouse_Y() < m_TacOffsetY
+            || g_Mouse->Get_Mouse_X() >= CELL_PIXELS * m_DisplayHeight + 128 + m_TacOffsetX
+            || g_Mouse->Get_Mouse_Y() >= CELL_PIXELS * m_DisplayWidth + 128 + m_TacOffsetY) {
+            Mouse_Left_Release(-1, g_Mouse->Get_Mouse_X(), g_Mouse->Get_Mouse_Y());
         }
     }
 
@@ -471,7 +471,7 @@ void DisplayClass::Draw_It(BOOL force_redraw)
         m_DisplayToRedraw = false;
         Refresh_Band();
         g_ChronalVortex.Set_Redraw();
-        int msg_count = Session.Get_Messages().Num_Messages();
+        int msg_count = g_Session.Get_Messages().Num_Messages();
 
         // If we have messages to draw, redraw the relevant rows of cells
         if (msg_count > 0) {
@@ -519,13 +519,13 @@ void DisplayClass::Draw_It(BOOL force_redraw)
 
         if (Lepton_To_Pixel(Coord_Lepton_X(m_DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_X(m_DisplayPos))
             && Lepton_To_Pixel(Coord_Lepton_Y(m_DisplayNewPos)) == Lepton_To_Pixel(Coord_Lepton_Y(m_DisplayPos))) {
-            ++ScenarioInit;
+            ++g_ScenarioInit;
 
             if (m_DisplayNewPos != m_DisplayPos) {
                 Set_Tactical_Position(m_DisplayNewPos);
             }
 
-            --ScenarioInit;
+            --g_ScenarioInit;
 
         } else {
             int x_move_dist = Lepton_To_Pixel(Coord_Lepton_X(m_DisplayPos)) - Lepton_To_Pixel(Coord_Lepton_X(m_DisplayNewPos));
@@ -552,32 +552,32 @@ void DisplayClass::Draw_It(BOOL force_redraw)
                 // Do a block blit of anything still in view.
                 Set_Cursor_Pos(-1);
 
-                if (g_hidPage.In_Video_Memory()) {
-                    g_mouse->Hide_Mouse();
+                if (g_HidPage.In_Video_Memory()) {
+                    g_Mouse->Hide_Mouse();
 
                     int src_x = m_TacOffsetX + -std::min(0, x_move_dist);
                     int src_y = -std::min(0, y_move_dist) + m_TacOffsetY;
                     int dst_x = std::max(0, x_move_dist) + m_TacOffsetX;
                     int dst_y = m_TacOffsetY + std::max(0, y_move_dist);
 
-                    g_seenBuff.Blit(g_hidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
-                    g_mouse->Show_Mouse();
+                    g_SeenBuff.Blit(g_HidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
+                    g_Mouse->Show_Mouse();
                 } else {
                     int src_x = m_TacOffsetX + -std::min(0, x_move_dist);
                     int src_y = -std::min(0, y_move_dist) + m_TacOffsetY;
                     int dst_x = std::max(0, x_move_dist) + m_TacOffsetX;
                     int dst_y = m_TacOffsetY + std::max(0, y_move_dist);
 
-                    g_hidPage.Blit(g_hidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
+                    g_HidPage.Blit(g_HidPage, src_x, src_y, dst_x, dst_y, width_remain, height_remain);
                 }
             }
 
             x_move_dist = std::max(0, x_move_dist);
             y_move_dist = std::max(0, y_move_dist);
 
-            ++ScenarioInit;
+            ++g_ScenarioInit;
             Set_Tactical_Position(m_DisplayNewPos);
-            --ScenarioInit;
+            --g_ScenarioInit;
 
             // If we aren't forcing a complete redraw, then redraw around the edges of the moved section.
             if (!force_redraw) {
@@ -676,20 +676,20 @@ void DisplayClass::Draw_It(BOOL force_redraw)
         }
 
         if (force_redraw) {
-            CellRedraw.Set();
+            s_CellRedraw.Set();
         }
 
-        if (g_hidPage.Lock()) {
+        if (g_HidPage.Lock()) {
             Redraw_Icons();
-            g_hidPage.Unlock();
+            g_HidPage.Unlock();
         }
 
-        if (g_hidPage.Lock()) {
+        if (g_HidPage.Lock()) {
             g_ChronalVortex.Render();
 
             BENCHMARK_START(BENCH_OBJECTS);
             for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
-                Layers[layer].Render_All(force_redraw);
+                s_Layers[layer].Render_All(force_redraw);
             }
 
             // SS does some drawing of flagfly.shp here after rendering surface
@@ -700,18 +700,18 @@ void DisplayClass::Draw_It(BOOL force_redraw)
             Redraw_Shadow();
             BENCHMARK_END(BENCH_SHROUD);
 
-            g_hidPage.Unlock();
+            g_HidPage.Unlock();
         }
 
         if (m_DisplayBit8) {
-            g_logicPage->Draw_Rect(m_TacOffsetX + m_BandBox.Get_Left(),
+            g_LogicPage->Draw_Rect(m_TacOffsetX + m_BandBox.Get_Left(),
                 m_TacOffsetY + m_BandBox.Get_Top(),
                 m_TacOffsetX + m_BandBox.Get_Right(),
                 m_TacOffsetY + m_BandBox.Get_Bottom(),
                 15);
         }
 
-        CellRedraw.Reset();
+        s_CellRedraw.Reset();
 
         BENCHMARK_END(BENCH_TACTICAL);
     }
@@ -764,7 +764,7 @@ BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
 
     // Spied radar reveals enemy movement logic
     if (house != nullptr && !house->Is_Player()) {
-        if (house->Spied_My_Radar(g_PlayerPtr) || (Session.Game_To_Play() == GAME_CAMPAIGN && house->Is_Ally(g_PlayerPtr))) {
+        if (house->Spied_My_Radar(g_PlayerPtr) || (g_Session.Game_To_Play() == GAME_CAMPAIGN && house->Is_Ally(g_PlayerPtr))) {
             house = g_PlayerPtr;
         }
     }
@@ -773,7 +773,7 @@ BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
         return false;
     }
 
-    CellClass &cell = Map[cellnum];
+    CellClass &cell = g_Map[cellnum];
 
     if (cell.Is_Visible()) {
         if (!cell.Is_Revealed()) {
@@ -792,7 +792,7 @@ BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
 
     for (FacingType facing = FACING_FIRST; facing < FACING_COUNT; ++facing) {
         cell_t adjacent = Cell_Get_Adjacent(cellnum, facing);
-        CellClass &adj_cell = Map[adjacent];
+        CellClass &adj_cell = g_Map[adjacent];
 
         adj_cell.Redraw_Objects();
 
@@ -925,8 +925,8 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
                 Set_Tactical_Position(pos_coord);
                 m_DisplayToRedraw = true;
                 Flag_To_Redraw();
-                Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
-                Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
+                s_Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
+                s_Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
             }
 
             return true;
@@ -974,13 +974,13 @@ void DisplayClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
 {
     if (w == -1) {
-        m_DisplayWidth = Pixel_To_Lepton(g_seenBuff.Get_Width() - x);
+        m_DisplayWidth = Pixel_To_Lepton(g_SeenBuff.Get_Width() - x);
     } else {
         m_DisplayWidth = w * 256;
     }
 
     if (h == -1) {
-        m_DisplayHeight = Pixel_To_Lepton(g_seenBuff.Get_Height() - y);
+        m_DisplayHeight = Pixel_To_Lepton(g_SeenBuff.Get_Height() - y);
     } else {
         m_DisplayHeight = h * 256;
     }
@@ -996,12 +996,12 @@ void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
     m_TacOffsetX = x;
     m_TacOffsetY = y;
 
-    WindowList[WINDOW_TACTICAL].W = Lepton_To_Pixel(m_DisplayWidth);
-    WindowList[WINDOW_TACTICAL].H = Lepton_To_Pixel(m_DisplayHeight);
-    WindowList[WINDOW_TACTICAL].X = x;
-    WindowList[WINDOW_TACTICAL].Y = y;
+    g_WindowList[WINDOW_TACTICAL].W = Lepton_To_Pixel(m_DisplayWidth);
+    g_WindowList[WINDOW_TACTICAL].H = Lepton_To_Pixel(m_DisplayHeight);
+    g_WindowList[WINDOW_TACTICAL].X = x;
+    g_WindowList[WINDOW_TACTICAL].Y = y;
 
-    if (Window == WINDOW_TACTICAL) {
+    if (g_Window == WINDOW_TACTICAL) {
         Change_Window(WINDOW_0);
         Change_Window(WINDOW_TACTICAL);
     }
@@ -1009,10 +1009,10 @@ void DisplayClass::Set_View_Dimensions(int x, int y, int w, int h)
     m_DisplayToRedraw = true;
     Flag_To_Redraw();
 
-    TacticalButton.Set_XPos(m_TacOffsetX);
-    TacticalButton.Set_YPos(m_TacOffsetY);
-    TacticalButton.Set_Width(Lepton_To_Pixel(m_DisplayWidth));
-    TacticalButton.Set_Height(Lepton_To_Pixel(m_DisplayHeight));
+    s_TacticalButton.Set_XPos(m_TacOffsetX);
+    s_TacticalButton.Set_YPos(m_TacOffsetY);
+    s_TacticalButton.Set_Width(Lepton_To_Pixel(m_DisplayWidth));
+    s_TacticalButton.Set_Height(Lepton_To_Pixel(m_DisplayHeight));
 }
 
 /**
@@ -1036,7 +1036,7 @@ void DisplayClass::Set_Tactical_Position(coord_t location)
     m_DisplayNewPos = Coord_From_Lepton_XY(x_coord, y_coord);
 
     // Update the display position if needed
-    if (ScenarioInit) {
+    if (g_ScenarioInit) {
         m_DisplayPos = Coord_From_Lepton_XY(x_coord, y_coord);
     }
 
@@ -1051,7 +1051,7 @@ void DisplayClass::Set_Tactical_Position(coord_t location)
  */
 void DisplayClass::Flag_Cell(cell_t cellnum)
 {
-    CellRedraw[cellnum] = true;
+    s_CellRedraw[cellnum] = true;
     m_DisplayToRedraw = true;
     Flag_To_Redraw();
 }
@@ -1073,7 +1073,7 @@ void DisplayClass::Mouse_Right_Press()
         m_PendingSuper = SPECIAL_NONE;
     }
 
-    Set_Default_Mouse(MOUSE_POINTER, Map.Mouse_In_Radar());
+    Set_Default_Mouse(MOUSE_POINTER, g_Map.Mouse_In_Radar());
 }
 
 void DisplayClass::Mouse_Left_Press(int mouse_x, int mouse_y)
@@ -1403,8 +1403,8 @@ void DisplayClass::Mouse_Left_Held(int mouse_x, int mouse_y)
             m_DisplayToRedraw = true;
             Flag_To_Redraw();
 
-            Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
-            Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
+            s_Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
+            s_Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
         }
     }
 }
@@ -1433,7 +1433,7 @@ void DisplayClass::Write_INI(GameINIClass &ini)
 
     ini.Clear(_map_section_name);
 
-    ini.Put_TheaterType(_map_section_name, "Theater", Scen.Get_Theater());
+    ini.Put_TheaterType(_map_section_name, "Theater", g_Scen.Get_Theater());
     ini.Put_Int(_map_section_name, "X", m_MapCellX);
     ini.Put_Int(_map_section_name, "Y", m_MapCellY);
     ini.Put_Int(_map_section_name, "Width", m_MapCellWidth);
@@ -1441,7 +1441,7 @@ void DisplayClass::Write_INI(GameINIClass &ini)
 
     char buffer[16];
     for ( int i = 0; i < WAYPOINT_COUNT; ++i ) {
-        cell_t wpcell = Scen.Get_Waypoint(i);
+        cell_t wpcell = g_Scen.Get_Waypoint(i);
         if ( wpcell != -1 ) {
             std::snprintf(buffer, sizeof(buffer), "%d", i);
             ini.Put_Int(_waypoint_section_name, buffer, wpcell);
@@ -1557,8 +1557,8 @@ void DisplayClass::Refresh_Band()
             }
         }
 
-        Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
-        Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
+        s_Layers[LAYER_TOP].Mark_All(MARK_REDRAW);
+        s_Layers[LAYER_AIR].Mark_All(MARK_REDRAW);
     }
 }
 
@@ -1573,7 +1573,7 @@ void DisplayClass::Cursor_Mark(cell_t cellnum, BOOL flag)
         cell_t offset_cell = cellnum + *offsets;
 
         if (MapClass::In_Radar(offset_cell)) {
-            CellClass &cell_ref = Map[offset_cell];
+            CellClass &cell_ref = g_Map[offset_cell];
             cell_ref.Redraw_Objects();
             cell_ref.Set_Placement_Check(flag);
         }
@@ -1584,7 +1584,7 @@ void DisplayClass::Cursor_Mark(cell_t cellnum, BOOL flag)
             int16_t offset_cell = cellnum + *overlap;
 
             if (MapClass::In_Radar(offset_cell)) {
-                Map[offset_cell].Redraw_Objects();
+                g_Map[offset_cell].Redraw_Objects();
             }
         }
     }
@@ -1700,8 +1700,8 @@ ObjectClass *DisplayClass::Prev_Object(ObjectClass *object) const
     // Scan backwards through the list of units until we find the one that
     // matches the passed pointer, then return the object before it in the list
     // in the next loop.
-    for (int index = Layers[LAYER_GROUND].Count() - 1; index >= 0; --index) {
-        ObjectClass *prev = Layers[LAYER_GROUND][index];
+    for (int index = s_Layers[LAYER_GROUND].Count() - 1; index >= 0; --index) {
+        ObjectClass *prev = s_Layers[LAYER_GROUND][index];
 
         if (prev != nullptr && prev->Is_Player_Army()) {
             if (retval == nullptr) {
@@ -1734,10 +1734,10 @@ ObjectClass *DisplayClass::Next_Object(ObjectClass *object) const
         found = true;
     }
 
-    LayerClass *layerptr = &Layers[LAYER_GROUND];
+    LayerClass *layerptr = &s_Layers[LAYER_GROUND];
 
-    for (int index = 0; index < Layers[LAYER_GROUND].Count(); ++index) {
-        ObjectClass *next = Layers[LAYER_GROUND][index];
+    for (int index = 0; index < s_Layers[LAYER_GROUND].Count(); ++index) {
+        ObjectClass *next = s_Layers[LAYER_GROUND][index];
 
         if (next != nullptr && next->Is_Player_Army()) {
             if (retval == nullptr) {
@@ -1760,14 +1760,14 @@ ObjectClass *DisplayClass::Next_Object(ObjectClass *object) const
 void DisplayClass::Submit(ObjectClass *object, LayerType layer)
 {
     if (object != nullptr) {
-        Layers[layer].Submit(object, layer == LAYER_GROUND);
+        s_Layers[layer].Submit(object, layer == LAYER_GROUND);
     }
 }
 
 void DisplayClass::Remove(ObjectClass *object, LayerType layer)
 {
     if (object != nullptr) {
-        Layers[layer].Remove(object);
+        s_Layers[layer].Remove(object);
     }
 }
 
@@ -1805,8 +1805,8 @@ void DisplayClass::Select_These(coord_t start, coord_t finish)
 
     // Loops through all ground units and select them if they fall
     // within the rectangle.
-    for (int index = 0; index < Layers[LAYER_GROUND].Count(); ++index) {
-        TechnoClass *objptr = reinterpret_cast<TechnoClass *>(Layers[LAYER_GROUND][index]);
+    for (int index = 0; index < s_Layers[LAYER_GROUND].Count(); ++index) {
+        TechnoClass *objptr = reinterpret_cast<TechnoClass *>(s_Layers[LAYER_GROUND][index]);
 
         if (objptr != nullptr) {
             coord_t obj_loc = objptr->Center_Coord();
@@ -1988,7 +1988,7 @@ cell_t DisplayClass::Set_Cursor_Pos(cell_t cell)
     cell_t retval;
 
     if (cell == -1) {
-        cell = Click_Cell_Calc(g_mouse->Get_Mouse_X(), g_mouse->Get_Mouse_Y());
+        cell = Click_Cell_Calc(g_Mouse->Get_Mouse_X(), g_Mouse->Get_Mouse_Y());
     }
 
     if (m_DisplayCursorOccupy != nullptr) {
@@ -2178,11 +2178,11 @@ void DisplayClass::Redraw_Icons()
             if (In_View(cellnum) && Is_Cell_Flagged(cellnum) && Coord_To_Pixel(coord, draw_x, draw_y)) {
                 CellClass &cell = m_Array[Coord_To_Cell(coord)];
 
-                if (cell.Is_Visible() || DebugUnshroud) {
+                if (cell.Is_Visible() || g_DebugUnshroud) {
                     cell.Draw_It(draw_x, draw_y);
                 }
 
-                if (!cell.Is_Revealed() && !DebugUnshroud) {
+                if (!cell.Is_Revealed() && !g_DebugUnshroud) {
                     m_RedrawShadow = true;
                 }
             }
@@ -2218,7 +2218,7 @@ void DisplayClass::Redraw_Shadow()
 
                         if (frame >= 0) { // If we have a valid frame, draw the shroud frame.
                             CC_Draw_Shape(
-                                ShadowShapes, frame, draw_x, draw_y, WINDOW_TACTICAL, SHAPE_GHOST, nullptr, ShadowTrans);
+                                s_ShadowShapes, frame, draw_x, draw_y, WINDOW_TACTICAL, SHAPE_GHOST, nullptr, s_ShadowTrans);
                         } else if (frame != SHADOW_CLEAR) { // Otherwise, if we don't have -1 fill black
                             int w = CELL_PIXELS;
                             int h = CELL_PIXELS;
@@ -2227,7 +2227,7 @@ void DisplayClass::Redraw_Shadow()
                             int y_clip = Lepton_To_Pixel(m_DisplayHeight);
 
                             if (Clip_Rect(draw_x, draw_y, w, h, x_clip, y_clip) >= 0) {
-                                g_logicPage->Fill_Rect(draw_x + m_TacOffsetX,
+                                g_LogicPage->Fill_Rect(draw_x + m_TacOffsetX,
                                     draw_y + m_TacOffsetY,
                                     w + draw_x + m_TacOffsetX - 1,
                                     h + draw_y + m_TacOffsetY - 1,
@@ -2464,7 +2464,7 @@ cell_t DisplayClass::Calculated_Cell(
     int zone = -1;
 
     if (waypoint != -1) {
-        cell_num = Scen.Get_Waypoint(waypoint);
+        cell_num = g_Scen.Get_Waypoint(waypoint);
     }
 
     if (cell_num == -1) {
@@ -2519,18 +2519,18 @@ cell_t DisplayClass::Calculated_Cell(
         switch (source) {
             case SOURCE_EAST:
                 x = m_MapCellWidth;
-                y = Scen.Get_Random_Value(0, m_MapCellHeight - 1);
+                y = g_Scen.Get_Random_Value(0, m_MapCellHeight - 1);
                 break;
 
             case SOURCE_SOUTH:
                 y_clipped = true;
-                x = Scen.Get_Random_Value(0, m_MapCellWidth - 1);
+                x = g_Scen.Get_Random_Value(0, m_MapCellWidth - 1);
                 y = m_MapCellWidth;
                 break;
 
             case SOURCE_WEST:
                 x = -1;
-                y = Scen.Get_Random_Value(0, m_MapCellHeight - 1);
+                y = g_Scen.Get_Random_Value(0, m_MapCellHeight - 1);
                 break;
 
             default:
@@ -2629,8 +2629,8 @@ coord_t DisplayClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
  */
 void DisplayClass::All_To_Look(BOOL skip_buildings)
 {
-    for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {
-        TechnoClass *objptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][i]);
+    for (int i = 0; i < DisplayClass::s_Layers[LAYER_GROUND].Count(); ++i) {
+        TechnoClass *objptr = reinterpret_cast<TechnoClass *>(DisplayClass::s_Layers[LAYER_GROUND][i]);
 
         if (objptr != nullptr && objptr->Is_Techno()) {
             if (objptr->What_Am_I() != RTTI_BUILDING || !skip_buildings) {
@@ -2639,7 +2639,7 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
                         objptr->Look();
                     }
                 } else if (objptr->What_Am_I() == RTTI_BUILDING) {
-                    if (Rule.Ally_Reveal()) {
+                    if (g_Rule.Ally_Reveal()) {
                         if (g_PlayerPtr->Is_Ally(objptr->Get_Owner_House())) {
                             objptr->Look();
                         }
@@ -2657,8 +2657,8 @@ void DisplayClass::All_To_Look(BOOL skip_buildings)
  */
 void DisplayClass::Constrained_Look(coord_t coord, int constraint)
 {
-    for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {
-        ObjectClass *objptr = DisplayClass::Layers[LAYER_GROUND][index];
+    for (int index = 0; index < DisplayClass::s_Layers[LAYER_GROUND].Count(); ++index) {
+        ObjectClass *objptr = DisplayClass::s_Layers[LAYER_GROUND][index];
 
         if (objptr != nullptr && objptr->Is_Techno()) {
             TechnoClass *tcptr = reinterpret_cast<TechnoClass *>(objptr);
@@ -2673,7 +2673,7 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
                     }
                 }
             } else if (tcptr->What_Am_I() == RTTI_BUILDING) {
-                if (Rule.Ally_Reveal()) {
+                if (g_Rule.Ally_Reveal()) {
                     if (g_PlayerPtr->Is_Ally(tcptr->Get_Owner_House()->What_Type())) {
                         int lepton_sight =
                             constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Get_Sight() * 256);
@@ -2695,7 +2695,7 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
  */
 void DisplayClass::Encroach_Shadow()
 {
-    if (!DebugUnshroud) {
+    if (!g_DebugUnshroud) {
         // Check every cell and mark unrevealed cells
         for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
             if (In_Radar(cellnum)) {
@@ -2806,7 +2806,7 @@ int __cdecl DisplayClass::Clip_Rect(int &x, int &y, int &w, int &h, int clip_w, 
 void DisplayClass::All_Layers_To_Redraw()
 {
     for (LayerType layer = LAYER_FIRST; layer < LAYER_COUNT; ++layer) {
-        Layers[layer].Render_All(true);
+        s_Layers[layer].Render_All(true);
     }
 }
 
@@ -2814,7 +2814,7 @@ void DisplayClass::Flag_All_Cells_To_Redraw()
 {
     for (cell_t cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
         if (!Is_Cell_Flagged(cellnum)) {
-            CellRedraw[cellnum] = true;
+            s_CellRedraw[cellnum] = true;
         }
     }
 }
@@ -2836,5 +2836,5 @@ BOOL DisplayClass::Is_Spot_Free(coord_t coord) const
     if (coord & 0x80008000) {
         return false;
     }
-    return Map[Coord_To_Cell(coord)].Is_Spot_Free(CellClass::Spot_Index(coord));
+    return g_Map[Coord_To_Cell(coord)].Is_Spot_Free(CellClass::Spot_Index(coord));
 }

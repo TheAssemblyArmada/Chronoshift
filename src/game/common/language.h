@@ -23,11 +23,11 @@
 #define NAME_OVERRIDE_MAX 25
 
 #ifdef GAME_DLL
-extern char **NameOverride;
-extern int *NameIDOverride;
+extern char **g_NameOverride;
+extern int *g_NameIDOverride;
 #else
-extern char *NameOverride[NAME_OVERRIDE_MAX];
-extern int NameIDOverride[NAME_OVERRIDE_MAX];
+extern char *g_NameOverride[NAME_OVERRIDE_MAX];
+extern int g_NameIDOverride[NAME_OVERRIDE_MAX];
 #endif
 
 // clang-format off
@@ -780,8 +780,8 @@ enum LanguageType
     LANGUAGE_NONE = -1,
 };
 
-extern LanguageType Language;
-extern const char *MissionStr[];
+extern LanguageType g_Language;
+extern const char *g_MissionStr[];
 extern const char TXT_CS_MISSIONS[];
 extern const char TXT_AM_MISSIONS[];
 extern const char TXT_ABOUT[];

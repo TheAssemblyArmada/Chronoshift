@@ -34,7 +34,7 @@ AbstractTypeClass::AbstractTypeClass(const AbstractTypeClass &that) :
 int AbstractTypeClass::Full_Name() const
 {
     for (int i = 0; i < 25; ++i) {
-        if (100 * (m_RTTI + 1) + m_HeapID == NameIDOverride[i]) {
+        if (100 * (m_RTTI + 1) + m_HeapID == g_NameIDOverride[i]) {
             return -(i + 1);
         }
     }

@@ -133,7 +133,7 @@ void GameMouseClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
                 }
 
                 void *shape = Extract_Shape(Get_Shape_File_For_Mouse(m_CurrentMouse), m_MouseFrame + frame);
-                g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, shape);
+                g_Mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, shape);
             }
         }
     }
@@ -177,7 +177,7 @@ BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
     m_MouseFrame = 0;
     int frame = in_radar ? (cursor.Small == -1 ? cursor.Frame : cursor.Small) : cursor.Frame;
     void *shape = Extract_Shape(Get_Shape_File_For_Mouse(mouse), frame);
-    g_mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, shape);
+    g_Mouse->Set_Cursor(cursor.HotSpotX, cursor.HotSpotY, shape);
     m_CurrentMouse = mouse;
     m_MouseInRadar = in_radar;
 
@@ -189,16 +189,16 @@ void GameMouseClass::Mouse_Small(BOOL use_small_frame)
     if (m_MouseInRadar != use_small_frame) {
         if (use_small_frame) {
             if (s_MouseControl[m_CurrentMouse].Small == -1) {
-                g_mouse->Set_Cursor(s_MouseControl[MOUSE_POINTER].HotSpotX,
+                g_Mouse->Set_Cursor(s_MouseControl[MOUSE_POINTER].HotSpotX,
                     s_MouseControl[MOUSE_POINTER].HotSpotY,
                     Extract_Shape(Get_Shape_File_For_Mouse(MOUSE_POINTER), 0));
             } else {
-                g_mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
+                g_Mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
                     s_MouseControl[m_DefaultMouse].HotSpotY,
                     Extract_Shape(Get_Shape_File_For_Mouse(m_DefaultMouse), s_MouseControl[m_DefaultMouse].Small + m_MouseFrame));
             }
         } else {
-            g_mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
+            g_Mouse->Set_Cursor(s_MouseControl[m_DefaultMouse].HotSpotX,
                 s_MouseControl[m_DefaultMouse].HotSpotY,
                 Extract_Shape(Get_Shape_File_For_Mouse(m_DefaultMouse), s_MouseControl[m_DefaultMouse].Frame + m_MouseFrame));
         }
@@ -220,7 +220,7 @@ BOOL GameMouseClass::Load(Straw &straw)
     NoInitClass noinit;
 
     if (straw.Get(&theater, sizeof(theater)) == sizeof(theater)) {
-        g_lastTheater = THEATER_NONE;
+        g_LastTheater = THEATER_NONE;
         Reset_Theater_Shapes();
         Init_Theater(theater);
         TerrainTypeClass::Init(theater);
@@ -254,7 +254,7 @@ BOOL GameMouseClass::Load(Straw &straw)
                 }
             }
 
-            g_lastTheater = Scen.Get_Theater();
+            g_LastTheater = g_Scen.Get_Theater();
 
             return true;
         }
@@ -274,7 +274,7 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
     DEBUG_ASSERT_PRINT(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
 #endif*/
 
-    TheaterType theater = Scen.Get_Theater();
+    TheaterType theater = g_Scen.Get_Theater();
     pipe.Put(&theater, sizeof(theater));
     pipe.Put(this, sizeof(*this));
     uint32_t saved_cells = 0;

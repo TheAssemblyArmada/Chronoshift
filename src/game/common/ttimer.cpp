@@ -18,14 +18,14 @@
 #include "ostimer.h"
 
 #ifndef GAME_DLL
-TTimerClass<SystemTimerClass> TickCountTimer;
-TCountDownTimerClass<SystemTimerClass> FrameTimer;
+TTimerClass<SystemTimerClass> g_TickCountTimer;
+TCountDownTimerClass<SystemTimerClass> g_FrameTimer;
 #endif
 
 uint32_t SystemTimerClass::operator()() const
 {
-    if (PlatformTimer != nullptr) {
-        return PlatformTimer->Get_System_Tick_Count();
+    if (g_PlatformTimer != nullptr) {
+        return g_PlatformTimer->Get_System_Tick_Count();
     }
 
     return 0;

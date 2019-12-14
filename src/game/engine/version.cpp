@@ -25,7 +25,7 @@ using std::strlen;
 using std::snprintf;
 
 #ifndef GAME_DLL
-VersionClass g_version;
+VersionClass g_Version;
 #endif
 
 VersionClass::VersionClass() :
@@ -212,4 +212,4 @@ int VersionClass::Major_Version()
     return m_MajorVersion;
 }
 
-const char *Version_Name() { return g_version.Version_String(); }
+const char *Version_Name() { return g_Version.Version_String(); }

@@ -43,7 +43,7 @@ BigCheckBoxClass::~BigCheckBoxClass()
 BOOL BigCheckBoxClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
-        g_mouse->Hide_Mouse();
+        g_Mouse->Hide_Mouse();
 
         int shape_frame = 0;
 
@@ -66,7 +66,7 @@ BOOL BigCheckBoxClass::Draw_Me(BOOL redraw)
         Conquer_Clip_Text_Print(
             m_TextString, m_XPos + 20, m_YPos, GadgetClass::Get_Color_Scheme(), 0, m_TextStyle, m_Width, nullptr);
 
-        g_mouse->Show_Mouse();
+        g_Mouse->Show_Mouse();
 
         return true;
     }

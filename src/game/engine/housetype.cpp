@@ -117,7 +117,7 @@ BOOL HouseTypeClass::Read_INI(GameINIClass &ini)
  */
 uint8_t *HouseTypeClass::Remap_Table()
 {
-    return ColorRemaps[m_Color].RemapPalette;
+    return g_ColorRemaps[m_Color].RemapPalette;
 }
 
 /**

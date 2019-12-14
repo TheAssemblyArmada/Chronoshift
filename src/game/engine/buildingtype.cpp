@@ -141,7 +141,7 @@ coord_t BuildingTypeClass::Coord_Fixup(coord_t coord) const
  */
 int BuildingTypeClass::Full_Name() const
 {
-    if (g_InMapEditor || !m_IsNominal || Rule.Named_Civilians() || m_Type < BUILDING_V01 || m_Type > BUILDING_V37) {
+    if (g_InMapEditor || !m_IsNominal || g_Rule.Named_Civilians() || m_Type < BUILDING_V01 || m_Type > BUILDING_V37) {
         return AbstractTypeClass::Full_Name();
     }
 
@@ -201,7 +201,7 @@ BOOL BuildingTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 int BuildingTypeClass::Cost_Of() const
 {
-    if (Rule.Separate_Aircraft() && m_Type == BUILDING_HELIPAD) {
+    if (g_Rule.Separate_Aircraft() && m_Type == BUILDING_HELIPAD) {
         return Raw_Cost();
     }
 
@@ -306,7 +306,7 @@ int BuildingTypeClass::Raw_Cost() const
             break;
 
         case BUILDING_HELIPAD:
-            if (Rule.Separate_Aircraft()) {
+            if (g_Rule.Separate_Aircraft()) {
                 cost -= (AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Get_Cost()
                         + AircraftTypeClass::As_Reference(AIRCRAFT_HIND).Get_Cost()) / 2;
             }
@@ -560,7 +560,7 @@ void BuildingTypeClass::One_Time()
 
         if (building.m_BuildupData != nullptr) {
             int frame_count = Get_Build_Frame_Count(building.m_BuildupData);
-            int delay = (frame_count > 0 ? ((Rule.Buildup_Time() * 900) / frame_count) : 1);
+            int delay = (frame_count > 0 ? ((g_Rule.Buildup_Time() * 900) / frame_count) : 1);
             building.Init_Anim(BSTATE_0, 0, frame_count, delay);
         }
     }
@@ -646,7 +646,7 @@ void BuildingTypeClass::Prep_For_Add()
         BuildingTypeClass *btptr = As_Pointer(i);
         if (btptr != nullptr) {
             if (btptr->m_ImageData != nullptr) {
-                Map.Add_To_List(btptr);
+                g_Map.Add_To_List(btptr);
             }
         }
     }

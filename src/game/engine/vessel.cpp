@@ -72,7 +72,7 @@ VesselClass::VesselClass(const NoInitClass &noinit) :
 VesselClass::~VesselClass()
 {
     m_Class = nullptr;
-    if (GameActive) {
+    if (g_GameActive) {
         if (m_OwnerHouse != nullptr) {
             m_OwnerHouse->Tracking_Remove(this);
         }
@@ -126,7 +126,7 @@ void VesselClass::AI()
         Commence();
     }
 
-    if (Map.In_View(Center_Cell())) {
+    if (g_Map.In_View(Center_Cell())) {
         if (Visually_Unclear()) {
             Mark(MARK_REDRAW);
         }
@@ -135,7 +135,7 @@ void VesselClass::AI()
     if (What_Type() == VESSEL_CARRIER) {
         if (m_Cargo.Cargo_Count()) {
             if (m_field_145.Expired()) {
-                m_field_145 = 900 * Rule.Reload_Rate();
+                m_field_145 = 900 * g_Rule.Reload_Rate();
                 for (ObjectClass *optr = m_Cargo.Attached_Object(); optr != nullptr; optr = optr->Get_Next()) {
                     target_t tmptarget = 0;
                     optr->Receive_Message(this, RADIO_RELOAD, tmptarget);
@@ -188,11 +188,11 @@ ActionType VesselClass::What_Action(cell_t cellnum) const
 {
     ActionType action = DriveClass::What_Action(cellnum);
     if (action == ACTION_NO_MOVE) {
-        if (Map[cellnum].Get_Land() == LAND_BEACH) {
+        if (g_Map[cellnum].Get_Land() == LAND_BEACH) {
             return ACTION_MOVE;
         }
         if (Is_Weapon_Equipped() && Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY)->Get_Projectile()->Is_UnderWater()
-            && Map[cellnum].Is_Bridge_Here()) {
+            && g_Map[cellnum].Is_Bridge_Here()) {
             return ACTION_ATTACK;
         }
     }
@@ -428,12 +428,12 @@ target_t VesselClass::Greatest_Threat(ThreatType threat)
 BulletClass *VesselClass::Fire_At(target_t target, WeaponSlotType weapon)
 {
     if (What_Type() == VESSEL_CARRIER) {
-        m_RearmTimer = Rule.Carrier_Launch_Delay();
+        m_RearmTimer = g_Rule.Carrier_Launch_Delay();
         FootClass *fptr = m_Cargo.Detach_Object();
         if (fptr != nullptr) {
-            ++ScenarioInit;
+            ++g_ScenarioInit;
             fptr->Unlimbo(Center_Coord());
-            --ScenarioInit;
+            --g_ScenarioInit;
             fptr->Assign_Mission(MISSION_ATTACK);
             fptr->Assign_Target(m_TarCom);
             fptr->Commence();
@@ -511,7 +511,7 @@ int VesselClass::Shape_Number() const
             frame = 0;
             break;
         default:
-            frame = TechnoClass::BodyShape32[FacingClass::Facing16[m_Facing.Get_Current()] * 2] / 2;
+            frame = TechnoClass::s_BodyShape32[FacingClass::s_Facing16[m_Facing.Get_Current()] * 2] / 2;
             break;
     };
 
@@ -555,7 +555,7 @@ void VesselClass::Repair_AI()
     return func(this);
 #else
     if (m_ToSelfRepair) {
-        if (!(g_GameFrame % (Rule.Get_Repair_Rate() * 900))) {
+        if (!(g_GameFrame % (g_Rule.Get_Repair_Rate() * 900))) {
             Mark(MARK_REDRAW);
 
             int cost = Class_Of().Repair_Cost();
@@ -587,7 +587,7 @@ void VesselClass::Repair_AI()
  */
 BOOL VesselClass::Edge_Of_World_AI()
 {
-    if (!m_Moving && !Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
+    if (!m_Moving && !g_Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
         if (m_Team != nullptr) {
             m_Team->Set_Bit2_4(true);
         }

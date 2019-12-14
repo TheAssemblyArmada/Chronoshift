@@ -82,9 +82,9 @@ private:
 const char *Version_Name();
 
 #ifdef GAME_DLL
-extern VersionClass &g_version;
+extern VersionClass &g_Version;
 #else
-extern VersionClass g_version;
+extern VersionClass g_Version;
 #endif
 
 #endif // VERSION_H

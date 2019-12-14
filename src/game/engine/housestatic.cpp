@@ -21,11 +21,11 @@ HouseStaticClass::HouseStaticClass() :
     m_IQ(0),
     m_TechLevel(1),
     m_Allies(0),
-    m_MaxUnit(Rule.Max_Unit() / 6),
-    m_MaxBuilding(Rule.Max_Building() / 6),
-    m_MaxInfantry(Rule.Max_Infantry() / 6),
-    m_MaxVessel(Rule.Max_Vessel() / 6),
-    m_MaxAircraft(Rule.Max_Unit() / 6),
+    m_MaxUnit(g_Rule.Max_Unit() / 6),
+    m_MaxBuilding(g_Rule.Max_Building() / 6),
+    m_MaxInfantry(g_Rule.Max_Infantry() / 6),
+    m_MaxVessel(g_Rule.Max_Vessel() / 6),
+    m_MaxAircraft(g_Rule.Max_Unit() / 6),
     m_Credits(0),
     m_Edge(SOURCE_NORTH)
 {
@@ -63,7 +63,7 @@ bool HouseStaticClass::Read_INI(GameINIClass &ini, char const *section)
         m_Credits = (ini.Get_Int(section, "Credits", m_Credits) * 100);
 
         m_IQ = ini.Get_Int(section, "IQ", m_IQ);
-        if (m_IQ > Rule.IQ_Controls().m_MaxIQLevels) {
+        if (m_IQ > g_Rule.IQ_Controls().m_MaxIQLevels) {
             m_IQ = 1;
         }
 

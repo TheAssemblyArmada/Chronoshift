@@ -23,9 +23,9 @@
 #include <algorithm>
 
 #ifndef GAME_DLL
-PowerClass::PowerButtonClass PowerClass::PowerButton;
-void *PowerClass::PowerShape = nullptr;
-void *PowerClass::PowerBarShape = nullptr;
+PowerClass::PowerButtonClass PowerClass::s_PowerButton;
+void *PowerClass::s_PowerShape = nullptr;
+void *PowerClass::s_PowerBarShape = nullptr;
 #endif
 
 PowerClass::PowerButtonClass::PowerButtonClass() :
@@ -68,14 +68,14 @@ PowerClass::PowerClass() :
 void PowerClass::One_Time()
 {
     RadarClass::One_Time();
-    PowerShape = GameFileClass::Retrieve("power.shp");
-    DEBUG_ASSERT(PowerShape != nullptr);
+    s_PowerShape = GameFileClass::Retrieve("power.shp");
+    DEBUG_ASSERT(s_PowerShape != nullptr);
 
-    PowerBarShape = GameFileClass::Retrieve("powerbar.shp");
-    DEBUG_ASSERT(PowerBarShape != nullptr);
+    s_PowerBarShape = GameFileClass::Retrieve("powerbar.shp");
+    DEBUG_ASSERT(s_PowerBarShape != nullptr);
 
-    PowerButton.Set_Position(480, 180);
-    PowerButton.Set_Size(15, 220);
+    s_PowerButton.Set_Position(480, 180);
+    s_PowerButton.Set_Size(15, 220);
 }
 
 void PowerClass::Init_Clear()
@@ -104,7 +104,7 @@ void PowerClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
     func(this, key, mouse_x, mouse_y);
 #endif
     /*
-    if (Map.Is_Sidebar_Drawn()) {
+    if (g_Map.Is_Sidebar_Drawn()) {
         int prev_drain = m_DrainHeight;
         int prev_output = m_OutputHeight;
 
@@ -177,7 +177,7 @@ void PowerClass::Draw_It(BOOL force_redraw)
     /*
     static int _modtable[] = { 0, -1, 0, 1, 0, -1, -2, -1, 0, 1, 2, 1, 0 };
 
-    if ((m_PowerToRedraw || force_redraw) && Map.Is_Sidebar_Drawn()) {
+    if ((m_PowerToRedraw || force_redraw) && g_Map.Is_Sidebar_Drawn()) {
         m_PowerToRedraw = false;
 
         ShapeFlags flags = SHAPE_NORMAL;
@@ -192,7 +192,7 @@ void PowerClass::Draw_It(BOOL force_redraw)
             // If remaining time mod 3 is odd?
             if ((m_FlashTimer.Time() % 3) & 1) {
                 flags |= SHAPE_FADING;
-                fadingtable = DisplayClass::FadingRed;
+                fadingtable = DisplayClass::s_FadingRed;
             }
         }
 
@@ -236,8 +236,8 @@ void PowerClass::Draw_It(BOOL force_redraw)
             drain_height = (drain_height / 107) * 153;
 
             // Draw the power bar, two similar color lines next to each other
-            g_logicPage->Fill_Rect(PowerButton.Get_XPos() + 10, output_height - 351, PowerButton.Get_XPos() + 11, 351, lcolor);
-            g_logicPage->Fill_Rect(PowerButton.Get_XPos() + 12, output_height - 351, PowerButton.Get_XPos() + 13, 351, dcolor);
+            g_LogicPage->Fill_Rect(PowerButton.Get_XPos() + 10, output_height - 351, PowerButton.Get_XPos() + 11, 351, lcolor);
+            g_LogicPage->Fill_Rect(PowerButton.Get_XPos() + 12, output_height - 351, PowerButton.Get_XPos() + 13, 351, dcolor);
         }
 
         // Draw the power level indicator.

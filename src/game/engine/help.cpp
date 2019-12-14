@@ -24,8 +24,8 @@
 using std::snprintf;
 
 #ifndef GAME_DLL
-int16_t HelpClass::OverlapList[60];
-char *HelpClass::HelpText = nullptr;
+int16_t HelpClass::s_OverlapList[60];
+char *HelpClass::s_HelpText = nullptr;
 #endif
 
 /**
@@ -71,7 +71,7 @@ void HelpClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
         HelpClass::Help_Text(TXT_NULL);
     }
 
-    if (m_CountDownTimer != 0 && HelpText == nullptr && m_HelpTextID != TXT_NULL) {
+    if (m_CountDownTimer != 0 && s_HelpText == nullptr && m_HelpTextID != TXT_NULL) {
         if (m_HelpForceDraw || (m_HelpMouseXPos == mouse_x && m_HelpMouseYPos == mouse_y)) {
             HelpClass::Set_Text(m_HelpTextID);
         } else {
@@ -99,29 +99,29 @@ void HelpClass::Draw_It(BOOL force_redraw)
         return;
     }
 
-    if (m_CountDownTimer == 0 && g_logicPage->Lock()) {
+    if (m_CountDownTimer == 0 && g_LogicPage->Lock()) {
         Plain_Text_Print(m_HelpTextID, m_HelpXPos, m_HelpYPos, m_HelpTextColor, COLOR_BLACK, TPF_NOSHADOW | TPF_MAP);
-        g_logicPage->Draw_Rect(m_HelpXPos - 1, m_HelpYPos - 1, m_HelpWidth + m_HelpXPos + 1, g_fontHeight + m_HelpYPos, m_HelpTextColor);
+        g_LogicPage->Draw_Rect(m_HelpXPos - 1, m_HelpYPos - 1, m_HelpWidth + m_HelpXPos + 1, g_FontHeight + m_HelpYPos, m_HelpTextColor);
         
         if (m_HelpCost != 0) {
             snprintf(buffer, sizeof(buffer), "$%d", m_HelpCost);
             int stringwidth = String_Pixel_Width(buffer);
-            Plain_Text_Print(buffer, m_HelpXPos, m_HelpYPos + g_fontHeight, m_HelpTextColor, COLOR_BLACK, TPF_NOSHADOW | TPF_MAP);
+            Plain_Text_Print(buffer, m_HelpXPos, m_HelpYPos + g_FontHeight, m_HelpTextColor, COLOR_BLACK, TPF_NOSHADOW | TPF_MAP);
             
-            g_logicPage->Draw_Rect(m_HelpXPos - 1,
-                m_HelpYPos + g_fontHeight,
+            g_LogicPage->Draw_Rect(m_HelpXPos - 1,
+                m_HelpYPos + g_FontHeight,
                 stringwidth + m_HelpXPos + 1,
-                g_fontHeight + m_HelpYPos + g_fontHeight - 1,
+                g_FontHeight + m_HelpYPos + g_FontHeight - 1,
                 m_HelpTextColor);
 
-            g_logicPage->Draw_Line(m_HelpXPos,
-                m_HelpYPos + g_fontHeight,
+            g_LogicPage->Draw_Line(m_HelpXPos,
+                m_HelpYPos + g_FontHeight,
                 m_HelpXPos + std::min(stringwidth + 1, m_HelpWidth) - 1,
-                m_HelpYPos + g_fontHeight,
+                m_HelpYPos + g_FontHeight,
                 COLOR_BLACK);
         }
 
-        g_logicPage->Unlock();
+        g_LogicPage->Unlock();
     }
 }
 
@@ -135,11 +135,11 @@ void HelpClass::Help_Text(int str_id, int x, int y, int color, BOOL no_wait)
     if (m_HelpTextID != str_id) {
         // If we are changing a displayed string, clear the cells it overlapped.
         if (m_HelpTextID != TXT_NULL) {
-            Refresh_Cells(Coord_To_Cell(m_DisplayPos), HelpClass::OverlapList);
+            Refresh_Cells(Coord_To_Cell(m_DisplayPos), HelpClass::s_OverlapList);
         }
 
-        m_HelpMouseXPos = (x == -1 ? g_mouse->Get_Mouse_X() : x);
-        m_HelpMouseYPos = (y == -1 ? g_mouse->Get_Mouse_Y() : y);
+        m_HelpMouseXPos = (x == -1 ? g_Mouse->Get_Mouse_X() : x);
+        m_HelpMouseYPos = (y == -1 ? g_Mouse->Get_Mouse_Y() : y);
         m_HelpForceDraw = (x != -1 || y != -1);
 
         if (no_wait) {
@@ -190,10 +190,10 @@ void HelpClass::Set_Tactical_Position(coord_t location)
 const int16_t *HelpClass::Overlap_List() const
 {
     if (m_HelpTextID == TXT_NULL || m_CountDownTimer > 0) {
-        OverlapList[0] = LIST_END;
+        s_OverlapList[0] = LIST_END;
     }
 
-    return OverlapList;
+    return s_OverlapList;
 }
 
 /**
@@ -239,7 +239,7 @@ void HelpClass::Set_Text(int string_id)
         }
 
         // Copy list and mark final buffer position as end in case source list is longer than buffer.
-        memcpy(OverlapList, Text_Overlap_List(Text_String(m_HelpTextID), m_HelpXPos - 1, m_HelpYPos), sizeof(OverlapList));
-        OverlapList[HELP_OVERLAP_BUFFER - 1] = LIST_END;
+        memcpy(s_OverlapList, Text_Overlap_List(Text_String(m_HelpTextID), m_HelpXPos - 1, m_HelpYPos), sizeof(s_OverlapList));
+        s_OverlapList[HELP_OVERLAP_BUFFER - 1] = LIST_END;
     }
 }

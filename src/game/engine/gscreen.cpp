@@ -25,8 +25,8 @@
 #include "iomap.h"
 
 #ifndef GAME_DLL
-GadgetClass *GameScreenClass::Buttons = nullptr;
-GraphicViewPortClass *GameScreenClass::ShadowPage = nullptr;
+GadgetClass *GameScreenClass::g_Buttons = nullptr;
+GraphicViewPortClass *GameScreenClass::g_ShadowPage = nullptr;
 #endif
 
 GameScreenClass::GameScreenClass() :
@@ -40,10 +40,10 @@ GameScreenClass::~GameScreenClass()
 
 void GameScreenClass::One_Time()
 {
-    Buttons = nullptr;
-    ShadowPage = new GraphicBufferClass(320, 200, nullptr);
-    ShadowPage->Clear();
-    g_hidPage.Clear();
+    g_Buttons = nullptr;
+    g_ShadowPage = new GraphicBufferClass(320, 200, nullptr);
+    g_ShadowPage->Clear();
+    g_HidPage.Clear();
 }
 
 void GameScreenClass::Init(TheaterType theater)
@@ -55,9 +55,9 @@ void GameScreenClass::Init(TheaterType theater)
 
 void GameScreenClass::Init_Clear()
 {
-    if (ShadowPage != nullptr) {
-        ShadowPage->Clear();
-        g_hidPage.Clear();
+    if (g_ShadowPage != nullptr) {
+        g_ShadowPage->Clear();
+        g_HidPage.Clear();
     }
 
     m_RedrawFlag |= REDRAW_FORCE;
@@ -65,7 +65,7 @@ void GameScreenClass::Init_Clear()
 
 void GameScreenClass::Init_IO()
 {
-    Buttons = nullptr;
+    g_Buttons = nullptr;
 }
 
 void GameScreenClass::Flag_To_Redraw(BOOL redraw)
@@ -79,21 +79,21 @@ void GameScreenClass::Flag_To_Redraw(BOOL redraw)
 
 void GameScreenClass::Input(KeyNumType &key, int &mouse_x, int &mouse_y)
 {
-    key = KeyNumType(g_keyboard->Check());
-    mouse_x = g_mouse->Get_Mouse_X();
-    mouse_y = g_mouse->Get_Mouse_Y();
+    key = KeyNumType(g_Keyboard->Check());
+    mouse_x = g_Mouse->Get_Mouse_X();
+    mouse_y = g_Mouse->Get_Mouse_Y();
 
-    if (Buttons != nullptr) {
-        if (Buttons->Is_List_To_Redraw()) {
+    if (g_Buttons != nullptr) {
+        if (g_Buttons->Is_List_To_Redraw()) {
             Flag_To_Redraw();
         }
 
-        GraphicViewPortClass *old = Set_Logic_Page(g_hidPage);
-        key = Buttons->Input();
+        GraphicViewPortClass *old = Set_Logic_Page(g_HidPage);
+        key = g_Buttons->Input();
         Set_Logic_Page(old);
 
     } else if (key != KN_NONE) {
-        key = KeyNumType(g_keyboard->Get());
+        key = KeyNumType(g_Keyboard->Get());
     }
 
     AI(key, mouse_x, mouse_y);
@@ -101,29 +101,29 @@ void GameScreenClass::Input(KeyNumType &key, int &mouse_x, int &mouse_y)
 
 void GameScreenClass::Add_A_Button(GadgetClass &gadget)
 {
-    if (&gadget == Buttons) {
+    if (&gadget == g_Buttons) {
         Remove_A_Button(gadget);
     } else {
         gadget.Remove();
     }
 
-    if (Buttons != nullptr) {
-        gadget.Add_Tail(*Buttons);
+    if (g_Buttons != nullptr) {
+        gadget.Add_Tail(*g_Buttons);
     } else {
-        Buttons = &gadget;
+        g_Buttons = &gadget;
     }
 }
 
 void GameScreenClass::Remove_A_Button(GadgetClass &gadget)
 {
-    Buttons = gadget.Remove();
+    g_Buttons = gadget.Remove();
 }
 
 // TODO: This function should probably be bumped up to DisplayClass as it relies on DisplayClass members.
 void GameScreenClass::Render()
 {
     // This if is only done in EDWIN, so editor only?
-    if (g_InMapEditor && Buttons != nullptr && Buttons->Is_List_To_Redraw()) {
+    if (g_InMapEditor && g_Buttons != nullptr && g_Buttons->Is_List_To_Redraw()) {
         m_RedrawFlag |= REDRAW_2;
     }
 
@@ -131,28 +131,28 @@ void GameScreenClass::Render()
 
         BENCHMARK_START(BENCH_FULL_PROCESS);
 
-        GraphicViewPortClass *old = Set_Logic_Page(g_hidPage);
+        GraphicViewPortClass *old = Set_Logic_Page(g_HidPage);
 
         BOOL to_redraw = (m_RedrawFlag & REDRAW_FORCE) != 0;
 
         if (g_InMapEditor && to_redraw) {
-            g_hidPage.Clear();
+            g_HidPage.Clear();
         }
 
         Draw_It(to_redraw);
 
-        if (Buttons != nullptr) {
-            Buttons->Draw_All(false);
+        if (g_Buttons != nullptr) {
+            g_Buttons->Draw_All(false);
         }
 
 
         if (!g_InMapEditor) {
-            if (Session.Get_Messages().Num_Messages() > 0) {
+            if (g_Session.Get_Messages().Num_Messages() > 0) {
                 // Calculate the width of the message buffer based on the current tactical width.
-                Session.Get_Messages().Set_Width(CELL_PIXELS * Lepton_To_Cell_Coord(Map.Get_DisplayWidth()));
+                g_Session.Get_Messages().Set_Width(CELL_PIXELS * Lepton_To_Cell_Coord(g_Map.Get_DisplayWidth()));
             }
 
-            Session.Get_Messages().Draw();
+            g_Session.Get_Messages().Draw();
         }
 
         Blit_Display();
@@ -173,17 +173,17 @@ void GameScreenClass::Blit_Display()
 {
     BENCHMARK_START(BENCH_BLIT);
 
-    g_mouse->Draw_Mouse(g_hidPage);
+    g_Mouse->Draw_Mouse(g_HidPage);
 
-    g_hidPage.Blit(g_seenBuff,
-        g_hidPage.Get_XPos(),
-        g_hidPage.Get_YPos(),
-        g_seenBuff.Get_XPos(),
-        g_seenBuff.Get_YPos(),
-        g_hidPage.Get_Width(),
-        g_hidPage.Get_Height());
+    g_HidPage.Blit(g_SeenBuff,
+        g_HidPage.Get_XPos(),
+        g_HidPage.Get_YPos(),
+        g_SeenBuff.Get_XPos(),
+        g_SeenBuff.Get_YPos(),
+        g_HidPage.Get_Width(),
+        g_HidPage.Get_Height());
 
-    g_mouse->Erase_Mouse(g_hidPage);
+    g_Mouse->Erase_Mouse(g_HidPage);
 
     BENCHMARK_END(BENCH_BLIT);
 }

@@ -138,17 +138,17 @@ void MapEditClass::Toggle_Editor_Mode(BOOL editor_mode)
         g_InMapEditor = true;
         g_Debug_Unshroud = true;
         Unselect_All();
-        Map.Activate(0);
-        Map.Init_IO();
-        g_hidPage.Clear();
+        g_Map.Activate(0);
+        g_Map.Init_IO();
+        g_HidPage.Clear();
     } else {
         g_InMapEditor = false;
         g_Debug_Unshroud = false;
         Unselect_All();
-        Map.Init_IO();
+        g_Map.Init_IO();
     }
-    Map.Flag_To_Redraw(true);
-    Map.Render();
+    g_Map.Flag_To_Redraw(true);
+    g_Map.Render();
 }
 
 /**

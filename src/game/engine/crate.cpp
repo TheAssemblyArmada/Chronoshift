@@ -20,12 +20,12 @@
 #include "scenario.h"
 
 #ifndef GAME_DLL
-AnimType CrateClass::CrateAnims[CRATE_COUNT];
-int CrateClass::CrateShares[CRATE_COUNT] = { 50, 20, 3, 1, 3, 5, 5, 20, 1, 1, 3, 10, 10, 10, 1, 1, 3, 5 };
-int CrateClass::CrateData[CRATE_COUNT];
+AnimType CrateClass::s_CrateAnims[CRATE_COUNT];
+int CrateClass::s_CrateShares[CRATE_COUNT] = { 50, 20, 3, 1, 3, 5, 5, 20, 1, 1, 3, 10, 10, 10, 1, 1, 3, 5 };
+int CrateClass::s_CrateData[CRATE_COUNT];
 #endif
 
-const char *CrateClass::CrateNames[] = { "Money",
+const char *CrateClass::s_CrateNames[] = { "Money",
     "Unit",
     "ParaBomb",
     "HealBase",
@@ -90,8 +90,8 @@ BOOL CrateClass::Put_Crate(cell_t &cell)
 
 BOOL CrateClass::Get_Crate(cell_t cell)
 {
-    if (Map.In_Radar(cell)) {
-        CellClass &cptr = Map[cell];
+    if (g_Map.In_Radar(cell)) {
+        CellClass &cptr = g_Map[cell];
         OverlayType overlay = cptr.Get_Overlay();
         if (overlay == OVERLAY_WOOD_CRATE || overlay == OVERLAY_STEEL_CRATE || overlay == OVERLAY_WATER_WOOD_CRATE) {
             cptr.Set_Overlay(OVERLAY_NONE);
@@ -107,7 +107,7 @@ CrateType CrateClass::From_Name(const char *name)
 {
     if (name != nullptr) {
         for (CrateType i = CRATE_MONEY; i < CRATE_COUNT; ++i) {
-            if (strcasecmp(name, CrateNames[i]) == 0) {
+            if (strcasecmp(name, s_CrateNames[i]) == 0) {
                 return i;
             }
         }

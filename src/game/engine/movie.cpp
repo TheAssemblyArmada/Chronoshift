@@ -22,7 +22,7 @@
 #include <strings.h>
 #endif
 
-MovieInfoStruct MovieTypes[MOVIE_COUNT] = {
+MovieInfoStruct g_MovieTypes[MOVIE_COUNT] = {
     { "AAGUN", false },
     { "MIG", false },
     { "SFROZEN", false },
@@ -179,7 +179,7 @@ MovieType Movie_From_Name(const char *name)
 
     if (name != nullptr) {
         for (MovieType movie = MOVIE_FIRST; movie < MOVIE_COUNT; ++movie) {
-            if (strcasecmp(name, MovieTypes[movie].Name) == 0) {
+            if (strcasecmp(name, g_MovieTypes[movie].Name) == 0) {
                 return movie;
             }
         }
@@ -191,7 +191,7 @@ MovieType Movie_From_Name(const char *name)
 const char *Name_From_Movie(MovieType movie)
 {
     if (movie != MOVIE_NONE && movie < MOVIE_COUNT) {
-        return MovieTypes[movie].Name;
+        return g_MovieTypes[movie].Name;
     }
     return "<none>";
 }
@@ -199,7 +199,7 @@ const char *Name_From_Movie(MovieType movie)
 MovieInfoStruct *MovieInfo_From_Movie(MovieType movie)
 {
     if (movie != MOVIE_NONE && movie < MOVIE_COUNT) {
-        return &MovieTypes[movie];
+        return &g_MovieTypes[movie];
     }
     return nullptr;
 }
@@ -216,7 +216,7 @@ void Play_Intro(BOOL flag)
 {
     static MovieType _counter = MOVIE_NONE;
 
-    g_keyboard->Clear();
+    g_Keyboard->Clear();
 
     if ( flag ) {
 
@@ -234,7 +234,7 @@ void Play_Intro(BOOL flag)
         DEBUG_ASSERT(_counter != MOVIE_NONE);
         DEBUG_ASSERT(_counter < MOVIE_COUNT);
 
-        g_visiblePage.Clear();
+        g_VisiblePage.Clear();
 
         Play_Movie(_counter);
 
@@ -243,7 +243,7 @@ void Play_Intro(BOOL flag)
 
     } else {
 
-        g_visiblePage.Clear();
+        g_VisiblePage.Clear();
 
         Play_Movie(MOVIE_PROLOG, THEME_NONE, false);
 
@@ -252,18 +252,18 @@ void Play_Intro(BOOL flag)
 
 void Play_SneakPeak()
 {
-    g_visiblePage.Clear();
+    g_VisiblePage.Clear();
 
     Play_Movie(MOVIE_PROLOG);
-    g_keyboard->Clear();
+    g_Keyboard->Clear();
 
-    g_visiblePage.Clear();
+    g_VisiblePage.Clear();
 
     Play_Movie(MOVIE_SIZZLE);
-    g_keyboard->Clear();
+    g_Keyboard->Clear();
 
-    g_visiblePage.Clear();
+    g_VisiblePage.Clear();
 
     Play_Movie(MOVIE_SIZZLE2);
-    g_keyboard->Clear();
+    g_Keyboard->Clear();
 }

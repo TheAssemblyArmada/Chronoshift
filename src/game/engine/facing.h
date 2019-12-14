@@ -151,16 +151,16 @@ public:
     BOOL Has_Not_Changed() const { return m_Current == m_Desired; }
 
 public:
-    static uint8_t const Facing8[256];
-    static uint8_t const Facing16[256];
-    static uint8_t const Facing32[256];
-    static uint8_t const Facing64[256];
+    static uint8_t const s_Facing8[256];
+    static uint8_t const s_Facing16[256];
+    static uint8_t const s_Facing32[256];
+    static uint8_t const s_Facing64[256];
 
 public:
-    static int8_t const Rotation8[256];
-    static int8_t const Rotation16[256];
-    static int8_t const Rotation32[256];
-    static int8_t const Rotation64[256];
+    static int8_t const s_Rotation8[256];
+    static int8_t const s_Rotation16[256];
+    static int8_t const s_Rotation32[256];
+    static int8_t const s_Rotation64[256];
 
 private:
     DirType m_Current;

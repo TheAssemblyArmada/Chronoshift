@@ -20,7 +20,7 @@
 #include <algorithm>
 
 #ifndef GAME_DLL
-TCountDownTimerClass<SystemTimerClass> ScrollClass::ScrollingCounter;
+TCountDownTimerClass<SystemTimerClass> ScrollClass::s_ScrollingCounter;
 #endif
 
 /**
@@ -30,7 +30,7 @@ ScrollClass::ScrollClass() :
     m_Autoscroll(true),
     m_ScrollUnkInt(0)
 {
-    ScrollingCounter = 1;
+    s_ScrollingCounter = 1;
 }
 
 /**
@@ -40,7 +40,7 @@ ScrollClass::ScrollClass() :
  */
 void ScrollClass::Init_IO()
 {
-    ScrollingCounter = 0;
+    s_ScrollingCounter = 0;
     HelpClass::Init_IO();
 }
 
@@ -80,8 +80,8 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
     static DirType _direction = DIR_NONE;
 
     if (!m_DisplayBit8) {
-        int vp_w = g_seenBuff.Get_Width();
-        int vp_h = g_seenBuff.Get_Height();
+        int vp_w = g_SeenBuff.Get_Width();
+        int vp_h = g_SeenBuff.Get_Height();
 
         bool at_edge = (mouse_x <= 0 || mouse_y <= 0 || vp_w - 1 <= mouse_x || vp_h - 1 <= mouse_y);
         bool edge_scrolling = false;
@@ -126,19 +126,19 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 
             FacingType scroll_facing = Direction_To_Facing(_direction);
 
-            int rate_index = g_InMapEditor ? Options.Get_Scroll_Rate() + 1 : (8 - m_ScrollUnkInt);
+            int rate_index = g_InMapEditor ? g_Options.Get_Scroll_Rate() + 1 : (8 - m_ScrollUnkInt);
 
-            if (rate_index < (Options.Get_Scroll_Rate() + 1)) {
-                rate_index = (Options.Get_Scroll_Rate() + 1);
-                m_ScrollUnkInt = 8 - (Options.Get_Scroll_Rate() + 1);
+            if (rate_index < (g_Options.Get_Scroll_Rate() + 1)) {
+                rate_index = (g_Options.Get_Scroll_Rate() + 1);
+                m_ScrollUnkInt = 8 - (g_Options.Get_Scroll_Rate() + 1);
             }
 
             // if the right mouse button is down, half the scroll speed.
-            if (g_keyboard->Down(KN_RMOUSE)) {
+            if (g_Keyboard->Down(KN_RMOUSE)) {
                 rate_index = std::clamp((rate_index + 1), 4, 8);
             }
 
-            if (!Options.Free_Scrolling()) {
+            if (!g_Options.Free_Scrolling()) {
                 _direction = Facing_To_Direction(Direction_To_Facing(_direction));
             }
 
@@ -147,15 +147,15 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             if (Scroll_Map(_direction, distance, false)) {
                 Override_Mouse_Shape(_scroll_mouse[scroll_facing]);
 
-                if (g_keyboard->Down(KN_LMOUSE) || m_Autoscroll) {
+                if (g_Keyboard->Down(KN_LMOUSE) || m_Autoscroll) {
                     distance = _rate[rate_index];
                     Scroll_Map(_direction, distance, true);
 
                     if (g_InMapEditor) {
-                        ScrollingCounter = 1;
+                        s_ScrollingCounter = 1;
                     } else {
-                        if (edge_scrolling && ScrollingCounter == 0) {
-                            ScrollingCounter = 1;
+                        if (edge_scrolling && s_ScrollingCounter == 0) {
+                            s_ScrollingCounter = 1;
                             ++m_ScrollUnkInt;
                         }
                     }
@@ -165,14 +165,14 @@ void ScrollClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
             }
         }
 
-        if (!g_InMapEditor && !edge_scrolling && ScrollingCounter == 0) {
+        if (!g_InMapEditor && !edge_scrolling && s_ScrollingCounter == 0) {
             --m_ScrollUnkInt;
 
             if (m_ScrollUnkInt < 0) {
                 ++m_ScrollUnkInt;
             }
 
-            ScrollingCounter = 1;
+            s_ScrollingCounter = 1;
         }
     }
 

@@ -23,9 +23,9 @@
 
 // NOTE: Update this as additional layers of the hierachy are added.
 #ifdef GAME_DLL
-extern MapEditClass &Map;
+extern MapEditClass &g_Map;
 #else
-extern MapEditClass Map;
+extern MapEditClass g_Map;
 #endif
 
 #endif // IOMAP_H

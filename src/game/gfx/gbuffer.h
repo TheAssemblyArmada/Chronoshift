@@ -108,15 +108,15 @@ public:
     void Draw_Stamp(void *tileset, int icon, int x, int y, const void *remapper, int left, int top, int right, int bottom);
 
 #ifdef GAME_DLL
-    // static BOOL &AllowHardwareBlitFills;
-    // static BOOL &AllowStretchBlits;
-    static int &ScreenWidth;
-    static int &ScreenHeight;
+    // static BOOL &s_AllowHardwareBlitFills;
+    // static BOOL &s_AllowStretchBlits;
+    static int &s_ScreenWidth;
+    static int &s_ScreenHeight;
 #else
-    static BOOL AllowHardwareBlitFills;
-    static BOOL AllowStretchBlits;
-    static int ScreenWidth;
-    static int ScreenHeight;
+    static BOOL s_AllowHardwareBlitFills;
+    static BOOL s_AllowStretchBlits;
+    static int s_ScreenWidth;
+    static int s_ScreenHeight;
 #endif
 
 private:
@@ -163,7 +163,7 @@ public:
     BOOL Lock();
     BOOL Unlock();
 
-    static int TotalLocks;
+    static int s_TotalLocks;
 
 private:
     BufferClass m_GraphicBuffer;
@@ -179,21 +179,21 @@ GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *view);
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &view);
 
 #ifdef GAME_DLL
-extern GraphicViewPortClass *&g_logicPage;
-extern GraphicViewPortClass &g_seenBuff;
-extern GraphicViewPortClass &g_hidPage;
-extern GraphicBufferClass &g_visiblePage;
-extern GraphicBufferClass &g_hiddenPage;
-extern GraphicBufferClass &g_sysMemPage;
-extern GraphicBufferClass &g_modeXBuff;
+extern GraphicViewPortClass *&g_LogicPage;
+extern GraphicViewPortClass &g_SeenBuff;
+extern GraphicViewPortClass &g_HidPage;
+extern GraphicBufferClass &g_VisiblePage;
+extern GraphicBufferClass &g_HiddenPage;
+extern GraphicBufferClass &g_SysMemPage;
+extern GraphicBufferClass &g_ModeXBuff;
 #else
-extern GraphicViewPortClass *g_logicPage;
-extern GraphicViewPortClass g_seenBuff;
-extern GraphicViewPortClass g_hidPage;
-extern GraphicBufferClass g_visiblePage;
-extern GraphicBufferClass g_hiddenPage;
-extern GraphicBufferClass g_sysMemPage;
-extern GraphicBufferClass g_modeXBuff;
+extern GraphicViewPortClass *g_LogicPage;
+extern GraphicViewPortClass g_SeenBuff;
+extern GraphicViewPortClass g_HidPage;
+extern GraphicBufferClass g_VisiblePage;
+extern GraphicBufferClass g_HiddenPage;
+extern GraphicBufferClass g_SysMemPage;
+extern GraphicBufferClass g_ModeXBuff;
 #endif
 
 #endif // GBUFFER_H

@@ -50,8 +50,8 @@ BOOL ShapeButtonClass::Draw_Me(BOOL redraw)
         return false;
     }
 
-    if (g_logicPage == &g_seenBuff) {
-        g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
+    if (g_LogicPage == &g_SeenBuff) {
+        g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
     }
 
     int shape_frame = SHAPE_DEFAULT;
@@ -66,8 +66,8 @@ BOOL ShapeButtonClass::Draw_Me(BOOL redraw)
 
     CC_Draw_Shape(m_ButtonShape, shape_frame, m_XPos, m_YPos);
 
-    if (g_logicPage == &g_seenBuff) {
-        g_mouse->Conditional_Show_Mouse();
+    if (g_LogicPage == &g_SeenBuff) {
+        g_Mouse->Conditional_Show_Mouse();
     }
 
     return true;

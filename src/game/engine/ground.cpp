@@ -18,10 +18,10 @@
 #include <algorithm>
 
 #ifndef GAME_DLL
-GroundClass Ground[LAND_COUNT];
+GroundClass g_Ground[LAND_COUNT];
 #endif
 
-const char *GroundTypes[GROUND_COUNT] = {
+const char *g_GroundTypes[GROUND_COUNT] = {
     "Foot",
     "Track",
     "Wheel",
@@ -48,7 +48,7 @@ GroundType GroundClass::From_Name(const char *name)
 
 const char *GroundClass::Name_From(GroundType ground)
 {
-    return ground != GROUND_NONE && ground < GROUND_COUNT ? GroundTypes[ground] : "<none>";
+    return ground != GROUND_NONE && ground < GROUND_COUNT ? g_GroundTypes[ground] : "<none>";
 }
 
 BOOL GroundClass::Read_INI(GameINIClass &ini, LandType const land)
@@ -60,7 +60,7 @@ BOOL GroundClass::Read_INI(GameINIClass &ini, LandType const land)
 
     if (ini.Find_Section(landname) != nullptr) {
         for (SpeedType speed = SPEED_FIRST; speed < SPEED_COUNT; ++speed) {
-            Speeds[speed] = std::min(fixed_t::_1_1, ini.Get_Fixed(landname, GroundTypes[speed], Speeds[SPEED_FOOT]));
+            Speeds[speed] = std::min(fixed_t::_1_1, ini.Get_Fixed(landname, g_GroundTypes[speed], Speeds[SPEED_FOOT]));
         }
 
         Buildable = ini.Get_Bool(landname, "Buildable", false);

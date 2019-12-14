@@ -154,8 +154,8 @@ Dial8Class &Dial8Class::operator=(Dial8Class &that)
 BOOL Dial8Class::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Hide_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Hide_Mouse();
         }
 
         // Draw bevelled box.
@@ -166,20 +166,20 @@ BOOL Dial8Class::Draw_Me(BOOL redraw)
             Draw_Box(m_CompassPoints[i].x - 1, m_CompassPoints[i].y - 1, 3, 3, BOX_STYLE_1, false);
         }
 
-        g_logicPage->Draw_Line(m_Center.x + 1,
+        g_LogicPage->Draw_Line(m_Center.x + 1,
             m_Center.y + 1,
             m_LinePoints[m_Facing].x + 1,
             m_LinePoints[m_Facing].y + 1,
             GadgetClass::Get_Color_Scheme()->WindowPalette[0]);
 
-        g_logicPage->Draw_Line(m_Center.x,
+        g_LogicPage->Draw_Line(m_Center.x,
             m_Center.y,
             m_LinePoints[m_Facing].x,
             m_LinePoints[m_Facing].y,
             GadgetClass::Get_Color_Scheme()->WindowPalette[3]);
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Show_Mouse();
         }
 
         return true;
@@ -202,7 +202,7 @@ BOOL Dial8Class::Action(unsigned flags, KeyNumType &key)
         _is_sel = true;
     }
     if (flags & MOUSE_LEFT_PRESS || flags & MOUSE_LEFT_HELD && _is_sel) {
-        m_Direction = Desired_Facing8(m_Center.x, m_Center.y, g_mouse->Get_Mouse_X(), g_mouse->Get_Mouse_Y());
+        m_Direction = Desired_Facing8(m_Center.x, m_Center.y, g_Mouse->Get_Mouse_X(), g_Mouse->Get_Mouse_Y());
         m_Facing = Direction_To_Facing(m_Direction);
 
         if (m_Facing != m_LastFacing) {

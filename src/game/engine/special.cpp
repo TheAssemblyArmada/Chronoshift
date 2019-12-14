@@ -17,5 +17,5 @@
 #include "special.h"
 
 #ifndef GAME_DLL
-SpecialClass Special;
+SpecialClass s_Special;
 #endif

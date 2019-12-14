@@ -21,7 +21,7 @@
 #include "straw.h"
 
 #ifndef GAME_DLL
-SessionClass Session;
+SessionClass g_Session;
 #endif
 
 SessionClass::SessionClass()
@@ -220,7 +220,7 @@ uint32_t SessionClass::Compute_Unique_ID()
 
 BOOL SessionClass::Am_I_Master()
 {
-    for (int i = 0; i < Session.m_MPlayerMax; ++i) {
+    for (int i = 0; i < g_Session.m_MPlayerMax; ++i) {
         HouseClass *house = HouseClass::As_Pointer(HousesType(i) + HOUSES_MULTI_FIRST);
         if (house->Is_Human()) {
             if (house == g_PlayerPtr) {

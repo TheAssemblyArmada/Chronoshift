@@ -116,7 +116,7 @@ BOOL VesselTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
     /*VesselClass *vptr = new VesselClass(m_Type, HOUSES_NONE);
 
     if (vptr != nullptr) {
-        DirType dir = (DirType)Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
+        DirType dir = (DirType)g_Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
         return vptr->Unlimbo(Cell_To_Coord(cellnum), dir);
     }*/
 
@@ -203,7 +203,7 @@ void VesselTypeClass::Prep_For_Add()
         VesselTypeClass *vtptr = As_Pointer(i);
         if (vtptr != nullptr) {
             if (vtptr->m_ImageData != nullptr) {
-                Map.Add_To_List(vtptr);
+                g_Map.Add_To_List(vtptr);
             }
         }
     }

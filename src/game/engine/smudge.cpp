@@ -71,7 +71,7 @@ SmudgeClass::SmudgeClass(const NoInitClass &noinit) :
  */
 SmudgeClass::~SmudgeClass()
 {
-    if (GameActive) {
+    if (g_GameActive) {
         Limbo();
     }
     m_Class = nullptr;
@@ -127,8 +127,8 @@ BOOL SmudgeClass::Mark(MarkType mark)
     for (int i = 0; i < type.Get_Width(); ++i) {
         for (int j = 0; j < type.Get_Height(); ++j) {
             cell_t calc_cell = (j * CELL_MAX) + i + cell;
-            if (Map.In_Radar(calc_cell)) {
-                CellClass *cptr = &Map[calc_cell];
+            if (g_Map.In_Radar(calc_cell)) {
+                CellClass *cptr = &g_Map[calc_cell];
                 DEBUG_ASSERT(cptr != nullptr);
 
                 if (type.Is_Bib()) {
@@ -149,7 +149,7 @@ BOOL SmudgeClass::Mark(MarkType mark)
             }
         }
     }
-    Map.Overlap_Up(Get_Cell(), this);
+    g_Map.Overlap_Up(Get_Cell(), this);
     m_IsDown = false;
     m_InLimbo = true;
     delete this;
@@ -168,7 +168,7 @@ void SmudgeClass::Disown(cell_t cell)
         for (int i = 0; i < type.Get_Width(); ++i) {
             for (int j = 0; j < type.Get_Height(); ++j) {
                 cell_t calc_cell = (j * CELL_MAX) + i + cell;
-                CellClass *cptr = &Map[calc_cell];
+                CellClass *cptr = &g_Map[calc_cell];
                 DEBUG_ASSERT(cptr != nullptr);
 
                 if (cptr->Get_Overlay() == OVERLAY_NONE || !cptr->Has_Wall()) {
@@ -207,7 +207,7 @@ void SmudgeClass::Read_INI(GameINIClass &ini)
                 }
 
                 new SmudgeClass(smudge, Cell_To_Coord(cellnum));
-                CellClass &cell = Map[cellnum];
+                CellClass &cell = g_Map[cellnum];
                 if (cell.Get_Smudge() == smudge && frame > 0) {
                     cell.Set_Smudge_Frame(frame);
                 }
@@ -227,7 +227,7 @@ void SmudgeClass::Write_INI(GameINIClass &ini)
 
     ini.Clear("SMUDGE");
     for (int i = 0; i < MAP_MAX_AREA; ++i) {
-        CellClass *cptr = &Map[i];
+        CellClass *cptr = &g_Map[i];
         DEBUG_ASSERT(cptr != nullptr);
 
         if (cptr->Get_Smudge() != SMUDGE_NONE) {

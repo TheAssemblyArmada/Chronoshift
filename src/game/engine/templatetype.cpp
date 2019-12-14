@@ -539,7 +539,7 @@ void TemplateTypeClass::Prep_For_Add()
         TemplateTypeClass *ttptr = As_Pointer(i);
         if (ttptr != nullptr) {
             if (ttptr->m_ImageData != nullptr) {
-                Map.Add_To_List(ttptr);
+                g_Map.Add_To_List(ttptr);
             }
         }
     }

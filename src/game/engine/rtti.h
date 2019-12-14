@@ -70,7 +70,7 @@ struct RTTITypeStruct
     const char *Description;
 };
 
-extern RTTITypeStruct RTTIName[RTTI_COUNT];
+extern RTTITypeStruct g_RTTIName[RTTI_COUNT];
 
 RTTIType RTTI_From_Name(const char *name);
 const char *Name_From_RTTI(RTTIType rtti);

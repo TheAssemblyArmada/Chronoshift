@@ -57,9 +57,9 @@ public:
     static void Set_CD_Drive(int cd_drive);
     static void Clear_Search_Drives();
     static BOOL Is_Disk_Inserted(int cd_drive);
-    static BOOL Has_Paths() { return s_first != nullptr; }
-    static int Last_Drive() { return s_lastCDDrive; }
-    static int Current_Drive() { return s_currentCDDrive; }
+    static BOOL Has_Paths() { return s_First != nullptr; }
+    static int Last_Drive() { return s_LastCDDrive; }
+    static int Current_Drive() { return s_CurrentCDDrive; }
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -70,17 +70,17 @@ protected:
 
 private:
 #ifdef GAME_DLL
-    static char *s_rawPath;
-    static SearchDriveType *&s_first;
-    static int &s_currentCDDrive;
-    static int &s_lastCDDrive;
+    static char *s_RawPath;
+    static SearchDriveType *&s_First;
+    static int &s_CurrentCDDrive;
+    static int &s_LastCDDrive;
 #else
-    static char s_rawPath[];
-    static SearchDriveType *s_first;
-    static int s_currentCDDrive;
-    static int s_lastCDDrive;
+    static char s_RawPath[];
+    static SearchDriveType *s_First;
+    static int s_CurrentCDDrive;
+    static int s_LastCDDrive;
 #endif
-    static const char *s_pathSeperator;
+    static const char *s_PathSeperator;
 };
 
 #endif // CDFILECLASS_H

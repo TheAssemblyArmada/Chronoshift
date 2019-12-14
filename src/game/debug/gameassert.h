@@ -26,11 +26,11 @@ extern "C" {
 
 #ifdef CHRONOSHIFT_ASSERTS
 
-extern bool ExitOnAssert; // Exit application on assertion when break button is pressed?
-extern bool IgnoreAllAsserts; // Ignore all assertionss.
-extern int GlobalIgnoreCount; // The number of assertions to ignore on a global basis.
-extern int TotalAssertions; // The total number of assertions.
-extern bool BreakOnException; // Break to debugger when a throw assertion is triggered.
+extern bool g_ExitOnAssert; // Exit application on assertion when break button is pressed?
+extern bool g_IgnoreAllAsserts; // Ignore all assertionss.
+extern int g_GlobalIgnoreCount; // The number of assertions to ignore on a global basis.
+extern int g_TotalAssertions; // The total number of assertions.
+extern bool g_BreakOnException; // Break to debugger when a throw assertion is triggered.
 
 enum
 {

@@ -307,7 +307,7 @@ InfantryType UnitClass::Crew_Type() const
         return DriveClass::Crew_Type();
     }
 
-    if (Scen.Get_Random_Value(0, 99) < 50) {
+    if (g_Scen.Get_Random_Value(0, 99) < 50) {
         return INFANTRY_C1;
     }
     return INFANTRY_C7;
@@ -448,7 +448,7 @@ BOOL UnitClass::Ok_To_Move(DirType dir)
  */
 BOOL UnitClass::Edge_Of_World_AI()
 {
-    if (m_Mission == MISSION_GUARD && !Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
+    if (m_Mission == MISSION_GUARD && !g_Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
         if (m_Team != nullptr) {
             m_Team->Set_Bit2_4(true);
         }
@@ -521,7 +521,7 @@ void UnitClass::APC_Open_Door()
  */
 int UnitClass::Credit_Load()
 {
-    return Rule.Get_Gold_Value() * m_Gold + Rule.Get_Gem_Value() * m_Gems;
+    return g_Rule.Get_Gold_Value() * m_Gold + g_Rule.Get_Gem_Value() * m_Gems;
 }
 
 BOOL UnitClass::Ore_Check(short &cellnum, int a2, int a3)
@@ -533,7 +533,7 @@ BOOL UnitClass::Ore_Check(short &cellnum, int a2, int a3)
     /*
     cell_t check_cell;
 
-    if (Scen.Game_To_Play() == GAME_CAMPAIGN && m_PlayerOwned && !Map[check_cell].Is_Visible()) {
+    if (g_Scen.Game_To_Play() == GAME_CAMPAIGN && m_PlayerOwned && !Map[check_cell].Is_Visible()) {
         return false;
     }
 
@@ -559,7 +559,7 @@ BOOL UnitClass::Goto_Ore(int scan_radius)
 
     // is the cell im under ore?
     cell_t cellnum = Center_Cell();
-    if (Map[cellnum].Get_Land() == LAND_ORE) {
+    if (g_Map[cellnum].Get_Land() == LAND_ORE) {
         return true;
     }
 

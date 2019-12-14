@@ -23,19 +23,19 @@
 using std::snprintf;
 
 #ifdef GAME_DLL
-extern char *&GameStrings;
-extern char *&DebugStrings;
+extern char *&g_GameStrings;
+extern char *&g_DebugStrings;
 #else
-char *GameStrings = nullptr;
-char *DebugStrings = nullptr;
-char *NameOverride[NAME_OVERRIDE_MAX];
-int NameIDOverride[NAME_OVERRIDE_MAX];
+char *g_GameStrings = nullptr;
+char *g_DebugStrings = nullptr;
+char *g_NameOverride[NAME_OVERRIDE_MAX];
+int g_NameIDOverride[NAME_OVERRIDE_MAX];
 #endif
 
-char *EditorStrings = nullptr;
-char *NewGameStrings = nullptr; // Chronshift strings table.
+char *g_EditorStrings = nullptr;
+char *g_NewGameStrings = nullptr; // Chronshift strings table.
 
-LanguageType Language = LANGUAGE_ENGLISH;
+LanguageType g_Language = LANGUAGE_ENGLISH;
 
 const char TXT_CS_MISSIONS[] = { "Counterstrike Missions" };
 const char TXT_AM_MISSIONS[] = { "Aftermath Missions" };
@@ -49,7 +49,7 @@ const char TXT_CHRONOSHIFT_WEBSITE[] = { "https://github.com/TheAssemblyArmada/C
 
 // clang-format off
 
-const char *MissionStr[] = {
+const char *g_MissionStr[] = {
     "Coastal Influence (Med)",
     "Middle Mayhem (Sm)",
     "Equal Opportunity (Sm)",
@@ -289,8 +289,8 @@ bool Init_Language()
     // Load Game string table.
     DEBUG_LOG("Init_Language() - Loading Game Strings...\n");
     const char *filename = Language_Name("conquer");
-    GameStrings = (char *)GameFileClass::Retrieve(filename);
-    if (GameStrings == nullptr) {
+    g_GameStrings = (char *)GameFileClass::Retrieve(filename);
+    if (g_GameStrings == nullptr) {
         DEBUG_LOG("Failed to find string file '%s'.\n", filename);
         return false;
     }
@@ -298,8 +298,8 @@ bool Init_Language()
     // Load System string table.
     DEBUG_LOG("Init_Language() - Loading Chronoshift Strings...\n");
     filename = Language_Name("chonoshift");
-    NewGameStrings = (char *)GameFileClass::Retrieve(filename);
-    if (NewGameStrings == nullptr) {
+    g_NewGameStrings = (char *)GameFileClass::Retrieve(filename);
+    if (g_NewGameStrings == nullptr) {
         DEBUG_LOG("Failed to find string file '%s'.\n", filename);
         return false;
     }
@@ -307,8 +307,8 @@ bool Init_Language()
     // Load Editor string table.
     DEBUG_LOG("Init_Language() - Loading Editor Strings...\n");
     filename = Language_Name("editor");
-    EditorStrings = (char *)GameFileClass::Retrieve(filename);
-    if (EditorStrings == nullptr) {
+    g_EditorStrings = (char *)GameFileClass::Retrieve(filename);
+    if (g_EditorStrings == nullptr) {
         DEBUG_LOG("Failed to find string file '%s'.\n", filename);
     }
 
@@ -316,13 +316,13 @@ bool Init_Language()
 #if defined(CHRONOSHIFT_DEBUG)
     DEBUG_LOG("Init_Language() - Loading Debug Strings...\n");
     filename = Language_Name("debug");
-    DebugStrings = (char *)GameFileClass::Retrieve(filename);
-    if (DebugStrings == nullptr) {
+    g_DebugStrings = (char *)GameFileClass::Retrieve(filename);
+    if (g_DebugStrings == nullptr) {
         DEBUG_LOG("Failed to find string file '%s'.\n", filename);
     }
 #endif // CHRONOSHIFT_DEBUG
 
-    return GameStrings != nullptr;
+    return g_GameStrings != nullptr;
 }
 
 const char *Language_Name(const char *filename)
@@ -330,12 +330,12 @@ const char *Language_Name(const char *filename)
     static char _fullname[32];
 
     DEBUG_ASSERT(filename != nullptr);
-    DEBUG_ASSERT(Language != LANGUAGE_NONE);
+    DEBUG_ASSERT(g_Language != LANGUAGE_NONE);
 
     if (filename != nullptr) {
         memset(_fullname, 0, sizeof(_fullname));
 
-        switch (Language) {
+        switch (g_Language) {
             default: // Fallthrough.
             case LANGUAGE_ENGLISH:
                 snprintf(_fullname, sizeof(_fullname), "%s.eng", filename);
@@ -372,11 +372,11 @@ const char *Get_Language_Char()
 {
     static char _char[2];
 
-    DEBUG_ASSERT(Language != LANGUAGE_NONE);
+    DEBUG_ASSERT(g_Language != LANGUAGE_NONE);
 
     _char[0] = '\0';
 
-    switch (Language) {
+    switch (g_Language) {
         default: // Fallthrough.
         case LANGUAGE_ENGLISH:
             strcpy(_char, "E");
@@ -411,31 +411,31 @@ const char *Text_String(int str_id)
     if (str_id >= TXT_ADDITIONAL_FIRST) {
         str_id -= TXT_ADDITIONAL_MAGIC_NUM; // ground the value to be zero based.
         DEBUG_ASSERT(str_id < (TXT_ADDITIONAL_FIRST + TXT_ADDITIONAL_COUNT));
-        DEBUG_ASSERT(NewGameStrings != nullptr);
-        return Extract_String(NewGameStrings, str_id);
+        DEBUG_ASSERT(g_NewGameStrings != nullptr);
+        return Extract_String(g_NewGameStrings, str_id);
     }
 
     if (str_id >= TXT_EDITOR_FIRST) {
         str_id -= TXT_EDITOR_MAGIC_NUM; // ground the value to be zero based.
         DEBUG_ASSERT(str_id < (TXT_EDITOR_FIRST + TXT_EDITOR_COUNT));
-        DEBUG_ASSERT(EditorStrings != nullptr);
-        return Extract_String(EditorStrings, str_id);
+        DEBUG_ASSERT(g_EditorStrings != nullptr);
+        return Extract_String(g_EditorStrings, str_id);
     }
 
     if (str_id >= TXT_DEBUG_FIRST) {
         str_id -= TXT_DEBUG_MAGIC_NUM; // ground the value to be zero based.
         DEBUG_ASSERT(str_id < (TXT_DEBUG_FIRST + TXT_DEBUG_COUNT));
-        DEBUG_ASSERT(DebugStrings != nullptr);
-        return Extract_String(DebugStrings, str_id);
+        DEBUG_ASSERT(g_DebugStrings != nullptr);
+        return Extract_String(g_DebugStrings, str_id);
     }
 
     if (str_id < TXT_FIRST && std::abs(str_id) < NAME_OVERRIDE_MAX) {
-        return NameOverride[-(str_id + 1)];
+        return g_NameOverride[-(str_id + 1)];
     }
 
     DEBUG_ASSERT(str_id < TXT_COUNT);
-    DEBUG_ASSERT(GameStrings != nullptr);
-    return Extract_String(GameStrings, str_id);
+    DEBUG_ASSERT(g_GameStrings != nullptr);
+    return Extract_String(g_GameStrings, str_id);
 }
 
 const char *Mission_Text_String(int str_id)

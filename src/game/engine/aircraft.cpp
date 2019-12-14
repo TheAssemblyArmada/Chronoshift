@@ -55,15 +55,15 @@ AircraftClass::~AircraftClass()
  */
 MoveType AircraftClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 {
-    if (!Map.In_Radar(cellnum)) {
+    if (!g_Map.In_Radar(cellnum)) {
         return MOVE_NO;
     }
-    CellClass &cell = Map[cellnum];
+    CellClass &cell = g_Map[cellnum];
     TechnoClass *optr = reinterpret_cast<TechnoClass *>(cell.Get_Occupier());
     if (optr != nullptr && optr->Is_Techno()) {
         if (!optr->Get_Owner_House()->Is_Ally(m_OwnerHouse)) {
             if (optr->Cloak_State() == 2) {
-                if (Session.Game_To_Play() == GAME_CAMPAIGN || !m_PlayerOwned || cell.Is_Visible()) {
+                if (g_Session.Game_To_Play() == GAME_CAMPAIGN || !m_PlayerOwned || cell.Is_Visible()) {
                     return MOVE_OK;
                 }
                 return MOVE_NO;
@@ -71,7 +71,7 @@ MoveType AircraftClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
             if (optr->What_Am_I() == RTTI_BUILDING) {
                 BuildingClass *bptr = reinterpret_cast<BuildingClass *>(optr);
                 if (bptr->Class_Of().Is_Invisible()) {
-                    if (Session.Game_To_Play() == GAME_CAMPAIGN || !m_PlayerOwned || cell.Is_Visible()) {
+                    if (g_Session.Game_To_Play() == GAME_CAMPAIGN || !m_PlayerOwned || cell.Is_Visible()) {
                         return MOVE_OK;
                     }
                     return MOVE_NO;
@@ -82,7 +82,7 @@ MoveType AircraftClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
     if (!cell.Is_Clear_To_Move(SPEED_TRACK)) {
         return MOVE_NO;
     }
-    if (Session.Game_To_Play() == GAME_CAMPAIGN || !m_PlayerOwned || cell.Is_Visible()) {
+    if (g_Session.Game_To_Play() == GAME_CAMPAIGN || !m_PlayerOwned || cell.Is_Visible()) {
         return MOVE_OK;
     }
     return MOVE_NO;
@@ -117,9 +117,9 @@ void AircraftClass::AI()
             }
         }
         if (!Landing_Takeoff_AI()) {
-            if (Map.In_View(Get_Cell())) {
-                Map.Flag_To_Redraw();
-                Map.Display_To_Redraw();
+            if (g_Map.In_View(Get_Cell())) {
+                g_Map.Flag_To_Redraw();
+                g_Map.Display_To_Redraw();
             }
             Edge_Of_World_AI();
         }
@@ -226,7 +226,7 @@ void AircraftClass::Draw_It(int x, int y, WindowNumberType window) const
         int frame = Shape_Number();
         DirType rot = DIR_NONE;
         if (Class_Of().Get_ROT_Count() == 16) {
-            rot = (DirType)FacingClass::Rotation16[m_BDir.Get_Current()];
+            rot = (DirType)FacingClass::s_Rotation16[m_BDir.Get_Current()];
         }
 
         int jitter = 0;
@@ -241,7 +241,7 @@ void AircraftClass::Draw_It(int x, int y, WindowNumberType window) const
                 y + 2,
                 window,
                 SHAPE_PREDATOR | SHAPE_FADING | SHAPE_CENTER | SHAPE_VIEWPORT_REL,
-                DisplayClass::FadingShade);
+                DisplayClass::s_FadingShade);
         }
         Techno_Draw_Object(image, frame, x, jitter + y, window, rot);
 
@@ -269,7 +269,7 @@ void AircraftClass::Look(BOOL a1)
         sight = 1;
     }
     if (sight > 0) {
-        Map.Sight_From(Get_Cell(), sight, m_OwnerHouse, a1);
+        g_Map.Sight_From(Get_Cell(), sight, m_OwnerHouse, a1);
     }
 }
 
@@ -445,15 +445,15 @@ DirType AircraftClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) co
     cell_t cell = Get_Cell();
     for (int i = 0; i < 4; ++i) {
         cellnum = Cell_Get_Adjacent(cell, SS_41B73C(FACING_SOUTH, i));
-        if (Map.In_Radar(cellnum)) {
-            if (object->Get_Cell() == cellnum || Map[cellnum].Is_Clear_To_Move(SPEED_FOOT)) {
+        if (g_Map.In_Radar(cellnum)) {
+            if (object->Get_Cell() == cellnum || g_Map[cellnum].Is_Clear_To_Move(SPEED_FOOT)) {
                 return DIR_NORTH;
             }
         }
 
         cellnum = cellnum = Cell_Get_Adjacent(cell, SS_41B710(FACING_SOUTH, i));
-        if (Map.In_Radar(cellnum)) {
-            if (object->Get_Cell() == cellnum || Map[cellnum].Is_Clear_To_Move(SPEED_FOOT)) {
+        if (g_Map.In_Radar(cellnum)) {
+            if (object->Get_Cell() == cellnum || g_Map[cellnum].Is_Clear_To_Move(SPEED_FOOT)) {
                 return DIR_NORTH;
             }
         }
@@ -506,7 +506,7 @@ void AircraftClass::Response_Select()
         VOC_AWAIT1
     };
 
-    VocType voc = _response[g_nonCriticalRandom(0, ARRAY_SIZE(_response) - 1)];
+    VocType voc = _response[g_NonCriticalRandom(0, ARRAY_SIZE(_response) - 1)];
     if (g_AllowVoice) {
         Sound_Effect(voc, fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
@@ -524,7 +524,7 @@ void AircraftClass::Response_Move()
         VOC_AFFIRM1,
     };
 
-    VocType voc = _response[g_nonCriticalRandom(0, ARRAY_SIZE(_response) - 1)];
+    VocType voc = _response[g_NonCriticalRandom(0, ARRAY_SIZE(_response) - 1)];
     if (g_AllowVoice) {
         Sound_Effect(voc, fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
@@ -542,7 +542,7 @@ void AircraftClass::Response_Attack()
         VOC_ACKNO,
     };
 
-    VocType voc = _response[g_nonCriticalRandom(0, ARRAY_SIZE(_response) - 1)];
+    VocType voc = _response[g_NonCriticalRandom(0, ARRAY_SIZE(_response) - 1)];
     if (g_AllowVoice) {
         Sound_Effect(voc, fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
@@ -697,7 +697,7 @@ BOOL AircraftClass::Landing_Takeoff_AI()
  */
 BOOL AircraftClass::Edge_Of_World_AI()
 {
-    if (Map.In_Radar(Get_Cell())) {
+    if (g_Map.In_Radar(Get_Cell())) {
         m_LockedOnMap = true;
         return false;
     }
@@ -746,7 +746,7 @@ BOOL AircraftClass::Is_LZ_Clear(target_t lzone)
         return false;
     }
     cell_t cell = As_Cell(lzone);
-    if (!Map.In_Radar(cell)) {
+    if (!g_Map.In_Radar(cell)) {
         return false;
     }
     ObjectClass *optr = Map[cell].Cell_Object();
@@ -763,17 +763,17 @@ BOOL AircraftClass::Is_LZ_Clear(target_t lzone)
         return false;
     }
     cell_t cell = As_Cell(lzone);
-    if (!Map.In_Radar(cell)) {
+    if (!g_Map.In_Radar(cell)) {
         return false;
     }
-    ObjectClass *optr = Map[cell].Cell_Object();
+    ObjectClass *optr = g_Map[cell].Cell_Object();
     if (optr != nullptr) {
         if (optr == this) {
             return true;
         }
         return Radio_Valid() && m_Radio == optr;
     }
-    return Map[cell].Is_Clear_To_Move(SPEED_TRACK);
+    return g_Map[cell].Is_Clear_To_Move(SPEED_TRACK);
 }
 
 /**

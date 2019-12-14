@@ -153,11 +153,11 @@ DEFINE_ENUMERATION_OPERATORS(VoxType);
 
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
 #ifdef GAME_DLL
-extern void **SpeechBuffer;
-extern VoxType *SpeechRecord;
+extern void **g_SpeechBuffer;
+extern VoxType *g_SpeechRecord;
 #else
-extern void *SpeechBuffer[VOX_BUFFERS];
-extern VoxType SpeechRecord[VOX_BUFFERS];
+extern void *g_SpeechBuffer[VOX_BUFFERS];
+extern VoxType g_SpeechRecord[VOX_BUFFERS];
 #endif
 
 VoxType Vox_From_Name(const char *name);

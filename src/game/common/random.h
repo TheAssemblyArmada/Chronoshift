@@ -32,12 +32,12 @@ public:
     };
 
 public:
-    RandomClass(int seed = 0) : m_seed(seed) {}
+    RandomClass(int seed = 0) : m_Seed(seed) {}
 
     int operator()();
     int operator()(int minval, int maxval);
 
-    uint32_t Get_Seed() { return m_seed; }
+    uint32_t Get_Seed() { return m_Seed; }
 
 private:
     enum
@@ -46,15 +46,15 @@ private:
         MAXIMUM = 32767
     };
 
-    uint32_t m_seed;
-    static const int s_multiplier;
-    static const int s_adder;
+    uint32_t m_Seed;
+    static const int s_Multiplier;
+    static const int s_Adder;
 };
 
 #ifdef GAME_DLL
-extern RandomClass &g_nonCriticalRandom;
+extern RandomClass &g_NonCriticalRandom;
 #else
-extern RandomClass g_nonCriticalRandom;
+extern RandomClass g_NonCriticalRandom;
 #endif
 
 #endif // RANDOM_H

@@ -82,7 +82,7 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
     //    BUTTON_CANCEL, TXT_OK, TPF_CENTER | TPF_6PT_GRAD | TPF_USE_GRAD_PAL | TPF_NOSHADOW , 470, 244, 60);
     SliderClass diffsli(2, 110, 222, 420, 16, true);
 
-    if (Rule.FineDiffControl) {
+    if (g_Rule.FineDiffControl) {
         diffsli.Set_Maximum(DIFF_COUNT);
         diffsli.Set_Value((diffsli.Get_Maximum() / 2) - 1); // set initial value.    //2
     } else {
@@ -101,11 +101,11 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
     //DialogGadgets.Add(&cancelbtn);
     DialogGadgets.Add(&diffsli);
 
-    Set_Logic_Page(&g_seenBuff);
+    Set_Logic_Page(&g_SeenBuff);
 
     while (process) {
         if (to_draw) {
-            g_mouse->Hide_Mouse();
+            g_Mouse->Hide_Mouse();
 
             Dialog_Box(200, 200, 500, 160);
 
@@ -135,7 +135,7 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
                 active_gadget->Draw_All(true);
             }
 
-            g_mouse->Show_Mouse();
+            g_Mouse->Show_Mouse();
         }
 
         Application_Callback();
@@ -157,7 +157,7 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
         } 
     }
 
-    return (Rule.FineDiffControl == false) + 1) * diffsli.Get_Value();
+    return (g_Rule.FineDiffControl == false) + 1) * diffsli.Get_Value();
 #else
     return DIFF_EASIEST;
 #endif

@@ -20,8 +20,8 @@
 #endif
 
 #ifndef GAME_DLL
-void *SpeechBuffer[VOX_BUFFERS];
-VoxType SpeechRecord[VOX_BUFFERS];
+void *g_SpeechBuffer[VOX_BUFFERS];
+VoxType g_SpeechRecord[VOX_BUFFERS];
 #endif
 
 // clang-format off

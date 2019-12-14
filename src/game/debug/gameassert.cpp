@@ -26,11 +26,11 @@
 
 #ifdef CHRONOSHIFT_ASSERTS
 
-bool ExitOnAssert = true;
-bool IgnoreAllAsserts = false;
-int GlobalIgnoreCount = 0;
-int TotalAssertions = 0;
-bool BreakOnException = false;
+bool g_ExitOnAssert = true;
+bool g_IgnoreAllAsserts = false;
+int g_GlobalIgnoreCount = 0;
+int g_TotalAssertions = 0;
+bool g_BreakOnException = false;
 
 bool ShowAssertionDialog
 #ifdef PLATFORM_WINDOWS
@@ -151,9 +151,9 @@ AssertButtonType Debug_Assertion_Dialog(char const *expr, char const *file, int 
 void Debug_Assert(char const *expr, char const *file, int const line, char const *func, char const *msg,
     volatile bool &_ignore, volatile bool &_break)
 {
-    ++TotalAssertions;
+    ++g_TotalAssertions;
 
-    if (!IgnoreAllAsserts) {
+    if (!g_IgnoreAllAsserts) {
 
         if (!_ignore) {
 
@@ -172,7 +172,7 @@ void Debug_Assert(char const *expr, char const *file, int const line, char const
 
                 switch (Debug_Assertion_Dialog(expr, file, line, func, msg)) {
                     case BUTTON_ABORT:
-                        if (ExitOnAssert) {
+                        if (g_ExitOnAssert) {
                             //TODO: Need to move Emergency_Exit() from startup.
                             //Emergency_Exit(-1);
                         }
@@ -188,7 +188,7 @@ void Debug_Assert(char const *expr, char const *file, int const line, char const
 
                     case BUTTON_IGNORE:
                         _ignore = true;
-                        ++GlobalIgnoreCount;
+                        ++g_GlobalIgnoreCount;
                         break;
 
                     case BUTTON_SKIP:

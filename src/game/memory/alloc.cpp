@@ -34,8 +34,8 @@
 using std::memset;
 
 #ifndef GAME_DLL
-memerrorhandler_t g_memoryError = nullptr; // Memory error handler function pointer.
-memexithandler_t g_memoryErrorExit = nullptr;
+memerrorhandler_t g_MemoryError = nullptr; // Memory error handler function pointer.
+memexithandler_t g_MemoryErrorExit = nullptr;
 #endif
 
 static int g_memoryCalls;
@@ -48,8 +48,8 @@ void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags)
     // DEBUG_LOG("Attempting to allocate memory of size %d with flags %d.\n", bytes_to_alloc, flags);
     void *ptr = malloc(bytes_to_alloc);
 
-    if (ptr == nullptr && g_memoryError != nullptr) {
-        g_memoryError();
+    if (ptr == nullptr && g_MemoryError != nullptr) {
+        g_MemoryError();
     }
 
     if (ptr != nullptr && (flags & MEM_CLEAR) != 0) {
@@ -75,8 +75,8 @@ void *Resize_Alloc(void *original_ptr, unsigned int new_size_in_bytes)
 
     temp = realloc(original_ptr, new_size_in_bytes);
 
-    if (temp == nullptr && g_memoryError != nullptr) {
-        g_memoryError();
+    if (temp == nullptr && g_MemoryError != nullptr) {
+        g_MemoryError();
     }
 
     return temp;

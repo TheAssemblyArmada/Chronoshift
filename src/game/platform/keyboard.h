@@ -393,9 +393,9 @@ private:
 };
 
 #ifdef GAME_DLL
-extern KeyboardClass *&g_keyboard;
+extern KeyboardClass *&g_Keyboard;
 #else
-extern KeyboardClass *g_keyboard;
+extern KeyboardClass *g_Keyboard;
 #endif
 
 #endif // KEYBOARD_H

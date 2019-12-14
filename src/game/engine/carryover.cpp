@@ -97,15 +97,15 @@ BOOL CarryoverClass::Create()
 
     ptr->Set_Health(m_Health);
 
-    int init = ScenarioInit;
+    int init = g_ScenarioInit;
     if (m_RTTI == RTTI_INFANTRY) {
-        ScenarioInit = 0;
+        g_ScenarioInit = 0;
     }
 
     ptr->Unlimbo(Cell_To_Coord(m_Cell), DIR_NORTH);
 
     if (m_RTTI == RTTI_INFANTRY) {
-        ScenarioInit = init;
+        g_ScenarioInit = init;
     }
     return true;
 #endif

@@ -121,9 +121,9 @@ protected:
 
 #ifdef GAME_DLL
 #include "hooker.h"
-extern WinsockInterfaceClass *&g_packetTransport;
+extern WinsockInterfaceClass *&g_PacketTransport;
 #else
-extern WinsockInterfaceClass *g_packetTransport;
+extern WinsockInterfaceClass *g_PacketTransport;
 #endif
 
 #endif // WSOCK_H

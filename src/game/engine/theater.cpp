@@ -20,10 +20,10 @@
 #endif
 
 #ifndef GAME_DLL
-TheaterType g_lastTheater = THEATER_NONE;
+TheaterType g_LastTheater = THEATER_NONE;
 #endif
 
-TheaterDataType g_theaters[THEATER_COUNT] = {
+TheaterDataType g_Theaters[THEATER_COUNT] = {
     {"TEMPERATE", "TEMPERAT", "TEM"},
     {"SNOW", "SNOW", "SNO"},
     {"INTERIOR", "INTERIOR", "INT"},
@@ -33,7 +33,7 @@ TheaterType Theater_From_Name(const char *name)
 {
     if (name != nullptr) {
         for (int i = 0; i < THEATER_COUNT; ++i) {
-            if (strcasecmp(name, g_theaters[i].name) == 0) {
+            if (strcasecmp(name, g_Theaters[i].name) == 0) {
                 return TheaterType(i);
             }
         }
@@ -45,7 +45,7 @@ TheaterType Theater_From_Name(const char *name)
 const char *Name_From_Theater(TheaterType theater)
 {
     if (theater >= THEATER_NONE && theater < THEATER_COUNT) {
-        return g_theaters[theater].name;
+        return g_Theaters[theater].name;
     }
 
     return "none";

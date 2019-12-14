@@ -16,17 +16,17 @@
 #include "random.h"
 
 #ifndef GAME_DLL
-RandomClass g_nonCriticalRandom;
+RandomClass g_NonCriticalRandom;
 #endif
 
-const int RandomClass::s_multiplier = 0x41C64E6D; // K multiplier value.
-const int RandomClass::s_adder = 0x00003039; // K additive value.
+const int RandomClass::s_Multiplier = 0x41C64E6D; // K multiplier value.
+const int RandomClass::s_Adder = 0x00003039; // K additive value.
 
 int RandomClass::operator()()
 {
-    m_seed = (m_seed * s_multiplier) + s_adder;
+    m_Seed = (m_Seed * s_Multiplier) + s_Adder;
 
-    return ((m_seed >> THROW_AWAY_BITS) & MAXIMUM);
+    return ((m_Seed >> THROW_AWAY_BITS) & MAXIMUM);
 }
 
 int RandomClass::operator()(int minval, int maxval)

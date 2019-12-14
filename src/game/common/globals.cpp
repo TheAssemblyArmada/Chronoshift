@@ -16,40 +16,40 @@
 #include "globals.h"
 
 #if defined PLATFORM_WINDOWS && !defined GAME_DLL
-HWND MainWindow = nullptr;
-//HMODULE ProgramInstance = nullptr; // Only used in gameres packet, won't be needed in final
+HWND g_MainWindow = nullptr;
+//HMODULE g_ProgramInstance = nullptr; // Only used in gameres packet, won't be needed in final
 #endif
 
 #ifndef GAME_DLL
-int g_iniFormat = 0;
+int g_INIFormat = 0;
 int g_GameFrame = 0;
-BOOL g_gameInFocus = false;
+BOOL g_GameInFocus = false;
 BOOL g_InMovie = false;
 BOOL g_InMapEditor = false;
-char *Metal12FontPtr = nullptr;
-char *MapFontPtr = nullptr;
-char *Font6Ptr = nullptr;
-char *GradFont6Ptr = nullptr;
-char *EditorFont = nullptr;
-char *Font8Ptr = nullptr;
-char *Font3Ptr = nullptr;
-char *ScoreFontPtr = nullptr;
-char *FontLEDPtr = nullptr;
-char *VCRFontPtr = nullptr;
-char *TypeFontPtr = nullptr;
+char *g_Metal12FontPtr = nullptr;
+char *g_MapFontPtr = nullptr;
+char *g_Font6Ptr = nullptr;
+char *g_GradFont6Ptr = nullptr;
+char *g_EditorFont = nullptr;
+char *g_Font8Ptr = nullptr;
+char *g_Font3Ptr = nullptr;
+char *g_ScoreFontPtr = nullptr;
+char *g_FontLEDPtr = nullptr;
+char *g_VCRFontPtr = nullptr;
+char *g_TypeFontPtr = nullptr;
 BOOL g_AllowVoice = true;
-BOOL GameActive = false;
-int ScenarioInit;
-BOOL DebugUnshroud = false;
-BOOL DebugQuiet = false;
-BOOL ScoresPresent = false;
-BOOL StreamLowImpact = false;
-BOOL g_cancelCurrentMsgBox = false;
-BOOL VideoBackBufferAllowed = false;
+BOOL g_GameActive = false;
+int g_ScenarioInit = 0;
+BOOL g_DebugUnshroud = false;
+BOOL g_DebugQuiet = false;
+BOOL g_ScoresPresent = false;
+BOOL g_StreamLowImpact = false;
+BOOL g_CancelCurrentMsgBox = false;
+BOOL g_VideoBackBufferAllowed = false;
 BOOL g_OverlappedVideoBlits = true;
-BOOL g_soundOn = false;
-BOOL g_slowPalette = false;
-BOOL g_breakoutAllowed = true;
+BOOL g_SoundOn = false;
+BOOL g_SlowPalette = false;
+BOOL g_BreakoutAllowed = true;
 SpecialDialogType g_SpecialDialog = SPECIAL_DLG_NONE;
 BOOL g_IsTanyaDead = false;
 BOOL g_SaveTanya = false;
@@ -70,13 +70,13 @@ BOOL g_PlayerRestarts = false;
 BOOL g_PlayerAborts = false;
 int g_BuildLevel = 10;
 char *TutorialText = nullptr;
-BOOL MouseInstalled = false;
-int g_seed = 0;
-int CustomSeed = 0;
-int RandNumb = 0x12349876;
-int g_readyToQuit = false;
+BOOL g_MouseInstalled = false;
+int g_Seed = 0;
+int g_CustomSeed = 0;
+int g_RandNumb = 0x12349876;
+int g_ReadyToQuit = false;
 int g_SpareTicks = 0;
-HousesType Whom = HOUSES_NONE;
+HousesType g_Whom = HOUSES_NONE;
 void *g_WakeShapes = nullptr;
 void *g_TurretShapes = nullptr;
 void *g_SamShapes = nullptr;
@@ -111,7 +111,7 @@ BOOL g_Debug_Print_Events = false;
 BOOL g_MonoEnabled = false; // Actually a part of MonoClass.
 #endif
 
-int g_mapBinaryVersion; // For handling C&C and Sole Survivor map formats.
+int g_MapBinaryVersion; // For handling C&C and Sole Survivor map formats.
 
 BOOL g_Debug_Paused = false;
 BOOL g_Debug_Step = false;

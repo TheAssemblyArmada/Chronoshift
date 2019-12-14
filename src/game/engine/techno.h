@@ -294,7 +294,7 @@ protected:
     int m_Price;
 
 protected:
-    static int const BodyShape32[32];
+    static int const s_BodyShape32[32];
 };
 
 #endif // TECHNO_H

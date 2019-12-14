@@ -27,7 +27,7 @@
 #endif
 
 #ifndef GAME_DLL
-PlatformTimerClass *PlatformTimer = nullptr;
+PlatformTimerClass *g_PlatformTimer = nullptr;
 BOOL PlatformTimerClass::s_timerSystemOn = false;
 BOOL PlatformTimerClass::s_inCallback = false;
 void *PlatformTimerClass::s_threadHandle = nullptr;
@@ -36,7 +36,7 @@ void *PlatformTimerClass::s_threadHandle = nullptr;
 #ifdef PLATFORM_WINDOWS
 void __stdcall PlatformTimerClass::Timer_Callback(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
 {
-    PlatformTimer->s_inCallback = true;
+    g_PlatformTimer->s_inCallback = true;
 
     if (PlatformTimerClass::s_threadHandle == nullptr) {
         DuplicateHandle(GetCurrentProcess(),
@@ -48,8 +48,8 @@ void __stdcall PlatformTimerClass::Timer_Callback(UINT uID, UINT uMsg, DWORD_PTR
             DUPLICATE_SAME_ACCESS);
     }
 
-    if (PlatformTimer) {
-        PlatformTimer->Update_Tick_Count();
+    if (g_PlatformTimer) {
+        g_PlatformTimer->Update_Tick_Count();
     }
 
     PlatformTimerClass::s_inCallback = false;
@@ -59,8 +59,8 @@ void PlatformTimerClass::Timer_Callback(void *arg)
 {
     PlatformTimerClass::s_inCallback = true;
 
-    if (PlatformTimer) {
-        PlatformTimer->Update_Tick_Count();
+    if (g_PlatformTimer) {
+        g_PlatformTimer->Update_Tick_Count();
     }
 
     PlatformTimerClass::s_inCallback = false;
@@ -70,8 +70,8 @@ void PlatformTimerClass::Timer_Callback(union sigval arg)
 {
     PlatformTimerClass::s_inCallback = true;
 
-    if (PlatformTimer) {
-        PlatformTimer->Update_Tick_Count();
+    if (g_PlatformTimer) {
+        g_PlatformTimer->Update_Tick_Count();
     }
 
     PlatformTimerClass::s_inCallback = false;
@@ -130,8 +130,8 @@ PlatformTimerClass::PlatformTimerClass(unsigned freq, BOOL partial) :
 #endif
 
     if (m_timerHandle != 0 && !partial) {
-        PlatformTimer = this;
-        TickCount.Start();
+        g_PlatformTimer = this;
+        g_TickCount.Start();
     } else {
         DEBUG_LOG("Error - timer system failed to start.\n");
     }

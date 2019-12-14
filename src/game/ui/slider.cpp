@@ -93,15 +93,15 @@ void SliderClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &pe
 BOOL SliderClass::Draw_Me(BOOL redraw)
 {
     if (m_NoButtons && ControlClass::Draw_Me(redraw)) {
-        if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
+        if (&g_SeenBuff == g_LogicPage) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
         Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_0, true);
         Draw_Thumb();
 
-        if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Show_Mouse();
+        if (&g_SeenBuff == g_LogicPage) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;
@@ -117,10 +117,10 @@ BOOL SliderClass::Action(unsigned flags, KeyNumType &key)
         int gadget_pos;
 
         if (m_IsHorizontal) {
-            mouse_pos = g_mouse->Get_Mouse_X();
+            mouse_pos = g_Mouse->Get_Mouse_X();
             gadget_pos = m_XPos;
         } else {
-            mouse_pos = g_mouse->Get_Mouse_Y();
+            mouse_pos = g_Mouse->Get_Mouse_Y();
             gadget_pos = m_YPos;
         }
 

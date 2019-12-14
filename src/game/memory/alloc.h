@@ -38,11 +38,11 @@ int Heap_Size(MemoryFlagType flag);
 int Total_Ram_Free(MemoryFlagType flag);
 
 #ifdef GAME_DLL
-extern memerrorhandler_t &g_memoryError; // Memory error handler function pointer.
-extern memexithandler_t &g_memoryErrorExit;
+extern memerrorhandler_t &g_MemoryError; // Memory error handler function pointer.
+extern memexithandler_t &g_MemoryErrorExit;
 #else
-extern memerrorhandler_t g_memoryError; // Memory error handler function pointer.
-extern memexithandler_t g_memoryErrorExit;
+extern memerrorhandler_t g_MemoryError; // Memory error handler function pointer.
+extern memexithandler_t g_MemoryErrorExit;
 #endif
 
 #endif

@@ -88,8 +88,8 @@ void ChronalVortexClass::Appear(coord_t coord)
         m_IsHidden = false;
         m_ToDeactivate = false;
         m_TargetSetFrame = g_GameFrame;
-        m_RandomSpeedX = Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
-        m_RandomSpeedY = Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
+        m_RandomSpeedX = g_Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
+        m_RandomSpeedY = g_Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
     }
 }
 
@@ -171,7 +171,7 @@ void ChronalVortexClass::AI()
         Zap_Target();
 
         if (m_ToDeactivate && g_GameFrame - m_ToDeactivateFrame > 50) {
-            if (g_GameFrame - m_ToDeactivateFrame <= Scen.Get_Random_Value(0, 2000)) {
+            if (g_GameFrame - m_ToDeactivateFrame <= g_Scen.Get_Random_Value(0, 2000)) {
                 Show();
             }
 
@@ -222,7 +222,7 @@ void ChronalVortexClass::AI()
                     m_ToDeactivate = true;
                     m_ToDeactivateFrame = g_GameFrame;
 
-                    if (Scen.Get_Random_Value(0, 4) == 4) {
+                    if (g_Scen.Get_Random_Value(0, 4) == 4) {
                         Disappear();
                     }
 
@@ -253,7 +253,7 @@ void ChronalVortexClass::Movement()
 
     m_CurrentPos = Coord_From_Lepton_XY(new_x, new_y);
 
-    if (new_x >= (Map.Get_Map_Cell_Width() + Map.Get_Map_Cell_X()) * 256 - 1024) {
+    if (new_x >= (g_Map.Get_Map_Cell_Width() + g_Map.Get_Map_Cell_X()) * 256 - 1024) {
         unajusted = false;
 
         if (m_RandomSpeedX > 0) {
@@ -261,7 +261,7 @@ void ChronalVortexClass::Movement()
         }
     }
 
-    if (new_y > (Map.Get_Map_Cell_Height() + Map.Get_Map_Cell_Y()) * 256 - 1024) {
+    if (new_y > (g_Map.Get_Map_Cell_Height() + g_Map.Get_Map_Cell_Y()) * 256 - 1024) {
         unajusted = false;
 
         if (m_RandomSpeedY > 0) {
@@ -269,7 +269,7 @@ void ChronalVortexClass::Movement()
         }
     }
 
-    if (new_x <= Map.Get_Map_Cell_X() * 256 + 512) {
+    if (new_x <= g_Map.Get_Map_Cell_X() * 256 + 512) {
         unajusted = false;
 
         if (m_RandomSpeedX < 0) {
@@ -277,7 +277,7 @@ void ChronalVortexClass::Movement()
         }
     }
 
-    if (new_y < Map.Get_Map_Cell_Y() * 256 + 512) {
+    if (new_y < g_Map.Get_Map_Cell_Y() * 256 + 512) {
         unajusted = false;
 
         if (m_RandomSpeedY < 0) {
@@ -320,9 +320,9 @@ void ChronalVortexClass::Movement()
         }
     }
 
-    if (unajusted && Scen.Get_Random_Value(0, 100) == 100) {
-        m_RandomSpeedX = Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
-        m_RandomSpeedY = Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
+    if (unajusted && g_Scen.Get_Random_Value(0, 100) == 100) {
+        m_RandomSpeedX = g_Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
+        m_RandomSpeedY = g_Scen.Get_Random_Value(-m_VortexSpeed, m_VortexSpeed);
     }
 }
 
@@ -402,8 +402,8 @@ void ChronalVortexClass::Attack()
     coord_t pos = Round_Coord_To_Pixel(m_CurrentPos);
 
     // Look through all the objects until we find one closer than 512 leptons.
-    for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {
-        ObjectClass *objptr = DisplayClass::Layers[LAYER_GROUND][index];
+    for (int index = 0; index < DisplayClass::s_Layers[LAYER_GROUND].Count(); ++index) {
+        ObjectClass *objptr = DisplayClass::s_Layers[LAYER_GROUND][index];
 
         if (objptr->Is_Techno() && objptr->Get_Health() > 0 && Distance(objptr->Center_Coord(), pos) < 512) {
             Set_Target(objptr);
@@ -413,15 +413,15 @@ void ChronalVortexClass::Attack()
 
     // If a random interval has elapsed since target was last changed, choose a
     // closer one.
-    if (Target_Legal(m_Target) && Scen.Get_Random_Value(0, 1000) < g_GameFrame - m_TargetSetFrame) {
-        for (int index = 0; index < DisplayClass::Layers[LAYER_GROUND].Count(); ++index) {
-            ObjectClass *objptr = DisplayClass::Layers[LAYER_GROUND][index];
+    if (Target_Legal(m_Target) && g_Scen.Get_Random_Value(0, 1000) < g_GameFrame - m_TargetSetFrame) {
+        for (int index = 0; index < DisplayClass::s_Layers[LAYER_GROUND].Count(); ++index) {
+            ObjectClass *objptr = DisplayClass::s_Layers[LAYER_GROUND][index];
 
             if (objptr != nullptr && objptr->Is_Techno()) {
                 int distance = Distance(objptr->Center_Coord(), m_CurrentPos);
 
                 // VortexRange is in leptons, so no needs to convert it now.
-                if (distance < m_VortexRange && Scen.Get_Random_Value(0, 256) < 256) {
+                if (distance < m_VortexRange && g_Scen.Get_Random_Value(0, 256) < 256) {
                     Set_Target(objptr);
                     return;
                 }
@@ -455,7 +455,7 @@ void ChronalVortexClass::Zap_Target()
 
             delete tmp_bld;
 
-            Map.Flag_To_Redraw(true);
+            g_Map.Flag_To_Redraw(true);
             ++m_AttackState;
 
             // If target is unlucky, it takes damage.
@@ -466,7 +466,7 @@ void ChronalVortexClass::Zap_Target()
             }
         }
 
-        if (Scen.Get_Random_Value(0, 2) == 2) {
+        if (g_Scen.Get_Random_Value(0, 2) == 2) {
             Hide();
         }
     }
@@ -514,15 +514,15 @@ void ChronalVortexClass::Render()
             // to our vortex buffer.
             GraphicViewPortClass *oldvp = Set_Logic_Page(m_VortexGBuffer);
 
-            int tac_x = WindowList[WINDOW_TACTICAL].X;
-            int tac_y = WindowList[WINDOW_TACTICAL].Y;
-            int tac_w = WindowList[WINDOW_TACTICAL].W;
-            int tac_h = WindowList[WINDOW_TACTICAL].H;
+            int tac_x = g_WindowList[WINDOW_TACTICAL].X;
+            int tac_y = g_WindowList[WINDOW_TACTICAL].Y;
+            int tac_w = g_WindowList[WINDOW_TACTICAL].W;
+            int tac_h = g_WindowList[WINDOW_TACTICAL].H;
 
-            WindowList[WINDOW_TACTICAL].X = 0;
-            WindowList[WINDOW_TACTICAL].Y = 0;
-            WindowList[WINDOW_TACTICAL].W = m_VortexGBuffer->Get_Width();
-            WindowList[WINDOW_TACTICAL].H = m_VortexGBuffer->Get_Height();
+            g_WindowList[WINDOW_TACTICAL].X = 0;
+            g_WindowList[WINDOW_TACTICAL].Y = 0;
+            g_WindowList[WINDOW_TACTICAL].W = m_VortexGBuffer->Get_Width();
+            g_WindowList[WINDOW_TACTICAL].H = m_VortexGBuffer->Get_Height();
 
             // Redraw the current the terrain for the current map position into
             // our VortexGBuffer to apply the distortion to.
@@ -530,7 +530,7 @@ void ChronalVortexClass::Render()
                 for (int x = 0; x < 4; ++x) {
                     coord_t cellnum = Cell_From_XY(x + Coord_Cell_X(m_CurrentPos), y + Coord_Cell_Y(m_CurrentPos));
 
-                    CellClass &cell = Map[cellnum];
+                    CellClass &cell = g_Map[cellnum];
                     TemplateType type = cell.Get_Template();
 
                     int icon_num;
@@ -551,10 +551,10 @@ void ChronalVortexClass::Render()
                             x * CELL_PIXELS,
                             y * CELL_PIXELS,
                             nullptr,
-                            WindowList[WINDOW_0].X,
-                            WindowList[WINDOW_0].Y,
-                            WindowList[WINDOW_0].W,
-                            WindowList[WINDOW_0].H);
+                            g_WindowList[WINDOW_0].X,
+                            g_WindowList[WINDOW_0].Y,
+                            g_WindowList[WINDOW_0].W,
+                            g_WindowList[WINDOW_0].H);
                     }
 
                     if (cell.Get_Smudge() != SMUDGE_NONE && cell.Get_Smudge_Frame() != -1) {
@@ -569,10 +569,10 @@ void ChronalVortexClass::Render()
 
             // Restore old settings.
             Set_Logic_Page(oldvp);
-            WindowList[WINDOW_TACTICAL].X = tac_x;
-            WindowList[WINDOW_TACTICAL].Y = tac_y;
-            WindowList[WINDOW_TACTICAL].W = tac_w;
-            WindowList[WINDOW_TACTICAL].H = tac_h;
+            g_WindowList[WINDOW_TACTICAL].X = tac_x;
+            g_WindowList[WINDOW_TACTICAL].Y = tac_y;
+            g_WindowList[WINDOW_TACTICAL].W = tac_w;
+            g_WindowList[WINDOW_TACTICAL].H = tac_h;
 
             // Perform the distortion based on the lut we loaded.
             Coordinate_Remap(m_VortexGBuffer,
@@ -583,18 +583,18 @@ void ChronalVortexClass::Render()
                 lut);
 
             // Create a viewport based on the tactical dimensions.
-            GraphicViewPortClass vp(g_logicPage->Get_Graphic_Buffer(),
+            GraphicViewPortClass vp(g_LogicPage->Get_Graphic_Buffer(),
                 0,
-                g_logicPage->Get_YPos() + 16, // + Tab height
-                Lepton_To_Pixel(Map.Get_DisplayWidth()),
-                Lepton_To_Pixel(Map.Get_DisplayHeight()));
+                g_LogicPage->Get_YPos() + 16, // + Tab height
+                Lepton_To_Pixel(g_Map.Get_DisplayWidth()),
+                Lepton_To_Pixel(g_Map.Get_DisplayHeight()));
 
             // Do a lot of maths to clip the positions for the blit to the
             // tactical viewport we created.
             int16_t vtx_xpos = Lepton_Round_To_Pixel(Coord_Cell_To_Lepton(Coord_Sub_Cell_X(m_CurrentPos)))
-                - Lepton_Round_To_Pixel(Map.Get_DisplayWidth());
+                - Lepton_Round_To_Pixel(g_Map.Get_DisplayWidth());
             int16_t vtx_ypos = Lepton_Round_To_Pixel(Coord_Cell_To_Lepton(Coord_Sub_Cell_Y(m_CurrentPos)))
-                - Lepton_Round_To_Pixel(Map.Get_DisplayHeight());
+                - Lepton_Round_To_Pixel(g_Map.Get_DisplayHeight());
 
             int s_xpos = 0;
             int s_ypos = 0;
@@ -680,7 +680,7 @@ void ChronalVortexClass::Set_Redraw()
 
         for (int y = std::max(0, y_pos - 1); y < y_pos + 4; ++y) {
             for (int x = std::max(0, x_pos - 1); x < x_pos + 4; ++x) {
-                Map[Cell_From_XY(x, y)].Redraw_Objects();
+                g_Map[Cell_From_XY(x, y)].Redraw_Objects();
             }
         }
     }
@@ -750,7 +750,7 @@ void ChronalVortexClass::Setup_Remap_Tables(TheaterType theater)
 
     if (theater != m_Theater) {
         m_Theater = theater;
-        snprintf(buffer, sizeof(buffer), "%s_vtx.pal", g_theaters[m_Theater].ext);
+        snprintf(buffer, sizeof(buffer), "%s_vtx.pal", g_Theaters[m_Theater].ext);
         DEBUG_LOG("Building Chrono Vortex RemapTable for theater %s (%s)\n", Name_From_Theater(m_Theater), buffer);
         GameFileClass fc(buffer);
 
@@ -760,7 +760,7 @@ void ChronalVortexClass::Setup_Remap_Tables(TheaterType theater)
         } else {
             for (unsigned i = 0; i < GHOST_TABLE_COUNT; ++i) {
                 int frac = 240 - ((i * 256) / 16);
-                Build_Fading_Table(GamePalette, m_GhostTable[i], 0, frac);
+                Build_Fading_Table(g_GamePalette, m_GhostTable[i], 0, frac);
             }
 
             fc.Write(m_GhostTable, sizeof(m_GhostTable));

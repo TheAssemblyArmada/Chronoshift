@@ -180,9 +180,9 @@ private:
 };
 
 #ifdef GAME_DLL
-extern ScenarioClass &Scen;
+extern ScenarioClass &g_Scen;
 #else
-extern ScenarioClass Scen;
+extern ScenarioClass g_Scen;
 #endif
 
 BOOL Start_Scenario(const char *filename, BOOL play_movies = false);

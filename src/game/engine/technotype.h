@@ -173,18 +173,18 @@ protected:
     int m_Points;
 
 #ifdef GAME_DLL
-    static void *&WakeShapes;
-    static void *&TurretShapes;
-    static void *&SamShapes;
-    static void *&MGunShapes;
+    static void *&s_WakeShapes;
+    static void *&s_TurretShapes;
+    static void *&s_SamShapes;
+    static void *&s_MGunShapes;
 #else
-    static void *WakeShapes;
-    static void *TurretShapes;
-    static void *SamShapes;
-    static void *MGunShapes;
+    static void *s_WakeShapes;
+    static void *s_TurretShapes;
+    static void *s_SamShapes;
+    static void *s_MGunShapes;
 #endif
-    static void *LightningShapes; // NOTE: New addition for Chronoshift.
-    static void *MissingCameoShape; // NOTE: New addition for Chronoshift.
+    static void *s_LightningShapes; // NOTE: New addition for Chronoshift.
+    static void *s_MissingCameoShape; // NOTE: New addition for Chronoshift.
 };
 
 #endif // TECHNOTYPE_H

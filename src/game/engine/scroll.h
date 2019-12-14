@@ -49,9 +49,9 @@ protected:
 
 private:
 #ifdef GAME_DLL
-    static TCountDownTimerClass<SystemTimerClass> &ScrollingCounter;
+    static TCountDownTimerClass<SystemTimerClass> &s_ScrollingCounter;
 #else
-    static TCountDownTimerClass<SystemTimerClass> ScrollingCounter;
+    static TCountDownTimerClass<SystemTimerClass> s_ScrollingCounter;
 #endif
 };
 

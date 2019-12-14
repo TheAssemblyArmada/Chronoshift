@@ -102,7 +102,7 @@ enum TextPrintType
 
     TPF_USE_MEDIUM = 0x1000, // bit 13 //medium table in Sole/C&C
     TPF_USE_BRIGHT = 0x2000, // bit 14 white //bright table in Sole/C&C
-    TPF_USE_GRAD_PAL = 0x4000, // bit 15 transparent on most, gradient on MetalScheme fontpal in Sole/C&C
+    TPF_USE_GRAD_PAL = 0x4000, // bit 15 transparent on most, gradient on g_MetalScheme fontpal in Sole/C&C
     TPF_UNK_COLOR = 0x8000, // bit 16
     TPF_GRAD_ALL = 0xF000,
 };
@@ -148,37 +148,37 @@ enum WindowNumberType
 
 // TODO Refactor global naming after all locations implemented.
 #ifdef GAME_DLL
-extern WindowType *WindowList;
-extern unsigned &Window;
-extern int &WindowColumns;
-extern int &WindowLines;
-extern int &WindowWidth;
-extern int &WPos;
-extern int &WinX;
-extern int &WinY;
-extern int &WinW;
-extern int &WinH;
-extern int &WinC;
-extern int &WinB;
-extern int &WinCx;
-extern int &WinCy;
-extern int &ScrollCounter;
+extern WindowType *g_WindowList;
+extern unsigned &g_Window;
+extern int &g_WindowColumns;
+extern int &g_WindowLines;
+extern int &g_WindowWidth;
+extern int &g_WPos;
+extern int &g_WinX;
+extern int &g_WinY;
+extern int &g_WinW;
+extern int &g_WinH;
+extern int &g_WinC;
+extern int &g_WinB;
+extern int &g_WinCx;
+extern int &g_WinCy;
+extern int &g_ScrollCounter;
 #else
-extern WindowType WindowList[WINDOW_COUNT];
-extern unsigned Window;
-extern int WindowColumns;
-extern int WindowLines;
-extern int WindowWidth;
-extern int WPos;
-extern int WinX;
-extern int WinY;
-extern int WinW;
-extern int WinH;
-extern int WinC;
-extern int WinB;
-extern int WinCx;
-extern int WinCy;
-extern int ScrollCounter;
+extern WindowType g_WindowList[WINDOW_COUNT];
+extern unsigned g_Window;
+extern int g_WindowColumns;
+extern int g_WindowLines;
+extern int g_WindowWidth;
+extern int g_WPos;
+extern int g_WinX;
+extern int g_WinY;
+extern int g_WinW;
+extern int g_WinH;
+extern int g_WinC;
+extern int g_WinB;
+extern int g_WinCx;
+extern int g_WinCy;
+extern int g_ScrollCounter;
 #endif
 
 void Simple_Text_Print(

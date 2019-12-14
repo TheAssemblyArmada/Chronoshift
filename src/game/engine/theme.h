@@ -125,7 +125,7 @@ public:
     void Play_Prev();
     void Play_Next();
 
-    ThemeType Get_Random_Theme() const { return ThemeType(g_nonCriticalRandom(THEME_FIRST, THEME_LAST)); }
+    ThemeType Get_Random_Theme() const { return ThemeType(g_NonCriticalRandom(THEME_FIRST, THEME_LAST)); }
     ThemeType What_Is_Playing() { return m_CurrentTheme; }
     ThemeType What_Is_Queued() { return m_QueuedTheme; }
 
@@ -139,16 +139,16 @@ private:
     ThemeType m_CurrentTheme;
     ThemeType m_QueuedTheme;
 #ifdef GAME_DLL
-    static ThemeControl *Themes;
+    static ThemeControl *s_Themes;
 #else
-    static ThemeControl Themes[];
+    static ThemeControl s_Themes[];
 #endif
 };
 
 #ifdef GAME_DLL
-extern ThemeClass &Theme;
+extern ThemeClass &g_Theme;
 #else
-extern ThemeClass Theme;
+extern ThemeClass g_Theme;
 #endif
 
 #endif // THEME_H

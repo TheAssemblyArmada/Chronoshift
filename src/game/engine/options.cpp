@@ -243,7 +243,7 @@ void OptionsClass::Save_Settings()
     ini.Put_Int("Options", "ScrollRate", ScrollRate);
     ini.Put_Fixed("Options", "Volume", Volume);
 
-    if (Session.Game_To_Play() == GAME_CAMPAIGN) {
+    if (g_Session.Game_To_Play() == GAME_CAMPAIGN) {
         ini.Put_Fixed("Options", "ScoreVolume", ScoreVolume);
     }
 
@@ -479,14 +479,14 @@ void OptionsClass::Adjust_Palette(
 }
 
 /**
- * @brief Fixes up the CCPalette with the current display adjustment values.
+ * @brief Fixes up the g_CCPalette with the current display adjustment values.
  *
  * 0x00526BB0
  */
 void OptionsClass::Fixup_Palette() const
 {
-    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
-    CCPalette = GamePalette;
+    Adjust_Palette(g_OriginalPalette, g_GamePalette, Brightness, Saturation, Tint, Contrast);
+    g_CCPalette = g_GamePalette;
 }
 
 /**
@@ -530,7 +530,7 @@ void OptionsClass::Set_Score_Volume(fixed_t volume, BOOL beep)
     Volume = volume;
 
     if (beep) {
-        if (!Theme.Still_Playing()) {
+        if (!g_Theme.Still_Playing()) {
             Sound_Effect(VOC_RABEEP1, fixed_t(1, 1), 1, 0, HOUSES_NONE);
         }
     }
@@ -562,8 +562,8 @@ void OptionsClass::Set_Sound_Volume(fixed_t volume, BOOL beep)
 void OptionsClass::Set_Brightness(fixed_t brightness)
 {
     Brightness = brightness * fixed_t::_1_2 + fixed_t::_1_4;
-    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
-    GamePalette.Set();
+    Adjust_Palette(g_OriginalPalette, g_GamePalette, Brightness, Saturation, Tint, Contrast);
+    g_GamePalette.Set();
 }
 
 /**
@@ -574,8 +574,8 @@ void OptionsClass::Set_Brightness(fixed_t brightness)
 void OptionsClass::Set_Saturation(fixed_t saturation)
 {
     Saturation = saturation;
-    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
-    GamePalette.Set();
+    Adjust_Palette(g_OriginalPalette, g_GamePalette, Brightness, Saturation, Tint, Contrast);
+    g_GamePalette.Set();
 }
 
 /**
@@ -586,8 +586,8 @@ void OptionsClass::Set_Saturation(fixed_t saturation)
 void OptionsClass::Set_Contrast(fixed_t contrast)
 {
     Contrast = contrast * fixed_t::_1_2 + fixed_t::_1_4;
-    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
-    GamePalette.Set();
+    Adjust_Palette(g_OriginalPalette, g_GamePalette, Brightness, Saturation, Tint, Contrast);
+    g_GamePalette.Set();
 }
 
 /**
@@ -598,8 +598,8 @@ void OptionsClass::Set_Contrast(fixed_t contrast)
 void OptionsClass::Set_Tint(fixed_t tint)
 {
     Tint = tint;
-    Adjust_Palette(OriginalPalette, GamePalette, Brightness, Saturation, Tint, Contrast);
-    GamePalette.Set();
+    Adjust_Palette(g_OriginalPalette, g_GamePalette, Brightness, Saturation, Tint, Contrast);
+    g_GamePalette.Set();
 }
 
 /**

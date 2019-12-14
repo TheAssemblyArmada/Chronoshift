@@ -28,15 +28,15 @@
 #include <algorithm>
 
 #ifndef GAME_DLL
-RadarClass::RTacticalClass RadarClass::RadarButton;
-void *RadarClass::RadarAnim = nullptr;
-void *RadarClass::RadarPulse = nullptr;
-void *RadarClass::RadarFrame = nullptr;
-BOOL RadarClass::FullRedraw;
-GraphicBufferClass RadarClass::TileStage;
+RadarClass::RTacticalClass RadarClass::s_RadarButton;
+void *RadarClass::s_RadarAnim = nullptr;
+void *RadarClass::s_RadarPulse = nullptr;
+void *RadarClass::s_RadarFrame = nullptr;
+BOOL RadarClass::s_FullRedraw;
+GraphicBufferClass RadarClass::s_TileStage;
 #endif
 
-GraphicBufferClass RadarClass::IconStage(3, 3);
+GraphicBufferClass RadarClass::s_IconStage(3, 3);
 
 RadarClass::RTacticalClass::RTacticalClass() :
     GadgetClass(0, 0, 0, 0, MOUSE_LEFT_PRESS | MOUSE_LEFT_HELD | MOUSE_LEFT_RLSE | MOUSE_LEFT_UP | MOUSE_RIGHT_PRESS, true)
@@ -94,15 +94,15 @@ void RadarClass::One_Time()
     m_MinRadarY = 7;
     m_MaxRadarWidth = 146;
     m_MaxRadarHeight = 130;
-    m_RadarButtonXPos = g_seenBuff.Get_Width() - m_RadarButtonWidth;
+    m_RadarButtonXPos = g_SeenBuff.Get_Width() - m_RadarButtonWidth;
 
     DisplayClass::One_Time();
 
-    RadarButton.Set_Position(m_RadarButtonXPos, m_RadarButtonYPos);
-    RadarButton.Set_Size(m_RadarButtonWidth, m_RadarButtonHeight);
+    s_RadarButton.Set_Position(m_RadarButtonXPos, m_RadarButtonYPos);
+    s_RadarButton.Set_Size(m_RadarButtonWidth, m_RadarButtonHeight);
 
     // Moved from Draw_It as its the same no matter what.
-    RadarPulse = GameFileClass::Retrieve("pulse.shp");
+    s_RadarPulse = GameFileClass::Retrieve("pulse.shp");
 }
 
 void RadarClass::Init_Clear()
@@ -285,7 +285,7 @@ void RadarClass::Activate_Pulse()
 
 void RadarClass::Radar_Pixel(cell_t cellnum)
 {
-    if (m_RadarActive && Map.Is_Sidebar_Drawn() && Cell_On_Radar(cellnum)) {
+    if (m_RadarActive && g_Map.Is_Sidebar_Drawn() && Cell_On_Radar(cellnum)) {
         m_RadarToRedraw = true;
         m_Array[cellnum].Set_Bit1(true);
 
@@ -323,7 +323,7 @@ void RadarClass::Render_Terrain(cell_t cellnum, int x, int y, int scale)
 
     if (objectcount > 0) {
         if (scale == 1) {
-            g_logicPage->Put_Pixel(x, y, 21);
+            g_LogicPage->Put_Pixel(x, y, 21);
         } else {
             // TODO, A simple sort algo?
             for (int i = 0; i < objectcount - 1; ++i) {
@@ -339,8 +339,8 @@ void RadarClass::Render_Terrain(cell_t cellnum, int x, int y, int scale)
                 char *icondata = reinterpret_cast<TerrainClass *>(objects[index])->Radar_Icon(cellnum);
 
                 if (icondata != nullptr) {
-                    IconStage.From_Buffer(0, 0, 3, 3, icondata);
-                    IconStage.Scale(*g_logicPage, 0, 0, x, y, 3, 3, m_MiniMapScale, m_MiniMapScale, true, FadingBrighten);
+                    s_IconStage.From_Buffer(0, 0, 3, 3, icondata);
+                    s_IconStage.Scale(*g_LogicPage, 0, 0, x, y, 3, 3, m_MiniMapScale, m_MiniMapScale, true, s_FadingBrighten);
                 }
             }
         }
@@ -369,13 +369,13 @@ void RadarClass::Render_Overlay(cell_t cellnum, int x, int y, int scale)
             uint8_t *icondata = optr.Radar_Icon(cell.Get_Overlay_Frame());
 
             if (icondata != nullptr) {
-                IconStage.From_Buffer(0, 0, 3, 3, icondata);
+                s_IconStage.From_Buffer(0, 0, 3, 3, icondata);
 
                 if (optr.Is_Ore()) {
                     if (scale == 1) {
-                        g_logicPage->Put_Pixel(x, y, COLOR_GREY);
+                        g_LogicPage->Put_Pixel(x, y, COLOR_GREY);
                     } else {
-                        IconStage.Scale(*g_logicPage, 0, 0, x, y, 3, 3, scale, scale, true, FadingYellow);
+                        s_IconStage.Scale(*g_LogicPage, 0, 0, x, y, 3, 3, scale, scale, true, s_FadingYellow);
                     }
                 }
             }
@@ -425,7 +425,7 @@ void RadarClass::Zoom_Mode(cell_t cellnum)
     Set_Radar_Position(cellnum);
     m_RadarToRedraw = true;
     Flag_To_Redraw();
-    FullRedraw = true;
+    s_FullRedraw = true;
 }
 
 BOOL RadarClass::Is_Zoomable() const
@@ -439,7 +439,7 @@ BOOL RadarClass::Is_Zoomable() const
 int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
     // TODO, make sidebar check virtual so don't need global object.
-    if (Map.Is_Sidebar_Drawn() && m_RadarActive) {
+    if (g_Map.Is_Sidebar_Drawn() && m_RadarActive) {
         unsigned x_diff = x - (m_MinRadarX + m_RadarButtonXPos);
         unsigned y_diff = y - (m_MinRadarY + m_RadarButtonYPos);
 
@@ -504,12 +504,12 @@ void RadarClass::Cell_XY_To_Radar_Pixel(int cell_x, int cell_y, int &x, int &y)
 
 void RadarClass::Radar_Anim()
 {
-    if (!m_RadarDrawNames && Map.Is_Sidebar_Drawn()) {
-        GraphicViewPortClass *old_vp = Set_Logic_Page(&g_hidPage);
+    if (!m_RadarDrawNames && g_Map.Is_Sidebar_Drawn()) {
+        GraphicViewPortClass *old_vp = Set_Logic_Page(&g_HidPage);
 
-        GraphicViewPortClass vp(g_logicPage->Get_Graphic_Buffer(),
-            m_MinRadarX + m_RadarButtonXPos + g_logicPage->Get_XPos(),
-            g_logicPage->Get_YPos() + m_RadarButtonYPos + m_MinRadarY,
+        GraphicViewPortClass vp(g_LogicPage->Get_Graphic_Buffer(),
+            m_MinRadarX + m_RadarButtonXPos + g_LogicPage->Get_XPos(),
+            g_LogicPage->Get_YPos() + m_RadarButtonYPos + m_MinRadarY,
             m_MaxRadarWidth,
             m_MaxRadarHeight);
 
@@ -522,7 +522,7 @@ void RadarClass::Radar_Anim()
 
         vp.Clear();
 
-        CC_Draw_Shape(RadarAnim, m_RadarAnimFrame, m_RadarButtonXPos, m_RadarButtonYPos + 2);
+        CC_Draw_Shape(s_RadarAnim, m_RadarAnimFrame, m_RadarButtonXPos, m_RadarButtonYPos + 2);
 
         Set_Logic_Page(old_vp);
     }
@@ -589,11 +589,11 @@ void RadarClass::Radar_Cursor(BOOL redraw)
 
         Mark_Radar(pixel_left, pixel_top, pixel_right, pixel_btm, true, RADAR_CURSOR_SIZE);
 
-        GraphicViewPortClass *old = Set_Logic_Page(&g_hidPage);
+        GraphicViewPortClass *old = Set_Logic_Page(&g_HidPage);
 
-        GraphicViewPortClass gvp(g_logicPage->Get_Graphic_Buffer(),
-            g_logicPage->Get_XPos() + m_MinRadarX + m_RadarButtonXPos + m_MiniMap.m_left,
-            g_logicPage->Get_YPos() + m_MinRadarY + m_RadarButtonYPos + m_MiniMap.m_top,
+        GraphicViewPortClass gvp(g_LogicPage->Get_Graphic_Buffer(),
+            g_LogicPage->Get_XPos() + m_MinRadarX + m_RadarButtonXPos + m_MiniMap.m_left,
+            g_LogicPage->Get_YPos() + m_MinRadarY + m_RadarButtonYPos + m_MiniMap.m_top,
             m_MiniMap.m_right,
             m_MiniMap.m_bottom);
 
@@ -708,7 +708,7 @@ int RadarClass::Radar_Activate(int mode)
             break;
 
         case RADAR_0: // Turn radar off
-            if (!Map.Is_Sidebar_Drawn()) {
+            if (!g_Map.Is_Sidebar_Drawn()) {
                 Radar_Activate(RADAR_2);
 
                 return is_active;
@@ -734,7 +734,7 @@ int RadarClass::Radar_Activate(int mode)
             return is_active;
 
         case RADAR_1: // Turn radar on
-            if (!Map.Is_Sidebar_Drawn()) {
+            if (!g_Map.Is_Sidebar_Drawn()) {
                 Radar_Activate(RADAR_3);
 
                 return is_active;
@@ -759,10 +759,10 @@ int RadarClass::Radar_Activate(int mode)
             return is_active;
 
         case RADAR_2: // Radar off no side bar.
-            if (Session.Game_To_Play() != GAME_CAMPAIGN) {
-                Map.Enable_Zoom_Button();
+            if (g_Session.Game_To_Play() != GAME_CAMPAIGN) {
+                g_Map.Enable_Zoom_Button();
             } else {
-                Map.Disable_Zoom_Button();
+                g_Map.Disable_Zoom_Button();
             }
 
             m_RadarActivating = false;
@@ -771,8 +771,8 @@ int RadarClass::Radar_Activate(int mode)
             break;
 
         case RADAR_3: // Radar on no side bar
-            if (Session.Game_To_Play() == GAME_CAMPAIGN && Is_Zoomable()) {
-                Map.Enable_Zoom_Button();
+            if (g_Session.Game_To_Play() == GAME_CAMPAIGN && Is_Zoomable()) {
+                g_Map.Enable_Zoom_Button();
             }
 
             m_RadarActive = true;
@@ -797,7 +797,7 @@ int RadarClass::Radar_Activate(int mode)
         Flag_To_Redraw();
     }
 
-    FullRedraw = m_RadarActive;
+    s_FullRedraw = m_RadarActive;
 
     return is_active;
 }
@@ -816,7 +816,7 @@ BOOL RadarClass::Spy_Next_House()
     HousesType first;
     HousesType last;
 
-    if (Session.GameToPlay == GAME_CAMPAIGN) {
+    if (g_Session.GameToPlay == GAME_CAMPAIGN) {
         first = HOUSES_FIRST;
         last = HOUSES_LAST;
     } else {

@@ -28,18 +28,18 @@ void IPX_Call_Back()
 
 void Call_Back()
 {
-    Theme.AI();
+    g_Theme.AI();
     Speak_AI();
 
     if (g_InMapEditor) {
         return;
     }
 
-    if (Session.Game_To_Play() == GAME_IPX || Session.Game_To_Play() == GAME_INTERNET) {
+    if (g_Session.Game_To_Play() == GAME_IPX || g_Session.Game_To_Play() == GAME_INTERNET) {
         IPX_Call_Back();
     }
 
-    if ((Session.Game_To_Play() == GAME_1 || Session.Game_To_Play() == GAME_2) && Session.Modem_Service()) {
+    if ((g_Session.Game_To_Play() == GAME_1 || g_Session.Game_To_Play() == GAME_2) && g_Session.Modem_Service()) {
         // NullModem.Service();
     }
 

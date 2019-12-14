@@ -77,11 +77,11 @@ protected:
 
 private:
 #ifdef GAME_DLL
-    static ARRAY_DEC(int16_t, OverlapList, HELP_OVERLAP_BUFFER);
-    static char *&HelpText;
+    static ARRAY_DEC(int16_t, s_OverlapList, HELP_OVERLAP_BUFFER);
+    static char *&s_HelpText;
 #else
-    static int16_t OverlapList[HELP_OVERLAP_BUFFER];
-    static char *HelpText;
+    static int16_t s_OverlapList[HELP_OVERLAP_BUFFER];
+    static char *s_HelpText;
 #endif
 };
 

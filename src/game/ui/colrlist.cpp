@@ -67,22 +67,22 @@ void ColorListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL redraw)
                 break;
 
             case SELECT_2:
-                g_logicPage->Draw_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
+                g_LogicPage->Draw_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
                 Conquer_Clip_Text_Print(m_Entries[index], x, y, m_RemapList[index], 0, m_TextStyle, x_max, m_Tabs);
                 break;
 
             case SELECT_3:
                 if (m_TextStyle & TPF_6PT_GRAD) {
-                    g_logicPage->Fill_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
+                    g_LogicPage->Fill_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
                     Conquer_Clip_Text_Print(m_Entries[index], x, y, m_RemapList[index], 0, m_TextStyle | TPF_SHADOW, x_max, m_Tabs);
                 } else {
-                    g_logicPage->Fill_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
+                    g_LogicPage->Fill_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
                     Conquer_Clip_Text_Print(m_Entries[index], x, y, m_RemapList[index], 0, m_TextStyle, x_max, m_Tabs);
                 }
                 break;
 
             case SELECT_4:
-                g_logicPage->Fill_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
+                g_LogicPage->Fill_Rect(x, y, x_max + x - 2, m_YSpacing + y - 2, remapper->MediumColor);
                 break;
 
             default:

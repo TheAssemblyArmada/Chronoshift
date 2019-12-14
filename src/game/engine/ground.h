@@ -74,11 +74,11 @@ public:
 };
 
 #ifdef GAME_DLL
-extern GroundClass *Ground;
+extern GroundClass *g_Ground;
 #else
-extern GroundClass Ground[LAND_COUNT];
+extern GroundClass g_Ground[LAND_COUNT];
 #endif
 
-extern const char *GroundTypes[GROUND_COUNT];
+extern const char *g_GroundTypes[GROUND_COUNT];
 
 #endif // GROUND_H

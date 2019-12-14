@@ -24,13 +24,13 @@
 
 // PaletteClass *g_interpolationPalette = &PaletteClass::CurrentPalette;
 #ifdef GAME_DLL
-extern uint8_t **g_interpolatedPalettes;
+extern uint8_t **g_InterpolatedPalettes;
 #else
-uint8_t g_paletteInterpolationTable[INTERPOL_PAL_SIZE]; // rewrite this in to true 256 * 256 grid?
-BOOL g_palettesRead = false;
-int g_paletteCounter = 0;
-int g_interpolationMode = COPY_LINE_INTERPOLATE;
-uint8_t *g_interpolatedPalettes[100];
+uint8_t g_PaletteInterpolationTable[INTERPOL_PAL_SIZE]; // rewrite this in to true 256 * 256 grid?
+BOOL g_PalettesRead = false;
+int g_PaletteCounter = 0;
+int g_InterpolationMode = COPY_LINE_INTERPOLATE;
+uint8_t *g_InterpolatedPalettes[100];
 #endif
 
 static BOOL g_interpolationPaletteChanged = false;
@@ -47,10 +47,10 @@ void Create_Palette_Interpolation_Table()
     for (int i = 0; i < 256; i++) {
         for (int j = 0; j < 256; j++) {
             if (j == i) {
-                g_paletteInterpolationTable[(i << 8) + j] = i;
+                g_PaletteInterpolationTable[(i << 8) + j] = i;
             } else {
                 RGBClass avg = _InterpolationPalette[j].Average(_InterpolationPalette[i]);
-                g_paletteInterpolationTable[(i << 8) + j] = g_paletteInterpolationTable[(j << 8) + i] =
+                g_PaletteInterpolationTable[(i << 8) + j] = g_PaletteInterpolationTable[(j << 8) + i] =
                     _InterpolationPalette.Closest_Color(avg);
             }
         }
@@ -68,7 +68,7 @@ void Read_Interpolation_Palette(const char *filename)
 
     if (fc.Is_Available()) {
         fc.Open(FM_READ);
-        fc.Read(g_paletteInterpolationTable, sizeof(g_paletteInterpolationTable));
+        fc.Read(g_PaletteInterpolationTable, sizeof(g_PaletteInterpolationTable));
         fc.Close();
         g_interpolationPaletteChanged = false;
     }
@@ -82,7 +82,7 @@ void Write_Interpolation_Palette(const char *filename)
     GameFileClass fc(filename);
     if (!fc.Is_Available()) {
         fc.Open(FM_WRITE);
-        fc.Write(g_paletteInterpolationTable, sizeof(g_paletteInterpolationTable));
+        fc.Write(g_PaletteInterpolationTable, sizeof(g_PaletteInterpolationTable));
         fc.Close();
     }
 }
@@ -119,19 +119,19 @@ int Load_Interpolated_Palettes(const char *filename, BOOL append)
 {
     int palette_count = 0;
     int next_free = 0;
-    g_palettesRead = false;
+    g_PalettesRead = false;
     GameFileClass fc(filename);
 
     // Do we want to append additional tables or just start fresh?
     if (append) {
         for (next_free = 0; next_free < 100; ++next_free) {
-            if (g_interpolatedPalettes[next_free] == nullptr) {
+            if (g_InterpolatedPalettes[next_free] == nullptr) {
                 break;
             }
         }
     } else {
         for (int i = 0; i < 100; ++i) {
-            g_interpolatedPalettes[i] = nullptr;
+            g_InterpolatedPalettes[i] = nullptr;
         }
     }
 
@@ -146,24 +146,24 @@ int Load_Interpolated_Palettes(const char *filename, BOOL append)
         palette_count = le32toh(palette_count);
 
         for (int i = 0; i < palette_count; ++i) {
-            g_interpolatedPalettes[next_free] = (uint8_t *)malloc(INTERPOL_PAL_SIZE);
-            memset(g_interpolatedPalettes[next_free], 0, INTERPOL_PAL_SIZE);
+            g_InterpolatedPalettes[next_free] = (uint8_t *)malloc(INTERPOL_PAL_SIZE);
+            memset(g_InterpolatedPalettes[next_free], 0, INTERPOL_PAL_SIZE);
 
             int position = 0;
             for (int j = 0; j < 256; ++j) {
-                fc.Read(&g_interpolatedPalettes[next_free][position], j + 1);
+                fc.Read(&g_InterpolatedPalettes[next_free][position], j + 1);
                 position += 256;
             }
 
-            Rebuild_Interpolated_Palette(g_interpolatedPalettes[next_free]);
+            Rebuild_Interpolated_Palette(g_InterpolatedPalettes[next_free]);
             ++next_free;
         }
 
-        g_palettesRead = true;
+        g_PalettesRead = true;
         fc.Close();
     }
 
-    g_paletteCounter = 0;
+    g_PaletteCounter = 0;
 
     return palette_count;
 }
@@ -173,15 +173,15 @@ int Load_Interpolated_Palettes(const char *filename, BOOL append)
  */
 void Free_Interpolated_Palettes()
 {
-    for (int index = 0; index < ARRAY_SIZE(g_interpolatedPalettes); ++index) {
-        free(g_interpolatedPalettes[index]);
+    for (int index = 0; index < ARRAY_SIZE(g_InterpolatedPalettes); ++index) {
+        free(g_InterpolatedPalettes[index]);
 
-        g_interpolatedPalettes[index] = nullptr;
+        g_InterpolatedPalettes[index] = nullptr;
     }
 }
 
 /**
- * @brief Performs the interpolation using different methods based on the value of g_interpolationMode.
+ * @brief Performs the interpolation using different methods based on the value of g_InterpolationMode.
  */
 void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, const char *filename)
 {
@@ -205,15 +205,15 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
         Write_Interpolation_Palette(filename);
     }
 
-    if (&dst == &g_seenBuff) {
-        g_mouse->Hide_Mouse();
+    if (&dst == &g_SeenBuff) {
+        g_Mouse->Hide_Mouse();
     }
 
     Wait_Blit();
 
     if ((src_locked = src.Lock()) == false) {
-        if (&dst == &g_seenBuff) {
-            g_mouse->Show_Mouse();
+        if (&dst == &g_SeenBuff) {
+            g_Mouse->Show_Mouse();
         }
 
         return;
@@ -224,14 +224,14 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
             src.Unlock();
         }
 
-        if (&dst == &g_seenBuff) {
-            g_mouse->Show_Mouse();
+        if (&dst == &g_SeenBuff) {
+            g_Mouse->Show_Mouse();
         }
 
         return;
     }
 
-    switch (g_interpolationMode) {
+    switch (g_InterpolationMode) {
         case COPY_INTERLEAVE:
             /* Temp fall through to force best method.
             Interpolate_Interleave(src.Get_Offset(),
@@ -271,8 +271,8 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
         dst.Unlock();
     }
 
-    if (&dst == &g_seenBuff) {
-        g_mouse->Show_Mouse();
+    if (&dst == &g_SeenBuff) {
+        g_Mouse->Show_Mouse();
     }
 }
 
@@ -288,7 +288,7 @@ void __cdecl Interpolate_Interleave(void *src, void *dst, int src_height, int sr
         uint8_t *wptr = dptr;
         for (int i = 0; i < src_width - 1; ++i) {
             *wptr++ = *sptr;
-            *wptr++ = g_paletteInterpolationTable[*(uint16_t *)sptr];
+            *wptr++ = g_PaletteInterpolationTable[*(uint16_t *)sptr];
             ++sptr;
         }
 
@@ -313,8 +313,8 @@ void __cdecl Interpolate_Line_Double(void *src, void *dst, int src_height, int s
         for (int i = 0; i < src_width - 1; ++i) {
             *wptr++ = *sptr;
             *bptr++ = *sptr;
-            *wptr++ = g_paletteInterpolationTable[*(uint16_t *)sptr];
-            *bptr++ = g_paletteInterpolationTable[*(uint16_t *)sptr];
+            *wptr++ = g_PaletteInterpolationTable[*(uint16_t *)sptr];
+            *bptr++ = g_PaletteInterpolationTable[*(uint16_t *)sptr];
             ++sptr;
         }
 
@@ -337,7 +337,7 @@ static void Interpolate_X_Axis(void *src, void *dst, int src_width)
 
     for (int i = 0; i < src_width - 1; ++i) {
         *wptr++ = *sptr;
-        *wptr++ = g_paletteInterpolationTable[*(uint16_t *)sptr];
+        *wptr++ = g_PaletteInterpolationTable[*(uint16_t *)sptr];
         ++sptr;
     }
 
@@ -355,7 +355,7 @@ static void Interpolate_Y_Axis(void *top_line, void *bottom_line, void *middle_l
     for (int i = 0; i < dst_width; ++i) {
         uint16_t tmp = *tlp++;
         tmp |= (*blp++) << 8;
-        *mlp++ = g_paletteInterpolationTable[tmp];
+        *mlp++ = g_PaletteInterpolationTable[tmp];
     }
 }
 

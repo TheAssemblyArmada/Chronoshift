@@ -65,15 +65,15 @@ struct RemapControlType
 };
 
 #ifdef GAME_DLL
-extern RemapControlType *ColorRemaps;
-extern RemapControlType &MetalScheme;
-extern RemapControlType &GreyScheme;
-extern RemapControlType &SidebarScheme;
+extern RemapControlType *g_ColorRemaps;
+extern RemapControlType &g_MetalScheme;
+extern RemapControlType &g_GreyScheme;
+extern RemapControlType &g_SidebarScheme;
 #else
-extern RemapControlType ColorRemaps[REMAP_COUNT];
-extern RemapControlType MetalScheme;
-extern RemapControlType GreyScheme;
-extern RemapControlType SidebarScheme;
+extern RemapControlType g_ColorRemaps[REMAP_COUNT];
+extern RemapControlType g_MetalScheme;
+extern RemapControlType g_GreyScheme;
+extern RemapControlType g_SidebarScheme;
 #endif
 
 #endif // REMAP_H

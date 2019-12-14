@@ -34,7 +34,7 @@ EditClass::EditClass(int id, char *textbuffer, int bufferlength, TextPrintType t
     m_Text(textbuffer),
     m_MaxTextLength(bufferlength - 1),
     m_TextLength(strlen(textbuffer)),
-    m_ColorScheme(GadgetClass::ColorScheme)
+    m_ColorScheme(GadgetClass::s_ColorScheme)
 {
     Flag_To_Redraw();
     Set_Text(textbuffer, bufferlength);
@@ -42,12 +42,12 @@ EditClass::EditClass(int id, char *textbuffer, int bufferlength, TextPrintType t
     if (w == -1 || h == -1) {
         Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
         if (h == -1) {
-            m_Height = g_fontHeight + 1;
+            m_Height = g_FontHeight + 1;
         }
 
         if (w == -1) {
             if (strlen(m_Text) == 0) {
-                m_Width = (m_MaxTextLength + 1) * (g_fontXSpacing + Char_Pixel_Width('X')) + 2;
+                m_Width = (m_MaxTextLength + 1) * (g_FontXSpacing + Char_Pixel_Width('X')) + 2;
             } else {
                 m_Width = String_Pixel_Width(m_Text) + 6;
             }
@@ -87,15 +87,15 @@ void EditClass::Set_Text(char *text, int max_len)
 BOOL EditClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
         Draw_Background();
         Draw_Text(m_Text);
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;
@@ -123,7 +123,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
             Clear_Focus();
             flags = INPUT_NONE;
         } else {
-            character = g_keyboard->To_ASCII(key);
+            character = g_Keyboard->To_ASCII(key);
             if (key & KEY_VK_BIT && character >= KA_0 && character <= KA_9) {
                 key = (KeyNumType)(key & (~KEY_VK_BIT));
 
@@ -137,7 +137,7 @@ BOOL EditClass::Action(unsigned flags, KeyNumType &key)
                 key = KN_NONE;
                 flags &= ~KEYBOARD_INPUT;
             } else if (!(flags & MOUSE_LEFT_RLSE) && !(flags & MOUSE_RIGHT_RLSE)) {
-                if (Handle_Key(g_keyboard->To_ASCII(key))) {
+                if (Handle_Key(g_Keyboard->To_ASCII(key))) {
                     key = KN_NONE;
                     flags &= ~KEYBOARD_INPUT;
 

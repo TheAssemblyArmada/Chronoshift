@@ -22,15 +22,15 @@
 
 #ifdef GAME_DLL
 #ifdef BUILD_WITH_DDRAW
-extern ARRAY_DEC(tagPALETTEENTRY, g_paletteEntries, 256);
-extern LPDIRECTDRAWPALETTE &g_palettePtr;
+extern ARRAY_DEC(tagPALETTEENTRY, g_PaletteEntries, 256);
+extern LPDIRECTDRAWPALETTE &g_PalettePtr;
 #endif
 #else
 #ifdef BUILD_WITH_DDRAW
-LPDIRECTDRAW g_directDrawObject;
-LPDIRECTDRAWSURFACE g_paletteSurface = nullptr;
-tagPALETTEENTRY g_paletteEntries[256];
-LPDIRECTDRAWPALETTE g_palettePtr;
+LPDIRECTDRAW g_DirectDrawObject;
+LPDIRECTDRAWSURFACE g_PaletteSurface = nullptr;
+tagPALETTEENTRY g_PaletteEntries[256];
+LPDIRECTDRAWPALETTE g_PalettePtr;
 #endif
 #endif
 
@@ -375,7 +375,7 @@ static void Process_DD_Result(HRESULT result, BOOL show_success = false)
     };
 
     if (errorstr != nullptr) {
-        MessageBoxA(MainWindow, errorstr, "Note", MB_ICONEXCLAMATION | MB_OK);
+        MessageBoxA(g_MainWindow, errorstr, "Note", MB_ICONEXCLAMATION | MB_OK);
     }
 }
 #endif
@@ -408,13 +408,13 @@ static void Check_Overlapped_Blit_Capability()
 static uint32_t Get_Hardware_Caps()
 {
 #ifdef BUILD_WITH_DDRAW
-    if (g_directDrawObject == nullptr) {
+    if (g_DirectDrawObject == nullptr) {
         return 0;
     }
 
     DDCAPS caps;
     caps.dwSize = sizeof(caps);
-    HRESULT result = g_directDrawObject->GetCaps(&caps, nullptr);
+    HRESULT result = g_DirectDrawObject->GetCaps(&caps, nullptr);
 
     if (result != DD_OK) {
         Process_DD_Result(result);
@@ -462,14 +462,14 @@ static uint32_t Get_Hardware_Caps()
 static uint32_t Get_Video_Memory()
 {
 #ifdef BUILD_WITH_DDRAW
-    if (g_directDrawObject == nullptr) {
+    if (g_DirectDrawObject == nullptr) {
         return 0;
     }
 
     DDCAPS caps;
     caps.dwSize = sizeof(caps);
 
-    if (g_directDrawObject->GetCaps(&caps, nullptr) != DD_OK) {
+    if (g_DirectDrawObject->GetCaps(&caps, nullptr) != DD_OK) {
         return 0;
     }
 
@@ -491,32 +491,32 @@ BOOL Set_Video_Mode(uintptr_t handle, int w, int h, int bpp)
 #ifdef BUILD_WITH_DDRAW
     HRESULT result;
 
-    if (g_directDrawObject == nullptr) {
-        result = DirectDrawCreate(nullptr, &g_directDrawObject, nullptr);
+    if (g_DirectDrawObject == nullptr) {
+        result = DirectDrawCreate(nullptr, &g_DirectDrawObject, nullptr);
         Process_DD_Result(result);
 
         if (result != DD_OK) {
             return false;
         }
 
-        result = g_directDrawObject->SetCooperativeLevel(
+        result = g_DirectDrawObject->SetCooperativeLevel(
             (HWND)handle, (w == 320 ? DDSCL_ALLOWMODEX : 0) | DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN);
         Process_DD_Result(result);
     }
 
-    if (g_directDrawObject->SetDisplayMode(w, h, bpp) != DD_OK) {
-        g_directDrawObject->Release();
-        g_directDrawObject = nullptr;
+    if (g_DirectDrawObject->SetDisplayMode(w, h, bpp) != DD_OK) {
+        g_DirectDrawObject->Release();
+        g_DirectDrawObject = nullptr;
 
         return false;
     }
 
     // Fixes compiler error, looks like watcom directx sdk header has wrong prototype.
 #ifdef COMPILER_WATCOM
-    result = g_directDrawObject->CreatePalette(
-        DDPCAPS_8BIT | DDPCAPS_ALLOW256, g_paletteEntries, (LPDIRECTDRAWPALETTE)&g_palettePtr, nullptr);
+    result = g_DirectDrawObject->CreatePalette(
+        DDPCAPS_8BIT | DDPCAPS_ALLOW256, g_PaletteEntries, (LPDIRECTDRAWPALETTE)&g_PalettePtr, nullptr);
 #else
-    result = g_directDrawObject->CreatePalette(DDPCAPS_8BIT | DDPCAPS_ALLOW256, g_paletteEntries, &g_palettePtr, nullptr);
+    result = g_DirectDrawObject->CreatePalette(DDPCAPS_8BIT | DDPCAPS_ALLOW256, g_PaletteEntries, &g_PalettePtr, nullptr);
 #endif
     Process_DD_Result(result);
 
@@ -538,12 +538,12 @@ BOOL Set_Video_Mode(uintptr_t handle, int w, int h, int bpp)
 void Reset_Video_Mode()
 {
 #ifdef BUILD_WITH_DDRAW
-    if (g_directDrawObject) {
-        HRESULT result = g_directDrawObject->RestoreDisplayMode();
+    if (g_DirectDrawObject) {
+        HRESULT result = g_DirectDrawObject->RestoreDisplayMode();
         Process_DD_Result(result);
-        result = g_directDrawObject->Release();
+        result = g_DirectDrawObject->Release();
         Process_DD_Result(result);
-        g_directDrawObject = nullptr;
+        g_DirectDrawObject = nullptr;
     }
 #endif
 }
@@ -557,79 +557,79 @@ BOOL Init_Video()
 {
 #ifdef BUILD_WITH_DDRAW
     BOOL set_mode =
-        Set_Video_Mode((uintptr_t)MainWindow, GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, 8);
+        Set_Video_Mode((uintptr_t)g_MainWindow, GraphicViewPortClass::s_ScreenWidth, GraphicViewPortClass::s_ScreenHeight, 8);
 
-    if (GraphicViewPortClass::ScreenHeight == 400 && !set_mode) {
-        set_mode = Set_Video_Mode((uintptr_t)MainWindow, GraphicViewPortClass::ScreenWidth, 480, 8);
+    if (GraphicViewPortClass::s_ScreenHeight == 400 && !set_mode) {
+        set_mode = Set_Video_Mode((uintptr_t)g_MainWindow, GraphicViewPortClass::s_ScreenWidth, 480, 8);
 
         if (set_mode) {
-            GraphicViewPortClass::ScreenHeight = 480;
+            GraphicViewPortClass::s_ScreenHeight = 480;
         }
     }
 
     if (set_mode) {
-        if (GraphicViewPortClass::ScreenWidth == 320) {
-            g_visiblePage.Init(GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, nullptr, 0, GBC_NONE);
-            g_modeXBuff.Init(GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, nullptr, 0, GBC_VIDEO_MEM | GBC_VISIBLE);
+        if (GraphicViewPortClass::s_ScreenWidth == 320) {
+            g_VisiblePage.Init(GraphicViewPortClass::s_ScreenWidth, GraphicViewPortClass::s_ScreenHeight, nullptr, 0, GBC_NONE);
+            g_ModeXBuff.Init(GraphicViewPortClass::s_ScreenWidth, GraphicViewPortClass::s_ScreenHeight, nullptr, 0, GBC_VIDEO_MEM | GBC_VISIBLE);
         } else {
-            g_visiblePage.Init(GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, nullptr, 0, GBC_VIDEO_MEM | GBC_VISIBLE);
+            g_VisiblePage.Init(GraphicViewPortClass::s_ScreenWidth, GraphicViewPortClass::s_ScreenHeight, nullptr, 0, GBC_VIDEO_MEM | GBC_VISIBLE);
             DDSCAPS caps;
             memset(&caps, 0, sizeof(caps));
-            g_visiblePage.Get_DD_Surface()->GetCaps(&caps);
+            g_VisiblePage.Get_DD_Surface()->GetCaps(&caps);
 
             if (caps.dwCaps & DDSCAPS_SYSTEMMEMORY) {
 #ifdef PLATFORM_WINDOWS
-                MessageBoxA(MainWindow,
+                MessageBoxA(g_MainWindow,
                     "Error - Unable to allocate primary video buffer - aborting.",
                     "Chronoshift",
                     MB_ICONWARNING);
 #endif
                 DEBUG_LOG("Error - Unable to allocate primary video buffer - aborting.\n");
-                delete PlatformTimer;
+                delete g_PlatformTimer;
 
                 return false;
             }
 
             uint32_t hwcaps = Get_Hardware_Caps();
 
-            if (Get_Video_Memory() < (GraphicViewPortClass::ScreenWidth * GraphicViewPortClass::ScreenHeight) || !(hwcaps & VIDEO_BLITTER)
-                || (hwcaps & VIDEO_NO_HARDWARE_ASSIST) || !VideoBackBufferAllowed) {
-                g_hiddenPage.Init(GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, 0, 0, GBC_NONE);
+            if (Get_Video_Memory() < (GraphicViewPortClass::s_ScreenWidth * GraphicViewPortClass::s_ScreenHeight) || !(hwcaps & VIDEO_BLITTER)
+                || (hwcaps & VIDEO_NO_HARDWARE_ASSIST) || !g_VideoBackBufferAllowed) {
+                g_HiddenPage.Init(GraphicViewPortClass::s_ScreenWidth, GraphicViewPortClass::s_ScreenHeight, 0, 0, GBC_NONE);
             } else {
-                g_hiddenPage.Init(GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, 0, 0, GBC_VIDEO_MEM);
+                g_HiddenPage.Init(GraphicViewPortClass::s_ScreenWidth, GraphicViewPortClass::s_ScreenHeight, 0, 0, GBC_VIDEO_MEM);
                 DDSCAPS caps;
                 memset(&caps, 0, sizeof(caps));
-                g_hiddenPage.Get_DD_Surface()->GetCaps(&caps);
+                g_HiddenPage.Get_DD_Surface()->GetCaps(&caps);
 
                 if (!(caps.dwCaps & DDSCAPS_SYSTEMMEMORY)) {
-                    g_visiblePage.Attach_DD_Surface(&g_hiddenPage);
+                    g_VisiblePage.Attach_DD_Surface(&g_HiddenPage);
                 } else {
-                    g_allSurfaces.Remove_Surface(g_hiddenPage.Get_DD_Surface());
-                    g_hiddenPage.Get_DD_Surface()->Release();
-                    g_hiddenPage.Init(GraphicViewPortClass::ScreenWidth, GraphicViewPortClass::ScreenHeight, 0, 0, GBC_NONE);
+                    g_AllSurfaces.Remove_Surface(g_HiddenPage.Get_DD_Surface());
+                    g_HiddenPage.Get_DD_Surface()->Release();
+                    g_HiddenPage.Init(GraphicViewPortClass::s_ScreenWidth, GraphicViewPortClass::s_ScreenHeight, 0, 0, GBC_NONE);
                 }
             }
         }
 
-        GraphicViewPortClass::ScreenHeight = 400;
+        GraphicViewPortClass::s_ScreenHeight = 400;
         int y_offset = 0;
 
-        if (g_visiblePage.Get_Height() == 480) {
-            g_seenBuff.Attach(&g_visiblePage, 0, 80, 640, 400);
+        if (g_VisiblePage.Get_Height() == 480) {
+            g_SeenBuff.Attach(&g_VisiblePage, 0, 80, 640, 400);
             y_offset = 80;
         } else {
-            g_seenBuff.Attach(&g_visiblePage, 0, 0, 640, 400);
+            g_SeenBuff.Attach(&g_VisiblePage, 0, 0, 640, 400);
         }
 
-        g_hidPage.Attach(&g_hiddenPage, 0, y_offset, 640, 400);
+        g_HidPage.Attach(&g_HiddenPage, 0, y_offset, 640, 400);
 
         return true;
     } else {
 #ifdef PLATFORM_WINDOWS
-        MessageBoxA(MainWindow, "Error - Unable to set the video mode.", "Chronoshift", MB_ICONWARNING);
+        MessageBoxA(g_MainWindow, "Error - Unable to set the video mode.", "Chronoshift", MB_ICONWARNING);
 #endif
         DEBUG_LOG("Error - Unable to set the video mode.\n");
-        delete PlatformTimer;
+        delete g_PlatformTimer;
     }
 
     return false;
@@ -648,23 +648,23 @@ void Set_Video_Palette(void *pal)
 #ifdef BUILD_WITH_DDRAW
     static BOOL _first_palette_set = false;
 
-    if (pal == nullptr || g_directDrawObject == nullptr || g_paletteSurface == nullptr) {
+    if (pal == nullptr || g_DirectDrawObject == nullptr || g_PaletteSurface == nullptr) {
         return;
     }
 
     RGBClass *rgb = static_cast<RGBClass *>(pal);
 
     for (int i = 0; i < 256; ++i) {
-        g_paletteEntries[i].peRed = rgb[i].Get_Red() << 2;
-        g_paletteEntries[i].peGreen = rgb[i].Get_Green() << 2;
-        g_paletteEntries[i].peBlue = rgb[i].Get_Blue() << 2;
+        g_PaletteEntries[i].peRed = rgb[i].Get_Red() << 2;
+        g_PaletteEntries[i].peGreen = rgb[i].Get_Green() << 2;
+        g_PaletteEntries[i].peBlue = rgb[i].Get_Blue() << 2;
     }
 
     if (!_first_palette_set) {
-        g_paletteSurface->SetPalette(g_palettePtr);
+        g_PaletteSurface->SetPalette(g_PalettePtr);
         _first_palette_set = true;
     }
 
-    g_palettePtr->SetEntries(0, 0, 256, g_paletteEntries);
+    g_PalettePtr->SetEntries(0, 0, 256, g_PaletteEntries);
 #endif
 }

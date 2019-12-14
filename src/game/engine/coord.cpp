@@ -135,7 +135,7 @@ coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance)
  */
 coord_t Coord_Scatter(coord_t coord, uint16_t distance, BOOL center)
 {
-    DirType dir = (DirType)Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
+    DirType dir = (DirType)g_Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
     coord_t new_coord = Coord_Move(coord, dir, distance);
 
     if (Coord_Is_Negative(new_coord)) {

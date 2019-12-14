@@ -43,7 +43,7 @@ FactoryClass::FactoryClass() :
 
 FactoryClass::~FactoryClass()
 {
-    if (GameActive) {
+    if (g_GameActive) {
         Abandon();
     }
 }
@@ -220,7 +220,7 @@ BOOL FactoryClass::Abandon()
         m_ProductionTime.Set_Stage(0);
         m_ProductionTime.Set_Delay(0);
 
-        ++ScenarioInit;
+        ++g_ScenarioInit;
 
         if (m_SpecialItem != -1) {
             m_SpecialItem = -1;
@@ -231,7 +231,7 @@ BOOL FactoryClass::Abandon()
             m_Object = nullptr;
         }
 
-        --ScenarioInit;
+        --g_ScenarioInit;
 
         return true;
     }

@@ -22,14 +22,14 @@ using std::memcpy;
 using std::memcmp;
 
 #ifndef GAME_DLL
-PaletteClass GamePalette;
-PaletteClass OriginalPalette;
-PaletteClass CCPalette;
-PaletteClass BlackPalette(RGBClass::BlackColor);
-PaletteClass WhitePalette(RGBClass::WhiteColor);
+PaletteClass g_GamePalette;
+PaletteClass g_OriginalPalette;
+PaletteClass g_CCPalette;
+PaletteClass g_BlackPalette(RGBClass::BlackColor);
+PaletteClass g_WhitePalette(RGBClass::WhiteColor);
 #endif
 
-PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g_currentPalette);
+PaletteClass &PaletteClass::CurrentPalette = *reinterpret_cast<PaletteClass *>(g_CurrentPalette);
 
 PaletteClass::PaletteClass(const RGBClass &rgb)
 {

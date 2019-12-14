@@ -23,7 +23,7 @@
 using std::snprintf;
 
 #ifndef GAME_DLL
-ScenarioClass Scen;
+ScenarioClass g_Scen;
 #endif
 
 ScenarioClass::ScenarioClass() :
@@ -163,7 +163,7 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
             break;
 
         default:
-            if (Scen.Get_Random_Value(0, 99) < 50) {
+            if (g_Scen.Get_Random_Value(0, 99) < 50) {
                 dirvalue = 'W';
             } else {
                 dirvalue = 'E';
@@ -193,7 +193,7 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
             }
 
             if (i != 0) {
-                varvalue = Scen.Get_Random_Value(0, (i - 1)) + 'A';
+                varvalue = g_Scen.Get_Random_Value(0, (i - 1)) + 'A';
             } else {
                 varvalue = 'X';
             }
@@ -269,14 +269,14 @@ void ScenarioClass::Do_Fade_AI()
             m_FadeInBW = false;
         }
 
-        Options.Adjust_Palette(OriginalPalette,
-            GamePalette,
-            Options.Get_Brightness(),
-            Options.Get_Saturation() * fixed_t((15 - m_FadeTimer), 15),
-            Options.Get_Tint(),
-            Options.Get_Contrast());
+        g_Options.Adjust_Palette(g_OriginalPalette,
+            g_GamePalette,
+            g_Options.Get_Brightness(),
+            g_Options.Get_Saturation() * fixed_t((15 - m_FadeTimer), 15),
+            g_Options.Get_Tint(),
+            g_Options.Get_Contrast());
 
-        GamePalette.Set();
+        g_GamePalette.Set();
     }
 
     if (m_FadeOutBW) {
@@ -284,14 +284,14 @@ void ScenarioClass::Do_Fade_AI()
             m_FadeOutBW = false;
         }
 
-        Options.Adjust_Palette(OriginalPalette,
-            GamePalette,
-            Options.Get_Brightness(),
-            Options.Get_Saturation() * fixed_t(m_FadeTimer, 15),
-            Options.Get_Tint(),
-            Options.Get_Contrast());
+        g_Options.Adjust_Palette(g_OriginalPalette,
+            g_GamePalette,
+            g_Options.Get_Brightness(),
+            g_Options.Get_Saturation() * fixed_t(m_FadeTimer, 15),
+            g_Options.Get_Tint(),
+            g_Options.Get_Contrast());
 
-        GamePalette.Set();
+        g_GamePalette.Set();
 
         if (!m_FadeOutBW) {
             m_FadeInBW = true;

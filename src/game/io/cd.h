@@ -37,11 +37,11 @@ int Get_CD_Index(int drive, int delay);
 BOOL Force_CD_Available(int cd);
 
 #ifdef GAME_DLL
-extern int &g_currentCD;
-extern int &g_requiredCD;
+extern int &g_CurrentCD;
+extern int &g_RequiredCD;
 #else
-extern int g_currentCD;
-extern int g_requiredCD;
+extern int g_CurrentCD;
+extern int g_RequiredCD;
 #endif
 
 #endif // CD_H

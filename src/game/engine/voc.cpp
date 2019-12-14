@@ -19,7 +19,7 @@
 #endif
 
 // clang-format off
-SoundEffectType SoundEffectName[] = {
+SoundEffectType g_SoundEffectName[] = {
     { "GIRLOKAY", 20, VAR_NONE },
     { "GIRLYEAH", 20, VAR_NONE },
     { "GUYOKAY1", 20, VAR_NONE },
@@ -196,7 +196,7 @@ VocType Voc_From_Name(const char *name)
 
     if (name != nullptr) {
         for (VocType voc = VOC_FIRST; voc < VOC_COUNT; ++voc) {
-            if (strcasecmp(name, SoundEffectName[voc].BaseName)) {
+            if (strcasecmp(name, g_SoundEffectName[voc].BaseName)) {
                 return voc;
             }
         }
@@ -207,7 +207,7 @@ VocType Voc_From_Name(const char *name)
 const char *Name_From_Voc(VocType voc)
 {
     if (voc >= VOC_FIRST && voc < VOC_COUNT) {
-        return SoundEffectName[voc].BaseName;
+        return g_SoundEffectName[voc].BaseName;
     }
     return "<none>";
 }

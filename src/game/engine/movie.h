@@ -147,6 +147,6 @@ void Play_Movie(MovieType movie, ThemeType theme = THEME_NONE, BOOL a3 = true);
 void Play_Intro(BOOL flag = false);
 void Play_SneakPeak();
 
-extern MovieInfoStruct MovieTypes[MOVIE_COUNT];
+extern MovieInfoStruct g_MovieTypes[MOVIE_COUNT];
 
 #endif // MOVIE_H

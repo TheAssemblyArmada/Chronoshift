@@ -54,20 +54,20 @@ struct FontHeader
 
 // Global attributes for the current font.
 #ifdef GAME_DLL
-extern char *&g_fontPtr;
-extern int &g_fontYSpacing;
-extern int &g_fontXSpacing;
-extern uint8_t &g_fontHeight;
-extern uint8_t &g_fontWidth;
-extern uint8_t *g_colorXlat;
+extern char *&g_FontPtr;
+extern int &g_FontYSpacing;
+extern int &g_FontXSpacing;
+extern uint8_t &g_FontHeight;
+extern uint8_t &g_FontWidth;
+extern uint8_t *g_ColorXlat;
 extern uint8_t *byte_608988;
 #else
-extern char *g_fontPtr;
-extern int g_fontYSpacing;
-extern int g_fontXSpacing;
-extern uint8_t g_fontHeight;
-extern uint8_t g_fontWidth;
-extern uint8_t g_colorXlat[16];
+extern char *g_FontPtr;
+extern int g_FontYSpacing;
+extern int g_FontXSpacing;
+extern uint8_t g_FontHeight;
+extern uint8_t g_FontWidth;
+extern uint8_t g_ColorXlat[16];
 extern uint8_t byte_608988[];
 #endif
 

@@ -64,19 +64,19 @@ using std::sprintf;
 
 // These pointers are used only within this translation unit for reinitialisation after CD changes and such.
 #ifdef GAME_DLL
-extern GameMixFile *&MainMix;
-extern GameMixFile *&ConquerMix;
-extern GameMixFile *&GeneralMix;
-extern GameMixFile *&MoviesMix;
-extern GameMixFile *&ScoreMix;
+extern GameMixFile *&g_MainMix;
+extern GameMixFile *&g_ConquerMix;
+extern GameMixFile *&g_GeneralMix;
+extern GameMixFile *&g_MoviesMix;
+extern GameMixFile *&g_ScoreMix;
 #else
 namespace
 {
-GameMixFile *MainMix;
-GameMixFile *ConquerMix;
-GameMixFile *GeneralMix;
-GameMixFile *MoviesMix;
-GameMixFile *ScoreMix;
+GameMixFile *g_MainMix;
+GameMixFile *g_ConquerMix;
+GameMixFile *g_GeneralMix;
+GameMixFile *g_MoviesMix;
+GameMixFile *g_ScoreMix;
 } // namespace
 #endif
 
@@ -95,7 +95,7 @@ void Init_Expansion_Files()
     if (hndl != INVALID_HANDLE_VALUE) {
         do {
             if (strcasecmp(find.cFileName, "scores.mix") != 0) {
-                new GameMixFile(find.cFileName, &g_publicKey);
+                new GameMixFile(find.cFileName, &g_PublicKey);
                 GameFileClass::Cache_Mix(find.cFileName);
             }
         } while (FindNextFileA(hndl, &find));
@@ -106,7 +106,7 @@ void Init_Expansion_Files()
     // Find mix files starting with sc and do not cache them. Largely only useful for wsa and vqa files.
     if (hndl != INVALID_HANDLE_VALUE) {
         do {
-            new GameMixFile(find.cFileName, &g_publicKey);
+            new GameMixFile(find.cFileName, &g_PublicKey);
         } while (FindNextFileA(hndl, &find));
     }
 #elif defined HAVE_DIRENT_H && defined HAVE_FNMATCH_H
@@ -122,7 +122,7 @@ void Init_Expansion_Files()
             // Make sure we don't have a folder and name matches
             if (!S_ISDIR(st.st_mode) && fnmatch("sc*.mix", dirp->d_name, FNM_PATHNAME | FNM_CASEFOLD) == 0
                 && strcasecmp(dirp->d_name, "scores.mix") != 0) {
-                new GameMixFile(dirp->d_name, &g_publicKey);
+                new GameMixFile(dirp->d_name, &g_PublicKey);
                 GameFileClass::Cache_Mix(dirp->d_name);
             }
         }
@@ -136,7 +136,7 @@ void Init_Expansion_Files()
 
             // Make sure we don't have a folder and name matches
             if (!S_ISDIR(st.st_mode) && !fnmatch("ss*.mix", dirp->d_name, FNM_PATHNAME | FNM_CASEFOLD)) {
-                new GameMixFile(dirp->d_name, &g_publicKey);
+                new GameMixFile(dirp->d_name, &g_PublicKey);
             }
         }
     }
@@ -153,45 +153,45 @@ void Init_Expansion_Files()
  */
 void Init_Bootstrap_Mixfiles()
 {
-    int reqcd = g_requiredCD;
+    int reqcd = g_RequiredCD;
     // We are currently reading local files
-    g_requiredCD = -2;
+    g_RequiredCD = -2;
 
     GameFileClass wolapi("wolapi.mix");
     if (wolapi.Is_Available()) {
-        new GameMixFile("wolapi.mix", &g_publicKey);
+        new GameMixFile("wolapi.mix", &g_PublicKey);
         GameFileClass::Cache_Mix("wolapi.mix");
     }
 
     GameFileClass expand2("expand2.mix");
     if (expand2.Is_Available()) {
-        new GameMixFile("expand2.mix", &g_publicKey);
+        new GameMixFile("expand2.mix", &g_PublicKey);
         GameFileClass::Cache_Mix("expand2.mix");
     }
 
-    new GameMixFile("hires1.mix", &g_publicKey);
+    new GameMixFile("hires1.mix", &g_PublicKey);
     GameFileClass::Cache_Mix("hires1.mix");
 
     GameFileClass expand("expand.mix");
     if (expand.Is_Available()) {
-        new GameMixFile("expand.mix", &g_publicKey);
+        new GameMixFile("expand.mix", &g_PublicKey);
         GameFileClass::Cache_Mix("expand.mix");
     }
 
-    new GameMixFile("redalert.mix", &g_publicKey);
+    new GameMixFile("redalert.mix", &g_PublicKey);
 
-    new GameMixFile("local.mix", &g_publicKey);
+    new GameMixFile("local.mix", &g_PublicKey);
     GameFileClass::Cache_Mix("local.mix");
 
-    new GameMixFile("editor.mix", &g_publicKey);
+    new GameMixFile("editor.mix", &g_PublicKey);
     GameFileClass::Cache_Mix("editor.mix");
 
-    new GameMixFile("hires.mix", &g_publicKey);
+    new GameMixFile("hires.mix", &g_PublicKey);
     GameFileClass::Cache_Mix("hires.mix");
 
-    new GameMixFile("nchires.mix", &g_publicKey);
+    new GameMixFile("nchires.mix", &g_PublicKey);
 
-    g_requiredCD = reqcd;
+    g_RequiredCD = reqcd;
 }
 
 /**
@@ -201,36 +201,36 @@ void Init_Bootstrap_Mixfiles()
  */
 void Init_Secondary_Mixfiles()
 {
-    MainMix = new GameMixFile("main.mix", &g_publicKey); // In RA main.mix contains the others.
+    g_MainMix = new GameMixFile("main.mix", &g_PublicKey); // In RA main.mix contains the others.
 
-    new GameMixFile("edhi.mix", &g_publicKey);
+    new GameMixFile("edhi.mix", &g_PublicKey);
     GameFileClass::Cache_Mix("edhi.mix");
 
-    ConquerMix = new GameMixFile("conquer.mix", &g_publicKey);
+    g_ConquerMix = new GameMixFile("conquer.mix", &g_PublicKey);
 
-    if (GeneralMix == nullptr) {
-        GeneralMix = new GameMixFile("general.mix", &g_publicKey);
+    if (g_GeneralMix == nullptr) {
+        g_GeneralMix = new GameMixFile("general.mix", &g_PublicKey);
     }
 
     GameFileClass movies1("movies1.mix");
 
     if (movies1.Is_Available()) {
-        MoviesMix = new GameMixFile("movies1.mix", &g_publicKey);
+        g_MoviesMix = new GameMixFile("movies1.mix", &g_PublicKey);
     } else {
-        MoviesMix = new GameMixFile("movies2.mix", &g_publicKey);
+        g_MoviesMix = new GameMixFile("movies2.mix", &g_PublicKey);
     }
 
-    ScoreMix = new GameMixFile("scores.mix", &g_publicKey);
+    g_ScoreMix = new GameMixFile("scores.mix", &g_PublicKey);
 
-    if (ScoreMix != nullptr) {
-        ScoresPresent = true;
+    if (g_ScoreMix != nullptr) {
+        g_ScoresPresent = true;
         ThemeClass::Scan();
     }
 
-    new GameMixFile("speech.mix", &g_publicKey);
-    new GameMixFile("sounds.mix", &g_publicKey);
-    new GameMixFile("russian.mix", &g_publicKey);
-    new GameMixFile("allies.mix", &g_publicKey);
+    new GameMixFile("speech.mix", &g_PublicKey);
+    new GameMixFile("sounds.mix", &g_PublicKey);
+    new GameMixFile("russian.mix", &g_PublicKey);
+    new GameMixFile("allies.mix", &g_PublicKey);
 }
 
 /**
@@ -238,34 +238,34 @@ void Init_Secondary_Mixfiles()
  */
 void Reinit_Secondary_Mixfiles()
 {
-    if (MoviesMix != nullptr) {
-        delete MoviesMix;
+    if (g_MoviesMix != nullptr) {
+        delete g_MoviesMix;
     }
 
-    if (GeneralMix != nullptr) {
-        delete GeneralMix;
+    if (g_GeneralMix != nullptr) {
+        delete g_GeneralMix;
     }
 
-    if (ScoreMix != nullptr) {
-        delete ScoreMix;
+    if (g_ScoreMix != nullptr) {
+        delete g_ScoreMix;
     }
 
-    if (MainMix != nullptr) {
-        delete MainMix;
+    if (g_MainMix != nullptr) {
+        delete g_MainMix;
     }
 
-    MainMix = new GameMixFile("main.mix", &g_publicKey); // In RA main.mix contains the others.
+    g_MainMix = new GameMixFile("main.mix", &g_PublicKey); // In RA main.mix contains the others.
 
     GameFileClass movies1("movies1.mix");
 
     if (movies1.Is_Available()) {
-        MoviesMix = new GameMixFile("movies1.mix", &g_publicKey);
+        g_MoviesMix = new GameMixFile("movies1.mix", &g_PublicKey);
     } else {
-        MoviesMix = new GameMixFile("movies2.mix", &g_publicKey);
+        g_MoviesMix = new GameMixFile("movies2.mix", &g_PublicKey);
     }
 
-    GeneralMix = new GameMixFile("general.mix", &g_publicKey);
-    ScoreMix = new GameMixFile("scores.mix", &g_publicKey);
+    g_GeneralMix = new GameMixFile("general.mix", &g_PublicKey);
+    g_ScoreMix = new GameMixFile("scores.mix", &g_PublicKey);
     ThemeClass::Scan();
 }
 
@@ -283,8 +283,8 @@ void Init_Keys()
     RAMFileClass mem_keys(Keys, strlen(Keys));
     GameINIClass tempini;
     tempini.Load(mem_keys);
-    g_publicKey = tempini.Get_PKey(true);
-    g_privateKey = tempini.Get_PKey(false); // Private key is only used to write mix files.
+    g_PublicKey = tempini.Get_PKey(true);
+    g_PrivateKey = tempini.Get_PKey(false); // Private key is only used to write mix files.
 }
 
 /**
@@ -294,18 +294,18 @@ void Init_Keys()
  */
 void Init_Fonts()
 {
-    Metal12FontPtr = static_cast<char *>(GameFileClass::Retrieve("12metfnt.fnt"));
-    MapFontPtr = static_cast<char *>(GameFileClass::Retrieve("help.fnt"));
-    Font6Ptr = static_cast<char *>(GameFileClass::Retrieve("6point.fnt"));
-    GradFont6Ptr = static_cast<char *>(GameFileClass::Retrieve("grad6fnt.fnt"));
-    EditorFont = static_cast<char *>(GameFileClass::Retrieve("editfnt.fnt"));
-    Font8Ptr = static_cast<char *>(GameFileClass::Retrieve("8point.fnt"));
-    Font3Ptr = static_cast<char *>(GameFileClass::Retrieve("3point.fnt"));
-    ScoreFontPtr = static_cast<char *>(GameFileClass::Retrieve("scorefnt.fnt"));
-    FontLEDPtr = static_cast<char *>(GameFileClass::Retrieve("led.fnt"));
-    VCRFontPtr = static_cast<char *>(GameFileClass::Retrieve("vcr.fnt"));
-    TypeFontPtr = static_cast<char *>(GameFileClass::Retrieve("8point.fnt"));
-    Set_Font(Font8Ptr);
+    g_Metal12FontPtr = static_cast<char *>(GameFileClass::Retrieve("12metfnt.fnt"));
+    g_MapFontPtr = static_cast<char *>(GameFileClass::Retrieve("help.fnt"));
+    g_Font6Ptr = static_cast<char *>(GameFileClass::Retrieve("6point.fnt"));
+    g_GradFont6Ptr = static_cast<char *>(GameFileClass::Retrieve("grad6fnt.fnt"));
+    g_EditorFont = static_cast<char *>(GameFileClass::Retrieve("editfnt.fnt"));
+    g_Font8Ptr = static_cast<char *>(GameFileClass::Retrieve("8point.fnt"));
+    g_Font3Ptr = static_cast<char *>(GameFileClass::Retrieve("3point.fnt"));
+    g_ScoreFontPtr = static_cast<char *>(GameFileClass::Retrieve("scorefnt.fnt"));
+    g_FontLEDPtr = static_cast<char *>(GameFileClass::Retrieve("led.fnt"));
+    g_VCRFontPtr = static_cast<char *>(GameFileClass::Retrieve("vcr.fnt"));
+    g_TypeFontPtr = static_cast<char *>(GameFileClass::Retrieve("8point.fnt"));
+    Set_Font(g_Font8Ptr);
 }
 
 /**
@@ -318,62 +318,62 @@ void Init_Random()
 #ifdef PLATFORM_WINDOWS
     struct _SYSTEMTIME sys_time;
     GetSystemTime(&sys_time);
-    g_cryptRandom.Seed_Byte(sys_time.wMilliseconds);
-    g_cryptRandom.Seed_Bit(sys_time.wSecond);
-    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 1);
-    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 2);
-    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 3);
-    g_cryptRandom.Seed_Bit(sys_time.wSecond >> 4);
-    g_cryptRandom.Seed_Bit(sys_time.wMinute);
-    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 1);
-    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 2);
-    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 3);
-    g_cryptRandom.Seed_Bit(sys_time.wMinute >> 4);
-    g_cryptRandom.Seed_Bit(sys_time.wHour);
-    g_cryptRandom.Seed_Bit(sys_time.wDay);
-    g_cryptRandom.Seed_Bit(sys_time.wDayOfWeek);
-    g_cryptRandom.Seed_Bit(sys_time.wMonth);
-    g_cryptRandom.Seed_Bit(sys_time.wYear);
+    g_CryptRandom.Seed_Byte(sys_time.wMilliseconds);
+    g_CryptRandom.Seed_Bit(sys_time.wSecond);
+    g_CryptRandom.Seed_Bit(sys_time.wSecond >> 1);
+    g_CryptRandom.Seed_Bit(sys_time.wSecond >> 2);
+    g_CryptRandom.Seed_Bit(sys_time.wSecond >> 3);
+    g_CryptRandom.Seed_Bit(sys_time.wSecond >> 4);
+    g_CryptRandom.Seed_Bit(sys_time.wMinute);
+    g_CryptRandom.Seed_Bit(sys_time.wMinute >> 1);
+    g_CryptRandom.Seed_Bit(sys_time.wMinute >> 2);
+    g_CryptRandom.Seed_Bit(sys_time.wMinute >> 3);
+    g_CryptRandom.Seed_Bit(sys_time.wMinute >> 4);
+    g_CryptRandom.Seed_Bit(sys_time.wHour);
+    g_CryptRandom.Seed_Bit(sys_time.wDay);
+    g_CryptRandom.Seed_Bit(sys_time.wDayOfWeek);
+    g_CryptRandom.Seed_Bit(sys_time.wMonth);
+    g_CryptRandom.Seed_Bit(sys_time.wYear);
 #elif defined HAVE_SYS_TIME_H
     struct tm *sys_time;
     struct timeval curr_time;
     gettimeofday(&curr_time, nullptr);
     sys_time = localtime(&curr_time.tv_sec);
 
-    g_cryptRandom.Seed_Byte(curr_time.tv_usec / 1000);
-    g_cryptRandom.Seed_Bit(sys_time->tm_sec);
-    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 1);
-    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 2);
-    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 3);
-    g_cryptRandom.Seed_Bit(sys_time->tm_sec >> 4);
-    g_cryptRandom.Seed_Bit(sys_time->tm_min);
-    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 1);
-    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 2);
-    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 3);
-    g_cryptRandom.Seed_Bit(sys_time->tm_min >> 4);
-    g_cryptRandom.Seed_Bit(sys_time->tm_hour);
-    g_cryptRandom.Seed_Bit(sys_time->tm_mday);
-    g_cryptRandom.Seed_Bit(sys_time->tm_wday);
-    g_cryptRandom.Seed_Bit(sys_time->tm_mon);
-    g_cryptRandom.Seed_Bit(sys_time->tm_year);
+    g_CryptRandom.Seed_Byte(curr_time.tv_usec / 1000);
+    g_CryptRandom.Seed_Bit(sys_time->tm_sec);
+    g_CryptRandom.Seed_Bit(sys_time->tm_sec >> 1);
+    g_CryptRandom.Seed_Bit(sys_time->tm_sec >> 2);
+    g_CryptRandom.Seed_Bit(sys_time->tm_sec >> 3);
+    g_CryptRandom.Seed_Bit(sys_time->tm_sec >> 4);
+    g_CryptRandom.Seed_Bit(sys_time->tm_min);
+    g_CryptRandom.Seed_Bit(sys_time->tm_min >> 1);
+    g_CryptRandom.Seed_Bit(sys_time->tm_min >> 2);
+    g_CryptRandom.Seed_Bit(sys_time->tm_min >> 3);
+    g_CryptRandom.Seed_Bit(sys_time->tm_min >> 4);
+    g_CryptRandom.Seed_Bit(sys_time->tm_hour);
+    g_CryptRandom.Seed_Bit(sys_time->tm_mday);
+    g_CryptRandom.Seed_Bit(sys_time->tm_wday);
+    g_CryptRandom.Seed_Bit(sys_time->tm_mon);
+    g_CryptRandom.Seed_Bit(sys_time->tm_year);
 #else
 #error Suitable time functions not found.
 #endif
 
-    if (!Session.Loading_Game()) {
-        if (!Session.Playback_Game()) {
-            if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.Game_To_Play() == GAME_SKIRMISH) {
-                if (CustomSeed) {
-                    g_seed = CustomSeed;
+    if (!g_Session.Loading_Game()) {
+        if (!g_Session.Playback_Game()) {
+            if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Session.Game_To_Play() == GAME_SKIRMISH) {
+                if (g_CustomSeed) {
+                    g_Seed = g_CustomSeed;
                 } else {
                     std::srand(std::time(nullptr));
-                    g_seed = std::rand();
+                    g_Seed = std::rand();
                 }
             }
         }
 
-        RandNumb = g_seed;
-        Scen.Set_Random_Seed(g_seed);
+        g_RandNumb = g_Seed;
+        g_Scen.Set_Random_Seed(g_Seed);
     }
 }
 
@@ -384,93 +384,93 @@ void Init_Random()
  */
 void Init_Color_Remaps()
 {
-    g_sysMemPage.Clear();
-    Load_Picture("palette.cps", *g_sysMemPage.Get_GBuffer(), *g_sysMemPage.Get_GBuffer(), nullptr);
+    g_SysMemPage.Clear();
+    Load_Picture("palette.cps", *g_SysMemPage.Get_GBuffer(), *g_SysMemPage.Get_GBuffer(), nullptr);
 
     // General Remaps
     for (int remap = REMAP_FIRST; remap < REMAP_COUNT; ++remap) {
         // Set a default palette mapping
         for (int j = 0; j < 256; ++j) {
-            ColorRemaps[remap].RemapPalette[j] = j;
+            g_ColorRemaps[remap].RemapPalette[j] = j;
         }
 
         // Replace remap region with remapped indexes
         for (int j = 0; j < 16; ++j) {
-            ColorRemaps[remap].RemapPalette[g_sysMemPage.Get_Pixel(j, 0)] = g_sysMemPage.Get_Pixel(j, remap);
+            g_ColorRemaps[remap].RemapPalette[g_SysMemPage.Get_Pixel(j, 0)] = g_SysMemPage.Get_Pixel(j, remap);
         }
 
         // Write font gradient
         for (int j = 0; j < 6; ++j) {
-            ColorRemaps[remap].FontPalette[j + 10] = g_sysMemPage.Get_Pixel(j + 2, remap);
+            g_ColorRemaps[remap].FontPalette[j + 10] = g_SysMemPage.Get_Pixel(j + 2, remap);
         }
 
-        ColorRemaps[remap].BrightColor = COLOR_WHITE; // Index 15 is always white in the palette
-        ColorRemaps[remap].MediumColor = g_sysMemPage.Get_Pixel(4, remap);
-        ColorRemaps[remap].WindowPalette[0] = g_sysMemPage.Get_Pixel(10, remap);
-        ColorRemaps[remap].WindowPalette[1] = g_sysMemPage.Get_Pixel(9, remap);
-        ColorRemaps[remap].WindowPalette[2] = g_sysMemPage.Get_Pixel(7, remap);
-        ColorRemaps[remap].WindowPalette[3] = g_sysMemPage.Get_Pixel(4, remap);
-        ColorRemaps[remap].WindowPalette[4] = g_sysMemPage.Get_Pixel(4, remap);
-        ColorRemaps[remap].WindowPalette[5] = g_sysMemPage.Get_Pixel(0, remap);
-        ColorRemaps[remap].WindowPalette[6] = g_sysMemPage.Get_Pixel(0, remap);
-        ColorRemaps[remap].WindowPalette[7] = g_sysMemPage.Get_Pixel(6, remap);
+        g_ColorRemaps[remap].BrightColor = COLOR_WHITE; // Index 15 is always white in the palette
+        g_ColorRemaps[remap].MediumColor = g_SysMemPage.Get_Pixel(4, remap);
+        g_ColorRemaps[remap].WindowPalette[0] = g_SysMemPage.Get_Pixel(10, remap);
+        g_ColorRemaps[remap].WindowPalette[1] = g_SysMemPage.Get_Pixel(9, remap);
+        g_ColorRemaps[remap].WindowPalette[2] = g_SysMemPage.Get_Pixel(7, remap);
+        g_ColorRemaps[remap].WindowPalette[3] = g_SysMemPage.Get_Pixel(4, remap);
+        g_ColorRemaps[remap].WindowPalette[4] = g_SysMemPage.Get_Pixel(4, remap);
+        g_ColorRemaps[remap].WindowPalette[5] = g_SysMemPage.Get_Pixel(0, remap);
+        g_ColorRemaps[remap].WindowPalette[6] = g_SysMemPage.Get_Pixel(0, remap);
+        g_ColorRemaps[remap].WindowPalette[7] = g_SysMemPage.Get_Pixel(6, remap);
     }
 
     // Grey Scheme
-    // Set a default palette mapping for GreyScheme
+    // Set a default palette mapping for g_GreyScheme
     for (int i = 0; i < 256; ++i) {
-        GreyScheme.RemapPalette[i] = i;
+        g_GreyScheme.RemapPalette[i] = i;
     }
 
     // Write font gradient
     for (int i = 0; i < 6; ++i) {
-        GreyScheme.FontPalette[i + 10] = g_sysMemPage.Get_Pixel(i + 9, 5);
+        g_GreyScheme.FontPalette[i + 10] = g_SysMemPage.Get_Pixel(i + 9, 5);
     }
 
-    GreyScheme.BrightColor = g_sysMemPage.Get_Pixel(3, 5);
-    GreyScheme.MediumColor = g_sysMemPage.Get_Pixel(7, 5);
-    GreyScheme.WindowPalette[0] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(15, 5)];
-    GreyScheme.WindowPalette[1] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(14, 5)];
-    GreyScheme.WindowPalette[2] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(13, 5)];
-    GreyScheme.WindowPalette[3] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(9, 5)];
-    GreyScheme.WindowPalette[4] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(11, 5)];
-    GreyScheme.WindowPalette[5] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(5, 5)];
-    GreyScheme.WindowPalette[6] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(5, 5)];
-    GreyScheme.WindowPalette[7] = ColorRemaps[REMAP_5].RemapPalette[g_sysMemPage.Get_Pixel(11, 5)];
+    g_GreyScheme.BrightColor = g_SysMemPage.Get_Pixel(3, 5);
+    g_GreyScheme.MediumColor = g_SysMemPage.Get_Pixel(7, 5);
+    g_GreyScheme.WindowPalette[0] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(15, 5)];
+    g_GreyScheme.WindowPalette[1] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(14, 5)];
+    g_GreyScheme.WindowPalette[2] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(13, 5)];
+    g_GreyScheme.WindowPalette[3] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(9, 5)];
+    g_GreyScheme.WindowPalette[4] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(11, 5)];
+    g_GreyScheme.WindowPalette[5] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(5, 5)];
+    g_GreyScheme.WindowPalette[6] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(5, 5)];
+    g_GreyScheme.WindowPalette[7] = g_ColorRemaps[REMAP_5].RemapPalette[g_SysMemPage.Get_Pixel(11, 5)];
 
     // Metal Scheme
-    memset(&MetalScheme, 4, sizeof(RemapControlType));
+    memset(&g_MetalScheme, 4, sizeof(RemapControlType));
 
     for (int i = 0; i < 16; ++i) {
-        MetalScheme.FontPalette[i] = i;
+        g_MetalScheme.FontPalette[i] = i;
     }
 
-    MetalScheme.FontPalette[1] = 128;
-    MetalScheme.FontPalette[2] = COLOR_BLACK;
-    MetalScheme.FontPalette[4] = COLOR_LTGREY;
-    MetalScheme.MediumColor = 128;
-    MetalScheme.WindowPalette[1] = COLOR_TBLACK;
-    MetalScheme.WindowPalette[6] = 128;
-    MetalScheme.FontPalette[3] = COLOR_GREY;
+    g_MetalScheme.FontPalette[1] = 128;
+    g_MetalScheme.FontPalette[2] = COLOR_BLACK;
+    g_MetalScheme.FontPalette[4] = COLOR_LTGREY;
+    g_MetalScheme.MediumColor = 128;
+    g_MetalScheme.WindowPalette[1] = COLOR_TBLACK;
+    g_MetalScheme.WindowPalette[6] = 128;
+    g_MetalScheme.FontPalette[3] = COLOR_GREY;
 
     // REMAP_8 adjustments
     for (int i = 0; i < 16; ++i) {
-        ColorRemaps[REMAP_8].FontPalette[i] = g_sysMemPage.Get_Pixel(i, 8);
+        g_ColorRemaps[REMAP_8].FontPalette[i] = g_SysMemPage.Get_Pixel(i, 8);
     }
 
-    ColorRemaps[REMAP_8].WindowPalette[0] = COLOR_BLUE;
-    ColorRemaps[REMAP_8].WindowPalette[3] = COLOR_LTCYAN;
-    ColorRemaps[REMAP_8].WindowPalette[5] = COLOR_WHITE;
-    ColorRemaps[REMAP_8].BrightColor = COLOR_WHITE;
-    ColorRemaps[REMAP_8].MediumColor = COLOR_LTCYAN;
-    ColorRemaps[REMAP_8].WindowPalette[1] = COLOR_LTBLUE;
-    ColorRemaps[REMAP_8].WindowPalette[2] = COLOR_LTBLUE;
-    ColorRemaps[REMAP_8].WindowPalette[6] = COLOR_BLUE;
-    ColorRemaps[REMAP_8].WindowPalette[7] = COLOR_BLUE;
-    ColorRemaps[REMAP_8].WindowPalette[4] = COLOR_LTBLUE;
+    g_ColorRemaps[REMAP_8].WindowPalette[0] = COLOR_BLUE;
+    g_ColorRemaps[REMAP_8].WindowPalette[3] = COLOR_LTCYAN;
+    g_ColorRemaps[REMAP_8].WindowPalette[5] = COLOR_WHITE;
+    g_ColorRemaps[REMAP_8].BrightColor = COLOR_WHITE;
+    g_ColorRemaps[REMAP_8].MediumColor = COLOR_LTCYAN;
+    g_ColorRemaps[REMAP_8].WindowPalette[1] = COLOR_LTBLUE;
+    g_ColorRemaps[REMAP_8].WindowPalette[2] = COLOR_LTBLUE;
+    g_ColorRemaps[REMAP_8].WindowPalette[6] = COLOR_BLUE;
+    g_ColorRemaps[REMAP_8].WindowPalette[7] = COLOR_BLUE;
+    g_ColorRemaps[REMAP_8].WindowPalette[4] = COLOR_LTBLUE;
 
     // Set gadget remap type.
-    GadgetClass::Set_Color_Scheme(&ColorRemaps[REMAP_10]);
+    GadgetClass::Set_Color_Scheme(&g_ColorRemaps[REMAP_10]);
 }
 
 /**
@@ -480,11 +480,11 @@ void Init_Color_Remaps()
  */
 void Init_Mouse()
 {
-   if (!MouseInstalled) {
+   if (!g_MouseInstalled) {
         char buff[256];
-        GamePalette.Set();
+        g_GamePalette.Set();
         sprintf(buff, "Chronoshift is unable to detect your mouse driver.");
-        g_visiblePage.Clear();
+        g_VisiblePage.Clear();
         MessageBoxClass box;
         box.Process(buff);
         Emergency_Exit(1);
@@ -498,21 +498,21 @@ void Init_Mouse()
     void *edmouse_shp = MixFileClass<GameFileClass>::Retrieve("edmouse.shp");
 
     if (mouse_shp != nullptr) {
-        g_mouse->Set_Cursor(0, 0, Extract_Shape(mouse_shp));
+        g_Mouse->Set_Cursor(0, 0, Extract_Shape(mouse_shp));
 
-        while (g_mouse->Get_Mouse_State() > 1) {
-            g_mouse->Show_Mouse();
+        while (g_Mouse->Get_Mouse_State() > 1) {
+            g_Mouse->Show_Mouse();
         }
     }
 
-    Map.Set_Default_Mouse(MOUSE_POINTER);
+    g_Map.Set_Default_Mouse(MOUSE_POINTER);
 
     do {
-        g_mouse->Show_Mouse();
-    } while (g_mouse->Get_Mouse_State() > 1);
+        g_Mouse->Show_Mouse();
+    } while (g_Mouse->Get_Mouse_State() > 1);
 
     Call_Back();
-    g_mouse->Hide_Mouse();
+    g_Mouse->Hide_Mouse();
 }
 
 /**
@@ -524,28 +524,28 @@ void Bootstrap()
 {
     static RemapControlType _sidebar_scheme;
 
-    BlackPalette.Set();
+    g_BlackPalette.Set();
 
     if (CDFileClass::Has_Paths()) {
-        g_requiredCD = DISK_ANY;
+        g_RequiredCD = DISK_ANY;
     }
 
     // Call event handler until we are in focus.
     do {
-        g_keyboard->Check();
-    } while (!g_gameInFocus);
+        g_Keyboard->Check();
+    } while (!g_GameInFocus);
 
-    g_allSurfaces.Clear_Surfaces_Restored();
+    g_AllSurfaces.Clear_Surfaces_Restored();
     // Mono_Clear_Screen();
     Init_Bootstrap_Mixfiles();
     Init_Fonts();
-    g_keyboard->Clear();
+    g_Keyboard->Clear();
     Set_Shape_Buffer(new uint8_t[SHAPE_BUFF_SIZE], SHAPE_BUFF_SIZE);
     Init_Language(); // Original just assigned the pointers here, didn't have separate function.
-    memmove(&GamePalette, GameFileClass::Retrieve("temperat.pal"), sizeof(GamePalette));
+    memmove(&g_GamePalette, GameFileClass::Retrieve("temperat.pal"), sizeof(g_GamePalette));
 
-    if (&WhitePalette != &BlackPalette) {
-        WhitePalette[0] = BlackPalette[0];
+    if (&g_WhitePalette != &g_BlackPalette) {
+        g_WhitePalette[0] = g_BlackPalette[0];
     }
 
     Init_Expansion_Files();
@@ -569,11 +569,11 @@ void Bootstrap()
  */
 void Init_CDROM_Access()
 {
-    g_visiblePage.Clear();
-    g_hidPage.Clear();
+    g_VisiblePage.Clear();
+    g_HidPage.Clear();
 
     if (CDFileClass::Has_Paths()) {
-        g_requiredCD = DISK_ANY;
+        g_RequiredCD = DISK_ANY;
     } else {
         int result;
         MessageBoxClass msg;
@@ -585,39 +585,39 @@ void Init_CDROM_Access()
             switch (result) {
                 default: // Fallthrough
                 case 0: // Set drives succeeded.
-                    g_visiblePage.Clear();
-                    g_mouse->Show_Mouse();
+                    g_VisiblePage.Clear();
+                    g_Mouse->Show_Mouse();
 
-                    if (!Force_CD_Available(g_requiredCD)) {
+                    if (!Force_CD_Available(g_RequiredCD)) {
                         Emergency_Exit(0xFF);
                     }
 
-                    g_mouse->Hide_Mouse();
+                    g_Mouse->Hide_Mouse();
 
                     break;
                 case 1: // Set drives failed with no CD drive found.
-                    g_visiblePage.Clear();
-                    GamePalette.Set();
-                    g_mouse->Show_Mouse();
+                    g_VisiblePage.Clear();
+                    g_GamePalette.Set();
+                    g_Mouse->Show_Mouse();
                     msg.Process(TXT_CD_DIALOG_ERROR1);
                     Emergency_Exit(0xFF);
                     break;
                 case 2: // Set drives failed with CD not being RA disk.
-                    g_visiblePage.Clear();
-                    GamePalette.Set();
-                    g_mouse->Show_Mouse();
+                    g_VisiblePage.Clear();
+                    g_GamePalette.Set();
+                    g_Mouse->Show_Mouse();
 
                     if (msg.Process(TXT_CD_DIALOG_1, TXT_OK, TXT_CANCEL) == 1) {
                         Emergency_Exit(0xFF);
                     }
 
-                    g_mouse->Hide_Mouse();
+                    g_Mouse->Hide_Mouse();
                     break;
             }
 
         } while (result != 0);
 
-        g_requiredCD = DISK_ANY;
+        g_RequiredCD = DISK_ANY;
     }
 }
 
@@ -645,9 +645,9 @@ void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteCl
  */
 void Load_Prolog_Page()
 {
-    g_mouse->Hide_Mouse();
-    Load_Title_Screen("prolog.pcx", &g_hidPage, &CCPalette);
-    g_hidPage.Blit(g_seenBuff);
-    CCPalette.Set();
-    g_mouse->Show_Mouse();
+    g_Mouse->Hide_Mouse();
+    Load_Title_Screen("prolog.pcx", &g_HidPage, &g_CCPalette);
+    g_HidPage.Blit(g_SeenBuff);
+    g_CCPalette.Set();
+    g_Mouse->Show_Mouse();
 }
