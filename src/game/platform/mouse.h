@@ -108,11 +108,11 @@ void __stdcall Process_Mouse(
 
 // Global mouse instance.
 #ifdef GAME_DLL
-extern MouseClass *&g_mouse;
-extern MouseClass *&g_wwmouse;
+extern MouseClass *&g_Mouse;
+extern MouseClass *&g_WWMouse;
 #else
-extern MouseClass *g_mouse;
-extern MouseClass *g_wwmouse;
+extern MouseClass *g_Mouse;
+extern MouseClass *g_WWMouse;
 #endif
 
 #endif // MOUSE_H

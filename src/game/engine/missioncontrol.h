@@ -56,9 +56,9 @@ private:
     fixed_t m_AARate; // Anti-aircraft delay rate (if not specifed it uses regular rate).
 
 #ifdef GAME_DLL
-    static MissionControlClass *const MissionControl;
+    static MissionControlClass *const s_MissionControl;
 #else
-    static MissionControlClass MissionControl[MISSION_COUNT];
+    static MissionControlClass s_MissionControl[MISSION_COUNT];
 #endif
 };
 

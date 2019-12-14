@@ -73,7 +73,7 @@ public:
     BOOL AI(GameINIClass &ini);
     BOOL Powerups(GameINIClass &ini);
     BOOL Land_Types(GameINIClass &ini);
-    BOOL Themes(GameINIClass &ini);
+    BOOL s_Themes(GameINIClass &ini);
     BOOL IQ(GameINIClass &ini);
     BOOL Objects(GameINIClass &ini);
     BOOL Difficulty(GameINIClass &ini);
@@ -495,9 +495,9 @@ private:
 };
 
 #ifdef GAME_DLL
-extern RulesClass &Rule;
+extern RulesClass &g_Rule;
 #else
-extern RulesClass Rule;
+extern RulesClass g_Rule;
 #endif
 
 #endif // RULES_H

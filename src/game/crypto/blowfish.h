@@ -46,8 +46,8 @@ private:
     uint32_t m_pBoxDec[BF_ROUNDS + 2];
     uint32_t m_sBox[4 * 256];
 
-    static const uint32_t Blowfish_p_init[BF_ROUNDS + 2];
-    static const uint32_t Blowfish_s_init[4][256];
+    static const uint32_t s_Blowfish_p_init[BF_ROUNDS + 2];
+    static const uint32_t s_Blowfish_s_init[4][256];
 };
 
 #endif // BLOWFISH_H

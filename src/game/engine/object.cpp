@@ -154,19 +154,19 @@ void ObjectClass::AI()
             --m_FallingHeight;
             m_FallingHeight = std::max(-3, m_FallingHeight);
         } else {
-            m_FallingHeight = m_FallingHeight - Rule.Get_Gravity();
+            m_FallingHeight = m_FallingHeight - g_Rule.Get_Gravity();
             m_FallingHeight = std::max(-100, m_FallingHeight);
         }
 
         if (layer != In_Which_Layer()) {
-            Map.Remove(this, layer);
-            Map.Submit(this, In_Which_Layer());
+            g_Map.Remove(this, layer);
+            g_Map.Submit(this, In_Which_Layer());
 
             if (Class_Of().Get_Bit128()) {
                 if (In_Which_Layer() == LAYER_SURFACE) {
-                    Map.Place_Down(Coord_To_Cell(Center_Coord()), this);
+                    g_Map.Place_Down(Coord_To_Cell(Center_Coord()), this);
                 } else {
-                    Map.Pick_Up(Coord_To_Cell(Center_Coord()), this);
+                    g_Map.Pick_Up(Coord_To_Cell(Center_Coord()), this);
                 }
             }
         }
@@ -181,16 +181,16 @@ void ObjectClass::AI()
  */
 BOOL ObjectClass::Limbo()
 {
-    if (!GameActive || m_InLimbo) {
+    if (!g_GameActive || m_InLimbo) {
         return false;
     }
     Unselect();
     Detach_All(true);
     Mark(MARK_REMOVE);
-    Map.Remove(this, In_Which_Layer());
+    g_Map.Remove(this, In_Which_Layer());
 
     if (Class_Of().Get_Bit64()) {
-        Logic.Remove(this);
+        g_Logic.Remove(this);
     }
 
     Hidden();
@@ -206,10 +206,10 @@ BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
     (ObjectClass *, coord_t, DirType) = reinterpret_cast<BOOL (*)(ObjectClass *, coord_t, DirType)>(0x0051DE9C);
     return func(this, coord, dir);
 #else
-    // Needs IOMapClass and Logic
+    // Needs IOMapClass and g_Logic
     cell_t cell = Coord_To_Cell(coord);
 
-    if (GameActive && m_InLimbo && !m_IsDown && (ScenarioInit || Can_Enter_Cell(cell) == MOVE_OK)) {
+    if (g_GameActive && m_InLimbo && !m_IsDown && (g_ScenarioInit || Can_Enter_Cell(cell) == MOVE_OK)) {
 
         m_InLimbo = false;
         m_ToDisplay = false;
@@ -219,11 +219,11 @@ BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
         if (Mark(MARK_PUT)) {
             if (m_IsActive) {
                 if (In_Which_Layer() != LAYER_NONE) {
-                    Map.Submit(this, In_Which_Layer());
+                    g_Map.Submit(this, In_Which_Layer());
                 }
 
                 if (Class_Of().Get_Bit64()) {
-                    Logic.Submit(this);
+                    g_Logic.Submit(this);
                 }
             }
 
@@ -294,7 +294,7 @@ BOOL ObjectClass::Render(BOOL force_render)
 
     coord_t render_coord = Render_Coord();
 
-    if (!g_InMapEditor && !DebugUnshroud) {
+    if (!g_InMapEditor && !g_DebugUnshroud) {
 
         if (!force_render && !m_ToDisplay) {
             return false;
@@ -311,7 +311,7 @@ BOOL ObjectClass::Render(BOOL force_render)
     int render_x_pos = 0;
     int render_y_pos = 0;
 
-    if (Map.Coord_To_Pixel(render_coord, render_x_pos, render_y_pos)) {
+    if (g_Map.Coord_To_Pixel(render_coord, render_x_pos, render_y_pos)) {
 
         Draw_It(render_x_pos, render_y_pos, WINDOW_TACTICAL);
 
@@ -334,19 +334,19 @@ BOOL ObjectClass::Render(BOOL force_render)
                         int pixel_size = 3;
 
                         // Draw object coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
+                        g_Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
                         my_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_YELLOW);
+                        g_LogicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_YELLOW);
 
                         // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->Head_To(), headto_x_pos, headto_y_pos);
+                        g_Map.Coord_To_Pixel(foot_thisptr->Head_To(), headto_x_pos, headto_y_pos);
                         headto_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(headto_x_pos - 1, headto_y_pos - 1, pixel_size, COLOR_YELLOW);
+                        g_LogicPage->Put_Fat_Pixel(headto_x_pos - 1, headto_y_pos - 1, pixel_size, COLOR_YELLOW);
 
                         // Draw connection line.
-                        g_logicPage->Draw_Line(my_x_pos, my_y_pos, headto_x_pos, headto_y_pos, COLOR_YELLOW);
+                        g_LogicPage->Draw_Line(my_x_pos, my_y_pos, headto_x_pos, headto_y_pos, COLOR_YELLOW);
 
-                        //Map.Flag_To_Redraw(true);
+                        //g_Map.Flag_To_Redraw(true);
 
                     }
 
@@ -356,7 +356,7 @@ BOOL ObjectClass::Render(BOOL force_render)
 
         //}
 
-        //if (/*Special.Bit3_1 || g_Debug_Head_To*/) {
+        //if (/*s_Special.Bit3_1 || g_Debug_Head_To*/) {
 
             if (m_Selected) {
 
@@ -385,13 +385,13 @@ BOOL ObjectClass::Render(BOOL force_render)
                                 cell_t adjcell = Coord_To_Cell(foot_thisptr->Head_To()) + AdjacentCell[foot_thisptr->m_Paths[index]];
                                 coord_t coord = Cell_To_Coord(adjcell);
 
-                                if (Map.Coord_To_Pixel(coord, path2_x_pos, path2_y_pos) )  {
+                                if (g_Map.Coord_To_Pixel(coord, path2_x_pos, path2_y_pos) )  {
 
                                     path2_y_pos += 16;
 
                                     Fancy_Text_Print()
-                                    g_logicPage->Draw_Line(path_x_pos, path_y_pos, path2_x_pos, path2_y_pos, COLOR_YELLOW);
-                                    g_logicPage->Put_Fat_Pixel(path2_x_pos - 2, path2_y_pos - 2, pixel_size, COLOR_GREEN);
+                                    g_LogicPage->Draw_Line(path_x_pos, path_y_pos, path2_x_pos, path2_y_pos, COLOR_YELLOW);
+                                    g_LogicPage->Put_Fat_Pixel(path2_x_pos - 2, path2_y_pos - 2, pixel_size, COLOR_GREEN);
 
                                 }
 
@@ -400,13 +400,13 @@ BOOL ObjectClass::Render(BOOL force_render)
 
                             }
 
-                            Map.Coord_To_Pixel(foot_thisptr->m_Coord, path_x_pos, path_y_pos);
+                            g_Map.Coord_To_Pixel(foot_thisptr->m_Coord, path_x_pos, path_y_pos);
 
                             path_y_pos += 16;
 
-                            g_logicPage->Put_Fat_Pixel(path_x_pos - 1, path_y_pos - 1, pixel_size, COLOR_PINK);*/
+                            g_LogicPage->Put_Fat_Pixel(path_x_pos - 1, path_y_pos - 1, pixel_size, COLOR_PINK);*/
 
-                            //Map.Flag_To_Redraw(true);
+                            //g_Map.Flag_To_Redraw(true);
 
                         }
 
@@ -437,19 +437,19 @@ BOOL ObjectClass::Render(BOOL force_render)
                         int pixel_size = 3;
 
                         // Draw object coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
+                        g_Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
                         my_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_BLUE);
+                        g_LogicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_BLUE);
 
                         // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(As_Coord(foot_thisptr->Nav_Com()), navcom_x_pos, navcom_y_pos);
+                        g_Map.Coord_To_Pixel(As_Coord(foot_thisptr->Nav_Com()), navcom_x_pos, navcom_y_pos);
                         navcom_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(navcom_x_pos - 1, navcom_y_pos - 1, pixel_size, COLOR_BLUE);
+                        g_LogicPage->Put_Fat_Pixel(navcom_x_pos - 1, navcom_y_pos - 1, pixel_size, COLOR_BLUE);
 
                         // Draw connection line.
-                        g_logicPage->Draw_Line(my_x_pos, my_y_pos, navcom_x_pos, navcom_y_pos, COLOR_BLUE);
+                        g_LogicPage->Draw_Line(my_x_pos, my_y_pos, navcom_x_pos, navcom_y_pos, COLOR_BLUE);
 
-                        //Map.Flag_To_Redraw(true);
+                        //g_Map.Flag_To_Redraw(true);
 
                     }
 
@@ -478,19 +478,19 @@ BOOL ObjectClass::Render(BOOL force_render)
                         int pixel_size = 3;
 
                         // Draw object coord pixel.
-                        Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
+                        g_Map.Coord_To_Pixel(foot_thisptr->m_Coord, my_x_pos, my_y_pos);
                         my_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_RED);
+                        g_LogicPage->Put_Fat_Pixel(my_x_pos - 1, my_y_pos - 1, pixel_size, COLOR_RED);
 
                         // Draw HeadTo coord pixel.
-                        Map.Coord_To_Pixel(As_Coord(foot_thisptr->Get_TarCom()), tarcom_x_pos, tarcom_y_pos);
+                        g_Map.Coord_To_Pixel(As_Coord(foot_thisptr->Get_TarCom()), tarcom_x_pos, tarcom_y_pos);
                         tarcom_y_pos += 16;
-                        g_logicPage->Put_Fat_Pixel(tarcom_x_pos - 1, tarcom_y_pos - 1, pixel_size, COLOR_RED);
+                        g_LogicPage->Put_Fat_Pixel(tarcom_x_pos - 1, tarcom_y_pos - 1, pixel_size, COLOR_RED);
 
                         // Draw connection line.
-                        g_logicPage->Draw_Line(my_x_pos, my_y_pos, tarcom_x_pos, tarcom_y_pos, COLOR_RED);
+                        g_LogicPage->Draw_Line(my_x_pos, my_y_pos, tarcom_x_pos, tarcom_y_pos, COLOR_RED);
 
-                        //Map.Flag_To_Redraw(true);
+                        //g_Map.Flag_To_Redraw(true);
 
                     }
 
@@ -560,7 +560,7 @@ BOOL ObjectClass::Mark(MarkType mark)
 
     if (mark == MARK_5 && m_IsDown) {
         if (Class_Of().Get_Bit128()) {
-            Map.Overlap_Up(Coord_To_Cell(Get_Coord()), this);
+            g_Map.Overlap_Up(Coord_To_Cell(Get_Coord()), this);
         }
 
         Mark_For_Redraw();
@@ -570,7 +570,7 @@ BOOL ObjectClass::Mark(MarkType mark)
 
     if (mark == MARK_4 && m_IsDown) {
         if (Class_Of().Get_Bit128()) {
-            Map.Overlap_Down(Coord_To_Cell(Get_Coord()), this);
+            g_Map.Overlap_Down(Coord_To_Cell(Get_Coord()), this);
         }
 
         Mark_For_Redraw();
@@ -594,8 +594,8 @@ BOOL ObjectClass::Mark(MarkType mark)
         }
 
         if (mark == MARK_PUT && !m_IsDown) {
-            if (is_techno && Session.Game_To_Play() == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
-                Map[cellnum].Adjust_Threat(house, risk);
+            if (is_techno && g_Session.Game_To_Play() == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
+                g_Map[cellnum].Adjust_Threat(house, risk);
             }
 
             m_IsDown = true;
@@ -608,8 +608,8 @@ BOOL ObjectClass::Mark(MarkType mark)
             return false;
         }
 
-        if (is_techno && Session.Game_To_Play() == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
-            Map[cellnum].Adjust_Threat(house, risk);
+        if (is_techno && g_Session.Game_To_Play() == GAME_CAMPAIGN && In_Which_Layer() == LAYER_GROUND) {
+            g_Map[cellnum].Adjust_Threat(house, risk);
         }
     }
 
@@ -630,7 +630,7 @@ void ObjectClass::Mark_For_Redraw()
 {
     if (!m_ToDisplay) {
         m_ToDisplay = true;
-        Map.Flag_To_Redraw();
+        g_Map.Flag_To_Redraw();
     }
 }
 
@@ -649,7 +649,7 @@ BOOL ObjectClass::Select()
         }
 
         if (Get_Height() <= 0 || (RTTI != RTTI_UNIT && RTTI != RTTI_VESSEL && RTTI != RTTI_INFANTRY)) {
-            if (Map.PendingObjTypePtr == nullptr) {
+            if (g_Map.PendingObjTypePtr == nullptr) {
                 if (CurrentObjects.Count() > 0) {
                     HouseClass *objowner = HouseClass::As_Pointer(Owner());
                     HouseClass *current = HouseClass::As_Pointer(CurrentObjects.Fetch_Head()->Owner());
@@ -969,7 +969,7 @@ BOOL ObjectClass::Counts_As_Civ_Evac()
     }
 
     //auto evac Tanya
-    if (Scen.Evacuate_Civilians()) {
+    if (g_Scen.Evacuate_Civilians()) {
         if (ithis->What_Type() == INFANTRY_TANYA) {
             return true;
         }

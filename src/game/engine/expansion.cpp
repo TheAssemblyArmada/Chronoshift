@@ -22,7 +22,7 @@
 
 BOOL Is_Counterstrike_Installed()
 {
-    if (Options.Is_Counterstrike_Enabled()) {
+    if (g_Options.Is_Counterstrike_Enabled()) {
         return true;
     }
 #ifdef PLATFORM_WINDOWS
@@ -56,7 +56,7 @@ BOOL Is_Counterstrike_Installed()
 
 BOOL Is_Aftermath_Installed()
 {
-    if (Options.Is_Aftermath_Enabled()) {
+    if (g_Options.Is_Aftermath_Enabled()) {
         return true;
     }
 #ifdef PLATFORM_WINDOWS

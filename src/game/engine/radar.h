@@ -172,22 +172,22 @@ protected:
     HousesType m_SpiedHouse;
     int m_MiniMapCellCount;
     cell_t m_MiniMapCells[MINI_MAP_CELLS];
-    static GraphicBufferClass IconStage;
+    static GraphicBufferClass s_IconStage;
 
 #ifdef GAME_DLL
-    static RTacticalClass &RadarButton;
-    static void *&RadarAnim;
-    static void *&RadarPulse;
-    static void *&RadarFrame;
-    static BOOL &FullRedraw;
-    static GraphicBufferClass &TileStage;
+    static RTacticalClass &s_RadarButton;
+    static void *&s_RadarAnim;
+    static void *&s_RadarPulse;
+    static void *&s_RadarFrame;
+    static BOOL &s_FullRedraw;
+    static GraphicBufferClass &s_TileStage;
 #else
-    static RTacticalClass RadarButton;
-    static void *RadarAnim;
-    static void *RadarPulse;
-    static void *RadarFrame;
-    static BOOL FullRedraw;
-    static GraphicBufferClass TileStage;
+    static RTacticalClass s_RadarButton;
+    static void *s_RadarAnim;
+    static void *s_RadarPulse;
+    static void *s_RadarFrame;
+    static BOOL s_FullRedraw;
+    static GraphicBufferClass s_TileStage;
 #endif
 };
 

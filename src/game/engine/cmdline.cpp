@@ -108,18 +108,18 @@ BOOL Parse_Command_Line(int argc, char **argv)
     };
 #endif
 
-    Special.Init();
+    s_Special.Init();
 
-    Whom = HOUSES_GOODGUY;
+    g_Whom = HOUSES_GOODGUY;
 
     g_InMapEditor = false;
 
-    DebugUnshroud = false;
+    g_DebugUnshroud = false;
     g_Debug_Playtest = false;
     //g_Debug_Skip_Intro = false;
     g_Debug_Flag = false;
 
-    Language = LANGUAGE_ENGLISH;
+    g_Language = LANGUAGE_ENGLISH;
 
     // Make sure we have more than one entry stored in argv as the first entry is the program path.
     if (argc < 2) {
@@ -153,27 +153,27 @@ BOOL Parse_Command_Line(int argc, char **argv)
 
                 case 'E':
                 default:
-                    Language = LANGUAGE_ENGLISH;
+                    g_Language = LANGUAGE_ENGLISH;
                     break;
 
                 case 'F':
-                    Language = LANGUAGE_FRENCH;
+                    g_Language = LANGUAGE_FRENCH;
                     break;
 
                 case 'G':
-                    Language = LANGUAGE_GERMAN;
+                    g_Language = LANGUAGE_GERMAN;
                     break;
 
                 case 'I':
-                    Language = LANGUAGE_ITALIAN;
+                    g_Language = LANGUAGE_ITALIAN;
                     break;
 
                 case 'S':
-                    Language = LANGUAGE_SPANISH;
+                    g_Language = LANGUAGE_SPANISH;
                     break;
 
                 case 'J':
-                    Language = LANGUAGE_JAPANESE;
+                    g_Language = LANGUAGE_JAPANESE;
                     break;
 
             };
@@ -189,17 +189,17 @@ BOOL Parse_Command_Line(int argc, char **argv)
         }
 
         if (strstr(arg, "-STEALTH")) {
-            Session.Set_Net_Stealth(true);
+            g_Session.Set_Net_Stealth(true);
             continue;
         }
 
         if (strstr(arg, "-MESSAGES")) {
-            Session.Set_Net_Protect(true);
+            g_Session.Set_Net_Protect(true);
             continue;
         }
 
         if (strstr(arg, "-ATTRACT")) {
-            Session.Set_Allow_Attraction(true);
+            g_Session.Set_Allow_Attraction(true);
             continue;
         }
 
@@ -209,7 +209,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
         }
 
         if (strstr(arg, "-EDITOR")) {
-            Special.Set_First_Run(false); // TODO: Confirm correct bit.
+            s_Special.Set_First_Run(false); // TODO: Confirm correct bit.
             g_InMapEditor = true;
             g_Debug_Unshroud = true;
             //g_Debug_Skip_Intro = true;
@@ -218,12 +218,12 @@ BOOL Parse_Command_Line(int argc, char **argv)
 
         if (strstr(arg, "-SEED")) {
             char *seed = (char *)&arg[strlen("-SEED")];
-            CustomSeed = atoi(seed);
+            g_CustomSeed = atoi(seed);
             continue;
         }
 
         if (strstr(arg, "FROMINSTALL")) {
-            Special.Set_First_Run(true); // TODO: Confirm correct bit.
+            s_Special.Set_First_Run(true); // TODO: Confirm correct bit.
             continue;
         }
 
@@ -234,7 +234,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
 
 #if defined(CHRONOSHIFT_DEBUG)
         if (strstr(arg, "-NOINTRO")) {
-            Special.Set_First_Run(false); // TODO: Confirm correct bit.
+            s_Special.Set_First_Run(false); // TODO: Confirm correct bit.
             continue;
         }
 
@@ -249,20 +249,20 @@ BOOL Parse_Command_Line(int argc, char **argv)
         }
 
         if (strstr(arg, "-SUPERRECORD")) {
-            Session.Set_Super_Record_Game(true);
-            Session.Set_Playback_Game(false);
+            g_Session.Set_Super_Record_Game(true);
+            g_Session.Set_Playback_Game(false);
             continue;
         }
 
         if (strstr(arg, "-RECORD")) {
-            Session.Set_Record_Game(true);
-            Session.Set_Playback_Game(false);
+            g_Session.Set_Record_Game(true);
+            g_Session.Set_Playback_Game(false);
             continue;
         }
 
         if (strstr(arg, "-PLAY")) {
-            Session.Set_Playback_Game(true);
-            Session.Set_Record_Game(false);
+            g_Session.Set_Playback_Game(true);
+            g_Session.Set_Record_Game(false);
             continue;
         }
 
@@ -272,7 +272,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
         }
 
         if (strstr(arg, "-HANSOLO")) {
-            //Session.MPlayerSolo = true;
+            //g_Session.MPlayerSolo = true;
             continue;
         }
 
@@ -281,7 +281,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
             char *scen_name = (char *)&arg[strlen("-SCEN")];
             strcpy(OverrideScenario, scen_name);
             OverrideScenario[strlen(scen_name)] = '\0';
-            Special.Set_First_Run(false); // TODO: Confirm correct bit.
+            s_Special.Set_First_Run(false); // TODO: Confirm correct bit.
             Debug_Skip_Intro = true;
             continue;
         }*/
@@ -314,21 +314,21 @@ BOOL Parse_Command_Line(int argc, char **argv)
                     break;
 
                 case 'S': // Super record mode.
-                    Session.Set_Super_Record_Game(true);
-                    Session.Set_Playback_Game(false);
+                    g_Session.Set_Super_Record_Game(true);
+                    g_Session.Set_Playback_Game(false);
                     break;
 
                 case 'V': // Targeting flash visible for all.
                     break;
 
                 case 'X': // Record mode.
-                    Session.Set_Record_Game(true);
-                    Session.Set_Playback_Game(false);
+                    g_Session.Set_Record_Game(true);
+                    g_Session.Set_Playback_Game(false);
                     break;
 
                 case 'Y': // Playback mode.
-                    Session.Set_Playback_Game(true);
-                    Session.Set_Record_Game(false);
+                    g_Session.Set_Playback_Game(true);
+                    g_Session.Set_Record_Game(false);
                     break;
 
             };

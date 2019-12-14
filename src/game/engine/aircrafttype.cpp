@@ -269,7 +269,7 @@ void AircraftTypeClass::Prep_For_Add()
         AircraftTypeClass *atptr = As_Pointer(i);
         if (atptr != nullptr) {
             if (atptr->m_ImageData != nullptr) {
-                Map.Add_To_List(atptr);
+                g_Map.Add_To_List(atptr);
             }
         }
     }

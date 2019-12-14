@@ -27,7 +27,7 @@
         DEBUG_LOG(x, ##__VA_ARGS__); \
     }
 
-GameEventClass::EventInfoStruct GameEventClass::EventTypeList[EVENT_COUNT] = {
+GameEventClass::EventInfoStruct GameEventClass::s_EventTypeList[EVENT_COUNT] = {
     { "EMPTY", 0 },// No extra data.
     { "ALLY", sizeof(GameEventClass::HouseEventStruct) },
     { "MEGAMISSION", sizeof(GameEventClass::MegaMissionEventStruct) },
@@ -332,7 +332,7 @@ GameEventClass::GameEventClass(SpecialClass special) :
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
-    Special = special;
+    s_Special = special;
 }
 
 GameEventClass::GameEventClass(AnimType anim, HousesType owner, coord_t coord) :
@@ -486,7 +486,7 @@ char const *GameEventClass::Name_From(GameEventClass::GameEventType type)
     DEBUG_ASSERT(type < EVENT_COUNT);
 
     if (type != EVENT_EMPTY && type < EVENT_COUNT) {
-        return EventTypeList[type].Name;
+        return s_EventTypeList[type].Name;
     }
 
     return "<none>";

@@ -54,13 +54,13 @@ struct TheaterDataType
 TheaterType Theater_From_Name(const char *name);
 const char *Name_From_Theater(TheaterType theater);
 
-extern TheaterDataType g_theaters[THEATER_COUNT];
+extern TheaterDataType g_Theaters[THEATER_COUNT];
 
 #ifdef GAME_DLL
 #include "hooker.h"
-extern TheaterType &g_lastTheater;
+extern TheaterType &g_LastTheater;
 #else
-extern TheaterType g_lastTheater;
+extern TheaterType g_LastTheater;
 #endif
 
 #endif // THEATER_H

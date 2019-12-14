@@ -40,7 +40,7 @@
 #include <algorithm>
 
 // clang-format off
-const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
+const coord_t CellClass::s_StoppingCoordAbs[CELL_SPOT_COUNT] = {
     0x00800080,     // abs center of cell                       //INFANTRY_SPOT_CENTER
     0x00400040,     // center of top left quadrant of cell      //INFANTRY_SPOT_TOP_LEFT
     0x004000C0,     // center of top right quadrant of cell     //INFANTRY_SPOT_TOP_RIGHT
@@ -54,7 +54,7 @@ const coord_t CellClass::StoppingCoordAbs[CELL_SPOT_COUNT] = {
 cell_t CellClass::CurrentSelectedCell = -1;
 
 CellClass::CellClass() :
-    m_CellNumber(Map.Cell_Number(this)),
+    m_CellNumber(g_Map.Cell_Number(this)),
     m_Bit1(false),
     m_PlacementCheck(false),
     m_Visible(false),
@@ -110,7 +110,7 @@ int CellClass::Cell_Color(BOOL none) const
         if (none) {
             color = 0;
         } else {
-            switch (g_lastTheater) {
+            switch (g_LastTheater) {
                 case THEATER_SNOW:
                     color = _snow_color[Land];
                     break;
@@ -124,7 +124,7 @@ int CellClass::Cell_Color(BOOL none) const
         return color;
     }
 
-    return ColorRemaps[HouseClass::As_Reference(bptr->Owner()).Color].WindowPalette[7];
+    return g_ColorRemaps[HouseClass::As_Reference(bptr->Owner()).Color].WindowPalette[7];
 #else
     return 0;
 #endif
@@ -263,7 +263,7 @@ ObjectClass *CellClass::Cell_Object(int x, int y) const
  */
 void CellClass::Recalc_Attributes()
 {
-    if (g_lastTheater != THEATER_INTERIOR || (m_Template != TEMPLATE_NONE && m_Template >= TEMPLATE_FIRST)) {
+    if (g_LastTheater != THEATER_INTERIOR || (m_Template != TEMPLATE_NONE && m_Template >= TEMPLATE_FIRST)) {
         if (m_Overlay == OVERLAY_NONE || (m_Land = OverlayTypeClass::As_Reference(m_Overlay).Get_Land(), m_Land == LAND_CLEAR)) {
             // TODO Bug TEMPLATE_ARRO0003 can only be land type LAND_CLEAR because it is 0xFF, the value that was
             // TEMPLATE_NONE in the TD and SS map formats due to lower number of templates and using uint8_t to hold the
@@ -289,8 +289,8 @@ BOOL CellClass::Can_Ore_Grow() const
 {
     DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (Rule.Ore_Grows()) {
-        if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.MPlayer_Ore_Growth()) {
+    if (g_Rule.Ore_Grows()) {
+        if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Session.MPlayer_Ore_Growth()) {
             if (m_Land == LAND_ORE && m_OverlayFrame < ORESTAGE_FULLGROWN) { // see OreStageEnum?
                 return Contains_Ore();
             }
@@ -309,8 +309,8 @@ BOOL CellClass::Can_Ore_Spread() const
 {
     DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (Rule.Ore_Spreads()) {
-        if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.MPlayer_Ore_Growth()) {
+    if (g_Rule.Ore_Spreads()) {
+        if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Session.MPlayer_Ore_Growth()) {
             if (m_Land == LAND_ORE && m_OverlayFrame > ORESTAGE_SPREADING) { // see OreStageEnum?
                 return Contains_Ore();
             }
@@ -329,7 +329,7 @@ BOOL CellClass::Can_Ore_Germinate() const
 {
     DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (!Map.In_Radar(m_CellNumber)) {
+    if (!g_Map.In_Radar(m_CellNumber)) {
         return false;
     }
     if (Is_Bridge_Here()) {
@@ -346,7 +346,7 @@ BOOL CellClass::Can_Ore_Germinate() const
     if (bptr != nullptr && reinterpret_cast<const BuildingTypeClass &>(bptr->Class_Of()).Is_Invisible()) {
         return false;
     }
-    if (Ground[m_Land].Is_Buildable()) {
+    if (g_Ground[m_Land].Is_Buildable()) {
         return m_Overlay == OVERLAY_NONE;
     }
     return false;
@@ -385,14 +385,14 @@ BOOL CellClass::Spread_Ore(BOOL force)
 #elif 0
     if (force || Can_Ore_Spread()) {
         // Pick a random direction to start in.
-        FacingType start_dir = (FacingType)Scen.Get_Random_Value(FACING_FIRST, FACING_COUNT - 1);
+        FacingType start_dir = (FacingType)g_Scen.Get_Random_Value(FACING_FIRST, FACING_COUNT - 1);
 
         for (FacingType facing = FACING_FIRST; facing < FACING_COUNT; ++facing) {
             // Check each facing starting with our random one to see if Ore can be spawned there.
             const CellClass &cell = Adjacent_Cell((FacingType)(unsigned(start_dir + facing) % FACING_COUNT));
 
             if (cell.Can_Ore_Germinate()) {
-                OverlayType overlay = (OverlayType)Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04);
+                OverlayType overlay = (OverlayType)g_Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04);
                 OverlayClass *optr = new OverlayClass(overlay, cell.m_CellNumber, m_OwnerHouse);
                 DEBUG_ASSERT(optr != nullptr);
                 m_OverlayFrame = 0;
@@ -485,9 +485,9 @@ void CellClass::Redraw_Objects(BOOL force)
     DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
     // Check if we are even visible first, then check if already flagged for a redraw.
-    if (Map.In_View(m_CellNumber)) {
-        if (force || !Map.Is_Cell_Flagged(m_CellNumber)) {
-            Map.Flag_Cell(m_CellNumber);
+    if (g_Map.In_View(m_CellNumber)) {
+        if (force || !g_Map.Is_Cell_Flagged(m_CellNumber)) {
+            g_Map.Flag_Cell(m_CellNumber);
 
             // Loop through occupiers and if active mark them for redraw.
             for (ObjectClass *optr = m_OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
@@ -526,7 +526,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
 {
     DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
 
-    if (ScenarioInit) {
+    if (g_ScenarioInit) {
         return true;
     }
 
@@ -548,7 +548,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
     }
 
     if (speed != SPEED_NONE) {
-        if (Ground[m_Land].Get_Speed(speed) == fixed_t::_0_1) {
+        if (g_Ground[m_Land].Get_Speed(speed) == fixed_t::_0_1) {
             return false;
         }
 
@@ -559,7 +559,7 @@ BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
         return false;
     }
 
-    return Ground[m_Land].Is_Buildable();
+    return g_Ground[m_Land].Is_Buildable();
 }
 
 /**
@@ -596,9 +596,9 @@ void CellClass::Occupy_Down(ObjectClass *object)
         }
 
         // Dunno what this does yet.
-        Map.Radar_Pixel(CellNumber);
+        g_Map.Radar_Pixel(CellNumber);
 
-        if (Visible && Session.Game_To_Play() != GAME_CAMPAIGN) {
+        if (Visible && g_Session.Game_To_Play() != GAME_CAMPAIGN) {
             object->Revealed(PlayerPtr);
         }
 
@@ -661,7 +661,7 @@ void CellClass::Occupy_Up(ObjectClass *object)
         }
 
         // Dunno what this does yet. Updates radar pixel color for this cell?
-        Map.Radar_Pixel(CellNumber);
+        g_Map.Radar_Pixel(CellNumber);
 
         // Clear OccupantBit based on type of object.
         switch (object->What_Am_I()) {
@@ -760,7 +760,7 @@ void CellClass::Overlap_Up(ObjectClass *object)
     }
 
     if (g_InMapEditor) {
-        Map.Radar_Pixel(m_CellNumber);
+        g_Map.Radar_Pixel(m_CellNumber);
     }
 }
 
@@ -794,11 +794,11 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
     ObjectClass *obj = nullptr;
     TemplateTypeClass *tt = nullptr;
 
-    GraphicViewPortClass dbgcell(g_logicPage->Get_Graphic_Buffer(),
-        g_logicPage->Get_XPos() + WindowList[WINDOW_TACTICAL].X,
-        g_logicPage->Get_YPos() + WindowList[WINDOW_TACTICAL].Y,
-        WindowList[WINDOW_TACTICAL].W,
-        WindowList[WINDOW_TACTICAL].H);
+    GraphicViewPortClass dbgcell(g_LogicPage->Get_Graphic_Buffer(),
+        g_LogicPage->Get_XPos() + g_WindowList[WINDOW_TACTICAL].X,
+        g_LogicPage->Get_YPos() + g_WindowList[WINDOW_TACTICAL].Y,
+        g_WindowList[WINDOW_TACTICAL].W,
+        g_WindowList[WINDOW_TACTICAL].H);
 
     if (!flag) {
 
@@ -823,50 +823,50 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             // editor version from edwin
             if (g_InMapEditor) {
                 // impassable
-                if (Ground[m_Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0) || m_OccupierPtr != nullptr) {
-                    fading_table = DisplayClass::FadingRed;
+                if (g_Ground[m_Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0) || m_OccupierPtr != nullptr) {
+                    fading_table = DisplayClass::s_FadingRed;
                 }
                 // is occupied by multiple objects, could had been for finding overlapping objects?
                 if (m_OccupierPtr != nullptr && m_OccupierPtr->Get_Next() != nullptr) {
-                    fading_table = DisplayClass::FadingYellow;
+                    fading_table = DisplayClass::s_FadingYellow;
                 }
             // ingame version from RA beta
             } else {
                 // impassable
-                if (Ground[m_Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0)
+                if (g_Ground[m_Land].Get_Speed(SPEED_FOOT) == fixed_t(0, 0)
                     || m_OccupierPtr != nullptr && m_OccupierPtr->What_Am_I() != RTTI_INFANTRY) {
-                    fading_table = DisplayClass::FadingRed;
+                    fading_table = DisplayClass::s_FadingRed;
                 // unit will be very slow on this cell, in a unmodified RA this won't ever be true
-                } else if (Ground[m_Land].Get_Speed(SPEED_FOOT) <= fixed_t(1, 3)) {
-                    fading_table = DisplayClass::FadingYellow;
+                } else if (g_Ground[m_Land].Get_Speed(SPEED_FOOT) <= fixed_t(1, 3)) {
+                    fading_table = DisplayClass::s_FadingYellow;
                 // fully passable
                 } else {
-                    fading_table = DisplayClass::FadingGreen;
+                    fading_table = DisplayClass::s_FadingGreen;
                 }
             }
         }
 #endif
 
         if (tt->Get_Image_Data() != nullptr) {
-            g_logicPage->Draw_Stamp(tt->Get_Image_Data(),
+            g_LogicPage->Draw_Stamp(tt->Get_Image_Data(),
                 icon_num,
                 x,
                 y,
                 nullptr,
-                WindowList[WINDOW_TACTICAL].X,
-                WindowList[WINDOW_TACTICAL].Y,
-                WindowList[WINDOW_TACTICAL].W,
-                WindowList[WINDOW_TACTICAL].H);
+                g_WindowList[WINDOW_TACTICAL].X,
+                g_WindowList[WINDOW_TACTICAL].Y,
+                g_WindowList[WINDOW_TACTICAL].W,
+                g_WindowList[WINDOW_TACTICAL].H);
 #ifdef CHRONOSHIFT_DEBUG
             if (g_Debug_Passable) {
                 if (fading_table != nullptr) {
-                    GraphicViewPortClass remap(g_logicPage->Get_Graphic_Buffer(),
-                        g_logicPage->Get_XPos() + WindowList[WINDOW_TACTICAL].X,
-                        g_logicPage->Get_YPos() + WindowList[WINDOW_TACTICAL].Y,
-                        WindowList[WINDOW_TACTICAL].W,
-                        WindowList[WINDOW_TACTICAL].H);
+                    GraphicViewPortClass remap(g_LogicPage->Get_Graphic_Buffer(),
+                        g_LogicPage->Get_XPos() + g_WindowList[WINDOW_TACTICAL].X,
+                        g_LogicPage->Get_YPos() + g_WindowList[WINDOW_TACTICAL].Y,
+                        g_WindowList[WINDOW_TACTICAL].W,
+                        g_WindowList[WINDOW_TACTICAL].H);
                     // original line, i think this could result in out of bounds draws so using what edwin does instead
-                    // g_logicPage->Remap(x + Map.Tac_Offset_X(), y + Map.Tac_Offset_Y(), CELL_PIXELS, CELL_PIXELS, (unsigned char *)fading_table);
+                    // g_LogicPage->Remap(x + g_Map.Tac_Offset_X(), y + g_Map.Tac_Offset_Y(), CELL_PIXELS, CELL_PIXELS, (unsigned char *)fading_table);
                     remap.Remap(x, y, CELL_PIXELS, CELL_PIXELS, (unsigned char *)fading_table);
                 }
             }
@@ -888,7 +888,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             // clip to the tactical view as it should.
             // OverlayTypeClass::As_Reference(m_Overlay).Draw_It(x, y, m_OverlayFrame);
             OverlayTypeClass &otc = OverlayTypeClass::As_Reference(m_Overlay);
-            g_isTheaterShape = otc.Is_Theater();
+            g_IsTheaterShape = otc.Is_Theater();
             CC_Draw_Shape(otc.Get_Image_Data(),
                 m_OverlayFrame,
                 x + 12,
@@ -896,43 +896,43 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 WINDOW_TACTICAL,
                 SHAPE_GHOST | SHAPE_WIN_REL | SHAPE_CENTER,
                 nullptr,
-                DisplayClass::UnitShadow);
-            g_isTheaterShape = false;
+                DisplayClass::s_UnitShadow);
+            g_IsTheaterShape = false;
         }
 
         if (m_PlacementCheck) {
             SpeedType speed = SPEED_NONE;
 
-            if (Map.Pending_ObjectType() != nullptr && Map.Pending_ObjectType()->What_Am_I() == RTTI_BUILDING) {
-                speed = reinterpret_cast<TechnoTypeClass *>(Map.Pending_ObjectType())->Get_Speed();
+            if (g_Map.Pending_ObjectType() != nullptr && g_Map.Pending_ObjectType()->What_Am_I() == RTTI_BUILDING) {
+                speed = reinterpret_cast<TechnoTypeClass *>(g_Map.Pending_ObjectType())->Get_Speed();
             }
 
             int placement_icon = PLACEMENT_CLEAR;
 
             // TODO this is an enhancement to make unit occupied cells yellow rather than red.
-            /*if (!Map.Passed_Proximity_Check() && Get_Occupier() != nullptr && Get_Occupier()->What_Am_I() != RTTI_BUILDING)
-            { placement_icon = PLACEMENT_YELLOW; } else if (!Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
+            /*if (!g_Map.Passed_Proximity_Check() && Get_Occupier() != nullptr && Get_Occupier()->What_Am_I() != RTTI_BUILDING)
+            { placement_icon = PLACEMENT_YELLOW; } else if (!g_Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
                 placement_icon = PLACEMENT_RED;
             }*/
 
-            if (!Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
+            if (!g_Map.Passed_Proximity_Check() || !Is_Clear_To_Build(speed)) {
                 placement_icon = PLACEMENT_RED;
             }
 
-            g_logicPage->Draw_Stamp(DisplayClass::TransIconset,
+            g_LogicPage->Draw_Stamp(DisplayClass::s_TransIconset,
                 placement_icon,
                 x,
                 y,
                 nullptr,
-                WindowList[WINDOW_TACTICAL].X,
-                WindowList[WINDOW_TACTICAL].Y,
-                WindowList[WINDOW_TACTICAL].W,
-                WindowList[WINDOW_TACTICAL].H);
+                g_WindowList[WINDOW_TACTICAL].X,
+                g_WindowList[WINDOW_TACTICAL].Y,
+                g_WindowList[WINDOW_TACTICAL].W,
+                g_WindowList[WINDOW_TACTICAL].H);
 
 #if 0 // TODO Edwin map stuff.
             if (g_Debug_Placement_Ghosts) {
-                if (Map.Pending_ObjectType() != nullptr) {
-                    switch (Map.Pending_ObjectType()->What_Am_I()) {
+                if (g_Map.Pending_ObjectType() != nullptr) {
+                    switch (g_Map.Pending_ObjectType()->What_Am_I()) {
                         case RTTI_VESSEL:
                             // TODO
 
@@ -980,7 +980,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
                 WINDOW_TACTICAL,
                 SHAPE_SHADOW | SHAPE_FADING | SHAPE_CENTER,
                 (void *)HouseClass::As_Pointer(m_OwnerHouse)->Remap_Table(false, REMAP_1),
-                DisplayClass::UnitShadow);
+                DisplayClass::s_UnitShadow);
         }
 
         BENCHMARK_END(BENCH_CELL);
@@ -1144,7 +1144,7 @@ BOOL CellClass::Reduce_Wall(int damage)
         // the wall. As far as I can tell anyhow.
         if (overlay.Is_Wall()) {
             if (damage != -1 && overlay.Get_Overlay_Strength() > damage) {
-                is_reduced = overlay.Get_Overlay_Strength() > damage ? Scen.Get_Random_Value(0, damage) < damage : true;
+                is_reduced = overlay.Get_Overlay_Strength() > damage ? g_Scen.Get_Random_Value(0, damage) < damage : true;
             } else {
                 is_reduced = true;
             }
@@ -1167,9 +1167,9 @@ BOOL CellClass::Reduce_Wall(int damage)
                 Detach_This_From_All(As_Target(Cell_Number()), 1);
 
                 if (overlay.Is_Crushable()) {
-                    Map.Zone_Reset(1 << MZONE_NORMAL);
+                    g_Map.Zone_Reset(1 << MZONE_NORMAL);
                 } else {
-                    Map.Zone_Reset((1 << MZONE_NORMAL) | (1 << MZONE_CRUSHER));
+                    g_Map.Zone_Reset((1 << MZONE_NORMAL) | (1 << MZONE_CRUSHER));
                 }
 
                 return true;
@@ -1234,7 +1234,7 @@ BOOL CellClass::Is_Clear_To_Move(
     }
 
     // Check to make sure our speed type can actually move on this ground.
-    return (Ground[land].Get_Speed(speed) != fixed_t::_0_1);
+    return (g_Ground[land].Get_Speed(speed) != fixed_t::_0_1);
 }
 
 /**
@@ -1261,8 +1261,8 @@ int CellClass::Ore_Adjust(BOOL randomize)
                 case OVERLAY_GOLD_03:
                 case OVERLAY_GOLD_04: // Fallthrough
                     is_gems = false;
-                    value = Rule.Get_Gold_Value();
-                    m_Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04));
+                    value = g_Rule.Get_Gold_Value();
+                    m_Overlay = OverlayType(g_Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04));
                     break;
 
                 case OVERLAY_GEM_01:
@@ -1270,8 +1270,8 @@ int CellClass::Ore_Adjust(BOOL randomize)
                 case OVERLAY_GEM_03:
                 case OVERLAY_GEM_04: // Fallthrough
                     is_gems = true;
-                    value = Rule.Get_Gem_Value() * 4;
-                    m_Overlay = OverlayType(Scen.Get_Random_Value(OVERLAY_GEM_01, OVERLAY_GEM_04));
+                    value = g_Rule.Get_Gem_Value() * 4;
+                    m_Overlay = OverlayType(g_Scen.Get_Random_Value(OVERLAY_GEM_01, OVERLAY_GEM_04));
                     break;
 
                 default:
@@ -1342,7 +1342,7 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 
     // If our intended spot is free or we are skipping occupied, return it.
     if (skip_occupied || Is_Spot_Free(spotindex)) {
-        return Coord_Add(coord, StoppingCoordAbs[spotindex]);
+        return Coord_Add(coord, s_StoppingCoordAbs[spotindex]);
     }
 
     // If we already have an occupier on our intended spot, recalculate next best.
@@ -1352,13 +1352,13 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
     if (spotindex > 0) {
         spots = _sequence[spotindex];
     } else {
-        spots = _alternate[Scen.Get_Random_Value((m_OccupantBit & 1) == 0, 3)];
+        spots = _alternate[g_Scen.Get_Random_Value((m_OccupantBit & 1) == 0, 3)];
     }
 
     // From our possible spots list, find a free one, if not, return 0.
     for (int i = 0; i < 4; ++i) {
         if (Is_Spot_Free(spots[i])) {
-            return Coord_Add(coord, StoppingCoordAbs[coord_index]);
+            return Coord_Add(coord, s_StoppingCoordAbs[coord_index]);
         }
     }
 
@@ -1460,7 +1460,7 @@ BOOL CellClass::Save(Pipe &pipe) const
  */
 void CellClass::Adjust_Threat(HousesType house, int threat)
 {
-    int region = Map.Cell_Region(m_CellNumber);
+    int region = g_Map.Cell_Region(m_CellNumber);
     for (HousesType i = HOUSES_FIRST; i < HOUSES_COUNT; ++i) {
         if (i != house) {
             HouseClass *hptr = HouseClass::As_Pointer(i);
@@ -1472,7 +1472,7 @@ void CellClass::Adjust_Threat(HousesType house, int threat)
         }
     }
     if (g_Debug_Threat) {
-        Map.Flag_To_Redraw(true);
+        g_Map.Flag_To_Redraw(true);
     }
 }
 
@@ -1496,9 +1496,9 @@ void CellClass::Shimmer()
 void CellClass::Incoming(coord_t coord, BOOL a2, BOOL a3)
 {
     for (ObjectClass *optr = m_OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
-        if (a3 || Rule.Player_Scatter()
+        if (a3 || g_Rule.Player_Scatter()
             || (optr->Is_Techno()
-                && Rule.IQ_Controls().m_Scatter
+                && g_Rule.IQ_Controls().m_Scatter
                     <= reinterpret_cast<TechnoClass *>(optr)->Get_Owner_House()->Get_Current_IQ())) {
             optr->Scatter(coord, a2, a3);
         }

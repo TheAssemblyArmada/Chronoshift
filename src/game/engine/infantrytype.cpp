@@ -103,7 +103,7 @@ void InfantryTypeClass::operator delete(void *ptr)
  */
 int InfantryTypeClass::Full_Name() const
 {
-    if (g_InMapEditor || !m_IsNominal || Rule.Named_Civilians() || m_Type == INFANTRY_C10 || m_Type == INFANTRY_EINSTEIN
+    if (g_InMapEditor || !m_IsNominal || g_Rule.Named_Civilians() || m_Type == INFANTRY_C10 || m_Type == INFANTRY_EINSTEIN
         || m_Type == INFANTRY_DELPHI) {
         return AbstractTypeClass::Full_Name();
     }
@@ -253,7 +253,7 @@ void InfantryTypeClass::Prep_For_Add()
     for (InfantryType i = INFANTRY_FIRST; i < INFANTRY_COUNT; ++i) {
         InfantryTypeClass *itptr = As_Pointer(i);
         if (itptr != nullptr) {
-            Map.Add_To_List(itptr);
+            g_Map.Add_To_List(itptr);
         }
     }
 }

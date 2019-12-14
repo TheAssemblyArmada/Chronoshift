@@ -29,7 +29,7 @@ using std::strlen;
 using std::strcpy;
 using std::strncpy;
 
-int MessageListClass::MaxMessageWidth = 640;
+int MessageListClass::s_MaxMessageWidth = 640;
 
 MessageListClass::MessageListClass() :
     m_LabelList(nullptr),
@@ -154,7 +154,7 @@ TextLabelClass *MessageListClass::Add_Message(
         strlcpy(msgbuff, message, sizeof(msgbuff));
     }
 
-    Fancy_Text_Print(nullptr, 0, 0, &ColorRemaps[color], COLOR_TBLACK, style);
+    Fancy_Text_Print(nullptr, 0, 0, &g_ColorRemaps[color], COLOR_TBLACK, style);
     int break_pos = 0;
     char saved_char = '\0';
 
@@ -211,12 +211,12 @@ TextLabelClass *MessageListClass::Add_Message(
         }
     }
 
-    TextLabelClass *msglabel = new TextLabelClass(msgbuff, m_XPos, m_YPos, &ColorRemaps[color], style);
+    TextLabelClass *msglabel = new TextLabelClass(msgbuff, m_XPos, m_YPos, &g_ColorRemaps[color], style);
 
     if (lifetime == -1) {
         msglabel->Set_Lifetime(0);
     } else {
-        msglabel->Set_Lifetime(TickCountTimer.Time() + lifetime);
+        msglabel->Set_Lifetime(g_TickCountTimer.Time() + lifetime);
     }
 
     msglabel->Set_Label_ID(id);
@@ -265,7 +265,7 @@ TextLabelClass *MessageListClass::Add_Message(
 */
 TextLabelClass *MessageListClass::Add_Simple_Message(const char *player, const char *message, PlayerColorType color)
 {
-    return Add_Message(player, 0, message, color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, Rule.Message_Delay() * 900);
+    return Add_Message(player, 0, message, color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, g_Rule.Message_Delay() * 900);
 }
 
 /**
@@ -363,7 +363,7 @@ BOOL MessageListClass::Concat_Message(char *msg, int id, char *to_concat, int li
         if (lifetime == -1) {
             label->Set_Lifetime(0);
         } else {
-            label->Set_Lifetime(TickCountTimer.Time() + lifetime);
+            label->Set_Lifetime(g_TickCountTimer.Time() + lifetime);
         }
 
         return true;
@@ -433,7 +433,7 @@ TextLabelClass *MessageListClass::Add_Edit(PlayerColorType player, TextPrintType
     m_EditStart = strlen(existing);
     m_EditPos = strlen(existing);
 
-    m_EditingLabel = new TextLabelClass(m_EditBuffer, m_EditXPos, m_EditYPos, &ColorRemaps[player], style);
+    m_EditingLabel = new TextLabelClass(m_EditBuffer, m_EditXPos, m_EditYPos, &g_ColorRemaps[player], style);
     m_Width = width;
 
     if (m_EditingLabel != nullptr) {
@@ -486,7 +486,7 @@ char *MessageListClass::Get_Edit_Buf()
 void MessageListClass::Set_Edit_Color(PlayerColorType player)
 {
     if (m_Editing) {
-        m_EditingLabel->Set_Remap(&ColorRemaps[player]);
+        m_EditingLabel->Set_Remap(&g_ColorRemaps[player]);
     }
 }
 
@@ -499,7 +499,7 @@ BOOL MessageListClass::Manage()
 
     // Iterate through the message list and remove any messages that have past their delay.
     for (TextLabelClass *label = m_LabelList; label != nullptr;) {
-        if (label->Get_Lifetime() != 0 && TickCountTimer > label->Get_Lifetime()) {
+        if (label->Get_Lifetime() != 0 && g_TickCountTimer > label->Get_Lifetime()) {
             TextLabelClass *next = reinterpret_cast<TextLabelClass *>(label->Get_Next());
             m_LabelList = reinterpret_cast<TextLabelClass *>(label->Remove());
 
@@ -545,7 +545,7 @@ int MessageListClass::Input(KeyNumType &key)
         return 0;
     }
 
-    KeyASCIIType ascii_char = g_keyboard->To_ASCII(key);
+    KeyASCIIType ascii_char = g_Keyboard->To_ASCII(key);
     char raw_char = ascii_char & 0xFF;
 
     if (key & KEY_VK_BIT && isdigit(raw_char)) {
@@ -639,8 +639,8 @@ int MessageListClass::Input(KeyNumType &key)
 void MessageListClass::Draw()
 {
     if (m_Editing) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Hide_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Hide_Mouse();
         }
 
         m_EditingLabel->Draw_Me(true);
@@ -658,20 +658,20 @@ void MessageListClass::Draw()
             }
         }
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Show_Mouse();
         }
     }
 
     if (m_LabelList != nullptr) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Hide_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Hide_Mouse();
         }
 
         m_LabelList->Draw_All(true);
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Show_Mouse();
         }
     }
 }

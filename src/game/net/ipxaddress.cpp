@@ -47,7 +47,7 @@ void IPXAddressClass::Set_Address(char *net, char *node)
  */
 void IPXAddressClass::Set_Address(IPXHEADER *header)
 {
-    ProtocolEnum protocol = g_packetTransport != nullptr ? g_packetTransport->Get_Protocol() : PROTOCOL_IPX;
+    ProtocolEnum protocol = g_PacketTransport != nullptr ? g_PacketTransport->Get_Protocol() : PROTOCOL_IPX;
 
     switch (protocol) {
         case PROTOCOL_IPX:

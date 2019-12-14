@@ -24,7 +24,7 @@
 #include "vortex.h"
 
 #ifndef GAME_DLL
-RulesClass Rule;
+RulesClass g_Rule;
 #endif
 
 RulesClass::RulesClass() :
@@ -245,7 +245,7 @@ BOOL RulesClass::Process(GameINIClass &ini)
     AI(ini);
     Powerups(ini);
     Land_Types(ini);
-    Themes(ini);
+    s_Themes(ini);
     IQ(ini);
     Objects(ini);
     Difficulty(ini);
@@ -263,7 +263,7 @@ void RulesClass::Addition(GameINIClass &ini)
     AI(ini);
     Powerups(ini);
     Land_Types(ini);
-    Themes(ini);
+    s_Themes(ini);
     IQ(ini);
     Objects(ini);
     Difficulty(ini);
@@ -561,23 +561,23 @@ BOOL RulesClass::Powerups(GameINIClass &ini)
 
                 if (share) {
                     strtrim(share);
-                    CrateClass::CrateShares[crate] = strtol(share, nullptr, 10);
+                    CrateClass::s_CrateShares[crate] = strtol(share, nullptr, 10);
                 }
 
                 char *anim = strtok(value, ",");
 
                 if (anim) {
                     strtrim(anim);
-                    CrateClass::CrateAnims[crate] = AnimTypeClass::From_Name(anim);
+                    CrateClass::s_CrateAnims[crate] = AnimTypeClass::From_Name(anim);
                 }
 
                 char *data = strtok(value, ",");
 
                 if (strpbrk(value, ".%")) {
-                    CrateClass::CrateData[crate] = fixed_t(data).To_Int();
+                    CrateClass::s_CrateData[crate] = fixed_t(data).To_Int();
                 } else {
                     strtrim(data);
-                    CrateClass::CrateData[crate] = strtol(data, nullptr, 10);
+                    CrateClass::s_CrateData[crate] = strtol(data, nullptr, 10);
                 }
             }
         }
@@ -591,13 +591,13 @@ BOOL RulesClass::Powerups(GameINIClass &ini)
 #endif
 }
 
-BOOL RulesClass::Themes(GameINIClass &ini)
+BOOL RulesClass::s_Themes(GameINIClass &ini)
 {
     char entry[INIClass::MAX_LINE_LENGTH];
 
     if (ini.Is_Present("ThemeControl")) {
         for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
-            const char *theme_name = Theme.Base_Name(theme);
+            const char *theme_name = g_Theme.Base_Name(theme);
             if (theme_name && ini.Find_Entry("ThemeControl", theme_name) != nullptr) {
                 ini.Get_String("ThemeControl", theme_name, "", entry, sizeof(entry));
 
@@ -607,7 +607,7 @@ BOOL RulesClass::Themes(GameINIClass &ini)
                 char *owner_val = strtok(entry, ",");
                 int owner = owner_val ? HouseTypeClass::Owner_From_Name(owner_val) : -1;
 
-                Theme.Set_Theme_Data(theme, scen, owner);
+                g_Theme.Set_Theme_Data(theme, scen, owner);
             }
         }
 
@@ -682,7 +682,7 @@ BOOL RulesClass::Objects(GameINIClass &ini)
     }
 
     for (MissionType mission = MISSION_FIRST; mission < MISSION_COUNT; ++mission) {
-        MissionControlClass::MissionControl[mission].Read_INI(ini);
+        MissionControlClass::s_MissionControl[mission].Read_INI(ini);
     }
 
     return true;

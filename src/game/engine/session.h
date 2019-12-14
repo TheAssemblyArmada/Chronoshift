@@ -274,9 +274,9 @@ private:
 };
 
 #ifdef GAME_DLL
-extern SessionClass &Session;
+extern SessionClass &g_Session;
 #else
-extern SessionClass Session;
+extern SessionClass g_Session;
 #endif
 
 #endif // SESSION_H

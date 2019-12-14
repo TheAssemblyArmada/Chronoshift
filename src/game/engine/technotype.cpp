@@ -23,13 +23,13 @@
 #include "session.h"
 
 #ifndef GAME_DLL
-void *TechnoTypeClass::WakeShapes = nullptr;
-void *TechnoTypeClass::TurretShapes = nullptr;
-void *TechnoTypeClass::SamShapes = nullptr;
-void *TechnoTypeClass::MGunShapes = nullptr;
+void *TechnoTypeClass::s_WakeShapes = nullptr;
+void *TechnoTypeClass::s_TurretShapes = nullptr;
+void *TechnoTypeClass::s_SamShapes = nullptr;
+void *TechnoTypeClass::s_MGunShapes = nullptr;
 #endif
-void *TechnoTypeClass::LightningShapes = nullptr;
-void *TechnoTypeClass::MissingCameoShape = nullptr;
+void *TechnoTypeClass::s_LightningShapes = nullptr;
+void *TechnoTypeClass::s_MissingCameoShape = nullptr;
 
 /**
  * 0x00569564
@@ -198,11 +198,11 @@ BOOL TechnoTypeClass::Legal_Placement(cell_t cellnum) const
         for (const int16_t *list_pos = Occupy_List(true); list_pos[0] == LIST_END; ++list_pos) {
             cell_t offset_cellnum = (list_pos[0] + cellnum);
 
-            if (!Map.In_Radar(offset_cellnum)) {
+            if (!g_Map.In_Radar(offset_cellnum)) {
                 return false;
             }
 
-            CellClass &cell = Map[offset_cellnum];
+            CellClass &cell = g_Map[offset_cellnum];
 
             if (What_Am_I() == RTTI_BUILDINGTYPE) {
                 if (!cell.Is_Clear_To_Build(m_Speed)) {
@@ -229,7 +229,7 @@ BOOL TechnoTypeClass::Legal_Placement(cell_t cellnum) const
  */
 int TechnoTypeClass::Get_Ownable() const
 {
-    if (m_DoubleOwned && Session.Game_To_Play() != GAME_CAMPAIGN) {
+    if (m_DoubleOwned && g_Session.Game_To_Play() != GAME_CAMPAIGN) {
         return m_Owner | (SIDE_ALLIES | SIDE_SOVIET);
     }
 
@@ -243,7 +243,7 @@ int TechnoTypeClass::Get_Ownable() const
  */
 int TechnoTypeClass::Time_To_Build() const
 {
-    return fixed_t(900, 1000) * m_Cost * Rule.Get_Build_Speed();
+    return fixed_t(900, 1000) * m_Cost * g_Rule.Get_Build_Speed();
 }
 
 /**
@@ -258,8 +258,8 @@ void *TechnoTypeClass::Get_Cameo_Data() const
     }
 
     // Enhancement backported from TS.
-    if (MissingCameoShape != nullptr) {
-        return MissingCameoShape;
+    if (s_MissingCameoShape != nullptr) {
+        return s_MissingCameoShape;
     }
 
     return nullptr;
@@ -273,15 +273,15 @@ void *TechnoTypeClass::Get_Cameo_Data() const
 int TechnoTypeClass::Repair_Cost() const
 {
     if (Is_FootType()) {
-        return (Raw_Cost() / (m_Strength / Rule.Get_Unit_Repair_Step()))
-            * Rule.Get_Unit_Repair_Percent(); // this code check if the result is greater than 1(.0), if so,
+        return (Raw_Cost() / (m_Strength / g_Rule.Get_Unit_Repair_Step()))
+            * g_Rule.Get_Unit_Repair_Percent(); // this code check if the result is greater than 1(.0), if so,
                                               // forces 1, see for TS/RA2 version
                                               // http://dc.strategy-x.com/src2/TechnoTypeClass/GetRepairStepCost.cpp needs
                                               // recoding for use with fixed *see (U)RepairPercent type.
     }
 
-    return (Raw_Cost() / (m_Strength / Rule.Get_Repair_Step()))
-        * Rule.Get_Repair_Percent(); // same as above, but this is normal repair percent for buildings.
+    return (Raw_Cost() / (m_Strength / g_Rule.Get_Repair_Step()))
+        * g_Rule.Get_Repair_Percent(); // same as above, but this is normal repair percent for buildings.
 }
 
 /**
@@ -292,10 +292,10 @@ int TechnoTypeClass::Repair_Cost() const
 int TechnoTypeClass::Repair_Step() const
 {
     if (Is_FootType()) {
-        return Rule.Get_Unit_Repair_Step();
+        return g_Rule.Get_Unit_Repair_Step();
     }
 
-    return Rule.Get_Repair_Step();
+    return g_Rule.Get_Repair_Step();
 }
 
 /**
@@ -393,28 +393,28 @@ void TechnoTypeClass::One_Time()
 {
     // NOTE: Moved from UnitTypeClass as it was actually setting
     // TechnoType statics. Called from UnitTypeClass One_Time().
-    if (WakeShapes == nullptr) {
-        WakeShapes = GameFileClass::Retrieve("wake.shp");
-        DEBUG_ASSERT(WakeShapes != nullptr);
+    if (s_WakeShapes == nullptr) {
+        s_WakeShapes = GameFileClass::Retrieve("wake.shp");
+        DEBUG_ASSERT(s_WakeShapes != nullptr);
     }
-    if (TurretShapes == nullptr) {
-        TurretShapes = GameFileClass::Retrieve("turr.shp");
-        DEBUG_ASSERT(TurretShapes != nullptr);
+    if (s_TurretShapes == nullptr) {
+        s_TurretShapes = GameFileClass::Retrieve("turr.shp");
+        DEBUG_ASSERT(s_TurretShapes != nullptr);
     }
-    if (SamShapes == nullptr) {
-        SamShapes = GameFileClass::Retrieve("ssam.shp");
-        DEBUG_ASSERT(SamShapes != nullptr);
+    if (s_SamShapes == nullptr) {
+        s_SamShapes = GameFileClass::Retrieve("ssam.shp");
+        DEBUG_ASSERT(s_SamShapes != nullptr);
     }
-    if (MGunShapes == nullptr) {
-        MGunShapes = GameFileClass::Retrieve("mgun.shp");
-        DEBUG_ASSERT(MGunShapes != nullptr);
+    if (s_MGunShapes == nullptr) {
+        s_MGunShapes = GameFileClass::Retrieve("mgun.shp");
+        DEBUG_ASSERT(s_MGunShapes != nullptr);
     }
-    if (LightningShapes == nullptr) {
-        LightningShapes = GameFileClass::Retrieve("litning.shp");
-        DEBUG_ASSERT(LightningShapes != nullptr);
+    if (s_LightningShapes == nullptr) {
+        s_LightningShapes = GameFileClass::Retrieve("litning.shp");
+        DEBUG_ASSERT(s_LightningShapes != nullptr);
     }
-    if (MissingCameoShape == nullptr) {
-        MissingCameoShape = GameFileClass::Retrieve("xxicon.shp");
-        DEBUG_ASSERT(MissingCameoShape != nullptr);
+    if (s_MissingCameoShape == nullptr) {
+        s_MissingCameoShape = GameFileClass::Retrieve("xxicon.shp");
+        DEBUG_ASSERT(s_MissingCameoShape != nullptr);
     }
 }

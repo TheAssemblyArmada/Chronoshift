@@ -136,16 +136,16 @@ private:
     uint8_t *m_FileCache;
 // A linked list of all currently indexed mix files for the program
 #ifdef GAME_DLL
-    static List<MixFileClass<FC> *> &s_mixList;
+    static List<MixFileClass<FC> *> &s_MixList;
 #else
-    static List<MixFileClass<FC> *> s_mixList;
+    static List<MixFileClass<FC> *> s_MixList;
 #endif
 };
 
 #ifndef GAME_DLL
 // Initialised for GameFileClass for dll in mixfile.cpp
 template<class FC>
-List<MixFileClass<FC> *> MixFileClass<FC>::s_mixList;
+List<MixFileClass<FC> *> MixFileClass<FC>::s_MixList;
 #endif
 
 template<class FC>
@@ -163,7 +163,7 @@ MixFileClass<FC>::MixFileClass(const char *filename, PKey *key) :
     DEBUG_ASSERT(filename != nullptr);
     DEBUG_ASSERT(key != nullptr);
 
-    if (!Force_CD_Available(g_requiredCD)) {
+    if (!Force_CD_Available(g_RequiredCD)) {
         Emergency_Exit(0xFF);
     }
 
@@ -198,7 +198,7 @@ void MixFileClass<FC>::Load_File(FC &file, PKey *key)
 
     if (file.Is_Available()) {
         // CryptRandom is a global instance of RandomStraw, see extern above.
-        PKStraw pkstrw(STRAW_DECRYPT, g_cryptRandom);
+        PKStraw pkstrw(STRAW_DECRYPT, g_CryptRandom);
         FileStraw filestrw(&file);
 
         // This Straw pointer will point to which straw we need to read the header
@@ -256,7 +256,7 @@ void MixFileClass<FC>::Load_File(FC &file, PKey *key)
 #endif // !SYSTEM_BIG_ENDIAN
 
             // Add the mix file to the global list.
-            s_mixList.Add_Tail(this);
+            s_MixList.Add_Tail(this);
         }
     }
 }
@@ -310,7 +310,7 @@ MixFileClass<FC> *MixFileClass<FC>::Finder(const char *filename)
     char fname[NAME_MAX];
     char dest[NAME_MAX];
 
-    for (file = s_mixList.First(); file != nullptr && file->Is_Valid();
+    for (file = s_MixList.First(); file != nullptr && file->Is_Valid();
          file = reinterpret_cast<MixFileClass *>(file->Next())) {
         _splitpath(file->m_FileName, nullptr, nullptr, fname, ext);
         _makepath(dest, nullptr, nullptr, fname, ext);
@@ -323,7 +323,7 @@ MixFileClass<FC> *MixFileClass<FC>::Finder(const char *filename)
     char path[PATH_MAX];
     char *dest = nullptr;
 
-    for (file = s_mixList.First(); file != nullptr && file->Is_Valid();
+    for (file = s_MixList.First(); file != nullptr && file->Is_Valid();
          file = reinterpret_cast<MixFileClass *>(file->Next())) {
         strlcpy(path, file->m_FileName, PATH_MAX);
         dest = basename(path);
@@ -491,7 +491,7 @@ BOOL MixFileClass<FC>::Offset(
 
     // Iterate over the list of loaded MixFileClass' and search them until
     // we find one that has the file or we reach the end of the list.
-    for (MixFileClass<FC> *tmp_mix = s_mixList.First(); tmp_mix != nullptr && tmp_mix->Is_Valid();
+    for (MixFileClass<FC> *tmp_mix = s_MixList.First(); tmp_mix != nullptr && tmp_mix->Is_Valid();
          tmp_mix = tmp_mix->Next()) {
         // compare the current entry with the entry we need.
         FileInfoStruct *entry_pointer =

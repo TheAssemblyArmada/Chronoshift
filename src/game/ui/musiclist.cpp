@@ -35,12 +35,12 @@ void MusicListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL selecte
     if (style & TPF_6PT_GRAD) {
         if (selected) {
             style |= TPF_USE_BRIGHT;
-            g_logicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + m_YSpacing) - 1), remapper->WindowPalette[0]);
+            g_LogicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + m_YSpacing) - 1), remapper->WindowPalette[0]);
         } else if (!(style & TPF_USE_GRAD_PAL)) {
             style |= TPF_USE_MEDIUM;
         }
     } else {
-        remapper = (selected ? &ColorRemaps[REMAP_10] : &ColorRemaps[REMAP_5]);
+        remapper = (selected ? &g_ColorRemaps[REMAP_10] : &g_ColorRemaps[REMAP_5]);
     }
 
     Conquer_Clip_Text_Print(entry, x, y, remapper, COLOR_TBLACK, style, x_max, m_Tabs);

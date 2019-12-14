@@ -37,7 +37,7 @@
 
 using std::min;
 
-int const TechnoClass::BodyShape32[32] = {
+int const TechnoClass::s_BodyShape32[32] = {
     0, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
 };
 
@@ -274,7 +274,7 @@ BOOL TechnoClass::Unlimbo(coord_t coord, DirType dir)
     m_Facing = dir;
     Enter_Idle_Mode(true);
     Commence();
-    m_LockedOnMap = Map.In_Radar(Get_Cell());
+    m_LockedOnMap = g_Map.In_Radar(Get_Cell());
     return true;
 }
 
@@ -334,12 +334,12 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
 {
     m_Door.Clear_To_Redraw();
 
-    if (m_Selected || Special.Always_Show_Health()) {
-        GraphicViewPortClass rect(g_logicPage->Get_Graphic_Buffer(),
-            g_logicPage->Get_XPos() + WindowList[WINDOW_TACTICAL].X,
-            g_logicPage->Get_YPos() + WindowList[WINDOW_TACTICAL].Y,
-            WindowList[WINDOW_TACTICAL].W,
-            WindowList[WINDOW_TACTICAL].H);
+    if (m_Selected || s_Special.Always_Show_Health()) {
+        GraphicViewPortClass rect(g_LogicPage->Get_Graphic_Buffer(),
+            g_LogicPage->Get_XPos() + g_WindowList[WINDOW_TACTICAL].X,
+            g_LogicPage->Get_YPos() + g_WindowList[WINDOW_TACTICAL].Y,
+            g_WindowList[WINDOW_TACTICAL].W,
+            g_WindowList[WINDOW_TACTICAL].H);
 
         if (m_RTTI == RTTI_INFANTRY) {
             y -= 6;
@@ -355,22 +355,22 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
 
         // draw health bar
         if (m_Health > 0) {
-            if (m_OwnerHouse->Is_Ally(g_PlayerPtr) || Rule.Show_Enemy_Health()) {
+            if (m_OwnerHouse->Is_Ally(g_PlayerPtr) || g_Rule.Show_Enemy_Health()) {
                 fixed_t health = Health_Ratio();
                 int bar_left = x - dim_w / 2;
                 int bar_top = y - dim_h / 2;
 
                 // fade background of health bar
-                rect.Remap(bar_left + 1, bar_top + 1, dim_w - 1, 2, DisplayClass::FadingShade);
+                rect.Remap(bar_left + 1, bar_top + 1, dim_w - 1, 2, DisplayClass::s_FadingShade);
 
                 // draw health bar bounding box
                 rect.Draw_Rect(bar_left, bar_top, bar_left + dim_w - 1, bar_top + 3, 12);
                 int health_w = std::clamp((dim_w - 2) * health, 1, dim_w - 2);
                 ColorType healthcolor = COLOR_LTGREEN;
-                if (health <= Rule.Condition_Yellow()) {
+                if (health <= g_Rule.Condition_Yellow()) {
                     healthcolor = COLOR_YELLOW;
                 }
-                if (health <= Rule.Condition_Red()) {
+                if (health <= g_Rule.Condition_Red()) {
                     healthcolor = COLOR_RED;
                 }
 
@@ -389,7 +389,7 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
             int adj_y = 0;
 
             // if we are showing the health bar nudge the selection box a bit
-            if (m_OwnerHouse->Is_Ally(g_PlayerPtr) || Rule.Show_Enemy_Health()) {
+            if (m_OwnerHouse->Is_Ally(g_PlayerPtr) || g_Rule.Show_Enemy_Health()) {
                 adj_y = 4;
             }
 
@@ -460,7 +460,7 @@ void TechnoClass::Look(BOOL a1)
 {
     int sight = Techno_Class_Of().Get_Sight();
     if (sight > 0) {
-        Map.Sight_From(Get_Cell(), sight, m_OwnerHouse, a1);
+        g_Map.Sight_From(Get_Cell(), sight, m_OwnerHouse, a1);
     }
 }
 
@@ -560,11 +560,11 @@ void TechnoClass::Per_Cell_Process(PCPType pcp)
 {
     if (pcp == PCP_2) {
         cell_t cell = Get_Cell();
-        if (!m_LockedOnMap && Map.In_Radar(cell)) {
+        if (!m_LockedOnMap && g_Map.In_Radar(cell)) {
             m_LockedOnMap = true;
         }
         if (!m_PlayerAware) {
-            if (Map[cell].Is_Revealed()) {
+            if (g_Map[cell].Is_Revealed()) {
                 Revealed(g_PlayerPtr);
             }
         }
@@ -609,7 +609,7 @@ BOOL TechnoClass::Revealed(HouseClass *house)
     if (house == g_PlayerPtr) {
         m_PlayerAware = true;
         if (!m_PlayerOwned) {
-            if (ScenarioInit == 0 && m_AttachedTrigger != nullptr) {
+            if (g_ScenarioInit == 0 && m_AttachedTrigger != nullptr) {
                 m_AttachedTrigger->Spring(TEVENT_DISCOVERED_BY_PLAYER, this);
             }
             m_OwnerHouse->Set_Discovered(true);
@@ -737,10 +737,10 @@ InfantryType TechnoClass::Crew_Type() const
         return INFANTRY_NONE;
     }
     if (m_OwnerHouse->Acts_Like() == HOUSES_NEUTRAL) {
-        return (InfantryType)Scen.Get_Random_Value(INFANTRY_C1, INFANTRY_C9);
+        return (InfantryType)g_Scen.Get_Random_Value(INFANTRY_C1, INFANTRY_C9);
     }
-    if (Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr && Scen.Get_Random_Value(0, 99) < 50){
-        if (Scen.Get_Random_Value(0, 99) < 50) {
+    if (Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr && g_Scen.Get_Random_Value(0, 99) < 50){
+        if (g_Scen.Get_Random_Value(0, 99) < 50) {
             return INFANTRY_C1;
         }
         return INFANTRY_C7;
@@ -840,8 +840,8 @@ void TechnoClass::Player_Assign_Mission(MissionType mission, target_t target, ta
     if (g_FormMove) {
         Queue_Mission_Formation(TargetClass(this), mission, target, dest, g_FormSpeed, g_FormMaxSpeed);
     } else {
-        if (mission == MISSION_MOVE && g_keyboard->Down(Options.Get_KeyQueueMove1())
-            || g_keyboard->Down(Options.Get_KeyQueueMove1())) {
+        if (mission == MISSION_MOVE && g_Keyboard->Down(g_Options.Get_KeyQueueMove1())
+            || g_Keyboard->Down(g_Options.Get_KeyQueueMove1())) {
             mission = MISSION_QMOVE;
         }
         Queue_Mission(TargetClass(this), mission, target, dest);
@@ -974,7 +974,7 @@ uint8_t *TechnoClass::Remap_Table() const
     if (Techno_Class_Of().Is_Remapable()) {
         return (uint8_t *)m_OwnerHouse->Remap_Table(m_Flasher.Get_Flashed(), Techno_Class_Of().Get_Remap());
     }
-    return ColorRemaps[REMAP_0].RemapPalette;
+    return g_ColorRemaps[REMAP_0].RemapPalette;
 }
 
 void TechnoClass::Draw_Pips(int x, int y, WindowNumberType window) const
@@ -1065,7 +1065,7 @@ void TechnoClass::Techno_Draw_Object(
         VisualType visual = Visual_Character();
 
         void *remap_table = Remap_Table();
-        void *shadow_table = DisplayClass::UnitShadow;
+        void *shadow_table = DisplayClass::s_UnitShadow;
 
         const ObjectTypeClass &type = Class_Of();
 
@@ -1077,7 +1077,7 @@ void TechnoClass::Techno_Draw_Object(
         }
 
         if (m_Height > 0) {
-            shadow_table = DisplayClass::UnitShadowAir;
+            shadow_table = DisplayClass::s_UnitShadowAir;
         }
 
         y -= Lepton_To_Pixel(Get_Height());
@@ -1095,7 +1095,7 @@ void TechnoClass::Techno_Draw_Object(
         }
 
         if (!m_InvulnerabilityTimer.Expired()) {
-            remap_table = DisplayClass::FadingRed;
+            remap_table = DisplayClass::s_FadingRed;
         }
 
         ShapeFlags flags = SHAPE_WIN_REL | SHAPE_CENTER;
@@ -1128,7 +1128,7 @@ void TechnoClass::Techno_Draw_Object(
                             window,
                             flags | SHAPE_FADING,
                             remap_table,
-                            DisplayClass::FadingShade,
+                            DisplayClass::s_FadingShade,
                             dir,
                             scale);
                         break;
@@ -1142,7 +1142,7 @@ void TechnoClass::Techno_Draw_Object(
                             window,
                             flags | SHAPE_PREDATOR | SHAPE_FADING,
                             nullptr,
-                            DisplayClass::FadingShade,
+                            DisplayClass::s_FadingShade,
                             dir,
                             scale);
                         break;
@@ -1165,7 +1165,7 @@ void TechnoClass::Techno_Draw_Object(
                             window,
                             flags | SHAPE_FADING | SHAPE_PREDATOR,
                             nullptr,
-                            DisplayClass::FadingShade,
+                            DisplayClass::s_FadingShade,
                             dir,
                             scale);
 
@@ -1190,7 +1190,7 @@ void TechnoClass::Techno_Draw_Object(
                             window,
                             flags | SHAPE_FADING | SHAPE_PREDATOR,
                             remap_table,
-                            DisplayClass::FadingShade,
+                            DisplayClass::s_FadingShade,
                             dir,
                             scale);
                     }
@@ -1294,12 +1294,12 @@ BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
     if (m_RTTI == RTTI_INFANTRY){
         return false;
     }
-    if (Map.In_Radar(cell)) {
-        if (Map[cell].Get_Overlay() == OVERLAY_FPLS) {
+    if (g_Map.In_Radar(cell)) {
+        if (g_Map[cell].Get_Overlay() == OVERLAY_FPLS) {
             return false;
         }
         const TechnoTypeClass *ttptr = &Techno_Class_Of();
-        return Map[cell].Is_Clear_To_Move(ttptr->Get_Speed(),
+        return g_Map[cell].Is_Clear_To_Move(ttptr->Get_Speed(),
             true,
             true,
             -1,
@@ -1437,5 +1437,5 @@ cell_t TechnoClass::Nearby_Location(TechnoClass *techno) const
     }
     cell_t cell = Coord_To_Cell(techno != nullptr ? techno->Center_Coord() : Center_Coord());
     MZoneType mzone = ttptr->Get_Movement_Zone();
-    return Map.Nearby_Location(cell, speed, Map[cell].Get_Zone(mzone), mzone);
+    return g_Map.Nearby_Location(cell, speed, g_Map[cell].Get_Zone(mzone), mzone);
 }

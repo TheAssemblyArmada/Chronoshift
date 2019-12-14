@@ -20,7 +20,7 @@
 using std::memset;
 
 #ifndef GAME_DLL
-KeyboardClass *g_keyboard = nullptr;
+KeyboardClass *g_Keyboard = nullptr;
 #endif
 
 KeyboardClass::KeyboardClass() : 

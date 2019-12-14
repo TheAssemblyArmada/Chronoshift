@@ -24,12 +24,12 @@
 using std::memcpy;
 
 #ifdef PLATFORM_WINDOWS
-// extern HWND MainWindow;
+// extern HWND g_MainWindow;
 #endif
 
 #ifndef GAME_DLL
-MouseClass *g_mouse = nullptr;
-MouseClass *g_wwmouse = nullptr;
+MouseClass *g_Mouse = nullptr;
+MouseClass *g_WWMouse = nullptr;
 #endif
 //
 // Frequency to update the mouse in ms
@@ -44,9 +44,9 @@ void CALLBACK Process_Mouse(UINT uDelay, UINT uResolution, DWORD_PTR fptc, DWORD
 {
     static bool InMouseCallback;
 
-    if (g_mouse != nullptr && !InMouseCallback) {
+    if (g_Mouse != nullptr && !InMouseCallback) {
         InMouseCallback = true;
-        g_mouse->Process_Mouse();
+        g_Mouse->Process_Mouse();
         InMouseCallback = false;
     }
 }
@@ -229,7 +229,7 @@ void MouseClass::Clear_Cursor_Clip()
 
 void MouseClass::Process_Mouse()
 {
-    if (m_Screen != nullptr && m_State <= 0 && !m_MouseUpdate && !m_EraseFlags && g_gameInFocus && m_Screen->Get_LockCount() == 0) {
+    if (m_Screen != nullptr && m_State <= 0 && !m_MouseUpdate && !m_EraseFlags && g_GameInFocus && m_Screen->Get_LockCount() == 0) {
         int cur_x;
         int cur_y;
 

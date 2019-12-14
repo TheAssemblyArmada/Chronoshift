@@ -259,12 +259,12 @@ void AnimTypeClass::Init(TheaterType theater)
 
     char filename[512];
 
-    if (theater != g_lastTheater) {
+    if (theater != g_LastTheater) {
         for (AnimType type = ANIM_FIRST; type < ANIM_COUNT; ++type) {
             AnimTypeClass *atptr = As_Pointer(type);
             const char *name = atptr->m_ImageName[0] != '\0' ? atptr->m_ImageName : atptr->m_Name;
             // TODO: Change the theater info to lower case and standardise on that?
-            const char *ext = atptr->m_Theater ? g_theaters[theater].ext : "shp";
+            const char *ext = atptr->m_Theater ? g_Theaters[theater].ext : "shp";
             snprintf(filename, sizeof(filename), "%s.%s", name, ext);
             atptr->m_ImageData = GameFileClass::Retrieve(filename);
         }

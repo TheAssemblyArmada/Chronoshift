@@ -65,7 +65,7 @@ int MessageBoxClass::Process(
     const char *body_text, const char *button_1_text, const char *button_2_text, const char *button_3_text, BOOL shadow_seen)
 {
     char buffer[510];
-    GraphicBufferClass shadow_buffer(g_visiblePage.Get_Width(), g_visiblePage.Get_Height());
+    GraphicBufferClass shadow_buffer(g_VisiblePage.Get_Width(), g_VisiblePage.Get_Height());
     int ret_val = 0;
 
     if (button_1_text != nullptr && *button_1_text == '\0') {
@@ -89,7 +89,7 @@ int MessageBoxClass::Process(
     int b_width = 0;
 
     if (button_1_text != nullptr) {
-        b1_ypos = g_fontYSpacing + g_fontHeight + 4;
+        b1_ypos = g_FontYSpacing + g_FontHeight + 4;
         b_width = std::max(60, String_Pixel_Width(button_1_text) + 16);
 
         if (button_2_text != nullptr) {
@@ -114,8 +114,8 @@ int MessageBoxClass::Process(
     TextPrintType style = TPF_6PT_GRAD | TPF_NOSHADOW;
     formatted_width = std::max(formatted_width, 180) + 80;
     formatted_height += button_count == 0 ? 80 : 120;
-    int xpos = (g_seenBuff.Get_Width() - formatted_width) / 2;
-    int ypos = (g_seenBuff.Get_Height() - formatted_height) / 2;
+    int xpos = (g_SeenBuff.Get_Width() - formatted_width) / 2;
+    int ypos = (g_SeenBuff.Get_Height() - formatted_height) / 2;
     int adj_xpos = xpos + 40;
 
     if (format_result == 1) {
@@ -124,7 +124,7 @@ int MessageBoxClass::Process(
     }
 
     // Perform a full blit of contents of visible to shadow buffer to allow removal of message later.
-    g_visiblePage.Blit(shadow_buffer, 0, 0, 0, 0, g_visiblePage.Get_Width(), g_visiblePage.Get_Height(), false);
+    g_VisiblePage.Blit(shadow_buffer, 0, 0, 0, 0, g_VisiblePage.Get_Width(), g_VisiblePage.Get_Height(), false);
     TextButtonClass button1(MSGBOX_IDOK,
         button_1_text,
         TPF_6PT_GRAD | TPF_NOSHADOW | TPF_CENTER,
@@ -183,13 +183,13 @@ int MessageBoxClass::Process(
         button_head->Turn_On();
     }
 
-    g_mouse->Hide_Mouse();
+    g_Mouse->Hide_Mouse();
     uint8_t *seen_shadown_buff = nullptr;
 
     // Bool seems to decide if we shadow the seenBuff viewport as well as the underlying visiblePage buffer.
     if (shadow_seen) {
         seen_shadown_buff = new uint8_t[formatted_height * formatted_width];
-        g_seenBuff.To_Buffer(
+        g_SeenBuff.To_Buffer(
             xpos, ypos, formatted_width, formatted_height, seen_shadown_buff, formatted_height * formatted_width);
     }
 
@@ -201,7 +201,7 @@ int MessageBoxClass::Process(
         button_head->Draw_All(true);
     }
 
-    g_mouse->Show_Mouse();
+    g_Mouse->Show_Mouse();
 
     if (button_head != nullptr) {
         bool process = true;
@@ -211,14 +211,14 @@ int MessageBoxClass::Process(
         int current_button = starting_button;
 
         while (process) {
-            if (g_allSurfaces.Surfaces_Restored()) {
-                g_allSurfaces.Clear_Surfaces_Restored();
-                shadow_buffer.Blit(g_visiblePage, 0, 0, 0, 0, shadow_buffer.Get_Width(), shadow_buffer.Get_Height(), false);
+            if (g_AllSurfaces.Surfaces_Restored()) {
+                g_AllSurfaces.Clear_Surfaces_Restored();
+                shadow_buffer.Blit(g_VisiblePage, 0, 0, 0, 0, shadow_buffer.Get_Width(), shadow_buffer.Get_Height(), false);
                 redraw = true;
             }
 
             if (redraw) {
-                g_mouse->Hide_Mouse();
+                g_Mouse->Hide_Mouse();
                 Dialog_Box(xpos, ypos, formatted_width, formatted_height);
                 Draw_Caption(m_CaptionText, xpos, ypos, formatted_width);
                 Fancy_Text_Print(buffer, adj_xpos, ypos + 30, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, style);
@@ -227,16 +227,16 @@ int MessageBoxClass::Process(
                     button_head->Draw_All(true);
                 }
 
-                g_mouse->Show_Mouse();
+                g_Mouse->Show_Mouse();
             }
 
             Call_Back();
             KeyNumType input = button_head->Input();
             unsigned click_button = 0;
 
-            if (g_cancelCurrentMsgBox) {
+            if (g_CancelCurrentMsgBox) {
                 input = KN_ESC;
-                g_cancelCurrentMsgBox = false;
+                g_CancelCurrentMsgBox = false;
             }
 
             switch ((int)input) {
@@ -324,9 +324,9 @@ int MessageBoxClass::Process(
                     }
                 }
 
-                g_mouse->Hide_Mouse();
+                g_Mouse->Hide_Mouse();
                 button_head->Draw_All(true);
-                g_mouse->Show_Mouse();
+                g_Mouse->Show_Mouse();
 
                 switch (click_button) {
                     case MSGBOX_IDOK:
@@ -348,17 +348,17 @@ int MessageBoxClass::Process(
                 process_action = false;
             }
 
-            // TODO we probably need a PlatformTimer::Sleep(1) here to make it behave nicely with other programs.
+            // TODO we probably need a g_PlatformTimer::Sleep(1) here to make it behave nicely with other programs.
         }
     } else {
-        g_keyboard->Clear();
+        g_Keyboard->Clear();
     }
 
     if (shadow_seen) {
-        g_mouse->Hide_Mouse();
-        g_seenBuff.From_Buffer(xpos, ypos, formatted_width, formatted_height, seen_shadown_buff);
+        g_Mouse->Hide_Mouse();
+        g_SeenBuff.From_Buffer(xpos, ypos, formatted_width, formatted_height, seen_shadown_buff);
         delete[] seen_shadown_buff;
-        g_mouse->Show_Mouse();
+        g_Mouse->Show_Mouse();
     }
 
     return ret_val;

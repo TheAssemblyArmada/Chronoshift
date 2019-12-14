@@ -21,7 +21,7 @@
 BOOL CheckBoxClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
-        g_mouse->Hide_Mouse();
+        g_Mouse->Hide_Mouse();
         Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_0, false);
         // This appears to be how it was originally
         // LogicPage->Fill_Rect(XPos + 1, YPos + 1,
@@ -35,8 +35,8 @@ BOOL CheckBoxClass::Draw_Me(BOOL redraw)
 
         // This way only calls Fill_Rect once.
         int fill_color = m_ToggleState ? 4 : 13;
-        g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_XPos + m_Width - 2, m_YPos + m_Height - 2, fill_color);
-        g_mouse->Show_Mouse();
+        g_LogicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_XPos + m_Width - 2, m_YPos + m_Height - 2, fill_color);
+        g_Mouse->Show_Mouse();
 
         return true;
     }

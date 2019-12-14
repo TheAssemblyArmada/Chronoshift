@@ -187,11 +187,11 @@ extern uint32_t GameCRC;
 extern uint32_t CRC[32];
 
 #ifdef GAME_DLL
-extern TEventQueueClass<GameEventClass, OUTGOING_SIZE> &OutgoingEvents;
-extern TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &ScheduledEvents;
+extern TEventQueueClass<GameEventClass, OUTGOING_SIZE> &g_OutgoingEvents;
+extern TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &g_ScheduledEvents;
 #else
-extern TEventQueueClass<GameEventClass, OUTGOING_SIZE> OutgoingEvents;
-extern TEventQueueClass<GameEventClass, SCHEDULED_SIZE> ScheduledEvents;
+extern TEventQueueClass<GameEventClass, OUTGOING_SIZE> g_OutgoingEvents;
+extern TEventQueueClass<GameEventClass, SCHEDULED_SIZE> g_ScheduledEvents;
 #endif
 
 #endif // QUEUE_H

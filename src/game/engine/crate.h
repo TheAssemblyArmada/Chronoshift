@@ -67,22 +67,22 @@ public:
     static BOOL Put_Crate(cell_t &cell);
     static BOOL Get_Crate(cell_t cell);
     static CrateType From_Name(const char *name);
-    static const char *Name_From(CrateType crate) { return CrateNames[crate]; }
+    static const char *Name_From(CrateType crate) { return s_CrateNames[crate]; }
 
 private:
     TCountDownTimerClass<FrameTimerClass> m_CrateTimer;
     cell_t m_Cell;
 
 public:
-    static const char *CrateNames[];
+    static const char *s_CrateNames[];
 #ifdef GAME_DLL
-    static char *CrateAnims;
-    static int *CrateShares;
-    static int *CrateData;
+    static char *s_CrateAnims;
+    static int *s_CrateShares;
+    static int *s_CrateData;
 #else
-    static AnimType CrateAnims[CRATE_COUNT];
-    static int CrateShares[CRATE_COUNT];
-    static int CrateData[CRATE_COUNT];
+    static AnimType s_CrateAnims[CRATE_COUNT];
+    static int s_CrateShares[CRATE_COUNT];
+    static int s_CrateData[CRATE_COUNT];
 #endif
 };
 

@@ -31,13 +31,13 @@ void Set_Video_Palette(void *pal);
 
 #ifdef GAME_DLL
 #ifdef BUILD_WITH_DDRAW
-extern LPDIRECTDRAW &g_directDrawObject;
-extern LPDIRECTDRAWSURFACE &g_paletteSurface;
+extern LPDIRECTDRAW &g_DirectDrawObject;
+extern LPDIRECTDRAWSURFACE &g_PaletteSurface;
 #endif
 #else
 #ifdef BUILD_WITH_DDRAW
-extern LPDIRECTDRAW g_directDrawObject;
-extern LPDIRECTDRAWSURFACE g_paletteSurface;
+extern LPDIRECTDRAW g_DirectDrawObject;
+extern LPDIRECTDRAWSURFACE g_PaletteSurface;
 #endif
 #endif
 

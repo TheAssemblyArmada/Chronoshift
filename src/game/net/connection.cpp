@@ -386,7 +386,7 @@ BOOL ConnectionClass::Service_Receive_Queue()
 uint32_t ConnectionClass::Time()
 {
     if (PlatformTimerClass::s_timerSystemOn) {
-        return TickCountTimer.Time();
+        return g_TickCountTimer.Time();
     }
 
     DEBUG_ASSERT_PRINT(false, "Timer system is not active!");

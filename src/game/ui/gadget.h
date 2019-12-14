@@ -104,20 +104,20 @@ public:
     int Get_Width() { return m_Width; }
     int Get_Height() { return m_Height; }
 
-    static RemapControlType *Get_Color_Scheme() { return ColorScheme; }
-    static void Set_Color_Scheme(RemapControlType *remap) { ColorScheme = remap; }
+    static RemapControlType *Get_Color_Scheme() { return s_ColorScheme; }
+    static void Set_Color_Scheme(RemapControlType *remap) { s_ColorScheme = remap; }
 
 protected:
 #ifdef GAME_DLL
-    static RemapControlType *&ColorScheme;
-    static GadgetClass *&StuckOn;
-    static GadgetClass *&LastList;
-    static GadgetClass *&Focused;
+    static RemapControlType *&s_ColorScheme;
+    static GadgetClass *&s_StuckOn;
+    static GadgetClass *&s_LastList;
+    static GadgetClass *&s_Focused;
 #else
-    static RemapControlType *ColorScheme;
-    static GadgetClass *StuckOn;
-    static GadgetClass *LastList;
-    static GadgetClass *Focused;
+    static RemapControlType *s_ColorScheme;
+    static GadgetClass *s_StuckOn;
+    static GadgetClass *s_LastList;
+    static GadgetClass *s_Focused;
 #endif
 
 protected:

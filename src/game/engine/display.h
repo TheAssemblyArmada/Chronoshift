@@ -115,7 +115,7 @@ public:
 
     void All_Layers_To_Redraw();
     void Flag_All_Cells_To_Redraw();
-    static BOOL Is_Cell_Flagged(cell_t cellnum) { return CellRedraw.Is_True(cellnum); }
+    static BOOL Is_Cell_Flagged(cell_t cellnum) { return s_CellRedraw.Is_True(cellnum); }
 
     lepton_t Get_DisplayWidth() const { return m_DisplayWidth; }
     lepton_t Get_DisplayHeight() const { return m_DisplayHeight; }
@@ -178,49 +178,49 @@ private:
 
 public:
 #ifdef GAME_DLL
-    static LayerClass *Layers;
-    static TacticalClass &TacticalButton;
-    static ARRAY_DEC(uint8_t, FadingBrighten, 256);
-    static ARRAY_DEC(uint8_t, FadingShade, 256);
-    static ARRAY_DEC(uint8_t, FadingWayDark, 256);
-    static ARRAY_DEC(uint8_t, FadingLight, 256);
-    static ARRAY_DEC(uint8_t, FadingGreen, 256);
-    static ARRAY_DEC(uint8_t, FadingYellow, 256);
-    static ARRAY_DEC(uint8_t, FadingRed, 256);
-    static ARRAY2D_DEC(uint8_t, TranslucentTable, 14, 256);
-    static ARRAY2D_DEC(uint8_t, WhiteTranslucentTable, 2, 256);
-    static ARRAY2D_DEC(uint8_t, MouseTranslucentTable, 5, 256);
-    static ARRAY2D_DEC(uint8_t, ShadowTrans, 5, 256);
-    static ARRAY2D_DEC(uint8_t, UnitShadow, 2, 256);
-    static ARRAY2D_DEC(uint8_t, UnitShadowAir, 2, 256);
-    static ARRAY2D_DEC(uint8_t, SpecialGhost, 2, 256);
-    static void *&TransIconset;
-    static void *&ShadowShapes;
-    static BufferClass *&TheaterBuffer;
-    static BooleanVectorClass &CellRedraw;
+    static LayerClass *s_Layers;
+    static TacticalClass &s_TacticalButton;
+    static ARRAY_DEC(uint8_t, s_FadingBrighten, 256);
+    static ARRAY_DEC(uint8_t, s_FadingShade, 256);
+    static ARRAY_DEC(uint8_t, s_FadingWayDark, 256);
+    static ARRAY_DEC(uint8_t, s_FadingLight, 256);
+    static ARRAY_DEC(uint8_t, s_FadingGreen, 256);
+    static ARRAY_DEC(uint8_t, s_FadingYellow, 256);
+    static ARRAY_DEC(uint8_t, s_FadingRed, 256);
+    static ARRAY2D_DEC(uint8_t, s_TranslucentTable, 14, 256);
+    static ARRAY2D_DEC(uint8_t, s_WhiteTranslucentTable, 2, 256);
+    static ARRAY2D_DEC(uint8_t, s_MouseTranslucentTable, 5, 256);
+    static ARRAY2D_DEC(uint8_t, s_ShadowTrans, 5, 256);
+    static ARRAY2D_DEC(uint8_t, s_UnitShadow, 2, 256);
+    static ARRAY2D_DEC(uint8_t, s_UnitShadowAir, 2, 256);
+    static ARRAY2D_DEC(uint8_t, s_SpecialGhost, 2, 256);
+    static void *&s_TransIconset;
+    static void *&s_ShadowShapes;
+    static BufferClass *&s_TheaterBuffer;
+    static BooleanVectorClass &s_CellRedraw;
 #else
-    static LayerClass Layers[LAYER_COUNT];
-    static TacticalClass TacticalButton;
-    static uint8_t FadingBrighten[256];
-    static uint8_t FadingShade[256];
-    static uint8_t FadingWayDark[256];
-    static uint8_t FadingLight[256];
-    static uint8_t FadingGreen[256];
-    static uint8_t FadingYellow[256];
-    static uint8_t FadingRed[256];
-    static uint8_t TranslucentTable[14][256];
-    static uint8_t WhiteTranslucentTable[2][256];
-    static uint8_t MouseTranslucentTable[5][256];
-    static uint8_t ShadowTrans[5][256];
-    static uint8_t UnitShadow[2][256];
-    static uint8_t UnitShadowAir[2][256];
-    static uint8_t SpecialGhost[2][256];
-    static void *TransIconset;
-    static void *ShadowShapes;
-    static BufferClass *TheaterBuffer;
-    static BooleanVectorClass CellRedraw;
+    static LayerClass s_Layers[LAYER_COUNT];
+    static TacticalClass s_TacticalButton;
+    static uint8_t s_FadingBrighten[256];
+    static uint8_t s_FadingShade[256];
+    static uint8_t s_FadingWayDark[256];
+    static uint8_t s_FadingLight[256];
+    static uint8_t s_FadingGreen[256];
+    static uint8_t s_FadingYellow[256];
+    static uint8_t s_FadingRed[256];
+    static uint8_t s_TranslucentTable[14][256];
+    static uint8_t s_WhiteTranslucentTable[2][256];
+    static uint8_t s_MouseTranslucentTable[5][256];
+    static uint8_t s_ShadowTrans[5][256];
+    static uint8_t s_UnitShadow[2][256];
+    static uint8_t s_UnitShadowAir[2][256];
+    static uint8_t s_SpecialGhost[2][256];
+    static void *s_TransIconset;
+    static void *s_ShadowShapes;
+    static BufferClass *s_TheaterBuffer;
+    static BooleanVectorClass s_CellRedraw;
 #endif
-    static char FadingWhite[256];
+    static char s_FadingWhite[256];
 
 #ifdef GAME_DLL
     cell_t Hook_Click_Cell_Calc(int x, int y) { return DisplayClass::Click_Cell_Calc(x, y); }

@@ -35,11 +35,11 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
 
     if (shape_ptr != nullptr) {
         if (flags & SHAPE_FADING && fading_table == nullptr) {
-            fading_table = DisplayClass::FadingShade;
+            fading_table = DisplayClass::s_FadingShade;
         }
 
         if (flags & SHAPE_GHOST && ghost_table == nullptr) {
-            ghost_table = DisplayClass::SpecialGhost;
+            ghost_table = DisplayClass::s_SpecialGhost;
         }
 
         if (_xbuffer == nullptr) {
@@ -49,27 +49,27 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
         if (frame != -1) {
             shape_width = Get_Build_Frame_Width(shape_ptr);
             shape_height = Get_Build_Frame_Height(shape_ptr);
-            shape_frame = Build_Frame(shape_ptr, frame, g_shapeBuffer);
+            shape_frame = Build_Frame(shape_ptr, frame, g_ShapeBuffer);
 
             if (shape_frame != nullptr) {
-                if (Get_Last_Frame_Length() > g_shapeBufferSize) {
+                if (Get_Last_Frame_Length() > g_ShapeBufferSize) {
                     DEBUG_LOG("Attempt to use shape buffer for size %d buffer is only size %d",
                         Get_Last_Frame_Length(),
-                        g_shapeBufferSize);
+                        g_ShapeBufferSize);
                 }
 
-                GraphicViewPortClass vp(g_logicPage->Get_Graphic_Buffer(),
-                    WindowList[window_num].X + g_logicPage->Get_XPos(),
-                    WindowList[window_num].Y + g_logicPage->Get_YPos(),
-                    WindowList[window_num].W,
-                    WindowList[window_num].H);
+                GraphicViewPortClass vp(g_LogicPage->Get_Graphic_Buffer(),
+                    g_WindowList[window_num].X + g_LogicPage->Get_XPos(),
+                    g_WindowList[window_num].Y + g_LogicPage->Get_YPos(),
+                    g_WindowList[window_num].W,
+                    g_WindowList[window_num].H);
 
-                g_useOldShapeDraw = false;
+                g_UseOldShapeDraw = false;
 
                 // As all shapes are drawn as they are, we ignore DIR_NORTH as it represents this.
                 // Scale of 256 is 100%
                 if (angle != DIR_NORTH || scale != 256) {
-                    g_useOldShapeDraw = true;
+                    g_UseOldShapeDraw = true;
                     BitmapClass data_bitmap(shape_width, shape_height, Get_Shape_Header_Data(shape_frame));
                     shape_width *= 2;
                     shape_height *= 2;
@@ -87,7 +87,7 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
                 }
 
                 curr_frame = g_GameFrame;
-                if (WindowList[window_num].X >> 1 < draw_x) {
+                if (g_WindowList[window_num].X >> 1 < draw_x) {
                     curr_frame = -curr_frame;
                 }
 

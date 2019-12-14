@@ -23,7 +23,7 @@ target_t &RadioClass::Get_LParam()
     return LParam;
 }
 
-const char *RadioClass::Messages[RADIO_COUNT] = {
+const char *RadioClass::s_Messages[RADIO_COUNT] = {
     "static (no message)",
     "Roger.",
     "Come in.",
@@ -215,7 +215,7 @@ const char *RadioClass::Message_From(RadioMessageType message)
     DEBUG_ASSERT(message < RADIO_COUNT);
 
     if (message != RADIO_NONE && message < RADIO_COUNT) {
-        return Messages[message];
+        return s_Messages[message];
     }
     return "Invalid message";
 }

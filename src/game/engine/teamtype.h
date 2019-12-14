@@ -162,7 +162,7 @@ private:
         const char *ExpectedValue; // TODO: Rename this.
     };
 
-    static TMissionInfoStruct TMissions[TMISSION_COUNT];
+    static TMissionInfoStruct s_TMissions[TMISSION_COUNT];
 };
 
 #ifdef GAME_DLL

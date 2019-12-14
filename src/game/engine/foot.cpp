@@ -32,17 +32,17 @@
 #define PATH_FLAG_BITSIZE 32
 
 #ifdef GAME_DLL
-extern cell_t &StartLocation;
-extern cell_t &DestLocation;
+extern cell_t &g_StartLocation;
+extern cell_t &g_DestLocation;
 #else
-static cell_t StartLocation;
-static cell_t DestLocation;
+static cell_t g_StartLocation;
+static cell_t g_DestLocation;
 #endif
 
-static unsigned MainOverlap[512]; // Is this perhaps some map size math?
-static unsigned LeftOverlap[512]; // Is this perhaps some map size math?
-static unsigned RightOverlap[512]; // Is this perhaps some map size math?
-static int PathCount;
+static unsigned g_MainOverlap[512]; // Is this perhaps some map size math?
+static unsigned g_LeftOverlap[512]; // Is this perhaps some map size math?
+static unsigned g_RightOverlap[512]; // Is this perhaps some map size math?
+static int g_PathCount;
 
 FootClass::FootClass(RTTIType type, int id, HousesType house) :
     TechnoClass(type, id, house),
@@ -132,7 +132,7 @@ void FootClass::Debug_Dump(MonoClass *mono) const
 
 FootClass::~FootClass()
 {
-    if (GameActive) {
+    if (g_GameActive) {
         m_Team->Remove(this);
     }
 }
@@ -230,18 +230,18 @@ BOOL FootClass::Mark(MarkType mark)
     cell_t cell = Get_Cell();
     switch (mark) {
         case MARK_REMOVE:
-            Map.Pick_Up(cell, this);
+            g_Map.Pick_Up(cell, this);
             return true;
         case MARK_PUT:
-            Map.Place_Down(cell, this);
+            g_Map.Place_Down(cell, this);
             return true;
         case MARK_REDRAW:
-            Map.Refresh_Cells(cell, Overlap_List(true));
-            Map.Refresh_Cells(cell, Occupy_List());
+            g_Map.Refresh_Cells(cell, Overlap_List(true));
+            g_Map.Refresh_Cells(cell, Occupy_List());
             return true;
         default:
-            Map.Refresh_Cells(cell, Overlap_List());
-            Map.Refresh_Cells(cell, Occupy_List());
+            g_Map.Refresh_Cells(cell, Overlap_List());
+            g_Map.Refresh_Cells(cell, Occupy_List());
             return true;
     }
 }
@@ -337,7 +337,7 @@ int FootClass::Mission_Attack()
     } else {
         Enter_Idle_Mode();
     }
-    return (900 * MissionControlClass::MissionControl[m_Mission].m_Rate) + Scen.Get_Random_Value(0, 2);
+    return (900 * MissionControlClass::s_MissionControl[m_Mission].m_Rate) + g_Scen.Get_Random_Value(0, 2);
 }
 
 int FootClass::Mission_Capture()
@@ -451,7 +451,7 @@ BOOL FootClass::Start_Driver(coord_t &dest)
     if (dest) {
         m_HeadTo = dest;
         m_Moving = true;
-        if (Map[Coord_To_Cell(dest)].Goodie_Check(this)) {
+        if (g_Map[Coord_To_Cell(dest)].Goodie_Check(this)) {
             return true;
         }
         if (m_IsActive) {
@@ -515,7 +515,7 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
     int threat;
     int risk;
     int threat_state = 0;
-    ++PathCount;
+    ++g_PathCount;
 
     BENCHMARK_START(BENCH_FIND_PATH);
 
@@ -538,17 +538,17 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
     // Set up initial state of the path
     cell_t current_cell = Coord_To_Cell(Get_Coord());
 
-    _path.StartCell = StartLocation = current_cell;
+    _path.StartCell = g_StartLocation = current_cell;
     _path.Score = 0;
     _path.Length = 0;
     _path.Moves = buffer;
-    _path.Overlap = MainOverlap;
+    _path.Overlap = g_MainOverlap;
     _path.PreviousCell = -1;
     _path.UnravelCheckpoint = -1;
     _path.Moves[0] = FACING_NONE;
     --length;
-    DestLocation = dest;
-    memset(MainOverlap, 0, sizeof(MainOverlap));
+    g_DestLocation = dest;
+    memset(g_MainOverlap, 0, sizeof(g_MainOverlap));
     _path.Overlap[(uint16_t)current_cell / 32] |= 1 << ((uint16_t)current_cell % 32);
 
     while (_path.Length < length) {
@@ -618,9 +618,9 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
                 memcpy(&left_path, &_path, sizeof(left_path));
                 left_path.Moves = left_moves;
-                left_path.Overlap = LeftOverlap;
+                left_path.Overlap = g_LeftOverlap;
                 memcpy(left_moves, _path.Moves, _path.Length);
-                memcpy(left_path.Overlap, _path.Overlap, sizeof(LeftOverlap));
+                memcpy(left_path.Overlap, _path.Overlap, sizeof(g_LeftOverlap));
 
                 left_score = Follow_Edge(current_cell,
                     adj_cell,
@@ -634,9 +634,9 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
                 memcpy(&right_path, &_path, sizeof(right_path));
                 right_path.Moves = right_moves;
-                right_path.Overlap = RightOverlap;
+                right_path.Overlap = g_RightOverlap;
                 memcpy(right_moves, _path.Moves, _path.Length);
-                memcpy(right_path.Overlap, _path.Overlap, sizeof(RightOverlap));
+                memcpy(right_path.Overlap, _path.Overlap, sizeof(g_RightOverlap));
 
                 right_score = Follow_Edge(current_cell,
                     adj_cell,
@@ -714,7 +714,7 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
                 if (move_count > 0) {
                     // DEBUG_LOG("  Find_Path is copying .\n");
-                    memcpy(_path.Overlap, chosen_path->Overlap, sizeof(MainOverlap));
+                    memcpy(_path.Overlap, chosen_path->Overlap, sizeof(g_MainOverlap));
                     memcpy(_path.Moves, chosen_path->Moves, move_count);
                     _path.Length = move_count;
                     _path.Score = chosen_path->Score;
@@ -757,13 +757,13 @@ BOOL FootClass::Basic_Path()
     if (Target_Legal(m_NavCom)) {
         cell_t navcell = As_Cell(m_NavCom);
         int navdist = Distance_To_Target(m_NavCom);
-        int straydist = m_Team.Has_Valid_ID() ? Rule.Stray_Distance() : Rule.Close_Enough_Distance();
+        int straydist = m_Team.Has_Valid_ID() ? g_Rule.Stray_Distance() : g_Rule.Close_Enough_Distance();
 
         if (Can_Enter_Cell(navcell) > MOVE_CLOAK && navdist > straydist) {
             MZoneType mzone = reinterpret_cast<TechnoTypeClass const *>(&Class_Of())->Get_Movement_Zone();
             SpeedType speed = reinterpret_cast<TechnoTypeClass const *>(&Class_Of())->Get_Speed();
             cell_t thiscell = Coord_To_Cell(Get_Coord());
-            cell_t nearcell = Map.Nearby_Location(navcell, speed, Map[thiscell].Get_Zone(mzone), mzone);
+            cell_t nearcell = g_Map.Nearby_Location(navcell, speed, g_Map[thiscell].Get_Zone(mzone), mzone);
 
             // If we have a nearby cell and its closer than navdist, set that to
             // the nav cell instead.
@@ -775,7 +775,7 @@ BOOL FootClass::Basic_Path()
         }
 
         if (What_Am_I() == RTTI_INFANTRY) {
-            FootClass *occupier = reinterpret_cast<FootClass *>(Map[Coord_To_Cell(Center_Coord())].Get_Occupier());
+            FootClass *occupier = reinterpret_cast<FootClass *>(g_Map[Coord_To_Cell(Center_Coord())].Get_Occupier());
 
             // Find a chained object from the cell occupier that has a valid
             // path that isn't us if we are Infantry.
@@ -808,7 +808,7 @@ BOOL FootClass::Basic_Path()
             // If we are human owned and aren't close enough, downgrade max
             // move types we will evaluate the path for.
             if (m_OwnerHouse->Is_Human() && Get_Mission() == MISSION_MOVE) {
-                if (Distance_To_Target(m_NavCom) < Rule.Close_Enough_Distance()) {
+                if (Distance_To_Target(m_NavCom) < g_Rule.Close_Enough_Distance()) {
                     move = MOVE_DESTROYABLE;
                 }
             }
@@ -842,7 +842,7 @@ BOOL FootClass::Basic_Path()
             Mark(MARK_PUT);
         }
 
-        m_PathDelay.Reset(900 * Rule.Path_Delay());
+        m_PathDelay.Reset(900 * g_Rule.Path_Delay());
 
         // Do we have a valid path?
         if (m_Paths[0] != FACING_NONE) {
@@ -1314,9 +1314,9 @@ int FootClass::Passable_Cell(cell_t cell, FacingType facing, int threat, MoveTyp
     }
 
     if (canmove <= move) {
-        if (Session.Game_To_Play() != GAME_CAMPAIGN || threat == -1
-            || Distance(Cell_To_Coord(cell), Cell_To_Coord(DestLocation)) <= 1280
-            || Map.Cell_Threat(cell, Owner()) <= threat) {
+        if (g_Session.Game_To_Play() != GAME_CAMPAIGN || threat == -1
+            || Distance(Cell_To_Coord(cell), Cell_To_Coord(g_DestLocation)) <= 1280
+            || g_Map.Cell_Threat(cell, Owner()) <= threat) {
             return _value[canmove];
         }
     }

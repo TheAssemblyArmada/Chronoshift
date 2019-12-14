@@ -47,15 +47,15 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
 {
     if (m_Class->Get_End() == -1) {
         // seems like this if once had Theater specific art access
-        // g_isTheaterShape = m_Class->Is_Theater();
+        // g_IsTheaterShape = m_Class->Is_Theater();
         m_Class->Set_End(Get_Build_Frame_Count(m_Class->Get_Image_Data()));
-        // g_isTheaterShape = false;
+        // g_IsTheaterShape = false;
     }
     if (m_Class->Get_Loop_End() == -1) {
         m_Class->Set_End(m_Class->Get_End());
     }
     if (m_Class->Is_Normalized()) {
-        m_LoopStage.Set_Delay(Options.Normalize_Delay(m_Class->Get_Rate()));
+        m_LoopStage.Set_Delay(g_Options.Normalize_Delay(m_Class->Get_Rate()));
     } else {
         m_LoopStage.Set_Delay(m_Class->Get_Rate());
     }
@@ -65,7 +65,7 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
     }
     Unlimbo(Adjust_Coord(coord));
     if (What_Type() == ANIM_LZ_SMOKE) {
-        Map.Sight_From(Coord_To_Cell(coord), Rule.Drop_Zone_Radius(), g_PlayerPtr, false);
+        g_Map.Sight_From(Coord_To_Cell(coord), g_Rule.Drop_Zone_Radius(), g_PlayerPtr, false);
     }
     // something here has been badly removed, this is how the code is in edwin and RA
     m_Loops = m_Class->Get_Loop_Count() * std::max<uint8_t>(loop_count, 1);
@@ -191,7 +191,7 @@ void AnimClass::Detach(target_t target, int a2)
 {
     // TS doesn't check a2, YR checks target != 0 in place of a2...
     if (target == m_AttachedTo && a2) {
-        Map.Remove(this, In_Which_Layer());
+        g_Map.Remove(this, In_Which_Layer());
         m_AttachedTo = 0;
         m_Bit1 = true;
         Mark(MARK_REMOVE);
@@ -208,7 +208,7 @@ BOOL AnimClass::Render(BOOL force_render)
     if (m_LoopDelay) {
         return false;
     }
-    if (Map[Center_Cell()].Is_Revealed()) {
+    if (g_Map[Center_Cell()].Is_Revealed()) {
         m_ToDisplay = true;
     }
 
@@ -234,19 +234,19 @@ const int16_t *AnimClass::Occupy_List(BOOL a1) const
 void AnimClass::Draw_It(int x_pos, int y_pos, WindowNumberType window) const
 {
     if (!m_Invisible) {
-        g_isTheaterShape = m_Class->Is_Theater();
+        g_IsTheaterShape = m_Class->Is_Theater();
         void *shape = Get_Image_Data();
         if (shape != nullptr) {
             uint8_t *trans_table = nullptr;
             int frame = m_Class->Get_Start() + m_LoopStage.Get_Stage();
             if (m_Class->Is_Bit_8()) {
-                trans_table = DisplayClass::WhiteTranslucentTable[0];
+                trans_table = DisplayClass::s_WhiteTranslucentTable[0];
             }
             if (trans_table == nullptr && m_Class->Is_Translucent()) {
-                trans_table = DisplayClass::TranslucentTable[0];
+                trans_table = DisplayClass::s_TranslucentTable[0];
             }
             if (What_Type() == ANIM_ATOMSFX) {
-                trans_table = DisplayClass::UnitShadow[0];
+                trans_table = DisplayClass::s_UnitShadow[0];
             }
             ShapeFlags flags = SHAPE_CENTER | SHAPE_VIEWPORT_REL;
             if (trans_table != nullptr) {
@@ -254,7 +254,7 @@ void AnimClass::Draw_It(int x_pos, int y_pos, WindowNumberType window) const
             }
             CC_Draw_Shape(shape, frame, x_pos, y_pos, window, flags, nullptr, trans_table);
         }
-        g_isTheaterShape = false;
+        g_IsTheaterShape = false;
     }
 }
 
@@ -268,7 +268,7 @@ BOOL AnimClass::Mark(MarkType mark)
     if (!ObjectClass::Mark(mark)) {
         return false;
     }
-    Map.SidebarClass::Refresh_Cells(Center_Cell(), Anim_Overlap_List());
+    g_Map.SidebarClass::Refresh_Cells(Center_Cell(), Anim_Overlap_List());
     return true;
 }
 

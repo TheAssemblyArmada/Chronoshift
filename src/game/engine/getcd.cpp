@@ -27,7 +27,7 @@
 using std::memset;
 
 #ifndef GAME_DLL
-GetCDClass g_cdList;
+GetCDClass g_CDList;
 #endif
 
 GetCDClass::GetCDClass()

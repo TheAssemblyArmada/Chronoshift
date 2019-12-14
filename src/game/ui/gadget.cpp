@@ -19,10 +19,10 @@
 #include "remap.h"
 
 #ifndef GAME_DLL
-RemapControlType *GadgetClass::ColorScheme = &GreyScheme;
-GadgetClass *GadgetClass::StuckOn = nullptr;
-GadgetClass *GadgetClass::LastList = nullptr;
-GadgetClass *GadgetClass::Focused = nullptr;
+RemapControlType *GadgetClass::s_ColorScheme = &g_GreyScheme;
+GadgetClass *GadgetClass::s_StuckOn = nullptr;
+GadgetClass *GadgetClass::s_LastList = nullptr;
+GadgetClass *GadgetClass::s_Focused = nullptr;
 #endif
 
 GadgetClass::GadgetClass(unsigned input_flag, BOOL sticky) : m_XPos(0), m_YPos(0), m_Width(0), m_Height(0), m_IsSticky(sticky) {}
@@ -61,16 +61,16 @@ GadgetClass::~GadgetClass()
         Clear_Focus();
     }
 
-    if (this == StuckOn) {
-        StuckOn = nullptr;
+    if (this == s_StuckOn) {
+        s_StuckOn = nullptr;
     }
 
-    if (this == LastList) {
-        LastList = nullptr;
+    if (this == s_LastList) {
+        s_LastList = nullptr;
     }
 
-    if (this == Focused) {
-        Focused = nullptr;
+    if (this == s_Focused) {
+        s_Focused = nullptr;
     }
 }
 
@@ -116,28 +116,28 @@ KeyNumType GadgetClass::Input()
     unsigned press_flags = INPUT_NONE;
     KeyNumType key_press = KN_NONE;
 
-    if (this != LastList) {
-        LastList = this;
-        StuckOn = nullptr;
-        Focused = nullptr;
+    if (this != s_LastList) {
+        s_LastList = this;
+        s_StuckOn = nullptr;
+        s_Focused = nullptr;
         not_last_list = true;
     }
 
     // DEBUG_LOG("GadgetClass::Input checking input buffer.\n");
-    key_press = (KeyNumType)g_keyboard->Check();
+    key_press = (KeyNumType)g_Keyboard->Check();
     if (key_press) {
         // DEBUG_LOG("GadgetClass::Input checked 0x%04X was in buffer, retrieving.\n", key_press);
-        key_press = (KeyNumType)g_keyboard->Get();
+        key_press = (KeyNumType)g_Keyboard->Get();
         // DEBUG_LOG("GadgetClass::Input retrieved 0x%04X from buffer.\n", key_press);
     }
 
     // checks for mouse keys?
     if ((key_press & 0xFF) != KN_LMOUSE && (key_press & 0xFF) != KN_RMOUSE) {
-        mouse_x = g_mouse->Get_Mouse_X();
-        mouse_y = g_mouse->Get_Mouse_Y();
+        mouse_x = g_Mouse->Get_Mouse_X();
+        mouse_y = g_Mouse->Get_Mouse_Y();
     } else {
-        mouse_y = g_keyboard->Get_MouseQY();
-        mouse_x = g_keyboard->Get_MouseQX();
+        mouse_y = g_Keyboard->Get_MouseQY();
+        mouse_x = g_Keyboard->Get_MouseQX();
     }
 
     if (key_press) {
@@ -163,47 +163,47 @@ KeyNumType GadgetClass::Input()
 
     } else {
         // 0x1001
-        if (g_keyboard->Down(KN_LMOUSE)) {
+        if (g_Keyboard->Down(KN_LMOUSE)) {
             press_flags |= MOUSE_LEFT_HELD;
         } else {
             press_flags |= MOUSE_LEFT_UP;
         }
 
         // 0x1002
-        if (g_keyboard->Down(KN_RMOUSE)) {
+        if (g_Keyboard->Down(KN_RMOUSE)) {
             press_flags |= MOUSE_RIGHT_HELD;
         } else {
             press_flags |= MOUSE_RIGHT_UP;
         }
     }
 
-    if (StuckOn != nullptr) {
-        StuckOn->Draw_Me(false);
-        GadgetClass *stuck = StuckOn;
-        // DEBUG_LOG("Calling StuckOn->Clicked_On\n");
-        StuckOn->Clicked_On(key_press, press_flags, mouse_x, mouse_y);
+    if (s_StuckOn != nullptr) {
+        s_StuckOn->Draw_Me(false);
+        GadgetClass *stuck = s_StuckOn;
+        // DEBUG_LOG("Calling s_StuckOn->Clicked_On\n");
+        s_StuckOn->Clicked_On(key_press, press_flags, mouse_x, mouse_y);
 
-        if (StuckOn != nullptr) {
-            StuckOn->Draw_Me(false);
+        if (s_StuckOn != nullptr) {
+            s_StuckOn->Draw_Me(false);
         } else {
             stuck->Draw_Me(false);
         }
 
     } else {
-        if (Focused != nullptr && (press_flags & KEYBOARD_INPUT) != 0) {
-            Focused->Draw_Me(false);
-            // DEBUG_LOG("Calling Focused->Clicked_On\n");
-            Focused->Clicked_On(key_press, press_flags, mouse_x, mouse_y);
+        if (s_Focused != nullptr && (press_flags & KEYBOARD_INPUT) != 0) {
+            s_Focused->Draw_Me(false);
+            // DEBUG_LOG("Calling s_Focused->Clicked_On\n");
+            s_Focused->Clicked_On(key_press, press_flags, mouse_x, mouse_y);
 
-            if (Focused != nullptr) {
-                Focused->Draw_Me(false);
+            if (s_Focused != nullptr) {
+                s_Focused->Draw_Me(false);
             }
 
             if (key_press) {
                 for (GadgetClass *entry = this; entry; entry = entry->Get_Next()) {
                     entry->Draw_Me(not_last_list);
 
-                    if (!entry->m_IsDisabled && entry != Focused
+                    if (!entry->m_IsDisabled && entry != s_Focused
                         && entry->Clicked_On(key_press, press_flags, mouse_x, mouse_y)) {
                         entry->Draw_Me(false);
                         return key_press;
@@ -273,7 +273,7 @@ ControlClass *GadgetClass::Extract_Gadget(unsigned id)
 
 void GadgetClass::Flag_List_To_Redraw()
 {
-    LastList = nullptr;
+    s_LastList = nullptr;
 }
 
 void GadgetClass::Disable()
@@ -307,27 +307,27 @@ void GadgetClass::Peer_To_Peer(unsigned flags, KeyNumType &key, ControlClass &pe
 
 void GadgetClass::Set_Focus()
 {
-    if (Focused != nullptr) {
-        Focused->Flag_To_Redraw();
-        Focused->Clear_Focus();
+    if (s_Focused != nullptr) {
+        s_Focused->Flag_To_Redraw();
+        s_Focused->Clear_Focus();
     }
 
     m_InputFlag |= KEYBOARD_INPUT;
 
-    Focused = this;
+    s_Focused = this;
 }
 
 void GadgetClass::Clear_Focus()
 {
-    if (this == Focused) {
+    if (this == s_Focused) {
         m_InputFlag &= ~KEYBOARD_INPUT;
-        Focused = nullptr;
+        s_Focused = nullptr;
     }
 }
 
 BOOL GadgetClass::Has_Focus()
 {
-    return (this == Focused);
+    return (this == s_Focused);
 }
 
 BOOL GadgetClass::Is_List_To_Redraw()
@@ -367,14 +367,14 @@ BOOL GadgetClass::Draw_Me(BOOL redraw)
 void GadgetClass::Sticky_Process(unsigned flags)
 {
     if (m_IsSticky && (flags & MOUSE_LEFT_PRESS)) {
-        StuckOn = this;
+        s_StuckOn = this;
 
         return;
     }
 
-    if (this == StuckOn && (flags & MOUSE_LEFT_RLSE)) {
+    if (this == s_StuckOn && (flags & MOUSE_LEFT_RLSE)) {
         m_ToRedraw = true;
-        StuckOn = nullptr;
+        s_StuckOn = nullptr;
 
         return;
     }
@@ -396,7 +396,7 @@ BOOL GadgetClass::Clicked_On(KeyNumType &key, unsigned flags, int x, int y)
 {
     unsigned masked_flags = m_InputFlag & flags;
 
-    if (this == StuckOn || (masked_flags & KEYBOARD_INPUT) != 0
+    if (this == s_StuckOn || (masked_flags & KEYBOARD_INPUT) != 0
         || ((masked_flags != INPUT_NONE) && (unsigned int)(x - m_XPos) < (unsigned int)m_Width
                && (unsigned int)(y - m_YPos) < (unsigned int)m_Height)) {
         return Action(masked_flags, key);

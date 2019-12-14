@@ -42,12 +42,12 @@ void UDPInterfaceClass::Broadcast(void *src, int src_len)
         m_OutBuffers.Add(wsockbuffer);
 
 #if defined(PLATFORM_WINDOWS)
-        SendMessageA(MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
+        SendMessageA(g_MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
 #else
         // TODO Need SDL vesion
 #endif // PLATFORM_WINDOWS
 
-        g_keyboard->Check();
+        g_Keyboard->Check();
     }
 }
 

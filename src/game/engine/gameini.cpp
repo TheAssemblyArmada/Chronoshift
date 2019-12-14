@@ -19,7 +19,7 @@
 #include <algorithm>
 
 GameINIClass::GameINIClass() :
-    DigestValid(false)
+    m_DigestValid(false)
 {
 }
 
@@ -149,8 +149,8 @@ const ThemeType GameINIClass::Get_ThemeType(const char *section, const char *ent
 {
     char valuebuf[MAX_LINE_LENGTH];
 
-    if (Get_String(section, entry, Theme.Base_Name(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
-        return Theme.From_Name(valuebuf);
+    if (Get_String(section, entry, g_Theme.Base_Name(defvalue), valuebuf, sizeof(valuebuf)) > 0) {
+        return g_Theme.From_Name(valuebuf);
     }
 
     return defvalue;
@@ -158,7 +158,7 @@ const ThemeType GameINIClass::Get_ThemeType(const char *section, const char *ent
 
 BOOL GameINIClass::Put_ThemeType(const char *section, const char *entry, const ThemeType value)
 {
-    return Put_String(section, entry, Theme.Base_Name(value));
+    return Put_String(section, entry, g_Theme.Base_Name(value));
 }
 
 const SourceType GameINIClass::Get_SourceType(const char *section, const char *entry, const SourceType defvalue) const
@@ -869,24 +869,24 @@ BOOL GameINIClass::Put_PKey(PKey &key)
 
 void GameINIClass::Calculate_Message_Digest()
 {
-    if (!DigestValid) {
+    if (!m_DigestValid) {
         SHAPipe pipe;
         INIClass::Save(pipe);
-        pipe.Result(&Digest);
-        DigestValid = true;
+        pipe.Result(&s_Digest);
+        m_DigestValid = true;
     }
 }
 
 void GameINIClass::Invalidate_Message_Digest()
 {
-    memset(&Digest, 0, sizeof(Digest));
-    DigestValid = false;
+    memset(&s_Digest, 0, sizeof(s_Digest));
+    m_DigestValid = false;
 }
 
 int32_t const GameINIClass::Get_Unique_ID()
 {
-    if (!DigestValid) {
+    if (!m_DigestValid) {
         Calculate_Message_Digest();
     }
-    return Calculate_CRC(&Digest, sizeof(Digest));
+    return Calculate_CRC(&s_Digest, sizeof(s_Digest));
 }

@@ -28,25 +28,25 @@ public:
     void Adjust_Vars_For_Resolution();
 
 private:
-    int OptionsDialogWidth;
-    int OptionsDialogHeight;
-    int OptionsDialogCenterX;
-    int OptionsDialogCenterY;
-    int field_8C;
-    int OptionsDialogButtonYSpacing;
-    int field_94;
-    int OptionsDialogButtonOffsetFromTop;
-    int field_9C;
-    int field_A0;
-    int OptionsDialogBottomButtonOffsetTop;
+    int m_OptionsDialogWidth;
+    int m_OptionsDialogHeight;
+    int m_OptionsDialogCenterX;
+    int m_OptionsDialogCenterY;
+    int m_field_8C;
+    int m_OptionsDialogButtonYSpacing;
+    int m_field_94;
+    int m_OptionsDialogButtonOffsetFromTop;
+    int m_field_9C;
+    int m_field_A0;
+    int m_OptionsDialogBottomButtonOffsetTop;
 };
 
 #ifdef GAME_DLL
 #include "hooker.h"
 
-extern GameOptionsClass &Options;
+extern GameOptionsClass &g_Options;
 #else
-extern GameOptionsClass Options;
+extern GameOptionsClass g_Options;
 #endif
 
 #endif // GAMEOPTIONS_H

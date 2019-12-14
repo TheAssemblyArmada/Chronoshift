@@ -155,7 +155,7 @@ void BuildingClass::Active_Click_With(ActionType action, ObjectClass *object)
         case ACTION_SELF:
             if (Class_Of().Factory_Type() != RTTI_NONE) {
                 GameEventClass event(GameEventClass::EVENT_PRIMARY, object);
-                OutgoingEvents.Add(event);
+                g_OutgoingEvents.Add(event);
             }
             break;
 
@@ -178,10 +178,10 @@ void BuildingClass::Active_Click_With(ActionType action, cell_t cellnum)
         case ACTION_MOVE:
             if (What_Type() == BUILDING_FACT) {
                 GameEventClass archev(GameEventClass::EVENT_ARCHIVE, this, ::As_Target(cellnum));
-                OutgoingEvents.Add(archev);
+                g_OutgoingEvents.Add(archev);
 
                 GameEventClass sellev(GameEventClass::EVENT_SELL, this);
-                OutgoingEvents.Add(sellev);
+                g_OutgoingEvents.Add(sellev);
             }
             break;
         default:
@@ -196,9 +196,9 @@ void BuildingClass::Draw_It(int x, int y, WindowNumberType window)
 {
     void *image = Get_Image_Data();
     if (image != nullptr) {
-        g_isTheaterShape = Class_Of().Is_Theater();
+        g_IsTheaterShape = Class_Of().Is_Theater();
         Techno_Draw_Object(image, Shape_Number(), x, y, window);
-        g_isTheaterShape = false;
+        g_IsTheaterShape = false;
         if (m_CurrentState != BSTATE_0) {
             if (m_Tethered && m_Radio != nullptr && !m_Radio->In_Limbo() && m_Radio->What_Am_I() != RTTI_BUILDING) {
                 int radio_x = Lepton_To_Pixel(Coord_Lepton_X(m_Radio->Render_Coord()));
@@ -213,7 +213,7 @@ void BuildingClass::Draw_It(int x, int y, WindowNumberType window)
             // draw war factory doors
             if (What_Type() == BUILDING_WEAP || What_Type() == BUILDING_WEAF) {
                 int frame = m_Door.Door_Stage();
-                if (Health_Ratio() <= Rule.Condition_Yellow()) {
+                if (Health_Ratio() <= g_Rule.Condition_Yellow()) {
                     frame += 4;
                 }
                 Techno_Draw_Object(BuildingTypeClass::g_WarFactoryOverlay, frame, x, y, window);
@@ -282,8 +282,8 @@ BOOL BuildingClass::Limbo()
         m_OwnerHouse->Adjust_Capacity(-Class_Of().Storage_Capacity(), true);
 
         if (m_OwnerHouse == g_PlayerPtr) {
-            Map.Flag_Power_To_Redraw();
-            Map.Flag_To_Redraw();
+            g_Map.Flag_Power_To_Redraw();
+            g_Map.Flag_To_Redraw();
         }
     }
     return TechnoClass::Limbo();

@@ -250,11 +250,11 @@ uint32_t TCountDownTimerClass<T>::Time() const
 }
 
 #ifdef GAME_DLL
-extern TTimerClass<SystemTimerClass> &TickCountTimer;
-extern TCountDownTimerClass<SystemTimerClass> &FrameTimer;
+extern TTimerClass<SystemTimerClass> &g_TickCountTimer;
+extern TCountDownTimerClass<SystemTimerClass> &g_FrameTimer;
 #else
-extern TTimerClass<SystemTimerClass> TickCountTimer;
-extern TCountDownTimerClass<SystemTimerClass> FrameTimer;
+extern TTimerClass<SystemTimerClass> g_TickCountTimer;
+extern TCountDownTimerClass<SystemTimerClass> g_FrameTimer;
 #endif
 
 #endif

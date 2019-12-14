@@ -29,10 +29,10 @@
 using std::snprintf;
 
 #ifndef GAME_DLL
-ThemeClass Theme;
+ThemeClass g_Theme;
 
 // BaseName; Name; Scenario; Length; IsNormal; IsRepeat; IsAvailable; Side;
-ThemeClass::ThemeControl ThemeClass::Themes[THEME_COUNT] = {
+ThemeClass::ThemeControl ThemeClass::s_Themes[THEME_COUNT] = {
     { "BIGF226M", TXT_THEME_BIGFOOT, 0, 307, true, false, true, SIDE_ALLIES },
     { "CRUS226M", TXT_THEME_CRUSH, 0, 222, true, false, true, SIDE_SOVIET },
     { "FAC1226M", TXT_THEME_FACE_ENEMY_1, 0, 271, true, false, true, SIDE_ALLIES },
@@ -92,7 +92,7 @@ ThemeClass::~ThemeClass()
 const char *ThemeClass::Base_Name(ThemeType theme) const
 {
     if (theme > THEME_NONE) {
-        return Themes[theme].BaseName;
+        return s_Themes[theme].BaseName;
     }
 
     return "No theme";
@@ -106,7 +106,7 @@ const char *ThemeClass::Base_Name(ThemeType theme) const
 const char *ThemeClass::Full_Name(ThemeType theme) const
 {
     if (theme > THEME_NONE && theme < THEME_COUNT) {
-        return Text_String(Themes[theme].Name);
+        return Text_String(s_Themes[theme].Name);
     }
 
     return nullptr;
@@ -119,8 +119,8 @@ const char *ThemeClass::Full_Name(ThemeType theme) const
  */
 void ThemeClass::AI()
 {
-    if (!DebugQuiet) {
-        if (ScoresPresent && Options.Get_Score_Volume() != 0) {
+    if (!g_DebugQuiet) {
+        if (g_ScoresPresent && g_Options.Get_Score_Volume() != 0) {
             if (!Still_Playing()) {
                 if (m_QueuedTheme != THEME_NONE) {
                     if (m_QueuedTheme == THEME_NEXT) {
@@ -148,10 +148,10 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
     DEBUG_ASSERT(theme < THEME_COUNT);
 
     if (theme == THEME_NONE || theme == THEME_NEXT
-        || (theme != THEME_STOP && !Themes[theme].IsRepeat && !Options.Get_Repeat())) {
+        || (theme != THEME_STOP && !s_Themes[theme].IsRepeat && !g_Options.Get_Repeat())) {
         // If we are shuffling the score, select a random score. If its the same as the one we were passed or isn't allowed,
         // roll for another.
-        if (Options.Get_Shuffle()) {
+        if (g_Options.Get_Shuffle()) {
             ThemeType next;
 
             do {
@@ -189,7 +189,7 @@ void ThemeClass::Queue_Song(ThemeType theme)
 {
     DEBUG_ASSERT(theme < THEME_COUNT);
 
-    if (ScoresPresent && !DebugQuiet && Options.Get_Score_Volume() != 0) {
+    if (g_ScoresPresent && !g_DebugQuiet && g_Options.Get_Score_Volume() != 0) {
         if (m_QueuedTheme == THEME_NONE || m_QueuedTheme == THEME_NEXT || theme == THEME_NONE || theme == THEME_STOP) {
             m_QueuedTheme = theme;
 
@@ -212,14 +212,14 @@ int ThemeClass::Play_Song(ThemeType theme)
 {
     DEBUG_ASSERT(theme < THEME_COUNT);
 
-    if (ScoresPresent && !DebugQuiet && Options.Get_Score_Volume() != 0) {
+    if (g_ScoresPresent && !g_DebugQuiet && g_Options.Get_Score_Volume() != 0) {
         Stop();
         m_CurrentTheme = theme;
 
         if (theme != THEME_NONE && theme != THEME_STOP) {
-            StreamLowImpact = true;
+            g_StreamLowImpact = true;
             m_ThemeHandle = File_Stream_Sample_Vol(Theme_File_Name(theme), 256, true);
-            StreamLowImpact = false;
+            g_StreamLowImpact = false;
         }
     }
 
@@ -236,10 +236,10 @@ const char *ThemeClass::Theme_File_Name(ThemeType theme)
     static char _name[512];
 
     if (theme > THEME_NONE && theme < THEME_COUNT) {
-        const char *base_name = Themes[theme].BaseName;
+        const char *base_name = s_Themes[theme].BaseName;
 
         // From C&C/Sole, allow remix versions of tracks if available.
-        if (Special.Allow_Remixes()) {
+        if (s_Special.Allow_Remixes()) {
             snprintf(_name, sizeof(_name), "%s.var", base_name);
             GameFileClass varfile(_name);
 
@@ -264,7 +264,7 @@ const char *ThemeClass::Theme_File_Name(ThemeType theme)
 int ThemeClass::Track_Length(ThemeType theme) const
 {
     if (theme > THEME_NONE && theme < THEME_COUNT) {
-        return Themes[theme].Length;
+        return s_Themes[theme].Length;
     }
 
     return 0;
@@ -277,7 +277,7 @@ int ThemeClass::Track_Length(ThemeType theme) const
  */
 void ThemeClass::Stop()
 {
-    if (ScoresPresent && !DebugQuiet && m_ThemeHandle != -1) {
+    if (g_ScoresPresent && !g_DebugQuiet && m_ThemeHandle != -1) {
         Stop_Sample(m_ThemeHandle);
         m_ThemeHandle = -1;
         m_CurrentTheme = THEME_NONE;
@@ -292,7 +292,7 @@ void ThemeClass::Stop()
  */
 void ThemeClass::Suspend()
 {
-    if (ScoresPresent && !DebugQuiet && m_ThemeHandle != -1) {
+    if (g_ScoresPresent && !g_DebugQuiet && m_ThemeHandle != -1) {
         Stop_Sample(m_ThemeHandle);
         m_ThemeHandle = -1;
         m_QueuedTheme = m_CurrentTheme;
@@ -307,7 +307,7 @@ void ThemeClass::Suspend()
  */
 BOOL ThemeClass::Still_Playing() const
 {
-    if (ScoresPresent && m_ThemeHandle != -1 && !DebugQuiet) {
+    if (g_ScoresPresent && m_ThemeHandle != -1 && !g_DebugQuiet) {
         return Sample_Status(m_ThemeHandle);
     }
 
@@ -332,18 +332,18 @@ BOOL ThemeClass::Is_Allowed(ThemeType theme) const
     }
     // Is this theme allowed and available (is it as normal theme) to be played in the ingame? If either of these are false,
     // then return false.
-    if (!Themes[theme].IsAvailable || !Themes[theme].IsNormal) {
+    if (!s_Themes[theme].IsAvailable || !s_Themes[theme].IsNormal) {
         return false;
     }
 
     // Is the player part of the allowed side or is a allowed owner for this theme?
     if (PlayerPtr != nullptr) {
-        if (!(Themes[theme].Side & (1 << PlayerPtr->Side))) {
+        if (!(s_Themes[theme].Side & (1 << PlayerPtr->Side))) {
             return false;
         }
     }
 
-    if (Session.Game_To_Play() == GAME_CAMPAIGN || Scen.m_ScenarioIndex >= Themes[theme].Scenario) {
+    if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Scen.m_ScenarioIndex >= s_Themes[theme].Scenario) {
         return true;
     }
 
@@ -370,7 +370,7 @@ ThemeType ThemeClass::From_Name(const char *name) const
         }
 
         for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
-            if (strstr(Text_String(Themes[theme].Name), name) != nullptr) {
+            if (strstr(Text_String(s_Themes[theme].Name), name) != nullptr) {
                 return theme;
             }
         }
@@ -382,7 +382,7 @@ ThemeType ThemeClass::From_Name(const char *name) const
 const char *ThemeClass::Name_From(ThemeType theme)
 {
     if (theme >= THEME_FIRST && theme < THEME_COUNT) {
-        return Text_String(Themes[theme].Name);
+        return Text_String(s_Themes[theme].Name);
     }
 
     return "None";
@@ -397,7 +397,7 @@ void ThemeClass::Scan()
 {
     for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {
         GameFileClass file(Theme_File_Name(theme));
-        Themes[theme].IsAvailable = file.Is_Available();
+        s_Themes[theme].IsAvailable = file.Is_Available();
     }
 }
 
@@ -409,9 +409,9 @@ void ThemeClass::Scan()
 void ThemeClass::Set_Theme_Data(ThemeType theme, int scenario, int side)
 {
     if (theme > THEME_NONE && theme < THEME_COUNT) {
-        Themes[theme].IsNormal = true;
-        Themes[theme].Scenario = scenario;
-        Themes[theme].Side = side;
+        s_Themes[theme].IsNormal = true;
+        s_Themes[theme].Scenario = scenario;
+        s_Themes[theme].Side = side;
     }
 }
 

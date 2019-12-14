@@ -49,8 +49,8 @@ GaugeClass::GaugeClass(GaugeClass &that) :
 BOOL GaugeClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_XPos + m_Width, m_YPos + m_Height);
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_XPos + m_Width, m_YPos + m_Height);
         }
 
         Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_0, true);
@@ -60,13 +60,13 @@ BOOL GaugeClass::Draw_Me(BOOL redraw)
 
             if (m_IsHorizontal) {
                 if (pval >= m_XPos + 1) {
-                    g_logicPage->Fill_Rect(
-                        m_XPos + 1, m_YPos + 1, pval, m_YPos + m_Height - 2, GadgetClass::ColorScheme->WindowPalette[5]);
+                    g_LogicPage->Fill_Rect(
+                        m_XPos + 1, m_YPos + 1, pval, m_YPos + m_Height - 2, GadgetClass::s_ColorScheme->WindowPalette[5]);
                 }
             } else {
                 if (pval >= m_YPos + 1) {
-                    g_logicPage->Fill_Rect(
-                        m_XPos + 1, m_YPos + 1, m_XPos + m_Width - 2, pval, GadgetClass::ColorScheme->WindowPalette[5]);
+                    g_LogicPage->Fill_Rect(
+                        m_XPos + 1, m_YPos + 1, m_XPos + m_Width - 2, pval, GadgetClass::s_ColorScheme->WindowPalette[5]);
                 }
             }
         }
@@ -75,8 +75,8 @@ BOOL GaugeClass::Draw_Me(BOOL redraw)
             Draw_Thumb();
         }
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;
@@ -93,13 +93,13 @@ BOOL GaugeClass::Action(unsigned flags, KeyNumType &key)
 
     Sticky_Process(flags);
 
-    if ((flags & MOUSE_LEFT_PRESS) || ((flags & MOUSE_LEFT_HELD) && this == GadgetClass::StuckOn)) {
+    if ((flags & MOUSE_LEFT_PRESS) || ((flags & MOUSE_LEFT_HELD) && this == GadgetClass::s_StuckOn)) {
         int valpixel;
         int mousepos;
 
         if (flags & MOUSE_LEFT_PRESS) {
             int pixelval = Value_To_Pixel(m_Value);
-            mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+            mousepos = m_IsHorizontal ? g_Mouse->Get_Mouse_X() : g_Mouse->Get_Mouse_Y();
 
             if (mousepos <= pixelval) {
                 m_LastPos = 0;
@@ -112,7 +112,7 @@ BOOL GaugeClass::Action(unsigned flags, KeyNumType &key)
                 }
             }
 
-            mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+            mousepos = m_IsHorizontal ? g_Mouse->Get_Mouse_X() : g_Mouse->Get_Mouse_Y();
             valpixel = Pixel_To_Value(mousepos - m_LastPos);
 
             for (int i = valpixel; i < m_Value;) {
@@ -121,12 +121,12 @@ BOOL GaugeClass::Action(unsigned flags, KeyNumType &key)
                 }
 
                 --m_LastPos;
-                mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+                mousepos = m_IsHorizontal ? g_Mouse->Get_Mouse_X() : g_Mouse->Get_Mouse_Y();
                 i = Pixel_To_Value(mousepos - m_LastPos);
             }
         }
 
-        mousepos = m_IsHorizontal ? g_mouse->Get_Mouse_X() : g_mouse->Get_Mouse_Y();
+        mousepos = m_IsHorizontal ? g_Mouse->Get_Mouse_X() : g_Mouse->Get_Mouse_Y();
         valpixel = Pixel_To_Value(mousepos - m_LastPos);
 
         if (!Set_Value(valpixel)) {

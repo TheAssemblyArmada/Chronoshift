@@ -26,17 +26,17 @@
 #include <algorithm>
 
 #ifndef GAME_DLL
-BOOL GraphicViewPortClass::AllowHardwareBlitFills;
-BOOL GraphicViewPortClass::AllowStretchBlits;
-int GraphicViewPortClass::ScreenWidth = 640;
-int GraphicViewPortClass::ScreenHeight = 400;
-GraphicViewPortClass *g_logicPage = nullptr;
-GraphicViewPortClass g_seenBuff;
-GraphicViewPortClass g_hidPage;
-GraphicBufferClass g_visiblePage;
-GraphicBufferClass g_hiddenPage;
-GraphicBufferClass g_sysMemPage;
-GraphicBufferClass g_modeXBuff;
+BOOL GraphicViewPortClass::s_AllowHardwareBlitFills;
+BOOL GraphicViewPortClass::s_AllowStretchBlits;
+int GraphicViewPortClass::s_ScreenWidth = 640;
+int GraphicViewPortClass::s_ScreenHeight = 400;
+GraphicViewPortClass *g_LogicPage = nullptr;
+GraphicViewPortClass g_SeenBuff;
+GraphicViewPortClass g_HidPage;
+GraphicBufferClass g_VisiblePage;
+GraphicBufferClass g_HiddenPage;
+GraphicBufferClass g_SysMemPage;
+GraphicBufferClass g_ModeXBuff;
 #endif
 
 void Wait_Blit()
@@ -44,23 +44,23 @@ void Wait_Blit()
 #ifdef BUILD_WITH_DDRAW
     DWORD result;
     do {
-        result = g_paletteSurface->GetBltStatus(DDGBS_ISBLTDONE);
+        result = g_PaletteSurface->GetBltStatus(DDGBS_ISBLTDONE);
     } while (result != 0 && result != DDERR_SURFACELOST);
 #endif
 }
 
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass *view)
 {
-    GraphicViewPortClass *old = g_logicPage;
-    g_logicPage = view;
+    GraphicViewPortClass *old = g_LogicPage;
+    g_LogicPage = view;
 
     return old;
 }
 
 GraphicViewPortClass *Set_Logic_Page(GraphicViewPortClass &view)
 {
-    GraphicViewPortClass *old = g_logicPage;
-    g_logicPage = &view;
+    GraphicViewPortClass *old = g_LogicPage;
+    g_LogicPage = &view;
 
     return old;
 }
@@ -432,11 +432,11 @@ void GraphicBufferClass::DD_Init(GBCEnum mode)
         m_SurfaceInfo.ddsCaps.dwCaps |= DDSCAPS_MODEX;
     }
 
-    g_directDrawObject->CreateSurface(&m_SurfaceInfo, &m_VideoSurface, NULL);
-    g_allSurfaces.Add_Surface(m_VideoSurface);
+    g_DirectDrawObject->CreateSurface(&m_SurfaceInfo, &m_VideoSurface, NULL);
+    g_AllSurfaces.Add_Surface(m_VideoSurface);
 
     if (mode & GBC_VISIBLE) {
-        g_paletteSurface = m_VideoSurface;
+        g_PaletteSurface = m_VideoSurface;
     }
 
     m_GraphicBuffer.Set_Allocated(false);
@@ -687,15 +687,15 @@ void GraphicBufferClass::Un_Init()
 
     while (m_LockCount > 0) {
         if (m_VideoSurface->DeleteAttachedSurface(0, NULL) == DDERR_SURFACELOST) {
-            if (GBufferFocusLoss != nullptr) {
-                GBufferFocusLoss();
+            if (g_GBufferFocusLoss != nullptr) {
+                g_GBufferFocusLoss();
             }
 
-            g_allSurfaces.Restore_Surfaces();
+            g_AllSurfaces.Restore_Surfaces();
         }
     }
 
-    g_allSurfaces.Remove_Surface(m_VideoSurface);
+    g_AllSurfaces.Remove_Surface(m_VideoSurface);
     m_VideoSurface->Release();
     m_VideoSurface = nullptr;
 #endif
@@ -712,19 +712,19 @@ BOOL GraphicBufferClass::Lock()
         return false;
     }
 
-    if (!g_gameInFocus) {
+    if (!g_GameInFocus) {
         return false;
     }
 
-    if (g_mouse != nullptr) {
-        g_mouse->Block_Mouse(this);
+    if (g_Mouse != nullptr) {
+        g_Mouse->Block_Mouse(this);
     }
 
     if (m_LockCount != 0) {
         ++m_LockCount;
 
-        if (g_mouse != nullptr) {
-            g_mouse->Unblock_Mouse(this);
+        if (g_Mouse != nullptr) {
+            g_Mouse->Unblock_Mouse(this);
         }
 
         return true;
@@ -737,28 +737,28 @@ BOOL GraphicBufferClass::Lock()
                 m_Pitch = m_SurfaceInfo.lPitch;
                 m_Pitch -= m_Width;
                 ++m_LockCount;
-                // Original has a TotalLocks global that was probably for debugging.
-                if (g_mouse != nullptr) {
-                    g_mouse->Unblock_Mouse(this);
+                // Original has a s_TotalLocks global that was probably for debugging.
+                if (g_Mouse != nullptr) {
+                    g_Mouse->Unblock_Mouse(this);
                 }
 
                 return 1;
             }
 
             if (locked == DDERR_SURFACELOST) {
-                if (GBufferFocusLoss != nullptr) {
-                    GBufferFocusLoss();
+                if (g_GBufferFocusLoss != nullptr) {
+                    g_GBufferFocusLoss();
                 }
 
-                g_allSurfaces.Restore_Surfaces();
+                g_AllSurfaces.Restore_Surfaces();
             } else {
                 break;
             }
         }
     }
 
-    if (g_mouse != nullptr) {
-        g_mouse->Unblock_Mouse(this);
+    if (g_Mouse != nullptr) {
+        g_Mouse->Unblock_Mouse(this);
     }
 
     return false;
@@ -775,13 +775,13 @@ BOOL GraphicBufferClass::Unlock()
     }
 
     if (m_LockCount == 1 && m_VideoSurface != nullptr) {
-        if (g_mouse != nullptr) {
-            g_mouse->Block_Mouse(this);
+        if (g_Mouse != nullptr) {
+            g_Mouse->Block_Mouse(this);
         }
 
         if (m_VideoSurface->Unlock(nullptr) != DD_OK) {
-            if (g_mouse != nullptr) {
-                g_mouse->Unblock_Mouse(this);
+            if (g_Mouse != nullptr) {
+                g_Mouse->Unblock_Mouse(this);
             }
 
             return false;
@@ -790,8 +790,8 @@ BOOL GraphicBufferClass::Unlock()
         m_Offset = nullptr;
         --m_LockCount;
 
-        if (g_mouse != nullptr) {
-            g_mouse->Unblock_Mouse(this);
+        if (g_Mouse != nullptr) {
+            g_Mouse->Unblock_Mouse(this);
         }
     } else {
         --m_LockCount;

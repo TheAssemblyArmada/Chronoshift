@@ -124,7 +124,7 @@ public:
     virtual BOOL Override_Mouse_Shape(MouseType mouse, BOOL in_radar = false) = 0;
     virtual void Revert_Mouse_Shape() = 0;
     virtual void Mouse_Small(BOOL use_small_frame) = 0;
-    virtual GraphicViewPortClass *Shadow_Address() { return ShadowPage; }
+    virtual GraphicViewPortClass *Shadow_Address() { return g_ShadowPage; }
 
     // Additions for MapClass
     virtual void Alloc_Cells() = 0;
@@ -172,11 +172,11 @@ protected:
 
 private:
 #ifdef GAME_DLL
-    static GadgetClass *&Buttons;
-    static GraphicViewPortClass *&ShadowPage;
+    static GadgetClass *&g_Buttons;
+    static GraphicViewPortClass *&g_ShadowPage;
 #else
-    static GadgetClass *Buttons;
-    static GraphicViewPortClass *ShadowPage;
+    static GadgetClass *g_Buttons;
+    static GraphicViewPortClass *g_ShadowPage;
 #endif
 };
 

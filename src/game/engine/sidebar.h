@@ -114,35 +114,35 @@ class SidebarClass : public PowerClass
 
     private:
 #ifdef GAME_DLL
-        static void *&LogoShapes;
-        static void *&ClockShapes;
-        static ARRAY_DEC(void *, SpecialShapes, SPECIAL_COUNT);
+        static void *&s_LogoShapes;
+        static void *&s_ClockShapes;
+        static ARRAY_DEC(void *, s_SpecialShapes, SPECIAL_COUNT);
         // this is an array of 2x4.
         // (1) left strip, cameo 1,2,3,4
         // (2) right strip, cameo 1,2,3,4
         // based on column count and row count, this will grow dynamicly.
-        static ARRAY2D_DEC(SelectClass, SelectButton, COLUMN_COUNT, ROW_COUNT);
+        static ARRAY2D_DEC(SelectClass, s_SelectButton, COLUMN_COUNT, ROW_COUNT);
 
         // these are the strip scrolling buttons, 2 pairs of up and down.
         // based on the column count, buttons will be allocated dynamicly.
-        static ARRAY_DEC(ShapeButtonClass, UpButton, COLUMN_COUNT);
-        static ARRAY_DEC(ShapeButtonClass, DownButton, COLUMN_COUNT);
-        static ARRAY2D_DEC(char, ClockTranslucentTable, 2, 256);
+        static ARRAY_DEC(ShapeButtonClass, s_UpButton, COLUMN_COUNT);
+        static ARRAY_DEC(ShapeButtonClass, s_DownButton, COLUMN_COUNT);
+        static ARRAY2D_DEC(char, s_ClockTranslucentTable, 2, 256);
 #else
-        static void *LogoShapes;
-        static void *ClockShapes;
-        static void *SpecialShapes[SPECIAL_COUNT];
+        static void *s_LogoShapes;
+        static void *s_ClockShapes;
+        static void *s_SpecialShapes[SPECIAL_COUNT];
         // this is an array of 2x4.
         // (1) left strip, cameo 1,2,3,4
         // (2) right strip, cameo 1,2,3,4
         // based on column count and row count, this will grow dynamicly.
-        static SelectClass SelectButton[COLUMN_COUNT][ROW_COUNT];
+        static SelectClass s_SelectButton[COLUMN_COUNT][ROW_COUNT];
 
         // these are the strip scrolling buttons, 2 pairs of up and down.
         // based on the column count, buttons will be allocated dynamicly.
-        static ShapeButtonClass UpButton[COLUMN_COUNT];
-        static ShapeButtonClass DownButton[COLUMN_COUNT];
-        static char ClockTranslucentTable[256][2];
+        static ShapeButtonClass s_UpButton[COLUMN_COUNT];
+        static ShapeButtonClass s_DownButton[COLUMN_COUNT];
+        static char s_ClockTranslucentTable[256][2];
 #endif
     private:
         struct SelectButtonType
@@ -209,8 +209,8 @@ public:
     void Zoom_Mode_Control();
 
     BOOL Is_Sidebar_Drawn() const { return m_SidebarIsDrawn; }
-    void Disable_Zoom_Button() { ZoomButton.Disable(); }
-    void Enable_Zoom_Button() { ZoomButton.Enable(); }
+    void Disable_Zoom_Button() { s_ZoomButton.Disable(); }
+    void Enable_Zoom_Button() { s_ZoomButton.Enable(); }
     void Flag_Strip_Redraw(ColumnType strip) { m_Columns[strip].Flag_To_Redraw(); }
 
 protected:
@@ -231,25 +231,25 @@ protected:
 #endif
 
 #ifdef GAME_DLL
-    static SBGadgetClass &Background;
-    static ShapeButtonClass &RepairButton;
-    static ShapeButtonClass &SellButton;
-    static ShapeButtonClass &ZoomButton;
+    static SBGadgetClass &s_Background;
+    static ShapeButtonClass &s_RepairButton;
+    static ShapeButtonClass &s_SellButton;
+    static ShapeButtonClass &s_ZoomButton;
 
-    static void *&SidebarShape;
-    static void *&SidebarMiddleShape;
-    static void *&SidebarBottomShape;
+    static void *&s_SidebarShape;
+    static void *&s_SidebarMiddleShape;
+    static void *&s_SidebarBottomShape;
 #else
-    static SBGadgetClass Background;
-    static ShapeButtonClass RepairButton;
-    static ShapeButtonClass SellButton;
-    static ShapeButtonClass ZoomButton;
+    static SBGadgetClass s_Background;
+    static ShapeButtonClass s_RepairButton;
+    static ShapeButtonClass s_SellButton;
+    static ShapeButtonClass s_ZoomButton;
 
-    static void *SidebarShape;
-    static void *SidebarMiddleShape;
-    static void *SidebarBottomShape;
+    static void *s_SidebarShape;
+    static void *s_SidebarMiddleShape;
+    static void *s_SidebarBottomShape;
 #endif
-    static void *SidebarAddonShape; // NOTE: Chronoshift addition.
+    static void *s_SidebarAddonShape; // NOTE: Chronoshift addition.
 };
 
 #endif // SIDEBAR_H

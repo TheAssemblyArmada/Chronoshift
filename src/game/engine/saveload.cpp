@@ -46,10 +46,10 @@ int Save_Game(int number, char *savename, int unknown)
 void Post_Load_Game(int skip_overpass)
 {
     if (skip_overpass == false) {
-        Map.Overpass();
+        g_Map.Overpass();
     }
-    Scen.Set_Bridge_Count(Map.Intact_Bridge_Count());
-    Map.Zone_Reset(15);
+    g_Scen.Set_Bridge_Count(g_Map.Intact_Bridge_Count());
+    g_Map.Zone_Reset(15);
 }
 
 int Load_Game(int unknown)
@@ -101,25 +101,25 @@ int Load_Misc_Values(Straw &straw)
 
 int Save_MPlayer_Values(Pipe &pipe)
 {
-    Session.Save(pipe);
+    g_Session.Save(pipe);
     pipe.Put(&g_BuildLevel, sizeof(g_BuildLevel));
     pipe.Put(&g_Debug_Unshroud, sizeof(g_Debug_Unshroud));
-    pipe.Put(&g_seed, sizeof(g_seed));
-    pipe.Put(&Whom, sizeof(Whom));
-    pipe.Put(&Special, sizeof(Special));
-    pipe.Put(&Options, sizeof(Options));
+    pipe.Put(&g_Seed, sizeof(g_Seed));
+    pipe.Put(&g_Whom, sizeof(g_Whom));
+    pipe.Put(&s_Special, sizeof(s_Special));
+    pipe.Put(&g_Options, sizeof(g_Options));
     return 1;
 }
 
 int Load_MPlayer_Values(Straw &straw)
 {
-    Session.Load(straw);
+    g_Session.Load(straw);
     straw.Get(&g_BuildLevel, sizeof(g_BuildLevel));
     straw.Get(&g_Debug_Unshroud, sizeof(g_Debug_Unshroud));
-    straw.Get(&g_seed, sizeof(g_seed));
-    straw.Get(&Whom, sizeof(Whom));
-    straw.Get(&Special, sizeof(Special));
-    straw.Get(&Options, sizeof(Options));
+    straw.Get(&g_Seed, sizeof(g_Seed));
+    straw.Get(&g_Whom, sizeof(g_Whom));
+    straw.Get(&s_Special, sizeof(s_Special));
+    straw.Get(&g_Options, sizeof(g_Options));
     return 1;
 }
 

@@ -75,13 +75,13 @@ protected:
     int16_t m_DrainInc;
 
 #ifdef GAME_DLL
-    static PowerButtonClass &PowerButton;
-    static void *&PowerShape;
-    static void *&PowerBarShape;
+    static PowerButtonClass &s_PowerButton;
+    static void *&s_PowerShape;
+    static void *&s_PowerBarShape;
 #else
-    static PowerButtonClass PowerButton;
-    static void *PowerShape;
-    static void *PowerBarShape;
+    static PowerButtonClass s_PowerButton;
+    static void *s_PowerShape;
+    static void *s_PowerBarShape;
 #endif
 };
 

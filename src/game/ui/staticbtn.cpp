@@ -36,7 +36,7 @@ StaticButtonClass::StaticButtonClass(unsigned id, const char *text, TextPrintTyp
         }
 
         if (h == -1) {
-            m_Height = g_fontHeight;
+            m_Height = g_FontHeight;
         }
     }
 }
@@ -52,15 +52,15 @@ StaticButtonClass::StaticButtonClass(StaticButtonClass &that) :
 BOOL StaticButtonClass::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
         }
 
         Draw_Background();
         Draw_Text(m_ButtonText);
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;
@@ -87,7 +87,7 @@ void StaticButtonClass::Set_Text(const char *string, BOOL adjust)
 
         Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
         m_Width = String_Pixel_Width(m_ButtonText) + 8;
-        m_Height = g_fontYSpacing + g_fontHeight + 2;
+        m_Height = g_FontYSpacing + g_FontHeight + 2;
 
         BufferClass buff;
         m_DrawBuffer = buff;
@@ -101,13 +101,13 @@ void StaticButtonClass::Draw_Background()
         m_DrawBuffer.Resize(nullptr, m_Width * m_Height);
 
         if (m_DrawBuffer.Get_Buffer() != nullptr) {
-            g_logicPage->To_Buffer(m_XPos, m_YPos, m_Width, m_Height, m_DrawBuffer.Get_Buffer(), m_DrawBuffer.Get_Size());
+            g_LogicPage->To_Buffer(m_XPos, m_YPos, m_Width, m_Height, m_DrawBuffer.Get_Buffer(), m_DrawBuffer.Get_Size());
         }
     }
 
     // Draw what we have in the buffer back to the viewport, sampled once, the replaced each draw.
     if (m_DrawBuffer.Get_Buffer()) {
-        g_logicPage->From_Buffer(m_XPos, m_YPos, m_Width, m_Height, m_DrawBuffer.Get_Buffer());
+        g_LogicPage->From_Buffer(m_XPos, m_YPos, m_Width, m_Height, m_DrawBuffer.Get_Buffer());
     }
 }
 
@@ -125,6 +125,6 @@ void StaticButtonClass::Draw_Text(const char *string)
         }
 
         // Print the button text!
-        Fancy_Text_Print(string, xpos, m_YPos, GadgetClass::ColorScheme, COLOR_TBLACK, m_TextStyle);
+        Fancy_Text_Print(string, xpos, m_YPos, GadgetClass::s_ColorScheme, COLOR_TBLACK, m_TextStyle);
     }
 }

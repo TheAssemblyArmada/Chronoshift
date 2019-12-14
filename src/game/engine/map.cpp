@@ -197,7 +197,7 @@ void MapClass::Init_Cells()
  */
 void MapClass::Logic_AI()
 {
-    if (Session.Game_To_Play() != GAME_CAMPAIGN && Session.MPlayer_Goodies_Allowed()) {
+    if (g_Session.Game_To_Play() != GAME_CAMPAIGN && g_Session.MPlayer_Goodies_Allowed()) {
         for (int i = 0; i < ARRAY_SIZE(m_Crates); ++i) {
             if (m_Crates[i].Get_Cell() != -1) {
                 if (m_Crates[i].Timer_Expired()) {
@@ -208,18 +208,18 @@ void MapClass::Logic_AI()
         }
     }
 
-    if (Rule.Ore_Grows() || Rule.Ore_Spreads()) {
+    if (g_Rule.Ore_Grows() || g_Rule.Ore_Spreads()) {
         // Limit how much of the map we try to mark at any one time to limit how often the growth logic runs.
-        int growth_limit = std::max(MAP_MAX_AREA / (Rule.Ore_Growth_Rate() * GAME_TICKS_PER_MINUTE), 1);
+        int growth_limit = std::max(MAP_MAX_AREA / (g_Rule.Ore_Growth_Rate() * GAME_TICKS_PER_MINUTE), 1);
         int index;
 
         // Build lists of cells that need growth and spreading applied to them.
         for (index = m_OreLogicPos; index < MAP_MAX_AREA; ++index) {
             if (In_Radar(index)) {
                 if (m_Array[index].Can_Ore_Grow()) {
-                    if (Scen.Get_Random_Value(0, m_OreGrowthExcess) <= m_OreGrowthCount) {
+                    if (g_Scen.Get_Random_Value(0, m_OreGrowthExcess) <= m_OreGrowthCount) {
                         if (m_OreGrowthCount >= ARRAY_SIZE(m_OreGrowth)) {
-                            m_OreGrowth[Scen.Get_Random_Value(0, m_OreGrowthCount - 1)] = index;
+                            m_OreGrowth[g_Scen.Get_Random_Value(0, m_OreGrowthCount - 1)] = index;
                         } else {
                             m_OreGrowth[m_OreGrowthCount++] = index;
                         }
@@ -229,9 +229,9 @@ void MapClass::Logic_AI()
                 }
 
                 if (m_Array[index].Can_Ore_Spread()) {
-                    if (Scen.Get_Random_Value(0, m_OreSpreadExcess) <= m_OreSpreadCount) {
+                    if (g_Scen.Get_Random_Value(0, m_OreSpreadExcess) <= m_OreSpreadCount) {
                         if (m_OreSpreadCount >= ARRAY_SIZE(m_OreSpread)) {
-                            m_OreSpread[Scen.Get_Random_Value(0, m_OreSpreadCount - 1)] = index;
+                            m_OreSpread[g_Scen.Get_Random_Value(0, m_OreSpreadCount - 1)] = index;
                         } else {
                             m_OreSpread[m_OreSpreadCount++] = index;
                         }
@@ -332,7 +332,7 @@ BOOL MapClass::Place_Random_Crate_At_Cell(cell_t cellnum)
  */
 BOOL MapClass::Remove_Crate(cell_t cellnum)
 {
-    if (Session.Game_To_Play() != GAME_CAMPAIGN) {
+    if (g_Session.Game_To_Play() != GAME_CAMPAIGN) {
         for (int index = 0; index < MAP_MAX_CRATES; ++index) {
             if (m_Crates[index].Get_Cell() != -1 && m_Crates[index].Get_Cell() == cellnum) {
                 return m_Crates[index].Remove_It();
@@ -362,7 +362,7 @@ BOOL MapClass::Remove_Crate(cell_t cellnum)
 cell_t MapClass::Pick_Random_Location() const
 {
     return Cell_From_XY(
-        m_MapCellX + Scen.Get_Random_Value(0, m_MapCellWidth - 1), m_MapCellY + Scen.Get_Random_Value(0, m_MapCellHeight - 1));
+        m_MapCellX + g_Scen.Get_Random_Value(0, m_MapCellWidth - 1), m_MapCellY + g_Scen.Get_Random_Value(0, m_MapCellHeight - 1));
 }
 
 /**
@@ -436,7 +436,7 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
                 // radius, not radius * 256.
                 if (Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
                     if (!m_Array[offset_cellnum].Is_Visible()) {
-                        Map.Map_Cell(offset_cellnum, house);
+                        g_Map.Map_Cell(offset_cellnum, house);
                     }
                 }
             }
@@ -455,7 +455,7 @@ void MapClass::Shroud_From(cell_t cellnum, int radius)
     DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
 
     // BUGFIX Original code does not check radius is with the array bounds
-    if (In_Radar(cellnum) && radius > 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+    if (In_Radar(cellnum) && radius > 0 && radius <= g_Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
         const int32_t *offset_ptr = RadiusOffset;
         int32_t radius_count = RadiusCount[radius];
 
@@ -468,7 +468,7 @@ void MapClass::Shroud_From(cell_t cellnum, int radius)
                 // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
                 // radius, not radius * 256.
                 if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
-                    Map.Shroud_Cell(offset_cellnum); // TODO call from display class, should be virtual?
+                    g_Map.Shroud_Cell(offset_cellnum); // TODO call from display class, should be virtual?
                 }
             }
         }
@@ -492,7 +492,7 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
     }
 
     // BUGFIX Original does not check radius is within array bounds
-    if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+    if (radius >= 0 && radius <= g_Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
         const int32_t *offset_ptr = RadiusOffset;
         int32_t radius_count = RadiusCount[radius];
 
@@ -502,13 +502,13 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
 
             if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                 if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
-                    Map.Jam_Cell(offset_cellnum, house);
+                    g_Map.Jam_Cell(offset_cellnum, house);
                 }
             }
         }
 
         if (house->Player_Has_Control()) {
-            Map.Constrained_Look(Cell_To_Coord(cellnum), Rule.Gap_Radius() * 256);
+            g_Map.Constrained_Look(Cell_To_Coord(cellnum), g_Rule.Gap_Radius() * 256);
         }
     }
 }
@@ -530,7 +530,7 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
     }
     
     // BUGFIX Original does not check radius is within array bounds
-    if (radius >= 0 && radius <= Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
+    if (radius >= 0 && radius <= g_Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
         const int32_t *offset_ptr = RadiusOffset;
         int32_t radius_count = RadiusCount[radius];
 
@@ -540,7 +540,7 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
 
             if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                 if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
-                    Map.UnJam_Cell(offset_cellnum, house);
+                    g_Map.UnJam_Cell(offset_cellnum, house);
                 }
             }
         }
@@ -923,7 +923,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
             if (j >= -left && i <= top) {
                 cell_t near_cellnum = Cell_From_XY(j + cell_x, cell_y - i);
 
-                if (Map.In_Radar(near_cellnum)) {
+                if (g_Map.In_Radar(near_cellnum)) {
                     if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
@@ -937,7 +937,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
             if (j <= right && i <= bottom) {
                 cell_t near_cellnum = Cell_From_XY(cell_x + j, i + cell_y);
 
-                if (Map.In_Radar(near_cellnum)) {
+                if (g_Map.In_Radar(near_cellnum)) {
                     if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
@@ -957,7 +957,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
             if (k >= -top && i <= left) {
                 cell_t near_cellnum = Cell_From_XY(cell_x - i, k + cell_y);
 
-                if (Map.In_Radar(near_cellnum)) {
+                if (g_Map.In_Radar(near_cellnum)) {
                     if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
@@ -971,7 +971,7 @@ cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZon
             if (k <= bottom && i <= right) {
                 cell_t near_cellnum = Cell_From_XY(cell_x + i, cell_y + k);
 
-                if (Map.In_Radar(near_cellnum)) {
+                if (g_Map.In_Radar(near_cellnum)) {
                     if (m_Array[near_cellnum].Is_Clear_To_Move(speed, false, false, zone, mzone)) {
                         near_cells[near_cell_index++] = near_cellnum;
                     }
@@ -1128,9 +1128,9 @@ void MapClass::Shroud_The_Map()
         }
     }
 
-    for (int i = 0; i < DisplayClass::Layers[LAYER_GROUND].Count(); ++i) {
-        if (DisplayClass::Layers[LAYER_GROUND][i]->Is_Techno()) {
-            TechnoClass *tptr = reinterpret_cast<TechnoClass *>(DisplayClass::Layers[LAYER_GROUND][i]);
+    for (int i = 0; i < DisplayClass::s_Layers[LAYER_GROUND].Count(); ++i) {
+        if (DisplayClass::s_Layers[LAYER_GROUND][i]->Is_Techno()) {
+            TechnoClass *tptr = reinterpret_cast<TechnoClass *>(DisplayClass::s_Layers[LAYER_GROUND][i]);
 
             if (tptr != nullptr && tptr->Is_Techno() && tptr->Get_Owner_House() == g_PlayerPtr) {
                 tptr->Look();
@@ -1179,7 +1179,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
     LCWStraw lcw(STRAW_UNCOMPRESS);
     lcw.Get_From(&straw);
 
-    switch (g_iniFormat) {
+    switch (g_INIFormat) {
         case INIFORMAT_0: // Covers both TD and SS maps, .BIN files
             // TD and SS both "blank" the map cell array first.
             for (int cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
@@ -1191,7 +1191,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
             }
 
             // Handle Sole Survivor maps. Only cells other than TEMPLATE_NONE are saved in the binary.
-            if (g_mapBinaryVersion != 0) {
+            if (g_MapBinaryVersion != 0) {
                 // Format is 4 bytes per cell, X pos, Y pos, template type, icon
                 uint8_t coord[2];
                 uint8_t icon[2];

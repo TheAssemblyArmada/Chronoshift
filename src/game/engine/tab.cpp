@@ -33,10 +33,10 @@
 #include <cstdlib>
 
 #ifndef GAME_DLL
-void *TabClass::TabShape = nullptr;
+void *TabClass::s_TabShape = nullptr;
 #endif
-void *TabClass::PassableShape = nullptr;
-void *TabClass::TabBackgroundShape = nullptr;
+void *TabClass::s_PassableShape = nullptr;
+void *TabClass::s_TabBackgroundShape = nullptr;
 
 /**
  * 0x004ACB90
@@ -70,26 +70,26 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
         TabClass::Draw_Credits_Tab();
 
         // Print credit amount.
-        if (Options.Sidebar_Toggle_Allowed()) {
+        if (g_Options.Sidebar_Toggle_Allowed()) {
             Fancy_Text_Print("%d",
-                g_seenBuff.Get_Width() - (TAB_WIDTH / 2) - TAB_WIDTH,
+                g_SeenBuff.Get_Width() - (TAB_WIDTH / 2) - TAB_WIDTH,
                 0,
-                &MetalScheme,
+                &g_MetalScheme,
                 0,
                 TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
                 m_Credits);
         } else {
             Fancy_Text_Print("%d",
-                g_seenBuff.Get_Width() - (TAB_WIDTH / 2),
+                g_SeenBuff.Get_Width() - (TAB_WIDTH / 2),
                 0,
-                &MetalScheme,
+                &g_MetalScheme,
                 0,
                 TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
                 m_Credits);
         }
 
-        if (Scen.Global_Timer_Running()) {
-            int frame_time = Scen.Get_Global_Time();
+        if (g_Scen.Global_Timer_Running()) {
+            int frame_time = g_Scen.Get_Global_Time();
             int total_seconds = frame_time / 15; // Game ticks at 15 frames per logical second (not actual seconds unless at 15 fps).
             int hours = (total_seconds / 60) / 60;
             int minutes = (total_seconds / 60) % 60;
@@ -136,16 +136,16 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
 
             if (voctospeak != VOX_NONE) {
                 Speak(voctospeak);
-                Map.m_TimerFlashTimer = 7;
+                g_Map.m_TimerFlashTimer = 7;
             }
 
             // Print the time.
-            if (Options.Sidebar_Toggle_Allowed()) {
+            if (g_Options.Sidebar_Toggle_Allowed()) {
                 if (hours != 0) {
                     Fancy_Text_Print(TXT_TIME_HMS_FORMAT,
-                        g_logicPage->Get_Width() - (2 * TAB_WIDTH) - (TAB_WIDTH / 2),
+                        g_LogicPage->Get_Width() - (2 * TAB_WIDTH) - (TAB_WIDTH / 2),
                         0,
-                        &MetalScheme,
+                        &g_MetalScheme,
                         0,
                         TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
                         hours,
@@ -153,9 +153,9 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
                         seconds);
                 } else {
                     Fancy_Text_Print(TXT_TIME_MS_FORMAT,
-                        g_logicPage->Get_Width() - (2 * TAB_WIDTH) - (TAB_WIDTH / 2),
+                        g_LogicPage->Get_Width() - (2 * TAB_WIDTH) - (TAB_WIDTH / 2),
                         0,
-                        &MetalScheme,
+                        &g_MetalScheme,
                         0,
                         TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
                         minutes,
@@ -164,9 +164,9 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
             } else {
                 if (hours != 0) {
                     Fancy_Text_Print(TXT_TIME_HMS_FORMAT,
-                        g_logicPage->Get_Width() - TAB_WIDTH - (TAB_WIDTH / 2),
+                        g_LogicPage->Get_Width() - TAB_WIDTH - (TAB_WIDTH / 2),
                         0,
-                        &MetalScheme,
+                        &g_MetalScheme,
                         0,
                         TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
                         hours,
@@ -174,9 +174,9 @@ void TabClass::CreditClass::Graphic_Logic(BOOL force_redraw)
                         seconds);
                 } else {
                     Fancy_Text_Print(TXT_TIME_MS_FORMAT,
-                        g_logicPage->Get_Width() - TAB_WIDTH - (TAB_WIDTH / 2),
+                        g_LogicPage->Get_Width() - TAB_WIDTH - (TAB_WIDTH / 2),
                         0,
-                        &MetalScheme,
+                        &g_MetalScheme,
                         0,
                         TPF_12PT_METAL | TPF_CENTER | TPF_USE_GRAD_PAL,
                         minutes,
@@ -202,21 +202,21 @@ void TabClass::CreditClass::AI(BOOL force_update)
     static int _last = 0;
 
     if (g_InMapEditor) {
-        m_Available = std::max(0, Map.m_TotalValue);
+        m_Available = std::max(0, g_Map.m_TotalValue);
 
         if (m_Credits != m_Available) {
             m_CreditHasChanged = false;
             m_Credits = m_Available;
             m_CreditToRedraw = true;
-            Map.Flag_To_Redraw();
+            g_Map.Flag_To_Redraw();
         }
     } else if (force_update || g_GameFrame != _last) {
         _last = g_GameFrame;
         m_Available = std::max(0, g_PlayerPtr->Available_Money());
 
-        if (!Scen.Global_Timer().Expired()) {
+        if (!g_Scen.Global_Timer().Expired()) {
             m_CreditToRedraw = true;
-            Map.Flag_To_Redraw();
+            g_Map.Flag_To_Redraw();
         }
 
         if (m_Credits != m_Available) {
@@ -246,7 +246,7 @@ void TabClass::CreditClass::AI(BOOL force_update)
             }
 
             m_CreditToRedraw = true;
-            Map.Flag_To_Redraw();
+            g_Map.Flag_To_Redraw();
         }
     }
 }
@@ -267,9 +267,9 @@ TabClass::TabClass() :
 void TabClass::One_Time()
 {
     SidebarClass::One_Time();
-    TabShape = GameFileClass::Retrieve("tabs.shp");
-    PassableShape = GameFileClass::Retrieve("passable.shp");
-    TabBackgroundShape = GameFileClass::Retrieve("tabback.shp");
+    s_TabShape = GameFileClass::Retrieve("tabs.shp");
+    s_PassableShape = GameFileClass::Retrieve("passable.shp");
+    s_TabBackgroundShape = GameFileClass::Retrieve("tabback.shp");
 }
 
 /**
@@ -279,18 +279,18 @@ void TabClass::One_Time()
  */
 void TabClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    if (mouse_y > 0 && mouse_y < 16 && mouse_x < g_seenBuff.Get_Width() && mouse_x > 0) {
+    if (mouse_y > 0 && mouse_y < 16 && mouse_x < g_SeenBuff.Get_Width() && mouse_x > 0) {
         // Handle a left click and set key to 0 to indicate handled to lower layers.
         if (key == KN_LMOUSE) {
             int tab_index = -1;
 
-            // We are in the "Options" tab here.
+            // We are in the "g_Options" tab here.
             if (mouse_x < TAB_WIDTH) {
                 tab_index = 0;
             }
 
             // If Sidebar toggle allowed and we are in the Sidebar tab here.
-            if (Options.Sidebar_Toggle_Allowed() && mouse_x > g_seenBuff.Get_Width() - TAB_WIDTH) {
+            if (g_Options.Sidebar_Toggle_Allowed() && mouse_x > g_SeenBuff.Get_Width() - TAB_WIDTH) {
                 tab_index = 1;
             }
 
@@ -322,25 +322,25 @@ void TabClass::Draw_It(BOOL force_redraw)
 {
     SidebarClass::Draw_It(force_redraw);
 
-    if ((force_redraw || m_TabToRedraw) && g_logicPage->Lock()) {
-        g_logicPage->Fill_Rect(0, 0, g_seenBuff.Get_Width() - 1, 15, COLOR_BLACK);
+    if ((force_redraw || m_TabToRedraw) && g_LogicPage->Lock()) {
+        g_LogicPage->Fill_Rect(0, 0, g_SeenBuff.Get_Width() - 1, 15, COLOR_BLACK);
 
         // Draw the new Chronoshift tab background if available.
-        if (TabBackgroundShape != nullptr) {
-            int distance = g_logicPage->Get_Width() / TAB_WIDTH;
-            int framecount = Get_Build_Frame_Count(TabBackgroundShape);
+        if (s_TabBackgroundShape != nullptr) {
+            int distance = g_LogicPage->Get_Width() / TAB_WIDTH;
+            int framecount = Get_Build_Frame_Count(s_TabBackgroundShape);
             int xpos = 0;
 
             if (framecount == 1) {
                 for (int i = 0; i <= distance; ++i) {
-                    CC_Draw_Shape(TabBackgroundShape, 0, xpos, g_logicPage->Get_YPos());
+                    CC_Draw_Shape(s_TabBackgroundShape, 0, xpos, g_LogicPage->Get_YPos());
                     xpos += TAB_WIDTH;
                 }
             } else if (framecount >= 1) {
                 int frameindex = 0;
 
                 for (int i = 0; i <= distance && frameindex <= framecount; ++i) {
-                    CC_Draw_Shape(TabBackgroundShape, frameindex, xpos, g_logicPage->Get_YPos());
+                    CC_Draw_Shape(s_TabBackgroundShape, frameindex, xpos, g_LogicPage->Get_YPos());
                     xpos += TAB_WIDTH;
                     ++frameindex;
                 }
@@ -348,28 +348,28 @@ void TabClass::Draw_It(BOOL force_redraw)
         }
 
         // Draw options tab.
-        CC_Draw_Shape(TabShape, 0, 0, 0, WINDOW_0, SHAPE_NORMAL);
+        CC_Draw_Shape(s_TabShape, 0, 0, 0, WINDOW_0, SHAPE_NORMAL);
         Fancy_Text_Print(
-            TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
+            TXT_TAB_BUTTON_CONTROLS, 80, 0, &g_MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
 
         // Credits and timer tab.
         TabClass::Draw_Credits_Tab();
 
         // Line underneath tab area to separate from tactical display.
-        g_logicPage->Draw_Line(0, 16 - 2, g_seenBuff.Get_Width() - 1, 16 - 2, COLOR_BLACK);
+        g_LogicPage->Draw_Line(0, 16 - 2, g_SeenBuff.Get_Width() - 1, 16 - 2, COLOR_BLACK);
 
         // For when sidebar is allowed to be hidden ala C&C95 or the DOS versions.
-        if (Options.Sidebar_Toggle_Allowed()) {
-            CC_Draw_Shape(TabShape, 6, g_seenBuff.Get_Width() - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+        if (g_Options.Sidebar_Toggle_Allowed()) {
+            CC_Draw_Shape(s_TabShape, 6, g_SeenBuff.Get_Width() - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
             Fancy_Text_Print(TXT_TAB_SIDEBAR,
-                g_seenBuff.Get_Width() - 80,
+                g_SeenBuff.Get_Width() - 80,
                 0,
-                &MetalScheme,
+                &g_MetalScheme,
                 COLOR_TBLACK,
                 TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
         }
 
-        g_logicPage->Unlock();
+        g_LogicPage->Unlock();
     }
 
     m_CreditDisplay.Graphic_Logic(force_redraw || m_TabToRedraw);
@@ -397,43 +397,43 @@ void TabClass::Flash_Money()
 void TabClass::Draw_Credits_Tab()
 {
     int tabframe = 0;
-    int width = g_logicPage->Get_Width();
+    int width = g_LogicPage->Get_Width();
 
-    if (Options.Sidebar_Toggle_Allowed()) {
-        if (Map.m_CreditsFlashTimer > 1) {
+    if (g_Options.Sidebar_Toggle_Allowed()) {
+        if (g_Map.m_CreditsFlashTimer > 1) {
             tabframe = 4;
         } else {
             tabframe = 2;
         }
 
-        CC_Draw_Shape(TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+        CC_Draw_Shape(s_TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
     } else {
-        if (Map.m_CreditsFlashTimer > 1) {
+        if (g_Map.m_CreditsFlashTimer > 1) {
             tabframe = 8;
         } else {
             tabframe = 6;
         }
 
-        CC_Draw_Shape(TabShape, tabframe, width - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+        CC_Draw_Shape(s_TabShape, tabframe, width - TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
     }
 
-    if (Scen.Global_Timer_Running()) {
-        if (Scen.Get_Global_Time() >= 900 * Rule.Get_Timer_Warning()) {
-            tabframe = Map.m_TimerFlashTimer > 0 ? 4 : 2;
+    if (g_Scen.Global_Timer_Running()) {
+        if (g_Scen.Get_Global_Time() >= 900 * g_Rule.Get_Timer_Warning()) {
+            tabframe = g_Map.m_TimerFlashTimer > 0 ? 4 : 2;
         } else {
             tabframe = 4;
         }
 
-        if (Options.Sidebar_Toggle_Allowed()) {
-            CC_Draw_Shape(TabShape, tabframe, width - 3 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+        if (g_Options.Sidebar_Toggle_Allowed()) {
+            CC_Draw_Shape(s_TabShape, tabframe, width - 3 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
         } else {
-            CC_Draw_Shape(TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
+            CC_Draw_Shape(s_TabShape, tabframe, width - 2 * TAB_WIDTH, 0, WINDOW_0, SHAPE_NORMAL);
         }
     }
 }
 
 /**
- * @brief Draw tab as though pressed, Options or Sidebar tab only.
+ * @brief Draw tab as though pressed, g_Options or Sidebar tab only.
  *
  * 0x00553868
  */
@@ -449,7 +449,7 @@ void TabClass::Hilite_Tab(int tab)
             break;
 
         case TAB_SIDEBAR:
-            pos = g_seenBuff.Get_Width() - TAB_WIDTH;
+            pos = g_SeenBuff.Get_Width() - TAB_WIDTH;
             frame = 7;
             break;
 
@@ -457,15 +457,15 @@ void TabClass::Hilite_Tab(int tab)
             break;
     }
 
-    CC_Draw_Shape(TabShape, frame, pos, 0, WINDOW_0, SHAPE_NORMAL);
-    MetalScheme.MediumColor = 134;
+    CC_Draw_Shape(s_TabShape, frame, pos, 0, WINDOW_0, SHAPE_NORMAL);
+    g_MetalScheme.MediumColor = 134;
     Fancy_Text_Print(
-        TXT_TAB_BUTTON_CONTROLS, 80, 0, &MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
-    MetalScheme.MediumColor = 128;
+        TXT_TAB_BUTTON_CONTROLS, 80, 0, &g_MetalScheme, COLOR_TBLACK, TPF_USE_GRAD_PAL | TPF_CENTER | TPF_12PT_METAL);
+    g_MetalScheme.MediumColor = 128;
 }
 
 /**
- * @brief Activates logic behind either Options or Sidebar tab.
+ * @brief Activates logic behind either g_Options or Sidebar tab.
  *
  * 0x005539AC
  */

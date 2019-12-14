@@ -33,7 +33,7 @@ const BuildingClass *BaseClass::Get_Building(int entry) const
 {
     BuildingClass *ptrs[7];
     const BaseNodeClass &node = m_Nodes[entry];
-    CellClass &cell = Map[node.m_Cell];
+    CellClass &cell = g_Map[node.m_Cell];
 
     ptrs[0] = cell.Cell_Building();
     int count = 1;

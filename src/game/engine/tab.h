@@ -106,12 +106,12 @@ protected:
 
 private:
 #ifdef GAME_DLL
-    static void *&TabShape;
+    static void *&s_TabShape;
 #else
-    static void *TabShape;
+    static void *s_TabShape;
 #endif
-    static void *PassableShape; // Edwin tab for showing passablity of cells
-    static void *TabBackgroundShape; // name subject to change
+    static void *s_PassableShape; // Edwin tab for showing passablity of cells
+    static void *s_TabBackgroundShape; // name subject to change
 };
 
 #endif // TAB_H

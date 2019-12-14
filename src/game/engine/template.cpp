@@ -74,7 +74,7 @@ void TemplateClass::operator delete(void *ptr)
  */
 TemplateClass::~TemplateClass()
 {
-    if (GameActive) {
+    if (g_GameActive) {
         Limbo();
     }
 }
@@ -97,8 +97,8 @@ BOOL TemplateClass::Mark(MarkType mark)
     for (int h = 0; m_Class->Get_Height() > h; ++h) {
         for (int w = 0; m_Class->Get_Width() > w; ++w) {
             cell_t cell = Cell_From_XY(w, h) + Coord_To_Cell(m_Coord);
-            if (Map.In_Radar(cell)) {
-                CellClass *cptr = &Map[cell];
+            if (g_Map.In_Radar(cell)) {
+                CellClass *cptr = &g_Map[cell];
                 int icon = h * m_Class->Get_Width() + w;
                 if (set[icon] != -1) {
                     if (mark == MARK_REMOVE && !_noup) {

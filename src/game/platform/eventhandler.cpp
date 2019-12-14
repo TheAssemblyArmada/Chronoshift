@@ -27,9 +27,9 @@
 #include "wsock.h"
 
 #ifndef GAME_DLL
-unsigned CCFocusMessage = 0x432;
-focusfunc_t AudioFocusLoss;
-focusfunc_t GBufferFocusLoss;
+unsigned g_CCFocusMessage = 0x432;
+focusfunc_t g_AudioFocusLoss;
+focusfunc_t g_GBufferFocusLoss;
 #endif
 
 // TODO Refactor so this cleanup stuff is done with atexit perhaps once standalone?
@@ -37,37 +37,37 @@ void Prog_End()
 {
     Sound_End();
 
-    delete g_mouse;
-    g_mouse = nullptr;
+    delete g_Mouse;
+    g_Mouse = nullptr;
 
-    delete PlatformTimer;
-    PlatformTimer = nullptr;
+    delete g_PlatformTimer;
+    g_PlatformTimer = nullptr;
 }
 
 // This probably needs moving later as its also called in Game_Main.
 void Shutdown_Network()
 {
-    Session.MPlayer_Clear_Game_Name();
+    g_Session.MPlayer_Clear_Game_Name();
 }
 
 #if defined PLATFORM_WINDOWS
 LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     // Handle a focus change message.
-    if (uMsg == CCFocusMessage) {
+    if (uMsg == g_CCFocusMessage) {
         Start_Primary_Sound_Buffer(true);
 
         if (!g_InMovie) {
-            Theme.Stop();
-            Theme.Queue_Song(THEME_NEXT);
+            g_Theme.Stop();
+            g_Theme.Queue_Song(THEME_NEXT);
         }
 
         return 0;
     }
 
     // Handle a message for the network interface.
-    if (g_packetTransport != nullptr && uMsg == g_packetTransport->Protocol_Event_Message()) {
-        if (g_packetTransport->Message_Handler(hwnd, uMsg, wParam, lParam) != 0) {
+    if (g_PacketTransport != nullptr && uMsg == g_PacketTransport->Protocol_Event_Message()) {
+        if (g_PacketTransport->Message_Handler(hwnd, uMsg, wParam, lParam) != 0) {
             return DefWindowProcA(hwnd, uMsg, wParam, lParam);
         }
 
@@ -75,16 +75,16 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     // Handle input messages.
-    if (g_keyboard->Message_Handler(hwnd, uMsg, wParam, lParam)) {
+    if (g_Keyboard->Message_Handler(hwnd, uMsg, wParam, lParam)) {
         return 1;
     }
 
     switch (uMsg) {
         case WM_DESTROY:
             Prog_End();
-            g_visiblePage.Un_Init();
-            g_hiddenPage.Un_Init();
-            g_allSurfaces.Release();
+            g_VisiblePage.Un_Init();
+            g_HiddenPage.Un_Init();
+            g_AllSurfaces.Release();
 
             // Original checks a bool here called InDebugger which is never true in the final build.
             Reset_Video_Mode();
@@ -93,17 +93,17 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
             PostQuitMessage(0);
 
-            switch (g_readyToQuit) {
+            switch (g_ReadyToQuit) {
                 case 0: // normal exit.
                     Shutdown_Network();
                     ExitProcess(0);
                     break;
                 case 1: // exit due to memory or failure in main.
-                    g_readyToQuit = 2; // Seems to mean abnormal exit reached.
+                    g_ReadyToQuit = 2; // Seems to mean abnormal exit reached.
                     break;
                 case 3: // Doing an emergency exit.
                     Shutdown_Network();
-                    g_readyToQuit = 2; // Seems to mean abnormal exit reached.
+                    g_ReadyToQuit = 2; // Seems to mean abnormal exit reached.
                     break;
                 default:
                     break;
@@ -123,14 +123,14 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             break;
         case WM_ACTIVATEAPP:
             // Handle focus change.
-            g_gameInFocus = wParam;
+            g_GameInFocus = wParam;
 
-            if (!g_gameInFocus) {
+            if (!g_GameInFocus) {
                 Focus_Loss();
             }
 
-            g_allSurfaces.Set_Surface_Focus(g_gameInFocus);
-            g_allSurfaces.Restore_Surfaces();
+            g_AllSurfaces.Set_Surface_Focus(g_GameInFocus);
+            g_AllSurfaces.Restore_Surfaces();
 
             return 0;
         default:

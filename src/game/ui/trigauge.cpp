@@ -39,8 +39,8 @@ TriColorGaugeClass &TriColorGaugeClass::operator=(TriColorGaugeClass &that)
 BOOL TriColorGaugeClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, (m_XPos + m_Width), (m_YPos + m_Height));
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, (m_XPos + m_Width), (m_YPos + m_Height));
         }
 
         Draw_Box(m_XPos, m_YPos, m_Width, m_Height, m_IsDisabled ? BOX_STYLE_1 : BOX_STYLE_0, true);
@@ -52,37 +52,37 @@ BOOL TriColorGaugeClass::Draw_Me(BOOL redraw)
         if (m_Value > m_RedLimit) {
             if (m_Value > m_RedLimit && m_Value <= m_YellowLimit) {
                 if (m_IsHorizontal) {
-                    g_logicPage->Fill_Rect(rpixel, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, rpixel, m_Height + m_YPos - 2, COLOR_PINK);
+                    g_LogicPage->Fill_Rect(rpixel, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_YELLOW);
+                    g_LogicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, rpixel, m_Height + m_YPos - 2, COLOR_PINK);
                 } else {
-                    g_logicPage->Fill_Rect(m_XPos + 1, rpixel, m_Width + m_XPos - 2, vpixel, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, rpixel, COLOR_PINK);
+                    g_LogicPage->Fill_Rect(m_XPos + 1, rpixel, m_Width + m_XPos - 2, vpixel, COLOR_YELLOW);
+                    g_LogicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, rpixel, COLOR_PINK);
                 }
 
             } else if (m_Value > m_YellowLimit && m_Value <= m_Maximum) {
                 if (m_IsHorizontal) {
-                    g_logicPage->Fill_Rect(ypixel, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_GREEN);
-                    g_logicPage->Fill_Rect(rpixel, m_YPos + 1, ypixel, m_Height + m_YPos - 2, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, rpixel, m_Height + m_YPos - 2, COLOR_PINK);
+                    g_LogicPage->Fill_Rect(ypixel, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_GREEN);
+                    g_LogicPage->Fill_Rect(rpixel, m_YPos + 1, ypixel, m_Height + m_YPos - 2, COLOR_YELLOW);
+                    g_LogicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, rpixel, m_Height + m_YPos - 2, COLOR_PINK);
                 } else {
-                    g_logicPage->Fill_Rect(m_XPos + 1, ypixel, m_Width + m_XPos - 2, vpixel, COLOR_GREEN);
-                    g_logicPage->Fill_Rect(m_XPos + 1, rpixel, m_Width + m_XPos - 2, ypixel, COLOR_YELLOW);
-                    g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, rpixel, COLOR_PINK);
+                    g_LogicPage->Fill_Rect(m_XPos + 1, ypixel, m_Width + m_XPos - 2, vpixel, COLOR_GREEN);
+                    g_LogicPage->Fill_Rect(m_XPos + 1, rpixel, m_Width + m_XPos - 2, ypixel, COLOR_YELLOW);
+                    g_LogicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, rpixel, COLOR_PINK);
                 }
             }
 
         } else if (m_IsHorizontal) {
-            g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_PINK);
+            g_LogicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, vpixel, m_Height + m_YPos - 2, COLOR_PINK);
         } else {
-            g_logicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, vpixel, COLOR_PINK);
+            g_LogicPage->Fill_Rect(m_XPos + 1, m_YPos + 1, m_Width + m_XPos - 2, vpixel, COLOR_PINK);
         }
 
         if (m_UseThumb) {
             Draw_Thumb();
         }
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;

@@ -20,7 +20,7 @@
 #include <strings.h>
 #endif
 
-RTTITypeStruct RTTIName[RTTI_COUNT] = {
+RTTITypeStruct g_RTTIName[RTTI_COUNT] = {
     { "<none>", RTTI_NONE, "Invalid object" },
     { "Aircraft", RTTI_AIRCRAFT, "Aircraft object" },
     { "AircraftType", RTTI_AIRCRAFTTYPE, "AircraftType object" },
@@ -65,7 +65,7 @@ RTTIType RTTI_From_Name(const char *name)
 
     if (name != nullptr) {
         for (RTTIType rtti = RTTI_NONE; rtti < RTTI_COUNT; ++rtti) {
-            if (strcasecmp(name, RTTIName[rtti].Name) == 0) {
+            if (strcasecmp(name, g_RTTIName[rtti].Name) == 0) {
                 return rtti;
             }
         }
@@ -77,7 +77,7 @@ RTTIType RTTI_From_Name(const char *name)
 const char *Name_From_RTTI(RTTIType rtti)
 {
     if (rtti < RTTI_COUNT) {
-        return RTTIName[rtti].Name;
+        return g_RTTIName[rtti].Name;
     }
 
     return "<none>";
@@ -86,7 +86,7 @@ const char *Name_From_RTTI(RTTIType rtti)
 const char *Description_From_RTTI(RTTIType rtti)
 {
     if (rtti < RTTI_COUNT) {
-        return RTTIName[rtti].Description;
+        return g_RTTIName[rtti].Description;
     }
 
     return "<none>";

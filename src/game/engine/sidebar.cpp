@@ -34,23 +34,23 @@ const NoInitClass noinit;
 }
 
 #ifndef GAME_DLL
-void *SidebarClass::StripClass::LogoShapes = nullptr;
-void *SidebarClass::StripClass::ClockShapes = nullptr;
-void *SidebarClass::StripClass::SpecialShapes[SPECIAL_COUNT];
-SidebarClass::StripClass::SelectClass SidebarClass::StripClass::SelectButton[COLUMN_COUNT][ROW_COUNT];
-ShapeButtonClass SidebarClass::StripClass::UpButton[COLUMN_COUNT];
-ShapeButtonClass SidebarClass::StripClass::DownButton[COLUMN_COUNT];
-char SidebarClass::StripClass::ClockTranslucentTable[256][2];
-SidebarClass::SBGadgetClass SidebarClass::Background;
-ShapeButtonClass SidebarClass::RepairButton;
-ShapeButtonClass SidebarClass::SellButton;
-ShapeButtonClass SidebarClass::ZoomButton;
-void *SidebarClass::SidebarShape = nullptr;
-void *SidebarClass::SidebarMiddleShape = nullptr;
-void *SidebarClass::SidebarBottomShape = nullptr;
+void *SidebarClass::StripClass::s_LogoShapes = nullptr;
+void *SidebarClass::StripClass::s_ClockShapes = nullptr;
+void *SidebarClass::StripClass::s_SpecialShapes[SPECIAL_COUNT];
+SidebarClass::StripClass::SelectClass SidebarClass::StripClass::s_SelectButton[COLUMN_COUNT][ROW_COUNT];
+ShapeButtonClass SidebarClass::StripClass::s_UpButton[COLUMN_COUNT];
+ShapeButtonClass SidebarClass::StripClass::s_DownButton[COLUMN_COUNT];
+char SidebarClass::StripClass::s_ClockTranslucentTable[256][2];
+SidebarClass::SBGadgetClass SidebarClass::s_Background;
+ShapeButtonClass SidebarClass::s_RepairButton;
+ShapeButtonClass SidebarClass::s_SellButton;
+ShapeButtonClass SidebarClass::s_ZoomButton;
+void *SidebarClass::s_SidebarShape = nullptr;
+void *SidebarClass::s_SidebarMiddleShape = nullptr;
+void *SidebarClass::s_SidebarBottomShape = nullptr;
 #endif
 
-void *SidebarClass::SidebarAddonShape = nullptr;
+void *SidebarClass::s_SidebarAddonShape = nullptr;
 
 SidebarClass::SBGadgetClass::SBGadgetClass() :
     GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false)
@@ -59,8 +59,8 @@ SidebarClass::SBGadgetClass::SBGadgetClass() :
 
 BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
 {
-    Map.Help_Text(TXT_NULL);
-    Map.Override_Mouse_Shape(MOUSE_POINTER);
+    g_Map.Help_Text(TXT_NULL);
+    g_Map.Override_Mouse_Shape(MOUSE_POINTER);
     return true;
 }
 
@@ -129,11 +129,11 @@ void SidebarClass::StripClass::One_Time(int column)
     func(this, column);
 #else
     char icon_fname[16];
-    // ClockShapes = GameFileClass::Retrieve("clock.shp");
+    // s_ClockShapes = GameFileClass::Retrieve("clock.shp");
 
     // for ( SpecialWeaponType super = SPECIAL_FIRST; super < SPECIAL_COUNT; ++super ) {
     //    snprintf(icon_fname, sizeof(icon_fname), "%.4sicon.shp", SuperWeaponClass::Get_Special_Icon(super));
-    //    SpecialShapes[super] = GameFileClass::Retrieve(icon_fname);
+    //    s_SpecialShapes[super] = GameFileClass::Retrieve(icon_fname);
     //}
 #endif
 }
@@ -141,7 +141,7 @@ void SidebarClass::StripClass::One_Time(int column)
 void *SidebarClass::StripClass::Get_Special_Cameo(SpecialWeaponType super)
 {
     if (super != SPECIAL_NONE && super < SPECIAL_COUNT) {
-        return SpecialShapes[super];
+        return s_SpecialShapes[super];
     }
     return nullptr;
 }
@@ -169,24 +169,24 @@ void SidebarClass::StripClass::Init_IO(int column)
     if (!g_InMapEditor) {
         m_WhichColumn = column;
 
-        UpButton[m_WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_LEFT);
-        UpButton[m_WhichColumn].Set_XPos(m_XPos + 4);
-        UpButton[m_WhichColumn].Set_YPos(m_YPos + 194);
-        UpButton[m_WhichColumn].Set_Shape(GameFileClass::Retrieve("stripup.shp"));
-        UpButton[m_WhichColumn].Set_Sticky(true);
+        s_UpButton[m_WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_LEFT);
+        s_UpButton[m_WhichColumn].Set_XPos(m_XPos + 4);
+        s_UpButton[m_WhichColumn].Set_YPos(m_YPos + 194);
+        s_UpButton[m_WhichColumn].Set_Shape(GameFileClass::Retrieve("stripup.shp"));
+        s_UpButton[m_WhichColumn].Set_Sticky(true);
 
-        DownButton[m_WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_RIGHT);
-        DownButton[m_WhichColumn].Set_XPos(m_XPos + 36);
-        DownButton[m_WhichColumn].Set_YPos(m_YPos + 194);
-        DownButton[m_WhichColumn].Set_Shape(GameFileClass::Retrieve("stripdn.shp"));
-        DownButton[m_WhichColumn].Set_Sticky(true);
+        s_DownButton[m_WhichColumn].Set_ID(column + GADGET_STRIP_COLUMN_RIGHT);
+        s_DownButton[m_WhichColumn].Set_XPos(m_XPos + 36);
+        s_DownButton[m_WhichColumn].Set_YPos(m_YPos + 194);
+        s_DownButton[m_WhichColumn].Set_Shape(GameFileClass::Retrieve("stripdn.shp"));
+        s_DownButton[m_WhichColumn].Set_Sticky(true);
 
         for (int index = 0; index < ROW_COUNT; ++index) {
-            SelectButton[m_WhichColumn][index].Set_ID(220);
-            SelectButton[m_WhichColumn][index].Set_Size(64, 48);
-            SelectButton[m_WhichColumn][index].Set_XPos(m_XPos);
-            SelectButton[m_WhichColumn][index].Set_YPos(m_YPos + index * 48);
-            SelectButton[m_WhichColumn][index].Set_Owner(*this, index);
+            s_SelectButton[m_WhichColumn][index].Set_ID(220);
+            s_SelectButton[m_WhichColumn][index].Set_Size(64, 48);
+            s_SelectButton[m_WhichColumn][index].Set_XPos(m_XPos);
+            s_SelectButton[m_WhichColumn][index].Set_YPos(m_YPos + index * 48);
+            s_SelectButton[m_WhichColumn][index].Set_Owner(*this, index);
         }
     }
 }
@@ -200,15 +200,15 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
     if (!g_InMapEditor) {
         Reload_LogoShapes();
 
-        if (theater != THEATER_NONE && theater != g_lastTheater) {
-            palette = OriginalPalette;
+        if (theater != THEATER_NONE && theater != g_LastTheater) {
+            palette = g_OriginalPalette;
 
             // Block out 7 (21 / 3 = 7) entries of the temp palette as white (63, 63, 63 is white in 7bit vga pal)
             memset(&palette[32], 63, 21);
 
             // Build the fading tables for drawing the clock sweep overlay.
-            Build_Translucent_Table(palette, &_clock_cols, 1, ClockTranslucentTable[0]);
-            Conquer_Build_Fading_Table(GamePalette, ClockTranslucentTable[1], 12, 100);
+            Build_Translucent_Table(palette, &_clock_cols, 1, s_ClockTranslucentTable[0]);
+            Conquer_Build_Fading_Table(g_GamePalette, s_ClockTranslucentTable[1], 12, 100);
         }
     }
 }
@@ -224,24 +224,24 @@ void SidebarClass::StripClass::Reload_LogoShapes()
 
 void SidebarClass::StripClass::Activate()
 {
-    UpButton[m_WhichColumn].Unlink();
-    DownButton[m_WhichColumn].Unlink();
-    Map.Add_A_Button(UpButton[m_WhichColumn]);
-    Map.Add_A_Button(DownButton[m_WhichColumn]);
+    s_UpButton[m_WhichColumn].Unlink();
+    s_DownButton[m_WhichColumn].Unlink();
+    g_Map.Add_A_Button(s_UpButton[m_WhichColumn]);
+    g_Map.Add_A_Button(s_DownButton[m_WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-        SelectButton[m_WhichColumn][index].Unlink();
-        Map.Add_A_Button(SelectButton[m_WhichColumn][index]);
+        s_SelectButton[m_WhichColumn][index].Unlink();
+        g_Map.Add_A_Button(s_SelectButton[m_WhichColumn][index]);
     }
 }
 
 void SidebarClass::StripClass::Deactivate()
 {
-    Map.Remove_A_Button(UpButton[m_WhichColumn]);
-    Map.Remove_A_Button(DownButton[m_WhichColumn]);
+    g_Map.Remove_A_Button(s_UpButton[m_WhichColumn]);
+    g_Map.Remove_A_Button(s_DownButton[m_WhichColumn]);
 
     for (int index = 0; index < ROW_COUNT; ++index) {
-        Map.Remove_A_Button(SelectButton[m_WhichColumn][index]);
+        g_Map.Remove_A_Button(s_SelectButton[m_WhichColumn][index]);
     }
 }
 
@@ -262,7 +262,7 @@ BOOL SidebarClass::StripClass::Add(RTTIType type, int id)
             }
         }
 
-        if (!ScenarioInit && type != RTTI_SPECIAL) {
+        if (!g_ScenarioInit && type != RTTI_SPECIAL) {
             Speak(VOX_NEW_OPTIONS);
         }
 
@@ -301,7 +301,7 @@ BOOL SidebarClass::StripClass::Scroll(BOOL reverse)
 void SidebarClass::StripClass::Flag_To_Redraw()
 {
     m_StripToRedraw = true;
-    Map.Flag_To_Redraw();
+    g_Map.Flag_To_Redraw();
 }
 
 BOOL SidebarClass::StripClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
@@ -384,22 +384,22 @@ void SidebarClass::One_Time()
 {
     PowerClass::One_Time();
 
-    WindowList[WINDOW_SIDEBAR].X = 496;
-    WindowList[WINDOW_SIDEBAR].Y = 180;
-    WindowList[WINDOW_SIDEBAR].W = 160;
-    WindowList[WINDOW_SIDEBAR].H = 192;
+    g_WindowList[WINDOW_SIDEBAR].X = 496;
+    g_WindowList[WINDOW_SIDEBAR].Y = 180;
+    g_WindowList[WINDOW_SIDEBAR].W = 160;
+    g_WindowList[WINDOW_SIDEBAR].H = 192;
 
     for (int column = 0; column < COLUMN_COUNT; ++column) {
         m_Columns[column].One_Time(column);
     }
 
-    if (SidebarShape == nullptr) {
-        SidebarShape = GameFileClass::Retrieve("sidebar.shp");
+    if (s_SidebarShape == nullptr) {
+        s_SidebarShape = GameFileClass::Retrieve("sidebar.shp");
     }
 
     // NOTE: Chronoshift hi-res sidebar addition.
-    if (SidebarAddonShape == nullptr) {
-        SidebarAddonShape = GameFileClass::Retrieve("addon.shp");
+    if (s_SidebarAddonShape == nullptr) {
+        s_SidebarAddonShape = GameFileClass::Retrieve("addon.shp");
     }
 }
 
@@ -425,32 +425,32 @@ void SidebarClass::Init_IO()
     PowerClass::Init_IO();
 
     if (!g_InMapEditor) {
-        RepairButton.Set_ID(BUTTON_REPAIR);
-        RepairButton.Set_Position(498, 150);
-        RepairButton.Set_Sticky(true);
-        RepairButton.Set_Toggle_Bool1(false);
-        RepairButton.Set_Toggle_Disabled(true);
-        RepairButton.Set_Shape_Bool_One(true);
-        RepairButton.Set_Shape(GameFileClass::Retrieve("repair.shp"));
+        s_RepairButton.Set_ID(BUTTON_REPAIR);
+        s_RepairButton.Set_Position(498, 150);
+        s_RepairButton.Set_Sticky(true);
+        s_RepairButton.Set_Toggle_Bool1(false);
+        s_RepairButton.Set_Toggle_Disabled(true);
+        s_RepairButton.Set_Shape_Bool_One(true);
+        s_RepairButton.Set_Shape(GameFileClass::Retrieve("repair.shp"));
 
-        SellButton.Set_ID(BUTTON_SELL);
-        SellButton.Set_Position(543, 150);
-        SellButton.Set_Sticky(true);
-        SellButton.Set_Toggle_Bool1(false);
-        SellButton.Set_Toggle_Disabled(true);
-        SellButton.Set_Shape_Bool_One(true);
-        SellButton.Set_Shape(GameFileClass::Retrieve("sell.shp"));
+        s_SellButton.Set_ID(BUTTON_SELL);
+        s_SellButton.Set_Position(543, 150);
+        s_SellButton.Set_Sticky(true);
+        s_SellButton.Set_Toggle_Bool1(false);
+        s_SellButton.Set_Toggle_Disabled(true);
+        s_SellButton.Set_Shape_Bool_One(true);
+        s_SellButton.Set_Shape(GameFileClass::Retrieve("sell.shp"));
 
-        ZoomButton.Set_ID(BUTTON_ZOOM);
-        ZoomButton.Set_Position(588, 150);
-        ZoomButton.Set_Sticky(true);
-        ZoomButton.Set_Toggle_Bool1(false);
-        ZoomButton.Set_Shape(GameFileClass::Retrieve("map.shp"));
+        s_ZoomButton.Set_ID(BUTTON_ZOOM);
+        s_ZoomButton.Set_Position(588, 150);
+        s_ZoomButton.Set_Sticky(true);
+        s_ZoomButton.Set_Toggle_Bool1(false);
+        s_ZoomButton.Set_Shape(GameFileClass::Retrieve("map.shp"));
 
-        if ((m_RadarActive && Is_Zoomable()) || Session.Game_To_Play() != GAME_CAMPAIGN) {
-            ZoomButton.Enable();
+        if ((m_RadarActive && Is_Zoomable()) || g_Session.Game_To_Play() != GAME_CAMPAIGN) {
+            s_ZoomButton.Enable();
         } else {
-            ZoomButton.Disable();
+            s_ZoomButton.Disable();
         }
 
         for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
@@ -497,9 +497,9 @@ void SidebarClass::Draw_It(BOOL force_redraw)
 
         if (m_SidebarIsDrawn && (m_SidebarToRedraw || force_redraw) && !g_InMapEditor ) {
             m_SidebarToRedraw = false;
-            if (g_logicPage->Lock()) {
-                if (SidebarShape != nullptr) {
-                    CC_Draw_Shape(SidebarShape,
+            if (g_LogicPage->Lock()) {
+                if (s_SidebarShape != nullptr) {
+                    CC_Draw_Shape(s_SidebarShape,
                         0,
                         480,
                         16,
@@ -507,8 +507,8 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                         SHAPE_WIN_REL);
                 }
 
-                if (SidebarMiddleShape != nullptr) {
-                    CC_Draw_Shape(SidebarMiddleShape,
+                if (s_SidebarMiddleShape != nullptr) {
+                    CC_Draw_Shape(s_SidebarMiddleShape,
                         force_redraw ? 0 : 1,
                         480,
                         176, // Height of tab + 160, height of the first sidebar piece.
@@ -516,8 +516,8 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                         SHAPE_WIN_REL);
                 }
 
-                if (SidebarBottomShape != nullptr) {
-                    CC_Draw_Shape(SidebarBottomShape,
+                if (s_SidebarBottomShape != nullptr) {
+                    CC_Draw_Shape(s_SidebarBottomShape,
                         force_redraw ? 0 : 1,
                         480,
                         276, // Height of tab + 160 + 100,, height of last piece added on.
@@ -526,10 +526,10 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                 }
 
                 // Handles drawing extra bits for higher resolutions.
-                if (g_logicPage->Get_Height() > 400) {
-                    if (SidebarAddonShape != nullptr) {
-                        int addonheight = Get_Build_Frame_Height(SidebarAddonShape);
-                        CC_Draw_Shape(SidebarAddonShape,
+                if (g_LogicPage->Get_Height() > 400) {
+                    if (s_SidebarAddonShape != nullptr) {
+                        int addonheight = Get_Build_Frame_Height(s_SidebarAddonShape);
+                        CC_Draw_Shape(s_SidebarAddonShape,
                             0,
                             480,
                             400,
@@ -538,15 +538,15 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                     }
                 }
 
-                RepairButton.Draw_Me(true);
-                SellButton.Draw_Me(true);
-                ZoomButton.Draw_Me(true);
+                s_RepairButton.Draw_Me(true);
+                s_SellButton.Draw_Me(true);
+                s_ZoomButton.Draw_Me(true);
 
                 /*for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
                     m_Columns[column].m_StripToRedraw = true;
                 }*/
 
-                g_logicPage->Unlock();
+                g_LogicPage->Unlock();
             }
         }
 
@@ -556,9 +556,9 @@ void SidebarClass::Draw_It(BOOL force_redraw)
             }
 
             if (m_SidebarToRedraw || force_redraw) {
-                RepairButton.Draw_Me(true);
-                SellButton.Draw_Me(true);
-                ZoomButton.Draw_Me(true);
+                s_RepairButton.Draw_Me(true);
+                s_SellButton.Draw_Me(true);
+                s_ZoomButton.Draw_Me(true);
             }
         }
 
@@ -614,11 +614,11 @@ void SidebarClass::Reload_Sidebar()
 
     // this basicly replaces the '?' in the filenames above with a number.
     sidebarnames[side_index][4] = '1';
-    SidebarShape = GameFileClass::Retrieve(sidebarnames[side_index]);
+    s_SidebarShape = GameFileClass::Retrieve(sidebarnames[side_index]);
     sidebarnames[side_index][4] = '2';
-    SidebarMiddleShape = GameFileClass::Retrieve(sidebarnames[side_index]);
+    s_SidebarMiddleShape = GameFileClass::Retrieve(sidebarnames[side_index]);
     sidebarnames[side_index][4] = '3';
-    SidebarBottomShape = GameFileClass::Retrieve(sidebarnames[side_index]);
+    s_SidebarBottomShape = GameFileClass::Retrieve(sidebarnames[side_index]);
 
     // reload the side specific stip backgrounds.
     Strips[COLUMN_LEFT].Reload_LogoShapes();
@@ -808,7 +808,7 @@ BOOL SidebarClass::Activate(int mode)
     bool prevvalue = m_SidebarIsDrawn;
 
     if (!g_InMapEditor) {
-        if (!Session.Playback_Game()) {
+        if (!g_Session.Playback_Game()) {
             m_SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? !m_SidebarIsDrawn : mode == SIDEBAR_ACTIVATE);
 
             bool newvalue = m_SidebarIsDrawn;
@@ -818,37 +818,37 @@ BOOL SidebarClass::Activate(int mode)
                     Set_View_Dimensions(0, 16, 20, -1);
                     m_SidebarToRedraw = true;
                     Help_Text(TXT_NULL, -1, -1);
-                    RepairButton.Unlink();
-                    Add_A_Button(RepairButton);
-                    SellButton.Unlink();
-                    Add_A_Button(SellButton);
-                    ZoomButton.Unlink();
-                    Add_A_Button(ZoomButton);
+                    s_RepairButton.Unlink();
+                    Add_A_Button(s_RepairButton);
+                    s_SellButton.Unlink();
+                    Add_A_Button(s_SellButton);
+                    s_ZoomButton.Unlink();
+                    Add_A_Button(s_ZoomButton);
 
                     for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
                         m_Columns[column].Activate();
                     }
 
-                    Background.Unlink();
-                    Add_A_Button(Background);
-                    RadarButton.Unlink();
-                    Add_A_Button(RadarButton);
-                    PowerButton.Unlink();
-                    Add_A_Button(PowerButton);
+                    s_Background.Unlink();
+                    Add_A_Button(s_Background);
+                    s_RadarButton.Unlink();
+                    Add_A_Button(s_RadarButton);
+                    s_PowerButton.Unlink();
+                    Add_A_Button(s_PowerButton);
                 } else {
                     Set_View_Dimensions(0, 16, -1, -1);
                     Help_Text(TXT_NULL, -1, -1);
-                    Remove_A_Button(RepairButton);
-                    Remove_A_Button(SellButton);
-                    Remove_A_Button(ZoomButton);
+                    Remove_A_Button(s_RepairButton);
+                    Remove_A_Button(s_SellButton);
+                    Remove_A_Button(s_ZoomButton);
 
                     for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
                         m_Columns[column].Deactivate();
                     }
 
-                    Remove_A_Button(Background);
-                    Remove_A_Button(RadarButton);
-                    Remove_A_Button(PowerButton);
+                    Remove_A_Button(s_Background);
+                    Remove_A_Button(s_RadarButton);
+                    Remove_A_Button(s_PowerButton);
                 }
 
                 Flag_To_Redraw(true);
@@ -866,10 +866,10 @@ int SidebarClass::Abandon_Production(RTTIType type, int unk2)
 void SidebarClass::Zoom_Mode_Control()
 {
     if (!m_RadarActive) {
-        if (Session.Game_To_Play() != GAME_CAMPAIGN) {
+        if (g_Session.Game_To_Play() != GAME_CAMPAIGN) {
             Player_Names(!m_RadarDrawNames);
         }
-    } else if (m_RadarZoomed || Session.Game_To_Play() == GAME_CAMPAIGN) {
+    } else if (m_RadarZoomed || g_Session.Game_To_Play() == GAME_CAMPAIGN) {
         if (m_RadarZoomed || !Spy_Next_House()) {
             Zoom_Mode(Coord_To_Cell(m_DisplayPos));
         }

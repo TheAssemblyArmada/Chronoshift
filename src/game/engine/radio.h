@@ -73,7 +73,7 @@ public:
     static RadioMessageType From_Message(const char *message);
 
 private:
-    static const char *Messages[RADIO_COUNT];
+    static const char *s_Messages[RADIO_COUNT];
 
 protected:
     //RadioMessageType m_ReceivedMessage;

@@ -44,12 +44,12 @@
 #endif
 
 #ifndef GAME_DLL
-char CDFileClass::s_rawPath[PATH_MAX * 2]; // full raw path of the search drive set.
-CDFileClass::SearchDriveType *CDFileClass::s_first; // first entry in the search drive, each entry is linked.
-int CDFileClass::s_currentCDDrive;
-int CDFileClass::s_lastCDDrive;
+char CDFileClass::s_RawPath[PATH_MAX * 2]; // full raw path of the search drive set.
+CDFileClass::SearchDriveType *CDFileClass::s_First; // first entry in the search drive, each entry is linked.
+int CDFileClass::s_CurrentCDDrive;
+int CDFileClass::s_LastCDDrive;
 #endif
-const char *CDFileClass::s_pathSeperator = ";";
+const char *CDFileClass::s_PathSeperator = ";";
 
 CDFileClass::CDFileClass() : m_DisableSearchDrives(false) {}
 
@@ -67,15 +67,15 @@ const char *CDFileClass::Set_Name(const char *filename)
 
     BufferIOFileClass::Set_Name(filename);
 
-    if (m_DisableSearchDrives || s_first == nullptr || BufferIOFileClass::Is_Available()) {
+    if (m_DisableSearchDrives || s_First == nullptr || BufferIOFileClass::Is_Available()) {
         return File_Name();
     }
 
-    SearchDriveType *drive = s_first;
+    SearchDriveType *drive = s_First;
 
     while (true) {
         // make full or relivent file path.
-        snprintf(path_buffer, sizeof(path_buffer), "%s%s", s_first->m_Path, filename);
+        snprintf(path_buffer, sizeof(path_buffer), "%s%s", s_First->m_Path, filename);
 
         BufferIOFileClass::Set_Name(path_buffer);
 
@@ -123,12 +123,12 @@ BOOL CDFileClass::Open(const char *filename, int rights)
 }
 
 /**
- * @brief Resets the search path to only those drives stored in s_rawPath.
+ * @brief Resets the search path to only those drives stored in s_RawPath.
  */
 void CDFileClass::Refresh_Search_Drives()
 {
     Clear_Search_Drives();
-    Set_Search_Drives(s_rawPath);
+    Set_Search_Drives(s_RawPath);
 }
 
 /**
@@ -146,21 +146,21 @@ int CDFileClass::Set_Search_Drives(const char *path)
         return 0;
     }
 
-    // DEBUG_LOG("Current search path is '%s', appending '%s'.\n", s_rawPath, path);
+    // DEBUG_LOG("Current search path is '%s', appending '%s'.\n", s_RawPath, path);
 
     // Append path to raw path list
-    if (path != s_rawPath) {
+    if (path != s_RawPath) {
         // PATH_MAX * 2
-        int current_len = (int)strlen(s_rawPath);
-        // current_len += snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", s_pathSeperator);
-        // snprintf(&s_rawPath[current_len], sizeof(s_rawPath) - current_len, "%s", path);
-        current_len += snprintf(&s_rawPath[current_len], PATH_MAX * 2 - current_len, "%s", s_pathSeperator);
-        snprintf(&s_rawPath[current_len], PATH_MAX * 2 - current_len, "%s", path);
+        int current_len = (int)strlen(s_RawPath);
+        // current_len += snprintf(&s_RawPath[current_len], sizeof(s_RawPath) - current_len, "%s", s_PathSeperator);
+        // snprintf(&s_RawPath[current_len], sizeof(s_RawPath) - current_len, "%s", path);
+        current_len += snprintf(&s_RawPath[current_len], PATH_MAX * 2 - current_len, "%s", s_PathSeperator);
+        snprintf(&s_RawPath[current_len], PATH_MAX * 2 - current_len, "%s", path);
     }
 
     // Scan through the path looking for semicolons to delimit seperate
     // paths to add.
-    for (char *path_ptr = strtok(s_rawPath, s_pathSeperator); path_ptr; path_ptr = strtok(0, s_pathSeperator)) {
+    for (char *path_ptr = strtok(s_RawPath, s_PathSeperator); path_ptr; path_ptr = strtok(0, s_PathSeperator)) {
         if (strlen(path_ptr) != 0) {
             snprintf(path_buffer, sizeof(path_buffer), "%s", path_ptr);
             // strncpy(path_buffer, path_ptr, sizeof(path_buffer));
@@ -178,13 +178,13 @@ int CDFileClass::Set_Search_Drives(const char *path)
             if (strncmp(path_buffer, CD_DRIVE_PREFIX, CD_PREFIX_SIZE) == 0) {
 // Only windows uses the drive logic that this applies to
 #if defined(PLATFORM_WINDOWS)
-                if (s_currentCDDrive != 0) {
+                if (s_CurrentCDDrive != 0) {
                     paths_set = true;
                     // Move Get_CD_Index and its static vars if any into CDFileClass?
                     // Need to decide what we are doing with this
                     // DEBUG_LOG("Adding CD drive path as search drive.\n", path_buffer);
-                    if (Get_CD_Index(s_currentCDDrive, 120) >= 0) {
-                        path_buffer[0] = s_currentCDDrive + 'A';
+                    if (Get_CD_Index(s_CurrentCDDrive, 120) >= 0) {
+                        path_buffer[0] = s_CurrentCDDrive + 'A';
                         // surely this is path buffer
                         // Add_Search_Drive((const char *)v13);
                         DEBUG_LOG("Adding '%s as CD path.\n", path_buffer);
@@ -223,9 +223,9 @@ void CDFileClass::Add_Search_Drive(const char *path)
 {
     SearchDriveType *entry = new SearchDriveType(nullptr, strdup(path));
 
-    if (s_first != nullptr) {
+    if (s_First != nullptr) {
         // Traverse linked list to end and add new node
-        SearchDriveType *i = s_first;
+        SearchDriveType *i = s_First;
 
         while (i->m_Next != nullptr) {
             i = i->m_Next;
@@ -234,7 +234,7 @@ void CDFileClass::Add_Search_Drive(const char *path)
         i->m_Next = entry;
 
     } else {
-        s_first = entry;
+        s_First = entry;
     }
 }
 
@@ -243,8 +243,8 @@ void CDFileClass::Add_Search_Drive(const char *path)
  */
 void CDFileClass::Set_CD_Drive(int cd_drive)
 {
-    s_lastCDDrive = s_currentCDDrive;
-    s_currentCDDrive = cd_drive;
+    s_LastCDDrive = s_CurrentCDDrive;
+    s_CurrentCDDrive = cd_drive;
 }
 
 /**
@@ -252,7 +252,7 @@ void CDFileClass::Set_CD_Drive(int cd_drive)
  */
 void CDFileClass::Clear_Search_Drives()
 {
-    SearchDriveType *entry = s_first;
+    SearchDriveType *entry = s_First;
 
     while (entry != nullptr) {
         // delete the current 'entry' and set it to the next pointer in the list
@@ -261,8 +261,8 @@ void CDFileClass::Clear_Search_Drives()
         entry = next;
     }
 
-    // void 's_first', removes access the linked list.
-    s_first = nullptr;
+    // void 's_First', removes access the linked list.
+    s_First = nullptr;
 }
 /**
  * @brief Tests if a given CD drive has a disk inserted by checking if any files are found at the root path.

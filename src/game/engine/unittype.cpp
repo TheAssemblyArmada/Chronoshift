@@ -150,7 +150,7 @@ BOOL UnitTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
     /*UnitClass *uptr = new UnitClass(m_Type, HOUSES_NONE);
 
     if (uptr != nullptr) {
-        DirType dir = (DirType)Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
+        DirType dir = (DirType)g_Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
         return uptr->Unlimbo(Cell_To_Coord(cellnum), dir);
     }*/
 
@@ -255,7 +255,7 @@ void UnitTypeClass::Prep_For_Add()
         UnitTypeClass *utptr = As_Pointer(i);
         if (utptr != nullptr) {
             if (utptr->m_ImageData != nullptr) {
-                Map.Add_To_List(utptr);
+                g_Map.Add_To_List(utptr);
             }
         }
     }

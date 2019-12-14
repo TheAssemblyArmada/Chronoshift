@@ -131,7 +131,7 @@ TListClass<T>::TListClass(
     // The nullptr Fancy_Text_Print sets the font pointer and the dimension globals
     // for the m_YSpacing and m_ThumbSize
     Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, m_TextStyle);
-    m_YSpacing = g_fontYSpacing + g_fontHeight - 1;
+    m_YSpacing = g_FontYSpacing + g_FontHeight - 1;
     m_ThumbSize = (h - 1) / m_YSpacing;
 }
 
@@ -323,8 +323,8 @@ template<typename T>
 BOOL TListClass<T>::Draw_Me(BOOL redraw)
 {
     if (GadgetClass::Draw_Me(redraw)) {
-        if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
+        if (&g_SeenBuff == g_LogicPage) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos, m_Height + m_YPos);
         }
 
         Draw_Box(m_XPos, m_YPos, m_Width, m_Height, BOX_STYLE_4, 1);
@@ -344,8 +344,8 @@ BOOL TListClass<T>::Draw_Me(BOOL redraw)
             }
         }
 
-        if (&g_seenBuff == g_logicPage) {
-            g_mouse->Conditional_Show_Mouse();
+        if (&g_SeenBuff == g_LogicPage) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;
@@ -381,7 +381,7 @@ BOOL TListClass<T>::Action(unsigned flags, KeyNumType &key)
             flags &= ~KEYBOARD_INPUT;
         }
     } else {
-        m_CurrentIndex = m_ViewIndex + (g_mouse->Get_Mouse_Y() - m_YPos) / m_YSpacing;
+        m_CurrentIndex = m_ViewIndex + (g_Mouse->Get_Mouse_Y() - m_YPos) / m_YSpacing;
         m_CurrentIndex = std::min(m_CurrentIndex, m_Entries.Count() - 1);
 
         if (m_CurrentIndex == -1) {

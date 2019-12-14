@@ -126,7 +126,7 @@ void DriveClass::Response_Select()
         VOC_VEHIC1, VOC_REPORT1, VOC_YESSIR1, VOC_AWAIT1
     };
     if (g_AllowVoice) {
-        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
+        Sound_Effect(_response[g_Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
 }
 
@@ -140,7 +140,7 @@ void DriveClass::Response_Move()
         VOC_ACKNO, VOC_AFFIRM1
     };
     if (g_AllowVoice) {
-        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
+        Sound_Effect(_response[g_Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
 }
 
@@ -154,7 +154,7 @@ void DriveClass::Response_Attack()
         VOC_AFFIRM1, VOC_ACKNO
     };
     if (g_AllowVoice) {
-        Sound_Effect(_response[Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
+        Sound_Effect(_response[g_Scen.Get_Random_Value(0, ARRAY_SIZE(_response))], fixed_t(1, 1), -(Get_Heap_ID() + 1));
     }
 }
 
@@ -235,7 +235,7 @@ BOOL DriveClass::Teleport_To(cell_t cell)
 {
     DEBUG_ASSERT(Valid_Cell(cell));
 
-    if (Rule.Chrono_Kills_Cargo()) {
+    if (g_Rule.Chrono_Kills_Cargo()) {
         Kill_Cargo(nullptr);
     }
     Stop_Driver();
@@ -261,7 +261,7 @@ BOOL DriveClass::Teleport_To(cell_t cell)
     }
     if (Can_Enter_Cell(cell)) {
         // needs speed access verification
-        cell = Map.Nearby_Location(cell, Techno_Class_Of().Get_Speed());
+        cell = g_Map.Nearby_Location(cell, Techno_Class_Of().Get_Speed());
     }
     // set coord code needs verification
     m_Coord = Cell_To_Coord(cell);

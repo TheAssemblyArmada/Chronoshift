@@ -26,11 +26,11 @@
  */
 void Focus_Loss()
 {
-    Theme.Suspend();
+    g_Theme.Suspend();
     Stop_Primary_Sound_Buffer();
 
-    if (g_mouse != nullptr) {
-        g_mouse->Clear_Cursor_Clip();
+    if (g_Mouse != nullptr) {
+        g_Mouse->Clear_Cursor_Clip();
     }
 }
 
@@ -41,13 +41,13 @@ void Focus_Loss()
  */
 void Focus_Restore()
 {
-    Map.Flag_To_Redraw(true);
+    g_Map.Flag_To_Redraw(true);
     Start_Primary_Sound_Buffer(true);
 
-    if (g_mouse != nullptr) {
-        g_mouse->Set_Cursor_Clip();
+    if (g_Mouse != nullptr) {
+        g_Mouse->Set_Cursor_Clip();
     }
 
-    g_visiblePage.Clear();
-    g_hiddenPage.Clear();
+    g_VisiblePage.Clear();
+    g_HiddenPage.Clear();
 }

@@ -243,12 +243,12 @@ void Create_Main_Window(void *hInstance, int nCmdShow, int width, int height)
     UpdateWindow(app_hwnd);
     SetFocus(app_hwnd);
     
-    MainWindow = app_hwnd;
-    CCFocusMessage = RegisterWindowMessageA("CHRONOSHIFT_GOT_FOCUS");
-    AudioFocusLoss = Focus_Loss;
-    MiscFocusLoss = Focus_Loss;
-    MiscFocusRestore = Focus_Restore;
-    GBufferFocusLoss = Focus_Loss;
+    g_MainWindow = app_hwnd;
+    g_CCFocusMessage = RegisterWindowMessageA("CHRONOSHIFT_GOT_FOCUS");
+    g_AudioFocusLoss = Focus_Loss;
+    g_MiscFocusLoss = Focus_Loss;
+    g_MiscFocusRestore = Focus_Restore;
+    g_GBufferFocusLoss = Focus_Loss;
 #endif
 }
 
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
 
     // Make pretty log header for debug logging builds.
     DEBUG_LOG("================================================================================\n\n");
-    DEBUG_LOG("Chronoshift Version: %s\n", g_version.Version_Name());
+    DEBUG_LOG("Chronoshift Version: %s\n", g_Version.Version_Name());
     DEBUG_LOG("Build date: %s\n", g_gitCommitDate);
     DEBUG_LOG("Build branch: %s\n", g_gitBranch);
     DEBUG_LOG("Build commit: %s\n", g_gitShortSHA1);
@@ -287,7 +287,7 @@ int main(int argc, char **argv)
 
 #ifdef GAME_DLL
     // Remove this once Send_Statistics_Packet is implemented as its only used there.
-    ProgramInstance = GetModuleHandleA(nullptr);
+    g_ProgramInstance = GetModuleHandleA(nullptr);
 #endif
 
     Set_Working_Directory();
@@ -300,12 +300,12 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    PlatformTimer = new PlatformTimerClass(60, false);
+    g_PlatformTimer = new PlatformTimerClass(60, false);
 
-    unsigned ticks = PlatformTimer->Get_System_Tick_Count();
+    unsigned ticks = g_PlatformTimer->Get_System_Tick_Count();
     PlatformTimerClass::Sleep(1000); // Sleep for 1 second to test the timer.
 
-    if (ticks == PlatformTimer->Get_System_Tick_Count()) {
+    if (ticks == g_PlatformTimer->Get_System_Tick_Count()) {
         DEBUG_LOG(
             "Error - Timer system failed to initialise due to system instability. You may need to restart the operating "
             "system.");
@@ -313,7 +313,7 @@ int main(int argc, char **argv)
         return 255;
     }
 
-    g_keyboard = new KeyboardClass;
+    g_Keyboard = new KeyboardClass;
     
     Check_Use_Compressed_Shapes();
 
@@ -337,9 +337,9 @@ int main(int argc, char **argv)
 
         if (!settingsfile.Is_Available()) {
             DEBUG_LOG("Unable to create Chronoshift game settings file!\n");
-            g_keyboard->Get();
-            delete PlatformTimer;
-            PlatformTimer = nullptr;
+            g_Keyboard->Get();
+            delete g_PlatformTimer;
+            g_PlatformTimer = nullptr;
             return 0;
         }
 
@@ -376,67 +376,67 @@ int main(int argc, char **argv)
 
     //TODO when Audio_Init is reimplemented, remove need for HWND parameter.
 #ifdef PLATFORM_WINDOWS
-    g_soundOn = Audio_Init(MainWindow, 16, 0, 22050, 0);
+    g_SoundOn = Audio_Init(g_MainWindow, 16, 0, 22050, 0);
 #else
-    g_soundOn = Audio_Init(nullptr, 16, 0, 22050, 0);
+    g_SoundOn = Audio_Init(nullptr, 16, 0, 22050, 0);
 #endif
 
     if (!Init_Video()) {
-        delete PlatformTimer;
-        PlatformTimer = nullptr;
+        delete g_PlatformTimer;
+        g_PlatformTimer = nullptr;
 
         return 255;
     }
 
-    Options.Adjust_Vars_For_Resolution();
+    g_Options.Adjust_Vars_For_Resolution();
     
     // TODO set memory error handler here.
     
-    WindowList[WINDOW_0].W = g_seenBuff.Get_Width();
-    WindowList[WINDOW_0].H = g_seenBuff.Get_Height();
-    WindowList[WINDOW_5].W = g_seenBuff.Get_Width();
-    WindowList[WINDOW_5].H = g_seenBuff.Get_Height();
+    g_WindowList[WINDOW_0].W = g_SeenBuff.Get_Width();
+    g_WindowList[WINDOW_0].H = g_SeenBuff.Get_Height();
+    g_WindowList[WINDOW_5].W = g_SeenBuff.Get_Width();
+    g_WindowList[WINDOW_5].H = g_SeenBuff.Get_Height();
     
     // TODO Won't need both of these once standalone.
-    g_mouse = g_wwmouse = new MouseClass(&g_seenBuff, 48, 48);
-    MouseInstalled = true;
+    g_Mouse = g_WWMouse = new MouseClass(&g_SeenBuff, 48, 48);
+    g_MouseInstalled = true;
     
-    int cd_drive = g_cdList.Reset_And_Get_CD_Drive();
+    int cd_drive = g_CDList.Reset_And_Get_CD_Drive();
     CDFileClass::Set_CD_Drive(cd_drive);
-    // CDFileClass::Set_CD_Drive(g_cdList.Reset_And_Get_CD_Drive());
+    // CDFileClass::Set_CD_Drive(g_CDList.Reset_And_Get_CD_Drive());
 
-    if (!Special.Is_First_Run() && Session.Game_To_Play() != GAME_6 && Session.Game_To_Play() != GAME_7) {
-        Special.Set_First_Run(settingsini.Get_Bool("Intro", "PlayIntro", true));
+    if (!s_Special.Is_First_Run() && g_Session.Game_To_Play() != GAME_6 && g_Session.Game_To_Play() != GAME_7) {
+        s_Special.Set_First_Run(settingsini.Get_Bool("Intro", "PlayIntro", true));
     }
 
-    if (Special.Is_First_Run()) {
-        g_breakoutAllowed = true;
+    if (s_Special.Is_First_Run()) {
+        g_BreakoutAllowed = true;
         settingsini.Put_Bool("Intro", "PlayIntro", false);
         settingsini.Save(settingsfile);
     }
 
-    g_slowPalette = settingsini.Get_Bool("Options", "SlowPalette", true);
+    g_SlowPalette = settingsini.Get_Bool("Options", "SlowPalette", true);
     
     // TODO set Memory_Error_Exit handler here.
     
     Game_Main(argc, argv);
 
     // Start tidying up before quit.
-    g_visiblePage.Clear();
-    g_hiddenPage.Clear();
+    g_VisiblePage.Clear();
+    g_HiddenPage.Clear();
     
     // TODO set Memory_Error_Exit handler here.
     
-    g_readyToQuit = 1;
+    g_ReadyToQuit = 1;
 
 #ifdef PLATFORM_WINDOWS
-    PostMessageA(MainWindow, WM_DESTROY, 0, 0);
+    PostMessageA(g_MainWindow, WM_DESTROY, 0, 0);
 #endif
 
     // Keep calling the event handler loop until everything in the queue has been processed.
     do {
-        g_keyboard->Check();
-    } while (g_readyToQuit == 1);
+        g_Keyboard->Check();
+    } while (g_ReadyToQuit == 1);
 
     return 0;
 }

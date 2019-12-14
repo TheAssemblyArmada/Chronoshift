@@ -17,7 +17,7 @@
 #include "mission.h"
 
 #ifndef GAME_DLL
-MissionControlClass MissionControlClass::MissionControl[MISSION_COUNT];
+MissionControlClass MissionControlClass::s_MissionControl[MISSION_COUNT];
 #endif
 
 /**

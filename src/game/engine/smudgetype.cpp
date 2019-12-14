@@ -96,9 +96,9 @@ const int16_t *SmudgeTypeClass::Overlap_List() const
 void SmudgeTypeClass::Draw_It(int x, int y, int frame) const
 {
     if (Get_Image_Data() != nullptr) {
-        g_isTheaterShape = true;
+        g_IsTheaterShape = true;
         CC_Draw_Shape(Get_Image_Data(), frame, x, y, WINDOW_TACTICAL, SHAPE_WIN_REL);
-        g_isTheaterShape = false;
+        g_IsTheaterShape = false;
     }
 }
 
@@ -154,11 +154,11 @@ void SmudgeTypeClass::Init(TheaterType theater)
 
     char filename[256];
 
-    if (theater != g_lastTheater) {
+    if (theater != g_LastTheater) {
         for (SmudgeType i = SMUDGE_FIRST; i < SMUDGE_COUNT; ++i) {
             SmudgeTypeClass &smudge = As_Reference(i);
             const char *name = smudge.m_ImageName[0] != '\0' ? smudge.m_ImageName : smudge.m_Name;
-            snprintf(filename, sizeof(filename), "%s.%s", name, g_theaters[theater].ext);
+            snprintf(filename, sizeof(filename), "%s.%s", name, g_Theaters[theater].ext);
             smudge.m_ImageData = GameFileClass::Retrieve(filename);
         }
     }
@@ -188,7 +188,7 @@ void SmudgeTypeClass::Prep_For_Add()
         SmudgeTypeClass *stptr = As_Pointer(i);
         if (stptr != nullptr) {
             if (stptr->m_ImageData != nullptr) {
-                Map.Add_To_List(stptr);
+                g_Map.Add_To_List(stptr);
             }
         }
     }

@@ -21,7 +21,7 @@
 #include <strings.h>
 #endif
 
-uint8_t const FacingClass::Facing8[256] = {
+uint8_t const FacingClass::s_Facing8[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -40,7 +40,7 @@ uint8_t const FacingClass::Facing8[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-uint8_t const FacingClass::Facing16[256] = {
+uint8_t const FacingClass::s_Facing16[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
     2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
@@ -59,7 +59,7 @@ uint8_t const FacingClass::Facing16[256] = {
     15, 15, 15, 15, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-uint8_t const FacingClass::Facing32[256] = {
+uint8_t const FacingClass::s_Facing32[256] = {
     0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
     2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6,
@@ -78,7 +78,7 @@ uint8_t const FacingClass::Facing32[256] = {
     30, 31, 31, 31, 31, 31, 31, 31, 31, 31, 0, 0, 0, 0, 0, 0
 };
 
-int8_t const FacingClass::Rotation16[256] = {
+int8_t const FacingClass::s_Rotation16[256] = {
     0, 1, 2, 3, 4, 5, 6, 7, -8, -7, -6, -5, -4, -3, -2, -1,
     0, 1, 2, 3, 4, 5, 6, 7, -8, -7, -6, -5, -4, -3, -2, -1,
     0, 1, 2, 3, 4, 5, 6, 7, -8, -7, -6, -5, -4, -3, -2, -1,
@@ -160,7 +160,7 @@ BOOL FacingClass::Rotation_Adjust(int adjust)
             m_Current = m_Desired;
         }
 
-        return Facing32[m_Current] != Facing32[curr];
+        return s_Facing32[m_Current] != s_Facing32[curr];
     }
 
     return false;

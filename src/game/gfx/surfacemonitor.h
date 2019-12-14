@@ -52,13 +52,13 @@ private:
 };
 
 #ifdef GAME_DLL
-extern void (*&MiscFocusLoss)();
-extern void (*&MiscFocusRestore)();
-extern SurfaceMonitorClass &g_allSurfaces;
+extern void (*&g_MiscFocusLoss)();
+extern void (*&g_MiscFocusRestore)();
+extern SurfaceMonitorClass &g_AllSurfaces;
 #else
-extern void (*MiscFocusLoss)();
-extern void (*MiscFocusRestore)();
-extern SurfaceMonitorClass g_allSurfaces;
+extern void (*g_MiscFocusLoss)();
+extern void (*g_MiscFocusRestore)();
+extern SurfaceMonitorClass g_AllSurfaces;
 #endif
 
 #endif // SURFACEMONITOR_H

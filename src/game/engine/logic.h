@@ -40,12 +40,12 @@ public:
 };
 
 #ifdef GAME_DLL
-extern LogicClass &Logic;
+extern LogicClass &g_Logic;
 extern DynamicVectorClass<TriggerClass *> &g_LogicTriggers;
 extern DynamicVectorClass<TriggerClass *> &g_MapTriggers;
 extern DynamicVectorClass<TriggerClass *> *g_HouseTriggers;
 #else
-extern LogicClass Logic;
+extern LogicClass g_Logic;
 extern DynamicVectorClass<TriggerClass *> g_LogicTriggers;
 extern DynamicVectorClass<TriggerClass *> g_MapTriggers;
 extern DynamicVectorClass<TriggerClass *> g_HouseTriggers[HOUSES_COUNT];

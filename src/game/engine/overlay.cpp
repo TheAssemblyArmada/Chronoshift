@@ -47,7 +47,7 @@ OverlayClass::OverlayClass(const NoInitClass &noinit) :
 
 OverlayClass::~OverlayClass()
 {
-    if (GameActive) {
+    if (g_GameActive) {
         OverlayClass::Limbo();
     }
     m_Class = nullptr;
@@ -90,7 +90,7 @@ BOOL OverlayClass::Mark(MarkType mark)
         return false;
     }
 
-    CellClass *cell = &Map[Get_Cell()];
+    CellClass *cell = &g_Map[Get_Cell()];
     const OverlayTypeClass *type = &Class_Of();
 
     if (type->Is_Wall()) {
@@ -104,14 +104,14 @@ BOOL OverlayClass::Mark(MarkType mark)
         cell->Redraw_Objects();
         cell->Wall_Update();
 
-        Map.Zone_Reset(type->Is_Crushable() ? MZONE_CRUSHER : MZONE_NORMAL);
+        g_Map.Zone_Reset(type->Is_Crushable() ? MZONE_CRUSHER : MZONE_NORMAL);
 
         if (s_ToOwn != HOUSES_NONE) {
             cell->Set_Owner(s_ToOwn);
         }
     } else {
         bool cell_clear = false;
-        if (ScenarioInit == 0) {
+        if (g_ScenarioInit == 0) {
             if (type->What_Type() == OVERLAY_WATER_WOOD_CRATE) {
                 cell_clear = cell->Is_Clear_To_Move(SPEED_FLOAT);
             } else {
@@ -125,7 +125,7 @@ BOOL OverlayClass::Mark(MarkType mark)
             cell_clear = true;
         }
 
-        if ((ScenarioInit || cell->Get_Overlay() == OVERLAY_NONE) && cell_clear) {
+        if ((g_ScenarioInit || cell->Get_Overlay() == OVERLAY_NONE) && cell_clear) {
             cell->Set_Overlay(type->What_Type());
             cell->Set_Overlay_Frame(0);
             cell->Redraw_Objects();
@@ -137,7 +137,7 @@ BOOL OverlayClass::Mark(MarkType mark)
     }
 
     cell->Recalc_Attributes();
-    Map.Overlap_Up(Get_Cell(), this);
+    g_Map.Overlap_Up(Get_Cell(), this);
     m_IsDown = false;
     m_InLimbo = true;
     delete this;

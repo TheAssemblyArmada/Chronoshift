@@ -19,11 +19,11 @@
 using std::memcpy;
 
 #ifndef GAME_DLL
-uint8_t g_currentPalette[768];
+uint8_t g_CurrentPalette[768];
 #endif
 
 void Set_Palette(void *pal)
 {
-    memcpy(g_currentPalette, pal, 768);
+    memcpy(g_CurrentPalette, pal, 768);
     Set_Video_Palette(pal);
 }

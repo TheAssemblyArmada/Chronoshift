@@ -56,7 +56,7 @@ HouseClass::HouseClass(HousesType type) :
     m_RTTI(RTTI_HOUSE),
     m_HeapID(g_Houses.ID(this)),
     m_Class(g_HouseTypes.Ptr(type)),
-    m_AIDifficulty(Scen.Get_AI_Difficulty()),
+    m_AIDifficulty(g_Scen.Get_AI_Difficulty()),
     m_FirepowerMult("1.0"),
     m_GroundspeedMult("1.0"),
     m_AirspeedMult("1.0"),
@@ -158,7 +158,7 @@ HouseClass::HouseClass(HousesType type) :
     m_RadarSpied(0),
     m_Score(0),
     m_PreferredTarget(QUARRY_ANYTHING),
-    m_AttackTime(Rule.Attack_Delay() * Scen.Get_Random_Value(450, 1800)),
+    m_AttackTime(g_Rule.Attack_Delay() * g_Scen.Get_Random_Value(450, 1800)),
     m_Enemy(HOUSES_NONE),
     m_AITime(0),
     m_ChronoObject(0),
@@ -169,8 +169,8 @@ HouseClass::HouseClass(HousesType type) :
     m_ChosenVessel(VESSEL_NONE),
     m_MissileTargetCell(0),
     m_Allies(0),
-    m_DamageTime(Rule.Get_Damage_Delay() * 900),
-    m_TeamTime(Rule.Team_Delay() * 900),
+    m_DamageTime(g_Rule.Get_Damage_Delay() * 900),
+    m_TeamTime(g_Rule.Team_Delay() * 900),
     m_TriggerTime(0),
     m_AttackedSpeechTime(1),
     m_LowPowerSpeechTime(1),
@@ -189,26 +189,26 @@ HouseClass::HouseClass(HousesType type) :
     memset(m_ThreatRegions, 0, sizeof(m_ThreatRegions));
 
     new (&m_Specials[SPECIAL_SONAR_PULSE])
-        SuperClass(Rule.Get_Recharge_Sonar() * 900, false, VOX_NONE, VOX_SONAR_PULSE_AVAILABLE, VOX_NONE, VOX_NONE);
+        SuperClass(g_Rule.Get_Recharge_Sonar() * 900, false, VOX_NONE, VOX_SONAR_PULSE_AVAILABLE, VOX_NONE, VOX_NONE);
     new (&m_Specials[SPECIAL_ATOM_BOMB])
-        SuperClass(Rule.Get_Recharge_Nuke() * 900, true, VOX_ABOMB_PREPING, VOX_ABOMB_READY, VOX_NONE, VOX_NO_POWER);
+        SuperClass(g_Rule.Get_Recharge_Nuke() * 900, true, VOX_ABOMB_PREPING, VOX_ABOMB_READY, VOX_NONE, VOX_NO_POWER);
     new (&m_Specials[SPECIAL_WARP_SPHERE])
-        SuperClass(Rule.Get_Recharge_Chrono() * 900, true, VOX_CHROCHR1, VOX_CHRORDY1, VOX_NONE, VOX_NO_POWER);
+        SuperClass(g_Rule.Get_Recharge_Chrono() * 900, true, VOX_CHROCHR1, VOX_CHRORDY1, VOX_NONE, VOX_NO_POWER);
     new (&m_Specials[SPECIAL_PARA_BOMB])
-        SuperClass(Rule.Get_Recharge_ParaBomb() * 900, false, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NONE);
+        SuperClass(g_Rule.Get_Recharge_ParaBomb() * 900, false, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NONE);
     new (&m_Specials[SPECIAL_PARA_INFANTRY])
-        SuperClass(Rule.Get_Recharge_Paratrooper() * 900, false, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NONE);
+        SuperClass(g_Rule.Get_Recharge_Paratrooper() * 900, false, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NONE);
     new (&m_Specials[SPECIAL_SPY_PLANE])
-        SuperClass(Rule.Get_Recharge_SpyPlane() * 900, false, VOX_NONE, VOX_SPY_PLANE, VOX_NONE, VOX_NONE);
+        SuperClass(g_Rule.Get_Recharge_SpyPlane() * 900, false, VOX_NONE, VOX_SPY_PLANE, VOX_NONE, VOX_NONE);
     new (&m_Specials[SPECIAL_IRON_CURTAIN])
-        SuperClass(Rule.Get_Recharge_IronCurtain() * 900, true, VOX_IRON_CHARGING, VOX_IRON_READY, VOX_NONE, VOX_NO_POWER);
+        SuperClass(g_Rule.Get_Recharge_IronCurtain() * 900, true, VOX_IRON_CHARGING, VOX_IRON_READY, VOX_NONE, VOX_NO_POWER);
     new (&m_Specials[SPECIAL_GPS])
-        SuperClass(Rule.Get_Recharge_GPS() * 900, true, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NO_POWER);
+        SuperClass(g_Rule.Get_Recharge_GPS() * 900, true, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NO_POWER);
 
     strlcpy(m_PlayerName, Text_String(TXT_COMPUTER), sizeof(m_PlayerName));
     memset(m_PlayerHandle, 0, sizeof(m_PlayerHandle));
 
-    if (Session.Game_To_Play() == GAME_INTERNET) {
+    if (g_Session.Game_To_Play() == GAME_INTERNET) {
         m_AircraftBought = new UnitTrackerClass(AIRCRAFT_COUNT);
         m_InfantryBought = new UnitTrackerClass(INFANTRY_COUNT);
         m_UnitsBought = new UnitTrackerClass(UNIT_COUNT);
@@ -226,7 +226,7 @@ HouseClass::HouseClass(HousesType type) :
     g_HouseTriggers[type].Clear();
 
     Make_Ally(type);
-    Assign_Handicap(Scen.Get_AI_Difficulty());
+    Assign_Handicap(g_Scen.Get_AI_Difficulty());
 }
 
 /**
@@ -378,7 +378,7 @@ HouseClass::HouseClass(const HouseClass &that) :
  */
 HouseClass::~HouseClass()
 {
-    if (Session.Game_To_Play() == GAME_INTERNET) {
+    if (g_Session.Game_To_Play() == GAME_INTERNET) {
         delete m_AircraftBought;
         delete m_InfantryBought;
         delete m_UnitsBought;
@@ -646,33 +646,33 @@ DiffType HouseClass::Assign_Handicap(DiffType diff)
     m_AIDifficulty = diff;
 
     // If the game isn't the single player campaign, apply house bonuses from ActsLike house.
-    if (Session.Game_To_Play() != GAME_CAMPAIGN) {
+    if (g_Session.Game_To_Play() != GAME_CAMPAIGN) {
         HouseTypeClass &act_like = HouseTypeClass::As_Reference(m_ActsLike);
-        m_FirepowerMult = act_like.Get_Firepower() * Rule.Difficulty_Control(diff).Firepower;
-        m_GroundspeedMult = act_like.Get_Groundspeed() * Rule.Difficulty_Control(diff).Groundspeed;
-        m_GroundspeedMult *= Rule.GameSpeed_Bias();
-        m_AirspeedMult = act_like.Get_Airspeed() * Rule.Difficulty_Control(diff).Airspeed;
-        m_AirspeedMult *= Rule.GameSpeed_Bias();
-        m_ArmorMult = act_like.Get_Armor() * Rule.Difficulty_Control(diff).Armor;
-        m_ROFMult = act_like.Get_ROF() * Rule.Difficulty_Control(diff).ROF;
-        m_CostMult = act_like.Get_Cost() * Rule.Difficulty_Control(diff).Cost;
-        m_RepairDelay = Rule.Difficulty_Control(diff).RepairDelay;
-        m_BuildDelay = Rule.Difficulty_Control(diff).BuildDelay;
-        m_BuildTimerMult = act_like.Get_BuildTime() * Rule.Difficulty_Control(diff).BuildTime;
-        m_BuildTimerMult *= Rule.GameSpeed_Bias();
+        m_FirepowerMult = act_like.Get_Firepower() * g_Rule.Difficulty_Control(diff).Firepower;
+        m_GroundspeedMult = act_like.Get_Groundspeed() * g_Rule.Difficulty_Control(diff).Groundspeed;
+        m_GroundspeedMult *= g_Rule.GameSpeed_Bias();
+        m_AirspeedMult = act_like.Get_Airspeed() * g_Rule.Difficulty_Control(diff).Airspeed;
+        m_AirspeedMult *= g_Rule.GameSpeed_Bias();
+        m_ArmorMult = act_like.Get_Armor() * g_Rule.Difficulty_Control(diff).Armor;
+        m_ROFMult = act_like.Get_ROF() * g_Rule.Difficulty_Control(diff).ROF;
+        m_CostMult = act_like.Get_Cost() * g_Rule.Difficulty_Control(diff).Cost;
+        m_RepairDelay = g_Rule.Difficulty_Control(diff).RepairDelay;
+        m_BuildDelay = g_Rule.Difficulty_Control(diff).BuildDelay;
+        m_BuildTimerMult = act_like.Get_BuildTime() * g_Rule.Difficulty_Control(diff).BuildTime;
+        m_BuildTimerMult *= g_Rule.GameSpeed_Bias();
     } else {
-        m_FirepowerMult = Rule.Difficulty_Control(diff).Firepower;
-        m_GroundspeedMult = Rule.Difficulty_Control(diff).Groundspeed;
-        m_GroundspeedMult *= Rule.GameSpeed_Bias();
-        m_AirspeedMult = Rule.Difficulty_Control(diff).Airspeed;
-        m_AirspeedMult *= Rule.GameSpeed_Bias();
-        m_ArmorMult = Rule.Difficulty_Control(diff).Armor;
-        m_ROFMult = Rule.Difficulty_Control(diff).ROF;
-        m_CostMult = Rule.Difficulty_Control(diff).Cost;
-        m_RepairDelay = Rule.Difficulty_Control(diff).RepairDelay;
-        m_BuildDelay = Rule.Difficulty_Control(diff).BuildDelay;
-        m_BuildTimerMult = Rule.Difficulty_Control(diff).BuildTime;
-        m_BuildTimerMult *= Rule.GameSpeed_Bias();
+        m_FirepowerMult = g_Rule.Difficulty_Control(diff).Firepower;
+        m_GroundspeedMult = g_Rule.Difficulty_Control(diff).Groundspeed;
+        m_GroundspeedMult *= g_Rule.GameSpeed_Bias();
+        m_AirspeedMult = g_Rule.Difficulty_Control(diff).Airspeed;
+        m_AirspeedMult *= g_Rule.GameSpeed_Bias();
+        m_ArmorMult = g_Rule.Difficulty_Control(diff).Armor;
+        m_ROFMult = g_Rule.Difficulty_Control(diff).ROF;
+        m_CostMult = g_Rule.Difficulty_Control(diff).Cost;
+        m_RepairDelay = g_Rule.Difficulty_Control(diff).RepairDelay;
+        m_BuildDelay = g_Rule.Difficulty_Control(diff).BuildDelay;
+        m_BuildTimerMult = g_Rule.Difficulty_Control(diff).BuildTime;
+        m_BuildTimerMult *= g_Rule.GameSpeed_Bias();
     }
 
     return prevdiff;
@@ -691,7 +691,7 @@ BOOL HouseClass::Can_Build(TechnoTypeClass *obj, HousesType house)
     }
 
     // Handle Aftermath units being disabled by default regardless of tech level.
-    if (!Rule.New_Units_Enabled()) {
+    if (!g_Rule.New_Units_Enabled()) {
         switch (obj->What_Am_I()) {
             case RTTI_INFANTRYTYPE:
                 if (obj->Get_Heap_ID() >= INFANTRY_NOEXP_COUNT) {
@@ -714,7 +714,7 @@ BOOL HouseClass::Can_Build(TechnoTypeClass *obj, HousesType house)
     }
 
     // Campaign AI can build anything it wants if its scripted to do so.
-    if (!m_IsHuman && Session.Game_To_Play() == GAME_CAMPAIGN) {
+    if (!m_IsHuman && g_Session.Game_To_Play() == GAME_CAMPAIGN) {
         return true;
     }
 
@@ -726,7 +726,7 @@ BOOL HouseClass::Can_Build(TechnoTypeClass *obj, HousesType house)
             prereq_mask |= 0x20000;
         }
 
-        if (Session.Game_To_Play() != GAME_CAMPAIGN && (prereq_mask & 0x80001)) {
+        if (g_Session.Game_To_Play() != GAME_CAMPAIGN && (prereq_mask & 0x80001)) {
             prereq_mask |= 0x80001;
         }
 
@@ -758,20 +758,20 @@ void HouseClass::Make_Ally(HousesType house)
         m_Enemy = HOUSES_NONE;
     }
 
-    if (ScenarioInit) {
+    if (g_ScenarioInit) {
         m_Static.Add_Ally(house);
     }
 
     // It we aren't in a campaign, set up the alliance.
-    if (Session.Game_To_Play() != GAME_CAMPAIGN && !ScenarioInit) {
+    if (g_Session.Game_To_Play() != GAME_CAMPAIGN && !g_ScenarioInit) {
         // If computer can go paranoid, it will at this point.
-        if (As_Pointer(house) != nullptr && m_IsHuman && Rule.Computer_Paranoid()) {
+        if (As_Pointer(house) != nullptr && m_IsHuman && g_Rule.Computer_Paranoid()) {
             Computer_Paranoid();
         }
 
         // Clears existing targetting orders against units from now allied side?
-        for (int index = 0; index < Logic.Count(); ++index) {
-            ObjectClass *objptr = Logic[index];
+        for (int index = 0; index < g_Logic.Count(); ++index) {
+            ObjectClass *objptr = g_Logic[index];
 
             if (objptr != nullptr) {
                 if (!objptr->In_Limbo() && objptr->Is_Techno()) {
@@ -791,13 +791,13 @@ void HouseClass::Make_Ally(HousesType house)
         }
 
         // Reveals around our buildings for our ally.
-        if (Rule.Ally_Reveal() && g_PlayerPtr->What_Type() == house) {
+        if (g_Rule.Ally_Reveal() && g_PlayerPtr->What_Type() == house) {
             for (int index = 0; index < g_Buildings.Count(); ++index) {
                 BuildingClass *bptr = &g_Buildings[index];
 
                 if (bptr != nullptr && !bptr->In_Limbo()) {
                     if (bptr->Get_Owner_House() == this) {
-                        Map.Sight_From(bptr->Center_Cell(), bptr->Class_Of().Get_Sight(), g_PlayerPtr, false);
+                        g_Map.Sight_From(bptr->Center_Cell(), bptr->Class_Of().Get_Sight(), g_PlayerPtr, false);
                     }
                 }
             }
@@ -808,9 +808,9 @@ void HouseClass::Make_Ally(HousesType house)
             // Prepare and queue the display of the "Player has allied with OtherPlayer" message.
             char buff[80];
             snprintf(buff, sizeof(buff), Text_String(TXT_HAS_ALLIED), m_PlayerName, As_Pointer(house)->m_PlayerName);
-            Session.Get_Messages().Add_Message(
-                nullptr, 0, buff, m_Color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, 900 * Rule.Message_Delay());
-            Map.Flag_To_Redraw(false);
+            g_Session.Get_Messages().Add_Message(
+                nullptr, 0, buff, m_Color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, 900 * g_Rule.Message_Delay());
+            g_Map.Flag_To_Redraw(false);
         }
     }
 }
@@ -833,7 +833,7 @@ void HouseClass::Make_Enemy(HousesType house)
     // Clear the bit corresponding the the house to ally with.
     m_Allies &= ~(1 << house);
 
-    if (ScenarioInit) {
+    if (g_ScenarioInit) {
         m_Static.Remove_Ally(house);
     }
 
@@ -843,18 +843,18 @@ void HouseClass::Make_Enemy(HousesType house)
     if (hptr != nullptr && hptr->Is_Ally(this)) {
         hptr->m_Allies &= ~(1 << m_Class->What_Type());
 
-        if (ScenarioInit) {
+        if (g_ScenarioInit) {
             hptr->m_Static.Remove_Ally(m_Class->What_Type());
         }
     }
 
-    if (Session.Game_To_Play() != GAME_CAMPAIGN && !ScenarioInit && m_IsHuman) {
+    if (g_Session.Game_To_Play() != GAME_CAMPAIGN && !g_ScenarioInit && m_IsHuman) {
         // Prepare and queue the display of the "Player has declared war on OtherPlayer" message.
         char buff[80];
         snprintf(buff, sizeof(buff), Text_String(TXT_AT_WAR), m_PlayerName, As_Pointer(house)->m_PlayerName);
-        Session.Get_Messages().Add_Message(
-            nullptr, 0, buff, m_Color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, 900 * Rule.Message_Delay());
-        Map.Flag_To_Redraw(false);
+        g_Session.Get_Messages().Add_Message(
+            nullptr, 0, buff, m_Color, TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL, 900 * g_Rule.Message_Delay());
+        g_Map.Flag_To_Redraw(false);
     }
 }
 
@@ -910,7 +910,7 @@ BOOL HouseClass::Flag_To_Die()
     if (!m_ToWin) {
         if (!m_ToDie && !m_ToLose) {
             m_ToDie = true;
-            m_BorrowedTime = (Rule.Savour_Delay() * 900);
+            m_BorrowedTime = (g_Rule.Savour_Delay() * 900);
         }
     }
 
@@ -927,7 +927,7 @@ BOOL HouseClass::Flag_To_Win()
     if (!m_ToWin) {
         if (!m_ToDie && !m_ToLose) {
             m_ToWin = true;
-            m_BorrowedTime = (Rule.Savour_Delay() * 900);
+            m_BorrowedTime = (g_Rule.Savour_Delay() * 900);
         }
     }
 
@@ -945,7 +945,7 @@ BOOL HouseClass::Flag_To_Lose()
 
     if (!m_ToDie && !m_ToLose) {
         m_ToLose = true;
-        m_BorrowedTime = (Rule.Savour_Delay() * 900);
+        m_BorrowedTime = (g_Rule.Savour_Delay() * 900);
     }
 
     return m_ToLose;
@@ -1024,7 +1024,7 @@ void HouseClass::Tracking_Add(TechnoClass *object)
             ++m_CurrentBuildingCount;
             ++m_BuildingQuantity[reinterpret_cast<const BuildingTypeClass &>(object->Class_Of()).What_Type()];
 
-            if (Session.Game_To_Play() == GAME_INTERNET) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET) {
                 m_BScan.m_HaveBuilt |= 1 << reinterpret_cast<const BuildingTypeClass &>(object->Class_Of()).What_Type();
             }
             break;
@@ -1033,7 +1033,7 @@ void HouseClass::Tracking_Add(TechnoClass *object)
             ++m_CurrentAircraftCount;
             ++m_AircraftQuantity[reinterpret_cast<const AircraftTypeClass &>(object->Class_Of()).What_Type()];
 
-            if (Session.Game_To_Play() == GAME_INTERNET) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET) {
                 m_AScan.m_HaveBuilt |= 1 << reinterpret_cast<const AircraftTypeClass &>(object->Class_Of()).What_Type();
             }
             break;
@@ -1042,7 +1042,7 @@ void HouseClass::Tracking_Add(TechnoClass *object)
             ++m_CurrentInfantryCount;
             ++m_InfantryQuantity[reinterpret_cast<const InfantryTypeClass &>(object->Class_Of()).What_Type()];
 
-            if (Session.Game_To_Play() == GAME_INTERNET) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET) {
                 m_IScan.m_HaveBuilt |= 1 << reinterpret_cast<const InfantryTypeClass &>(object->Class_Of()).What_Type();
             }
             break;
@@ -1051,7 +1051,7 @@ void HouseClass::Tracking_Add(TechnoClass *object)
             ++m_CurrentUnitCount;
             ++m_UnitQuantity[reinterpret_cast<const UnitTypeClass &>(object->Class_Of()).What_Type()];
 
-            if (Session.Game_To_Play() == GAME_INTERNET) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET) {
                 m_UScan.m_HaveBuilt |= 1 << reinterpret_cast<const UnitTypeClass &>(object->Class_Of()).What_Type();
             }
             break;
@@ -1060,7 +1060,7 @@ void HouseClass::Tracking_Add(TechnoClass *object)
             ++m_CurrentVesselCount;
             ++m_VesselQuantity[reinterpret_cast<const VesselTypeClass &>(object->Class_Of()).What_Type()];
 
-            if (Session.Game_To_Play() == GAME_INTERNET) {
+            if (g_Session.Game_To_Play() == GAME_INTERNET) {
                 m_VScan.m_HaveBuilt |= 1 << reinterpret_cast<const VesselTypeClass &>(object->Class_Of()).What_Type();
             }
             break;
@@ -1214,7 +1214,7 @@ void HouseClass::Set_Factory(RTTIType rtti, FactoryClass *factory)
 /**
  * Retrieves the remap table to use for objects belonging to this house.
  *
- * @param alt Retrieves DisplayClass::FadingLight instead of the remap table.
+ * @param alt Retrieves DisplayClass::s_FadingLight instead of the remap table.
  * @param type Type of 0 returns a null pointer instead of remap table.
  *
  * 0x004D6528
@@ -1223,13 +1223,13 @@ const uint8_t *HouseClass::Remap_Table(BOOL alt, RemapType type)
 {
     if (alt) {
         // TODO Make fading table types consistent across project.
-        return DisplayClass::FadingLight;
+        return DisplayClass::s_FadingLight;
     }
 
     if (type == REMAP_0) {
         return nullptr;
     }
-    return ColorRemaps[m_Color].RemapPalette;
+    return g_ColorRemaps[m_Color].RemapPalette;
 }
 
 /**
@@ -1240,7 +1240,7 @@ const uint8_t *HouseClass::Remap_Table(BOOL alt, RemapType type)
 void HouseClass::Sell_Wall(cell_t cellnum)
 {
     if (cellnum != 0) {
-        CellClass &cell = Map[cellnum];
+        CellClass &cell = g_Map[cellnum];
 
         if (cell.Get_Overlay() != OVERLAY_NONE && cell.Owner() == What_Type()) {
             OverlayTypeClass &overlay = OverlayTypeClass::As_Reference(cell.Get_Overlay());
@@ -1282,7 +1282,7 @@ void HouseClass::Sell_Wall(cell_t cellnum)
                         Sound_Effect(VOC_CASHTURN);
                     }
 
-                    Refund_Money(bptr->Raw_Cost() * Rule.Refund_Percent());
+                    Refund_Money(bptr->Raw_Cost() * g_Rule.Refund_Percent());
                     // Original fetched same cell reference again here, unneeded? Inlined function?
                     cell.Set_Overlay(OVERLAY_NONE);
                     cell.Set_Overlay_Frame(0);
@@ -1291,9 +1291,9 @@ void HouseClass::Sell_Wall(cell_t cellnum)
                     cell.Recalc_Attributes();
                     // Fetched again here.
                     cell.Redraw_Objects();
-                    Map.Radar_Pixel(cellnum);
+                    g_Map.Radar_Pixel(cellnum);
                     ObjectClass::Detach_This_From_All(As_Target(cellnum), 1);
-                    Map.Zone_Reset(overlay.Is_Crushable() ? ZONE_NORTH : ZONE_SOUTH);
+                    g_Map.Zone_Reset(overlay.Is_Crushable() ? ZONE_NORTH : ZONE_SOUTH);
                 }
             }
         }
@@ -1398,7 +1398,7 @@ coord_t HouseClass::Find_Build_Location(BuildingClass *building) const
     }
 
     // Use the zone scores to determine which zone is best, using a random one if none are.
-    ZoneType find_zone = (ZoneType)Scen.Get_Random_Value(ZONE_CORE, ZONE_COUNT - 1);
+    ZoneType find_zone = (ZoneType)g_Scen.Get_Random_Value(ZONE_CORE, ZONE_COUNT - 1);
     int last_score = 0;
 
     for (ZoneType zone = ZONE_CORE; zone < ZONE_COUNT; ++zone) {
@@ -1414,7 +1414,7 @@ coord_t HouseClass::Find_Build_Location(BuildingClass *building) const
     if (Valid_Cell(zone_cell)) {
         return Cell_To_Coord(zone_cell);
     } else {
-        for (ZoneType zone = (ZoneType)Scen.Get_Random_Value(ZONE_FIRST, ZONE_COUNT - 1); zone < ZONE_COUNT; ++zone) {
+        for (ZoneType zone = (ZoneType)g_Scen.Get_Random_Value(ZONE_FIRST, ZONE_COUNT - 1); zone < ZONE_COUNT; ++zone) {
             cell_t zonecell = Find_Cell_In_Zone(building, _zones[zone % ZONE_COUNT]);
 
             if (Valid_Cell(zonecell)) {
@@ -1445,12 +1445,12 @@ cell_t HouseClass::Find_Cell_In_Zone(TechnoClass *object, ZoneType zone) const
         }
 
         for (cell_t cellnum = 0; cellnum < MAP_MAX_AREA; ++cellnum) {
-            if (Map.In_Radar(cellnum) && Which_Zone(cellnum) != ZONE_NONE) {
+            if (g_Map.In_Radar(cellnum) && Which_Zone(cellnum) != ZONE_NONE) {
                 bool can_place = tech_type.Legal_Placement(cellnum);
 
                 if (can_place && olist != nullptr) {
                     // Cast away const here, function perhaps should take const ObjectTypeClass  and const int16_t* instead?
-                    if (!Map.Passes_Proximity_Check((ObjectTypeClass *)&tech_type, What_Type(), (int16_t *)olist, cellnum)) {
+                    if (!g_Map.Passes_Proximity_Check((ObjectTypeClass *)&tech_type, What_Type(), (int16_t *)olist, cellnum)) {
                         can_place = false;
                     }
                 }
@@ -1486,62 +1486,62 @@ cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
 
     switch (zone) {
         case ZONE_CORE: {
-            random_coord = Coord_Scatter(m_BaseCenter, Scen.Get_Random_Value(0, m_Radius), true);
+            random_coord = Coord_Scatter(m_BaseCenter, g_Scen.Get_Random_Value(0, m_Radius), true);
             break;
         }
 
         case ZONE_NORTH: {
-            lepton_t map_top = Coord_Cell_To_Lepton(Map.Get_Map_Cell_Y());
+            lepton_t map_top = Coord_Cell_To_Lepton(g_Map.Get_Map_Cell_Y());
             int bound = min(3 * m_Radius, Coord_Lepton_Y(m_BaseCenter) - map_top - 256);
 
             if (bound >= 0) {
                 int upper_bound = min(bound, 3 * m_Radius);
                 int lower_bound = min(bound, 2 * m_Radius);
                 random_coord = Coord_Move(m_BaseCenter,
-                    (DirType)Scen.Get_Random_Value(DIR_NORTH, DIR_EAST) - 32,
-                    Scen.Get_Random_Value(lower_bound, upper_bound));
+                    (DirType)g_Scen.Get_Random_Value(DIR_NORTH, DIR_EAST) - 32,
+                    g_Scen.Get_Random_Value(lower_bound, upper_bound));
             }
             break;
         }
 
         case ZONE_EAST: {
-            lepton_t map_left = Coord_Cell_To_Lepton(Map.Get_Map_Cell_X());
+            lepton_t map_left = Coord_Cell_To_Lepton(g_Map.Get_Map_Cell_X());
             int bound = min(3 * m_Radius, Coord_Lepton_X(m_BaseCenter) - map_left - 256);
 
             if (bound >= 0) {
                 int upper_bound = min(bound, 3 * m_Radius);
                 int lower_bound = min(bound, 2 * m_Radius);
                 random_coord = Coord_Move(m_BaseCenter,
-                    (DirType)Scen.Get_Random_Value(DIR_SOUTH_EAST, DIR_SOUTH_WEST),
-                    Scen.Get_Random_Value(lower_bound, upper_bound));
+                    (DirType)g_Scen.Get_Random_Value(DIR_SOUTH_EAST, DIR_SOUTH_WEST),
+                    g_Scen.Get_Random_Value(lower_bound, upper_bound));
             }
             break;
         }
 
         case ZONE_SOUTH: {
-            lepton_t map_top = Coord_Cell_To_Lepton(Map.Get_Map_Cell_Y());
+            lepton_t map_top = Coord_Cell_To_Lepton(g_Map.Get_Map_Cell_Y());
             int bound = min(3 * m_Radius, Coord_Lepton_Y(m_BaseCenter) - map_top - 256);
 
             if (bound >= 0) {
                 int upper_bound = min(bound, 3 * m_Radius);
                 int lower_bound = min(bound, 2 * m_Radius);
                 random_coord = Coord_Move(m_BaseCenter,
-                    (DirType)Scen.Get_Random_Value(DIR_SOUTH_EAST, DIR_SOUTH_WEST),
-                    Scen.Get_Random_Value(lower_bound, upper_bound));
+                    (DirType)g_Scen.Get_Random_Value(DIR_SOUTH_EAST, DIR_SOUTH_WEST),
+                    g_Scen.Get_Random_Value(lower_bound, upper_bound));
             }
             break;
         }
 
         case ZONE_WEST: {
-            lepton_t map_left = Coord_Cell_To_Lepton(Map.Get_Map_Cell_X());
+            lepton_t map_left = Coord_Cell_To_Lepton(g_Map.Get_Map_Cell_X());
             int bound = min(3 * m_Radius, Coord_Lepton_X(m_BaseCenter) - map_left - 256);
 
             if (bound >= 0) {
                 int upper_bound = min(bound, 3 * m_Radius);
                 int lower_bound = min(bound, 2 * m_Radius);
                 random_coord = Coord_Move(m_BaseCenter,
-                    (DirType)Scen.Get_Random_Value(DIR_SOUTH_WEST, DIR_NORTH_WEST),
-                    Scen.Get_Random_Value(lower_bound, upper_bound));
+                    (DirType)g_Scen.Get_Random_Value(DIR_SOUTH_WEST, DIR_NORTH_WEST),
+                    g_Scen.Get_Random_Value(lower_bound, upper_bound));
             }
             break;
         }
@@ -1552,7 +1552,7 @@ cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
 
     cell_t random_cell = 0;
 
-    if (Valid_Cell(random_coord) && Map.In_Radar(Coord_To_Cell(random_coord))) {
+    if (Valid_Cell(random_coord) && g_Map.In_Radar(Coord_To_Cell(random_coord))) {
         random_cell = Coord_To_Cell(random_coord);
     } else {
         if (zone != ZONE_CORE) {
@@ -1562,8 +1562,8 @@ cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
         }
     }
 
-    if (!Map.In_Radar(random_cell)) {
-        random_cell = Map.Clamp_To_Radar(random_cell);
+    if (!g_Map.In_Radar(random_cell)) {
+        random_cell = g_Map.Clamp_To_Radar(random_cell);
     }
 
     return random_cell;
@@ -1749,14 +1749,14 @@ cell_t HouseClass::Where_To_Go(FootClass *obj) const
     value += obj->Anti_Infantry();
 
     if (value > 0) {
-        zone = (ZoneType)Scen.Get_Random_Value(ZONE_FIRST, ZONE_COUNT - 1);
+        zone = (ZoneType)g_Scen.Get_Random_Value(ZONE_FIRST, ZONE_COUNT - 1);
     } else {
         zone = ZONE_CORE;
     }
 
     cell_t cellnum = Random_Cell_In_Zone(zone);
 
-    return Map.Nearby_Location(cellnum, SPEED_TRACK, Map[cellnum].Get_Zone(MZONE_NORMAL), MZONE_NORMAL);
+    return g_Map.Nearby_Location(cellnum, SPEED_TRACK, g_Map[cellnum].Get_Zone(MZONE_NORMAL), MZONE_NORMAL);
 }
 
 /**
@@ -2090,12 +2090,12 @@ BOOL HouseClass::Is_Allowed_To_Ally(HousesType house)
     }
 
     // We can ally if its scenario setup time to set map configured alliances.
-    if (ScenarioInit) {
+    if (g_ScenarioInit) {
         return true;
     }
 
     // No allying once in game for a campaign game though.
-    if (Session.Game_To_Play() == GAME_CAMPAIGN) {
+    if (g_Session.Game_To_Play() == GAME_CAMPAIGN) {
         return false;
     }
 
@@ -2301,7 +2301,7 @@ int HouseClass::AI_Attack(UrgencyType urgency)
  */
 UrgencyType HouseClass::Check_Raise_Power()
 {
-    if (Power_Fraction() < Rule.Power_Emergency() && m_Drain - 400 > m_Power) {
+    if (Power_Fraction() < g_Rule.Power_Emergency() && m_Drain - 400 > m_Power) {
         if (m_Smarties == URGENCY_3) {
             return URGENCY_3;
         }

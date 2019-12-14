@@ -16,8 +16,8 @@
 #include "remap.h"
 
 #ifndef GAME_DLL
-RemapControlType ColorRemaps[REMAP_COUNT];
-RemapControlType MetalScheme;
-RemapControlType GreyScheme;
-RemapControlType SidebarScheme;
+RemapControlType g_ColorRemaps[REMAP_COUNT];
+RemapControlType g_MetalScheme;
+RemapControlType g_GreyScheme;
+RemapControlType g_SidebarScheme;
 #endif

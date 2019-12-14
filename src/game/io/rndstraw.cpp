@@ -17,5 +17,5 @@
 
 // Global instance of random straw to use as a source of random data.
 #ifndef GAME_DLL
-RandomStraw<RandomClass> g_cryptRandom;
+RandomStraw<RandomClass> g_CryptRandom;
 #endif

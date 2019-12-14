@@ -91,9 +91,9 @@ private:
 };
 
 #ifdef GAME_DLL
-extern SpecialClass &Special;
+extern SpecialClass &s_Special;
 #else
-extern SpecialClass Special;
+extern SpecialClass s_Special;
 #endif
 
 #endif // SPECIAL_H

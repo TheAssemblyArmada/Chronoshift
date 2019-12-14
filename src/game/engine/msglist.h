@@ -39,7 +39,7 @@ public:
     ~MessageListClass();
 
     void Init(int x, int y, int max_lines, int max_chars, int max_msg, int edit_x, int edit_y, BOOL a8, int a9, int a10,
-        int width = MaxMessageWidth);
+        int width = s_MaxMessageWidth);
     void Reset();
     TextLabelClass *Add_Message(const char *player, int id, const char *message, PlayerColorType color,
         TextPrintType style = TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL /*4046h*/, int lifetime = -1);
@@ -94,7 +94,7 @@ private:
     bool m_SlotAvailable[MAX_MESSAGES];
 
 private:
-    static int MaxMessageWidth;
+    static int s_MaxMessageWidth;
 };
 
 #endif // MSGLIST_H

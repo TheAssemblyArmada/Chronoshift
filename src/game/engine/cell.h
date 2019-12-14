@@ -226,7 +226,7 @@ private:
     ObjectClass *m_Overlapper[OVERLAPPER_COUNT];
     uint32_t m_OccupantBit;
     LandType m_Land;
-    static const coord_t StoppingCoordAbs[CELL_SPOT_COUNT];
+    static const coord_t s_StoppingCoordAbs[CELL_SPOT_COUNT];
 };
 
 inline BOOL CellClass::Contains_Ore() const

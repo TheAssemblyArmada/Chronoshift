@@ -27,7 +27,7 @@
 #include "target.h"
 
 #ifndef GAME_DLL
-LogicClass Logic;
+LogicClass g_Logic;
 DynamicVectorClass<TriggerClass *> g_LogicTriggers;
 DynamicVectorClass<TriggerClass *> g_MapTriggers;
 DynamicVectorClass<TriggerClass *> g_HouseTriggers[HOUSES_COUNT];
@@ -69,7 +69,7 @@ void LogicClass::AI()
 
     ++FramesPerSecond;
 
-    Scen.Do_Fade_AI();
+    g_Scen.Do_Fade_AI();
 
     for (LogicTriggerID = 0; LogicTriggerID < LogicTriggers.Count(); ++LogicTriggerID) {
         // DEBUG_LOG("LogicClass::AI() - LogicTriggerID is %d, trigger name is '%s'\n", LogicTriggerID,
@@ -81,30 +81,30 @@ void LogicClass::AI()
             // DEBUG_LOG("LogicClass::AI() - LogicTrigger %d:'%s' is valid, about to check global status\n", LogicTriggerID,
             // LogicTriggers[LogicTriggerID]->ObjectType->Get_Name());
 
-            if ((!Scen.m_GlobalsChanged || !trigger->Spring(TEVENT_GLOBAL_SET)) && !trigger->Spring(TEVENT_GLOBAL_CLEAR)
+            if ((!g_Scen.m_GlobalsChanged || !trigger->Spring(TEVENT_GLOBAL_SET)) && !trigger->Spring(TEVENT_GLOBAL_CLEAR)
 
-                && (!Scen.m_DestroyBridges || !trigger->Spring(TEVENT_ATTACHED_BRIDGE_DESTROYED))
+                && (!g_Scen.m_DestroyBridges || !trigger->Spring(TEVENT_ATTACHED_BRIDGE_DESTROYED))
                 && !trigger->Spring(TEVENT_ELAPSED_TIME)) {
-                if (Scen.m_GlobalTimer.Has_Expired()) {
+                if (g_Scen.m_GlobalTimer.Has_Expired()) {
                     trigger->Spring(TEVENT_TIMER_EXPIRED);
                 }
             }
         }
     }
 
-    if (Scen.m_GlobalTimer.Has_Expired()) {
-        Scen.m_GlobalTimer.Stop();
-        Map.Flag_To_Redraw();
+    if (g_Scen.m_GlobalTimer.Has_Expired()) {
+        g_Scen.m_GlobalTimer.Stop();
+        g_Map.Flag_To_Redraw();
     }
 
-    Scen.m_DestroyBridges = false;
-    Scen.m_GlobalsChanged = false;
+    g_Scen.m_DestroyBridges = false;
+    g_Scen.m_GlobalsChanged = false;
 
-    if (Special.Bools.ShroudGrows && Rule.ShroudRate > 0) {
-        if (Scen.SomeScenarioTimer.Has_Expired()) {
-            Scen.SomeScenarioTimer = (Rule.ShroudRate * DEF_TICKS_PER_MINUTE);
+    if (s_Special.Bools.ShroudGrows && g_Rule.ShroudRate > 0) {
+        if (g_Scen.SomeScenarioTimer.Has_Expired()) {
+            g_Scen.SomeScenarioTimer = (g_Rule.ShroudRate * DEF_TICKS_PER_MINUTE);
 
-            Map.Encroach_Shadow();
+            g_Map.Encroach_Shadow();
         }
     }
 
@@ -128,8 +128,8 @@ void LogicClass::AI()
 
     g_ChronalVortex.AI();
 
-    for (int index = 0; index < Logic.Count(); ++index) {
-        ObjectClass *objptr = Logic[index];
+    for (int index = 0; index < g_Logic.Count(); ++index) {
+        ObjectClass *objptr = g_Logic[index];
         DEBUG_ASSERT(objptr != nullptr);
         if (objptr != nullptr) {
             // DEBUG_LOG("LogicClass::AI() - About to call AI() on %s:%s\n", RTTIName[objptr->What_Am_I()].Name,
@@ -141,29 +141,29 @@ void LogicClass::AI()
         if (objptr != nullptr) {
             if (TimeQuake) {
                 DEBUG_LOG("LogicClass::AI() - Processing %s:%s for Time Quake damage!\n",
-                    RTTIName[objptr->What_Am_I()].Name,
+                    g_RTTIName[objptr->What_Am_I()].Name,
                     objptr->Name());
 
                 if (objptr->Is_Active() && !objptr->In_Limbo() && objptr->Get_Health() > 0) {
                     if (TimeQuakeCenter != 0) {
-                        if (Target_Distance(As_Target(objptr), TimeQuakeCenter) / 256 < Rule.MTankDistance) {
+                        if (Target_Distance(As_Target(objptr), TimeQuakeCenter) / 256 < g_Rule.MTankDistance) {
                             int quake_damage = 0;
 
                             switch (objptr->What_Am_I()) {
                                 case RTTI_BUILDING:
-                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeBuildingDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * g_Rule.QuakeBuildingDamage;
                                     break;
 
                                 case RTTI_INFANTRY:
-                                    quake_damage = Rule.QuakeInfantryDamage;
+                                    quake_damage = g_Rule.QuakeInfantryDamage;
                                     break;
 
                                 case RTTI_VESSEL:
-                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeVesselDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * g_Rule.QuakeVesselDamage;
                                     break;
 
                                 case RTTI_UNIT:
-                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeUnitDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * g_Rule.QuakeUnitDamage;
                                     break;
 
                                 case RTTI_AIRCRAFT: {
@@ -180,7 +180,7 @@ void LogicClass::AI()
                                 }
 
                                 default:
-                                    quake_damage = objptr->Class_Of().Get_Strength() * Rule.QuakeDamage;
+                                    quake_damage = objptr->Class_Of().Get_Strength() * g_Rule.QuakeDamage;
                                     break;
                             };
 
@@ -198,14 +198,14 @@ void LogicClass::AI()
             }
         }
 
-        if (objptr != Logic[index]) {
+        if (objptr != g_Logic[index]) {
             --index;
         }
     }
 
     HouseClass::Recalc_Attributes();
 
-    Map.Logic_AI();
+    g_Map.Logic_AI();
 
     // DEBUG_LOG("LogicClass::AI() - Factories.Count = %d\n", Teams.Count());
     for (int factory = 0; factory < Factories.Count(); ++factory) {
@@ -219,7 +219,7 @@ void LogicClass::AI()
         }
     }
 
-    if (Session.GameToPlay != GAME_CAMPAIGN) {
+    if (g_Session.GameToPlay != GAME_CAMPAIGN) {
         for (HousesType mphouse = HOUSES_MULTI_FIRST; mphouse < HOUSES_MULTI_LAST; ++mphouse) {
             HouseClass *hptr = HouseClass::As_Pointer(mphouse);
             DEBUG_ASSERT(hptr != nullptr);
@@ -243,15 +243,15 @@ void LogicClass::AI()
         }
     }
 
-    if (Session.GameToPlay != GAME_CAMPAIGN) {
-        if (Scen.AutoSonarTimer <= 0) {
+    if (g_Session.GameToPlay != GAME_CAMPAIGN) {
+        if (g_Scen.AutoSonarTimer <= 0) {
             if (AutoSonarPulse) {
-                Map.Activate_Pulse();
+                g_Map.Activate_Pulse();
                 VocManager.Play_Locally(VOC_SONPULSE);
                 AutoSonarPulse = false;
             }
 
-            Scen.AutoSonarTimer = 600;
+            g_Scen.AutoSonarTimer = 600;
         }
     }
 #endif

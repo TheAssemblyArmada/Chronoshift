@@ -17,13 +17,13 @@
 #include "ostimer.h"
 
 #ifndef GAME_DLL
-TimerClass TickCount;
-CountDownTimerClass CountDown;
+TimerClass g_TickCount;
+CountDownTimerClass g_CountDown;
 #endif
 
 TimerClass::TimerClass(BaseTimerEnum base_timer, BOOL start) : m_started(0), m_accumulated(0), m_tickType(base_timer)
 {
-    if (start && PlatformTimer->s_timerSystemOn) {
+    if (start && g_PlatformTimer->s_timerSystemOn) {
         Start();
     }
 }
@@ -42,14 +42,14 @@ TimerClass::~TimerClass()
 
 int TimerClass::Get_Ticks()
 {
-    if (PlatformTimer != nullptr) {
+    if (g_PlatformTimer != nullptr) {
         switch (m_tickType) {
             case BT_USER:
-                return PlatformTimer->Get_User_Tick_Count();
+                return g_PlatformTimer->Get_User_Tick_Count();
 
             case BT_SYSTEM:
             default:
-                return PlatformTimer->Get_System_Tick_Count();
+                return g_PlatformTimer->Get_System_Tick_Count();
         }
     }
 

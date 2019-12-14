@@ -43,9 +43,9 @@ private:
 };
 
 #ifdef GAME_DLL
-extern GetCDClass &g_cdList;
+extern GetCDClass &g_CDList;
 #else
-extern GetCDClass g_cdList;
+extern GetCDClass g_CDList;
 #endif
 
 #endif // GETCD_H

@@ -262,7 +262,7 @@ struct SoundEffectType
 VocType Voc_From_Name(const char *name);
 const char *Name_From_Voc(VocType voc);
 
-extern SoundEffectType SoundEffectName[];
+extern SoundEffectType g_SoundEffectName[];
 
 void Sound_Effect(VocType voc, coord_t location, int int2 = 1, HousesType house = HOUSES_NONE);
 int Sound_Effect(VocType voc, fixed_t volume = fixed_t(1, 1), int int1 = 1, int16_t pan = 0, HousesType house = HOUSES_NONE);

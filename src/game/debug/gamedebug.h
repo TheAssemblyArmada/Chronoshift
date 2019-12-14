@@ -82,7 +82,7 @@
             __CURRENT_FUNCTION__, \
             #exp, \
             ##__VA_ARGS__); \
-        if (BreakOnException) { \
+        if (g_BreakOnException) { \
             __debugbreak(); \
         } \
         throw except; \

@@ -28,7 +28,7 @@
 #include <cstdio>
 
 #ifndef GAME_DLL
-WindowType WindowList[WINDOW_COUNT] = {
+WindowType g_WindowList[WINDOW_COUNT] = {
     { 0, 0, 640, 400, 15, 12, 0, 0 },
     { 8, 75, 304, 100, 15, 12, 0, 0 },
     { 0, 0, 640, 400, 15, 14, 0, 0 },
@@ -37,20 +37,20 @@ WindowType WindowList[WINDOW_COUNT] = {
     { 40, 30, 240, 140, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 15, 12, 0, 0 }
 };
-unsigned Window;
-int WindowColumns = 40;
-int WindowLines = 25;
-int WindowWidth = 40;
-int WPos = 0;
-int WinX = 0;
-int WinY = 0;
-int WinW = 40;
-int WinH = 25;
-int WinC = 1;
-int WinB = 0;
-int WinCx = 0;
-int WinCy = 0;
-int ScrollCounter = 0;
+unsigned g_Window;
+int g_WindowColumns = 40;
+int g_WindowLines = 25;
+int g_WindowWidth = 40;
+int g_WPos = 0;
+int g_WinX = 0;
+int g_WinY = 0;
+int g_WinW = 40;
+int g_WinH = 25;
+int g_WinC = 1;
+int g_WinB = 0;
+int g_WinCx = 0;
+int g_WinCy = 0;
+int g_ScrollCounter = 0;
 #endif
 
 /**
@@ -76,7 +76,7 @@ void Simple_Text_Print(
     // rather than there being remap objects that contain all the various color
     // mapping tables
     if (!remapper) {
-        mapper = &ColorRemaps[REMAP_2]; // Red remap
+        mapper = &g_ColorRemaps[REMAP_2]; // Red remap
     } else {
         mapper = remapper;
     }
@@ -133,64 +133,64 @@ void Simple_Text_Print(
 
     switch (font) {
         case TPF_SCORE:
-            fontptr = ScoreFontPtr;
+            fontptr = g_ScoreFontPtr;
             break;
 
         case TPF_12PT_METAL:
             // xspace = 2; //temp adjust
-            fontptr = Metal12FontPtr;
+            fontptr = g_Metal12FontPtr;
             break;
 
         case TPF_MAP:
-            fontptr = MapFontPtr;
+            fontptr = g_MapFontPtr;
             xspace = 0;
             break;
 
         case TPF_VCR:
-            fontptr = VCRFontPtr;
+            fontptr = g_VCRFontPtr;
             break;
 
         case TPF_6PT_GRAD:
-            fontptr = GradFont6Ptr;
+            fontptr = g_GradFont6Ptr;
             xspace = 0;
             break;
 
         case TPF_3PT:
             style = style & (TPF_GRAD_ALL | TPF_ALIGN_MAX | TPF_RED_SHAD | TPF_FONTS);
-            fontptr = Font3Ptr;
+            fontptr = g_Font3Ptr;
             xspace = 2;
             break;
 
         case TPF_6PT:
-            fontptr = Font6Ptr;
+            fontptr = g_Font6Ptr;
             xspace = 0;
             break;
 
         case TPF_EDITOR:
-            fontptr = EditorFont;
+            fontptr = g_EditorFont;
             yspace = 1;
             xspace = -1;
             break;
 
         case TPF_8PT:
-            fontptr = Font8Ptr;
+            fontptr = g_Font8Ptr;
             xspace = -1;
             yspace = -4;
             break;
 
         case TPF_LED:
-            fontptr = FontLEDPtr;
+            fontptr = g_FontLEDPtr;
             xspace = -3;
             break;
 
         case TPF_TYPEWRITER:
-            fontptr = TypeFontPtr;
+            fontptr = g_TypeFontPtr;
             xspace = -2;
             yspace = 2;
             break;
 
         default:
-            fontptr = g_fontPtr;
+            fontptr = g_FontPtr;
             break;
     }
 
@@ -231,8 +231,8 @@ void Simple_Text_Print(
         xlat[1] = mapper->MediumColor;
     }
 
-    g_fontXSpacing = xspace;
-    g_fontYSpacing = yspace;
+    g_FontXSpacing = xspace;
+    g_FontYSpacing = yspace;
 
     Set_Font(fontptr);
 
@@ -256,8 +256,8 @@ void Simple_Text_Print(
                 break;
         }
 
-        if ((unsigned)xpos < (unsigned)g_logicPage->Get_Width() && (unsigned)ypos < (unsigned)g_logicPage->Get_Height()) {
-            g_logicPage->Print(string, xpos, ypos, fgcolor, bgcolor);
+        if ((unsigned)xpos < (unsigned)g_LogicPage->Get_Width() && (unsigned)ypos < (unsigned)g_LogicPage->Get_Height()) {
+            g_LogicPage->Print(string, xpos, ypos, fgcolor, bgcolor);
         }
     }
 }
@@ -458,7 +458,7 @@ int Format_Window_String(char *string, int max_w, int &w, int &h)
         int lines = 0;
         while (*string) {
             // We just started a new line, so increment the height by font height
-            h += g_fontYSpacing + g_fontHeight;
+            h += g_FontYSpacing + g_FontHeight;
             int width = 0;
             ++lines;
 
@@ -523,7 +523,7 @@ int Format_Window_String_New(const char *string, int max_w, int &w, int &h, char
 
         while (*string) {
             // We just started a new line, so increment the height by font height
-            h += g_fontYSpacing + g_fontHeight;
+            h += g_FontYSpacing + g_FontHeight;
             ++lines;
 
             int width;
@@ -607,10 +607,10 @@ void Draw_Caption(const char *string, int x, int y, int w)
 
             int width = String_Pixel_Width(string) / 2;
 
-            g_logicPage->Draw_Line(middle - width,
-                g_fontYSpacing + g_fontHeight + y + 16,
+            g_LogicPage->Draw_Line(middle - width,
+                g_FontYSpacing + g_FontHeight + y + 16,
                 middle + width,
-                g_fontYSpacing + g_fontHeight + y + 16,
+                g_FontYSpacing + g_FontHeight + y + 16,
                 GadgetClass::Get_Color_Scheme()->WindowPalette[4]);
         }
     }
@@ -626,15 +626,15 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
     //int new_x_pos = std::max(x_pos - 30, 0);
     //int new_y_pos = std::max(y_pos - 8, 0);
 
-    //int new_width = std::min(width + 60, GraphicViewPortClass::ScreenWidth - new_x_pos);
-    //int new_height = std::min(height + 16, GraphicViewPortClass::ScreenHeight - new_y_pos);
+    //int new_width = std::min(width + 60, GraphicViewPortClass::s_ScreenWidth - new_x_pos);
+    //int new_height = std::min(height + 16, GraphicViewPortClass::s_ScreenHeight - new_y_pos);
 
-    WindowList[WINDOW_6].X = x_pos;
-    WindowList[WINDOW_6].Y = y_pos;
-    WindowList[WINDOW_6].W = width;
-    WindowList[WINDOW_6].H = height;
+    g_WindowList[WINDOW_6].X = x_pos;
+    g_WindowList[WINDOW_6].Y = y_pos;
+    g_WindowList[WINDOW_6].W = width;
+    g_WindowList[WINDOW_6].H = height;
 
-    GraphicViewPortClass *saved = Set_Logic_Page(g_hidPage);
+    GraphicViewPortClass *saved = Set_Logic_Page(g_HidPage);
 
     // Draw dialog background.
     void *bkgndshape = GameFileClass::Retrieve("dd-bkgnd.shp");
@@ -692,11 +692,11 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
         WINDOW_6,
         SHAPE_VIEWPORT_REL);
 
-    g_mouse->Draw_Mouse(g_hidPage);
+    g_Mouse->Draw_Mouse(g_HidPage);
 
-    g_hidPage.Blit(g_seenBuff, x_pos, y_pos, x_pos, y_pos, width, height, false);
+    g_HidPage.Blit(g_SeenBuff, x_pos, y_pos, x_pos, y_pos, width, height, false);
 
-    g_mouse->Erase_Mouse(g_hidPage, false);
+    g_Mouse->Erase_Mouse(g_HidPage, false);
 
     Set_Logic_Page(saved);
 }
@@ -734,67 +734,67 @@ void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, B
     BoxStyleType *box_style = &styles[style];
 
     if (fill) {
-        g_logicPage->Fill_Rect(x_pos, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->FillColor);
+        g_LogicPage->Fill_Rect(x_pos, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->FillColor);
     }
 
     switch (style) {
         case BOX_STYLE_4:
-            g_logicPage->Draw_Rect(x_pos, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->ButtonHighColor);
+            g_LogicPage->Draw_Rect(x_pos, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->ButtonHighColor);
             break;
 
         case BOX_STYLE_5:
-            g_logicPage->Draw_Rect(x_pos + 1, y_pos + 1, width + x_pos - 2, height + y_pos - 2, box_style->ButtonHighColor);
+            g_LogicPage->Draw_Rect(x_pos + 1, y_pos + 1, width + x_pos - 2, height + y_pos - 2, box_style->ButtonHighColor);
             break;
 
         default:
-            g_logicPage->Draw_Line(
+            g_LogicPage->Draw_Line(
                 x_pos, height + y_pos - 1, width + x_pos - 1, height + y_pos - 1, box_style->ButtonLowColor); // bottom line
-            g_logicPage->Draw_Line(
+            g_LogicPage->Draw_Line(
                 width + x_pos - 1, y_pos, width + x_pos - 1, height + y_pos - 1, box_style->ButtonLowColor); // left line
-            g_logicPage->Draw_Line(x_pos, y_pos, width + x_pos - 1, y_pos, box_style->ButtonHighColor); // top line
-            g_logicPage->Draw_Line(x_pos, y_pos, x_pos, height + y_pos - 1, box_style->ButtonHighColor); // right line
-            g_logicPage->Put_Pixel(x_pos, height + y_pos - 1, box_style->TransitionColor); // transition bottom left
-            g_logicPage->Put_Pixel(width + x_pos - 1, y_pos, box_style->TransitionColor); // transition top right
+            g_LogicPage->Draw_Line(x_pos, y_pos, width + x_pos - 1, y_pos, box_style->ButtonHighColor); // top line
+            g_LogicPage->Draw_Line(x_pos, y_pos, x_pos, height + y_pos - 1, box_style->ButtonHighColor); // right line
+            g_LogicPage->Put_Pixel(x_pos, height + y_pos - 1, box_style->TransitionColor); // transition bottom left
+            g_LogicPage->Put_Pixel(width + x_pos - 1, y_pos, box_style->TransitionColor); // transition top right
             break;
     }
 }
 
 void Window_Box(WindowNumberType type, BoxStyleEnum style)
 {
-    if (g_logicPage == &g_seenBuff) {
-        g_mouse->Conditional_Hide_Mouse(WindowList[style].X,
-            WindowList[style].Y,
-            WindowList[style].X + WindowList[style].W,
-            WindowList[style].Y + WindowList[style].H);
+    if (g_LogicPage == &g_SeenBuff) {
+        g_Mouse->Conditional_Hide_Mouse(g_WindowList[style].X,
+            g_WindowList[style].Y,
+            g_WindowList[style].X + g_WindowList[style].W,
+            g_WindowList[style].Y + g_WindowList[style].H);
     }
 
-    Draw_Box(WindowList[style].X, WindowList[style].Y, WindowList[style].W, WindowList[style].H, style, true);
+    Draw_Box(g_WindowList[style].X, g_WindowList[style].Y, g_WindowList[style].W, g_WindowList[style].H, style, true);
 
-    if (g_logicPage == &g_seenBuff) {
-        g_mouse->Conditional_Show_Mouse();
+    if (g_LogicPage == &g_SeenBuff) {
+        g_Mouse->Conditional_Show_Mouse();
     }
 }
 
 unsigned Change_Window(unsigned window)
 {
     unsigned old_window;
-    old_window = Window;
-    Window = window;
-    WinX = WindowList[window].X;
-    WinY = WindowList[window].Y;
-    WinW = WindowList[window].W;
-    WinH = WindowList[window].H;
-    WinC = WindowList[window].C;
-    WinB = WindowList[window].B;
-    WinCx = WindowList[window].Cx;
-    WinCy = WindowList[window].Cy;
+    old_window = g_Window;
+    g_Window = window;
+    g_WinX = g_WindowList[window].X;
+    g_WinY = g_WindowList[window].Y;
+    g_WinW = g_WindowList[window].W;
+    g_WinH = g_WindowList[window].H;
+    g_WinC = g_WindowList[window].C;
+    g_WinB = g_WindowList[window].B;
+    g_WinCx = g_WindowList[window].Cx;
+    g_WinCy = g_WindowList[window].Cy;
 
-    int full_width = g_fontXSpacing + g_fontWidth;
-    WPos = WinCx / full_width;
-    WindowLines = (WinH - g_fontYSpacing) / (g_fontHeight + g_fontYSpacing);
-    WindowWidth = 8 * WinW;
-    ScrollCounter = 0;
-    WindowColumns = (8 * WinW) / full_width;
+    int full_width = g_FontXSpacing + g_FontWidth;
+    g_WPos = g_WinCx / full_width;
+    g_WindowLines = (g_WinH - g_FontYSpacing) / (g_FontHeight + g_FontYSpacing);
+    g_WindowWidth = 8 * g_WinW;
+    g_ScrollCounter = 0;
+    g_WindowColumns = (8 * g_WinW) / full_width;
 
     return old_window;
 }

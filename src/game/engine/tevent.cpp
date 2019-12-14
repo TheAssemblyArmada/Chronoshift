@@ -243,7 +243,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
         case TEVENT_ELAPSED_TIME:
             return tdevent.Timer_Expired();
         case TEVENT_TIMER_EXPIRED:
-            return Scen.Global_Timer().Expired();
+            return g_Scen.Global_Timer().Expired();
         case TEVENT_DESTROYED_BUILDINGS:
             hc = HouseClass::As_Pointer(house);
 
@@ -347,9 +347,9 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
 
             return false;
         case TEVENT_GLOBAL_SET:
-            return Scen.Get_Global(m_Value);
+            return g_Scen.Get_Global(m_Value);
         case TEVENT_GLOBAL_CLEAR:
-            return !Scen.Get_Global(m_Value);
+            return !g_Scen.Get_Global(m_Value);
         case TEVENT_DESTROYED_ALL_FAKES:
             return true;
         case TEVENT_LOW_POWER:
@@ -367,7 +367,7 @@ BOOL TEventClass::operator()(TDelayEventClass &tdevent, TEventType tevent, House
 
             return hc->Power_Fraction() < fixed_t(1, 1);
         case TEVENT_ATTACHED_BRIDGE_DESTROYED:
-            if (Scen.Get_Bridge_Count() == 0) {
+            if (g_Scen.Get_Bridge_Count() == 0) {
                 tdevent.Set_Bit1(true);
                 return true;
             }
@@ -408,7 +408,7 @@ void TEventClass::Build_INI_Entry(char *entry_buffer) const
 
 void TEventClass::Read_INI()
 {
-    switch (g_iniFormat) {
+    switch (g_INIFormat) {
         case 0: // Similar to TD trigger format? Skips none event related entries.
             m_Type = (TEventType)atoi(strtok(nullptr, ","));
             // skip next 2 entries.
@@ -606,12 +606,12 @@ void EventChoiceClass::Draw_It(int index, int x, int y, int x_max, int y_max, BO
     if ((style & TPF_FONTS) == TPF_6PT_GRAD || (style & TPF_FONTS) == TPF_EDITOR) {
         if (selected) {
             style |= TPF_USE_BRIGHT;
-            g_logicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + y_max) - 1), remapper->WindowPalette[0]);
+            g_LogicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + y_max) - 1), remapper->WindowPalette[0]);
         } else if (!(style & TPF_USE_GRAD_PAL)) {
             style |= TPF_USE_MEDIUM;
         }
     } else {
-        remapper = (selected ? &ColorRemaps[REMAP_10] : &ColorRemaps[REMAP_5]);
+        remapper = (selected ? &g_ColorRemaps[REMAP_10] : &g_ColorRemaps[REMAP_5]);
     }
 
     Conquer_Clip_Text_Print(TEventClass::Name_From_Event(m_Event), x, y, remapper, COLOR_TBLACK, style, x_max, _tabs);

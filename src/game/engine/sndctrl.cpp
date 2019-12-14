@@ -66,11 +66,11 @@ void SoundControlsClass::Process()
 
     // not sure what's this for and why it uses OK button id...
     ControlClass ctrl(
-        BUTTON_SOUND_OK, 0, 0, g_seenBuff.Get_Width(), g_seenBuff.Get_Height(), MOUSE_LEFT_PRESS | MOUSE_RIGHT_PRESS);
+        BUTTON_SOUND_OK, 0, 0, g_SeenBuff.Get_Width(), g_SeenBuff.Get_Height(), MOUSE_LEFT_PRESS | MOUSE_RIGHT_PRESS);
 
     // set shuffle state
     sufflebtn.Set_Toggle_Disabled(true);
-    if (Options.Get_Shuffle()) {
+    if (g_Options.Get_Shuffle()) {
         sufflebtn.Turn_On();
     } else {
         sufflebtn.Turn_Off();
@@ -79,7 +79,7 @@ void SoundControlsClass::Process()
 
     // set repeat state
     repeatbtn.Set_Toggle_Disabled(true);
-    if (Options.Get_Repeat()) {
+    if (g_Options.Get_Repeat()) {
         repeatbtn.Turn_On();
     } else {
         repeatbtn.Turn_Off();
@@ -89,13 +89,13 @@ void SoundControlsClass::Process()
     // set slider states
     scorevolsldr.Set_Maximum(255);
     scorevolsldr.Set_Thumb_Size(16);
-    scorevolsldr.Set_Value(Options.Get_Sound_Volume() * 256); // is it * 256?
+    scorevolsldr.Set_Value(g_Options.Get_Sound_Volume() * 256); // is it * 256?
     soundvolsldr.Set_Maximum(255);
     soundvolsldr.Set_Thumb_Size(16);
-    soundvolsldr.Set_Value(Options.Get_Score_Volume() * 256); // is it * 256?
+    soundvolsldr.Set_Value(g_Options.Get_Score_Volume() * 256); // is it * 256?
 
     // set graphic page to draw to
-    Set_Logic_Page(g_seenBuff);
+    Set_Logic_Page(g_SeenBuff);
 
     // link all the gadgets
     GadgetClass *activegdt = &okbtn;
@@ -110,9 +110,9 @@ void SoundControlsClass::Process()
     ctrl.Add_Tail(*activegdt);
 
     // fill up the list entries
-    for (ThemeType i = THEME_FIRST; i < Theme.Max_Themes(); ++i) {
-        if (Theme.Is_Allowed(i)) {
-            int length = Theme.Track_Length(i);
+    for (ThemeType i = THEME_FIRST; i < g_Theme.Max_Themes(); ++i) {
+        if (g_Theme.Is_Allowed(i)) {
+            int length = g_Theme.Track_Length(i);
             // these strings are used while the list menu exists and are cleaned up at the end of the function
             char *str = new char[100];
             if (str != nullptr) {
@@ -125,10 +125,10 @@ void SoundControlsClass::Process()
                     musiclist.Count() + 1,
                     length / 60,
                     length % 60,
-                    Theme.Full_Name(i));
+                    g_Theme.Full_Name(i));
                 musiclist.Add_Item(str);
             }
-            if (Theme.What_Is_Playing() == i) {
+            if (g_Theme.What_Is_Playing() == i) {
                 musiclist.Set_Selected_Index(musiclist.Count() - 1);
             }
         }
@@ -140,19 +140,19 @@ void SoundControlsClass::Process()
     BOOL to_draw = true;
     RemapControlType *scheme = GadgetClass::Get_Color_Scheme();
     while (process) {
-        if (Session.Game_To_Play() == GAME_CAMPAIGN || Session.Game_To_Play() == GAME_SKIRMISH) {
+        if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Session.Game_To_Play() == GAME_SKIRMISH) {
             Call_Back();
         } else if (Main_Loop()) {
             process = false;
         }
 
-        if (g_allSurfaces.Surfaces_Restored()) {
-            g_allSurfaces.Clear_Surfaces_Restored();
+        if (g_AllSurfaces.Surfaces_Restored()) {
+            g_AllSurfaces.Clear_Surfaces_Restored();
             to_draw = true;
         }
 
         if (to_draw) {
-            g_mouse->Hide_Mouse();
+            g_Mouse->Hide_Mouse();
             Dialog_Box(28, 54, 584, 292);
             Draw_Caption(42, 28, 54, 584);
             Fancy_Text_Print(TXT_MUSIC_VOLUME_COLON, 312, 106, scheme, 0, TPF_RIGHT | TPF_NOSHADOW | TPF_6PT_GRAD);
@@ -162,7 +162,7 @@ void SoundControlsClass::Process()
 
             // Draw all linked gadgets
             activegdt->Draw_All();
-            g_mouse->Show_Mouse();
+            g_Mouse->Show_Mouse();
             to_draw = false;
         }
 
@@ -175,43 +175,43 @@ void SoundControlsClass::Process()
                     break;
                 case GADGET_INPUT_RENAME2(BUTTON_SOUND_STOP):
                     // are both needed?
-                    Theme.Stop();
-                    Theme.Stop_Playing_Song();
+                    g_Theme.Stop();
+                    g_Theme.Stop_Playing_Song();
                     break;
                 case KN_SPACE:
                 case GADGET_INPUT_RENAME2(BUTTON_SOUND_PLAY):
                     // TODO, this is how RA had it
                     // This is a hack - first char of the string is the theme number
                     // Needs a better solution
-                    Theme.Queue_Song((ThemeType)musiclist.Current_Item()[0]);
+                    g_Theme.Queue_Song((ThemeType)musiclist.Current_Item()[0]);
                     break;
                 case GADGET_INPUT_RENAME2(BUTTON_SOUND_SUFFLE):
                     sufflebtn.Set_Text(sufflebtn.Get_Toggle_State() ? TXT_ON : TXT_OFF, false);
-                    Options.Set_Shuffle(sufflebtn.Get_Toggle_State());
+                    g_Options.Set_Shuffle(sufflebtn.Get_Toggle_State());
                     break;
                 case GADGET_INPUT_RENAME2(BUTTON_SOUND_REPEAT):
                     repeatbtn.Set_Text(repeatbtn.Get_Toggle_State() ? TXT_ON : TXT_OFF, false);
-                    Options.Set_Repeat(repeatbtn.Get_Toggle_State());
+                    g_Options.Set_Repeat(repeatbtn.Get_Toggle_State());
                     break;
                 case GADGET_INPUT_RENAME2(BUTTON_SOUND_OK):
                     process = false;
                     break;
                 case GADGET_INPUT_RENAME2(SLIDER_SCORE_VOL):
-                    Options.Set_Score_Volume(fixed_t(scorevolsldr.Get_Value(), 256), true);
-                    if (Session.Game_To_Play() != GAME_CAMPAIGN) {
-                        Options.Set_Multiplayer_Score_Volume(Options.Get_Score_Volume());
+                    g_Options.Set_Score_Volume(fixed_t(scorevolsldr.Get_Value(), 256), true);
+                    if (g_Session.Game_To_Play() != GAME_CAMPAIGN) {
+                        g_Options.Set_Multiplayer_Score_Volume(g_Options.Get_Score_Volume());
                     }
                     break;
                 case GADGET_INPUT_RENAME2(SLIDER_SOUND_VOL):
-                    Options.Set_Sound_Volume(fixed_t(soundvolsldr.Get_Value(), 256), true);
+                    g_Options.Set_Sound_Volume(fixed_t(soundvolsldr.Get_Value(), 256), true);
                     break;
                 default:
                     break;
             }
         }
     }
-    if (Options.Get_Score_Volume() == 0) {
-        Theme.Stop();
+    if (g_Options.Get_Score_Volume() == 0) {
+        g_Theme.Stop();
     }
     // cleanup
     while (musiclist.Count()) {

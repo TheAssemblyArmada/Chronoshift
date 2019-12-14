@@ -17,7 +17,7 @@
 #include "gbuffer.h"
 
 #ifndef GAME_DLL
-GameOptionsClass Options;
+GameOptionsClass g_Options;
 #endif
 
 /**
@@ -42,15 +42,15 @@ void GameOptionsClass::Process()
 void GameOptionsClass::Adjust_Vars_For_Resolution()
 {
     // TODO work out what these are all used for if anything.
-    OptionsDialogWidth = 448;
-    OptionsDialogHeight = 222;
-    OptionsDialogCenterX = (g_seenBuff.Get_Width() - OptionsDialogWidth) / 2;
-    OptionsDialogCenterY = (g_seenBuff.Get_Height() - OptionsDialogHeight) / 2;
-    field_8C = 260;
-    OptionsDialogButtonYSpacing = 18;
-    field_94 = 10;
-    OptionsDialogButtonOffsetFromTop = 42;
-    field_9C = 144;
-    field_A0 = 32;
-    OptionsDialogBottomButtonOffsetTop = OptionsDialogHeight - 38;
+    m_OptionsDialogWidth = 448;
+    m_OptionsDialogHeight = 222;
+    m_OptionsDialogCenterX = (g_SeenBuff.Get_Width() - m_OptionsDialogWidth) / 2;
+    m_OptionsDialogCenterY = (g_SeenBuff.Get_Height() - m_OptionsDialogHeight) / 2;
+    m_field_8C = 260;
+    m_OptionsDialogButtonYSpacing = 18;
+    m_field_94 = 10;
+    m_OptionsDialogButtonOffsetFromTop = 42;
+    m_field_9C = 144;
+    m_field_A0 = 32;
+    m_OptionsDialogBottomButtonOffsetTop = m_OptionsDialogHeight - 38;
 }

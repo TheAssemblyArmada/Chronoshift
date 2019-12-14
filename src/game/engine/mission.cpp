@@ -280,7 +280,7 @@ BOOL MissionClass::Is_Recruitable_Mission(MissionType mission)
         return true;
     }
 
-    return MissionControlClass::MissionControl[mission].m_Recruitable;
+    return MissionControlClass::s_MissionControl[mission].m_Recruitable;
 }
 
 /**

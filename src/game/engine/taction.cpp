@@ -199,9 +199,9 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_CREATE_TEAM:
-            ++ScenarioInit;
+            ++g_ScenarioInit;
             m_TeamType->Create_One_Of();
-            --ScenarioInit;
+            --g_ScenarioInit;
 
             return true;
         case TACTION_DESTROY_ALL_TEAMS:
@@ -216,7 +216,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
             return m_TeamType->Do_Reinforcements();
 
         case TACTION_DROP_FLARE:
-            new AnimClass(ANIM_LZ_SMOKE, Cell_To_Coord(Scen.Get_Waypoint(m_Value)));
+            new AnimClass(ANIM_LZ_SMOKE, Cell_To_Coord(g_Scen.Get_Waypoint(m_Value)));
 
             return true;
         case TACTION_FIRE_SALE:
@@ -226,21 +226,21 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_PLAY_MOVIE:
-            g_wwmouse->Hide_Mouse();
-            g_seenBuff.Clear();
+            g_WWMouse->Hide_Mouse();
+            g_SeenBuff.Clear();
             Play_Movie((MovieType)m_Value);
-            GamePalette.Set();
-            Map.Flag_To_Redraw(true);
-            g_wwmouse->Show_Mouse();
+            g_GamePalette.Set();
+            g_Map.Flag_To_Redraw(true);
+            g_WWMouse->Show_Mouse();
 
             return true;
         case TACTION_DISPLAY_TEXT:
-            Session.Get_Messages().Add_Message(nullptr,
+            g_Session.Get_Messages().Add_Message(nullptr,
                 0,
                 g_TutorialText[m_Value],
                 PLAYER_COLOR_GREEN,
                 TPF_6PT_GRAD | TPF_OUTLINE | TPF_USE_GRAD_PAL,
-                900 * Rule.Message_Delay());
+                900 * g_Rule.Message_Delay());
 
             return true;
         case TACTION_DESTROY_TRIGGER:
@@ -268,7 +268,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
                 g_PlayerPtr->Set_Visionary(true);
 
                 for (cell_t i = 0; i < MAP_MAX_AREA; ++i) {
-                    Map.Map_Cell(i, g_PlayerPtr);
+                    g_Map.Map_Cell(i, g_PlayerPtr);
                 }
             }
 
@@ -276,17 +276,17 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
         case TACTION_REVEAL_WAYPOINT:
             if (!g_PlayerPtr->Visionary()) {
                 // TODO gap radius is used here, but really it should be a separate constant as in later games.
-                Map.Sight_From(Scen.Get_Waypoint(m_Value), Rule.Gap_Radius(), g_PlayerPtr, false);
+                g_Map.Sight_From(g_Scen.Get_Waypoint(m_Value), g_Rule.Gap_Radius(), g_PlayerPtr, false);
             }
 
             return true;
         case TACTION_REVEAL_WAYPOINT_ZONE:
             if (!g_PlayerPtr->Visionary()) {
-                uint8_t zone = Map[Scen.Get_Waypoint(m_Value)].Get_Zone(MZONE_CRUSHER);
+                uint8_t zone = g_Map[g_Scen.Get_Waypoint(m_Value)].Get_Zone(MZONE_CRUSHER);
 
                 for (cell_t i = 0; i < MAP_MAX_AREA; ++i) {
-                    if (Map[i].Get_Zone(MZONE_CRUSHER) == zone) {
-                        Map.Map_Cell(i, g_PlayerPtr);
+                    if (g_Map[i].Get_Zone(MZONE_CRUSHER) == zone) {
+                        g_Map.Map_Cell(i, g_PlayerPtr);
                     }
                 }
             }
@@ -297,7 +297,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_PLAY_MUSIC_THEME:
-            Theme.Queue_Song((ThemeType)m_Value);
+            g_Theme.Queue_Song((ThemeType)m_Value);
 
             return true;
         case TACTION_PLAY_SPEECH:
@@ -311,45 +311,45 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_TIMER_START:
-            if (!Scen.Global_Timer_Running()) {
-                Scen.Start_Global_Timer();
-                Map.Set_Tab_Redraw(true);
-                Map.Flag_To_Redraw();
+            if (!g_Scen.Global_Timer_Running()) {
+                g_Scen.Start_Global_Timer();
+                g_Map.Set_Tab_Redraw(true);
+                g_Map.Flag_To_Redraw();
             }
 
             return true;
         case TACTION_TIMER_STOP:
-            if (Scen.Global_Timer_Running()) {
-                Scen.Stop_Global_Timer();
-                Map.Set_Tab_Redraw(true);
-                Map.Flag_To_Redraw();
+            if (g_Scen.Global_Timer_Running()) {
+                g_Scen.Stop_Global_Timer();
+                g_Map.Set_Tab_Redraw(true);
+                g_Map.Flag_To_Redraw();
             }
 
             return true;
         case TACTION_TIMER_EXTEND:
-            Scen.Set_Global_Time(Scen.Get_Global_Time() + 90 * m_Value);
-            Map.Set_Tab_Redraw(true);
-            Map.Flag_To_Redraw();
+            g_Scen.Set_Global_Time(g_Scen.Get_Global_Time() + 90 * m_Value);
+            g_Map.Set_Tab_Redraw(true);
+            g_Map.Flag_To_Redraw();
 
             return true;
         case TACTION_TIMER_REDUCE:
-            Scen.Set_Global_Time(std::max(Scen.Get_Global_Time() - 90 * m_Value, 0));
-            Map.Set_Tab_Redraw(true);
-            Map.Flag_To_Redraw();
+            g_Scen.Set_Global_Time(std::max(g_Scen.Get_Global_Time() - 90 * m_Value, 0));
+            g_Map.Set_Tab_Redraw(true);
+            g_Map.Flag_To_Redraw();
 
             return true;
         case TACTION_TIMER_SET:
-            Scen.Set_Global_Time(90 * m_Value);
-            Map.Set_Tab_Redraw(true);
-            Map.Flag_To_Redraw();
+            g_Scen.Set_Global_Time(90 * m_Value);
+            g_Map.Set_Tab_Redraw(true);
+            g_Map.Flag_To_Redraw();
 
             return true;
         case TACTION_GLOBAL_SET:
-            Scen.Set_Global_To(m_Value, true);
+            g_Scen.Set_Global_To(m_Value, true);
 
             return true;
         case TACTION_GLOBAL_CLEAR:
-            Scen.Set_Global_To(m_Value, false);
+            g_Scen.Set_Global_To(m_Value, false);
 
             return true;
         case TACTION_AUTO_BASE_AI:
@@ -357,7 +357,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
 
             return true;
         case TACTION_GROW_SHROUD:
-            Map.Encroach_Shadow();
+            g_Map.Encroach_Shadow();
 
             return true;
         case TACTION_DESTROY_ATTACHED:
@@ -369,7 +369,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
             }
 
             if (cell_num != 0) {
-                Map.Destroy_Bridge_At(cell_num);
+                g_Map.Destroy_Bridge_At(cell_num);
             }
 
             if (tp != nullptr) {
@@ -414,8 +414,8 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
             hp->Enable_Superweapon((SpecialWeaponType)m_Value, m_Type == TACTION_ONE_TIME_SUPER);
 
             if (hp == g_PlayerPtr) {
-                Map.Add(RTTI_SPECIAL, (SpecialWeaponType)m_Value);
-                Map.Flag_Strip_Redraw(COLUMN_RIGHT);
+                g_Map.Add(RTTI_SPECIAL, (SpecialWeaponType)m_Value);
+                g_Map.Flag_Strip_Redraw(COLUMN_RIGHT);
             }
 
             return true;
@@ -476,7 +476,7 @@ void TActionClass::Build_INI_Entry(char *entry_buffer) const
  */
 void TActionClass::Read_INI()
 {
-    switch (g_iniFormat) {
+    switch (g_INIFormat) {
         case INIFORMAT_0:
         case INIFORMAT_1:
             m_Type = (TActionType)atoi(strtok(nullptr, ","));
@@ -591,12 +591,12 @@ void ActionChoiceClass::Draw_It(int index, int x, int y, int x_max, int y_max, B
     if ((style & TPF_FONTS) == TPF_6PT_GRAD || (style & TPF_FONTS) == TPF_EDITOR) {
         if (selected) {
             style |= TPF_USE_BRIGHT;
-            g_logicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + y_max) - 1), remapper->WindowPalette[0]);
+            g_LogicPage->Fill_Rect(x, y, ((x + x_max) - 1), ((y + y_max) - 1), remapper->WindowPalette[0]);
         } else if (!(style & TPF_USE_GRAD_PAL)) {
             style |= TPF_USE_MEDIUM;
         }
     } else {
-        remapper = (selected ? &ColorRemaps[REMAP_10] : &ColorRemaps[REMAP_5]);
+        remapper = (selected ? &g_ColorRemaps[REMAP_10] : &g_ColorRemaps[REMAP_5]);
     }
 
     Conquer_Clip_Text_Print(TActionClass::Name_From_Action(m_Action), x, y, remapper, COLOR_TBLACK, style, x_max, _tabs);

@@ -22,7 +22,7 @@ int WinsockInterfaceClass::SocketsMax = 0;
 #endif // !PLATFORM_WINDOWS
 
 #ifndef GAME_DLL
-WinsockInterfaceClass *g_packetTransport = nullptr;
+WinsockInterfaceClass *g_PacketTransport = nullptr;
 #endif
 
 /**
@@ -175,11 +175,11 @@ void WinsockInterfaceClass::Write_To(void *src, int src_len, void *src_head)
 #ifdef PLATFORM_WINDOWS
     // Send a message to our event queue that sent data is pending. 
     // TODO Will need to change this when we port to SDL or other cross platform event model.
-    SendMessageA(MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
+    SendMessageA(g_MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
 #endif
 
     // Handle events.
-    g_keyboard->Check();
+    g_Keyboard->Check();
 }
 
 /**
@@ -203,10 +203,10 @@ void WinsockInterfaceClass::Broadcast(void *src, int src_len)
 #ifdef PLATFORM_WINDOWS
     // Send a message to our event queue that sent data is pending.
     // TODO Will need to change this when we port to SDL or other cross platform event model.
-    SendMessageA(MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
+    SendMessageA(g_MainWindow, Protocol_Event_Message(), 0, FD_WRITE);
 #endif
 
-    g_keyboard->Check();
+    g_Keyboard->Check();
 }
 
 /**
@@ -252,7 +252,7 @@ BOOL WinsockInterfaceClass::Start_Listening()
         SocketsMax = m_Socket;
     }
 #elif defined PLATFORM_WINDOWS
-    if (WSAAsyncSelect(m_Socket, MainWindow, Protocol_Event_Message(), FD_READ | FD_WRITE) == -1) {
+    if (WSAAsyncSelect(m_Socket, g_MainWindow, Protocol_Event_Message(), FD_READ | FD_WRITE) == -1) {
         DEBUG_LOG("WinsockInterface: Async select failed.\n");
         WSACancelAsyncRequest(m_TaskHandle);
         m_TaskHandle = INVALID_HANDLE_VALUE;

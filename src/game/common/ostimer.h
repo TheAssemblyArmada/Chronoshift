@@ -136,9 +136,9 @@ public:
 };
 
 #ifdef GAME_DLL
-extern PlatformTimerClass *&PlatformTimer;
+extern PlatformTimerClass *&g_PlatformTimer;
 #else
-extern PlatformTimerClass *PlatformTimer;
+extern PlatformTimerClass *g_PlatformTimer;
 #endif
 
 #endif // OSTIMER_H

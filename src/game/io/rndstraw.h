@@ -174,9 +174,9 @@ void RandomStraw<RNG>::Seed_Double_Word(int32_t value)
 
 // Global instance of random straw to use as a source of random data.
 #ifdef GAME_DLL
-extern RandomStraw<RandomClass> &g_cryptRandom;
+extern RandomStraw<RandomClass> &g_CryptRandom;
 #else
-extern RandomStraw<RandomClass> g_cryptRandom;
+extern RandomStraw<RandomClass> g_CryptRandom;
 #endif
 // extern RandomStraw<Random2Class> CryptRandom2;
 

@@ -54,7 +54,7 @@ TerrainClass::TerrainClass(TerrainType type, cell_t cellnum) :
  */
 TerrainClass::~TerrainClass()
 {
-    if (GameActive) {
+    if (g_GameActive) {
         Limbo();
     }
 }
@@ -122,11 +122,11 @@ MoveType TerrainClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
     }
     for (const int16_t *list = Occupy_List(); *list != LIST_END; ++list) {
         if (m_Class->Is_Waterbound()) {
-            if (!Map[cellnum + *list].Is_Clear_To_Build(SPEED_FLOAT)) {
+            if (!g_Map[cellnum + *list].Is_Clear_To_Build(SPEED_FLOAT)) {
                 return MOVE_NO;
             }
         } else {
-            if (!Map[cellnum + *list].Is_Clear_To_Build(SPEED_TRACK)) {
+            if (!g_Map[cellnum + *list].Is_Clear_To_Build(SPEED_TRACK)) {
                 return MOVE_NO;
             }
         }
@@ -142,15 +142,15 @@ MoveType TerrainClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 void TerrainClass::AI()
 {
     ObjectClass::AI();
-    if (What_Type() == TERRAIN_MINE && !(g_GameFrame % (900 * Rule.Ore_Growth_Rate()))) {
-        Map[As_Cell(As_Target())].Spread_Ore(true);
+    if (What_Type() == TERRAIN_MINE && !(g_GameFrame % (900 * g_Rule.Ore_Growth_Rate()))) {
+        g_Map[As_Cell(As_Target())].Spread_Ore(true);
     }
     if (m_AnimStage.Stage_Changed()) {
         Mark(MARK_REMOVE);
         if (m_Crumbling) {
             if (m_AnimStage.Get_Stage() == Get_Build_Frame_Count(Get_Image_Data()) - 1) {
                 delete this;
-                Map.Zone_Reset((1 | 2 | 4)); // TODO, implement enum for zone flags.
+                g_Map.Zone_Reset((1 | 2 | 4)); // TODO, implement enum for zone flags.
             }
         }
     }
@@ -175,7 +175,7 @@ coord_t TerrainClass::Sort_Y() const
 BOOL TerrainClass::Limbo()
 {
     if (!m_InLimbo) {
-        Map[Coord_To_Cell(m_Coord)].Clear_Occupant_Bit(OCCUPANT_TERRAIN);
+        g_Map[Coord_To_Cell(m_Coord)].Clear_Occupant_Bit(OCCUPANT_TERRAIN);
     }
     return ObjectClass::Limbo();
 }
@@ -213,16 +213,16 @@ void TerrainClass::Draw_It(int x, int y, WindowNumberType window) const
             flags |= SHAPE_FADING;
         }
         // edwin has a if case for team flags here
-        g_isTheaterShape = true;
+        g_IsTheaterShape = true;
         CC_Draw_Shape(shape,
             frame,
             x,
             y,
             window,
             flags | (SHAPE_GHOST | SHAPE_VIEWPORT_REL),
-            DisplayClass::FadingLight,
-            DisplayClass::UnitShadow);
-        g_isTheaterShape = false;
+            DisplayClass::s_FadingLight,
+            DisplayClass::s_UnitShadow);
+        g_IsTheaterShape = false;
     }
 }
 
@@ -238,15 +238,15 @@ BOOL TerrainClass::Mark(MarkType mark)
     }
     cell_t cellnum = Coord_To_Cell(m_Coord);
     if (mark == MARK_REMOVE) {
-        Map.Pick_Up(cellnum, this);
+        g_Map.Pick_Up(cellnum, this);
         return true;
     }
     if (mark == MARK_PUT) {
-        Map.Place_Down(cellnum, this);
+        g_Map.Place_Down(cellnum, this);
         return true;
     }
-    Map.Refresh_Cells(cellnum, Overlap_List(true));
-    Map.Refresh_Cells(cellnum, Occupy_List(false));
+    g_Map.Refresh_Cells(cellnum, Overlap_List(true));
+    g_Map.Refresh_Cells(cellnum, Occupy_List(false));
     return true;
 }
 

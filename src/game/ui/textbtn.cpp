@@ -62,15 +62,15 @@ TextButtonClass::TextButtonClass(TextButtonClass &that) :
 BOOL TextButtonClass::Draw_Me(BOOL redraw)
 {
     if (ControlClass::Draw_Me(redraw)) {
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Hide_Mouse(m_XPos, m_YPos, m_Width + m_XPos - 1, m_Height + m_YPos - 1);
         }
 
         Draw_Background();
         Draw_Text(m_ButtonText);
 
-        if (g_logicPage == &g_seenBuff) {
-            g_mouse->Conditional_Show_Mouse();
+        if (g_LogicPage == &g_SeenBuff) {
+            g_Mouse->Conditional_Show_Mouse();
         }
 
         return true;
@@ -89,7 +89,7 @@ void TextButtonClass::Set_Text(const char *string, BOOL adjust)
     if (m_ButtonText && adjust) {
         Fancy_Text_Print(nullptr, 0, 0, nullptr, 0, m_TextStyle);
         m_Width = String_Pixel_Width(m_ButtonText) + 8;
-        m_Height = g_fontYSpacing + g_fontHeight + 2;
+        m_Height = g_FontYSpacing + g_FontHeight + 2;
     }
 }
 
@@ -105,7 +105,7 @@ void TextButtonClass::Draw_Background()
     BoxStyleEnum style;
 
     if (m_HasOutline) {
-        g_logicPage->Draw_Rect(m_XPos - 1, m_YPos - 1, m_Width + m_XPos + 2, m_Height + m_YPos + 2, COLOR_BLACK);
+        g_LogicPage->Draw_Rect(m_XPos - 1, m_YPos - 1, m_Width + m_XPos + 2, m_Height + m_YPos + 2, COLOR_BLACK);
     }
 
     // Select required box style based on button state.
@@ -139,7 +139,7 @@ void TextButtonClass::Draw_Text(const char *string)
         style |= TPF_CENTER;
 
         // Print the button text!
-        Fancy_Text_Print(string, (m_Width / 2) + m_XPos - 1, m_YPos + 1, GadgetClass::ColorScheme, COLOR_TBLACK, style);
+        Fancy_Text_Print(string, (m_Width / 2) + m_XPos - 1, m_YPos + 1, GadgetClass::s_ColorScheme, COLOR_TBLACK, style);
     }
 }
 
@@ -154,7 +154,7 @@ void TextButtonClass::Calculate_Button_Size(int w, int h)
         }
 
         if (h == -1) {
-            m_Height = g_fontYSpacing + g_fontHeight + 2;
+            m_Height = g_FontYSpacing + g_FontHeight + 2;
         }
     }
 }

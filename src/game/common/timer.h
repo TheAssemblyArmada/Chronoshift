@@ -82,11 +82,11 @@ private:
 
 
 #ifdef GAME_DLL
-extern TimerClass &TickCount;
-extern CountDownTimerClass &CountDown;
+extern TimerClass &g_TickCount;
+extern CountDownTimerClass &g_CountDown;
 #else
-extern TimerClass TickCount;
-extern CountDownTimerClass CountDown;
+extern TimerClass g_TickCount;
+extern CountDownTimerClass g_CountDown;
 #endif
 
 #endif // TIMER_H

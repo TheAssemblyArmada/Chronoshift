@@ -22,9 +22,9 @@ using std::rand;
 
 // RSA keys
 #ifndef GAME_DLL
-PKey g_publicKey;
+PKey g_PublicKey;
 #endif
-PKey g_privateKey;
+PKey g_PrivateKey;
 
 PKey::PKey(const void *exponent, const void *modulus) : m_modulus(), m_exponent(), m_bitPrecision(0)
 {

@@ -161,12 +161,12 @@ void CheckListClass::Draw_Entry(int index, int x, int y, int x_max, BOOL redraw)
 
             if (redraw) {
                 style |= TPF_USE_BRIGHT;
-                g_logicPage->Fill_Rect(x, y, x_max + x - 1, m_YSpacing + y - 1, GadgetClass::ColorScheme->WindowPalette[0]);
+                g_LogicPage->Fill_Rect(x, y, x_max + x - 1, m_YSpacing + y - 1, GadgetClass::s_ColorScheme->WindowPalette[0]);
             } else if (!(style & TPF_USE_GRAD_PAL)) {
                 style |= TPF_USE_MEDIUM;
             }
 
-            Conquer_Clip_Text_Print(stringbuff, x, y, GadgetClass::ColorScheme, 0, style, x_max, m_Tabs);
+            Conquer_Clip_Text_Print(stringbuff, x, y, GadgetClass::s_ColorScheme, 0, style, x_max, m_Tabs);
         }
     }
 }

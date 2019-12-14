@@ -175,11 +175,11 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL DigestValid : 1; // & 1
+    BOOL m_DigestValid : 1; // & 1
 #else
-    bool DigestValid;
+    bool m_DigestValid;
 #endif
-    SHAEngine::SHADigest Digest;
+    SHAEngine::SHADigest s_Digest;
 };
 
 #endif // GAMEINI_H

@@ -56,17 +56,17 @@ private:
 };
 
 #ifdef GAME_DLL
-extern PaletteClass &GamePalette;
-extern PaletteClass &OriginalPalette;
-extern PaletteClass &CCPalette;
-extern PaletteClass &BlackPalette;
-extern PaletteClass &WhitePalette;
+extern PaletteClass &g_GamePalette;
+extern PaletteClass &g_OriginalPalette;
+extern PaletteClass &g_CCPalette;
+extern PaletteClass &g_BlackPalette;
+extern PaletteClass &g_WhitePalette;
 #else
-extern PaletteClass GamePalette;
-extern PaletteClass OriginalPalette;
-extern PaletteClass CCPalette;
-extern PaletteClass BlackPalette;
-extern PaletteClass WhitePalette;
+extern PaletteClass g_GamePalette;
+extern PaletteClass g_OriginalPalette;
+extern PaletteClass g_CCPalette;
+extern PaletteClass g_BlackPalette;
+extern PaletteClass g_WhitePalette;
 #endif
 
 #endif // PALETTE_H

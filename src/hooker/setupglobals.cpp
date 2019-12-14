@@ -2,192 +2,192 @@
 
 // alloc.cpp
 #include "alloc.h"
-memerrorhandler_t &g_memoryError = Make_Global<memerrorhandler_t>(0x006B1A2C); // Memory error handler function pointer.
-memexithandler_t &g_memoryErrorExit = Make_Global<memexithandler_t>(0x006B1A30);
+memerrorhandler_t &g_MemoryError = Make_Global<memerrorhandler_t>(0x006B1A2C); // Memory error handler function pointer.
+memexithandler_t &g_MemoryErrorExit = Make_Global<memexithandler_t>(0x006B1A30);
 
 // ostimer.cpp
 #include "ostimer.h"
-PlatformTimerClass *&PlatformTimer = Make_Global<PlatformTimerClass *>(0x00665EB0);
+PlatformTimerClass *&g_PlatformTimer = Make_Global<PlatformTimerClass *>(0x00665EB0);
 BOOL &PlatformTimerClass::s_timerSystemOn = Make_Global<BOOL>(0x006ABF68);
 BOOL &PlatformTimerClass::s_inCallback = Make_Global<BOOL>(0x006ABF8C);
 void *&PlatformTimerClass::s_threadHandle = Make_Global<void *>(0x006ABF88);
 
 // cdfile.cpp
 #include "cdfile.h"
-char *CDFileClass::s_rawPath = Make_Pointer<char>(0x006AC06C);
-CDFileClass::SearchDriveType *&CDFileClass::s_first =
+char *CDFileClass::s_RawPath = Make_Pointer<char>(0x006AC06C);
+CDFileClass::SearchDriveType *&CDFileClass::s_First =
     *reinterpret_cast<CDFileClass::SearchDriveType **>(0x006AC060); // first entry in the search drive, each entry is linked.
-int &CDFileClass::s_currentCDDrive = *reinterpret_cast<int *>(0x006AC064);
-int &CDFileClass::s_lastCDDrive = *reinterpret_cast<int *>(0x006AC068);
+int &CDFileClass::s_CurrentCDDrive = *reinterpret_cast<int *>(0x006AC064);
+int &CDFileClass::s_LastCDDrive = *reinterpret_cast<int *>(0x006AC068);
 
 // gamefile.cpp
 #include "gamefile.h"
-ARRAY_DEF(0x00635BE4, GameFileClass, g_handles, 10);
+ARRAY_DEF(0x00635BE4, GameFileClass, g_Handles, 10);
 
 // cd.cpp
-int &g_requiredCD = *reinterpret_cast<int *>(0x006017D0);
-int &g_currentCD = Make_Global<int>(0x006017D4);
+int &g_RequiredCD = *reinterpret_cast<int *>(0x006017D0);
+int &g_CurrentCD = Make_Global<int>(0x006017D4);
 
 // mixfile.cpp
 template<>
 List<MixFileClass<GameFileClass> *> &
-    MixFileClass<GameFileClass>::s_mixList = *reinterpret_cast<List<MixFileClass<GameFileClass> *> *>(0x006ECE30);
+    MixFileClass<GameFileClass>::s_MixList = *reinterpret_cast<List<MixFileClass<GameFileClass> *> *>(0x006ECE30);
 
 // rndstraw.cpp
-RandomStraw<RandomClass> &g_cryptRandom = *reinterpret_cast<RandomStraw<RandomClass> *>(0x00667764);
+RandomStraw<RandomClass> &g_CryptRandom = *reinterpret_cast<RandomStraw<RandomClass> *>(0x00667764);
 
 // initvideo.cpp
 #ifdef BUILD_WITH_DDRAW
 #define DIRECTDRAW_VERSION 0x300
 #include <ddraw.h>
-LPDIRECTDRAW &g_directDrawObject = Make_Global<LPDIRECTDRAW>(0x006B1490);
-LPDIRECTDRAWSURFACE &g_paletteSurface = Make_Global<LPDIRECTDRAWSURFACE>(0x006B18A4);
-ARRAY_DEF(0x006B149C, tagPALETTEENTRY, g_paletteEntries, 256);
-LPDIRECTDRAWPALETTE &g_palettePtr = Make_Global<LPDIRECTDRAWPALETTE>(0x006B189C);
+LPDIRECTDRAW &g_DirectDrawObject = Make_Global<LPDIRECTDRAW>(0x006B1490);
+LPDIRECTDRAWSURFACE &g_PaletteSurface = Make_Global<LPDIRECTDRAWSURFACE>(0x006B18A4);
+ARRAY_DEF(0x006B149C, tagPALETTEENTRY, g_PaletteEntries, 256);
+LPDIRECTDRAWPALETTE &g_PalettePtr = Make_Global<LPDIRECTDRAWPALETTE>(0x006B189C);
 #endif
 
 // eventhandler.cpp
 typedef void (*focusfunc_t)();
-unsigned &CCFocusMessage = Make_Global<unsigned>(0x00609BA0);
-focusfunc_t &AudioFocusLoss = Make_Global<focusfunc_t>(0x006AC058);
-focusfunc_t &GBufferFocusLoss = Make_Global<focusfunc_t>(0x006AC278);
+unsigned &g_CCFocusMessage = Make_Global<unsigned>(0x00609BA0);
+focusfunc_t &g_AudioFocusLoss = Make_Global<focusfunc_t>(0x006AC058);
+focusfunc_t &g_GBufferFocusLoss = Make_Global<focusfunc_t>(0x006AC278);
 
 // keyboard.cpp
 class KeyboardClass;
-KeyboardClass *&g_keyboard = Make_Global<KeyboardClass *>(0x00666904);
+KeyboardClass *&g_Keyboard = Make_Global<KeyboardClass *>(0x00666904);
 
 // mouse.cpp
 class MouseClass;
-MouseClass *&g_mouse = Make_Global<MouseClass *>(0x006AC284);
-MouseClass *&g_wwmouse = Make_Global<MouseClass *>(0x00665E08);
+MouseClass *&g_Mouse = Make_Global<MouseClass *>(0x006AC284);
+MouseClass *&g_WWMouse = Make_Global<MouseClass *>(0x00665E08);
 
 // gbuffer.cpp
 #include "gbuffer.h"
-int &GraphicViewPortClass::ScreenWidth = Make_Global<int>(0x006016B0);
-int &GraphicViewPortClass::ScreenHeight = Make_Global<int>(0x006016B4);
-GraphicViewPortClass *&g_logicPage = Make_Global<GraphicViewPortClass *>(0x006AC274);
-GraphicViewPortClass &g_seenBuff = Make_Global<GraphicViewPortClass>(0x006807A4);
-GraphicViewPortClass &g_hidPage = Make_Global<GraphicViewPortClass>(0x006807CC);
-GraphicBufferClass &g_visiblePage = Make_Global<GraphicBufferClass>(0x0068065C);
-GraphicBufferClass &g_hiddenPage = Make_Global<GraphicBufferClass>(0x00680700);
-GraphicBufferClass &g_sysMemPage = Make_Global<GraphicBufferClass>(0x00665E0C);
-GraphicBufferClass &g_modeXBuff = Make_Global<GraphicBufferClass>(0x00665EB4);
+int &GraphicViewPortClass::s_ScreenWidth = Make_Global<int>(0x006016B0);
+int &GraphicViewPortClass::s_ScreenHeight = Make_Global<int>(0x006016B4);
+GraphicViewPortClass *&g_LogicPage = Make_Global<GraphicViewPortClass *>(0x006AC274);
+GraphicViewPortClass &g_SeenBuff = Make_Global<GraphicViewPortClass>(0x006807A4);
+GraphicViewPortClass &g_HidPage = Make_Global<GraphicViewPortClass>(0x006807CC);
+GraphicBufferClass &g_VisiblePage = Make_Global<GraphicBufferClass>(0x0068065C);
+GraphicBufferClass &g_HiddenPage = Make_Global<GraphicBufferClass>(0x00680700);
+GraphicBufferClass &g_SysMemPage = Make_Global<GraphicBufferClass>(0x00665E0C);
+GraphicBufferClass &g_ModeXBuff = Make_Global<GraphicBufferClass>(0x00665EB4);
 
 // textprint.cpp
-char *&g_fontPtr = Make_Global<char *>(0x006B1974);
+char *&g_FontPtr = Make_Global<char *>(0x006B1974);
 char *&g_fontWidthBlockPtr = Make_Global<char *>(0x006B1978);
-int &g_fontYSpacing = Make_Global<int>(0x006B1970);
-int &g_fontXSpacing = Make_Global<int>(0x006B196C);
-uint8_t &g_fontHeight = Make_Global<uint8_t>(0x0060CE65);
-uint8_t &g_fontWidth = Make_Global<uint8_t>(0x0060CE64);
-uint8_t *g_colorXlat = Make_Pointer<uint8_t>(0x00609BC8);
+int &g_FontYSpacing = Make_Global<int>(0x006B1970);
+int &g_FontXSpacing = Make_Global<int>(0x006B196C);
+uint8_t &g_FontHeight = Make_Global<uint8_t>(0x0060CE65);
+uint8_t &g_FontWidth = Make_Global<uint8_t>(0x0060CE64);
+uint8_t *g_ColorXlat = Make_Pointer<uint8_t>(0x00609BC8);
 uint8_t *byte_608988 = Make_Pointer<uint8_t>(0x00609BD8);
 
 // interpolate.cpp
-uint8_t *g_paletteInterpolationTable = reinterpret_cast<uint8_t *>(0x00691734);
-BOOL &g_palettesRead = Make_Global<BOOL>(0x00655DA0);
-int &g_paletteCounter = Make_Global<int>(0x00655DA4);
-int &g_interpolationMode = Make_Global<int>(0x006A1738);
-uint8_t **g_interpolatedPalettes = reinterpret_cast<uint8_t **>(0x00655C10);
+uint8_t *g_PaletteInterpolationTable = reinterpret_cast<uint8_t *>(0x00691734);
+BOOL &g_PalettesRead = Make_Global<BOOL>(0x00655DA0);
+int &g_PaletteCounter = Make_Global<int>(0x00655DA4);
+int &g_InterpolationMode = Make_Global<int>(0x006A1738);
+uint8_t **g_InterpolatedPalettes = reinterpret_cast<uint8_t **>(0x00655C10);
 
 // pal.cpp
-uint8_t *g_currentPalette = reinterpret_cast<uint8_t *>(0x0060CE90);
+uint8_t *g_CurrentPalette = reinterpret_cast<uint8_t *>(0x0060CE90);
 
 // palette.cpp
 class PaletteClass;
-PaletteClass &GamePalette = Make_Global<PaletteClass>(0x00669C5C);
-PaletteClass &OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
-PaletteClass &CCPalette = Make_Global<PaletteClass>(0x0066995C);
-PaletteClass &BlackPalette = Make_Global<PaletteClass>(0x00668F5C);
-PaletteClass &WhitePalette = Make_Global<PaletteClass>(0x0066925C);
+PaletteClass &g_GamePalette = Make_Global<PaletteClass>(0x00669C5C);
+PaletteClass &g_OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
+PaletteClass &g_CCPalette = Make_Global<PaletteClass>(0x0066995C);
+PaletteClass &g_BlackPalette = Make_Global<PaletteClass>(0x00668F5C);
+PaletteClass &g_WhitePalette = Make_Global<PaletteClass>(0x0066925C);
 
 // shape.cpp
-BOOL &g_useBigShapeBuffer = Make_Global<BOOL>(0x006A1784);
-BOOL &g_isTheaterShape = Make_Global<BOOL>(0x006A1788);
-BOOL &g_originalUseBigShapeBuffer = Make_Global<BOOL>(0x006A178C);
-char *&g_bigShapeBufferStart = Make_Global<char *>(0x006A177C);
-char *&g_bigShapeBufferPtr = Make_Global<char *>(0x006A1790);
+BOOL &g_UseBigShapeBuffer = Make_Global<BOOL>(0x006A1784);
+BOOL &g_IsTheaterShape = Make_Global<BOOL>(0x006A1788);
+BOOL &g_OriginalUseBigShapeBuffer = Make_Global<BOOL>(0x006A178C);
+char *&g_BigShapeBufferStart = Make_Global<char *>(0x006A177C);
+char *&g_BigShapeBufferPtr = Make_Global<char *>(0x006A1790);
 // int &TotalBigShapes;
-BOOL &g_reallocShapeBufferFlag = Make_Global<BOOL>(0x006A1798);
-char *&g_theaterShapeBufferStart = Make_Global<char *>(0x006A1780);
-char *&g_theaterShapeBufferPtr = Make_Global<char *>(0x006A179C);
-int &g_totalTheaterShapes = Make_Global<int>(0x006A17A0);
-uint32_t **g_keyFrameSlots = reinterpret_cast<uint32_t **>(0x006A17A4);
-int &g_totalSlotsUsed = Make_Global<int>(0x006A2F14);
+BOOL &g_ReallocShapeBufferFlag = Make_Global<BOOL>(0x006A1798);
+char *&g_TheaterShapeBufferStart = Make_Global<char *>(0x006A1780);
+char *&g_TheaterShapeBufferPtr = Make_Global<char *>(0x006A179C);
+int &g_TotalTheaterShapes = Make_Global<int>(0x006A17A0);
+uint32_t **g_KeyFrameSlots = reinterpret_cast<uint32_t **>(0x006A17A4);
+int &g_TotalSlotsUsed = Make_Global<int>(0x006A2F14);
 // int &BuildFrameLength;
-BOOL &g_useOldShapeDraw = Make_Global<BOOL>(0x00655C08);
-uint8_t *&g_shapeBuffer = Make_Global<uint8_t *>(0x0060BE58);
-int &g_shapeBufferSize = Make_Global<int>(0x0060BE5C);
-unsigned int &g_bigShapeBufferLength = Make_Global<unsigned int>(0x00609D68);
-unsigned int &g_theaterShapeBufferLength = Make_Global<unsigned int>(0x00609D6C);
-int &g_theaterSlotsUsed = Make_Global<int>(0x00609D70);
-int &g_shapeLength = Make_Global<int>(0x006A2F18);
+BOOL &g_UseOldShapeDraw = Make_Global<BOOL>(0x00655C08);
+uint8_t *&g_ShapeBuffer = Make_Global<uint8_t *>(0x0060BE58);
+int &g_ShapeBufferSize = Make_Global<int>(0x0060BE5C);
+unsigned int &g_BigShapeBufferLength = Make_Global<unsigned int>(0x00609D68);
+unsigned int &g_TheaterShapeBufferLength = Make_Global<unsigned int>(0x00609D6C);
+int &g_TheaterSlotsUsed = Make_Global<int>(0x00609D70);
+int &g_ShapeLength = Make_Global<int>(0x006A2F18);
 
 // surfacemonitor.cpp
 class SurfaceMonitorClass;
-void (*&MiscFocusLoss)() = Make_Global<void (*)()>(0x006B190C);
-void (*&MiscFocusRestore)() = Make_Global<void (*)()>(0x006B1910);
-SurfaceMonitorClass &g_allSurfaces = Make_Global<SurfaceMonitorClass>(0x006B18A8);
+void (*&g_MiscFocusLoss)() = Make_Global<void (*)()>(0x006B190C);
+void (*&g_MiscFocusRestore)() = Make_Global<void (*)()>(0x006B1910);
+SurfaceMonitorClass &g_AllSurfaces = Make_Global<SurfaceMonitorClass>(0x006B18A8);
 
 // dialog.cpp
 #include "dialog.h"
-WindowType *WindowList = reinterpret_cast<WindowType *>(0x006016CC);
-unsigned &Window = Make_Global<unsigned>(0x006B1A08);
-int &WindowColumns = Make_Global<int>(0x0060CE6C);
-int &WindowLines = Make_Global<int>(0x0060CE70);
-int &WindowWidth = Make_Global<int>(0x0060CE74);
-int &WPos = Make_Global<int>(0x006B19DC);
-int &WinX = Make_Global<int>(0x006B19F8);
-int &WinY = Make_Global<int>(0x006B19FC);
-int &WinW = Make_Global<int>(0x0060CE80);
-int &WinH = Make_Global<int>(0x0060CE7C);
-int &WinC = Make_Global<int>(0x0060CE78);
-int &WinB = Make_Global<int>(0x006B19F4);
-int &WinCx = Make_Global<int>(0x006B1A00);
-int &WinCy = Make_Global<int>(0x006B1A04);
-int &ScrollCounter = Make_Global<int>(0x006B197C);
+WindowType *g_WindowList = reinterpret_cast<WindowType *>(0x006016CC);
+unsigned &g_Window = Make_Global<unsigned>(0x006B1A08);
+int &g_WindowColumns = Make_Global<int>(0x0060CE6C);
+int &g_WindowLines = Make_Global<int>(0x0060CE70);
+int &g_WindowWidth = Make_Global<int>(0x0060CE74);
+int &g_WPos = Make_Global<int>(0x006B19DC);
+int &g_WinX = Make_Global<int>(0x006B19F8);
+int &g_WinY = Make_Global<int>(0x006B19FC);
+int &g_WinW = Make_Global<int>(0x0060CE80);
+int &g_WinH = Make_Global<int>(0x0060CE7C);
+int &g_WinC = Make_Global<int>(0x0060CE78);
+int &g_WinB = Make_Global<int>(0x006B19F4);
+int &g_WinCx = Make_Global<int>(0x006B1A00);
+int &g_WinCy = Make_Global<int>(0x006B1A04);
+int &g_ScrollCounter = Make_Global<int>(0x006B197C);
 
 // gadget.cpp
 #include "gadget.h"
-RemapControlType *&GadgetClass::ColorScheme = Make_Global<RemapControlType *>(0x00601694);
-GadgetClass *&GadgetClass::StuckOn = Make_Global<GadgetClass *>(0x0065D7B0);
-GadgetClass *&GadgetClass::LastList = Make_Global<GadgetClass *>(0x0065D7B4);
-GadgetClass *&GadgetClass::Focused = Make_Global<GadgetClass *>(0x0065D7B8);
+RemapControlType *&GadgetClass::s_ColorScheme = Make_Global<RemapControlType *>(0x00601694);
+GadgetClass *&GadgetClass::s_StuckOn = Make_Global<GadgetClass *>(0x0065D7B0);
+GadgetClass *&GadgetClass::s_LastList = Make_Global<GadgetClass *>(0x0065D7B4);
+GadgetClass *&GadgetClass::s_Focused = Make_Global<GadgetClass *>(0x0065D7B8);
 
 // globals.cpp
 #include "globals.h"
-HWND &MainWindow = Make_Global<HWND>(0x006B1498);
-HMODULE &ProgramInstance = Make_Global<HMODULE>(0x0068A4BC);
-int &g_iniFormat = Make_Global<int>(0x00665DE8);
+HWND &g_MainWindow = Make_Global<HWND>(0x006B1498);
+HMODULE &g_ProgramInstance = Make_Global<HMODULE>(0x0068A4BC);
+int &g_INIFormat = Make_Global<int>(0x00665DE8);
 int &g_GameFrame = Make_Global<int>(0x006680C4);
-BOOL &g_gameInFocus = Make_Global<BOOL>(0x00665F64);
+BOOL &g_GameInFocus = Make_Global<BOOL>(0x00665F64);
 BOOL &g_InMovie = Make_Global<BOOL>(0x00665F58);
 BOOL &g_InMapEditor = Make_Global<BOOL>(0x0065D7E8);
-char *&Metal12FontPtr = Make_Global<char *>(0x0066992C);
-char *&MapFontPtr = Make_Global<char *>(0x00669930);
-char *&Font6Ptr = Make_Global<char *>(0x0066993C);
-char *&GradFont6Ptr = Make_Global<char *>(0x00669954);
-char *&EditorFont = Make_Global<char *>(0x00669940);
-char *&Font8Ptr = Make_Global<char *>(0x00669944);
-char *&Font3Ptr = Make_Global<char *>(0x00669938);
-char *&ScoreFontPtr = Make_Global<char *>(0x00669950);
-char *&FontLEDPtr = Make_Global<char *>(0x00669948);
-char *&VCRFontPtr = Make_Global<char *>(0x0066994C);
-char *&TypeFontPtr = Make_Global<char *>(0x00669934);
+char *&g_Metal12FontPtr = Make_Global<char *>(0x0066992C);
+char *&g_MapFontPtr = Make_Global<char *>(0x00669930);
+char *&g_Font6Ptr = Make_Global<char *>(0x0066993C);
+char *&g_GradFont6Ptr = Make_Global<char *>(0x00669954);
+char *&g_EditorFont = Make_Global<char *>(0x00669940);
+char *&g_Font8Ptr = Make_Global<char *>(0x00669944);
+char *&g_Font3Ptr = Make_Global<char *>(0x00669938);
+char *&g_ScoreFontPtr = Make_Global<char *>(0x00669950);
+char *&g_FontLEDPtr = Make_Global<char *>(0x00669948);
+char *&g_VCRFontPtr = Make_Global<char *>(0x0066994C);
+char *&g_TypeFontPtr = Make_Global<char *>(0x00669934);
 BOOL &g_AllowVoice = Make_Global<BOOL>(0x006016C0);
-BOOL &GameActive = Make_Global<BOOL>(0x00669924);
-int &ScenarioInit = Make_Global<int>(0x00669914);
-BOOL &DebugUnshroud = Make_Global<BOOL>(0x0065D7F0);
-BOOL &DebugQuiet = Make_Global<BOOL>(0x0065D7CC);
-BOOL &ScoresPresent = Make_Global<BOOL>(0x006680C0);
-BOOL &StreamLowImpact = Make_Global<BOOL>(0x006ABFCC);
-BOOL &g_cancelCurrentMsgBox = Make_Global<BOOL>(0x00685170);
-BOOL &VideoBackBufferAllowed = Make_Global<BOOL>(0x00604DE8);
+BOOL &g_GameActive = Make_Global<BOOL>(0x00669924);
+int &g_ScenarioInit = Make_Global<int>(0x00669914);
+BOOL &g_DebugUnshroud = Make_Global<BOOL>(0x0065D7F0);
+BOOL &g_DebugQuiet = Make_Global<BOOL>(0x0065D7CC);
+BOOL &g_ScoresPresent = Make_Global<BOOL>(0x006680C0);
+BOOL &g_StreamLowImpact = Make_Global<BOOL>(0x006ABFCC);
+BOOL &g_CancelCurrentMsgBox = Make_Global<BOOL>(0x00685170);
+BOOL &g_VideoBackBufferAllowed = Make_Global<BOOL>(0x00604DE8);
 BOOL &AllowHardwareFilledBlits = Make_Global<BOOL>(0x0060BA70);
 BOOL &g_OverlappedVideoBlits = Make_Global<BOOL>(0x0060BE54);
-BOOL &g_soundOn = Make_Global<BOOL>(0x006807F4);
-BOOL &g_slowPalette = Make_Global<BOOL>(0x006678E4);
-BOOL &g_breakoutAllowed = Make_Global<BOOL>(0x006016B8);
+BOOL &g_SoundOn = Make_Global<BOOL>(0x006807F4);
+BOOL &g_SlowPalette = Make_Global<BOOL>(0x006678E4);
+BOOL &g_BreakoutAllowed = Make_Global<BOOL>(0x006016B8);
 SpecialDialogType &g_SpecialDialog = Make_Global<SpecialDialogType>(0x00680834);
 BOOL &g_IsTanyaDead = Make_Global<BOOL>(0x00665DD4);
 BOOL &g_SaveTanya = Make_Global<BOOL>(0x00665DD8);
@@ -207,17 +207,16 @@ BOOL &g_PlayerLoses = Make_Global<BOOL>(0x006680CC);
 BOOL &g_PlayerRestarts = Make_Global<BOOL>(0x006680D0);
 BOOL g_PlayerAborts = false;
 int &g_BuildLevel = Make_Global<int>(0x006016C8);
-char **TutorialText = reinterpret_cast<char **>(0x00666304);
 BOOL &g_FormMove = Make_Global<BOOL>(0x0065E0CC);
 SpeedType &g_FormSpeed = Make_Global<SpeedType>(0x0065E0D0);
 MPHType &g_FormMaxSpeed = Make_Global<MPHType>(0x0065E0D1);
-BOOL &MouseInstalled = Make_Global<BOOL>(0x00680838);
-int &g_seed = Make_Global<int>(0x00680654);
-int &CustomSeed = Make_Global<int>(0x00680658);
-int &RandNumb = Make_Global<int>(0x0060D61C);
+BOOL &g_MouseInstalled = Make_Global<BOOL>(0x00680838);
+int &g_Seed = Make_Global<int>(0x00680654);
+int &g_CustomSeed = Make_Global<int>(0x00680658);
+int &g_RandNumb = Make_Global<int>(0x0060D61C);
 int &g_SpareTicks = Make_Global<int>(0x006670E8);
-int &g_readyToQuit = Make_Global<int>(0x00680880);
-HousesType &Whom = Make_Global<HousesType>(0x00669910);
+int &g_ReadyToQuit = Make_Global<int>(0x00680880);
+HousesType &g_Whom = Make_Global<HousesType>(0x00669910);
 void *&g_WakeShapes = Make_Global<void *>(0x0068D2DC);
 void *&g_TurretShapes = Make_Global<void *>(0x0068D2E0);
 void *&g_SamShapes = Make_Global<void *>(0x0068D2E4);
@@ -277,44 +276,44 @@ TFixedIHeapClass<BulletTypeClass> &g_BulletTypes = Make_Global<TFixedIHeapClass<
 
 // crate.cpp
 #include "crate.h"
-char *CrateClass::CrateAnims = Make_Pointer<char>(0x005FF24C); // TODO should be AnimType *CrateAnims[CRATE_COUNT];
-int *CrateClass::CrateShares = Make_Pointer<int>(0x005FF204);
-int *CrateClass::CrateData = Make_Pointer<int>(0x00655DA8);
+char *CrateClass::s_CrateAnims = Make_Pointer<char>(0x005FF24C); // TODO should be AnimType *s_CrateAnims[CRATE_COUNT];
+int *CrateClass::s_CrateShares = Make_Pointer<int>(0x005FF204);
+int *CrateClass::s_CrateData = Make_Pointer<int>(0x00655DA8);
 
 // display.cpp
 #include "display.h"
-LayerClass *DisplayClass::Layers = Make_Pointer<LayerClass>(0x00656080);
-DisplayClass::TacticalClass &DisplayClass::TacticalButton = Make_Global<DisplayClass::TacticalClass>(0x00658804);
-ARRAY_DEF(0x006560E0, uint8_t, DisplayClass::FadingBrighten, 256);
-ARRAY_DEF(0x006561E0, uint8_t, DisplayClass::FadingShade, 256);
-ARRAY_DEF(0x006562E0, uint8_t, DisplayClass::FadingWayDark, 256);
-ARRAY_DEF(0x006563E0, uint8_t, DisplayClass::FadingLight, 256);
-ARRAY_DEF(0x006564E0, uint8_t, DisplayClass::FadingGreen, 256);
-ARRAY_DEF(0x006565E0, uint8_t, DisplayClass::FadingYellow, 256);
-ARRAY_DEF(0x006566E0, uint8_t, DisplayClass::FadingRed, 256);
-ARRAY2D_DEF(0x006567E0, uint8_t, DisplayClass::TranslucentTable, 14, 256);
-ARRAY2D_DEF(0x006575E0, uint8_t, DisplayClass::WhiteTranslucentTable, 2, 256);
-ARRAY2D_DEF(0x006577E0, uint8_t, DisplayClass::MouseTranslucentTable, 5, 256);
-ARRAY2D_DEF(0x006582E8, uint8_t, DisplayClass::ShadowTrans, 5, 256);
-ARRAY2D_DEF(0x00657CE4, uint8_t, DisplayClass::UnitShadow, 2, 256);
-ARRAY2D_DEF(0x00657EE4, uint8_t, DisplayClass::UnitShadowAir, 2, 256);
-ARRAY2D_DEF(0x006580E4, uint8_t, DisplayClass::SpecialGhost, 2, 256);
-void *&DisplayClass::TransIconset = Make_Global<void *>(0x00657CE0);
-void *&DisplayClass::ShadowShapes = Make_Global<void *>(0x006582E4);
-BufferClass *&DisplayClass::TheaterBuffer = Make_Global<BufferClass *>(0x006680E4);
-BooleanVectorClass &DisplayClass::CellRedraw = Make_Global<BooleanVectorClass>(0x006587E8);
+LayerClass *DisplayClass::s_Layers = Make_Pointer<LayerClass>(0x00656080);
+DisplayClass::TacticalClass &DisplayClass::s_TacticalButton = Make_Global<DisplayClass::TacticalClass>(0x00658804);
+ARRAY_DEF(0x006560E0, uint8_t, DisplayClass::s_FadingBrighten, 256);
+ARRAY_DEF(0x006561E0, uint8_t, DisplayClass::s_FadingShade, 256);
+ARRAY_DEF(0x006562E0, uint8_t, DisplayClass::s_FadingWayDark, 256);
+ARRAY_DEF(0x006563E0, uint8_t, DisplayClass::s_FadingLight, 256);
+ARRAY_DEF(0x006564E0, uint8_t, DisplayClass::s_FadingGreen, 256);
+ARRAY_DEF(0x006565E0, uint8_t, DisplayClass::s_FadingYellow, 256);
+ARRAY_DEF(0x006566E0, uint8_t, DisplayClass::s_FadingRed, 256);
+ARRAY2D_DEF(0x006567E0, uint8_t, DisplayClass::s_TranslucentTable, 14, 256);
+ARRAY2D_DEF(0x006575E0, uint8_t, DisplayClass::s_WhiteTranslucentTable, 2, 256);
+ARRAY2D_DEF(0x006577E0, uint8_t, DisplayClass::s_MouseTranslucentTable, 5, 256);
+ARRAY2D_DEF(0x006582E8, uint8_t, DisplayClass::s_ShadowTrans, 5, 256);
+ARRAY2D_DEF(0x00657CE4, uint8_t, DisplayClass::s_UnitShadow, 2, 256);
+ARRAY2D_DEF(0x00657EE4, uint8_t, DisplayClass::s_UnitShadowAir, 2, 256);
+ARRAY2D_DEF(0x006580E4, uint8_t, DisplayClass::s_SpecialGhost, 2, 256);
+void *&DisplayClass::s_TransIconset = Make_Global<void *>(0x00657CE0);
+void *&DisplayClass::s_ShadowShapes = Make_Global<void *>(0x006582E4);
+BufferClass *&DisplayClass::s_TheaterBuffer = Make_Global<BufferClass *>(0x006680E4);
+BooleanVectorClass &DisplayClass::s_CellRedraw = Make_Global<BooleanVectorClass>(0x006587E8);
 
 // factory.cpp
 #include "factory.h"
 TFixedIHeapClass<FactoryClass> &g_Factories = Make_Global<TFixedIHeapClass<FactoryClass> >(0x0065D948);
 
 // foot.cpp
-cell_t &StartLocation = Make_Global<cell_t>(0x0065D7AE);
-cell_t &DestLocation = Make_Global<cell_t>(0x0065D7AC);
+cell_t &g_StartLocation = Make_Global<cell_t>(0x0065D7AE);
+cell_t &g_DestLocation = Make_Global<cell_t>(0x0065D7AC);
 
 // gameoptions.cpp
 class GameOptionsClass;
-GameOptionsClass &Options = Make_Global<GameOptionsClass>(0x00668188);
+GameOptionsClass &g_Options = Make_Global<GameOptionsClass>(0x00668188);
 
 // gameptr.cpp
 #include "template.h"
@@ -385,7 +384,7 @@ FixedIHeapClass *const GamePtr<VesselTypeClass>::g_Heap = Make_Pointer<FixedIHea
 
 // getcd.cpp
 class GetCDClass;
-GetCDClass &g_cdList = Make_Global<GetCDClass>(0x00680884);
+GetCDClass &g_CDList = Make_Global<GetCDClass>(0x00680884);
 
 // gmouse.cpp
 #include "gmouse.h"
@@ -395,15 +394,15 @@ TCountDownTimerClass<SystemTimerClass> &GameMouseClass::s_AnimationTimer =
 
 // ground.cpp
 class GroundClass;
-GroundClass *Ground = Make_Pointer<GroundClass>(0x00655DF0);
+GroundClass *g_Ground = Make_Pointer<GroundClass>(0x00655DF0);
 
 // gscreen.cpp
-GadgetClass *&GameScreenClass::Buttons = Make_Global<GadgetClass *>(0x00680900);
-GraphicViewPortClass *&GameScreenClass::ShadowPage = Make_Global<GraphicViewPortClass *>(0x00680904);
+GadgetClass *&GameScreenClass::g_Buttons = Make_Global<GadgetClass *>(0x00680900);
+GraphicViewPortClass *&GameScreenClass::g_ShadowPage = Make_Global<GraphicViewPortClass *>(0x00680904);
 
 // help.cpp
-ARRAY_DEF(0x006018B8, int16_t, HelpClass::OverlapList, HelpClass::HELP_OVERLAP_BUFFER);
-char *&HelpClass::HelpText = Make_Global<char *>(0x006821B8);
+ARRAY_DEF(0x006018B8, int16_t, HelpClass::s_OverlapList, HelpClass::HELP_OVERLAP_BUFFER);
+char *&HelpClass::s_HelpText = Make_Global<char *>(0x006821B8);
 
 // house.cpp
 #include "house.h"
@@ -423,26 +422,26 @@ TFixedIHeapClass<InfantryClass> &g_Infantry = Make_Global<TFixedIHeapClass<Infan
 TFixedIHeapClass<InfantryTypeClass> &g_InfantryTypes = Make_Global<TFixedIHeapClass<InfantryTypeClass> >(0x0065DE08);
 
 // init.cpp
-GameMixFile *&MainMix = Make_Global<GameMixFile *>(0x00668180);
-GameMixFile *&ConquerMix = Make_Global<GameMixFile *>(0x00668184);
-GameMixFile *&GeneralMix = Make_Global<GameMixFile *>(0x00668178);
-GameMixFile *&MoviesMix = Make_Global<GameMixFile *>(0x00668174);
-GameMixFile *&ScoreMix = Make_Global<GameMixFile *>(0x0066817C);
+GameMixFile *&g_MainMix = Make_Global<GameMixFile *>(0x00668180);
+GameMixFile *&g_ConquerMix = Make_Global<GameMixFile *>(0x00668184);
+GameMixFile *&g_GeneralMix = Make_Global<GameMixFile *>(0x00668178);
+GameMixFile *&g_MoviesMix = Make_Global<GameMixFile *>(0x00668174);
+GameMixFile *&g_ScoreMix = Make_Global<GameMixFile *>(0x0066817C);
 
 // iomap.cpp
 class MapEditClass;
-MapEditClass &Map = Make_Global<MapEditClass>(0x00668250);
+MapEditClass &g_Map = Make_Global<MapEditClass>(0x00668250);
 
 // logic.cpp
 #include "logic.h"
-LogicClass &Logic = Make_Global<LogicClass>(0x00668230);
+LogicClass &g_Logic = Make_Global<LogicClass>(0x00668230);
 DynamicVectorClass<TriggerClass *> &g_LogicTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F270);
 DynamicVectorClass<TriggerClass *> &g_MapTriggers = Make_Global<DynamicVectorClass<TriggerClass *> >(0x0067F254);
 DynamicVectorClass<TriggerClass *> *g_HouseTriggers = Make_Pointer<DynamicVectorClass<TriggerClass *> >(0x0067F074);
 
 // missioncontrol.cpp
 #include "missioncontrol.h"
-MissionControlClass *const MissionControlClass::MissionControl = Make_Pointer<MissionControlClass>(0x00666234);
+MissionControlClass *const MissionControlClass::s_MissionControl = Make_Pointer<MissionControlClass>(0x00666234);
 
 // object.cpp
 DynamicVectorClass<ObjectClass *> &CurrentObjects = Make_Global<DynamicVectorClass<ObjectClass *> >(0x006677F8);
@@ -458,25 +457,25 @@ TFixedIHeapClass<OverlayClass> &g_Overlays = Make_Global<TFixedIHeapClass<Overla
 TFixedIHeapClass<OverlayTypeClass> &g_OverlayTypes = Make_Global<TFixedIHeapClass<OverlayTypeClass> >(0x0065E01C);
 
 // power.cpp
-PowerClass::PowerButtonClass &PowerClass::PowerButton = Make_Global<PowerClass::PowerButtonClass>(0x006877C0);
-void *&PowerClass::PowerShape = Make_Global<void *>(0x006877B8);
-void *&PowerClass::PowerBarShape = Make_Global<void *>(0x006877BC);
+PowerClass::PowerButtonClass &PowerClass::s_PowerButton = Make_Global<PowerClass::PowerButtonClass>(0x006877C0);
+void *&PowerClass::s_PowerShape = Make_Global<void *>(0x006877B8);
+void *&PowerClass::s_PowerBarShape = Make_Global<void *>(0x006877BC);
 
 // queue.cpp
 #include "gameevent.h"
 #include "queue.h"
-TEventQueueClass<GameEventClass, OUTGOING_SIZE> &OutgoingEvents =
+TEventQueueClass<GameEventClass, OUTGOING_SIZE> &g_OutgoingEvents =
     Make_Global<TEventQueueClass<GameEventClass, OUTGOING_SIZE> >(0x0066AB5C);
-TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &ScheduledEvents =
+TEventQueueClass<GameEventClass, SCHEDULED_SIZE> &g_ScheduledEvents =
     Make_Global<TEventQueueClass<GameEventClass, SCHEDULED_SIZE> >(0x0066B068);
 
 // radar.cpp
-RadarClass::RTacticalClass &RadarClass::RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
-void *&RadarClass::RadarAnim = Make_Global<void *>(0x00687908);
-void *&RadarClass::RadarPulse = Make_Global<void *>(0x0068790C);
-void *&RadarClass::RadarFrame = Make_Global<void *>(0x00687910);
-BOOL &RadarClass::FullRedraw = Make_Global<BOOL>(0x00687914);
-GraphicBufferClass &RadarClass::TileStage = Make_Global<GraphicBufferClass>(0x006879BC);
+RadarClass::RTacticalClass &RadarClass::s_RadarButton = Make_Global<RadarClass::RTacticalClass>(0x006878E4);
+void *&RadarClass::s_RadarAnim = Make_Global<void *>(0x00687908);
+void *&RadarClass::s_RadarPulse = Make_Global<void *>(0x0068790C);
+void *&RadarClass::s_RadarFrame = Make_Global<void *>(0x00687910);
+BOOL &RadarClass::s_FullRedraw = Make_Global<BOOL>(0x00687914);
+GraphicBufferClass &RadarClass::s_TileStage = Make_Global<GraphicBufferClass>(0x006879BC);
 
 // rules.cpp
 #include "rules.h"
@@ -493,36 +492,36 @@ int &RulesClass::m_QuakeDelay = Make_Global<int>(0x00665DFC);
 BOOL &RulesClass::m_OrigNewUnitsEnabled = Make_Global<BOOL>(0x00665DE0);
 BOOL &RulesClass::m_OrigSecretUnitsEnabled = Make_Global<BOOL>(0x00665DE4);
 fixed_t RulesClass::m_CloakDelay;
-RulesClass &Rule = Make_Global<RulesClass>(0x00666704);
+RulesClass &g_Rule = Make_Global<RulesClass>(0x00666704);
 
 // scenario.cpp
 class ScenarioClass;
-ScenarioClass &Scen = Make_Global<ScenarioClass>(0x006678E8);
+ScenarioClass &g_Scen = Make_Global<ScenarioClass>(0x006678E8);
 
 // scroll.cpp
-TCountDownTimerClass<SystemTimerClass> &ScrollClass::ScrollingCounter =
+TCountDownTimerClass<SystemTimerClass> &ScrollClass::s_ScrollingCounter =
     Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x00687C08);
 
 // session.cpp
 class SessionClass;
-SessionClass &Session = Make_Global<SessionClass>(0x0067F2B4);
+SessionClass &g_Session = Make_Global<SessionClass>(0x0067F2B4);
 
 // sidebar.cpp
-void *&SidebarClass::StripClass::LogoShapes = Make_Global<void *>(0x0068A464);
-void *&SidebarClass::StripClass::ClockShapes = Make_Global<void *>(0x0068A468);
-ARRAY_DEF(0x0068A46C, void *, SidebarClass::StripClass::SpecialShapes, SPECIAL_COUNT);
-ARRAY2D_DEF(0x0068A2C4, SidebarClass::StripClass::SelectClass, SidebarClass::StripClass::SelectButton, COLUMN_COUNT,
+void *&SidebarClass::StripClass::s_LogoShapes = Make_Global<void *>(0x0068A464);
+void *&SidebarClass::StripClass::s_ClockShapes = Make_Global<void *>(0x0068A468);
+ARRAY_DEF(0x0068A46C, void *, SidebarClass::StripClass::s_SpecialShapes, SPECIAL_COUNT);
+ARRAY2D_DEF(0x0068A2C4, SidebarClass::StripClass::SelectClass, SidebarClass::StripClass::s_SelectButton, COLUMN_COUNT,
     SidebarClass::StripClass::ROW_COUNT);
-ARRAY_DEF(0x0068A1E4, ShapeButtonClass, SidebarClass::StripClass::UpButton, COLUMN_COUNT);
-ARRAY_DEF(0x0068A254, ShapeButtonClass, SidebarClass::StripClass::DownButton, COLUMN_COUNT);
-ARRAY2D_DEF(0x00689F18, char, SidebarClass::StripClass::ClockTranslucentTable, 2, 256);
-SidebarClass::SBGadgetClass &SidebarClass::Background = Make_Global<SidebarClass::SBGadgetClass>(0x0068A118);
-ShapeButtonClass &SidebarClass::RepairButton = Make_Global<ShapeButtonClass>(0x0068A13C);
-ShapeButtonClass &SidebarClass::SellButton = Make_Global<ShapeButtonClass>(0x0068A174);
-ShapeButtonClass &SidebarClass::ZoomButton = Make_Global<ShapeButtonClass>(0x0068A1AC);
-void *&SidebarClass::SidebarShape = Make_Global<void *>(0x00689F0C);
-void *&SidebarClass::SidebarMiddleShape = Make_Global<void *>(0x00689F10);
-void *&SidebarClass::SidebarBottomShape = Make_Global<void *>(0x00689F14);
+ARRAY_DEF(0x0068A1E4, ShapeButtonClass, SidebarClass::StripClass::s_UpButton, COLUMN_COUNT);
+ARRAY_DEF(0x0068A254, ShapeButtonClass, SidebarClass::StripClass::s_DownButton, COLUMN_COUNT);
+ARRAY2D_DEF(0x00689F18, char, SidebarClass::StripClass::s_ClockTranslucentTable, 2, 256);
+SidebarClass::SBGadgetClass &SidebarClass::s_Background = Make_Global<SidebarClass::SBGadgetClass>(0x0068A118);
+ShapeButtonClass &SidebarClass::s_RepairButton = Make_Global<ShapeButtonClass>(0x0068A13C);
+ShapeButtonClass &SidebarClass::s_SellButton = Make_Global<ShapeButtonClass>(0x0068A174);
+ShapeButtonClass &SidebarClass::s_ZoomButton = Make_Global<ShapeButtonClass>(0x0068A1AC);
+void *&SidebarClass::s_SidebarShape = Make_Global<void *>(0x00689F0C);
+void *&SidebarClass::s_SidebarMiddleShape = Make_Global<void *>(0x00689F10);
+void *&SidebarClass::s_SidebarBottomShape = Make_Global<void *>(0x00689F14);
 
 // smudge.cpp
 #include "smudge.h"
@@ -533,10 +532,10 @@ TFixedIHeapClass<SmudgeClass> &g_Smudges = Make_Global<TFixedIHeapClass<SmudgeCl
 TFixedIHeapClass<SmudgeTypeClass> &g_SmudgeTypes = Make_Global<TFixedIHeapClass<SmudgeTypeClass> >(0x0065E068);
 
 // special.cpp
-SpecialClass &Special = Make_Global<SpecialClass>(0x00669908);
+SpecialClass &s_Special = Make_Global<SpecialClass>(0x00669908);
 
 // tab.cpp
-void *&TabClass::TabShape = Make_Global<void *>(0x0068A4C0);
+void *&TabClass::s_TabShape = Make_Global<void *>(0x0068A4C0);
 
 // team.cpp
 #include "team.h"
@@ -546,10 +545,10 @@ TFixedIHeapClass<TeamClass> &g_Teams = Make_Global<TFixedIHeapClass<TeamClass> >
 TFixedIHeapClass<TeamTypeClass> &g_TeamTypes = Make_Global<TFixedIHeapClass<TeamTypeClass> >(0x0065DB10);
 
 // technotype.cpp
-void *&TechnoTypeClass::WakeShapes = Make_Global<void *>(0x0068D2DC);
-void *&TechnoTypeClass::TurretShapes = Make_Global<void *>(0x0068D2E0);
-void *&TechnoTypeClass::SamShapes = Make_Global<void *>(0x0068D2E4);
-void *&TechnoTypeClass::MGunShapes = Make_Global<void *>(0x0068D2E8);
+void *&TechnoTypeClass::s_WakeShapes = Make_Global<void *>(0x0068D2DC);
+void *&TechnoTypeClass::s_TurretShapes = Make_Global<void *>(0x0068D2E0);
+void *&TechnoTypeClass::s_SamShapes = Make_Global<void *>(0x0068D2E4);
+void *&TechnoTypeClass::s_MGunShapes = Make_Global<void *>(0x0068D2E8);
 
 // templatetype.cpp
 TFixedIHeapClass<TemplateTypeClass> &g_TemplateTypes = Make_Global<TFixedIHeapClass<TemplateTypeClass> >(0x0065DF84);
@@ -564,11 +563,11 @@ TFixedIHeapClass<TerrainClass> &g_Terrains = Make_Global<TFixedIHeapClass<Terrai
 TFixedIHeapClass<TerrainTypeClass> &g_TerrainTypes = Make_Global<TFixedIHeapClass<TerrainTypeClass> >(0x0065DFD0);
 
 // theater.cpp
-TheaterType &g_lastTheater = Make_Global<TheaterType>(0x006017CC);
+TheaterType &g_LastTheater = Make_Global<TheaterType>(0x006017CC);
 
 // theme.cpp
-ThemeClass &Theme = Make_Global<ThemeClass>(0x00668248);
-ThemeClass::ThemeControl *ThemeClass::Themes = Make_Pointer<ThemeClass::ThemeControl>(0x006052FC);
+ThemeClass &g_Theme = Make_Global<ThemeClass>(0x00668248);
+ThemeClass::ThemeControl *ThemeClass::s_Themes = Make_Pointer<ThemeClass::ThemeControl>(0x006052FC);
 
 // trigger.cpp
 TFixedIHeapClass<TriggerClass> &g_Triggers = Make_Global<TFixedIHeapClass<TriggerClass> >(0x00601810);
@@ -585,7 +584,7 @@ TFixedIHeapClass<UnitTypeClass> &g_UnitTypes = Make_Global<TFixedIHeapClass<Unit
 
 // version.cpp
 class VersionClass;
-VersionClass &g_version = Make_Global<VersionClass>(0x00667810);
+VersionClass &g_Version = Make_Global<VersionClass>(0x00667810);
 
 // vessel.cpp
 #include "vessel.h"
@@ -600,8 +599,8 @@ ChronalVortexClass &g_ChronalVortex = Make_Global<ChronalVortexClass>(0x006904B4
 
 // vox.cpp
 #include "vox.h"
-void **SpeechBuffer = Make_Pointer<void *>(0x006680D8);
-VoxType *SpeechRecord = Make_Pointer<VoxType>(0x006680E0);
+void **g_SpeechBuffer = Make_Pointer<void *>(0x006680D8);
+VoxType *g_SpeechRecord = Make_Pointer<VoxType>(0x006680E0);
 
 // warheadtype.cpp
 TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClass<WarheadTypeClass> >(0x00691600);
@@ -610,34 +609,34 @@ TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClas
 TFixedIHeapClass<WeaponTypeClass> &g_WeaponTypes = Make_Global<TFixedIHeapClass<WeaponTypeClass> >(0x0069164C);
 
 // language.cpp
-char *&GameStrings = Make_Global<char *>(0x0066991C);
-char *&DebugStrings = Make_Global<char *>(0x00669920);
-char **NameOverride = Make_Pointer<char *>(0x0066616C);
-int *NameIDOverride = Make_Pointer<int>(0x006661D0);
+char *&g_GameStrings = Make_Global<char *>(0x0066991C);
+char *&g_DebugStrings = Make_Global<char *>(0x00669920);
+char **g_NameOverride = Make_Pointer<char *>(0x0066616C);
+int *g_NameIDOverride = Make_Pointer<int>(0x006661D0);
 
 // random.cpp
-RandomClass &g_nonCriticalRandom = Make_Global<RandomClass>(0x00667760);
+RandomClass &g_NonCriticalRandom = Make_Global<RandomClass>(0x00667760);
 
 // remap.cpp
-RemapControlType *ColorRemaps = Make_Pointer<RemapControlType>(0x00666908);
-RemapControlType &MetalScheme = Make_Global<RemapControlType>(0x00667528);
-RemapControlType &GreyScheme = Make_Global<RemapControlType>(0x00667644);
-RemapControlType &SidebarScheme = Make_Global<RemapControlType>(0x00684CC0);
+RemapControlType *g_ColorRemaps = Make_Pointer<RemapControlType>(0x00666908);
+RemapControlType &g_MetalScheme = Make_Global<RemapControlType>(0x00667528);
+RemapControlType &g_GreyScheme = Make_Global<RemapControlType>(0x00667644);
+RemapControlType &g_SidebarScheme = Make_Global<RemapControlType>(0x00684CC0);
 
 // timer.cpp
-TimerClass &TickCount = Make_Global<TimerClass>(0x006ABF6C);
-CountDownTimerClass &CountDown = Make_Global<CountDownTimerClass>(0x006ABF78);
+TimerClass &g_TickCount = Make_Global<TimerClass>(0x006ABF6C);
+CountDownTimerClass &g_CountDown = Make_Global<CountDownTimerClass>(0x006ABF78);
 
 // ttimer.cpp
-TTimerClass<SystemTimerClass> &TickCountTimer = Make_Global<TTimerClass<SystemTimerClass> >(0x00680870);
-TCountDownTimerClass<SystemTimerClass> &FrameTimer = Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x006807F8);
+TTimerClass<SystemTimerClass> &g_TickCountTimer = Make_Global<TTimerClass<SystemTimerClass> >(0x00680870);
+TCountDownTimerClass<SystemTimerClass> &g_FrameTimer = Make_Global<TCountDownTimerClass<SystemTimerClass> >(0x006807F8);
 
 // pk.cpp
-PKey &g_publicKey = Make_Global<PKey>(0x00665F68);
+PKey &g_PublicKey = Make_Global<PKey>(0x00665F68);
 
 // wsock.cpp
 class WinsockInterfaceClass;
-WinsockInterfaceClass *&g_packetTransport = Make_Global<WinsockInterfaceClass *>(0x0069172C);
+WinsockInterfaceClass *&g_PacketTransport = Make_Global<WinsockInterfaceClass *>(0x0069172C);
 
 // basec.cpp
 class BaseClass;

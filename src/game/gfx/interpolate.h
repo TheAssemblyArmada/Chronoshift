@@ -46,15 +46,15 @@ void __cdecl Interpolate_Line_Double(void *src, void *dst, int src_height, int s
 void __cdecl Interpolate_Line_Interpolate(void *src, void *dst, int src_height, int src_width, int dst_pitch);
 
 #ifdef GAME_DLL
-extern uint8_t *g_paletteInterpolationTable;
-extern BOOL &g_palettesRead;
-extern int &g_paletteCounter;
-extern int &g_interpolationMode;
+extern uint8_t *g_PaletteInterpolationTable;
+extern BOOL &g_PalettesRead;
+extern int &g_PaletteCounter;
+extern int &g_InterpolationMode;
 #else
-extern uint8_t g_paletteInterpolationTable[INTERPOL_PAL_SIZE];
-extern BOOL g_palettesRead;
-extern int g_paletteCounter;
-extern int g_interpolationMode;
+extern uint8_t g_PaletteInterpolationTable[INTERPOL_PAL_SIZE];
+extern BOOL g_PalettesRead;
+extern int g_PaletteCounter;
+extern int g_InterpolationMode;
 #endif
 
 #endif // INTERPOLATE_H

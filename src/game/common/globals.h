@@ -88,52 +88,52 @@
 
 #ifdef PLATFORM_WINDOWS
 #ifdef GAME_DLL
-extern HWND &MainWindow;
-extern HMODULE &ProgramInstance;
+extern HWND &g_MainWindow;
+extern HMODULE &g_ProgramInstance;
 #else
-extern HWND MainWindow;
-//extern HMODULE ProgramInstance; // Only used in gameres packet, won't be needed in final
+extern HWND g_MainWindow;
+//extern HMODULE g_ProgramInstance; // Only used in gameres packet, won't be needed in final
 #endif
 #else
 
 #endif
 
-// For ScreenWidth and ScreenHeight, see public static members of GraphicViewPortClass.
+// For s_ScreenWidth and s_ScreenHeight, see public static members of GraphicViewPortClass.
 
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
 #ifdef GAME_DLL
 #include "hooker.h"
 
-extern int &g_iniFormat;
+extern int &g_INIFormat;
 extern int &g_GameFrame; // NOTE: previously g_Frame.
-extern BOOL &g_gameInFocus;
+extern BOOL &g_GameInFocus;
 extern BOOL &g_InMovie;
 extern BOOL &g_InMapEditor;
-extern char *&Metal12FontPtr;
-extern char *&MapFontPtr;
-extern char *&Font6Ptr;
-extern char *&GradFont6Ptr;
-extern char *&EditorFont;
-extern char *&Font8Ptr;
-extern char *&Font3Ptr;
-extern char *&ScoreFontPtr;
-extern char *&FontLEDPtr;
-extern char *&VCRFontPtr;
-extern char *&TypeFontPtr;
+extern char *&g_Metal12FontPtr;
+extern char *&g_MapFontPtr;
+extern char *&g_Font6Ptr;
+extern char *&g_GradFont6Ptr;
+extern char *&g_EditorFont;
+extern char *&g_Font8Ptr;
+extern char *&g_Font3Ptr;
+extern char *&g_ScoreFontPtr;
+extern char *&g_FontLEDPtr;
+extern char *&g_VCRFontPtr;
+extern char *&g_TypeFontPtr;
 extern BOOL &g_AllowVoice;
-extern BOOL &GameActive;
-extern int &ScenarioInit;
-extern BOOL &DebugUnshroud;
-extern BOOL &DebugQuiet;
-extern BOOL &ScoresPresent;
-extern BOOL &StreamLowImpact;
-extern BOOL &g_cancelCurrentMsgBox;
-extern BOOL &VideoBackBufferAllowed;
+extern BOOL &g_GameActive;
+extern int &g_ScenarioInit;
+extern BOOL &g_DebugUnshroud;
+extern BOOL &g_DebugQuiet;
+extern BOOL &g_ScoresPresent;
+extern BOOL &g_StreamLowImpact;
+extern BOOL &g_CancelCurrentMsgBox;
+extern BOOL &g_VideoBackBufferAllowed;
 extern BOOL &AllowHardwareFilledBlits;
 extern BOOL &g_OverlappedVideoBlits;
-extern BOOL &g_soundOn;
-extern BOOL &g_slowPalette;
-extern BOOL &g_breakoutAllowed;
+extern BOOL &g_SoundOn;
+extern BOOL &g_SlowPalette;
+extern BOOL &g_BreakoutAllowed;
 extern SpecialDialogType &g_SpecialDialog;
 extern BOOL &g_IsTanyaDead;
 extern BOOL &g_SaveTanya;
@@ -153,14 +153,13 @@ extern BOOL &g_PlayerLoses;
 extern BOOL &g_PlayerRestarts;
 extern BOOL g_PlayerAborts;
 extern int &g_BuildLevel;
-extern char **TutorialText;
-extern BOOL &MouseInstalled;
-extern int &g_seed;
-extern int &CustomSeed;
-extern int &RandNumb;
+extern BOOL &g_MouseInstalled;
+extern int &g_Seed;
+extern int &g_CustomSeed;
+extern int &g_RandNumb;
 extern int &g_SpareTicks;
-extern int &g_readyToQuit;
-extern HousesType &Whom;
+extern int &g_ReadyToQuit;
+extern HousesType &g_Whom;
 extern void *&g_WakeShapes;
 extern void *&g_TurretShapes;
 extern void *&g_SamShapes;
@@ -194,36 +193,36 @@ extern BOOL &g_Debug_Print_Events;
 
 extern BOOL &g_MonoEnabled;
 #else
-extern int g_iniFormat;
+extern int g_INIFormat;
 extern int g_GameFrame;
-extern BOOL g_gameInFocus;
+extern BOOL g_GameInFocus;
 extern BOOL g_InMovie;
 extern BOOL g_InMapEditor;
-extern char *Metal12FontPtr;
-extern char *MapFontPtr;
-extern char *Font6Ptr;
-extern char *GradFont6Ptr;
-extern char *EditorFont;
-extern char *Font8Ptr;
-extern char *Font3Ptr;
-extern char *ScoreFontPtr;
-extern char *FontLEDPtr;
-extern char *VCRFontPtr;
-extern char *TypeFontPtr;
+extern char *g_Metal12FontPtr;
+extern char *g_MapFontPtr;
+extern char *g_Font6Ptr;
+extern char *g_GradFont6Ptr;
+extern char *g_EditorFont;
+extern char *g_Font8Ptr;
+extern char *g_Font3Ptr;
+extern char *g_ScoreFontPtr;
+extern char *g_FontLEDPtr;
+extern char *g_VCRFontPtr;
+extern char *g_TypeFontPtr;
 extern BOOL g_AllowVoice;
-extern BOOL GameActive;
-extern int ScenarioInit;
-extern BOOL DebugUnshroud;
-extern BOOL DebugQuiet;
-extern BOOL ScoresPresent;
-extern BOOL StreamLowImpact;
-extern BOOL g_cancelCurrentMsgBox;
-extern BOOL VideoBackBufferAllowed;
+extern BOOL g_GameActive;
+extern int g_ScenarioInit;
+extern BOOL g_DebugUnshroud;
+extern BOOL g_DebugQuiet;
+extern BOOL g_ScoresPresent;
+extern BOOL g_StreamLowImpact;
+extern BOOL g_CancelCurrentMsgBox;
+extern BOOL g_VideoBackBufferAllowed;
 extern BOOL AllowHardwareFilledBlits;
 extern BOOL g_OverlappedVideoBlits;
-extern BOOL g_soundOn;
-extern BOOL g_slowPalette;
-extern BOOL g_breakoutAllowed;
+extern BOOL g_SoundOn;
+extern BOOL g_SlowPalette;
+extern BOOL g_BreakoutAllowed;
 extern SpecialDialogType g_SpecialDialog;
 extern BOOL g_IsTanyaDead;
 extern BOOL g_SaveTanya;
@@ -243,14 +242,13 @@ extern BOOL g_PlayerLoses;
 extern BOOL g_PlayerRestarts;
 extern BOOL g_PlayerAborts;
 extern int g_BuildLevel;
-extern char *TutorialText;
-extern BOOL MouseInstalled;
-extern int g_seed;
-extern int CustomSeed;
-extern int RandNumb;
+extern BOOL g_MouseInstalled;
+extern int g_Seed;
+extern int g_CustomSeed;
+extern int g_RandNumb;
 extern int g_SpareTicks;
-extern int g_readyToQuit;
-extern HousesType Whom;
+extern int g_ReadyToQuit;
+extern HousesType g_Whom;
 extern void *g_WakeShapes;
 extern void *g_TurretShapes;
 extern void *g_SamShapes;
@@ -285,7 +283,7 @@ extern BOOL g_Debug_Print_Events;
 extern BOOL g_MonoEnabled;
 #endif
 
-extern int g_mapBinaryVersion;
+extern int g_MapBinaryVersion;
 
 extern BOOL g_Debug_Paused;
 extern BOOL g_Debug_Step;

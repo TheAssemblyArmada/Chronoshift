@@ -33,8 +33,8 @@
 using std::snprintf;
 
 #ifndef GAME_DLL
-int g_requiredCD = DISK_CDCHECK;
-int g_currentCD = DISK_CDCHECK;
+int g_RequiredCD = DISK_CDCHECK;
+int g_CurrentCD = DISK_CDCHECK;
 #endif
 
 // Was local to Force_CD_Present in orignal but now shared between split out functions.
@@ -207,7 +207,7 @@ static BOOL Change_Local_Dir(int cd)
  */
 static void Change_CD(int drive, int index, int &cd)
 {
-    g_currentCD = index;
+    g_CurrentCD = index;
     CDFileClass::Set_CD_Drive(drive);
     CDFileClass::Refresh_Search_Drives();
 
@@ -218,7 +218,7 @@ static void Change_CD(int drive, int index, int &cd)
     // If disk needs to change then unload existing files that are present on CD and reload from new CD.
     if (cd > DISK_CDCHECK && cd != g_last /*&& cd != DISK_DVD*/) {
         g_last = cd;
-        Theme.Stop();
+        g_Theme.Stop();
         Reinit_Secondary_Mixfiles();
     }
 }
@@ -270,7 +270,7 @@ BOOL Force_CD_Available(int cd)
         }
     }
 
-    Theme.Stop();
+    g_Theme.Stop();
 
     // If current drive didn't give use a valid CD index, try again with last drive.
     if (drive == 0) {
@@ -292,7 +292,7 @@ BOOL Force_CD_Available(int cd)
     // If we have a valid drive, check that its not the same as the one we already loaded and reload data.
     if (drive != 0) {
         // change_drive:
-        /*g_currentCD = cd_index;
+        /*g_CurrentCD = cd_index;
         CDFileClass::Set_CD_Drive(drive);
         CDFileClass::Refresh_Search_Drives();
 
@@ -303,7 +303,7 @@ BOOL Force_CD_Available(int cd)
         // If disk needs to change then unload existing files that are present on CD and reload from new CD.
         if (cd > DISK_CDCHECK && cd != _last && cd != DISK_DVD) {
             _last = cd;
-            Theme.Stop();
+            g_Theme.Stop();
 
             // Needs init merging.
         }*/
@@ -317,8 +317,8 @@ BOOL Force_CD_Available(int cd)
     int state = -1;
 
     while (true) {
-        for (int i = 0; i < g_cdList.Get_Drive_Count(); ++i) {
-            int list_drive = g_cdList.Get_CD_Drive();
+        for (int i = 0; i < g_CDList.Get_Drive_Count(); ++i) {
+            int list_drive = g_CDList.Get_CD_Drive();
             cd_index = Get_CD_Index(list_drive, scan_delay);
 
             if (cd_index >= 0) {
@@ -361,22 +361,22 @@ BOOL Force_CD_Available(int cd)
             snprintf(msg_buff, sizeof(msg_buff), "Please insert the %s", _cd_name[cd]);
         }
 
-        GraphicViewPortClass *old = Set_Logic_Page(&g_seenBuff);
-        Theme.Stop();
-        state = g_mouse->Get_Mouse_State();
-        _font = g_fontPtr;
+        GraphicViewPortClass *old = Set_Logic_Page(&g_SeenBuff);
+        g_Theme.Stop();
+        state = g_Mouse->Get_Mouse_State();
+        _font = g_FontPtr;
 
         if ((((PaletteClass::CurrentPalette[1].Get_Blue() >> 6) | (PaletteClass::CurrentPalette[1].Get_Blue() << 2))
                 + ((PaletteClass::CurrentPalette[1].Get_Red() >> 6) | (PaletteClass::CurrentPalette[1].Get_Red() << 2))
                 + ((PaletteClass::CurrentPalette[1].Get_Green() >> 6) | (PaletteClass::CurrentPalette[1].Get_Green() << 2)))
             == 0) {
-            GamePalette.Set();
+            g_GamePalette.Set();
         }
 
-        g_keyboard->Clear();
+        g_Keyboard->Clear();
 
-        while (g_mouse->Get_Mouse_State()) {
-            g_mouse->Show_Mouse();
+        while (g_Mouse->Get_Mouse_State()) {
+            g_Mouse->Show_Mouse();
         }
 
         MessageBoxClass msg;
@@ -386,7 +386,7 @@ BOOL Force_CD_Available(int cd)
         }
 
         while (--state != -1) {
-            g_mouse->Hide_Mouse();
+            g_Mouse->Hide_Mouse();
         }
 
         Set_Font(_font);
@@ -394,7 +394,7 @@ BOOL Force_CD_Available(int cd)
     }
 
     while (--state != -1) {
-        g_mouse->Hide_Mouse();
+        g_Mouse->Hide_Mouse();
     }
 
     return false;
