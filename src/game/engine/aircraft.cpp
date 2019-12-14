@@ -597,7 +597,7 @@ void AircraftClass::Assign_Destination(target_t dest)
             // TODO, investigate, doing dest != m_NavCom again is useless...
             if (Class_Of().Is_Airplane() && (m_IsLanding || m_NavCom != 0 && dest != m_NavCom)) {
                 Process_Take_Off();
-                Status = STATUS_0;
+                m_Status = STATUS_0;
             }
         }
         FootClass::Assign_Destination(dest);
@@ -663,7 +663,7 @@ void AircraftClass::Rotation_AI()
  */
 void AircraftClass::Movement_AI()
 {
-    if (m_NavCom != 0 && Mission == MISSION_GUARD && MissionQueue == MISSION_NONE) {
+    if (m_NavCom != 0 && m_Mission == MISSION_GUARD && m_MissionQueue == MISSION_NONE) {
         Assign_Mission(MISSION_MOVE);
     }
     if (m_Speed > 0) {
@@ -701,7 +701,7 @@ BOOL AircraftClass::Edge_Of_World_AI()
         m_LockedOnMap = true;
         return false;
     }
-    if (Mission != MISSION_RETREAT) {
+    if (m_Mission != MISSION_RETREAT) {
         return false;
     }
     while (m_Cargo.Attached_Object()) {

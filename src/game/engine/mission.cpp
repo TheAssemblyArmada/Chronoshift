@@ -16,7 +16,7 @@
 #include "mission.h"
 #include "missioncontrol.h"
 
-const char *MissionClass::Missions[MISSION_COUNT] = { 
+const char *MissionClass::s_Missions[MISSION_COUNT] = { 
     "Sleep",
     "Attack",
     "Move",
@@ -47,11 +47,11 @@ const char *MissionClass::Missions[MISSION_COUNT] = {
  */
 MissionClass::MissionClass(RTTIType type, int id) :
     ObjectClass(type, id),
-    Mission(MISSION_NONE),
-    SuspendedMission(MISSION_NONE),
-    MissionQueue(MISSION_NONE),
-    Status(STATUS_NONE),
-    MissionTimer()
+    m_Mission(MISSION_NONE),
+    m_SuspendedMission(MISSION_NONE),
+    m_MissionQueue(MISSION_NONE),
+    m_Status(STATUS_NONE),
+    m_MissionTimer()
 {
 }
 
@@ -71,11 +71,11 @@ MissionType MissionClass::Get_Mission() const
 {
     DEBUG_ASSERT(m_IsActive);
 
-    if (Mission != MISSION_NONE) {
-        return Mission;
+    if (m_Mission != MISSION_NONE) {
+        return m_Mission;
     }
 
-    return MissionQueue;
+    return m_MissionQueue;
 }
 
 /**
@@ -91,8 +91,8 @@ void MissionClass::Assign_Mission(MissionType mission)
         mission = MISSION_MOVE;
     }
 
-    if (mission != MISSION_NONE && mission != Mission) {
-        MissionQueue = mission;
+    if (mission != MISSION_NONE && mission != m_Mission) {
+        m_MissionQueue = mission;
     }
 }
 
@@ -105,11 +105,11 @@ BOOL MissionClass::Commence()
 {
     DEBUG_ASSERT(m_IsActive);
 
-    if (MissionQueue != MISSION_NONE) {
-        MissionTimer.Reset();
-        Mission = MissionQueue;
-        MissionQueue = MISSION_NONE;
-        Status = STATUS_0;
+    if (m_MissionQueue != MISSION_NONE) {
+        m_MissionTimer.Reset();
+        m_Mission = m_MissionQueue;
+        m_MissionQueue = MISSION_NONE;
+        m_Status = STATUS_0;
 
         return true;
     }
@@ -126,8 +126,8 @@ void MissionClass::Set_Mission(MissionType mission)
 {
     DEBUG_ASSERT(m_IsActive);
 
-    MissionQueue = MISSION_NONE;
-    Mission = mission;
+    m_MissionQueue = MISSION_NONE;
+    m_Mission = mission;
 }
 
 /**
@@ -139,13 +139,13 @@ void MissionClass::Override_Mission(MissionType mission, int target1, int target
 {
     DEBUG_ASSERT(m_IsActive);
 
-    if (MissionQueue == MISSION_NONE) {
-        SuspendedMission = MissionQueue;
+    if (m_MissionQueue == MISSION_NONE) {
+        m_SuspendedMission = m_MissionQueue;
     } else {
-        SuspendedMission = Mission;
+        m_SuspendedMission = m_Mission;
     }
 
-    Assign_Mission(SuspendedMission);
+    Assign_Mission(m_SuspendedMission);
 }
 
 /**
@@ -157,9 +157,9 @@ BOOL MissionClass::Restore_Mission()
 {
     DEBUG_ASSERT(m_IsActive);
 
-    if (SuspendedMission != MISSION_NONE) {
-        Assign_Mission(SuspendedMission);
-        SuspendedMission = MISSION_NONE;
+    if (m_SuspendedMission != MISSION_NONE) {
+        Assign_Mission(m_SuspendedMission);
+        m_SuspendedMission = MISSION_NONE;
 
         return true;
     }
@@ -182,86 +182,86 @@ void MissionClass::AI()
         return;
     }
 
-    if (m_IsActive && MissionTimer == 0 && Get_Health() > 0) {
+    if (m_IsActive && m_MissionTimer == 0 && Get_Health() > 0) {
         switch (Get_Mission()) {
             case MISSION_SLEEP:
             case MISSION_HARMLESS:
-                MissionTimer = Mission_Sleep();
+                m_MissionTimer = Mission_Sleep();
                 break;
 
             case MISSION_GUARD:
             case MISSION_STICKY:
-                MissionTimer = Mission_Guard();
+                m_MissionTimer = Mission_Guard();
                 break;
 
             case MISSION_ENTER:
-                MissionTimer = Mission_Enter();
+                m_MissionTimer = Mission_Enter();
                 break;
 
             case MISSION_CONSTRUCTION:
-                MissionTimer = Mission_Construction();
+                m_MissionTimer = Mission_Construction();
                 break;
 
             case MISSION_DECONSTRUCTION:
-                MissionTimer = Mission_Deconstruction();
+                m_MissionTimer = Mission_Deconstruction();
                 break;
 
             case MISSION_CAPTURE:
             case MISSION_SABOTAGE:
-                MissionTimer = Mission_Capture();
+                m_MissionTimer = Mission_Capture();
                 break;
 
             case MISSION_MOVE:
             case MISSION_QMOVE:
-                MissionTimer = Mission_Move();
+                m_MissionTimer = Mission_Move();
                 break;
 
             case MISSION_ATTACK:
-                MissionTimer = Mission_Attack();
+                m_MissionTimer = Mission_Attack();
                 break;
 
             case MISSION_RETREAT:
-                MissionTimer = Mission_Retreat();
+                m_MissionTimer = Mission_Retreat();
                 break;
 
             case MISSION_HARVEST:
-                MissionTimer = Mission_Harvest();
+                m_MissionTimer = Mission_Harvest();
                 break;
 
             case MISSION_AREA_GUARD:
-                MissionTimer = Mission_Guard_Area();
+                m_MissionTimer = Mission_Guard_Area();
                 break;
 
             case MISSION_RETURN:
-                MissionTimer = Mission_Return();
+                m_MissionTimer = Mission_Return();
                 break;
 
             case MISSION_STOP:
-                MissionTimer = Mission_Stop();
+                m_MissionTimer = Mission_Stop();
                 break;
 
             case MISSION_AMBUSH:
-                MissionTimer = Mission_Ambush();
+                m_MissionTimer = Mission_Ambush();
                 break;
 
             case MISSION_HUNT:
             case MISSION_RESCUE:
-                MissionTimer = Mission_Hunt();
+                m_MissionTimer = Mission_Hunt();
                 break;
 
             case MISSION_UNLOAD:
-                MissionTimer = Mission_Unload();
+                m_MissionTimer = Mission_Unload();
                 break;
 
             case MISSION_REPAIR:
-                MissionTimer = Mission_Repair();
+                m_MissionTimer = Mission_Repair();
                 break;
 
             case MISSION_MISSILE:
-                MissionTimer = Mission_Missile();
+                m_MissionTimer = Mission_Missile();
                 break;
             default:
-                DEBUG_LOG("Unhandled MissionType in MissionClass::AI()! (%d)", Mission);
+                DEBUG_LOG("Unhandled MissionType in MissionClass::AI()! (%d)", m_Mission);
                 break;
         }
     }
@@ -280,7 +280,7 @@ BOOL MissionClass::Is_Recruitable_Mission(MissionType mission)
         return true;
     }
 
-    return MissionControlClass::MissionControl[mission].Recruitable;
+    return MissionControlClass::MissionControl[mission].m_Recruitable;
 }
 
 /**
@@ -298,7 +298,7 @@ MissionType MissionClass::From_Name(const char *name)
 
     if (name != nullptr) {
         for (MissionType mission = MISSION_FIRST; mission < MISSION_COUNT; ++mission) {
-            if (strcasecmp(name, Missions[mission]) == 0) {
+            if (strcasecmp(name, s_Missions[mission]) == 0) {
                 return mission;
             }
         }
@@ -315,7 +315,7 @@ MissionType MissionClass::From_Name(const char *name)
 const char *MissionClass::Name_From(MissionType mission)
 {
     if (mission != MISSION_NONE && mission < MISSION_COUNT) {
-        return Missions[mission];
+        return s_Missions[mission];
     }
 
     return "None";

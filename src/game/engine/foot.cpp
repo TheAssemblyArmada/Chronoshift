@@ -337,7 +337,7 @@ int FootClass::Mission_Attack()
     } else {
         Enter_Idle_Mode();
     }
-    return (900 * MissionControlClass::MissionControl[Mission].Rate) + Scen.Get_Random_Value(0, 2);
+    return (900 * MissionControlClass::MissionControl[m_Mission].m_Rate) + Scen.Get_Random_Value(0, 2);
 }
 
 int FootClass::Mission_Capture()
@@ -1407,7 +1407,7 @@ BOOL FootClass::Is_Allowed_To_Leave_Map() const
     if(!m_LockedOnMap) {
         return false;
     }
-    if(!m_IsALoner && Mission != MISSION_RETREAT) {
+    if(!m_IsALoner && m_Mission != MISSION_RETREAT) {
         /*
         if(!m_Team->Is_Leaving_Map()) {
             return false;
@@ -1425,5 +1425,5 @@ BOOL FootClass::Is_Allowed_To_Leave_Map() const
  */
 BOOL FootClass::Is_On_Priority_Mission()
 {
-    return Mission == MISSION_ENTER;
+    return m_Mission == MISSION_ENTER;
 }

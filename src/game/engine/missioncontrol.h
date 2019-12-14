@@ -36,24 +36,24 @@ public:
     void Write_INI(GameINIClass &ini);
 
 private:
-    MissionType Mission; // The mission we control.
+    MissionType m_Mission; // The mission we control.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL NoThreat : 1;
-    BOOL Zombie : 1;
-    BOOL Recruitable : 1;
-    BOOL Paralyzed : 1;
-    BOOL Retaliate : 1;
-    BOOL Scatter : 1;
+    BOOL m_NoThreat : 1;
+    BOOL m_Zombie : 1;
+    BOOL m_Recruitable : 1;
+    BOOL m_Paralyzed : 1;
+    BOOL m_Retaliate : 1;
+    BOOL m_Scatter : 1;
 #else
-    bool NoThreat; // Is its weapons disabled and thus ignored as a potential target until fired upon?
-    bool Zombie; // Is forced to sit there like a zombie and never recovers?
-    bool Recruitable; // Can it be recruited into a team or base defense?
-    bool Paralyzed;    // Is the object frozen in place but can still fire and function?
-    bool Retaliate; // Is allowed to retaliate while on this mission?
-    bool Scatter; // Is allowed to scatter from threats?
+    bool m_NoThreat; // Is its weapons disabled and thus ignored as a potential target until fired upon?
+    bool m_Zombie; // Is forced to sit there like a zombie and never recovers?
+    bool m_Recruitable; // Can it be recruited into a team or base defense?
+    bool m_Paralyzed;    // Is the object frozen in place but can still fire and function?
+    bool m_Retaliate; // Is allowed to retaliate while on this mission?
+    bool m_Scatter; // Is allowed to scatter from threats?
 #endif
-    fixed_t Rate; // Delay between normal processing (larger = faster game, less responsiveness).
-    fixed_t AARate; // Anti-aircraft delay rate (if not specifed it uses regular rate).
+    fixed_t m_Rate; // Delay between normal processing (larger = faster game, less responsiveness).
+    fixed_t m_AARate; // Anti-aircraft delay rate (if not specifed it uses regular rate).
 
 #ifdef GAME_DLL
     static MissionControlClass *const MissionControl;

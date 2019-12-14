@@ -28,7 +28,7 @@ class MissionClass : public ObjectClass
 
 public:
     MissionClass(RTTIType type, int id);
-    MissionClass(const NoInitClass &noinit) : ObjectClass(noinit), MissionTimer(noinit) {}
+    MissionClass(const NoInitClass &noinit) : ObjectClass(noinit), m_MissionTimer(noinit) {}
     virtual ~MissionClass() {}
 
 #ifdef CHRONOSHIFT_DEBUG
@@ -67,11 +67,11 @@ public:
     virtual void Set_Mission(MissionType mission);
     virtual void Override_Mission(MissionType mission, int target1 = -1, int target2 = -1);
     virtual BOOL Restore_Mission(); 
-    
-    MissionType Get_Suspended_Mission() const { return SuspendedMission; };
-    MissionType Get_Queued_Mission() const { return MissionQueue; }
-    void Set_Mission_Status(MissionStatusType status) { Status = status; }
-    int Get_Mission_Status() const { return Status; }
+
+    MissionType Get_Suspended_Mission() const { return m_SuspendedMission; };
+    MissionType Get_Queued_Mission() const { return m_MissionQueue; }
+    void Set_Mission_Status(MissionStatusType status) { m_Status = status; }
+    int Get_Mission_Status() const { return m_Status; }
     BOOL Not_On_A_Mission() const { return Get_Mission() == MISSION_NONE && Get_Queued_Mission() == MISSION_NONE; }
 
     static BOOL Is_Recruitable_Mission(MissionType mission);
@@ -80,13 +80,13 @@ public:
     static const char *Name_From(MissionType mission);
 
 protected:
-    MissionType Mission; // The current mission of this object (def = MISSION_NONE).
-    MissionType SuspendedMission;
-    MissionType MissionQueue;
-    int Status; //see MissionStatusType
-    TCountDownTimerClass<FrameTimerClass> MissionTimer; // C&CDOS calls this "Timer" might not be BTC, but TCountDownTimerClass<FrameTimerClass>
+    MissionType m_Mission; // The current mission of this object (def = MISSION_NONE).
+    MissionType m_SuspendedMission;
+    MissionType m_MissionQueue;
+    int m_Status; //see MissionStatusType
+    TCountDownTimerClass<FrameTimerClass> m_MissionTimer;
 
-    static const char *Missions[MISSION_COUNT];
+    static const char *s_Missions[MISSION_COUNT];
 };
 
 #endif // MISSION_H
