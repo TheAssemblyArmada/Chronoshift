@@ -448,7 +448,7 @@ BOOL UnitClass::Ok_To_Move(DirType dir)
  */
 BOOL UnitClass::Edge_Of_World_AI()
 {
-    if (Mission == MISSION_GUARD && !Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
+    if (m_Mission == MISSION_GUARD && !Map.In_Radar(Get_Cell()) && m_LockedOnMap) {
         if (m_Team != nullptr) {
             m_Team->Set_Bit2_4(true);
         }

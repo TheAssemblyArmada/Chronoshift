@@ -286,8 +286,8 @@ BOOL TechnoClass::Unlimbo(coord_t coord, DirType dir)
 void TechnoClass::Detach(target_t target, int a2)
 {
     ObjectClass::Detach(target, a2);
-    if (SuspendedMission != MISSION_NONE && m_SuspendedTarCom == target) {
-        SuspendedMission = MISSION_NONE;
+    if (m_SuspendedMission != MISSION_NONE && m_SuspendedTarCom == target) {
+        m_SuspendedMission = MISSION_NONE;
         m_SuspendedTarCom = 0;
     }
     if (m_TarCom == target) {
@@ -602,7 +602,7 @@ BOOL TechnoClass::Revealed(HouseClass *house)
         return false;
     }
 
-    if (!house->Is_Human() && Mission == MISSION_AMBUSH) {
+    if (!house->Is_Human() && m_Mission == MISSION_AMBUSH) {
         Assign_Mission(MISSION_HUNT);
     }
 

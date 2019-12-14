@@ -24,15 +24,15 @@ MissionControlClass MissionControlClass::MissionControl[MISSION_COUNT];
  * 0x00502D7C
  */
 MissionControlClass::MissionControlClass() :
-    Mission(MISSION_NONE),
-    NoThreat(false),
-    Zombie(false),
-    Recruitable(true),
-    Paralyzed(false),
-    Retaliate(true),
-    Scatter(true),
-    Rate("0.016"),
-    AARate("0.016")
+    m_Mission(MISSION_NONE),
+    m_NoThreat(false),
+    m_Zombie(false),
+    m_Recruitable(true),
+    m_Paralyzed(false),
+    m_Retaliate(true),
+    m_Scatter(true),
+    m_Rate("0.016"),
+    m_AARate("0.016")
 {
 }
 
@@ -43,8 +43,8 @@ MissionControlClass::MissionControlClass() :
  */
 const char *MissionControlClass::Name() const
 {
-    if (Mission != MISSION_NONE && Mission < MISSION_COUNT) {
-        return MissionClass::Missions[Mission];
+    if (m_Mission != MISSION_NONE && m_Mission < MISSION_COUNT) {
+        return MissionClass::s_Missions[m_Mission];
     }
 
     return "<none>";
@@ -58,18 +58,18 @@ const char *MissionControlClass::Name() const
 BOOL MissionControlClass::Read_INI(GameINIClass &ini)
 {
     if (ini.Find_Section(Name()) != nullptr) {
-        NoThreat = ini.Get_Bool(Name(), "NoThreat", NoThreat);
-        Zombie = ini.Get_Bool(Name(), "Zombie", Zombie);
-        Recruitable = ini.Get_Bool(Name(), "Recruitable", Recruitable);
-        Paralyzed = ini.Get_Bool(Name(), "Paralyzed", Paralyzed);
-        Retaliate = ini.Get_Bool(Name(), "Retaliate", Retaliate);
-        Scatter = ini.Get_Bool(Name(), "Scatter", Scatter);
-        Rate = ini.Get_Fixed(Name(), "Rate", Rate);
-        AARate = ini.Get_Fixed(Name(), "AARate", fixed_t(0, 0));
+        m_NoThreat = ini.Get_Bool(Name(), "NoThreat", m_NoThreat);
+        m_Zombie = ini.Get_Bool(Name(), "Zombie", m_Zombie);
+        m_Recruitable = ini.Get_Bool(Name(), "Recruitable", m_Recruitable);
+        m_Paralyzed = ini.Get_Bool(Name(), "Paralyzed", m_Paralyzed);
+        m_Retaliate = ini.Get_Bool(Name(), "Retaliate", m_Retaliate);
+        m_Scatter = ini.Get_Bool(Name(), "Scatter", m_Scatter);
+        m_Rate = ini.Get_Fixed(Name(), "Rate", m_Rate);
+        m_AARate = ini.Get_Fixed(Name(), "AARate", fixed_t(0, 0));
 
         // Falls back to Rate for AARate if AARate is zero.
-        if (AARate == fixed_t(0, 1)) {
-            AARate = Rate;
+        if (m_AARate == fixed_t(0, 1)) {
+            m_AARate = m_Rate;
         }
 
         return true;
@@ -84,12 +84,12 @@ BOOL MissionControlClass::Read_INI(GameINIClass &ini)
 void MissionControlClass::Write_INI(GameINIClass &ini)
 {
     ini.Clear(Name());
-    ini.Put_Bool(Name(), "NoThreat", NoThreat);
-    ini.Put_Bool(Name(), "Zombie", Zombie);
-    ini.Put_Bool(Name(), "Recruitable", Recruitable);
-    ini.Put_Bool(Name(), "Paralyzed", Paralyzed);
-    ini.Put_Bool(Name(), "Retaliate", Retaliate);
-    ini.Put_Bool(Name(), "Scatter", Scatter);
-    ini.Put_Fixed(Name(), "Rate", Rate);
-    ini.Put_Fixed(Name(), "AARate", AARate);
+    ini.Put_Bool(Name(), "NoThreat", m_NoThreat);
+    ini.Put_Bool(Name(), "Zombie", m_Zombie);
+    ini.Put_Bool(Name(), "Recruitable", m_Recruitable);
+    ini.Put_Bool(Name(), "Paralyzed", m_Paralyzed);
+    ini.Put_Bool(Name(), "Retaliate", m_Retaliate);
+    ini.Put_Bool(Name(), "Scatter", m_Scatter);
+    ini.Put_Fixed(Name(), "Rate", m_Rate);
+    ini.Put_Fixed(Name(), "AARate", m_AARate);
 }
