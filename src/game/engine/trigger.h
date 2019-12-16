@@ -63,6 +63,7 @@ public:
 
     void Add_Ref() { ++m_RefCount; }
     void Release_Ref() { --m_RefCount; }
+    BOOL Has_Refs() const { return m_RefCount != 0; }
 
     void Code_Pointers() {}
     void Decode_Pointers() {}

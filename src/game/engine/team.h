@@ -23,7 +23,7 @@
 #include "gameptr.h"
 #include "gametypes.h"
 #include "house.h"
-#include "triggertype.h"
+#include "trigger.h"
 #include "ttimer.h"
 
 class FootClass;
@@ -32,10 +32,9 @@ class TeamTypeClass;
 class TeamClass : public AbstractClass
 {
 public:
-    TeamClass();
-    TeamClass(const TeamClass &that);
-    TeamClass(const NoInitClass &noinit);
-    ~TeamClass();
+    TeamClass(TeamTypeClass *teamtype, HouseClass *house);
+    TeamClass(const NoInitClass &noinit) {}
+    virtual ~TeamClass();
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
@@ -43,6 +42,8 @@ public:
 #ifndef COMPILER_WATCOM // Watcom doesn't like this, MSVC/GCC does.
     void operator delete(void *ptr, void *place) {}
 #endif
+
+    virtual void AI() override;
 
     BOOL Remove(FootClass *object, int a2 = -1);
 
@@ -106,11 +107,11 @@ private:
     int m_field_35;
     FormationType m_Formation;
     TCountDownTimerClass<FrameTimerClass> m_field_3A;
-    GamePtr<TriggerTypeClass> m_Trigger;
+    GamePtr<TriggerClass> m_Trigger;
     int m_Mission;
     TCountDownTimerClass<FrameTimerClass> m_field_4B;
     FootClass *m_field_54;
-    unsigned char m_Quantity[5];
+    uint8_t m_Quantity[5];
 };
 
 #ifdef GAME_DLL

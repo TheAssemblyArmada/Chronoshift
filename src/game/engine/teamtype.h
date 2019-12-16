@@ -20,8 +20,10 @@
 
 #include "always.h"
 #include "abstracttype.h"
+#include "dialog.h"
 #include "gameptr.h"
 #include "gametypes.h"
+#include <new>
 
 class HouseClass;
 class TeamClass;
@@ -46,7 +48,7 @@ enum TeamMissionType
     TMISSION_DO_THIS, // "Do this..."
     TMISSION_SET_GLOBAL, // "Set global..."
     TMISSION_INVULNERABLE, // "Invulnerable"
-    TMISSION_14, // "Load onto Transport"
+    TMISSION_LOAD_TRANSPORT, // "Load onto Transport"
     TMISSION_SPY_ON_BUILDING, // "Spy on bldg @ waypt..."
     TMISSION_PATROL_WAYPOINT, // "Patrol to waypoint..."
 
@@ -60,29 +62,25 @@ DEFINE_ENUMERATION_OPERATORS(TeamMissionType);
 
 class TeamMissionClass
 {
+    friend class TeamTypeClass;
+
 public:
     TeamMissionClass() : m_TMission(TMISSION_NONE) {}
     TeamMissionClass(TeamMissionType mission, int value = 0) : m_TMission(mission) {}
     ~TeamMissionClass() {}
 
 protected:
-    TeamMissionType m_TMission; // 0x00
-
-    // small note, CCWMAP lists this as "Time", looks like its anything the "mission" requires; cell num, time etc
-    union TMissionDataUnion
-    { // 0x01
-        int32_t m_Data; // General data holder
-        cell_t m_Cell;
-    } u_TMissionData;
+    TeamMissionType m_TMission;
+    int32_t m_TMissionData;
 
 private:
-    static TeamMissionClass TeamMissions[TMISSION_COUNT];
+    static TeamMissionClass s_TeamMissions[TMISSION_COUNT];
 };
 
 struct TeamTypeContent
 {
-    int Count; // 0x0
-    ObjectTypeClass *Object; // 0x04
+    int m_Count;
+    ObjectTypeClass *m_Object;
 };
 
 class TeamTypeClass : public AbstractTypeClass
@@ -100,30 +98,42 @@ public:
     void operator delete(void *ptr, void *place) {}
 #endif
 
-    void Build_INI_Entry(char *entry_buffer);
-    void Fill_In(const char *, const char *);
     TeamClass *Create_One_Of() const;
     void Destroy_All_Of() const;
     NeedType TeamMission_Needs(TeamMissionType tmission);
     BOOL Do_Reinforcements();
     void Detach(target_t target, int a2);
-
+    void Draw_It(int index, int x, int y, int x_max, int y_max, BOOL selected, TextPrintType style);
+    void Edit();
     void Code_Pointers();
     void Decode_Pointers();
 
-    BOOL Validate() { return false; }
     BOOL Avoid_Threats() const { return m_AvoidThreats; }
+    void Add_Instance() { ++m_Instances; }
+    void Remove_Instance() { --m_Instances; }
+    HousesType Get_Owner() const { return m_Owner; }
+    int Get_Location() const { return m_Location; }
+    const GamePtr<TriggerTypeClass> &Get_TriggerType() const { return m_TriggerType; }
 
     static void Init();
-    static void Read_Scenario_INI(GameINIClass &ini);
-    static void Write_Scenario_INI(GameINIClass &ini);
+    static void Read_INI(GameINIClass &ini);
+    static void Write_INI(GameINIClass &ini);
     static TeamMissionType Mission_From_Name(const char *name);
     static const char *Name_From_Mission(TeamMissionType tmission);
-    static TeamTypeClass &As_Reference(const char *name);
     static TeamTypeClass *As_Pointer(const char *name);
     static TeamTypeClass *From_Name(const char *name);
-    static const char *Name_From(TeamTypeClass *team);
-    static TeamTypeClass *Suggested_New_Team(HouseClass *house, long, long, long, long, int);
+    static TeamTypeClass *Suggested_New_Team(HouseClass *house, int32_t avail_air, int32_t avail_unit, int32_t avail_inf,
+        int32_t avail_vessel, BOOL allow_autocreate);
+
+#ifdef GAME_DLL
+    TeamTypeClass *Hook_Ctor() { return new (this) TeamTypeClass; }
+#endif
+
+private:
+    void Fill_In(const char *entry, char *data);
+    void Build_INI_Entry(char *buffer);
+    const char *Description();
+    const char *Member_Description();
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -141,25 +151,25 @@ protected:
     bool m_Prebuild; // Prebuild team members before creating.
     bool m_Reinforce; // Automatically reinforce.
 #endif
-    int m_Priority; // 0x29 //confirmed
-    uint8_t m_field_2D; // 0x2D
-    uint8_t m_Max; // 0x2E //confirmed 	//max instance count?
-    uint8_t m_field_2F; // 0x2F
-    HousesType m_Owner; // 0x30
-    GamePtr<TriggerTypeClass> m_TriggerType; // 0x31
-    int m_field_35; // 0x35  //some waypoint?
-    int m_Instances; // 0x39  //instance count?   //needs confirming, doesnt seem like a right name
-    int m_MissionCount; // 0x3D //team mission count?
-    TeamMissionClass m_Missions[20]; // 0x41 // A TeamType can have maximum of 20 missions asigned to it
-    int m_MemberCount; // 0xA5 	//im not sure if this is exact member count or how many different types we have.
-    TeamTypeContent m_Content[5]; // 0xA9 	//members?
+    int m_Priority;
+    uint8_t m_Number;
+    uint8_t m_Max;
+    uint8_t m_Unused;
+    HousesType m_Owner;
+    GamePtr<TriggerTypeClass> m_TriggerType;
+    int m_Location;
+    int m_Instances;
+    int m_MissionCount;
+    TeamMissionClass m_Missions[20];
+    int m_MemberCount;
+    TeamTypeContent m_Content[5];
 
 private:
     struct TMissionInfoStruct
     {
-        const char *Name;
-        const char *Description;
-        const char *ExpectedValue; // TODO: Rename this.
+        const char *m_Name;
+        const char *m_Description;
+        const char *m_ExpectedValue;
     };
 
     static TMissionInfoStruct s_TMissions[TMISSION_COUNT];
