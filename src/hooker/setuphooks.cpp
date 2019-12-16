@@ -1042,6 +1042,22 @@ void Setup_Hooks()
     Hook_Function(0x0054FCF0, *SmudgeClass::Mark);
     Hook_Function(0x0054FFAC, *SmudgeClass::Disown);
     Hook_Function(0x005500B0, *SmudgeClass::Read_INI);
+
+    // teamtype.cpp
+    Hook_Function(0x0055FF10, *TeamTypeClass::Hook_Ctor);
+    Hook_Function(0x004F9340, *TeamTypeClass::Code_Pointers);
+    Hook_Function(0x004F939C, *TeamTypeClass::Decode_Pointers);
+    Hook_Function(0x00560310, *TeamTypeClass::Detach);
+    Hook_Function(0x0055FFC0, TeamTypeClass::Init);
+    Hook_Function(0x0055FFD4, TeamTypeClass::As_Pointer);
+    Hook_Function(0x00560020, TeamTypeClass::Mission_From_Name);
+    Hook_Function(0x00560070, TeamTypeClass::Name_From_Mission);
+    Hook_Function(0x00560368, TeamTypeClass::Read_INI);
+    Hook_Function(0x0056076C, TeamTypeClass::Write_INI);
+    Hook_Function(0x00560248, TeamTypeClass::From_Name);
+    Hook_Function(0x0056016C, TeamTypeClass::Suggested_New_Team);
+    Hook_Function_Const(0x005600C4, &TeamTypeClass::Create_One_Of);
+    Hook_Function_Const(0x00560114, &TeamTypeClass::Destroy_All_Of);
 #endif
 }
 
