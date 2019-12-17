@@ -33,8 +33,8 @@ class GameINIClass;
 class ObjectTypeClass : public AbstractTypeClass
 {
 public:
-    ObjectTypeClass(RTTIType type, int id, BOOL animates, BOOL radar_invisible, BOOL selectable, BOOL legal_target,
-        BOOL insignificant, BOOL is_immune, BOOL logical, int ui_name, const char *name);
+    ObjectTypeClass(RTTIType type, int id, BOOL unk1, BOOL radar_invisible, BOOL selectable, BOOL legal_target,
+        BOOL insignificant, BOOL is_immune, BOOL unk2, int ui_name, const char *name);
     ObjectTypeClass(const ObjectTypeClass &that);
     ObjectTypeClass(const NoInitClass &noinit) : AbstractTypeClass(noinit) {}
     ~ObjectTypeClass();
