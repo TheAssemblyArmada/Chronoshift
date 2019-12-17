@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "overlaytype.h"
+#include "overlay.h"
 #include "overlaydata.h"
 #include "gamefile.h"
 #include "coord.h"
@@ -194,33 +195,12 @@ coord_t OverlayTypeClass::Coord_Fixup(coord_t coord) const
 
 BOOL OverlayTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-    // TODO requires OverlayClass
-#ifdef GAME_DLL
-    BOOL(*func)(const OverlayTypeClass*, cell_t, HousesType) = reinterpret_cast<BOOL(*)(const OverlayTypeClass*, cell_t, HousesType)>(0x00524A5C);
-    return func(this, cellnum, house);
-#elif 0
-    DEBUG_ASSERT(this != nullptr);
-
     return new OverlayClass(m_Type, cellnum, house) != nullptr;
-#else
-    return false;
-#endif
 }
 
 ObjectClass *OverlayTypeClass::Create_One_Of(HouseClass *house) const
 {
-    // TODO requires OverlayClass
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const OverlayTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const OverlayTypeClass*, HouseClass*)>(0x00524A98);
-    return func(this, house);
-#elif 0
-    DEBUG_ASSERT(this != nullptr);
-    DEBUG_ASSERT(house != nullptr);
-
     return new OverlayClass(m_Type);
-#else
-    return nullptr;
-#endif
 }
 
 const int16_t *OverlayTypeClass::Occupy_List(BOOL a1) const
