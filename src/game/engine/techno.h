@@ -92,7 +92,7 @@ public:
     virtual BOOL Mark(MarkType mark) override;
     virtual void Clicked_As_Target(int flash_frames) override;
     virtual BOOL Select() override;
-    virtual BOOL In_Range(coord_t a1, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
+    virtual BOOL In_Range(coord_t coord, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual int Weapon_Range(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual DamageResultType Take_Damage(
         int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) override;

@@ -509,7 +509,7 @@ BOOL TechnoClass::Select()
     return false;
 }
 
-BOOL TechnoClass::In_Range(coord_t a1, WeaponSlotType weapon) const
+BOOL TechnoClass::In_Range(coord_t coord, WeaponSlotType weapon) const
 {
     return 0;
 }
