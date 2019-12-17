@@ -1310,7 +1310,8 @@ int CellClass::Ore_Adjust(BOOL randomize)
 }
 
 /**
- * 0x004B4D80
+ *
+ *
  */
 coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 {
@@ -1334,31 +1335,30 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
     // clang-format on
 
     int spotindex = Spot_Index(coord);
+    coord_t top_left = Coord_Top_Left(coord);
 
     // If we have a unit or terrain object, return is 0;
-    if (!skip_occupied && ((m_OccupantBit & OCCUPANT_UNIT) != 0 || (m_OccupantBit & OCCUPANT_TERRAIN) != 0)) {
+    if (!skip_occupied && (m_OccupantBit & OCCUPANT_UNIT || m_OccupantBit & OCCUPANT_TERRAIN)) {
         return 0;
     }
 
     // If our intended spot is free or we are skipping occupied, return it.
     if (skip_occupied || Is_Spot_Free(spotindex)) {
-        return Coord_Add(coord, s_StoppingCoordAbs[spotindex]);
+        return Coord_Add(top_left, s_StoppingCoordAbs[spotindex]);
     }
 
     // If we already have an occupier on our intended spot, recalculate next best.
-    int coord_index = 0;
     char *spots = nullptr;
-
-    if (spotindex > 0) {
-        spots = _sequence[spotindex];
+    if (spotindex == 0) {
+        spots = _alternate[g_Scen.Get_Random_Value((m_OccupantBit & INFANTRY_SPOT_TOP_LEFT) == 0, 3)];
     } else {
-        spots = _alternate[g_Scen.Get_Random_Value((m_OccupantBit & 1) == 0, 3)];
+        spots = _sequence[spotindex];
     }
 
     // From our possible spots list, find a free one, if not, return 0.
     for (int i = 0; i < 4; ++i) {
         if (Is_Spot_Free(spots[i])) {
-            return Coord_Add(coord, s_StoppingCoordAbs[coord_index]);
+            return Coord_Add(top_left, s_StoppingCoordAbs[spots[i]]);
         }
     }
 
@@ -1370,7 +1370,7 @@ coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
  */
 int CellClass::Spot_Index(coord_t coord)
 {
-    coord_t spot = coord & 0x00FF00FF;
+    coord_t spot = Coord_Sub_Cell(coord);
 
     // Looks like it checks the lepton distance and then does some math on the X and Y lepton dimensions to decide which spot
     // the passed packed coords are in.
