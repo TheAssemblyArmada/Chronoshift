@@ -42,7 +42,7 @@ public:
 
     // ObjectClass
     virtual BOOL Limbo() override;
-    virtual void Scatter(coord_t coord, int a2, int a3) override;
+    virtual void Scatter(coord_t coord, int a2, BOOL a3 = false) override;
     virtual void Per_Cell_Process(PCPType pcp) override;
 
     // TechnoClass
