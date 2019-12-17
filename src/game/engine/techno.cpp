@@ -144,6 +144,11 @@ TechnoClass::TechnoClass(const NoInitClass &noinit) :
 {
 }
 
+TechnoClass::~TechnoClass()
+{
+    m_OwnerHouse = nullptr;
+}
+
 #ifdef CHRONOSHIFT_DEBUG
 void TechnoClass::Debug_Dump(MonoClass *mono) const
 {
