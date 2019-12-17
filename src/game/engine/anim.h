@@ -27,7 +27,7 @@
 class AnimClass : public ObjectClass
 {
 public:
-    AnimClass(AnimType type, coord_t coord, unsigned char loop_delay = 0, unsigned char loop_count = 1/*, BOOL invisible = false*/);
+    AnimClass(AnimType type, coord_t coord, unsigned char loop_delay = 0, unsigned char loop_count = 1);
     AnimClass(const AnimClass &that);
     AnimClass(const NoInitClass &noinit);
     virtual ~AnimClass() {}
@@ -63,7 +63,7 @@ public:
 
     void Attach_To(ObjectClass *object);
     coord_t Adjust_Coord(coord_t coord);
-    static void Do_Atom_Damage(HousesType house, cell_t cell);
+    static void Do_Atom_Damage(HousesType house, cell_t cellnum);
 
     target_t Attached_To() const { return m_AttachedTo; }
     unsigned char Get_Loops() const { return m_Loops; }

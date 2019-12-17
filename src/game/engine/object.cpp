@@ -276,8 +276,8 @@ BOOL ObjectClass::Paradrop(coord_t coord)
     if (!Unlimbo(coord, DIR_SOUTH)) {
         return false;
     }
-    coord_t anim_coord = Coord_Move(Center_Coord(), DIR_NORTH, Get_Height() + 48);
-    AnimClass *anim = new AnimClass((What_Am_I() == RTTI_BULLET ? ANIM_PARABOMB : ANIM_PARACHUTE), coord);
+    coord_t anim_coord = Coord_Move(Center_Coord(), DIR_NORTH, m_Height + 48);
+    AnimClass *anim = new AnimClass((What_Am_I() == RTTI_BULLET ? ANIM_PARABOMB : ANIM_PARACHUTE), anim_coord);
     if (anim != nullptr) {
         anim->Attach_To(this);
     }
