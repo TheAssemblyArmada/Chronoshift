@@ -58,7 +58,7 @@ public:
     TechnoClass(RTTIType type, int id, HousesType house);
     TechnoClass(const TechnoClass &that);
     TechnoClass(const NoInitClass &init);
-    virtual ~TechnoClass() {}
+    virtual ~TechnoClass();
 
 #ifdef CHRONOSHIFT_DEBUG
 #ifdef CHRONOSHIFT_STANDALONE
