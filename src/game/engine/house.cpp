@@ -378,6 +378,7 @@ HouseClass::HouseClass(const HouseClass &that) :
  */
 HouseClass::~HouseClass()
 {
+    m_Class = nullptr;
     if (g_Session.Game_To_Play() == GAME_INTERNET) {
         delete m_AircraftBought;
         delete m_InfantryBought;
