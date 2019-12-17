@@ -52,7 +52,7 @@ DEFINE_ENUMERATION_OPERATORS(SmudgeType);
 class SmudgeTypeClass : public ObjectTypeClass
 {
 public:
-    SmudgeTypeClass(SmudgeType smudge, const char *name, int uiname, int width = 1, int height = 1, BOOL crater = false, BOOL burn = false);
+    SmudgeTypeClass(SmudgeType smudge, const char *name, int uiname, int width = 1, int height = 1, BOOL bib = false, BOOL crater = false);
     SmudgeTypeClass(const SmudgeTypeClass &that);
     SmudgeTypeClass(const NoInitClass &noinit) : ObjectTypeClass(noinit) {}
     ~SmudgeTypeClass() {}
