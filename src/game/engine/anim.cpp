@@ -32,7 +32,7 @@ TFixedIHeapClass<AnimClass> g_Anims;
  *
  * @address 0x00424648
  */
-AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, unsigned char loop_count /*, BOOL invisible*/) :
+AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, unsigned char loop_count) :
     ObjectClass(RTTI_ANIM, g_Anims.ID(this)),
     m_LoopStage(),
     m_Class(g_AnimTypes.Ptr(type)),
@@ -41,9 +41,9 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
     m_Loops(loop_count),
     m_Bit1(false),
     m_Bit2(true),
-    m_Invisible(false /*invisible*/),
+    m_Invisible(false),
     m_LoopDelay(loop_delay),
-    m_field_4A()
+    m_field_4A(0)
 {
     if (m_Class->Get_End() == -1) {
         // seems like this if once had Theater specific art access
@@ -71,7 +71,7 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
     m_Loops = m_Class->Get_Loop_Count() * std::max<uint8_t>(loop_count, 1);
     m_Loops = std::max<uint8_t>(m_Loops, 1); // thats what it is...
     //
-    if (m_LoopDelay > 0) {
+    if (m_LoopDelay == 0) {
         Start();
     }
 }

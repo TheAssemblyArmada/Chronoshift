@@ -123,6 +123,7 @@ public:
     void Set_Health(int16_t health) { m_Health = health; }
 
     void Set_ToDisplay(bool state) { m_ToDisplay = state; }
+    void Set_AnimAttached(bool state) { m_AnimAttached = state; }
 
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);
