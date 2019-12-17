@@ -24,7 +24,7 @@
 class OverlayClass : public ObjectClass
 {
 public:
-    OverlayClass(OverlayType type, cell_t cell, HousesType house);
+    OverlayClass(OverlayType type, cell_t cell = -1, HousesType house = HOUSES_NONE);
     OverlayClass(const OverlayClass &that);
     OverlayClass(const NoInitClass &noinit);
     virtual ~OverlayClass();
