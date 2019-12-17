@@ -57,7 +57,6 @@ private:
             BOOL m_ShroudRegrows : 1; // & 1
             BOOL m_BuildTimeAccelerated : 1; // & 2
             BOOL m_FirstRun : 1; // & 4
-            //BOOL m_DemoMode : 1; // & 4
             BOOL m_CaptureTheFlag : 1; // & 8
             BOOL m_NoDamage : 1; // & 16
             BOOL m_ThreePointTurnLogic : 1; // & 32
@@ -76,8 +75,8 @@ private:
     bool m_ShroudRegrows; // Used in skirmish menu
     bool m_BuildTimeAccelerated; //  Used in special dialog
     bool m_FirstRun; // Play intro followed by allied 1 or soviet 1.
-    // bool m_DemoMode; // activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1 or soviet 1.
-    bool m_CaptureTheFlag; // Used in lan dialog, also checked in bridge destruction related code.
+                     // activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1 or soviet 1.
+    bool m_CaptureTheFlag; // is this a CTF game?, Used in lan dialog
     bool m_NoDamage; // Used by Explosion_Damage code.
     bool m_ThreePointTurnLogic; // Used in hidden special dialog.
     bool m_OreGrows; // Set in skirmish menu
