@@ -325,7 +325,7 @@ int main(int argc, char **argv)
     }
 
     // TODO: Search for this in the user home folder, then in game folder as fallback.
-    RawFileClass settingsfile("chronoshift.ini");
+    GameFileClass settingsfile(g_SettingsFilename);
     INIClass settingsini;
 
     // If we was unable to find the settings file, copy them from the original
@@ -346,7 +346,7 @@ int main(int argc, char **argv)
         // Copy settings from original Red Alert file. This also handles the
         // case where the game requires 'redalert.ini' to exist, otherwise
         // it will not run (user had to run SETUP.EXE first).
-        RawFileClass redalertfile("redalert.ini");
+        GameFileClass redalertfile("redalert.ini");
         INIClass redalertini;
         if (!redalertfile.Is_Available()) {
             DEBUG_LOG("Red Alert settings ini not found, continuing with default settings.\n");

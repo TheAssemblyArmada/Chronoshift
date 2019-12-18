@@ -17,6 +17,7 @@
 #include "expansion.h"
 #include "gamefile.h"
 #include "gameini.h"
+#include "globals.h"
 #include "hsv.h"
 #include "palette.h"
 #include "session.h"
@@ -232,7 +233,7 @@ void OptionsClass::One_Time()
 void OptionsClass::Save_Settings()
 {
     // TODO Some global to handle if the game is TD or RA for later TD support.
-    GameFileClass fc("redalert.ini");
+    GameFileClass fc(g_SettingsFilename);
     GameINIClass ini;
 
     if (fc.Is_Available()) {
@@ -322,7 +323,7 @@ void OptionsClass::Save_Settings()
  */
 void OptionsClass::Load_Settings()
 {
-    GameFileClass fc("redalert.ini");
+    GameFileClass fc(g_SettingsFilename);
 
     GameINIClass ini;
     ini.Load(fc);

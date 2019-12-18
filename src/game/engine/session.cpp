@@ -16,6 +16,8 @@
  */
 #include "session.h"
 #include "house.h"
+#include "ini.h"
+#include "iomap.h"
 #include "multimission.h"
 #include "pipe.h"
 #include "straw.h"
@@ -153,20 +155,71 @@ BOOL SessionClass::Load(GameFileClass &file)
     return true;
 }
 
+/**
+ *
+ *
+ */
 void SessionClass::Read_MultiPlayer_Settings()
 {
-#ifdef GAME_DLL
-    void (*func)(SessionClass*) = reinterpret_cast<void (*)(SessionClass*)>(0x0054AB08);
-    return func(this);
-#endif
+    GameFileClass settingsfile(g_SettingsFilename);
+    INIClass settingsini;
+
+    if (settingsini.Load(settingsfile)) {
+        settingsini.Get_String("MultiPlayer", "Handle", "Noname", m_MPlayerName, sizeof(m_MPlayerName));
+        m_MPlayerPrefColor = (PlayerColorType)settingsini.Get_Int("MultiPlayer", "Color", PLAYER_COLOR_YELLOW);
+        m_MPlayerHouse = (HousesType)settingsini.Get_Int("MultiPlayer", "Side", HOUSES_USSR);
+
+        m_TrapCheckHeap = settingsini.Get_Int("MultiPlayer", "CheckHeap", false);
+
+        m_TrapFrame = settingsini.Get_Int("SyncBug", "Frame", 0x7FFFFFFF);
+
+        char syncbug_str[128];
+        settingsini.Get_String("SyncBug", "Type", "NONE", syncbug_str, sizeof(syncbug_str));
+        if (!strcasecmp(syncbug_str, "AIRCRAFT")) {
+            m_TrapType = RTTI_AIRCRAFT;
+        } else if (!strcasecmp(syncbug_str, "ANIM")) {
+            m_TrapType = RTTI_ANIM;
+        } else if (!strcasecmp(syncbug_str, "BUILDING")) {
+            m_TrapType = RTTI_BUILDING;
+        } else if (!strcasecmp(syncbug_str, "BULLET")) {
+            m_TrapType = RTTI_BULLET;
+        } else if (!strcasecmp(syncbug_str, "INFANTRY")) {
+            m_TrapType = RTTI_INFANTRY;
+        } else if (!strcasecmp(syncbug_str, "UNIT")) {
+            m_TrapType = RTTI_UNIT;
+        } else {
+            m_TrapType = RTTI_NONE;
+        }
+
+        settingsini.Get_String("SyncBug", "Coord", "0", syncbug_str, sizeof(syncbug_str));
+        sscanf(syncbug_str, "%x", m_TrapCoord);
+        settingsini.Get_String("SyncBug", "Target", "0", syncbug_str, sizeof(syncbug_str));
+        sscanf(syncbug_str, "%x", m_TrapTarget);
+        settingsini.Get_String("SyncBug", "Cell", "0", syncbug_str, sizeof(syncbug_str));
+        cell_t cell = atoi(syncbug_str);
+        if (cell != 0 && cell < MAP_MAX_AREA) {
+            m_TrapCell = &g_Map[cell];
+        }
+        m_TrapPrintCRC = settingsini.Get_Int("SyncBug", "PrintCRC", 0x7FFFFFFF);
+    }
 }
 
+/**
+ *
+ *
+ */
 void SessionClass::Write_MultiPlayer_Settings()
 {
-#ifdef GAME_DLL
-    void (*func)(SessionClass*) = reinterpret_cast<void (*)(SessionClass*)>(0x0054B510);
-    return func(this);
-#endif
+    GameFileClass settingsfile(g_SettingsFilename);
+    INIClass settingsini;
+
+    if (settingsini.Load(settingsfile)) {
+        settingsini.Put_String("MultiPlayer", "Handle", m_MPlayerName);
+        settingsini.Put_Int("MultiPlayer", "Color", m_MPlayerPrefColor);
+        settingsini.Put_Int("MultiPlayer", "Side", m_MPlayerHouse);
+
+        settingsini.Save(settingsfile);
+    }
 }
 
 void SessionClass::Read_Scenario_Descriptions()

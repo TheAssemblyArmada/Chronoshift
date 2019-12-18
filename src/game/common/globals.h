@@ -86,6 +86,8 @@
 
 #define TUTORIAL_TEXT_COUNT 225
 
+extern const char g_SettingsFilename[];
+
 #ifdef PLATFORM_WINDOWS
 #ifdef GAME_DLL
 extern HWND &g_MainWindow;
