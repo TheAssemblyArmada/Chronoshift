@@ -79,20 +79,22 @@
 #include "mouseshape.h"
 #include "msgbox.h"
 #include "msglist.h"
-#include "overlay.h"
 #include "options.h"
 #include "ostimer.h"
+#include "overlay.h"
 #include "power.h"
 #include "radar.h"
 #include "rawfile.h"
 #include "rgb.h"
 #include "rules.h"
 #include "scenario.h"
+#include "session.h"
 #include "shape.h"
 #include "shapebtn.h"
 #include "sidebar.h"
 #include "slider.h"
 #include "smudge.h"
+#include "sndctrl.h"
 #include "super.h"
 #include "surfacemonitor.h"
 #include "team.h"
@@ -111,7 +113,6 @@
 #include "vortex.h"
 #include "wsa.h"
 #include "xordelta.h"
-#include "sndctrl.h"
 #include <malloc.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -430,8 +431,12 @@ void Setup_Hooks()
 
     // options.h
     // Hook_Function(0x00525884, *OptionsClass::Adjust_Palette);
+
+    // !!! Required to be hooked because main now loads 'chronoshift.ini' !!!
     Hook_Function(0x00525A24, *OptionsClass::Load_Settings);
     Hook_Function(0x005263A8, *OptionsClass::Save_Settings);
+    Hook_Function(0x0054AB08, *SessionClass::Read_MultiPlayer_Settings);
+    Hook_Function(0x0054B510, *SessionClass::Write_MultiPlayer_Settings);
 
     // display.h
     Hook_Function(0x004AEF7C, *DisplayClass::Init_Clear);

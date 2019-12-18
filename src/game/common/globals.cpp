@@ -15,6 +15,8 @@
  */
 #include "globals.h"
 
+const char g_SettingsFilename[] = "chronoshift.ini";
+
 #if defined PLATFORM_WINDOWS && !defined GAME_DLL
 HWND g_MainWindow = nullptr;
 //HMODULE g_ProgramInstance = nullptr; // Only used in gameres packet, won't be needed in final
