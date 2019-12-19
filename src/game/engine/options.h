@@ -62,8 +62,8 @@ public:
     int Normalize_Delay(int delay) const;
     void Set_Shuffle(BOOL shuffle) { ScoreShuffles = shuffle; }
     void Set_Repeat(BOOL repeat) { ScoreRepeats = repeat; }
-    void Set_Score_Volume(fixed_t volume, BOOL beep = false);
-    void Set_Sound_Volume(fixed_t volume, BOOL beep = false);
+    void Set_Score_Volume(fixed_t volume, BOOL feedback = false);
+    void Set_Sound_Volume(fixed_t volume, BOOL feedback = false);
     void Set_Multiplayer_Score_Volume(fixed_t volume) { MultiplayerScoreVolume = volume; }
 
     void Set_Brightness(fixed_t brightness);
