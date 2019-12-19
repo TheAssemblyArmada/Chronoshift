@@ -520,19 +520,16 @@ int OptionsClass::Normalize_Delay(int delay) const
  *
  * 0x0052520C
  */
-void OptionsClass::Set_Score_Volume(fixed_t volume, BOOL beep)
+void OptionsClass::Set_Score_Volume(fixed_t volume, BOOL feedback)
 {
-    if (volume >= 1) {
-        volume.Set_Word(255);
-    }
+    ScoreVolume = std::clamp<fixed_t>(volume, fixed_t(0), fixed_t(255, 256));
 
-    Set_Score_Vol(256 * volume);
+    //this takes a int so we need to scale the fixed to the 256 range
+    Set_Score_Vol(256 * ScoreVolume);
 
-    Volume = volume;
-
-    if (beep) {
+    if (feedback) {
         if (!g_Theme.Still_Playing()) {
-            Sound_Effect(VOC_RABEEP1, fixed_t(1, 1), 1, 0, HOUSES_NONE);
+            Sound_Effect(VOC_RABEEP1, ScoreVolume, 1, 0, HOUSES_NONE);
         }
     }
 }
@@ -542,15 +539,11 @@ void OptionsClass::Set_Score_Volume(fixed_t volume, BOOL beep)
  *
  * 0x005252BC
  */
-void OptionsClass::Set_Sound_Volume(fixed_t volume, BOOL beep)
+void OptionsClass::Set_Sound_Volume(fixed_t volume, BOOL feedback)
 {
-    if (volume >= 1) {
-        volume.Set_Word(255);
-    }
+    Volume = std::clamp<fixed_t>(volume, fixed_t(0), fixed_t(255, 256));
 
-    Volume = volume;
-
-    if (beep) {
+    if (feedback) {
         Sound_Effect(VOC_RABEEP1);
     }
 }

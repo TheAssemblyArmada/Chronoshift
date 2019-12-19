@@ -89,10 +89,10 @@ void SoundControlsClass::Process()
     // set slider states
     scorevolsldr.Set_Maximum(255);
     scorevolsldr.Set_Thumb_Size(16);
-    scorevolsldr.Set_Value(g_Options.Get_Sound_Volume() * 256); // is it * 256?
+    scorevolsldr.Set_Value(g_Options.Get_Score_Volume() * 256);
     soundvolsldr.Set_Maximum(255);
     soundvolsldr.Set_Thumb_Size(16);
-    soundvolsldr.Set_Value(g_Options.Get_Score_Volume() * 256); // is it * 256?
+    soundvolsldr.Set_Value(g_Options.Get_Sound_Volume() * 256);
 
     // set graphic page to draw to
     Set_Logic_Page(g_SeenBuff);
