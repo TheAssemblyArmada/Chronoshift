@@ -19,8 +19,10 @@
 #include "gadget.h"
 #include "gamefile.h"
 #include "gameini.h"
+#include "gameoptions.h"
 #include "gbuffer.h"
 #include "globals.h"
+#include "house.h"
 #include "iomap.h"
 #include "keyboard.h"
 #include "language.h"
@@ -60,7 +62,6 @@
 #define SHAPE_BUFF_SIZE 65000
 
 using std::sprintf;
-
 
 // These pointers are used only within this translation unit for reinitialisation after CD changes and such.
 #ifdef GAME_DLL
@@ -267,6 +268,67 @@ void Reinit_Secondary_Mixfiles()
     g_GeneralMix = new GameMixFile("general.mix", &g_PublicKey);
     g_ScoreMix = new GameMixFile("scores.mix", &g_PublicKey);
     ThemeClass::Scan();
+}
+
+/**
+ * Performs caching of some essential mix files and prepares the tutorial text.
+ */
+void Init_Bulk_Data()
+{
+    GameMixFile::Cache("conquer.mix");
+
+    if (!g_DebugQuiet) {
+        GameMixFile::Cache("sounds.mix");
+        GameMixFile::Cache("russian.mix");
+        GameMixFile::Cache("allies.mix");
+    }
+
+    Call_Back();
+
+    GameINIClass ini;
+    GameFileClass fc("tutorial.ini");
+    ini.Load(fc);
+
+    // TODO size is ARRAY_SIZE(g_TutorialText), needs adjustments to hooked global or standalone.
+    for (int i = 0; i < 225; ++i) {
+        char entry[20];
+        char buff[128];
+        g_TutorialText[i] = nullptr;
+        sprintf(entry, "%d", i);
+
+        if (ini.Get_String("Tutorial", entry, "", buff, sizeof(buff)) > 0) {
+            // TODO Original game allocates these and leaves cleanup to process exit.
+            // Should really clean this up properly with an atexit function?
+            g_TutorialText[i] = strdup(buff);
+        }
+    }
+
+    Init_One_Time_Systems();
+}
+
+/**
+ * Performs all the one time initialisation that is required to prepare the engine to run.
+ */
+void Init_One_Time_Systems()
+{
+    Call_Back();
+    g_Map.One_Time();
+    g_Options.One_Time();
+    g_Session.One_Time();
+    ObjectTypeClass::One_Time();
+    BuildingTypeClass::One_Time();
+    BulletTypeClass::One_Time();
+    HouseTypeClass::One_Time();
+    TemplateTypeClass::One_Time();
+    OverlayTypeClass::One_Time();
+    SmudgeTypeClass::One_Time();
+    TerrainTypeClass::One_Time();
+    UnitTypeClass::One_Time();
+    VesselTypeClass::One_Time();
+    InfantryTypeClass::One_Time();
+    AnimTypeClass::One_Time();
+    AircraftTypeClass::One_Time();
+    HouseClass::One_Time();
 }
 
 /**
@@ -480,7 +542,7 @@ void Init_Color_Remaps()
  */
 void Init_Mouse()
 {
-   if (!g_MouseInstalled) {
+    if (!g_MouseInstalled) {
         char buff[256];
         g_GamePalette.Set();
         sprintf(buff, "Chronoshift is unable to detect your mouse driver.");
@@ -491,9 +553,9 @@ void Init_Mouse()
     }
 
 #ifdef PLATFORM_WINDOWS
-   ShowCursor(FALSE); // Hides the OS GUI cursor.
+    ShowCursor(FALSE); // Hides the OS GUI cursor.
 #endif
- 
+
     void *mouse_shp = MixFileClass<GameFileClass>::Retrieve("mouse.shp");
     void *edmouse_shp = MixFileClass<GameFileClass>::Retrieve("edmouse.shp");
 
