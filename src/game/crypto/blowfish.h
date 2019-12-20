@@ -3,6 +3,7 @@
  *
  * @author CCHyper
  * @author OmniBlade
+ * @author tomsons26
  *
  * @brief Blowfish encryption engine.
  *
@@ -18,8 +19,6 @@
 
 #include "always.h"
 
-#define BF_ENCRYPT 1
-#define BF_DECRYPT 0
 #define BF_BLOCKSIZE 8 // Size of encryption block.
 #define BF_ROUNDS 16
 #define BF_DEF_KEY_LENGTH 16
@@ -29,7 +28,8 @@
 class BlowfishEngine
 {
 public:
-    BlowfishEngine(void *key = nullptr, int length = 0);
+    BlowfishEngine();
+    BlowfishEngine(void *key, int length);
     ~BlowfishEngine();
 
     void Submit_Key(void *key, int length);
@@ -38,16 +38,18 @@ public:
 
 private:
     void Process_Block(void *input, void *output, uint32_t *pbox);
-    void Sub_Key_Encrypt(uint32_t *input, uint32_t *output);
+    void Sub_Key_Encrypt(uint32_t &input, uint32_t &output);
+    int Process(bool encrypt, void *in_text, int length, void *out_text);
+
+#ifdef GAME_DLL
+    friend void Setup_Hooks();
+#endif
 
 private:
-    BOOL m_hasKey;
-    uint32_t m_pBoxEnc[BF_ROUNDS + 2];
-    uint32_t m_pBoxDec[BF_ROUNDS + 2];
-    uint32_t m_sBox[4 * 256];
-
-    static const uint32_t s_Blowfish_p_init[BF_ROUNDS + 2];
-    static const uint32_t s_Blowfish_s_init[4][256];
+    BOOL m_HasKey;
+    uint32_t m_PBoxEnc[BF_ROUNDS + 2];
+    uint32_t m_PBoxDec[BF_ROUNDS + 2];
+    uint32_t m_SBox[4][256];
 };
 
 #endif // BLOWFISH_H

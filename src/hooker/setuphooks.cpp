@@ -1147,6 +1147,13 @@ void Setup_Hooks()
     Hook_Function(0x00528C78, *Queue_Mission);
     Hook_Function(0x00528D18, *Queue_Mission_Formation);
     Hook_Function(0x0052BC94, *Clean_Scheduled_Events);
+
+    // blowfish.cpp
+    Hook_Function(0x005D4EA0, *BlowfishEngine::Submit_Key);
+    Hook_Function(0x005D5084, *BlowfishEngine::Encrypt);
+    Hook_Function(0x005D5138, *BlowfishEngine::Decrypt);
+    Hook_Function(0x005D51EC, *BlowfishEngine::Process_Block);
+    Hook_Function(0x005D5330, *BlowfishEngine::Sub_Key_Encrypt);
 #endif
 }
 
