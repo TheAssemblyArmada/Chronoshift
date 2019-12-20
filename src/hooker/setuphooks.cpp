@@ -862,6 +862,8 @@ void Setup_Hooks()
     Hook_Function(0x004F7A08, Init_CDROM_Access);
     Hook_Function(0x005B3CD8, Load_Title_Screen);
     Hook_Function(0x004F3E98, Load_Prolog_Page);
+    Hook_Function(0x004F78D8, Init_One_Time_Systems);
+    Hook_Function(0x004F850C, Init_Bulk_Data);
 
     // super.h
     Hook_Function(0x00552FE8, *SuperClass::Suspend);
