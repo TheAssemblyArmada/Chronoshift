@@ -289,6 +289,7 @@ public:
     void Enable_Superweapon(SpecialWeaponType type, BOOL one_time) { m_Specials[type].Enable(one_time); }
     void Set_Preferred_Target(QuarryType target) { m_PreferredTarget = target; }
     BOOL Flag_To_Recalc() { return m_RecalcNeeded = true; }
+    int Get_Power() const { return m_Power; }
 
     static void One_Time();
     static void Init();
