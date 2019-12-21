@@ -141,6 +141,7 @@ public:
     static InfantryType From_Name(const char *name);
     static const char *Name_From(InfantryType type) { return As_Reference(type).m_Name; }
 
+    static void One_Time();
     static void Prep_For_Add();
 
 private:
