@@ -192,9 +192,9 @@ void SessionClass::Read_MultiPlayer_Settings()
         }
 
         settingsini.Get_String("SyncBug", "Coord", "0", syncbug_str, sizeof(syncbug_str));
-        sscanf(syncbug_str, "%x", m_TrapCoord);
+        sscanf(syncbug_str, "%x", &m_TrapCoord);
         settingsini.Get_String("SyncBug", "Target", "0", syncbug_str, sizeof(syncbug_str));
-        sscanf(syncbug_str, "%x", m_TrapTarget);
+        sscanf(syncbug_str, "%x", &m_TrapTarget);
         settingsini.Get_String("SyncBug", "Cell", "0", syncbug_str, sizeof(syncbug_str));
         cell_t cell = atoi(syncbug_str);
         if (cell != 0 && cell < MAP_MAX_AREA) {
