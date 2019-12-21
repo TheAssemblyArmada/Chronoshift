@@ -94,6 +94,8 @@ private:
     BOOL Process_Take_Off();
     BOOL Is_LZ_Clear(target_t landing_zone);
     DirType Pose_Dir() const;
+    int Paradrop_Cargo();
+    BOOL Cell_Seems_Ok(cell_t cell, BOOL a3);
 
 #ifdef GAME_DLL
     friend void Setup_Hooks();

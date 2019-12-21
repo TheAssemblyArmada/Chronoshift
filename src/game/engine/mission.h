@@ -22,6 +22,8 @@
 #include "object.h"
 #include "ttimer.h"
 
+class MissionControlClass;
+
 class MissionClass : public ObjectClass
 {
     friend class MissionControlClass;
@@ -73,11 +75,14 @@ public:
     void Set_Mission_Status(MissionStatusType status) { m_Status = status; }
     int Get_Mission_Status() const { return m_Status; }
     BOOL Not_On_A_Mission() const { return Get_Mission() == MISSION_NONE && Get_Queued_Mission() == MISSION_NONE; }
+    BOOL Has_A_Suspended_Mission() { return m_SuspendedMission != MISSION_NONE; }
+    int Mission_Time() { return m_MissionTimer.Time(); }
 
     static BOOL Is_Recruitable_Mission(MissionType mission);
 
     static MissionType From_Name(const char *name);
     static const char *Name_From(MissionType mission);
+    static const MissionControlClass &Get_Mission_Control(MissionType mission);
 
 protected:
     MissionType m_Mission; // The current mission of this object (def = MISSION_NONE).

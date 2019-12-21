@@ -60,6 +60,7 @@ public:
     int Get_ThreatPosed() const { return m_ThreatPosed; }
     int Get_ThreatPoints() const { return m_ThreatPoints; }
     BOOL Is_Invisible() const { return m_IsInvisible; }
+    BOOL Is_Leader() const { return m_IsLeader; }
     BOOL Is_Cloakable() const { return m_Cloakable; }
     BOOL Is_Theater() const { return m_IsTheater; }
     BOOL Is_Turret_Equipped() const { return m_IsTurretEquipped; }
@@ -76,6 +77,7 @@ public:
     uint32_t Get_Prerequisites() const { return m_Prerequisite; }
     MZoneType Get_Movement_Zone() const { return m_MovementZone; }
     int Get_ROT_Count() const { return m_ROTCount; }
+    int Get_Rate_Of_Turn() const { return m_ROT; }
     MPHType Get_MPH() const { return m_MPH; }
 
     WeaponTypeClass *Get_Weapon(WeaponSlotType weapon) const
