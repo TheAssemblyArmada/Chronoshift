@@ -206,8 +206,8 @@ void TeamTypeClass::Fill_In(const char *entry, char *data)
     m_MissionCount = atoi(strtok(nullptr, ","));
 
     for (int i = 0; i < m_MissionCount; ++i) {
-        m_Missions[i].m_TMission = TeamMissionType(atoi(strtok(nullptr, ",")));
-        m_Missions[i].m_TMissionData = atoi(strtok(nullptr, ","));
+        m_Missions[i].m_TMission = TeamMissionType(atoi(strtok(nullptr, ",:")));
+        m_Missions[i].m_TMissionData = atoi(strtok(nullptr, ",:"));
     }
 
     if (g_INIFormat <= 1) {

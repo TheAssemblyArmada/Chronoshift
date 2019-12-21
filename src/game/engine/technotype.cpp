@@ -415,6 +415,5 @@ void TechnoTypeClass::One_Time()
     }
     if (s_MissingCameoShape == nullptr) {
         s_MissingCameoShape = GameFileClass::Retrieve("xxicon.shp");
-        DEBUG_ASSERT(s_MissingCameoShape != nullptr);
     }
 }
