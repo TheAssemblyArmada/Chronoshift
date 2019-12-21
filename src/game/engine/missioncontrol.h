@@ -35,15 +35,21 @@ public:
     BOOL Read_INI(GameINIClass &ini);
     void Write_INI(GameINIClass &ini);
 
+    const fixed_t &Get_Rate() const { return m_Rate; }
+    const fixed_t &Get_AARate() const { return m_AARate; }
+    BOOL Is_Zombie() const { return m_Zombie; }
+    BOOL Is_Paralyzed() const { return m_Paralyzed; }
+    BOOL Can_Scatter() const { return m_Scatter; }
+
 private:
     MissionType m_Mission; // The mission we control.
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_NoThreat : 1;
-    BOOL m_Zombie : 1;
-    BOOL m_Recruitable : 1;
-    BOOL m_Paralyzed : 1;
-    BOOL m_Retaliate : 1;
-    BOOL m_Scatter : 1;
+    BOOL m_NoThreat : 1; // 1
+    BOOL m_Zombie : 1; // 2
+    BOOL m_Recruitable : 1; // 4
+    BOOL m_Paralyzed : 1; // 8
+    BOOL m_Retaliate : 1; // 16
+    BOOL m_Scatter : 1; // 32
 #else
     bool m_NoThreat; // Is its weapons disabled and thus ignored as a potential target until fired upon?
     bool m_Zombie; // Is forced to sit there like a zombie and never recovers?

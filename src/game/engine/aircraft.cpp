@@ -20,6 +20,8 @@
 #include "globals.h"
 #include "house.h"
 #include "iomap.h"
+#include "missioncontrol.h"
+#include "mission.h"
 #include "session.h"
 #include "team.h"
 #include "target.h"
@@ -157,14 +159,16 @@ ActionType AircraftClass::What_Action(cell_t cellnum) const
     return action;
 }
 
+/**
+ *
+ *
+ */
 LayerType AircraftClass::In_Which_Layer() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00423BEC, LayerType, const AircraftClass *);
-    return func(this);
-#else
-    return LAYER_NONE;
-#endif
+    if (Class_Of().Is_Airplane() && m_Height > 0) {
+        return LAYER_TOP;
+    }
+    return FootClass::In_Which_Layer();
 }
 
 /**
@@ -316,12 +320,21 @@ DamageResultType AircraftClass::Take_Damage(int &damage, int a2, WarheadType war
 #endif
 }
 
+/**
+ *
+ *
+ */
 void AircraftClass::Scatter(coord_t coord, BOOL a2, BOOL a3)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00422980, void, AircraftClass *, coord_t, BOOL, BOOL);
-    func(this, coord, a2, a3);
-#endif
+    if (Get_Mission_Control(m_Mission).Can_Scatter()) {
+        if (!Class_Of().Is_Airplane()) {
+            if (m_IsLanding || m_Height == 0) {
+                m_IsLanding = false;
+                m_IsTakingOff = true;
+            }
+            Enter_Idle_Mode();
+        }
+    }
 }
 
 /**
@@ -364,14 +377,34 @@ int AircraftClass::Mission_Guard()
 #endif
 }
 
+/**
+ *
+ *
+ */
 int AircraftClass::Mission_Guard_Area()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00422FC8, int, AircraftClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    if (m_Height == 256) {
+        if (m_Team == nullptr) {
+            Enter_Idle_Mode();
+        }
+        return 1;
+    }
+
+    if (m_OwnerHouse->Is_Human()) {
+        return 15;
+    }
+
+    if (m_Height == 0 && m_Radio == nullptr) {
+        Scatter(0, 1);
+        return 45;
+    }
+
+    if (Target_Legal(m_TarCom)) {
+        Assign_Mission(MISSION_ATTACK);
+        return 1;
+    }
+
+    return FootClass::Mission_Guard_Area();
 }
 
 int AircraftClass::Mission_Hunt()
@@ -593,9 +626,9 @@ BulletClass *AircraftClass::Fire_At(target_t target, WeaponSlotType weapon)
 void AircraftClass::Assign_Destination(target_t dest)
 {
     if (dest != m_NavCom) {
-        if (dest != 0) {
+        if (Target_Legal(dest)) {
             // TODO, investigate, doing dest != m_NavCom again is useless...
-            if (Class_Of().Is_Airplane() && (m_IsLanding || m_NavCom != 0 && dest != m_NavCom)) {
+            if (Class_Of().Is_Airplane() && (m_IsLanding || Target_Legal(m_NavCom) && dest != m_NavCom)) {
                 Process_Take_Off();
                 m_Status = STATUS_0;
             }
@@ -648,12 +681,29 @@ void AircraftClass::Draw_Rotors(int x, int y, WindowNumberType window) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 void AircraftClass::Rotation_AI()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00423A2C, void, AircraftClass *);
-    func(this);
-#endif
+    if (m_Facing.Has_Changed()) {
+        Mark(MARK_3);
+        if (m_Facing.Rotation_Adjust(Class_Of().Get_Rate_Of_Turn())) {
+            Mark(MARK_3);
+        }
+    }
+
+    if (Class_Of().Is_Airplane()) {
+        m_BDir = m_Facing;
+    }
+
+    if (m_BDir.Has_Changed()) {
+        Mark(MARK_3);
+        if (m_BDir.Rotation_Adjust(Class_Of().Get_Rate_Of_Turn())) {
+            Mark(MARK_3);
+        }
+    }
 }
 
 /**
@@ -663,7 +713,7 @@ void AircraftClass::Rotation_AI()
  */
 void AircraftClass::Movement_AI()
 {
-    if (m_NavCom != 0 && m_Mission == MISSION_GUARD && m_MissionQueue == MISSION_NONE) {
+    if (Target_Legal(m_NavCom) && m_Mission == MISSION_GUARD && m_MissionQueue == MISSION_NONE) {
         Assign_Mission(MISSION_MOVE);
     }
     if (m_Speed > 0) {
@@ -724,13 +774,60 @@ BOOL AircraftClass::Edge_Of_World_AI()
     return true;
 }
 
+/**
+ *
+ *
+ */
 BOOL AircraftClass::Process_Take_Off()
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x00421580, BOOL, AircraftClass *);
     return func(this);
 #else
-    return false;
+    m_IsLanding = false;
+    m_IsTakingOff = true;
+
+    if (Class_Of().Is_Airplane()) {
+        Set_Speed(255);
+        if (m_Height == 256) {
+            return true;
+        }
+        return false;
+    }
+    int height = m_Height;
+
+    if (height < 171) {
+        if (height == 0) {
+            m_Door.Close_Door(5, 4);
+            m_Facing = m_BDir;
+        } else if (height == 128) {
+        	//TODO FIX ME
+            //m_Facing.Set_Desired(Direction(Center_Coord(), As_Coord(m_NavCom)));
+        }
+        return false;
+    }
+
+    if (height <= 171) {
+        m_BDir.Set_Desired(m_Facing.Get_Desired());
+        Set_Speed(32);
+        return false;
+    }
+
+    if (height < 205) {
+        return false;
+    }
+
+    if (height <= 205) {
+        Set_Speed(64);
+        return false;
+    }
+
+    if (height == 256) {
+        Set_Speed(255);
+        m_IsTakingOff = false;
+        return true;
+    }
+    return true;
 #endif
 }
 
@@ -789,4 +886,47 @@ DirType AircraftClass::Pose_Dir() const
         return DIR_EAST;
     }
     return DIR_NORTH_EAST;
+}
+
+/**
+ *
+ *
+ */
+int AircraftClass::Paradrop_Cargo()
+{
+    FootClass *cptr = (FootClass *)m_Cargo.Detach_Object();
+    if (cptr != nullptr) {
+        if (!cptr->Paradrop(Center_Coord())) {
+            m_Cargo.Attach(cptr);
+        } else {
+            Sound_Effect(VOC_CHUTE1, m_Coord);
+            if (m_Team != nullptr) {
+                m_Team->Remove(cptr);
+
+                Assign_Mission(cptr->Get_Owner_House()->Is_Human() ? MISSION_GUARD : MISSION_HUNT);
+            }
+            m_RearmTimer = 0;
+        }
+    }
+    return m_RearmTimer.Time();
+}
+
+/**
+ *
+ *
+ */
+BOOL AircraftClass::Cell_Seems_Ok(cell_t cell, BOOL a3)
+{
+    target_t target = ::As_Target(cell);
+    for (int i = 0; i < g_Aircraft.Count(); ++i) {
+        AircraftClass *aptr = &g_Aircraft[i];
+        if (aptr != nullptr) {
+            if ((a3 || aptr != this) && !aptr->In_Limbo()) {
+                if (aptr->Get_Cell() == cell || aptr->Nav_Com() == target) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
 }

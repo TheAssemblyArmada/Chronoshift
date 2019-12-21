@@ -320,3 +320,8 @@ const char *MissionClass::Name_From(MissionType mission)
 
     return "None";
 }
+
+const MissionControlClass &MissionClass::Get_Mission_Control(MissionType mission)
+{
+    return MissionControlClass::s_MissionControl[mission];
+}
