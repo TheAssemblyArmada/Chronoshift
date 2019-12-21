@@ -36,7 +36,7 @@ public:
     virtual const BuildingTypeClass &Class_Of() const final;
     virtual BOOL Can_Player_Move() const final;
     virtual void Detach(target_t target, int a2) final;
-    virtual void Draw_It(int x, int y, WindowNumberType window) final;
+    virtual void Draw_It(int x, int y, WindowNumberType window) const final;
     virtual void Active_Click_With(ActionType action, ObjectClass *object) final;
     virtual void Active_Click_With(ActionType action, cell_t cellnum) final;
     virtual BOOL Limbo() final;
@@ -48,7 +48,7 @@ public:
 
     BuildingType What_Type() const { return m_Class->What_Type(); }
 
-    int Shape_Number();
+    int Shape_Number() const;
     int Power_Output();
 
 
