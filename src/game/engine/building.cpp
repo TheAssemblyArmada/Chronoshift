@@ -192,7 +192,7 @@ void BuildingClass::Active_Click_With(ActionType action, cell_t cellnum)
  *
  *
  */
-void BuildingClass::Draw_It(int x, int y, WindowNumberType window)
+void BuildingClass::Draw_It(int x, int y, WindowNumberType window) const
 {
     void *image = Get_Image_Data();
     if (image != nullptr) {
@@ -244,10 +244,10 @@ void BuildingClass::Draw_It(int x, int y, WindowNumberType window)
     }
 }
 
-int BuildingClass::Shape_Number()
+int BuildingClass::Shape_Number() const
 {
 #ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00455618, int, BuildingClass *);
+    DEFINE_CALL(func, 0x00455618, int, const BuildingClass *);
     return func(this);
 #else
     return 0;
