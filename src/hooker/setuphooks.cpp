@@ -516,6 +516,7 @@ void Setup_Hooks()
     Hook_Function(0x00527EA4, *PowerClass::Refresh_Cells); // seems to work
     Hook_Function(0x00527EE4, *PowerClass::Power_Height); // seems to work
     Hook_Function(0x00528010, *PowerClass::Flash_Power); // seems to work
+    Hook_Function(0x00527F54, *PowerClass::PowerButtonClass::Action);
 
     // sidebar.h
     Hook_Function(0x0054ECA8, *SidebarClass::StripClass::SelectClass::Set_Owner); // seems to work

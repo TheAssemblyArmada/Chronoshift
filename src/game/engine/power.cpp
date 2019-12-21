@@ -15,6 +15,7 @@
  */
 #include "power.h"
 #include "gamefile.h"
+#include "house.h"
 #include "coord.h"
 #include "drawshape.h"
 #include "iomap.h"
@@ -33,17 +34,23 @@ PowerClass::PowerButtonClass::PowerButtonClass() :
 {
 }
 
+/**
+ *
+ *
+ */
 BOOL PowerClass::PowerButtonClass::Action(unsigned flags, KeyNumType &key)
 {
-    // TODO, needs HouseClass, TabClass, HelpClass.
-#ifdef GAME_DLL
-    BOOL(*func)
-    (const PowerButtonClass *, unsigned, KeyNumType &) =
-        reinterpret_cast<BOOL (*)(const PowerButtonClass *, unsigned, KeyNumType &)>(0x00527F54);
-    return func(this, flags, key);
-#else
-    return false;
-#endif
+    if (!g_Map.Is_Sidebar_Drawn()) {
+        return false;
+    }
+
+    g_Map.Override_Mouse_Shape(MOUSE_POINTER);
+
+    int str_id = (g_PlayerPtr->Power_Fraction() < fixed_t(1, 1) || g_PlayerPtr->Get_Power() > 0) ? TXT_POWER_OUTPUT : TXT_POWER_OUTPUT_LOW;
+    g_Map.Help_Text(str_id, -1, -1, GadgetClass::Get_Color_Scheme()->MediumColor);
+
+    GadgetClass::Action(flags, key);
+    return true;
 }
 
 PowerClass::PowerClass() :
