@@ -316,6 +316,7 @@ void Init_One_Time_Systems()
     g_Options.One_Time();
     g_Session.One_Time();
     ObjectTypeClass::One_Time();
+    TechnoTypeClass::One_Time();
     BuildingTypeClass::One_Time();
     BulletTypeClass::One_Time();
     HouseTypeClass::One_Time();

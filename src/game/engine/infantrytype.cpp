@@ -16,6 +16,7 @@
 #include "infantrytype.h"
 #include "infantrydata.h"
 #include "gameini.h"
+#include "gamefile.h"
 #include "facing.h"
 #include "globals.h"
 #include "lists.h"
@@ -293,4 +294,24 @@ void InfantryTypeClass::Init_Heap()
     new InfantryTypeClass(InfantryDrChan);
     new InfantryTypeClass(InfantryShockTrooper);
     new InfantryTypeClass(InfantryMechanic);
+}
+
+/**
+ *
+ *
+ */
+void InfantryTypeClass::One_Time()
+{
+    char filename[512];
+
+    for (InfantryType i = INFANTRY_FIRST; i < INFANTRY_COUNT; ++i) {
+        InfantryTypeClass &infantry = As_Reference(i);
+        const char *name = infantry.m_ImageName[0] != '\0' ? infantry.m_ImageName : infantry.m_Name;
+
+        snprintf(filename, sizeof(filename), "%s.shp", name);
+        infantry.m_ImageData = GameFileClass::Retrieve(filename);
+
+        snprintf(filename, sizeof(filename), "%.4sicon.shp", name);
+        infantry.m_CameoData = GameFileClass::Retrieve(filename);
+    }
 }
