@@ -70,7 +70,7 @@ private:
 
 inline target_t Make_Target(RTTIType type, int id)
 {
-    return (id & 0xFFFFFF) | ((type << 24) & 0xFF000000);
+    return ((type & 0xFF) << 24) | (id & 0xFFFFFF);
 }
 
 inline RTTIType Target_Get_RTTI(target_t target)

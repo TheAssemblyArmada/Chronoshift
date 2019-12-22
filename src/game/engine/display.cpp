@@ -916,7 +916,7 @@ BOOL DisplayClass::Scroll_Map(DirType dir, int &distance, BOOL redraw)
 
         // Update distance if the move was constrained.
         if (confined) {
-            distance = Distance(m_DisplayPos, pos_coord);
+            distance = Coord_Distance(m_DisplayPos, pos_coord);
         }
 
         // If we actually moved, redraw.
@@ -2146,7 +2146,7 @@ BOOL DisplayClass::Passes_Proximity_Check(ObjectTypeClass *object, HousesType ho
                 int width = bptr->Class_Of().Width();
                 int height = bptr->Class_Of().Height();
 
-                if ((Distance(center_coord, cell_coord) / 256) - ((width + height) / 2)
+                if ((Coord_Distance(center_coord, cell_coord) / 256) - ((width + height) / 2)
                     <= reinterpret_cast<BuildingTypeClass *>(object)->Adjacency()) {
                     return true;
                 }
@@ -2668,7 +2668,7 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
                     int lepton_sight =
                         constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Get_Sight() * 256);
 
-                    if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
+                    if (Coord_Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
                         tcptr->Look();
                     }
                 }
@@ -2678,7 +2678,7 @@ void DisplayClass::Constrained_Look(coord_t coord, int constraint)
                         int lepton_sight =
                             constraint * (reinterpret_cast<TechnoTypeClass const &>(tcptr->Class_Of()).Get_Sight() * 256);
 
-                        if (Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
+                        if (Coord_Distance(tcptr->Center_Coord(), coord) <= lepton_sight) {
                             tcptr->Look();
                         }
                     }

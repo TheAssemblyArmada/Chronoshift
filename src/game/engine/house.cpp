@@ -1458,7 +1458,7 @@ cell_t HouseClass::Find_Cell_In_Zone(TechnoClass *object, ZoneType zone) const
                 }
 
                 if (can_place) {
-                    int distance = Distance(Cell_To_Coord(cellnum), Cell_To_Coord(random_cell));
+                    int distance = Coord_Distance(Cell_To_Coord(cellnum), Cell_To_Coord(random_cell));
 
                     if (last_distance == -1 || distance < last_distance) {
                         last_distance = distance;
@@ -1603,7 +1603,7 @@ ZoneType HouseClass::Which_Zone(cell_t cellnum) const
 ZoneType HouseClass::Which_Zone(coord_t coord) const
 {
     if (coord != 0) {
-        int distance = Distance(m_BaseCenter, coord);
+        int distance = Coord_Distance(m_BaseCenter, coord);
 
         if (distance <= m_Radius) {
             return ZONE_CORE;
@@ -1851,7 +1851,7 @@ target_t HouseClass::Find_Juicy_Target(coord_t coord) const
         // and thus ripe for the taking.
         if (uptr != nullptr && !uptr->In_Limbo() && !Is_Ally(uptr)) {
             if (uptr->Get_Owner_House()->Which_Zone(uptr) == ZONE_NONE) {
-                int dist = Distance(uptr->Center_Coord(), coord);
+                int dist = Coord_Distance(uptr->Center_Coord(), coord);
 
                 // Give anti air units a wide berth.
                 if (uptr->Anti_Air()) {
@@ -1973,7 +1973,7 @@ void HouseClass::Recalc_Center()
             for (int i = 0; i < g_Buildings.Count(); ++i) {
                 BuildingClass *bptr = &g_Buildings[i];
                 if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Owner_House() == this && bptr->Get_Health() > 0) {
-                    dist += Distance(m_BaseCenter, bptr->Center_Coord());
+                    dist += Coord_Distance(m_BaseCenter, bptr->Center_Coord());
                 }
             }
             m_Radius = std::max(dist / calc, 512);

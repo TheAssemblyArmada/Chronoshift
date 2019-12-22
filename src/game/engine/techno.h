@@ -133,7 +133,7 @@ public:
     virtual BOOL In_Range(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
     virtual BOOL In_Range(ObjectClass *object, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
     virtual void Death_Announcement(TechnoClass *killer) const = 0;
-    virtual FireErrorType Can_Fire(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
+    virtual FireErrorType Can_Fire(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const; // Queries if any specific state prevents the object from firing.
     virtual target_t Greatest_Threat(ThreatType threat);
     virtual void Assign_Target(target_t target);
     virtual BulletClass *Fire_At(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY);
@@ -269,7 +269,7 @@ public:
 
 protected:
     void Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir = DIR_NORTH, int scale = 256) const;
-    VisualType Visual_Character(BOOL flag = false) const;
+    VisualType Visual_Character(BOOL flag = false) const; // Visual character for drawing.
     void Kill_Cargo(TechnoClass * object);
     WeaponSlotType What_Weapon_Should_I_Use(target_t target) const;
     int Combat_Damage(WeaponSlotType weapon = WEAPON_SLOT_NONE) const;

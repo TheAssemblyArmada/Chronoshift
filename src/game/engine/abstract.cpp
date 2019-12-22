@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief Base class for most in game objects.
+ * @brief Base class for in game objects.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -18,6 +18,9 @@
 #include "target.h"
 #include <algorithm>
 
+/**
+ * Class constructor.
+ */
 AbstractClass::AbstractClass(RTTIType type, int heap_id) :
     m_RTTI(type),
     m_HeapID(heap_id),
@@ -27,7 +30,10 @@ AbstractClass::AbstractClass(RTTIType type, int heap_id) :
 {
 }
 
-AbstractClass::AbstractClass(AbstractClass const &that) :
+/**
+ * Copy constructor.
+ */
+AbstractClass::AbstractClass(const AbstractClass &that) :
     m_RTTI(that.m_RTTI),
     m_HeapID(that.m_HeapID),
     m_Coord(that.m_Coord),
@@ -36,6 +42,9 @@ AbstractClass::AbstractClass(AbstractClass const &that) :
 {
 }
 
+/**
+ * Dump and print realtime info to the debug console.
+ */
 #ifdef CHRONOSHIFT_DEBUG
 void AbstractClass::Debug_Dump(MonoClass *mono) const
 {
@@ -53,15 +62,21 @@ void AbstractClass::Debug_Dump(MonoClass *mono) const
 
     if (Owner() != HOUSES_NONE) {
         mono->Set_Cursor(1, 3);
-        TextEnum hname = HouseTypeClass::As_Reference(Owner())->Get_UIName();
-        mono->Printf("%-18s", Text_String(hname));
+        TextEnum name = HouseTypeClass::As_Reference(Owner())->Get_UIName();
+        mono->Printf("%-18s", Text_String(name));
     }*/
 }
 #endif
 
+/**
+ * Distance from this object to the specificed target.
+ */
 int AbstractClass::Distance_To_Target(target_t target) const
 {
-    int distance = Distance(Center_Coord(), As_Coord(target));
+    int distance = Coord_Distance(Center_Coord(), As_Coord(target));
+
+    // If the target is a building, we need to fake its dimensions in the
+    // game world, so adjust distance accordingly.
     BuildingClass *bptr = As_Building(target);
 
     if (bptr != nullptr) {
