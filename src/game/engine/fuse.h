@@ -41,6 +41,8 @@ public:
     void Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_time);
     int Fuse_Checkup(coord_t a1);
 
+    coord_t Get_Position() const { return m_Position; }
+
     void Code_Pointers() {}
     void Decode_Pointers() {}
 

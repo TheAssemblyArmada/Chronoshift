@@ -270,6 +270,10 @@ TFixedIHeapClass<BuildingTypeClass> &g_BuildingTypes = Make_Global<TFixedIHeapCl
 void *&BuildingTypeClass::g_WarFactoryOverlay = Make_Global<void *>(0x00635BA8);
 void *&BuildingTypeClass::g_LightningShapes = Make_Global<void *>(0x00635BAC); // TODO: Should be moved to TechnoTypeClass.
 
+// bullet.cpp
+#include "bullet.h"
+TFixedIHeapClass<BulletClass> &g_Bullets = Make_Global<TFixedIHeapClass<BulletClass> >(0x0065D8FC);
+
 // bullettype.cpp
 #include "bullettype.h"
 TFixedIHeapClass<BulletTypeClass> &g_BulletTypes = Make_Global<TFixedIHeapClass<BulletTypeClass> >(0x0065DE54);

@@ -71,7 +71,7 @@ public:
     int Cell_Threat(cell_t cellnum, HousesType house);
     int Zone_Reset(int zones);
     int Zone_Span(cell_t cell, int zone = 0, MZoneType mzone = MZONE_NORMAL);
-    cell_t Nearby_Location(cell_t cellnum, SpeedType speed, int zone = 0, MZoneType mzone = MZONE_NORMAL) const;
+    cell_t Nearby_Location(cell_t cellnum, SpeedType speed, int zone = -1, MZoneType mzone = MZONE_NORMAL) const;
     BOOL Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) const;
     int Destroy_Bridge_At(cell_t cellnum);
     void Detach(int32_t target, int a2);

@@ -25,6 +25,7 @@
 #include "blitters.h"
 #include "building.h"
 #include "buildingtype.h"
+#include "bullet.h"
 #include "bullettype.h"
 #include "carryover.h"
 #include "cd.h"
@@ -1094,6 +1095,24 @@ void Setup_Hooks()
     Hook_Function(0x004F2504, *InfantryClass::Hook_Is_Ready_To_Random_Animate);
     Hook_Function(0x004F0DB4, *InfantryClass::Edge_Of_World_AI);
     Hook_Function(0x004ED260, *InfantryClass::Assign_Destination);
+
+    // bullet.cpp
+    Hook_Function(0x00460B90, *BulletClass::Hook_Ctor);
+    Hook_Function(0x00460C38, *BulletClass::Hook_Dtor);
+    Hook_Function(0x00460EEC, *BulletClass::Hook_Occupy_List);
+    Hook_Function(0x00460FF8, *BulletClass::Mark);
+    Hook_Function(0x00461068, *BulletClass::AI);
+    Hook_Function_Const(0x004614EC, &BulletClass::Shape_Number);
+    Hook_Function(0x004615A0, *BulletClass::Hook_Draw_It);
+    Hook_Function(0x004617CC, *BulletClass::Detach);
+    Hook_Function(0x00461838, *BulletClass::Unlimbo);
+    Hook_Function(0x00461D40, *BulletClass::Hook_Target_Coord);
+    Hook_Function(0x00461D8C, *BulletClass::Hook_Sort_Y);
+    Hook_Function(0x00461DA8, *BulletClass::Hook_In_Which_Layer);
+    Hook_Function_Const(0x00461DEC, &BulletClass::Is_Forced_To_Explode);
+    Hook_Function(0x00461FBC, *BulletClass::Bullet_Explodes);
+    Hook_Function(0x00462380, *BulletClass::Assign_Target);
+    Hook_Function(0x004623B0, *BulletClass::Hook_Overlap_List);
 #endif
 }
 
@@ -1113,6 +1132,7 @@ ASSERT_SIZEOF(AnimTypeClass, 0x162);
 ASSERT_SIZEOF(BufferIOFileClass, 0x4C);
 ASSERT_SIZEOF(BuildingClass, 0xFB);
 ASSERT_SIZEOF(BuildingTypeClass, 0x207);
+ASSERT_SIZEOF(BulletClass, 0x4B);
 ASSERT_SIZEOF(BulletTypeClass, 0x146);
 ASSERT_SIZEOF(CDFileClass, 0x50);
 ASSERT_SIZEOF(CellClass, 0x3A);

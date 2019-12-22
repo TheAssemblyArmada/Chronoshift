@@ -331,7 +331,7 @@ protected:
     int m_Ammo;
     int m_Price;
 
-protected:
+public:
     static int const s_BodyShape32[32];
 };
 

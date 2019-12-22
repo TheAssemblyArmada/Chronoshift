@@ -88,6 +88,11 @@ inline BOOL Target_Is_Building(target_t target)
     return Target_Get_RTTI(target) == RTTI_BUILDING;
 }
 
+inline BOOL Target_Is_Aircraft(target_t target)
+{
+    return Target_Get_RTTI(target) == RTTI_AIRCRAFT;
+}
+
 inline BOOL Target_Is_Unit(target_t target)
 {
     return Target_Get_RTTI(target) == RTTI_UNIT;

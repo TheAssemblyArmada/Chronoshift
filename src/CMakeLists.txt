@@ -61,6 +61,7 @@ set(GAMEENGINE_SRC
     game/engine/building.cpp
     game/engine/buildingdata.cpp
     game/engine/buildingtype.cpp
+    game/engine/bullet.cpp
     game/engine/bulletdata.cpp
     game/engine/bullettype.cpp
     game/engine/callback.cpp
