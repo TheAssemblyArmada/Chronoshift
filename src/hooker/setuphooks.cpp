@@ -1071,6 +1071,20 @@ void Setup_Hooks()
     Hook_Function(0x0056016C, TeamTypeClass::Suggested_New_Team);
     Hook_Function_Const(0x005600C4, &TeamTypeClass::Create_One_Of);
     Hook_Function_Const(0x00560114, &TeamTypeClass::Destroy_All_Of);
+
+    // infantry.cpp
+    Hook_Function(0x004F24B0, *InfantryClass::Hook_Get_Image_Data);
+    Hook_Function(0x004F2564, *InfantryClass::Paradrop);
+    Hook_Function(0x004EC3AC, *InfantryClass::Hook_Draw_It);
+    Hook_Function(0x004F03D4, *InfantryClass::Hook_Active_Click_With);//obj
+    Hook_Function(0x004F049C, *InfantryClass::Hook_Full_Name);
+    Hook_Function(0x004ED1FC, *InfantryClass::Detach);
+    Hook_Function(0x004F0548, *InfantryClass::Mission_Attack);
+    Hook_Function(0x004EDF98, *InfantryClass::Hook_Can_Fire);
+    Hook_Function(0x004ED478, *InfantryClass::Assign_Target);
+    Hook_Function(0x004EEE00, *InfantryClass::Fire_At);
+    Hook_Function(0x004F2504, *InfantryClass::Hook_Is_Ready_To_Random_Animate);
+    Hook_Function(0x004F0DB4, *InfantryClass::Edge_Of_World_AI);
 #endif
 }
 

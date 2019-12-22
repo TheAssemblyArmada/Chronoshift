@@ -224,6 +224,7 @@ public:
     BuildingType What_Type() const { return m_Type; }
     RTTIType Factory_Type() const { return m_FactoryType; }
     BOOL Is_Fake() const { return m_Fake; }
+    BOOL Is_Capturable() const { return m_Capturable; }
     BOOL Base_Normal() const { return m_BaseNormal; }
     BOOL Unsellable() const { return m_Unsellable; }
     BOOL Is_Wall() const { return m_Wall; }
