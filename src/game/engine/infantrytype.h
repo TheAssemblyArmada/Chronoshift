@@ -95,7 +95,7 @@ DEFINE_ENUMERATION_OPERATORS(DoType);
 
 struct DoInfoStruct
 {
-    int m_StartingFrames; // Where in the shape does it start.
+    int m_StartingFrame; // Where in the shape does it start.
     uint8_t m_NumFrames; // How many frames does the anim last.
     uint8_t m_FacingMultiplier; // How many frames to the next facing.
 };
@@ -129,11 +129,16 @@ public:
 
     InfantryType What_Type() const { return m_Type; }
 
+    BOOL Is_Infiltrator() const { return m_IsInfiltrator; }
+    BOOL Is_Fraidycat() const { return m_IsFraidycat; }
     BOOL Is_Civilian() const { return m_IsCivilian; }
+    BOOL Has_C4() const { return m_HasC4; }
     BOOL Is_Canine() const { return m_IsCanine; }
     BOOL Has_Alt_Remap() const { return m_HasAltRemap; }
 
     const uint8_t *Alt_Remap_Table() const { return m_AltRemap; }
+
+    const DoInfoStruct &Fetch_DoInfo(DoType type) const { return m_DoControl[type]; }
 
     static void Init_Heap();
     static InfantryTypeClass &As_Reference(InfantryType type);

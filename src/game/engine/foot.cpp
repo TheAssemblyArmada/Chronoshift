@@ -211,10 +211,18 @@ BOOL FootClass::Unlimbo(coord_t coord, DirType dir)
 
 void FootClass::Detach(target_t target, int a2)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C3210, void, FootClass*, target_t, int);
+    func(this, target, a2);
+#endif
 }
 
 void FootClass::Detach_All(int a1)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C2F80, void, FootClass*, int);
+    func(this, a1);
+#endif
 }
 
 /**
