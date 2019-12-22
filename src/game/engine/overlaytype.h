@@ -105,6 +105,7 @@ public:
     int Get_Damage_Levels() const { return m_DamageLevels; }
     int Get_Overlay_Strength() const { return m_OverlayStrength; }
     BOOL Is_Wall() const { return m_Wall; }
+    BOOL Is_High() const { return m_High; }
     BOOL Is_Crate() const { return m_Crate; }
     BOOL Is_Radar_Visible() const { return m_RadarVisible; }
     BOOL Is_Ore() const { return m_Ore; }

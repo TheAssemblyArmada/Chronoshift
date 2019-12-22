@@ -123,9 +123,10 @@ public:
     BOOL Save(Pipe &pipe) const;
     BOOL Has_Crater() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Pointer(m_Smudge)->Is_Crater(); }
     BOOL Has_Bib() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Pointer(m_Smudge)->Is_Bib(); }
-    BOOL Has_Wall() { return m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Pointer(m_Overlay)->Is_Wall(); }
-    void Clear_Occupants(CellOccupantEnum bitmask) { m_OccupantBit &= ~bitmask; }
-    void Set_Occupants(CellOccupantEnum bitmask) { m_OccupantBit |= bitmask; }
+    BOOL Has_Wall() const { return m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Pointer(m_Overlay)->Is_Wall(); }
+    BOOL Has_High_Overlay() const { return m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Pointer(m_Overlay)->Is_High(); }
+    void Clear_Occupants(CellOccupantEnum bit) { m_OccupantBit &= ~bit; }
+    void Set_Occupants(CellOccupantEnum bit) { m_OccupantBit |= bit; }
     BOOL Check_Occupants(CellOccupantEnum bitmask) const { return m_OccupantBit & bitmask; }
     BOOL Is_Occuppied() const { return m_OccupantBit != OCCUPANT_NONE; }
 

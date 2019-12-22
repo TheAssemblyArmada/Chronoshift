@@ -83,7 +83,7 @@ enum DoType
     DO_17,
     DO_18,
     DO_19,
-    DO_20,
+    DO_20, // Doggie limbo launch.
 
     DO_COUNT,
 

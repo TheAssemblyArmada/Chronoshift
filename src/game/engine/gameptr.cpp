@@ -21,6 +21,7 @@
 #include "animtype.h"
 #include "building.h"
 #include "buildingtype.h"
+#include "bullet.h"
 #include "bullettype.h"
 #include "factory.h"
 #include "house.h"
@@ -50,6 +51,7 @@ template<> FixedIHeapClass *const GamePtr<AnimClass>::g_Heap = &g_Anims;
 template<> FixedIHeapClass *const GamePtr<AnimTypeClass>::g_Heap = &g_AnimTypes;
 template<> FixedIHeapClass *const GamePtr<BuildingClass>::g_Heap = &g_Buildings;
 template<> FixedIHeapClass *const GamePtr<BuildingTypeClass>::g_Heap = &g_BuildingTypes;
+template<> FixedIHeapClass *const GamePtr<BulletClass>::g_Heap = &g_Bullets;
 template<> FixedIHeapClass *const GamePtr<BulletTypeClass>::g_Heap = &g_BulletTypes;
 template<> FixedIHeapClass *const GamePtr<FactoryClass>::g_Heap = &g_Factories;
 template<> FixedIHeapClass *const GamePtr<HouseClass>::g_Heap = &g_Houses;

@@ -105,7 +105,7 @@ BOOL CrateClass::Put_Crate(cell_t &cell)
             }
             cell = g_Map.Pick_Random_Location();
             int chance = 100 * g_Rule.Water_Crate_Chance();
-            cell = g_Map.Nearby_Location(cell, (g_Scen.Get_Random_Value(0, 99) < chance) ? SPEED_FLOAT : SPEED_TRACK, -1);
+            cell = g_Map.Nearby_Location(cell, (g_Scen.Get_Random_Value(0, 99) < chance) ? SPEED_FLOAT : SPEED_TRACK);
             cptr = &g_Map[cell];
         }
     }

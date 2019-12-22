@@ -27,27 +27,28 @@ class GameINIClass;
 // If you add an entry here, add matching entries to bullettype.cpp globals and Init_Heap.
 enum BulletType
 {
-    BULLET_NONE = -1,
-    BULLET_FIRST = 0,
-    BULLET_INVISIBLE = 0,
-    BULLET_CANNON = 1,
-    BULLET_ACK = 2,
-    BULLET_TORPEDO = 3,
-    BULLET_FROG = 4,
-    BULLET_HEATSEEKER = 5,
-    BULLET_LASERGUIDED = 6,
-    BULLET_LOBBED = 7,
-    BULLET_BOMBLET = 8,
-    BULLET_BALLISTIC = 9,
-    BULLET_PARACHUTE = 10,
-    BULLET_FIREBALL = 11,
-    BULLET_LEAPDOG = 12,
-    BULLET_CATAPULT = 13,
-    BULLET_AAMISSILE = 14,
-    BULLET_GPSSATELLITE = 15,
-    BULLET_NUKEUP = 16,
-    BULLET_NUKEDOWN = 17,
+    BULLET_INVISIBLE,
+    BULLET_CANNON,
+    BULLET_ACK,
+    BULLET_TORPEDO,
+    BULLET_FROG,
+    BULLET_HEATSEEKER,
+    BULLET_LASERGUIDED,
+    BULLET_LOBBED,
+    BULLET_BOMBLET,
+    BULLET_BALLISTIC,
+    BULLET_PARACHUTE ,
+    BULLET_FIREBALL,
+    BULLET_LEAPDOG,
+    BULLET_CATAPULT,
+    BULLET_AAMISSILE,
+    BULLET_GPSSATELLITE,
+    BULLET_NUKEUP,
+    BULLET_NUKEDOWN,
     BULLET_COUNT,
+
+    BULLET_NONE = -1,
+    BULLET_FIRST = BULLET_INVISIBLE,
 };
 
 DEFINE_ENUMERATION_OPERATORS(BulletType);
@@ -75,25 +76,25 @@ public:
     void Decode_Pointers() {}
 
     BOOL Get_High() const { return m_High; }
-    BOOL Get_Shadow() const { return m_Shadow; }
+    BOOL Draw_Shadow() const { return m_Shadow; }
     BOOL Get_Arcing() const { return m_Arcing; }
     BOOL Is_Dropping() const { return m_Dropping; }
-    BOOL Is_Inviso() const { return m_Inviso; }
+    BOOL Invisible() const { return m_Inviso; }
     BOOL Get_Proximity() const { return m_Proximity; }
-    BOOL Get_Animates() const { return m_Animates; }
-    BOOL Is_Ranged() const { return m_Ranged; }
+    BOOL Animates() const { return m_Animates; }
+    BOOL Ranged() const { return m_Ranged; }
     BOOL Rotates() const { return !m_NoRotate; }
     BOOL Is_Inaccurate() const { return m_Inaccurate; }
     BOOL Is_Translucent() const { return m_Translucent; }
     BOOL Is_Anti_Air() const { return m_AntiAir; }
     BOOL Is_Anti_Ground() const { return m_AntiGround; }
     BOOL Is_Anti_Sub_Warfare() const { return m_AntiSubWarfare; }
-    BOOL Get_Degenerates() const { return m_Degenerates; }
+    BOOL Degenerates() const { return m_Degenerates; }
     BOOL Is_UnderWater() const { return m_UnderWater; }
     BOOL Get_Parachuted() const { return m_Parachuted; }
     BOOL Get_Gigundo() const { return m_Gigundo; }
-    uint8_t Get_ROT() const { return m_ROT; }
-    int Get_Arm() const { return m_Arm; }
+    uint8_t Rate_Of_Turn() const { return m_ROT; }
+    int Arming_Delay() const { return m_Arm; }
     int Get_Frames() const { return m_Frames; }
 
     BulletType What_Type() const { return m_Type; }
@@ -107,24 +108,24 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_High : 1;
-    BOOL m_Shadow : 1;
-    BOOL m_Arcing : 1;
-    BOOL m_Dropping : 1;
-    BOOL m_Inviso : 1;
-    BOOL m_Proximity : 1;
-    BOOL m_Animates : 1;
-    BOOL m_Ranged : 1;
-    BOOL m_NoRotate : 1;
-    BOOL m_Inaccurate : 1;
-    BOOL m_Translucent : 1;
-    BOOL m_AntiAir : 1;
-    BOOL m_AntiGround : 1;
-    BOOL m_AntiSubWarfare : 1;
-    BOOL m_Degenerates : 1;
-    BOOL m_UnderWater : 1;
-    BOOL m_Parachuted : 1;
-    BOOL m_Gigundo : 1;
+    BOOL m_High : 1; // 1
+    BOOL m_Shadow : 1; // 2
+    BOOL m_Arcing : 1; // 4
+    BOOL m_Dropping : 1; // 8
+    BOOL m_Inviso : 1; // 16
+    BOOL m_Proximity : 1; // 32
+    BOOL m_Animates : 1; // 64
+    BOOL m_Ranged : 1; // 128
+    BOOL m_NoRotate : 1; // 1
+    BOOL m_Inaccurate : 1; // 2
+    BOOL m_Translucent : 1; // 4
+    BOOL m_AntiAir : 1; // 8
+    BOOL m_AntiGround : 1; // 16
+    BOOL m_AntiSubWarfare : 1; // 32
+    BOOL m_Degenerates : 1; // 64
+    BOOL m_UnderWater : 1; // 128
+    BOOL m_Parachuted : 1; // 1
+    BOOL m_Gigundo : 1; // 2
 #else
     bool m_High; // Can it fly over walls?
     bool m_Shadow; // If High, does this bullet need to have a shadow drawn?

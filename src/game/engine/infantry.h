@@ -84,6 +84,7 @@ public:
     void Clear_Occupy_Spot(cell_t cellnum, int spot_index);
 
     BOOL Is_Technician() const { return m_Technician; }
+    BOOL Get_Bit16() const { return m_Bit16; }
 
     InfantryType What_Type() const { return m_Class->What_Type(); }
 
