@@ -147,8 +147,7 @@ TechnoClass *CellClass::Cell_Techno(int x, int y) const
 
         if (obj->Is_Techno()) {
             coord_t obj_coord = obj->Center_Coord();
-            uint32_t distance = Distance(obj_coord &= 0x00FF00FF,
-                coord); // TODO what is going on with obj_coord?!  is it fetching sub cell or cell xy?
+            uint32_t distance = Coord_Distance(obj_coord &= 0x00FF00FF, coord); // TODO what is going on with obj_coord?! is it fetching sub cell or cell xy?
 
             if (object == nullptr || (signed int)distance < (signed int)sdistance) {
                 sdistance = distance;
@@ -1374,7 +1373,7 @@ int CellClass::Spot_Index(coord_t coord)
 
     // Looks like it checks the lepton distance and then does some math on the X and Y lepton dimensions to decide which spot
     // the passed packed coords are in.
-    if (Distance(spot, 0x00800080) >= 60) {
+    if (Coord_Distance(spot, 0x00800080) >= 60) {
         int spot_index = 0;
 
         if (Coord_Lepton_X(spot) > 128) {

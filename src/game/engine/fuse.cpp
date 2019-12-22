@@ -38,7 +38,7 @@ void FuseClass::Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_tim
 
     m_ArmTimer = arm_time;
     m_Position = arm_pos;
-    m_ArmDistance = Distance(pos, arm_pos);
+    m_ArmDistance = Coord_Distance(pos, arm_pos);
 }
 
 /**
@@ -57,7 +57,7 @@ int FuseClass::Fuse_Checkup(coord_t pos)
             return FUSE_1;
         }
 
-        int dist = Distance(pos, m_Position);
+        int dist = Coord_Distance(pos, m_Position);
 
         if (dist < 16) {
             return FUSE_1;

@@ -562,7 +562,7 @@ BOOL TechnoClass::In_Range(coord_t coord, WeaponSlotType weapon) const
     if (!m_LockedOnMap) {
         return false;
     }
-    if (Distance(Fire_Coord(weapon), coord) <= Weapon_Range(weapon)) {
+    if (Coord_Distance(Fire_Coord(weapon), coord) <= Weapon_Range(weapon)) {
         return true;
     }
     return false;
@@ -1750,5 +1750,5 @@ int TechnoClass::Evaluate_Just_Cell(cell_t cellnum) const
         return 0;
     }
 
-    return Weapon_Range(WEAPON_SLOT_PRIMARY) - Distance(Center_Coord(), coord);
+    return Weapon_Range(WEAPON_SLOT_PRIMARY) - Coord_Distance(Center_Coord(), coord);
 }

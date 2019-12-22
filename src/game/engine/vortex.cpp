@@ -338,7 +338,7 @@ void ChronalVortexClass::Set_Target(ObjectClass *object)
 
         if (object != nullptr) {
             m_Target = object->As_Target();
-            m_TargetDistance = Distance(object->Center_Coord(), m_CurrentPos);
+            m_TargetDistance = Coord_Distance(object->Center_Coord(), m_CurrentPos);
         } else {
             m_Target = 0;
             m_TargetDistance = 0;
@@ -405,7 +405,7 @@ void ChronalVortexClass::Attack()
     for (int index = 0; index < DisplayClass::s_Layers[LAYER_GROUND].Count(); ++index) {
         ObjectClass *objptr = DisplayClass::s_Layers[LAYER_GROUND][index];
 
-        if (objptr->Is_Techno() && objptr->Get_Health() > 0 && Distance(objptr->Center_Coord(), pos) < 512) {
+        if (objptr->Is_Techno() && objptr->Get_Health() > 0 && Coord_Distance(objptr->Center_Coord(), pos) < 512) {
             Set_Target(objptr);
             break;
         }
@@ -418,7 +418,7 @@ void ChronalVortexClass::Attack()
             ObjectClass *objptr = DisplayClass::s_Layers[LAYER_GROUND][index];
 
             if (objptr != nullptr && objptr->Is_Techno()) {
-                int distance = Distance(objptr->Center_Coord(), m_CurrentPos);
+                int distance = Coord_Distance(objptr->Center_Coord(), m_CurrentPos);
 
                 // VortexRange is in leptons, so no needs to convert it now.
                 if (distance < m_VortexRange && g_Scen.Get_Random_Value(0, 256) < 256) {

@@ -61,7 +61,7 @@ public:
     virtual void *Get_Image_Data() const { return Class_Of().Get_Image_Data(); }
     virtual ActionType What_Action(ObjectClass *object) const { return ACTION_NONE; }
     virtual ActionType What_Action(cell_t cellnum) const { return ACTION_NONE; }
-    virtual LayerType In_Which_Layer() const { return Get_Height() >= 171 ? LAYER_TOP : LAYER_GROUND; }
+    virtual LayerType In_Which_Layer() const { return Get_Height() >= 171 ? LAYER_TOP : LAYER_GROUND; } // What display layer am i located in (for drawing purposes)?
     virtual int Get_Ownable() const { return OWNER_ALL; }
     virtual const ObjectTypeClass &Class_Of() const = 0;
     virtual int Full_Name() const { return Class_Of().Full_Name(); }
@@ -74,8 +74,8 @@ public:
     virtual coord_t Sort_Y() const { return Get_Coord(); }
     virtual coord_t Fire_Coord(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const { return Get_Coord(); }
     virtual coord_t Exit_Coord() const { return Center_Coord(); }
-    virtual BOOL Limbo();
-    virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH);
+    virtual BOOL Limbo(); // Take the object from the game world and place into limbo.
+    virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH); // Object is appearing in the game world.
     virtual void Detach(target_t target, int a2);
     virtual void Detach_All(int a1 = 1);
     virtual void Record_The_Kill(TechnoClass *object = nullptr) {}

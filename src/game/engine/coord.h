@@ -20,21 +20,24 @@
 
 #include "always.h"
 #include "facing.h"
+#include "target.h"
 #include "gametypes.h"
 #include "trect.h"
+
+#define MAP_MAX_WIDTH 128
+#define MAP_MAX_HEIGHT 128
+#define MAPTD_MAX_WIDTH 64
+#define MAPTD_MAX_HEIGHT 64
+#define MAP_MAX_AREA MAP_MAX_WIDTH * MAP_MAX_HEIGHT
 
 #define CELL_PIXELS 24
 #define CELL_LEPTONS 256
 #define CELL_MIN 0
 #define CELL_MAX 128
 #define CELL_MAX_X 128
+
 #define COORD_MIN 0
 #define COORD_MAX (CELL_LEPTONS * CELL_MAX)
-#define MAP_MAX_WIDTH 128
-#define MAP_MAX_HEIGHT 128
-#define MAPTD_MAX_WIDTH 64
-#define MAPTD_MAX_HEIGHT 64
-#define MAP_MAX_AREA MAP_MAX_WIDTH * MAP_MAX_HEIGHT
 
 extern const coord_t AdjacentCoord[FACING_COUNT];
 extern const cell_t AdjacentCell[FACING_COUNT];
@@ -80,11 +83,10 @@ inline coord_t Coord_Subtract(coord_t coord1, coord_t coord2)
     return Coord_From_Lepton_XY(lx, ly);
 }
 
-
 /**
  * Returns coordinates that are centered in the cell
  * operation - coord[0] = 128; coord[2] = 128;
- * 
+ *
  */
 inline coord_t Coord_Centered(coord_t coord)
 {
@@ -94,7 +96,7 @@ inline coord_t Coord_Centered(coord_t coord)
 /**
  * Returns coordinates that are at the top left of the cell
  * operation - coord[0] = 0; coord[2] = 0;
- * 
+ *
  */
 inline coord_t Coord_Top_Left(coord_t coord)
 {
@@ -104,38 +106,56 @@ inline coord_t Coord_Top_Left(coord_t coord)
 /**
  * Returns coordinate that only contains subcells
  * operation - coord[1] = 0; coord[3] = 0;
- * 
+ *
  */
 inline coord_t Coord_Sub_Cell(coord_t coord)
 {
     return coord & 0x00FF00FF;
 }
 
+/**
+ * Fetch an adjacent coordinate from the specified direction.
+ */
 inline coord_t Coord_Get_Adjacent(coord_t coord, FacingType facing)
 {
     return Coord_Centered(Coord_Add(coord, AdjacentCoord[(unsigned)facing % FACING_COUNT]));
 }
 
+/**
+ * The map cell 'x' position of the coordinate.
+ */
 inline uint8_t Coord_Cell_X(coord_t coord)
 {
     return (coord & 0x00007F00) >> 8;
 }
 
+/**
+ * The map cell 'y' position of the coordinate.
+ */
 inline uint8_t Coord_Cell_Y(coord_t coord)
 {
     return (coord & 0x7F000000) >> 24;
 }
 
+/**
+ * Is this coordinate a negative? Used for sanity checks.
+ */
 inline BOOL Coord_Is_Negative(coord_t coord)
 {
     return (coord & 0x80008000) != 0;
 }
 
+/**
+ * Cell position value from x and y values.
+ */
 inline cell_t Cell_From_XY(uint8_t x, uint8_t y)
 {
     return (((y % MAP_MAX_WIDTH) * MAP_MAX_WIDTH) + (x % MAP_MAX_WIDTH));
 }
 
+/*
+ * Convert a coordinate value to a cell position.
+ */
 inline cell_t Coord_To_Cell(coord_t coord)
 {
     return Cell_From_XY(Coord_Cell_X(coord), Coord_Cell_Y(coord));
@@ -154,7 +174,7 @@ inline uint8_t Cell_Get_Y(cell_t cellnum)
 /**
  * Makes a coord out of a cell
  * returned coordinate is in center of the cell
- * 
+ *
  */
 inline coord_t Cell_To_Coord(cell_t cellnum)
 {
@@ -231,13 +251,21 @@ inline DirType Cell_Direction8(cell_t cell1, cell_t cell2)
     return Desired_Facing8(Cell_Get_X(cell1), Cell_Get_Y(cell1), Cell_Get_X(cell2), Cell_Get_Y(cell2));
 }
 
-DirType Direction(coord_t coord1, coord_t coord2);
-DirType Direction(target_t target1, target_t target2);
-DirType Direction(cell_t cell1, cell_t cell2);
+DirType Coord_Direction(coord_t coord1, coord_t coord2);
+DirType Target_Direction(target_t target1, target_t target2);
+DirType Cell_Direction(cell_t cell1, cell_t cell2);
 
-int Distance(coord_t coord1, coord_t coord2);
-int Distance(target_t target1, target_t target2);
-int Distance(cell_t cell1, cell_t cell2);
+int Coord_Distance(coord_t coord1, coord_t coord2);
+
+/**
+ * Calculate the distance (in leptons) between two targets.
+ */
+inline int Target_Distance(target_t target1, target_t target2)
+{
+    return Coord_Distance(As_Coord(target1), As_Coord(target1));
+}
+
+int Cell_Distance(cell_t cell1, cell_t cell2);
 
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance);

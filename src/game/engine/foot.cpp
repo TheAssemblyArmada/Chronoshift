@@ -161,7 +161,7 @@ BOOL FootClass::Can_Demolish() const
             // Handle if we are heading to a building and that building is the repair depot.
             if (m_Radio != nullptr && m_Radio->What_Am_I() == RTTI_BUILDING) {
                 if (reinterpret_cast<BuildingClass *>(m_Radio)->What_Type() == BUILDING_FIX) {
-                    if (Distance(Center_Coord(), m_Radio->Target_Coord()) < 128) {
+                    if (Coord_Distance(Center_Coord(), m_Radio->Target_Coord()) < 128) {
                         return true;
                     }
                 }
@@ -776,7 +776,7 @@ BOOL FootClass::Basic_Path()
             // If we have a nearby cell and its closer than navdist, set that to
             // the nav cell instead.
             if (nearcell != 0) {
-                if (Distance(Cell_To_Coord(navcell), Cell_To_Coord(nearcell)) < navdist) {
+                if (Coord_Distance(Cell_To_Coord(navcell), Cell_To_Coord(nearcell)) < navdist) {
                     navcell = nearcell;
                 }
             }
@@ -1323,7 +1323,7 @@ int FootClass::Passable_Cell(cell_t cell, FacingType facing, int threat, MoveTyp
 
     if (canmove <= move) {
         if (g_Session.Game_To_Play() != GAME_CAMPAIGN || threat == -1
-            || Distance(Cell_To_Coord(cell), Cell_To_Coord(g_DestLocation)) <= 1280
+            || Coord_Distance(Cell_To_Coord(cell), Cell_To_Coord(g_DestLocation)) <= 1280
             || g_Map.Cell_Threat(cell, Owner()) <= threat) {
             return _value[canmove];
         }

@@ -42,11 +42,11 @@ const cell_t AdjacentCell[FACING_COUNT] = {
 };
 
 /**
- * Calculate the distance between two Coords. 
+ * Calculate the distance (in leptons) between two coords.
  *
  * 0x004AC41C
  */
-int Distance(coord_t coord1, coord_t coord2)
+int Coord_Distance(coord_t coord1, coord_t coord2)
 {
     int ydiff = std::abs(Coord_Lepton_Y(coord1) - Coord_Lepton_Y(coord2));
     int xdiff = std::abs(Coord_Lepton_X(coord1) - Coord_Lepton_X(coord2));
@@ -60,12 +60,10 @@ int Distance(coord_t coord1, coord_t coord2)
     return ydiff + xdiff;
 }
 
-int Distance(target_t target1, target_t target2)
-{
-    return Distance(As_Coord(target1), As_Coord(target1));
-}
-
-int Distance(cell_t cell1, cell_t cell2)
+/**
+ * Calculate the distance (in cells within the map bounds) between two cells.
+ */
+int Cell_Distance(cell_t cell1, cell_t cell2)
 {
     int ydiff = std::abs(Cell_Get_Y(cell1) - Cell_Get_Y(cell2));
     int xdiff = std::abs(Cell_Get_X(cell1) - Cell_Get_X(cell2));
@@ -362,17 +360,17 @@ const int16_t *Coord_Spillage_List(coord_t coord, const TRect<int> &rect, BOOL s
     return _spillage_list;
 }
 
-DirType Direction(coord_t coord1, coord_t coord2)
+DirType Coord_Direction(coord_t coord1, coord_t coord2)
 {
     return Desired_Facing256(Coord_Lepton_X(coord1), Coord_Lepton_Y(coord1), Coord_Lepton_X(coord2), Coord_Lepton_Y(coord2));
 }
 
-DirType Direction(target_t target1, target_t target2)
+DirType Target_Direction(target_t target1, target_t target2)
 {
-    return Direction(As_Coord(target1), As_Coord(target1));
+    return Coord_Direction(As_Coord(target1), As_Coord(target1));
 }
 
-DirType Direction(cell_t cell1, cell_t cell2)
+DirType Cell_Direction(cell_t cell1, cell_t cell2)
 {
     return Desired_Facing8(Cell_Get_X(cell1), Cell_Get_Y(cell1), Cell_Get_X(cell2), Cell_Get_Y(cell2));
 }

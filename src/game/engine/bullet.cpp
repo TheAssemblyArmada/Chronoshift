@@ -197,10 +197,7 @@ void BulletClass::AI()
     if (g_GameFrame & 1) {
         if (Target_Legal(m_Target) && Homes_In()) {
             coord_t target_coord = As_Coord(m_Target);
-            DirType dir = Desired_Facing256(Coord_Lepton_X(m_Coord),
-                Coord_Lepton_Y(m_Coord),
-                Coord_Lepton_X(target_coord),
-                Coord_Lepton_Y(target_coord)); // TODO: Replace with call to "Direction(coord, coord) when implemented.
+            DirType dir = Coord_Direction(m_Coord, target_coord);
             m_Facing.Set_Desired(dir);
         }
     }
@@ -324,12 +321,12 @@ BOOL BulletClass::Unlimbo(coord_t coord, DirType dir)
     if (m_BBit1 || Class_Of().Is_Inaccurate() || (Target_Is_Cell(m_Target) || Target_Is_Infantry(m_Target))
         && (m_Warhead == WARHEAD_AP || Class_Of().Ranged())) {
         if (Class_Of().Get_Arcing()) {
-            int scatter_dist = std::max<lepton_t>(std::min<lepton_t>((Distance(coord, target_coord) / 16) - 64, g_Rule.Homing_Scatter_Distance()), 0);
+            int scatter_dist = std::max<lepton_t>(std::min<lepton_t>((Coord_Distance(coord, target_coord) / 16) - 64, g_Rule.Homing_Scatter_Distance()), 0);
             direction += g_Scen.Get_Random_Value(0, 10) - 5;
             int coord_dist = g_Scen.Get_Random_Value(0, scatter_dist);
             target_coord = Coord_Scatter(target_coord, coord_dist);
         } else {
-            int scatter_dist = std::max<lepton_t>(std::min<lepton_t>((Distance(coord, target_coord) / 16) - 64, g_Rule.Ballistic_Scatter_Distance()), 0);
+            int scatter_dist = std::max<lepton_t>(std::min<lepton_t>((Coord_Distance(coord, target_coord) / 16) - 64, g_Rule.Ballistic_Scatter_Distance()), 0);
             int coord_dist = g_Scen.Get_Random_Value(0, scatter_dist);
             target_coord = Coord_Move(target_coord, direction, coord_dist);
         }
@@ -344,7 +341,7 @@ BOOL BulletClass::Unlimbo(coord_t coord, DirType dir)
 
     int dist = 255;
     if (!Class_Of().Is_Dropping()) {
-        dist = Distance(m_Coord, target_coord) / m_Speed + 4;
+        dist = Coord_Distance(m_Coord, target_coord) / m_Speed + 4;
     }
 
     MPHType speed = MPHType(m_Speed);
@@ -353,7 +350,7 @@ BOOL BulletClass::Unlimbo(coord_t coord, DirType dir)
     }
 
     if (Class_Of().Get_Arcing()) {
-        int arc_dist = Distance(Center_Coord(), target_coord);
+        int arc_dist = Coord_Distance(Center_Coord(), target_coord);
         speed = MPHType(std::max((arc_dist / 32) + m_Speed, 25));
     }
 
@@ -370,7 +367,7 @@ BOOL BulletClass::Unlimbo(coord_t coord, DirType dir)
     if (Class_Of().Get_Arcing()) {
         m_Height = 1;
         m_IsFalling = true;
-        m_FallingHeight = g_Rule.Get_Gravity() * (Distance(Center_Coord(), target_coord) / 2 / (speed + 1));
+        m_FallingHeight = g_Rule.Get_Gravity() * (Coord_Distance(Center_Coord(), target_coord) / 2 / (speed + 1));
         m_FallingHeight = std::max(m_FallingHeight, 10);
     }
 
@@ -631,7 +628,7 @@ BOOL BulletClass::Is_Forced_To_Explode(coord_t &at) const
 
     if (Class_Of().Is_UnderWater()) {
         // get the distance between the sub-cell position of requested coord from the center coord of a cell.
-        int dist = Distance(Coord_Sub_Cell(at), Coord_From_Lepton_XY(128, 128));
+        int dist = Coord_Distance(Coord_Sub_Cell(at), Coord_From_Lepton_XY(128, 128));
 
         TechnoClass *ctptr = cptr->Cell_Techno();
         if (cptr->Get_Land() != LAND_WATER || (dist < 85 && ctptr != nullptr && ctptr != m_Payback)) {

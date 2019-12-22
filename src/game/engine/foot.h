@@ -119,7 +119,7 @@ public:
     BOOL Is_Allowed_To_Leave_Map() const;
     BOOL Is_On_Priority_Mission();
 
-    coord_t Head_To() const { return m_HeadTo; }
+    coord_t Head_To() const { return m_HeadTo; } // Fetches immediate (next cell) destination coordinate.
     FacingType Get_Path_Facing(int index) const { return m_Paths[index]; }
     target_t Nav_Com() const { return m_NavCom; }
 

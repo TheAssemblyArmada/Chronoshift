@@ -434,7 +434,7 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
             if ((uint16_t)offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                 // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
                 // radius, not radius * 256.
-                if (Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
+                if (Coord_Distance(Cell_To_Coord(offset_cellnum), Cell_To_Coord(cellnum)) <= (radius * 256)) {
                     if (!m_Array[offset_cellnum].Is_Visible()) {
                         g_Map.Map_Cell(offset_cellnum, house);
                     }
@@ -467,7 +467,7 @@ void MapClass::Shroud_From(cell_t cellnum, int radius)
             if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
                 // In SS/C&C, distance uses raw cell numbers into the int16_t int version of distance and checks <=
                 // radius, not radius * 256.
-                if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                if (Coord_Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
                     g_Map.Shroud_Cell(offset_cellnum); // TODO call from display class, should be virtual?
                 }
             }
@@ -501,7 +501,7 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
             ++offset_ptr;
 
             if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-                if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                if (Coord_Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
                     g_Map.Jam_Cell(offset_cellnum, house);
                 }
             }
@@ -539,7 +539,7 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
             ++offset_ptr;
 
             if (offset_cellnum < MAP_MAX_AREA && abs(Cell_Get_X(offset_cellnum) - Cell_Get_X(cellnum)) <= radius) {
-                if (Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
+                if (Coord_Distance(Cell_To_Coord(cellnum), Cell_To_Coord(offset_cellnum)) <= (radius * 256)) {
                     g_Map.UnJam_Cell(offset_cellnum, house);
                 }
             }
@@ -1401,13 +1401,13 @@ ObjectClass *MapClass::Close_Object(coord_t coord) const
                     int distance;
 
                     if (obj->What_Am_I() == RTTI_BUILDING) {
-                        distance = Distance(coord, Cell_To_Coord(offset_cell));
+                        distance = Coord_Distance(coord, Cell_To_Coord(offset_cell));
 
                         if (distance > 181) {
                             distance = -1;
                         }
                     } else {
-                        distance = Distance(coord, obj->Center_Coord());
+                        distance = Coord_Distance(coord, obj->Center_Coord());
                     }
 
                     if (distance >= 0 && (retval == nullptr || distance < nearest)) {
