@@ -72,6 +72,15 @@ inline coord_t Coord_Add(coord_t coord1, coord_t coord2)
     return Coord_From_Lepton_XY(lx, ly);
 }
 
+inline coord_t Coord_Subtract(coord_t coord1, coord_t coord2)
+{
+    lepton_t lx = Coord_Lepton_X(coord1) - Coord_Lepton_X(coord2);
+    lepton_t ly = Coord_Lepton_Y(coord1) - Coord_Lepton_Y(coord2);
+
+    return Coord_From_Lepton_XY(lx, ly);
+}
+
+
 /**
  * Returns coordinates that are centered in the cell
  * operation - coord[0] = 128; coord[2] = 128;
@@ -222,7 +231,14 @@ inline DirType Cell_Direction8(cell_t cell1, cell_t cell2)
     return Desired_Facing8(Cell_Get_X(cell1), Cell_Get_Y(cell1), Cell_Get_X(cell2), Cell_Get_Y(cell2));
 }
 
+DirType Direction(coord_t coord1, coord_t coord2);
+DirType Direction(target_t target1, target_t target2);
+DirType Direction(cell_t cell1, cell_t cell2);
+
 int Distance(coord_t coord1, coord_t coord2);
+int Distance(target_t target1, target_t target2);
+int Distance(cell_t cell1, cell_t cell2);
+
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance);
 coord_t Coord_Scatter(coord_t coord, uint16_t distance, BOOL center = false);
