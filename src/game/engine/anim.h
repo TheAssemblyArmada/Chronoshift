@@ -30,7 +30,7 @@ public:
     AnimClass(AnimType type, coord_t coord, unsigned char loop_delay = 0, unsigned char loop_count = 1);
     AnimClass(const AnimClass &that);
     AnimClass(const NoInitClass &noinit);
-    virtual ~AnimClass() {}
+    virtual ~AnimClass();
 
     void *operator new(size_t size);
     void *operator new(size_t size, void *ptr) { return ptr; }
