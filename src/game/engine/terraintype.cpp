@@ -15,6 +15,7 @@
  *            LICENSE
  */
 #include "terraintype.h"
+#include "terrain.h"
 #include "terraindata.h"
 #include "gamefile.h"
 #include "coord.h"
@@ -126,17 +127,7 @@ const int16_t *TerrainTypeClass::Overlap_List() const
  */
 BOOL TerrainTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-    // TODO requires TerrainClass
-#ifdef GAME_DLL
-    BOOL(*func)
-    (const TerrainTypeClass *, cell_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const TerrainTypeClass *, cell_t, HousesType)>(0x0055B9E4);
-    return func(this, cellnum, house);
-#elif 0
     return new TerrainClass(m_Type, Cell_To_Coord(cellnum)) != nullptr;
-#else
-    return false;
-#endif
 }
 
 /**
@@ -146,18 +137,7 @@ BOOL TerrainTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *TerrainTypeClass::Create_One_Of(HouseClass *house) const
 {
-    // TODO requires TerrainClass
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const TerrainTypeClass *, HouseClass *) =
-        reinterpret_cast<ObjectClass *(*)(const TerrainTypeClass *, HouseClass *)>(0x0055BA1C);
-    return func(this, house);
-#elif 0
-    DEBUG_ASSERT(house != nullptr);
-
     return new TerrainClass(m_Type);
-#else
-    return nullptr;
-#endif
 }
 
 /**
