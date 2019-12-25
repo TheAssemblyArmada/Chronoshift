@@ -55,7 +55,7 @@ public:
     CrateClass() : m_Cell(-1) {}
 
     BOOL Remove_It();
-    BOOL Create_Crate(cell_t cell);
+    BOOL Create_It(cell_t cell);
     cell_t Get_Cell() { return m_Cell; }
     BOOL Timer_Expired() { return m_CrateTimer.Time() <= 0; }
     void Init_Clear()
