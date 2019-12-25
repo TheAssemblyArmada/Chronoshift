@@ -15,8 +15,11 @@
  */
 #include "crate.h"
 #include "cell.h"
+#include "gametypes.h"
+#include "globals.h"
 #include "iomap.h"
-#include "gamedebug.h"
+#include "overlay.h"
+#include "rules.h"
 #include "scenario.h"
 
 #ifndef GAME_DLL
@@ -45,6 +48,10 @@ const char *CrateClass::s_CrateNames[] = { "Money",
     "ChronalVortex",
     nullptr };
 
+/**
+ *
+ *
+ */
 BOOL CrateClass::Remove_It()
 {
     if (m_Cell == -1) {
@@ -52,42 +59,67 @@ BOOL CrateClass::Remove_It()
     }
 
     Get_Crate(m_Cell);
-    Init_Clear();
-
+    m_Cell = -1;
+    m_CrateTimer.Stop();
     return true;
 }
 
-BOOL CrateClass::Create_Crate(cell_t cell)
+/**
+ *
+ *
+ */
+BOOL CrateClass::Create_It(cell_t cell)
 {
-    // TODO Requires ScenarioClass and RuleClass to actuall implement the functions.
-#ifdef GAME_DLL
-    BOOL (*func)(const CrateClass *, cell_t) = reinterpret_cast<BOOL (*)(const CrateClass *, cell_t)>(0x004AC91C);
-    return func(this, cell);
-#elif 0
+    //remove existing crate if there is one
     Remove_It();
 
     if (Put_Crate(cell)) {
+        m_Cell = cell;
+        m_CrateTimer = g_Scen.Get_Random_Value(450 * g_Rule.Crate_Regen(), 1800 * g_Rule.Crate_Regen());
+        m_CrateTimer.Start();
+        return true;
     }
 
     return false;
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-    return false;
-#endif
 }
 
+/**
+ * Place crate on cell
+ *
+ */
 BOOL CrateClass::Put_Crate(cell_t &cell)
 {
-    // TODO Requires MapClass, CellClass and ScenarioClass to actuall implement the functions.
-#ifdef GAME_DLL
-    BOOL (*func)(cell_t &) = reinterpret_cast<BOOL (*)(cell_t &)>(0x004AC9B4);
-    return func(cell);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-    return false;
-#endif
+    int stored_init = g_ScenarioInit;
+    g_ScenarioInit = 0;
+
+    if (!g_Map.In_Radar(cell)) {
+        g_ScenarioInit = stored_init;
+        return false;
+    }
+
+    CellClass *cptr = &g_Map[cell];
+    if (cptr != nullptr && cptr->Get_Overlay() != OVERLAY_NONE) {
+        while (cptr->Get_Overlay() != OVERLAY_NONE) {
+            if (cptr->Is_Clear_To_Build(SPEED_FLOAT) || cptr->Is_Clear_To_Build(SPEED_FOOT)) {
+                break;
+            }
+            cell = g_Map.Pick_Random_Location();
+            int chance = 100 * g_Rule.Water_Crate_Chance();
+            cell = g_Map.Nearby_Location(cell, (g_Scen.Get_Random_Value(0, 99) < chance) ? SPEED_FLOAT : SPEED_TRACK, -1);
+            cptr = &g_Map[cell];
+        }
+    }
+    OverlayClass *optr = new OverlayClass(cptr->Is_Clear_To_Build(SPEED_FLOAT) ? OVERLAY_WATER_WOOD_CRATE : OVERLAY_WOOD_CRATE, cell);
+    DEBUG_ASSERT(optr != nullptr);
+
+    g_ScenarioInit = stored_init;
+    return true;
 }
 
+/**
+ * "Pick up" crate from cell
+ *
+ */
 BOOL CrateClass::Get_Crate(cell_t cell)
 {
     if (g_Map.In_Radar(cell)) {
@@ -103,6 +135,10 @@ BOOL CrateClass::Get_Crate(cell_t cell)
     return false;
 }
 
+/**
+ *
+ *
+ */
 CrateType CrateClass::From_Name(const char *name)
 {
     if (name != nullptr) {

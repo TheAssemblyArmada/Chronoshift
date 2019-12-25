@@ -994,7 +994,10 @@ void Setup_Hooks()
     Hook_Function(0x00462448, *CargoClass::Detach_Object);
 
     // crate.cpp
-    Hook_Function(0x0045DE68, *CrateClass::Get_Crate);
+    Hook_Function(0x004AC8E0, *CrateClass::Remove_It);
+    Hook_Function(0x004AC91C, *CrateClass::Create_It);
+    Hook_Function(0x004AC9B4, *CrateClass::Put_Crate);
+    Hook_Function(0x004ACB1C, *CrateClass::Get_Crate);
 
     // building.cpp
     Hook_Function(0x0045DE68, *BuildingClass::Hook_Death_Announcement);

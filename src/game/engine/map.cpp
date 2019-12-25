@@ -294,12 +294,12 @@ BOOL MapClass::Place_Random_Crate()
         if (m_Crates[i].Get_Cell() == -1) {
             // Try to place crate up to 1000 times, return result of final attempt if all others fail.
             for (int i = 0; i < 1000; ++i) {
-                if (m_Crates[i].Create_Crate(Pick_Random_Location())) {
+                if (m_Crates[i].Create_It(Pick_Random_Location())) {
                     return true;
                 }
             }
 
-            return m_Crates[i].Create_Crate(Pick_Random_Location());
+            return m_Crates[i].Create_It(Pick_Random_Location());
         }
     }
 
@@ -313,12 +313,12 @@ BOOL MapClass::Place_Random_Crate_At_Cell(cell_t cellnum)
         if (m_Crates[i].Get_Cell() == -1) {
             // Try to place crate up to 1000 times, return result of final attempt if all others fail.
             for (int i = 0; i < 1000; ++i) {
-                if (m_Crates[i].Create_Crate(cellnum)) {
+                if (m_Crates[i].Create_It(cellnum)) {
                     return true;
                 }
             }
 
-            return m_Crates[i].Create_Crate(cellnum);
+            return m_Crates[i].Create_It(cellnum);
         }
     }
 
