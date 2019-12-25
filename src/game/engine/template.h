@@ -24,7 +24,7 @@
 class TemplateClass : public ObjectClass
 {
 public:
-    TemplateClass(TemplateType type, cell_t cellnum);
+    TemplateClass(TemplateType type, cell_t cellnum = -1);
     TemplateClass(const TemplateClass &that);
     TemplateClass(const NoInitClass &noinit) : ObjectClass(noinit) {}
     virtual ~TemplateClass();

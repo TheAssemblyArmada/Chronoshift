@@ -15,6 +15,7 @@
  */
 #include "templatetype.h"
 #include "templatedata.h"
+#include "template.h"
 #include "gamefile.h"
 #include "coord.h"
 #include "gamedebug.h"
@@ -547,39 +548,12 @@ void TemplateTypeClass::Prep_For_Add()
 
 BOOL TemplateTypeClass::Create_And_Place(int16_t cellnum, HousesType house) const
 {
-    // TODO requires TemplateClass
-#ifdef GAME_DLL
-    BOOL(*func)(const TemplateTypeClass*, int16_t, HousesType) = reinterpret_cast<BOOL(*)(const TemplateTypeClass*, int16_t, HousesType)>(0x0049EB84);
-    return func(this, cellnum, house);
-#elif 0
-    DEBUG_ASSERT(this != nullptr);
-
-    TemplateClass *tptr = new TemplateClass(m_Type, cellnum);
-    DEBUG_ASSERT(tptr != nullptr);
-
-    return tptr != nullptr;
-#else
-    return false;
-#endif
+    return new TemplateClass(m_Type, cellnum) != nullptr;
 }
 
 ObjectClass *TemplateTypeClass::Create_One_Of(HouseClass *house) const
 {
-    // TODO requires TemplateClass
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const TemplateTypeClass*, HouseClass*) = reinterpret_cast<ObjectClass *(*)(const TemplateTypeClass*, HouseClass*)>(0x0049EBBC);
-    return func(this, house);
-#elif 0
-    DEBUG_ASSERT(this != nullptr);
-    //DEBUG_ASSERT(house != nullptr);
-
-    TemplateClass *tptr = new TemplateClass(m_Type);
-    DEBUG_ASSERT(tptr != nullptr);
-
-    return tptr;
-#else
-    return nullptr;
-#endif
+    return new TemplateClass(m_Type);
 }
 
 LandType TemplateTypeClass::Land_Type(int sub_icon) const

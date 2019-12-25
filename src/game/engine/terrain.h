@@ -31,7 +31,7 @@ class TerrainClass : public ObjectClass
     friend void Setup_Hooks();
 
 public:
-    TerrainClass(TerrainType type, cell_t cellnum);
+    TerrainClass(TerrainType type, cell_t cellnum = -1);
     TerrainClass(const TerrainClass &that);
     TerrainClass(const NoInitClass &noinit) : ObjectClass(noinit) {}
     virtual ~TerrainClass();
