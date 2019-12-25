@@ -96,6 +96,36 @@ AnimClass::AnimClass(const NoInitClass &noinit) :
 {
 }
 
+AnimClass::~AnimClass()
+{
+    if (g_GameActive) {
+        ObjectClass *optr = As_Object(m_AttachedTo);
+        if (Target_Legal(m_AttachedTo) && optr != nullptr) {
+            g_Map.Remove(this, In_Which_Layer());
+
+            int i;
+            for (i = 0; i < g_Anims.Count(); ++i) {
+                AnimClass *aptr = &g_Anims[i];
+                if (aptr != this && aptr->Attached_To() == m_AttachedTo) {
+                    break;
+                }
+            }
+            if (i == g_Anims.Count()) {
+                optr->Fire_Out();
+                optr->Mark(MARK_5);
+                optr->Set_AnimAttached(false);
+                optr->Mark(MARK_4);
+            }
+
+            m_AttachedTo = 0;
+            m_Coord = Coord_Add(m_Coord, optr->Center_Coord());
+        }
+        Limbo();
+    }
+    m_AttachedTo = 0;
+    m_Class = nullptr;
+}
+
 /**
  * @brief
  *
