@@ -1212,6 +1212,10 @@ void TechnoClass::Techno_Draw_Object(
     }
 }
 
+/**
+ *
+ *
+ */
 int TechnoClass::Anti_Air()
 {
     if (!Is_Weapon_Equipped()) {
@@ -1225,7 +1229,7 @@ int TechnoClass::Anti_Air()
         return 0;
     }
 
-    int effectiveness = weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_LIGHT) * weapon->Get_Range();
+    int effectiveness = (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_LIGHT) * weapon->Get_Range()) / weapon->Get_ROF();
 
     if (tech_type.Is_Two_Shooter()) {
         effectiveness *= 2;
@@ -1234,6 +1238,10 @@ int TechnoClass::Anti_Air()
     return effectiveness / 50;
 }
 
+/**
+ *
+ *
+ */
 int TechnoClass::Anti_Armor()
 {
     if (!Is_Weapon_Equipped()) {
@@ -1248,8 +1256,8 @@ int TechnoClass::Anti_Armor()
     }
 
     lepton_t range = min<lepton_t>(weapon->Get_Range(), 1024);
-    int effectiveness = weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_HEAVY) * range
-        * weapon->Get_Warhead()->Get_Spread() / weapon->Get_ROF();
+    int effectiveness = (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_HEAVY) * range
+        * weapon->Get_Warhead()->Get_Spread()) / weapon->Get_ROF();
 
     if (tech_type.Is_Two_Shooter()) {
         effectiveness *= 2;
@@ -1262,6 +1270,10 @@ int TechnoClass::Anti_Armor()
     return effectiveness / 50;
 }
 
+/**
+ *
+ *
+ */
 int TechnoClass::Anti_Infantry()
 {
     if (!Is_Weapon_Equipped()) {
@@ -1276,8 +1288,8 @@ int TechnoClass::Anti_Infantry()
     }
 
     lepton_t range = min<lepton_t>(weapon->Get_Range(), 1024);
-    int effectiveness = weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_NONE) * range
-        * weapon->Get_Warhead()->Get_Spread() / weapon->Get_ROF();
+    int effectiveness = (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_NONE) * range
+        * weapon->Get_Warhead()->Get_Spread()) / weapon->Get_ROF();
 
     if (tech_type.Is_Two_Shooter()) {
         effectiveness *= 2;
