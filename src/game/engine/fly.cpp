@@ -13,22 +13,43 @@
  *            LICENSE
  */
 #include "fly.h"
+#include "coord.h"
+#include "fixed.h"
 
-ImpactType FlyClass::Physics(unsigned int &somevalue, DirType dir)
+/**
+ *
+ *
+ */
+ImpactType FlyClass::Physics(coord_t &coord, DirType dir)
 {
-#ifdef GAME_DLL
-    ImpactType (*func)(FlyClass *, unsigned int &, DirType) =
-        reinterpret_cast<ImpactType (*)(FlyClass *, unsigned int &, DirType)>(0x004C06E0);
-    return func(this, somevalue, dir);
-#else
-    return IMPACT_NONE;
-#endif
+    if (m_Speed != MPH_MIN) {
+        int numer = m_Speed + m_field_0;
+        div_t divval = div(numer, 10);
+        m_field_0 = divval.rem;
+        numer -= divval.rem;
+        coord_t org_coord = coord;
+        if (divval.quot != 0) {
+            //speed check above changes on 0xffff :/
+            coord_t moved_coord = Coord_Move(coord, dir, numer & 0xffff);
+            if (moved_coord == coord) {
+                return IMPACT_0;
+            }
+            coord = moved_coord;
+            if (moved_coord & 0x80008000) {
+                coord = org_coord;
+                return IMPACT_2;
+            }
+            return IMPACT_1;
+        }
+    }
+    return IMPACT_0;
 }
 
+/**
+ *
+ *
+ */
 void FlyClass::Fly_Speed(int speed, MPHType mph)
 {
-#ifdef GAME_DLL
-    void (*func)(FlyClass *, int, MPHType) = reinterpret_cast<void (*)(FlyClass *, int, MPHType)>(0x004C0764);
-    func(this, speed, mph);
-#endif
+    m_Speed = mph * fixed_t(speed, 256);
 }
