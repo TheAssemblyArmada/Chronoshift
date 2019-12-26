@@ -40,7 +40,7 @@ public:
     FlyClass() : m_field_0(0), m_Speed(0) {}
     FlyClass(const NoInitClass &noinit) {}
 
-    ImpactType Physics(unsigned int &somevalue, DirType dir);
+    ImpactType Physics(coord_t &coord, DirType dir);
     void Fly_Speed(int speed, MPHType mph);
 
     uint8_t Get_Speed() const { return m_Speed; }
