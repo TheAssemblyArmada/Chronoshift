@@ -57,7 +57,7 @@ public:
     virtual coord_t Center_Coord() const override { return Get_Coord(); }
     virtual coord_t Target_Coord() const override;
     virtual void AI() override;
-    virtual BOOL Is_Player_Army() const { return false; }
+    virtual BOOL Is_Players_Army() const { return false; }
     virtual void *Get_Image_Data() const { return Class_Of().Get_Image_Data(); }
     virtual ActionType What_Action(ObjectClass *object) const { return ACTION_NONE; }
     virtual ActionType What_Action(cell_t cellnum) const { return ACTION_NONE; }

@@ -174,19 +174,53 @@ void TechnoClass::AI()
 #endif
 }
 
-BOOL TechnoClass::Is_Player_Army() const
+/**
+ *
+ *
+ */
+BOOL TechnoClass::Is_Players_Army() const
 {
-    return 0;
+    if (m_Health <= 0) {
+        return false;
+    }
+
+    if (m_InLimbo || !m_LockedOnMap) {
+        return false;
+    }
+
+    if (What_Am_I() == RTTI_BUILDING) {
+        return false;
+    }
+
+    if (!m_PlayerAware) {
+        return false;
+    }
+
+    if (!Techno_Class_Of().Is_Selectable()) {
+        return false;
+    }
+
+    return m_OwnerHouse->Player_Has_Control();
 }
 
 ActionType TechnoClass::What_Action(ObjectClass *object) const
 {
-    return ActionType();
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x0056590C, ActionType, const TechnoClass *, ObjectClass *);
+    return func(this, object);
+#else
+    return ACTION_NONE;
+#endif
 }
 
 ActionType TechnoClass::What_Action(cell_t cellnum) const
 {
-    return ActionType();
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00565D84, ActionType, const TechnoClass *, cell_t);
+    return func(this, cellnum);
+#else
+    return ACTION_NONE;
+#endif
 }
 
 /**
@@ -306,6 +340,10 @@ void TechnoClass::Detach(target_t target, int a2)
 
 void TechnoClass::Record_The_Kill(TechnoClass *object)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00566720, void, TechnoClass *, TechnoClass *);
+    func(this, object);
+#endif
 }
 
 /**
@@ -327,6 +365,7 @@ void TechnoClass::Do_Shimmer()
  */
 int TechnoClass::Exit_Object(TechnoClass *object)
 {
+    //empty
     return 0;
 }
 
@@ -514,9 +553,19 @@ BOOL TechnoClass::Select()
     return false;
 }
 
+/**
+ *
+ *
+ */
 BOOL TechnoClass::In_Range(coord_t coord, WeaponSlotType weapon) const
 {
-    return 0;
+    if (!m_LockedOnMap) {
+        return false;
+    }
+    if (Distance(Fire_Coord(weapon), coord) <= Weapon_Range(weapon)) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -546,14 +595,23 @@ DamageResultType TechnoClass::Take_Damage(int &damage, int a2, WarheadType warhe
 #endif
 }
 
+/**
+ *
+ *
+ */
 int TechnoClass::Value() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0056756C, int, const TechnoClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    int value = 0;
+
+    if (g_Rule.Difficulty_Control(m_OwnerHouse->Get_AI_Difficulty()).ContentScan
+        || g_Rule.IQ_Controls().m_ContentScan <= m_OwnerHouse->Get_Current_IQ()) {
+        if (m_Cargo.Has_Cargo()) {
+            for (ObjectClass *i = static_cast<ObjectClass *>(m_Cargo.Attached_Object()); i != nullptr; i = i->Get_Next()) {
+                value += i->Value();
+            }
+        }
+    }
+    return value + Risk() + Techno_Class_Of().Get_ThreatPoints();
 }
 
 /**
@@ -697,7 +755,12 @@ DirType TechnoClass::Turret_Facing() const
 
 BuildingClass *TechnoClass::Find_Docking_Bay(BuildingType building, int a2) const
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00569020, BuildingClass *, const TechnoClass *, BuildingType, int);
+    return func(this, building, a2);
+#else
     return nullptr;
+#endif
 }
 
 /**
@@ -789,14 +852,49 @@ int TechnoClass::Rearm_Delay(BOOL a1, WeaponSlotType weapon) const
     return 3;
 }
 
+/**
+ *
+ *
+ */
 int TechnoClass::Refund_Amount() const
 {
-    return 0;
+    int cost = m_OwnerHouse->Get_Cost_Multiplier() * Techno_Class_Of().Raw_Cost();
+    if (m_OwnerHouse->Is_Human()) {
+        cost = g_Rule.Refund_Percent() * cost;
+    }
+    return cost;
 }
 
+/**
+ *
+ *
+ */
+int TechnoClass::Risk() const
+{
+    return Techno_Class_Of().Get_ThreatPosed();
+}
+
+/**
+ *
+ *
+ */
 int TechnoClass::Threat_Range(int a1) const
 {
-    return 0;
+    if (a1 == -1) {
+        return -1;
+    }
+
+    int guard_range = Techno_Class_Of().Get_Guard_Range();
+
+    if (a1 == 0) {
+        return guard_range != 0 ? guard_range : 0;
+    }
+
+    if (guard_range == 0) {
+        guard_range = std::max(Weapon_Range(WEAPON_SLOT_PRIMARY), Weapon_Range(WEAPON_SLOT_SECONDARY));
+    }
+    // clamp to 0 or maximum guard range which is 10 cells in leptons
+    return std::clamp(2 * guard_range, 0, (CELL_LEPTONS * 10));
 }
 
 /**
@@ -899,22 +997,42 @@ void TechnoClass::Stun()
 
 BOOL TechnoClass::In_Range(target_t target, WeaponSlotType weapon) const
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00562878, BOOL, const TechnoClass *, target_t, WeaponSlotType);
+    return func(this, target, weapon);
+#else
     return 0;
+#endif
 }
 
 BOOL TechnoClass::In_Range(ObjectClass *object, WeaponSlotType weapon) const
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00562798, BOOL, const TechnoClass *, ObjectClass *, WeaponSlotType);
+    return func(this, object, weapon);
+#else
     return 0;
+#endif
 }
 
 FireErrorType TechnoClass::Can_Fire(target_t target, WeaponSlotType weapon) const
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00564CC8, FireErrorType, const TechnoClass *, target_t, WeaponSlotType);
+    return func(this, target, weapon);
+#else
     return FireErrorType();
+#endif
 }
 
 target_t TechnoClass::Greatest_Threat(ThreatType threat)
 {
-    return target_t();
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x0056385C, target_t, TechnoClass *, ThreatType);
+    return func(this, threat);
+#else
+    return 0;
+#endif
 }
 
 void TechnoClass::Assign_Target(target_t target)
@@ -935,14 +1053,45 @@ BulletClass *TechnoClass::Fire_At(target_t target, WeaponSlotType weapon)
 #endif
 }
 
-BOOL TechnoClass::Captured(HouseClass *house)
+/**
+ *
+ *
+ */
+BOOL TechnoClass::Captured(HouseClass *new_owner)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00566290, BOOL, TechnoClass *, HouseClass *);
-    return func(this, house);
-#else
-    return false;
-#endif
+    if (m_OwnerHouse == new_owner) {
+        return false;
+    }
+
+    if (m_AttachedTrigger != nullptr) {
+        m_AttachedTrigger->Spring(TEVENT_ENTERED_BY, this);
+    }
+
+    Record_The_Kill();
+
+    m_OwnerHouse->Tracking_Remove(this);
+    new_owner->Tracking_Add(this);
+
+    switch (What_Am_I()) {
+        case RTTI_BUILDING:
+            new_owner->Inc_Destroyed_Building_Count(Owner());
+            break;
+        case RTTI_INFANTRY:
+        case RTTI_UNIT:
+        case RTTI_AIRCRAFT:
+        case RTTI_VESSEL:
+            new_owner->Inc_Destroyed_Unit_Count(Owner());
+            break;
+        default:
+            break;
+    }
+
+    m_OwnerHouse->Set_UnkHouseType(new_owner->What_Type());
+    Detach_All();
+    m_OwnerHouse = new_owner;
+    Set_Player_Owned();
+
+    return true;
 }
 
 BOOL TechnoClass::Electric_Zap(target_t target, BOOL a2, coord_t a3, uint8_t *a4)
@@ -1023,6 +1172,7 @@ BOOL TechnoClass::Is_Ready_To_Random_Animate() const
  */
 BOOL TechnoClass::Random_Animate()
 {
+    //empty
     return false;
 }
 
@@ -1210,6 +1360,102 @@ void TechnoClass::Techno_Draw_Object(
                 break;
         }
     }
+}
+
+int TechnoClass::Time_To_Build() const
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00560F80, int, const TechnoClass *);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+int TechnoClass::Is_Visible_On_Radar() const
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00561220, int, const TechnoClass *);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+fixed_t TechnoClass::Area_Modify(cell_t cellnum)
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005628C8, fixed_t, TechnoClass *, cell_t);
+    return func(this, cellnum);
+#else
+    return fixed_t(0, 0);
+#endif
+}
+
+int TechnoClass::Evaluate_Object(ThreatType threat, int intval1, int intval2, TechnoClass *techno, int &distance, int zoneval)
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00562DB0, int, const TechnoClass *, ThreatType, int, int, TechnoClass *, int &, int);
+    return func(this, threat, intval1, intval2, techno, distance, zoneval);
+#else
+    return 0;
+#endif
+}
+
+int TechnoClass::Evaluate_Cell(ThreatType threat, int intval1, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3)
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005634A8, int, const TechnoClass *, ThreatType, int, cell_t, int, TechnoClass **, int &, int);
+    return func(this, threat, intval1, cellnum, intval2, techno, distance, intval3);
+#else
+    return 0;
+#endif
+}
+
+void TechnoClass::Cloaking_AI()
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005646F0, void, TechnoClass *);
+    func(this);
+#endif
+}
+
+int TechnoClass::Is_Ready_To_Cloak() const
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00564B20, int, const TechnoClass *);
+    return func(this);
+#else
+    return 0;
+#endif
+}
+
+BOOL TechnoClass::Is_In_Same_Zone(cell_t cellnum)
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005676FC, BOOL, const TechnoClass *, cell_t);
+    return func(this, cellnum);
+#else
+    return 0;
+#endif
+}
+
+void TechnoClass::Base_Is_Attacked(TechnoClass *techno)
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x00567770, void, TechnoClass *, TechnoClass *);
+    func(this, techno);
+#endif
+}
+
+int TechnoClass::Is_Allowed_To_Retaliate(TechnoClass *techno)
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x005680C8, int, const TechnoClass *, TechnoClass *);
+    return func(this, techno);
+#else
+    return 0;
+#endif
 }
 
 /**
@@ -1455,4 +1701,54 @@ cell_t TechnoClass::Nearby_Location(TechnoClass *techno) const
     cell_t cell = Coord_To_Cell(techno != nullptr ? techno->Center_Coord() : Center_Coord());
     MZoneType mzone = ttptr->Get_Movement_Zone();
     return g_Map.Nearby_Location(cell, speed, g_Map[cell].Get_Zone(mzone), mzone);
+}
+
+/**
+ *
+ *
+ */
+int TechnoClass::Evaluate_Just_Cell(cell_t cellnum) const
+{
+    if (What_Am_I() == RTTI_VESSEL) {
+        return 0;
+    }
+
+    if (m_OwnerHouse->Is_Human()) {
+        return 0;
+    }
+
+    if (!g_Rule.Difficulty_Control(m_OwnerHouse->Get_AI_Difficulty()).DestroyWalls) {
+        return 0;
+    }
+
+    CellClass *cptr = &g_Map[cellnum];
+    DEBUG_ASSERT(cptr != nullptr);
+    if (!cptr->Has_Wall()) {
+        return 0;
+    }
+
+    target_t target = ::As_Target(cellnum);
+    coord_t coord = Cell_To_Coord(cellnum);
+    if (!In_Range(coord, What_Weapon_Should_I_Use(target))) {
+        return 0;
+    }
+
+    WeaponTypeClass *wptr = Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY);
+    if (wptr == nullptr || wptr->Get_Warhead() == nullptr) {
+        return 0;
+    }
+
+    if (wptr->Get_Projectile() != nullptr && !wptr->Get_Projectile()->Is_Anti_Ground()) {
+        return 0;
+    }
+
+    if (!wptr->Get_Warhead()->Is_Wall_Destroyer()) {
+        return 0;
+    }
+
+    if (m_OwnerHouse->Is_Ally(cptr->Owner())) {
+        return 0;
+    }
+
+    return Weapon_Range(WEAPON_SLOT_PRIMARY) - Distance(Center_Coord(), coord);
 }

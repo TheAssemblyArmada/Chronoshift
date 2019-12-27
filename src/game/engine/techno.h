@@ -73,7 +73,7 @@ public:
     virtual void AI() override;
 
     // ObjectClass
-    virtual BOOL Is_Player_Army() const override;
+    virtual BOOL Is_Players_Army() const override;
     virtual ActionType What_Action(ObjectClass *object) const override;
     virtual ActionType What_Action(cell_t cellnum) const override;
     virtual int Get_Ownable() const override;
@@ -121,7 +121,7 @@ public:
     virtual int Pip_Count() const { return 0; }
     virtual int Rearm_Delay(BOOL a1, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const;
     virtual int Refund_Amount() const;
-    virtual int Risk() const { return Techno_Class_Of().Get_ThreatPosed(); }
+    virtual int Risk() const;
     virtual int Threat_Range(int a1) const;
     virtual void Response_Select();
     virtual void Response_Move();
@@ -154,9 +154,22 @@ public:
         VisualType visual = Visual_Character();
         return visual != VISUAL_NORMAL && visual != VISUAL_HIDDEN;
     }
+
+    int Time_To_Build() const;
+    int Is_Visible_On_Radar() const;
+    fixed_t Area_Modify(cell_t cellnum);
+    int Evaluate_Object(ThreatType threat, int intval1, int intval2, TechnoClass *techno, int &distance, int zoneval);
+    int Evaluate_Cell(ThreatType threat, int intval1, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3);
+    void Cloaking_AI();
+    int Is_Ready_To_Cloak() const;
+    BOOL Is_In_Same_Zone(cell_t cellnum);
+    void Base_Is_Attacked(TechnoClass *techno);
+    int Is_Allowed_To_Retaliate(TechnoClass *techno);
+
     int Anti_Air();
     int Anti_Armor();
     int Anti_Infantry();
+
     const GamePtr<HouseClass> &Get_Owner_House() const { return m_OwnerHouse; }
     FacingClass &Get_Facing() { return m_Facing; }
     int Get_Price() const { return m_Price; }
@@ -228,6 +241,30 @@ public:
     {
         return TechnoClass::Is_Ready_To_Random_Animate();
     }
+    BOOL Hook_Is_Players_Army()
+    {
+        return TechnoClass::Is_Players_Army();
+    }
+    BOOL Hook_In_Range_Coord(coord_t coord, WeaponSlotType weapon)
+    {
+        return TechnoClass::In_Range(coord, weapon);
+    }
+    int Hook_Value()
+    {
+        return TechnoClass::Value();
+    }
+    int Hook_Refund_Amount()
+    {
+        return TechnoClass::Refund_Amount();
+    }
+    int Hook_Threat_Range(int a1)
+    {
+        return TechnoClass::Threat_Range(a1);
+    }
+    int Hook_Evaluate_Just_Cell(cell_t cellnum)
+    {
+        return TechnoClass::Evaluate_Just_Cell(cellnum);
+    }
 #endif
 
 protected:
@@ -237,6 +274,7 @@ protected:
     WeaponSlotType What_Weapon_Should_I_Use(target_t target) const;
     int Combat_Damage(WeaponSlotType weapon = WEAPON_SLOT_NONE) const;
     cell_t Nearby_Location(TechnoClass *techno) const;
+    int Evaluate_Just_Cell(cell_t cellnum) const;
 
     const TechnoTypeClass &Techno_Class_Of() const { return reinterpret_cast<const TechnoTypeClass &>(Class_Of()); }
 

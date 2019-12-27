@@ -1703,7 +1703,7 @@ ObjectClass *DisplayClass::Prev_Object(ObjectClass *object) const
     for (int index = s_Layers[LAYER_GROUND].Count() - 1; index >= 0; --index) {
         ObjectClass *prev = s_Layers[LAYER_GROUND][index];
 
-        if (prev != nullptr && prev->Is_Player_Army()) {
+        if (prev != nullptr && prev->Is_Players_Army()) {
             if (retval == nullptr) {
                 retval = prev;
             }
@@ -1739,7 +1739,7 @@ ObjectClass *DisplayClass::Next_Object(ObjectClass *object) const
     for (int index = 0; index < s_Layers[LAYER_GROUND].Count(); ++index) {
         ObjectClass *next = s_Layers[LAYER_GROUND][index];
 
-        if (next != nullptr && next->Is_Player_Army()) {
+        if (next != nullptr && next->Is_Players_Army()) {
             if (retval == nullptr) {
                 retval = next;
             }
