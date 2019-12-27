@@ -706,6 +706,13 @@ void Setup_Hooks()
     Hook_Function(0x005686C0, *TechnoClass::Hook_Is_Ready_To_Random_Animate);
     Hook_Function(0x00566EFC, *TechnoClass::Hook_Visual_Character);
     Hook_Function(0x005673AC, *TechnoClass::Detach);
+    Hook_Function(0x005609B0, *TechnoClass::Hook_Is_Players_Army);
+    Hook_Function(0x00562878, *TechnoClass::Hook_In_Range_Coord);
+    Hook_Function(0x0056756C, *TechnoClass::Hook_Value);
+    Hook_Function(0x00569234, *TechnoClass::Hook_Refund_Amount);
+    Hook_Function(0x00567648, *TechnoClass::Hook_Threat_Range);
+    Hook_Function(0x00566290, *TechnoClass::Captured);
+    Hook_Function(0x0056364C, *TechnoClass::Hook_Evaluate_Just_Cell);
 
     // house.h
     Hook_Function(0x004D5EF4, *HouseClass::Silo_Redraw_Check);

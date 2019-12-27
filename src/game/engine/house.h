@@ -262,6 +262,8 @@ public:
     int Currently_Owned_Vessel_Count() const { return m_CurrentVesselCount; }
     int Currently_Owned_Aircraft_Count() const { return m_CurrentAircraftCount; }
     coord_t Base_Center() const { return m_BaseCenter; }
+    HousesType Get_UnkHouseType() const { return m_UnkHouseType; }
+    void Set_UnkHouseType(HousesType house) { m_UnkHouseType = house; }
     RegionClass *Threat_Regions() { return m_ThreatRegions; }
     target_t Chrono_Object() const { return m_ChronoObject; }
     BOOL Has_Buildings() const { return m_BScan.m_HaveBuilt != 0; }
@@ -290,6 +292,8 @@ public:
     void Set_Preferred_Target(QuarryType target) { m_PreferredTarget = target; }
     BOOL Flag_To_Recalc() { return m_RecalcNeeded = true; }
     int Get_Power() const { return m_Power; }
+    void Inc_Destroyed_Building_Count(HousesType house) { ++m_BuildingsDestroyed[house]; }
+    void Inc_Destroyed_Unit_Count(HousesType house) { ++m_UnitsDestroyed[house]; }
 
     static void One_Time();
     static void Init();
