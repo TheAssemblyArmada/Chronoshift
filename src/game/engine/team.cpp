@@ -126,7 +126,7 @@ void TeamClass::AI()
 BOOL TeamClass::Remove(FootClass *object, int a2)
 {
 #ifdef GAME_DLL
-    BOOL (*func)(TeamClass *, FootClass *, int) = reinterpret_cast<BOOL (*)(TeamClass *, FootClass *, int)>(0x004C3794);
+    BOOL (*func)(TeamClass *, FootClass *, int) = reinterpret_cast<BOOL (*)(TeamClass *, FootClass *, int)>(0x0055D164);
     return func(this, object, a2);
 #else
     //DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
