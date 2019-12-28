@@ -570,7 +570,7 @@ ThemeClass &g_Theme = Make_Global<ThemeClass>(0x00668248);
 ThemeClass::ThemeControl *ThemeClass::s_Themes = Make_Pointer<ThemeClass::ThemeControl>(0x006052FC);
 
 // trigger.cpp
-TFixedIHeapClass<TriggerClass> &g_Triggers = Make_Global<TFixedIHeapClass<TriggerClass> >(0x00601810);
+TFixedIHeapClass<TriggerClass> &g_Triggers = Make_Global<TFixedIHeapClass<TriggerClass> >(0x0065DBF4);
 
 // triggertypes.cpp
 TFixedIHeapClass<TriggerTypeClass> &g_TriggerTypes = *reinterpret_cast<TFixedIHeapClass<TriggerTypeClass> *>(0x0065DCD8);
