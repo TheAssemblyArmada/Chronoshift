@@ -23,6 +23,15 @@
 #include "factory.h"
 #include "techno.h"
 
+enum CheckPointType {
+    CHECKPOINT_0,
+    CHECKPOINT_1,
+    CHECKPOINT_2,
+    CHECKPOINT_COUNT,
+    CHECKPOINT_NONE = -1,
+    CHECKPOINT_FIRST = CHECKPOINT_0,
+};
+
 class BuildingClass : public TechnoClass
 {
 public:
@@ -31,26 +40,91 @@ public:
     BuildingClass(const NoInitClass &noinit);
     virtual ~BuildingClass();
 
+    // AbstractClass
+    virtual coord_t Center_Coord() const final;
+    virtual coord_t Target_Coord() const final;
+    virtual MoveType Can_Enter_Cell(cell_t cellnum, FacingType facing = FACING_NONE) const final;
+    virtual void AI() final;
+
     // ObjectClass
     virtual void *Get_Image_Data() const final;
-    virtual const BuildingTypeClass &Class_Of() const final;
+    virtual ActionType What_Action(ObjectClass *object) const final;
+    virtual ActionType What_Action(cell_t cellnum) const final;
+    virtual const BuildingTypeClass &Class_Of() const final { return *m_Class; }
+    virtual BOOL Can_Demolish() const final;
     virtual BOOL Can_Player_Move() const final;
+    virtual coord_t Docking_Coord() const final;
+    virtual coord_t Sort_Y() const final;
+    virtual coord_t Exit_Coord() const final;
+    virtual BOOL Limbo() final;
+    virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH) final;
     virtual void Detach(target_t target, int a2) final;
+    virtual void Detach_All(int a1 = 1) final;
+    virtual int Exit_Object(TechnoClass *object) final;
+    virtual const int16_t *Overlap_List(BOOL a1 = false) const final;
     virtual void Draw_It(int x, int y, WindowNumberType window) const final;
+    virtual BOOL Mark(MarkType mark) final;
     virtual void Active_Click_With(ActionType action, ObjectClass *object) final;
     virtual void Active_Click_With(ActionType action, cell_t cellnum) final;
-    virtual BOOL Limbo() final;
-    virtual void Fire_Out() final {}
+    virtual DamageResultType Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) final;
+    virtual void Fire_Out() final;
     virtual int Value() const final;
+    virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target) final;
+    virtual BOOL Revealed(HouseClass *house) final;
+    virtual void Repair(int a1 = -1) final;
+    virtual void Sell_Back(int a1) final;
+
+    // MissionClass
+    virtual int Mission_Attack() final;
+    virtual int Mission_Guard() final;
+    virtual int Mission_Harvest() final;
+    virtual int Mission_Unload() final;
+    virtual int Mission_Construction() final;
+    virtual int Mission_Deconstruction() final;
+    virtual int Mission_Repair() final;
+    virtual int Mission_Missile() final;
 
     // TechnoClass
+    virtual int How_Many_Survivors() const final;
+    virtual DirType Turret_Facing() const final;
+    virtual cell_t Find_Exit_Cell(TechnoClass *object) const final;
+    virtual DirType Fire_Direction() const final;
+    virtual InfantryType Crew_Type() const final;
+    virtual int Pip_Count() const final;
     virtual void Death_Announcement(TechnoClass *killer) const final;
+    virtual FireErrorType Can_Fire(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const final;
+    virtual target_t Greatest_Threat(ThreatType threat) final;
+    virtual void Assign_Target(target_t target) final;
+    virtual BOOL Captured(HouseClass *house) final;
+
+    // BuildingClass
+    virtual void Enter_Idle_Mode(BOOL a1 = false) final;
+    virtual void Grand_Opening(int a1) final;
+    virtual void Update_Buildables() final;
+    virtual uint8_t *Remap_Table() const final;
+    virtual int Toggle_Primary() final;
+
+    cell_t Check_Point(CheckPointType check) const; 
 
     BuildingType What_Type() const { return m_Class->What_Type(); }
 
-    int Shape_Number() const;
-    int Power_Output();
+    static void Read_INI(GameINIClass &ini);
+    static void Write_INI(GameINIClass &ini);
 
+private:
+    int Shape_Number() const;
+    void Drop_Debris(target_t target);
+    void Begin_Mode(BStateType state);
+    int Power_Output();
+    int Flush_For_Placement(TechnoClass *techno, cell_t cellnum) const;
+    void Update_Radar_Spied();
+    void Factory_AI();
+    void Rotation_AI();
+    void Charging_AI();
+    void Repair_AI();
+    void Animation_AI();
+    void Add_Gap_Effect() {} // To be implemented, inlined in AI().
+    void Remove_Gap_Effect();
 
 #ifdef GAME_DLL
     friend void Setup_Hooks();
