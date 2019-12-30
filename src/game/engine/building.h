@@ -153,19 +153,41 @@ private:
     GamePtr<FactoryClass> m_Factory;
     HousesType m_field_D5;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Bit1 : 1; // 1
-    BOOL m_Bit2 : 1; // 2
-    BOOL m_Bit4 : 1; // 4
+    BOOL m_ToRebuild : 1; // 1
+    BOOL m_ToAutoRepair : 1; // 2
+    BOOL m_ToSell : 1; // 4
     BOOL m_Bit8 : 1; // 8
-    BOOL m_Bit16 : 1; // 16
+    BOOL m_IsRepairing : 1; // 16
     BOOL m_Bit32 : 1; // 32
+    BOOL m_Bit64 : 1; // 64
+    BOOL m_Bit128 : 1; // 128
+
+    BOOL m_IsCharging : 1; // 1
+    BOOL m_IsCharged : 1; // 2
+    BOOL m_IsCaptured : 1; // 4
+    BOOL m_IsJamming : 1; // 8
+    BOOL m_IsJammed : 1; // 16
+    BOOL m_Bit2_32 : 1; // 32
+    BOOL m_Bit2_64 : 1; // 64
+    BOOL m_Bit2_128 : 1; // 128
 #else
-    bool m_Bit1;
-    bool m_Bit2;
-    bool m_Bit4;
+    bool m_ToRebuild;
+    bool m_ToAutoRepair;
+    bool m_ToSell;
     bool m_Bit8;
-    bool m_Bit16;
+    bool m_IsRepairing;
     bool m_Bit32;
+    bool m_Bit64;
+    bool m_Bit128;
+
+    bool m_IsCharging;
+    bool m_IsCharged;
+    bool m_IsCaptured;
+    bool m_IsJamming;
+    bool m_IsJammed;
+    bool m_Bit2_32;
+    bool m_Bit2_64;
+    bool m_Bit2_128;
 #endif
     TCountDownTimerClass<FrameTimerClass> m_C4FuseTimer;
     BStateType m_CurrentState;

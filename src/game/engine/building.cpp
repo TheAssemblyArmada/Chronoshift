@@ -275,7 +275,7 @@ void BuildingClass::Draw_It(int x, int y, WindowNumberType window) const
             }
 
             // draw repair shape on building
-            if (m_Bit16 && m_Bit32) {
+            if (m_IsRepairing && m_Bit32) {
                 CC_Draw_Shape(ObjectTypeClass::SelectShapes, 2, x, y, window, SHAPE_CENTER | SHAPE_VIEWPORT_REL);
             }
         }
