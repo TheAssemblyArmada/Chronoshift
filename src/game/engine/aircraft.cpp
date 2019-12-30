@@ -316,10 +316,10 @@ DamageResultType AircraftClass::Take_Damage(int &damage, int a2, WarheadType war
 #endif
 }
 
-void AircraftClass::Scatter(coord_t coord, int a2, BOOL a3)
+void AircraftClass::Scatter(coord_t coord, BOOL a2, BOOL a3)
 {
 #ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00422980, void, AircraftClass *, coord_t, int, BOOL);
+    DEFINE_CALL(func, 0x00422980, void, AircraftClass *, coord_t, BOOL, BOOL);
     func(this, coord, a2, a3);
 #endif
 }

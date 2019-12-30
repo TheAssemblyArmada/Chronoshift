@@ -88,10 +88,10 @@ BOOL DriveClass::Limbo()
 //#endif
 }
 
-void DriveClass::Scatter(coord_t coord, int a2, int a3)
+void DriveClass::Scatter(coord_t coord, BOOL a2, BOOL a3)
 {
 #ifdef GAME_DLL
-    void (*func)(DriveClass *, coord_t, int, int) = reinterpret_cast<void (*)(DriveClass *, coord_t, int, int)>(0x004B6304);
+    void (*func)(DriveClass *, coord_t, BOOL, BOOL) = reinterpret_cast<void (*)(DriveClass *, coord_t, BOOL, BOOL)>(0x004B6304);
     func(this, coord, a2, a3);
 #else
     DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);

@@ -169,10 +169,10 @@ DamageResultType UnitClass::Take_Damage(
 #endif
 }
 
-void UnitClass::Scatter(coord_t coord, int a2, int a3)
+void UnitClass::Scatter(coord_t coord, BOOL a2, BOOL a3)
 {
 #ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00581644, void, UnitClass *, coord_t, int, int);
+    DEFINE_CALL(func, 0x00581644, void, UnitClass *, coord_t, BOOL, BOOL);
     func(this, coord, a2, a3);
 #endif
 }
