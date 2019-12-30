@@ -99,7 +99,7 @@ public:
     virtual BOOL In_Range(coord_t coord, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const { return 0; }
     virtual int Weapon_Range(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const { return 0; }
     virtual DamageResultType Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false);
-    virtual void Scatter(coord_t coord = 0, int a2 = 0, BOOL a3 = false) {}
+    virtual void Scatter(coord_t coord = 0, BOOL a2 = false, BOOL a3 = false) {}
     virtual BOOL Catch_Fire() { return 0; }
     virtual void Fire_Out() {}
     virtual int Value() const { return 0; }
