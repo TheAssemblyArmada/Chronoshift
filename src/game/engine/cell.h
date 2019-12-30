@@ -124,8 +124,10 @@ public:
     BOOL Has_Crater() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Pointer(m_Smudge)->Is_Crater(); }
     BOOL Has_Bib() const { return m_Smudge != SMUDGE_NONE && SmudgeTypeClass::As_Pointer(m_Smudge)->Is_Bib(); }
     BOOL Has_Wall() { return m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Pointer(m_Overlay)->Is_Wall(); }
-    void Clear_Occupant_Bit(CellOccupantEnum bit) { m_OccupantBit &= ~bit; }
-    void Set_Occupant_Bit(CellOccupantEnum bit) { m_OccupantBit |= bit; }
+    void Clear_Occupants(CellOccupantEnum bitmask) { m_OccupantBit &= ~bitmask; }
+    void Set_Occupants(CellOccupantEnum bitmask) { m_OccupantBit |= bitmask; }
+    BOOL Check_Occupants(CellOccupantEnum bitmask) const { return m_OccupantBit & bitmask; }
+    BOOL Is_Occuppied() const { return m_OccupantBit != OCCUPANT_NONE; }
 
     cell_t Cell_Number() const { return m_CellNumber; }
     int8_t Get_Zone(MZoneType mzone) const { return m_Zones[mzone]; }
@@ -164,6 +166,8 @@ public:
     LandType Get_Land() const { return m_Land; }
     void Set_Land(LandType land) { m_Land = land; }
     uint16_t Get_Field_A() const { return m_field_A; }
+    void Set_Field_A(HousesType house) { m_field_A |= (1 << house); }
+    void Clear_Field_A(HousesType house) { m_field_A &= ~(1 << house); }
     static int Spot_Index(coord_t coord);
     void Adjust_Threat(HousesType house, int threat);
     void Shimmer();

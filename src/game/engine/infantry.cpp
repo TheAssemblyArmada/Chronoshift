@@ -123,7 +123,6 @@ InfantryClass::~InfantryClass()
     }
     m_Class = nullptr;
     m_Doing = DO_NONE;
-    delete this;
 }
 
 void *InfantryClass::operator new(size_t size)
@@ -231,6 +230,20 @@ int InfantryClass::Full_Name() const
     }
 
     return Class_Of().Full_Name();
+}
+
+/**
+ *
+ *
+ */
+BOOL InfantryClass::Limbo()
+{
+    if (!m_InLimbo) {
+        Stop_Driver();
+        Clear_Occupy_Spot(m_Coord);
+    }
+
+    return FootClass::Limbo();
 }
 
 /**
@@ -360,6 +373,58 @@ BOOL InfantryClass::Is_Ready_To_Random_Animate() const
     return m_Doing == DO_GUARD || m_Doing == DO_READY;
 }
 
+/**
+ *
+ *
+ */
+void InfantryClass::Assign_Destination(target_t dest)
+{
+    if (m_Moving && !m_InFormation && Target_Legal(dest)) {
+        if (g_Map[Get_Cell()].Is_Clear_To_Move(Class_Of().Get_Speed(), true)) {
+            Stop_Driver();
+        }
+    }
+
+    if (m_OwnerHouse->Is_Human() && Target_Legal(dest) && m_NavCom == dest && m_Prone) {
+        if (!Class_Of().Is_Fraidycat() && !Class_Of().Is_Canine()) {
+            Do_Action(DO_UP);
+        }
+    }
+
+    TechnoClass *tptr = As_Techno(dest);
+    if (tptr != nullptr && (m_Mission == MISSION_ENTER || m_MissionQueue == MISSION_ENTER) && !Radio_Valid()) {
+        if (tptr->Radio_Valid()) {
+            m_Archive = dest;
+        } else if (Transmit_Message(RADIO_HELLO, tptr) == RADIO_ROGER) {
+            if (Transmit_Message(RADIO_TRYING_TO_LOAD) == RADIO_ROGER) {
+                return;
+            }
+            Transmit_Message(RADIO_OVER_AND_OUT);
+        }
+    } else {
+        m_Paths[0] = FACING_NONE;
+    }
+    FootClass::Assign_Destination(dest);
+}
+
+/**
+ *
+ *
+ */
+BOOL InfantryClass::Stop_Driver()
+{
+    if (m_HeadTo) {
+        Clear_Occupy_Spot(m_HeadTo);
+    }
+    Set_Occupy_Spot(m_Coord);
+
+    Do_Action((!Class_Of().Is_Canine() && m_Prone) ? DO_PRONE : DO_READY);
+
+    m_Bit8 = Can_Enter_Cell(Get_Cell()) != MOVE_OK;
+
+    return FootClass::Stop_Driver();
+}
+
 BOOL InfantryClass::Do_Action(DoType dotype, BOOL a1)
 {
 #ifdef GAME_DLL
@@ -397,6 +462,36 @@ int InfantryClass::Shape_Number() const
     return number + doinfo.m_StartingFrame;
     */
 #endif
+}
+
+/**
+ *
+ *
+ */
+void InfantryClass::Set_Occupy_Spot(cell_t cellnum, int spot_index)
+{
+    DEBUG_ASSERT(spot_index < CELL_SPOT_COUNT);
+
+    CellClass &cell = g_Map[cellnum];
+    cell.Set_Occupants(CellOccupantEnum(1 << spot_index));
+    cell.Set_Owner(Owner());
+}
+
+/**
+ *
+ *
+ */
+void InfantryClass::Clear_Occupy_Spot(cell_t cellnum, int spot_index)
+{
+    DEBUG_ASSERT(spot_index < CELL_SPOT_COUNT);
+
+    CellClass &cell = g_Map[cellnum];
+    cell.Clear_Occupants(CellOccupantEnum(1 << spot_index));
+
+    // If the cell isn't occupied by any infantry the cell isn't owned anymore
+    if (!cell.Check_Occupants(OCCUPANT_INFANTRY)) {
+        cell.Set_Owner(HOUSES_NONE);
+    }
 }
 
 /**

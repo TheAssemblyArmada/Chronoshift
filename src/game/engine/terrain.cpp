@@ -175,7 +175,7 @@ coord_t TerrainClass::Sort_Y() const
 BOOL TerrainClass::Limbo()
 {
     if (!m_InLimbo) {
-        g_Map[Coord_To_Cell(m_Coord)].Clear_Occupant_Bit(OCCUPANT_TERRAIN);
+        g_Map[Coord_To_Cell(m_Coord)].Clear_Occupants(OCCUPANT_TERRAIN);
     }
     return ObjectClass::Limbo();
 }
