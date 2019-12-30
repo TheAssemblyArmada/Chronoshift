@@ -1085,6 +1085,7 @@ void Setup_Hooks()
     Hook_Function(0x004EEE00, *InfantryClass::Fire_At);
     Hook_Function(0x004F2504, *InfantryClass::Hook_Is_Ready_To_Random_Animate);
     Hook_Function(0x004F0DB4, *InfantryClass::Edge_Of_World_AI);
+    Hook_Function(0x004ED260, *InfantryClass::Assign_Destination);
 #endif
 }
 

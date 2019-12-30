@@ -19,6 +19,7 @@
 #define INFANTRY_H
 
 #include "always.h"
+#include "cell.h"
 #include "foot.h"
 #include "infantrytype.h"
 
@@ -54,6 +55,7 @@ public:
     virtual void *Get_Image_Data() const final;
     virtual const InfantryTypeClass &Class_Of() const final { return *m_Class; }
     virtual int Full_Name() const final;
+    virtual BOOL Limbo() final;
     virtual void Detach(target_t target, int a2) final;
     virtual BOOL Paradrop(coord_t coord) final;
     virtual void Draw_It(int x, int y, WindowNumberType window) const final;
@@ -68,9 +70,18 @@ public:
     virtual void Assign_Target(target_t target) final;
     virtual BulletClass *Fire_At(target_t target, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) final;
     virtual BOOL Is_Ready_To_Random_Animate() const final;
+    virtual void Assign_Destination(target_t dest) final;
+
+    // FootClass
+    virtual BOOL Stop_Driver() final;
 
     // InfantryClass
     virtual BOOL Do_Action(DoType dotype, BOOL a1 = false);
+
+    inline void Set_Occupy_Spot(coord_t coord) { Set_Occupy_Spot(Coord_To_Cell(coord), CellClass::Spot_Index(coord)); }
+    inline void Clear_Occupy_Spot(coord_t coord) { Clear_Occupy_Spot(Coord_To_Cell(coord), CellClass::Spot_Index(coord)); }
+    void Set_Occupy_Spot(cell_t cellnum, int spot_index);
+    void Clear_Occupy_Spot(cell_t cellnum, int spot_index);
 
     BOOL Is_Technician() const { return m_Technician; }
 
