@@ -241,6 +241,7 @@ int UnitClass::Mission_Hunt()
  */
 int UnitClass::Mission_Move()
 {
+    m_IsHarvesting = false;
     if (m_Door.Is_Closed()) {
         APC_Close_Door();
     }
@@ -430,7 +431,7 @@ void UnitClass::Overrun_Cell(cell_t cell, int a2)
 BOOL UnitClass::Ok_To_Move(DirType dir)
 {
     if (!Class_Of().Is_Bit32()) {
-        return false;
+        return true;
     }
     if (m_Rotating) {
         return false;
@@ -558,30 +559,35 @@ BOOL UnitClass::Goto_Ore(int scan_radius)
     }
 
     // is the cell im under ore?
-    cell_t cellnum = Center_Cell();
-    if (g_Map[cellnum].Get_Land() == LAND_ORE) {
+    cell_t cell = Get_Cell();
+    if (g_Map[cell].Get_Land() == LAND_ORE) {
         return true;
     }
 
+    cell_t adj_cell = -1;
     for (int i = 1; i < scan_radius; ++i) {
         for (int j = -i; j <= i; ++j) {
-            if (Ore_Check(cellnum, j, -i)) {
-                Assign_Destination(::As_Target(cellnum));
+            adj_cell = cell;
+            if (Ore_Check(adj_cell, j, -i)) {
+                Assign_Destination(::As_Target(adj_cell));
                 return false;
             }
 
-            if (Ore_Check(cellnum, j, i)) {
-                Assign_Destination(::As_Target(cellnum));
+            adj_cell = cell;
+            if (Ore_Check(adj_cell, j, i)) {
+                Assign_Destination(::As_Target(adj_cell));
                 return false;
             }
 
-            if (Ore_Check(cellnum, -i, j)) {
-                Assign_Destination(::As_Target(cellnum));
+            adj_cell = cell;
+            if (Ore_Check(adj_cell, -i, j)) {
+                Assign_Destination(::As_Target(adj_cell));
                 return false;
             }
 
-            if (Ore_Check(cellnum, i, j)) {
-                Assign_Destination(::As_Target(cellnum));
+            adj_cell = cell;
+            if (Ore_Check(adj_cell, i, j)) {
+                Assign_Destination(::As_Target(adj_cell));
                 return false;
             }
         }
