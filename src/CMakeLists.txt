@@ -68,6 +68,7 @@ set(GAMEENGINE_SRC
     game/engine/carryover.cpp
     game/engine/cell.cpp
     game/engine/cmdline.cpp
+    game/engine/combat.cpp
     game/engine/coord.cpp
     game/engine/crate.cpp
     game/engine/difficulty.cpp
