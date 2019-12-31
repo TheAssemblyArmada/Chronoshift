@@ -79,6 +79,7 @@ set(GAMEENGINE_SRC
     game/engine/facing.cpp
     game/engine/factory.cpp
     game/engine/flasher.cpp
+    game/engine/fetchtechtype.cpp
     game/engine/fly.cpp
     game/engine/focus.cpp
     game/engine/foot.cpp

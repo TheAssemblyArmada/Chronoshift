@@ -20,6 +20,7 @@
 #include "coord.h"
 #include "display.h"
 #include "foot.h"
+#include "fetchtechtype.h"
 #include "gameini.h"
 #include "globals.h"
 #include "heap.h"
@@ -1653,43 +1654,116 @@ const TeamTypeClass *HouseClass::Suggested_New_Team(int a1)
 #endif
 }
 
-ProdFailType HouseClass::Begin_Production(RTTIType rtti, int a2)
+/**
+ *
+ *
+ */
+ProdFailType HouseClass::Begin_Production(RTTIType rtti, int id)
 {
-#ifdef GAME_DLL
-    ProdFailType (*func)(HouseClass *, RTTIType, int) =
-        reinterpret_cast<ProdFailType (*)(HouseClass *, RTTIType, int)>(0x004D6600);
-    return func(this, rtti, a2);
-#else
-    return ProdFailType();
-#endif
+    TechnoTypeClass *techtype = Fetch_Techno_Type(rtti, id);
+    BOOL set = true;
+    FactoryClass *fptr = Fetch_Factory(rtti);
+    if (fptr != nullptr) {
+        if (fptr->Is_Building()){
+            DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Cannot queue, factory is busy.\n", techtype->Get_Name());
+            return PROD_REJECTED;
+        }
+    } else {
+        fptr = new FactoryClass;
+        if (fptr == nullptr) {
+            DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Unable to create factory\n", techtype->Get_Name());
+            return PROD_REJECTED;
+        }
+        Set_Factory(rtti, fptr);
+        set = fptr->Set(*techtype, *this);
+    }
+
+    if (set == false) {
+        DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Factory was unable to create the requested object\n",
+            techtype->Get_Name());
+        if (fptr != nullptr) {
+            delete fptr;
+        }
+        return PROD_REJECTED;
+    }
+    fptr->Start();
+    if (Is_Player()) {
+        g_Map.Factory_Link(fptr->Get_Heap_ID(), rtti, id);
+    }
+    return PROD_APPROVED;
 }
 
+/**
+ *
+ *
+ */
 ProdFailType HouseClass::Suspend_Production(RTTIType rtti)
 {
-#ifdef GAME_DLL
-    ProdFailType (*func)(HouseClass *, RTTIType) = reinterpret_cast<ProdFailType (*)(HouseClass *, RTTIType)>(0x004D66D0);
-    return func(this, rtti);
-#else
-    return ProdFailType();
-#endif
+    FactoryClass *fptr = Fetch_Factory(rtti);
+    if (fptr == nullptr) {
+        return PROD_REJECTED;
+    }
+
+    fptr->Suspend();
+    if (Is_Player()) {
+        g_Map.Flag_Sidebar_To_Redraw();
+        g_Map.Flag_To_Redraw();
+    }
+    return PROD_APPROVED;
 }
 
+/**
+ *
+ *
+ */
 ProdFailType HouseClass::Abandon_Production(RTTIType rtti)
-{ 
-#ifdef GAME_DLL
-    ProdFailType (*func)(HouseClass *, RTTIType) = reinterpret_cast<ProdFailType (*)(HouseClass *, RTTIType)>(0x004D671C);
-    return func(this, rtti);
-#else
-    return ProdFailType();
-#endif
+{
+    FactoryClass *fptr = Fetch_Factory(rtti);
+    if (fptr == nullptr) {
+        return PROD_REJECTED;
+    }
+    if (Is_Player()) {
+        g_Map.Abandon_Production(rtti, fptr->Get_Heap_ID());
+        if (rtti == RTTI_BUILDINGTYPE || rtti == RTTI_BUILDING) {
+            g_Map.Reset_Pending_Object(false);
+            g_Map.Set_Cursor_Shape();
+        }
+    }
+    fptr->Abandon();
+    Set_Factory(rtti, nullptr);
+    if (fptr != nullptr) {
+        delete fptr;
+    }
+    return PROD_APPROVED;
 }
 
 void HouseClass::Production_Begun(TechnoClass *object)
 {
-#ifdef GAME_DLL
-    void (*func)(HouseClass *, TechnoClass *) = reinterpret_cast<void (*)(HouseClass *, TechnoClass *)>(0x004DC93C);
-    func(this, object);
-#endif
+    switch (object->What_Am_I()) {
+        case RTTI_AIRCRAFT:
+            if (reinterpret_cast<AircraftClass *>(object)->What_Type() == m_ChosenAircraft) {
+                m_ChosenAircraft = AIRCRAFT_NONE;
+            }
+            break;
+        case RTTI_BUILDING:
+            if (reinterpret_cast<BuildingClass *>(object)->What_Type() == m_ChosenBuilding) {
+                m_ChosenBuilding = BUILDING_NONE;
+            }
+            break;
+        case RTTI_INFANTRY:
+            if (reinterpret_cast<InfantryClass *>(object)->What_Type() == m_ChosenInfantry) {
+                m_ChosenInfantry = INFANTRY_NONE;
+            }
+            break;
+        case RTTI_UNIT:
+            if (reinterpret_cast<UnitClass *>(object)->What_Type() == m_ChosenUnit) {
+                m_ChosenUnit = UNIT_NONE;
+            }
+            break;
+        default:
+            DEBUG_LOG("HouseClass::Production_Begun got unsupported RTTI! %d\n", object->What_Am_I());
+            break;
+    }
 }
 
 void HouseClass::Recalc_Attributes()

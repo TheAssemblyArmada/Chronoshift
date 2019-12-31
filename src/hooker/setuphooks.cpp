@@ -760,6 +760,10 @@ void Setup_Hooks()
     Hook_Function(0x004DE178, *HouseClass::Fire_Sale);
     Hook_Function(0x004D7DC4, *HouseClass::Detach);
     //Hook_Function_Const(0x004D7E80, &HouseClass::Suggest_New_Object);//can't hook cause of defarg
+    Hook_Function(0x004D6600, *HouseClass::Begin_Production);
+    Hook_Function(0x004D66D0, *HouseClass::Suspend_Production);
+    Hook_Function(0x004D671C, *HouseClass::Abandon_Production);
+    Hook_Function(0x004DC93C, *HouseClass::Production_Begun);
 
     // foot.h
     Hook_Function(0x004C3328, *FootClass::Hook_Can_Demolish);
@@ -821,13 +825,14 @@ void Setup_Hooks()
     Hook_Function(0x004A96E8, CC_Draw_Shape);
 
     // factory.h
+    Hook_Function(0x004BEBE0, *FactoryClass::Hook_Ctor);
     Hook_Function(0x004BEE10, *FactoryClass::Has_Changed);
     Hook_Function(0x004BEF80, *FactoryClass::Suspend);
     Hook_Function(0x004BF330, *FactoryClass::Hooked_Has_Completed);
     Hook_Function(0x004BF380, *FactoryClass::Hooked_Cost_Per_Tick);
     Hook_Function(0x004BF3B4, *FactoryClass::Completed);
     Hook_Function(0x004BF228, *FactoryClass::Abandon);
-    // Hook_Function(0x004BEE30, *FactoryClass::Hooked_Set1);
+    //Hook_Function(0x004BEE30, *FactoryClass::Hooked_Set1);
     Hook_Function(0x004BEF04, *FactoryClass::Hooked_Set2);
     Hook_Function(0x004BECE8, *FactoryClass::AI);
     // Hook_Function(0x004F9550, *FactoryClass::Decode_Pointers);
