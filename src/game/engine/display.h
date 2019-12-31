@@ -127,7 +127,7 @@ public:
     HousesType Pending_Object_Owner() const { return m_PendingObjectOwner; }
     SpecialWeaponType Pending_Super() const { return m_PendingSuper; }
     void Set_Pending_Super(SpecialWeaponType type) { m_PendingSuper = type; }
-    void Reset_Pending_Object();
+    void Reset_Pending_Object(BOOL clear_special = true);
     int Tac_Offset_X() const { return m_TacOffsetX; }
     int Tac_Offset_Y() const { return m_TacOffsetY; }
     coord_t New_Pos() const { return m_DisplayNewPos; }

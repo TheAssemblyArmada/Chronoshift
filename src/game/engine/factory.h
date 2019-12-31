@@ -91,6 +91,7 @@ private:
 
 #ifdef GAME_DLL
 public:
+    FactoryClass *Hook_Ctor() { return new (this) FactoryClass; }
     BOOL Hooked_Has_Completed() { return FactoryClass::Has_Completed(); }
     int Hooked_Cost_Per_Tick() { return FactoryClass::Cost_Per_Tick(); }
     BOOL Hooked_Set1(TechnoTypeClass &objecttype, HouseClass &house) { return FactoryClass::Set(objecttype, house); }
