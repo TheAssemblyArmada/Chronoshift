@@ -121,6 +121,14 @@ void TeamClass::AI()
 #endif 
 }
 
+void TeamClass::Detach(target_t target, BOOL a2)
+{
+#ifdef GAME_DLL 
+    DEFINE_CALL(func, 0x0055D8DC, void, TeamClass *, target_t, BOOL);
+    func(this, target, a2);
+#endif 
+}
+
 BOOL TeamClass::Remove(FootClass *object, int a2)
 {
 #ifdef GAME_DLL

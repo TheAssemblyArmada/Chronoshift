@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief Just a function to detach a target from everything else in game.
+ * @brief Function to detach a target from everything else in game.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License

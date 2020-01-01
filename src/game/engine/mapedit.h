@@ -27,6 +27,16 @@ class TechnoTypeClass;
 class MapEditClass : public GameMouseClass
 {
 public:
+#ifndef COMPILER_WATCOM // Watcom doesn't like this, MSVC/GCC does.
+    // This is needed due to the virtual Detach being overloaded and
+    // hiding the MapClass member function. This will bring the derived
+    // classes function into scope so it can be used with the Map IO layer.
+    using GameMouseClass::Detach;
+#else
+    void Detach(target_t target, BOOL a2 = true) { GameMouseClass::Detach(target, a2); }
+#endif
+
+public:
     MapEditClass();
     MapEditClass(const NoInitClass &noinit) : GameMouseClass(noinit) {}
 
