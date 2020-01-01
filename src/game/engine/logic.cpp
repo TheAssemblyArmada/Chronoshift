@@ -257,7 +257,7 @@ void LogicClass::AI()
 #endif
 }
 
-void LogicClass::Detach(target_t target, int a2)
+void LogicClass::Detach(target_t target, BOOL a2)
 {
 #ifdef GAME_DLL
     void (*func)(LogicClass *, target_t, int) = reinterpret_cast<void (*)(LogicClass *, target_t, int)>(0x004FE2BC);

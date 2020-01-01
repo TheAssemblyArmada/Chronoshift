@@ -303,7 +303,7 @@ BOOL TeamTypeClass::Do_Reinforcements()
 /**
  * Detaches a trigger type target from a team type.
  */
-void TeamTypeClass::Detach(target_t target, int a2)
+void TeamTypeClass::Detach(target_t target, BOOL a2)
 {
     if (Target_Get_RTTI(target) != RTTI_TRIGGERTYPE || m_TriggerType == nullptr) {
         return;

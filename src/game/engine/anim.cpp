@@ -217,9 +217,8 @@ LayerType AnimClass::In_Which_Layer() const
  *
  * @address 0x00425A98
  */
-void AnimClass::Detach(target_t target, int a2)
+void AnimClass::Detach(target_t target, BOOL a2)
 {
-    // TS doesn't check a2, YR checks target != 0 in place of a2...
     if (target == m_AttachedTo && a2) {
         g_Map.Remove(this, In_Which_Layer());
         m_AttachedTo = 0;

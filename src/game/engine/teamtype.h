@@ -102,7 +102,7 @@ public:
     void Destroy_All_Of() const;
     NeedType TeamMission_Needs(TeamMissionType tmission);
     BOOL Do_Reinforcements();
-    void Detach(target_t target, int a2);
+    void Detach(target_t target, BOOL a2 = true);
     void Draw_It(int index, int x, int y, int x_max, int y_max, BOOL selected, TextPrintType style);
     void Edit();
     void Code_Pointers();

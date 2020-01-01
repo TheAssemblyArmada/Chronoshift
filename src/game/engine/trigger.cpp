@@ -88,7 +88,7 @@ target_t TriggerClass::As_Target() const
     return Make_Target(m_RTTI, m_HeapID);
 }
 
-void TriggerClass::Detach(target_t target, int a2)
+void TriggerClass::Detach(target_t target, BOOL a2)
 {
 }
 

@@ -242,7 +242,7 @@ BOOL BuildingClass::Unlimbo(coord_t coord, DirType dir)
  *
  * @address 0x0045E3E4
  */
-void BuildingClass::Detach(target_t target, int a2)
+void BuildingClass::Detach(target_t target, BOOL a2)
 {
     TechnoClass::Detach(target, a2);
     if (m_SabotagedBy == target) {
@@ -253,10 +253,10 @@ void BuildingClass::Detach(target_t target, int a2)
     }
 }
 
-void BuildingClass::Detach_All(int a1)
+void BuildingClass::Detach_All(BOOL a1)
 {
 #ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0045E57C, void, BuildingClass *, int);
+    DEFINE_CALL(func, 0x0045E57C, void, BuildingClass *, BOOL);
     func(this, a1);
 #endif
 }

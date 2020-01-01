@@ -199,7 +199,7 @@ public:
     BOOL Place_Object(RTTIType rtti, cell_t cell = -1);
     BOOL Manual_Place(BuildingClass *builder, BuildingClass *pending_building);
     void Clobber_All();
-    void Detach(target_t a1, int a2);
+    void Detach(target_t target, BOOL a2 = true);
     BOOL Does_Enemy_Building_Exist(BuildingType type) const;
     const TechnoTypeClass *Suggest_New_Object(RTTIType rtti, BOOL is_kennel = false) const;
     BOOL Flag_Remove(target_t target, int a2);

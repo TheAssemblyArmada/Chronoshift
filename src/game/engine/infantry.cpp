@@ -226,7 +226,7 @@ BOOL InfantryClass::Limbo()
  *
  *
  */
-void InfantryClass::Detach(target_t target, int a2)
+void InfantryClass::Detach(target_t target, BOOL a2)
 {
     if (m_TarCom == target) {
         Mark(MARK_5);

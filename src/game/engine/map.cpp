@@ -1042,7 +1042,7 @@ int MapClass::Destroy_Bridge_At(cell_t cellnum)
  *
  * 0x0050078C
  */
-void MapClass::Detach(int32_t target, int a2)
+void MapClass::Detach(target_t target, BOOL a2)
 {
     // TODO Requires TriggerClass
 #ifdef GAME_DLL

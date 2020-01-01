@@ -66,8 +66,8 @@ public:
     virtual BOOL Can_Demolish() const override;
     virtual coord_t Sort_Y() const override;
     virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH) override;
-    virtual void Detach(target_t target, int a2) override;
-    virtual void Detach_All(int a1 = 1) override;
+    virtual void Detach(target_t target, BOOL a2 = true) override;
+    virtual void Detach_All(BOOL a1 = true) override;
     virtual BOOL Mark(MarkType mark) override;
     virtual void Active_Click_With(ActionType action, ObjectClass *object) override;
     virtual void Active_Click_With(ActionType action, cell_t cellnum) override;

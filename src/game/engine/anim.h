@@ -48,7 +48,7 @@ public:
     // ObjectClass
     virtual LayerType In_Which_Layer() const override;
     virtual const AnimTypeClass &Class_Of() const override { return *m_Class; }
-    virtual void Detach(target_t target, int a2) override;
+    virtual void Detach(target_t target, BOOL a2 = true) override;
     virtual BOOL Render(BOOL force_render = false) override;
     virtual const int16_t *Occupy_List(BOOL a1 = false) const override;
     virtual void Draw_It(int x_pos, int y_pos, WindowNumberType window) const override;
