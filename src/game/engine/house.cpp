@@ -34,6 +34,7 @@
 #include "session.h"
 #include "target.h"
 #include "teamtype.h"
+#include "tracker.h"
 #include "unit.h"
 #include "utracker.h"
 #include "vessel.h"
@@ -1292,7 +1293,7 @@ void HouseClass::Sell_Wall(cell_t cellnum)
                     // Fetched again here.
                     cell.Redraw_Objects();
                     g_Map.Radar_Pixel(cellnum);
-                    ObjectClass::Detach_This_From_All(As_Target(cellnum));
+                    Detach_This_From_All(As_Target(cellnum));
                     g_Map.Zone_Reset(overlay.Is_Crushable() ? ZONE_NORTH : ZONE_SOUTH);
                 }
             }
