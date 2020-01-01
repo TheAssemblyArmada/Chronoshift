@@ -45,6 +45,7 @@ public:
 
     virtual void AI() override;
 
+    void Detach(target_t target, BOOL a2 = true);
     BOOL Remove(FootClass *object, int a2 = -1);
 
     void Code_Pointers();
