@@ -82,7 +82,7 @@ public:
     virtual BOOL Can_Player_Move() const override;
     virtual coord_t Fire_Coord(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH) override;
-    virtual void Detach(target_t target, int a2) override;
+    virtual void Detach(target_t target, BOOL a2 = true) override;
     virtual void Record_The_Kill(TechnoClass *object = nullptr) override;
     virtual void Do_Shimmer() override;
     virtual int Exit_Object(TechnoClass *object) override;

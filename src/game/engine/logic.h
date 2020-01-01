@@ -36,7 +36,7 @@ public:
     void Remove(ObjectClass *const object);
     BOOL Submit(ObjectClass *object, BOOL sort = false);
 
-    void Detach(target_t target, int a2);
+    void Detach(target_t target, BOOL a2 = true);
 };
 
 #ifdef GAME_DLL

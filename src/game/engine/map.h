@@ -74,7 +74,7 @@ public:
     cell_t Nearby_Location(cell_t cellnum, SpeedType speed, int zone = -1, MZoneType mzone = MZONE_NORMAL) const;
     BOOL Base_Region(cell_t cellnum, HousesType &house, ZoneType &zone) const;
     int Destroy_Bridge_At(cell_t cellnum);
-    void Detach(int32_t target, int a2);
+    void Detach(target_t target, BOOL a2 = true);
     int Intact_Bridge_Count() const;
     void Shroud_The_Map();
     int Write_Binary(Pipe &pipe);

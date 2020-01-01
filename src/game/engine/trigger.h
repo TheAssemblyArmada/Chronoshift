@@ -46,7 +46,7 @@ public:
     BOOL Is_Active() const { return m_IsActive; }
 
     target_t As_Target() const;
-    void Detach(target_t target, int a2);
+    void Detach(target_t target, BOOL a2 = true);
     AttachType Attaches_To() const;
     BOOL Remove();
 

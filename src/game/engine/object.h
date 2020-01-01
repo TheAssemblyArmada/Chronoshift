@@ -76,8 +76,8 @@ public:
     virtual coord_t Exit_Coord() const { return Center_Coord(); }
     virtual BOOL Limbo(); // Take the object from the game world and place into limbo.
     virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH); // Object is appearing in the game world.
-    virtual void Detach(target_t target, int a2);
-    virtual void Detach_All(int a1 = 1);
+    virtual void Detach(target_t target, BOOL a2 = true);
+    virtual void Detach_All(BOOL a1 = true);
     virtual void Record_The_Kill(TechnoClass *object = nullptr) {}
     virtual BOOL Paradrop(coord_t coord);
     virtual void Do_Shimmer() {}
@@ -127,7 +127,7 @@ public:
 
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);
-    static void Detach_This_From_All(target_t object, BOOL unk);
+    static void Detach_This_From_All(target_t target, BOOL a2 = true);
 
     BOOL Attach_Trigger(TriggerClass *trigger);
     // These functions were global, but only ObjectClass derived classes use them.

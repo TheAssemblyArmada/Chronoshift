@@ -322,7 +322,7 @@ BOOL TechnoClass::Unlimbo(coord_t coord, DirType dir)
  *
  * @address 0x005673AC
  */
-void TechnoClass::Detach(target_t target, int a2)
+void TechnoClass::Detach(target_t target, BOOL a2)
 {
     ObjectClass::Detach(target, a2);
     if (m_SuspendedMission != MISSION_NONE && m_SuspendedTarCom == target) {
@@ -991,7 +991,7 @@ void TechnoClass::Stun()
     Assign_Target(0);
     Assign_Destination(0);
     Transmit_Message(RADIO_OVER_AND_OUT);
-    Detach_All(true);
+    Detach_All();
     Unselect();
 }
 

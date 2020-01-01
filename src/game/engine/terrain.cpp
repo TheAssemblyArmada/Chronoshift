@@ -270,7 +270,7 @@ DamageResultType TerrainClass::Take_Damage(int &damage, int a2, WarheadType warh
         Catch_Fire();
     }
     if (ret == DAMAGE_DEAD) {
-        Detach_All(true);
+        Detach_All();
         if (m_OnFire) {
             Shorten_Attached_Anims();
         } else {

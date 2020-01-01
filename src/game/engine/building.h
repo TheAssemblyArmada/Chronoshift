@@ -58,8 +58,8 @@ public:
     virtual coord_t Exit_Coord() const final;
     virtual BOOL Limbo() final;
     virtual BOOL Unlimbo(coord_t coord, DirType dir = DIR_NORTH) final;
-    virtual void Detach(target_t target, int a2) final;
-    virtual void Detach_All(int a1 = 1) final;
+    virtual void Detach(target_t target, BOOL a2 = true) final;
+    virtual void Detach_All(BOOL a1 = true) final;
     virtual int Exit_Object(TechnoClass *object) final;
     virtual const int16_t *Overlap_List(BOOL a1 = false) const final;
     virtual void Draw_It(int x, int y, WindowNumberType window) const final;

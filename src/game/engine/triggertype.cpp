@@ -126,7 +126,7 @@ TriggerClass *TriggerTypeClass::Find_Or_Make()
 /**
  * Detaches this trigger type from the target.
  */
-void TriggerTypeClass::Detach(target_t target, int unk)
+void TriggerTypeClass::Detach(target_t target, BOOL a2)
 {
     m_ActionOne.Detach(target);
     m_ActionTwo.Detach(target);

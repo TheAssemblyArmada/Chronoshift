@@ -182,7 +182,7 @@ BOOL ObjectClass::Limbo()
         return false;
     }
     Unselect();
-    Detach_All(true);
+    Detach_All();
     Mark(MARK_REMOVE);
     g_Map.Remove(this, In_Which_Layer());
 
@@ -237,7 +237,7 @@ BOOL ObjectClass::Unlimbo(coord_t coord, DirType dir)
  *
  * @address 0x0051DDC0
  */
-void ObjectClass::Detach(target_t target, int a2)
+void ObjectClass::Detach(target_t target, BOOL a2)
 {
     if (m_AttachedTrigger != nullptr && Target_Get_RTTI(target) == RTTI_TRIGGER) {
         if (m_AttachedTrigger->As_Target() == target) {
@@ -251,7 +251,7 @@ void ObjectClass::Detach(target_t target, int a2)
  *
  * @address 0x0051DFDC
  */
-void ObjectClass::Detach_All(int a1)
+void ObjectClass::Detach_All(BOOL a1)
 {
     if (a1 || Owner() != g_PlayerPtr->What_Type()) {
         Unselect();
@@ -781,7 +781,7 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
                     }
                 }
 
-                Detach_All(1);
+                Detach_All();
             }
 
         } else if (m_Health == 1) {
@@ -929,11 +929,11 @@ void ObjectClass::Shorten_Attached_Anims()
     }
 }
 
-void ObjectClass::Detach_This_From_All(target_t object, BOOL unk)
+void ObjectClass::Detach_This_From_All(target_t target, BOOL a2)
 {
 #ifdef GAME_DLL
     void (*func)(target_t, BOOL) = reinterpret_cast<void (*)(target_t, BOOL)>(0x0056C5E0);
-    func(object, unk);
+    func(target, a2);
 #else
     // TODO: Requires Detach function in TeamClass, TeamTypeClass, HouseClass, Object classes, MapClass, VortexClass
 #endif

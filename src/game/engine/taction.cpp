@@ -247,7 +247,7 @@ BOOL TActionClass::operator()(HousesType house, ObjectClass *object, int trigger
             if (m_TriggerType != nullptr) {
                 for (int i = 0; i < g_Triggers.Count(); ++i) {
                     if (&g_Triggers[i].Class_Of() == m_TriggerType) {
-                        Detach_This_From_All(m_TriggerType->As_Target(), true);
+                        Detach_This_From_All(m_TriggerType->As_Target());
                         delete &g_Triggers[i];
                     }
                 }

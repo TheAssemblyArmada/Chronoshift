@@ -92,7 +92,7 @@ public:
     void Code_Pointers();
     void Decode_Pointers();
     TriggerClass *Find_Or_Make();
-    void Detach(target_t target, int unk);
+    void Detach(target_t target, BOOL a2 = true);
     AttachType Attaches_To();
     BOOL Edit();
     void Draw_It(int index, int x, int y, int x_max, int y_max, BOOL selected, TextPrintType style);

@@ -56,7 +56,7 @@ public:
     virtual const InfantryTypeClass &Class_Of() const final { return *m_Class; }
     virtual int Full_Name() const final;
     virtual BOOL Limbo() final;
-    virtual void Detach(target_t target, int a2) final;
+    virtual void Detach(target_t target, BOOL a2 = true) final;
     virtual BOOL Paradrop(coord_t coord) final;
     virtual void Draw_It(int x, int y, WindowNumberType window) const final;
     virtual void Active_Click_With(ActionType action, ObjectClass *object) final;

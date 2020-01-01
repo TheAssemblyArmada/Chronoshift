@@ -15,11 +15,11 @@
  */
 #include "tracker.h"
 
-void Detach_This_From_All(int32_t target, int unk)
+void Detach_This_From_All(target_t target, BOOL a2)
 {
     // TODO Needs most of the top level object classes.
 #ifdef GAME_DLL
-    void(*func)(int32_t, int) = reinterpret_cast<void(*)(int32_t, int)>(0x0056C5E0);
-    func(target, unk);
+    void(*func)(target_t, int) = reinterpret_cast<void(*)(target_t, int)>(0x0056C5E0);
+    func(target, a2);
 #endif
 }

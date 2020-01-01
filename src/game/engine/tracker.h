@@ -19,7 +19,8 @@
 #define TRACKER_H
 
 #include "always.h"
+#include "gametypes.h"
 
-void Detach_This_From_All(int32_t target, int unk);
+void Detach_This_From_All(target_t target, BOOL a2 = true);
 
 #endif // TRACKER_H
