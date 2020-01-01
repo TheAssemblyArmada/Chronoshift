@@ -929,16 +929,6 @@ void ObjectClass::Shorten_Attached_Anims()
     }
 }
 
-void ObjectClass::Detach_This_From_All(target_t target, BOOL a2)
-{
-#ifdef GAME_DLL
-    void (*func)(target_t, BOOL) = reinterpret_cast<void (*)(target_t, BOOL)>(0x0056C5E0);
-    func(target, a2);
-#else
-    // TODO: Requires Detach function in TeamClass, TeamTypeClass, HouseClass, Object classes, MapClass, VortexClass
-#endif
-}
-
 /**
  * @brief
  *

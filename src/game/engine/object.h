@@ -127,7 +127,6 @@ public:
 
     static BOOL Sort_Y_Less_Than(ObjectClass *object1, ObjectClass *object2);
     static BOOL Sort_Y_Greater_Than(ObjectClass *object1, ObjectClass *object2);
-    static void Detach_This_From_All(target_t target, BOOL a2 = true);
 
     BOOL Attach_Trigger(TriggerClass *trigger);
     // These functions were global, but only ObjectClass derived classes use them.
