@@ -2202,7 +2202,7 @@ void DisplayClass::Redraw_Shadow()
         for (int16_t y = -Coord_Sub_Cell_Y(m_DisplayPos); y <= m_DisplayHeight; y += 256) {
             for (int16_t x = -Coord_Sub_Cell_X(m_DisplayPos); x <= m_DisplayWidth; x += 256) {
                 cell_t cellnum = Coord_To_Cell(Coord_Add(m_DisplayPos, Coord_From_Lepton_XY(x, y)));
-                coord_t coord = Coord_Top_Left(Cell_To_Coord(cellnum));
+                coord_t coord = Cell_To_Coord_Top_Left(cellnum);
                 int draw_x = 0;
                 int draw_y = 0;
 
@@ -2253,7 +2253,7 @@ BOOL DisplayClass::In_View(cell_t cellnum) const
         return false;
     }
 
-    uint32_t cell = Coord_Top_Left(Cell_To_Coord(cellnum));
+    uint32_t cell = Cell_To_Coord_Top_Left(cellnum);
     uint32_t loc1 = Coord_Top_Left(m_DisplayPos);
 
     // Makes use of unsigned underflow to detect if we are greater than m_DisplayPos but within display dimensions in two

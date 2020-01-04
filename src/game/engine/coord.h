@@ -72,16 +72,31 @@ inline coord_t Coord_Add(coord_t coord1, coord_t coord2)
     return Coord_From_Lepton_XY(lx, ly);
 }
 
+/**
+ * Returns coordinates that are centered in the cell
+ * operation - coord[0] = 128; coord[2] = 128;
+ * 
+ */
 inline coord_t Coord_Centered(coord_t coord)
 {
-    return coord & 0xFF80FF80;
+    return (coord & 0xFF00FF00) | 0x00800080;
 }
 
+/**
+ * Returns coordinates that are at the top left of the cell
+ * operation - coord[0] = 0; coord[2] = 0;
+ * 
+ */
 inline coord_t Coord_Top_Left(coord_t coord)
 {
     return coord & 0xFF00FF00;
 }
 
+/**
+ * Returns coordinate that only contains subcells
+ * operation - coord[1] = 0; coord[3] = 0;
+ * 
+ */
 inline coord_t Coord_Sub_Cell(coord_t coord)
 {
     return coord & 0x00FF00FF;
@@ -127,9 +142,24 @@ inline uint8_t Cell_Get_Y(cell_t cellnum)
     return (unsigned)cellnum / MAP_MAX_HEIGHT;
 }
 
+/**
+ * Makes a coord out of a cell
+ * returned coordinate is in center of the cell
+ * 
+ */
 inline coord_t Cell_To_Coord(cell_t cellnum)
 {
     return 0x00800080 | (Cell_Get_X(cellnum) << 8) | (Cell_Get_Y(cellnum) << 24);
+}
+
+/**
+ * Makes a coord out of a cell
+ * returned coordinate is in top left of the cell
+ * 
+ */
+inline coord_t Cell_To_Coord_Top_Left(cell_t cellnum)
+{
+    return (Cell_Get_X(cellnum) << 8) | (Cell_Get_Y(cellnum) << 24);
 }
 
 inline lepton_t Coord_Cell_To_Lepton(int cellcoord)
