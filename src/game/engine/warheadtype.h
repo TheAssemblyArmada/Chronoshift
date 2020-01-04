@@ -87,7 +87,7 @@ private:
 #else
     bool m_Wall; // Does this warhead damage concrete walls?
     bool m_Wood; // Does this warhead damage wood walls?
-    bool m_m_Ore; // Does this warhead destroy ore?
+    bool m_Ore; // Does this warhead destroy ore?
     bool m_UnkBool; // TODO: Only checked in InfantryClass::Greatest_Threat. Removes targets except infantry and harvester?
 #endif
     fixed_t m_Verses[ARMOR_COUNT]; // Damage verses various armor types (as percentage of full damage). eg, Verses[ARMOR_WOOD];
