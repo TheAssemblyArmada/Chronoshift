@@ -763,7 +763,7 @@ void Keyboard_Process(KeyNumType &key)
                 key = KN_NONE;
             }
 
-            if ((justkey == g_Options.Get_KeyHome1() || key == g_Options.Get_KeyHome2())) {
+            if ((justkey == g_Options.Get_KeyHome1() || justkey == g_Options.Get_KeyHome2())) {
                 if (CurrentObjects.Count() > 0) {
                     g_Map.Center_Map();
                     g_Map.Flag_To_Redraw(true);
@@ -880,7 +880,7 @@ void Keyboard_Process(KeyNumType &key)
                 key = KN_NONE;
             }
 
-            if (justkey == g_Options.Get_KeyOption1() || key == g_Options.Get_KeyOption2()) {
+            if (justkey == g_Options.Get_KeyOption1() || justkey == g_Options.Get_KeyOption2()) {
                 g_Map.Help_Text(TXT_NULL);
                 Queue_Options();
                 key = KN_NONE;
