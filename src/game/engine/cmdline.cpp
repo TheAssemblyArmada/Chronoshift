@@ -42,7 +42,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
         "  -WIN            = Run the game in windowed mode.\n"
         "  -EDITOR         = Launch the game directly into the scenario editor.\n"
         "  -SEED           = Pre-seed the random number generator.\n"
-        "\Misc Parameters:\n"
+        "\nMisc Parameters:\n"
         "FROMINSTALL       = Enables \"first run\" mode after installation."
         "PLAYTEST          = <TODO>.\n"
         
