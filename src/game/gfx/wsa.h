@@ -29,29 +29,29 @@ class GraphicViewPortClass;
 #pragma pack(push, 1)
 struct WSAFileHeaderType
 {
-    uint16_t total_frames;
-    uint16_t x_pos;
-    uint16_t y_pos;
-    uint16_t width;
-    uint16_t height;
-    uint16_t largest_frame_size;
-    uint16_t flags;
-    uint32_t first_frame_start;
-    uint32_t first_frame_end;
+    uint16_t m_TotalFrames;
+    uint16_t m_XPos;
+    uint16_t m_YPos;
+    uint16_t m_Width;
+    uint16_t m_Height;
+    uint16_t m_LargestFrameSize;
+    uint16_t m_Flags;
+    uint32_t m_FirstFrameStart;
+    uint32_t m_FirstFrameEnd;
 };
 
 // Header version with a larger Delta as used in Poly for images > 320 x 200.
 struct WSAHDFileHeaderType
 {
-    uint16_t total_frames;
-    uint16_t x_pos;
-    uint16_t y_pos;
-    uint16_t width;
-    uint16_t height;
-    uint32_t largest_frame_size;
-    uint16_t flags;
-    uint32_t first_frame_start;
-    uint32_t first_frame_end;
+    uint16_t m_TotalFrames;
+    uint16_t m_XPos;
+    uint16_t m_YPos;
+    uint16_t m_Width;
+    uint16_t m_Height;
+    uint32_t m_LargestFrameSize;
+    uint16_t m_Flags;
+    uint32_t m_FirstFrameStart;
+    uint32_t m_FirstFrameEnd;
 };
 
 //
@@ -61,42 +61,42 @@ struct WSAHDFileHeaderType
 // uint32_t array of offsets to the frame data
 struct WSAFileHeader
 {
-    uint16_t frame_count;
-    uint16_t x_pos;
-    uint16_t y_pos;
-    uint16_t width;
-    uint16_t height;
-    uint16_t delta_buffer_size;
-    uint16_t flags;
+    uint16_t m_FrameCount;
+    uint16_t m_XPos;
+    uint16_t m_YPos;
+    uint16_t m_Width;
+    uint16_t m_Height;
+    uint16_t m_DeltaBufferSize;
+    uint16_t m_Flags;
 };
 
 struct WSAHDFileHeader
 {
-    uint16_t frame_count;
-    uint16_t x_pos;
-    uint16_t y_pos;
-    uint16_t width;
-    uint16_t height;
-    uint32_t delta_buffer_size;
-    uint16_t flags;
+    uint16_t m_FrameCount;
+    uint16_t m_XPos;
+    uint16_t m_YPos;
+    uint16_t m_Width;
+    uint16_t m_Height;
+    uint32_t m_DeltaBufferSize;
+    uint16_t m_Flags;
 };
 
 // Loaded WSA header
 struct SysAnimHeaderType
 {
-    uint16_t current_frame;
-    uint16_t total_frames;
-    uint16_t x_pos;
-    uint16_t y_pos;
-    uint16_t width;
-    uint16_t height;
-    uint32_t largest_frame_size;  // This is needed for higher res wsa files.
-    void *delta_buffer;
-    void *file_buffer;
-    char file_name[13];
-    uint16_t flags;
-    uint16_t file_handle;
-    uint32_t anim_mem_size;
+    uint16_t m_CurrentFrame;
+    uint16_t m_TotalFrames;
+    uint16_t m_XPos;
+    uint16_t m_YPos;
+    uint16_t m_Width;
+    uint16_t m_Height;
+    uint32_t m_LargestFrameSize;  // This is needed for higher res wsa files.
+    void *m_DeltaBuffer;
+    void *m_FileBuffer;
+    char m_Filename[13];
+    uint16_t m_Flags;
+    uint16_t m_FileHandle;
+    uint32_t m_AnimMemSize;
 };
 
 #pragma pack(pop)
@@ -134,8 +134,8 @@ enum WSAType
 
 union WSAHeaderType
 {
-    WSAFileHeaderType sd;
-    WSAHDFileHeaderType hd;
+    WSAFileHeaderType m_SD;
+    WSAHDFileHeaderType m_HD;
 };
 
 SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, int size, char flags, void *pal);

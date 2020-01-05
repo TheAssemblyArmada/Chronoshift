@@ -1024,10 +1024,10 @@ void *Get_Shape_Header_Data(void *shape)
 {
     ShapeBufferHeader *header = static_cast<ShapeBufferHeader *>(shape);
     if (g_UseBigShapeBuffer) {
-        if (header->is_theater_shape) {
-            return header->frame_offset + g_TheaterShapeBufferStart;
+        if (header->m_IsTheaterShape) {
+            return header->m_FrameOffset + g_TheaterShapeBufferStart;
         } else {
-            return header->frame_offset + g_BigShapeBufferStart;
+            return header->m_FrameOffset + g_BigShapeBufferStart;
         }
     }
 
@@ -1127,10 +1127,10 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
     }
 
     ShapeHeaderStruct *header = static_cast<ShapeHeaderStruct *>(shape);
-    if (frame >= le16toh(header->frame_count)) {
+    if (frame >= le16toh(header->m_FrameCount)) {
         // DEBUG_LOG(
         //    "Requested frame %d is greater than total frames %d in this shape file.\n", frame,
-        //    le16toh(header->frame_count));
+        //    le16toh(header->m_FrameCount));
 
         return nullptr;
     }
@@ -1151,20 +1151,20 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         }
 
         // Do we have a keyframe slot allocated already?
-        if (header->x_pos != 0xDDD5) {
-            header->x_pos = 0xDDD5;
+        if (header->m_XPos != 0xDDD5) {
+            header->m_XPos = 0xDDD5;
             if (g_IsTheaterShape) {
-                header->y_pos = g_TheaterSlotsUsed++;
+                header->m_YPos = g_TheaterSlotsUsed++;
             } else {
-                header->y_pos = g_TotalSlotsUsed++;
+                header->m_YPos = g_TotalSlotsUsed++;
             }
 
-            g_KeyFrameSlots[header->y_pos] = new uint32_t[header->frame_count];
-            memset(g_KeyFrameSlots[header->y_pos], 0, sizeof(uint32_t) * header->frame_count);
+            g_KeyFrameSlots[header->m_YPos] = new uint32_t[header->m_FrameCount];
+            memset(g_KeyFrameSlots[header->m_YPos], 0, sizeof(uint32_t) * header->m_FrameCount);
         }
 
         // Do we have anything in our keyframe slot yet? If so, return it.
-        uint32_t shp_buff_offset = g_KeyFrameSlots[header->y_pos][frame];
+        uint32_t shp_buff_offset = g_KeyFrameSlots[header->m_YPos][frame];
         if (shp_buff_offset != 0) {
             // DEBUG_LOG("Using Cached frame.\n");
 
@@ -1178,7 +1178,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
     // If we don't have a cache or failed to find a cached image for this frame, we need to decode the frame we want.
     uint32_t offset_buff[7];
-    int frame_size = le16toh(header->height) * le16toh(header->width);
+    int frame_size = le16toh(header->m_Height) * le16toh(header->m_Width);
     memcpy(offset_buff, &shape_data[8 * frame + sizeof(ShapeHeaderStruct)], 12);
     uint8_t frame_type = (le32toh(offset_buff[0]) & 0xFF000000) >> 24;
 
@@ -1187,7 +1187,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         uint8_t *frame_data = &shape_data[le32toh(offset_buff[0]) & 0xFFFFFF];
 
         // Amazingly it seems that shp files actually do support having a pal, just none do.
-        if (header->flags & SHP_HAS_PAL) {
+        if (header->m_Flags & SHP_HAS_PAL) {
             frame_data = &shape_data[(le32toh(offset_buff[0]) & 0xFFFFFF) + 768];
         }
 
@@ -1202,11 +1202,11 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         }
 
         // Get the base LCW data and the offset from it to the Xor data
-        int base_frame_offset = offset_buff[1] & 0xFFFFFF;
+        int base_m_FrameOffset = offset_buff[1] & 0xFFFFFF;
         int xor_data_offset = (le32toh(offset_buff[0]) & 0xFFFFFF) - (le32toh(offset_buff[1]) & 0xFFFFFF);
         uint8_t *lcw_data = &shape_data[le32toh(offset_buff[1]) & 0xFFFFFF];
 
-        if (header->flags & SHP_HAS_PAL) {
+        if (header->m_Flags & SHP_HAS_PAL) {
             lcw_data = &shape_data[(le32toh(offset_buff[1]) & 0xFFFFFF) + 768];
         }
 
@@ -1223,7 +1223,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
             int offset_index = 2;
 
             while (ref_frame <= frame) {
-                Apply_XOR_Delta(buffer, &lcw_data[(le32toh(offset_buff[offset_index]) & 0xFFFFFF) - base_frame_offset]);
+                Apply_XOR_Delta(buffer, &lcw_data[(le32toh(offset_buff[offset_index]) & 0xFFFFFF) - base_m_FrameOffset]);
                 ++ref_frame;
                 offset_index += 2;
 
@@ -1244,7 +1244,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
             // Why height? I don't get it? Anyhow, this bit is aligning the memory
             // Ahh, Buffer_Frame_To_Page writes flags into the extra area
             // for how each line is to be processed.
-            char *aligned_tsbp = g_TheaterShapeBufferPtr + header->height + sizeof(ShapeBufferHeader);
+            char *aligned_tsbp = g_TheaterShapeBufferPtr + header->m_Height + sizeof(ShapeBufferHeader);
 
             // Align memory pointer
             uintptr_t align = (uintptr_t)aligned_tsbp;
@@ -1257,10 +1257,10 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
             memcpy(aligned_tsbp, buffer, frame_size);
             buff_header = reinterpret_cast<ShapeBufferHeader *>(g_TheaterShapeBufferPtr);
-            buff_header->draw_flags = -1;
-            buff_header->is_theater_shape = true;
-            buff_header->frame_offset = aligned_tsbp - g_TheaterShapeBufferStart;
-            g_KeyFrameSlots[header->y_pos][frame] = g_TheaterShapeBufferPtr - g_TheaterShapeBufferStart;
+            buff_header->m_DrawFlags = -1;
+            buff_header->m_IsTheaterShape = true;
+            buff_header->m_FrameOffset = aligned_tsbp - g_TheaterShapeBufferStart;
+            g_KeyFrameSlots[header->m_YPos][frame] = g_TheaterShapeBufferPtr - g_TheaterShapeBufferStart;
             g_TheaterShapeBufferPtr = aligned_tsbp + frame_size;
 
             // Align memory pointer
@@ -1275,7 +1275,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
             return saved_tsbp;
         } else {
             char *saved_bsbp = g_BigShapeBufferPtr;
-            char *aligned_bsbp = g_BigShapeBufferPtr + header->height + sizeof(ShapeBufferHeader);
+            char *aligned_bsbp = g_BigShapeBufferPtr + header->m_Height + sizeof(ShapeBufferHeader);
 
             // Align memory pointer
             uintptr_t align = (uintptr_t)aligned_bsbp;
@@ -1288,10 +1288,10 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
             memcpy(aligned_bsbp, buffer, frame_size);
             buff_header = reinterpret_cast<ShapeBufferHeader *>(g_BigShapeBufferPtr);
-            buff_header->draw_flags = -1;
-            buff_header->is_theater_shape = false;
-            buff_header->frame_offset = aligned_bsbp - g_BigShapeBufferStart;
-            g_KeyFrameSlots[header->y_pos][frame] = g_BigShapeBufferPtr - g_BigShapeBufferStart;
+            buff_header->m_DrawFlags = -1;
+            buff_header->m_IsTheaterShape = false;
+            buff_header->m_FrameOffset = aligned_bsbp - g_BigShapeBufferStart;
+            g_KeyFrameSlots[header->m_YPos][frame] = g_BigShapeBufferPtr - g_BigShapeBufferStart;
             g_BigShapeBufferPtr = aligned_bsbp + frame_size;
 
             // Align memory pointer
@@ -1314,7 +1314,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 unsigned short Get_Build_Frame_Count(void *shape)
 {
     if (shape != nullptr) {
-        return static_cast<ShapeHeaderStruct *>(shape)->frame_count;
+        return static_cast<ShapeHeaderStruct *>(shape)->m_FrameCount;
     }
 
     return 0;
@@ -1323,7 +1323,7 @@ unsigned short Get_Build_Frame_Count(void *shape)
 unsigned short Get_Build_Frame_X(void *shape)
 {
     if (shape != nullptr) {
-        return static_cast<ShapeHeaderStruct *>(shape)->x_pos;
+        return static_cast<ShapeHeaderStruct *>(shape)->m_XPos;
     }
 
     return 0;
@@ -1332,7 +1332,7 @@ unsigned short Get_Build_Frame_X(void *shape)
 unsigned short Get_Build_Frame_Y(void *shape)
 {
     if (shape != nullptr) {
-        return static_cast<ShapeHeaderStruct *>(shape)->y_pos;
+        return static_cast<ShapeHeaderStruct *>(shape)->m_YPos;
     }
 
     return 0;
@@ -1341,7 +1341,7 @@ unsigned short Get_Build_Frame_Y(void *shape)
 unsigned short Get_Build_Frame_Width(void *shape)
 {
     if (shape != nullptr) {
-        return static_cast<ShapeHeaderStruct *>(shape)->width;
+        return static_cast<ShapeHeaderStruct *>(shape)->m_Width;
     }
 
     return 0;
@@ -1350,7 +1350,7 @@ unsigned short Get_Build_Frame_Width(void *shape)
 unsigned short Get_Build_Frame_Height(void *shape)
 {
     if (shape != nullptr) {
-        return static_cast<ShapeHeaderStruct *>(shape)->height;
+        return static_cast<ShapeHeaderStruct *>(shape)->m_Height;
     }
 
     return 0;
@@ -1362,9 +1362,9 @@ BOOL Get_Build_Frame_Palette(void *shape, void *pal)
 {
     ShapeHeaderStruct *header = static_cast<ShapeHeaderStruct *>(shape);
 
-    if (shape && header->flags & SHP_HAS_PAL) {
+    if (shape && header->m_Flags & SHP_HAS_PAL) {
         // calc offset to palette
-        memcpy(pal, static_cast<char *>(shape) + 8 * header->frame_count + sizeof(ShapeHeaderStruct), 768);
+        memcpy(pal, static_cast<char *>(shape) + 8 * header->m_FrameCount + sizeof(ShapeHeaderStruct), 768);
 
         return true;
     }
@@ -1380,8 +1380,8 @@ void Set_Shape_Buffer(void *buffer, int size)
 
 int Set_Shape_Height(void *shape, unsigned short new_height)
 {
-    int oldheight = static_cast<ShapeHeaderStruct *>(shape)->height;
-    static_cast<ShapeHeaderStruct *>(shape)->height = new_height;
+    int oldheight = static_cast<ShapeHeaderStruct *>(shape)->m_Height;
+    static_cast<ShapeHeaderStruct *>(shape)->m_Height = new_height;
     return oldheight;
 }
 
@@ -1400,7 +1400,7 @@ static void Single_Line_Flagger(
 
     shape_src = static_cast<uint8_t *>(frame);
     ShapeBufferHeader *header = static_cast<ShapeBufferHeader *>(draw_header);
-    header->draw_flags = flags & 0x1340;
+    header->m_DrawFlags = flags & 0x1340;
     flag_dst = static_cast<uint8_t *>(draw_header) + sizeof(ShapeBufferHeader);
     uint8_t *ghost = static_cast<uint8_t *>(ghost_lookup);
 
@@ -1461,11 +1461,11 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
         draw_header = static_cast<ShapeBufferHeader *>(shape);
         uint8_t *shape_buff = reinterpret_cast<uint8_t *>(g_BigShapeBufferStart);
 
-        if (draw_header->is_theater_shape) {
+        if (draw_header->m_IsTheaterShape) {
             shape_buff = reinterpret_cast<uint8_t *>(g_TheaterShapeBufferStart);
         }
 
-        frame_data = shape_buff + draw_header->frame_offset;
+        frame_data = shape_buff + draw_header->m_FrameOffset;
         use_old_drawer = false;
     }
 
@@ -1495,7 +1495,7 @@ void Buffer_Frame_To_Page(int x, int y, int width, int height, void *shape, Grap
         use_old_drawer = true;
     }
 
-    if (use_old_drawer != true && (draw_header->draw_flags == 0xFFFFFFFF || draw_header->draw_flags != (flags & 0x1340))) {
+    if (use_old_drawer != true && (draw_header->m_DrawFlags == 0xFFFFFFFF || draw_header->m_DrawFlags != (flags & 0x1340))) {
         Single_Line_Flagger(width, height, frame_data, draw_header, flags, ghost_table, ghost_lookup);
     }
 

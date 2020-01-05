@@ -50,20 +50,20 @@ DEFINE_ENUMERATION_BITWISE_OPERATORS(ShapeFlags);
 #pragma pack(push,1)
 struct ShapeHeaderStruct
 {
-    uint16_t frame_count;
-    uint16_t x_pos; // In memory 0xDDD5 here indicates we have a keyframe slot allocated
-    uint16_t y_pos; // Used in memory to hold keyframe slot
-    uint16_t width;
-    uint16_t height;
-    uint16_t largest_frame_size;
-    uint16_t flags;
+    uint16_t m_FrameCount;
+    uint16_t m_XPos; // In memory 0xDDD5 here indicates we have a keyframe slot allocated
+    uint16_t m_YPos; // Used in memory to hold keyframe slot
+    uint16_t m_Width;
+    uint16_t m_Height;
+    uint16_t m_LargestFrameSize;
+    uint16_t m_Flags;
 };
 
 struct ShapeBufferHeader
 {
-    uint32_t draw_flags;
-    uint32_t frame_offset;
-    BOOL is_theater_shape;
+    uint32_t m_DrawFlags;
+    uint32_t m_FrameOffset;
+    BOOL m_IsTheaterShape;
 };
 #pragma pack(pop)
 
