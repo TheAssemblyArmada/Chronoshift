@@ -199,7 +199,7 @@ void SoundControlsClass::Process()
                 case GADGET_INPUT_RENAME2(SLIDER_SCORE_VOL):
                     g_Options.Set_Score_Volume(fixed_t(scorevolsldr.Get_Value(), 256), true);
                     if (g_Session.Game_To_Play() != GAME_CAMPAIGN) {
-                        g_Options.Set_Multiplayer_Score_Volume(g_Options.Get_Score_Volume());
+                        g_Options.Set_MPlayer_Score_Volume(g_Options.Get_Score_Volume());
                     }
                     break;
                 case GADGET_INPUT_RENAME2(SLIDER_SOUND_VOL):
