@@ -25,29 +25,6 @@ TFixedIHeapClass<InfantryClass> g_Infantry;
 
 // clang-format off
 InfantryClass::DoStruct InfantryClass::MasterDoControls[DO_COUNT] = {
-#ifndef CHRONOSHIFT_NO_BITFIELDS
-    { 1, 0 },
-    { 1, 0 },
-    { 1, 0 },
-    { 1 | 2 | 4, 2 },
-    { 1, 1 },
-    { 2, 2 },
-    { 1 | 2 | 4, 2 },
-    { 0, 3 },
-    { 1, 1 },
-    { 1, 2 },
-    { 1, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 },
-    { 0, 2 }
-#else
     { true,  false, false, 0 }, // DO_READY
     { true,  false, false, 0 }, // DO_GUARD
     { true,  false, false, 0 }, // DO_PRONE
@@ -69,7 +46,6 @@ InfantryClass::DoStruct InfantryClass::MasterDoControls[DO_COUNT] = {
     { false, false, false, 2 }, // DO_18
     { false, false, false, 2 }, // DO_19
     { false, false, false, 2 }  // DO_20
-#endif
 };
 // clang-format on
 

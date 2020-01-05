@@ -87,6 +87,8 @@ public:
 
     InfantryType What_Type() const { return m_Class->What_Type(); }
 
+    static const DoStruct &Fetch_Master_Do_Controls(DoType type) { return MasterDoControls[type]; }
+
 private:
     int Shape_Number() const;
     BOOL Edge_Of_World_AI();
