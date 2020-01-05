@@ -105,7 +105,10 @@ public:
     static BOOL Cache(const char *filename, BufferClass *buffer = nullptr);
     static BOOL Offset(const char *filename, void **cachedfile = nullptr, MixFileClass<FC> **mixfile = nullptr,
         int *file_offset = 0, int *file_size = 0);
+
+#ifdef GAME_DLL
     static void Hook_Load_File(MixFileClass *ptr, FC &file, PKey *key) { ptr->Load_File(file, key); }
+#endif
 
 private:
     // Private load function shared by the ctors.
@@ -134,6 +137,7 @@ private:
     int m_FileStart;
     FileInfoStruct *m_FileIndex;
     uint8_t *m_FileCache;
+
 // A linked list of all currently indexed mix files for the program
 #ifdef GAME_DLL
     static List<MixFileClass<FC> *> &s_MixList;
