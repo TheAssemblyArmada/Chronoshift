@@ -117,6 +117,13 @@ public:
     void Flag_All_Cells_To_Redraw();
     static BOOL Is_Cell_Flagged(cell_t cellnum) { return s_CellRedraw.Is_True(cellnum); }
 
+    void Set_Pending_Object(ObjectClass *object, ObjectTypeClass *object_type, HousesType owner)
+    {
+        m_PendingObjectTypePtr = object_type;
+        m_PendingObjectPtr = object;
+        m_PendingObjectOwner = owner;
+    }
+    void Clear_Pending_Object() { Set_Pending_Object(nullptr, nullptr, HOUSES_NONE); }
     lepton_t Get_DisplayWidth() const { return m_DisplayWidth; }
     lepton_t Get_DisplayHeight() const { return m_DisplayHeight; }
     cell_t Get_Cursor_Start() const { return m_DisplayCursorStart; }

@@ -2385,14 +2385,13 @@ UrgencyType HouseClass::Check_Raise_Power()
     return URGENCY_NOTHING;
 }
 
+/**
+ *
+ *
+ */
 UrgencyType HouseClass::Check_Lower_Power()
 {
-#ifdef GAME_DLL
-    UrgencyType (*func)(HouseClass *) = reinterpret_cast<UrgencyType (*)(HouseClass *)>(0x004D9D2C);
-    return func(this);
-#else
-    return UrgencyType();
-#endif
+    return UrgencyType(m_Drain + 300 < m_Power);
 }
 
 UrgencyType HouseClass::Check_Raise_Money()
@@ -2501,12 +2500,32 @@ void HouseClass::Super_Weapon_Handler()
 #endif
 }
 
+/**
+ * Finds and targets the most threatening building, fires super weapon at it
+ *
+ */
 void HouseClass::Special_Weapon_AI(SpecialWeaponType special)
 {
-#ifdef GAME_DLL
-    void (*func)(HouseClass *, SpecialWeaponType) = reinterpret_cast<void (*)(HouseClass *, SpecialWeaponType)>(0x004D67C4);
-    func(this, special);
-#endif
+    BuildingClass *building = nullptr;
+    int threat_value = -1;
+
+    for (int i = 0; i < g_Buildings.Count(); ++i) {
+        BuildingClass *bptr = &g_Buildings[i];
+
+        if (bptr != nullptr && !bptr->In_Limbo() && bptr->Get_Health() > 0) {
+
+            if (!Is_Ally(bptr) && g_Scen.Get_Random_Value(0, 99) < 90 && bptr->Value() > threat_value
+                || threat_value == -1) {
+                threat_value = bptr->Value();
+                building = bptr;
+            }
+        }
+    }
+
+    if (building != nullptr) {
+        DEBUG_LOG("HouseClass::Special_Weapon_AI - Placing special blast at building '%s' (threat value '%d')", building->Class_Of().Get_Name(), threat_value);
+        Place_Special_Blast(special, building->Center_Cell());
+    }
 }
 
 BOOL HouseClass::Place_Special_Blast(SpecialWeaponType special, cell_t cell)
@@ -2521,27 +2540,171 @@ BOOL HouseClass::Place_Special_Blast(SpecialWeaponType special, cell_t cell)
 #endif
 }
 
+/**
+ *
+ *
+ */
 BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
 {
-#ifdef GAME_DLL
-    BOOL(*func)
-    (HouseClass *, RTTIType, cell_t) = reinterpret_cast<BOOL (*)(HouseClass *, RTTIType, cell_t)>(0x004D7678);
-    return func(this, rtti, cell);
-#else
-    return false;
-#endif
+    FactoryClass *fptr = Fetch_Factory(rtti);
+
+    if (fptr == nullptr || !fptr->Has_Completed()) {
+        return true;
+    }
+
+    TechnoClass *tptr = fptr->Get_Object();
+
+    // If cell is valid then we assume we are placing a building.
+    if (cell != -1) {
+        if (tptr == nullptr) {
+            DEBUG_LOG("HouseClass::Place_Object - Building pointer was nullptr\n");
+            return false;
+        }
+
+        BuildingClass *builder = tptr->Who_Can_Build_Me();
+
+        // This returns nullptr when the building either doesn't exist or denies the request.
+        if (builder == nullptr) {
+            DEBUG_LOG("HouseClass::Place_Object - Unable to build Building, cancelling\n");
+            return false;
+        }
+
+        builder->Transmit_Message(RADIO_HELLO, tptr);
+        DEBUG_LOG("HouseClass::Place_Object - Contacted Builder\n");
+
+        if (tptr->Unlimbo(Cell_To_Coord(cell))) {
+            // Flag production as completed.
+            fptr->Completed();
+            // Release factory so it can produce again.
+            Abandon_Production(rtti);
+
+            if (!Is_Player()) {
+                return true;
+            }
+
+            Sound_Effect(VOC_PLACE_BUILDING);
+            g_Map.Set_Cursor_Shape();
+            g_Map.Clear_Pending_Object();
+            DEBUG_LOG("HouseClass::Place_Object - Placed Building\n");
+            return true;
+        }
+
+        // Failed to deploy.
+
+        if (Is_Player()) {
+            Speak(VOX_NO_DEPLOY);
+        }
+
+        builder->Transmit_Message(RADIO_OVER_AND_OUT);
+        DEBUG_LOG("HouseClass::Place_Object - Failed to Deploy, terminated Radio with Builder\n");
+
+        return false;
+    }
+
+    // Following code handles placing objects.
+
+    if (tptr == nullptr) {
+        DEBUG_LOG("HouseClass::Place_Object - Object pointer was nullptr\n");
+        return true;
+    }
+
+    bool not_airplane = false;
+
+    if (tptr->What_Am_I() == RTTI_AIRCRAFT) {
+        if (!reinterpret_cast<AircraftClass *>(tptr)->Class_Of().Is_Airplane()) {
+            not_airplane = true;
+        }
+    }
+
+    BuildingClass *builder = tptr->Who_Can_Build_Me(not_airplane);
+
+    // This returns nullptr when the building either doesn't exist or denies the request.
+    if (builder == nullptr) {
+        DEBUG_LOG("HouseClass::Place_Object - Unable to build Object, cancelling\n");
+        return false;
+    }
+
+    // When this fails usually that means the builder was blocked, like for example walled in.
+    if (!builder->Exit_Object(tptr)) {
+        DEBUG_LOG("HouseClass::Place_Object - Failed to exit Object from Factory\n");
+        return false;
+    }
+
+    // Flag production as completed.
+    fptr->Completed();
+    // Release factory so it can produce again.
+    Abandon_Production(rtti);
+
+    // Register just built object.
+    return Register_Just_Built(tptr);
 }
 
-BOOL HouseClass::Manual_Place(BuildingClass *a1, BuildingClass *a2)
+/**
+ *
+ *
+ */
+BOOL HouseClass::Register_Just_Built(TechnoClass *tptr)
 {
-#ifdef GAME_DLL
-    BOOL (*func)
-    (HouseClass *, BuildingClass *, BuildingClass *) =
-        reinterpret_cast<BOOL (*)(HouseClass *, BuildingClass *, BuildingClass *)>(0x004D7A18);
-    return func(this, a1, a2);
-#else
+    switch (tptr->What_Am_I()) {
+        case RTTI_AIRCRAFT:
+            m_JustAircraft = reinterpret_cast<AircraftClass *>(tptr)->What_Type();
+            m_BuiltSomething = true;
+            return true;
+
+        case RTTI_BUILDING:
+            m_JustBuilding = reinterpret_cast<BuildingClass *>(tptr)->What_Type();
+            m_BuiltSomething = true;
+            return true;
+
+        case RTTI_INFANTRY:
+            m_JustInfantry = reinterpret_cast<InfantryClass *>(tptr)->What_Type();
+            m_BuiltSomething = true;
+            return true;
+
+        case RTTI_UNIT:
+            m_JustUnit = reinterpret_cast<UnitClass *>(tptr)->What_Type();
+            m_BuiltSomething = true;
+            return true;
+
+        case RTTI_VESSEL:
+            m_JustVessel = reinterpret_cast<VesselClass *>(tptr)->What_Type();
+            m_BuiltSomething = true;
+            return true;
+
+        default:
+            break;
+    }
     return false;
-#endif
+}
+
+/**
+ *
+ *
+ */
+BOOL HouseClass::Manual_Place(BuildingClass *builder, BuildingClass *pending_building)
+{
+    if (Is_Player() && g_Map.Pending_ObjectType() == nullptr && builder != nullptr && pending_building != nullptr) {
+        Unselect_All();
+
+        g_Map.Repair_Mode_Control(0);
+        g_Map.Sell_Mode_Control(0);
+
+        g_Map.Set_Pending_Object(
+            pending_building, const_cast<BuildingTypeClass *>(&pending_building->Class_Of()), What_Type());
+
+        // Set current occupy list to the list of the building.
+        g_Map.Set_Cursor_Shape((int16_t *)pending_building->Occupy_List(true));
+
+        // Place the foundation preview near the builder.
+        // Doesn't actually set the mouse cursor.
+        g_Map.Set_Cursor_Pos(builder->Get_Cell());
+
+        builder->Mark(MARK_REDRAW);
+
+        return true;
+    }
+
+    return false;
 }
 
 void HouseClass::Clobber_All()

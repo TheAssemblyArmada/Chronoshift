@@ -764,6 +764,9 @@ void Setup_Hooks()
     Hook_Function(0x004D66D0, *HouseClass::Suspend_Production);
     Hook_Function(0x004D671C, *HouseClass::Abandon_Production);
     Hook_Function(0x004DC93C, *HouseClass::Production_Begun);
+    Hook_Function(0x004D67C4, *HouseClass::Special_Weapon_AI);
+    Hook_Function(0x004D7678, *HouseClass::Place_Object);
+    Hook_Function(0x004D7A18, *HouseClass::Manual_Place);
 
     // foot.h
     Hook_Function(0x004C3328, *FootClass::Hook_Can_Demolish);

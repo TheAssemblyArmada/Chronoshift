@@ -196,8 +196,8 @@ public:
     void Super_Weapon_Handler();
     void Special_Weapon_AI(SpecialWeaponType special);
     BOOL Place_Special_Blast(SpecialWeaponType special, cell_t cell);
-    BOOL Place_Object(RTTIType rtti, cell_t cell);
-    BOOL Manual_Place(BuildingClass *a1, BuildingClass *a2);
+    BOOL Place_Object(RTTIType rtti, cell_t cell = -1);
+    BOOL Manual_Place(BuildingClass *builder, BuildingClass *pending_building);
     void Clobber_All();
     void Detach(target_t a1, int a2);
     BOOL Does_Enemy_Building_Exist(BuildingType type) const;
@@ -328,6 +328,7 @@ public:
 private:
     BOOL Is_Allowed_To_Ally(HousesType house);
     BOOL Is_No_Yak_Mig() const;
+    BOOL Register_Just_Built(TechnoClass *tptr);
 
 private:
     RTTIType m_RTTI;
