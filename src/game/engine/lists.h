@@ -26,6 +26,7 @@
 //http://nyerguds.arsaneus-design.com/cnc95upd/inirules/grids.ini
 
 void List_Copy(int16_t *dst, const int16_t *src, int size);
+int List_Size(const int16_t *list);
 
 
 ////////////////////////////////////////////////////////////////////////////////
