@@ -87,16 +87,20 @@ TeamTypeClass::TeamTypeClass() :
 
 void *TeamTypeClass::operator new(size_t size)
 {
-    void *ptr = g_TeamTypes.Allocate();
-    static_cast<TeamTypeClass *>(ptr)->m_IsActive = true;
-
-    return ptr;
+    TeamTypeClass *this_ptr = g_TeamTypes.Alloc();
+    if (this_ptr != nullptr) {
+        this_ptr->m_IsActive = true;
+    }
+    return this_ptr;
 }
 
 void TeamTypeClass::operator delete(void *ptr)
 {
-    static_cast<TeamTypeClass *>(ptr)->m_IsActive = false;
-    g_TeamTypes.Free(ptr);
+    TeamTypeClass *this_ptr = static_cast<TeamTypeClass *>(ptr);
+    if (this_ptr != nullptr) {
+        this_ptr->m_IsActive = false;
+    }
+    g_TeamTypes.Free(this_ptr);
 }
 
 /**
