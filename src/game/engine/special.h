@@ -48,45 +48,29 @@ public:
     uint32_t Pack() const { return m_SpecialFlags; }
 
 private:
-#ifndef CHRONOSHIFT_NO_BITFIELDS
-    // Union/Struct required so we fetch the data easily with SpecialFlags.
     union
     {
         struct
         {
-            BOOL m_ShroudRegrows : 1; // & 1
-            BOOL m_BuildTimeAccelerated : 1; // & 2
-            BOOL m_FirstRun : 1; // & 4
-            BOOL m_CaptureTheFlag : 1; // & 8
-            BOOL m_NoDamage : 1; // & 16
-            BOOL m_ThreePointTurnLogic : 1; // & 32
-            BOOL m_OreGrows : 1; // & 64
-            BOOL m_OreSpreads : 1; // & 128
+            BOOL m_ShroudRegrows : 1; // & 1 // Used in skirmish menu.
+            BOOL m_BuildTimeAccelerated : 1; // & 2 // Used in special dialog
+            BOOL m_FirstRun : 1; // & 4 // Play intro followed by allied 1 or soviet 1.
+                                        // activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1 or soviet 1.
+            BOOL m_CaptureTheFlag : 1; // & 8 // is this a CTF game?, Used in lan dialog
+            BOOL m_NoDamage : 1; // & 16 // Used by Explosion_Damage code.
+            BOOL m_ThreePointTurnLogic : 1; // & 32 // Used in hidden special dialog.
+            BOOL m_OreGrows : 1; // & 64 // Set in skirmish menu
+            BOOL m_OreSpreads : 1; // & 128 // Set in skirmish menu
 
-            BOOL m_Spawned : 1; // & 1
-            BOOL m_Remixes : 1; // & 2
-            BOOL m_ShowHealth : 1; // & 4
+            // Chronoshift additions
+            BOOL m_Spawned : 1; // & 1 // "About to initialise Winsock" string RA demo, now only skips intro and fades in the menu. For Wchat?
+            BOOL m_Remixes : 1; // & 2 // Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
+            BOOL m_ShowHealth : 1; // & 4 // Always show health bars
 
             //m_Bit3_1 is debug path finding is C&C Dos.
         };
         int m_SpecialFlags;
     };
-#else
-    bool m_ShroudRegrows; // Used in skirmish menu
-    bool m_BuildTimeAccelerated; //  Used in special dialog
-    bool m_FirstRun; // Play intro followed by allied 1 or soviet 1.
-                     // activated by 0xD95C68A2 command shows the standby screen, the intro, then to allied 1 or soviet 1.
-    bool m_CaptureTheFlag; // is this a CTF game?, Used in lan dialog
-    bool m_NoDamage; // Used by Explosion_Damage code.
-    bool m_ThreePointTurnLogic; // Used in hidden special dialog.
-    bool m_OreGrows; // Set in skirmish menu
-    bool m_OreSpreads; // Set in skirmish menu
-
-    // Chronoshift additions
-    bool m_Spawned; // "About to initialise Winsock" string RA demo, now only skips intro and fades in the menu. For Wchat?
-    bool m_Remixes; // Enable remix versions of audio tracks that have them. From C&C/Sole, absent from RA.
-    bool m_ShowHealth; // Always show health bars
-#endif
 };
 
 #ifdef GAME_DLL
