@@ -22,9 +22,12 @@
 
 enum MemoryFlagType
 {
-    MEM_NORMAL = 0,
-    MEM_NEW = 1,
-    MEM_CLEAR = 2,
+    MEM_NORMAL = 0x0,
+    MEM_NEW = 0x1,
+    MEM_CLEAR = 0x2,
+    MEM_REAL = 0x4,
+    MEM_TEMP = 0x8,
+    MEM_LOCK = 0x10
 };
 
 typedef void(*memerrorhandler_t)();
