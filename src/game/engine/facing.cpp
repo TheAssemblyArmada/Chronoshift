@@ -145,7 +145,7 @@ BOOL FacingClass::Rotation_Adjust(int adjust)
 {
     if (Has_Changed()) {
         DirType curr = m_Current;
-        int diff = (int8_t)(m_Desired - m_Current); // Fixes watcom optimising DirType to uint8_t and failing diff check.
+        int diff = Difference();
 
         adjust = std::min(adjust, 127);
 
@@ -395,15 +395,15 @@ const char *Name_From_Direction(DirType dir)
             return "North";
 
         //case -240:
-        case DIR_NORTH_NORTH_EAST:
+        case DIR_NORTH_NORTHEAST:
             return "North-northeast";
 
         //case -224:
         case DIR_NORTH_EAST:
-            return "Northeast";
+            return "North east";
 
         //case -208:
-        case DIR_EAST_NORTH_EAST:
+        case DIR_EAST_NORTHEAST:
             return "East-northeast";
 
         //case -192:
@@ -411,7 +411,7 @@ const char *Name_From_Direction(DirType dir)
             return "East";
 
         //case -176:
-        case DIR_EAST_SOUTH_EAST:
+        case DIR_EAST_SOUTHEAST:
             return "East-southeast";
 
         //case -160:
@@ -419,7 +419,7 @@ const char *Name_From_Direction(DirType dir)
             return "Southeast";
 
         //case -144:
-        case DIR_SOUTH_SOUTH_EAST:
+        case DIR_SOUTH_SOUTHEAST:
             return "South-southeast";
 
         //case -128:
@@ -427,7 +427,7 @@ const char *Name_From_Direction(DirType dir)
             return "South";
 
         //case -114:
-        case DIR_SOUTH_SOUTH_WEST:
+        case DIR_SOUTH_SOUTHWEST:
             return "South-southwest";
 
         //case -96:
@@ -435,7 +435,7 @@ const char *Name_From_Direction(DirType dir)
             return "Southwest";
 
         //case -80:
-        case DIR_WEST_SOUTH_WEST:
+        case DIR_WEST_SOUTHWEST:
             return "West-southwest";
 
         //case -64:
@@ -443,7 +443,7 @@ const char *Name_From_Direction(DirType dir)
             return "West";
 
         //case -48:
-        case DIR_WEST_NORTH_WEST:
+        case DIR_WEST_NORTHWEST:
             return "West-northwest";
 
         //case -32:
@@ -451,7 +451,7 @@ const char *Name_From_Direction(DirType dir)
             return "Northwest";
 
         //case -16:
-        case DIR_NORTH_WEST_NORTH:
+        case DIR_NORTH_NORTHWEST:
             return "North-northwest";
 
         default:

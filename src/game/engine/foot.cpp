@@ -491,7 +491,7 @@ BOOL FootClass::Offload_Ore_Bail()
 void FootClass::Approach_Target()
 {
 #ifdef GAME_DLL
-    void (*func)(FootClass *) = reinterpret_cast<void (*)(FootClass *)>(0x005808FC);
+    void (*func)(FootClass *) = reinterpret_cast<void (*)(FootClass *)>(0x004C1640);
     func(this);
 #else
 #endif

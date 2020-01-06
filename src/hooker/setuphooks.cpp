@@ -1042,6 +1042,14 @@ void Setup_Hooks()
     Hook_Function(0x0058143C, *UnitClass::Credit_Load);
     Hook_Function(0x0057CFA0, *UnitClass::Goto_Ore);
     Hook_Function(0x005804E8, *UnitClass::Ok_To_Move);
+    Hook_Function(0x00581644, *UnitClass::Scatter);
+    Hook_Function(0x0057FB98, *UnitClass::Mission_Guard);
+    Hook_Function(0x005819E8, *UnitClass::Mission_Guard_Area);
+    Hook_Function(0x00580554, *UnitClass::Hook_Can_Fire);
+    Hook_Function(0x00580F14, *UnitClass::Greatest_Threat);
+    Hook_Function(0x005808FC, *UnitClass::Approach_Target);
+    Hook_Function(0x005809EC, *UnitClass::Overrun_Cell);
+    Hook_Function(0x005803C4, *UnitClass::Hook_Fire_Direction);
 
     // vessel.cpp
     Hook_Function(0x0058A634, *VesselClass::AI);

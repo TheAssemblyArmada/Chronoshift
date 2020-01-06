@@ -78,7 +78,7 @@ public:
     virtual void Approach_Target() final;
 
     // DriveClass
-    virtual void Overrun_Cell(cell_t cell, int a2) final;
+    virtual void Overrun_Cell(cell_t cellnum, BOOL a2) final;
     virtual BOOL Ok_To_Move(DirType dir) final;
 
     BOOL Edge_Of_World_AI();
@@ -109,6 +109,14 @@ public:
     InfantryType Hook_Crew_Type()
     {
         return UnitClass::Crew_Type();
+    }
+    FireErrorType Hook_Can_Fire(target_t target, WeaponSlotType weapon)
+    {
+        return UnitClass::Can_Fire(target, weapon);
+    }
+    DirType Hook_Fire_Direction()
+    {
+        return UnitClass::Fire_Direction();
     }
 #endif
 

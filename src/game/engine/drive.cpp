@@ -196,10 +196,10 @@ void DriveClass::Fixup_Path(PathType *path)
 #endif
 }
 
-void DriveClass::Overrun_Cell(cell_t cell, int a2)
+void DriveClass::Overrun_Cell(cell_t cell, BOOL a2)
 {
 #ifdef GAME_DLL
-    int (*func)(DriveClass *, cell_t, int) = reinterpret_cast<int (*)(DriveClass *, cell_t, int)>(0x004B8470);
+    int (*func)(DriveClass *, cell_t, BOOL) = reinterpret_cast<int (*)(DriveClass *, cell_t, BOOL)>(0x004B8470);
     func(this, cell, a2);
 #else
     DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
