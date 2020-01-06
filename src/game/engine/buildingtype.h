@@ -183,9 +183,9 @@ class BuildingTypeClass : public TechnoTypeClass
 
 public:
     BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, coord_t exit_coord,
-        RemapType altremap, int primaryf, int primaryl, int primaryh, BOOL fake, BOOL unk1, BOOL nominal, BOOL wall,
-        BOOL unk2, BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL theater, BOOL turret,
-        BOOL remapable, RTTIType factory, DirType dir, BSizeType size, const int16_t *exit_list, const int16_t *occupy_list,
+        RemapType altremap, int primaryf, int primaryl, int primaryh, BOOL fake, BOOL normalized, BOOL nominal, BOOL wall,
+        BOOL simple_damage, BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL theater, BOOL turret,
+        BOOL remapable, RTTIType factory, DirType start_dir, BSizeType size, const int16_t *exit_list, const int16_t *occupy_list,
         const int16_t *overlap_list);
     BuildingTypeClass(const BuildingTypeClass &that);
     BuildingTypeClass(const NoInitClass &noinit) : TechnoTypeClass(noinit) {}
