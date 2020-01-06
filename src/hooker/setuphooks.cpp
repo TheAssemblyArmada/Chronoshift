@@ -977,6 +977,8 @@ void Setup_Hooks()
     Hook_Function(0x004242D0, *AnimClass::Mark);
     Hook_Function(0x00423F64, *AnimClass::Wrap_Sort_Y);
     Hook_Function(0x004256B8, *AnimClass::Start);
+    Hook_Function(0x00425748, *AnimClass::Middle);
+    Hook_Function(0x0042554C, *AnimClass::Attach_To);
 
     // aircraft.cpp
     Hook_Function(0x00421918, *AircraftClass::Hook_Can_Enter_Cell);

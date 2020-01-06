@@ -71,6 +71,7 @@ public:
     void Do_Fade_AI();
     BOOL Set_Global_To(int global, BOOL value);
     int Get_Random_Value(int min, int max) { return m_SyncRandom(min, max); }
+    BOOL Check_Random_Chance(int chance) { return m_SyncRandom(0, 99) < chance; }
     void Set_Random_Seed(int seed) { m_SyncRandom = seed; }
 
     DiffType Get_Human_Difficulty() const { return m_HumanDifficulty; }

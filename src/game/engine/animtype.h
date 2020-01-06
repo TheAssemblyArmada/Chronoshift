@@ -64,6 +64,8 @@ public:
     BOOL Is_Translucent() const { return m_Translucent; }
     BOOL Is_Theater() const { return m_Theater; }
     BOOL Is_Bit_8() const { return m_Bit_8; }
+    BOOL Scorches_Ground() const { return m_Scorch; }
+    BOOL Forms_Crater() const { return m_Crater; }
 
     int Get_Start() { return m_Start; }
     int Get_Rate() { return m_Rate; }
@@ -76,15 +78,16 @@ public:
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Normalized : 1;
-    BOOL m_Surface : 1;
-    BOOL m_Translucent : 1;
-    BOOL m_Bit_8 : 1;
-    BOOL m_Flamer : 1;
-    BOOL m_Scorch : 1;
-    BOOL m_Crater : 1;
-    BOOL m_Sticky : 1;
-    BOOL m_Theater : 1;
+    BOOL m_Normalized : 1; // & 1
+    BOOL m_Surface : 1; // & 2
+    BOOL m_Translucent : 1; // & 4
+    BOOL m_Bit_8 : 1; // & 8
+    BOOL m_Flamer : 1; // & 16
+    BOOL m_Scorch : 1; // & 32
+    BOOL m_Crater : 1; // & 64
+    BOOL m_Sticky : 1; // & 128
+
+    BOOL m_Theater : 1; // & 1
 #else
     bool m_Normalized; // Should the animation speed be regulated/adjusted to appear at a consistent speed (def = false)?
     bool m_Surface; // Is this animation at ground level (def = false)?
