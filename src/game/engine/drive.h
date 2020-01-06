@@ -56,7 +56,7 @@ public:
     virtual void Fixup_Path(PathType *path) override;
 
     // DriveClass
-    virtual void Overrun_Cell(cell_t cell, int a2);
+    virtual void Overrun_Cell(cell_t cell, BOOL a2);
     virtual BOOL Ok_To_Move(DirType dir);
 
     void Do_Turn(DirType dir);

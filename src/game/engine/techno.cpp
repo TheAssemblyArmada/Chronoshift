@@ -1633,15 +1633,31 @@ VisualType TechnoClass::Visual_Character(BOOL flag) const
 }
 
 /**
- *
+ * Kill cargo, record the kill for the killer
  *
  */
 void TechnoClass::Kill_Cargo(TechnoClass *object)
 {
     while (m_Cargo.Has_Cargo()) {
+        // TODO: Investigate, TS also Removes the cargo object from any attached teams.
         FootClass *ptr = m_Cargo.Detach_Object();
         if (ptr != nullptr) {
             ptr->Record_The_Kill(object);
+            delete ptr;
+        }
+    }
+}
+
+/**
+ * Unconditionally destroys all cargo.
+ *
+ */
+void TechnoClass::Destory_Cargo()
+{
+    while (m_Cargo.Has_Cargo()) {
+        FootClass *ptr = m_Cargo.Detach_Object();
+
+        if (ptr != nullptr) {
             delete ptr;
         }
     }

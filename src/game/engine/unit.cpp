@@ -14,23 +14,63 @@
  *            LICENSE
  */
 #include "unit.h"
-#include "scenario.h"
-#include "team.h"
+#include "anim.h"
+#include "fixedmult.h"
+#include "gameoptions.h"
+#include "infantry.h"
 #include "iomap.h"
+#include "missioncontrol.h"
 #include "rules.h"
+#include "scenario.h"
+#include "session.h"
 #include "target.h"
+#include "team.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<UnitClass> g_Units;
 #endif
 
 UnitClass::UnitClass(UnitType type, HousesType house) :
-    DriveClass(RTTI_UNIT, g_Units.ID(this), house)
+    DriveClass(RTTI_UNIT, g_Units.ID(this), house),
+    m_Class(g_UnitTypes.Ptr(type)),
+    m_FlagOwner(HOUSES_NONE),
+    m_IsDumping(false),
+    m_Gold(0),
+    m_Gems(0),
+    m_ToScatter(false),
+    m_BailCount(0),
+    m_GapGenCellTracker(-1),
+    m_GapGenCenterCell(0),
+    m_V2RearmDelayTimer(0),
+    m_TurretFacing()
 {
+    m_OwnerHouse->Tracking_Add(this);
+
+    m_Ammo = Class_Of().Get_Ammo();
+    m_Cloakable = Class_Of().Is_Cloakable();
+
+    if (Class_Of().Is_Viceroid()) {
+         m_AnimStage.Set_Delay(g_Options.Normalize_Delay(3));
+    }
+
+    m_Bit2_16 = !Class_Of().Is_Two_Shooter();
+    m_Health = Class_Of().Get_Strength();
+
 }
 
 UnitClass::UnitClass(const UnitClass &that) :
-    DriveClass(that)
+    DriveClass(that),
+    m_Class(that.m_Class),
+    m_FlagOwner(that.m_FlagOwner),
+    m_IsDumping(that.m_IsDumping),
+    m_Gold(that.m_Gold),
+    m_Gems(that.m_Gems),
+    m_ToScatter(that.m_ToScatter),
+    m_BailCount(that.m_BailCount),
+    m_GapGenCellTracker(that.m_GapGenCellTracker),
+    m_GapGenCenterCell(that.m_GapGenCenterCell),
+    m_V2RearmDelayTimer(that.m_V2RearmDelayTimer),
+    m_TurretFacing(that.m_TurretFacing)
 {
 }
 
@@ -41,6 +81,21 @@ UnitClass::UnitClass(const NoInitClass &noinit) :
 
 UnitClass::~UnitClass()
 {
+    if (g_GameActive) {
+        if (m_Team != nullptr) {
+            m_Team->Remove(this);
+            m_Team = nullptr;
+        }
+
+        m_OwnerHouse->Tracking_Remove(this);
+
+        Destory_Cargo();
+
+        Limbo();
+    }
+
+    m_Class = nullptr;
+    m_FlagOwner = HOUSES_NONE;
 }
 
 MoveType UnitClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
@@ -169,12 +224,25 @@ DamageResultType UnitClass::Take_Damage(
 #endif
 }
 
+/**
+ *
+ *
+ */
 void UnitClass::Scatter(coord_t coord, BOOL a2, BOOL a3)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00581644, void, UnitClass *, coord_t, BOOL, BOOL);
-    func(this, coord, a2, a3);
-#endif
+    // Note this if prevents sleeping units from being worken up by a scatter order.
+    // Only UnitClass has this, other object classes don't have such check in retail RA
+    if (m_Mission != MISSION_SLEEP) {
+        if (m_Mission != MISSION_STICKY && m_Mission != MISSION_UNLOAD
+            && (Get_Mission_Control(m_Mission).Can_Scatter() || a2) && m_Facing.Has_Not_Changed()
+            && (!Target_Legal(m_NavCom) || a3)) {
+            if (coord == 0) {
+                Assign_Destination(::As_Target(g_Map.Nearby_Location(Get_Cell(), Class_Of().Get_Speed())));
+            } else {
+                DriveClass::Scatter(coord, a2, a3);
+            }
+        }
+    }
 }
 
 void UnitClass::Per_Cell_Process(PCPType pcp)
@@ -195,24 +263,73 @@ RadioMessageType UnitClass::Receive_Message(RadioClass *radio, RadioMessageType 
 #endif
 }
 
+/**
+ *
+ *
+ */
 int UnitClass::Mission_Guard()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0057FB98, int, UnitClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    if (!m_OwnerHouse->Is_Human() && Class_Of().Is_Harvester() && m_OwnerHouse->Get_Quantity(BUILDING_PROC)
+        && !m_OwnerHouse->Short_On_Ore()) {
+        Assign_Mission(MISSION_HARVEST);
+        return 1;
+    }
+
+    if (What_Type() == UNIT_MCV) {
+        if (m_OwnerHouse->Auto_Base_AI()) {
+            Assign_Mission(MISSION_UNLOAD);
+            return (900 * Get_Mission_Control(m_Mission).Get_Rate()) + g_Scen.Get_Random_Value(0, 2);
+        }
+    }
+
+    return DriveClass::Mission_Guard();
 }
 
+/**
+ *
+ *
+ */
 int UnitClass::Mission_Guard_Area()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x005819E8, int, UnitClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    if (g_Session.Game_To_Play() == GAME_CAMPAIGN) {
+        return DriveClass::Mission_Guard_Area();
+    }
+
+    if (What_Type() != UNIT_APC && What_Type() != UNIT_PHASE) {
+        return DriveClass::Mission_Guard_Area();
+    }
+
+    if (Target_Legal(m_TarCom) || m_Radio != nullptr) {
+        return DriveClass::Mission_Guard_Area();
+    }
+
+    if (m_OwnerHouse->Which_Zone(this) == ZONE_NONE) {
+        return DriveClass::Mission_Guard_Area();
+    }
+
+    if (!m_OwnerHouse->Is_Human()) {
+        return DriveClass::Mission_Guard_Area();
+    }
+
+    int passengers = Class_Of().Max_Passengers() - m_Cargo.Cargo_Count();
+
+    for (int i = 0; i < g_Infantry.Count() && passengers != 0; ++i)  {
+        InfantryClass *iptr = &g_Infantry[i];
+
+        if (iptr != nullptr && iptr->Is_Active() && !iptr->In_Limbo() && iptr->Get_Health() > 0) {
+            if (iptr->Get_Owner_House() == m_OwnerHouse && !Target_Legal(m_TarCom) && !Target_Legal(m_NavCom)) {
+                if (Direction_To_Coord(iptr->Target_Coord()) < (CELL_LEPTONS * 7)) {
+                    if (iptr->Get_Mission() == MISSION_GUARD || iptr->Get_Mission() == MISSION_AREA_GUARD) {
+                        iptr->Assign_Mission(MISSION_ENTER);
+                        --passengers;
+                        iptr->Set_Archive(As_Target());
+                    }
+                }
+            }
+        }
+    }
+
+    return DriveClass::Mission_Guard_Area();
 }
 
 int UnitClass::Mission_Harvest()
@@ -268,14 +385,17 @@ int UnitClass::Mission_Repair()
 #endif
 }
 
+/**
+ *
+ *
+ */
 DirType UnitClass::Turret_Facing() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x004CDB40, DirType, const UnitClass *);
-    return func(this);
-#else
-    return DIR_NONE;
-#endif
+    if (Class_Of().Is_Turret_Equipped()) {
+        return m_TurretFacing.Get_Current();
+    }
+
+    return m_Facing.Get_Current();
 }
 
 DirType UnitClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) const
@@ -288,14 +408,35 @@ DirType UnitClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 DirType UnitClass::Fire_Direction() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x005803C4, DirType, const UnitClass *);
-    return func(this);
-#else
-    return DIR_NONE;
-#endif
+    if (Class_Of().Is_Turret_Equipped()) {
+        // Special logics for the V2 facing.
+        if (What_Type() == UNIT_V2RL) {
+            // TODO: figure out what exactly is going on here and document it.
+            int dif1 = std::abs(m_TurretFacing.Difference_From_Current(DIR_EAST));
+            int dif2 = std::abs(m_TurretFacing.Difference_From_Current(DIR_WEST));
+
+            // TODO: Old TD era fixed maths, need to be replaced with fixed_t if possible.
+            int adj = fixed_mult(DIR_EAST - std::min(dif1, dif2), std::abs(m_TurretFacing.Difference_From_Current(DIR_NORTH)));
+
+            if (m_TurretFacing.Difference_From_Current(DIR_NORTH) < 0) {
+                return m_TurretFacing.Get_Current() - adj;
+            } else {
+                return m_TurretFacing.Get_Current() + adj;
+            }
+        }
+
+        // Not a special unit so get its turret facing.
+        return m_TurretFacing.Get_Current();
+    }
+
+    // Got no turret so get the unit facing.
+    return DriveClass::Fire_Direction();
 }
 
 /**
@@ -314,14 +455,17 @@ InfantryType UnitClass::Crew_Type() const
     return INFANTRY_C7;
 }
 
+/**
+ *
+ *
+ */
 fixed_t UnitClass::Ore_Load() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00580874, fixed_t, const UnitClass *);
-    return func(this);
-#else
+    if (What_Type() == UNIT_HARVESTER) {
+        return fixed_t(m_BailCount, g_Rule.Bail_Count());   
+    }
+
     return fixed_t(0);
-#endif
 }
 
 int UnitClass::Pip_Count() const
@@ -334,24 +478,63 @@ int UnitClass::Pip_Count() const
 #endif
 }
 
+/**
+ *
+ *
+ */
 FireErrorType UnitClass::Can_Fire(target_t target, WeaponSlotType weapon) const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00580554, FireErrorType, const UnitClass *, target_t, WeaponSlotType);
-    return func(this, target, weapon);
-#else
-    return FIRE_NONE;
-#endif
+    FireErrorType fireerror = DriveClass::Can_Fire(target, weapon);
+
+    if (fireerror != FIRE_OK) {
+        return fireerror;
+    }
+
+    WeaponTypeClass *wptr = Class_Of().Get_Weapon(weapon);
+
+    if (Class_Of().No_Moving_Fire() && Target_Legal(m_NavCom)) {
+        return FIRE_MOVING;
+    }
+
+    if (!m_Firing && m_Rotating && wptr->Get_Projectile()->Rate_Of_Turn() == 0) {
+        return FIRE_ROTATING;
+    }
+
+    // TODO figure out what exactly is going on here and document it.
+    DirType dir = Direction_To_Target(target);
+
+    int absdir = std::abs(Class_Of().Is_Turret_Equipped() ? m_TurretFacing.Difference_From_Current(dir) : m_Facing.Difference_From_Current(dir));
+    
+    if (wptr->Get_Projectile()->Rate_Of_Turn()) {
+        absdir /= 4;
+    }
+
+    if (absdir >= 8) {
+        return FIRE_FACING;
+    }
+
+    return DriveClass::Can_Fire(target, weapon);
 }
 
+/**
+ *
+ *
+ */
 target_t UnitClass::Greatest_Threat(ThreatType threat)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00580F14, target_t, UnitClass *, ThreatType);
-    return func(this, threat);
-#else
-    return 0;
-#endif
+    WeaponTypeClass *wptr = Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY);
+
+    if (wptr != nullptr) {
+        threat |= wptr->Allowed_Threats();
+    }
+
+    wptr = Class_Of().Get_Weapon(WEAPON_SLOT_SECONDARY);
+
+    if (wptr != nullptr) {
+        threat |= wptr->Allowed_Threats();
+    }
+
+    return DriveClass::Greatest_Threat(threat);
 }
 
 BulletClass *UnitClass::Fire_At(target_t target, WeaponSlotType weapon)
@@ -408,20 +591,81 @@ BOOL UnitClass::Offload_Ore_Bail()
     return false;
 }
 
+/**
+ *
+ *
+ */
 void UnitClass::Approach_Target()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x005808FC, void, UnitClass *);
-    func(this);
-#endif
+    // Is the owner of the current object not human, is its target legal and the current object has nowhere to go?
+    if (!m_OwnerHouse->Is_Human() && Target_Legal(m_TarCom) && !Target_Legal(m_NavCom)) {
+        // Is the current unit a crusher and within crushing distance?
+        if (Class_Of().Crusher() && Distance_To_Target(m_TarCom) < g_Rule.Crush_Distance()) {
+            UnitClass *uptr = (UnitClass *)As_Techno(m_TarCom);
+
+            // Do we have a target and is it crushable?
+            if (uptr != nullptr && uptr->Class_Of().Is_Crushable()) {
+                // Assign target's location as navigation destination so we can crush it.
+                Assign_Destination(m_TarCom);
+                return;
+            }
+        }
+    }
+
+    // just handle target approach as we normally do
+    DriveClass::Approach_Target();
 }
 
-void UnitClass::Overrun_Cell(cell_t cell, int a2)
+/**
+ *
+ *
+ */
+void UnitClass::Overrun_Cell(cell_t cellnum, BOOL a2)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x005809EC, void, UnitClass *, cell_t, int);
-    func(this, cell, a2);
-#endif
+    CellClass &cell = g_Map[cellnum];
+
+    if (Class_Of().Crusher()) {
+        if (a2) {
+            if (cell.Check_Occupants(OCCUPANT_INFANTRY)) {
+                cell.Incoming(0, true);
+            }
+        } else {
+            bool uncloak = false;
+
+            ObjectClass *optr = cell.Get_Occupier();
+
+            while (optr != nullptr) {
+                // Is the object crushable, is it a enemy and is it less than a half cell away?
+                if (optr->Class_Of().Is_Crushable() && !m_OwnerHouse->Is_Ally(optr)
+                    && Distance_To_Object_Center(optr) < 128) {
+                    ObjectClass *next = optr->Get_Next();
+
+                    uncloak = true;
+
+                    Sound_Effect(VOC_SQUISHY2, m_Coord);
+
+                    if (m_Height == 0) {
+                        AnimClass *aptr = new AnimClass(ANIM_CORPSE1, optr->Center_Coord());
+                        DEBUG_ASSERT(aptr != nullptr);
+                    }
+
+                    optr->Record_The_Kill(this);
+                    optr->Mark(MARK_REMOVE);
+                    optr->Limbo();
+
+                    delete optr;
+
+                    optr = next;
+                } else {
+                    optr = optr->Get_Next();
+                }
+            }
+
+            if (uncloak) {
+                Do_Uncloak();
+            }
+        }
+    }
 }
 
 /**
@@ -433,13 +677,16 @@ BOOL UnitClass::Ok_To_Move(DirType dir)
     if (!Class_Of().Is_Bit32()) {
         return true;
     }
+
     if (m_Rotating) {
         return false;
     }
-    if (dir - m_TurretFacing.Get_Current() != 0) {
+
+    if (m_TurretFacing.Difference_From_Current(dir) != 0) {
         m_TurretFacing.Set_Desired(dir);
         return false;
     }
+
     return true;
 }
 

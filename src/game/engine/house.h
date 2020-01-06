@@ -253,6 +253,7 @@ public:
     void Set_Visionary(BOOL value) { m_Visionary = value; }
     int Get_Current_IQ() const { return m_CurrentIQ; }
     void Set_IQ_Level(int value) { m_CurrentIQ = value; }
+    BOOL Short_On_Ore() const { return m_OreShort; }
     UrgencyType Get_Smarties() const { return m_Smarties; }
     void Set_Smarties(UrgencyType value) { m_Smarties = value; }
     SuperClass &Special_Weapons(SpecialWeaponType type) { return m_Specials[type]; }

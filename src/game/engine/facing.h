@@ -62,21 +62,21 @@ enum DirType : uint8_t
 {
     DIR_FIRST = 0,
     DIR_NORTH = 0, // 0 degrees
-    DIR_NORTH_NORTH_EAST = 16,
+    DIR_NORTH_NORTHEAST = 16,
     DIR_NORTH_EAST = 32, // 45 degrees
-    DIR_EAST_NORTH_EAST = 48,
+    DIR_EAST_NORTHEAST = 48,
     DIR_EAST = 64, // 90 degrees
-    DIR_EAST_SOUTH_EAST = 80,
+    DIR_EAST_SOUTHEAST = 80,
     DIR_SOUTH_EAST = 96, // 135 degrees
-    DIR_SOUTH_SOUTH_EAST = 112,
+    DIR_SOUTH_SOUTHEAST = 112,
     DIR_SOUTH = 128, // 180 degrees
-    DIR_SOUTH_SOUTH_WEST = 144,
+    DIR_SOUTH_SOUTHWEST = 144,
     DIR_SOUTH_WEST = 160, // 225 degrees
-    DIR_WEST_SOUTH_WEST = 176,
+    DIR_WEST_SOUTHWEST = 176,
     DIR_WEST = 192, // 270 degrees
-    DIR_WEST_NORTH_WEST = 208,
+    DIR_WEST_NORTHWEST = 208,
     DIR_NORTH_WEST = 224, // 315 degrees
-    DIR_NORTH_WEST_NORTH = 240,
+    DIR_NORTH_NORTHWEST = 240,
     DIR_LAST = 255,
     DIR_NONE = 255,
 };
@@ -149,6 +149,11 @@ public:
 
     BOOL Has_Changed() const { return m_Current != m_Desired; }
     BOOL Has_Not_Changed() const { return m_Current == m_Desired; }
+
+    // Note all thse must return signed.
+    int8_t Difference() { return m_Desired - m_Current; }
+    int8_t Difference_From_Current(DirType dir) const { return dir - m_Current; }
+    int8_t Difference_From_Desired(DirType dir) const { return dir - m_Desired; }
 
 public:
     static uint8_t const s_Facing8[256];
