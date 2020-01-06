@@ -65,7 +65,7 @@ RadarClass::RadarClass() :
     m_RadarDeactivating(false),
     m_RadarJammed(false),
     m_RadarPulseActive(false),
-    m_RadarZoomed(false),
+    m_RadarZoomed(true),
     m_RadarDrawNames(false),
     m_RadarDrawSpiedInfo(false),
     m_RadarPulseFrame(0),
