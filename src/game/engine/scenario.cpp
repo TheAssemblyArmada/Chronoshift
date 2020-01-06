@@ -163,7 +163,7 @@ void ScenarioClass::Set_Scenario_Name(int index, ScenarioPlayerEnum player, Scen
             break;
 
         default:
-            if (g_Scen.Get_Random_Value(0, 99) < 50) {
+            if (g_Scen.Check_Random_Chance(50)) {
                 dirvalue = 'W';
             } else {
                 dirvalue = 'E';

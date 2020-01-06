@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "anim.h"
+#include "cell.h"
 #include "drawshape.h"
 #include "gameoptions.h"
 #include "house.h"
@@ -21,6 +22,7 @@
 #include "lists.h"
 #include "rules.h"
 #include "target.h"
+#include "smudge.h"
 
 
 #ifndef GAME_DLL
@@ -352,14 +354,23 @@ const int16_t *AnimClass::Anim_Overlap_List() const
 #endif
 }
 
+/**
+ *
+ *
+ */
 void AnimClass::Attach_To(ObjectClass *object)
 {
-#ifdef GAME_DLL
-    void (*func)(AnimClass *, ObjectClass *) = reinterpret_cast<void (*)(AnimClass *, ObjectClass *)>(0x0042554C);
-    func(this, object);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-#endif
+    if (object != nullptr) {
+        object->Mark(MARK_5);
+        object->Set_AnimAttached(true);
+        object->Mark(MARK_4);
+
+        g_Map.Remove(this, In_Which_Layer());
+        m_AttachedTo = object->As_Target();
+        g_Map.Submit(this, In_Which_Layer());
+
+        m_Coord = Coord_Subtract(m_Coord, object->Target_Coord());
+    }
 }
 
 /**
@@ -397,12 +408,66 @@ void AnimClass::Start()
     }
 }
 
+/**
+ *
+ *
+ */
 void AnimClass::Middle()
 {
-#ifdef GAME_DLL
-    void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x00425748);
-    func(this);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-#endif
+    cell_t cellnum = Get_Cell();
+    CellClass &cell = g_Map[cellnum];
+
+    if (What_Type() == ANIM_ATOMSFX) {
+        AnimClass::Do_Atom_Damage(m_Owner, cellnum);
+    }
+
+    if (Class_Of().Scorches_Ground()) {
+        SmudgeClass *sptr = new SmudgeClass((SmudgeType)g_Scen.Get_Random_Value(SMUDGE_SC1, SMUDGE_SC6), Center_Coord());
+        DEBUG_ASSERT(sptr != nullptr);
+
+    }
+
+    if (Class_Of().Forms_Crater()) {
+        cell.Reduce_Ore(6);
+        SmudgeClass *sptr = new SmudgeClass(SMUDGE_CR1, Center_Coord());
+        DEBUG_ASSERT(sptr != nullptr);
+    }
+
+    switch (What_Type()) {
+        case ANIM_NAPALM1:
+        case ANIM_NAPALM2:
+        case ANIM_NAPALM3: {
+            coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 64, false), true);
+            AnimClass *aptr = new AnimClass(ANIM_FIRE3, coord, 0, g_Scen.Get_Random_Value(1, 2));
+            DEBUG_ASSERT(aptr != nullptr);
+
+            if (g_Scen.Check_Random_Chance(50)) {
+                coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 160, false), true);
+                AnimClass *aptr = new AnimClass(ANIM_FIRE3, coord, 0, g_Scen.Get_Random_Value(1, 2));
+                DEBUG_ASSERT(aptr != nullptr);
+            }
+
+            if (g_Scen.Check_Random_Chance(50)) {
+                coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 112, false), true);
+                AnimClass *aptr = new AnimClass(ANIM_FIRE2, coord, 0, g_Scen.Get_Random_Value(1, 2));
+                DEBUG_ASSERT(aptr != nullptr);
+            }
+
+            break;
+        }
+        case ANIM_FIRE2:
+        case ANIM_FIRE1: {
+            AnimClass *aptr = new AnimClass(ANIM_FIRE3, Center_Coord(), 0, g_Scen.Get_Random_Value(1, 2));
+            DEBUG_ASSERT(aptr != nullptr);
+
+            if (aptr != nullptr) {
+                if (Target_Legal(m_AttachedTo)) {
+                    aptr->Attach_To(As_Object(m_AttachedTo));
+                }
+            }
+            break;
+        }
+        default:
+            break;
+    }
 }

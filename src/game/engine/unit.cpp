@@ -308,7 +308,7 @@ InfantryType UnitClass::Crew_Type() const
         return DriveClass::Crew_Type();
     }
 
-    if (g_Scen.Get_Random_Value(0, 99) < 50) {
+    if (g_Scen.Check_Random_Chance(50)) {
         return INFANTRY_C1;
     }
     return INFANTRY_C7;

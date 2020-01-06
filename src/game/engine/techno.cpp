@@ -807,8 +807,8 @@ InfantryType TechnoClass::Crew_Type() const
     if (m_OwnerHouse->Acts_Like() == HOUSES_NEUTRAL) {
         return (InfantryType)g_Scen.Get_Random_Value(INFANTRY_C1, INFANTRY_C9);
     }
-    if (Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr && g_Scen.Get_Random_Value(0, 99) < 50){
-        if (g_Scen.Get_Random_Value(0, 99) < 50) {
+    if (Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr && g_Scen.Check_Random_Chance(50)){
+        if (g_Scen.Check_Random_Chance(50)) {
             return INFANTRY_C1;
         }
         return INFANTRY_C7;
