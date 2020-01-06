@@ -38,7 +38,7 @@ void *BuildingTypeClass::g_LightningShapes = nullptr;
 BuildingTypeClass::BuildingTypeClass(BuildingType type, int uiname, const char *name, FacingType facing, coord_t exit_coord,
     RemapType altremap, int primaryf, int primaryl, int primaryh, BOOL fake, BOOL normalized, BOOL nominal, BOOL wall, BOOL simple_damage,
     BOOL radar_invisible, BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL theater, BOOL turret, BOOL remapable,
-    RTTIType factory, DirType dir, BSizeType size, const int16_t *exit_list, const int16_t *occupy_list,
+    RTTIType factory, DirType start_dir, BSizeType size, const int16_t *exit_list, const int16_t *occupy_list,
     const int16_t *overlap_list) :
     TechnoTypeClass(RTTI_BUILDINGTYPE, type, uiname, name, altremap, primaryf, primaryl, primaryh, primaryl, primaryh,
         nominal, radar_invisible, selectable, legal_target, insignificant, 0, theater, turret, remapable, 1,
@@ -58,7 +58,7 @@ BuildingTypeClass::BuildingTypeClass(BuildingType type, int uiname, const char *
     m_ExitCoord(exit_coord),
     m_ExitList(exit_list),
     m_Type(type),
-    m_StartFacing(dir),
+    m_StartFacing(start_dir),
     m_Storage(0),
     m_Power(0),
     m_Drain(0),
