@@ -64,6 +64,14 @@ public:
 
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe) const;
+
+#ifdef GAME_DLL
+public:
+    BOOL Hook_Save(Pipe &pipe)
+    {
+        return LayerClass::Save(pipe);
+    }
+#endif
 };
 
 #endif // LAYER_H

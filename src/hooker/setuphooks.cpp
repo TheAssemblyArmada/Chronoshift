@@ -609,6 +609,8 @@ void Setup_Hooks()
     Hook_Function(0x004FBA80, *LayerClass::Submit);
     Hook_Function(0x004FBAA4, *LayerClass::Sort);
     Hook_Function(0x004FBB20, *LayerClass::Sorted_Add);
+    Hook_Function(0x004F9580, *LayerClass::Load);
+    Hook_Function(0x004F9600, *LayerClass::Hook_Save);
 
     // map.h
     Hook_Function(0x004FE310, *MapClass::One_Time);

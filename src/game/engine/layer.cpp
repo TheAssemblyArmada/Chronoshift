@@ -26,9 +26,13 @@ LayerClass::~LayerClass()
 {
 }
 
+/**
+ *
+ *
+ */
 void LayerClass::Init()
 {
-    DEBUG_LOG("LayerClass::Clear()\n");
+    DEBUG_LOG("LayerClass::Init()\n");
 
     Clear();
 }
@@ -61,6 +65,10 @@ void LayerClass::Decode_Pointers()
     }
 }
 
+/**
+ *
+ *
+ */
 BOOL LayerClass::Submit(ObjectClass *object, BOOL sort)
 {
     DEBUG_ASSERT(object != nullptr);
@@ -72,6 +80,10 @@ BOOL LayerClass::Submit(ObjectClass *object, BOOL sort)
     return Add(object);
 }
 
+/**
+ *
+ *
+ */
 void LayerClass::Sort()
 {
     // Go through array to Count() - 1
@@ -90,6 +102,10 @@ void LayerClass::Sort()
     }
 }
 
+/**
+ *
+ *
+ */
 BOOL LayerClass::Sorted_Add(ObjectClass *const object)
 {
     DEBUG_ASSERT(object != nullptr);
@@ -132,6 +148,10 @@ BOOL LayerClass::Sorted_Add(ObjectClass *const object)
     return true;
 }
 
+/**
+ *
+ *
+ */
 void LayerClass::Mark_All(MarkType mark)
 {
     for (int index = 0; index < Count(); ++index) {
@@ -144,6 +164,10 @@ void LayerClass::Mark_All(MarkType mark)
     }
 }
 
+/**
+ *
+ *
+ */
 void LayerClass::Render_All(BOOL force_redraw)
 {
     for (int index = 0; index < Count(); ++index) {
@@ -155,12 +179,50 @@ void LayerClass::Render_All(BOOL force_redraw)
     }
 }
 
+/**
+ *
+ *
+ */
 BOOL LayerClass::Load(Straw &straw)
 {
-    return false; // TODO
+    uint32_t count = 0;
+    ObjectClass *objptr = nullptr;
+
+    if (straw.Get(&count, sizeof(count)) != sizeof(count)) {
+        return false;
+    }
+
+    Clear();
+
+    for (int i = 0; i < count; ++i) {
+        if (straw.Get(&objptr, sizeof(objptr)) != sizeof(objptr)) {
+            return false;
+        }
+        Add(objptr);
+    }
+
+    return true;
 }
 
+/**
+ *
+ *
+ */
 BOOL LayerClass::Save(Pipe &pipe) const
 {
-    return false; // TODO
+    uint32_t count = Count();
+
+    if (pipe.Put(&count, sizeof(count)) != sizeof(count)) {
+        return false;
+    }
+
+    for (int i = 0; i < count; ++i) {
+        ObjectClass *objptr = (*this)[i];
+
+        if (pipe.Put(&objptr, sizeof(objptr)) != sizeof(objptr)) {
+            return false;
+        }
+    }
+
+    return true;
 }
