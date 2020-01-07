@@ -991,12 +991,12 @@ BOOL ObjectClass::Counts_As_Civ_Evac()
 BOOL ObjectClass::Attach_Trigger(TriggerClass *trigger)
 {
     if (m_AttachedTrigger != nullptr) {
-        trigger->Release_Ref();
+        m_AttachedTrigger->Release_Ref();
         m_AttachedTrigger = nullptr;
     }
     if (trigger != nullptr) {
         m_AttachedTrigger = trigger;
-        trigger->Add_Ref();
+        m_AttachedTrigger->Add_Ref();
         return true;
     }
     return false;
