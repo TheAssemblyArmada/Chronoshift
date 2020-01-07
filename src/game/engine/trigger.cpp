@@ -68,7 +68,6 @@ TriggerClass::~TriggerClass()
 void *TriggerClass::operator new(size_t size)
 {
     TriggerClass *this_ptr = g_Triggers.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
@@ -78,7 +77,6 @@ void *TriggerClass::operator new(size_t size)
 void TriggerClass::operator delete(void *ptr)
 {
     TriggerClass *this_ptr = static_cast<TriggerClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }

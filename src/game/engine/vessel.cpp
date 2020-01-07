@@ -82,7 +82,6 @@ VesselClass::~VesselClass()
 void *VesselClass::operator new(size_t size)
 {
     VesselClass *this_ptr = g_Vessels.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
@@ -92,7 +91,6 @@ void *VesselClass::operator new(size_t size)
 void VesselClass::operator delete(void *ptr)
 {
     VesselClass *this_ptr = static_cast<VesselClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }

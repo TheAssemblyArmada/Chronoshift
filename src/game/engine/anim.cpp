@@ -134,7 +134,6 @@ AnimClass::~AnimClass()
 void *AnimClass::operator new(size_t size)
 {
     AnimClass *this_ptr = g_Anims.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }

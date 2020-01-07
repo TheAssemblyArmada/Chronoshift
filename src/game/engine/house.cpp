@@ -402,7 +402,6 @@ HouseClass::~HouseClass()
 void *HouseClass::operator new(size_t size)
 {
     HouseClass *this_ptr = g_Houses.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
@@ -415,7 +414,6 @@ void *HouseClass::operator new(size_t size)
 void HouseClass::operator delete(void *ptr)
 {
     HouseClass *this_ptr = static_cast<HouseClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }

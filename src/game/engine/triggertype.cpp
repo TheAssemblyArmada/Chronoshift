@@ -65,11 +65,9 @@ TriggerTypeClass::TriggerTypeClass() :
 void *TriggerTypeClass::operator new(size_t size)
 {
     TriggerTypeClass *this_ptr = g_TriggerTypes.Alloc();
-
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
-
     return this_ptr;
 }
 
@@ -79,11 +77,9 @@ void *TriggerTypeClass::operator new(size_t size)
 void TriggerTypeClass::operator delete(void *ptr)
 {
     TriggerTypeClass *this_ptr = static_cast<TriggerTypeClass *>(ptr);
-
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }
-
     g_TriggerTypes.Free(this_ptr);
 }
 
