@@ -67,7 +67,6 @@ TerrainClass::~TerrainClass()
 void *TerrainClass::operator new(size_t size)
 {
     TerrainClass *this_ptr = g_Terrains.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
@@ -82,7 +81,7 @@ void *TerrainClass::operator new(size_t size)
 void TerrainClass::operator delete(void *ptr)
 {
     TerrainClass *this_ptr = static_cast<TerrainClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
+
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }

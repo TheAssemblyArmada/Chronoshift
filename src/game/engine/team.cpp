@@ -98,7 +98,6 @@ void *TeamClass::operator new(size_t size)
 {
     DEBUG_ASSERT(size == sizeof(TeamClass) && size == g_Teams.Heap_Size());
     TeamClass *this_ptr = g_Teams.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
@@ -108,7 +107,6 @@ void *TeamClass::operator new(size_t size)
 void TeamClass::operator delete(void *ptr)
 {
     TeamClass *this_ptr = static_cast<TeamClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }

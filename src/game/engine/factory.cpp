@@ -55,7 +55,6 @@ FactoryClass::FactoryClass(const FactoryClass &that)
 void *FactoryClass::operator new(size_t size)
 {
     FactoryClass *this_ptr = g_Factories.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
@@ -65,7 +64,6 @@ void *FactoryClass::operator new(size_t size)
 void FactoryClass::operator delete(void *ptr)
 {
     FactoryClass *this_ptr = static_cast<FactoryClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }

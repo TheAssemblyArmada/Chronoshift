@@ -45,7 +45,6 @@ TemplateClass::TemplateClass(TemplateType type, cell_t cellnum) :
 void *TemplateClass::operator new(size_t size)
 {
     TemplateClass *this_ptr = g_Templates.Alloc();
-    DEBUG_ASSERT(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
     }
