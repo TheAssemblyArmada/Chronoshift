@@ -272,7 +272,7 @@ protected:
     void Techno_Draw_Object(const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir = DIR_NORTH, int scale = 256) const;
     VisualType Visual_Character(BOOL flag = false) const; // Visual character for drawing.
     void Kill_Cargo(TechnoClass * object);
-    void Destory_Cargo();
+    void Destroy_Cargo();
     WeaponSlotType What_Weapon_Should_I_Use(target_t target) const;
     int Combat_Damage(WeaponSlotType weapon = WEAPON_SLOT_NONE) const;
     cell_t Nearby_Location(TechnoClass *techno) const;

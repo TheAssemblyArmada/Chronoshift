@@ -34,20 +34,16 @@ VesselClass::VesselClass(VesselType type, HousesType house) :
     m_Class(g_VesselTypes.Ptr(type)),
     m_ToSelfRepair(false),
     m_Repairing(false),
-    m_TransportDoorTimer(),
-    m_SubmergeTimer(),
+    m_TransportDoorTimer(0),
+    m_SubmergeTimer(0),
     m_SecondaryTurretFacing()
 {
-    if (m_OwnerHouse != nullptr) {
-        m_OwnerHouse->Tracking_Add(this);
-    }
+    m_OwnerHouse->Tracking_Add(this);
 
-    if (What_Type() != VESSEL_NONE) {
-        m_Bit2_16 = !(Class_Of().Is_Two_Shooter() == true);
-        m_Cloakable = Class_Of().Is_Cloakable();
-        m_Ammo = Class_Of().Get_Ammo();
-        m_Health = Class_Of().Get_Strength();
-    }
+    m_Ammo = Class_Of().Get_Ammo();
+    m_Bit2_16 = !Class_Of().Is_Two_Shooter();
+    m_Health = Class_Of().Get_Strength();
+    m_Cloakable = Class_Of().Is_Cloakable();
 }
 
 VesselClass::VesselClass(const VesselClass &that) :
@@ -71,12 +67,18 @@ VesselClass::VesselClass(const NoInitClass &noinit) :
 
 VesselClass::~VesselClass()
 {
-    m_Class = nullptr;
     if (g_GameActive) {
-        if (m_OwnerHouse != nullptr) {
-            m_OwnerHouse->Tracking_Remove(this);
+        if (m_Team != nullptr) {
+            m_Team->Remove(this);
+            m_Team = nullptr;
         }
+
+        m_OwnerHouse->Tracking_Remove(this);
+        Destroy_Cargo();
+        Limbo();
     }
+
+    m_Class = nullptr;
 }
 
 void *VesselClass::operator new(size_t size)
@@ -520,16 +522,31 @@ int VesselClass::Shape_Number() const
     return frame;
 }
 
+/**
+ *
+ *
+ */
 void VesselClass::Rotation_AI()
 {
-    DEBUG_ASSERT(m_IsActive);
+    if (Target_Legal(m_TarCom) && !m_Rotating) {
+        if (Class_Of().Is_Turret_Equipped()) {
+            m_SecondaryTurretFacing.Set_Desired(Direction_To_Target(m_TarCom));
+        }
+    }
 
-#ifdef GAME_DLL
-    void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058CEE4);
-    return func(this);
-#else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
-#endif
+    m_Rotating = false;
+
+    if (Class_Of().Is_Turret_Equipped() && m_SecondaryTurretFacing.Has_Changed()) {
+        Mark(MARK_3);
+
+        int rot = Class_Of().Get_Rate_Of_Turn() * m_OwnerHouse->Get_Groundspeed_Multiplier();
+
+        if (m_SecondaryTurretFacing.Rotation_Adjust(rot + 1)) {
+            Mark(MARK_3);
+        }
+
+        m_Rotating = m_SecondaryTurretFacing.Has_Changed();
+    }
 }
 
 void VesselClass::Combat_AI()
@@ -544,39 +561,37 @@ void VesselClass::Combat_AI()
 #endif
 }
 
+/**
+ *
+ *
+ */
 void VesselClass::Repair_AI()
 {
-    DEBUG_ASSERT(m_IsActive);
+    if (m_Repairing && (g_GameFrame % (900 * g_Rule.Get_Repair_Rate())) == 0) {
+        Mark(MARK_REDRAW);
 
-#ifdef GAME_DLL
-    void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058D300);
-    return func(this);
-#else
-    if (m_ToSelfRepair) {
-        if (!(g_GameFrame % (g_Rule.Get_Repair_Rate() * 900))) {
-            Mark(MARK_REDRAW);
+        int repair_cost = Class_Of().Repair_Cost();
+        int repair_step = Class_Of().Repair_Step();
 
-            int cost = Class_Of().Repair_Cost();
+        // Can we afford the repair?
+        if (m_OwnerHouse->Available_Money() >= repair_cost) {
+            m_OwnerHouse->Spend_Money(repair_cost);
+            m_Health += repair_step;
 
-            if (m_OwnerHouse->Available_Money() >= cost) {
-                m_OwnerHouse->Spend_Money(cost);
+            // Check if we are done repairing.
+            if (m_Health >= Class_Of().Get_Strength()) {
+                // Set object's health to its max if we overshot it repairing it.
+                m_Health = Class_Of().Get_Strength();
 
-                m_Health += Class_Of().Repair_Step();
+                m_Repairing = false;
+                m_ToSelfRepair = false;
 
-                if (m_Health >= Class_Of().Get_Strength()) {
-                    m_Health = Class_Of().Get_Strength();
-
-                    m_Repairing = false;
-                    m_ToSelfRepair = false;
-
-                    if (m_PlayerOwned) {
-                        Speak(VOX_UNIT_REPAIRED);
-                    }
+                if (m_PlayerOwned) {
+                    Speak(VOX_UNIT_REPAIRED);
                 }
             }
         }
     }
-#endif
 }
 
 /**

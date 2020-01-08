@@ -89,7 +89,7 @@ UnitClass::~UnitClass()
 
         m_OwnerHouse->Tracking_Remove(this);
 
-        Destory_Cargo();
+        Destroy_Cargo();
 
         Limbo();
     }
