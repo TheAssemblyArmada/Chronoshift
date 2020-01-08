@@ -1652,7 +1652,7 @@ void TechnoClass::Kill_Cargo(TechnoClass *object)
  * Unconditionally destroys all cargo.
  *
  */
-void TechnoClass::Destory_Cargo()
+void TechnoClass::Destroy_Cargo()
 {
     while (m_Cargo.Has_Cargo()) {
         FootClass *ptr = m_Cargo.Detach_Object();

@@ -1068,6 +1068,8 @@ void Setup_Hooks()
     Hook_Function(0x0058D26C, *VesselClass::Edge_Of_World_AI);
     Hook_Function(0x0058C23C, *VesselClass::Transport_Open_Door);
     Hook_Function(0x0058C26C, *VesselClass::Transport_Close_Door);
+    Hook_Function(0x0058CEE4, *VesselClass::Rotation_AI);
+    Hook_Function(0x0058D300, *VesselClass::Repair_AI);
 
     // overlay.cpp
     Hook_Function(0x00526D64, *OverlayClass::Mark);
