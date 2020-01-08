@@ -158,8 +158,8 @@ public:
     int Time_To_Build() const;
     int Is_Visible_On_Radar() const;
     fixed_t Area_Modify(cell_t cellnum);
-    int Evaluate_Object(ThreatType threat, int intval1, int intval2, TechnoClass *techno, int &distance, int zoneval);
-    int Evaluate_Cell(ThreatType threat, int intval1, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3);
+    int Evaluate_Object(ThreatType threat, int scan, int intval2, TechnoClass *techno, int &distance, int zoneval);//TODO: for scan see ThreatScanType
+    int Evaluate_Cell(ThreatType threat, int scan, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3);//TODO: for scan see ThreatScanType
     void Cloaking_AI();
     int Is_Ready_To_Cloak() const;
     BOOL Is_In_Same_Zone(cell_t cellnum);

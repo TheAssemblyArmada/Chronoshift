@@ -1392,21 +1392,21 @@ fixed_t TechnoClass::Area_Modify(cell_t cellnum)
 #endif
 }
 
-int TechnoClass::Evaluate_Object(ThreatType threat, int intval1, int intval2, TechnoClass *techno, int &distance, int zoneval)
+int TechnoClass::Evaluate_Object(ThreatType threat, int scan, int intval2, TechnoClass *techno, int &distance, int zoneval)
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x00562DB0, int, const TechnoClass *, ThreatType, int, int, TechnoClass *, int &, int);
-    return func(this, threat, intval1, intval2, techno, distance, zoneval);
+    return func(this, threat, scan, intval2, techno, distance, zoneval);
 #else
     return 0;
 #endif
 }
 
-int TechnoClass::Evaluate_Cell(ThreatType threat, int intval1, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3)
+int TechnoClass::Evaluate_Cell(ThreatType threat, int scan, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3)
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x005634A8, int, const TechnoClass *, ThreatType, int, cell_t, int, TechnoClass **, int &, int);
-    return func(this, threat, intval1, cellnum, intval2, techno, distance, intval3);
+    return func(this, threat, scan, cellnum, intval2, techno, distance, intval3);
 #else
     return 0;
 #endif

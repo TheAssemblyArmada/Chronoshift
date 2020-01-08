@@ -19,6 +19,7 @@
 #define GAMETYPES_H
 
 #include "always.h"
+#include "rtti.h"
 
 #define DEF_TICKS_PER_SECOND 15
 #define DEF_TICKS_PER_MINUTE (DEF_TICKS_PER_SECOND * 60)
@@ -181,27 +182,93 @@ enum TeamEventType
     TEAM_EVENT_COUNT = 4
 };
 
-// threat type is in fact linked to Quarry, these all do not seems right...
+// threat type is linked to Quarry
+// Quarry is resolved to the threats to target
+// These seem to serve two purposes, flagging what threat something poses,
+// and what threats something is vulnerable to
 enum ThreatType
 {
     THREAT_NONE = -1,
-    THREAT_ANY = 0x0,
-    THREAT_1 = 0x1,
-    THREAT_2 = 0x2,
-    THREAT_AIRCRAFT = 0x4,          // AIR / AIRCRAFT?
-    THREAT_INFANTRY = 0x8,
-    THREAT_VEHICLE = 0x10,
-    THREAT_BUILDING = 0x20,
-    THREAT_HARVESTERS = 0x40,       // Economy?
-    THREAT_VESSEL = 0x80,
-    THREAT_NEUTRAL = 0x100,
-    THREAT_CAPTURE = 0x200,
-    THREAT_FAKES = 0x400,
-    THREAT_POWER_FACILTIES = 0x800,
-    THREAT_FACTORIES = 0x1000,
-    THREAT_BASE_DEFENSES = 0x2000,
-    THREAT_3D60 = (THREAT_BUILDING | THREAT_HARVESTERS | THREAT_NEUTRAL | THREAT_FAKES | THREAT_POWER_FACILTIES
-        | THREAT_FACTORIES | THREAT_BASE_DEFENSES)  // 0x3D60
+
+    // absolutely anything
+    THREAT_ANY = 0,
+
+    // TMission_Patrol sets this, FootClass::Greatest_Threat sets this when m_Bit1_1 set, armed threat?
+    // based on some code in YR, objects on guard mission?
+    THREAT_1 = 1 << 0, // 0x1
+
+    // FootClass::Greatest_Threat clears this when m_Bit1_1 set
+    // based on some code in YR, objects on patrol mission?
+    THREAT_2 = 1 << 1, // 0x2
+
+    // any aircraft
+    THREAT_AIRCRAFT = 1 << 2, // 0x4
+
+    // any infantry
+    THREAT_INFANTRY = 1 << 3, // 0x8
+
+    // any unit
+    THREAT_VEHICLES = 1 << 4, // 0x10
+
+    // any building
+    THREAT_BUILDINGS = 1 << 5, // 0x20
+
+    // anything that will threaten a house's economy
+    // this includes buildings with storage not 0 and harvesters
+    THREAT_ECONOMY = 1 << 6, // 0x40
+
+    // any vessels
+    THREAT_VESSELS = 1 << 7, // 0x80
+
+    // usually harmless? civilian? easy targets?
+    THREAT_100 = 1 << 8, // 0x100
+
+    // threats that can infiltrate, in RA this seems to only be Thieves
+    // in YR this includes Thieves, Spies, Engineers, units with C4
+    THREAT_INFILTRATORS = 1 << 9, // 0x200
+
+    // any fake buildings
+    THREAT_FAKES = 1 << 10, // 0x400
+
+    // any power facilities
+    THREAT_POWER_FACILTIES = 1 << 11, // 0x800
+
+    // any factories
+    THREAT_FACTORIES = 1 << 12, // 0x1000
+
+    // any base defenses
+    THREAT_BASE_DEFENSES = 1 << 13, // 0x2000
+
+    // used in combination a lot..
+    THREAT_3 = THREAT_1 | THREAT_2,
+
+    // set in WeaponTypeClass::Allowed_Threats
+    // any ground units
+    THREAT_GROUND = THREAT_INFANTRY | THREAT_VEHICLES | THREAT_BUILDINGS, // 0x38
+
+    // set when it checks vessels
+    THREAT_B8 = THREAT_GROUND | THREAT_VESSELS, // 0xB8
+
+    // set in InfantryClass::Greatest_Threat if Thief
+    THREAT_THEFT = THREAT_INFILTRATORS | THREAT_ECONOMY, // 0x240
+
+    // checked in TechnoClass::Greatest_Threat
+    THREAT_2108 = THREAT_INFANTRY | THREAT_100 | THREAT_BASE_DEFENSES, // 0x2108
+
+    // checked in TechnoClass::Greatest_Threat
+    // easy/defenseless targets?
+    THREAT_3D60 = THREAT_BUILDINGS | THREAT_ECONOMY | THREAT_100 | THREAT_FAKES | THREAT_POWER_FACILTIES
+        | THREAT_FACTORIES | THREAT_BASE_DEFENSES, // 0x3D60
+};
+
+// This is used within TechnoClass::Greatest_Threat
+enum ThreatScanType
+{
+    THREAT_SCAN_AIRCRAFT = 1 << RTTI_AIRCRAFT,
+    THREAT_SCAN_BUILDING = 1 << RTTI_BUILDING,
+    THREAT_SCAN_INFANTRY = 1 << RTTI_INFANTRY,
+    THREAT_SCAN_UNIT = 1 << RTTI_UNIT,
+    THREAT_SCAN_VESSEL = 1 << RTTI_VESSEL,
 };
 
 DEFINE_ENUMERATION_BITWISE_OPERATORS(ThreatType);
