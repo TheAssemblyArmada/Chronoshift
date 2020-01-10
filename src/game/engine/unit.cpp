@@ -269,7 +269,7 @@ RadioMessageType UnitClass::Receive_Message(RadioClass *radio, RadioMessageType 
  */
 int UnitClass::Mission_Guard()
 {
-    if (!m_OwnerHouse->Is_Human() && Class_Of().Is_Harvester() && m_OwnerHouse->Get_Quantity(BUILDING_PROC)
+    if (!m_OwnerHouse->Is_Human() && Class_Of().Is_Harvester() && m_OwnerHouse->Get_Quantity(BUILDING_PROC) > 0
         && !m_OwnerHouse->Short_On_Ore()) {
         Assign_Mission(MISSION_HARVEST);
         return 1;

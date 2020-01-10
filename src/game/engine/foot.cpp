@@ -137,11 +137,19 @@ FootClass::~FootClass()
     }
 }
 
+/**
+ *
+ *
+ */
 MoveType FootClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 {
     return MOVE_OK;
 }
 
+/**
+ *
+ *
+ */
 void FootClass::AI()
 {
     TechnoClass::AI();
@@ -272,16 +280,30 @@ void FootClass::Active_Click_With(ActionType action, cell_t cellnum)
 
 DamageResultType FootClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C1BC8, DamageResultType, FootClass *, int &, int, WarheadType, TechnoClass *, BOOL)
+    return func(this, damage, a2, warhead, object, a5);
+#else
     return DamageResultType();
+#endif
 }
 
 void FootClass::Per_Cell_Process(PCPType pcp)
 {
+#ifdef GAME_DLL
+    void (*func)(FootClass *, PCPType) = reinterpret_cast<void (*)(FootClass *, PCPType)>(0x004C2568);
+    func(this, pcp);
+#endif
 }
 
 RadioMessageType FootClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C2BFC, RadioMessageType, FootClass *, RadioClass *, RadioMessageType, target_t)
+    return func(this, radio, message, target);
+#else
     return RadioMessageType();
+#endif
 }
 
 /**
@@ -350,37 +372,72 @@ int FootClass::Mission_Attack()
 
 int FootClass::Mission_Capture()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C0F50, int, FootClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 int FootClass::Mission_Guard()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C1104, int, FootClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 int FootClass::Mission_Guard_Area()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C191C, int, FootClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 int FootClass::Mission_Hunt()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C1340, int, FootClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 int FootClass::Mission_Move()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C0DE4, int, FootClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 int FootClass::Mission_Retreat()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C37B8, int, FootClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 int FootClass::Mission_Enter()
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C2EB0, int, FootClass *);
+    return func(this);
+#else
     return 0;
+#endif
 }
 
 /**
@@ -435,7 +492,12 @@ void FootClass::Death_Announcement(TechnoClass *killer) const
 
 target_t FootClass::Greatest_Threat(ThreatType threat)
 {
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004C3174, target_t, FootClass *, ThreatType);
+    return func(this, threat);
+#else
     return target_t();
+#endif
 }
 
 void FootClass::Assign_Destination(target_t dest)
@@ -493,7 +555,6 @@ void FootClass::Approach_Target()
 #ifdef GAME_DLL
     void (*func)(FootClass *) = reinterpret_cast<void (*)(FootClass *)>(0x004C1640);
     func(this);
-#else
 #endif
 }
 
