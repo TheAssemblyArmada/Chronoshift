@@ -433,24 +433,26 @@ void AnimClass::Middle()
         DEBUG_ASSERT(sptr != nullptr);
     }
 
+    // aptr asserts are commented out cause this chunk causes common heap overruns
+
     switch (What_Type()) {
         case ANIM_NAPALM1:
         case ANIM_NAPALM2:
         case ANIM_NAPALM3: {
             coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 64, false), true);
             AnimClass *aptr = new AnimClass(ANIM_FIRE3, coord, 0, g_Scen.Get_Random_Value(1, 2));
-            DEBUG_ASSERT(aptr != nullptr);
+            //DEBUG_ASSERT(aptr != nullptr);
 
             if (g_Scen.Check_Random_Chance(50)) {
                 coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 160, false), true);
                 AnimClass *aptr = new AnimClass(ANIM_FIRE3, coord, 0, g_Scen.Get_Random_Value(1, 2));
-                DEBUG_ASSERT(aptr != nullptr);
+                //DEBUG_ASSERT(aptr != nullptr);
             }
 
             if (g_Scen.Check_Random_Chance(50)) {
                 coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 112, false), true);
                 AnimClass *aptr = new AnimClass(ANIM_FIRE2, coord, 0, g_Scen.Get_Random_Value(1, 2));
-                DEBUG_ASSERT(aptr != nullptr);
+                //DEBUG_ASSERT(aptr != nullptr);
             }
 
             break;
@@ -458,7 +460,7 @@ void AnimClass::Middle()
         case ANIM_FIRE2:
         case ANIM_FIRE1: {
             AnimClass *aptr = new AnimClass(ANIM_FIRE3, Center_Coord(), 0, g_Scen.Get_Random_Value(1, 2));
-            DEBUG_ASSERT(aptr != nullptr);
+            //DEBUG_ASSERT(aptr != nullptr);
 
             if (aptr != nullptr) {
                 if (Target_Legal(m_AttachedTo)) {
