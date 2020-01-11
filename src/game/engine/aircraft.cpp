@@ -719,11 +719,11 @@ void AircraftClass::Movement_AI()
     if (m_Speed > 0) {
         if (In_Which_Layer() == LAYER_GROUND) {
             Mark(MARK_REMOVE);
-            m_FlyControl.Physics(m_Coord, Get_Facing().Get_Current());
+            m_FlyControl.Physics(m_Coord, m_Facing.Get_Current());
             Mark(MARK_PUT);
         } else {
             Mark(MARK_3);
-            if (m_FlyControl.Physics(m_Coord, Get_Facing().Get_Current())) {
+            if (m_FlyControl.Physics(m_Coord, m_Facing.Get_Current()) != IMPACT_0) {
                 Mark(MARK_3);
             }
         }
