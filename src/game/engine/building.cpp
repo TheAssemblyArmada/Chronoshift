@@ -537,14 +537,17 @@ int BuildingClass::How_Many_Survivors() const
 #endif
 }
 
+/**
+ *
+ *
+ */
 DirType BuildingClass::Turret_Facing() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00459A28, DirType, const BuildingClass *);
-    return func(this);
-#else
-    return DIR_NONE;
-#endif
+    if (Class_Of().Is_Turret_Equipped() || !Target_Legal(m_TarCom)) {
+        return m_Facing.Get_Current();
+    }
+
+    return Direction_To_Target(m_TarCom);
 }
 
 cell_t BuildingClass::Find_Exit_Cell(TechnoClass *object) const
@@ -557,14 +560,17 @@ cell_t BuildingClass::Find_Exit_Cell(TechnoClass *object) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 DirType BuildingClass::Fire_Direction() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0045DEB0, DirType, const BuildingClass *);
-    return func(this);
-#else
-    return DIR_NONE;
-#endif
+    if (Class_Of().Is_Turret_Equipped()) {
+        return m_Facing.Get_Current();
+    }
+
+    return Direction_To_Target(m_TarCom);
 }
 
 InfantryType BuildingClass::Crew_Type() const
@@ -577,14 +583,13 @@ InfantryType BuildingClass::Crew_Type() const
 #endif
 }
 
+/**
+ *
+ *
+ */
 int BuildingClass::Pip_Count() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0045DDE0, int, const BuildingClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    return m_OwnerHouse->Ore_Fraction() * Class_Of().Max_Pips();
 }
 
 /**
@@ -619,12 +624,20 @@ target_t BuildingClass::Greatest_Threat(ThreatType threat)
 #endif
 }
 
+/**
+ *
+ *
+ */
 void BuildingClass::Assign_Target(target_t target)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00458998, void, BuildingClass *, target_t);
-    func(this, target);
-#endif
+    // Anti-Air defenses are excluded from range checks?
+    if (What_Type() != BUILDING_SAM && What_Type() != BUILDING_AGUN) {
+        if (!In_Range(target)) {
+            target = 0;
+        }
+    }
+
+    TechnoClass::Assign_Target(target);
 }
 
 BOOL BuildingClass::Captured(HouseClass *house)

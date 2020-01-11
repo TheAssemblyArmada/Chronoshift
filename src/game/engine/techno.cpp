@@ -1139,20 +1139,54 @@ void TechnoClass::Draw_Pips(int x, int y, WindowNumberType window) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 void TechnoClass::Do_Uncloak()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00566D88, void, TechnoClass *);
-    func(this);
-#endif
+    if (m_Cloakable) {
+        if (m_CloakState == CLOAK_CLOAKED || m_CloakState == CLOAK_CLOAKING) {
+            if (m_CloakState == CLOAK_CLOAKED) {
+                g_Map.Flag_To_Redraw(true);
+            }
+
+            m_CloakState = CLOAK_UNCLOAKING;
+            m_CloakingStage.Set_Stage(0);
+            m_CloakingStage.Set_Delay(1);
+
+            // BUGFIX: The following stops the uncloaking sound from playing upon game start.
+            if (g_GameFrame > 25) {
+                Sound_Effect(m_RTTI == RTTI_VESSEL ? VOC_SUB_SHOW : VOC_IRONCUR9, m_Coord);
+            }
+        }
+    }
 }
 
+/**
+ *
+ *
+ */
 void TechnoClass::Do_Cloak()
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00566E34, void, TechnoClass *);
-    func(this);
-#endif
+    if (m_Cloakable) {
+        if (m_CloakState == CLOAK_UNCLOAKED || m_CloakState == CLOAK_UNCLOAKING) {
+            Detach_All(0);
+
+            if (m_CloakState == CLOAK_UNCLOAKED) {
+                g_Map.Flag_To_Redraw(true);
+            }
+
+            m_CloakState = CLOAK_CLOAKING;
+            m_CloakingStage.Set_Stage(0);
+            m_CloakingStage.Set_Delay(1);
+
+            // BUGFIX: The following stops the cloaking sound from playing upon game start.
+            if (g_GameFrame > 25) {
+                Sound_Effect(m_RTTI == RTTI_VESSEL ? VOC_SUB_SHOW : VOC_IRONCUR9, m_Coord);
+            }
+        }
+    }
 }
 
 /**
