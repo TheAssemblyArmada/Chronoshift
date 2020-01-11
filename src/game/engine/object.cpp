@@ -128,23 +128,21 @@ coord_t ObjectClass::Target_Coord() const
     return Coord_From_Lepton_XY(Coord_Lepton_X(coord), Coord_Lepton_Y(coord) - Get_Height());
 }
 
+/**
+ *
+ *
+ */
 void ObjectClass::AI()
 {
-#ifdef GAME_DLL
-    void (*func)(ObjectClass *) = reinterpret_cast<void (*)(ObjectClass *)>(0x0051D7F0);
-    func(this);
-#else
-    DEBUG_ASSERT(m_IsActive);
-
     AbstractClass::AI();
 
     if (m_IsFalling) {
         LayerType layer = In_Which_Layer();
 
-        Set_Height(m_FallingHeight + Get_Height());
+        m_Height += m_FallingHeight;
 
-        if (Get_Height() <= 0) {
-            Set_Height(0);
+        if (m_Height <= 0) {
+            m_Height = 0;
             m_IsFalling = false;
             Per_Cell_Process(PCP_2);
             Shorten_Attached_Anims();
@@ -152,10 +150,10 @@ void ObjectClass::AI()
 
         if (m_AnimAttached) {
             --m_FallingHeight;
-            m_FallingHeight = std::max(-3, m_FallingHeight);
+            m_FallingHeight = std::max(m_FallingHeight, -3);
         } else {
-            m_FallingHeight = m_FallingHeight - g_Rule.Get_Gravity();
-            m_FallingHeight = std::max(-100, m_FallingHeight);
+            m_FallingHeight -= g_Rule.Get_Gravity();
+            m_FallingHeight = std::max(m_FallingHeight, -100);
         }
 
         if (layer != In_Which_Layer()) {
@@ -163,15 +161,14 @@ void ObjectClass::AI()
             g_Map.Submit(this, In_Which_Layer());
 
             if (Class_Of().Get_Bit128()) {
-                if (In_Which_Layer() == LAYER_SURFACE) {
-                    g_Map.Place_Down(Coord_To_Cell(Center_Coord()), this);
+                if (In_Which_Layer() == LAYER_GROUND) {
+                    g_Map.Place_Down(Center_Cell(), this);
                 } else {
-                    g_Map.Pick_Up(Coord_To_Cell(Center_Coord()), this);
+                    g_Map.Pick_Up(Center_Cell(), this);
                 }
             }
         }
     }
-#endif
 }
 
 /**
