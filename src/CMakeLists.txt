@@ -76,6 +76,7 @@ set(GAMEENGINE_SRC
     game/engine/display.cpp
     game/engine/door.cpp
     game/engine/drive.cpp
+    game/engine/egos.cpp
     game/engine/expansion.cpp
     game/engine/facing.cpp
     game/engine/factory.cpp
