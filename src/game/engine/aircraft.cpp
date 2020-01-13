@@ -769,9 +769,13 @@ BOOL AircraftClass::Edge_Of_World_AI()
         }
     }
 
-    m_Team->Set_Bit2_4(true);
+    if (m_Team != nullptr) {
+        m_Team->Set_Bit2_4(true);
+    }
+
     Stun();
     delete this;
+
     return true;
 }
 

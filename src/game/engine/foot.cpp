@@ -296,14 +296,85 @@ void FootClass::Per_Cell_Process(PCPType pcp)
 #endif
 }
 
+/**
+ *
+ *
+ */
 RadioMessageType FootClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x004C2BFC, RadioMessageType, FootClass *, RadioClass *, RadioMessageType, target_t)
-    return func(this, radio, message, target);
-#else
-    return RadioMessageType();
-#endif
+    switch (message) {
+        case RADIO_NEED_A_LIFT:
+            if (m_Mission == MISSION_ENTER || m_MissionQueue == MISSION_ENTER) {
+                TechnoClass::Receive_Message(radio, message, target);
+                return RADIO_ROGER;
+            }
+            break;
+
+        case RADIO_MOVE_TO_LOCATION:
+            if (m_NavCom == target) {
+                return RADIO_ROGER;
+            }
+
+            if (::As_Target(Get_Cell()) == target) {
+                return RADIO_NOW_WHAT;
+            }
+
+            if (m_Mission == MISSION_GUARD && m_MissionQueue == MISSION_NONE) {
+                Assign_Mission(MISSION_MOVE);
+            }
+
+            Assign_Destination(target);
+            m_MissionTimer = 0;
+            return RADIO_ROGER;
+
+        case RADIO_NEED_TO_MOVE:
+            target = m_NavCom;
+    
+            if (!Target_Legal(m_NavCom)) {
+                return RADIO_ROGER;
+            }
+
+            return RADIO_UNABLE_TO_COMPLY;
+
+        case RADIO_RUN_AWAY:
+            if (m_Radio != nullptr && m_Radio->As_Target() == m_NavCom) {
+                Assign_Destination(0);
+            }
+
+            if (m_Mission == MISSION_SLEEP) {
+                Assign_Mission(MISSION_GUARD);
+                Commence();
+            }
+
+            if (m_Mission == MISSION_ENTER) {
+                Assign_Mission(MISSION_GUARD);
+            }
+
+            if (!m_Rotating && !Target_Legal(m_NavCom)) {
+                Scatter(0, true, true);
+            }
+            break;
+
+        case RADIO_REPAIR_ONE_STEP:
+            if (Target_Legal(m_NavCom)) {
+                return RADIO_UNABLE_TO_COMPLY;
+            }
+            break;
+
+        case RADIO_ON_SERVICE:
+            BuildingClass *bptr = g_Map[Center_Cell()].Cell_Building();
+            if (bptr == nullptr) {
+                return RADIO_UNABLE_TO_COMPLY;
+            }
+    
+            if (bptr->What_Type() != BUILDING_FIX) {
+                return RADIO_UNABLE_TO_COMPLY;
+            }
+
+            return RADIO_ROGER;
+    };
+
+    return TechnoClass::Receive_Message(radio, message, target);
 }
 
 /**
@@ -511,26 +582,29 @@ coord_t FootClass::Likely_Coord()
     return (m_HeadTo ? m_HeadTo : Target_Coord());
 }
 
+/**
+ *
+ *
+ */
 BOOL FootClass::Start_Driver(coord_t &dest)
 {
-#ifdef GAME_DLL
-    BOOL (*func)(FootClass *, coord_t &) = reinterpret_cast<BOOL (*)(FootClass *, coord_t &)>(0x004C14C8);
-    return func(this, dest);
-#else
     Stop_Driver();
+
     if (dest) {
         m_HeadTo = dest;
         m_Moving = true;
+
         if (g_Map[Coord_To_Cell(dest)].Goodie_Check(this)) {
             return true;
         }
+
         if (m_IsActive) {
             m_HeadTo = 0;
             m_Moving = false;
         }
     }
+
     return false;
-#endif
 }
 
 BOOL FootClass::Stop_Driver()

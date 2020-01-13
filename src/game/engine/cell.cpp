@@ -1541,3 +1541,35 @@ void CellClass::Decode_Pointers()
         }
     }
 }
+
+/**
+ *
+ *
+ */
+BOOL CellClass::Flag_Place(HousesType house)
+{
+    if (!m_HasFlag && Is_Clear_To_Move(SPEED_TRACK)) {
+        m_OwnerHouse = house;
+        m_HasFlag = true;
+        Redraw_Objects();
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ *
+ *
+ */
+BOOL CellClass::Flag_Remove()
+{
+    if (m_HasFlag) {
+        m_HasFlag = false;
+        m_OwnerHouse = HOUSES_NONE;
+        Redraw_Objects();
+        return true;
+    }
+
+    return false;
+}

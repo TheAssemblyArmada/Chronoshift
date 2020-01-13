@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "building.h"
+#include "bullettype.h"
 #include "drawshape.h"
 #include "gameevent.h"
 #include "globals.h"
@@ -107,14 +108,35 @@ ActionType BuildingClass::What_Action(ObjectClass *object) const
 #endif
 }
 
+/**
+ *
+ *
+ */
 ActionType BuildingClass::What_Action(cell_t cellnum) const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0045A6D8, ActionType, const BuildingClass *, cell_t);
-    return func(this, cellnum);
-#else
-    return ACTION_NONE;
-#endif
+    ActionType action = TechnoClass::What_Action(cellnum);
+
+    switch (action) {
+        case ACTION_MOVE:
+            if (What_Type() != BUILDING_FACT || !g_Rule.Allow_MCV_Undeploy()) {
+                return ACTION_NONE;
+            }
+            break;
+
+        case ACTION_ATTACK: {
+            WeaponTypeClass *wptr = Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY);
+
+            if (wptr != nullptr && !wptr->Get_Projectile()->Is_Anti_Ground()) {
+                return ACTION_NONE;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return action;
 }
 
 BOOL BuildingClass::Can_Demolish() const
@@ -147,14 +169,30 @@ coord_t BuildingClass::Docking_Coord() const
 #endif
 }
 
+/**
+ *
+ *
+ */
 coord_t BuildingClass::Sort_Y() const
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0045B79C, coord_t, const BuildingClass *);
-    return func(this);
-#else
-    return 0;
-#endif
+    switch (What_Type()) {
+        case BUILDING_FIX:
+            return m_Coord;
+
+        case BUILDING_BARR:
+        case BUILDING_PROC:
+            return Center_Coord();
+
+        case BUILDING_MINV:
+        case BUILDING_MINP:
+            return Coord_Move(Center_Coord(), DIR_NORTH, 256);
+
+        default:
+            break;
+            
+    }
+
+    return Coord_Add(Center_Coord(), Coord_From_Lepton_XY(0, (Class_Of().Height() * 256) / 3));
 }
 
 coord_t BuildingClass::Exit_Coord() const
@@ -431,20 +469,101 @@ BOOL BuildingClass::Revealed(HouseClass *house)
 #endif
 }
 
-void BuildingClass::Repair(int a1)
+/**
+ *
+ *
+ */
+void BuildingClass::Repair(int mode)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0045A138, void, BuildingClass *, int);
-    func(this, a1);
-#endif
+    switch (mode) {
+        case -1:
+            m_IsRepairing = !m_IsRepairing;
+            break;
+
+        case 0:
+            if (!m_IsRepairing) {
+                return;
+            }
+
+            m_IsRepairing = false;
+            break;
+
+        case 1:
+            if (m_IsRepairing) {
+                return;
+            }
+
+            m_IsRepairing = true;
+            break;
+    
+        default:
+            break;
+    }
+
+    VocType voc = VOC_NONE;
+
+    if (m_IsRepairing) {
+        if (m_Health == Class_Of().Get_Strength()) {
+            voc = VOC_SCOLDY1;
+        } else {
+            voc = VOC_RAMENU1;
+
+            if (m_OwnerHouse->Player_Has_Control()) {
+                Clicked_As_Target(7);
+            }
+
+            m_Bit32 = true;
+        }
+    } else {
+        voc = VOC_RAMENU1;
+    }
+
+    if (m_OwnerHouse->Player_Has_Control()) {
+        Sound_Effect(voc, m_Coord);
+    }
 }
 
-void BuildingClass::Sell_Back(int a1)
+/**
+ *
+ *
+ */
+void BuildingClass::Sell_Back(int mode)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x0045A288, void, BuildingClass *, int);
-    func(this, a1);
-#endif
+    if (Class_Of().Get_Buildup_Data()) {
+        bool to_deconstruct = false;
+    
+        switch (mode) {
+            case -1:
+                to_deconstruct = m_Mission != MISSION_DECONSTRUCTION;
+                break;
+            case 0:
+                if (m_Mission != MISSION_DECONSTRUCTION) {
+                    return;
+                }
+                break;
+            case 1:
+                if (m_Mission == MISSION_DECONSTRUCTION || m_Bit64) {
+                    return;
+                }
+                to_deconstruct = true;
+                break;
+            default:
+                break;
+        }
+
+        if (to_deconstruct) {
+            Assign_Mission(MISSION_DECONSTRUCTION);
+            Commence();
+
+            if (m_OwnerHouse->Player_Has_Control()) {
+                Clicked_As_Target(7);
+            }
+        }
+
+        if (m_OwnerHouse->Player_Has_Control()) {
+            Sound_Effect(VOC_RAMENU1);
+        }
+    }
 }
 
 int BuildingClass::Mission_Attack()

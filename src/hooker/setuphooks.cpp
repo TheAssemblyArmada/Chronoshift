@@ -597,6 +597,8 @@ void Setup_Hooks()
     Hook_Function(0x004A0230, *CellClass::Adjust_Threat);
     Hook_Function(0x004A1AE4, *CellClass::Shimmer);
     Hook_Function(0x004A013C, *CellClass::Incoming);
+    Hook_Function(0x004A1A5C, *CellClass::Flag_Place);
+    Hook_Function(0x004A1AB4, *CellClass::Flag_Remove);
 
     // door.h
     Hook_Function(0x004B5C40, *DoorClass::AI);
@@ -790,6 +792,8 @@ void Setup_Hooks()
     Hook_Function(0x004C2B98, *FootClass::Override_Mission);
     Hook_Function(0x004C2BCC, *FootClass::Restore_Mission);
     Hook_Function(0x004C160C, *FootClass::Stun);
+    Hook_Function(0x004C2BFC, *FootClass::Receive_Message);
+    Hook_Function(0x004C14C8, *FootClass::Start_Driver);
 
     // abstract.h
     Hook_Function(0x004CD8E0, *AbstractClass::Hook_Ctor_NoInit);
@@ -1029,6 +1033,10 @@ void Setup_Hooks()
     Hook_Function(0x0045523C, *BuildingClass::Hook_Draw_It);
     Hook_Function(0x0045E320, *BuildingClass::Power_Output);
     Hook_Function(0x00459880, *BuildingClass::Limbo);
+    Hook_Function(0x0045A6D8, *BuildingClass::Hook_What_Action_Cell);
+    Hook_Function(0x0045B79C, *BuildingClass::Hook_Sort_Y);
+    Hook_Function(0x0045A138, *BuildingClass::Repair);
+    Hook_Function(0x0045A288, *BuildingClass::Sell_Back);
 
     // unit.cpp
     Hook_Function(0x00581730, *UnitClass::Limbo);
