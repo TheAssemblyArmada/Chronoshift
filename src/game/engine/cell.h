@@ -173,6 +173,8 @@ public:
     void Adjust_Threat(HousesType house, int threat);
     void Shimmer();
     void Incoming(coord_t coord, BOOL a2 = false, BOOL a3 = false);
+    BOOL Flag_Place(HousesType house);
+    BOOL Flag_Remove();
 
     void Code_Pointers();
     void Decode_Pointers();

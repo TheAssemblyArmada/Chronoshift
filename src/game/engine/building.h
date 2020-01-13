@@ -145,6 +145,14 @@ public:
     {
         BuildingClass::Active_Click_With(action, cellnum);
     }
+    coord_t Hook_Sort_Y()
+    {
+        return BuildingClass::Sort_Y();
+    }
+    coord_t Hook_What_Action_Cell(cell_t cellnum)
+    {
+        return BuildingClass::What_Action(cellnum);
+    }
 #endif
 
 
