@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "ostimer.h"
-#include "gamedebug.h"
 #include "timer.h"
+#include <captainslog.h>
 
 #ifdef PLATFORM_WINDOWS
 #ifdef __WATCOMC__
@@ -133,7 +133,7 @@ PlatformTimerClass::PlatformTimerClass(unsigned freq, BOOL partial) :
         g_PlatformTimer = this;
         g_TickCount.Start();
     } else {
-        DEBUG_LOG("Error - timer system failed to start.\n");
+        captainslog_debug("Error - timer system failed to start.");
     }
 }
 

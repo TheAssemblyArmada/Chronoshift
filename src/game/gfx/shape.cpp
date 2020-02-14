@@ -16,10 +16,10 @@
 #include "shape.h"
 #include "alloc.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "lcw.h"
 #include "xordelta.h"
+#include <captainslog.h>
 #include <cstdarg>
 #include <cstring>
 
@@ -687,7 +687,7 @@ void Single_Line_Predator(
     for (int i = width; i > 0; --i) {
         g_PartialCount += g_PartialPred;
 
-        DEBUG_ASSERT_PRINT(g_PredFrame < 8, "Predator frame %u.\n", g_PredFrame);
+        captainslog_dbgassert(g_PredFrame < 8, "Predator frame %u.\n", g_PredFrame);
 
         if (g_PartialCount >= 256) {
             g_PartialCount %= 256;
@@ -711,7 +711,7 @@ void Single_Line_Predator_Trans(
         if (sbyte) {
             g_PartialCount += g_PartialPred;
 
-            DEBUG_ASSERT_PRINT(g_PredFrame < 8, "Predator frame %u.\n", g_PredFrame);
+            captainslog_dbgassert(g_PredFrame < 8, "Predator frame %u.\n", g_PredFrame);
 
             if (g_PartialCount >= 256) {
                 g_PartialCount %= 256;
@@ -1060,7 +1060,7 @@ void Reallocate_Big_Shape_Buffer()
         g_BigShapeBufferLength += BIGSHP_BUFFER_GROW;
         g_BigShapeBufferPtr -= (intptr_t)g_BigShapeBufferStart;
         g_BigShapeBufferStart = (char *)Resize_Alloc(g_BigShapeBufferStart, g_BigShapeBufferLength);
-        // DEBUG_LOG("Reallocating Big Shape Buffer, size is now %d.\n", g_BigShapeBufferLength);
+        // captainslog_debug("Reallocating Big Shape Buffer, size is now %d.", g_BigShapeBufferLength);
         // TODO
         // g_MemoryError = Memory_Error_Handler;
         if (g_BigShapeBufferStart) {
@@ -1093,7 +1093,7 @@ void Check_Use_Compressed_Shapes()
     GlobalMemoryStatusEx(&Buffer);
     g_UseBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
     g_OriginalUseBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
-    // DEBUG_LOG("Using Big Shape Buffer and Original Buffer is %s.\n", Buffer.ullTotalPhys > 0x1000000 ? "true" : "false");
+    // captainslog_debug("Using Big Shape Buffer and Original Buffer is %s.", Buffer.ullTotalPhys > 0x1000000 ? "true" : "false");
 #elif defined PLATFORM_OSX
     size_t totalmem;
     size_t len = sizeof(totalmem);
@@ -1128,7 +1128,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
     ShapeHeaderStruct *header = static_cast<ShapeHeaderStruct *>(shape);
     if (frame >= le16toh(header->m_FrameCount)) {
-        // DEBUG_LOG(
+        // captainslog_debug(
         //    "Requested frame %d is greater than total frames %d in this shape file.\n", frame,
         //    le16toh(header->m_FrameCount));
 
@@ -1138,7 +1138,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
     // If we are using a cache
     if (g_UseBigShapeBuffer) {
         if (!g_BigShapeBufferStart) {
-            // DEBUG_LOG("Allocating buffers for g_UseBigShapeBuffer.\n");
+            // captainslog_debug("Allocating buffers for g_UseBigShapeBuffer.");
             g_BigShapeBufferStart = static_cast<char *>(Alloc(g_BigShapeBufferLength, MEM_NORMAL));
             g_BigShapeBufferPtr = g_BigShapeBufferStart;
             g_TheaterShapeBufferStart = static_cast<char *>(Alloc(g_TheaterShapeBufferLength, MEM_NORMAL));
@@ -1166,7 +1166,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         // Do we have anything in our keyframe slot yet? If so, return it.
         uint32_t shp_buff_offset = g_KeyFrameSlots[header->m_YPos][frame];
         if (shp_buff_offset != 0) {
-            // DEBUG_LOG("Using Cached frame.\n");
+            // captainslog_debug("Using Cached frame.");
 
             if (g_IsTheaterShape) {
                 return shp_buff_offset + g_TheaterShapeBufferStart;
@@ -1183,7 +1183,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
     uint8_t frame_type = (le32toh(offset_buff[0]) & 0xFF000000) >> 24;
 
     if (frame_type & SHP_LCW_FRAME) {
-        // DEBUG_LOG("Decoding key frame.\n");
+        // captainslog_debug("Decoding key frame.");
         uint8_t *frame_data = &shape_data[le32toh(offset_buff[0]) & 0xFFFFFF];
 
         // Amazingly it seems that shp files actually do support having a pal, just none do.
@@ -1193,7 +1193,7 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
 
         frame_size = LCW_Uncomp(frame_data, buffer, frame_size);
     } else {
-        // DEBUG_LOG("Decoding XOR frame.\n");
+        // captainslog_debug("Decoding XOR frame.");
         int ref_frame = 0;
         // If we have an Xor chain, load first delta address into buffer
         if (frame_type & SHP_XOR_PREV_FRAME) {
@@ -1211,14 +1211,14 @@ void *Build_Frame(void *shape, uint16_t frame, void *buffer)
         }
 
         if (LCW_Uncomp(lcw_data, buffer, frame_size) > frame_size) {
-            // DEBUG_LOG("LCW decompressed more data than expected.\n");
+            // captainslog_debug("LCW decompressed more data than expected.");
             return nullptr;
         }
 
         Apply_XOR_Delta(buffer, lcw_data + xor_data_offset);
 
         if (frame_type & SHP_XOR_PREV_FRAME) {
-            // DEBUG_LOG("Decoding delta sequence.\n");
+            // captainslog_debug("Decoding delta sequence.");
             ++ref_frame;
             int offset_index = 2;
 

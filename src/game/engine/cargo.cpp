@@ -14,9 +14,9 @@
  *            LICENSE
  */
 #include "cargo.h"
-#include "gamedebug.h"
 #include "foot.h"
 #include "target.h"
+#include <captainslog.h>
 
 /**
  * @brief

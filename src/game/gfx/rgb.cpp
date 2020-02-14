@@ -14,10 +14,10 @@
  *            LICENSE
  */
 #include "rgb.h"
-#include "gamedebug.h"
 #include "hsv.h"
 #include "palette.h"
 #include <algorithm>
+#include <captainslog.h>
 
 RGBClass const RGBClass::BlackColor(RGB_MIN, RGB_MIN, RGB_MIN);
 RGBClass const RGBClass::WhiteColor(RGB_MAX, RGB_MAX, RGB_MAX);

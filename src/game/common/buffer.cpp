@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "buffer.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 BufferClass::BufferClass() : m_buffer(nullptr), m_size(0), m_allocated(false)
 {
@@ -89,8 +89,8 @@ void BufferClass::Resize(int size)
 
 void BufferClass::Resize(void *buff, int size)
 {
-    // DEBUG_ASSERT(buff != nullptr);
-    // DEBUG_ASSERT(size > 0);
+    // captainslog_assert(buff != nullptr);
+    // captainslog_assert(size > 0);
 
     // Free existing buffer if we own it.
     Free();

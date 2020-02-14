@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "base64.h"
-#include "gamedebug.h"
 #include "endiantype.h"
+#include <captainslog.h>
 
 static const char _pad = '=';
 static const char _encoder[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

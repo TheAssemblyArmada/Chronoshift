@@ -14,9 +14,9 @@
  *            LICENSE
  */
 #include "pkstraw.h"
-#include "gamedebug.h"
 #include "pk.h"
 #include <algorithm>
+#include <captainslog.h>
 
 PKStraw::PKStraw(StrawControl mode, Straw &rstraw) :
     m_ChangeKey(true),
@@ -35,8 +35,8 @@ PKStraw::PKStraw(StrawControl mode, Straw &rstraw) :
 */
 int PKStraw::Get(void *buffer, int length)
 {
-    DEBUG_ASSERT(buffer != nullptr);
-    DEBUG_ASSERT(length > 0);
+    captainslog_assert(buffer != nullptr);
+    captainslog_assert(length > 0);
 
     char byte_buff[256];
     char *outbuff = static_cast<char *>(buffer);
@@ -57,7 +57,7 @@ int PKStraw::Get(void *buffer, int length)
             // If we didn't get a full keyblock as expected we can't
             // decrypt anymore of the stream, so print an error and abort.
             if (bytes_retrieved != Encrypted_Key_Length()) {
-                DEBUG_LOG("PKStraw::Get() - Failed to retrieve file key!\n");
+                captainslog_debug("PKStraw::Get() - Failed to retrieve file key!");
                 return 0;
             }
 

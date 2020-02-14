@@ -16,7 +16,6 @@
 #include "gbuffer.h"
 #include "blitters.h"
 #include "eventhandler.h"
-#include "gamedebug.h"
 #include "globals.h"
 #include "initvideo.h"
 #include "mouse.h"
@@ -24,6 +23,7 @@
 #include "textprint.h"
 #include "tileset.h"
 #include <algorithm>
+#include <captainslog.h>
 
 #ifndef GAME_DLL
 BOOL GraphicViewPortClass::s_AllowHardwareBlitFills;
@@ -111,7 +111,7 @@ void GraphicViewPortClass::Attach(GraphicBufferClass *buffer, int x, int y, int 
 BOOL GraphicViewPortClass::Change(int x, int y, int w, int h)
 {
     if (Get_Graphic_Buffer() == this) {
-        DEBUG_LOG("GraphicBuff == this in GraphicViewPortClass::Change()!\n");
+        captainslog_debug("GraphicBuff == this in GraphicViewPortClass::Change()!");
         return false;
     }
 

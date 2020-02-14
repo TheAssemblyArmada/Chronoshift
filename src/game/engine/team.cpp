@@ -14,11 +14,11 @@
  *            LICENSE
  */
 #include "team.h"
-#include "gamedebug.h"
 #include "foot.h"
 #include "scenario.h"
 #include "target.h"
 #include "trigger.h"
+#include <captainslog.h>
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TeamClass> g_Teams;
@@ -96,7 +96,7 @@ TeamClass::~TeamClass()
 
 void *TeamClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(TeamClass) && size == g_Teams.Heap_Size());
+    captainslog_assert(size == sizeof(TeamClass) && size == g_Teams.Heap_Size());
     TeamClass *this_ptr = g_Teams.Alloc();
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = true;
@@ -127,7 +127,7 @@ BOOL TeamClass::Remove(FootClass *object, int a2)
     BOOL (*func)(TeamClass *, FootClass *, int) = reinterpret_cast<BOOL (*)(TeamClass *, FootClass *, int)>(0x0055D164);
     return func(this, object, a2);
 #else
-    //DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    //captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
     return false;
 #endif
 }

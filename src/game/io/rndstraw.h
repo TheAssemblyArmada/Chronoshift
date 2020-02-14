@@ -19,11 +19,10 @@
 #define RNDSTRAW_H
 
 #include "always.h"
-#include "gamedebug.h"
-#include "gameassert.h"
 #include "random.h"
 #include "sha.h"
 #include "straw.h"
+#include <captainslog.h>
 #include <cstring>
 #include <new> // for placement new
 
@@ -63,8 +62,8 @@ RandomStraw<RNG>::~RandomStraw()
 template<class RNG>
 int RandomStraw<RNG>::Get(void *buffer, int length)
 {
-    DEBUG_ASSERT(buffer != nullptr);
-    DEBUG_ASSERT(length > 0);
+    captainslog_assert(buffer != nullptr);
+    captainslog_assert(length > 0);
 
     uint8_t *buff = static_cast<uint8_t *>(buffer);
 

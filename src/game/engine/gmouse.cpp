@@ -16,7 +16,7 @@
 #include "gmouse.h"
 #include "animtype.h"
 #include "buildingtype.h"
-#include "gamedebug.h"
+#include "coord.h"
 #include "gamefile.h"
 #include "mouse.h"
 #include "mouseshape.h"
@@ -28,7 +28,7 @@
 #include "straw.h"
 #include "templatetype.h"
 #include "terraintype.h"
-#include "coord.h"
+#include <captainslog.h>
 #include <new>
 
 #ifndef GAME_DLL
@@ -156,8 +156,8 @@ void GameMouseClass::Set_Default_Mouse(MouseType mouse, BOOL in_radar)
  */
 BOOL GameMouseClass::Override_Mouse_Shape(MouseType mouse, BOOL in_radar)
 {
-    DEBUG_ASSERT_PRINT(mouse != MOUSE_NONE, "mouse = %d.", mouse);
-    DEBUG_ASSERT_PRINT(mouse < MOUSE_COUNT, "mouse = %d.", mouse);
+    captainslog_dbgassert(mouse != MOUSE_NONE, "mouse = %d.", mouse);
+    captainslog_dbgassert(mouse < MOUSE_COUNT, "mouse = %d.", mouse);
 
     static BOOL _startup = false;
 
@@ -213,7 +213,7 @@ void GameMouseClass::Mouse_Small(BOOL use_small_frame)
 BOOL GameMouseClass::Load(Straw &straw)
 {
 /*#ifdef COMPILER_WATCOM
-    DEBUG_ASSERT_PRINT(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
+    captainslog_dbgassert(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
 #endif*/
 
     TheaterType theater = THEATER_NONE;
@@ -241,7 +241,7 @@ BOOL GameMouseClass::Load(Straw &straw)
         uint32_t saved_cells = 0;
 
         if (straw.Get(&saved_cells, sizeof(saved_cells)) == sizeof(saved_cells)) {
-            DEBUG_LOG("Loading data for %u cells.\n", saved_cells);
+            captainslog_debug("Loading data for %u cells.", saved_cells);
             for (unsigned i = 0; i < saved_cells; ++i) {
                 cell_t cell_num;
 
@@ -271,7 +271,7 @@ BOOL GameMouseClass::Load(Straw &straw)
 BOOL GameMouseClass::Save(Pipe &pipe) const
 {
 /*#ifdef COMPILER_WATCOM
-    DEBUG_ASSERT_PRINT(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
+    captainslog_dbgassert(sizeof(*this) == 5739, "IOMap object is %d bytes instead of expected 5739 bytes", sizeof(*this));
 #endif*/
 
     TheaterType theater = g_Scen.Get_Theater();
@@ -286,7 +286,7 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
         }
     }
 
-    DEBUG_LOG("Saving %u cells with none default state\n", saved_cells);
+    captainslog_debug("Saving %u cells with none default state", saved_cells);
     pipe.Put(&saved_cells, sizeof(saved_cells));
 
     // Save the cells that need saving.
@@ -298,7 +298,7 @@ BOOL GameMouseClass::Save(Pipe &pipe) const
         }
     }
 
-    DEBUG_ASSERT_PRINT(saved_cells == 0, "IOMap save failed to save %d cells that were counted to save.\n", saved_cells);
+    captainslog_dbgassert(saved_cells == 0, "IOMap save failed to save %d cells that were counted to save.\n", saved_cells);
 
     return saved_cells == 0;
 }

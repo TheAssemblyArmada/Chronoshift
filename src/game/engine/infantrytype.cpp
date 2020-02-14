@@ -84,7 +84,7 @@ InfantryTypeClass::InfantryTypeClass(InfantryTypeClass const &that) :
  */
 void *InfantryTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(InfantryTypeClass) && size == g_InfantryTypes.Heap_Size());
+    captainslog_assert(size == sizeof(InfantryTypeClass) && size == g_InfantryTypes.Heap_Size());
     return g_InfantryTypes.Allocate();
 }
 
@@ -93,7 +93,7 @@ void *InfantryTypeClass::operator new(size_t size)
  */
 void InfantryTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_InfantryTypes.Free(ptr);
 }
 
@@ -161,7 +161,7 @@ ObjectClass *InfantryTypeClass::Create_One_Of(HouseClass *house) const
         reinterpret_cast<ObjectClass *(*)(const InfantryTypeClass *, HouseClass *)>(0x004EAF20);
     return func(this, house);
 #else
-    /*DEBUG_ASSERT(house != nullptr);
+    /*captainslog_assert(house != nullptr);
     return new InfantryClass(Type, house->What_Type());*/
 
     return nullptr;
@@ -217,8 +217,8 @@ BOOL InfantryTypeClass::Read_INI(GameINIClass &ini)
  */
 InfantryTypeClass &InfantryTypeClass::As_Reference(InfantryType type)
 {
-    DEBUG_ASSERT(type != INFANTRY_NONE);
-    DEBUG_ASSERT(type < INFANTRY_COUNT);
+    captainslog_assert(type != INFANTRY_NONE);
+    captainslog_assert(type < INFANTRY_COUNT);
 
     return g_InfantryTypes[type];
 }

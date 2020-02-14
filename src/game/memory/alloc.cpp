@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "alloc.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <cstdlib>
 #include <cstring>
 #include <malloc.h>
@@ -45,7 +45,7 @@ unsigned int g_maxRam;
 
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags)
 {
-    // DEBUG_LOG("Attempting to allocate memory of size %d with flags %d.\n", bytes_to_alloc, flags);
+    // captainslog_debug("Attempting to allocate memory of size %d with flags %d.", bytes_to_alloc, flags);
     void *ptr = malloc(bytes_to_alloc);
 
     if (ptr == nullptr && g_MemoryError != nullptr) {

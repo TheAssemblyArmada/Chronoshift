@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "armor.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>

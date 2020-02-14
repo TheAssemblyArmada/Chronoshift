@@ -18,7 +18,6 @@
 #include "building.h"
 #include "coord.h"
 #include "display.h"
-#include "gamedebug.h"
 #include "gameevent.h"
 #include "gameoptions.h"
 #include "globals.h"
@@ -36,6 +35,7 @@
 #include "theme.h"
 #include "unit.h"
 #include "vortex.h"
+#include <captainslog.h>
 
 static BOOL g_Debug_Keys = false;
 
@@ -262,7 +262,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires UnitClass.
                 /*UnitClass *uptr = new UnitClass(UNIT_MCV, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(uptr != nullptr);
+                captainslog_assert(uptr != nullptr);
                 if ( uptr != nullptr ) {
                     uptr->Unlimbo(g_Map.Pixel_To_Coord(g_WWMouse->Get_Mouse_X(), g_WWMouse->Get_Mouse_Y()));
                 }*/
@@ -275,7 +275,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires UnitClass.
                 /*UnitClass *uptr = new UnitClass(UNIT_HARVESTER, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(uptr != nullptr);
+                captainslog_assert(uptr != nullptr);
                 if ( uptr != nullptr ) {
                     uptr->Unlimbo(g_Map.Pixel_To_Coord(g_WWMouse->Get_Mouse_X(), g_WWMouse->Get_Mouse_Y()));
                 }*/
@@ -288,7 +288,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires AircraftClass.
                 /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_HELI, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(aptr != nullptr);
+                captainslog_assert(aptr != nullptr);
                 if ( aptr != nullptr ) {
                     aptr->Set_Height(0);
                     aptr->Unlimbo(coord);
@@ -302,7 +302,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires AircraftClass.
                 /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_HIND, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(aptr != nullptr);
+                captainslog_assert(aptr != nullptr);
                 if (aptr != nullptr) {
                     aptr->Set_Height(0);
                     aptr->Unlimbo(coord);
@@ -316,7 +316,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires AircraftClass.
                 /*AircraftClass *aptr = new AircraftClass(AIRCRAFT_TRANSPORT, g_PlayerPtr->What_Type());
-                DEBUG_ASSERT(aptr != nullptr);
+                captainslog_assert(aptr != nullptr);
                 if ( aptr != nullptr ) {
                     aptr->Set_Height(0);
                     aptr->Unlimbo(coord);
@@ -330,7 +330,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires AnimClass, Explosion_Damage.
                 /*AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
-                DEBUG_ASSERT(aptr != nullptr);
+                captainslog_assert(aptr != nullptr);
                 if ( aptr != nullptr ) {
                     Explosion_Damage(coord, Rule.AtomDamage, nullptr, WARHEAD_HE);
                 }*/
@@ -343,7 +343,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires AnimClass, Explosion_Damage.
                 /*AnimClass *aptr = new AnimClass(ANIM_ATOMSFX, coord);
-                DEBUG_ASSERT(aptr != nullptr);
+                captainslog_assert(aptr != nullptr);
                 if ( aptr != nullptr ) {
                     Explosion_Damage(coord, Rule.AtomDamage, nullptr, WARHEAD_HE);
                 }*/
@@ -356,7 +356,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (coord) {
                 // TODO: Requires AnimClass, Explosion_Damage.
                 /*AnimClass *aptr = new AnimClass(ANIM_ART_EXP1, coord);
-                DEBUG_ASSERT(aptr != nullptr);
+                captainslog_assert(aptr != nullptr);
                 if ( aptr != nullptr ) {
                     Explosion_Damage(coord, 250, nullptr, WARHEAD_HE);
                 }*/
@@ -368,7 +368,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (CurrentObjects.Count() > 0) {
                 for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     ObjectClass *objptr = CurrentObjects[index];
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             delete objptr;
@@ -532,7 +532,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (CurrentObjects.Count() > 0) {
                 for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
                     TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             if (!objptr->Get_Owner_House()->Is_Player()) {
@@ -557,7 +557,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (CurrentObjects.Count() > 0) {
                 for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
                     TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             objptr->Set_Cloakable(!objptr->Is_Cloakable());
@@ -572,7 +572,7 @@ void Debug_Keyboard_Process(KeyNumType &key)
             if (CurrentObjects.Count() > 0) {
                 for (size_t index = 0; index < CurrentObjects.Count(); ++index) {
                     TechnoClass *objptr = reinterpret_cast<TechnoClass *>(CurrentObjects[index]);
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Is_Active() && !objptr->In_Limbo()) {
                             int damage = 50;
@@ -683,9 +683,9 @@ void Keyboard_Process(KeyNumType &key)
                     }
                     objptr = g_Map.Prev_Object(curobj);
                 }
-                DEBUG_ASSERT(objptr != nullptr);
+                captainslog_assert(objptr != nullptr);
                 if (objptr != nullptr) {
-                    DEBUG_LOG("Keyboard_Process() - Jumping to next object %s.\n", objptr->Name());
+                    captainslog_debug("Keyboard_Process() - Jumping to next object %s.", objptr->Name());
                     Unselect_All();
                     objptr->Select();
                     g_Map.Center_Map();
@@ -710,9 +710,9 @@ void Keyboard_Process(KeyNumType &key)
                     }
                     objptr = g_Map.Next_Object(curobj);
                 }
-                DEBUG_ASSERT(objptr != nullptr);
+                captainslog_assert(objptr != nullptr);
                 if (objptr != nullptr) {
-                    DEBUG_LOG("Keyboard_Process() - Jumping to prev object %s.\n", objptr->Name());
+                    captainslog_debug("Keyboard_Process() - Jumping to prev object %s.", objptr->Name());
                     Unselect_All();
                     objptr->Select();
                     g_Map.Center_Map();
@@ -724,7 +724,7 @@ void Keyboard_Process(KeyNumType &key)
             if (justkey == g_Options.Get_KeyStop()) {
                 for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     objptr = CurrentObjects[index];
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Can_Player_Move() && objptr->What_Am_I() != RTTI_BUILDING) {
                             GameEventClass ev(GameEventClass::EVENT_IDLE, TargetClass(objptr));
@@ -738,7 +738,7 @@ void Keyboard_Process(KeyNumType &key)
             if (justkey == g_Options.Get_KeyGuard()) {
                 for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     objptr = CurrentObjects[index];
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Can_Player_Move() && objptr->Can_Player_Fire()) {
                             GameEventClass ev(TargetClass(objptr), MISSION_AREA_GUARD, TargetClass(0), TargetClass(0));
@@ -752,7 +752,7 @@ void Keyboard_Process(KeyNumType &key)
             if (justkey == g_Options.Get_KeyScatter()) {
                 for (int index = 0; index < CurrentObjects.Count(); ++index) {
                     objptr = CurrentObjects[index];
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Can_Player_Move()) {
                             GameEventClass ev(GameEventClass::EVENT_SCATTER, TargetClass(objptr));
@@ -783,7 +783,7 @@ void Keyboard_Process(KeyNumType &key)
                 if (!selected && g_PlayerPtr->Currently_Owned_Building_Count() > 0) {
                     for (int index = 0; index < g_Buildings.Count(); ++index) {
                         BuildingClass *bptr = &g_Buildings[index];
-                        DEBUG_ASSERT(bptr != nullptr);
+                        captainslog_assert(bptr != nullptr);
                         if (bptr != nullptr) {
                             if (!bptr->In_Limbo() && bptr->Get_Owner_House()->Is_Player()) {
                                 if (bptr->What_Type() == BUILDING_FACT) {
@@ -804,7 +804,7 @@ void Keyboard_Process(KeyNumType &key)
                 if (!selected && g_PlayerPtr->Currently_Owned_Unit_Count() > 0) {
                     for (int index = 0; index < g_Units.Count(); ++index) {
                         UnitClass *uptr = &g_Units[index];
-                        DEBUG_ASSERT(uptr != nullptr);
+                        captainslog_assert(uptr != nullptr);
                         if (uptr != nullptr) {
                             if (!uptr->In_Limbo() && uptr->Get_Owner_House()->Is_Player()) {
                                 if (uptr->What_Type() == UNIT_MCV) {
@@ -838,7 +838,7 @@ void Keyboard_Process(KeyNumType &key)
                 if ((g_Debug_Flag || g_Session.Game_To_Play() != GAME_CAMPAIGN) && CurrentObjects.Count() > 0
                     && !g_PlayerPtr->Is_Defeated()) {
                     ObjectClass *objptr = CurrentObjects.Fetch_Head();
-                    DEBUG_ASSERT(objptr != nullptr);
+                    captainslog_assert(objptr != nullptr);
                     if (objptr != nullptr) {
                         if (objptr->Owner() == g_PlayerPtr->What_Type()) {
                             GameEventClass ev(GameEventClass::EVENT_ALLY, objptr->Owner());
@@ -980,7 +980,7 @@ void Keyboard_Process(KeyNumType &key)
             if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Session.Game_To_Play() == GAME_SKIRMISH) {
                 if (justkey == g_Options.Get_DebugKeyToggleDebug()) {
                     g_Debug_Keys = !g_Debug_Keys;
-                    DEBUG_LOG("Debug hotkeys %s!", (g_Debug_Keys ? "enabled" : "disabled"));
+                    captainslog_debug("Debug hotkeys %s!", (g_Debug_Keys ? "enabled" : "disabled"));
                     if (g_Debug_Keys) {
                         g_Session.Get_Messages().Add_Simple_Message(
                             "System", "Debug hotkeys enabled!", PLAYER_COLOR_LIGHT_BLUE);

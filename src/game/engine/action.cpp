@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "action.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -75,7 +75,7 @@ ActionType Action_From_Name(const char *name)
 
 const char *Name_From_Action(ActionType action)
 {
-    DEBUG_ASSERT(action < ACTION_COUNT);
+    captainslog_assert(action < ACTION_COUNT);
 
     if (action >= ACTION_NONE && action < ACTION_COUNT) {
         return ActionName[action];

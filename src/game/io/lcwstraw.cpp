@@ -15,10 +15,10 @@
  */
 #include "lcwstraw.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "lcw.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 
@@ -50,7 +50,7 @@ LCWStraw::~LCWStraw()
  */
 int LCWStraw::Get(void *buffer, int length)
 {
-    DEBUG_ASSERT_PRINT(m_InBuffer != nullptr, "m_InBuffer is a null pointer.\n");
+    captainslog_dbgassert(m_InBuffer != nullptr, "m_InBuffer is a null pointer.\n");
 
     int bytesread = 0;
     uint8_t *dst = static_cast<uint8_t *>(buffer);

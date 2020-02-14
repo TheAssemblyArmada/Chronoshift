@@ -13,7 +13,8 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "gamedebug.h"
+#include <captainslog.h>
+
 #include "hooker.h"
 #include "setuphooks.h"
 #include <cstdio>
@@ -38,7 +39,6 @@ StaticInitObject::StaticInitObject()
 
 StaticInitObject::~StaticInitObject()
 {
-    DEBUG_STOP();
     StopHooking();
 }
 
@@ -53,8 +53,8 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved
             // StartHooking();
             // Setup_Hooks();
             // printf("Initialising DLL.\n");
-            // DEBUG_INIT(DEBUG_LOG_TO_FILE);
-            // DEBUG_LOG("Attaching DLL.\n");
+            // DEBUG_INIT(captainslog_debug_TO_FILE);
+            // captainslog_debug("Attaching DLL.");
             break;
 
         case DLL_PROCESS_DETACH:

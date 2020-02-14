@@ -14,8 +14,7 @@
  *            LICENSE
  */
 #include "rawfile.h"
-#include "gamedebug.h"
-#include "stringex.h"
+#include <captainslog.h>
 #include <cerrno>
 #include <cstdio>
 #include <cstdlib>
@@ -335,11 +334,11 @@ int RawFileClass::Read(void *buffer, int length)
         }
 #else
         int readlen = read(m_Handle, buffer, length);
-        DEBUG_LOG("Read %d out of attempted %d bytes.\n", readlen, length);
+        captainslog_debug("Read %d out of attempted %d bytes.", readlen, length);
 
         if (readlen == 0) {
             readlen = read(m_Handle, buffer, length);
-            DEBUG_LOG("Attempting to get more data after read of 0, got %d.\n", readlen);
+            captainslog_debug("Attempting to get more data after read of 0, got %d.", readlen);
         }
 
         if (readlen >= 0) {
@@ -552,7 +551,7 @@ BOOL RawFileClass::Set_Date_Time(time_t datetime)
 void RawFileClass::Error(int error, BOOL can_retry, const char *filename)
 {
     // Nothing in RA
-    DEBUG_LOG("Triggered error %d for file '%s'.\n", error, filename);
+    captainslog_debug("Triggered error %d for file '%s'.", error, filename);
 }
 
 void RawFileClass::Bias(int offset, int length)

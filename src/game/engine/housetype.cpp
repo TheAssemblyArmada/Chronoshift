@@ -184,8 +184,8 @@ HousesType HouseTypeClass::From_Name(const char *name)
  */
 HouseTypeClass &HouseTypeClass::As_Reference(HousesType type)
 {
-    DEBUG_ASSERT(type != HOUSES_NONE);
-    DEBUG_ASSERT(type < HOUSES_COUNT);
+    captainslog_assert(type != HOUSES_NONE);
+    captainslog_assert(type < HOUSES_COUNT);
 
     return g_HouseTypes[type];
 }

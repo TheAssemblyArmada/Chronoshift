@@ -150,7 +150,7 @@ void OverlayClass::Read_INI(GameINIClass &ini)
     DEFINE_CALL(func, 0x00527014, void, GameINIClass &);
     func(ini);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -160,7 +160,7 @@ void OverlayClass::Write_INI(GameINIClass &ini)
     DEFINE_CALL(func, 0x0052736C, void, GameINIClass &);
     func(ini);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 

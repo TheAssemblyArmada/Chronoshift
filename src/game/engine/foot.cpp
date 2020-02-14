@@ -17,7 +17,6 @@
 #include "bench.h"
 #include "building.h"
 #include "coord.h"
-#include "gamedebug.h"
 #include "globals.h"
 #include "iomap.h"
 #include "missioncontrol.h"
@@ -26,6 +25,7 @@
 #include "target.h"
 #include "team.h"
 #include <algorithm>
+#include <captainslog.h>
 #include <cstdlib>
 
 // Size in bits of each element of the path flags array.
@@ -421,7 +421,7 @@ void FootClass::Decode_Pointers()
 {
     if (m_Member != nullptr) {
         m_Member = reinterpret_cast<FootClass *>(As_Techno((uintptr_t)m_Member));
-        DEBUG_ASSERT(m_Member != nullptr);
+        captainslog_assert(m_Member != nullptr);
     }
     TechnoClass::Decode_Pointers();
 }
@@ -557,7 +557,7 @@ void FootClass::Death_Announcement(TechnoClass *killer) const
         reinterpret_cast<void (*)(const FootClass *, TechnoClass *)>(0x004C3150);
     func(this, killer);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -644,7 +644,7 @@ void FootClass::Fixup_Path(PathType *path)
  */
 PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, MoveType move)
 {
-    // DEBUG_LOG("Running Find_Path...\n");
+    // captainslog_debug("Running Find_Path...");
     // This is Script_Unit_Pathfinder in OpenDUNE which returns the struct as
     // an object instead of using a static instance. Might be useful to study
     // for rewriting this without the gotos.
@@ -664,11 +664,11 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
     // Are we part of a team and should that team avoid threats?
     if (!m_Team.Is_Valid() || !m_Team->Should_Avoid_Threats()) {
-        // DEBUG_LOG(" Threat procesing will not be performed for final cell.\n");
+        // captainslog_debug(" Threat procesing will not be performed for final cell.");
         threat = -1;
         risk = -1;
     } else {
-        // DEBUG_LOG(" Threat procesing will be performed if needed for final cell.\n");
+        // captainslog_debug(" Threat procesing will be performed if needed for final cell.");
         if (!m_Team.Is_Valid()) {
             risk = Risk();
         } else {
@@ -704,11 +704,11 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
         int cell_score = Passable_Cell(adj_cell, direction, threat, move);
 
         if (cell_score != 0) { // Great, we have a direct move, do the next round.
-            // DEBUG_LOG("  Cell passable and on direct route, registering cell.\n");
+            // captainslog_debug("  Cell passable and on direct route, registering cell.");
             Register_Cell(&_path, adj_cell, direction, cell_score, move);
             current_cell = adj_cell;
         } else { // Oops, we bumped into something, find a way around.
-            // DEBUG_LOG("  No direct route, doing further searching.\n");
+            // captainslog_debug("  No direct route, doing further searching.");
             FacingType right_moves[304];
             PathType right_path;
             int right_score = 0;
@@ -738,7 +738,7 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                             break;
                         }
 
-                        // DEBUG_LOG("  Adjusting threat state for final cell early check.\n");
+                        // captainslog_debug("  Adjusting threat state for final cell early check.");
                         switch (threat_state++) {
                             case 0:
                                 threat = risk / 2;
@@ -792,17 +792,17 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                     move);
 
                 if (left_score != 0 || right_score != 0) {
-                    // DEBUG_LOG("  Found a path following an edge.\n");
+                    // captainslog_debug("  Found a path following an edge.");
                     break;
                 }
 
-                // DEBUG_LOG("  Follow_Edge failed to find path, checking adjacents.\n");
+                // captainslog_debug("  Follow_Edge failed to find path, checking adjacents.");
                 while (adj_cell != dest) {
                     next_dir = Direction_To_Facing(Cell_Direction8(adj_cell, dest));
                     adj_cell = Cell_Get_Adjacent(adj_cell, next_dir);
 
                     if (Passable_Cell(adj_cell, next_dir, threat, move) == 0) {
-                        // DEBUG_LOG("  Adjacent cell not passable, incrementing exit checker.\n");
+                        // captainslog_debug("  Adjacent cell not passable, incrementing exit checker.");
                         ++i;
 
                         break;
@@ -814,14 +814,14 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                 }
 
                 if (threat == -1) {
-                    // DEBUG_LOG("  Find_Path bailing as failed Follow_Edge and adj_cell == dest.\n");
+                    // captainslog_debug("  Find_Path bailing as failed Follow_Edge and adj_cell == dest.");
                     // Set current a break to finish pathfinding.
                     current_cell = adj_cell;
 
                     break;
                 }
 
-                // DEBUG_LOG("  Adjusting threat for final cell check.\n");
+                // captainslog_debug("  Adjusting threat for final cell check.");
                 switch (threat_state++) {
                     case 0:
                         threat = risk >> 1;
@@ -843,20 +843,20 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                 chosen_path = &left_path;
 
                 if (right_score == 0) {
-                    // DEBUG_LOG("  Find_Path found a left path.\n");
+                    // captainslog_debug("  Find_Path found a left path.");
                     chosen_path = &left_path;
                 } else if (left_score == 0) {
-                    // DEBUG_LOG("  Find_Path found a right path.\n");
+                    // captainslog_debug("  Find_Path found a right path.");
                     chosen_path = &right_path;
                 } else {
-                    // DEBUG_LOG("  Find_Path chose path based on length, left %d vs right %d.\n", left_path.Length, right_path.Length);
+                    // captainslog_debug("  Find_Path chose path based on length, left %d vs right %d.", left_path.Length, right_path.Length);
                     chosen_path = left_path.Length >= right_path.Length ? &right_path : &left_path;
                 }
 
                 int move_count = std::min(chosen_path->Length, length);
 
                 if (move_count > 0) {
-                    // DEBUG_LOG("  Find_Path is copying .\n");
+                    // captainslog_debug("  Find_Path is copying .");
                     memcpy(_path.Overlap, chosen_path->Overlap, sizeof(g_MainOverlap));
                     memcpy(_path.Moves, chosen_path->Moves, move_count);
                     _path.Length = move_count;
@@ -866,7 +866,7 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
                     current_cell = adj_cell;
                 } else {
-                    // DEBUG_LOG("  Find_Path bailing, mount cound 0 after successful follow edge.\n");
+                    // captainslog_debug("  Find_Path bailing, mount cound 0 after successful follow edge.");
                     break;
                 }
             } else {
@@ -883,7 +883,7 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
     BENCHMARK_END(BENCH_FIND_PATH);
 
-    // DEBUG_LOG("Completed Find_Path...\n");
+    // captainslog_debug("Completed Find_Path...");
     return &_path;
 }
 
@@ -1041,7 +1041,7 @@ BOOL FootClass::Unravel_Loop(PathType *path, cell_t &cell, FacingType &facing, i
  */
 BOOL FootClass::Register_Cell(PathType *path, cell_t cell, FacingType facing, int cost, MoveType move)
 {
-    DEBUG_ASSERT(cell >= 0);
+    captainslog_assert(cell >= 0);
 
     // Check the flagging for the passed in cell, if its not flagged, then add
     // facing to what appears to be the move list.
@@ -1263,9 +1263,9 @@ int FootClass::Optimize_Moves(PathType *path, MoveType move)
 {
     // This is Script_Unit_Pathfinder_Smoothen in OpenDUNE, looks like it does
     // exactly the same thing but cell pass check doesn't use move types.
-    DEBUG_ASSERT(m_IsActive);
-    DEBUG_ASSERT(move != MOVE_NONE);
-    // DEBUG_ASSERT_PRINT(move < MOVE_COUNT, "move value is %d which exceed expected %d.\n", move, MOVE_COUNT);
+    captainslog_assert(m_IsActive);
+    captainslog_assert(move != MOVE_NONE);
+    // captainslog_dbgassert(move < MOVE_COUNT, "move value is %d which exceed expected %d.\n", move, MOVE_COUNT);
                 
     static FacingType _trans[] = { FACING_NORTH,
         FACING_NORTH,
@@ -1482,7 +1482,7 @@ int FootClass::Point_Relative_To_Line(int px, int py, int sx, int sy, int ex, in
  */
 PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int length, MoveType move)
 {
-    DEBUG_LOG("***Find_Path_Wrapper entered***\n");
+    captainslog_debug("***Find_Path_Wrapper entered***");
     PathType *real;
     PathType *test;
     FacingType *buffer2 = new FacingType[length];
@@ -1499,25 +1499,25 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
 
     bool fail = false;
     if (real->StartCell != test->StartCell) {
-        DEBUG_LOG("ERROR: Find_Path_Wrapper StartCells don't match real %hd test %hd\n", real->StartCell, test->StartCell);
+        captainslog_debug("ERROR: Find_Path_Wrapper StartCells don't match real %hd test %hd", real->StartCell, test->StartCell);
         fail = true;
     }
     if (real->Score != test->Score) {
-        DEBUG_LOG("ERROR: Find_Path_Wrapper Scores don't match real %d test %d\n", real->Score, test->Score);
+        captainslog_debug("ERROR: Find_Path_Wrapper Scores don't match real %d test %d", real->Score, test->Score);
         fail = true;
     }
     if (real->Length != test->Length) {
-        DEBUG_LOG("ERROR: Find_Path_Wrapper Lengths don't match real %d test %d\n", real->Length, test->Length);
+        captainslog_debug("ERROR: Find_Path_Wrapper Lengths don't match real %d test %d", real->Length, test->Length);
         fail = true;
     }
     if (real->PreviousCell != test->PreviousCell) {
-        DEBUG_LOG("ERROR: Find_Path_Wrapper PreviousCells don't match real %hd test %hd\n",
+        captainslog_debug("ERROR: Find_Path_Wrapper PreviousCells don't match real %hd test %hd",
             real->PreviousCell,
             test->PreviousCell);
         fail = true;
     }
     if (real->UnravelCheckpoint != test->UnravelCheckpoint) {
-        DEBUG_LOG("ERROR: Find_Path_Wrapper UnravelCheckpoints don't match real %hd test %hd\n",
+        captainslog_debug("ERROR: Find_Path_Wrapper UnravelCheckpoints don't match real %hd test %hd",
             real->UnravelCheckpoint,
             test->UnravelCheckpoint);
         fail = true;
@@ -1527,17 +1527,17 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
     if (fail == false) {
         int num1 = memcmp(real->Moves, test->Moves, test->Length > real->Length ? test->Length : real->Length);
         if (num1 != 0) {
-            DEBUG_LOG("ERROR: Find_Path_Wrapper Moves don't match\n");
+            captainslog_debug("ERROR: Find_Path_Wrapper Moves don't match");
         }
         int num2 = memcmp(real->Overlap, test_overlap, 2048);
         if (num2 != 0) {
-            DEBUG_LOG("ERROR: Find_Path_Wrapper Overlaps don't match\n");
+            captainslog_debug("ERROR: Find_Path_Wrapper Overlaps don't match");
         }
     }
 
     // clear test's buffer
     delete[] buffer2;
-    DEBUG_LOG("***Find_Path_Wrapper exit***\n");
+    captainslog_debug("***Find_Path_Wrapper exit***");
     return real;
 }
 

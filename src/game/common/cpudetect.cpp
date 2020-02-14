@@ -15,8 +15,8 @@
  */
 #include "always.h"
 #include "cpudetect.h"
-#include "gamedebug.h"
 #include "ostimer.h"
+#include <captainslog.h>
 #include <cstring>
 #include <stdio.h>
 

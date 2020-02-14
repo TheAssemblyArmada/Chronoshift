@@ -14,9 +14,9 @@
  */
 #include "udp.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "globals.h"
 #include "keyboard.h"
+#include <captainslog.h>
 #include <cstdio>
 
 using std::sprintf;
@@ -91,7 +91,7 @@ int UDPInterfaceClass::Open_Socket(unsigned port)
     m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 
     if (m_Socket == INVALID_SOCKET) {
-        DEBUG_LOG("Failed to create UDP socket - error code %d.\n", LastSocketError);
+        captainslog_debug("Failed to create UDP socket - error code %d.", LastSocketError);
 
         return 0;
     }
@@ -101,14 +101,14 @@ int UDPInterfaceClass::Open_Socket(unsigned port)
     addr.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(m_Socket, (sockaddr const *)&addr, sizeof(addr)) == SOCKET_ERROR) {
-        DEBUG_LOG("UDP socket bind failed with error code %d.\n", LastSocketError);
+        captainslog_debug("UDP socket bind failed with error code %d.", LastSocketError);
         Close_Socket();
 
         return 0;
     }
 
     gethostname(addrname, 128);
-    DEBUG_LOG("Hostname is %s\n", addrname);
+    captainslog_debug("Hostname is %s", addrname);
     host = gethostbyname(addrname);
 
     // Clear the existing list of local addresses
@@ -121,7 +121,7 @@ int UDPInterfaceClass::Open_Socket(unsigned port)
 
     while (*addr_list != nullptr) {
         uint32_t addr_int = *(uint32_t *)(*addr_list);
-        DEBUG_LOG("UDP OpenSocket found local address: %u.%u.%u.%u\n",
+        captainslog_debug("UDP OpenSocket found local address: %u.%u.%u.%u",
             (uint8_t)(*addr_list)[0],
             (uint8_t)(*addr_list)[1],
             (uint8_t)(*addr_list)[2],

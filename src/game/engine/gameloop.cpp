@@ -309,7 +309,7 @@ BOOL Main_Loop()
         Call_Back();
 
         if (g_PlayerWins) {
-            DEBUG_LOG("Player wins.\n");
+            captainslog_debug("Player wins.");
             if (g_Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
                 Register_Game_End_Time();
                 Send_Statistics_Packet();
@@ -325,7 +325,7 @@ BOOL Main_Loop()
         }
 
         if (g_PlayerLoses) {
-            DEBUG_LOG("Player loses.\n");
+            captainslog_debug("Player loses.");
             if (g_Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
                 Register_Game_End_Time();
                 Send_Statistics_Packet();
@@ -341,7 +341,7 @@ BOOL Main_Loop()
         }
 
         if (g_PlayerRestarts) {
-            DEBUG_LOG("Player restarted.\n");
+            captainslog_debug("Player restarted.");
             g_PlayerLoses = false;
             g_PlayerWins = false;
             g_PlayerRestarts = false;
@@ -353,7 +353,7 @@ BOOL Main_Loop()
         }
 
         if (g_PlayerAborts) {
-            DEBUG_LOG("Player aborted.\n");
+            captainslog_debug("Player aborted.");
             g_PlayerLoses = false;
             g_PlayerWins = false;
             g_PlayerRestarts = false;
@@ -366,7 +366,7 @@ BOOL Main_Loop()
 
         if (g_Session.Game_To_Play() != GAME_CAMPAIGN && g_Session.Game_To_Play() != GAME_SKIRMISH
             && g_Session.Players_List().Count() == 2 && g_Scen.Get_field_7CF() && g_Scen.Get_field_7D3()) {
-            DEBUG_LOG("Game is a draw.\n");
+            captainslog_debug("Game is a draw.");
             if (g_Session.Game_To_Play() == GAME_INTERNET && !g_GameStatisticsPacketSent) {
                 Register_Game_End_Time();
                 Send_Statistics_Packet();

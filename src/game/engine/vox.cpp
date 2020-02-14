@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "vox.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -148,7 +148,7 @@ const char *VoxName[VOX_COUNT] = {
 
 VoxType Vox_From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return VOX_NONE;

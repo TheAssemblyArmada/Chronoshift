@@ -15,9 +15,9 @@
  */
 #include "textprint.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include <algorithm>
+#include <captainslog.h>
 #include <cstring>
 
 using std::memcpy;

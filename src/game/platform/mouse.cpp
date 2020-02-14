@@ -14,12 +14,12 @@
  *            LICENSE
  */
 #include "mouse.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "mouseshape.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 
@@ -274,7 +274,7 @@ void MouseClass::Low_Hide_Mouse()
     if (m_State == 0) {
         if (m_BuffX != -1 || m_BuffY != -1) {
             if (m_Screen->Lock()) {
-                // DEBUG_LOG("Erasing mouse at X %d, Y %d, HotX %d, HotY %d\n", m_buffX, m_buffY, m_mouseHotX,
+                // captainslog_debug("Erasing mouse at X %d, Y %d, HotX %d, HotY %d", m_buffX, m_buffY, m_mouseHotX,
                 // m_mouseHotY);
                 Mouse_Shadow_Buffer(*this, *m_Screen, m_MouseBuffer, m_BuffX, m_BuffY, m_MouseHotX, m_MouseHotY, false);
                 m_Screen->Unlock();
@@ -290,7 +290,7 @@ void MouseClass::Low_Hide_Mouse()
 
 void MouseClass::Hide_Mouse()
 {
-    // DEBUG_LOG("MouseClass::Hide_Mouse()\n");
+    // captainslog_debug("MouseClass::Hide_Mouse()");
     ++m_MouseUpdate;
     Low_Hide_Mouse();
     --m_MouseUpdate;
@@ -309,7 +309,7 @@ void MouseClass::Low_Show_Mouse(int x_pos, int y_pos)
 
 void MouseClass::Show_Mouse()
 {
-    // DEBUG_LOG("MouseClass::Show_Mouse()\n");
+    // captainslog_debug("MouseClass::Show_Mouse()");
     int x_pos;
     int y_pos;
 

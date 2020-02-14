@@ -1344,7 +1344,7 @@ BuildingClass *HouseClass::Find_Building(BuildingType to_find, ZoneType zone) co
  */
 coord_t HouseClass::Find_Build_Location(BuildingClass *building) const
 {
-    DEBUG_ASSERT(building != nullptr);
+    captainslog_assert(building != nullptr);
     static ZoneType _zones[ZONE_COUNT] = { ZONE_CORE, ZONE_NORTH, ZONE_SOUTH, ZONE_EAST, ZONE_WEST };
     ZoneInfo zoneinfo = { 0, 0, 0 };
     int zone_scores[ZONE_COUNT];
@@ -1479,8 +1479,8 @@ cell_t HouseClass::Find_Cell_In_Zone(TechnoClass *object, ZoneType zone) const
  */
 cell_t HouseClass::Random_Cell_In_Zone(ZoneType zone) const
 {
-    DEBUG_ASSERT(zone != ZONE_NONE);
-    DEBUG_ASSERT(zone < ZONE_COUNT);
+    captainslog_assert(zone != ZONE_NONE);
+    captainslog_assert(zone < ZONE_COUNT);
 
     coord_t random_coord = 0;
 
@@ -1663,13 +1663,13 @@ ProdFailType HouseClass::Begin_Production(RTTIType rtti, int id)
     FactoryClass *fptr = Fetch_Factory(rtti);
     if (fptr != nullptr) {
         if (fptr->Is_Building()){
-            DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Cannot queue, factory is busy.\n", techtype->Get_Name());
+            captainslog_debug("Request to Begin_Production of '%s' was rejected. Cannot queue, factory is busy.", techtype->Get_Name());
             return PROD_REJECTED;
         }
     } else {
         fptr = new FactoryClass;
         if (fptr == nullptr) {
-            DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Unable to create factory\n", techtype->Get_Name());
+            captainslog_debug("Request to Begin_Production of '%s' was rejected. Unable to create factory", techtype->Get_Name());
             return PROD_REJECTED;
         }
         Set_Factory(rtti, fptr);
@@ -1677,7 +1677,7 @@ ProdFailType HouseClass::Begin_Production(RTTIType rtti, int id)
     }
 
     if (set == false) {
-        DEBUG_LOG("Request to Begin_Production of '%s' was rejected. Factory was unable to create the requested object\n",
+        captainslog_debug("Request to Begin_Production of '%s' was rejected. Factory was unable to create the requested object",
             techtype->Get_Name());
         if (fptr != nullptr) {
             delete fptr;
@@ -1759,7 +1759,7 @@ void HouseClass::Production_Begun(TechnoClass *object)
             }
             break;
         default:
-            DEBUG_LOG("HouseClass::Production_Begun got unsupported RTTI! %d\n", object->What_Am_I());
+            captainslog_debug("HouseClass::Production_Begun got unsupported RTTI! %d", object->What_Am_I());
             break;
     }
 }
@@ -1779,8 +1779,8 @@ void HouseClass::Recalc_Attributes()
  */
 cell_t HouseClass::Zone_Cell(ZoneType zone) const
 {
-    DEBUG_ASSERT(zone != ZONE_NONE);
-    DEBUG_ASSERT(zone < ZONE_COUNT);
+    captainslog_assert(zone != ZONE_NONE);
+    captainslog_assert(zone < ZONE_COUNT);
 
     switch (zone) {
         case ZONE_CORE:
@@ -1813,7 +1813,7 @@ cell_t HouseClass::Zone_Cell(ZoneType zone) const
  */
 cell_t HouseClass::Where_To_Go(FootClass *obj) const
 {
-    DEBUG_ASSERT(obj != nullptr);
+    captainslog_assert(obj != nullptr);
 
     ZoneType zone;
 
@@ -1889,7 +1889,7 @@ BOOL HouseClass::Is_No_Yak_Mig() const
     if (fptr != nullptr) {
         if (fptr->Get_Object()) {
             AircraftClass *aptr = reinterpret_cast<AircraftClass *>(fptr->Get_Object());
-            DEBUG_ASSERT(aptr != nullptr);
+            captainslog_assert(aptr != nullptr);
 
             if (aptr->What_Type() == AIRCRAFT_MIG || aptr->What_Type() == AIRCRAFT_YAK) {
                 --count;
@@ -2150,7 +2150,7 @@ void HouseClass::Write_INI(GameINIClass &ini)
  */
 BOOL HouseClass::Is_Allowed_To_Ally(HousesType house)
 {
-    DEBUG_ASSERT(house < HOUSES_COUNT);
+    captainslog_assert(house < HOUSES_COUNT);
 
     // No allying with a none house
     if (house == HOUSES_NONE) {
@@ -2521,7 +2521,7 @@ void HouseClass::Special_Weapon_AI(SpecialWeaponType special)
     }
 
     if (building != nullptr) {
-        DEBUG_LOG("HouseClass::Special_Weapon_AI - Placing special blast at building '%s' (threat value '%d')", building->Class_Of().Get_Name(), threat_value);
+        captainslog_debug("HouseClass::Special_Weapon_AI - Placing special blast at building '%s' (threat value '%d')", building->Class_Of().Get_Name(), threat_value);
         Place_Special_Blast(special, building->Center_Cell());
     }
 }
@@ -2555,7 +2555,7 @@ BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
     // If cell is valid then we assume we are placing a building.
     if (cell != -1) {
         if (tptr == nullptr) {
-            DEBUG_LOG("HouseClass::Place_Object - Building pointer was nullptr\n");
+            captainslog_debug("HouseClass::Place_Object - Building pointer was nullptr");
             return false;
         }
 
@@ -2563,12 +2563,12 @@ BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
 
         // This returns nullptr when the building either doesn't exist or denies the request.
         if (builder == nullptr) {
-            DEBUG_LOG("HouseClass::Place_Object - Unable to build Building, cancelling\n");
+            captainslog_debug("HouseClass::Place_Object - Unable to build Building, cancelling");
             return false;
         }
 
         builder->Transmit_Message(RADIO_HELLO, tptr);
-        DEBUG_LOG("HouseClass::Place_Object - Contacted Builder\n");
+        captainslog_debug("HouseClass::Place_Object - Contacted Builder");
 
         if (tptr->Unlimbo(Cell_To_Coord(cell))) {
             // Flag production as completed.
@@ -2583,7 +2583,7 @@ BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
             Sound_Effect(VOC_PLACE_BUILDING);
             g_Map.Set_Cursor_Shape();
             g_Map.Clear_Pending_Object();
-            DEBUG_LOG("HouseClass::Place_Object - Placed Building\n");
+            captainslog_debug("HouseClass::Place_Object - Placed Building");
             return true;
         }
 
@@ -2594,7 +2594,7 @@ BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
         }
 
         builder->Transmit_Message(RADIO_OVER_AND_OUT);
-        DEBUG_LOG("HouseClass::Place_Object - Failed to Deploy, terminated Radio with Builder\n");
+        captainslog_debug("HouseClass::Place_Object - Failed to Deploy, terminated Radio with Builder");
 
         return false;
     }
@@ -2602,7 +2602,7 @@ BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
     // Following code handles placing objects.
 
     if (tptr == nullptr) {
-        DEBUG_LOG("HouseClass::Place_Object - Object pointer was nullptr\n");
+        captainslog_debug("HouseClass::Place_Object - Object pointer was nullptr");
         return true;
     }
 
@@ -2618,13 +2618,13 @@ BOOL HouseClass::Place_Object(RTTIType rtti, cell_t cell)
 
     // This returns nullptr when the building either doesn't exist or denies the request.
     if (builder == nullptr) {
-        DEBUG_LOG("HouseClass::Place_Object - Unable to build Object, cancelling\n");
+        captainslog_debug("HouseClass::Place_Object - Unable to build Object, cancelling");
         return false;
     }
 
     // When this fails usually that means the builder was blocked, like for example walled in.
     if (!builder->Exit_Object(tptr)) {
-        DEBUG_LOG("HouseClass::Place_Object - Failed to exit Object from Factory\n");
+        captainslog_debug("HouseClass::Place_Object - Failed to exit Object from Factory");
         return false;
     }
 

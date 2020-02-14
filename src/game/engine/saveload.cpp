@@ -13,7 +13,6 @@
  *            LICENSE
  */
 #include "saveload.h"
-#include "gamedebug.h"
 #include "gameoptions.h"
 #include "globals.h"
 #include "house.h"
@@ -24,6 +23,7 @@
 #include "special.h"
 #include "straw.h"
 #include "vortex.h"
+#include <captainslog.h>
 
 void Put_All(Pipe &pipe, int skip_callback)
 {
@@ -167,16 +167,16 @@ int Get_Savefile_Info(int number, char *savename, unsigned *scenarioidx, HousesT
     //}
     switch (magic) {
         default:
-            DEBUG_LOG("Get_Savefile_Info - Uknown Magic Number! Got %x\n", magic);
+            captainslog_debug("Get_Savefile_Info - Uknown Magic Number! Got %x", magic);
             return false;
         case RADOS_10X_MAGIC_ID:
         case RADOS_20X_MAGIC_ID:
-            DEBUG_LOG("Get_Savefile_Info - DOS saves are not supported!\n");
+            captainslog_debug("Get_Savefile_Info - DOS saves are not supported!");
             return false;
         case RA95_10X_MAGIC_ID:
         case RA95_20X_MAGIC_ID:
         case RA95_105_MAGIC_ID:
-            DEBUG_LOG("Get_Savefile_Info - Old saves currently are not supported!\n");
+            captainslog_debug("Get_Savefile_Info - Old saves currently are not supported!");
             return false;
         case RA95_2XX_MAGIC_ID:
         case RA95_30X_MAGIC_ID:

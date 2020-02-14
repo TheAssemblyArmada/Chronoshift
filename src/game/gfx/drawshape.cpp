@@ -16,9 +16,9 @@
 #include "drawshape.h"
 #include "display.h"
 #include "gamefile.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
+#include <captainslog.h>
 
 /**
  * @brief Main function used to draw sprites to the screen, wraps lower level handling.
@@ -53,7 +53,7 @@ void CC_Draw_Shape(void *shape_ptr, int frame, int draw_x, int draw_y, WindowNum
 
             if (shape_frame != nullptr) {
                 if (Get_Last_Frame_Length() > g_ShapeBufferSize) {
-                    DEBUG_LOG("Attempt to use shape buffer for size %d buffer is only size %d",
+                    captainslog_debug("Attempt to use shape buffer for size %d buffer is only size %d",
                         Get_Last_Frame_Length(),
                         g_ShapeBufferSize);
                 }

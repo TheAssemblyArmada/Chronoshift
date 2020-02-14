@@ -15,7 +15,7 @@
  */
 #include "sha.h"
 #include "endiantype.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <stdio.h>
 #include <string.h>
 

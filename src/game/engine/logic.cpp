@@ -13,7 +13,6 @@
  *            LICENSE
  */
 #include "logic.h"
-#include "gamedebug.h"
 #include "iomap.h"
 //#include "voc.h"
 //#include "trigger.h"
@@ -25,6 +24,7 @@
 #include "object.h"
 //#include "anim.h"
 #include "target.h"
+#include <captainslog.h>
 
 #ifndef GAME_DLL
 LogicClass g_Logic;
@@ -40,7 +40,7 @@ LogicClass::~LogicClass()
 
 void LogicClass::Init()
 {
-    DEBUG_LOG("LogicClass::Clear()\n");
+    captainslog_debug("LogicClass::Clear()");
 
     LayerClass::Init();
 }
@@ -72,13 +72,13 @@ void LogicClass::AI()
     g_Scen.Do_Fade_AI();
 
     for (LogicTriggerID = 0; LogicTriggerID < LogicTriggers.Count(); ++LogicTriggerID) {
-        // DEBUG_LOG("LogicClass::AI() - LogicTriggerID is %d, trigger name is '%s'\n", LogicTriggerID,
+        // captainslog_debug("LogicClass::AI() - LogicTriggerID is %d, trigger name is '%s'", LogicTriggerID,
         // LogicTriggers[LogicTriggerID]->ObjectType->Get_Name());
 
         TriggerClass *trigger = LogicTriggers[LogicTriggerID];
-        DEBUG_ASSERT(trigger != nullptr);
+        captainslog_assert(trigger != nullptr);
         if (trigger != nullptr) {
-            // DEBUG_LOG("LogicClass::AI() - LogicTrigger %d:'%s' is valid, about to check global status\n", LogicTriggerID,
+            // captainslog_debug("LogicClass::AI() - LogicTrigger %d:'%s' is valid, about to check global status", LogicTriggerID,
             // LogicTriggers[LogicTriggerID]->ObjectType->Get_Name());
 
             if ((!g_Scen.m_GlobalsChanged || !trigger->Spring(TEVENT_GLOBAL_SET)) && !trigger->Spring(TEVENT_GLOBAL_CLEAR)
@@ -108,13 +108,13 @@ void LogicClass::AI()
         }
     }
 
-    // DEBUG_LOG("LogicClass::AI() - Teams.Count = %d\n", Teams.Count());
+    // captainslog_debug("LogicClass::AI() - Teams.Count = %d", Teams.Count());
     for (int team = 0; team < Teams.Count(); ++team) {
         TeamClass *tptr = Teams[team];
-        DEBUG_ASSERT(tptr != nullptr);
+        captainslog_assert(tptr != nullptr);
         if (tptr != nullptr) {
             if (tptr->Is_Active()) {
-                // DEBUG_LOG("LogicClass::AI() - About to call AI() on team '%s'\n", tptr->Name());
+                // captainslog_debug("LogicClass::AI() - About to call AI() on team '%s'", tptr->Name());
                 tptr->AI();
             }
         }
@@ -130,9 +130,9 @@ void LogicClass::AI()
 
     for (int index = 0; index < g_Logic.Count(); ++index) {
         ObjectClass *objptr = g_Logic[index];
-        DEBUG_ASSERT(objptr != nullptr);
+        captainslog_assert(objptr != nullptr);
         if (objptr != nullptr) {
-            // DEBUG_LOG("LogicClass::AI() - About to call AI() on %s:%s\n", RTTIName[objptr->What_Am_I()].Name,
+            // captainslog_debug("LogicClass::AI() - About to call AI() on %s:%s", RTTIName[objptr->What_Am_I()].Name,
             // objptr->Name());
 
             objptr->AI();
@@ -140,7 +140,7 @@ void LogicClass::AI()
 
         if (objptr != nullptr) {
             if (TimeQuake) {
-                DEBUG_LOG("LogicClass::AI() - Processing %s:%s for Time Quake damage!\n",
+                captainslog_debug("LogicClass::AI() - Processing %s:%s for Time Quake damage!",
                     g_RTTIName[objptr->What_Am_I()].Name,
                     objptr->Name());
 
@@ -188,7 +188,7 @@ void LogicClass::AI()
                                 objptr->Clicked_As_Target(7);
 
                                 AnimClass *anim = new AnimClass(ANIM_MINEEXP1, objptr->Center_Coord());
-                                DEBUG_ASSERT(anim != nullptr);
+                                captainslog_assert(anim != nullptr);
                             }
 
                             objptr->Take_Damage(v36, 0, WARHEAD_AP, nullptr, 1); // TODO, check def args
@@ -207,13 +207,13 @@ void LogicClass::AI()
 
     g_Map.Logic_AI();
 
-    // DEBUG_LOG("LogicClass::AI() - Factories.Count = %d\n", Teams.Count());
+    // captainslog_debug("LogicClass::AI() - Factories.Count = %d", Teams.Count());
     for (int factory = 0; factory < Factories.Count(); ++factory) {
         FactoryClass *fptr = Factories[factory];
-        DEBUG_ASSERT(fptr != nullptr);
+        captainslog_assert(fptr != nullptr);
         if (fptr != nullptr) {
             if (fptr->Is_Active()) {
-                DEBUG_LOG("LogicClass::AI() - About to call FactoryClass::AI() on factory '%d'\n", factory);
+                captainslog_debug("LogicClass::AI() - About to call FactoryClass::AI() on factory '%d'", factory);
                 fptr->AI();
             }
         }
@@ -222,7 +222,7 @@ void LogicClass::AI()
     if (g_Session.GameToPlay != GAME_CAMPAIGN) {
         for (HousesType mphouse = HOUSES_MULTI_FIRST; mphouse < HOUSES_MULTI_LAST; ++mphouse) {
             HouseClass *hptr = HouseClass::As_Pointer(mphouse);
-            DEBUG_ASSERT(hptr != nullptr);
+            captainslog_assert(hptr != nullptr);
 
             if (hptr != nullptr) {
                 if (hptr->Is_Active()) {
@@ -234,7 +234,7 @@ void LogicClass::AI()
     } else {
         for (HousesType house = HOUSES_FIRST; house < HOUSES_COUNT; ++house) {
             HouseClass *hptr = HouseClass::As_Pointer(house);
-            DEBUG_ASSERT(hptr != nullptr);
+            captainslog_assert(hptr != nullptr);
             if (hptr != nullptr) {
                 if (hptr->Is_Active()) {
                     hptr->AI();
@@ -269,7 +269,7 @@ void LogicClass::Detach(target_t target, int a2)
     if ((RTTIType)a2 == RTTI_TRIGGER) {
         for (int index = 0; index < LogicTriggers.Count(); ++index) {
             TriggerClass *ptr = LogicTriggers[index];
-            DEBUG_ASSERT(ptr != nullptr);
+            captainslog_assert(ptr != nullptr);
 
             if (As_Trigger(target) == ptr) {
                 LogicTriggers.Delete_Index(index);

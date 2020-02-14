@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "facing.h"
-#include "gamedebug.h"
 #include <algorithm>
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -343,8 +343,8 @@ FacingType KN_To_Facing(KeyNumType kn)
 
 const char *Name_From_Facing(FacingType facing, BOOL abbreviated)
 {
-    // DEBUG_ASSERT(facing != FACING_NONE);
-    DEBUG_ASSERT(facing < FACING_COUNT);
+    // captainslog_assert(facing != FACING_NONE);
+    captainslog_assert(facing < FACING_COUNT);
 
     if (facing != FACING_NONE && facing < FACING_COUNT) {
         if (abbreviated) {
@@ -358,7 +358,7 @@ const char *Name_From_Facing(FacingType facing, BOOL abbreviated)
 
 FacingType Facing_From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return FACING_NONE;

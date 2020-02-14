@@ -107,11 +107,11 @@ void Queue_AI_Normal()
     }
     /*if (g_Session.Record_Game()) {
         bool executed = Execute_ScheduledEvents(1, g_PlayerPtr->What_Type());
-        //DEBUG_LOG_CONDITIONAL(!executed, "Execute_ScheduledEvents() returned false in Queue_AI_Normal()!\n");
+        //captainslog_debug_CONDITIONAL(!executed, "Execute_ScheduledEvents() returned false in Queue_AI_Normal()!\n");
         if (executed) {
             Clean_ScheduledEvents();
         } else {
-            DEBUG_LOG("Queue_AI_Normal() - Execute_ScheduledEvents() failed, setting g_GameActive to false\n");
+            captainslog_debug("Queue_AI_Normal() - Execute_ScheduledEvents() failed, setting g_GameActive to false");
             g_GameActive = false;
         }
     }*/

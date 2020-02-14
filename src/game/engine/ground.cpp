@@ -14,8 +14,8 @@
  */
 #include "ground.h"
 #include "gameini.h"
-#include "gamedebug.h"
 #include <algorithm>
+#include <captainslog.h>
 
 #ifndef GAME_DLL
 GroundClass g_Ground[LAND_COUNT];
@@ -53,8 +53,8 @@ const char *GroundClass::Name_From(GroundType ground)
 
 BOOL GroundClass::Read_INI(GameINIClass &ini, LandType const land)
 {
-    DEBUG_ASSERT(land != LAND_NONE);
-    DEBUG_ASSERT(land < LAND_COUNT);
+    captainslog_assert(land != LAND_NONE);
+    captainslog_assert(land < LAND_COUNT);
 
     const char *landname = Name_From_Land(land);
 

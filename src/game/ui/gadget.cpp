@@ -123,12 +123,12 @@ KeyNumType GadgetClass::Input()
         not_last_list = true;
     }
 
-    // DEBUG_LOG("GadgetClass::Input checking input buffer.\n");
+    // captainslog_debug("GadgetClass::Input checking input buffer.");
     key_press = (KeyNumType)g_Keyboard->Check();
     if (key_press) {
-        // DEBUG_LOG("GadgetClass::Input checked 0x%04X was in buffer, retrieving.\n", key_press);
+        // captainslog_debug("GadgetClass::Input checked 0x%04X was in buffer, retrieving.", key_press);
         key_press = (KeyNumType)g_Keyboard->Get();
-        // DEBUG_LOG("GadgetClass::Input retrieved 0x%04X from buffer.\n", key_press);
+        // captainslog_debug("GadgetClass::Input retrieved 0x%04X from buffer.", key_press);
     }
 
     // checks for mouse keys?
@@ -180,7 +180,7 @@ KeyNumType GadgetClass::Input()
     if (s_StuckOn != nullptr) {
         s_StuckOn->Draw_Me(false);
         GadgetClass *stuck = s_StuckOn;
-        // DEBUG_LOG("Calling s_StuckOn->Clicked_On\n");
+        // captainslog_debug("Calling s_StuckOn->Clicked_On");
         s_StuckOn->Clicked_On(key_press, press_flags, mouse_x, mouse_y);
 
         if (s_StuckOn != nullptr) {
@@ -192,7 +192,7 @@ KeyNumType GadgetClass::Input()
     } else {
         if (s_Focused != nullptr && (press_flags & KEYBOARD_INPUT) != 0) {
             s_Focused->Draw_Me(false);
-            // DEBUG_LOG("Calling s_Focused->Clicked_On\n");
+            // captainslog_debug("Calling s_Focused->Clicked_On");
             s_Focused->Clicked_On(key_press, press_flags, mouse_x, mouse_y);
 
             if (s_Focused != nullptr) {
@@ -213,7 +213,7 @@ KeyNumType GadgetClass::Input()
 
         } else {
             for (GadgetClass *entry = this; entry; entry = entry->Get_Next()) {
-                // DEBUG_LOG("Calling entry->Clicked_On\n");
+                // captainslog_debug("Calling entry->Clicked_On");
                 entry->Draw_Me(not_last_list);
 
                 if (!entry->m_IsDisabled && entry->Clicked_On(key_press, press_flags, mouse_x, mouse_y)) {
@@ -230,7 +230,7 @@ KeyNumType GadgetClass::Input()
 
 void GadgetClass::Draw_All(BOOL redraw)
 {
-    // DEBUG_LOG("Go Go Gadget Draw_All()!.\n");
+    // captainslog_debug("Go Go Gadget Draw_All()!.");
 
     for (GadgetClass *gadget = this; gadget != nullptr; gadget = gadget->Get_Next()) {
         gadget->Draw_Me(redraw);

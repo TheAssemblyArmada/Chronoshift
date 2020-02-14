@@ -16,8 +16,8 @@
 
 #include "blowfish.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "memrev.h"
+#include <captainslog.h>
 #include <string.h>
 
 const uint32_t BlowfishEngine::s_Blowfish_p_init[BF_ROUNDS + 2] = {
@@ -1085,7 +1085,7 @@ BlowfishEngine::~BlowfishEngine()
 */
 void BlowfishEngine::Submit_Key(void *key, int length)
 {
-    DEBUG_ASSERT_PRINT(length <= BF_MAX_KEY_LENGTH,
+    captainslog_dbgassert(length <= BF_MAX_KEY_LENGTH,
         "Key length %d exceeds maximum key length %d for Blowfish.\n", length, BF_MAX_KEY_LENGTH);
 
     memcpy(m_pBoxEnc, s_Blowfish_p_init, sizeof(m_pBoxEnc));

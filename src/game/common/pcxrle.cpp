@@ -13,8 +13,8 @@
  *            LICENSE
  */
 #include "pcxrle.h"
-#include "gamedebug.h"
 #include <algorithm>
+#include <captainslog.h>
 
 #ifdef COMPILER_WATCOM
 enum EncodingFlags

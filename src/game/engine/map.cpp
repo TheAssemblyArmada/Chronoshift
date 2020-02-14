@@ -406,9 +406,9 @@ cell_t MapClass::Clamp_To_Radar(cell_t cellnum) const
  */
 void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
-    DEBUG_ASSERT(house != nullptr);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(radius < ARRAY_SIZE(RadiusCount));
+    captainslog_assert(house != nullptr);
 
     // NOTE: In C&C/Sole, this doesn't take a house and instead always passes PlayerPtr to Map_Cell().
     // Sole adjusts radius to be 10 if its greater than 10. Possible fix to avoid function treating radius > 10 as 0?
@@ -451,8 +451,8 @@ void MapClass::Sight_From(cell_t cellnum, int radius, HouseClass *house, BOOL a4
  */
 void MapClass::Shroud_From(cell_t cellnum, int radius)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(radius < ARRAY_SIZE(RadiusCount));
 
     // BUGFIX Original code does not check radius is with the array bounds
     if (In_Radar(cellnum) && radius > 0 && radius <= g_Rule.Gap_Radius() && radius < ARRAY_SIZE(RadiusCount)) {
@@ -482,9 +482,9 @@ void MapClass::Shroud_From(cell_t cellnum, int radius)
  */
 void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
-    DEBUG_ASSERT(house != nullptr);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(radius < ARRAY_SIZE(RadiusCount));
+    captainslog_assert(house != nullptr);
 
     // We don't need to process jamming in map editing mode.
     if (g_InMapEditor) {
@@ -520,9 +520,9 @@ void MapClass::Jam_From(cell_t cellnum, int radius, HouseClass *house)
  */
 void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(radius < ARRAY_SIZE(RadiusCount));
-    DEBUG_ASSERT(house != nullptr);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(radius < ARRAY_SIZE(RadiusCount));
+    captainslog_assert(house != nullptr);
 
     // We don't need to process jamming in map editing mode.
     if (g_InMapEditor) {
@@ -554,8 +554,8 @@ void MapClass::UnJam_From(cell_t cellnum, int radius, HouseClass *house)
  */
 void MapClass::Place_Down(cell_t cellnum, ObjectClass *object)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(object != nullptr);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(object != nullptr);
 
     int16_t tmp_list[60];
 
@@ -598,8 +598,8 @@ void MapClass::Place_Down(cell_t cellnum, ObjectClass *object)
  */
 void MapClass::Pick_Up(cell_t cellnum, ObjectClass *object)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(object != nullptr);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(object != nullptr);
 
     int16_t tmp_list[60];
 
@@ -642,8 +642,8 @@ void MapClass::Pick_Up(cell_t cellnum, ObjectClass *object)
  */
 void MapClass::Overlap_Down(cell_t cellnum, ObjectClass *object)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(object != nullptr);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(object != nullptr);
 
     int16_t tmp_list[60];
 
@@ -672,8 +672,8 @@ void MapClass::Overlap_Down(cell_t cellnum, ObjectClass *object)
  */
 void MapClass::Overlap_Up(cell_t cellnum, ObjectClass *object)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
-    DEBUG_ASSERT(object != nullptr);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
+    captainslog_assert(object != nullptr);
 
     int16_t tmp_list[60];
 
@@ -725,7 +725,7 @@ int MapClass::Overpass()
  */
 int MapClass::Cell_Region(cell_t cellnum)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
 
     return 34 * (Cell_Get_X(cellnum) / 4 + 1) + (Cell_Get_Y(cellnum) / 4 + 1);
 }
@@ -904,7 +904,7 @@ int MapClass::Zone_Span(cell_t cell, int zone, MZoneType mzone)
  */
 cell_t MapClass::Nearby_Location(cell_t cellnum, SpeedType speed, int zone, MZoneType mzone) const
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
 
     cell_t near_cells[10];
 
@@ -1052,7 +1052,7 @@ void MapClass::Detach(int32_t target, int a2)
     if (Target_Get_RTTI(target) == RTTI_TRIGGER) {
         for (int i = 0; i < MapTriggers.Count(); ++i) {
             TriggerClass *trig = MapTriggers[i];
-            DEBUG_ASSERT(trig != nullptr);
+            captainslog_assert(trig != nullptr);
 
             if (As_Trigger(target) == trig) {
                 MapTriggers.Delete(trig);
@@ -1197,7 +1197,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
                 uint8_t icon[2];
 
                 while (straw.Get(coord, sizeof(coord)) > 0 && straw.Get(icon, sizeof(icon)) > 0) {
-                    DEBUG_ASSERT((coord[0] * coord[1]) < MAP_MAX_AREA);
+                    captainslog_assert((coord[0] * coord[1]) < MAP_MAX_AREA);
                     CellClass &cell = m_Array[coord[0] * coord[1]];
 
                     if (icon[0] == 0xFF) {
@@ -1282,7 +1282,7 @@ BOOL MapClass::Read_Binary(Straw &straw)
             break;
 
         default: // Unknown format, future expansion?
-            DEBUG_LOG("Invalid Map format\n");
+            captainslog_debug("Invalid Map format");
             break;
     }
 

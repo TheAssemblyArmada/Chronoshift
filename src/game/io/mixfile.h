@@ -20,21 +20,18 @@
 
 #include "always.h"
 #include "basefile.h"
+#include "buffer.h"
 #include "cd.h"
 #include "crc.h"
-#include "filestraw.h"
-#include "gamedebug.h"
-#include "listnode.h"
-
-//#include "obscure.h"
-#include "buffer.h"
 #include "endiantype.h"
+#include "filestraw.h"
+#include "listnode.h"
 #include "pkstraw.h"
 #include "rndstraw.h"
 #include "sha.h"
 #include "shastraw.h"
 #include "startup.h"
-#include "stringex.h"
+#include <captainslog.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -164,8 +161,8 @@ MixFileClass<FC>::MixFileClass(const char *filename, PKey *key) :
     m_FileIndex(nullptr),
     m_FileCache(nullptr)
 {
-    DEBUG_ASSERT(filename != nullptr);
-    DEBUG_ASSERT(key != nullptr);
+    captainslog_assert(filename != nullptr);
+    captainslog_assert(key != nullptr);
 
     if (!Force_CD_Available(g_RequiredCD)) {
         Emergency_Exit(0xFF);
@@ -189,7 +186,7 @@ MixFileClass<FC>::MixFileClass(FC &file, PKey *key) :
     m_FileIndex(nullptr),
     m_FileCache(nullptr)
 {
-    DEBUG_ASSERT(key != nullptr);
+    captainslog_assert(key != nullptr);
 
     Load_File(file, key);
 }
@@ -231,7 +228,7 @@ void MixFileClass<FC>::Load_File(FC &file, PKey *key)
             // If encrypted, set the PKStraw key and set it as the Straw we are
             // using.
             if (m_IsEncrypted) {
-                DEBUG_ASSERT(key != nullptr);
+                captainslog_assert(key != nullptr);
                 pkstrw.Key(key);
                 pkstrw.Get_From(&filestrw);
                 straw_to_use = &pkstrw;
@@ -290,7 +287,7 @@ MixFileClass<FC>::~MixFileClass()
 template<class FC>
 void *MixFileClass<FC>::Retrieve(const char *filename)
 {
-    DEBUG_ASSERT(filename != nullptr);
+    captainslog_assert(filename != nullptr);
     // This is a pointer to the retrieved file data.
     void *data = nullptr;
     Offset(filename, &data);
@@ -304,7 +301,7 @@ void *MixFileClass<FC>::Retrieve(const char *filename)
 template<class FC>
 MixFileClass<FC> *MixFileClass<FC>::Finder(const char *filename)
 {
-    DEBUG_ASSERT(filename != nullptr);
+    captainslog_assert(filename != nullptr);
 
     MixFileClass<FC> *file = nullptr;
 
@@ -347,7 +344,7 @@ MixFileClass<FC> *MixFileClass<FC>::Finder(const char *filename)
 template<class FC>
 BOOL MixFileClass<FC>::Cache(const char *filename, BufferClass *buffer)
 {
-    DEBUG_ASSERT(filename != nullptr);
+    captainslog_assert(filename != nullptr);
 
     MixFileClass<FC> *file = Finder(filename);
 
@@ -414,7 +411,7 @@ bool MixFileClass<FC>::Cache(BufferClass *buffer)
                 shastrw.Result(&computed_checksum);
 
                 if (memcmp(&computed_checksum, &file_checksum, sizeof(SHAEngine::SHADigest))) {
-                    DEBUG_LOG("Mixfile checksum doesn't match calculated for %s\n", m_FileName);
+                    captainslog_debug("Mixfile checksum doesn't match calculated for %s", m_FileName);
 
                     delete m_FileCache;
                     m_FileCache = nullptr;
@@ -447,7 +444,7 @@ void MixFileClass<FC>::Discard_Cache(const char *filename)
 {
     MixFileClass<FC> *file;
 
-    DEBUG_ASSERT(filename != nullptr);
+    captainslog_assert(filename != nullptr);
 
     if ((file = Finder(filename)) != nullptr) {
         file->Invalidate_Cache();

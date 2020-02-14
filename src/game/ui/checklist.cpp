@@ -14,8 +14,8 @@
  *            LICENSE
  */
 #include "checklist.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
+#include <captainslog.h>
 #include <stdio.h>
 
 CheckListClass::CheckListClass(
@@ -31,7 +31,7 @@ CheckListClass::~CheckListClass() {}
 
 int CheckListClass::Add_Item(const char *string)
 {
-    DEBUG_ASSERT(string != nullptr);
+    captainslog_assert(string != nullptr);
 
     CheckListItemClass *checkitem = new CheckListItemClass(string, false);
 

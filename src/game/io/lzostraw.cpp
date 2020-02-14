@@ -15,9 +15,9 @@
  */
 #include "lzostraw.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 
@@ -55,7 +55,7 @@ LZOStraw::~LZOStraw()
  */
 int LZOStraw::Get(void *buffer, int length)
 {
-    DEBUG_ASSERT(buffer != nullptr);
+    captainslog_assert(buffer != nullptr);
 
     int bytesread = 0;
     uint8_t *dst = static_cast<uint8_t *>(buffer);

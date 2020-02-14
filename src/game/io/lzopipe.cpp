@@ -15,9 +15,9 @@
  */
 #include "lzopipe.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 
@@ -61,7 +61,7 @@ int LZOPipe::Put(const void *source, int length)
         return Pipe::Put(source, length);
     }
 
-    DEBUG_ASSERT(m_InBuffer != nullptr);
+    captainslog_assert(m_InBuffer != nullptr);
 
     uint8_t const *src = static_cast<uint8_t const *>(source);
 

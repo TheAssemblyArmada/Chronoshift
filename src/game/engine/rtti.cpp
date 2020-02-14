@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "rtti.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -57,7 +57,7 @@ RTTITypeStruct g_RTTIName[RTTI_COUNT] = {
 
 RTTIType RTTI_From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return RTTI_NONE;

@@ -151,7 +151,7 @@ void RadarClass::Set_Map_Dimensions(int x, int y, int w, int h)
 
 BOOL RadarClass::Map_Cell(cell_t cellnum, HouseClass *house)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
 
     if (DisplayClass::Map_Cell(cellnum, house)) {
         Radar_Pixel(cellnum);
@@ -179,7 +179,7 @@ cell_t RadarClass::Click_Cell_Calc(int x, int y) const
 
 void RadarClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
 
     if (list != nullptr) {
         if (*list == LIST_START) {
@@ -199,7 +199,7 @@ void RadarClass::Set_Tactical_Position(coord_t location)
 
 void RadarClass::Flag_Cell(cell_t cellnum)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
     DisplayClass::Flag_Cell(cellnum);
 }
 
@@ -238,7 +238,7 @@ BOOL RadarClass::Is_Radar_Jammed()
     return func(this);
 #else
     /*
-    DEBUG_ASSERT(this != nullptr);
+    captainslog_assert(this != nullptr);
     if (PlayerPtr->GPSActive) {
         return false;
     }
@@ -359,7 +359,7 @@ void RadarClass::Render_Infantry(cell_t cellnum, int x, int y, int scale)
 
 void RadarClass::Render_Overlay(cell_t cellnum, int x, int y, int scale)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
     CellClass &cell = m_Array[cellnum];
 
     if (cell.Get_Overlay() != OVERLAY_NONE) {
@@ -699,10 +699,10 @@ int RadarClass::Radar_Activate(int mode)
         case RADAR_M1: // Toggle active and inactive
             if (m_RadarActive) {
                 Radar_Activate(RADAR_0);
-                DEBUG_LOG("Radar: TacticalMap availability is off\n");
+                captainslog_debug("Radar: TacticalMap availability is off");
             } else {
                 Radar_Activate(RADAR_1);
-                DEBUG_LOG("Radar: TacticalMap availability is on\n");
+                captainslog_debug("Radar: TacticalMap availability is on");
             }
 
             break;
@@ -720,7 +720,7 @@ int RadarClass::Radar_Activate(int mode)
 
             Sound_Effect(VOC_RADAR_OFF);
 
-            DEBUG_LOG("Radar: DEACTIVING\n");
+            captainslog_debug("Radar: DEACTIVING");
 
             m_RadarDeactivating = true;
             m_RadarActive = false;
@@ -746,7 +746,7 @@ int RadarClass::Radar_Activate(int mode)
 
             Sound_Effect(VOC_RADAR_ON);
 
-            DEBUG_LOG("Radar: ACTIVATING\n");
+            captainslog_debug("Radar: ACTIVATING");
 
             m_RadarActivating = true;
 

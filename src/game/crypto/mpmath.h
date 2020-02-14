@@ -19,7 +19,7 @@
 #define MPMATH_H
 
 #include "always.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 class Straw;
 
@@ -192,13 +192,13 @@ inline uint32_t Unit_Sig_Bit(int32_t bits)
 
 inline void Print(mp_digit_u *number, int precision)
 {
-    DEBUG_LOG("\n");
+    captainslog_debug("");
 
     for (int i = precision - 1; i >= 0; i--) {
-        DEBUG_LOG("%08x", number[i]);
+        captainslog_debug("%08x", number[i]);
     }
 
-    DEBUG_LOG("\n");
+    captainslog_debug("");
 }
 
 } // namespace MPMath

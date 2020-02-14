@@ -133,7 +133,7 @@ BOOL TriggerClass::Remove()
 
     /*for (int index = 0; index < g_Units.Count(); ++index) {
         UnitClass *uptr = g_Units.Ptr(index);
-        DEBUG_ASSERT(uptr != nullptr);
+        captainslog_assert(uptr != nullptr);
         if (this == uptr->Get_Attached_Trigger()) {
             uptr->Invalidate_Attached_Trigger();
         }
@@ -141,7 +141,7 @@ BOOL TriggerClass::Remove()
 
     /*for (int index = 0; index < g_Vessels.Count(); ++index) {
         VesselClass *vptr = g_Vessels.Ptr(index);
-        DEBUG_ASSERT(vptr != nullptr);
+        captainslog_assert(vptr != nullptr);
         if (this == vptr->Get_Attached_Trigger()) {
             vptr->Invalidate_Attached_Trigger();
         }
@@ -149,7 +149,7 @@ BOOL TriggerClass::Remove()
 
     /*for (int index = 0; index < g_Infantry.Count(); ++index) {
         InfantryClass *iptr = g_Infantry.Ptr(index);
-        DEBUG_ASSERT(iptr != nullptr);
+        captainslog_assert(iptr != nullptr);
         if (this == iptr->Get_Attached_Trigger()) {
             iptr->Invalidate_Attached_Trigger();
         }
@@ -157,7 +157,7 @@ BOOL TriggerClass::Remove()
 
     /*for (int index = 0; index < g_Aircraft.Count(); ++index) {
         AircraftClass *aptr = g_Aircraft.Ptr(index);
-        DEBUG_ASSERT(aptr != nullptr);
+        captainslog_assert(aptr != nullptr);
         if (this == aptr->Get_Attached_Trigger()) {
             aptr->Invalidate_Attached_Trigger();
         }
@@ -165,7 +165,7 @@ BOOL TriggerClass::Remove()
 
     /*for (int index = 0; index < g_Buildings.Count(); ++index) {
         BuildingClass *bptr = g_Buildings.Ptr(index);
-        DEBUG_ASSERT(bptr != nullptr);
+        captainslog_assert(bptr != nullptr);
         if (this == bptr->Get_Attached_Trigger()) {
             bptr->Invalidate_Attached_Trigger();
         }
@@ -174,7 +174,7 @@ BOOL TriggerClass::Remove()
     HousesType house = m_Class->Get_House();
     for (int index = 0; index < g_HouseTriggers[house].Count(); ++index) {
         TriggerClass *tptr = g_HouseTriggers[house][index];
-        DEBUG_ASSERT(tptr != nullptr);
+        captainslog_assert(tptr != nullptr);
         if (tptr != nullptr) {
             g_HouseTriggers[index].Delete(this);
         }

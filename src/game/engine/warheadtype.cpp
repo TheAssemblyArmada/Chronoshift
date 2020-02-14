@@ -97,7 +97,7 @@ void WarheadTypeClass::Init_Heap()
  */
 WarheadType WarheadTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return WARHEAD_NONE;
@@ -127,8 +127,8 @@ const char *WarheadTypeClass::Name_From(WarheadType type)
  */
 WarheadTypeClass &WarheadTypeClass::As_Reference(WarheadType type)
 {
-    DEBUG_ASSERT(type != WARHEAD_NONE);
-    DEBUG_ASSERT(type < WARHEAD_COUNT);
+    captainslog_assert(type != WARHEAD_NONE);
+    captainslog_assert(type < WARHEAD_COUNT);
 
     return g_WarheadTypes[type];
 }
@@ -169,18 +169,18 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
         // Build the verses format based on the armor count.
         for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
             size_t check = strlcat(verses_format_buffer, "100%%", sizeof(verses_format_buffer));
-            DEBUG_ASSERT(check <= sizeof(verses_format_buffer));
+            captainslog_assert(check <= sizeof(verses_format_buffer));
 
             if (armor != (ARMOR_COUNT - 1)) {
                 check = strlcat(verses_format_buffer, ",", sizeof(verses_format_buffer));
-                DEBUG_ASSERT(check <= sizeof(verses_format_buffer));
+                captainslog_assert(check <= sizeof(verses_format_buffer));
             }
         }
 
         if (ini.Get_String(m_Name, "Verses", verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
             char *value = strtok(verses_buffer, ",");
             for (ArmorType armor = ARMOR_FIRST; (armor < ARMOR_COUNT) && (value != nullptr); ++armor) {
-                DEBUG_ASSERT(value != nullptr);
+                captainslog_assert(value != nullptr);
                 m_Verses[armor] = fixed_t(value);
                 value = strtok(nullptr, ",");
             }

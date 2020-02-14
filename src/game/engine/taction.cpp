@@ -18,7 +18,6 @@
 #include "anim.h"
 #include "building.h"
 #include "coord.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "house.h"
@@ -41,6 +40,7 @@
 #include "voc.h"
 #include "vox.h"
 #include <algorithm>
+#include <captainslog.h>
 #include <cstdio>
 
 using std::sprintf;

@@ -14,13 +14,13 @@
  *            LICENSE
  */
 #include "factory.h"
-#include "gamedebug.h"
 #include "globals.h"
 #include "target.h"
 #include "techno.h"
 #include "technotype.h"
 #include "house.h"
 #include <algorithm>
+#include <captainslog.h>
 
 #ifndef GAME_DLL
 TFixedIHeapClass<FactoryClass> g_Factories;
@@ -204,7 +204,7 @@ BOOL FactoryClass::Start()
 BOOL FactoryClass::Abandon()
 {
     if (m_Object != nullptr) {
-        DEBUG_LOG("Abandoning production of %s\n", m_Object->Name());
+        captainslog_debug("Abandoning production of %s", m_Object->Name());
 
         if (m_Owner != nullptr) {
             m_Owner->Refund_Money(m_Object->Class_Of().Cost_Of() - m_Balance);

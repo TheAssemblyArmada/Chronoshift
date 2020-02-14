@@ -19,7 +19,7 @@
 #include "language.h"
 #include "session.h"
 #include "scenario.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 /**
  * Parses the command line for any arguments we act upon.
@@ -126,14 +126,14 @@ BOOL Parse_Command_Line(int argc, char **argv)
         return true;
     }
 
-    DEBUG_LOG("About to parse command line arguments.\n");
+    captainslog_debug("About to parse command line arguments.");
 
     // NOTE: We're starting on 1 because we don't need to know the path of the program, which is stored in argv[0].
     for (int index = 1; index < argc; ++index) {
 
         const char *arg = strupr(argv[index]);
 
-        DEBUG_LOG("\tFound: '%s'\n", arg);
+        captainslog_debug("\tFound: '%s'", arg);
 
         if (!strcasecmp(arg, "/?") || !strcasecmp(arg, "-?") || !strcasecmp(arg, "-h") || !strcasecmp(arg, "/h")) {
 #ifdef PLATFORM_WINDOWS
@@ -340,12 +340,12 @@ BOOL Parse_Command_Line(int argc, char **argv)
 
 #if defined(CHRONOSHIFT_DEBUG) || ASSERT_LEVEL == ASSERTS_RELEASE
         if (strstr(arg, "-IGNOREASSERTS")) {
-            //captain_ignoreasserts(true);
+            //captainslog_ignoreasserts(true);
             continue;
         }
 
         if (strstr(arg, "-SILENTASSERTS")) {
-            //captain_allowpopups(false);
+            //captainslog_allowpopups(false);
             continue;
         }
 #endif

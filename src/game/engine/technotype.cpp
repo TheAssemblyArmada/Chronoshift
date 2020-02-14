@@ -395,23 +395,23 @@ void TechnoTypeClass::One_Time()
     // TechnoType statics. Called from UnitTypeClass One_Time().
     if (s_WakeShapes == nullptr) {
         s_WakeShapes = GameFileClass::Retrieve("wake.shp");
-        DEBUG_ASSERT(s_WakeShapes != nullptr);
+        captainslog_assert(s_WakeShapes != nullptr);
     }
     if (s_TurretShapes == nullptr) {
         s_TurretShapes = GameFileClass::Retrieve("turr.shp");
-        DEBUG_ASSERT(s_TurretShapes != nullptr);
+        captainslog_assert(s_TurretShapes != nullptr);
     }
     if (s_SamShapes == nullptr) {
         s_SamShapes = GameFileClass::Retrieve("ssam.shp");
-        DEBUG_ASSERT(s_SamShapes != nullptr);
+        captainslog_assert(s_SamShapes != nullptr);
     }
     if (s_MGunShapes == nullptr) {
         s_MGunShapes = GameFileClass::Retrieve("mgun.shp");
-        DEBUG_ASSERT(s_MGunShapes != nullptr);
+        captainslog_assert(s_MGunShapes != nullptr);
     }
     if (s_LightningShapes == nullptr) {
         s_LightningShapes = GameFileClass::Retrieve("litning.shp");
-        DEBUG_ASSERT(s_LightningShapes != nullptr);
+        captainslog_assert(s_LightningShapes != nullptr);
     }
     if (s_MissingCameoShape == nullptr) {
         s_MissingCameoShape = GameFileClass::Retrieve("xxicon.shp");

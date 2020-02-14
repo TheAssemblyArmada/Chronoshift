@@ -24,7 +24,6 @@
 #include "target.h"
 #include "smudge.h"
 
-
 #ifndef GAME_DLL
 TFixedIHeapClass<AnimClass> g_Anims;
 #endif
@@ -150,7 +149,7 @@ void *AnimClass::operator new(size_t size)
 void AnimClass::operator delete(void *ptr)
 {
     AnimClass *this_ptr = static_cast<AnimClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
+    captainslog_assert(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }
@@ -189,7 +188,7 @@ void AnimClass::AI()
     void (*func)(AnimClass *) = reinterpret_cast<void (*)(AnimClass *)>(0x00424B94);
     func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -349,7 +348,7 @@ const int16_t *AnimClass::Anim_Overlap_List() const
     int16_t *(*func)(const AnimClass *) = reinterpret_cast<int16_t *(*)(const AnimClass *)>(0x00424318);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return nullptr;
 #endif
 }
@@ -390,7 +389,7 @@ void AnimClass::Do_Atom_Damage(HousesType house, cell_t cell)
     void (*func)(HousesType, cell_t) = reinterpret_cast<void (*)(HousesType, cell_t)>(0x00425AE0);
     func(house, cell);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -423,14 +422,14 @@ void AnimClass::Middle()
 
     if (Class_Of().Scorches_Ground()) {
         SmudgeClass *sptr = new SmudgeClass((SmudgeType)g_Scen.Get_Random_Value(SMUDGE_SC1, SMUDGE_SC6), Center_Coord());
-        DEBUG_ASSERT(sptr != nullptr);
+        captainslog_assert(sptr != nullptr);
 
     }
 
     if (Class_Of().Forms_Crater()) {
         cell.Reduce_Ore(6);
         SmudgeClass *sptr = new SmudgeClass(SMUDGE_CR1, Center_Coord());
-        DEBUG_ASSERT(sptr != nullptr);
+        captainslog_assert(sptr != nullptr);
     }
 
     // aptr asserts are commented out cause this chunk causes common heap overruns
@@ -441,18 +440,18 @@ void AnimClass::Middle()
         case ANIM_NAPALM3: {
             coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 64, false), true);
             AnimClass *aptr = new AnimClass(ANIM_FIRE3, coord, 0, g_Scen.Get_Random_Value(1, 2));
-            //DEBUG_ASSERT(aptr != nullptr);
+            //captainslog_assert(aptr != nullptr);
 
             if (g_Scen.Check_Random_Chance(50)) {
                 coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 160, false), true);
                 AnimClass *aptr = new AnimClass(ANIM_FIRE3, coord, 0, g_Scen.Get_Random_Value(1, 2));
-                //DEBUG_ASSERT(aptr != nullptr);
+                //captainslog_assert(aptr != nullptr);
             }
 
             if (g_Scen.Check_Random_Chance(50)) {
                 coord_t coord = g_Map.Closest_Free_Spot(Coord_Scatter(Center_Coord(), 112, false), true);
                 AnimClass *aptr = new AnimClass(ANIM_FIRE2, coord, 0, g_Scen.Get_Random_Value(1, 2));
-                //DEBUG_ASSERT(aptr != nullptr);
+                //captainslog_assert(aptr != nullptr);
             }
 
             break;
@@ -460,7 +459,7 @@ void AnimClass::Middle()
         case ANIM_FIRE2:
         case ANIM_FIRE1: {
             AnimClass *aptr = new AnimClass(ANIM_FIRE3, Center_Coord(), 0, g_Scen.Get_Random_Value(1, 2));
-            //DEBUG_ASSERT(aptr != nullptr);
+            //captainslog_assert(aptr != nullptr);
 
             if (aptr != nullptr) {
                 if (Target_Legal(m_AttachedTo)) {

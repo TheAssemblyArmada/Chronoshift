@@ -76,10 +76,10 @@ void PowerClass::One_Time()
 {
     RadarClass::One_Time();
     s_PowerShape = GameFileClass::Retrieve("power.shp");
-    DEBUG_ASSERT(s_PowerShape != nullptr);
+    captainslog_assert(s_PowerShape != nullptr);
 
     s_PowerBarShape = GameFileClass::Retrieve("powerbar.shp");
-    DEBUG_ASSERT(s_PowerBarShape != nullptr);
+    captainslog_assert(s_PowerBarShape != nullptr);
 
     s_PowerButton.Set_Position(480, 180);
     s_PowerButton.Set_Size(15, 220);
@@ -259,7 +259,7 @@ void PowerClass::Draw_It(BOOL force_redraw)
 
 void PowerClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
 
     if (list != nullptr) {
         if (*list == LIST_START) {

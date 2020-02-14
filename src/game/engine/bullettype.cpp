@@ -159,7 +159,7 @@ void BulletTypeClass::operator delete(void *ptr)
  */
 BulletType BulletTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return BULLET_NONE;
@@ -190,8 +190,8 @@ const char *BulletTypeClass::Name_From(BulletType bullet)
  */
 BulletTypeClass &BulletTypeClass::As_Reference(BulletType type)
 {
-    DEBUG_ASSERT(type != BULLET_NONE);
-    DEBUG_ASSERT(type < BULLET_COUNT);
+    captainslog_assert(type != BULLET_NONE);
+    captainslog_assert(type < BULLET_COUNT);
 
     return g_BulletTypes[type];
 }

@@ -331,10 +331,10 @@ void DisplayClass::One_Time()
     }
 
     s_TransIconset = GameFileClass::Retrieve("trans.icn");
-    DEBUG_ASSERT(s_TransIconset != nullptr);
+    captainslog_assert(s_TransIconset != nullptr);
 
     s_ShadowShapes = GameFileClass::Retrieve("shadow.shp");
-    DEBUG_ASSERT(s_ShadowShapes != nullptr);
+    captainslog_assert(s_ShadowShapes != nullptr);
 
     Set_View_Dimensions(0, 16);
 }
@@ -760,7 +760,7 @@ void DisplayClass::Read_INI(GameINIClass &ini)
  */
 BOOL DisplayClass::Map_Cell(cell_t cellnum, HouseClass *house)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
 
     // Spied radar reveals enemy movement logic
     if (house != nullptr && !house->Is_Player()) {

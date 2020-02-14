@@ -104,12 +104,12 @@ void BooleanVectorClass::Fixup(int index) const
 
     if (index != LastIndex) {
         if (LastIndex != -1) {
-            DEBUG_ASSERT(unsigned(LastIndex) < unsigned(BitCount));
+            captainslog_assert(unsigned(LastIndex) < unsigned(BitCount));
             Set_Bit((void *)&BitArray[0], LastIndex, Copy);
         }
 
         if (index != -1) {
-            DEBUG_ASSERT(unsigned(index) < unsigned(BitCount));
+            captainslog_assert(unsigned(index) < unsigned(BitCount));
             Copy = Get_Bit((void *)&BitArray[0], index);
         }
 

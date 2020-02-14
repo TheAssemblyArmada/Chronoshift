@@ -446,7 +446,7 @@ int InfantryClass::Shape_Number() const
  */
 void InfantryClass::Set_Occupy_Spot(cell_t cellnum, int spot_index)
 {
-    DEBUG_ASSERT(spot_index < CELL_SPOT_COUNT);
+    captainslog_assert(spot_index < CELL_SPOT_COUNT);
 
     CellClass &cell = g_Map[cellnum];
     cell.Set_Occupants(CellOccupantEnum(1 << spot_index));
@@ -459,7 +459,7 @@ void InfantryClass::Set_Occupy_Spot(cell_t cellnum, int spot_index)
  */
 void InfantryClass::Clear_Occupy_Spot(cell_t cellnum, int spot_index)
 {
-    DEBUG_ASSERT(spot_index < CELL_SPOT_COUNT);
+    captainslog_assert(spot_index < CELL_SPOT_COUNT);
 
     CellClass &cell = g_Map[cellnum];
     cell.Clear_Occupants(CellOccupantEnum(1 << spot_index));

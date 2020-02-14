@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "pipe.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 Pipe::~Pipe()
 {
@@ -53,8 +53,8 @@ void Pipe::Put_To(Pipe *pipe)
 
 int Pipe::Put(const void *source, int length)
 {
-    DEBUG_ASSERT(source != nullptr);
-    DEBUG_ASSERT(length > 0);
+    captainslog_assert(source != nullptr);
+    captainslog_assert(length > 0);
 
     if (m_ChainTo != nullptr) {
         return m_ChainTo->Put(source, length);

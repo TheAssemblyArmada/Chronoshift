@@ -181,7 +181,7 @@ BOOL GameFileClass::Open(int mode)
         return CDFileClass::Open(mode);
     }
 
-    DEBUG_ASSERT(mixfile != nullptr);
+    captainslog_assert(mixfile != nullptr);
 
     if (cachedfile == nullptr && mixfile != nullptr) {
         char *tmpfilename = strdup(File_Name());
@@ -237,19 +237,19 @@ BOOL GameFileClass::Set_Date_Time(time_t date_time)
 
 void *GameFileClass::Retrieve(char const *filename)
 {
-    DEBUG_ASSERT(filename != nullptr);
+    captainslog_assert(filename != nullptr);
 
     void *fileptr = GameMixFile::Retrieve(filename);
 
     // DEBUG_ERROR_CONDITIONAL(fileptr == nullptr, "Unable to find file %s!", strupr(filename));
-    // DEBUG_ASSERT(fileptr != nullptr);
+    // captainslog_assert(fileptr != nullptr);
 
     return fileptr;
 }
 
 int GameFileClass::Retrieve_Size(char const *filename)
 {
-    DEBUG_ASSERT(filename != nullptr);
+    captainslog_assert(filename != nullptr);
 
     // Size of the file in bytes.
     int filesize = 0;
@@ -257,14 +257,14 @@ int GameFileClass::Retrieve_Size(char const *filename)
     GameMixFile::Offset(filename, nullptr, nullptr, nullptr, &filesize);
 
     // DEBUG_ERROR_CONDITIONAL(mixfile == nullptr, "Unable to find file %s!", std::strupr(filename));
-    // DEBUG_ASSERT(mixfile != nullptr);
+    // captainslog_assert(mixfile != nullptr);
 
     return filesize;
 }
 
 GameMixFile *GameFileClass::Retrieve_Mix(char const *mix_filename)
 {
-    DEBUG_ASSERT(mix_filename != nullptr);
+    captainslog_assert(mix_filename != nullptr);
 
     // Pointer to the mix file that contains the file we want.
     GameMixFile *mixfile = nullptr;
@@ -272,7 +272,7 @@ GameMixFile *GameFileClass::Retrieve_Mix(char const *mix_filename)
     mixfile = GameMixFile::Finder(mix_filename);
 
     // DEBUG_ERROR_CONDITIONAL(mixfile == nullptr, "Unable to find file %s!", std::strupr(filename));
-    // DEBUG_ASSERT(mixfile != nullptr);
+    // captainslog_assert(mixfile != nullptr);
 
     return mixfile;
 }
@@ -286,14 +286,14 @@ bool GameFileClass::File_Available(char const *filename)
 GameMixFile *GameFileClass::Allocate_Mix(char const *filename)
 {
     GameMixFile *mixfile = new GameMixFile(filename);
-    DEBUG_ASSERT(mixfile != nullptr);
+    captainslog_assert(mixfile != nullptr);
     return mixfile;
 }
 
 bool GameFileClass::Cache_Mix(char const *filename)
 {
     bool cached = GameMixFile::Cache(filename);
-    DEBUG_ASSERT(cached);
+    captainslog_assert(cached);
     return cached;
 }
 

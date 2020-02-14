@@ -287,7 +287,7 @@ BOOL ObjectClass::Render(BOOL force_render)
     BOOL(*func)(ObjectClass *, BOOL) = reinterpret_cast<BOOL(*)(ObjectClass *, BOOL)>(0x0051DD34);
     return func(this, force_render);
 #else*/
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     coord_t render_coord = Render_Coord();
 
@@ -638,7 +638,7 @@ BOOL ObjectClass::Select()
     return func(this);
 #elif 0
     // TODO Needs TechnoClass, HouseClass, DisplayClass
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if ((g_InMapEditor || !m_Selected) && Class_Of().Is_Selectable()) {
         if (!g_InMapEditor && Can_Player_Move() && Is_Techno() && reinterpret_cast<TechnoClass *>(this)->m_IsALoner) {
@@ -772,7 +772,7 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
                     
                     if (tptr != nullptr) {
                         ObjectClass *v99 = As_Object(tptr->OwnerHouse->field_531);
-                        DEBUG_ASSERT(v99 != nullptr);
+                        captainslog_assert(v99 != nullptr);
                         if (v99 != nullptr) {
                             if (this != v99) {
                                 tptr->OwnerHouse->field_531 = 0;
