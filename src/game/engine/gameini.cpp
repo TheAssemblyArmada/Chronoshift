@@ -833,22 +833,22 @@ const PKey GameINIClass::Get_PKey(BOOL fast) const
     uint8_t buffer[512];
 
     if (fast) {
-        DEBUG_LOG("GameINIClass::Get_PKey() - Preparing PublicKey...\n");
+        captainslog_debug("GameINIClass::Get_PKey() - Preparing PublicKey...");
         Int<MAX_UNIT_PRECISION> exp(0x10001);
         MPMath::DER_Encode(exp, buffer, MAX_UNIT_PRECISION);
     } else {
-        DEBUG_LOG("GameINIClass::Get_PKey() - Loading PrivateKey\n");
+        captainslog_debug("GameINIClass::Get_PKey() - Loading PrivateKey");
         Get_UUBlock("PrivateKey", buffer, sizeof(buffer));
     }
 
-    DEBUG_LOG("GameINIClass::Get_PKey() - Decoding Exponent\n");
+    captainslog_debug("GameINIClass::Get_PKey() - Decoding Exponent");
     key.Decode_Exponent(buffer);
 
-    DEBUG_LOG("GameINIClass::Get_PKey() - Loading PublicKey\n");
+    captainslog_debug("GameINIClass::Get_PKey() - Loading PublicKey");
 
     Get_UUBlock("PublicKey", buffer, sizeof(buffer));
 
-    DEBUG_LOG("GameINIClass::Get_PKey() - Decoding Modulus\n");
+    captainslog_debug("GameINIClass::Get_PKey() - Decoding Modulus");
     key.Decode_Modulus(buffer);
 
     return key;

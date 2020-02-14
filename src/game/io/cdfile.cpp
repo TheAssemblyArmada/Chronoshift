@@ -18,7 +18,7 @@
 // http://linux.die.net/man/3/getmntent
 
 #include "cdfile.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -146,7 +146,7 @@ int CDFileClass::Set_Search_Drives(const char *path)
         return 0;
     }
 
-    // DEBUG_LOG("Current search path is '%s', appending '%s'.\n", s_RawPath, path);
+    // captainslog_debug("Current search path is '%s', appending '%s'.", s_RawPath, path);
 
     // Append path to raw path list
     if (path != s_RawPath) {
@@ -174,7 +174,7 @@ int CDFileClass::Set_Search_Drives(const char *path)
 
             // Check if we have our "disk drive" prefix, if so we need to check which
             // disk we are dealing with.
-            // DEBUG_LOG("Checking if '%s' is a CD path.\n", path_buffer);
+            // captainslog_debug("Checking if '%s' is a CD path.", path_buffer);
             if (strncmp(path_buffer, CD_DRIVE_PREFIX, CD_PREFIX_SIZE) == 0) {
 // Only windows uses the drive logic that this applies to
 #if defined(PLATFORM_WINDOWS)
@@ -182,12 +182,12 @@ int CDFileClass::Set_Search_Drives(const char *path)
                     paths_set = true;
                     // Move Get_CD_Index and its static vars if any into CDFileClass?
                     // Need to decide what we are doing with this
-                    // DEBUG_LOG("Adding CD drive path as search drive.\n", path_buffer);
+                    // captainslog_debug("Adding CD drive path as search drive.", path_buffer);
                     if (Get_CD_Index(s_CurrentCDDrive, 120) >= 0) {
                         path_buffer[0] = s_CurrentCDDrive + 'A';
                         // surely this is path buffer
                         // Add_Search_Drive((const char *)v13);
-                        DEBUG_LOG("Adding '%s as CD path.\n", path_buffer);
+                        captainslog_debug("Adding '%s as CD path.", path_buffer);
                         Add_Search_Drive(path_buffer);
                     }
                 }

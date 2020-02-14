@@ -19,8 +19,8 @@
 #define GAMEPTR_H
 
 #include "always.h"
-#include "gamedebug.h"
 #include "heap.h"
+#include <captainslog.h>
 
 template<class T>
 class GamePtr
@@ -34,29 +34,29 @@ public:
 
     T *operator->() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr);
-        DEBUG_ASSERT(m_ID < g_Heap->Length());
+        captainslog_assert(g_Heap != nullptr);
+        captainslog_assert(m_ID < g_Heap->Length());
         return Is_Valid() ? Get_Raw_Pointer() : nullptr;
     }
 
     T &operator*() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr);
-        DEBUG_ASSERT(m_ID < g_Heap->Length());
+        captainslog_assert(g_Heap != nullptr);
+        captainslog_assert(m_ID < g_Heap->Length());
         return *Get_Raw_Pointer();
     }
 
     operator T *() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr);
-        DEBUG_ASSERT(m_ID < g_Heap->Length());
+        captainslog_assert(g_Heap != nullptr);
+        captainslog_assert(m_ID < g_Heap->Length());
         return Has_Valid_ID() ? Get_Raw_Pointer() : nullptr;
     }
 
     operator T &() const
     {
-        DEBUG_ASSERT(g_Heap != nullptr);
-        DEBUG_ASSERT(m_ID < g_Heap->Length());
+        captainslog_assert(g_Heap != nullptr);
+        captainslog_assert(m_ID < g_Heap->Length());
         return *Get_Raw_Pointer();
     }
 

@@ -101,13 +101,13 @@ void VesselClass::operator delete(void *ptr)
 
 MoveType VesselClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     MoveType const (*func)(const VesselClass *, cell_t, FacingType) = reinterpret_cast<MoveType const (*)(const VesselClass *, cell_t, FacingType)>(0x00589ECC);
     return func(this, cellnum, facing);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return MOVE_NONE;
 #endif
 }
@@ -169,13 +169,13 @@ void VesselClass::AI()
 
 ActionType VesselClass::What_Action(ObjectClass *object) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     ActionType (*func)(const VesselClass *, ObjectClass *) = reinterpret_cast<ActionType (*)(const VesselClass *, ObjectClass *)>(0x0058AAA0);
     return func(this, object);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return ACTION_NONE;
 #endif
 }
@@ -205,7 +205,7 @@ ActionType VesselClass::What_Action(cell_t cellnum) const
  */
 coord_t VesselClass::Fire_Coord(WeaponSlotType weapon) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     switch (What_Type())
     {
@@ -227,16 +227,16 @@ coord_t VesselClass::Fire_Coord(WeaponSlotType weapon) const
 
 const int16_t *VesselClass::Overlap_List(BOOL a1) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     const int16_t *(*func)(const VesselClass *, BOOL) = reinterpret_cast<const int16_t *(*)(const VesselClass *, BOOL)>(0x0058A494);
     return func(this, a1);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 
-    /*DEBUG_ASSERT(this != nullptr);
-    DEBUG_ASSERT(m_IsActive);
+    /*captainslog_assert(this != nullptr);
+    captainslog_assert(m_IsActive);
 
     if (Get_Height() <= 0 && Class_Of().FrameDimensions != nullptr && a1) {
         TRect<int> tmprect(0, 0, 0, 0);
@@ -261,13 +261,13 @@ const int16_t *VesselClass::Overlap_List(BOOL a1) const
 
 void VesselClass::Draw_It(int x, int y, WindowNumberType window) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     void (*func)(const VesselClass *, int, int, WindowNumberType) = reinterpret_cast<void (*)(const VesselClass *, int, int, WindowNumberType)>(0x0058A0FC);
     return func(this, x, y, window);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -291,71 +291,71 @@ void VesselClass::Active_Click_With(ActionType action, ObjectClass *object)
  */
 void VesselClass::Active_Click_With(ActionType action, cell_t cellnum)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     DriveClass::Active_Click_With(action, cellnum);
 }
 
 DamageResultType VesselClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     DamageResultType (*func)(VesselClass *, int &, int, WarheadType, TechnoClass *, int) = reinterpret_cast<DamageResultType (*)(VesselClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0058AD50);
     return func(this, damage, a2, warhead, object, a5);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return DAMAGE_NONE;
 #endif
 }
 
 void VesselClass::Per_Cell_Process(PCPType pcp)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     void (*func)(VesselClass *, PCPType) = reinterpret_cast<void (*)(VesselClass *, PCPType)>(0x0058A90C);
     return func(this, pcp);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 
 RadioMessageType VesselClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     RadioMessageType (*func)(VesselClass *, RadioClass *, RadioMessageType, target_t &) = reinterpret_cast<RadioMessageType (*)(VesselClass *, RadioClass *, RadioMessageType, target_t &)>(0x0058BA50);
     return func(this, radio, message, target);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return RADIO_NONE;
 #endif
 }
 
 int VesselClass::Mission_Retreat()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     int (*func)(VesselClass *) = reinterpret_cast<int (*)(VesselClass *)>(0x0058C748);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return 0;
 #endif
 }
 
 int VesselClass::Mission_Unload()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     int (*func)(VesselClass *) = reinterpret_cast<int (*)(VesselClass *)>(0x0058C2A0);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return 0;
 #endif
 }
@@ -366,20 +366,20 @@ int VesselClass::Mission_Unload()
  */
 DirType VesselClass::Turret_Facing() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     return (Class_Of().Is_Turret_Equipped() ? m_SecondaryTurretFacing.Get_Current() : m_Facing.Get_Current());
 }
 
 DirType VesselClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     DirType const (*func)(const VesselClass *, ObjectClass *, cell_t &) = reinterpret_cast<DirType const (*)(const VesselClass *, ObjectClass *, cell_t &)>(0x0058C074);
     return func(this, object, cellnum);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return DIR_NONE;
 #endif
 }
@@ -390,33 +390,33 @@ DirType VesselClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) cons
  */
 BOOL VesselClass::Is_Allowed_To_Recloak() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     return m_SubmergeTimer.Expired();
 }
 
 FireErrorType VesselClass::Can_Fire(target_t target, WeaponSlotType weapon) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     FireErrorType (*func)(const VesselClass *, target_t, WeaponSlotType) = reinterpret_cast<FireErrorType (*)(const VesselClass *, target_t, WeaponSlotType)>(0x0058AFF8);
     return func(this, target, weapon);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return FIRE_NONE;
 #endif
 }
 
 target_t VesselClass::Greatest_Threat(ThreatType threat)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     target_t (*func)(VesselClass *, ThreatType) = reinterpret_cast<target_t (*)(VesselClass *, ThreatType)>(0x0058B6F8);
     return func(this, threat);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
     return 0;
 #endif
 }
@@ -474,13 +474,13 @@ void VesselClass::Assign_Destination(target_t dest)
 
 void VesselClass::Enter_Idle_Mode(BOOL a1)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     void (*func)(VesselClass *, BOOL) = reinterpret_cast<void (*)(VesselClass *, BOOL)>(0x0058B87C);
     return func(this, a1);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -551,13 +551,13 @@ void VesselClass::Rotation_AI()
 
 void VesselClass::Combat_AI()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     void (*func)(VesselClass *) = reinterpret_cast<void (*)(VesselClass *)>(0x0058D094);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 
@@ -617,7 +617,7 @@ BOOL VesselClass::Edge_Of_World_AI()
  */
 void VesselClass::Transport_Open_Door()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (!m_Moving && !m_Rotating) {
         m_Door.Open_Door(TRANSPORT_DOOR_DELAY, TRANSPORT_DOOR_STAGES);
@@ -630,7 +630,7 @@ void VesselClass::Transport_Open_Door()
  */
 void VesselClass::Transport_Close_Door()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     m_Door.Close_Door(TRANSPORT_DOOR_DELAY, TRANSPORT_DOOR_STAGES);
 }
@@ -641,7 +641,7 @@ void VesselClass::Read_INI(GameINIClass &ini)
     void (*func)(GameINIClass &) = reinterpret_cast<void (*)(GameINIClass &)>(0x0058C95C);
     return func(ini);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function called!\n");
+    captainslog_dbgassert(false, "Unimplemented function called!\n");
 #endif
 }
 

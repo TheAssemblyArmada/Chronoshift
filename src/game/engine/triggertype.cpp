@@ -1234,7 +1234,7 @@ BOOL TriggerTypeClass::Edit()
 
     if (strlen(name_buf) == 0) {
         strlcpy(m_Name, "____", sizeof(m_Name));
-        DEBUG_LOG("TriggerTypeClass::Edit Warning - Writing Trigger without a Name!\n");
+        captainslog_debug("TriggerTypeClass::Edit Warning - Writing Trigger without a Name!");
     } else {
         strlcpy(m_Name, name_buf, sizeof(m_Name));
     }
@@ -1629,8 +1629,8 @@ const char *TriggerTypeClass::Name_From(TriggerTypeClass *trigger)
  */
 TriggerTypeClass &TriggerTypeClass::As_Reference(TriggerType type)
 {
-    DEBUG_ASSERT(type != TRIGGER_NONE);
-    DEBUG_ASSERT(type < g_TriggerTypes.Count());
+    captainslog_assert(type != TRIGGER_NONE);
+    captainslog_assert(type < g_TriggerTypes.Count());
 
     return g_TriggerTypes[type];
 }

@@ -15,9 +15,9 @@
 #include "connection.h"
 #include "commbuff.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "ostimer.h"
 #include "ttimer.h"
+#include <captainslog.h>
 #include <cstring>
 
 using std::memcpy;
@@ -389,7 +389,7 @@ uint32_t ConnectionClass::Time()
         return g_TickCountTimer.Time();
     }
 
-    DEBUG_ASSERT_PRINT(false, "Timer system is not active!");
+    captainslog_dbgassert(false, "Timer system is not active!");
 
     return 0;
 }

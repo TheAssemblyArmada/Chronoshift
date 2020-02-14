@@ -3,7 +3,6 @@ set(GAMEENGINE_INCLUDES
     game/audio
     game/common
     game/crypto
-    game/debug
     game/engine
     game/gfx
     game/io
@@ -45,8 +44,6 @@ set(GAMEENGINE_SRC
     game/crypto/mpmath.cpp
     game/crypto/pk.cpp
     game/crypto/sha.cpp
-    game/debug/gameassert.cpp
-    game/debug/gamelogging.cpp
     game/engine/abstract.cpp
     game/engine/abstracttype.cpp
     game/engine/action.cpp
@@ -294,6 +291,23 @@ if(CMAKE_CONFIGURATION_TYPES)
     endforeach()
 endif()
 
+# Enable Thyme debug logging.
+if(LOGGING)
+    set(CAPTNLOG_LEVEL $<$<CONFIG:Debug>:5>$<$<CONFIG:RelWithDebInfo>:3>$<$<CONFIG:Release>:3>$<$<CONFIG:MinSizeRel>:3>)
+else()
+    set(CAPTNLOG_LEVEL 0)
+endif()
+
+# Enable Thyme debug assertions.
+if(ASSERTIONS)
+    set(CAPTNASSERT_LEVEL $<$<CONFIG:Debug>:2>$<$<CONFIG:RelWithDebInfo>:1>$<$<CONFIG:Release>:1>$<$<CONFIG:MinSizeRel>:1>)
+else()
+    set(CAPTNASSERT_LEVEL 0)
+endif()
+
+# Setup various included libraries
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../libs/captnlog ${CMAKE_CURRENT_BINARY_DIR}/captnlog EXCLUDE_FROM_ALL)
+
 # Build and link the EXE or DLL.
 if(STANDALONE)
     add_executable(chronoshift ${GAMEENGINE_SRC} ${GAMEENGINE_HEADERS})
@@ -334,7 +348,7 @@ if(ASSERTIONS)
     target_compile_definitions(chronoshift PUBLIC CHRONOSHIFT_ASSERTS=1)
 endif()
 
-target_link_libraries(chronoshift base)
+target_link_libraries(chronoshift base captnlog)
 
 if(DDRAW_FOUND)
     target_compile_definitions(chronoshift PRIVATE BUILD_WITH_DDRAW=1)

@@ -14,7 +14,7 @@
  */
 #include "ipx.h"
 #include "endiantype.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <cstring>
 
 using std::memcpy;
@@ -63,7 +63,7 @@ int IPXInterfaceClass::Open_Socket(unsigned port)
     m_Socket = socket(AF_IPX, SOCK_DGRAM, NSPROTO_IPX);
 
     if (m_Socket == INVALID_SOCKET) {
-        DEBUG_LOG("Failed to create IPX socket - error code %d.\n", LastSocketError);
+        captainslog_debug("Failed to create IPX socket - error code %d.", LastSocketError);
         closesocket(m_Socket);
 
         return 0;
@@ -76,7 +76,7 @@ int IPXInterfaceClass::Open_Socket(unsigned port)
     }
 
     if (bind(m_Socket, (const sockaddr *)&addr, sizeof(addr)) == SOCKET_ERROR) {
-        DEBUG_LOG("IPX socket bind failed with error code %d.\n", LastSocketError);
+        captainslog_debug("IPX socket bind failed with error code %d.", LastSocketError);
         closesocket(m_Socket);
 
         return 0;
@@ -86,16 +86,16 @@ int IPXInterfaceClass::Open_Socket(unsigned port)
     uint32_t type = 4;
 
     if (setsockopt(m_Socket, SOL_SOCKET, SO_BROADCAST, (const char *)&broadcast, sizeof(broadcast)) == SOCKET_ERROR) {
-        DEBUG_LOG("Failed to set IPX socket option SO_BROADCAST - error code %d.\n", LastSocketError);
+        captainslog_debug("Failed to set IPX socket option SO_BROADCAST - error code %d.", LastSocketError);
     }
 
     // These options don't appear to exist on linux.
     if (setsockopt(m_Socket, NSPROTO_IPX, IPX_PTYPE, (const char *)&type, sizeof(type)) == SOCKET_ERROR) {
-        DEBUG_LOG("Failed to set IPX socket option IPX_PTYPE - error code %d.\n", LastSocketError);
+        captainslog_debug("Failed to set IPX socket option IPX_PTYPE - error code %d.", LastSocketError);
     }
 
     if (setsockopt(m_Socket, NSPROTO_IPX, IPX_FILTERPTYPE, (const char *)&type, sizeof(type)) == SOCKET_ERROR) {
-        DEBUG_LOG("Failed to set IPX socket option IPX_FILTERPTYPE - error code %d.\n", LastSocketError);
+        captainslog_debug("Failed to set IPX socket option IPX_FILTERPTYPE - error code %d.", LastSocketError);
     }
 
     Set_Socket_Options();

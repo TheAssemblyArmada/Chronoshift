@@ -70,7 +70,7 @@ void DriveClass::AI()
     void (*func)(DriveClass *) = reinterpret_cast<void (*)(DriveClass *)>(0x004B7CA8);
     func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -94,7 +94,7 @@ void DriveClass::Scatter(coord_t coord, BOOL a2, BOOL a3)
     void (*func)(DriveClass *, coord_t, BOOL, BOOL) = reinterpret_cast<void (*)(DriveClass *, coord_t, BOOL, BOOL)>(0x004B6304);
     func(this, coord, a2, a3);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -164,7 +164,7 @@ void DriveClass::Assign_Destination(target_t dest)
     void (*func)(DriveClass *, target_t) = reinterpret_cast<void (*)(DriveClass *, target_t)>(0x004B67C8);
     func(this, dest);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -192,7 +192,7 @@ void DriveClass::Fixup_Path(PathType *path)
     void (*func)(DriveClass *, PathType *) = reinterpret_cast<void (*)(DriveClass *, PathType *)>(0x004B7F4C);
     func(this, path);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -202,7 +202,7 @@ void DriveClass::Overrun_Cell(cell_t cell, BOOL a2)
     int (*func)(DriveClass *, cell_t, BOOL) = reinterpret_cast<int (*)(DriveClass *, cell_t, BOOL)>(0x004B8470);
     func(this, cell, a2);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -212,7 +212,7 @@ BOOL DriveClass::Ok_To_Move(DirType dir)
     BOOL (*func)(DriveClass *, DirType) = reinterpret_cast<BOOL (*)(DriveClass *, DirType)>(0x004B83AC);
     return func(this, dir);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
     return false;
 #endif
 }
@@ -223,7 +223,7 @@ void DriveClass::Do_Turn(DirType dir)
     void (*func)(DriveClass *, DirType) = reinterpret_cast<void (*)(DriveClass *, DirType)>(0x004B6514);
     func(this, dir);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -233,7 +233,7 @@ void DriveClass::Do_Turn(DirType dir)
  */
 BOOL DriveClass::Teleport_To(cell_t cell)
 {
-    DEBUG_ASSERT(Valid_Cell(cell));
+    captainslog_assert(Valid_Cell(cell));
 
     if (g_Rule.Chrono_Kills_Cargo()) {
         Kill_Cargo(nullptr);
@@ -275,7 +275,7 @@ void DriveClass::Force_Track(int track, coord_t coord)
     void (*func)(DriveClass *, int, coord_t) = reinterpret_cast<void (*)(DriveClass *, int, coord_t)>(0x004B669C);
     func(this, track, coord);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }
 
@@ -286,7 +286,7 @@ coord_t DriveClass::Smooth_Turn(coord_t coord, DirType &dir)
         reinterpret_cast<coord_t (*)(DriveClass *, coord_t, DirType &)>(0x004B6748);
     return func(this, coord, dir);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
     return 0;
 #endif
 }
@@ -297,7 +297,7 @@ BOOL DriveClass::While_Moving()
     BOOL (*func)(DriveClass *) = reinterpret_cast<BOOL (*)(DriveClass *)>(0x004B68B0);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
     return false;
 #endif
 }
@@ -308,7 +308,7 @@ BOOL DriveClass::Start_Of_Move()
     BOOL (*func)(DriveClass *) = reinterpret_cast<BOOL (*)(DriveClass *)>(0x004B6FA0);
     return func(this);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
     return false;
 #endif
 }
@@ -324,6 +324,6 @@ void DriveClass::Mark_Track(coord_t coord, MarkType mark)
     void (*func)(DriveClass *, coord_t, MarkType) = reinterpret_cast<void (*)(DriveClass *, coord_t, MarkType)>(0x004B82AC);
     func(this, coord, mark);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
 #endif
 }

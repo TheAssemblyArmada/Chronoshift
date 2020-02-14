@@ -20,8 +20,8 @@
 
 #include "always.h"
 #include "gametypes.h"
-#include "gamedebug.h"
 #include "mission.h"
+#include <captainslog.h>
 
 class TargetClass;
 class GameEventClass;
@@ -47,13 +47,13 @@ public:
 
     EVENT &operator[](unsigned int index)
     {
-        DEBUG_ASSERT(index < SIZE);
+        captainslog_assert(index < SIZE);
         return List[index % SIZE];
     }
 
     const EVENT &operator[](unsigned int index) const
     {
-        DEBUG_ASSERT(index < SIZE);
+        captainslog_assert(index < SIZE);
         return List[index % SIZE];
     }
 
@@ -88,11 +88,11 @@ public:
     bool Add(EVENT &element)
     {
         if (Count >= SIZE) {
-            DEBUG_LOG("TEventQueueClass::Add() - Failed! (Count:%d, Capacity:%d, Tail:%d, Head:%d).\n", Count, SIZE, Tail, Head);
+            captainslog_debug("TEventQueueClass::Add() - Failed! (Count:%d, Capacity:%d, Tail:%d, Head:%d).", Count, SIZE, Tail, Head);
             return false;
         }
 
-        DEBUG_LOG("TEventQueueClass::Add() - Adding event '%s' to queue.\n", element.Name());
+        captainslog_debug("TEventQueueClass::Add() - Adding event '%s' to queue.", element.Name());
 
         List[Tail] = element;
         Tail = (Tail + 1) % SIZE;

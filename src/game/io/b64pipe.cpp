@@ -16,9 +16,9 @@
 #include "always.h"
 #include "b64pipe.h"
 #include "base64.h"
-#include "gamedebug.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 using std::memmove;
@@ -31,8 +31,8 @@ int Base64Pipe::Put(const void *source, int slen)
     int incount = 0;
     int b64len = 0;
 
-    DEBUG_ASSERT(source != nullptr);
-    DEBUG_ASSERT(slen > 0);
+    captainslog_assert(source != nullptr);
+    captainslog_assert(slen > 0);
 
     if (source && slen > 0) {
         int result = 0;

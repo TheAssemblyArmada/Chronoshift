@@ -105,9 +105,9 @@ BOOL RadioClass::Limbo()
 
 RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
-    DEBUG_ASSERT(radio != nullptr);
-    DEBUG_ASSERT(message != RADIO_NONE);
-    DEBUG_ASSERT(message < RADIO_COUNT);
+    captainslog_assert(radio != nullptr);
+    captainslog_assert(message != RADIO_NONE);
+    captainslog_assert(message < RADIO_COUNT);
 
 #ifdef GAME_DLL
     RadioMessageType (*func)(RadioClass *, RadioMessageType, target_t &) =
@@ -154,8 +154,8 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
 
 RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t &target, RadioClass *radio)
 {
-    DEBUG_ASSERT(message != RADIO_NONE);
-    DEBUG_ASSERT(message < RADIO_COUNT);
+    captainslog_assert(message != RADIO_NONE);
+    captainslog_assert(message < RADIO_COUNT);
 
     RadioClass *radioptr = radio == nullptr ? reinterpret_cast<RadioClass *>(m_Radio) : radio;
 
@@ -183,9 +183,9 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
 
 RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioClass *radio)
 {
-    // DEBUG_ASSERT(radio != nullptr);
-    DEBUG_ASSERT(message != RADIO_NONE);
-    DEBUG_ASSERT(message < RADIO_COUNT);
+    // captainslog_assert(radio != nullptr);
+    captainslog_assert(message != RADIO_NONE);
+    captainslog_assert(message < RADIO_COUNT);
 
     return Transmit_Message(message, Get_LParam(), radio);
 }
@@ -203,7 +203,7 @@ void RadioClass::Decode_Pointers()
 {
     if (m_Radio != nullptr) {
         m_Radio = reinterpret_cast<ObjectClass *>(As_Techno((uintptr_t)(m_Radio)));
-        DEBUG_ASSERT(m_Radio != nullptr);
+        captainslog_assert(m_Radio != nullptr);
     }
 
     MissionClass::Decode_Pointers();
@@ -211,8 +211,8 @@ void RadioClass::Decode_Pointers()
 
 const char *RadioClass::Message_From(RadioMessageType message)
 {
-    // DEBUG_ASSERT(message != RADIO_NONE);
-    DEBUG_ASSERT(message < RADIO_COUNT);
+    // captainslog_assert(message != RADIO_NONE);
+    captainslog_assert(message < RADIO_COUNT);
 
     if (message != RADIO_NONE && message < RADIO_COUNT) {
         return s_Messages[message];
@@ -222,7 +222,7 @@ const char *RadioClass::Message_From(RadioMessageType message)
 
 RadioMessageType RadioClass::From_Message(const char *message)
 {
-    DEBUG_ASSERT(message != nullptr);
+    captainslog_assert(message != nullptr);
 
     if (strcasecmp(message, "Invalid message") == 0 || strcasecmp(message, "<none>") == 0
         || strcasecmp(message, "none") == 0) {

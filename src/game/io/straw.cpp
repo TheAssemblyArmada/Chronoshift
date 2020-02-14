@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "straw.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 Straw::~Straw()
 {

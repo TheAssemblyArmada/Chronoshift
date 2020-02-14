@@ -69,7 +69,7 @@ void MissionClass::Debug_Dump(MonoClass *mono) const
  */
 MissionType MissionClass::Get_Mission() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (m_Mission != MISSION_NONE) {
         return m_Mission;
@@ -85,7 +85,7 @@ MissionType MissionClass::Get_Mission() const
  */
 void MissionClass::Assign_Mission(MissionType mission)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (mission == MISSION_QMOVE) {
         mission = MISSION_MOVE;
@@ -103,7 +103,7 @@ void MissionClass::Assign_Mission(MissionType mission)
  */
 BOOL MissionClass::Commence()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (m_MissionQueue != MISSION_NONE) {
         m_MissionTimer.Reset();
@@ -124,7 +124,7 @@ BOOL MissionClass::Commence()
  */
 void MissionClass::Set_Mission(MissionType mission)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     m_MissionQueue = MISSION_NONE;
     m_Mission = mission;
@@ -137,7 +137,7 @@ void MissionClass::Set_Mission(MissionType mission)
  */
 void MissionClass::Override_Mission(MissionType mission, int target1, int target2)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (m_MissionQueue == MISSION_NONE) {
         m_SuspendedMission = m_MissionQueue;
@@ -155,7 +155,7 @@ void MissionClass::Override_Mission(MissionType mission, int target1, int target
  */
 BOOL MissionClass::Restore_Mission()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (m_SuspendedMission != MISSION_NONE) {
         Assign_Mission(m_SuspendedMission);
@@ -174,7 +174,7 @@ BOOL MissionClass::Restore_Mission()
  */
 void MissionClass::AI()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     ObjectClass::AI();
 
@@ -261,7 +261,7 @@ void MissionClass::AI()
                 m_MissionTimer = Mission_Missile();
                 break;
             default:
-                DEBUG_LOG("Unhandled MissionType in MissionClass::AI()! (%d)", m_Mission);
+                captainslog_debug("Unhandled MissionType in MissionClass::AI()! (%d)", m_Mission);
                 break;
         }
     }
@@ -274,7 +274,7 @@ void MissionClass::AI()
  */
 BOOL MissionClass::Is_Recruitable_Mission(MissionType mission)
 {
-    DEBUG_ASSERT(mission < MISSION_COUNT);
+    captainslog_assert(mission < MISSION_COUNT);
 
     if (mission == MISSION_NONE) {
         return true;
@@ -290,7 +290,7 @@ BOOL MissionClass::Is_Recruitable_Mission(MissionType mission)
  */
 MissionType MissionClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return MISSION_NONE;

@@ -19,7 +19,7 @@
 #define CRITSECTION_H
 
 #include "always.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #if !defined GAME_DLL && !defined COMPILER_WATCOM
 #include <atomic>
@@ -123,7 +123,7 @@ public:
     ScopedCriticalSectionClass(SimpleCriticalSectionClass *cs) : m_critSection(cs)
     {
         if (cs != nullptr) {
-            // DEBUG_LOG("Entering CriticalSection from scoped lock\n");
+            // captainslog_debug("Entering CriticalSection from scoped lock");
             m_critSection->Enter();
         }
     }
@@ -131,7 +131,7 @@ public:
     virtual ~ScopedCriticalSectionClass()
     {
         if (m_critSection != nullptr) {
-            // DEBUG_LOG("Leaving CriticalSection from scoped lock\n");
+            // captainslog_debug("Leaving CriticalSection from scoped lock");
             m_critSection->Leave();
         }
     }

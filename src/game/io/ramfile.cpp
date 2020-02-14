@@ -14,9 +14,9 @@
  *            LICENSE
  */
 #include "ramfile.h"
-#include "gamedebug.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memmove;
 
@@ -121,7 +121,7 @@ BOOL RAMFileClass::Open(const char *filename, int rights)
 
 int RAMFileClass::Read(void *buffer, int size)
 {
-    DEBUG_ASSERT(buffer != nullptr);
+    captainslog_assert(buffer != nullptr);
 
     if (m_Buffer && buffer && size) {
         BOOL opened = false;
@@ -185,7 +185,7 @@ off_t RAMFileClass::Seek(off_t offset, int whence)
 
 off_t RAMFileClass::Size()
 {
-    DEBUG_ASSERT_PRINT(m_Buffer != nullptr, "m_Buffer is NULL while retrieving the size!");
+    captainslog_dbgassert(m_Buffer != nullptr, "m_Buffer is NULL while retrieving the size!");
 
     if (m_Buffer != nullptr) {
         return m_BufferAvailable;
@@ -196,8 +196,8 @@ off_t RAMFileClass::Size()
 
 int RAMFileClass::Write(const void *buffer, int size)
 {
-    DEBUG_ASSERT(buffer != nullptr);
-    DEBUG_ASSERT(size > 0);
+    captainslog_assert(buffer != nullptr);
+    captainslog_assert(size > 0);
 
     if (m_Buffer && buffer && size) {
         BOOL opened = false;

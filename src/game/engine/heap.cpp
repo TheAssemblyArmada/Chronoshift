@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "heap.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 FixedHeapClass::FixedHeapClass() :
     IsAllocated(false),
@@ -138,7 +138,7 @@ BOOL FixedHeapClass::Free(void *object)
     int index = ID(object);
 
     if (index >= HeapLength) {
-        DEBUG_LOG("Recovered index %d is outside the heap of size %d.\n", index, HeapLength);
+        captainslog_debug("Recovered index %d is outside the heap of size %d.", index, HeapLength);
         return false;
     }
 

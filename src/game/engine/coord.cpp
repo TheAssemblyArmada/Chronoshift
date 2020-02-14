@@ -311,7 +311,7 @@ const int16_t *Coord_Spillage_List(coord_t coord, int size)
     }
 
     // This condition will result in an out of bounds read and probably shouldn't happen.
-    DEBUG_ASSERT(_spill_table[index] != -1);
+    captainslog_assert(_spill_table[index] != -1);
 
     return _move_spillage[_spill_table[index]]; 
 }

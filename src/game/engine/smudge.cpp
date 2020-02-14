@@ -129,7 +129,7 @@ BOOL SmudgeClass::Mark(MarkType mark)
             cell_t calc_cell = (j * CELL_MAX) + i + cell;
             if (g_Map.In_Radar(calc_cell)) {
                 CellClass *cptr = &g_Map[calc_cell];
-                DEBUG_ASSERT(cptr != nullptr);
+                captainslog_assert(cptr != nullptr);
 
                 if (type.Is_Bib()) {
                     cptr->Set_Smudge(type.What_Type());
@@ -169,7 +169,7 @@ void SmudgeClass::Disown(cell_t cell)
             for (int j = 0; j < type.Get_Height(); ++j) {
                 cell_t calc_cell = (j * CELL_MAX) + i + cell;
                 CellClass *cptr = &g_Map[calc_cell];
-                DEBUG_ASSERT(cptr != nullptr);
+                captainslog_assert(cptr != nullptr);
 
                 if (cptr->Get_Overlay() == OVERLAY_NONE || !cptr->Has_Wall()) {
                     cptr->Set_Smudge(SMUDGE_NONE);
@@ -228,7 +228,7 @@ void SmudgeClass::Write_INI(GameINIClass &ini)
     ini.Clear("SMUDGE");
     for (int i = 0; i < MAP_MAX_AREA; ++i) {
         CellClass *cptr = &g_Map[i];
-        DEBUG_ASSERT(cptr != nullptr);
+        captainslog_assert(cptr != nullptr);
 
         if (cptr->Get_Smudge() != SMUDGE_NONE) {
             SmudgeTypeClass *stptr = SmudgeTypeClass::As_Pointer(cptr->Get_Smudge());

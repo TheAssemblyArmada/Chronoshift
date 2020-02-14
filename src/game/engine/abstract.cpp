@@ -48,8 +48,8 @@ AbstractClass::AbstractClass(const AbstractClass &that) :
 #ifdef CHRONOSHIFT_DEBUG
 void AbstractClass::Debug_Dump(MonoClass *mono) const
 {
-    DEBUG_ASSERT(mono != nullptr);
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(mono != nullptr);
+    captainslog_assert(m_IsActive);
 
     /*mono->Set_Cursor(11, 5);
     mono->Printf("%08X", As_Target());

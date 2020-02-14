@@ -52,13 +52,13 @@ SmudgeTypeClass::SmudgeTypeClass(SmudgeTypeClass const &that) :
 
 void *SmudgeTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(SmudgeTypeClass));
+    captainslog_assert(size == sizeof(SmudgeTypeClass));
     return g_SmudgeTypes.Allocate();
 }
 
 void SmudgeTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_SmudgeTypes.Free(ptr);
 }
 
@@ -104,7 +104,7 @@ void SmudgeTypeClass::Draw_It(int x, int y, int frame) const
 
 SmudgeType SmudgeTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return SMUDGE_NONE;
@@ -149,8 +149,8 @@ void SmudgeTypeClass::Init_Heap()
 
 void SmudgeTypeClass::Init(TheaterType theater)
 {
-    DEBUG_ASSERT(theater < THEATER_COUNT);
-    DEBUG_ASSERT(theater != THEATER_NONE);
+    captainslog_assert(theater < THEATER_COUNT);
+    captainslog_assert(theater != THEATER_NONE);
 
     char filename[256];
 
@@ -166,8 +166,8 @@ void SmudgeTypeClass::Init(TheaterType theater)
 
 SmudgeTypeClass &SmudgeTypeClass::As_Reference(SmudgeType type)
 {
-    DEBUG_ASSERT(type != SMUDGE_NONE);
-    DEBUG_ASSERT(type < SMUDGE_COUNT);
+    captainslog_assert(type != SMUDGE_NONE);
+    captainslog_assert(type < SMUDGE_COUNT);
 
     return g_SmudgeTypes[type];
 }

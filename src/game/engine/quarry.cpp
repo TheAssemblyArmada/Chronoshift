@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "quarry.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -35,7 +35,7 @@ const char *g_QuarryName[QUARRY_COUNT] = { "N/A",
 
 QuarryType Quarry_From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return QUARRY_NONE;
@@ -54,8 +54,8 @@ QuarryType Quarry_From_Name(const char *name)
 
 const char *Name_From_Quarry(QuarryType type)
 {
-    DEBUG_ASSERT(type != QUARRY_NONE);
-    DEBUG_ASSERT(type < QUARRY_COUNT);
+    captainslog_assert(type != QUARRY_NONE);
+    captainslog_assert(type < QUARRY_COUNT);
 
     if (type != QUARRY_NONE && type < QUARRY_COUNT) {
         return g_QuarryName[type];

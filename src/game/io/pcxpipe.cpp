@@ -14,11 +14,11 @@
  */
 #include "always.h"
 #include "pcxpipe.h"
-#include "gamedebug.h"
 #include "pcxrle.h"
 #include <climits>
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 
@@ -32,7 +32,7 @@ PCXPipe::PCXPipe(PipeControl mode, int size) :
     m_OutBuffer(nullptr)
 {
     // Must be less than half of int max
-    DEBUG_ASSERT(m_LineLength < (INT_MAX / 2) && m_LineLength > 0);
+    captainslog_assert(m_LineLength < (INT_MAX / 2) && m_LineLength > 0);
 
     if (m_Mode == PIPE_ENCODE) {
         m_InBuffer = new uint8_t[m_LineLength];

@@ -15,9 +15,9 @@
  */
 #include "shapebtn.h"
 #include "drawshape.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "mouse.h"
+#include <captainslog.h>
 
 ShapeButtonClass::ShapeButtonClass(unsigned id, void *button_shape, int x, int y) :
     ToggleClass(id, x, y, INPUT_NONE, false),
@@ -75,7 +75,7 @@ BOOL ShapeButtonClass::Draw_Me(BOOL redraw)
 
 void ShapeButtonClass::Set_Shape(void *button_shape)
 {
-    DEBUG_ASSERT(Get_Build_Frame_Count(button_shape) > 0);
+    captainslog_assert(Get_Build_Frame_Count(button_shape) > 0);
 
     m_ButtonShape = button_shape;
 

@@ -14,14 +14,14 @@
  *            LICENSE
  */
 #include "link.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 /**
  * @brief Add another LinkClass instance as the next link in the chain after this instance.
  */
 LinkClass &LinkClass::Add(LinkClass &that)
 {
-    DEBUG_ASSERT(this != &that);
+    captainslog_assert(this != &that);
     LinkClass *next = that.m_Next;
     that.m_Next = this;
     m_Prev = &that;
@@ -39,7 +39,7 @@ LinkClass &LinkClass::Add(LinkClass &that)
  */
 LinkClass &LinkClass::Add_Tail(LinkClass &that)
 {
-    DEBUG_ASSERT(this != &that);
+    captainslog_assert(this != &that);
     LinkClass *tail = &that.Tail_Of_List();
     tail->m_Next = this;
     m_Next = nullptr;
@@ -53,7 +53,7 @@ LinkClass &LinkClass::Add_Tail(LinkClass &that)
  */
 LinkClass &LinkClass::Add_Head(LinkClass &that)
 {
-    DEBUG_ASSERT(this != &that);
+    captainslog_assert(this != &that);
     LinkClass *head = &that.Head_Of_List();
     head->m_Prev = this;
     m_Prev = nullptr;

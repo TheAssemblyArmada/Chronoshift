@@ -18,11 +18,11 @@
 #ifndef HEAP_H
 #define HEAP_H
 
-#include "gameassert.h"
 #include "noinit.h"
 #include "pipe.h"
 #include "straw.h"
 #include "vector.h"
+#include <captainslog.h>
 
 #define FIXED_HEAP_MAX 500
 
@@ -35,13 +35,13 @@ public:
 
     char &operator[](int index)
     {
-        DEBUG_ASSERT(index < HeapLength);
+        captainslog_assert(index < HeapLength);
         return *(HeapSize * index + Pointer);
     }
 
     char const &operator[](int index) const
     {
-        DEBUG_ASSERT(index < HeapLength);
+        captainslog_assert(index < HeapLength);
         return *(HeapSize * index + Pointer);
     }
 
@@ -97,13 +97,13 @@ public:
 
     T &operator[](int index)
     {
-        DEBUG_ASSERT(index < ActiveCount);
+        captainslog_assert(index < ActiveCount);
         return *((T *)&FixedHeapClass::operator[](index));
     }
 
     T const &operator[](int index) const
     {
-        DEBUG_ASSERT(index < ActiveCount);
+        captainslog_assert(index < ActiveCount);
         return *((T *)&FixedHeapClass::operator[](index));
     }
 

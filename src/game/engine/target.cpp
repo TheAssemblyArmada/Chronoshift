@@ -208,7 +208,7 @@ ObjectClass *As_Object(target_t target)
             break;
     };
 
-    // DEBUG_ASSERT(objptr != nullptr);
+    // captainslog_assert(objptr != nullptr);
 
     if (objptr != nullptr && objptr->m_IsActive) {
         return objptr;
@@ -266,7 +266,7 @@ TechnoClass *As_Techno(target_t target)
     return func(target);
 #else
     ObjectClass *objptr = As_Object(target);
-    DEBUG_ASSERT(objptr != nullptr);
+    captainslog_assert(objptr != nullptr);
     return objptr != nullptr && objptr->Is_Techno() ? (TechnoClass *)objptr : nullptr;
 #endif
 }

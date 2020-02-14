@@ -67,7 +67,7 @@ VesselTypeClass::VesselTypeClass(const VesselTypeClass &that) :
  */
 void *VesselTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(VesselTypeClass) && size == g_VesselTypes.Heap_Size());
+    captainslog_assert(size == sizeof(VesselTypeClass) && size == g_VesselTypes.Heap_Size());
     return g_VesselTypes.Allocate();
 }
 
@@ -76,7 +76,7 @@ void *VesselTypeClass::operator new(size_t size)
  */
 void VesselTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_VesselTypes.Free(ptr);
 }
 
@@ -136,7 +136,7 @@ ObjectClass *VesselTypeClass::Create_One_Of(HouseClass *house) const
         reinterpret_cast<ObjectClass *(*)(const VesselTypeClass *, HouseClass *)>(0x00584870);
     return func(this, house);
 #else
-    /*DEBUG_ASSERT(house != nullptr);
+    /*captainslog_assert(house != nullptr);
 
     return new VesselClass(m_Type, house->What_Type());*/
     return nullptr;
@@ -163,8 +163,8 @@ const int16_t *VesselTypeClass::Overlap_List() const
  */
 VesselTypeClass &VesselTypeClass::As_Reference(VesselType type)
 {
-    DEBUG_ASSERT(type != VESSEL_NONE);
-    DEBUG_ASSERT(type < VESSEL_COUNT);
+    captainslog_assert(type != VESSEL_NONE);
+    captainslog_assert(type < VESSEL_COUNT);
 
     return g_VesselTypes[type];
 }

@@ -17,13 +17,13 @@
 #include "gamefile.h"
 #include "drawshape.h"
 #include "gadget.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "language.h"
 #include "mixfile.h"
 #include "mouse.h"
 #include "textprint.h"
+#include <captainslog.h>
 #include <cstdarg>
 #include <cstdio>
 
@@ -703,8 +703,8 @@ void Dialog_Box(int x_pos, int y_pos, int width, int height)
 
 void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, BOOL fill)
 {
-    DEBUG_ASSERT(style != BOX_STYLE_NONE);
-    DEBUG_ASSERT(style < BOX_STYLE_COUNT);
+    captainslog_assert(style != BOX_STYLE_NONE);
+    captainslog_assert(style < BOX_STYLE_COUNT);
     
     // this is a list of colour indices for rendering the bevel effect of a box i think.
     // Looks like each style has 4 colours, one for the body of the button,

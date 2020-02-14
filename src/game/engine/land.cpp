@@ -15,7 +15,7 @@
  */
 #include "land.h"
 #include "gameini.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 const char *LandName[LAND_COUNT] = {
     "Clear",
@@ -31,7 +31,7 @@ const char *LandName[LAND_COUNT] = {
 
 LandType Land_From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return LAND_NONE;

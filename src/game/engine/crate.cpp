@@ -110,7 +110,7 @@ BOOL CrateClass::Put_Crate(cell_t &cell)
         }
     }
     OverlayClass *optr = new OverlayClass(cptr->Is_Clear_To_Build(SPEED_FLOAT) ? OVERLAY_WATER_WOOD_CRATE : OVERLAY_WOOD_CRATE, cell);
-    DEBUG_ASSERT(optr != nullptr);
+    captainslog_assert(optr != nullptr);
 
     g_ScenarioInit = stored_init;
     return true;

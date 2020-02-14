@@ -20,7 +20,7 @@
 
 #include "always.h"
 #include "bitarray.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <new>
 #include <stdlib.h>
 #include <string.h>
@@ -62,14 +62,14 @@ protected:
 template<typename T>
 T &VectorClass<T>::operator[](int index)
 {
-    DEBUG_ASSERT(unsigned(index) < unsigned(VectorMax));
+    captainslog_assert(unsigned(index) < unsigned(VectorMax));
     return Vector[index];
 }
 
 template<typename T>
 const T &VectorClass<T>::operator[](int index) const
 {
-    DEBUG_ASSERT(unsigned(index) < unsigned(VectorMax));
+    captainslog_assert(unsigned(index) < unsigned(VectorMax));
     return Vector[index];
 }
 

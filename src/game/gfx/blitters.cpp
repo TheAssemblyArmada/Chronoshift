@@ -14,9 +14,9 @@
  *            LICENSE
  */
 #include "blitters.h"
-#include "gamedebug.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memset;
 using std::memcpy;

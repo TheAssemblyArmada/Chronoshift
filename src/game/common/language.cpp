@@ -16,8 +16,8 @@
 #include "language.h"
 #include "gamefile.h"
 #include "dipthong.h"
-#include "gamedebug.h"
 #include "mixfile.h"
+#include <captainslog.h>
 #include <cstdio>
 
 using std::snprintf;
@@ -287,38 +287,38 @@ const char *g_MissionStr[] = {
 bool Init_Language()
 {
     // Load Game string table.
-    DEBUG_LOG("Init_Language() - Loading Game Strings...\n");
+    captainslog_debug("Init_Language() - Loading Game Strings...");
     const char *filename = Language_Name("conquer");
     g_GameStrings = (char *)GameFileClass::Retrieve(filename);
     if (g_GameStrings == nullptr) {
-        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
+        captainslog_debug("Failed to find string file '%s'.", filename);
         return false;
     }
 
     // Load System string table.
-    DEBUG_LOG("Init_Language() - Loading Chronoshift Strings...\n");
+    captainslog_debug("Init_Language() - Loading Chronoshift Strings...");
     filename = Language_Name("chonoshift");
     g_NewGameStrings = (char *)GameFileClass::Retrieve(filename);
     if (g_NewGameStrings == nullptr) {
-        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
+        captainslog_debug("Failed to find string file '%s'.", filename);
         return false;
     }
 
     // Load Editor string table.
-    DEBUG_LOG("Init_Language() - Loading Editor Strings...\n");
+    captainslog_debug("Init_Language() - Loading Editor Strings...");
     filename = Language_Name("editor");
     g_EditorStrings = (char *)GameFileClass::Retrieve(filename);
     if (g_EditorStrings == nullptr) {
-        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
+        captainslog_debug("Failed to find string file '%s'.", filename);
     }
 
     // Load Debug string table.
 #if defined(CHRONOSHIFT_DEBUG)
-    DEBUG_LOG("Init_Language() - Loading Debug Strings...\n");
+    captainslog_debug("Init_Language() - Loading Debug Strings...");
     filename = Language_Name("debug");
     g_DebugStrings = (char *)GameFileClass::Retrieve(filename);
     if (g_DebugStrings == nullptr) {
-        DEBUG_LOG("Failed to find string file '%s'.\n", filename);
+        captainslog_debug("Failed to find string file '%s'.", filename);
     }
 #endif // CHRONOSHIFT_DEBUG
 
@@ -329,8 +329,8 @@ const char *Language_Name(const char *filename)
 {
     static char _fullname[32];
 
-    DEBUG_ASSERT(filename != nullptr);
-    DEBUG_ASSERT(g_Language != LANGUAGE_NONE);
+    captainslog_assert(filename != nullptr);
+    captainslog_assert(g_Language != LANGUAGE_NONE);
 
     if (filename != nullptr) {
         memset(_fullname, 0, sizeof(_fullname));
@@ -372,7 +372,7 @@ const char *Get_Language_Char()
 {
     static char _char[2];
 
-    DEBUG_ASSERT(g_Language != LANGUAGE_NONE);
+    captainslog_assert(g_Language != LANGUAGE_NONE);
 
     _char[0] = '\0';
 
@@ -410,22 +410,22 @@ const char *Text_String(int str_id)
 {
     if (str_id >= TXT_ADDITIONAL_FIRST) {
         str_id -= TXT_ADDITIONAL_MAGIC_NUM; // ground the value to be zero based.
-        DEBUG_ASSERT(str_id < (TXT_ADDITIONAL_FIRST + TXT_ADDITIONAL_COUNT));
-        DEBUG_ASSERT(g_NewGameStrings != nullptr);
+        captainslog_assert(str_id < (TXT_ADDITIONAL_FIRST + TXT_ADDITIONAL_COUNT));
+        captainslog_assert(g_NewGameStrings != nullptr);
         return Extract_String(g_NewGameStrings, str_id);
     }
 
     if (str_id >= TXT_EDITOR_FIRST) {
         str_id -= TXT_EDITOR_MAGIC_NUM; // ground the value to be zero based.
-        DEBUG_ASSERT(str_id < (TXT_EDITOR_FIRST + TXT_EDITOR_COUNT));
-        DEBUG_ASSERT(g_EditorStrings != nullptr);
+        captainslog_assert(str_id < (TXT_EDITOR_FIRST + TXT_EDITOR_COUNT));
+        captainslog_assert(g_EditorStrings != nullptr);
         return Extract_String(g_EditorStrings, str_id);
     }
 
     if (str_id >= TXT_DEBUG_FIRST) {
         str_id -= TXT_DEBUG_MAGIC_NUM; // ground the value to be zero based.
-        DEBUG_ASSERT(str_id < (TXT_DEBUG_FIRST + TXT_DEBUG_COUNT));
-        DEBUG_ASSERT(g_DebugStrings != nullptr);
+        captainslog_assert(str_id < (TXT_DEBUG_FIRST + TXT_DEBUG_COUNT));
+        captainslog_assert(g_DebugStrings != nullptr);
         return Extract_String(g_DebugStrings, str_id);
     }
 
@@ -433,8 +433,8 @@ const char *Text_String(int str_id)
         return g_NameOverride[-(str_id + 1)];
     }
 
-    DEBUG_ASSERT(str_id < TXT_COUNT);
-    DEBUG_ASSERT(g_GameStrings != nullptr);
+    captainslog_assert(str_id < TXT_COUNT);
+    captainslog_assert(g_GameStrings != nullptr);
     return Extract_String(g_GameStrings, str_id);
 }
 

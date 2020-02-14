@@ -14,9 +14,9 @@
  *            LICENSE
  */
 #include "layer.h"
-#include "gamedebug.h"
 #include "object.h"
 #include "target.h"
+#include <captainslog.h>
 
 LayerClass::LayerClass()
 {
@@ -32,7 +32,7 @@ LayerClass::~LayerClass()
  */
 void LayerClass::Init()
 {
-    DEBUG_LOG("LayerClass::Init()\n");
+    captainslog_debug("LayerClass::Init()");
 
     Clear();
 }
@@ -46,7 +46,7 @@ void LayerClass::Code_Pointers()
 {
     for (int i = 0; i < Count(); ++i) {
         ObjectClass *obj = (*this)[i];
-        DEBUG_ASSERT(obj != nullptr);
+        captainslog_assert(obj != nullptr);
 
         (*this)[i] = reinterpret_cast<ObjectClass *>(As_Target(obj));
     }
@@ -61,7 +61,7 @@ void LayerClass::Decode_Pointers()
 {
     for (int i = 0; i < Count(); ++i) {
         (*this)[i] = As_Object((uintptr_t)((*this)[i]));
-        DEBUG_ASSERT((*this)[i] != nullptr);
+        captainslog_assert((*this)[i] != nullptr);
     }
 }
 
@@ -71,7 +71,7 @@ void LayerClass::Decode_Pointers()
  */
 BOOL LayerClass::Submit(ObjectClass *object, BOOL sort)
 {
-    DEBUG_ASSERT(object != nullptr);
+    captainslog_assert(object != nullptr);
 
     if (sort) {
         return Sorted_Add(object);
@@ -108,7 +108,7 @@ void LayerClass::Sort()
  */
 BOOL LayerClass::Sorted_Add(ObjectClass *const object)
 {
-    DEBUG_ASSERT(object != nullptr);
+    captainslog_assert(object != nullptr);
 
     if (ActiveCount >= VectorMax) {
         if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
@@ -128,7 +128,7 @@ BOOL LayerClass::Sorted_Add(ObjectClass *const object)
 
     for (index = 0; index < ActiveCount; ++index) {
         ObjectClass *objptr = (*this)[index];
-        // DEBUG_ASSERT(objptr != nullptr);
+        // captainslog_assert(objptr != nullptr);
         if (objptr != nullptr) {
             if (object->Sort_Y() < objptr->Sort_Y()) {
                 break;
@@ -156,7 +156,7 @@ void LayerClass::Mark_All(MarkType mark)
 {
     for (int index = 0; index < Count(); ++index) {
         ObjectClass *objptr = (*this)[index];
-        DEBUG_ASSERT(objptr != nullptr);
+        captainslog_assert(objptr != nullptr);
 
         if (objptr != nullptr && objptr->Is_Active()) {
             objptr->Mark(mark);
@@ -172,7 +172,7 @@ void LayerClass::Render_All(BOOL force_redraw)
 {
     for (int index = 0; index < Count(); ++index) {
         ObjectClass *objptr = (*this)[index];
-        // DEBUG_ASSERT(objptr != nullptr);
+        // captainslog_assert(objptr != nullptr);
         if (objptr != nullptr && objptr->Is_Active()) {
             (*this)[index]->Render(force_redraw);
         }

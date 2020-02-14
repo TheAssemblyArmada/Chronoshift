@@ -646,7 +646,7 @@ void UnitClass::Overrun_Cell(cell_t cellnum, BOOL a2)
 
                     if (m_Height == 0) {
                         AnimClass *aptr = new AnimClass(ANIM_CORPSE1, optr->Center_Coord());
-                        DEBUG_ASSERT(aptr != nullptr);
+                        captainslog_assert(aptr != nullptr);
                     }
 
                     optr->Record_The_Kill(this);

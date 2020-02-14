@@ -18,10 +18,10 @@
 #include "template.h"
 #include "gamefile.h"
 #include "coord.h"
-#include "gamedebug.h"
 #include "mixfile.h"
 #include "iomap.h"
 #include <algorithm>
+#include <captainslog.h>
 
 #ifndef GAME_DLL
 TFixedIHeapClass<TemplateTypeClass> g_TemplateTypes;
@@ -48,13 +48,13 @@ TemplateTypeClass::TemplateTypeClass(const TemplateTypeClass &that) :
 
 void *TemplateTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(TemplateTypeClass));
+    captainslog_assert(size == sizeof(TemplateTypeClass));
     return g_TemplateTypes.Allocate();
 }
 
 void TemplateTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_TemplateTypes.Free(ptr);
 }
 
@@ -613,7 +613,7 @@ LandType TemplateTypeClass::Land_Type(int sub_icon) const
 
 TemplateType TemplateTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return TEMPLATE_NONE;
@@ -657,8 +657,8 @@ TemplateTypeClass *TemplateTypeClass::As_Pointer(TemplateType type)
 
 TemplateTypeClass &TemplateTypeClass::As_Reference(TemplateType type)
 {
-    DEBUG_ASSERT(type != TEMPLATE_NONE);
-    DEBUG_ASSERT(type < TEMPLATE_COUNT);
+    captainslog_assert(type != TEMPLATE_NONE);
+    captainslog_assert(type < TEMPLATE_COUNT);
 
     return g_TemplateTypes[type];
 }

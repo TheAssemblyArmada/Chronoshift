@@ -15,7 +15,7 @@
  */
 #include "crc.h"
 #include "endiantype.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 void CRCEngine::operator()(char datum)
 {

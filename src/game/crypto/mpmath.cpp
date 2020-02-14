@@ -15,9 +15,9 @@
  */
 #include "mpmath.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "straw.h"
 #include <algorithm>
+#include <captainslog.h>
 #include <cstring>
 #include <stdlib.h>
 
@@ -3561,7 +3561,7 @@ static int Prime_Compare_Func(const void *a, const void *b)
 
 int32_t MPMath::Byte_Precision(int32_t length)
 {
-    DEBUG_ASSERT(length > 0);
+    captainslog_assert(length > 0);
 
     int32_t bytes = BYTES_PER_UNIT;
 
@@ -3578,8 +3578,8 @@ int32_t MPMath::Byte_Precision(int32_t length)
 
 int32_t MPMath::Significance(const mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     int32_t i = precision - 1;
 
@@ -3592,8 +3592,8 @@ int32_t MPMath::Significance(const mp_digit_u *number, int32_t precision)
 
 int32_t MPMath::Count_Bits(const mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     int32_t bits = Significance(number, precision);
 
@@ -3613,8 +3613,8 @@ int32_t MPMath::Count_Bits(const mp_digit_u *number, int32_t precision)
 
 int32_t MPMath::Count_Bytes(mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     uint8_t *byteptr = reinterpret_cast<uint8_t *>(number);
     int32_t total_bytes = Units_To_Bytes(precision);
@@ -3635,8 +3635,8 @@ int32_t MPMath::Count_Bytes(mp_digit_u *number, int32_t precision)
 
 void MPMath::Init(mp_digit_u *number, mp_digit_u value, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     memset(number, 0, precision * BYTES_PER_UNIT);
     *number = value;
@@ -3677,7 +3677,7 @@ void MPMath::Move_BETOH(mp_digit_u *dst, const mp_digit_u *src, int32_t precisio
 
 int32_t MPMath::DER_Length_Encode(uint32_t length, uint8_t *output)
 {
-    DEBUG_ASSERT(output != nullptr);
+    captainslog_assert(output != nullptr);
 
     int32_t retval;
 
@@ -3698,9 +3698,9 @@ int32_t MPMath::DER_Length_Encode(uint32_t length, uint8_t *output)
 
 uint32_t MPMath::Encode(uint8_t *to, const mp_digit_u *from, int32_t precision)
 {
-    DEBUG_ASSERT(to != nullptr);
-    DEBUG_ASSERT(from != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(to != nullptr);
+    captainslog_assert(from != nullptr);
+    captainslog_assert(precision > 0);
 
     // TODO rewrite the function to swap to BE initially, keeps the maths a bit
     // simpler.
@@ -3748,10 +3748,10 @@ uint32_t MPMath::Encode(uint8_t *to, const mp_digit_u *from, int32_t precision)
 
 uint32_t MPMath::Encode_Bounded(uint8_t *to, uint32_t tobytes, const mp_digit_u *from, int32_t precision)
 {
-    DEBUG_ASSERT(to != nullptr);
-    DEBUG_ASSERT(from != nullptr);
-    DEBUG_ASSERT(tobytes > 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(to != nullptr);
+    captainslog_assert(from != nullptr);
+    captainslog_assert(tobytes > 0);
+    captainslog_assert(precision > 0);
 
     mp_digit_u buffer[MAX_UNIT_PRECISION];
     Move_HTOLE(buffer, from, precision);
@@ -3776,9 +3776,9 @@ uint32_t MPMath::Encode_Bounded(uint8_t *to, uint32_t tobytes, const mp_digit_u 
 
 int32_t MPMath::DER_Encode(const mp_digit_u *from, uint8_t *output, int32_t precision)
 {
-    DEBUG_ASSERT(from != nullptr);
-    DEBUG_ASSERT(output != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(from != nullptr);
+    captainslog_assert(output != nullptr);
+    captainslog_assert(precision > 0);
 
     // Sufficient buffer for max length integer plus meta data.
     uint8_t buffer[MAX_BYTE_PRECISION + 44];
@@ -3800,10 +3800,10 @@ int32_t MPMath::DER_Encode(const mp_digit_u *from, uint8_t *output, int32_t prec
 
 void MPMath::Signed_Decode(mp_digit_u *result, uint8_t const *from, int32_t frombytes, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(from != nullptr);
-    DEBUG_ASSERT(frombytes > 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(from != nullptr);
+    captainslog_assert(frombytes > 0);
+    captainslog_assert(precision > 0);
 
     mp_digit_u buffer[MAX_UNIT_PRECISION];
 
@@ -3825,10 +3825,10 @@ void MPMath::Signed_Decode(mp_digit_u *result, uint8_t const *from, int32_t from
 
 void MPMath::Unsigned_Decode(mp_digit_u *result, uint8_t const *from, int32_t frombytes, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(from != nullptr);
-    DEBUG_ASSERT(frombytes > 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(from != nullptr);
+    captainslog_assert(frombytes > 0);
+    captainslog_assert(precision > 0);
 
     mp_digit_u buffer[MAX_UNIT_PRECISION];
 
@@ -3849,9 +3849,9 @@ void MPMath::Unsigned_Decode(mp_digit_u *result, uint8_t const *from, int32_t fr
 
 void MPMath::DER_Decode(mp_digit_u *result, uint8_t const *input, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(input != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(input != nullptr);
+    captainslog_assert(precision > 0);
 
     uint32_t numlen;
 
@@ -3887,8 +3887,8 @@ void MPMath::DER_Decode(mp_digit_u *result, uint8_t const *input, int32_t precis
 
 void MPMath::Not(mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     for (int i = 0; i < precision; ++i) {
         number[i] = ~number[i];
@@ -3897,8 +3897,8 @@ void MPMath::Not(mp_digit_u *number, int32_t precision)
 
 void MPMath::Inc(mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     // Loop through and increment each unit of the number.
     for (int i = 0; i < precision; ++i) {
@@ -3914,8 +3914,8 @@ void MPMath::Inc(mp_digit_u *number, int32_t precision)
 
 void MPMath::Dec(mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     // Loop through and decrement each unit of the number.
     for (int i = 0; i < precision; ++i) {
@@ -3930,8 +3930,8 @@ void MPMath::Dec(mp_digit_u *number, int32_t precision)
 
 void MPMath::Neg(mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     Not(number, precision);
     Inc(number, precision);
@@ -3939,8 +3939,8 @@ void MPMath::Neg(mp_digit_u *number, int32_t precision)
 
 void MPMath::Abs(mp_digit_u *number, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     // Check if the last unsigned would be negative if taken as a signed int and
     // negate if so to get +ve version.
@@ -3951,9 +3951,9 @@ void MPMath::Abs(mp_digit_u *number, int32_t precision)
 
 void MPMath::Shift_Right_Bits(mp_digit_u *number, uint32_t bits, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(bits >= 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(bits >= 0);
+    captainslog_assert(precision > 0);
     ;
 
     // Shift 0 bytes right, we are already done.
@@ -4003,9 +4003,9 @@ void MPMath::Shift_Right_Bits(mp_digit_u *number, uint32_t bits, int32_t precisi
 
 void MPMath::Shift_Left_Bits(mp_digit_u *number, uint32_t bits, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(bits >= 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(bits >= 0);
+    captainslog_assert(precision > 0);
 
     // Our work is already done.
     if (bits == 0) {
@@ -4054,8 +4054,8 @@ void MPMath::Shift_Left_Bits(mp_digit_u *number, uint32_t bits, int32_t precisio
 
 mp_digit_u MPMath::Rotate_Left(mp_digit_u *number, mp_digit_u carry, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     for (int i = 0; i < precision; ++i) {
         mp_digit_u nextcarry = number[i] & 0x800000000 ? true : false;
@@ -4074,8 +4074,8 @@ mp_digit_u MPMath::Rotate_Left(mp_digit_u *number, mp_digit_u carry, int32_t pre
 
 mp_digit_u MPMath::Rotate_Right(mp_digit_u *number, mp_digit_u carry, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     for (int i = precision - 1; i >= 0; --i) {
         mp_digit_u nextcarry = number[i] & 0x000000001 ? true : false;
@@ -4094,8 +4094,8 @@ mp_digit_u MPMath::Rotate_Right(mp_digit_u *number, mp_digit_u carry, int32_t pr
 
 BOOL MPMath::Test_Eq_Int(const mp_digit_u *number, int32_t i, int32_t precision)
 {
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(precision > 0);
 
     //
     // If we only have one significant unit and it matches our i, then we
@@ -4110,9 +4110,9 @@ BOOL MPMath::Test_Eq_Int(const mp_digit_u *number, int32_t i, int32_t precision)
 
 int MPMath::Compare(const mp_digit_u *left_number, const mp_digit_u *right_number, int32_t precision)
 {
-    DEBUG_ASSERT(left_number != nullptr);
-    DEBUG_ASSERT(right_number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(left_number != nullptr);
+    captainslog_assert(right_number != nullptr);
+    captainslog_assert(precision > 0);
 
     // Start with most significant figure and work backwards.
     for (int i = precision - 1; i >= 0; --i) {
@@ -4134,10 +4134,10 @@ int MPMath::Compare(const mp_digit_u *left_number, const mp_digit_u *right_numbe
 mp_digit_u MPMath::Add(
     mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u carry, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(left_number != nullptr);
-    DEBUG_ASSERT(right_number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(left_number != nullptr);
+    captainslog_assert(right_number != nullptr);
+    captainslog_assert(precision > 0);
 
     for (int i = 0; i < precision; ++i) {
         mp_digit_u nextcarry = Add_Carry(left_number[i], right_number[i], carry);
@@ -4151,10 +4151,10 @@ mp_digit_u MPMath::Add(
 mp_digit_u MPMath::Add_Int(
     mp_digit_u *result, const mp_digit_u *left_number, mp_digit_u right_number, mp_digit_u carry, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(left_number != nullptr);
-    DEBUG_ASSERT(right_number != 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(left_number != nullptr);
+    captainslog_assert(right_number != 0);
+    captainslog_assert(precision > 0);
 
     for (int i = 0; i < precision; ++i) {
         mp_digit_u nextcarry = Add_Carry(left_number[i], right_number, carry);
@@ -4169,10 +4169,10 @@ mp_digit_u MPMath::Add_Int(
 mp_digit_u MPMath::Sub(
     mp_digit_u *result, const mp_digit_u *left_number, const mp_digit_u *right_number, mp_digit_u borrow, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(left_number != nullptr);
-    DEBUG_ASSERT(right_number != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(left_number != nullptr);
+    captainslog_assert(right_number != nullptr);
+    captainslog_assert(precision > 0);
 
     for (int i = 0; i < precision; i++) {
         mp_digit_u nextborrow = Sub_Carry(left_number[i], right_number[i], borrow);
@@ -4186,10 +4186,10 @@ mp_digit_u MPMath::Sub(
 mp_digit_u MPMath::Sub_Int(
     mp_digit_u *result, const mp_digit_u *left_number, mp_digit_u right_number, mp_digit_u borrow, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(left_number != nullptr);
-    DEBUG_ASSERT(right_number != 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(left_number != nullptr);
+    captainslog_assert(right_number != 0);
+    captainslog_assert(precision > 0);
 
     for (int i = 0; i < precision; i++) {
         mp_digit_u nextborrow = Sub_Carry(left_number[i], right_number, borrow);
@@ -4203,10 +4203,10 @@ mp_digit_u MPMath::Sub_Int(
 
 int32_t MPMath::Unsigned_Mul(mp_digit_u *prod, const mp_digit_u *multiplicand, const mp_digit_u *multiplier, int32_t precision)
 {
-    DEBUG_ASSERT(prod != nullptr);
-    DEBUG_ASSERT(multiplicand != nullptr);
-    DEBUG_ASSERT(multiplier != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(prod != nullptr);
+    captainslog_assert(multiplicand != nullptr);
+    captainslog_assert(multiplier != nullptr);
+    captainslog_assert(precision > 0);
 
     Init(prod, 0, precision);
 
@@ -4244,10 +4244,10 @@ int32_t MPMath::Unsigned_Mul(mp_digit_u *prod, const mp_digit_u *multiplicand, c
 
 int32_t MPMath::Unsigned_Mul_Int(mp_digit_u *prod, const mp_digit_u *multiplicand, mp_digit_s multiplier, int32_t precision)
 {
-    DEBUG_ASSERT(prod != nullptr);
-    DEBUG_ASSERT(multiplicand != nullptr);
-    DEBUG_ASSERT(multiplier != 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(prod != nullptr);
+    captainslog_assert(multiplicand != nullptr);
+    captainslog_assert(multiplier != 0);
+    captainslog_assert(precision > 0);
 
     // Test for trivial case of multiply by 0 and return
     if (Test_Eq_Int(multiplicand, 0, precision) != 0 || multiplier == 0) {
@@ -4271,10 +4271,10 @@ int32_t MPMath::Unsigned_Mul_Int(mp_digit_u *prod, const mp_digit_u *multiplican
 
 int32_t MPMath::Unsigned_Mul_Int16(mp_digit_u *prod, mp_digit_u *multiplicand, int16_t multiplier, int32_t precision)
 {
-    DEBUG_ASSERT(prod != nullptr);
-    DEBUG_ASSERT(multiplicand != nullptr);
-    DEBUG_ASSERT(multiplier != 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(prod != nullptr);
+    captainslog_assert(multiplicand != nullptr);
+    captainslog_assert(multiplier != 0);
+    captainslog_assert(precision > 0);
 
     // Test for trivial case of multiply by 0 and return
     if (Test_Eq_Int(multiplicand, 0, precision) != 0 || multiplier == 0) {
@@ -4299,10 +4299,10 @@ int32_t MPMath::Unsigned_Mul_Int16(mp_digit_u *prod, mp_digit_u *multiplicand, i
 
 int32_t MPMath::Signed_Mul(mp_digit_u *prod, const mp_digit_u *multiplicand, const mp_digit_u *multiplier, int32_t precision)
 {
-    DEBUG_ASSERT(prod != nullptr);
-    DEBUG_ASSERT(multiplicand != nullptr);
-    DEBUG_ASSERT(multiplier != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(prod != nullptr);
+    captainslog_assert(multiplicand != nullptr);
+    captainslog_assert(multiplier != nullptr);
+    captainslog_assert(precision > 0);
 
     mp_digit_u abs_multiplier[MAX_UNIT_PRECISION];
     mp_digit_u abs_multiplicand[MAX_UNIT_PRECISION];
@@ -4342,10 +4342,10 @@ int32_t MPMath::Signed_Mul(mp_digit_u *prod, const mp_digit_u *multiplicand, con
 
 int32_t MPMath::Signed_Mul_Int(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_u multiplier, int32_t precision)
 {
-    DEBUG_ASSERT(prod != nullptr);
-    DEBUG_ASSERT(multiplicand != nullptr);
-    DEBUG_ASSERT(multiplier != 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(prod != nullptr);
+    captainslog_assert(multiplicand != nullptr);
+    captainslog_assert(multiplier != 0);
+    captainslog_assert(precision > 0);
 
     mp_digit_u abs_multiplicand[MAX_UNIT_PRECISION];
 
@@ -4406,11 +4406,11 @@ void MPMath::Double_Mul(mp_digit_u *prod, mp_digit_u *multiplicand, mp_digit_u *
 int32_t MPMath::Unsigned_Div(
     mp_digit_u *remainder, mp_digit_u *quotient, const mp_digit_u *dividend, const mp_digit_u *divisor, int32_t precision)
 {
-    DEBUG_ASSERT(remainder != nullptr);
-    DEBUG_ASSERT(quotient != nullptr);
-    DEBUG_ASSERT(dividend != nullptr);
-    DEBUG_ASSERT(divisor != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(remainder != nullptr);
+    captainslog_assert(quotient != nullptr);
+    captainslog_assert(dividend != nullptr);
+    captainslog_assert(divisor != nullptr);
+    captainslog_assert(precision > 0);
 
     // total_bit_count
 
@@ -4458,10 +4458,10 @@ int32_t MPMath::Unsigned_Div(
 
 uint32_t MPMath::Unsigned_Div_Int(mp_digit_u *quotient, const mp_digit_u *dividend, mp_digit_u divisor, int32_t precision)
 {
-    DEBUG_ASSERT(quotient != nullptr);
-    DEBUG_ASSERT(dividend != nullptr);
-    DEBUG_ASSERT(divisor > 0);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(quotient != nullptr);
+    captainslog_assert(dividend != nullptr);
+    captainslog_assert(divisor > 0);
+    captainslog_assert(precision > 0);
 
     // Divide by zero error!
     if (divisor == 0) {
@@ -4508,11 +4508,11 @@ uint32_t MPMath::Unsigned_Div_Int(mp_digit_u *quotient, const mp_digit_u *divide
 void MPMath::Signed_Div(
     mp_digit_u *remainder, mp_digit_u *quotient, mp_digit_u *dividend, mp_digit_u *divisor, int32_t precision)
 {
-    DEBUG_ASSERT(remainder != nullptr);
-    DEBUG_ASSERT(quotient != nullptr);
-    DEBUG_ASSERT(dividend != nullptr);
-    DEBUG_ASSERT(divisor != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(remainder != nullptr);
+    captainslog_assert(quotient != nullptr);
+    captainslog_assert(dividend != nullptr);
+    captainslog_assert(divisor != nullptr);
+    captainslog_assert(precision > 0);
 
     mp_digit_u scratch_divisor[MAX_UNIT_PRECISION];
     mp_digit_u scratch_dividend[MAX_UNIT_PRECISION];
@@ -4551,10 +4551,10 @@ void MPMath::Signed_Div(
 
 void MPMath::Modulo(mp_digit_u *remainder, mp_digit_u *num1, mp_digit_u *num2, int32_t precision)
 {
-    DEBUG_ASSERT(remainder != nullptr);
-    DEBUG_ASSERT(num1 != nullptr);
-    DEBUG_ASSERT(num2 != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(remainder != nullptr);
+    captainslog_assert(num1 != nullptr);
+    captainslog_assert(num2 != nullptr);
+    captainslog_assert(precision > 0);
 
     // Divide by zero error!
     if (Test_Eq_Int(num2, 0, precision) != 0) {
@@ -4594,10 +4594,10 @@ void MPMath::Modulo(mp_digit_u *remainder, mp_digit_u *num1, mp_digit_u *num2, i
 
 void MPMath::Inverse_A_Mod_B(mp_digit_u *result, const mp_digit_u *number, const mp_digit_u *modulus, int32_t precision)
 {
-    DEBUG_ASSERT(result != nullptr);
-    DEBUG_ASSERT(number != nullptr);
-    DEBUG_ASSERT(modulus != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(result != nullptr);
+    captainslog_assert(number != nullptr);
+    captainslog_assert(modulus != nullptr);
+    captainslog_assert(precision > 0);
 
     mp_digit_u y[MAX_UNIT_PRECISION];
     mp_digit_u g[3][MAX_UNIT_PRECISION];
@@ -4634,9 +4634,9 @@ void MPMath::Inverse_A_Mod_B(mp_digit_u *result, const mp_digit_u *number, const
 
 int32_t MPMath::Reciprocal(mp_digit_u *quotient, const mp_digit_u *divisor, int32_t precision)
 {
-    DEBUG_ASSERT(quotient != nullptr);
-    DEBUG_ASSERT(divisor != nullptr);
-    DEBUG_ASSERT(precision > 0);
+    captainslog_assert(quotient != nullptr);
+    captainslog_assert(divisor != nullptr);
+    captainslog_assert(precision > 0);
 
     mp_digit_u remainder[MAX_UNIT_PRECISION];
 

@@ -18,11 +18,11 @@
 #include "blitters.h"
 #include "gamefile.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "lcw.h"
 #include "stringex.h"
 #include "xordelta.h"
+#include <captainslog.h>
 #include <inttypes.h>
 
 SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, int size, char flags, void *pal)
@@ -47,13 +47,13 @@ SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, in
     filehandle = Open_File(filename, FM_READ);
 
     if (filehandle == -1) {
-        DEBUG_LOG("Open_Animation() - Couldn't open file\n");
+        captainslog_debug("Open_Animation() - Couldn't open file");
 
         return nullptr;
     }
 
     if (Read_File(filehandle, &fileheader, sizeof(WSAFileHeaderType)) != sizeof(WSAFileHeaderType)) {
-        DEBUG_LOG("Open_Animation() - Failed to read header correctly for size %d\n", sizeof(WSAFileHeaderType));
+        captainslog_debug("Open_Animation() - Failed to read header correctly for size %d", sizeof(WSAFileHeaderType));
 
         return nullptr;
     }
@@ -67,7 +67,7 @@ SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, in
 
     // Detect if we have a "HD" version of WSA.
     if (fileheader.m_SD.m_Width > 320 || fileheader.m_SD.m_Height > 200) {
-        DEBUG_LOG("Opening High Res WSA File '%s'.\n", filename);
+        captainslog_debug("Opening High Res WSA File '%s'.", filename);
         is_hd = true;
         header_size = sizeof(WSAHDFileHeader);
         // Read the missing 2 bytes for the HD header.
@@ -79,7 +79,7 @@ SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, in
         fileheader.m_HD.m_Flags = le16toh(fileheader.m_HD.m_Flags);
         fileheader.m_HD.m_FirstFrameStart = le32toh(fileheader.m_HD.m_FirstFrameStart);
         fileheader.m_HD.m_FirstFrameEnd = le32toh(fileheader.m_HD.m_FirstFrameEnd);
-        DEBUG_LOG("Total frames: %" PRIu16 "\n"
+        captainslog_debug("Total frames: %" PRIu16 ""
             "X pos : %" PRIu16 "\n"
             "Y pos : %" PRIu16 "\n"
             "Width : %" PRIu16 "\n"
@@ -99,13 +99,13 @@ SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, in
             fileheader.m_HD.m_FirstFrameEnd
         );
     } else {
-        DEBUG_LOG("Opening Low Res WSA File '%s'.\n", filename);
+        captainslog_debug("Opening Low Res WSA File '%s'.", filename);
         header_size = sizeof(WSAFileHeader);
         fileheader.m_SD.m_LargestFrameSize = le16toh(fileheader.m_SD.m_LargestFrameSize);
         fileheader.m_SD.m_Flags = le16toh(fileheader.m_SD.m_Flags);
         fileheader.m_SD.m_FirstFrameStart = le32toh(fileheader.m_SD.m_FirstFrameStart);
         fileheader.m_SD.m_FirstFrameEnd = le32toh(fileheader.m_SD.m_FirstFrameEnd);
-        DEBUG_LOG("Total frames: %" PRIu16 "\n"
+        captainslog_debug("Total frames: %" PRIu16 ""
             "X pos : %" PRIu16 "\n"
             "Y pos : %" PRIu16 "\n"
             "Width : %" PRIu16 "\n"
@@ -198,14 +198,14 @@ SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, in
         mem_flags |= WSA_NO_ALLOC;
     } else {
         if (flags & WSA_OPEN_FROM_DISK || (size && size < file_and_decode_size)) {
-            // DEBUG_LOG("Preparing for WSA from file\n");
+            // captainslog_debug("Preparing for WSA from file");
             buffer_size = decode_size;
         } else {
             buffer_size = file_and_decode_size;
         }
 
         if (Ram_Free() < buffer_size) {
-            DEBUG_LOG("Not enough free memory\n");
+            captainslog_debug("Not enough free memory");
             if (Ram_Free() < decode_size) {
                 Close_File(filehandle);
                 return 0;
@@ -246,7 +246,7 @@ SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, in
 
     // If we have enough space, read the whole file
     if (buffer_size == file_and_decode_size) {
-        DEBUG_LOG("Open_Animation() - Caching file to memory\n");
+        captainslog_debug("Open_Animation() - Caching file to memory");
         mem_header->m_FileBuffer = static_cast<char *>(delta_ptr) + mem_header->m_LargestFrameSize;
 
         // This gets the entire set of offsets so needs to use sizeof the file header.
@@ -263,7 +263,7 @@ SysAnimHeaderType *__cdecl Open_Animation(const char *filename, void *buffer, in
             mem_flags |= WSA_CACHED | WSA_NOLOOP;
         }
     } else {
-        DEBUG_LOG("Open_Animation() - Handling from file\n");
+        captainslog_debug("Open_Animation() - Handling from file");
         if (Get_File_Frame_Offset(filehandle, mem_header->m_TotalFrames + 1, pal_size)) {
             mem_flags |= WSA_FROMFILE;
         } else {
@@ -309,8 +309,8 @@ void __cdecl Close_Animation(SysAnimHeaderType *header)
 
 BOOL __cdecl Animate_Frame(SysAnimHeaderType *header, GraphicViewPortClass &viewport, int frame, int x_pos, int y_pos)
 {
-    DEBUG_ASSERT(header != nullptr);
-    DEBUG_ASSERT(frame < header->m_TotalFrames);
+    captainslog_assert(header != nullptr);
+    captainslog_assert(frame < header->m_TotalFrames);
 
     if (header != nullptr && frame < header->m_TotalFrames) {
         if (viewport.Lock()) {
@@ -332,9 +332,9 @@ BOOL __cdecl Animate_Frame(SysAnimHeaderType *header, GraphicViewPortClass &view
 
             // We are handling the first frame if current and total frames are equal
             if (header->m_CurrentFrame == header->m_TotalFrames) {
-                //DEBUG_LOG("Animate_Frame() - Handing initial frame\n");
+                //captainslog_debug("Animate_Frame() - Handing initial frame");
                 if (!(header->m_Flags & WSA_NO_INIT)) {
-                    //DEBUG_LOG("Animate_Frame() - Anim_Open staged initial frame, applying now\n");
+                    //captainslog_debug("Animate_Frame() - Anim_Open staged initial frame, applying now");
                     if (xor_to_vp) {
                         Apply_XOR_Delta_To_Page_Or_Viewport(
                             frame_buff, header->m_DeltaBuffer, header->m_Width, pitch, (header->m_Flags & WSA_ALLOC) == 0);
@@ -361,7 +361,7 @@ BOOL __cdecl Animate_Frame(SysAnimHeaderType *header, GraphicViewPortClass &view
                 direction = -1;
             }
 
-            DEBUG_LOG(
+            captainslog_debug(
                 "Animate_Frame() - Frame step is %d, to apply is %d, current frame is %d\n", direction, to_apply, cur_frame);
 
             if (direction <= 0) {
@@ -370,13 +370,13 @@ BOOL __cdecl Animate_Frame(SysAnimHeaderType *header, GraphicViewPortClass &view
                         cur_frame = header->m_TotalFrames;
                     }
 
-                    DEBUG_LOG("Animate_Frame() - Framestep is <=0, applying frame %d\n", cur_frame);
+                    captainslog_debug("Animate_Frame() - Framestep is <=0, applying frame %d", cur_frame);
                     Apply_Delta(header, cur_frame, frame_buff, pitch);
                     cur_frame += direction;
                 }
             } else {
                 for (int i = 0; i < to_apply; ++i) {
-                    DEBUG_LOG("Animate_Frame() - Framestep is > 0, applying frame %d\n", cur_frame + direction);
+                    captainslog_debug("Animate_Frame() - Framestep is > 0, applying frame %d", cur_frame + direction);
                     Apply_Delta(header, direction + cur_frame, frame_buff, pitch);
 
                     if (cur_frame == header->m_TotalFrames) {
@@ -414,7 +414,7 @@ int Apply_Delta(SysAnimHeaderType *header, int curr_frame, void *buffer, int pit
 
     // Read from Ram if cached, else get a frame from memory
     if (header->m_Flags & WSA_CACHED) {
-        // DEBUG_LOG("Applying delta for WSA_CACHED\n");
+        // captainslog_debug("Applying delta for WSA_CACHED");
 
         frame_offset = Get_Resident_Frame_Offset(header->m_FileBuffer, curr_frame);
 
@@ -425,7 +425,7 @@ int Apply_Delta(SysAnimHeaderType *header, int curr_frame, void *buffer, int pit
 
         memcpy(lcw_buff, frame_data, frame_data_size);
     } else if (header->m_Flags & WSA_FROMFILE) {
-        // DEBUG_LOG("Applying delta for WSA_FROMFILE\n");
+        // captainslog_debug("Applying delta for WSA_FROMFILE");
         int file_handle = header->m_FileHandle;
 
         Seek_File(file_handle, 0, FS_SEEK_START);
@@ -466,7 +466,7 @@ unsigned __cdecl Get_Animation_Size(SysAnimHeaderType *header)
 
 unsigned Get_Resident_Frame_Offset(void *anim, int frame)
 {
-    DEBUG_LOG("Getting resident frame offsets.\n");
+    captainslog_debug("Getting resident frame offsets.");
     uint32_t *offsets = static_cast<uint32_t *>(anim);
     int first_frame_size = 0;
 
@@ -483,7 +483,7 @@ unsigned Get_Resident_Frame_Offset(void *anim, int frame)
 
 unsigned Get_File_Frame_Offset(int handle, int frame, int palette_adjust)
 {
-    DEBUG_LOG("Getting file frame offsets.\n");
+    captainslog_debug("Getting file frame offsets.");
     uint32_t offset;
     Seek_File(handle, 4 * frame + sizeof(SysAnimHeaderType), FS_SEEK_START);
 

@@ -208,8 +208,8 @@ void TerrainTypeClass::Init_Heap()
  */
 void TerrainTypeClass::Init(TheaterType theater)
 {
-    DEBUG_ASSERT(theater != THEATER_NONE);
-    DEBUG_ASSERT(theater < THEATER_COUNT);
+    captainslog_assert(theater != THEATER_NONE);
+    captainslog_assert(theater < THEATER_COUNT);
 
     char filename[512];
 
@@ -246,7 +246,7 @@ void TerrainTypeClass::Init(TheaterType theater)
  */
 TerrainType TerrainTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return TERRAIN_NONE;
@@ -277,8 +277,8 @@ const char *TerrainTypeClass::Name_From(TerrainType type)
  */
 TerrainTypeClass &TerrainTypeClass::As_Reference(TerrainType type)
 {
-    DEBUG_ASSERT(type != TERRAIN_NONE);
-    DEBUG_ASSERT(type < TERRAIN_COUNT);
+    captainslog_assert(type != TERRAIN_NONE);
+    captainslog_assert(type < TERRAIN_COUNT);
 
     return g_TerrainTypes[type];
 }

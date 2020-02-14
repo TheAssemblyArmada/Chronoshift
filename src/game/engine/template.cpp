@@ -59,7 +59,7 @@ void *TemplateClass::operator new(size_t size)
 void TemplateClass::operator delete(void *ptr)
 {
     TemplateClass *this_ptr = static_cast<TemplateClass *>(ptr);
-    DEBUG_ASSERT(this_ptr != nullptr);
+    captainslog_assert(this_ptr != nullptr);
     if (this_ptr != nullptr) {
         this_ptr->m_IsActive = false;
     }
@@ -85,7 +85,7 @@ TemplateClass::~TemplateClass()
  */
 BOOL TemplateClass::Mark(MarkType mark)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
     static bool _noup = false;
 
     void *image = Class_Of().Get_Image_Data();

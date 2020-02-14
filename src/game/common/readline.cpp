@@ -15,7 +15,7 @@
  */
 #include "readline.h"
 #include "filestraw.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <cstring>
 
 using std::strlen;
@@ -28,8 +28,8 @@ int Read_Line(FileClass &file, char *line, int length, BOOL &eof)
 
 int Read_Line(Straw &straw, char *buffer, int length, BOOL &eof)
 {
-    DEBUG_ASSERT(buffer != nullptr);
-    DEBUG_ASSERT(length > 0);
+    captainslog_assert(buffer != nullptr);
+    captainslog_assert(length > 0);
 
     if (buffer && length > 0) {
         int i = 0;

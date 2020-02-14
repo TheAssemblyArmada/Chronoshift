@@ -116,7 +116,7 @@ static BOOL Change_Local_Dir(int cd)
     static unsigned _detected = 0;
     static const char *_vol_labels[] = { "cd1", "cd2", "cd3", "cd4" };
     char vol_buff[16];
-    // DEBUG_LOG("Requested %d, last is %d.\n", cd, g_last);
+    // captainslog_debug("Requested %d, last is %d.", cd, g_last);
 
     // Detect which if any of the discs have had their data copied to an appropriate local folder.
     if (!_initialised) {
@@ -124,7 +124,7 @@ static BOOL Change_Local_Dir(int cd)
             struct stat st;
 
             if (stat(_vol_labels[i], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
-                // DEBUG_LOG("Found '%s' folder, checking for main.mix.\n", _vol_labels[i]);
+                // captainslog_debug("Found '%s' folder, checking for main.mix.", _vol_labels[i]);
                 CDFileClass::Refresh_Search_Drives();
                 snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[i]);
                 CDFileClass::Add_Search_Drive(vol_buff);
@@ -132,7 +132,7 @@ static BOOL Change_Local_Dir(int cd)
 
                 // Populate _detected as a bitfield for which discs we found a local copy of.
                 if (fc.Is_Available()) {
-                    // DEBUG_LOG("main.mix verified, adding.\n", _vol_labels[i]);
+                    // captainslog_debug("main.mix verified, adding.", _vol_labels[i]);
                     _detected |= 1 << i;
                 }
             }
@@ -178,19 +178,19 @@ static BOOL Change_Local_Dir(int cd)
 
     // If the data from the CD we want was detected, then double check it and change to it.
     if (_detected & (1 << cd)) {
-        DEBUG_ASSERT_PRINT(cd >= 0 && cd < 4, "Requested CD is outside expected range.\n");
+        captainslog_dbgassert(cd >= 0 && cd < 4, "Requested CD is outside expected range.\n");
         struct stat st;
 
         // Verify that the file is still available and hasn't been deleted out from under us.
         if (stat(_vol_labels[cd], &st) == 0 && (st.st_mode & S_IFDIR) == S_IFDIR) {
-            // DEBUG_LOG("Local directory '%s' found, adding to search path and checking for main.mix.\n", _vol_labels[cd]);
+            // captainslog_debug("Local directory '%s' found, adding to search path and checking for main.mix.", _vol_labels[cd]);
             CDFileClass::Refresh_Search_Drives();
             snprintf(vol_buff, sizeof(vol_buff), "%s/", _vol_labels[cd]);
             CDFileClass::Add_Search_Drive(vol_buff);
             GameFileClass fc("main.mix");
 
             if (fc.Is_Available()) {
-                // DEBUG_LOG("main.mix for '%s' found in search path, reloading secondary mix files.\n", _vol_labels[cd]);
+                // captainslog_debug("main.mix for '%s' found in search path, reloading secondary mix files.", _vol_labels[cd]);
                 g_last = cd;
                 Reinit_Secondary_Mixfiles();
 
@@ -240,14 +240,14 @@ BOOL Force_CD_Available(int cd)
         "Aftermath CD" /*, "RED ALERT DVD"*/
     };
 
-    //DEBUG_LOG("Force_CD_Available attempting to change to %d\n", cd);
+    //captainslog_debug("Force_CD_Available attempting to change to %d", cd);
 
     if (cd == DISK_ANY) {
         return true;
     }
 
     if (Change_Local_Dir(cd)) {
-        //DEBUG_LOG("Force_CD_Available found data locally, returning success.\n");
+        //captainslog_debug("Force_CD_Available found data locally, returning success.");
         return true;
     }
 

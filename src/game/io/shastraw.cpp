@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "shastraw.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 /**
  * @brief Read data from the straw into specified memory buffer.

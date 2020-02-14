@@ -15,12 +15,12 @@
 #include "interpolate.h"
 #include "gamefile.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "mouse.h"
 #include "palette.h"
 #include <malloc.h>
 #include <algorithm>
+#include <captainslog.h>
 
 // PaletteClass *g_interpolationPalette = &PaletteClass::CurrentPalette;
 #ifdef GAME_DLL
@@ -136,7 +136,7 @@ int Load_Interpolated_Palettes(const char *filename, BOOL append)
     }
 
     if (!fc.Is_Available()) {
-        DEBUG_LOG("'%s' not available, loading default.\n", fc.File_Name());
+        captainslog_debug("'%s' not available, loading default.", fc.File_Name());
         fc.Set_Name("AAGUN.VQP"); // gets defualt vqp pal?
     }
 
@@ -195,7 +195,7 @@ void Interpolate_2X_Scale(GraphicBufferClass &src, GraphicViewPortClass &dst, co
 
         // If the read failed, create a new interpolation pal
         if (g_interpolationPaletteChanged) {
-            DEBUG_LOG("Table '%s' not loaded, generating.\n", filename);
+            captainslog_debug("Table '%s' not loaded, generating.", filename);
             Create_Palette_Interpolation_Table();
         }
     }

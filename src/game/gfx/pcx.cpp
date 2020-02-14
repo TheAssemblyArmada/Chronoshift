@@ -16,7 +16,6 @@
 #include "endiantype.h"
 #include "filepipe.h"
 #include "filestraw.h"
-#include "gamedebug.h"
 #include "gamefile.h"
 #include "gbuffer.h"
 #include "palette.h"
@@ -24,6 +23,7 @@
 #include "pcxrle.h"
 #include "pcxstraw.h"
 #include <algorithm>
+#include <captainslog.h>
 
 /**
  * Read a PCX file directly into a graphic buffer.
@@ -41,7 +41,7 @@ GraphicBufferClass *Read_PCX_File(const char *filename, PaletteClass *pal, void 
         file.Open(FM_READ);
         file.Read(&header, sizeof(PCX_HEADER));
         if (header.Identifier != PCX_ZSOFT && header.Version != PCX_VER30 && header.BitsPixelPlane != 8) {
-            DEBUG_LOG("PCX does not have expected header.\n");
+            captainslog_debug("PCX does not have expected header.");
             file.Close();
             return nullptr;
         } else {
@@ -52,14 +52,14 @@ GraphicBufferClass *Read_PCX_File(const char *filename, PaletteClass *pal, void 
                 height = std::min(size / width - 1, height);
                 gbuff = new GraphicBufferClass(width, height, buffer, size);
                 if (!gbuff || !gbuff->Get_GBuffer()->Get_Buffer()) {
-                    DEBUG_LOG("GraphicBuffer for PCX is not valid.\n");
+                    captainslog_debug("GraphicBuffer for PCX is not valid.");
                     file.Close();
                     return nullptr;
                 }
             } else {
                 gbuff = new GraphicBufferClass(width, height, 0, width * (height + 4));
                 if (!gbuff || !gbuff->Get_GBuffer()->Get_Buffer()) {
-                    DEBUG_LOG("Allocated GraphicBuffer for PCX is not valid.\n");
+                    captainslog_debug("Allocated GraphicBuffer for PCX is not valid.");
                     file.Close();
                     return nullptr;
                 }
@@ -89,7 +89,7 @@ GraphicBufferClass *Read_PCX_File(const char *filename, PaletteClass *pal, void 
             return gbuff;
         }
     } else {
-        DEBUG_LOG("File '%s' wasn't available\n", filename);
+        captainslog_debug("File '%s' wasn't available", filename);
 
         return nullptr;
     }
@@ -133,7 +133,7 @@ int Write_PCX_File(FileClass &file, GraphicBufferClass &gbuff, PaletteClass &pal
 
     // Write a temp header to the file.
 
-    DEBUG_LOG("Write_PCX_File() writing empty header.\n");
+    captainslog_debug("Write_PCX_File() writing empty header.");
     int data_put = file.Write(&header, sizeof(PCX_HEADER));
 
     // is this loop checking if the Xmax can be (*&header.Xmax >> 16) divided by 16?
@@ -141,9 +141,9 @@ int Write_PCX_File(FileClass &file, GraphicBufferClass &gbuff, PaletteClass &pal
     // Not sure we need this Get_VideoBuffer->Get_Buffer stuff, can't we just lock and get offset for the same end?
     char *bitmap_data = (char *)gbuff.Get_GBuffer()->Get_Buffer() + pitch * gbuff.Get_YPos() + gbuff.Get_XPos();
 
-    DEBUG_LOG("Write_PCX_File() writing scan lines.\n");
+    captainslog_debug("Write_PCX_File() writing scan lines.");
     for (int i = 0; i < gbuff.Get_Height(); ++i) {
-        DEBUG_LOG("\tscan line %d of %d", i, gbuff.Get_Height());
+        captainslog_debug("\tscan line %d of %d", i, gbuff.Get_Height());
         data_put += rpipe.Put(bitmap_data, gbuff.Get_Width());
         bitmap_data += pitch;
     }
@@ -153,16 +153,16 @@ int Write_PCX_File(FileClass &file, GraphicBufferClass &gbuff, PaletteClass &pal
     data_put += file.Write(&pal_marker, 1);
 
     // Fill tmppal with the input palette.
-    DEBUG_LOG("Write_PCX_File() preparing to write image palette.\n");
+    captainslog_debug("Write_PCX_File() preparing to write image palette.");
     for (int i = 0; i < 256; ++i) {
-        DEBUG_LOG("\tpreparing entry %d of %d\n", i, 256);
+        captainslog_debug("\tpreparing entry %d of %d", i, 256);
         tmppal[i].Set_Red(pal[i].Get_Red() << 2);
         tmppal[i].Set_Green(pal[i].Get_Green() << 2);
         tmppal[i].Set_Blue(pal[i].Get_Blue() << 2);
     }
 
     // Write the tmppal palette to the file.
-    DEBUG_LOG("Write_PCX_File() writing image palette.\n");
+    captainslog_debug("Write_PCX_File() writing image palette.");
     file.Write(&tmppal, sizeof(PaletteClass));
 
     // If we opened the file for writing, lets be safe and close it.

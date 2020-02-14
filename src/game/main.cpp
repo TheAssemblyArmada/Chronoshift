@@ -21,7 +21,6 @@
 #include "dialog.h"
 #include "eventhandler.h"
 #include "focus.h"
-#include "gamedebug.h"
 #include "gamemain.h"
 #include "gameoptions.h"
 #include "gbuffer.h"
@@ -39,8 +38,11 @@
 #include "startup.h"
 #include "surfacemonitor.h"
 #include "version.h"
+#include "win32compat.h"
+#include <captainslog.h>
 
 #ifdef PLATFORM_WINDOWS
+#include <direct.h>
 #include <shellapi.h>
 
 #if !defined GAME_DLL && defined COMPILER_MSVC
@@ -49,72 +51,20 @@
 #endif
 #endif
 
-#ifdef PLATFORM_UNIX
-#include <libgen.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-#ifdef PLATFORM_WINDOWS
-#include <cstdlib>
+#ifdef HAVE_LIBGEN_H
+#include <libgen.h>
+#endif
 
-using std::atexit;
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
 
-// Global so we can ensure the argument list is freed at exit.
-static char **g_argv;
-
-void Free_Argv()
-{
-    LocalFree(g_argv);
-}
-
-// Taken from https://github.com/thpatch/win32_utf8/blob/master/src/shell32_dll.c
-// Get the command line as UTF-8 as it would be on other platforms.
-char **CommandLineToArgvU(LPCWSTR lpCmdLine, int *pNumArgs)
-{
-    int cmd_line_pos; // Array "index" of the actual command line string
-    // int lpCmdLine_len = wcslen(lpCmdLine) + 1;
-    int lpCmdLine_len = WideCharToMultiByte(CP_UTF8, 0, lpCmdLine, -1, nullptr, 0, nullptr, nullptr) + 1;
-    char **argv_u;
-
-    wchar_t **argv_w = CommandLineToArgvW(lpCmdLine, pNumArgs);
-
-    if (!argv_w) {
-        return nullptr;
-    }
-
-    cmd_line_pos = *pNumArgs + 1;
-
-    // argv is indeed terminated with an additional sentinel NULL pointer.
-    argv_u = (char **)LocalAlloc(LMEM_FIXED, cmd_line_pos * sizeof(char *) + lpCmdLine_len);
-
-    if (argv_u) {
-        int i;
-        char *cur_arg_u = (char *)&argv_u[cmd_line_pos];
-
-        for (i = 0; i < *pNumArgs; i++) {
-            size_t cur_arg_u_len;
-            argv_u[i] = cur_arg_u;
-            int conv_len = WideCharToMultiByte(CP_UTF8, 0, argv_w[i], -1, cur_arg_u, lpCmdLine_len, nullptr, nullptr);
-
-            cur_arg_u_len = argv_w[i] != nullptr ? conv_len : conv_len + 1;
-            cur_arg_u += cur_arg_u_len;
-            lpCmdLine_len -= cur_arg_u_len;
-        }
-
-        argv_u[i] = nullptr;
-
-        if (g_argv != nullptr) {
-            LocalFree(g_argv);
-        }
-
-        g_argv = argv_u;
-        atexit(Free_Argv);
-    }
-
-    LocalFree(argv_w);
-
-    return argv_u;
-}
+#ifdef HAVE_PWD_H
+#include <pwd.h>
 #endif
 
 /**
@@ -142,7 +92,7 @@ void Set_Working_Directory()
     struct stat sb;
 
     if (lstat(link, &sb) == -1) {
-        DEBUG_LOG("lstat() error setting working directory.\n");
+        captainslog_debug("lstat() error setting working directory.");
         exit(EXIT_FAILURE);
     }
 
@@ -150,19 +100,19 @@ void Set_Working_Directory()
     ssize_t ret = readlink(link, path, PATH_MAX);
 
     if (ret < 0) {
-        DEBUG_LOG("readlink() error setting working directory.\n");
+        captainslog_debug("readlink() error setting working directory.");
         exit(EXIT_FAILURE);
     }
 
     if (ret > sb.st_size) {
-        DEBUG_LOG("symlink increased in size between lstat() and readlink()\n");
+        captainslog_debug("symlink increased in size between lstat() and readlink()");
         exit(EXIT_FAILURE);
     }
 
     path[sb.st_size] = '\0';
 
     if(chdir(dirname(path)) != 0) {
-        DEBUG_LOG("Failed to set working directory with chdir().\n");
+        captainslog_debug("Failed to set working directory with chdir().");
         exit(EXIT_FAILURE);
     }
 
@@ -262,26 +212,75 @@ int main(int argc, char **argv)
 #endif
 {
     // Windows main can't take arguments as UTF8, so we need to overwrite them with the correct content.
-#ifdef PLATFORM_WINDOWS
-    argv = CommandLineToArgvU(GetCommandLineW(), &argc);
-#endif
+    Handle_Win32_Args(&argc, &argv);
+    Handle_Win32_Console();
 
-    DEBUG_INIT(DEBUG_LOG_TO_FILE);
+    const char *logfile = nullptr;
+#if LOGGING_LEVEL != LOGLEVEL_NONE
+    char dirbuf[PATH_MAX];
+    char curbuf[PATH_MAX];
+    char prevbuf[PATH_MAX];
+
+#ifdef PLATFORM_WINDOWS
+    char *tmp = getenv("USERPROFILE");
+
+    if (tmp != NULL) {
+        strcpy(dirbuf, tmp);
+        strcat(dirbuf, "\\Documents\\Chronoshift");
+        mkdir(dirbuf);
+        strcat(dirbuf, "\\");
+    } else {
+        GetModuleFileNameA(0, dirbuf, sizeof(dirbuf));
+
+        // Get the path to the executable minus the actual filename.
+        for (char *i = &dirbuf[strlen(dirbuf)]; i >= dirbuf && (*i != '\\' || *i != '/'); --i) {
+            *i = '\0';
+        }
+    }
+#else
+    char *homedir = getenv("HOME");
+    if (homedir != nullptr) {
+        strcpy(dirbuf, homedir);
+    }
+
+    if (homedir == nullptr) {
+        homedir = getpwuid(getuid())->pw_dir;
+        if (homedir != nullptr) {
+            strcpy(dirbuf, homedir);
+        }
+    }
+
+    if (homedir != nullptr) {
+        strcat(dirbuf, "/.config/Chronoshift");
+    }
+#endif
+    const char *prefix = "";
+    strcpy(prevbuf, dirbuf);
+    strcat(prevbuf, prefix);
+    strcat(prevbuf, "ChronoshiftDebugLogPrev.txt");
+    strcpy(curbuf, dirbuf);
+    strcat(curbuf, prefix);
+    strcat(curbuf, "ChronoshiftDebugLogFile.txt");
+    remove(prevbuf);
+    rename(curbuf, prevbuf);
+    logfile = curbuf;
+#endif
+    captainslog_init(LOGLEVEL_DEBUG, logfile, true, false, false);
 
     // Make pretty log header for debug logging builds.
-    DEBUG_LOG("================================================================================\n\n");
-    DEBUG_LOG("Chronoshift Version: %s\n", g_Version.Version_Name());
-    DEBUG_LOG("Build date: %s\n", g_gitCommitDate);
-    DEBUG_LOG("Build branch: %s\n", g_gitBranch);
-    DEBUG_LOG("Build commit: %s\n", g_gitShortSHA1);
-    // DEBUG_LOG("Processor: %s\n", CPUDetectClass::Get_Processor_String());
-    // DEBUG_LOG("Physical Memory: %llu MiB.\n", CPUDetectClass::Get_Total_Physical_Memory() / (1024 * 1024 + 1));
-    DEBUG_LOG(CPUDetectClass::Get_Processor_Log());
-    DEBUG_LOG("================================================================================\n");
+    captainslog_line("================================================================================");
+    captainslog_line("Chronoshift Version: %s", g_Version.Version_Name());
+    captainslog_line("Build date: %s", g_gitCommitDate);
+    captainslog_line("Build branch: %s", g_gitBranch);
+    captainslog_line("Build commit: %s", g_gitShortSHA1);
+    // captainslog_line("Processor: %s\n", CPUDetectClass::Get_Processor_String());
+    // captainslog_line("Physical Memory: %llu MiB.\n", CPUDetectClass::Get_Total_Physical_Memory() / (1024 * 1024 + 1));
+    captainslog_line(CPUDetectClass::Get_Processor_Log());
+    captainslog_line("================================================================================");
 
     // Commented out, we dont need to worry about memory these days...
     /*if (Ram_Free() < 7000000) {
-        DEBUG_LOG("Insufficient free memory, only have %d KB free.\n", Ram_Free() / 1024);
+        captainslog_debug("Insufficient free memory, only have %d KB free.", Ram_Free() / 1024);
         return 255;
     }*/
 
@@ -306,7 +305,7 @@ int main(int argc, char **argv)
     PlatformTimerClass::Sleep(1000); // Sleep for 1 second to test the timer.
 
     if (ticks == g_PlatformTimer->Get_System_Tick_Count()) {
-        DEBUG_LOG(
+        captainslog_error(
             "Error - Timer system failed to initialise due to system instability. You may need to restart the operating "
             "system.");
 
@@ -319,7 +318,7 @@ int main(int argc, char **argv)
 
     // Check if we have reasonable enough space for saves and such.
     if (Disk_Space_Available() < 0x800000) {
-        DEBUG_LOG("Disk space is critically low during init.\n");
+        captainslog_error("Disk space is critically low during init.\n");
 
         // TODO, original pops up windows message box informing of low space and asking to continue.
     }
@@ -336,7 +335,7 @@ int main(int argc, char **argv)
         settingsfile.Create();
 
         if (!settingsfile.Is_Available()) {
-            DEBUG_LOG("Unable to create Chronoshift game settings file!\n");
+            captainslog_error("Unable to create Chronoshift game settings file!\n");
             g_Keyboard->Get();
             delete g_PlatformTimer;
             g_PlatformTimer = nullptr;
@@ -349,7 +348,7 @@ int main(int argc, char **argv)
         GameFileClass redalertfile("redalert.ini");
         INIClass redalertini;
         if (!redalertfile.Is_Available()) {
-            DEBUG_LOG("Red Alert settings ini not found, continuing with default settings.\n");
+            captainslog_debug("Red Alert settings ini not found, continuing with default settings.");
             settingsini.Put_Int("Sound", "Card", 0);
             settingsini.Put_Int("Sound", "Port", 0x3F8, INIINTEGER_AS_HEX);
             settingsini.Put_Int("Sound", "IRQ", 4);
@@ -437,6 +436,8 @@ int main(int argc, char **argv)
     do {
         g_Keyboard->Check();
     } while (g_ReadyToQuit == 1);
+
+    captainslog_deinit();
 
     return 0;
 }

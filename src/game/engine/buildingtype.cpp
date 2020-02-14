@@ -16,7 +16,6 @@
 #include "buildingtype.h"
 #include "aircrafttype.h"
 #include "coord.h"
-#include "gamedebug.h"
 #include "globals.h"
 #include "lists.h"
 #include "rules.h"
@@ -25,6 +24,7 @@
 #include "gamefile.h"
 #include "iomap.h"
 #include <algorithm>
+#include <captainslog.h>
 
 #ifndef GAME_DLL
 TFixedIHeapClass<BuildingTypeClass> g_BuildingTypes;
@@ -111,7 +111,7 @@ BuildingTypeClass::BuildingTypeClass(const BuildingTypeClass &that) :
  */
 void *BuildingTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(BuildingTypeClass) && size == g_BuildingTypes.Heap_Size());
+    captainslog_assert(size == sizeof(BuildingTypeClass) && size == g_BuildingTypes.Heap_Size());
     return g_BuildingTypes.Allocate();
 }
 
@@ -120,7 +120,7 @@ void *BuildingTypeClass::operator new(size_t size)
  */
 void BuildingTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_BuildingTypes.Free(ptr);
 }
 
@@ -185,7 +185,7 @@ BOOL BuildingTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
     return func(this, cellnum, house);
 #else
     /*BuildingClass *bptr = new BuildingClass(Type, house);
-    DEBUG_ASSERT(bptr != nullptr);
+    captainslog_assert(bptr != nullptr);
     if (bptr != nullptr) {
         return bptr->Unlimbo(Cell_To_Coord(cellnum));
     }*/
@@ -220,7 +220,7 @@ ObjectClass *BuildingTypeClass::Create_One_Of(HouseClass *house) const
         reinterpret_cast<ObjectClass *(*)(const BuildingTypeClass *, HouseClass *)>(0x00453868);
     return func(this, house);
 #else
-    /*DEBUG_ASSERT(house != nullptr);
+    /*captainslog_assert(house != nullptr);
     return new BuildingClass(Type, house->What_Type());*/
 
     return nullptr;
@@ -360,7 +360,7 @@ int BuildingTypeClass::Width() const
     };
 
     // BuildingSize should never be greater than the size of the array.
-    DEBUG_ASSERT(m_BuildingSize < BSIZE_COUNT);
+    captainslog_assert(m_BuildingSize < BSIZE_COUNT);
 
     return _width[m_BuildingSize];
 }
@@ -385,7 +385,7 @@ int BuildingTypeClass::Height(BOOL check_bib) const
     };
 
     // BuildingSize should never be greater than the size of the array.
-    DEBUG_ASSERT(m_BuildingSize < BSIZE_COUNT);
+    captainslog_assert(m_BuildingSize < BSIZE_COUNT);
 
     // Adds 1 to the height if including bib cells.
     return _height[m_BuildingSize] + (check_bib && m_Bib);
@@ -567,13 +567,13 @@ void BuildingTypeClass::One_Time()
 
     if (g_WarFactoryOverlay == nullptr) {
         g_WarFactoryOverlay = GameFileClass::Retrieve("weap2.shp");
-        DEBUG_ASSERT(g_WarFactoryOverlay != nullptr);
+        captainslog_assert(g_WarFactoryOverlay != nullptr);
     }
 
     // TODO: Should be moved to TechnoTypeClass.
     if (g_LightningShapes == nullptr) {
         g_LightningShapes = GameFileClass::Retrieve("litning.shp");
-        DEBUG_ASSERT(g_LightningShapes != nullptr);
+        captainslog_assert(g_LightningShapes != nullptr);
     }
 
     for (int index = 0; index < ARRAY_SIZE(_anims); ++index) {
@@ -590,8 +590,8 @@ void BuildingTypeClass::One_Time()
  */
 BuildingTypeClass &BuildingTypeClass::As_Reference(BuildingType type)
 {
-    DEBUG_ASSERT(type != BUILDING_NONE);
-    DEBUG_ASSERT(type < BUILDING_COUNT);
+    captainslog_assert(type != BUILDING_NONE);
+    captainslog_assert(type < BUILDING_COUNT);
 
     return g_BuildingTypes[type];
 }

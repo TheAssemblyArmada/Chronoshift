@@ -67,13 +67,13 @@ OverlayTypeClass::OverlayTypeClass(const OverlayTypeClass &that) :
 
 void *OverlayTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(OverlayTypeClass));
+    captainslog_assert(size == sizeof(OverlayTypeClass));
     return g_OverlayTypes.Allocate();
 }
 
 void OverlayTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_OverlayTypes.Free(ptr);
 }
 
@@ -109,7 +109,7 @@ void OverlayTypeClass::Init_Heap()
 
 OverlayType OverlayTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return OVERLAY_NONE;
@@ -128,16 +128,16 @@ OverlayType OverlayTypeClass::From_Name(const char *name)
 
 const char *OverlayTypeClass::Name_From(OverlayType overlay)
 {
-    DEBUG_ASSERT(overlay != OVERLAY_NONE);
-    DEBUG_ASSERT(overlay < OVERLAY_COUNT);
+    captainslog_assert(overlay != OVERLAY_NONE);
+    captainslog_assert(overlay < OVERLAY_COUNT);
 
     return overlay != OVERLAY_NONE && overlay < OVERLAY_COUNT ? As_Reference(overlay).m_Name : "<none>";
 }
 
 void OverlayTypeClass::Init(TheaterType theater)
 {
-    DEBUG_ASSERT(theater < THEATER_COUNT);
-    DEBUG_ASSERT(theater != THEATER_NONE);
+    captainslog_assert(theater < THEATER_COUNT);
+    captainslog_assert(theater != THEATER_NONE);
 
     char filename[512];
 

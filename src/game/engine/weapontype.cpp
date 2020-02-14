@@ -148,7 +148,7 @@ void WeaponTypeClass::Init_Heap()
  */
 WeaponType WeaponTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return WEAPON_NONE;
@@ -178,8 +178,8 @@ const char *WeaponTypeClass::Name_From(WeaponType weapon)
  */
 WeaponTypeClass &WeaponTypeClass::As_Reference(WeaponType type)
 {
-    DEBUG_ASSERT(type !=  WEAPON_NONE);
-    DEBUG_ASSERT(type < WEAPON_COUNT);
+    captainslog_assert(type !=  WEAPON_NONE);
+    captainslog_assert(type < WEAPON_COUNT);
 
     return g_WeaponTypes[type];
 }

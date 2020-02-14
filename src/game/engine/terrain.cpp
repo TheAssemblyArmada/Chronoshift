@@ -95,7 +95,7 @@ void TerrainClass::operator delete(void *ptr)
  */
 coord_t TerrainClass::Center_Coord() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
     return Coord_Add(m_Coord, m_Class->Get_UnkCoord());
 }
 
@@ -162,7 +162,7 @@ void TerrainClass::AI()
  */
 coord_t TerrainClass::Sort_Y() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
     return Coord_Add(m_Coord, m_Class->Get_UnkCoord());
 }
 
@@ -316,7 +316,7 @@ void TerrainClass::Fire_Out()
             Mark(MARK_REMOVE);
             Start_To_Crumble();
             AnimClass *aptr = new AnimClass(ANIM_SMOKE_M, Center_Coord());
-            DEBUG_ASSERT(aptr != nullptr);
+            captainslog_assert(aptr != nullptr);
         }
     }
 }

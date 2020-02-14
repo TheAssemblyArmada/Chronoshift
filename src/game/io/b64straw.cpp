@@ -15,8 +15,8 @@
  */
 #include "b64straw.h"
 #include "base64.h"
-#include "gamedebug.h"
 #include <cstring>
+#include <captainslog.h>
 
 using std::memcpy;
 using std::memmove;
@@ -29,8 +29,8 @@ int Base64Straw::Get(void *dest, int slen)
     int fromsize = 0;
     int total = 0;
 
-    DEBUG_ASSERT(dest != nullptr);
-    DEBUG_ASSERT(slen > 0);
+    captainslog_assert(dest != nullptr);
+    captainslog_assert(slen > 0);
 
     switch (m_Mode) {
         case STRAW_ENCODE:

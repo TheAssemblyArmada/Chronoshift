@@ -19,7 +19,6 @@
 #include "bench.h"
 #include "coord.h"
 #include "drawshape.h"
-#include "gamedebug.h"
 #include "gamefile.h"
 #include "gbuffer.h"
 #include "globals.h"
@@ -38,6 +37,7 @@
 #include "tileset.h"
 #include "tracker.h"
 #include <algorithm>
+#include <captainslog.h>
 
 // clang-format off
 const coord_t CellClass::s_StoppingCoordAbs[CELL_SPOT_COUNT] = {
@@ -98,7 +98,7 @@ int CellClass::Cell_Color(BOOL none) const
     int (*func)(const CellClass *, BOOL) = reinterpret_cast<int (*)(const CellClass *, BOOL)>(0x0049EEF8);
     return func(this, none);
 #elif 0
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
+    captainslog_assert(CellNumber < MAP_MAX_AREA);
 
     static const int _ground_color[9] = { 141, 141, 172, 21, 21, 158, 141, 141, 174 };
     static const int _snow_color[9] = { 141, 141, 172, 21, 21, 158, 141, 141, 174 };
@@ -137,7 +137,7 @@ int CellClass::Cell_Color(BOOL none) const
  */
 TechnoClass *CellClass::Cell_Techno(int x, int y) const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     coord_t coord = Coord_From_Pixel_XY(x, y);
     ObjectClass *object = nullptr;
@@ -166,7 +166,7 @@ TechnoClass *CellClass::Cell_Techno(int x, int y) const
  */
 ObjectClass *CellClass::Cell_Find_Object(RTTIType type) const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     for (ObjectClass *object = m_OccupierPtr; object != nullptr; object = object->Get_Next()) {
         if (object->What_Am_I() == type) {
@@ -286,7 +286,7 @@ void CellClass::Recalc_Attributes()
  */
 BOOL CellClass::Can_Ore_Grow() const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (g_Rule.Ore_Grows()) {
         if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Session.MPlayer_Ore_Growth()) {
@@ -306,7 +306,7 @@ BOOL CellClass::Can_Ore_Grow() const
  */
 BOOL CellClass::Can_Ore_Spread() const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (g_Rule.Ore_Spreads()) {
         if (g_Session.Game_To_Play() == GAME_CAMPAIGN || g_Session.MPlayer_Ore_Growth()) {
@@ -326,7 +326,7 @@ BOOL CellClass::Can_Ore_Spread() const
  */
 BOOL CellClass::Can_Ore_Germinate() const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (!g_Map.In_Radar(m_CellNumber)) {
         return false;
@@ -358,7 +358,7 @@ BOOL CellClass::Can_Ore_Germinate() const
  */
 BOOL CellClass::Grow_Ore()
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (Can_Ore_Grow()) {
         ++m_OverlayFrame;
@@ -393,7 +393,7 @@ BOOL CellClass::Spread_Ore(BOOL force)
             if (cell.Can_Ore_Germinate()) {
                 OverlayType overlay = (OverlayType)g_Scen.Get_Random_Value(OVERLAY_GOLD_01, OVERLAY_GOLD_04);
                 OverlayClass *optr = new OverlayClass(overlay, cell.m_CellNumber, m_OwnerHouse);
-                DEBUG_ASSERT(optr != nullptr);
+                captainslog_assert(optr != nullptr);
                 m_OverlayFrame = 0;
 
                 return true;
@@ -414,8 +414,8 @@ BOOL CellClass::Spread_Ore(BOOL force)
  */
 CellClass &CellClass::Adjacent_Cell(FacingType facing)
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
-    // DEBUG_ASSERT(facing < FACING_COUNT);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
+    // captainslog_assert(facing < FACING_COUNT);
 
     static const cell_t AdjacentCell[FACING_COUNT] = {
         (-MAP_MAX_WIDTH), // NORTH
@@ -429,7 +429,7 @@ CellClass &CellClass::Adjacent_Cell(FacingType facing)
     };
 
     if (facing < FACING_COUNT) {
-        DEBUG_ASSERT_PRINT(uint16_t(m_CellNumber + AdjacentCell[facing]) <= MAP_MAX_AREA,
+        captainslog_dbgassert(uint16_t(m_CellNumber + AdjacentCell[facing]) <= MAP_MAX_AREA,
             "Attempting to get adjacent cell outside valid map.\n");
 
         // This logic relies on map cells being held in a contiguous area of memory, which in MapClass they are.
@@ -481,7 +481,7 @@ BOOL CellClass::Is_Bridge_Here() const
  */
 void CellClass::Redraw_Objects(BOOL force)
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     // Check if we are even visible first, then check if already flagged for a redraw.
     if (g_Map.In_View(m_CellNumber)) {
@@ -490,7 +490,7 @@ void CellClass::Redraw_Objects(BOOL force)
 
             // Loop through occupiers and if active mark them for redraw.
             for (ObjectClass *optr = m_OccupierPtr; optr != nullptr; optr = optr->Get_Next()) {
-                DEBUG_ASSERT(optr->Is_Active());
+                captainslog_assert(optr->Is_Active());
                 if (!optr->Is_Active()) {
                     break;
                 }
@@ -504,7 +504,7 @@ void CellClass::Redraw_Objects(BOOL force)
             // Loop through overlappers and if active mark them for redraw.
             for (int i = 0; i < ARRAY_SIZE(m_Overlapper); ++i) {
                 if (m_Overlapper[i] != nullptr) {
-                    DEBUG_ASSERT(m_Overlapper[i]->Is_Active());
+                    captainslog_assert(m_Overlapper[i]->Is_Active());
                     if (m_Overlapper[i]->Is_Active()) {
                         m_Overlapper[i]->Mark(MARK_REDRAW);
                     } else {
@@ -523,7 +523,7 @@ void CellClass::Redraw_Objects(BOOL force)
  */
 BOOL CellClass::Is_Clear_To_Build(SpeedType speed) const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (g_ScenarioInit) {
         return true;
@@ -574,8 +574,8 @@ void CellClass::Occupy_Down(ObjectClass *object)
         reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F394);
     func(this, object);
 #elif 0
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
-    DEBUG_ASSERT(object->Is_Active());
+    captainslog_assert(CellNumber < MAP_MAX_AREA);
+    captainslog_assert(object->Is_Active());
 
     if (object != nullptr) {
         // If object is a building, and already have a cell occupier, find end of occupier chanin and stick object on the
@@ -637,8 +637,8 @@ void CellClass::Occupy_Up(ObjectClass *object)
         reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F450);
     func(this, object);
 #elif 0
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
-    DEBUG_ASSERT(object->Is_Active());
+    captainslog_assert(CellNumber < MAP_MAX_AREA);
+    captainslog_assert(object->Is_Active());
 
     if (object != nullptr) {
         if (OccupierPtr == object) {
@@ -698,8 +698,8 @@ void CellClass::Overlap_Down(ObjectClass *object)
         reinterpret_cast<void (*)(const CellClass *, ObjectClass *)>(0x0049F4E4);
     func(this, object);
 #elif 0
-    DEBUG_ASSERT(CellNumber < MAP_MAX_AREA);
-    DEBUG_ASSERT(object->Is_Active());
+    captainslog_assert(CellNumber < MAP_MAX_AREA);
+    captainslog_assert(object->Is_Active());
 
     if (object == nullptr) {
         return;
@@ -748,8 +748,8 @@ void CellClass::Overlap_Down(ObjectClass *object)
  */
 void CellClass::Overlap_Up(ObjectClass *object)
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
-    DEBUG_ASSERT(object->Is_Active());
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(object->Is_Active());
 
     for (int i = 0; i < ARRAY_SIZE(m_Overlapper); ++i) {
         if (m_Overlapper[i] == object) {
@@ -770,7 +770,7 @@ void CellClass::Overlap_Up(ObjectClass *object)
  */
 int CellClass::Clear_Icon() const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
     return ((m_CellNumber >> 5) & 0xC) | (m_CellNumber & 0x3);
 }
 
@@ -786,7 +786,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
             reinterpret_cast<void (*)(const CellClass *, int, int, BOOL)>(0x0049F5F8);
         func(this, x, y, unk_bool);
     #elif 0*/
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     int icon_num = 0;
     void *fading_table = nullptr;
@@ -995,7 +995,7 @@ void CellClass::Draw_It(int x, int y, BOOL flag) const
  */
 void CellClass::Concrete_Calc()
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     static FacingType _even[] = {
         FACING_NORTH, FACING_SOUTH, FACING_SOUTH_WEST, FACING_WEST, FACING_NORTH_WEST, FACING_NORTH
@@ -1016,7 +1016,7 @@ void CellClass::Concrete_Calc()
  */
 void CellClass::Wall_Update()
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     static FacingType _offsets[] = { FACING_NORTH, FACING_EAST, FACING_SOUTH, FACING_WEST, FACING_NONE };
 
@@ -1092,7 +1092,7 @@ void CellClass::Wall_Update()
  */
 coord_t CellClass::Cell_Coord() const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     return Cell_To_Coord(m_CellNumber);
 }
@@ -1104,7 +1104,7 @@ coord_t CellClass::Cell_Coord() const
  */
 int CellClass::Reduce_Ore(int reduction)
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (reduction > 0 && m_Land == LAND_ORE) {
         // If we have a greater reduction than we have frames, set to -1 and return the frame we were on as the reduction,
@@ -1133,7 +1133,7 @@ int CellClass::Reduce_Ore(int reduction)
  */
 BOOL CellClass::Reduce_Wall(int damage)
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (m_Overlay != OVERLAY_NONE) {
         OverlayTypeClass &overlay = OverlayTypeClass::As_Reference(m_Overlay);
@@ -1190,7 +1190,7 @@ BOOL CellClass::Reduce_Wall(int damage)
 BOOL CellClass::Is_Clear_To_Move(
     SpeedType speed, BOOL ignore_crushable, BOOL ignore_destructable, int zone, MZoneType mzone) const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (speed == SPEED_WINGED) {
         return true;
@@ -1246,7 +1246,7 @@ int CellClass::Ore_Adjust(BOOL randomize)
     static int _adj[] = { 0, 1, 3, 4, 6, 7, 8, 10, 11 };
     static int _adjgem[] = { 0, 0, 0, 1, 1, 1, 2, 2, 2 };
 
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     if (m_Overlay != OVERLAY_NONE && OverlayTypeClass::As_Reference(m_Overlay).Get_Land() == LAND_ORE) {
         int value = 0;
@@ -1288,8 +1288,8 @@ int CellClass::Ore_Adjust(BOOL randomize)
             }
         }
 
-        DEBUG_ASSERT(adjustment < ARRAY_SIZE(_adj));
-        DEBUG_ASSERT(adjustment < ARRAY_SIZE(_adjgem));
+        captainslog_assert(adjustment < ARRAY_SIZE(_adj));
+        captainslog_assert(adjustment < ARRAY_SIZE(_adjgem));
 
         if (is_gems) {
             m_OverlayFrame = std::max(2, _adjgem[adjustment]);
@@ -1314,7 +1314,7 @@ int CellClass::Ore_Adjust(BOOL randomize)
  */
 coord_t CellClass::Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const
 {
-    DEBUG_ASSERT(m_CellNumber < MAP_MAX_AREA);
+    captainslog_assert(m_CellNumber < MAP_MAX_AREA);
 
     // clang-format off
     static char _sequence[][4] = {
@@ -1401,7 +1401,7 @@ BOOL CellClass::Goodie_Check(FootClass *foot)
     BOOL (*func)(const CellClass *, FootClass *) = reinterpret_cast<BOOL (*)(const CellClass *, FootClass *)>(0x004A0460);
     return func(this, foot);
 #else
-    DEBUG_ASSERT_PRINT(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
+    captainslog_dbgassert(false, "Unimplemented function '%s' called!\n", __FUNCTION__);
     return false;
 #endif
 }
@@ -1532,12 +1532,12 @@ void CellClass::Decode_Pointers()
 {
     if (m_OccupierPtr != nullptr) {
         m_OccupierPtr = As_Object((uintptr_t)m_OccupierPtr);
-        DEBUG_ASSERT(m_OccupierPtr != nullptr);
+        captainslog_assert(m_OccupierPtr != nullptr);
     }
     for (int i = 0; i < OVERLAPPER_COUNT; ++i) {
         if (m_Overlapper[i] != nullptr) {
             m_Overlapper[i] = As_Object((uintptr_t)m_Overlapper[i]);
-            DEBUG_ASSERT(m_Overlapper[i] != nullptr);
+            captainslog_assert(m_Overlapper[i] != nullptr);
         }
     }
 }

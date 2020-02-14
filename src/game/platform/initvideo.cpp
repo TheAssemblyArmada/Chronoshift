@@ -13,12 +13,12 @@
  *            LICENSE
  */
 #include "initvideo.h"
-#include "gamedebug.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "ostimer.h"
 #include "rgb.h"
 #include "surfacemonitor.h"
+#include <captainslog.h>
 
 #ifdef GAME_DLL
 #ifdef BUILD_WITH_DDRAW
@@ -473,7 +473,7 @@ static uint32_t Get_Video_Memory()
         return 0;
     }
 
-    DEBUG_LOG("Checking free video memory and returning %u bytes.\n", caps.dwVidMemFree);
+    captainslog_debug("Checking free video memory and returning %u bytes.", caps.dwVidMemFree);
 
     return caps.dwVidMemFree;
 #else
@@ -584,7 +584,7 @@ BOOL Init_Video()
                     "Chronoshift",
                     MB_ICONWARNING);
 #endif
-                DEBUG_LOG("Error - Unable to allocate primary video buffer - aborting.\n");
+                captainslog_debug("Error - Unable to allocate primary video buffer - aborting.");
                 delete g_PlatformTimer;
 
                 return false;
@@ -628,7 +628,7 @@ BOOL Init_Video()
 #ifdef PLATFORM_WINDOWS
         MessageBoxA(g_MainWindow, "Error - Unable to set the video mode.", "Chronoshift", MB_ICONWARNING);
 #endif
-        DEBUG_LOG("Error - Unable to set the video mode.\n");
+        captainslog_debug("Error - Unable to set the video mode.");
         delete g_PlatformTimer;
     }
 

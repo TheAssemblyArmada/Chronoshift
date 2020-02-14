@@ -166,7 +166,7 @@ void BulletClass::operator delete(void *ptr)
  */
 coord_t BulletClass::Target_Coord() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     return Coord_From_Lepton_XY(Coord_Lepton_X(m_Coord), Coord_Lepton_Y(m_Coord) - m_Height);
 }
@@ -176,7 +176,7 @@ coord_t BulletClass::Target_Coord() const
  */
 void BulletClass::AI()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     bool to_explode = false;
 
@@ -207,7 +207,7 @@ void BulletClass::AI()
         if (m_ToSpawnTrailer) {
             // fireball uses its own trailer animation, otherwise all other bullets use standard smoke puff.
             AnimClass *anim = new AnimClass((What_Type() == BULLET_FIREBALL ? ANIM_FIREBALLFADE : ANIM_SMOKE_PUFF), m_Coord, 1);
-            DEBUG_ASSERT(anim != nullptr);
+            captainslog_assert(anim != nullptr);
         }
         m_ToSpawnTrailer = !m_ToSpawnTrailer;
     }
@@ -270,7 +270,7 @@ void BulletClass::AI()
  */
 LayerType BulletClass::In_Which_Layer() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (Class_Of().Is_UnderWater()) {
         return LAYER_SURFACE;
@@ -284,7 +284,7 @@ LayerType BulletClass::In_Which_Layer() const
  */
 coord_t BulletClass::Sort_Y() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     return Coord_Move(m_Coord, DIR_SOUTH, 128);
 }
@@ -294,7 +294,7 @@ coord_t BulletClass::Sort_Y() const
  */
 BOOL BulletClass::Unlimbo(coord_t coord, DirType dir)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     // clamp the height if we don't cruise high.
     if (!Class_Of().Get_High()) {
@@ -396,7 +396,7 @@ BOOL BulletClass::Unlimbo(coord_t coord, DirType dir)
  */
 void BulletClass::Detach(target_t target, BOOL a2)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (m_Payback != nullptr) {
         if (m_Payback == As_Object(target)) {
@@ -419,7 +419,7 @@ void BulletClass::Detach(target_t target, BOOL a2)
  */
 const int16_t *BulletClass::Occupy_List(BOOL a1) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     // clang-format off
     // 3x6 list for the gps and atom bomb anims.
@@ -484,7 +484,7 @@ const int16_t *BulletClass::Occupy_List(BOOL a1) const
  */
 void BulletClass::Draw_It(int x, int y, WindowNumberType window) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     // no need to draw invisible bullets...
     if (Class_Of().Invisible()) {
@@ -539,7 +539,7 @@ void BulletClass::Draw_It(int x, int y, WindowNumberType window) const
  */
 BOOL BulletClass::Mark(MarkType mark)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (!ObjectClass::Mark(mark)) {
         return false;
@@ -561,7 +561,7 @@ BOOL BulletClass::Mark(MarkType mark)
  */
 void BulletClass::Code_Pointers()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (m_Payback != nullptr) {
         m_Payback = reinterpret_cast<TechnoClass *>(m_Payback->As_Target());
@@ -575,11 +575,11 @@ void BulletClass::Code_Pointers()
  */
 void BulletClass::Decode_Pointers()
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (m_Payback != nullptr) {
         m_Payback = reinterpret_cast<TechnoClass *>(As_Techno(uintptr_t(m_Payback)));
-        DEBUG_ASSERT(m_Payback != nullptr);
+        captainslog_assert(m_Payback != nullptr);
     }
 
     ObjectClass::Decode_Pointers();
@@ -590,7 +590,7 @@ void BulletClass::Decode_Pointers()
  */
 int BulletClass::Shape_Number() const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     int number = 0;
 
@@ -612,12 +612,12 @@ int BulletClass::Shape_Number() const
  */
 BOOL BulletClass::Is_Forced_To_Explode(coord_t &at) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     at = m_Coord;
 
     CellClass *cptr = &g_Map[Get_Cell()];
-    DEBUG_ASSERT(cptr != nullptr);
+    captainslog_assert(cptr != nullptr);
 
     if (!Class_Of().Get_High()) {
         if (cptr->Has_High_Overlay()) {
@@ -658,7 +658,7 @@ BOOL BulletClass::Is_Forced_To_Explode(coord_t &at) const
  */
 void BulletClass::Bullet_Explodes(BOOL a1)
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if ((m_Payback != nullptr && m_Payback->What_Am_I() == RTTI_INFANTRY && static_cast<InfantryClass *>(m_Payback)->Class_Of().Is_Canine()
         || !a1) && (!Class_Of().Get_Arcing() && !Homes_In() && m_Fuse.Get_Position())) {
@@ -698,7 +698,7 @@ void BulletClass::Bullet_Explodes(BOOL a1)
 
     if (Target_Is_Vessel(m_Target)) {
         VesselClass *vptr = As_Vessel(m_Target);
-        // DEBUG_ASSERT(vptr != nullptr);
+        // captainslog_assert(vptr != nullptr);
         if (Get_Cell() == vptr->Center_Cell()) {
             switch (anim) {
                 case ANIM_WATER_EXP1:

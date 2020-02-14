@@ -442,7 +442,7 @@ int BuildingClass::Value() const
                 btptr = &BuildingTypeClass::As_Reference(BUILDING_DOME);
                 return btptr->Get_ThreatPosed() + btptr->Get_ThreatPoints();
             default:
-                DEBUG_LOG("BuildingClass::Value - Unhandled fake!\n");
+                captainslog_debug("BuildingClass::Value - Unhandled fake!");
                 break;
         }
     }

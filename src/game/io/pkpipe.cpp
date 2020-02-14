@@ -14,10 +14,10 @@
  *            LICENSE
  */
 #include "pkpipe.h"
-#include "gamedebug.h"
 #include "pk.h"
 #include "straw.h"
 #include <algorithm>
+#include <captainslog.h>
 
 PKPipe::PKPipe(PipeControl mode, Straw &rstraw) :
     m_ChangeKey(true),

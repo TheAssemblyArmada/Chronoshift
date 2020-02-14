@@ -15,7 +15,7 @@
  */
 #include "pk.h"
 #include "straw.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <cstdlib>
 
 using std::rand;
@@ -28,8 +28,8 @@ PKey g_PrivateKey;
 
 PKey::PKey(const void *exponent, const void *modulus) : m_modulus(), m_exponent(), m_bitPrecision(0)
 {
-    DEBUG_ASSERT(exponent != nullptr);
-    DEBUG_ASSERT(modulus != nullptr);
+    captainslog_assert(exponent != nullptr);
+    captainslog_assert(modulus != nullptr);
 
     Decode_Modulus(modulus);
     Decode_Exponent(exponent);

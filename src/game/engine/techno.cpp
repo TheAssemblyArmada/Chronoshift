@@ -1247,7 +1247,7 @@ void TechnoClass::Set_Player_Owned()
 void TechnoClass::Techno_Draw_Object(
     const void *shape, int frame, int x, int y, WindowNumberType window, DirType dir, int scale) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (shape != nullptr) {
 
@@ -1612,7 +1612,7 @@ BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
  */
 VisualType TechnoClass::Visual_Character(BOOL flag) const
 {
-    DEBUG_ASSERT(m_IsActive);
+    captainslog_assert(m_IsActive);
 
     if (Techno_Class_Of().Is_Invisible() && m_PlayerOwned) {
         return VISUAL_NORMAL;
@@ -1772,7 +1772,7 @@ int TechnoClass::Evaluate_Just_Cell(cell_t cellnum) const
     }
 
     CellClass *cptr = &g_Map[cellnum];
-    DEBUG_ASSERT(cptr != nullptr);
+    captainslog_assert(cptr != nullptr);
     if (!cptr->Has_Wall()) {
         return 0;
     }

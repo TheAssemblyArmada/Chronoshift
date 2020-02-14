@@ -66,7 +66,7 @@ AircraftTypeClass::AircraftTypeClass(const AircraftTypeClass &that) :
  */
 void *AircraftTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(AircraftTypeClass) && size == g_AircraftTypes.Heap_Size());
+    captainslog_assert(size == sizeof(AircraftTypeClass) && size == g_AircraftTypes.Heap_Size());
     return g_AircraftTypes.Allocate();
 }
 
@@ -75,7 +75,7 @@ void *AircraftTypeClass::operator new(size_t size)
  */
 void AircraftTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_AircraftTypes.Free(ptr);
 }
 
@@ -124,7 +124,7 @@ BOOL AircraftTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
 #if 0
     AircraftClass *aptr = new AircraftClass(m_Type, house);
-    DEBUG_ASSERT(aptr != nullptr);
+    captainslog_assert(aptr != nullptr);
     if (aptr != nullptr) {
         return aptr->Unlimbo(Cell_To_Coord(cellnum));
     }
@@ -148,7 +148,7 @@ ObjectClass *AircraftTypeClass::Create_One_Of(HouseClass *house) const
         reinterpret_cast<ObjectClass *(*)(const AircraftTypeClass *, HouseClass *)>(0x00404024);
     return func(this, house);
 #else
-    /*DEBUG_ASSERT(house != nullptr);
+    /*captainslog_assert(house != nullptr);
     return new AircraftClass(Type, house->What_Type());*/
 
     return nullptr;
@@ -186,8 +186,8 @@ const int16_t *AircraftTypeClass::Overlap_List() const
  */
 AircraftTypeClass &AircraftTypeClass::As_Reference(AircraftType type)
 {
-    DEBUG_ASSERT(type != AIRCRAFT_NONE);
-    DEBUG_ASSERT(type < AIRCRAFT_COUNT);
+    captainslog_assert(type != AIRCRAFT_NONE);
+    captainslog_assert(type < AIRCRAFT_COUNT);
 
     return g_AircraftTypes[type];
 }

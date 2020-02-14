@@ -16,7 +16,6 @@
 #include "theme.h"
 #include "audio.h"
 #include "gamefile.h"
-#include "gamedebug.h"
 #include "gameoptions.h"
 #include "gametypes.h"
 #include "globals.h"
@@ -24,6 +23,7 @@
 //#include "scenario.h"
 #include "session.h"
 #include "special.h"
+#include <captainslog.h>
 #include <cstdio>
 
 using std::snprintf;
@@ -125,7 +125,7 @@ void ThemeClass::AI()
                 if (m_QueuedTheme != THEME_NONE) {
                     if (m_QueuedTheme == THEME_NEXT) {
                         m_QueuedTheme = Next_Song(m_CurrentTheme);
-                        DEBUG_LOG("ThemeClass::AI(Next song = %d : %s)\n", m_QueuedTheme, Base_Name(m_QueuedTheme));
+                        captainslog_debug("ThemeClass::AI(Next song = %d : %s)", m_QueuedTheme, Base_Name(m_QueuedTheme));
                     }
 
                     Play_Song(m_QueuedTheme);
@@ -145,7 +145,7 @@ void ThemeClass::AI()
  */
 ThemeType ThemeClass::Next_Song(ThemeType theme) const
 {
-    DEBUG_ASSERT(theme < THEME_COUNT);
+    captainslog_assert(theme < THEME_COUNT);
 
     if (theme == THEME_NONE || theme == THEME_NEXT
         || (theme != THEME_STOP && !s_Themes[theme].IsRepeat && !g_Options.Get_Repeat())) {
@@ -187,16 +187,16 @@ ThemeType ThemeClass::Next_Song(ThemeType theme) const
  */
 void ThemeClass::Queue_Song(ThemeType theme)
 {
-    DEBUG_ASSERT(theme < THEME_COUNT);
+    captainslog_assert(theme < THEME_COUNT);
 
     if (g_ScoresPresent && !g_DebugQuiet && g_Options.Get_Score_Volume() != 0) {
         if (m_QueuedTheme == THEME_NONE || m_QueuedTheme == THEME_NEXT || theme == THEME_NONE || theme == THEME_STOP) {
             m_QueuedTheme = theme;
 
-            DEBUG_LOG("ThemeClass::Queue_Song(%d : %s)\n", m_QueuedTheme, Base_Name(m_QueuedTheme));
+            captainslog_debug("ThemeClass::Queue_Song(%d : %s)", m_QueuedTheme, Base_Name(m_QueuedTheme));
 
             if (Still_Playing()) {
-                DEBUG_LOG("ThemeClass::Queue_Song() - Fading out %s\n", Base_Name(m_CurrentTheme));
+                captainslog_debug("ThemeClass::Queue_Song() - Fading out %s", Base_Name(m_CurrentTheme));
                 Fade_Sample(m_ThemeHandle, 60);
             }
         }
@@ -210,7 +210,7 @@ void ThemeClass::Queue_Song(ThemeType theme)
  */
 int ThemeClass::Play_Song(ThemeType theme)
 {
-    DEBUG_ASSERT(theme < THEME_COUNT);
+    captainslog_assert(theme < THEME_COUNT);
 
     if (g_ScoresPresent && !g_DebugQuiet && g_Options.Get_Score_Volume() != 0) {
         Stop();
@@ -360,7 +360,7 @@ BOOL ThemeClass::Is_Allowed(ThemeType theme) const
  */
 ThemeType ThemeClass::From_Name(const char *name) const
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (name && strlen(name) > 0) {
         for (ThemeType theme = THEME_FIRST; theme < THEME_COUNT; ++theme) {

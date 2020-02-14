@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "commbuff.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <cstring>
 
 using std::memcpy;
@@ -146,8 +146,8 @@ void CommBufferClass::Init_Receive_Queue()
  */
 int CommBufferClass::Queue_Send(void *buf, int buf_len, void *extra_buf, int extra_len)
 {
-    DEBUG_ASSERT_PRINT(m_SendCount != m_MaxSend, "No room in send queue.\n");
-    DEBUG_ASSERT_PRINT(buf_len <= m_MaxPacketSize, "Input length greater than m_MaxPacketSize.\n");
+    captainslog_dbgassert(m_SendCount != m_MaxSend, "No room in send queue.\n");
+    captainslog_dbgassert(buf_len <= m_MaxPacketSize, "Input length greater than m_MaxPacketSize.\n");
 
     if (m_SendCount != m_MaxSend && buf_len <= m_MaxPacketSize) {
         int free_index = -1;
@@ -292,8 +292,8 @@ void CommBufferClass::Grow_Send(int amount)
  */
 int CommBufferClass::Queue_Receive(void *buf, int buf_len, void *extra_buf, int extra_len)
 {
-    DEBUG_ASSERT_PRINT(m_ReceiveCount != m_MaxReceive, "No room in recieve queue.\n");
-    DEBUG_ASSERT_PRINT(buf_len <= m_MaxPacketSize, "Incoming packet larger than m_MaxPacketSize.\n");
+    captainslog_dbgassert(m_ReceiveCount != m_MaxReceive, "No room in recieve queue.\n");
+    captainslog_dbgassert(buf_len <= m_MaxPacketSize, "Incoming packet larger than m_MaxPacketSize.\n");
 
     if (m_ReceiveCount != m_MaxReceive && buf_len <= m_MaxPacketSize) {
         int free_index = -1;
@@ -306,7 +306,7 @@ int CommBufferClass::Queue_Receive(void *buf, int buf_len, void *extra_buf, int 
         }
 
         if (free_index == -1) {
-            DEBUG_ASSERT_PRINT(false, "Can't queue incoming packet - Unable to find free slot in array.\n");
+            captainslog_dbgassert(false, "Can't queue incoming packet - Unable to find free slot in array.\n");
 
             return 0;
         } else {

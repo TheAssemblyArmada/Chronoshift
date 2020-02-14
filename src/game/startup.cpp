@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "startup.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -35,7 +35,7 @@
 void Emergency_Exit(int exit_code)
 {
 #ifdef GAME_DLL
-    DEBUG_LOG("Calling emergency exit.\n");
+    captainslog_debug("Calling emergency exit.");
     // TODO Requires GraphicBufferClass, PaletteClass, KeyboardClass
     void (*hooked_exit)(int) = reinterpret_cast<void (*)(int)>(0x00552714);
     hooked_exit(exit_code);
@@ -70,7 +70,7 @@ uint64_t Disk_Space_Available()
     struct statvfs free_space;
 
     if (getcwd(path, sizeof(path)) == nullptr) {
-        DEBUG_ASSERT_PRINT(false, "Couldn't get current working directory.\n");
+        captainslog_dbgassert(false, "Couldn't get current working directory.\n");
         return 0;
     }
 

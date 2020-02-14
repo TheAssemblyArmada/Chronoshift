@@ -19,7 +19,7 @@
 #define LISTNODE_H
 
 #include "always.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 class GenericList;
 
@@ -91,7 +91,7 @@ inline GenericList *GenericNode::Main_List() const
 */
 inline void GenericNode::Link(GenericNode *node)
 {
-    DEBUG_ASSERT(node != nullptr);
+    captainslog_assert(node != nullptr);
 
     node->Unlink();
     node->m_nextNode = m_nextNode;

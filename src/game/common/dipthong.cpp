@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "dipthong.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <string.h>
 
 #define DIP_EX_ASCII_FLAG 27 // 0x1B

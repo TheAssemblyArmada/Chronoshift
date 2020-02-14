@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "xordelta.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #define XOR_SMALL 127
 #define XOR_MED 255
@@ -42,7 +42,7 @@ void __cdecl Apply_XOR_Delta(void *dst, void *src)
     int8_t cmd = 0;
 
     while (true) {
-        // DEBUG_LOG("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
+        // captainslog_debug("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
         // static_cast<int8_t*>(source));
         cmd = *getp++;
         count = cmd;
@@ -54,58 +54,58 @@ void __cdecl Apply_XOR_Delta(void *dst, void *src)
                 count = *getp++ & 0xFF;
                 value = *getp++;
                 xorval = true;
-                // DEBUG_LOG("0b00000000 Val Count %d ", count);
+                // captainslog_debug("0b00000000 Val Count %d ", count);
                 // 0b0???????
             } else {
-                // DEBUG_LOG("0b0??????? XOR Count %d ", count);
+                // captainslog_debug("0b0??????? XOR Count %d ", count);
             }
         } else {
             // 0b1??????? remove most significant bit
             count &= 0x7F;
             if (count != 0) {
                 putp += count;
-                // DEBUG_LOG("0b1??????? Skip Count %d\n", count);
+                // captainslog_debug("0b1??????? Skip Count %d", count);
                 continue;
             }
 
             count = (*getp & 0xFF) + (*(getp + 1) << 8);
             getp += 2;
 
-            // DEBUG_LOG("Eval %u ", count);
+            // captainslog_debug("Eval %u ", count);
 
             // 0b10000000 0 0
             if (count == 0) {
-                // DEBUG_LOG("0b10000000 Count %d to end delta\n", count);
+                // captainslog_debug("0b10000000 Count %d to end delta", count);
                 return;
             }
 
             // 0b100000000 0?
             if ((count & 0x8000) == 0) {
                 putp += count;
-                // DEBUG_LOG("0b100000000 0? Skip Count %d\n", count);
+                // captainslog_debug("0b100000000 0? Skip Count %d", count);
                 continue;
             } else {
                 // 0b10000000 11
                 if (count & 0x4000) {
                     count &= 0x3FFF;
                     value = *getp++;
-                    // DEBUG_LOG("0b10000000 11 Val Count %d ", count);
+                    // captainslog_debug("0b10000000 11 Val Count %d ", count);
                     xorval = true;
                     // 0b10000000 10
                 } else {
                     count &= 0x3FFF;
-                    // DEBUG_LOG("0b10000000 10 XOR Count %d ", count);
+                    // captainslog_debug("0b10000000 10 XOR Count %d ", count);
                 }
             }
         }
 
         if (xorval) {
-            // DEBUG_LOG("XOR Val %d\n", value);
+            // captainslog_debug("XOR Val %d", value);
             for (; count > 0; --count) {
                 *putp++ ^= value;
             }
         } else {
-            // DEBUG_LOG("XOR Source to Dest\n");
+            // captainslog_debug("XOR Source to Dest");
             for (; count > 0; --count) {
                 *putp++ ^= *getp++;
             }
@@ -123,7 +123,7 @@ void Copy_Delta_Buffer(int width, void *offset, void *delta, int pitch)
     int count = 0;
 
     while (true) {
-        // DEBUG_LOG("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
+        // captainslog_debug("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
         // static_cast<int8_t*>(source));
         cmd = *getp++;
         count = cmd;
@@ -135,10 +135,10 @@ void Copy_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 count = *getp++ & 0xFF;
                 value = *getp++;
                 xorval = true;
-                // DEBUG_LOG("0b00000000 Val Count %d ", count);
+                // captainslog_debug("0b00000000 Val Count %d ", count);
                 // 0b0???????
             } else {
-                // DEBUG_LOG("0b0??????? XOR Count %d ", count);
+                // captainslog_debug("0b0??????? XOR Count %d ", count);
             }
         } else {
             // 0b1??????? remove most significant bit
@@ -153,18 +153,18 @@ void Copy_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 }
 
                 putp += length;
-                // DEBUG_LOG("0b1??????? Skip Count %d\n", count);
+                // captainslog_debug("0b1??????? Skip Count %d", count);
                 continue;
             }
 
             count = (*getp & 0xFF) + (*(getp + 1) << 8);
             getp += 2;
 
-            // DEBUG_LOG("Eval %u ", count);
+            // captainslog_debug("Eval %u ", count);
 
             // 0b10000000 0 0
             if (count == 0) {
-                // DEBUG_LOG("0b10000000 Count %d to end delta\n", count);
+                // captainslog_debug("0b10000000 Count %d to end delta", count);
                 return;
             }
 
@@ -179,25 +179,25 @@ void Copy_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 }
 
                 putp += length;
-                // DEBUG_LOG("0b100000000 0? Skip Count %d\n", count);
+                // captainslog_debug("0b100000000 0? Skip Count %d", count);
                 continue;
             } else {
                 // 0b10000000 11
                 if (count & 0x4000) {
                     count &= 0x3FFF;
                     value = *getp++;
-                    // DEBUG_LOG("0b10000000 11 Val Count %d ", count);
+                    // captainslog_debug("0b10000000 11 Val Count %d ", count);
                     xorval = true;
                     // 0b10000000 10
                 } else {
                     count &= 0x3FFF;
-                    // DEBUG_LOG("0b10000000 10 XOR Count %d ", count);
+                    // captainslog_debug("0b10000000 10 XOR Count %d ", count);
                 }
             }
         }
 
         if (xorval) {
-            // DEBUG_LOG("XOR Val %d\n", value);
+            // captainslog_debug("XOR Val %d", value);
             for (; count > 0; --count) {
                 *putp++ = value;
                 ++length;
@@ -208,7 +208,7 @@ void Copy_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 }
             }
         } else {
-            // DEBUG_LOG("XOR Source to Dest\n");
+            // captainslog_debug("XOR Source to Dest");
             for (; count > 0; --count) {
                 *putp++ = *getp++;
                 ++length;
@@ -232,7 +232,7 @@ void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
     int count = 0;
 
     while (true) {
-        // DEBUG_LOG("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
+        // captainslog_debug("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<int8_t*>(dest), getp -
         // static_cast<int8_t*>(source));
         cmd = *getp++;
         count = cmd;
@@ -244,10 +244,10 @@ void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 count = *getp++ & 0xFF;
                 value = *getp++;
                 xorval = true;
-                // DEBUG_LOG("0b00000000 Val Count %d ", count);
+                // captainslog_debug("0b00000000 Val Count %d ", count);
                 // 0b0???????
             } else {
-                // DEBUG_LOG("0b0??????? XOR Count %d ", count);
+                // captainslog_debug("0b0??????? XOR Count %d ", count);
             }
         } else {
             // 0b1??????? remove most significant bit
@@ -262,18 +262,18 @@ void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 }
 
                 putp += length;
-                // DEBUG_LOG("0b1??????? Skip Count %d\n", count);
+                // captainslog_debug("0b1??????? Skip Count %d", count);
                 continue;
             }
 
             count = (*getp & 0xFF) + (*(getp + 1) << 8);
             getp += 2;
 
-            // DEBUG_LOG("Eval %u ", count);
+            // captainslog_debug("Eval %u ", count);
 
             // 0b10000000 0 0
             if (count == 0) {
-                // DEBUG_LOG("0b10000000 Count %d to end delta\n", count);
+                // captainslog_debug("0b10000000 Count %d to end delta", count);
                 return;
             }
 
@@ -288,25 +288,25 @@ void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 }
 
                 putp += length;
-                // DEBUG_LOG("0b100000000 0? Skip Count %d\n", count);
+                // captainslog_debug("0b100000000 0? Skip Count %d", count);
                 continue;
             } else {
                 // 0b10000000 11
                 if (count & 0x4000) {
                     count &= 0x3FFF;
                     value = *getp++;
-                    // DEBUG_LOG("0b10000000 11 Val Count %d ", count);
+                    // captainslog_debug("0b10000000 11 Val Count %d ", count);
                     xorval = true;
                     // 0b10000000 10
                 } else {
                     count &= 0x3FFF;
-                    // DEBUG_LOG("0b10000000 10 XOR Count %d ", count);
+                    // captainslog_debug("0b10000000 10 XOR Count %d ", count);
                 }
             }
         }
 
         if (xorval) {
-            // DEBUG_LOG("XOR Val %d\n", value);
+            // captainslog_debug("XOR Val %d", value);
             for (; count > 0; --count) {
                 *putp++ ^= value;
                 ++length;
@@ -317,7 +317,7 @@ void XOR_Delta_Buffer(int width, void *offset, void *delta, int pitch)
                 }
             }
         } else {
-            // DEBUG_LOG("XOR Source to Dest\n");
+            // captainslog_debug("XOR Source to Dest");
             for (; count > 0; --count) {
                 *putp++ ^= *getp++;
                 ++length;
@@ -354,12 +354,12 @@ int Generate_XOR_Delta(void *dst, void *src, void *base, int size)
     uint8_t *getsp = static_cast<uint8_t *>(src); // This is the image we go to
     uint8_t *getbp = static_cast<uint8_t *>(base); // This is image we come from
     uint8_t *getsendp = getsp + size;
-    // uint8_t *getsstartp = getsp;                //This is only needed for the //DEBUG_LOG calls
+    // uint8_t *getsstartp = getsp;                //This is only needed for the //captainslog_debug calls
 
     // only check getsp. Both source and base should be same size and both pointers
     // should be incremented at the same time.
     while (getsp < getsendp) {
-        // DEBUG_LOG("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<uint8_t*>(dest), getsp - getsstartp);
+        // captainslog_debug("XOR_Delta Put pos: %u, Get pos: %u.... ", putp - static_cast<uint8_t*>(dest), getsp - getsstartp);
         unsigned fillcount = 0;
         unsigned xorcount = 0;
         unsigned skipcount = 0;
@@ -385,7 +385,7 @@ int Generate_XOR_Delta(void *dst, void *src, void *base, int size)
             ++testbp;
         }
 
-        DEBUG_ASSERT_PRINT(fillcount <= xorcount, "fillcount %d has exceeded xorcount %d.\n", fillcount, xorcount);
+        captainslog_dbgassert(fillcount <= xorcount, "fillcount %d has exceeded xorcount %d.\n", fillcount, xorcount);
 
         fillcount = fillcount > 3 ? fillcount : 0;
 
@@ -396,12 +396,12 @@ int Generate_XOR_Delta(void *dst, void *src, void *base, int size)
             // cmd 0???????
             if (xorcount < XOR_MED) {
                 count = xorcount <= XOR_SMALL ? xorcount : XOR_SMALL;
-                // DEBUG_LOG("0b0??????? XOR Count %u\n", count);
+                // captainslog_debug("0b0??????? XOR Count %u", count);
                 *putp++ = count;
                 // cmd 10000000 10?????? ??????
             } else {
                 count = xorcount <= XOR_LARGE ? xorcount : XOR_LARGE;
-                // DEBUG_LOG("0b10000000 10 XOR Count %u\n", count);
+                // captainslog_debug("0b10000000 10 XOR Count %u", count);
                 *putp++ = 0x80;
                 *putp++ = count;
                 *putp++ = (count >> 8) | 0x80;
@@ -419,14 +419,14 @@ int Generate_XOR_Delta(void *dst, void *src, void *base, int size)
             uint16_t count = 0;
             // cmd 00000000 ????????
             if (fillcount <= XOR_MED) {
-                // DEBUG_LOG("0b00000000 Val Count %u\n", count);
+                // captainslog_debug("0b00000000 Val Count %u", count);
                 count = fillcount;
                 *putp++ = 0;
                 *putp++ = count;
                 // cmd 10000000 11?????? ??????
             } else {
                 count = fillcount <= XOR_LARGE ? fillcount : XOR_LARGE;
-                // DEBUG_LOG("0b10000000 11 Val Count %u\n", count);
+                // captainslog_debug("0b10000000 11 Val Count %u", count);
                 *putp++ = 0x80;
                 *putp++ = count;
                 *putp++ = (count >> 8) | 0xC0;
@@ -448,12 +448,12 @@ int Generate_XOR_Delta(void *dst, void *src, void *base, int size)
             uint16_t count = 0;
             if (skipcount < XOR_MED) {
                 count = skipcount <= XOR_SMALL ? skipcount : XOR_SMALL;
-                // DEBUG_LOG("0b1??????? Skip Count %u\n", count);
+                // captainslog_debug("0b1??????? Skip Count %u", count);
                 *putp++ = count | 0x80;
                 // cmd 10000000 0??????? ????????
             } else {
                 count = skipcount <= XOR_MAX ? skipcount : XOR_MAX;
-                // DEBUG_LOG("0b100000000 0? Skip Count %u\n", count);
+                // captainslog_debug("0b100000000 0? Skip Count %u", count);
                 *putp++ = 0x80;
                 *putp++ = count;
                 *putp++ = count >> 8;
@@ -465,7 +465,7 @@ int Generate_XOR_Delta(void *dst, void *src, void *base, int size)
     }
 
     // final skip command of 0;
-    // DEBUG_LOG("0b10000000 Count %d to end delta\n", 0);
+    // captainslog_debug("0b10000000 Count %d to end delta", 0);
     *putp++ = 0x80;
     *putp++ = 0;
     *putp++ = 0;

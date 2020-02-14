@@ -247,8 +247,8 @@ void SidebarClass::StripClass::Deactivate()
 
 BOOL SidebarClass::StripClass::Add(RTTIType type, int id)
 {
-    DEBUG_ASSERT(type >= RTTI_NONE);
-    DEBUG_ASSERT(type < RTTI_COUNT);
+    captainslog_assert(type >= RTTI_NONE);
+    captainslog_assert(type < RTTI_COUNT);
 
     // Check our cameo count isn't greater than we have space for. If it is, return false.
     if (m_CameoCount < MAX_BUTTONS_PER_COLUMN) {
@@ -570,7 +570,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
 
 void SidebarClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 {
-    DEBUG_ASSERT(cellnum < MAP_MAX_AREA);
+    captainslog_assert(cellnum < MAP_MAX_AREA);
     if (list != nullptr) {
         if (list[0] == LIST_START) {
             for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
@@ -645,7 +645,7 @@ int SidebarClass::Which_Column(RTTIType type)
             return COLUMN_RIGHT;
 
         default:
-            DEBUG_LOG("Unhandled RTTIType in Which_Column() returning COLUMN_RIGHT, We should never reach here!");
+            captainslog_debug("Unhandled RTTIType in Which_Column() returning COLUMN_RIGHT, We should never reach here!");
             return COLUMN_RIGHT;
     }
 }

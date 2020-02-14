@@ -16,7 +16,7 @@
 #include "gbuffer.h"
 #include "keyboard.h"
 #include "mouse.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -231,8 +231,8 @@ void Play_Intro(BOOL flag)
         }
 
         //dobule check before we try to play.
-        DEBUG_ASSERT(_counter != MOVIE_NONE);
-        DEBUG_ASSERT(_counter < MOVIE_COUNT);
+        captainslog_assert(_counter != MOVIE_NONE);
+        captainslog_assert(_counter < MOVIE_COUNT);
 
         g_VisiblePage.Clear();
 

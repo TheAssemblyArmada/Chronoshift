@@ -14,11 +14,11 @@
  */
 #include "always.h"
 #include "pcxstraw.h"
-#include "gamedebug.h"
 #include "pcxrle.h"
 #include <climits>
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 
@@ -33,7 +33,7 @@ PCXStraw::PCXStraw(StrawControl mode, unsigned pitch, unsigned width) :
     m_OutBuffer(nullptr)
 {
     // Must be less than half of int max
-    DEBUG_ASSERT(m_LinePitch < (INT_MAX / 2) && m_LinePitch > 0);
+    captainslog_assert(m_LinePitch < (INT_MAX / 2) && m_LinePitch > 0);
 
     m_LineWidth = std::min(m_LineWidth, m_LinePitch);
 
@@ -85,7 +85,7 @@ int PCXStraw::Get(void *buffer, int length)
             retrieved = Straw::Get(in_buff + m_Remaining, 2 * m_LinePitch - m_Remaining);
             int decoded = PCX_Decode((void const **)&in_buff, 2 * m_LinePitch, m_OutBuffer, m_LinePitch);
             if (decoded != m_LinePitch) {
-                DEBUG_LOG("PCXStraw failed to decode an entire line\n");
+                captainslog_debug("PCXStraw failed to decode an entire line");
                 break;
             }
 

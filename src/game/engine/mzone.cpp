@@ -14,7 +14,7 @@
  *            LICENSE
  */
 #include "mzone.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -29,7 +29,7 @@ const char *MZoneName[MZONE_COUNT] = {
 
 MZoneType MZone_From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return MZONE_NONE;
@@ -47,8 +47,8 @@ MZoneType MZone_From_Name(const char *name)
 
 const char *Name_From_MZone(MZoneType mzone)
 {
-    DEBUG_ASSERT(mzone < MZONE_COUNT);
-    DEBUG_ASSERT(mzone != MZONE_NONE);
+    captainslog_assert(mzone < MZONE_COUNT);
+    captainslog_assert(mzone != MZONE_NONE);
 
     if (mzone != MZONE_NONE && mzone < MZONE_COUNT) {
         return MZoneName[mzone];

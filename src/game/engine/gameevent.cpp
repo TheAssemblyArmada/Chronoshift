@@ -16,15 +16,15 @@
 #include "gameevent.h"
 #include "animtype.h"
 #include "coord.h"
-#include "gamedebug.h"
 #include "globals.h"
 #include "house.h"
 #include "mission.h"
+#include <captainslog.h>
 
-#define EVENT_DEBUG_LOG(x, ...) \
+#define EVENT_captainslog_debug(x, ...) \
     /*if ( g_Debug_Print_Events )*/ \
     { \
-        DEBUG_LOG(x, ##__VA_ARGS__); \
+        captainslog_debug(x, ##__VA_ARGS__); \
     }
 
 GameEventClass::EventInfoStruct GameEventClass::s_EventTypeList[EVENT_COUNT] = {
@@ -70,7 +70,7 @@ GameEventClass::GameEventClass() :
     m_IsExecuted(false)
 {
     // Removed, as this is used at the default constructor, so it will fire a lot of times...
-    // EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    // EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 }
@@ -102,7 +102,7 @@ GameEventClass::GameEventClass(GameEventType type) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 }
@@ -113,7 +113,7 @@ GameEventClass::GameEventClass(GameEventType type, cell_t cell) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -126,7 +126,7 @@ GameEventClass::GameEventClass(GameEventType type, unsigned int gamespeed) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -139,7 +139,7 @@ GameEventClass::GameEventClass(GameEventType type, HousesType house) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -152,7 +152,7 @@ GameEventClass::GameEventClass(GameEventType type, RTTIType rtti) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -165,7 +165,7 @@ GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, unsigned int h
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -179,7 +179,7 @@ GameEventClass::GameEventClass(GameEventType type, RTTIType rtti, cell_t cell) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -193,7 +193,7 @@ GameEventClass::GameEventClass(GameEventType type, SpecialWeaponType special, ce
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -207,7 +207,7 @@ GameEventClass::GameEventClass(GameEventType type, void *a2, unsigned long a3) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -220,7 +220,7 @@ GameEventClass::GameEventClass(GameEventType type, TargetClass whom) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -233,7 +233,7 @@ GameEventClass::GameEventClass(GameEventType type, TargetClass whom, TargetClass
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -247,7 +247,7 @@ GameEventClass::GameEventClass(GameEventType type, AnimType anim, HousesType own
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event. Anim:%s.\n",
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event. Anim:%s.",
         Name_From(m_Type),
         AnimTypeClass::Name_From(anim));
 
@@ -264,7 +264,7 @@ GameEventClass::GameEventClass(GameEventType type, unsigned int crc, unsigned sh
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -279,7 +279,7 @@ GameEventClass::GameEventClass(GameEventType type, unsigned short desired_frame_
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -293,7 +293,7 @@ GameEventClass::GameEventClass(TargetClass whom, MissionType mission, TargetClas
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating EVENT_MEGAMISSION event.\n");
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating EVENT_MEGAMISSION event.");
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -310,7 +310,7 @@ GameEventClass::GameEventClass(
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating EVENT_MEGAMISSION_F event.\n");
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating EVENT_MEGAMISSION_F event.");
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -328,7 +328,7 @@ GameEventClass::GameEventClass(SpecialClass special) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG("GameEventClass::GameEventClass() - Creating '%s' event.\n", Name_From(m_Type));
+    EVENT_captainslog_debug("GameEventClass::GameEventClass() - Creating '%s' event.", Name_From(m_Type));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
 
@@ -341,7 +341,7 @@ GameEventClass::GameEventClass(AnimType anim, HousesType owner, coord_t coord) :
     m_HouseID(g_PlayerPtr->Get_Heap_ID()),
     m_IsExecuted(false)
 {
-    EVENT_DEBUG_LOG(
+    EVENT_captainslog_debug(
         "GameEventClass::GameEventClass() - Creating ANIMATION event. Anim:%s.\n", AnimTypeClass::Name_From(anim));
 
     memset(&m_EventData, 0, sizeof(m_EventData));
@@ -353,7 +353,7 @@ GameEventClass::GameEventClass(AnimType anim, HousesType owner, coord_t coord) :
 
 void GameEventClass::Execute()
 {
-    EVENT_DEBUG_LOG("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, HouseID:%d).\n",
+    EVENT_captainslog_debug("GameEventClass::Execute() - Executing '%s' event (GameFrame:%d, EventFrame:%d, HouseID:%d).",
         Name_From(m_Type),
         g_GameFrame,
         m_EventFrame,
@@ -363,14 +363,14 @@ void GameEventClass::Execute()
         case EVENT_ALLY:
             break;
         case EVENT_MEGAMISSION:
-            EVENT_DEBUG_LOG("    MEGAMISSION - Whom:%08X, Mission:%s, Target:%08X, Dest:%08X.\n",
+            EVENT_captainslog_debug("    MEGAMISSION - Whom:%08X, Mission:%s, Target:%08X, Dest:%08X.",
                 m_EventData.u_MegaMission.m_Whom,
                 MissionClass::Name_From(m_EventData.u_MegaMission.m_Mission),
                 m_EventData.u_MegaMission.m_Target,
                 m_EventData.u_MegaMission.m_Dest);
             break;
         case EVENT_MEGAMISSION_F:
-            EVENT_DEBUG_LOG(
+            EVENT_captainslog_debug(
                 "    MEGAMISSION_F - Whom:%08X, Mission:%s, Target:%08X\n"
                 "                    Dest:%08X, FormSpeed:%d, FormMaxSpeed:%d.\n",
                 m_EventData.u_MegaMissionF.m_Whom,
@@ -381,94 +381,94 @@ void GameEventClass::Execute()
                 m_EventData.u_MegaMissionF.m_FormMaxSpeed);
             break;
         case EVENT_IDLE:
-            EVENT_DEBUG_LOG("    IDLE.\n");
+            EVENT_captainslog_debug("    IDLE.");
             break;
         case EVENT_SCATTER:
-            EVENT_DEBUG_LOG("    SCATTER.\n");
+            EVENT_captainslog_debug("    SCATTER.");
             break;
         case EVENT_DESTRUCT:
-            EVENT_DEBUG_LOG("    DESTRUCT.\n");
+            EVENT_captainslog_debug("    DESTRUCT.");
             break;
         case EVENT_DEPLOY:
-            EVENT_DEBUG_LOG("    DEPLOY.\n");
+            EVENT_captainslog_debug("    DEPLOY.");
             break;
         case EVENT_PLACE:
-            EVENT_DEBUG_LOG("    PLACE.\n");
+            EVENT_captainslog_debug("    PLACE.");
             break;
         case EVENT_OPTIONS:
-            EVENT_DEBUG_LOG("    OPTIONS.\n");
+            EVENT_captainslog_debug("    OPTIONS.");
             break;
         case EVENT_GAMESPEED:
-            EVENT_DEBUG_LOG("    GAMESPEED - GameSpeed:%d.\n", m_EventData.u_GameSpeed.m_GameSpeed);
+            EVENT_captainslog_debug("    GAMESPEED - GameSpeed:%d.", m_EventData.u_GameSpeed.m_GameSpeed);
             break;
         case EVENT_PRODUCE:
-            EVENT_DEBUG_LOG("    PRODUCE.\n");
+            EVENT_captainslog_debug("    PRODUCE.");
             break;
         case EVENT_SUSPEND:
-            EVENT_DEBUG_LOG("    SUSPEND.\n");
+            EVENT_captainslog_debug("    SUSPEND.");
             break;
         case EVENT_ABANDON:
-            EVENT_DEBUG_LOG("    ABANDON.\n");
+            EVENT_captainslog_debug("    ABANDON.");
             break;
         case EVENT_PRIMARY:
-            EVENT_DEBUG_LOG("    PRIMARY.\n");
+            EVENT_captainslog_debug("    PRIMARY.");
             break;
         case EVENT_SPECIAL_PLACE:
-            EVENT_DEBUG_LOG("    SPECIAL_PLACE.\n");
+            EVENT_captainslog_debug("    SPECIAL_PLACE.");
             break;
         case EVENT_EXIT:
-            EVENT_DEBUG_LOG("    EXIT.\n");
+            EVENT_captainslog_debug("    EXIT.");
             break;
         case EVENT_ANIMATION:
-            EVENT_DEBUG_LOG("    ANIMATION - Anim:%s, Coord: X:%d Y:%d.\n",
+            EVENT_captainslog_debug("    ANIMATION - Anim:%s, Coord: X:%d Y:%d.",
                 AnimTypeClass::Name_From(m_EventData.u_Anim.m_Anim),
                 Coord_Lepton_X(m_EventData.u_Anim.m_Coord),
                 Coord_Lepton_Y(m_EventData.u_Anim.m_Coord));
             break;
         case EVENT_REPAIR:
-            EVENT_DEBUG_LOG("    REPAIR.\n");
+            EVENT_captainslog_debug("    REPAIR.");
             break;
         case EVENT_SELL:
-            EVENT_DEBUG_LOG("    SELL.\n");
+            EVENT_captainslog_debug("    SELL.");
             break;
         case EVENT_SELL_CELL:
-            EVENT_DEBUG_LOG("    SELL_CELL.\n");
+            EVENT_captainslog_debug("    SELL_CELL.");
             break;
         case EVENT_SPECIAL:
-            EVENT_DEBUG_LOG("    SPECIAL.\n");
+            EVENT_captainslog_debug("    SPECIAL.");
             break;
         case EVENT_FRAME_SYNC:
-            EVENT_DEBUG_LOG("    FRAME_SYNC.\n");
+            EVENT_captainslog_debug("    FRAME_SYNC.");
             break;
         case EVENT_MESSAGE:
-            EVENT_DEBUG_LOG("    MESSAGE.\n");
+            EVENT_captainslog_debug("    MESSAGE.");
             break;
         case EVENT_RESPONSE_TIME:
-            EVENT_DEBUG_LOG("    RESPONSE_TIME.\n");
+            EVENT_captainslog_debug("    RESPONSE_TIME.");
             break;
         case EVENT_FRAME_INFO:
-            EVENT_DEBUG_LOG("    FRAME_INFO.\n");
+            EVENT_captainslog_debug("    FRAME_INFO.");
             break;
         case EVENT_SAVE_GAME:
-            EVENT_DEBUG_LOG("    SAVE_GAME.\n");
+            EVENT_captainslog_debug("    SAVE_GAME.");
             break;
         case EVENT_ARCHIVE:
-            EVENT_DEBUG_LOG("    ARCHIVE - Whom:%08X, Target:%08X.\n", m_EventData.u_WhomTarget.m_Whom, m_EventData.u_WhomTarget.m_Target);
+            EVENT_captainslog_debug("    ARCHIVE - Whom:%08X, Target:%08X.", m_EventData.u_WhomTarget.m_Whom, m_EventData.u_WhomTarget.m_Target);
             break;
         case EVENT_ADD_PLAYER:
-            EVENT_DEBUG_LOG("    ADD_PLAYER.\n");
+            EVENT_captainslog_debug("    ADD_PLAYER.");
             break;
         case EVENT_TIMING:
-            EVENT_DEBUG_LOG("    TIMING.\n");
+            EVENT_captainslog_debug("    TIMING.");
             break;
         case EVENT_PROCESS_TIME:
-            EVENT_DEBUG_LOG("    PROCESS_TIME.\n");
+            EVENT_captainslog_debug("    PROCESS_TIME.");
             break;
         case EVENT_PROPOSE_DRAW:
-            EVENT_DEBUG_LOG("    PROPOSE_DRAW.\n");
+            EVENT_captainslog_debug("    PROPOSE_DRAW.");
             break;
         case EVENT_RETRACT_DRAW:
-            EVENT_DEBUG_LOG("    RETRACT_DRAW.\n");
+            EVENT_captainslog_debug("    RETRACT_DRAW.");
             break;
         default:
             break;
@@ -483,7 +483,7 @@ void GameEventClass::Execute()
 
 char const *GameEventClass::Name_From(GameEventClass::GameEventType type)
 {
-    DEBUG_ASSERT(type < EVENT_COUNT);
+    captainslog_assert(type < EVENT_COUNT);
 
     if (type != EVENT_EMPTY && type < EVENT_COUNT) {
         return s_EventTypeList[type].Name;
@@ -494,7 +494,7 @@ char const *GameEventClass::Name_From(GameEventClass::GameEventType type)
 
 GameEventClass::GameEventType GameEventClass::From_Name(char const *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return EVENT_EMPTY;

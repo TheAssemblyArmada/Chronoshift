@@ -90,7 +90,7 @@ UnitTypeClass::UnitTypeClass(UnitTypeClass const &that) :
  */
 void *UnitTypeClass::operator new(size_t size)
 {
-    DEBUG_ASSERT(size == sizeof(UnitTypeClass) && size == g_UnitTypes.Heap_Size());
+    captainslog_assert(size == sizeof(UnitTypeClass) && size == g_UnitTypes.Heap_Size());
     return g_UnitTypes.Allocate();
 }
 
@@ -99,7 +99,7 @@ void *UnitTypeClass::operator new(size_t size)
  */
 void UnitTypeClass::operator delete(void *ptr)
 {
-    DEBUG_ASSERT(ptr != nullptr);
+    captainslog_assert(ptr != nullptr);
     g_UnitTypes.Free(ptr);
 }
 
@@ -170,7 +170,7 @@ ObjectClass *UnitTypeClass::Create_One_Of(HouseClass *house) const
         reinterpret_cast<ObjectClass *(*)(const UnitTypeClass *, HouseClass *)>(0x00578BD0);
     return func(this, house);
 #else
-    /*DEBUG_ASSERT(house != nullptr);
+    /*captainslog_assert(house != nullptr);
 
     return new UnitClass(m_Type, house->What_Type());*/
     return nullptr;
@@ -215,8 +215,8 @@ BOOL UnitTypeClass::Read_INI(GameINIClass &ini)
  */
 UnitTypeClass &UnitTypeClass::As_Reference(UnitType type)
 {
-    DEBUG_ASSERT(type != UNIT_NONE);
-    DEBUG_ASSERT(type < UNIT_COUNT);
+    captainslog_assert(type != UNIT_NONE);
+    captainslog_assert(type < UNIT_COUNT);
 
     return g_UnitTypes[type];
 }

@@ -751,7 +751,7 @@ void ChronalVortexClass::Setup_Remap_Tables(TheaterType theater)
     if (theater != m_Theater) {
         m_Theater = theater;
         snprintf(buffer, sizeof(buffer), "%s_vtx.pal", g_Theaters[m_Theater].ext);
-        DEBUG_LOG("Building Chrono Vortex RemapTable for theater %s (%s)\n", Name_From_Theater(m_Theater), buffer);
+        captainslog_debug("Building Chrono Vortex RemapTable for theater %s (%s)", Name_From_Theater(m_Theater), buffer);
         GameFileClass fc(buffer);
 
         // Read the table if available, otherwise we generate it and write it.

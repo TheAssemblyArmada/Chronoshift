@@ -50,7 +50,7 @@ int32_t Load_Uncompress(FileClass &file, BufferClass &uncomp_buff, BufferClass &
         bytesremaining -= header.PaletteSize;
 
         if (palette != nullptr) {
-            // DEBUG_LOG("Pal size %d, remaining %d\n", palettesize, bytesremaining);
+            // captainslog_debug("Pal size %d, remaining %d", palettesize, bytesremaining);
             file.Read(palette, header.PaletteSize);
         } else {
             file.Seek(header.PaletteSize, FS_SEEK_CURRENT);

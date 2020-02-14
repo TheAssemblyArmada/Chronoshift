@@ -15,10 +15,10 @@
  */
 #include "lcwpipe.h"
 #include "endiantype.h"
-#include "gamedebug.h"
 #include "lcw.h"
 #include <cstring>
 #include <algorithm>
+#include <captainslog.h>
 
 using std::memcpy;
 using std::memmove;
@@ -51,8 +51,8 @@ LCWPipe::~LCWPipe()
  */
 int LCWPipe::Put(const void *buffer, int length)
 {
-    DEBUG_ASSERT(buffer != nullptr);
-    DEBUG_ASSERT(length > 0);
+    captainslog_assert(buffer != nullptr);
+    captainslog_assert(length > 0);
 
     const uint8_t *src = static_cast<const uint8_t *>(buffer);
     int putbytes = 0;
@@ -151,7 +151,7 @@ int LCWPipe::Put(const void *buffer, int length)
  */
 int LCWPipe::Flush()
 {
-    DEBUG_ASSERT(m_InBuffer != nullptr);
+    captainslog_assert(m_InBuffer != nullptr);
 
     int putbytes = 0;
 

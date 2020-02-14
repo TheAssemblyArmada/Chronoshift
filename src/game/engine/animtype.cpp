@@ -114,7 +114,7 @@ BOOL AnimTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 #if 0
     coord_t coord = Cell_To_Coord(cellnum);
     AnimClass *aptr = new AnimClass(m_Type, coord);
-    DEBUG_ASSERT(aptr != nullptr);
+    captainslog_assert(aptr != nullptr);
 
     return aptr != nullptr;
 #else 
@@ -131,7 +131,7 @@ ObjectClass *AnimTypeClass::Create_One_Of(HouseClass *house) const
 {
 #if 0
     AnimClass *aptr = new AnimClass(m_Type, 0);
-    DEBUG_ASSERT(aptr != nullptr);
+    captainslog_assert(aptr != nullptr);
     return aptr;
 #else
     return nullptr;
@@ -254,8 +254,8 @@ void AnimTypeClass::One_Time()
  */
 void AnimTypeClass::Init(TheaterType theater)
 {
-    DEBUG_ASSERT(theater < THEATER_COUNT);
-    DEBUG_ASSERT(theater != THEATER_NONE);
+    captainslog_assert(theater < THEATER_COUNT);
+    captainslog_assert(theater != THEATER_NONE);
 
     char filename[512];
 
@@ -277,7 +277,7 @@ void AnimTypeClass::Init(TheaterType theater)
  */
 AnimType AnimTypeClass::From_Name(const char *name)
 {
-    DEBUG_ASSERT(name != nullptr);
+    captainslog_assert(name != nullptr);
 
     if (strcasecmp(name, "<none>") == 0 || strcasecmp(name, "none") == 0) {
         return ANIM_NONE;
@@ -309,8 +309,8 @@ const char *AnimTypeClass::Name_From(AnimType type)
  */
 AnimTypeClass &AnimTypeClass::As_Reference(AnimType type)
 {
-    DEBUG_ASSERT(type != ANIM_NONE);
-    DEBUG_ASSERT(type < ANIM_COUNT);
+    captainslog_assert(type != ANIM_NONE);
+    captainslog_assert(type < ANIM_COUNT);
 
     return g_AnimTypes[type];
 }

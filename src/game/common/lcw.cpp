@@ -13,7 +13,7 @@
  *            LICENSE
  */
 #include "lcw.h"
-#include "gamedebug.h"
+#include <captainslog.h>
 #include <limits.h>
 #include <string.h>
 
@@ -51,8 +51,8 @@
  */
 int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
 {
-    DEBUG_ASSERT(src != nullptr);
-    DEBUG_ASSERT(dst != nullptr);
+    captainslog_assert(src != nullptr);
+    captainslog_assert(dst != nullptr);
 
     uint8_t *putstart = static_cast<uint8_t *>(dst);
     uint8_t *putend = putstart + bytes;
@@ -64,7 +64,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
     // buffer, meaning only ~64KB can be compressed effectively. Compressor implemented in this file uses size to determine
     // compression scheme used.
     if (*getp == 0) {
-        // DEBUG_LOG("LCW Relative Decompression... \n");
+        // captainslog_debug("LCW Relative Decompression... ");
         getp++;
 
         while (putp < putend) {
@@ -86,7 +86,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                             cpysize = putend - putp;
                         }
 
-                        // DEBUG_LOG("0b11111110 Source Pos %ld, Dest Pos %ld, Count %d\n", source - sstart - 3, dest -
+                        // captainslog_debug("0b11111110 Source Pos %ld, Dest Pos %ld, Count %d", source - sstart - 3, dest -
                         // start, cpysize);
                         memset(putp, (*getp++), cpysize);
                         putp += cpysize;
@@ -107,7 +107,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                             // extended format for VQA32 and large WSA files.
                             s = putp - offset;
 
-                            // DEBUG_LOG("0b11111111 Source Pos %ld, Dest Pos %ld, Count %d, Offset %d\n", source - sstart -
+                            // captainslog_debug("0b11111111 Source Pos %ld, Dest Pos %ld, Count %d, Offset %d", source - sstart -
                             // 5, dest - start, cpysize, offset);
                             for (; cpysize > 0; --cpysize) {
                                 *putp++ = *s++;
@@ -124,7 +124,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                             // extended format for VQA32 and large WSA files.
                             s = putp - offset;
 
-                            // DEBUG_LOG("0b11?????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d\n", source - sstart -
+                            // captainslog_debug("0b11?????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d", source - sstart -
                             // 3, dest - start, cpysize, offset);
                             for (; cpysize > 0; --cpysize) {
                                 *putp++ = *s++;
@@ -134,7 +134,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                     // short copy 0b10??????
                 } else {
                     if (flag == 0x80) {
-                        // DEBUG_LOG("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d\n", source - sstart - 1, dest -
+                        // captainslog_debug("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d", source - sstart - 1, dest -
                         // start, 0);
                         return putp - putstart;
                     }
@@ -145,7 +145,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                         cpysize = putend - putp;
                     }
 
-                    // DEBUG_LOG("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d\n", source - sstart - 1, dest - start,
+                    // captainslog_debug("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d", source - sstart - 1, dest - start,
                     // cpysize);
                     for (; cpysize > 0; --cpysize) {
                         *putp++ = *getp++;
@@ -160,7 +160,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                 }
 
                 offset = ((flag & 0xF) << 8) + (*getp++);
-                // DEBUG_LOG("0b0??????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d\n", source - sstart - 2, dest -
+                // captainslog_debug("0b0??????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d", source - sstart - 2, dest -
                 // start, cpysize, offset);
                 for (; cpysize > 0; --cpysize) {
                     *putp = *(putp - offset);
@@ -169,7 +169,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
             }
         }
     } else {
-        // DEBUG_LOG("LCW Decompression... \n");
+        // captainslog_debug("LCW Decompression... ");
 
         while (putp < putend) {
             uint8_t flag;
@@ -190,7 +190,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                             cpysize = putend - putp;
                         }
 
-                        // DEBUG_LOG("0b11111110 Source Pos %ld, Dest Pos %ld, Count %d\n", source - sstart - 3, dest -
+                        // captainslog_debug("0b11111110 Source Pos %ld, Dest Pos %ld, Count %d", source - sstart - 3, dest -
                         // start, cpysize);
                         memset(putp, (*getp++), cpysize);
                         putp += cpysize;
@@ -209,7 +209,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                             offset += (*getp++) << 8;
                             s = putstart + offset;
 
-                            // DEBUG_LOG("0b11111111 Source Pos %ld, Dest Pos %ld, Count %d, Offset %d\n", source - sstart -
+                            // captainslog_debug("0b11111111 Source Pos %ld, Dest Pos %ld, Count %d, Offset %d", source - sstart -
                             // 5, dest - start, cpysize, offset);
                             for (; cpysize > 0; --cpysize) {
                                 *putp++ = *s++;
@@ -224,7 +224,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                             offset += (*getp++) << 8;
                             s = putstart + offset;
 
-                            // DEBUG_LOG("0b11?????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d\n", source - sstart -
+                            // captainslog_debug("0b11?????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d", source - sstart -
                             // 3, dest - start, cpysize, offset);
                             for (; cpysize > 0; --cpysize) {
                                 *putp++ = *s++;
@@ -234,7 +234,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                     // short copy 0b10??????
                 } else {
                     if (flag == 0x80) {
-                        // DEBUG_LOG("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d\n", source - sstart - 1, dest -
+                        // captainslog_debug("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d", source - sstart - 1, dest -
                         // start, 0);
                         return putp - putstart;
                     }
@@ -245,7 +245,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                         cpysize = putend - putp;
                     }
 
-                    // DEBUG_LOG("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d\n", source - sstart - 1, dest - start,
+                    // captainslog_debug("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d", source - sstart - 1, dest - start,
                     // cpysize);
                     for (; cpysize > 0; --cpysize) {
                         *putp++ = *getp++;
@@ -260,7 +260,7 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
                 }
 
                 offset = ((flag & 0xF) << 8) + (*getp++);
-                // DEBUG_LOG("0b0??????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d\n", source - sstart - 2, dest -
+                // captainslog_debug("0b0??????? Source Pos %ld, Dest Pos %ld, Count %d, Offset %d", source - sstart - 2, dest -
                 // start, cpysize, offset);
                 for (; cpysize > 0; --cpysize) {
                     *putp = *(putp - offset);
@@ -279,8 +279,8 @@ int __cdecl LCW_Uncomp(const void *src, void *dst, unsigned int bytes)
  */
 int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes)
 {
-    DEBUG_ASSERT(src != nullptr);
-    DEBUG_ASSERT(dst != nullptr);
+    captainslog_assert(src != nullptr);
+    captainslog_assert(dst != nullptr);
 
     if (!bytes) {
         return 0;
@@ -295,11 +295,11 @@ int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes)
     const uint8_t *getend = getp + bytes;
     uint8_t *putstart = putp;
 
-    // DEBUG_LOG("LCW Compression... \n");
+    // captainslog_debug("LCW Compression... ");
 
     // relative LCW starts with 0 to flag as relative for decoder
     if (relative) {
-        // DEBUG_LOG("LCW Relative compressor.\n");
+        // captainslog_debug("LCW Relative compressor.");
         *putp++ = 0;
     }
 
@@ -324,7 +324,7 @@ int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes)
 
             // If run length is long enough, write the command and start loop again
             if (run_length >= 0x41) {
-                // DEBUG_LOG("0b11111110 Source Pos %ld, Dest Pos %ld, Count %d\n", getp - getstart, putp - putstart,
+                // captainslog_debug("0b11111110 Source Pos %ld, Dest Pos %ld, Count %d", getp - getstart, putp - putstart,
                 // run_length);  write 4byte command 0b11111110
                 cmd_one = false;
                 *putp++ = 0xFE;
@@ -388,12 +388,12 @@ int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes)
             if (cmd_one && *cmd_onep < 0xBF) {
                 // increment command value
                 ++*cmd_onep;
-                // DEBUG_LOG("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d\n", getp - getstart, cmd_onep - putstart,
+                // captainslog_debug("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d", getp - getstart, cmd_onep - putstart,
                 // *cmd_onep - 0x80);
                 *putp++ = *getp++;
             } else {
                 cmd_onep = putp;
-                // DEBUG_LOG("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d\n", getp - getstart, cmd_onep - putstart, 1);
+                // captainslog_debug("0b10?????? Source Pos %ld, Dest Pos %ld, Count %d", getp - getstart, cmd_onep - putstart, 1);
                 *putp++ = 0x81;
                 *putp++ = *getp++;
                 cmd_one = true;
@@ -404,24 +404,24 @@ int __cdecl LCW_Comp(const void *src, void *dst, unsigned int bytes)
             if (block_size > 0xA || (rel_offset > 0xFFF)) {
                 // write 5 byte command 0b11111111
                 if (block_size > 0x40) {
-                    // DEBUG_LOG("0b11111111 Source Pos %ld, Dest Pos %ld, Count %d, ", getp - getstart, putp - putstart,
+                    // captainslog_debug("0b11111111 Source Pos %ld, Dest Pos %ld, Count %d, ", getp - getstart, putp - putstart,
                     // block_size);
                     *putp++ = 0xFF;
                     *putp++ = block_size;
                     *putp++ = block_size >> 8;
                     // write 3 byte command 0b11??????
                 } else {
-                    // DEBUG_LOG("0b11?????? Source Pos %ld, Dest Pos %ld, Count %d, ", getp - getstart, putp - putstart,
+                    // captainslog_debug("0b11?????? Source Pos %ld, Dest Pos %ld, Count %d, ", getp - getstart, putp - putstart,
                     // block_size);
                     *putp++ = (block_size - 3) | 0xC0;
                 }
 
                 offset = relative ? rel_offset : offsetp - getstart;
-                // DEBUG_LOG("Offset %d\n", offset);
+                // captainslog_debug("Offset %d", offset);
                 // write 2 byte command? 0b0???????
             } else {
-                // DEBUG_LOG("0b0??????? Source Pos %ld, Dest Pos %ld, Count %d, ", getp - getstart, putp - putstart,
-                // block_size);  uint8_t cmd_two_val = 16 * (block_size - 3) + (rel_offset >> 8);  DEBUG_LOG("Offset %d\n",
+                // captainslog_debug("0b0??????? Source Pos %ld, Dest Pos %ld, Count %d, ", getp - getstart, putp - putstart,
+                // block_size);  uint8_t cmd_two_val = 16 * (block_size - 3) + (rel_offset >> 8);  captainslog_debug("Offset %d",
                 // rel_offset);
                 offset = rel_offset << 8 | (16 * (block_size - 3) + (rel_offset >> 8));
             }

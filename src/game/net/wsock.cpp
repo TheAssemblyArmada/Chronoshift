@@ -13,9 +13,9 @@
  *            LICENSE
  */
 #include "wsock.h"
-#include "gamedebug.h"
 #include "globals.h"
 #include "keyboard.h"
+#include <captainslog.h>
 
 #ifdef CHRONOSHIFT_SOCKETS_API
 int WinsockInterfaceClass::SocketsMax = 0;
@@ -73,14 +73,14 @@ BOOL WinsockInterfaceClass::Init()
 
         if (WSAStartup(wVersionRequested, &wsaData) != 0) { // need to check agaisnt error
             DWORD error = GetLastError();
-            DEBUG_LOG("WinsockInterface: Winsock failed to initialise - error code %d.\n", error);
+            captainslog_debug("WinsockInterface: Winsock failed to initialise - error code %d.", error);
             return false;
         }
 
         // Confirm that linked winsock supports requested version.
         // TODO upgrade this to 2.2.
         if ((wsaData.wVersion & 0xFF) != 1 || (wsaData.wVersion >> 8) != 1) {
-            DEBUG_LOG("WinsockInterface: Winsock version is less than 1.1\n");
+            captainslog_debug("WinsockInterface: Winsock version is less than 1.1");
             return false;
         }
 #endif // PLATFORM_WINDOWS
@@ -253,7 +253,7 @@ BOOL WinsockInterfaceClass::Start_Listening()
     }
 #elif defined PLATFORM_WINDOWS
     if (WSAAsyncSelect(m_Socket, g_MainWindow, Protocol_Event_Message(), FD_READ | FD_WRITE) == -1) {
-        DEBUG_LOG("WinsockInterface: Async select failed.\n");
+        captainslog_debug("WinsockInterface: Async select failed.");
         WSACancelAsyncRequest(m_TaskHandle);
         m_TaskHandle = INVALID_HANDLE_VALUE;
 
@@ -308,12 +308,12 @@ BOOL WinsockInterfaceClass::Set_Socket_Options()
 
     if (setsockopt(m_Socket, SOL_SOCKET, SO_RCVBUF, (char *)&socket_recv_buffer_size, sizeof(socket_recv_buffer_size))
         == SOCKET_ERROR) {
-        DEBUG_LOG("WinsockInterface: Failed to set SOL_SOCKET option SO_RCVBUF - error code %d.\n", LastSocketError);
+        captainslog_debug("WinsockInterface: Failed to set SOL_SOCKET option SO_RCVBUF - error code %d.", LastSocketError);
     }
 
     if (setsockopt(m_Socket, SOL_SOCKET, SO_SNDBUF, (char *)&socket_tran_buffer_size, sizeof(socket_tran_buffer_size))
         == SOCKET_ERROR) {
-        DEBUG_LOG("WinsockInterface: Failed to set SOL_SOCKET option SO_SNDBUF - error code %d.\n", LastSocketError);
+        captainslog_debug("WinsockInterface: Failed to set SOL_SOCKET option SO_SNDBUF - error code %d.", LastSocketError);
     }
     return true;
 }
