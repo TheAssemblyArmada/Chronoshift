@@ -119,6 +119,7 @@ public:
     const GamePtr<TriggerClass> &Get_Attached_Trigger() const { return m_AttachedTrigger; }
     void Invalidate_Attached_Trigger() { m_AttachedTrigger = nullptr; }
     BOOL In_Limbo() const { return m_InLimbo; }
+    BOOL Selected() const { return m_Selected; }
     int16_t Get_Health() const { return m_Health; }
     void Set_Health(int16_t health) { m_Health = health; }
 
