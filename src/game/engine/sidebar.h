@@ -213,7 +213,7 @@ public:
     void Disable_Zoom_Button() { s_ZoomButton.Disable(); }
     void Enable_Zoom_Button() { s_ZoomButton.Enable(); }
     void Flag_Strip_Redraw(ColumnType strip) { m_Columns[strip].Flag_To_Redraw(); }
-    static void Draw_Siidebar_Buttons()
+    static void Draw_Sidebar_Buttons()
     {
         s_RepairButton.Draw_Me(true);
         s_SellButton.Draw_Me(true);
