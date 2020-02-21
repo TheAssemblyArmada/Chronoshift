@@ -295,6 +295,7 @@ public:
     int Get_Power() const { return m_Power; }
     void Inc_Destroyed_Building_Count(HousesType house) { ++m_BuildingsDestroyed[house]; }
     void Inc_Destroyed_Unit_Count(HousesType house) { ++m_UnitsDestroyed[house]; }
+    PlayerColorType Player_Color() const { return m_Color; }
 
     static void One_Time();
     static void Init();

@@ -144,6 +144,7 @@ public:
     BOOL Repair_Mode() const { return m_DisplayRepairMode; }
     BOOL Sell_Mode() const { return m_DisplaySellMode; }
     BOOL Bit_8() const { return m_DisplayBit8; }
+    void Set_To_Redraw(BOOL redraw) { m_DisplayToRedraw = redraw; }
 
 private:
     // This only seems to be used by DisplayClass, so made it a static helper of this class.
