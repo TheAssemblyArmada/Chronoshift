@@ -236,6 +236,8 @@ set(GAMEENGINE_SRC
     game/platform/initvideo.cpp
     game/platform/keyboard.cpp
     game/platform/mouse.cpp
+    game/platform/stackdump.cpp
+    game/platform/excepthandler.cpp
     game/ui/bigcheck.cpp
     game/ui/checklist.cpp
     game/ui/checkbox.cpp
