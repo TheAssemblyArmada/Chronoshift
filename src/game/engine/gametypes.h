@@ -723,7 +723,7 @@ enum HousesType
 
     HOUSES_SP_LAST = 8,
     HOUSES_ALL_LAST = 19,
-
+    HOUSES_PLAYABLE_COUNT = 10,
     HOUSES_COUNT = 20
 };
 

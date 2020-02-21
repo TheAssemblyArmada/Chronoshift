@@ -101,6 +101,20 @@ public:
     int Radar_Activate(int mode = RADAR_M1);
     BOOL Spy_Next_House();
 
+    int Get_Radar_Button_X() const { return m_RadarButtonXPos; }
+    int Get_Radar_Button_Y() const { return m_RadarButtonYPos; }
+    int Get_Min_Radar_X() const { return m_MinRadarX; }
+    int Get_Min_Radar_Y() const { return m_MinRadarY; }
+    int Get_Max_Radar_Width() const { return m_MaxRadarWidth; }
+    int Get_Max_Radar_Height() const { return m_MaxRadarHeight; }
+    BOOL Radar_Active() const { return m_RadarActive; }
+    BOOL Radar_Zoomed() const { return m_RadarZoomed; }
+    BOOL Radar_Draw_Names() const { return m_RadarDrawNames; }
+    BOOL Radar_Jammed() const { return m_RadarJammed; }
+
+    void Set_Cursor_Frame(int frame) { m_RadarCursorFrame = frame; }
+    void Set_Jammed(BOOL jammed) { m_RadarJammed = jammed; }
+
 #ifdef GAME_DLL
     cell_t Hook_Click_Cell_Calc(int x, int y) { return RadarClass::Click_Cell_Calc(x, y); }
     BOOL Hook_Is_Zoomable() { return Is_Zoomable(); }
@@ -165,7 +179,8 @@ protected:
     int m_MiniMapCellHeight;
     cell_t m_MiniMapCell;
 #ifdef GAME_DLL
-    char padding[2]; // needed for DLL builds because original has m_MiniMapCell a int, but Radar_Position returns it as a short.
+    char padding[2]; // needed for DLL builds because original has m_MiniMapCell a int, but Radar_Position returns it as a
+                     // short.
 #endif
     TRect<int> m_MiniMap;
     int m_MiniMapScale;

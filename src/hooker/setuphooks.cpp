@@ -510,11 +510,25 @@ void Setup_Hooks()
     Hook_Function(0x0052FF40, *RadarClass::Mark_Radar); // seems to work
     Hook_Function(0x0052FED8, *RadarClass::Cursor_Cell); // seems to work
     Hook_Function(0x0052EF8C, *RadarClass::Render_Overlay); // works
+    Hook_Function(0x0052E9E8, *RadarClass::Render_Infantry); //
+    Hook_Function(0x0052E5BC, *RadarClass::Render_Terrain); //
     Hook_Function(0x00530300, *RadarClass::Radar_Cursor); // works
     Hook_Function(0x0052F294, *RadarClass::Zoom_Mode); //
     Hook_Function(0x0052FCC0, *RadarClass::Radar_Pixel); //
     Hook_Function(0x0052FD3C, *RadarClass::Hook_Click_In_Radar); //
     Hook_Function(0x0052D790, *RadarClass::Radar_Activate); //
+    Hook_Function(0x00530CF4, *RadarClass::Radar_Anim); //
+    Hook_Function(0x00530E6C, *RadarClass::AI); //
+    Hook_Function(0x0052DA14, *RadarClass::Draw_It); //
+    Hook_Function(0x005301F0, *RadarClass::Jam_Cell); //
+    Hook_Function(0x00530274, *RadarClass::UnJam_Cell); //
+    Hook_Function(0x005329C4, *RadarClass::Is_Radar_Jammed); //
+    Hook_Function(0x005314B4, *RadarClass::Set_Radar_Position); //
+    Hook_Function(0x00532268, *RadarClass::Draw_House_Info); //
+    Hook_Function(0x005325E4, *RadarClass::Draw_Names); //
+    Hook_Function(0x0052F4C4, *RadarClass::Plot_Radar_Pixel); //
+    Hook_Function(0x0053214C, *RadarClass::Spy_Next_House); //
+    Hook_Function(0x00531034, *RadarClass::RTacticalClass::Action); //
 
     // power.h
     Hook_Function(0x005275CC, *PowerClass::One_Time); // seems to work
