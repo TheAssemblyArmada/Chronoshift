@@ -42,6 +42,7 @@
 #include "drawshape.h"
 #include "drive.h"
 #include "droplist.h"
+#include "excepthandler.h"
 #include "facing.h"
 #include "factory.h"
 #include "fading.h"
@@ -125,6 +126,9 @@ void Setup_Hooks()
 #ifdef __WATCOMC__
     // Disable the DirectDraw based terrain caching system.
     Make_Global<BOOL>(0x0060BA6C) = false; // IconCacheAllowed
+
+    //replaces watcom's exception handler with ours
+    Hook_Function(0x005DF696, Watcom_Exception_Handler);
 
     //
     // Hook WinMain
