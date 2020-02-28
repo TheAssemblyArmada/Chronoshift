@@ -785,6 +785,7 @@ extern const char *g_MissionStr[];
 extern const char TXT_CS_MISSIONS[];
 extern const char TXT_AM_MISSIONS[];
 extern const char TXT_ABOUT[];
+extern const char TXT_MAP_EDITOR[];
 extern const char TXT_MORE_1[];
 extern const char TXT_MORE_2[];
 extern const char TXT_CONFIRM_QUIT[];

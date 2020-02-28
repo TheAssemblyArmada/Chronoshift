@@ -74,6 +74,7 @@
 #include "lzopipe.h"
 #include "lzostraw.h"
 #include "main.h"
+#include "mainmenu.h"
 #include "missioncontrol.h"
 #include "mixfile.h"
 #include "mouse.h"
@@ -222,6 +223,10 @@ void Setup_Hooks()
     Hook_Function(0x004FB994, Conquer_Build_Fading_Table);
     Hook_Function(0x004FB7C4, Build_Translucent_Table);
     Hook_Function(0x004FB870, Conquer_Build_Translucent_Table);
+
+    // mainmenu.h
+    Hook_Function(0x004F44DC, Select_Game);
+    Hook_Function(0x00501D54, Main_Menu);
 
     // gadget.h
     Hook_Function(0x004C3E40, *GadgetClass::Remove);

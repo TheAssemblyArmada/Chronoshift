@@ -40,6 +40,7 @@ LanguageType g_Language = LANGUAGE_ENGLISH;
 const char TXT_CS_MISSIONS[] = { "Counterstrike Missions" };
 const char TXT_AM_MISSIONS[] = { "Aftermath Missions" };
 const char TXT_ABOUT[] = { "About" };
+const char TXT_MAP_EDITOR[] = { "Map Editor" };
 const char TXT_MORE_1[] = { "--More--" };
 const char TXT_MORE_2[] = { "<MORE>" };
 const char TXT_CONFIRM_QUIT[] = { "Are you sure you want to quit?" };

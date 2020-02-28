@@ -37,7 +37,5 @@ void Init_Color_Remaps();
 void Init_Mouse();
 void Bootstrap();
 void Init_CDROM_Access();
-void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteClass *pal);
-void Load_Prolog_Page();
 
 #endif // INIT_H
