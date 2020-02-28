@@ -821,7 +821,7 @@ void Setup_Hooks()
     Hook_Function(0x00404090, *AircraftTypeClass::Hook_Max_Pips);
     Hook_Function(0x004040BC, *AircraftTypeClass::Hook_Dimensions);
     Hook_Function(0x004040B0, *AircraftTypeClass::Hook_Create_And_Place);
-    // Hook_Function(0x00404024, *AircraftTypeClass::Hook_Create_One_Of); // TODO: Requires implementation.
+    Hook_Function(0x00404024, *AircraftTypeClass::Hook_Create_One_Of);
     Hook_Function(0x00404078, *AircraftTypeClass::Hook_Occupy_List);
     Hook_Function(0x00404084, *AircraftTypeClass::Hook_Overlap_List);
     Hook_Function(0x004040F0, *AircraftTypeClass::As_Reference);
