@@ -107,7 +107,7 @@ public:
     cell_t Calculated_Cell(
         SourceType source, int waypoint, cell_t cellnum, SpeedType speed, BOOL use_zone, MZoneType mzone) const;
     BOOL Good_Reinforcement_Cell(cell_t cell1, cell_t cell2, SpeedType speed, int zone, MZoneType mzone) const;
-    coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const;
+    coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied = false) const;
     void All_To_Look(BOOL skip_buildings);
     void Constrained_Look(coord_t coord, int constraint);
     void Encroach_Shadow();

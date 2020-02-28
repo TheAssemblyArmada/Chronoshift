@@ -149,6 +149,39 @@ public:
     static void One_Time();
     static void Prep_For_Add();
 
+#ifdef GAME_DLL
+public:
+    friend void Setup_Hooks();
+
+    InfantryTypeClass *Hooked_Ctor(InfantryType type, int uiname, const char *name, int def_fire_coord, int rot_count, BOOL female,
+        BOOL crawls, BOOL civilian, BOOL has_alt_remap, BOOL nominal, BOOL theater, PipEnum pip, const DoInfoStruct *do_info,
+        int fire_up, int fire_prone, const uint8_t *alt_remap)
+    {
+        return new (this) InfantryTypeClass(type,
+            uiname,
+            name,
+            def_fire_coord,
+            rot_count,
+            female,
+            crawls,
+            civilian,
+            has_alt_remap,
+            nominal,
+            theater,
+            pip,
+            do_info,
+            fire_up,
+            fire_prone,
+            alt_remap);
+    }
+    int InfantryTypeClass::Hooked_Full_Name() const { return InfantryTypeClass::Full_Name(); }
+    void InfantryTypeClass::Hooked_Dimensions(int &w, int &h) const { InfantryTypeClass::Dimensions(w, h); }
+    BOOL InfantryTypeClass::Hooked_Create_And_Place(cell_t cellnum, HousesType house) { return InfantryTypeClass::Create_And_Place(cellnum, house); }
+    ObjectClass *InfantryTypeClass::Hooked_Create_One_Of(HouseClass *house) { return InfantryTypeClass::Create_One_Of(house); }
+    const int16_t *InfantryTypeClass::Hooked_Occupy_List(BOOL a1) { return InfantryTypeClass::Occupy_List(a1); }
+    BOOL Hooked_Read_INI(GameINIClass &ini) { return InfantryTypeClass::Read_INI(ini); }
+#endif
+
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_FemaleVoice : 1; // & 1 Uses the civilian female voice (def = false)?

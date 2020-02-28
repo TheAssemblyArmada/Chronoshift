@@ -1138,6 +1138,15 @@ void Setup_Hooks()
     Hook_Function(0x00462380, *BulletClass::Assign_Target);
     Hook_Function(0x004623B0, *BulletClass::Hook_Overlap_List);
 
+    // infantrytype.cpp
+    Hook_Function(0x004DF5E0, *InfantryTypeClass::Hook_Ctor);
+    Hook_Function(0x004EB16C, *InfantryTypeClass::Hook_Full_Name);
+    Hook_Function(0x004EB2DC, *InfantryTypeClass::Hook_Dimensions);
+    Hook_Function(0x004EAF74, *InfantryTypeClass::Hook_Create_And_Place);
+    Hook_Function(0x004EAF20, *InfantryTypeClass::Hook_Create_One_Of);
+    Hook_Function(0x004EB01C, *InfantryTypeClass::Hook_Occupy_List);
+    Hook_Function(0x004EB1D0, *InfantryTypeClass::Hook_Read_INI);
+
     // technotype.cpp
     //Hook_Function(0x00569564, *TechnoTypeClass::Hook_Ctor);
     Hook_Function(0x005698E8, *TechnoTypeClass::Hook_Is_Two_Shooter);

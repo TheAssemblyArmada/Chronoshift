@@ -14,14 +14,15 @@
  *            LICENSE
  */
 #include "infantrytype.h"
-#include "infantrydata.h"
-#include "gameini.h"
-#include "gamefile.h"
 #include "facing.h"
+#include "gamefile.h"
+#include "gameini.h"
 #include "globals.h"
+#include "infantry.h"
+#include "infantrydata.h"
+#include "iomap.h"
 #include "lists.h"
 #include "rules.h"
-#include "iomap.h"
 
 #ifndef GAME_DLL
 TFixedIHeapClass<InfantryTypeClass> g_InfantryTypes;
@@ -60,7 +61,7 @@ InfantryTypeClass::InfantryTypeClass(InfantryType type, int uiname, const char *
 /**
  * 0x004EB2F0
  */
-InfantryTypeClass::InfantryTypeClass(InfantryTypeClass const &that) :
+InfantryTypeClass::InfantryTypeClass(const InfantryTypeClass &that) :
     TechnoTypeClass(that),
     m_FemaleVoice(that.m_FemaleVoice),
     m_IsCrawler(that.m_IsCrawler),
@@ -130,23 +131,16 @@ void InfantryTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL InfantryTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-#ifdef GAME_DLL
-    BOOL (*func)
-    (const InfantryTypeClass *, cell_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const InfantryTypeClass *, cell_t, HousesType)>(0x004EAF74);
-    return func(this, cellnum, house);
-#else
-    /*InfantryClass *iptr = new InfantryClass(Type, house);
+    InfantryClass *iptr = new InfantryClass(m_Type, house);
 
     if (iptr != nullptr) {
-        coord_t spot = Map[cellnum].Closest_Free_Spot(Cell_To_Coord(cellnum));
-        if (spot != 0) {
-            return iptr->Unlimbo(spot, DIR_EAST);
+        coord_t coord = g_Map[cellnum].Closest_Free_Spot(Cell_To_Coord(cellnum));
+        if (coord != 0) {
+            return iptr->Unlimbo(coord, DIR_EAST);
         }
-    }*/
+    }
 
     return false;
-#endif
 }
 
 /**
@@ -156,16 +150,9 @@ BOOL InfantryTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *InfantryTypeClass::Create_One_Of(HouseClass *house) const
 {
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const InfantryTypeClass *, HouseClass *) =
-        reinterpret_cast<ObjectClass *(*)(const InfantryTypeClass *, HouseClass *)>(0x004EAF20);
-    return func(this, house);
-#else
-    /*captainslog_assert(house != nullptr);
-    return new InfantryClass(Type, house->What_Type());*/
+    captainslog_assert(house != nullptr);
 
-    return nullptr;
-#endif
+    return new InfantryClass(m_Type, house->What_Type());
 }
 
 /**
@@ -188,26 +175,26 @@ const int16_t *InfantryTypeClass::Occupy_List(BOOL a1) const
  */
 BOOL InfantryTypeClass::Read_INI(GameINIClass &ini)
 {
-    if (TechnoTypeClass::Read_INI(ini)) {
-        m_IsFraidycat = ini.Get_Bool(m_Name, "Fraidycat", m_IsFraidycat);
-        m_IsInfiltrator = ini.Get_Bool(m_Name, "Infiltrate", m_IsInfiltrator);
-        m_HasC4 = ini.Get_Bool(m_Name, "C4", m_HasC4);
-        m_IsCanine = ini.Get_Bool(m_Name, "IsCanine", m_IsCanine);
-
-        // C4 presumes infiltrate.
-        if (m_HasC4) {
-            m_IsInfiltrator = true;
-        }
-
-        // Dogs can't be leaders.
-        if (m_IsCanine) {
-            m_IsLeader = false;
-        }
-
-        return true;
+    if (!TechnoTypeClass::Read_INI(ini)) {
+        return false;
     }
 
-    return false;
+    m_IsFraidycat = ini.Get_Bool(m_Name, "Fraidycat", m_IsFraidycat);
+    m_IsInfiltrator = ini.Get_Bool(m_Name, "Infiltrate", m_IsInfiltrator);
+    m_HasC4 = ini.Get_Bool(m_Name, "C4", m_HasC4);
+    m_IsCanine = ini.Get_Bool(m_Name, "IsCanine", m_IsCanine);
+
+    // C4 presumes infiltrate.
+    if (m_HasC4) {
+        m_IsInfiltrator = true;
+    }
+
+    // Dogs can't be leaders.
+    if (m_IsCanine) {
+        m_IsLeader = false;
+    }
+
+    return true;
 }
 
 /**
