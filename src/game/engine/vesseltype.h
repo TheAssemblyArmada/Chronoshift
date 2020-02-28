@@ -20,6 +20,7 @@
 
 #include "always.h"
 #include "animtype.h"
+#include "facing.h"
 #include "heap.h"
 #include "technotype.h"
 
@@ -30,15 +31,16 @@ enum VesselType
     VESSEL_CRUISER,
     VESSEL_TRANSPORT,
     VESSEL_PT_BOAT,
+
+    // Aftermath additions.
     VESSEL_MISSILE_SUB,
     VESSEL_CARRIER,
 
     VESSEL_COUNT,
+    VESSEL_NOEXP_COUNT = 5, // Used for arrays that exclude new expansion units.
 
     VESSEL_NONE = -1,
     VESSEL_FIRST = VESSEL_SUBMARINE,
-
-    VESSEL_NOEXP_COUNT = 5, // Used for arrays that exclude new expansion units.
 };
 
 DEFINE_ENUMERATION_OPERATORS(VesselType);
@@ -79,6 +81,42 @@ public:
     static const char *Name_From(VesselType type) { return As_Reference(type).m_Name; }
 
     static void Prep_For_Add();
+
+private:
+    void Turret_Adjust(DirType dir, int &x, int &y) const;
+
+#ifdef GAME_DLL
+public:
+    friend void Setup_Hooks();
+
+    VesselTypeClass *Hooked_Ctor(VesselType type, int uiname, const char *name, AnimType death_anim, int def_fire_coord,
+        int pri_fire_coord_a, int pri_fire_coord_b, int sec_fire_coord_a, int sec_fire_coord_b, BOOL a10, BOOL nominal,
+        BOOL has_turret, int facings, MissionType mission)
+    {
+        return new (this) VesselTypeClass(type,
+            uiname,
+            name,
+            death_anim,
+            def_fire_coord,
+            pri_fire_coord_a,
+            pri_fire_coord_b,
+            sec_fire_coord_a,
+            sec_fire_coord_b,
+            a10,
+            nominal,
+            has_turret,
+            facings,
+            mission);
+    }
+    int Hooked_Max_Pips() { return VesselTypeClass::Max_Pips(); }
+    void Hooked_Dimensions(int &w, int &h) const { VesselTypeClass::Dimensions(w, h); }
+    BOOL Hooked_Create_And_Place(cell_t cellnum, HousesType house) const { return VesselTypeClass::Create_And_Place(cellnum, house); }
+    ObjectClass *Hooked_Create_One_Of(HouseClass *house) const { return VesselTypeClass::Create_One_Of(house); }
+    const int16_t *Hooked_Overlap_List() const { return VesselTypeClass::Hooked_Overlap_List(); }
+    void Hooked_Turret_Adjust(DirType dir, int &x, int &y) const { VesselTypeClass::Turret_Adjust(dir, x, y); }
+    void Hooked_One_Time() { VesselTypeClass::One_Time(); }
+    void Hooked_Init_Heap() { VesselTypeClass::Init_Heap(); }
+#endif
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS

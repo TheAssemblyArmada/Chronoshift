@@ -104,8 +104,9 @@ public:
     BOOL Read_INI(GameINIClass &ini);
     ThreatType Allowed_Threats() const;
     BOOL Is_Wall_Destroyer() const;
-    WarheadTypeClass *Get_Warhead() const { return m_Warhead; }
+    int Burst_Count() const { return m_Burst; }
     BulletTypeClass *Get_Projectile() const { return m_Projectile; }
+    WarheadTypeClass *Get_Warhead() const { return m_Warhead; }
     const char *Get_Name() const { return m_Name; }
     WeaponType What_Type() const { return (WeaponType)m_Type; }
     int Get_Damage() const { return m_Damage; }

@@ -870,7 +870,9 @@ void Setup_Hooks()
     Hook_Function(0x004ADB5C, &Draw_Box);
     Hook_Function(0x004AE350, &Window_Box);
 
+    // coord.h
     Hook_Function(0x004AC814, Move_Point);
+    //Hook_Function(0x004AC870, Normal_Move_Point);
 
     // init.h
     Hook_Function(0x004F5EC4, Init_Random);
@@ -1146,6 +1148,17 @@ void Setup_Hooks()
     Hook_Function(0x005697F8, *TechnoTypeClass::Hook_Repair_Cost);
     Hook_Function(0x005698AC, *TechnoTypeClass::Hook_Repair_Step);
     Hook_Function(0x00569914, *TechnoTypeClass::Hook_Read_INI);
+
+    // vesseltype.cpp
+    Hook_Function(0x00581F0C, *VesselTypeClass::Hook_Ctor);
+    Hook_Function(0x00584B7C, *VesselTypeClass::Hooked_Max_Pips);
+    Hook_Function(0x00584954, *VesselTypeClass::Hooked_Dimensions);
+    Hook_Function(0x005848C4, *VesselTypeClass::Hooked_Create_And_Place);
+    Hook_Function(0x00584870, *VesselTypeClass::Hooked_Create_One_Of);
+    Hook_Function(0x00584B20, *VesselTypeClass::Hooked_Overlap_List);
+    Hook_Function(0x00584A50, *VesselTypeClass::Hooked_Turret_Adjust);
+    Hook_Function(0x00584968, *VesselTypeClass::Hooked_One_Time);
+    Hook_Function(0x00582018, *VesselTypeClass::Hooked_Init_Heap);
 #endif
 }
 
