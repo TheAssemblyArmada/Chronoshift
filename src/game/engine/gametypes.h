@@ -40,90 +40,74 @@ inline coord_t Pixels_To_Cells(int pixels)
     return (pixels / 24);
 }
 
+//
 // Controls ID's
-#define BUTTON_NONE -1
+// Used for all type of gadget and ui controls.
+//
+// TODO: Once standalone, these can be reshuffled.
+enum ControlID
+{
+    CONTROL_0 = 0, // Special case to ignore action?
 
-// Standard Button ID's
-#define BUTTON_OK 1
-#define BUTTON_CANCEL 2
-#define BUTTON_YES 3
-#define BUTTON_NO 4
+    // Standard Button ID's
+    BUTTON_OK = 1,
+    BUTTON_CANCEL = 2,
+    BUTTON_YES = 3,
+    BUTTON_NO = 4,
 
-// Ingame GUI Gadget ID's
-#define BUTTON_REPAIR 101
-//#define BUTTON_
-#define BUTTON_SELL 103
-//#define BUTTON_
-#define BUTTON_ZOOM 105
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-#define BUTTON_ED_CLEAR 109
-#define BUTTON_ED_ORE 110
-#define BUTTON_ED_GEMS 111
-#define BUTTON_ED_WATER 112
-#define BUTTON_ED_SHORE 103
-#define BUTTON_ED_RIVER 104
-#define BUTTON_ED_ROAD 105
-#define BUTTON_ED_RIDGES 106
-#define BUTTON_ED_TREES 107
-#define BUTTON_ED_DEBRIS 108
-#define BUTTON_ED_PREV_ITEM 113
-#define BUTTON_ED_NEXT_ITEM 114
-#define BUTTON_ED_MX 115
-#define BUTTON_ED_START_FLAG 116
-#define CONTROL_ED_PREVIEW 117
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
+    // Ingame UI Gadget ID's
+    BUTTON_REPAIR = 101,
+    //BUTTON_
+    BUTTON_SELL = 103,
+    //BUTTON_
+    BUTTON_ZOOM = 105,
 
-#define CONTROL_SB_SELECT_BUTTON 0
-#define CONTROL_TILE_BROWSER 150
+    // Sidebar UI ID's
+    GADGET_STRIP_COLUMN_LEFT = 200,
+    GADGET_STRIP_COLUMN_RIGHT = 210,
 
-// Sidebar ID's
-#define GADGET_STRIP_COLUMN_LEFT 200
-#define GADGET_STRIP_COLUMN_RIGHT 210
+    // Sound Controls ID's
+    BUTTON_SOUND_STOP = 605,
+    BUTTON_SOUND_PLAY = 606,
+    BUTTON_SOUND_SUFFLE = 607,
+    BUTTON_SOUND_REPEAT = 608,
+    BUTTON_SOUND_OK = 609,
+    SLIDER_SCORE_VOL = 610,
+    SLIDER_SOUND_VOL = 611,
 
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
-//#define BUTTON_
+    // Menu Button ID's
+    BUTTON_CS = 1000,
+    BUTTON_AM = 1001,
+    BUTTON_NEW_GAME = 1002,
+    BUTTON_LOAD_GAME = 1003,
+    BUTTON_MPLAYER_GAME = 1004,
+    BUTTON_SNEAK_PEAK = 1005,
+    BUTTON_MOVIES = 1005,
+    BUTTON_MAP_EDITOR = 1006,
+    BUTTON_OPTIONS = 1007,
+    BUTTON_EXIT = 1008,
 
-// Editor Viewport Control ID
-#define CONTROL_EDITOR_VIEWPORT_INPUT 515
+    // Unknown
+    BUTTON__ = 1010,
 
-// Menu Button IDs
-#define BUTTON_CS 1000
-#define BUTTON_AM 1001
-#define BUTTON_NEW_GAME 1002
-#define BUTTON_LOAD_GAME 1003
-#define BUTTON_MP_GAME 1004
-#define BUTTON_SNEAK_PEAK 1005
-#define BUTTON_MOVIES 1006
-#define BUTTON_OPTIONS 1007
-#define BUTTON_EXIT 1008
+    // Mutliplayer Button ID's
+    BUTTON_MODEM_SERIAL = 1020,
+    BUTTON_SKIRMISH = 1021,
+    BUTTON_NETWORK = 1022,
+    BUTTON_INTERNET = 1023,
 
-#define BUTTON__ 1010
+    // Fetch Difficulty IDs
+    SLIDER_DIFFICULTY = 1030,
 
-// Mutliplayer Button IDs
-#define BUTTON_MODEM_SERIAL 1020
-#define BUTTON_SKIRMISH 1021
-#define BUTTON_NETWORK 1022
-#define BUTTON_INTERNET 1023
+    CONTROL_SB_SELECT_BUTTON = 0, // TODO: Work out of this is special case or not.
 
-// Fetch Difficulty IDs
-#define SLIDER_DIFFICULTY 1030
+    // Right Click Context Menu ID
+    CONTROL_CONTEXT_MENU = 8000,
 
-// Right click context menu id
-#define CONTROL_CONTEXT_MENU 8000
+    BUTTON_NONE = -1
+};
 
+DEFINE_ENUMERATION_BITWISE_OPERATORS(ControlID);
 
 // needs to stay here for now.
 // inf death anims
