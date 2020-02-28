@@ -129,6 +129,8 @@ public:
     void Set_MPlayer_Obi_Wan(BOOL onoff) { m_MPlayerObiWan = onoff; }
     BOOL MPlayer_Blitz() const { return m_MPlayerBlitz; }
     void Set_MPlayer_Blitz(BOOL onoff) { m_MPlayerBlitz = onoff; }
+    int Get_MPlayer_Max() const { return m_MPlayerMax; }
+    void Set_MPlayer_Max(int value) { m_MPlayerMax = value; }
 
     int Desired_Frame_Rate() const { return m_DesiredFrameRate; }
     void Set_Desired_Frame_Rate(int value) { m_DesiredFrameRate = value; }
@@ -157,6 +159,11 @@ public:
     int MPlayer_Current_Game() const { return m_MPlayerCurrentGame; }
     void MPlayer_Clear_Game_Name() { m_MPlayerGameName[0] = '\0'; }
 
+    int MPlayer_Games_Played() const { return m_MPlayerGamesPlayed; }
+    void Set_MPlayer_Games_Played(int value) { m_MPlayerGamesPlayed = value; }
+    int MPlayer_Num_Scores() const { return m_MPlayerNumScores; }
+    void Set_MPlayer_Num_Scores(int value) { m_MPlayerNumScores = value; }
+    
     GameFileClass &Recording_File() { return m_RecordFile; }
     BOOL Attraction_Allowed() const { return m_AllowAttract; }
     void Set_Allow_Attraction(BOOL onoff) { m_AllowAttract = onoff; }
