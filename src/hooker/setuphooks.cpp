@@ -1135,6 +1135,17 @@ void Setup_Hooks()
     Hook_Function(0x00461FBC, *BulletClass::Bullet_Explodes);
     Hook_Function(0x00462380, *BulletClass::Assign_Target);
     Hook_Function(0x004623B0, *BulletClass::Hook_Overlap_List);
+
+    // technotype.cpp
+    //Hook_Function(0x00569564, *TechnoTypeClass::Hook_Ctor);
+    Hook_Function(0x005698E8, *TechnoTypeClass::Hook_Is_Two_Shooter);
+    Hook_Function(0x00569E30, *TechnoTypeClass::Hook_Legal_Placement);
+    Hook_Function(0x00569754, *TechnoTypeClass::Hook_Get_Ownable);
+    Hook_Function(0x00569784, *TechnoTypeClass::Hook_Time_To_Build);
+    Hook_Function(0x005697E8, *TechnoTypeClass::Hook_Get_Cameo_Data);
+    Hook_Function(0x005697F8, *TechnoTypeClass::Hook_Repair_Cost);
+    Hook_Function(0x005698AC, *TechnoTypeClass::Hook_Repair_Step);
+    Hook_Function(0x00569914, *TechnoTypeClass::Hook_Read_INI);
 #endif
 }
 

@@ -118,6 +118,48 @@ public:
 
     static void One_Time();
 
+#ifdef GAME_DLL
+    friend void Setup_Hooks();
+
+    /*TechnoTypeClass *Hook_Ctor(RTTIType type, int id, int ui_name, const char *name, RemapType remap, int fire_offset_z,
+        int pri_fire_off_x, int pri_fire_off_y, int sec_fire_off_x, int sec_fire_off_y, BOOL nominal, BOOL radar_invisible,
+        BOOL selectable, BOOL legal_target, BOOL insignificant, BOOL is_immune, BOOL theater, BOOL turret, BOOL remapable,
+        BOOL unk1, int rot_count, SpeedType speed)
+    {
+        return new (this) TechnoTypeClass(type,
+            id,
+            ui_name,
+            name,
+            remap,
+            fire_offset_z,
+            pri_fire_off_x,
+            pri_fire_off_y,
+            sec_fire_off_x,
+            sec_fire_off_y,
+            nominal,
+            radar_invisible,
+            selectable,
+            legal_target,
+            insignificant,
+            is_immune,
+            theater,
+            turret,
+            remapable,
+            unk1,
+            rot_count,
+            speed);
+    }*/
+
+    BOOL Hook_Is_Two_Shooter() { return TechnoTypeClass::Is_Two_Shooter(); }
+    BOOL Hook_Legal_Placement(cell_t cellnum) { return TechnoTypeClass::Legal_Placement(cellnum); }
+    int Hook_Get_Ownable() { return TechnoTypeClass::Get_Ownable(); }
+    int Hook_Time_To_Build() { return TechnoTypeClass::Time_To_Build(); }
+    void *Hook_Get_Cameo_Data() { return TechnoTypeClass::Get_Cameo_Data(); }
+    int Hook_Repair_Cost() { return TechnoTypeClass::Repair_Cost(); }
+    int Hook_Repair_Step() { return TechnoTypeClass::Repair_Step(); }
+    BOOL Hook_Read_INI(GameINIClass &ini) { return TechnoTypeClass::Read_INI(ini); }
+#endif
+
 protected:
     RemapType m_Remap;
 #ifndef CHRONOSHIFT_NO_BITFIELDS

@@ -14,8 +14,9 @@
  *            LICENSE
  */
 #include "technotype.h"
-#include "gamefile.h"
 #include "cell.h"
+#include "gamefile.h"
+#include "gameini.h"
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
@@ -176,15 +177,7 @@ TechnoTypeClass &TechnoTypeClass::operator=(TechnoTypeClass &that)
  */
 BOOL TechnoTypeClass::Is_Two_Shooter() const
 {
-    // TODO Requires WeaponTypeClass
-#ifdef GAME_DLL
-    BOOL (*func)(const TechnoTypeClass *) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *)>(0x005698E8);
-    return func(this);
-#elif 0
-    return m_Primary != nullptr && (m_Primary == m_Secondary || m_Primary->Burst > 1);
-#else
-    return false;
-#endif
+    return m_Primary != nullptr && (m_Primary == m_Secondary || m_Primary->Burst_Count() > 1);
 }
 
 /**
@@ -257,7 +250,7 @@ void *TechnoTypeClass::Get_Cameo_Data() const
         return m_CameoData;
     }
 
-    // Enhancement backported from TS.
+    // Chronoshift enhancement.
     if (s_MissingCameoShape != nullptr) {
         return s_MissingCameoShape;
     }
@@ -305,76 +298,48 @@ int TechnoTypeClass::Repair_Step() const
  */
 BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
 {
-    // TODO Requires WeaponTypeClass and more functions in GameINIClass
-#ifdef GAME_DLL
-    BOOL (*func)
-    (const TechnoTypeClass *, GameINIClass &) = reinterpret_cast<BOOL (*)(const TechnoTypeClass *, GameINIClass &)>(0x00569914);
-    return func(this, ini);
-#elif 0
-    if (ObjectTypeClass::Read_INI(ini)) {
-        m_DoubleOwned = ini.Get_Bool(m_Name, "DoubleOwned", m_DoubleOwned);
-        m_GuardRange = ini.Get_Lepton(m_Name, "GuardRange", m_GuardRange);
-        m_Explodes = ini.Get_Bool(m_Name, "Explodes", m_Explodes);
-        m_Primary =
-            WeaponTypeClass::As_Pointer(ini.Get_WeaponType(m_Name, "Primary", (m_Primary ? m_Primary->m_Type : WEAPON_NONE)));
-        m_Secondary = WeaponTypeClass::As_Pointer(
-            ini.Get_WeaponType(m_Name, "Secondary", (m_Secondary ? m_Secondary->m_Type : WEAPON_NONE)));
-        m_Cloakable = ini.Get_Bool(m_Name, "Cloakable", m_Cloakable);
-        m_IsScanner = ini.Get_Bool(m_Name, "Sensors", m_IsScanner);
-        m_Prerequisite = ini.Get_Buildings(m_Name, "Prerequisite", m_Prerequisite);
-        m_Sight = ini.Get_Int(m_Name, "Sight", m_Sight);
-        m_TechLevel = ini.Get_Int(m_Name, "TechLevel", m_TechLevel);
-
-        // MPH
-        // TODO, two versions of code, maybe we need to fix Get_MPH?, see GameINIClass
-        fixed_t def(m_MPH, 256);
-        int value = ini.Get_MPHType(m_Name, "Speed", m_MPH);
-
-        if (value != -1) {
-            value = Bound(value, 0, 100);
-
-            int retval = (value * 255) / 100;
-
-            if (retval >= 255) {
-                retval = -1;
-            }
-
-            m_MPH = (MPHType)retval;
-        }
-
-        m_Cost = ini.Get_Int(m_Name, "Cost", m_Cost);
-        m_Ammo = ini.Get_Int(m_Name, "Ammo", m_Ammo);
-        m_Points = ini.Get_Int(m_Name, "Points", m_Points);
-        Owner = ini.Get_Owners(m_Name, "Owner", Owner);
-        m_IsCrewed = ini.Get_Bool(m_Name, "Crewed", m_IsCrewed);
-        m_IsRepairable = ini.Get_Bool(m_Name, "Repairable", m_IsRepairable);
-        m_IsInvisible = ini.Get_Bool(m_Name, "Invisible", m_IsInvisible);
-        m_IsSelfHealing = ini.Get_Bool(m_Name, "SelfHealing", m_IsSelfHealing);
-        m_ROT = ini.Get_Int(m_Name, "ROT", m_ROT);
-        m_Passengers = ini.Get_Int(m_Name, "Passengers", m_Passengers);
-        
-        m_ThreatPoints = m_Points;
-
-        if (m_Primary != nullptr && m_Primary->Damage > 0) {
-            m_IsLeader = true;
-        } else {
-            m_IsLeader = false;
-        }
-        if (m_Primary && m_Primary->Warhead && m_Primary->Warhead->m_Wall) { // need confirming
-            m_MovementZone = MZONE_DESTROYER;
-        }
-
-        if (m_Speed == SPEED_FLOAT) {
-            m_MovementZone = MZONE_AMPHIBIOUS_DESTROYER;
-        }
-
-        return true;
+    if (!ObjectTypeClass::Read_INI(ini)) {
+        return false;
     }
 
-    return false;
-#else
-    return false;
-#endif
+    m_DoubleOwned = ini.Get_Bool(m_Name, "DoubleOwned", m_DoubleOwned);
+    m_GuardRange = ini.Get_Lepton(m_Name, "GuardRange", m_GuardRange);
+    m_Explodes = ini.Get_Bool(m_Name, "Explodes", m_Explodes);
+    m_Primary = WeaponTypeClass::As_Pointer(ini.Get_WeaponType(m_Name, "Primary", (m_Primary ? m_Primary->What_Type() : WEAPON_NONE)));
+    m_Secondary = WeaponTypeClass::As_Pointer(ini.Get_WeaponType(m_Name, "Secondary", (m_Secondary ? m_Secondary->What_Type() : WEAPON_NONE)));
+    m_Cloakable = ini.Get_Bool(m_Name, "Cloakable", m_Cloakable);
+    m_IsScanner = ini.Get_Bool(m_Name, "Sensors", m_IsScanner);
+    m_Prerequisite = ini.Get_Buildings(m_Name, "Prerequisite", m_Prerequisite);
+    m_Sight = ini.Get_Int(m_Name, "Sight", m_Sight);
+    m_TechLevel = ini.Get_Int(m_Name, "TechLevel", m_TechLevel);
+    m_MPH = ini.Get_MPHType(m_Name, "Speed", m_MPH);
+    m_Cost = ini.Get_Int(m_Name, "Cost", m_Cost);
+    m_Ammo = ini.Get_Int(m_Name, "Ammo", m_Ammo);
+    m_Points = ini.Get_Int(m_Name, "Points", m_Points);
+    m_Owner = ini.Get_Owners(m_Name, "Owner", m_Owner);
+    m_IsCrewed = ini.Get_Bool(m_Name, "Crewed", m_IsCrewed);
+    m_IsRepairable = ini.Get_Bool(m_Name, "Repairable", m_IsRepairable);
+    m_IsInvisible = ini.Get_Bool(m_Name, "Invisible", m_IsInvisible);
+    m_IsSelfHealing = ini.Get_Bool(m_Name, "SelfHealing", m_IsSelfHealing);
+    m_ROT = ini.Get_Int(m_Name, "ROT", m_ROT);
+    m_Passengers = ini.Get_Int(m_Name, "Passengers", m_Passengers);
+        
+    m_ThreatPoints = m_Points;
+
+    if (m_Primary != nullptr && m_Primary->Get_Damage() > 0) {
+        m_IsLeader = true;
+    } else {
+        m_IsLeader = false;
+    }
+    if (m_Primary != nullptr && m_Primary->Get_Warhead() != nullptr && m_Primary->Get_Warhead()->Is_Wall_Destroyer()) {
+        m_MovementZone = MZONE_DESTROYER;
+    }
+
+    if (m_Speed == SPEED_FLOAT) {
+        m_MovementZone = MZONE_AMPHIBIOUS_DESTROYER;
+    }
+
+    return true;
 }
 
 /**
@@ -382,7 +347,6 @@ BOOL TechnoTypeClass::Read_INI(GameINIClass &ini)
  */
 BOOL TechnoTypeClass::Write_INI(GameINIClass &ini) const
 {
-    // TODO
     return false;
 }
 
