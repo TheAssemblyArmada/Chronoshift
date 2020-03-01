@@ -35,7 +35,7 @@ void Call_Back()
         return;
     }
 
-    if (g_Session.Game_To_Play() == GAME_IPX || g_Session.Game_To_Play() == GAME_INTERNET) {
+    if (g_Session.Game_To_Play() == GAME_NETWORK || g_Session.Game_To_Play() == GAME_INTERNET) {
         IPX_Call_Back();
     }
 

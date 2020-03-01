@@ -21,6 +21,8 @@
 
 typedef void (*focusfunc_t)();
 
+void Prog_End();
+
 #if defined PLATFORM_WINDOWS
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif

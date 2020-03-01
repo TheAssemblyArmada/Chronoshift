@@ -404,7 +404,7 @@ int main(int argc, char **argv)
     CDFileClass::Set_CD_Drive(cd_drive);
     // CDFileClass::Set_CD_Drive(g_CDList.Reset_And_Get_CD_Drive());
 
-    if (!s_Special.Is_First_Run() && g_Session.Game_To_Play() != GAME_6 && g_Session.Game_To_Play() != GAME_7) {
+    if (!s_Special.Is_First_Run()) {
         s_Special.Set_First_Run(settingsini.Get_Bool("Intro", "PlayIntro", true));
     }
 
