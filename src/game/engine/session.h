@@ -40,14 +40,11 @@ enum GameEnum
 {
     GAME_NONE = -1,
     GAME_CAMPAIGN,
-    GAME_1,
+    GAME_1, //These two are modem, unknown which.
     GAME_2,
-    GAME_IPX,
+    GAME_NETWORK,
     GAME_INTERNET,
     GAME_SKIRMISH,
-    GAME_6,
-    GAME_7,
-    // GAME_SOLE_SURVIVOR, // TODO: Add new code to allow RA to have a Sole Survivor mode?
     GAME_COUNT
 };
 
@@ -116,6 +113,7 @@ public:
     GameEnum Game_To_Play() const { return m_GameToPlay; }
     void Set_Game_To_Play(GameEnum game) { m_GameToPlay = game; }
     CommProtocolEnum Packet_Protocol() const { return m_PacketProtocol; }
+    int Frame_Send_Rate() { return m_FrameSendRate; }
 
     MPlayerOptionsStruct &MPlayer_Options() { return m_Options; }
     BOOL MPlayer_Goodies_Allowed() const { return m_Options.m_Goodies; }
@@ -124,6 +122,7 @@ public:
     void Set_MPlayer_Obi_Wan(BOOL onoff) { m_MPlayerObiWan = onoff; }
     BOOL MPlayer_Blitz() const { return m_MPlayerBlitz; }
     void Set_MPlayer_Blitz(BOOL onoff) { m_MPlayerBlitz = onoff; }
+    int MPlayer_Max() { return m_MPlayerMax; }
 
     int Desired_Frame_Rate() const { return m_DesiredFrameRate; }
     void Set_Desired_Frame_Rate(int value) { m_DesiredFrameRate = value; }
@@ -180,6 +179,7 @@ public:
 
     int Trap_Frame() const { return m_TrapFrame; }
     BOOL Trap_Check_Heap() const { return m_TrapCheckHeap; }
+    int Trap_Print_CRC() const { return m_TrapPrintCRC; }
 
     uint32_t Compute_Unique_ID();
 
@@ -265,7 +265,7 @@ private:
     target_t m_TrapTarget;
     CellClass *m_TrapCell;
     BOOL m_TrapCheckHeap;
-    BOOL m_TrapPrintCRC;
+    int m_TrapPrintCRC;
 };
 
 #ifdef GAME_DLL

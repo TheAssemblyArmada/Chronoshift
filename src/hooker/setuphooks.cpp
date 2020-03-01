@@ -84,6 +84,7 @@
 #include "ostimer.h"
 #include "overlay.h"
 #include "power.h"
+#include "queue.h"
 #include "radar.h"
 #include "rawfile.h"
 #include "rgb.h"
@@ -246,7 +247,7 @@ void Setup_Hooks()
     Hook_Function(0x004C3EC8, *GadgetClass::Action);
     Hook_Function(0x004C3DB4, *GadgetClass::Clicked_On); // issue
 
-    //link.h
+    // link.h
     Hook_Function(0x004FBC7C, *LinkClass::Zap);
     Hook_Function(0x004FBCCC, *LinkClass::Head_Of_List);
     Hook_Function(0x004FBCEC, *LinkClass::Tail_Of_List);
@@ -255,7 +256,7 @@ void Setup_Hooks()
     Hook_Function(0x004FBD4C, *LinkClass::Add_Tail);
     Hook_Function(0x004FBD74, *LinkClass::Remove);
 
-    //textbtn.h
+    // textbtn.h
     Hook_Function(0x0056BA70, *TextButtonClass::Hook_Ctor1);
     Hook_Function(0x0056BB64, *TextButtonClass::Hook_Ctor2);
     Hook_Function(0x0056BC2C, *TextButtonClass::Draw_Me);
@@ -764,7 +765,7 @@ void Setup_Hooks()
     Hook_Function(0x004D9D54, *HouseClass::Check_Raise_Power);
     Hook_Function(0x004DE178, *HouseClass::Fire_Sale);
     Hook_Function(0x004D7DC4, *HouseClass::Detach);
-    //Hook_Function_Const(0x004D7E80, &HouseClass::Suggest_New_Object);//can't hook cause of defarg
+    // Hook_Function_Const(0x004D7E80, &HouseClass::Suggest_New_Object);//can't hook cause of defarg
     Hook_Function(0x004D6600, *HouseClass::Begin_Production);
     Hook_Function(0x004D66D0, *HouseClass::Suspend_Production);
     Hook_Function(0x004D671C, *HouseClass::Abandon_Production);
@@ -842,7 +843,7 @@ void Setup_Hooks()
     Hook_Function(0x004BF380, *FactoryClass::Hooked_Cost_Per_Tick);
     Hook_Function(0x004BF3B4, *FactoryClass::Completed);
     Hook_Function(0x004BF228, *FactoryClass::Abandon);
-    //Hook_Function(0x004BEE30, *FactoryClass::Hooked_Set1);
+    // Hook_Function(0x004BEE30, *FactoryClass::Hooked_Set1);
     Hook_Function(0x004BEF04, *FactoryClass::Hooked_Set2);
     Hook_Function(0x004BECE8, *FactoryClass::AI);
     // Hook_Function(0x004F9550, *FactoryClass::Decode_Pointers);
@@ -962,8 +963,8 @@ void Setup_Hooks()
     Hook_Function(0x00550290, *SoundControlsClass::Process);
 
     Hook_Function_Const(0x004265F8, &BaseClass::Get_Building);
-    //Hook_Function(0x0042674C, static_cast<BaseNodeClass *(*)(BuildingClass *)>(*BaseClass::Get_Node));
-    //Hook_Function(0x004267C4, static_cast<BaseNodeClass *(*)(cell_t)>(*BaseClass::Get_Node));
+    // Hook_Function(0x0042674C, static_cast<BaseNodeClass *(*)(BuildingClass *)>(*BaseClass::Get_Node));
+    // Hook_Function(0x004267C4, static_cast<BaseNodeClass *(*)(cell_t)>(*BaseClass::Get_Node));
     Hook_Function(0x004267F8, *BaseClass::Next_Buildable);
     Hook_Function(0x00426470, *BaseClass::Load);
     Hook_Function(0x00426540, *BaseClass::Save);
@@ -971,9 +972,9 @@ void Setup_Hooks()
     Hook_Function(0x00426944, *BaseClass::Write_INI);
 
     Hook_Function(0x004624A0, *CarryoverClass::Hook_Ctor);
-    //Hook_Function(0x004625E8, *CarryoverClass::Create);
+    // Hook_Function(0x004625E8, *CarryoverClass::Create);
 
-    //anim.cpp
+    // anim.cpp
     Hook_Function(0x004240C0, *AnimClass::Wrap_Center_Coord);
     Hook_Function(0x00425610, *AnimClass::Wrap_In_Which_Layer);
     Hook_Function(0x00425A98, *AnimClass::Detach);
@@ -990,7 +991,7 @@ void Setup_Hooks()
     Hook_Function(0x00421918, *AircraftClass::Hook_Can_Enter_Cell);
     Hook_Function(0x0041E0E8, *AircraftClass::AI);
     Hook_Function(0x0041EA98, *AircraftClass::Hook_Sort_Y);
-    //Hook_Function(0x0041D25C, *AircraftClass::Hook_Draw_It);
+    // Hook_Function(0x0041D25C, *AircraftClass::Hook_Draw_It);
     Hook_Function(0x00423C38, *AircraftClass::Look);
     Hook_Function(0x00421464, *AircraftClass::Hook_Desired_Load_Dir);
     Hook_Function(0x00421D04, *AircraftClass::Hook_Pip_Count);
@@ -998,14 +999,14 @@ void Setup_Hooks()
     Hook_Function(0x004230FC, *AircraftClass::Response_Move);
     Hook_Function(0x004230A4, *AircraftClass::Response_Attack);
     Hook_Function(0x00423B60, *AircraftClass::Assign_Destination);
-    //Hook_Function(0x0042263C, *AircraftClass::Set_Speed);
+    // Hook_Function(0x0042263C, *AircraftClass::Set_Speed);
     Hook_Function(0x00423958, *AircraftClass::Movement_AI);
     Hook_Function(0x0042381C, *AircraftClass::Edge_Of_World_AI);
     Hook_Function(0x00420208, *AircraftClass::Hook_Active_Click_With);
     Hook_Function(0x004202A8, *AircraftClass::Hook_Player_Assign_Mission);
     Hook_Function(0x0041E9F4, *AircraftClass::Is_LZ_Clear);
     Hook_Function_Const(0x0042063C, &AircraftClass::Pose_Dir);
-    
+
     // object.cpp
     Hook_Function(0x0051DDE8, *ObjectClass::Limbo);
     Hook_Function(0x0051DF74, *ObjectClass::Detach);
@@ -1107,7 +1108,7 @@ void Setup_Hooks()
     Hook_Function(0x004F24B0, *InfantryClass::Hook_Get_Image_Data);
     Hook_Function(0x004F2564, *InfantryClass::Paradrop);
     Hook_Function(0x004EC3AC, *InfantryClass::Hook_Draw_It);
-    Hook_Function(0x004F03D4, *InfantryClass::Hook_Active_Click_With);//obj
+    Hook_Function(0x004F03D4, *InfantryClass::Hook_Active_Click_With); // obj
     Hook_Function(0x004F049C, *InfantryClass::Hook_Full_Name);
     Hook_Function(0x004ED1FC, *InfantryClass::Detach);
     Hook_Function(0x004F0548, *InfantryClass::Mission_Attack);
@@ -1135,6 +1136,17 @@ void Setup_Hooks()
     Hook_Function(0x00461FBC, *BulletClass::Bullet_Explodes);
     Hook_Function(0x00462380, *BulletClass::Assign_Target);
     Hook_Function(0x004623B0, *BulletClass::Hook_Overlap_List);
+
+    // queue.cpp
+    Hook_Function(0x00528DCC, *Queue_Options);
+    Hook_Function(0x00528E44, *Queue_Exit);
+    Hook_Function(0x0052BD20, *Queue_Record);
+    Hook_Function(0x00528EDC, *Queue_AI);
+    Hook_Function(0x00528F20, *Queue_AI_Normal);
+    // Hook_Function(0x00529020, *Queue_AI_Multiplayer);
+    Hook_Function(0x00528C78, *Queue_Mission);
+    Hook_Function(0x00528D18, *Queue_Mission_Formation);
+    Hook_Function(0x0052BC94, *Clean_Scheduled_Events);
 #endif
 }
 
