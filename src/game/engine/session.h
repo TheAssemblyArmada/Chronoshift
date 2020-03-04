@@ -62,13 +62,8 @@ struct GlobalPacket
 struct MPlayerScoreStruct
 {
     char m_Name[12];
-#ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Bit1 : 1; // & 1
-#else
-    bool m_Bit1;
-#endif
-    int m_Winner;
-    int m_field_10[4];
+    int m_field_C; //incrimented in HouseClass::Tally_Score when house !ToDie
+    int m_Score[4];//scores per 4 game sessions
     PlayerColorType m_Scheme;
 };
 
@@ -219,7 +214,7 @@ private:
     IPXAddressClass m_HostAddress;
     MessageListClass m_Messages;
     IPXAddressClass m_MessageAddress;
-    char m_LastMessage[118];
+    char m_LastMessage[120];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_SessionBit1 : 1; // & 1
 #else
