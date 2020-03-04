@@ -1189,6 +1189,7 @@ ASSERT_SIZEOF(OverlayTypeClass, 0x146);
 ASSERT_SIZEOF(PowerClass, 0x103E);
 ASSERT_SIZEOF(RadarClass, 0x100D);
 ASSERT_SIZEOF(RulesClass, 0x200);
+ASSERT_SIZEOF(SessionClass, 0x127C);
 ASSERT_SIZEOF(ScenarioClass, 0x7D7);
 ASSERT_SIZEOF(ScrollClass, 0x1661);
 ASSERT_SIZEOF(ShapeButtonClass, 0x38);
