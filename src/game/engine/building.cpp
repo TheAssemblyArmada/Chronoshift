@@ -385,7 +385,7 @@ void BuildingClass::Active_Click_With(ActionType action, cell_t cellnum)
 
         case ACTION_MOVE:
             if (What_Type() == BUILDING_FACT) {
-                GameEventClass archev(GameEventClass::EVENT_ARCHIVE, this, ::As_Target(cellnum));
+                GameEventClass archev(GameEventClass::EVENT_ARCHIVE, TargetClass(this), TargetClass(cellnum));
                 g_OutgoingEvents.Add(archev);
 
                 GameEventClass sellev(GameEventClass::EVENT_SELL, this);

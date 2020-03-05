@@ -75,6 +75,11 @@ TargetClass::TargetClass(CellClass *cell)
     }
 }
 
+TargetClass::TargetClass(cell_t cellnum)
+{
+    m_Target = (RTTI_CELL << 24) | (cellnum & 0xFFFFFF);
+}
+
 BOOL Target_Is_Techno(target_t target)
 {
     TechnoClass *ptr = As_Techno(target);
