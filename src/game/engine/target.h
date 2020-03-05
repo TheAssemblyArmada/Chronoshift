@@ -48,6 +48,7 @@ public:
     TargetClass(AbstractClass *abstract);
     TargetClass(AbstractTypeClass *abstractype);
     TargetClass(CellClass *cell);
+    TargetClass(cell_t cellnum);
     TargetClass(const TargetClass &that) : m_Target(that.m_Target) {}
     ~TargetClass() {}
 
