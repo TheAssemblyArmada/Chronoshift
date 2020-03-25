@@ -821,7 +821,7 @@ void Setup_Hooks()
     Hook_Function(0x00404090, *AircraftTypeClass::Hook_Max_Pips);
     Hook_Function(0x004040BC, *AircraftTypeClass::Hook_Dimensions);
     Hook_Function(0x004040B0, *AircraftTypeClass::Hook_Create_And_Place);
-    // Hook_Function(0x00404024, *AircraftTypeClass::Hook_Create_One_Of); // TODO: Requires implementation.
+    Hook_Function(0x00404024, *AircraftTypeClass::Hook_Create_One_Of);
     Hook_Function(0x00404078, *AircraftTypeClass::Hook_Occupy_List);
     Hook_Function(0x00404084, *AircraftTypeClass::Hook_Overlap_List);
     Hook_Function(0x004040F0, *AircraftTypeClass::As_Reference);
@@ -870,7 +870,9 @@ void Setup_Hooks()
     Hook_Function(0x004ADB5C, &Draw_Box);
     Hook_Function(0x004AE350, &Window_Box);
 
+    // coord.h
     Hook_Function(0x004AC814, Move_Point);
+    //Hook_Function(0x004AC870, Normal_Move_Point);
 
     // init.h
     Hook_Function(0x004F5EC4, Init_Random);
@@ -1135,6 +1137,37 @@ void Setup_Hooks()
     Hook_Function(0x00461FBC, *BulletClass::Bullet_Explodes);
     Hook_Function(0x00462380, *BulletClass::Assign_Target);
     Hook_Function(0x004623B0, *BulletClass::Hook_Overlap_List);
+
+    // infantrytype.cpp
+    Hook_Function(0x004DF5E0, *InfantryTypeClass::Hook_Ctor);
+    Hook_Function(0x004EB16C, *InfantryTypeClass::Hook_Full_Name);
+    Hook_Function(0x004EB2DC, *InfantryTypeClass::Hook_Dimensions);
+    Hook_Function(0x004EAF74, *InfantryTypeClass::Hook_Create_And_Place);
+    Hook_Function(0x004EAF20, *InfantryTypeClass::Hook_Create_One_Of);
+    Hook_Function(0x004EB01C, *InfantryTypeClass::Hook_Occupy_List);
+    Hook_Function(0x004EB1D0, *InfantryTypeClass::Hook_Read_INI);
+
+    // technotype.cpp
+    //Hook_Function(0x00569564, *TechnoTypeClass::Hook_Ctor);
+    Hook_Function(0x005698E8, *TechnoTypeClass::Hook_Is_Two_Shooter);
+    Hook_Function(0x00569E30, *TechnoTypeClass::Hook_Legal_Placement);
+    Hook_Function(0x00569754, *TechnoTypeClass::Hook_Get_Ownable);
+    Hook_Function(0x00569784, *TechnoTypeClass::Hook_Time_To_Build);
+    Hook_Function(0x005697E8, *TechnoTypeClass::Hook_Get_Cameo_Data);
+    Hook_Function(0x005697F8, *TechnoTypeClass::Hook_Repair_Cost);
+    Hook_Function(0x005698AC, *TechnoTypeClass::Hook_Repair_Step);
+    Hook_Function(0x00569914, *TechnoTypeClass::Hook_Read_INI);
+
+    // vesseltype.cpp
+    Hook_Function(0x00581F0C, *VesselTypeClass::Hook_Ctor);
+    Hook_Function(0x00584B7C, *VesselTypeClass::Hooked_Max_Pips);
+    Hook_Function(0x00584954, *VesselTypeClass::Hooked_Dimensions);
+    Hook_Function(0x005848C4, *VesselTypeClass::Hooked_Create_And_Place);
+    Hook_Function(0x00584870, *VesselTypeClass::Hooked_Create_One_Of);
+    Hook_Function(0x00584B20, *VesselTypeClass::Hooked_Overlap_List);
+    Hook_Function(0x00584A50, *VesselTypeClass::Hooked_Turret_Adjust);
+    Hook_Function(0x00584968, *VesselTypeClass::Hooked_One_Time);
+    Hook_Function(0x00582018, *VesselTypeClass::Hooked_Init_Heap);
 #endif
 }
 

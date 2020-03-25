@@ -130,6 +130,20 @@ void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance)
 }
 
 /**
+ * 
+ *
+ * 0x004AC870
+ */
+void Normal_Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance)
+{
+#ifdef GAME_DLL
+    void (*func)(int16_t, int16_t, DirType, uint16_t) =
+        reinterpret_cast<void (*)(int16_t, int16_t, DirType, uint16_t)>(0x004AC870);
+    return func(x, y, dir, distance);
+#endif
+}
+
+/**
  * Calculates a moved Coord relative to the source coord. 
  *
  * 0x004AC798

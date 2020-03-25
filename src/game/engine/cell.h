@@ -115,7 +115,7 @@ public:
     BOOL Reduce_Wall(int damage);
     BOOL Is_Clear_To_Move(SpeedType speed, BOOL ignore_crushable = false, BOOL ignore_destructable  = false, int zone = ZONE_NONE, MZoneType mzone = MZONE_NORMAL) const;
     int Ore_Adjust(BOOL randomize);
-    coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied) const;
+    coord_t Closest_Free_Spot(coord_t coord, BOOL skip_occupied = false) const;
     BOOL Is_Spot_Free(int spotindex) const { return ((1 << spotindex) & m_OccupantBit) == 0; }
     BOOL Goodie_Check(FootClass *foot);
     BOOL Should_Save() const;

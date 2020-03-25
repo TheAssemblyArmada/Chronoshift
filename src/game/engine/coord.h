@@ -268,6 +268,7 @@ inline int Target_Distance(target_t target1, target_t target2)
 int Cell_Distance(cell_t cell1, cell_t cell2);
 
 void Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
+void Normal_Move_Point(int16_t &x, int16_t &y, DirType dir, uint16_t distance);
 coord_t Coord_Move(coord_t coord, DirType dir, uint16_t distance);
 coord_t Coord_Scatter(coord_t coord, uint16_t distance, BOOL center = false);
 BOOL __cdecl Confine_Rect(int &x_pos, int &y_pos, int x, int y, int w, int h);

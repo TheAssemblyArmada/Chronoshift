@@ -122,16 +122,14 @@ void AircraftTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL AircraftTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-#if 0
+    // TODO: This function returns false, this could be why you can't pre place aircraft on a map correctly...
+    /*
     AircraftClass *aptr = new AircraftClass(m_Type, house);
-    captainslog_assert(aptr != nullptr);
     if (aptr != nullptr) {
         return aptr->Unlimbo(Cell_To_Coord(cellnum));
     }
+    */
 
-    return false;
-#endif
-    // TODO: This function returns false, this could be why you can't pre place aircraft on a map correctly...
     return false;
 }
 
@@ -142,17 +140,9 @@ BOOL AircraftTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *AircraftTypeClass::Create_One_Of(HouseClass *house) const
 {
-    //TODO: Requires AircaftClass to be implemented
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const AircraftTypeClass *, HouseClass *) =
-        reinterpret_cast<ObjectClass *(*)(const AircraftTypeClass *, HouseClass *)>(0x00404024);
-    return func(this, house);
-#else
-    /*captainslog_assert(house != nullptr);
-    return new AircraftClass(Type, house->What_Type());*/
+    captainslog_assert(house != nullptr);
 
-    return nullptr;
-#endif
+    return new AircraftClass(m_Type, house->What_Type());
 }
 
 /**
@@ -274,4 +264,3 @@ void AircraftTypeClass::Prep_For_Add()
         }
     }
 }
-

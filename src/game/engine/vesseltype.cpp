@@ -14,14 +14,16 @@
  *            LICENSE
  */
 #include "vesseltype.h"
-#include "vesseldata.h"
-#include "gamefile.h"
 #include "coord.h"
 #include "facing.h"
+#include "gamefile.h"
+#include "house.h"
+#include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
 #include "scenario.h"
-#include "iomap.h"
+#include "vessel.h"
+#include "vesseldata.h"
 #include <cstdio>
 
 using std::snprintf;
@@ -108,20 +110,14 @@ void VesselTypeClass::Dimensions(int &w, int &h) const
  */
 BOOL VesselTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
 {
-#ifdef GAME_DLL
-    BOOL (*func)(const VesselTypeClass *, cell_t, HousesType) =
-        reinterpret_cast<BOOL (*)(const VesselTypeClass *, cell_t, HousesType)>(0x005848C4);
-    return func(this, cellnum, house);
-#else
-    /*VesselClass *vptr = new VesselClass(m_Type, HOUSES_NONE);
+    VesselClass *vptr = new VesselClass(m_Type, house);
 
     if (vptr != nullptr) {
         DirType dir = (DirType)g_Scen.Get_Random_Value(DIR_FIRST, DIR_LAST);
         return vptr->Unlimbo(Cell_To_Coord(cellnum), dir);
-    }*/
+    }
 
     return false;
-#endif
 }
 
 /**
@@ -131,16 +127,9 @@ BOOL VesselTypeClass::Create_And_Place(cell_t cellnum, HousesType house) const
  */
 ObjectClass *VesselTypeClass::Create_One_Of(HouseClass *house) const
 {
-#ifdef GAME_DLL
-    ObjectClass *(*func)(const VesselTypeClass *, HouseClass *) =
-        reinterpret_cast<ObjectClass *(*)(const VesselTypeClass *, HouseClass *)>(0x00584870);
-    return func(this, house);
-#else
-    /*captainslog_assert(house != nullptr);
+    captainslog_assert(house != nullptr);
 
-    return new VesselClass(m_Type, house->What_Type());*/
-    return nullptr;
-#endif
+    return new VesselClass(m_Type, house->What_Type());
 }
 
 /**
@@ -153,6 +142,40 @@ const int16_t *VesselTypeClass::Overlap_List() const
     static const int16_t _list[] = { -3, -2, -1, 1, 2, 3, -128, -129, -127, -130, -126, 128, 129, 127, 130, 126, LIST_END };
 
     return _list;
+}
+
+/**
+ * 
+ *
+ * 0x00584A50
+ */
+void VesselTypeClass::Turret_Adjust(DirType dir, int &x, int &y) const
+{
+    short adj_x = x;
+    short adj_y = y;
+
+    switch (m_Type) {
+        case VESSEL_DESTROYER:
+            Normal_Move_Point(adj_x, adj_y, DirType((dir + 128) % 256), 8);
+            x = adj_x;
+            y = adj_y;
+            y -= 4;
+            break;
+        case VESSEL_CRUISER:
+            Normal_Move_Point(adj_x, adj_y, dir, 22);
+            x = adj_x;
+            y = adj_y;
+            y -= 4;
+            break;
+        case VESSEL_PT_BOAT:
+            Normal_Move_Point(adj_x, adj_y, dir, 14);
+            x = adj_x;
+            y = adj_y;
+            y += 1;
+            break;
+        default:
+            break;
+    };
 }
 
 /**
