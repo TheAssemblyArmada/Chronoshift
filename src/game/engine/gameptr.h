@@ -100,19 +100,23 @@ public:
     bool Name_Equal(const T &that) const { return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) == 0; }
     bool Name_Not_Equal(const T &that) const { return strcasecmp(Get_Raw_Pointer()->Get_Name(), that.Get_Name()) != 0; }
 
-    bool Is_Valid() const { return g_Heap != nullptr && m_ID != -1; }
-    bool Has_Valid_ID() const { return m_ID != -1; }
-    void Invalidate() { m_ID = -1; }
     void Set_ID(intptr_t id) { m_ID = id; }
     intptr_t Get_ID() const { return m_ID; }
+    void Invalidate_ID() { m_ID = -1; }
 
-protected:
+    static void Set_Heap(const FixedIHeapClass *heap) { g_Heap = heap; }
+    static void Invalidate_Heap() { g_Heap = nullptr; }
+
+private:
     T *Get_Raw_Pointer() const { return (T *)(&(*g_Heap)[m_ID]); }
     const T *Get_Raw_Const_Pointer() const { return (T *)(&(*g_Heap)[m_ID]); }
 
+    bool Is_Valid() const { return g_Heap != nullptr && m_ID != -1; }
+    bool Has_Valid_ID() const { return m_ID != -1; }
+
 private:
     intptr_t m_ID;
-    static FixedIHeapClass *const g_Heap;
+    static const FixedIHeapClass *g_Heap;
 };
 
 #endif // GAMEPTR_H

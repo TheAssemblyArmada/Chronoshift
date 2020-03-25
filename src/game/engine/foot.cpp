@@ -662,13 +662,14 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
     BENCHMARK_START(BENCH_FIND_PATH);
 
-    if (!m_Team.Is_Valid() || !m_Team->Is_Roundabout()) {
+    // Are we part of a team and should that team avoid threats?
+    if (m_Team == nullptr || !m_Team->Is_Roundabout()) {
         // captainslog_debug(" Threat procesing will not be performed for final cell.");
         threat = -1;
         risk = -1;
     } else {
         // captainslog_debug(" Threat procesing will be performed if needed for final cell.");
-        if (!m_Team.Is_Valid()) {
+        if (m_Team == nullptr) {
             risk = Risk();
         } else {
             risk = m_Team->Field35();
@@ -899,7 +900,7 @@ BOOL FootClass::Basic_Path()
     if (Target_Legal(m_NavCom)) {
         cell_t navcell = As_Cell(m_NavCom);
         int navdist = Distance_To_Target(m_NavCom);
-        int straydist = m_Team.Has_Valid_ID() ? g_Rule.Stray_Distance() : g_Rule.Close_Enough_Distance();
+        int straydist = m_Team != nullptr ? g_Rule.Stray_Distance() : g_Rule.Close_Enough_Distance();
 
         if (Can_Enter_Cell(navcell) > MOVE_CLOAK && navdist > straydist) {
             MZoneType mzone = reinterpret_cast<TechnoTypeClass const *>(&Class_Of())->Get_Movement_Zone();
