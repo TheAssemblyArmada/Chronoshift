@@ -47,43 +47,42 @@ public:
     virtual int ID(const T *ptr);
     virtual int ID(const T &ptr);
 
-    int Length() const { return VectorMax; }
+    int Length() const { return m_VectorMax; }
 
 protected:
-    T *Vector;
-    int VectorMax;
+    T *m_Vector;
+    int m_VectorMax;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL IsAllocated : 1;
+    BOOL m_IsAllocated : 1;
 #else
-    bool IsAllocated;
+    bool m_IsAllocated;
 #endif
 };
 
 template<typename T>
 T &VectorClass<T>::operator[](int index)
 {
-    captainslog_assert(unsigned(index) < unsigned(VectorMax));
-    return Vector[index];
+    captainslog_assert(unsigned(index) < unsigned(m_VectorMax));
+    return m_Vector[index];
 }
 
 template<typename T>
 const T &VectorClass<T>::operator[](int index) const
 {
-    captainslog_assert(unsigned(index) < unsigned(VectorMax));
-    return Vector[index];
+    captainslog_assert(unsigned(index) < unsigned(m_VectorMax));
+    return m_Vector[index];
 }
 
 template<typename T>
-VectorClass<T>::VectorClass(int size, const T *array) : Vector(nullptr), VectorMax(size), IsAllocated(false)
+VectorClass<T>::VectorClass(int size, const T *array) : m_Vector(nullptr), m_VectorMax(size), m_IsAllocated(false)
 {
-    //    Allocate the vector. The default constructor will be called for every
-    //    object in this vector.
+    // Allocate the vector. The default constructor will be called for every object in this vector.
     if (size > 0) {
         if (array != nullptr) {
-            Vector = new ((void *)array) T[size];
+            m_Vector = new ((void *)array) T[size];
         } else {
-            Vector = new T[size];
-            IsAllocated = true;
+            m_Vector = new T[size];
+            m_IsAllocated = true;
         }
     }
 }
@@ -95,7 +94,7 @@ VectorClass<T>::~VectorClass()
 }
 
 template<typename T>
-VectorClass<T>::VectorClass(VectorClass<T> const &vector) : Vector(nullptr), VectorMax(0), IsAllocated(false)
+VectorClass<T>::VectorClass(VectorClass<T> const &vector) : m_Vector(nullptr), m_VectorMax(0), m_IsAllocated(false)
 {
     *this = vector;
 }
@@ -105,21 +104,21 @@ VectorClass<T> &VectorClass<T>::operator=(VectorClass<T> const &vector)
 {
     if (this != &vector) {
         Clear();
-        VectorMax = vector.Length();
+        m_VectorMax = vector.Length();
 
-        if (VectorMax) {
-            Vector = new T[VectorMax];
+        if (m_VectorMax > 0) {
+            m_Vector = new T[m_VectorMax];
 
-            if (Vector) {
-                IsAllocated = true;
+            if (m_Vector != nullptr) {
+                m_IsAllocated = true;
 
-                for (int index = 0; index < VectorMax; index++) {
-                    Vector[index] = vector[index];
+                for (int index = 0; index < m_VectorMax; ++index) {
+                    m_Vector[index] = vector[index];
                 }
             }
         } else {
-            Vector = nullptr;
-            IsAllocated = false;
+            m_Vector = nullptr;
+            m_IsAllocated = false;
         }
     }
 
@@ -129,9 +128,9 @@ VectorClass<T> &VectorClass<T>::operator=(VectorClass<T> const &vector)
 template<typename T>
 BOOL VectorClass<T>::operator==(VectorClass<T> const &vector) const
 {
-    if (VectorMax == vector.Length()) {
-        for (int index = 0; index < VectorMax; index++) {
-            if (Vector[index] != vector[index]) {
+    if (m_VectorMax == vector.Length()) {
+        for (int index = 0; index < m_VectorMax; ++index) {
+            if (m_Vector[index] != vector[index]) {
                 return false;
             }
         }
@@ -145,13 +144,13 @@ BOOL VectorClass<T>::operator==(VectorClass<T> const &vector) const
 template<typename T>
 inline int VectorClass<T>::ID(const T *ptr)
 {
-    return ((uintptr_t)ptr - (uintptr_t)Vector) / sizeof(T);
+    return ((uintptr_t)ptr - (uintptr_t)m_Vector) / sizeof(T);
 }
 
 template<typename T>
 int VectorClass<T>::ID(const T &object)
 {
-    for (int index = 0; index < VectorMax; index++) {
+    for (int index = 0; index < m_VectorMax; ++index) {
         if ((*this)[index] == object) {
             return index;
         }
@@ -163,13 +162,13 @@ int VectorClass<T>::ID(const T &object)
 template<typename T>
 void VectorClass<T>::Clear()
 {
-    if (Vector && IsAllocated) {
-        delete[] Vector;
-        Vector = nullptr;
+    if (m_Vector != nullptr && m_IsAllocated) {
+        delete[] m_Vector;
+        m_Vector = nullptr;
     }
 
-    IsAllocated = false;
-    VectorMax = 0;
+    m_IsAllocated = false;
+    m_VectorMax = 0;
 }
 
 template<typename T>
@@ -184,26 +183,26 @@ BOOL VectorClass<T>::Resize(int newsize, const T *array)
             newptr = new ((void *)array) T[newsize];
         }
 
-        if (!newptr) {
+        if (newptr == nullptr) {
             return false;
         }
 
-        if (Vector != nullptr) {
-            int copy_count = (newsize < VectorMax) ? newsize : VectorMax;
+        if (m_Vector != nullptr) {
+            int copy_count = (newsize < m_VectorMax) ? newsize : m_VectorMax;
 
             for (int i = 0; i < copy_count; i++) {
-                newptr[i] = Vector[i];
+                newptr[i] = m_Vector[i];
             }
 
-            if (IsAllocated) {
-                delete[] Vector;
-                Vector = nullptr;
+            if (m_IsAllocated) {
+                delete[] m_Vector;
+                m_Vector = nullptr;
             }
         }
 
-        Vector = newptr;
-        VectorMax = newsize;
-        IsAllocated = (Vector && !array);
+        m_Vector = newptr;
+        m_VectorMax = newsize;
+        m_IsAllocated = (m_Vector && !array);
 
     } else {
         Clear();
@@ -219,9 +218,9 @@ protected:
 #ifndef COMPILER_WATCOM
     // Looks like watcom doesn't like these declarations, newer compilers
     // need them for standards compliance related to template lookup.
-    using VectorClass<T>::Vector;
-    using VectorClass<T>::VectorMax;
-    using VectorClass<T>::IsAllocated;
+    using VectorClass<T>::m_Vector;
+    using VectorClass<T>::m_VectorMax;
+    using VectorClass<T>::m_IsAllocated;
 #endif
 
 public:
@@ -236,9 +235,10 @@ public:
     virtual int ID(const T *ptr) override { return VectorClass<T>::ID(ptr); };
     virtual int ID(const T &ptr) override;
 
-    void Reset_Active() { ActiveCount = 0; }
-    void Set_Active(int count) { ActiveCount = count; }
-    int Count() const { return (ActiveCount); }
+    void Reset_Active() { m_ActiveCount = 0; }
+    void Set_Active(int count) { m_ActiveCount = count; }
+    int Count() const { return m_ActiveCount; }
+    BOOL Empty() const { return !(m_ActiveCount > 0); }
     BOOL Add(const T &object);
     BOOL Add_Head(const T &object);
     const T &Fetch_Head() const { return (*this)[0]; }
@@ -246,19 +246,19 @@ public:
     BOOL Delete(const T &object);
     BOOL Delete(int index);
     void Delete_All();
-    int Set_Growth_Step(int step) { return GrowthStep = step; }
-    int Growth_Step() { return GrowthStep; }
+    int Set_Growth_Step(int step) { return m_GrowthStep = step; }
+    int Growth_Step() { return m_GrowthStep; }
     T *Uninitialized_Add();
 
 protected:
-    int ActiveCount;
-    int GrowthStep;
+    int m_ActiveCount;
+    int m_GrowthStep;
 };
 
 template<typename T>
 void DynamicVectorClass<T>::Clear()
 {
-    ActiveCount = 0;
+    m_ActiveCount = 0;
     VectorClass<T>::Clear();
 };
 
@@ -266,8 +266,8 @@ template<typename T>
 DynamicVectorClass<T> &DynamicVectorClass<T>::operator=(DynamicVectorClass<T> const &rvalue)
 {
     VectorClass<T>::operator=(rvalue);
-    ActiveCount = rvalue.ActiveCount;
-    GrowthStep = rvalue.GrowthStep;
+    m_ActiveCount = rvalue.m_ActiveCount;
+    m_GrowthStep = rvalue.m_GrowthStep;
 
     return *this;
 }
@@ -275,16 +275,16 @@ DynamicVectorClass<T> &DynamicVectorClass<T>::operator=(DynamicVectorClass<T> co
 template<typename T>
 DynamicVectorClass<T>::DynamicVectorClass(unsigned size, const T *array) : VectorClass<T>(size, array)
 {
-    GrowthStep = 10;
-    ActiveCount = 0;
+    m_GrowthStep = 10;
+    m_ActiveCount = 0;
 }
 
 template<typename T>
 BOOL DynamicVectorClass<T>::Resize(int newsize, const T *array)
 {
     if (VectorClass<T>::Resize(newsize, array)) {
-        if (VectorMax < ActiveCount) {
-            ActiveCount = VectorMax;
+        if (m_VectorMax < m_ActiveCount) {
+            m_ActiveCount = m_VectorMax;
         }
 
         return true;
@@ -296,7 +296,7 @@ BOOL DynamicVectorClass<T>::Resize(int newsize, const T *array)
 template<typename T>
 int DynamicVectorClass<T>::ID(const T &object)
 {
-    for (int index = 0; index < Count(); index++) {
+    for (int index = 0; index < Count(); ++index) {
         if ((*this)[index] == object)
             return index;
     }
@@ -307,9 +307,9 @@ int DynamicVectorClass<T>::ID(const T &object)
 template<typename T>
 BOOL DynamicVectorClass<T>::Add(const T &object)
 {
-    if (ActiveCount >= VectorMax) {
-        if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
-            if (!Resize(VectorMax + GrowthStep)) {
+    if (m_ActiveCount >= m_VectorMax) {
+        if ((m_IsAllocated || !m_VectorMax) && m_GrowthStep > 0) {
+            if (!Resize(m_VectorMax + m_GrowthStep)) {
                 return false;
             }
         } else {
@@ -317,7 +317,7 @@ BOOL DynamicVectorClass<T>::Add(const T &object)
         }
     }
 
-    (*this)[ActiveCount++] = object;
+    (*this)[m_ActiveCount++] = object;
 
     return true;
 }
@@ -325,9 +325,9 @@ BOOL DynamicVectorClass<T>::Add(const T &object)
 template<typename T>
 BOOL DynamicVectorClass<T>::Add_Head(const T &object)
 {
-    if (ActiveCount >= VectorMax) {
-        if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
-            if (!Resize(VectorMax + GrowthStep)) {
+    if (m_ActiveCount >= m_VectorMax) {
+        if ((m_IsAllocated || !m_VectorMax) && m_GrowthStep > 0) {
+            if (!Resize(m_VectorMax + m_GrowthStep)) {
                 return false;
             }
         } else {
@@ -335,12 +335,12 @@ BOOL DynamicVectorClass<T>::Add_Head(const T &object)
         }
     }
 
-    if (ActiveCount) {
-        memmove(&(*this)[1], &(*this)[0], ActiveCount * sizeof(T));
+    if (m_ActiveCount) {
+        memmove(&(*this)[1], &(*this)[0], m_ActiveCount * sizeof(T));
     }
 
     (*this)[0] = object;
-    ActiveCount++;
+    ++m_ActiveCount;
 
     return true;
 }
@@ -348,13 +348,13 @@ BOOL DynamicVectorClass<T>::Add_Head(const T &object)
 template<typename T>
 BOOL DynamicVectorClass<T>::Insert(int index, const T &object)
 {
-    if (index < 0 || index > ActiveCount) {
+    if (index < 0 || index > m_ActiveCount) {
         return false;
     }
 
-    if (ActiveCount >= VectorMax) {
-        if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
-            if (!Resize(VectorMax + GrowthStep)) {
+    if (m_ActiveCount >= m_VectorMax) {
+        if ((m_IsAllocated || !m_VectorMax) && m_GrowthStep > 0) {
+            if (!Resize(m_VectorMax + m_GrowthStep)) {
                 return false;
             }
         } else {
@@ -362,12 +362,12 @@ BOOL DynamicVectorClass<T>::Insert(int index, const T &object)
         }
     }
 
-    if (index < ActiveCount) {
-        memmove(&(*this)[index + 1], &(*this)[index], (ActiveCount - index) * sizeof(T));
+    if (index < m_ActiveCount) {
+        memmove(&(*this)[index + 1], &(*this)[index], (m_ActiveCount - index) * sizeof(T));
     }
 
     (*this)[index] = object;
-    ActiveCount++;
+    ++m_ActiveCount;
 
     return true;
 }
@@ -387,10 +387,10 @@ BOOL DynamicVectorClass<T>::Delete(const T &object)
 template<typename T>
 BOOL DynamicVectorClass<T>::Delete(int index)
 {
-    if (index < ActiveCount) {
-        ActiveCount--;
+    if (index < m_ActiveCount) {
+        --m_ActiveCount;
 
-        for (int i = index; i < ActiveCount; i++) {
+        for (int i = index; i < m_ActiveCount; ++i) {
             (*this)[i] = (*this)[i + 1];
         }
 
@@ -403,7 +403,7 @@ BOOL DynamicVectorClass<T>::Delete(int index)
 template<typename T>
 void DynamicVectorClass<T>::Delete_All()
 {
-    int len = VectorMax;
+    int len = m_VectorMax;
     Clear();
     Resize(len);
 }
@@ -411,9 +411,9 @@ void DynamicVectorClass<T>::Delete_All()
 template<typename T>
 T *DynamicVectorClass<T>::Uninitialized_Add()
 {
-    if (ActiveCount >= VectorMax) {
-        if (GrowthStep > 0) {
-            if (!Resize(VectorMax + GrowthStep)) {
+    if (m_ActiveCount >= m_VectorMax) {
+        if (m_GrowthStep > 0) {
+            if (!Resize(m_VectorMax + m_GrowthStep)) {
                 return nullptr;
             }
         } else {
@@ -421,7 +421,7 @@ T *DynamicVectorClass<T>::Uninitialized_Add()
         }
     }
 
-    return &((*this)[ActiveCount++]);
+    return &((*this)[m_ActiveCount++]);
 }
 
 class BooleanVectorClass
@@ -435,7 +435,7 @@ public:
 
     void Init(unsigned size, uint8_t *array);
     void Init(unsigned size);
-    int Length() { return BitCount; };
+    int Length() { return m_BitCount; }
     void Reset();
     void Set();
     void Clear();
@@ -443,40 +443,40 @@ public:
 
     BOOL const &operator[](int index) const
     {
-        if (LastIndex != index) {
+        if (m_LastIndex != index) {
             Fixup(index);
         }
 
-        return Copy;
+        return m_Copy;
     };
 
     BOOL &operator[](int index)
     {
-        if (LastIndex != index) {
+        if (m_LastIndex != index) {
             Fixup(index);
         }
 
-        return Copy;
+        return m_Copy;
     };
 
     BOOL Is_True(int index) const
     {
-        if (index == LastIndex) {
-            return Copy;
+        if (index == m_LastIndex) {
+            return m_Copy;
         }
 
-        return Get_Bit(&BitArray[0], index);
+        return Get_Bit(&m_BitArray[0], index);
     };
 
     int First_False() const
     {
-        if (LastIndex != -1) {
+        if (m_LastIndex != -1) {
             Fixup(-1);
         }
 
-        int retval = First_False_Bit(&BitArray[0], BitArray.Length());
+        int retval = First_False_Bit(&m_BitArray[0], m_BitArray.Length());
 
-        if (retval < BitCount) {
+        if (retval < m_BitCount) {
             return retval;
         }
 
@@ -485,27 +485,27 @@ public:
 
     int First_True() const
     {
-        if (LastIndex != -1)
+        if (m_LastIndex != -1)
             Fixup(-1);
 
-        int retval = First_True_Bit(&BitArray[0], BitArray.Length());
+        int retval = First_True_Bit(&m_BitArray[0], m_BitArray.Length());
 
-        if (retval < BitCount) {
+        if (retval < m_BitCount) {
             return retval;
         }
 
         return -1;
     }
 
-    const VectorClass<uint8_t> &Get_Bit_Array() { return BitArray; }
+    const VectorClass<uint8_t> &Get_Bit_Array() { return m_BitArray; }
 
 protected:
     void Fixup(int index = -1) const;
-    int BitCount;
-    mutable BOOL Copy;
-    mutable int LastIndex;
+    int m_BitCount;
+    mutable BOOL m_Copy;
+    mutable int m_LastIndex;
 
-    VectorClass<uint8_t> BitArray;
+    VectorClass<uint8_t> m_BitArray;
 };
 
 template<typename T>

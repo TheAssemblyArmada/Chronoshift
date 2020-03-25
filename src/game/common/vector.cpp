@@ -17,36 +17,36 @@
 #include <string.h>
 
 BooleanVectorClass::BooleanVectorClass(unsigned size, uint8_t *array) :
-    BitCount(size),
-    Copy(false),
-    LastIndex(-1),
-    BitArray(0, 0)
+    m_BitCount(size),
+    m_Copy(false),
+    m_LastIndex(-1),
+    m_BitArray(0, 0)
 {
-    BitArray.Resize(((size + (8 - 1)) / 8), array);
+    m_BitArray.Resize(((size + (8 - 1)) / 8), array);
 }
 
 BooleanVectorClass::BooleanVectorClass(const BooleanVectorClass &vector)
 {
-    LastIndex = -1;
+    m_LastIndex = -1;
     *this = vector;
 }
 
 BooleanVectorClass &BooleanVectorClass::operator=(const BooleanVectorClass &vector)
 {
     Fixup();
-    Copy = vector.Copy;
-    LastIndex = vector.LastIndex;
-    BitArray = vector.BitArray;
-    BitCount = vector.BitCount;
+    m_Copy = vector.m_Copy;
+    m_LastIndex = vector.m_LastIndex;
+    m_BitArray = vector.m_BitArray;
+    m_BitCount = vector.m_BitCount;
 
     return *this;
 }
 
 BOOL BooleanVectorClass::operator==(const BooleanVectorClass &vector) const
 {
-    Fixup(LastIndex);
+    Fixup(m_LastIndex);
 
-    return BitCount == vector.BitCount && BitArray == vector.BitArray;
+    return m_BitCount == vector.m_BitCount && m_BitArray == vector.m_BitArray;
 }
 
 int BooleanVectorClass::Resize(unsigned size)
@@ -54,9 +54,9 @@ int BooleanVectorClass::Resize(unsigned size)
     Fixup();
 
     if (size > 0) {
-        unsigned oldsize = BitCount;
-        int success = BitArray.Resize(((size + (8 - 1)) / 8));
-        BitCount = size;
+        unsigned oldsize = m_BitCount;
+        int success = m_BitArray.Resize(((size + (8 - 1)) / 8));
+        m_BitCount = size;
 
         if (success && oldsize < size) {
             for (unsigned i = oldsize; i < size; i++) {
@@ -74,61 +74,61 @@ int BooleanVectorClass::Resize(unsigned size)
 void BooleanVectorClass::Clear()
 {
     Fixup();
-    BitCount = 0;
-    BitArray.Clear();
+    m_BitCount = 0;
+    m_BitArray.Clear();
 }
 
 void BooleanVectorClass::Reset()
 {
-    LastIndex = -1;
+    m_LastIndex = -1;
 
-    if (BitArray.Length() > 0) {
-        memset(&BitArray[0], 0, BitArray.Length());
+    if (m_BitArray.Length() > 0) {
+        memset(&m_BitArray[0], 0, m_BitArray.Length());
     }
 }
 
 void BooleanVectorClass::Set()
 {
-    LastIndex = -1;
+    m_LastIndex = -1;
 
-    if (BitArray.Length() > 0) {
-        memset(&BitArray[0], 0xFF, BitArray.Length());
+    if (m_BitArray.Length() > 0) {
+        memset(&m_BitArray[0], 0xFF, m_BitArray.Length());
     }
 }
 
 void BooleanVectorClass::Fixup(int index) const
 {
-    if ((unsigned)index >= (unsigned)BitCount) {
+    if ((unsigned)index >= (unsigned)m_BitCount) {
         index = -1;
     }
 
-    if (index != LastIndex) {
-        if (LastIndex != -1) {
-            captainslog_assert(unsigned(LastIndex) < unsigned(BitCount));
-            Set_Bit((void *)&BitArray[0], LastIndex, Copy);
+    if (index != m_LastIndex) {
+        if (m_LastIndex != -1) {
+            captainslog_assert(unsigned(m_LastIndex) < unsigned(m_BitCount));
+            Set_Bit((void *)&m_BitArray[0], m_LastIndex, m_Copy);
         }
 
         if (index != -1) {
-            captainslog_assert(unsigned(index) < unsigned(BitCount));
-            Copy = Get_Bit((void *)&BitArray[0], index);
+            captainslog_assert(unsigned(index) < unsigned(m_BitCount));
+            m_Copy = Get_Bit((void *)&m_BitArray[0], index);
         }
 
-        LastIndex = index;
+        m_LastIndex = index;
     }
 }
 
 void BooleanVectorClass::Init(unsigned size, uint8_t *array)
 {
-    Copy = false;
-    LastIndex = -1;
-    BitCount = size;
-    BitArray.Resize(((size + (8 - 1)) / 8), array);
+    m_Copy = false;
+    m_LastIndex = -1;
+    m_BitCount = size;
+    m_BitArray.Resize(((size + (8 - 1)) / 8), array);
 }
 
 void BooleanVectorClass::Init(unsigned size)
 {
-    Copy = false;
-    LastIndex = -1;
-    BitCount = size;
-    BitArray.Resize(((size + (8 - 1)) / 8));
+    m_Copy = false;
+    m_LastIndex = -1;
+    m_BitCount = size;
+    m_BitArray.Resize(((size + (8 - 1)) / 8));
 }

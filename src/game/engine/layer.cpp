@@ -87,7 +87,7 @@ BOOL LayerClass::Submit(ObjectClass *object, BOOL sort)
 void LayerClass::Sort()
 {
     // Go through array to Count() - 1
-    for (int index = 0; index < (ActiveCount - 1); ++index) {
+    for (int index = 0; index < (m_ActiveCount - 1); ++index) {
         // Get current index and next for comparison
         ObjectClass *current = (*this)[index];
         ObjectClass *next = (*this)[index + 1];
@@ -110,9 +110,9 @@ BOOL LayerClass::Sorted_Add(ObjectClass *const object)
 {
     captainslog_assert(object != nullptr);
 
-    if (ActiveCount >= VectorMax) {
-        if ((IsAllocated || !VectorMax) && GrowthStep > 0) {
-            if (!Resize(VectorMax + GrowthStep)) {
+    if (m_ActiveCount >= m_VectorMax) {
+        if ((m_IsAllocated || !m_VectorMax) && m_GrowthStep > 0) {
+            if (!Resize(m_VectorMax + m_GrowthStep)) {
                 // Failure to increase the size of the vector is an error
                 return false;
             }
@@ -126,7 +126,7 @@ BOOL LayerClass::Sorted_Add(ObjectClass *const object)
 
     int index = 0;
 
-    for (index = 0; index < ActiveCount; ++index) {
+    for (index = 0; index < m_ActiveCount; ++index) {
         ObjectClass *objptr = (*this)[index];
         // captainslog_assert(objptr != nullptr);
         if (objptr != nullptr) {
@@ -136,14 +136,14 @@ BOOL LayerClass::Sorted_Add(ObjectClass *const object)
         }
     }
 
-    for (int j = (ActiveCount - 1); j >= index; --j) {
+    for (int j = (m_ActiveCount - 1); j >= index; --j) {
         (*this)[j + 1] = (*this)[j];
     }
 
     (*this)[index] = object;
 
     // Increase the active count as we have added a new object.
-    ++ActiveCount;
+    ++m_ActiveCount;
 
     return true;
 }
