@@ -51,7 +51,7 @@ public:
     void Decode_Pointers();
 
     void Force_Active() { m_ForcedActive = true; }
-    BOOL Should_Avoid_Threats() const { return m_Class->Avoid_Threats(); }
+    BOOL Is_Roundabout() const { return m_Class->Roundabout(); }
     int Field35() const { return m_field_35; }
     BOOL Get_Bit2_4() const { return m_Bit2_4; }
     void Set_Bit2_4(BOOL state) { m_Bit2_4 = state; }

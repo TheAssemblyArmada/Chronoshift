@@ -1418,6 +1418,7 @@ coord_t HouseClass::Find_Build_Location(BuildingClass *building) const
             cell_t zonecell = Find_Cell_In_Zone(building, _zones[zone % ZONE_COUNT]);
 
             if (Valid_Cell(zonecell)) {
+                // BUGFIX: Previously, this incorrectly returned just the cell, now we properly convert to a coord.
                 return Cell_To_Coord(zonecell);
             }
         }

@@ -66,18 +66,19 @@ TeamTypeClass::TMissionInfoStruct TeamTypeClass::s_TMissions[TMISSION_COUNT] = {
 TeamTypeClass::TeamTypeClass() :
     AbstractTypeClass(RTTI_TEAMTYPE, g_TeamTypes.ID(this), 0, ""),
     m_IsActive(true), // Should be set by operator new, but best set it here as well.
-    m_AvoidThreats(false),
+    m_Roundabout(false),
     m_Suicide(false),
     m_Autocreate(false),
     m_Prebuild(true),
     m_Reinforce(true),
+    m_Bit64(false),
     m_Priority(7),
-    m_Number(0),
-    m_Max(0),
-    m_Unused(0),
+    m_InitialNumber(0),
+    m_MaxAllowed(0),
+    m_Fear(0),
     m_Owner(HOUSES_NONE),
     m_TriggerType(nullptr),
-    m_Location(-1),
+    m_Waypoint(-1),
     m_Instances(0),
     m_MissionCount(0),
     m_MemberCount(0)
@@ -111,10 +112,10 @@ void TeamTypeClass::Build_INI_Entry(char *buffer)
     // This function only builds NewINIFormat >= 3 entries.
     char *putp = buffer;
     int32_t booleans =
-        (m_AvoidThreats << 1) | (m_Suicide << 2) | (m_Autocreate << 3) | (m_Prebuild << 4) | (m_Reinforce << 5);
+        (m_Roundabout << 1) | (m_Suicide << 2) | (m_Autocreate << 3) | (m_Prebuild << 4) | (m_Reinforce << 5);
 
     // TODO strlen is how the original advanced the pointer, but using the return of sprintf should be more efficient.
-    sprintf(putp, "%d,%d,%d,%d,%d,%d,%d", m_Owner, booleans, m_Priority, m_Number, m_Max, m_Location, m_TriggerType.Get_ID());
+    sprintf(putp, "%d,%d,%d,%d,%d,%d,%d", m_Owner, booleans, m_Priority, m_InitialNumber, m_MaxAllowed, m_Waypoint, m_TriggerType.Get_ID());
     putp += strlen(putp);
     sprintf(putp, ",%d", m_MemberCount);
     putp += strlen(putp);
@@ -145,7 +146,7 @@ void TeamTypeClass::Fill_In(const char *entry, char *data)
     // they are packed into a single int in later formats.
     if (g_INIFormat <= 1) {
         int val = atoi(strtok(nullptr, ","));
-        m_AvoidThreats = (val & 1) != 0;
+        m_Roundabout = (val & 1) != 0;
         val = atoi(strtok(nullptr, ","));
         m_Suicide = (val & 1) != 0;
         val = atoi(strtok(nullptr, ","));
@@ -156,7 +157,7 @@ void TeamTypeClass::Fill_In(const char *entry, char *data)
         m_Reinforce = (val & 1) != 0;
     } else {
         int val = atoi(strtok(nullptr, ","));
-        m_AvoidThreats = (val & 2) != 0;
+        m_Roundabout = (val & 2) != 0;
         m_Suicide = (val & 4) != 0;
         m_Autocreate = (val & 8) != 0;
         m_Prebuild = (val & 16) != 0;
@@ -164,9 +165,9 @@ void TeamTypeClass::Fill_In(const char *entry, char *data)
     }
 
     m_Priority = atoi(strtok(nullptr, ","));
-    m_Number = atoi(strtok(nullptr, ","));
-    m_Max = atoi(strtok(nullptr, ","));
-    m_Location = atoi(strtok(nullptr, ","));
+    m_InitialNumber = atoi(strtok(nullptr, ","));
+    m_MaxAllowed = atoi(strtok(nullptr, ","));
+    m_Waypoint = atoi(strtok(nullptr, ","));
 
     if (g_INIFormat <= 1) {
         strtok(nullptr, ","); // Skip next entry in format 1? This entry is at the end instead?
@@ -224,7 +225,7 @@ void TeamTypeClass::Fill_In(const char *entry, char *data)
  */
 TeamClass *TeamTypeClass::Create_One_Of() const
 {
-    if (!g_ScenarioInit && m_Max <= m_Instances) {
+    if (g_ScenarioInit == 0 && m_Instances >= m_MaxAllowed) {
         return nullptr;
     }
 
@@ -465,7 +466,7 @@ TeamTypeClass *TeamTypeClass::Suggested_New_Team(
 
     for (int i = 0; i < g_TeamTypes.Count() && possible_teams_count < ARRAY_SIZE(possible_teams); ++i) {
         TeamTypeClass &ttptr = g_TeamTypes[i];
-        int max_instances = ttptr.m_Max;
+        int max_instances = ttptr.m_MaxAllowed;
 
         if ((allow_autocreate && !ttptr.m_Autocreate) || (!allow_autocreate && ttptr.m_Autocreate)) {
             max_instances = 0;
@@ -493,12 +494,12 @@ const char *TeamTypeClass::Description()
     char unk = m_Autocreate ? '*' : ' ';
     char wp[3] = { 0 };
 
-    if (m_Location > -1) {
-        if (m_Location > 26) {
-            wp[0] = m_Location / 26 + '@';
-            wp[1] = m_Location % 26 + 'A';
+    if (m_Waypoint > -1) {
+        if (m_Waypoint > 26) {
+            wp[0] = m_Waypoint / 26 + '@';
+            wp[1] = m_Waypoint % 26 + 'A';
         } else {
-            wp[0] = m_Location + 'A';
+            wp[0] = m_Waypoint + 'A';
         }
     }
 

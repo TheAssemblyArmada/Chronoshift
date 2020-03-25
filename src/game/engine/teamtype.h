@@ -108,11 +108,11 @@ public:
     void Code_Pointers();
     void Decode_Pointers();
 
-    BOOL Avoid_Threats() const { return m_AvoidThreats; }
+    BOOL Roundabout() const { return m_Roundabout; }
     void Add_Instance() { ++m_Instances; }
     void Remove_Instance() { --m_Instances; }
     HousesType Get_Owner() const { return m_Owner; }
-    int Get_Location() const { return m_Location; }
+    int Get_Waypoint() const { return m_Waypoint; }
     const GamePtr<TriggerTypeClass> &Get_TriggerType() const { return m_TriggerType; }
 
     static void Init();
@@ -138,26 +138,28 @@ private:
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_IsActive : 1; // 1
-    BOOL m_AvoidThreats : 1; // 2
+    BOOL m_Roundabout : 1; // 2
     BOOL m_Suicide : 1; // 4
     BOOL m_Autocreate : 1; // 8
     BOOL m_Prebuild : 1; // 16
     BOOL m_Reinforce : 1; // 32
+    BOOL m_Bit64 : 1; // 64
 #else
     bool m_IsActive;
-    bool m_AvoidThreats; // Always take the safest route, even if it’s a detour.
+    bool m_Roundabout; // Always take the safest route, even if it's a detour.
     bool m_Suicide; // Charge at target ignoring enemy units/enemy fire.
     bool m_Autocreate; // Team is only used by autocreate AI (produced taskforces).
     bool m_Prebuild; // Prebuild team members before creating.
     bool m_Reinforce; // Automatically reinforce.
+    bool m_Bit64;
 #endif
     int m_Priority;
-    uint8_t m_Number;
-    uint8_t m_Max;
-    uint8_t m_Unused;
+    uint8_t m_InitialNumber;
+    uint8_t m_MaxAllowed; // Maximum number of instances of this TeamType that can exist at the same time.
+    uint8_t m_Fear;
     HousesType m_Owner;
     GamePtr<TriggerTypeClass> m_TriggerType;
-    int m_Location;
+    int m_Waypoint;
     int m_Instances;
     int m_MissionCount;
     TeamMissionClass m_Missions[20];

@@ -39,12 +39,12 @@ DEFINE_ENUMERATION_OPERATORS(TriggerType);
 
 enum PersistanceType
 {
-    STATE_NONE = -1,
-    STATE_VOLATILE, // Will only ever be activated once.
-    STATE_SEMI_PERSISTANT, // Will only trigger once the trigger event has all conditions have been met.
-    STATE_PERSISTANT, // Will continue to repeat itself whenever its trigger event is true.
-    STATE_COUNT,
-    STATE_FIRST = 0,
+    PERSIST_NONE = -1,
+    PERSIST_VOLATILE, // Will only ever be activated once.
+    PERSIST_SEMI_PERSISTANT, // Will only trigger once the trigger event has all conditions have been met.
+    PERSIST_PERSISTANT, // Will continue to repeat itself whenever its trigger event is true.
+    PERSIST_COUNT,
+    PERSIST_FIRST = 0,
 };
 
 DEFINE_ENUMERATION_OPERATORS(PersistanceType);
@@ -124,7 +124,7 @@ protected:
     bool m_IsActive;
 #endif
 
-    PersistanceType m_State;
+    PersistanceType m_Existence;
     HousesType m_House;
     TEventClass m_EventOne;
     TEventClass m_EventTwo;
