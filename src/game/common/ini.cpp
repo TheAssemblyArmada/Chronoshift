@@ -28,68 +28,65 @@
 
 INIEntry::~INIEntry()
 {
-    if (m_key != nullptr) {
-        free((void*)m_key);
+    if (m_Key != nullptr) {
+        free(m_Key);
     }
+    m_Key = nullptr;
 
-    m_key = nullptr;
-
-    if (m_value != nullptr) {
-        free((void*)m_value);
+    if (m_Value != nullptr) {
+        free(m_Value);
     }
-
-    m_value = nullptr;
+    m_Value = nullptr;
 }
 
 void INIEntry::Set_Name(const char *new_name)
 {
-    if (m_key != nullptr) {
-        free((void*)m_key);
+    if (m_Key != nullptr) {
+        free(m_Key);
     }
-
-    m_key = strdup(new_name);
+    m_Key = strdup(new_name);
 }
 
-void INIEntry::Set_Value(const char *str)
+void INIEntry::Set_Value(const char *new_value)
 {
-    if (m_value != nullptr) {
-        free((void*)m_value);
+    if (m_Value != nullptr) {
+        free(m_Value);
     }
-
-    m_value = strdup(str);
+    m_Value = strdup(new_value);
 }
 
 INISection::~INISection()
 {
-    if (m_sectionName != nullptr) {
-        free((void*)m_sectionName);
+    if (m_Name != nullptr) {
+        free(m_Name);
     }
-    m_sectionName = nullptr;
+    m_Name = nullptr;
 
-    m_entryList.Delete();
+    m_EntryList.Delete();
 }
 
 INIEntry *INISection::Find_Entry(const char *entry) const
 {
-    int crc;
-
-    captainslog_assert(entry != nullptr);
-
-    // this function setup needs switching around. errors first etc.
-    if (entry != nullptr && (crc = CRC(entry), m_entryIndex.Is_Present(crc))) {
-        // captainslog_debug("Fetching entry %s with CRC %08x", entry, crc);
-        return m_entryIndex.Fetch_Index(crc);
+    if (entry == nullptr) {
+        return nullptr;
     }
+
+    int32_t crc = CRC(entry);
+
+    if (m_EntryIndex.Is_Present(crc)) {
+        // captainslog_debug("Fetching entry %s with CRC %08x", entry, crc);
+        return m_EntryIndex.Fetch_Index(crc);
+    }
+
     return nullptr;
 }
 
-void INISection::Set_Name(const char *str)
+void INISection::Set_Name(const char *new_name)
 {
-    if (m_sectionName != nullptr) {
-        free((void*)m_sectionName);
+    if (m_Name != nullptr) {
+        free(m_Name);
     }
-
-    m_sectionName = strdup(str);
+    m_Name = strdup(new_name);
 }
 
 INIClass::~INIClass()
@@ -99,38 +96,38 @@ INIClass::~INIClass()
 
 BOOL INIClass::Clear(const char *section, const char *entry)
 {
-    INISection *sectionptr;
-    INIEntry *entryptr;
+    if (section == nullptr) {
+        m_SectionList.Delete();
+        m_SectionIndex.Clear();
+        return true;
+    }
 
-    if (section) {
-        if ((sectionptr = Find_Section(section)) != nullptr) {
-            if (entry) {
-                if ((entryptr = sectionptr->Find_Entry(entry)) == nullptr) {
-                    return true;
-                }
+    INISection *sectionptr = Find_Section(section);
 
-                sectionptr->m_entryIndex.Remove_Index(CRC(entryptr->Get_Name()));
-                delete entryptr;
+    if (sectionptr != nullptr) {
+        if (entry != nullptr) {
+            INIEntry *entryptr = sectionptr->Find_Entry(entry);
 
-            } else {
-                if (!sectionptr) {
-                    return true;
-                }
-
-                m_sectionIndex.Remove_Index(CRC(sectionptr->Get_Name()));
-                delete sectionptr;
+            if (entryptr == nullptr) {
+                return true;
             }
 
-            return true;
+            sectionptr->Entry_Index().Remove_Index(CRC(entryptr->Get_Name()));
+            delete entryptr;
+
+        } else {
+            if (sectionptr == nullptr) {
+                return true;
+            }
+
+            m_SectionIndex.Remove_Index(CRC(sectionptr->Get_Name()));
+            delete sectionptr;
         }
 
-        return false;
+        return true;
     }
-    
-    m_sectionList.Delete();
-    m_sectionIndex.Clear();
 
-    return true;
+    return false;
 }
 
 int INIClass::Save(FileClass &file) const
@@ -142,6 +139,8 @@ int INIClass::Save(FileClass &file) const
 
 int INIClass::Save(Pipe &pipe) const
 {
+    static const char _newline[] = "\r\n";
+
     char space_fill[256];
 
     // total amount of bytes written to the stream.
@@ -150,7 +149,7 @@ int INIClass::Save(Pipe &pipe) const
     // fill 'space_fill' with spaces.
     memset(space_fill, ' ', sizeof(space_fill));
 
-    for (INISection *secptr = m_sectionList.First(); secptr != nullptr; secptr = secptr->Next()) {
+    for (INISection *secptr = m_SectionList.First(); secptr != nullptr; secptr = secptr->Next()) {
         // If this is not a valid section node, break out of the loop.
         if (!secptr->Is_Valid()) {
             // captainslog_debug("INIClass::Save() - Invalid section encountered");
@@ -161,10 +160,10 @@ int INIClass::Save(Pipe &pipe) const
         total += pipe.Put("[", 1);
         total += pipe.Put(secptr->Get_Name(), strlen(secptr->Get_Name()));
         total += pipe.Put("]", 1);
-        total += pipe.Put(SYS_NEW_LINE, strlen(SYS_NEW_LINE));
+        total += pipe.Put(_newline, strlen(_newline));
 
         // Loop though entries and write to stream.
-        for (INIEntry *entryptr = secptr->m_entryList.First(); entryptr != nullptr; entryptr = entryptr->Next()) {
+        for (INIEntry *entryptr = secptr->Entry_List().First(); entryptr != nullptr; entryptr = entryptr->Next()) {
             // If this is not a valid entry node, break out of the loop.
             if (!entryptr->Is_Valid()) {
                 // captainslog_debug("INIClass::Save() - Invalid entry encountered");
@@ -178,12 +177,12 @@ int INIClass::Save(Pipe &pipe) const
             // Finally write the value.
             total += pipe.Put(entryptr->Get_Value(), strlen(entryptr->Get_Value()));
             // Write a carriage return.
-            total += pipe.Put(SYS_NEW_LINE, strlen(SYS_NEW_LINE));
+            total += pipe.Put(_newline, strlen(_newline));
         }
 
         // Write a new line underneath the last entry of the section
         // to space out the sections neatly.
-        total += pipe.Put(SYS_NEW_LINE, strlen(SYS_NEW_LINE));
+        total += pipe.Put(_newline, strlen(_newline));
     }
 
     // End the data stream.
@@ -210,7 +209,7 @@ int INIClass::Load(Straw &straw)
         Read_Line(straw, buffer, MAX_LINE_LENGTH, end_of_file);
         if (end_of_file) {
             captainslog_debug("INIClass::Load() - reached end of file before finding a section");
-            return INI_LOAD_INVALID;
+            return 0;
         }
 
         if (buffer[0] == '[' && strchr(buffer, ']') != nullptr) {
@@ -228,10 +227,8 @@ int INIClass::Load(Straw &straw)
 
         if (section == nullptr) {
             captainslog_debug("INIClass::Load() - failed to create section!");
-
             Clear();
-
-            return INI_LOAD_INVALID;
+            return 0;
         }
 
         while (!end_of_file) {
@@ -243,6 +240,7 @@ int INIClass::Load(Straw &straw)
 
             // Strip comments from the line.
             Strip_Comments(buffer);
+
             char *delimiter = strchr(buffer, '=');
 
             if (count > 0 && buffer[0] != ';' && buffer[0] != '=') {
@@ -261,46 +259,39 @@ int INIClass::Load(Straw &straw)
                         }
 
                         INIEntry *entryptr = new INIEntry(entry, value);
-                        if (!entryptr) {
+                        if (entryptr == nullptr) {
                             captainslog_debug("Failed to create entry '%s = %s'.", entry, value);
 
                             delete section;
                             Clear();
 
-                            return INI_LOAD_INVALID;
+                            return 0;
                         }
 
-                        // Is this Name, Value or something?
                         CRC(entryptr->Get_Name());
                         int32_t crc = CRC(entryptr->Get_Name());
-
-                        if (section->m_entryIndex.Is_Present(crc)) {
-                            // Duplicate_CRC_Error(__FUNCTION__, section->Get_Name(), entryptr->Get_Name());
-                        }
-
-                        section->m_entryIndex.Add_Index(crc, entryptr);
-                        section->m_entryList.Add_Tail(entryptr);
+                        section->Entry_Index().Add_Index(crc, entryptr);
+                        section->Entry_List().Add_Tail(entryptr);
                     }
                 }
             }
         }
 
-        if (section->m_entryList.Is_Empty()) {
+        if (section->Entry_List().Is_Empty()) {
             delete section;
         } else {
             int32_t crc = CRC(section->Get_Name());
-            m_sectionIndex.Add_Index(crc, section);
-            m_sectionList.Add_Tail(section);
+            m_SectionIndex.Add_Index(crc, section);
+            m_SectionList.Add_Tail(section);
         }
     }
 
-    return INI_LOAD_OVERWRITE;
+    return 1;
 }
 
 bool INIClass::Is_Present(const char *section, const char *entry)
 {
     captainslog_assert(section != nullptr);
-    //captainslog_assert(entry != nullptr);
 
     if (section != nullptr && entry != nullptr) {
         return Find_Entry(section, entry) != nullptr;
@@ -314,12 +305,15 @@ bool INIClass::Is_Present(const char *section, const char *entry)
 
 INISection *INIClass::Find_Section(const char *section) const
 {
-    captainslog_assert(section != nullptr);
+    if (section == nullptr) {
+        return nullptr;
+    }
 
-    int crc;
+    int32_t crc = CRC(section);
 
-    if (section != nullptr && (crc = CRC(section)) != 0 && m_sectionIndex.Is_Present(crc)) {
-        return m_sectionIndex.Fetch_Index(crc);
+    if (m_SectionIndex.Is_Present(crc)) {
+        // captainslog_debug("Fetching section %s with CRC %08x", section, crc);
+        return m_SectionIndex.Fetch_Index(crc);
     }
 
     return nullptr;
@@ -332,11 +326,11 @@ INIEntry *INIClass::Find_Entry(const char *section, const char *entry) const
 
     INISection *sectionptr = Find_Section(section);
 
-    if (sectionptr != nullptr) {
-        return sectionptr->Find_Entry(entry);
+    if (sectionptr == nullptr) {
+        return nullptr;
     }
 
-    return nullptr;
+    return sectionptr->Find_Entry(entry);
 }
 
 int INIClass::Entry_Count(const char *section) const
@@ -345,52 +339,62 @@ int INIClass::Entry_Count(const char *section) const
 
     INISection *sectionptr = Find_Section(section);
 
-    if (sectionptr != nullptr) {
-        return sectionptr->Get_Entry_Count();
+    if (sectionptr == nullptr) {
+        return 0;
     }
 
-    return 0;
+    return sectionptr->Get_Entry_Count();
 }
 
 const char *INIClass::Get_Entry(const char *section, int index) const
 {
-    captainslog_assert(section != nullptr);
+    if (section == nullptr || index <= 0) {
+        return nullptr;
+    }
 
     INISection *sectionptr = Find_Section(section);
 
-    if (sectionptr != nullptr) {
+    if (sectionptr == nullptr) {
+        return nullptr;
+    }
+
+    if (index < sectionptr->Get_Entry_Count()) {
         int count = index;
 
-        if (index < sectionptr->Get_Entry_Count()) {
-            for (INIEntry *entryptr = sectionptr->m_entryList.First(); entryptr != nullptr; entryptr = entryptr->Next()) {
-                if (!entryptr->Is_Valid()) {
-                    break;
-                }
-
-                if (!count) {
-                    return entryptr->Get_Name(); // TODO
-                }
-
-                count--;
+        for (INIEntry *entryptr = sectionptr->Entry_List().First(); entryptr != nullptr; entryptr = entryptr->Next()) {
+            if (!entryptr->Is_Valid()) {
+                break;
             }
+
+            if (!count) {
+                return entryptr->Get_Name(); // TODO
+            }
+
+            --count;
         }
     }
 
     return nullptr;
 }
 
+/*
+ * Enumerates all entries (key/value pairs) of a given section.
+ * Returns the number of entries present or -1 upon error.
+ */
 int INIClass::Enumerate_Entries(const char *section, const char *entry_prefix, uint32_t start_number, uint32_t end_number)
 {
-    char buffer[256];
-    uint32_t i = start_number;
-
     captainslog_assert(section != nullptr);
-    captainslog_assert(!start_number && !end_number);
+    captainslog_assert(entry_prefix != nullptr);
+    captainslog_assert(start_number > 0 && end_number > 0);
+
+    char buffer[256];
+
+    uint32_t i = start_number;
 
     for (; i < end_number; ++i) {
         snprintf(buffer, sizeof(buffer), "%s%d", entry_prefix, i);
 
-        if (!Find_Entry(section, buffer)) {
+        if (Find_Entry(section, buffer) == nullptr) {
             break;
         }
     }
@@ -400,148 +404,143 @@ int INIClass::Enumerate_Entries(const char *section, const char *entry_prefix, u
 
 int INIClass::Get_UUBlock(const char *section, void *block, int length) const
 {
-    captainslog_assert(length > 0);
-    captainslog_assert(block != nullptr);
+    if (section == nullptr || block == nullptr || length <= 0) {
+        return 0;
+    }
 
     int total = 0;
     char buffer[128];
 
-    if (section != nullptr) {
-        Base64Pipe b64pipe(PIPE_DECODE);
-        BufferPipe bpipe(block, length);
+    Base64Pipe b64pipe(PIPE_DECODE);
+    BufferPipe bpipe(block, length);
 
-        b64pipe.Put_To(&bpipe);
+    b64pipe.Put_To(&bpipe);
 
-        int entry_count = Entry_Count(section);
+    int entry_count = Entry_Count(section);
 
-        if (entry_count > 0) {
-            for (int i = 0; i < entry_count; ++i) {
-                int strlen = Get_String(section, Get_Entry(section, i), "=", buffer, sizeof(buffer));
-                total += b64pipe.Put(buffer, strlen);
-            }
+    if (entry_count > 0) {
+        for (int i = 0; i < entry_count; ++i) {
+            int strlen = Get_String(section, Get_Entry(section, i), "=", buffer, sizeof(buffer));
+            total += b64pipe.Put(buffer, strlen);
         }
-
-        total += b64pipe.End();
     }
+
+    total += b64pipe.End();
 
     return total;
 }
 
 BOOL INIClass::Put_UUBlock(const char *section, void *buffer, int length)
 {
-    captainslog_assert(length > 0);
-    captainslog_assert(buffer != nullptr);
-
-    if (section != nullptr && buffer != nullptr && length > 0) {
-        Clear(section);
-
-        BufferStraw bstraw(buffer, length);
-        Base64Straw b64straw(STRAW_ENCODE);
-        b64straw.Get_From(&bstraw);
-
-        char block_buff[MAX_UUBLOCK_LINE_LENGTH + 2];
-        char entry_buff[32];
-        int entry = 1;
-
-        while (true) {
-            // Once buffer straw has exhausted all bytes passed in, get will return 0.
-            int bytes = b64straw.Get(block_buff, MAX_UUBLOCK_LINE_LENGTH);
-            block_buff[bytes] = '\0';
-
-            if (bytes == 0) {
-                break;
-            }
-
-            snprintf(entry_buff, sizeof(entry_buff), "%d", entry++);
-            Put_String(section, entry_buff, block_buff);
-        }
-
-        return true;
+    if (section == nullptr || buffer == nullptr || length <= 0) {
+        return false;
     }
 
-    return false;
+    Clear(section);
+
+    BufferStraw bstraw(buffer, length);
+    Base64Straw b64straw(STRAW_ENCODE);
+    b64straw.Get_From(&bstraw);
+
+    char block_buff[MAX_UUBLOCK_LINE_LENGTH + 2];
+    char entry_buff[32];
+    int entry = 1;
+
+    while (true) {
+        // Once buffer straw has exhausted all bytes passed in, get will return 0.
+        int bytes = b64straw.Get(block_buff, MAX_UUBLOCK_LINE_LENGTH);
+        block_buff[bytes] = '\0';
+
+        if (bytes == 0) {
+            break;
+        }
+
+        snprintf(entry_buff, sizeof(entry_buff), "%d", entry++);
+        Put_String(section, entry_buff, block_buff);
+    }
+
+    return true;
 }
 
 BOOL INIClass::Put_TextBlock(const char *section, const char *text)
 {
-    captainslog_assert(text != nullptr);
-
     char entry[32];
     char buffer[MAX_TEXTBLOCK_LINE_LENGTH + 1];
 
-    if (section != nullptr && text != nullptr) {
-        // Ensure we have a clear section to put our text block to.
-        Clear(section);
+    if (section == nullptr || text == nullptr) {
+        return false;
+    }
 
-        const char *block_ptr = text;
+    // Ensure we have a clear section to put our text block to.
+    Clear(section);
 
-        size_t block_len = 0;
+    const char *block_ptr = text;
 
-        // i is key for each line, starts at 1. Iterate over the text block in
-        // MAX_TEXTBLOCK_LINE_LENGTH sized chunks, turning them into ini entries.
-        for (int line = 1; *block_ptr != '\0'; block_ptr += block_len) {
-            strlcpy(buffer, block_ptr, sizeof(buffer));
-            snprintf(entry, sizeof(entry), "%d", line);
+    size_t block_len = 0;
 
-            block_len = strlen(buffer);
+    // i is key for each line, starts at 1. Iterate over the text block in
+    // MAX_TEXTBLOCK_LINE_LENGTH sized chunks, turning them into ini entries.
+    for (int line = 1; *block_ptr != '\0'; block_ptr += block_len) {
+        strlcpy(buffer, block_ptr, sizeof(buffer));
+        snprintf(entry, sizeof(entry), "%d", line);
+
+        block_len = strlen(buffer);
+
+        if (block_len <= 0) {
+            break;
+        }
+
+        if (block_len >= MAX_TEXTBLOCK_LINE_LENGTH) {
+            while (!isspace(buffer[block_len])) {
+                if (!--block_len) {
+                    return true;
+                }
+            }
 
             if (block_len <= 0) {
                 break;
             }
 
-            if (block_len >= MAX_TEXTBLOCK_LINE_LENGTH) {
-                while (!isspace(buffer[block_len])) {
-                    if (!--block_len) {
-                        return true;
-                    }
-                }
-
-                if (block_len <= 0) {
-                    break;
-                }
-
-                buffer[block_len] = '\0';
-            }
-
-            strtrim(buffer);
-            Put_String(section, entry, buffer);
-            ++line;
+            buffer[block_len] = '\0';
         }
 
-        return true;
+        strtrim(buffer);
+
+        Put_String(section, entry, buffer);
+
+        ++line;
     }
 
-    return false;
+    return true;
 }
 
 int INIClass::Get_TextBlock(const char *section, char *buffer, int length) const
 {
-    captainslog_assert(buffer != nullptr);
-    captainslog_assert(length != 0);
+    if (section == nullptr || buffer == nullptr || length <= 0) {
+        return 0;
+    }
 
     int total = 0;
 
-    if (section != nullptr && buffer != nullptr && length > 0) {
-        // If buffer has a length, we have at least a null string
-        buffer[0] = '\0';
+    // If buffer has a length, we have at least a null string
+    buffer[0] = '\0';
 
-        int elen = Entry_Count(section);
+    int elen = Entry_Count(section);
 
-        // If buffer can fit at least one char as well, get a char.
-        for (int i = 0; i < elen && length > 1; ++i) {
-            if (i > 0) {
-                // Puts a space between lines
-                *buffer++ = ' ';
-                --length;
-                ++total;
-            }
-
-            Get_String(section, Get_Entry(section, i),"", buffer, length);
-
-            total = strlen(buffer);
-            length -= total;
-            buffer += total;
+    // If buffer can fit at least one char as well, get a char.
+    for (int i = 0; i < elen && length > 1; ++i) {
+        if (i > 0) {
+            // Puts a space between lines
+            *buffer++ = ' ';
+            --length;
+            ++total;
         }
+
+        Get_String(section, Get_Entry(section, i),"", buffer, length);
+
+        total = strlen(buffer);
+        length -= total;
+        buffer += total;
     }
 
     return total;
@@ -549,113 +548,153 @@ int INIClass::Get_TextBlock(const char *section, char *buffer, int length) const
 
 BOOL INIClass::Put_Int(const char *section, const char *entry, int value, int format)
 {
-    char buffer[512];
+    char buffer[32];
 
-    if (format == INIINTEGER_AS_HEX) {
-        sprintf(buffer, "%Xh", value);
-    } else if (format == INIINTEGER_AS_MOTOROLA_HEX) {
-        sprintf(buffer, "$%X", value);
-    } else {
-        sprintf(buffer, "%d", value);
-    }
+    switch (format) {
+        case INI_INTEGER_AS_HEX:
+            snprintf(buffer, sizeof(buffer), "%Xh", value);
+            break;
+        case INI_INTEGER_AS_MOTOROLA_HEX:
+            snprintf(buffer, sizeof(buffer), "$%X", value);
+            break;
+        default:
+            snprintf(buffer, sizeof(buffer), "%d", value);
+            break;
+    };
 
     return Put_String(section, entry, buffer);
 }
 
 int INIClass::Get_Int(const char *section, const char *entry, int defvalue) const
 {
-    INIEntry *entryptr;
-    const char *value;
-
-    if (section != nullptr && entry != nullptr && (entryptr = Find_Entry(section, entry)) != nullptr && entryptr->Get_Name()
-        && (value = entryptr->Get_Value()) != nullptr) {
-        if (value[0] == '$') {
-            sscanf(value, "$%x", &defvalue);
-            return defvalue;
-        }
-
-        if (tolower(value[strlen(value) - 1]) == 'h') {
-            sscanf(value, "%xh", &defvalue);
-            return defvalue;
-        }
-
-        // Convert the value to a base 10 integer.
-        return strtol(value, nullptr, 10);
+    if (section == nullptr || entry == nullptr) {
+        return defvalue;
     }
 
-    return defvalue;
+    INIEntry *entryptr = Find_Entry(section, entry);
+    if (entryptr != nullptr) {
+        return defvalue;
+    }
+        
+    const char *value = entryptr->Get_Value();
+    if (entryptr->Get_Name() == nullptr || value == nullptr) {
+        return defvalue;
+    }
+
+    if (value[0] == '$') {
+        sscanf(value, "$%x", &defvalue);
+        return defvalue;
+    }
+
+    if (tolower(value[strlen(value) - 1]) == 'h') {
+        sscanf(value, "%xh", &defvalue);
+        return defvalue;
+    }
+
+    // Convert the value to a base 10 integer.
+    return strtol(value, nullptr, 10);
 }
 
-BOOL INIClass::Put_Hex(const char *section, const char *entry, int value)
+BOOL INIClass::Put_Hex(const char *section, const char *entry, unsigned value)
 {
     char buffer[32];
 
-    sprintf(buffer, "%X", (unsigned)value);
+    snprintf(buffer, sizeof(buffer), "%X", value);
 
     return Put_String(section, entry, buffer);
 }
 
-int INIClass::Get_Hex(const char *section, const char *entry, int defvalue) const
+unsigned INIClass::Get_Hex(const char *section, const char *entry, unsigned defvalue) const
 {
-    INIEntry *entryptr;
-
-    if (section && entry && (entryptr = Find_Entry(section, entry)) != nullptr && *(entryptr->Get_Value())) {
-        return sscanf(entryptr->Get_Name(), "%x", (unsigned *)&defvalue);
+    if (section == nullptr || entry == nullptr) {
+        return defvalue;
     }
 
-    return defvalue;
+    INIEntry *entryptr = Find_Entry(section, entry);
+    if (entryptr != nullptr) {
+        return defvalue;
+    }
+
+    const char *value = entryptr->Get_Value();
+    if (entryptr->Get_Name() == nullptr || value == nullptr) {
+        return defvalue;
+    }
+
+    return sscanf(entryptr->Get_Name(), "%x", &defvalue);
 }
 
 BOOL INIClass::Put_Float(const char *section, const char *entry, double value)
 {
     char buffer[32];
 
-    sprintf(buffer, "%f", value);
+    snprintf(buffer, sizeof(buffer), "%f", value);
 
     return Put_String(section, entry, buffer);
 }
 
 float INIClass::Get_Float(const char *section, const char *entry, float defvalue) const
 {
-    INIEntry *entryptr;
-
-    if (section != nullptr && entry && (entryptr = Find_Entry(section, entry)) != nullptr && *(entryptr->Get_Value())) {
-        sscanf(entryptr->Get_Value(), "%f", &defvalue);
-
-        // Is this actually a percentage? if so, divide it by 100
-        if (strchr(entryptr->Get_Value(), '%')) {
-            return defvalue / (float)100.0;
-        }
+    if (section == nullptr || entry == nullptr) {
+        return defvalue;
     }
 
-    return defvalue;
+    INIEntry *entryptr = Find_Entry(section, entry);
+
+    if (entryptr != nullptr) {
+        return defvalue;
+    }
+
+    const char *value = entryptr->Get_Value();
+
+    if (entryptr->Get_Name() == nullptr || value == nullptr) {
+        return defvalue;
+    }
+
+    float retval = 0.0f;
+    sscanf(value, "%f", &retval);
+
+    // Is this actually a percentage? if so, divide it by 100.
+    if (strchr(value, '%')) {
+        return retval / 100.0f;
+    }
+
+    return retval;
 }
 
 BOOL INIClass::Put_Double(const char *section, const char *entry, double value)
 {
     char buffer[32];
 
-    sprintf(buffer, "%lf", value);
+    snprintf(buffer, sizeof(buffer), "%lf", value);
 
     return Put_String(section, entry, buffer);
 }
 
 double INIClass::Get_Double(const char *section, const char *entry, double defvalue) const
 {
-    INIEntry *entryptr;
-
-    if (section && entry && (entryptr = Find_Entry(section, entry)) != nullptr && *(entryptr->Get_Value())) {
-        sscanf(entryptr->Get_Value(), "%lf", &defvalue);
-
-        //
-        // Is this value really a percentage? if so, divide it by 100.
-        //
-        if (strchr(entryptr->Get_Value(), '%')) {
-            return defvalue / 100.0;
-        }
+    if (section == nullptr || entry == nullptr) {
+        return defvalue;
     }
 
-    return defvalue;
+    INIEntry *entryptr = Find_Entry(section, entry);
+    if (entryptr != nullptr) {
+        return defvalue;
+    }
+
+    const char *value = entryptr->Get_Value();
+    if (entryptr->Get_Name() == nullptr || value == nullptr) {
+        return defvalue;
+    }
+
+    double retval = 0.0f;
+    sscanf(value, "%lf", &retval);
+
+    // Is this actually a percentage? if so, divide it by 100.
+    if (strchr(value, '%')) {
+        return retval / 100.0;
+    }
+
+    return retval;
 }
 
 BOOL INIClass::Put_String(const char *section, const char *entry, const char *string)
@@ -663,116 +702,111 @@ BOOL INIClass::Put_String(const char *section, const char *entry, const char *st
     captainslog_assert(section != nullptr);
     captainslog_assert(entry != nullptr);
 
-    INISection *sectionptr;
-    INIEntry *entryptr;
-
-    if (section != nullptr && entry != nullptr) {
-        if ((sectionptr = Find_Section(section)) == nullptr) {
-            captainslog_debug("INIClass::Put_String() Creating new section [%s]", section);
-            sectionptr = new INISection(section);
-            m_sectionList.Add_Tail(sectionptr);
-            m_sectionIndex.Add_Index(CRC(sectionptr->Get_Name()), sectionptr);
-        }
-
-        if ((entryptr = sectionptr->Find_Entry(entry)) != nullptr) {
-            // TODO needs rewriting, see BMFE or Ren
-            if (strcmp(entryptr->Get_Name(), entry) == 0) {
-                // Duplicate_CRC_Error(__CURRENT_FUNCTION__, section, entry);
-            } else {
-                // Duplicate_CRC(__CURRENT_FUNCTION__, section, entry);
-            }
-
-            // If we already have the entry, we are replacing it so delete
-            sectionptr->m_entryIndex.Remove_Index(CRC(entryptr->Get_Name()));
-
-            if (entryptr != nullptr) {
-                delete entryptr;
-            }
-        }
-
-        if (string != nullptr && strlen(string) > 0) {
-            if (string[0] != '\0' /*|| KeepBlankEntries*/) {
-                captainslog_assert(strlen(string) < MAX_LINE_LENGTH);
-
-                entryptr = new INIEntry(entry, string);
-                sectionptr->m_entryList.Add_Tail(entryptr);
-                sectionptr->m_entryIndex.Add_Index(CRC(entryptr->Get_Name()), entryptr);
-            }
-        }
-
-        return true;
+    if (section == nullptr && entry == nullptr) {
+        return false;
     }
 
-    return false;
+    INISection *sectionptr = Find_Section(section);
+
+    if (sectionptr == nullptr) {
+        captainslog_debug("INIClass::Put_String() Creating new section [%s]", section);
+        sectionptr = new INISection(section);
+        m_SectionList.Add_Tail(sectionptr);
+        m_SectionIndex.Add_Index(CRC(sectionptr->Get_Name()), sectionptr);
+    }
+
+    INIEntry *entryptr = sectionptr->Find_Entry(entry);
+    if (entryptr != nullptr) {
+
+        // If we already have the entry, we are replacing it so delete.
+        sectionptr->Entry_Index().Remove_Index(CRC(entryptr->Get_Name()));
+
+        if (entryptr != nullptr) {
+            delete entryptr;
+        }
+    }
+
+    if (string != nullptr && strlen(string) > 0) {
+        if (string[0] != '\0') {
+            captainslog_assert(strlen(string) < MAX_LINE_LENGTH);
+
+            entryptr = new INIEntry(entry, string);
+            sectionptr->Entry_List().Add_Tail(entryptr);
+            sectionptr->Entry_Index().Add_Index(CRC(entryptr->Get_Name()), entryptr);
+        }
+    }
+
+    return true;
 }
 
 int INIClass::Get_String(const char *section, const char *entry, const char *defvalue, char *buffer, int length) const
 {
-    INIEntry *entryptr;
-    const char *value = defvalue;
-
     captainslog_assert(section != nullptr);
     captainslog_assert(entry != nullptr);
-    captainslog_assert(buffer != nullptr);
-    captainslog_assert(length > 0);
 
-    if (buffer != nullptr && length > 0 && section != nullptr && entry != nullptr) {
-        if ((entryptr = Find_Entry(section, entry)) == nullptr || (value = entryptr->Get_Value()) == nullptr) {
-            if (defvalue == nullptr) {
-                buffer[0] = '\0'; // nullify the first byte of char
-                return 0;
-            }
-
-            value = defvalue;
-        }
-
-        // copy string to return result buffer
-        strlcpy(buffer, value, length);
-        strtrim(buffer);
-
-        return strlen(buffer);
+    if (section == nullptr || entry == nullptr) {
+        return 0;
     }
 
-    return 0;
+    if (buffer == nullptr || length <= 0) {
+        return 0;
+    }
+
+    INIEntry *entryptr = Find_Entry(section, entry);
+    const char *value = entryptr->Get_Value();
+    if (entryptr == nullptr || value == nullptr) {
+        if (defvalue == nullptr) {
+            buffer[0] = '\0'; // Nullify the first byte of char.
+            return 0;
+        }
+
+        value = defvalue;
+    }
+
+    // copy string to return result buffer
+    strlcpy(buffer, value, length);
+    strtrim(buffer);
+
+    return strlen(buffer);
+}
+
+int INIClass::Get_String(const char *section, const char *entry, char *buffer, int length) const
+{
+    const char *_nullchar = "";
+
+    return Get_String(section, entry, _nullchar, buffer, length);
 }
 
 BOOL INIClass::Put_Bool(const char *section, const char *entry, BOOL value)
 {
-
-    if (value) {
-        return Put_String(section, entry, "yes");
-    }
-
-    return Put_String(section, entry, "no");
+    return Put_String(section, entry, value ? "yes" : "no");
 }
 
-BOOL const INIClass::Get_Bool(const char *section, const char *entry, BOOL defvalue) const
+BOOL INIClass::Get_Bool(const char *section, const char *entry, BOOL defvalue) const
 {
-    INIEntry *entryptr;
-    const char *value;
+    if (section == nullptr && entry == nullptr) {
+        return false;
+    }
 
-    captainslog_assert(section != nullptr);
-    captainslog_assert(entry != nullptr);
+    INIEntry *entryptr = Find_Entry(section, entry);
+    const char *value = entryptr->Get_Value();
+    if (entryptr != nullptr && entryptr->Get_Name() && value != nullptr) {
+        switch (toupper(value[0])) {
+            // 1, true, yes...
+            case '1':
+            case 'T':
+            case 'Y':
+                return true;
 
-    if (section != nullptr && entry != nullptr) {
-        if ((entryptr = Find_Entry(section, entry)) != nullptr && entryptr->Get_Name() && (value = entryptr->Get_Value()) != nullptr) {
-            switch (toupper(value[0])) {
-                // 1, true, yes...
-                case '1':
-                case 'T':
-                case 'Y':
-                    return true;
+            // 0, false, no...
+            case '0':
+            case 'F':
+            case 'N':
+                return false;
 
-                // 0, false, no...
-                case '0':
-                case 'F':
-                case 'N':
-                    return false;
-
-                default:
-                    captainslog_debug("Invalid boolean entry in INIClass::Get_Bool()!");
-                    return false;
-            }
+            default:
+                captainslog_debug("Invalid boolean entry in INIClass::Get_Bool()!");
+                return false;
         }
     }
 
@@ -784,7 +818,7 @@ BOOL INIClass::Put_Fixed(const char *section, const char *entry, fixed_t value)
     return Put_String(section, entry, value.As_ASCII());
 }
 
-fixed_t const INIClass::Get_Fixed(const char *section, const char *entry, fixed_t defvalue) const
+const fixed_t INIClass::Get_Fixed(const char *section, const char *entry, const fixed_t defvalue) const
 {
     char buffer[128];
 
@@ -813,7 +847,7 @@ void INIClass::Strip_Comments(char *line)
     }
 }
 
-int32_t const INIClass::CRC(const char *string)
+int32_t INIClass::CRC(const char *string)
 {
     return Calculate_CRC(string, strlen(string));
 }
