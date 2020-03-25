@@ -944,7 +944,7 @@ void TechnoClass::Player_Assign_Mission(MissionType mission, target_t target, ta
         Queue_Mission_Formation(TargetClass(this), mission, target, dest, g_FormSpeed, g_FormMaxSpeed);
     } else {
         if (mission == MISSION_MOVE && g_Keyboard->Down(g_Options.Get_KeyQueueMove1())
-            || g_Keyboard->Down(g_Options.Get_KeyQueueMove1())) {
+            || g_Keyboard->Down(g_Options.Get_KeyQueueMove2())) {
             mission = MISSION_QMOVE;
         }
         Queue_Mission(TargetClass(this), mission, target, dest);
