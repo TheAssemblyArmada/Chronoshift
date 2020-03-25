@@ -662,8 +662,7 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
 
     BENCHMARK_START(BENCH_FIND_PATH);
 
-    // Are we part of a team and should that team avoid threats?
-    if (!m_Team.Is_Valid() || !m_Team->Should_Avoid_Threats()) {
+    if (!m_Team.Is_Valid() || !m_Team->Is_Roundabout()) {
         // captainslog_debug(" Threat procesing will not be performed for final cell.");
         threat = -1;
         risk = -1;

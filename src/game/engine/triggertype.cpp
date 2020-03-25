@@ -52,7 +52,7 @@ TFixedIHeapClass<TriggerTypeClass> g_TriggerTypes;
 
 TriggerTypeClass::TriggerTypeClass() :
     AbstractTypeClass(RTTI_TRIGGERTYPE, g_TriggerTypes.ID(this), 0, "x"),
-    m_State(STATE_VOLATILE),
+    m_Existence(PERSIST_VOLATILE),
     m_House(HOUSES_FIRST),
     m_EventLinkage(EVLINK_SINGLE),
     m_ActionLinkage(ACTLINK_SINGLE)
@@ -781,11 +781,11 @@ BOOL TriggerTypeClass::Edit()
         dn_btn);
 
     // Populate the lists.
-    for (PersistanceType i = STATE_FIRST; i < STATE_COUNT; ++i) {
+    for (PersistanceType i = PERSIST_FIRST; i < PERSIST_COUNT; ++i) {
         persist_list_edit.Add_Item(_perstext[i]);
     }
 
-    persist_list_edit.Set_Selected_Index(m_State);
+    persist_list_edit.Set_Selected_Index(m_Existence);
 
     // *** Setup buttons and intial gadget linkage state.
     TextButtonClass button_event(148,
@@ -1230,7 +1230,7 @@ BOOL TriggerTypeClass::Edit()
 
     // Save all the valuees from the gadgets to the class.
     m_House = (HousesType)owner_list_edit.Current_Index();
-    m_State = (PersistanceType)persist_list_edit.Current_Index();
+    m_Existence = (PersistanceType)persist_list_edit.Current_Index();
 
     if (strlen(name_buf) == 0) {
         strlcpy(m_Name, "____", sizeof(m_Name));
@@ -1423,10 +1423,10 @@ const char *TriggerTypeClass::Description()
     char act_link;
     const char *need;
 
-    switch (m_State) {
-        case STATE_SEMI_PERSISTANT:
+    switch (m_Existence) {
+        case PERSIST_SEMI_PERSISTANT:
             persist_type = 'S';
-        case STATE_PERSISTANT:
+        case PERSIST_PERSISTANT:
             persist_type = 'P';
             break;
         default:
@@ -1649,7 +1649,7 @@ TriggerTypeClass *TriggerTypeClass::As_Pointer(TriggerType type)
 void TriggerTypeClass::Fill_In(const char *name, char *options)
 {
     strlcpy(m_Name, name, sizeof(m_Name));
-    m_State = PersistanceType(atoi(strtok(options, ",")));
+    m_Existence = PersistanceType(atoi(strtok(options, ",")));
     m_House = HousesType(atoi(strtok(nullptr, ",")));
     m_EventLinkage = EventLinkType(atoi(strtok(nullptr, ",")));
     m_ActionLinkage = ActionLinkType(atoi(strtok(nullptr, ",")));
@@ -1664,7 +1664,7 @@ void TriggerTypeClass::Fill_In(const char *name, char *options)
  */
 void TriggerTypeClass::Build_INI_Entry(char *buffer)
 {
-    sprintf(buffer, "%d,%d,%d,%d,", m_State, m_House, m_EventLinkage, m_ActionLinkage);
+    sprintf(buffer, "%d,%d,%d,%d,", m_Existence, m_House, m_EventLinkage, m_ActionLinkage);
     m_EventOne.Build_INI_Entry(&buffer[strlen(buffer)]);
     strcat(buffer, ",");
     m_EventTwo.Build_INI_Entry(&buffer[strlen(buffer)]);

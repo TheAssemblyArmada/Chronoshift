@@ -232,18 +232,21 @@ const int16_t *Coord_Spillage_List(coord_t coord, int size)
     // clang-format on
 
     // Its big, just use the big refresh list.
-    if (size > 48) {
+    if (size > CELL_PIXELS * 2) {
         return _gigundo;
     }
 
-    if (size > 24) {
+    if (size > CELL_PIXELS) {
         // Calculate the rect we need to consider.
-        int adjust = std::min(size, 48) / 2;
+        int adjust = std::min(size, CELL_PIXELS * 2) / 2;
         unsigned index = 0;
-        int x_lo = Lepton_To_Pixel(Coord_Sub_Cell_X(coord)) - adjust;
-        int x_hi = Lepton_To_Pixel(Coord_Sub_Cell_X(coord)) + adjust;
-        int y_lo = Lepton_To_Pixel(Coord_Sub_Cell_Y(coord)) - adjust;
-        int y_hi = Lepton_To_Pixel(Coord_Sub_Cell_Y(coord)) + adjust;
+
+        int x = CELL_PIXELS * Coord_Sub_Cell_X(coord) / CELL_LEPTONS;
+        int y = CELL_PIXELS * Coord_Sub_Cell_Y(coord) / CELL_LEPTONS;
+        int x_lo = x - adjust;
+        int x_hi = x + adjust;
+        int y_lo = y - adjust;
+        int y_hi = y + adjust;
 
         // Construct a refresh list based on where rect lies relative to cell boundaries.
         _manual[index++] = 0;
@@ -253,7 +256,7 @@ const int16_t *Coord_Spillage_List(coord_t coord, int size)
             _manual[index++] = -1;
         }
 
-        if (x_hi > 24) {
+        if (x_hi >= CELL_PIXELS) {
             _manual[index++] = 1;
         }
 
@@ -262,7 +265,7 @@ const int16_t *Coord_Spillage_List(coord_t coord, int size)
             _manual[index++] = -128;
         }
 
-        if (y_hi > 24) {
+        if (y_hi >= CELL_PIXELS) {
             _manual[index++] = 128;
         }
 
@@ -271,15 +274,15 @@ const int16_t *Coord_Spillage_List(coord_t coord, int size)
             _manual[index++] = -129;
         }
 
-        if (x_hi > 24 && y_hi > 24) {
+        if (x_hi >= CELL_PIXELS && y_hi >= CELL_PIXELS) {
             _manual[index++] = 129;
         }
 
-        if (x_lo < 0 && y_hi > 24) {
+        if (x_lo < 0 && y_hi >= CELL_PIXELS) {
             _manual[index++] = 127;
         }
 
-        if (x_hi > 24 && y_lo < 0) {
+        if (x_hi >= CELL_PIXELS && y_lo < 0) {
             _manual[index++] = -127;
         }
 
@@ -288,7 +291,7 @@ const int16_t *Coord_Spillage_List(coord_t coord, int size)
         return _manual;
     }
 
-    int ref = _pix_to_lepton[(24 - size) / 2];
+    int ref = _pix_to_lepton[(CELL_PIXELS - size) / 2];
     int x = Coord_Sub_Cell_X(coord) - 128;
     int y = Coord_Sub_Cell_Y(coord) - 128;
     uint8_t index = 0;

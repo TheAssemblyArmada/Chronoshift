@@ -63,8 +63,8 @@ TeamClass::TeamClass(TeamTypeClass *teamtype, HouseClass *house) :
 
     memset(m_Quantity, 0, sizeof(m_Quantity));
 
-    if (m_Class->Get_Location() != -1) {
-        cell_t cellnum = g_Scen.Get_Waypoint(m_Class->Get_Location());
+    if (m_Class->Get_Waypoint() != -1) {
+        cell_t cellnum = g_Scen.Get_Waypoint(m_Class->Get_Waypoint());
         m_Center = ::As_Target(cellnum);
     }
 
