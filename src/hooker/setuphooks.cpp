@@ -739,7 +739,7 @@ void Setup_Hooks()
     Hook_Function(0x004D8CA8, *HouseClass::Init_Data);
     Hook_Function(0x004D5D9C, *HouseClass::Harvested);
     Hook_Function(0x004D5E80, *HouseClass::Adjust_Capacity);
-    Hook_Function_Const(0x004D8CC4, &HouseClass::Power_Fraction);
+    Hook_Function(0x004D8CC4, &HouseClass::Power_Fraction);
     Hook_Function(0x004D658C, *HouseClass::Adjust_Threat);
     Hook_Function(0x004DDBD0, *HouseClass::Hook_Fetch_Factory);
     Hook_Function(0x004DDC58, *HouseClass::Set_Factory);
@@ -765,7 +765,7 @@ void Setup_Hooks()
     Hook_Function(0x004D9D54, *HouseClass::Check_Raise_Power);
     Hook_Function(0x004DE178, *HouseClass::Fire_Sale);
     Hook_Function(0x004D7DC4, *HouseClass::Detach);
-    // Hook_Function_Const(0x004D7E80, &HouseClass::Suggest_New_Object);//can't hook cause of defarg
+    // Hook_Function(0x004D7E80, &HouseClass::Suggest_New_Object);//can't hook cause of defarg
     Hook_Function(0x004D6600, *HouseClass::Begin_Production);
     Hook_Function(0x004D66D0, *HouseClass::Suspend_Production);
     Hook_Function(0x004D671C, *HouseClass::Abandon_Production);
@@ -962,7 +962,7 @@ void Setup_Hooks()
 
     Hook_Function(0x00550290, *SoundControlsClass::Process);
 
-    Hook_Function_Const(0x004265F8, &BaseClass::Get_Building);
+    Hook_Function(0x004265F8, &BaseClass::Get_Building);
     // Hook_Function(0x0042674C, static_cast<BaseNodeClass *(*)(BuildingClass *)>(*BaseClass::Get_Node));
     // Hook_Function(0x004267C4, static_cast<BaseNodeClass *(*)(cell_t)>(*BaseClass::Get_Node));
     Hook_Function(0x004267F8, *BaseClass::Next_Buildable);
@@ -1005,7 +1005,7 @@ void Setup_Hooks()
     Hook_Function(0x00420208, *AircraftClass::Hook_Active_Click_With);
     Hook_Function(0x004202A8, *AircraftClass::Hook_Player_Assign_Mission);
     Hook_Function(0x0041E9F4, *AircraftClass::Is_LZ_Clear);
-    Hook_Function_Const(0x0042063C, &AircraftClass::Pose_Dir);
+    Hook_Function(0x0042063C, &AircraftClass::Pose_Dir);
 
     // object.cpp
     Hook_Function(0x0051DDE8, *ObjectClass::Limbo);
@@ -1073,7 +1073,7 @@ void Setup_Hooks()
     Hook_Function(0x0058C91C, *VesselClass::Hook_Is_Allowed_To_Recloak);
     Hook_Function(0x0058C654, *VesselClass::Assign_Destination);
     Hook_Function(0x0058D498, *VesselClass::Fire_At);
-    Hook_Function_Const(0x0058A040, &VesselClass::Shape_Number);
+    Hook_Function(0x0058A040, &VesselClass::Shape_Number);
     Hook_Function(0x0058D26C, *VesselClass::Edge_Of_World_AI);
     Hook_Function(0x0058C23C, *VesselClass::Transport_Open_Door);
     Hook_Function(0x0058C26C, *VesselClass::Transport_Close_Door);
@@ -1101,8 +1101,8 @@ void Setup_Hooks()
     Hook_Function(0x0056076C, TeamTypeClass::Write_INI);
     Hook_Function(0x00560248, TeamTypeClass::From_Name);
     Hook_Function(0x0056016C, TeamTypeClass::Suggested_New_Team);
-    Hook_Function_Const(0x005600C4, &TeamTypeClass::Create_One_Of);
-    Hook_Function_Const(0x00560114, &TeamTypeClass::Destroy_All_Of);
+    Hook_Function(0x005600C4, &TeamTypeClass::Create_One_Of);
+    Hook_Function(0x00560114, &TeamTypeClass::Destroy_All_Of);
 
     // infantry.cpp
     Hook_Function(0x004F24B0, *InfantryClass::Hook_Get_Image_Data);
@@ -1125,14 +1125,14 @@ void Setup_Hooks()
     Hook_Function(0x00460EEC, *BulletClass::Hook_Occupy_List);
     Hook_Function(0x00460FF8, *BulletClass::Mark);
     Hook_Function(0x00461068, *BulletClass::AI);
-    Hook_Function_Const(0x004614EC, &BulletClass::Shape_Number);
+    Hook_Function(0x004614EC, &BulletClass::Shape_Number);
     Hook_Function(0x004615A0, *BulletClass::Hook_Draw_It);
     Hook_Function(0x004617CC, *BulletClass::Detach);
     Hook_Function(0x00461838, *BulletClass::Unlimbo);
     Hook_Function(0x00461D40, *BulletClass::Hook_Target_Coord);
     Hook_Function(0x00461D8C, *BulletClass::Hook_Sort_Y);
     Hook_Function(0x00461DA8, *BulletClass::Hook_In_Which_Layer);
-    Hook_Function_Const(0x00461DEC, &BulletClass::Is_Forced_To_Explode);
+    Hook_Function(0x00461DEC, &BulletClass::Is_Forced_To_Explode);
     Hook_Function(0x00461FBC, *BulletClass::Bullet_Explodes);
     Hook_Function(0x00462380, *BulletClass::Assign_Target);
     Hook_Function(0x004623B0, *BulletClass::Hook_Overlap_List);

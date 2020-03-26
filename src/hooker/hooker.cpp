@@ -22,6 +22,8 @@
  */
 #include "hooker.h"
 
+using std::sprintf;
+
 static const int nBinarySize = 0x00244000; // Size of game binary
 
 // HANDLE hProcess = GetCurrentProcess();
@@ -36,4 +38,34 @@ void StopHooking()
 {
     DWORD OldProtect2;
     VirtualProtectEx(GetCurrentProcess(), (LPVOID)0x00401000, nBinarySize, OldProtect, &OldProtect2);
+}
+
+bool Check_Pointer(uintptr_t address, char *data)
+{
+    static const char *patterns[] = {
+        "\x55\x89\xE5", //watcall and stdcall
+        "\x53\x83", //cdecl
+        "\x53\x51", //cdecl
+        "\x8B\x44", //cdecl
+        nullptr
+    };
+
+    bool found = false;
+
+    for (int i = 0; i < ARRAY_SIZE(patterns); ++i) {
+        if (patterns[i] != nullptr && !memcmp((char *)data, patterns[i], strlen(patterns[i]) - 1)) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        static char buff[128];
+        sprintf(buff, "Can't hook 0x%08X, function not correct\n"
+        "First 4 Bytes %X %X %X %X", address, data[0], data[1], data[2], data[3]);
+        MessageBox(NULL, buff, "Hooking Failed", MB_ICONERROR);
+        return false;
+    }
+
+    return true;
 }
