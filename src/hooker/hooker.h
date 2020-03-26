@@ -86,6 +86,8 @@ inline T *Make_Pointer(const uintptr_t address)
     return reinterpret_cast<T *>(address);
 }
 
+bool Check_Pointer(uintptr_t address, char *data);
+
 //Macro version of Call_Function function as Watcom doesn't support variadic template
 
 //If the called function returns you don't need to add return after CALL_FUNCTION as it will be handled automatically by the macro.
@@ -131,45 +133,38 @@ void Hook_Function(uintptr_t in, T out)
 {
     static_assert(sizeof(x86_jump) == 5, "Jump struct not expected size.");
 
+    union {
+        T f;
+        uintptr_t rawf; // raw address
+        uintptr_t (*ptrf)(); // simplified mbrptrthunk type
+    } ptr = { out };
+
     x86_jump cmd;
     cmd.cmd = 0xE9;
-    cmd.addr = reinterpret_cast<uintptr_t>(out) - in - 5;
-    WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
-}
-
-/* @brief Replaces a const non-virtual function in the original binary with a new one at run time.
- * Hook using &Class::Function
- * 
- * When a member function is dereferenced Watcom makes a "mbrptrthunk" which returns the function's address
- * This hook function exploits that to hook const member functions
- * watcom doesn't allow normally so we no longer need a wrapper for those
- *
- * Note, this won't work for virtual functions cause mbrptrthunk makes virtual offset instead of the real function address
- * This also won't work for functions with defargs as the template doesn't contain the arg.
- */
-template<typename T>
-void Hook_Function_Const(uintptr_t in, T out)
-{
-    static_assert(sizeof(x86_jump) == 5, "Jump struct not expected size.");
-    union
-    {
-        T f; // function type this function gets as out
-        char *rawf; // raw address
-        unsigned int (*ptrf)(); // simplified mbrptrthunk type
-    } mbptr = { out };
 
     // check the prologue, so we know the function is right
-    // note this relies on traceable stacks being enabled - compiler arg -of+
-    // reason this check is needed is if something is hooked wrongly the game silently crashes
-    if (memcmp(mbptr.rawf, "\x55\x89\xE5\xB8", 4) == 0) {
-        x86_jump cmd;
-        cmd.cmd = 0xE9;
-        cmd.addr = (mbptr.ptrf() - (unsigned int)in - 5);
+
+    // Replaces a const non-virtual function in the original binary with a new one at run time.
+    // Hook using &Class::Function
+    if (memcmp((char*)ptr.rawf, "\x55\x89\xE5\xB8", 4) == 0) {
+        // When a member function is dereferenced Watcom makes a "mbrptrthunk" function which returns the function's address.
+        // This exploits that to hook const member functions Watcom doesn't allow normally so we no longer need a wrapper for those.
+        //
+        // Note, this relies on traceable stacks being enabled - compiler arg -of+ .
+        // Reason this check is needed is if something is hooked wrongly the game silently crashes.
+        //
+        // Note, this won't work for virtual functions cause mbrptrthunk makes virtual offset instead of the real function address
+        // Note, for this to work for functions with defargs you need to static_cast it as the template doesn't contain the arg elsewise.
+        cmd.addr = (ptr.ptrf() - in - 5);
         WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
+    //
+    // Replaces a normal function in the original binary with a new one at run time.
     } else {
-        char buff[32];
-        sprintf(buff, "Can't hook 0x%08X, mbrptrthunk function not correct", in);
-        MessageBox(NULL, buff, "Hooking Failed", MB_ICONERROR);
+        // Safety check to make sure its a proper function.
+        if (Check_Pointer(in, (char *)ptr.rawf)) {
+            cmd.addr = (ptr.rawf - in - 5);
+            WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
+        }
     }
 }
 
@@ -191,31 +186,6 @@ void Hook_Call(uintptr_t in, T out)
     x86_jump cmd;
     cmd.cmd = 0xE8;
     cmd.addr = reinterpret_cast<uintptr_t>(out) - in - 5;
-    WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
-}
-
-/**
- * @brief Replaces a member function in the original binary with a new one at run time.
- *
- * Replaces a function with a different member function at run time by patching in an assembly "jump" instruction to jump to
- * the new function. Provided the new function has the same parameters and calling convention as the one that it replaced, it
- * should work without issue so long as it can fulfill the same role.
- *
- * @param in The address of the function to replace.
- * @param out The address of the function to replace with.
- */
-template<typename T>
-void Hook_Method(uintptr_t in, T out)
-{
-    static_assert(sizeof(x86_jump) == 5, "Jump struct not expected size.");
-
-    x86_jump cmd;
-#ifdef COMPILER_WATCOM
-    x86_jump *tmp = reinterpret_cast<x86_jump*>((void *&)out);
-    cmd.addr = tmp.addr - in - 5;
-#else
-    cmd.addr = reinterpret_cast<uintptr_t>((void *&)out) - in - 5;
-#endif
     WriteProcessMemory(GetCurrentProcess(), (LPVOID)in, &cmd, 5, nullptr);
 }
 
