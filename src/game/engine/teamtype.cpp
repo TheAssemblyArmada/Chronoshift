@@ -438,6 +438,33 @@ TeamTypeClass *TeamTypeClass::As_Pointer(const char *name)
 }
 
 /**
+ * Get a TriggerTypeClass pointer from its heap ID.
+ */
+TeamTypeClass *TeamTypeClass::As_Pointer(TeamType type)
+{
+    return type != TEAMTYPE_NONE && type < g_TeamTypes.Count() ? &g_TeamTypes[type] : nullptr;
+}
+
+/**
+ * Get a TeamTypeClass reference from its heap ID.
+ */
+TeamTypeClass &TeamTypeClass::As_Reference(TeamType type)
+{
+    captainslog_assert(type != INFANTRY_NONE);
+    captainslog_assert(type < INFANTRY_COUNT);
+
+    return g_TeamTypes[type];
+}
+
+/**
+ * Get a reference to a team type from its name.
+ */
+TeamTypeClass &TeamTypeClass::As_Reference(const char *name)
+{
+    return *From_Name(name);
+}
+
+/**
  * Get a pointer to a team type from its name.
  */
 TeamTypeClass *TeamTypeClass::From_Name(const char *name)

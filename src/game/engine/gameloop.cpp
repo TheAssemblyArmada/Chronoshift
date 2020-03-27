@@ -254,7 +254,7 @@ BOOL Main_Loop()
                 g_FrameTimer = 60 / g_Session.Desired_Frame_Rate();
             }
         } else {
-            int game_speed = g_Options.Game_Speed();
+            int game_speed = g_Options.Get_Game_Speed();
             DiffType ai_diff = g_PlayerPtr->Get_AI_Difficulty();
             if (game_speed > 0) {
                 g_FrameTimer = game_speed + ((ai_diff == DIFF_EASIEST) - (ai_diff == DIFF_NORMAL));

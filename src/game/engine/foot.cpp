@@ -1595,3 +1595,43 @@ BOOL FootClass::Is_On_Priority_Mission()
 {
     return m_Mission == MISSION_ENTER;
 }
+
+/**
+ *
+ *
+ * 0x004C35D0
+ */
+void FootClass::Queue_Navigation_List(target_t target)
+{
+    if (Target_Legal(target)) {
+        int i;
+        for (i = 0; i < NAV_LENGTH && Target_Legal(m_NavList[i]); ++i);
+
+        if (target == As_Target() && i > 0) {
+            m_Bit2_4 = true;
+        } else {
+            if (i == 0) {
+                m_Bit2_4 = false;
+            }
+            if (i < NAV_LENGTH) {
+                m_NavList[i] = target;
+            }
+        } 
+
+        if (!Target_Legal(m_NavCom) && m_Mission == MISSION_GUARD) {
+            Enter_Idle_Mode();
+        }
+    }
+}
+
+/**
+ *
+ *
+ * 0x004C3684
+ */
+void FootClass::Clear_Navigation_List()
+{
+    for (int i = 0; i < NAV_LENGTH; ++i) {
+        m_NavList[i] = 0;
+    }
+}

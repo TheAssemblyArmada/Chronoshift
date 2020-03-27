@@ -1044,7 +1044,7 @@ void CellClass::Wall_Update()
                 adjcell.m_OverlayFrame = 0;
                 adjcell.m_Overlay = OVERLAY_NONE;
                 adjcell.m_OwnerHouse = HOUSES_NONE; // C&C DOS sets this, bug fix perhaps?
-                Detach_This_From_All(As_Target(adjcell.m_CellNumber));
+                Detach_This_From_All(As_Target());
             }
 
             // Frame 16 for SBAG is after the nondamaged set
@@ -1052,7 +1052,7 @@ void CellClass::Wall_Update()
                 adjcell.m_OverlayFrame = 0;
                 adjcell.m_Overlay = OVERLAY_NONE;
                 adjcell.m_OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.m_CellNumber));
+                Detach_This_From_All(As_Target());
             }
 
             // Frame 32 for CYCL is after the first damage state set
@@ -1060,7 +1060,7 @@ void CellClass::Wall_Update()
                 adjcell.m_OverlayFrame = 0;
                 adjcell.m_Overlay = OVERLAY_NONE;
                 adjcell.m_OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.m_CellNumber));
+                Detach_This_From_All(As_Target());
             }
 
             // Frame 16 for FENC is after the nondamaged set, on a 0 basis frame 32 doesn't exist, some hack for older art?
@@ -1068,7 +1068,7 @@ void CellClass::Wall_Update()
                 adjcell.m_OverlayFrame = 0;
                 adjcell.m_Overlay = OVERLAY_NONE;
                 adjcell.m_OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.m_CellNumber));
+                Detach_This_From_All(As_Target());
             }
 
             // Frame 16 for SBAG is after the nondamaged set
@@ -1076,7 +1076,7 @@ void CellClass::Wall_Update()
                 adjcell.m_OverlayFrame = 0;
                 adjcell.m_Overlay = OVERLAY_NONE;
                 adjcell.m_OwnerHouse = HOUSES_NONE;
-                Detach_This_From_All(As_Target(adjcell.m_CellNumber));
+                Detach_This_From_All(As_Target());
             }
 
             adjcell.Recalc_Attributes();
@@ -1163,7 +1163,7 @@ BOOL CellClass::Reduce_Wall(int damage)
                 Adjacent_Cell(FACING_WEST).Wall_Update();
                 Adjacent_Cell(FACING_SOUTH).Wall_Update();
                 Adjacent_Cell(FACING_EAST).Wall_Update();
-                Detach_This_From_All(As_Target(Cell_Number()));
+                Detach_This_From_All(As_Target());
 
                 if (overlay.Is_Crushable()) {
                     g_Map.Zone_Reset(1 << MZONE_NORMAL);

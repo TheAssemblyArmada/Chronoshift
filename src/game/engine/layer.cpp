@@ -48,7 +48,7 @@ void LayerClass::Code_Pointers()
         ObjectClass *obj = (*this)[i];
         captainslog_assert(obj != nullptr);
 
-        (*this)[i] = reinterpret_cast<ObjectClass *>(As_Target(obj));
+        (*this)[i] = reinterpret_cast<ObjectClass *>(obj->As_Target());
     }
 }
 

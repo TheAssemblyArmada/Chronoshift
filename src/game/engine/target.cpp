@@ -3,6 +3,7 @@
  *
  * @author OmniBlade
  * @author CCHyper
+ * @author tomsons26
  *
  * @brief Functions for converting to and from target values.
  *
@@ -14,43 +15,27 @@
  *            LICENSE
  */
 #include "target.h"
+#include "aircraft.h"
+#include "anim.h"
+#include "building.h"
+#include "bullet.h"
 #include "cell.h"
 #include "coord.h"
+#include "infantry.h"
+#include "iomap.h"
 #include "object.h"
+#include "overlay.h"
+#include "smudge.h"
 #include "techno.h"
 #include "technotype.h"
-//#include "triggertype.h"
-
-CellClass *TargetClass::As_Cell() const
-{
-    return nullptr;
-    //return ::As_Cell(m_Target);
-}
-
-AbstractClass *TargetClass::As_Abstract() const
-{
-    return ::As_Abstract(m_Target);
-}
-
-AbstractTypeClass *TargetClass::As_TypeClass() const
-{
-    return nullptr;
-    //return ::As_TypeClass(m_Target);
-}
-
-TechnoClass *TargetClass::As_Techno() const
-{
-    return ::As_Techno(m_Target);
-}
-
-ObjectClass *TargetClass::As_Object() const
-{
-    return ::As_Object(m_Target);
-}
+#include "terrain.h"
+#include "triggertype.h"
+#include "unit.h"
+#include "vessel.h"
 
 TargetClass::TargetClass(AbstractClass *abstract)
 {
-    if (abstract != nullptr){
+    if (abstract != nullptr) {
         m_Target = (abstract->What_Am_I() << 24) | (abstract->Get_Heap_ID() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
@@ -59,7 +44,7 @@ TargetClass::TargetClass(AbstractClass *abstract)
 
 TargetClass::TargetClass(AbstractTypeClass *abstractype)
 {
-    if (abstractype != nullptr){
+    if (abstractype != nullptr) {
         m_Target = (abstractype->What_Am_I() << 24) | (abstractype->Get_Heap_ID() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
@@ -68,26 +53,27 @@ TargetClass::TargetClass(AbstractTypeClass *abstractype)
 
 TargetClass::TargetClass(CellClass *cell)
 {
-    if (cell != nullptr){
+    if (cell != nullptr) {
         m_Target = (RTTI_CELL << 24) | (cell->Cell_Number() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
     }
 }
 
-TargetClass::TargetClass(cell_t cellnum)
+CellClass *TargetClass::As_Cell() const
 {
-    m_Target = (RTTI_CELL << 24) | (cellnum & 0xFFFFFF);
-}
+    if (Get_RTTI() == RTTI_CELL) {
+        return &g_Map[Get_ID()];
+    }
 
-BOOL Target_Is_Techno(target_t target)
-{
-    TechnoClass *ptr = As_Techno(target);
-    return ptr != nullptr ? ptr->Is_Techno() : false;
+    return nullptr;
 }
 
 BOOL Target_Legal(target_t target)
 {
+    // NOTE: Possible future improvement that could be a bug fix.
+    // return (Target_Get_RTTI(target) != RTTI_NONE && Target_Get_RTTI(target) < RTTI_COUNT && Target_Get_ID(target) >= 0) &&
+    // As_Object(target)->Is_Active();
     return (Target_Get_RTTI(target) != RTTI_NONE && Target_Get_RTTI(target) < RTTI_COUNT && Target_Get_ID(target) >= 0);
 }
 
@@ -98,248 +84,151 @@ target_t As_Target(cell_t cellnum)
 
 target_t As_Target(coord_t coord)
 {
-    return Make_Target(RTTI_CELL, (Coord_Lepton_X(coord) >> 4) | ((Coord_Lepton_Y(coord) >> 4) << 12));
-}
-
-target_t As_Target(CellClass *cell)
-{
-    return cell != nullptr ? As_Target(cell->Cell_Number()) : 0;
-}
-
-target_t As_Target(AbstractClass *object)
-{
-    return object != nullptr ? ((object->Get_Heap_ID() & 0xFFFFFF) | ((object->What_Am_I() << 24) & 0xFF000000)) : 0;
+    return Make_Target(RTTI_CELL, (Coord_Lepton_X(coord) / 16) | ((Coord_Lepton_Y(coord) / 16) << 12));
 }
 
 TriggerClass *As_Trigger(target_t target)
 {
-#ifdef GAME_DLL
-    TriggerClass *(*func)(target_t) = reinterpret_cast<TriggerClass *(*)(target_t)>(0x00554FFC);
-    return func(target);
-#elif 0
-    // TODO: Requires TriggerClass implementation.
-    return Target_Get_RTTI(target) == RTTI_TRIGGER ? &Triggers[Target_Get_ID(target)] : nullptr;
-#else
-    return nullptr;
-#endif
+    return Target_Is_Trigger(target) ? &g_Triggers[Target_Get_ID(target)] : nullptr;
 }
 
 TriggerTypeClass *As_TriggerType(target_t target)
 {
-#ifdef GAME_DLL
-    TriggerTypeClass *(*func)(target_t) = reinterpret_cast<TriggerTypeClass *(*)(target_t)>(0x005559CC);
-    return func(target);
-#elif 0
-    // TODO: Requires TriggerTypeClass implementation.
-    return Target_Get_RTTI(target) == RTTI_TRIGGERTYPE ? &TriggerTypes[Target_Get_ID(target)] : nullptr;
-#else
-    return nullptr;
-#endif
+    return Target_Is_TriggerType(target) ? &g_TriggerTypes[Target_Get_ID(target)] : nullptr;
 }
 
 TeamClass *As_Team(target_t target)
 {
-#ifdef GAME_DLL
-    TeamClass *(*func)(target_t) = reinterpret_cast<TeamClass *(*)(target_t)>(0x00555034);
-    return func(target);
-#elif 0
-    // TODO: Requires TeamClass implementation.
-    return Target_Get_RTTI(target) == RTTI_TEAM ? &Teams[Target_Get_ID(target)] : nullptr;
-#else
-    return nullptr;
-#endif
+    return Target_Is_Team(target) ? &g_Teams[Target_Get_ID(target)] : nullptr;
 }
 
 TeamTypeClass *As_TeamType(target_t target)
 {
-#ifdef GAME_DLL
-    TeamTypeClass *(*func)(target_t) = reinterpret_cast<TeamTypeClass *(*)(target_t)>(0x0055506C);
-    return func(target);
-#elif 0
-    // TODO: Requires TeamTypeClass implementation.
-    return Target_Get_RTTI(target) == RTTI_TEAMTYPE ? &TeamTypes[Target_Get_ID(target)] : nullptr;
-#else
-    return nullptr;
-#endif
-}
-
-AbstractClass *As_Abstract(target_t target)
-{
-    return (AbstractClass *)As_Object(target);
+    return Target_Is_TeamType(target) ? &g_TeamTypes[Target_Get_ID(target)] : nullptr;
 }
 
 ObjectClass *As_Object(target_t target)
 {
-#ifdef GAME_DLL
-    ObjectClass *(*func)(target_t) = reinterpret_cast<ObjectClass *(*)(target_t)>(0x00555190);
-    return func(target);
-#elif 0
+    int id = Target_Get_ID(target);
     ObjectClass *objptr = nullptr;
 
+    // NOTE: Possible future improvement that could be a bug fix.
+    // This returns only targetable Objects, in contrast
+    // xTargetClass::As_Object also returns Smudge and Overlay
     switch (Target_Get_RTTI(target)) {
         case RTTI_AIRCRAFT:
-            objptr = As_Aircraft(target);
+            objptr = &g_Aircraft[id];
             break;
 
         case RTTI_ANIM:
-            objptr = As_Animation(target);
+            objptr = &g_Anims[id];
             break;
 
         case RTTI_BUILDING:
-            objptr = As_Building(target);
+            objptr = &g_Buildings[id];
             break;
 
         case RTTI_BULLET:
-            objptr = As_Bullet(target);
+            objptr = &g_Bullets[id];
             break;
 
         case RTTI_INFANTRY:
-            objptr = As_Infantry(target);
+            objptr = &g_Infantry[id];
             break;
 
         case RTTI_TERRAIN:
-            objptr = As_Terrain(target);
+            objptr = &g_Terrains[id];
             break;
 
         case RTTI_UNIT:
-            objptr = As_Unit(target);
+            objptr = &g_Units[id];
             break;
 
         case RTTI_VESSEL:
-            objptr = As_Vessel(target);
+            objptr = &g_Vessels[id];
             break;
 
         default:
             break;
-    };
+    }
 
-    // captainslog_assert(objptr != nullptr);
-
-    if (objptr != nullptr && objptr->m_IsActive) {
+    if (objptr != nullptr && objptr->Is_Active()) {
         return objptr;
     }
 
     return nullptr;
-#else
-    return nullptr;
-#endif
 }
 
 AnimClass *As_Animation(target_t target)
 {
-#ifdef GAME_DLL
-    AnimClass *(*func)(target_t) = reinterpret_cast<AnimClass *(*)(target_t)>(0x005550A4);
-    return func(target);
-#elif 0
-    // TODO: Requires AnimClass implementation.
-    return Target_Get_RTTI(target) == RTTI_ANIM ? &Anims[Target_Get_ID(target)] : nullptr;
-#else
-    return nullptr;
-#endif
+    return Target_Is_Anim(target) ? &g_Anims[Target_Get_ID(target)] : nullptr;
 }
 
 BulletClass *As_Bullet(target_t target)
 {
-#ifdef GAME_DLL
-    BulletClass *(*func)(target_t) = reinterpret_cast<BulletClass *(*)(target_t)>(0x005550DC);
-    return func(target);
-#elif 0
-    // TODO: Requires BulletClass implementation.
-    return Target_Get_RTTI(target) == RTTI_BULLET ? &Bullets[Target_Get_ID(target)] : nullptr;
-#else
-    return nullptr;
-#endif
+    return Target_Is_Bullet(target) ? &g_Bullets[Target_Get_ID(target)] : nullptr;
 }
 
 TerrainClass *As_Terrain(target_t target)
 {
-#ifdef GAME_DLL
-    // TODO: Inlined in RA
-    return nullptr;
-#elif 0
-    // TODO: Requires TerrainClass implementation.
-    return Target_Get_RTTI(target) == RTTI_TERRAIN ? &Terrains[Target_Get_ID(target)] : nullptr;
-#else
-    return nullptr;
-#endif
+    return Target_Is_Terrain(target) ? &g_Terrains[Target_Get_ID(target)] : nullptr;
 }
 
 TechnoClass *As_Techno(target_t target)
 {
-#ifdef GAME_DLL
-    TechnoClass *(*func)(target_t) = reinterpret_cast<TechnoClass *(*)(target_t)>(0x0055514C);
-    return func(target);
-#else
-    ObjectClass *objptr = As_Object(target);
-    captainslog_assert(objptr != nullptr);
-    return objptr != nullptr && objptr->Is_Techno() ? (TechnoClass *)objptr : nullptr;
-#endif
+    ObjectClass *optr = As_Object(target);
+
+    if (optr != nullptr && optr->Is_Techno()) {
+        return reinterpret_cast<TechnoClass *>(optr);
+    }
+
+    return nullptr;
 }
 
 TechnoTypeClass *As_TechnoType(target_t target)
 {
-#ifdef GAME_DLL
-    TechnoTypeClass *(*func)(target_t) = reinterpret_cast<TechnoTypeClass *(*)(target_t)>(0x00555964);
-    return func(target);
-#else
-    // TODO: Requires all derivant TechnoTypeClass's to be implemented.
+    int id = Target_Get_ID(target);
+
+    switch (Target_Get_RTTI(target)) {
+        case RTTI_INFANTRYTYPE:
+            return InfantryTypeClass::As_Pointer(InfantryType(id));
+        case RTTI_UNITTYPE:
+            return UnitTypeClass::As_Pointer(UnitType(id));
+        case RTTI_VESSELTYPE:
+            return VesselTypeClass::As_Pointer(VesselType(id));
+        case RTTI_AIRCRAFTTYPE:
+            return AircraftTypeClass::As_Pointer(AircraftType(id));
+        case RTTI_BUILDINGTYPE:
+            return BuildingTypeClass::As_Pointer(BuildingType(id));
+        default:
+            break;
+    }
     return nullptr;
-#endif
 }
 
 AircraftClass *As_Aircraft(target_t target)
 {
-#ifdef GAME_DLL
-    AircraftClass *(*func)(target_t) = reinterpret_cast<AircraftClass *(*)(target_t)>(0x00555114);
-    return func(target);
-#else
-    // TODO: Requires AircraftClass implementation.
-    return 0;
-#endif
+    return Target_Is_Aircraft(target) ? &g_Aircraft[Target_Get_ID(target)] : nullptr;
 }
 
 UnitClass *As_Unit(target_t target)
 {
-#ifdef GAME_DLL
-    UnitClass *(*func)(target_t) = reinterpret_cast<UnitClass *(*)(target_t)>(0x00555290);
-    return func(target);
-#else
-    // TODO: Requires UnitClass implementation.
-    return 0;
-#endif
+    return Target_Is_Unit(target) ? &g_Units[Target_Get_ID(target)] : nullptr;
 }
 
 VesselClass *As_Vessel(target_t target)
 {
-#ifdef GAME_DLL
-    VesselClass *(*func)(target_t) = reinterpret_cast<VesselClass *(*)(target_t)>(0x005552C8);
-    return func(target);
-#else
-    // TODO: Requires VesselClass implementation.
-    return nullptr;
-#endif
+    return Target_Is_Vessel(target) ? &g_Vessels[Target_Get_ID(target)] : nullptr;
 }
 
 InfantryClass *As_Infantry(target_t target)
 {
-#ifdef GAME_DLL
-    InfantryClass *(*func)(target_t) = reinterpret_cast<InfantryClass *(*)(target_t)>(0x00555300);
-    return func(target);
-#else
-    // TODO: Requires InfantryClass implementation.
-    return nullptr;
-#endif
+    return Target_Is_Infantry(target) ? &g_Infantry[Target_Get_ID(target)] : nullptr;
 }
 
 BuildingClass *As_Building(target_t target)
 {
-#ifdef GAME_DLL
-    BuildingClass *(*func)(target_t) = reinterpret_cast<BuildingClass *(*)(target_t)>(0x00555338);
-    return func(target);
-#else
-    // TODO: Requires BuildingClass implementation.
-    return nullptr;
-#endif
+    return Target_Is_Building(target) ? &g_Buildings[Target_Get_ID(target)] : nullptr;
 }
 
 cell_t As_Cell(target_t target)
@@ -349,36 +238,217 @@ cell_t As_Cell(target_t target)
 
 coord_t As_Coord(target_t target)
 {
-#ifdef GAME_DLL
-    coord_t (*func)(target_t) = reinterpret_cast<coord_t (*)(target_t)>(0x00555384);
-    return func(target);
-#else
     if (!Target_Legal(target)) {
         return 0;
-}
-    if (!Target_Is_Cell(target)) {
-        ObjectClass *objptr = As_Object(target);
-        return (objptr != nullptr ? objptr->Target_Coord() : 0);
     }
-    lepton_t lx = 16 * (Target_Get_ID(target) & 0xFFF) + 8;
-    lepton_t ly = 16 * ((Target_Get_ID(target) >> 12) & 0xFFF) + 8;
-    return Coord_From_Lepton_XY(lx, ly);
-#endif
+
+    if (Target_Is_Cell(target)) {
+        int id = Target_Get_ID(target);
+        lepton_t lx = 16 * (id & 0xFFF) + 8;
+        lepton_t ly = 16 * ((id >> 12) & 0xFFF) + 8;
+        return Coord_From_Lepton_XY(lx, ly);
+    }
+
+    ObjectClass *objptr = As_Object(target);
+
+    if (objptr != nullptr) {
+        captainslog_assert(objptr->Is_Active());
+        return objptr->Target_Coord();
+    }
+    return 0;
 }
 
 coord_t As_Movement_Coord(target_t target)
 {
-#ifdef GAME_DLL
-    coord_t(*func)(target_t) = reinterpret_cast<coord_t(*)(target_t)>(0x005553F8);
-    return func(target);
-#else
     if (!Target_Legal(target)) {
         return 0;
     }
-    if (!Target_Is_Cell(target)) {
-        ObjectClass *objptr = As_Object(target);
-        return (objptr != nullptr ? objptr->Docking_Coord() : 0);
+
+    if (Target_Is_Cell(target)) {
+        int id = Target_Get_ID(target);
+        return Cell_To_Coord(id);
     }
-    return Cell_To_Coord(Target_Get_ID(target));
-#endif
+
+    ObjectClass *objptr = As_Object(target);
+
+    if (objptr != nullptr) {
+        captainslog_assert(objptr->Is_Active());
+        return objptr->Docking_Coord();
+    }
+    return 0;
+}
+
+CellClass *xTargetClass::As_Cell() const
+{
+    if (Get_RTTI() == RTTI_CELL) {
+        return &g_Map[Get_ID()];
+    }
+
+    return nullptr;
+}
+
+AbstractClass *xTargetClass::As_Abstract() const
+{
+    const int id = Get_ID();
+
+    switch (Get_RTTI()) {
+        case RTTI_TEAM:
+            return &g_Teams[id];
+        case RTTI_BULLET:
+            return &g_Bullets[id];
+        case RTTI_OVERLAY:
+            return &g_Overlays[id];
+        case RTTI_SMUDGE:
+            return &g_Smudges[id];
+        case RTTI_UNIT:
+            return &g_Units[id];
+        case RTTI_VESSEL:
+            return &g_Vessels[id];
+        case RTTI_BUILDING:
+            return &g_Buildings[id];
+        case RTTI_INFANTRY:
+            return &g_Infantry[id];
+        case RTTI_AIRCRAFT:
+            return &g_Aircraft[id];
+        case RTTI_TERRAIN:
+            return &g_Terrains[id];
+        case RTTI_ANIM:
+            return &g_Anims[id];
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+AbstractTypeClass *xTargetClass::As_TypeClass() const
+{
+    const int id = Get_ID();
+
+    switch (Get_RTTI()) {
+        // TODO: look into this, i don't think the RTTI checks not checking TYPE are correct...
+        case RTTI_TEAMTYPE:
+            return TeamTypeClass::As_Pointer(TeamType(id));
+        case RTTI_TRIGGERTYPE:
+            return TriggerTypeClass::As_Pointer(TriggerType(id));
+        case RTTI_BULLETTYPE:
+            return BulletTypeClass::As_Pointer(BulletType(id));
+        case RTTI_OVERLAY:
+            return OverlayTypeClass::As_Pointer(OverlayType(id));
+        case RTTI_SMUDGE:
+            return SmudgeTypeClass::As_Pointer(SmudgeType(id));
+        case RTTI_UNIT:
+            return UnitTypeClass::As_Pointer(UnitType(id));
+        case RTTI_VESSEL:
+            return VesselTypeClass::As_Pointer(VesselType(id));
+        case RTTI_BUILDING:
+            return BuildingTypeClass::As_Pointer(BuildingType(id));
+        case RTTI_INFANTRY:
+            return InfantryTypeClass::As_Pointer(InfantryType(id));
+        case RTTI_AIRCRAFT:
+            return AircraftTypeClass::As_Pointer(AircraftType(id));
+        case RTTI_TERRAIN:
+            return TerrainTypeClass::As_Pointer(TerrainType(id));
+        case RTTI_ANIM:
+            return AnimTypeClass::As_Pointer(AnimType(id));
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+TechnoClass *xTargetClass::As_Techno() const
+{
+    const int id = Get_ID();
+
+    switch (Get_RTTI()) {
+        case RTTI_UNIT:
+            return &g_Units[id];
+        case RTTI_VESSEL:
+            return &g_Vessels[id];
+        case RTTI_BUILDING:
+            return &g_Buildings[id];
+        case RTTI_INFANTRY:
+            return &g_Infantry[id];
+        case RTTI_AIRCRAFT:
+            return &g_Aircraft[id];
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+ObjectClass *xTargetClass::As_Object() const
+{
+    const int id = Get_ID();
+
+    switch (Get_RTTI()) {
+        case RTTI_TERRAIN:
+            return &g_Terrains[id];
+        case RTTI_SMUDGE:
+            return &g_Smudges[id];
+        case RTTI_OVERLAY:
+            return &g_Overlays[id];
+        case RTTI_BULLET:
+            return &g_Bullets[id];
+        case RTTI_ANIM:
+            return &g_Anims[id];
+        case RTTI_UNIT:
+            return &g_Units[id];
+        case RTTI_VESSEL:
+            return &g_Vessels[id];
+        case RTTI_BUILDING:
+            return &g_Buildings[id];
+        case RTTI_INFANTRY:
+            return &g_Infantry[id];
+        case RTTI_AIRCRAFT:
+            return &g_Aircraft[id];
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+AircraftClass *xTargetClass::As_Aircraft() const
+{
+    if (Get_RTTI() == RTTI_AIRCRAFT) {
+        return reinterpret_cast<AircraftClass *>(As_Techno());
+    }
+
+    return nullptr;
+}
+
+UnitClass *xTargetClass::As_Unit() const
+{
+    if (Get_RTTI() == RTTI_UNIT) {
+        return reinterpret_cast<UnitClass *>(As_Techno());
+    }
+
+    return nullptr;
+}
+
+VesselClass *xTargetClass::As_Vessel() const
+{
+    if (Get_RTTI() == RTTI_VESSEL) {
+        return reinterpret_cast<VesselClass *>(As_Techno());
+    }
+
+    return nullptr;
+}
+
+InfantryClass *xTargetClass::As_Infantry() const
+{
+    if (Get_RTTI() == RTTI_UNIT) {
+        return reinterpret_cast<InfantryClass *>(As_Techno());
+    }
+
+    return nullptr;
+}
+
+BuildingClass *xTargetClass::As_Building() const
+{
+    if (Get_RTTI() == RTTI_BUILDING) {
+        return reinterpret_cast<BuildingClass *>(As_Techno());
+    }
+
+    return nullptr;
 }

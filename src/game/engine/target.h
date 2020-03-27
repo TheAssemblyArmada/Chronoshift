@@ -3,6 +3,7 @@
  *
  * @author OmniBlade
  * @author CCHyper
+ * @author tomsons26
  *
  * @brief Functions for converting to and from target values.
  *
@@ -48,24 +49,26 @@ public:
     TargetClass(AbstractClass *abstract);
     TargetClass(AbstractTypeClass *abstractype);
     TargetClass(CellClass *cell);
-    TargetClass(cell_t cellnum);
     TargetClass(const TargetClass &that) : m_Target(that.m_Target) {}
     ~TargetClass() {}
 
-    operator target_t() { return m_Target; }
+    operator target_t() const { return m_Target; }
+
+    RTTIType Get_RTTI() const { return RTTIType(m_RTTI); }
+
+    int Get_ID() const { return m_ID; }
 
     CellClass *As_Cell() const;
-    AbstractClass *As_Abstract() const;
-    AbstractTypeClass *As_TypeClass() const;
-    TechnoClass *As_Techno() const;
-    ObjectClass *As_Object() const;
 
 private:
-    union {
-        struct {
+    union
+    {
+        struct
+        {
             unsigned int m_ID : 24;
             unsigned int m_RTTI : 8;
-        }; target_t m_Target;
+        };
+        target_t m_Target;
     };
 };
 
@@ -119,20 +122,51 @@ inline BOOL Target_Is_Cell(target_t target)
     return Target_Get_RTTI(target) == RTTI_CELL;
 }
 
-BOOL Target_Is_Techno(target_t target);
+inline BOOL Target_Is_TeamType(target_t target)
+{
+    return Target_Get_RTTI(target) == RTTI_TEAMTYPE;
+}
+
+inline BOOL Target_Is_TriggerType(target_t target)
+{
+    return Target_Get_RTTI(target) == RTTI_TRIGGERTYPE;
+}
+
+inline BOOL Target_Is_Anim(target_t target)
+{
+    return Target_Get_RTTI(target) == RTTI_ANIM;
+}
+
+inline BOOL Target_Is_Bullet(target_t target)
+{
+    return Target_Get_RTTI(target) == RTTI_BULLET;
+}
+
+inline BOOL Target_Is_Team(target_t target)
+{
+    return Target_Get_RTTI(target) == RTTI_TEAM;
+}
+
+inline BOOL Target_Is_Trigger(target_t target)
+{
+    return Target_Get_RTTI(target) == RTTI_TRIGGER;
+}
+
+inline BOOL Target_Is_Targetable(target_t target)
+{
+    RTTIType rtti = Target_Get_RTTI(target);
+    return rtti == RTTI_TERRAIN || rtti == RTTI_UNIT || rtti == RTTI_VESSEL || rtti == RTTI_INFANTRY || rtti == RTTI_BUILDING
+        || rtti == RTTI_AIRCRAFT;
+}
 
 BOOL Target_Legal(target_t target);
-
 target_t As_Target(cell_t cellnum);
 target_t As_Target(coord_t coord);
-target_t As_Target(CellClass *cell);
-target_t As_Target(AbstractClass *object);
 
 TriggerClass *As_Trigger(target_t target);
 TriggerTypeClass *As_TriggerType(target_t target);
 TeamClass *As_Team(target_t target);
 TeamTypeClass *As_TeamType(target_t target);
-AbstractClass *As_Abstract(target_t target);
 ObjectClass *As_Object(target_t target);
 AnimClass *As_Animation(target_t target);
 BulletClass *As_Bullet(target_t target);
@@ -148,5 +182,34 @@ BuildingClass *As_Building(target_t target);
 cell_t As_Cell(target_t target);
 coord_t As_Coord(target_t target);
 coord_t As_Movement_Coord(target_t target);
+
+// This class is for use with EventClass, as unions can't have constructors.
+class xTargetClass
+{
+public:
+    CellClass *As_Cell() const;
+    AbstractClass *As_Abstract() const;
+    AbstractTypeClass *As_TypeClass() const;
+    TechnoClass *As_Techno() const;
+    ObjectClass *As_Object() const;
+    AircraftClass *As_Aircraft() const;
+    UnitClass *As_Unit() const;
+    VesselClass *As_Vessel() const;
+    InfantryClass *As_Infantry() const;
+    BuildingClass *As_Building() const;
+
+    void operator=(const TargetClass &target) { m_Target = target; }
+
+    bool Valid_RTTI() const { return Target_Get_RTTI(m_Target) != RTTI_NONE; }
+
+    RTTIType Get_RTTI() const { return Target_Get_RTTI(m_Target); }
+
+    int Get_ID() const { return Target_Get_ID(m_Target); }
+
+    operator target_t() const { return m_Target; }
+
+private:
+    target_t m_Target;
+};
 
 #endif // TARGET_H

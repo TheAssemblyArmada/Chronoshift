@@ -33,6 +33,7 @@ class TriggerClass;
 enum TriggerType
 {
     TRIGGER_NONE = -1,
+    TRIGGER_FORCESIZE = 0x80000000
 };
 
 DEFINE_ENUMERATION_OPERATORS(TriggerType);

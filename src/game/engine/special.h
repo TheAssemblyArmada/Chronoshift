@@ -46,6 +46,7 @@ public:
     BOOL Always_Show_Health() { return m_ShowHealth; }
 
     uint32_t Pack() const { return m_SpecialFlags; }
+    void Set(uint32_t special) { m_SpecialFlags = special; }
 
 private:
     union

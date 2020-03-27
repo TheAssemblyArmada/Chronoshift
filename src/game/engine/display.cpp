@@ -1100,7 +1100,7 @@ void DisplayClass::Mouse_Left_Up(
     m_DisplayBit16 = false;
 
     if (object != nullptr) {
-        target = As_Target(object);
+        target = object->As_Target();
     } else if (cellnum != -1) {
         target = As_Target(cellnum);
     }
