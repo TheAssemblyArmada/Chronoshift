@@ -100,7 +100,9 @@ public:
     void Set_Bridge_Count(int count) { m_BridgeCount = count; }
     BOOL Get_Global(int index) const { return m_GlobalVariables[index]; }
     BOOL Get_field_7CF() const { return m_field_7CF; }
+    void Set_field_7CF(int state) { m_field_7CF = state; }
     BOOL Get_field_7D3() const { return m_field_7D3; }
+    void Set_field_7D3(int state) { m_field_7D3 = state; }
     BOOL Evacuate_Civilians() const { return m_CivEvac; }
 
 #ifdef GAME_DLL

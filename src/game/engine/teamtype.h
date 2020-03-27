@@ -32,6 +32,12 @@ class ObjectTypeClass;
 class TriggerTypeClass;
 class GameINIClass;
 
+// This enum is just for casting the TeamType heap indexes.
+enum TeamType
+{
+    TEAMTYPE_NONE = 0xFFFFFFFF,
+};
+
 enum TeamMissionType
 {
     TMISSION_ATTACK, // "Attack..."
@@ -121,6 +127,7 @@ public:
     static TeamMissionType Mission_From_Name(const char *name);
     static const char *Name_From_Mission(TeamMissionType tmission);
     static TeamTypeClass *As_Pointer(const char *name);
+    static TeamTypeClass *As_Pointer(TeamType type);
     static TeamTypeClass *From_Name(const char *name);
     static TeamTypeClass *Suggested_New_Team(HouseClass *house, int32_t avail_air, int32_t avail_unit, int32_t avail_inf,
         int32_t avail_vessel, BOOL allow_autocreate);

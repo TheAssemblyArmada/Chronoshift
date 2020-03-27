@@ -69,6 +69,40 @@ private:
     };
 };
 
+// this class is for use with EventClass, as unions can't have constructors
+class xTargetClass
+{
+public:
+    CellClass *As_Cell() const;
+    AbstractClass *As_Abstract() const;
+    AbstractTypeClass *As_TypeClass() const;
+    TechnoClass *As_Techno() const;
+    ObjectClass *As_Object() const;
+    BuildingClass *As_Building() const;
+
+    void operator=(TargetClass &target) { m_Target = target; }
+
+    bool Valid_RTTI() const
+    {
+        return Get_RTTI() != RTTI_NONE;
+    }
+
+    RTTIType Get_RTTI() const
+    {
+        return RTTIType((m_Target & 0xFF000000) >> 24);
+    }
+
+    int Get_ID() const
+    {
+        return m_Target & 0xFFFFFF;
+    }
+
+    operator target_t() { return m_Target; }
+
+private:
+    target_t m_Target;
+};
+
 inline target_t Make_Target(RTTIType type, int id)
 {
     return ((type & 0xFF) << 24) | (id & 0xFFFFFF);
@@ -77,6 +111,11 @@ inline target_t Make_Target(RTTIType type, int id)
 inline RTTIType Target_Get_RTTI(target_t target)
 {
     return RTTIType((target & 0xFF000000) >> 24);
+}
+
+inline bool Target_Valid_RTTI(target_t target)
+{
+    return ((target & 0xFF000000) >> 24) != RTTI_NONE;
 }
 
 inline int Target_Get_ID(target_t target)
@@ -134,6 +173,7 @@ TeamClass *As_Team(target_t target);
 TeamTypeClass *As_TeamType(target_t target);
 AbstractClass *As_Abstract(target_t target);
 ObjectClass *As_Object(target_t target);
+AbstractTypeClass *As_TypeClass(target_t target);
 AnimClass *As_Animation(target_t target);
 BulletClass *As_Bullet(target_t target);
 TerrainClass *As_Terrain(target_t target);

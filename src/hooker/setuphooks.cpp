@@ -1147,6 +1147,9 @@ void Setup_Hooks()
     Hook_Function(0x00528C78, *Queue_Mission);
     Hook_Function(0x00528D18, *Queue_Mission_Formation);
     Hook_Function(0x0052BC94, *Clean_Scheduled_Events);
+
+    // gameevent.cpp
+    Hook_Function(0x004BD0C8, *GameEventClass::Execute);
 #endif
 }
 

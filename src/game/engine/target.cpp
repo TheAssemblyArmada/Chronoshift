@@ -16,15 +16,27 @@
 #include "target.h"
 #include "cell.h"
 #include "coord.h"
+#include "iomap.h"
 #include "object.h"
 #include "techno.h"
 #include "technotype.h"
-//#include "triggertype.h"
+#include "triggertype.h"
+#include "aircraft.h"
+#include "anim.h"
+#include "building.h"
+#include "bullet.h"
+#include "infantry.h"
+#include "overlay.h"
+#include "smudge.h"
+#include "terrain.h"
+#include "unit.h"
+#include "vessel.h"
+
 
 CellClass *TargetClass::As_Cell() const
 {
     return nullptr;
-    //return ::As_Cell(m_Target);
+    // return ::As_Cell(m_Target);
 }
 
 AbstractClass *TargetClass::As_Abstract() const
@@ -35,7 +47,7 @@ AbstractClass *TargetClass::As_Abstract() const
 AbstractTypeClass *TargetClass::As_TypeClass() const
 {
     return nullptr;
-    //return ::As_TypeClass(m_Target);
+    // return ::As_TypeClass(m_Target);
 }
 
 TechnoClass *TargetClass::As_Techno() const
@@ -50,7 +62,7 @@ ObjectClass *TargetClass::As_Object() const
 
 TargetClass::TargetClass(AbstractClass *abstract)
 {
-    if (abstract != nullptr){
+    if (abstract != nullptr) {
         m_Target = (abstract->What_Am_I() << 24) | (abstract->Get_Heap_ID() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
@@ -59,7 +71,7 @@ TargetClass::TargetClass(AbstractClass *abstract)
 
 TargetClass::TargetClass(AbstractTypeClass *abstractype)
 {
-    if (abstractype != nullptr){
+    if (abstractype != nullptr) {
         m_Target = (abstractype->What_Am_I() << 24) | (abstractype->Get_Heap_ID() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
@@ -68,7 +80,7 @@ TargetClass::TargetClass(AbstractTypeClass *abstractype)
 
 TargetClass::TargetClass(CellClass *cell)
 {
-    if (cell != nullptr){
+    if (cell != nullptr) {
         m_Target = (RTTI_CELL << 24) | (cell->Cell_Number() & 0xFFFFFF);
     } else {
         m_RTTI = RTTI_NONE;
@@ -78,6 +90,141 @@ TargetClass::TargetClass(CellClass *cell)
 TargetClass::TargetClass(cell_t cellnum)
 {
     m_Target = (RTTI_CELL << 24) | (cellnum & 0xFFFFFF);
+}
+
+CellClass *xTargetClass::As_Cell() const
+{
+    if (Get_RTTI() == RTTI_CELL) {
+        return &g_Map[Get_ID()];
+    }
+
+    return nullptr;
+}
+
+AbstractClass *xTargetClass::As_Abstract() const
+{
+    const int id = Get_ID();
+    switch (Get_RTTI()) {
+        case RTTI_TEAM:
+            return &g_Teams[id];
+        case RTTI_BULLET:
+            return &g_Bullets[id];
+        case RTTI_OVERLAY:
+            return &g_Overlays[id];
+        case RTTI_SMUDGE:
+            return &g_Smudges[id];
+        case RTTI_UNIT:
+            return &g_Units[id];
+        case RTTI_VESSEL:
+            return &g_Vessels[id];
+        case RTTI_BUILDING:
+            return &g_Buildings[id];
+        case RTTI_INFANTRY:
+            return &g_Infantry[id];
+        case RTTI_AIRCRAFT:
+            return &g_Aircraft[id];
+        case RTTI_TERRAIN:
+            return &g_Terrains[id];
+        case RTTI_ANIM:
+            return &g_Anims[id];
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+AbstractTypeClass *xTargetClass::As_TypeClass() const
+{
+    const int id = Get_ID();
+    switch (Get_RTTI()) {
+        // TODO, look into this, i don't think the RTTI checks not checking TYPE are correct.....
+        case RTTI_TEAMTYPE:
+            return TeamTypeClass::As_Pointer((TeamType)id);
+        case RTTI_TRIGGERTYPE:
+            return TriggerTypeClass::As_Pointer((TriggerType)id);
+        case RTTI_BULLETTYPE:
+            return BulletTypeClass::As_Pointer((BulletType)id);
+        case RTTI_OVERLAY:
+            return OverlayTypeClass::As_Pointer((OverlayType)id);
+        case RTTI_SMUDGE:
+            return SmudgeTypeClass::As_Pointer((SmudgeType)id);
+        case RTTI_UNIT:
+            return UnitTypeClass::As_Pointer((UnitType)id);
+        case RTTI_VESSEL:
+            return VesselTypeClass::As_Pointer((VesselType)id);
+        case RTTI_BUILDING:
+            return BuildingTypeClass::As_Pointer((BuildingType)id);
+        case RTTI_INFANTRY:
+            return InfantryTypeClass::As_Pointer((InfantryType)id);
+        case RTTI_AIRCRAFT:
+            return AircraftTypeClass::As_Pointer((AircraftType)id);
+        case RTTI_TERRAIN:
+            return TerrainTypeClass::As_Pointer((TerrainType)id);
+        case RTTI_ANIM:
+            return AnimTypeClass::As_Pointer((AnimType)id);
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+TechnoClass *xTargetClass::As_Techno() const
+{
+    const int id = Get_ID();
+    switch (Get_RTTI()) {
+        case RTTI_UNIT:
+            return &g_Units[id];
+        case RTTI_VESSEL:
+            return &g_Vessels[id];
+        case RTTI_BUILDING:
+            return &g_Buildings[id];
+        case RTTI_INFANTRY:
+            return &g_Infantry[id];
+        case RTTI_AIRCRAFT:
+            return &g_Aircraft[id];
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+ObjectClass *xTargetClass::As_Object() const
+{
+    const int id = Get_ID();
+    switch (Get_RTTI()) {
+        case RTTI_TERRAIN:
+            return &g_Terrains[id];
+        case RTTI_SMUDGE:
+            return &g_Smudges[id];
+        case RTTI_OVERLAY:
+            return &g_Overlays[id];
+        case RTTI_BULLET:
+            return &g_Bullets[id];
+        case RTTI_ANIM:
+            return &g_Anims[id];
+        case RTTI_UNIT:
+            return &g_Units[id];
+        case RTTI_VESSEL:
+            return &g_Vessels[id];
+        case RTTI_BUILDING:
+            return &g_Buildings[id];
+        case RTTI_INFANTRY:
+            return &g_Infantry[id];
+        case RTTI_AIRCRAFT:
+            return &g_Aircraft[id];
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+BuildingClass *xTargetClass::As_Building() const
+{
+    if (Get_RTTI() == RTTI_BUILDING) {
+        return (BuildingClass *)As_Techno();
+    }
+
+    return nullptr;
 }
 
 BOOL Target_Is_Techno(target_t target)
@@ -166,6 +313,12 @@ TeamTypeClass *As_TeamType(target_t target)
 AbstractClass *As_Abstract(target_t target)
 {
     return (AbstractClass *)As_Object(target);
+}
+
+// FIXME
+AbstractTypeClass *As_TypeClass(target_t target)
+{
+    return nullptr;
 }
 
 ObjectClass *As_Object(target_t target)
@@ -355,7 +508,7 @@ coord_t As_Coord(target_t target)
 #else
     if (!Target_Legal(target)) {
         return 0;
-}
+    }
     if (!Target_Is_Cell(target)) {
         ObjectClass *objptr = As_Object(target);
         return (objptr != nullptr ? objptr->Target_Coord() : 0);
@@ -369,7 +522,7 @@ coord_t As_Coord(target_t target)
 coord_t As_Movement_Coord(target_t target)
 {
 #ifdef GAME_DLL
-    coord_t(*func)(target_t) = reinterpret_cast<coord_t(*)(target_t)>(0x005553F8);
+    coord_t (*func)(target_t) = reinterpret_cast<coord_t (*)(target_t)>(0x005553F8);
     return func(target);
 #else
     if (!Target_Legal(target)) {

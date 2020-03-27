@@ -175,6 +175,7 @@ public:
     int Get_Price() const { return m_Price; }
     void Set_Price(int price) { m_Price = price; }
     void Set_Archive(target_t archive) { m_Archive = archive; }
+    void Set_Suspended_TarCom(target_t target) { m_SuspendedTarCom = target; }
 
     target_t Get_TarCom() const { return m_TarCom; }
     BOOL Can_Teleport_Here(cell_t cell) const;
