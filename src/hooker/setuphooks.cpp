@@ -1154,6 +1154,10 @@ void Setup_Hooks()
     Hook_Function(0x005D5138, *BlowfishEngine::Decrypt);
     Hook_Function(0x005D51EC, *BlowfishEngine::Process_Block);
     Hook_Function(0x005D5330, *BlowfishEngine::Sub_Key_Encrypt);
+
+    // voc.cpp
+    Hook_Function(0x00425D1C, static_cast<void (*)(VocType, coord_t, int, HousesType)>(&Sound_Effect));
+    Hook_Function(0x00425F24, static_cast<int (*)(VocType, fixed_t, int, int16_t, HousesType)>(&Sound_Effect));
 #endif
 }
 

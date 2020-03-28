@@ -5,6 +5,14 @@
 
 #include "always.h"
 
+#define PAN_LEFT 32767
+#define PAN_CENTER 0
+#define PAN_RIGHT -32767
+
+enum {
+    INVALID_AUDIO_HANDLE = -1,
+};
+
 inline void Sound_Callback()
 {
 #ifdef GAME_DLL
@@ -89,6 +97,16 @@ inline void Sound_End()
 #ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x005BED80);
     func();
+#endif
+}
+
+inline int Play_Sample(void *sample, int priority, int volume, short panloc)
+{
+#ifdef GAME_DLL
+    int (*func)(void *, int, int, short) = reinterpret_cast<int (*)(void *, int, int, short)>(0x005BF200);
+    return func(sample, priority, volume, panloc);
+#else
+    return 0;
 #endif
 }
 
