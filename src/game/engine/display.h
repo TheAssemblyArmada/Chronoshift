@@ -124,6 +124,7 @@ public:
         m_PendingObjectOwner = owner;
     }
     void Clear_Pending_Object() { Set_Pending_Object(nullptr, nullptr, HOUSES_NONE); }
+    coord_t Get_DisplayPos() const { return m_DisplayPos; }
     lepton_t Get_DisplayWidth() const { return m_DisplayWidth; }
     lepton_t Get_DisplayHeight() const { return m_DisplayHeight; }
     cell_t Get_Cursor_Start() const { return m_DisplayCursorStart; }
