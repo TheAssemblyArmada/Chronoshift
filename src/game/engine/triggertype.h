@@ -32,7 +32,7 @@ class TriggerClass;
 // This enum is just for casting the TriggerType heap indexes.
 enum TriggerType
 {
-    TRIGGER_NONE = -1,
+    TRIGGER_NONE = 0xFFFFFFFF,
 };
 
 DEFINE_ENUMERATION_OPERATORS(TriggerType);

@@ -99,6 +99,7 @@ struct NodeNameTag
     HousesType m_House;
     PlayerColorType m_Color;
     HousesType m_AltHouse;
+    int field_19; //set in PROCESS_TIME event
 };
 
 class SessionClass
@@ -112,6 +113,8 @@ public:
 
     GameEnum Game_To_Play() const { return m_GameToPlay; }
     void Set_Game_To_Play(GameEnum game) { m_GameToPlay = game; }
+    void Set_MaxAhead(int maxahead) { m_MaxAhead = maxahead; }
+    int Get_MaxAhead() { return m_MaxAhead; }
     CommProtocolEnum Packet_Protocol() const { return m_PacketProtocol; }
     int Frame_Send_Rate() { return m_FrameSendRate; }
 
@@ -169,6 +172,8 @@ public:
     DynamicVectorClass<NodeNameTag *> &Games_List() { return m_Games; }
     DynamicVectorClass<NodeNameTag *> &Players_List() { return m_Players; }
     DynamicVectorClass<NodeNameTag *> &Network_Players_List() { return m_NetworkPlayers; }
+    int Player_Count() const { return m_Players.Count(); }
+    NodeNameTag *Player(int num) { return m_Players[num]; }
 
     BOOL Modem_Service() const { return m_ModemService; }
 

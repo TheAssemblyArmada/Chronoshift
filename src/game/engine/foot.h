@@ -123,6 +123,12 @@ public:
     FacingType Get_Path_Facing(int index) const { return m_Paths[index]; }
     target_t Nav_Com() const { return m_NavCom; }
 
+    void Set_To_Scatter(BOOL state) { m_ToScatter = state; }
+    void Set_In_Formation(BOOL state) { m_InFormation = state; }
+    void Set_Team_Speed(SpeedType speed) { m_TeamSpeed = speed; }
+    void Set_Team_Max_Speed(MPHType mph) { m_TeamMaxSpeed = mph; }
+    void Set_Suspended_NavCom(target_t target) { m_SuspendedNavCom = target; }
+
     static int Point_Relative_To_Line(int px, int py, int sx, int sy, int ex, int ey);
     PathType *Find_Path_Wrapper(cell_t dest, FacingType *buffer, int length, MoveType move);
 
@@ -132,6 +138,8 @@ public:
 #endif
 
     const fixed_t &Get_Speed_Multiplier() const { return m_SpeedMult; }
+    void Queue_Navigation_List(target_t target);
+    void Clear_Navigation_List();
     const GamePtr<TeamClass> &Get_Team() const { return m_Team; }
 
 protected:
