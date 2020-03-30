@@ -52,7 +52,7 @@ TechnoClass::TechnoClass(RTTIType type, int id, HousesType house) :
     m_AnimStage(),
     m_Cargo(),
     m_Door(),
-    m_KillCount(0),
+    m_Crew(),
     m_IsUseless(false),
     m_IsTickedOff(false),
     m_Cloakable(false),
@@ -91,7 +91,7 @@ TechnoClass::TechnoClass(const TechnoClass &that) :
     m_AnimStage(that.m_AnimStage),
     m_Cargo(that.m_Cargo),
     m_Door(that.m_Door),
-    m_KillCount(that.m_KillCount),
+    m_Crew(that.m_Crew),
     m_IsUseless(that.m_IsUseless),
     m_IsTickedOff(that.m_IsTickedOff),
     m_Cloakable(that.m_Cloakable),
@@ -958,7 +958,7 @@ void TechnoClass::Player_Assign_Mission(MissionType mission, target_t target, ta
  */
 int TechnoClass::Made_A_Kill()
 {
-    return ++m_KillCount;
+    return m_Crew.Register_Kill();
 }
 
 /**

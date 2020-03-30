@@ -21,6 +21,7 @@
 #include "always.h"
 #include "buildingtype.h"
 #include "cargo.h"
+#include "crew.h"
 #include "door.h"
 #include "flasher.h"
 #include "gameptr.h"
@@ -285,7 +286,7 @@ protected:
     StageClass m_AnimStage;
     CargoClass m_Cargo;
     DoorClass m_Door;
-    uint16_t m_KillCount;
+    CrewClass m_Crew;
 #ifndef CHRONOSHIFT_NO_BITFIELDS
     BOOL m_IsUseless : 1; // & 1
     BOOL m_IsTickedOff : 1; // & 2
