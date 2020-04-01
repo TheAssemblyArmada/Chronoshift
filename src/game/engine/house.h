@@ -293,9 +293,12 @@ public:
     void Set_Preferred_Target(QuarryType target) { m_PreferredTarget = target; }
     BOOL Flag_To_Recalc() { return m_RecalcNeeded = true; }
     int Get_Power() const { return m_Power; }
+    int Get_Buildings_Destroyed(HousesType house) const { return m_BuildingsDestroyed[house]; }
+    int Get_Units_Destroyed(HousesType house) const { return m_UnitsDestroyed[house]; }
     void Inc_Destroyed_Building_Count(HousesType house) { ++m_BuildingsDestroyed[house]; }
     void Inc_Destroyed_Unit_Count(HousesType house) { ++m_UnitsDestroyed[house]; }
     PlayerColorType Player_Color() const { return m_Color; }
+    const char *Player_Name() const { return m_PlayerName; }
 
     static void One_Time();
     static void Init();
