@@ -122,7 +122,7 @@ public:
     void Set_MPlayer_Obi_Wan(BOOL onoff) { m_MPlayerObiWan = onoff; }
     BOOL MPlayer_Blitz() const { return m_MPlayerBlitz; }
     void Set_MPlayer_Blitz(BOOL onoff) { m_MPlayerBlitz = onoff; }
-    int MPlayer_Max() { return m_MPlayerMax; }
+    int MPlayer_Max() const { return m_MPlayerMax; }
 
     int Desired_Frame_Rate() const { return m_DesiredFrameRate; }
     void Set_Desired_Frame_Rate(int value) { m_DesiredFrameRate = value; }
