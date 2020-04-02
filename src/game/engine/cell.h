@@ -166,9 +166,11 @@ public:
     ObjectClass *Get_Occupier() const { return m_OccupierPtr; }
     LandType Get_Land() const { return m_Land; }
     void Set_Land(LandType land) { m_Land = land; }
-    uint16_t Get_Field_A() const { return m_field_A; }
-    void Set_Field_A(HousesType house) { m_field_A |= (1 << house); }
-    void Clear_Field_A(HousesType house) { m_field_A &= ~(1 << house); }
+    uint16_t Get_Jammed_Houses() const { return m_JammedHouses; }
+    void Jam_House(HousesType house) { m_JammedHouses |= (1 << house); }
+    void Unjam_House(HousesType house) { m_JammedHouses &= ~(1 << house); }
+    BOOL Is_House_Jammed(HousesType house) const { return (m_JammedHouses & (1 << house)) != 0; }
+    BOOL Other_Houses_Jammed(HousesType house) const { return (m_JammedHouses & (uint16_t(-1) - (1 << house))) != 0; }
     static int Spot_Index(coord_t coord);
     void Adjust_Threat(HousesType house, int threat);
     void Shimmer();
@@ -219,7 +221,7 @@ private:
 #endif
 
     int8_t m_Zones[MZONE_COUNT]; // field_6
-    uint16_t m_field_A;
+    uint16_t m_JammedHouses;
     int m_CellTag; // GamePtr<TriggerClass> CellTag; // Needs TriggerClass
     TemplateType m_Template;
     uint8_t m_Icon;
@@ -246,7 +248,7 @@ inline BOOL CellClass::operator==(CellClass const &that) const
 {
     return m_CellNumber == that.m_CellNumber && m_Bit1 == that.m_Bit1 && m_PlacementCheck == that.m_PlacementCheck
         && m_Visible == that.m_Visible && m_Revealed == that.m_Revealed && m_Bit16 == that.m_Bit16 && m_Bit32 == that.m_Bit32
-        && m_HasFlag == that.m_HasFlag && m_Bit128 == that.m_Bit128 && m_field_A == that.m_field_A
+        && m_HasFlag == that.m_HasFlag && m_Bit128 == that.m_Bit128 && m_JammedHouses == that.m_JammedHouses
         && m_CellTag == that.m_CellTag && m_Template == that.m_Template && m_Icon == that.m_Icon
         && m_Overlay == that.m_Overlay && m_OverlayFrame == that.m_OverlayFrame && m_Smudge == that.m_Smudge
         && m_SmudgeFrame == that.m_SmudgeFrame && m_OwnerHouse == that.m_OwnerHouse && m_field_18 == that.m_field_18
