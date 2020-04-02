@@ -30,6 +30,24 @@ class GraphicViewPortClass;
 #pragma pack(push, 1)
 struct IconControlType
 {
+    uint8_t *Get_Icon_Data()
+    {
+        if (td.icons == TD_TILESET_CHECK) {
+            return reinterpret_cast<uint8_t *>(this) + td.icons;
+        } else {
+            return reinterpret_cast<uint8_t *>(this) + ra.icons;
+        }
+    }
+
+    uint8_t *Get_Icon_Map()
+    {
+        if (td.icons == TD_TILESET_CHECK) {
+            return reinterpret_cast<uint8_t *>(this) + td.map;
+        } else {
+            return reinterpret_cast<uint8_t *>(this) + ra.map;
+        }
+    }
+
     int16_t width; // always 24 (ICON_WIDTH)
     int16_t height; // always 24 (ICON_HEIGHT)
     int16_t count; // count of cells in set, not same as images
