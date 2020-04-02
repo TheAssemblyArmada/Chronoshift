@@ -2734,7 +2734,7 @@ void DisplayClass::Encroach_Shadow()
 void DisplayClass::Shroud_Cell(cell_t cellnum)
 {
     // If player has GPS or has units in the cell, then don't do anything.
-    if (!g_PlayerPtr->Is_Map_Clear() || (m_Array[cellnum].Get_Field_A() & (1 << g_PlayerPtr->What_Type()))) {
+    if (!g_PlayerPtr->Is_Map_Clear() || m_Array[cellnum].Is_House_Jammed(g_PlayerPtr->What_Type())) {
         if (In_Radar(cellnum)) {
             CellClass &cell = m_Array[cellnum];
 

@@ -63,7 +63,7 @@ CellClass::CellClass() :
     m_Bit32(false),
     m_HasFlag(false),
     m_Bit128(false),
-    m_field_A(0),
+    m_JammedHouses(0),
     m_CellTag(-1), // TODO, should be default GamePtr Ctor.
     m_Template(TEMPLATE_NONE),
     m_Icon(0),
