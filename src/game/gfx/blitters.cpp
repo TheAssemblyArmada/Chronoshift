@@ -79,8 +79,7 @@ void __cdecl Buffer_Draw_Line(GraphicViewPortClass &vp, int x1, int y1, int x2, 
     int increment = 1;
 
     // Do we need to do any clipping
-    if (x1 < 0 || x1 >= vp.Get_Width() || y1 < 0 || y1 >= vp.Get_Height() || x2 < 0 || x2 >= vp.Get_Width() || y2 < 0
-        || y2 >= vp.Get_Height()) {
+    if (unsigned(x1) >= unsigned(vp.Get_Width()) || unsigned(y1) >= unsigned(vp.Get_Height()) || unsigned(x2) >= unsigned(vp.Get_Width()) || unsigned(y2) >= unsigned(vp.Get_Height())) {
         while (true) {
             unsigned clip1 = Line_Get_Clipping(vp, x1, y1);
             unsigned clip2 = Line_Get_Clipping(vp, x2, y2);
@@ -170,12 +169,12 @@ void __cdecl Buffer_Draw_Line(GraphicViewPortClass &vp, int x1, int y1, int x2, 
     }
 
     screen += y1 * vp.Get_Full_Pitch();
-
     x2 -= x1;
+
     if (x2 == 0) {
         screen += x1;
 
-        while (y2-- != 0) {
+        while (y2-- >= 0) {
             *screen = color;
             screen += vp.Get_Full_Pitch();
         }
