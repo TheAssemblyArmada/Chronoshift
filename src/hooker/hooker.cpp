@@ -22,6 +22,10 @@
  */
 #include "hooker.h"
 
+#ifndef __WATCOMC__
+#include <winuser.h>
+#endif
+
 using std::sprintf;
 
 static const int nBinarySize = 0x00244000; // Size of game binary
@@ -63,7 +67,7 @@ bool Check_Pointer(uintptr_t address, char *data)
         static char buff[128];
         sprintf(buff, "Can't hook 0x%08X, function not correct\n"
         "First 4 Bytes %X %X %X %X", address, data[0], data[1], data[2], data[3]);
-        MessageBox(NULL, buff, "Hooking Failed", MB_ICONERROR);
+        MessageBoxA(NULL, buff, "Hooking Failed", MB_ICONERROR);
         return false;
     }
 
