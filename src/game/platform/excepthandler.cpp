@@ -47,7 +47,7 @@ void Except_Log_Init()
         GetModuleFileNameA(0, dirbuf, sizeof(dirbuf));
 
         // Get the path to the executable minus the actual filename.
-        for (char *i = &dirbuf[strlen(dirbuf)]; i >= dirbuf && (*i != '\\' || *i != '/'); --i) {
+        for (char *i = &dirbuf[strlen(dirbuf) - 1]; i >= dirbuf && (*i != '\\' || *i != '/'); --i) {
             *i = '\0';
         }
     }
@@ -82,8 +82,6 @@ LONG __cdecl Exception_Handler(unsigned int u, struct _EXCEPTION_POINTERS *e_inf
         caption != nullptr ? caption : "Application",
         MB_OK | MB_ICONERROR);
 
-    Emergency_Exit(1);
-
     return EXCEPTION_EXECUTE_HANDLER;
 }
 #endif
@@ -95,6 +93,13 @@ int __cdecl Watcom_Exception_Handler(EXCEPTION_RECORD *ex, void *establisher_fra
     EXCEPTION_POINTERS rec;
     rec.ExceptionRecord = ex;
     rec.ContextRecord = context;
+
+    static bool handled = false;
+    // catch a recursive call
+    if (handled) {
+        ExitProcess( -1 );
+    }
+    handled = true;
 
     return Exception_Handler(0, &rec);
 }
