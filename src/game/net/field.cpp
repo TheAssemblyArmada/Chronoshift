@@ -22,7 +22,7 @@ FieldClass::FieldClass(char *id, uint8_t data)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_UINT8;
     m_Size = sizeof(data);
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, &data, m_Size);
     m_Next = nullptr;
 }
@@ -32,7 +32,7 @@ FieldClass::FieldClass(char *id, bool data)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_BOOLEAN;
     m_Size = sizeof(data);
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, &data, m_Size);
     m_Next = nullptr;
 }
@@ -42,7 +42,7 @@ FieldClass::FieldClass(char *id, int16_t data)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_INT16;
     m_Size = sizeof(data);
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, &data, m_Size);
     m_Next = nullptr;
 }
@@ -52,7 +52,7 @@ FieldClass::FieldClass(char *id, uint16_t data)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_UINT16;
     m_Size = sizeof(data);
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, &data, m_Size);
     m_Next = nullptr;
 }
@@ -62,7 +62,7 @@ FieldClass::FieldClass(char *id, int32_t data)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_INT32;
     m_Size = sizeof(data);
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, &data, m_Size);
     m_Next = nullptr;
 }
@@ -72,7 +72,7 @@ FieldClass::FieldClass(char *id, uint32_t data)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_UINT32;
     m_Size = sizeof(data);
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, &data, m_Size);
     m_Next = nullptr;
 }
@@ -82,7 +82,7 @@ FieldClass::FieldClass(char *id, char *data)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_STRING;
     m_Size = (int16_t)strlen(data) + 1;
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, &data, m_Size);
     m_Next = nullptr;
 }
@@ -92,7 +92,7 @@ FieldClass::FieldClass(char *id, void *data, int size)
     strncpy(m_ID, id, sizeof(m_ID));
     m_DataType = FD_CUSTOM;
     m_Size = size;
-    m_Data = new char[m_Size];
+    m_Data = new uint8_t[m_Size];
     memcpy(m_Data, data, m_Size);
     m_Next = nullptr;
 }
