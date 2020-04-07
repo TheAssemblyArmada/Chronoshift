@@ -230,6 +230,7 @@ set(GAMEENGINE_SRC
     game/net/field.cpp
     game/net/ipx.cpp
     game/net/ipxaddress.cpp
+    game/net/packet.cpp
     game/net/udp.cpp
     game/net/wsock.cpp
     game/platform/eventhandler.cpp

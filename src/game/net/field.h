@@ -34,7 +34,10 @@ enum FieldDataType
 
 class FieldClass
 {
+    friend class PacketClass;
+
 public:
+    FieldClass() : m_DataType(0), m_Size(0), m_Data(nullptr), m_Next(nullptr) {}
     FieldClass(char *id, uint8_t data);
     FieldClass(char *id, bool data);
     FieldClass(char *id, int16_t data);
@@ -55,7 +58,7 @@ protected:
     char m_ID[4];
     int16_t m_DataType;
     int16_t m_Size;
-    char *m_Data;
+    uint8_t *m_Data;
     FieldClass *m_Next;
 };
 #endif // FIELD_H
