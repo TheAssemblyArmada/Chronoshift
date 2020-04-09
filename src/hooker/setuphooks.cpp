@@ -14,6 +14,7 @@
  */
 #include "setuphooks.h"
 #include "abstract.h"
+#include "adpcm.h"
 #include "aircraft.h"
 #include "aircrafttype.h"
 #include "alloc.h"
@@ -1176,6 +1177,11 @@ void Setup_Hooks()
     // voc.cpp
     Hook_Function(0x00425D1C, static_cast<void (*)(VocType, coord_t, int, HousesType)>(&Sound_Effect));
     Hook_Function(0x00425F24, static_cast<int (*)(VocType, fixed_t, int, int16_t, HousesType)>(&Sound_Effect));
+
+    // adpcm.cpp
+    Hook_Function(0x005D8AD8, &ADPCM_Stream_Init);
+    Hook_Function(0x005D8B15, &ADPCM_Decompress);
+    Hook_Function(0x005E0377, &ADPCM_Decompress); // Optimised for mono 16bit in original code.
 #endif
 }
 
