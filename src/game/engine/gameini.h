@@ -182,4 +182,12 @@ private:
     SHAEngine::SHADigest s_Digest;
 };
 
+#ifdef GAME_DLL
+extern GameINIClass &g_RuleINI;
+extern GameINIClass &g_AftermathINI;
+#else
+extern GameINIClass g_RuleINI;
+extern GameINIClass g_AftermathINI;
+#endif
+
 #endif // GAMEINI_H
