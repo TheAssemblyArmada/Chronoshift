@@ -18,6 +18,11 @@
 #include "shapipe.h"
 #include <algorithm>
 
+#ifndef GAME_DLL
+GameINIClass g_RuleINI;
+GameINIClass g_AftermathINI;
+#endif
+
 GameINIClass::GameINIClass() :
     m_DigestValid(false)
 {

@@ -206,6 +206,9 @@ BOOL &g_PlayerWins = Make_Global<BOOL>(0x006680C8);
 BOOL &g_PlayerLoses = Make_Global<BOOL>(0x006680CC);
 BOOL &g_PlayerRestarts = Make_Global<BOOL>(0x006680D0);
 BOOL g_PlayerAborts = false;
+char &g_TeamEvent = Make_Global<char>(0x00655C0C);
+char &g_TeamNumber = Make_Global<char>(0x00655C0D);
+char &g_FormationEvent = Make_Global<char>(0x00655C0E);
 int &g_BuildLevel = Make_Global<int>(0x006016C8);
 BOOL &g_FormMove = Make_Global<BOOL>(0x0065E0CC);
 SpeedType &g_FormSpeed = Make_Global<SpeedType>(0x0065E0D0);
@@ -686,3 +689,8 @@ void *&g_FileStreamBuffer = Make_Global<void *>(0x006AC054);
 BOOL volatile &g_AudioDone = Make_Global<BOOL>(0x006AC05C);
 int16_t &g_SoundType = Make_Global<int16_t>(0x006ABFD8);
 int16_t &g_SampleType = Make_Global<int16_t>(0x006ABFDA);
+
+// gameini.cpp
+#include "gameini.h"
+GameINIClass &g_RuleINI = Make_Global<GameINIClass>(0x00666688);
+GameINIClass &g_AftermathINI = Make_Global<GameINIClass>(0x006666C4);
