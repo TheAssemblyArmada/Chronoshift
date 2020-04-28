@@ -63,6 +63,12 @@ enum ScenarioVarEnum
 class ScenarioClass
 {
 public:
+    enum
+    {
+        SCENARIO_NAME_LEN = 512,
+    };
+
+public:
     ScenarioClass();
 
     void Set_Scenario_Name(const char *scen_name);
@@ -87,6 +93,7 @@ public:
     void Stop_Global_Timer() { return m_GlobalTimer.Stop(); }
     TCountDownTimerClass<FrameTimerClass> &Some_Timer() { return m_SomeTimer; }
     int Get_Scenario_Index() const { return m_ScenarioIndex; }
+    void Set_Scenario_Index(int index) { m_ScenarioIndex = index; }
     TheaterType Get_Theater() const { return m_Theater; }
     void Set_Theater(TheaterType theater) { m_Theater = theater; }
     const char *Scenario_Name() const { return m_ScenarioName; }
@@ -122,7 +129,7 @@ private:
     TCountDownTimerClass<FrameTimerClass> m_SomeTimer;
     int m_ScenarioIndex;
     TheaterType m_Theater;
-    char m_ScenarioName[512];
+    char m_ScenarioName[SCENARIO_NAME_LEN];
     char m_ScenarioDescription[44];
     MovieType m_IntroMovie;
     MovieType m_BriefMovie;
