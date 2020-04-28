@@ -1181,37 +1181,37 @@ BOOL TriggerTypeClass::Edit()
         KeyNumType input = gadget_list.Input();
 
         switch (input) {
-            case GADGET_INPUT_RENAME2(105):
+            case GADGET_BUTTON(105):
                 Speak((VoxType)act_one_vox_edit.Current_Index());
                 to_draw = true;
                 break;
-            case GADGET_INPUT_RENAME2(106):
+            case GADGET_BUTTON(106):
                 Speak((VoxType)act_two_vox_edit.Current_Index());
                 to_draw = true;
                 break;
-            case GADGET_INPUT_RENAME2(111):
+            case GADGET_BUTTON(111):
                 Sound_Effect((VocType)act_one_voc_edit.Current_Index());
                 to_draw = true;
                 break;
-            case GADGET_INPUT_RENAME2(112):
+            case GADGET_BUTTON(112):
                 Sound_Effect((VocType)act_two_voc_edit.Current_Index());
                 to_draw = true;
                 break;
             case KN_RETURN:
-            case GADGET_INPUT_RENAME2(145):
+            case GADGET_BUTTON(145):
                 // Break out of the loop and process any changes.
                 process = false;
                 break;
             case KN_ESC:
-            case GADGET_INPUT_RENAME2(146):
+            case GADGET_BUTTON(146):
                 cancelled = true;
                 process = false;
                 break;
-            case GADGET_INPUT_RENAME2(147):
+            case GADGET_BUTTON(147):
                 action_linkage = action_linkage == 0;
                 to_draw = true;
                 break;
-            case GADGET_INPUT_RENAME2(148):
+            case GADGET_BUTTON(148):
                 event_linkage = (event_linkage + 1) % 4;
                 to_draw = true;
                 break;

@@ -23,24 +23,25 @@
 #include "remap.h"
 #include "trect.h"
 
- // Redraw flags used by the game menu loops.
+// Redraw flags used by the game menu loops.
 #define NO_REDRAW 0
 #define REDRAW_GADGETS 1
 #define REDRAW_ALL 2
 
 class ControlClass;
 
-enum GadgetMasks {
+enum GadgetMasks
+{
     UNK_BIT = 0x4000,
     BTN_BIT = 0x8000
 };
 
-// TODO, not sure, looks like EditClass only mask?
-#define     GADGET_INPUT_RENAME(id)        (KeyNumType)((UNK_BIT | id))
+// TODO: Not sure, looks like EditClass only mask?
+#define GADGET_INPUT_RENAME(id) (KeyNumType)((UNK_BIT | id))
 
-// All UI controls are this number + the control ID.
+// All UI controls flag this bit + the control ID.
 // Otherwise, input will return a standard KeyNumType.
-#define     GADGET_INPUT_RENAME2(id)         (KeyNumType)((BTN_BIT | id))
+#define GADGET_BUTTON(id) (KeyNumType)((BTN_BIT | id))
 
 enum GadgetInput
 {
