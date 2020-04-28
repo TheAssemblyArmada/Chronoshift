@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "gameloop.h"
+#include "attract.h"
 #include "bench.h"
 #include "callback.h"
 #include "gamekeyboard.h"
@@ -37,14 +38,6 @@ void Check_For_Focus_Loss()
 {
 #ifdef GAME_DLL
     void (*func)() = reinterpret_cast<void (*)()>(0x005B3624);
-    func();
-#endif
-}
-
-void Do_Record_Playback()
-{
-#ifdef GAME_DLL
-    void (*func)() = reinterpret_cast<void (*)()>(0x004AB140);
     func();
 #endif
 }

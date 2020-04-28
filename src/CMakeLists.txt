@@ -56,6 +56,7 @@ set(GAMEENGINE_SRC
     game/engine/animdata.cpp
     game/engine/animtype.cpp
     game/engine/armor.cpp
+    game/engine/attract.cpp
     game/engine/basec.cpp
     game/engine/building.cpp
     game/engine/buildingdata.cpp
