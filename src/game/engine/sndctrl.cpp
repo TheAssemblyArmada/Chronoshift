@@ -173,36 +173,36 @@ void SoundControlsClass::Process()
                 case KN_ESC:
                     process = false;
                     break;
-                case GADGET_INPUT_RENAME2(BUTTON_SOUND_STOP):
+                case GADGET_BUTTON(BUTTON_SOUND_STOP):
                     // are both needed?
                     g_Theme.Stop();
                     g_Theme.Stop_Playing_Song();
                     break;
                 case KN_SPACE:
-                case GADGET_INPUT_RENAME2(BUTTON_SOUND_PLAY):
+                case GADGET_BUTTON(BUTTON_SOUND_PLAY):
                     // TODO, this is how RA had it
                     // This is a hack - first char of the string is the theme number
                     // Needs a better solution
                     g_Theme.Queue_Song((ThemeType)musiclist.Current_Item()[0]);
                     break;
-                case GADGET_INPUT_RENAME2(BUTTON_SOUND_SUFFLE):
+                case GADGET_BUTTON(BUTTON_SOUND_SUFFLE):
                     sufflebtn.Set_Text(sufflebtn.Get_Toggle_State() ? TXT_ON : TXT_OFF, false);
                     g_Options.Set_Shuffle(sufflebtn.Get_Toggle_State());
                     break;
-                case GADGET_INPUT_RENAME2(BUTTON_SOUND_REPEAT):
+                case GADGET_BUTTON(BUTTON_SOUND_REPEAT):
                     repeatbtn.Set_Text(repeatbtn.Get_Toggle_State() ? TXT_ON : TXT_OFF, false);
                     g_Options.Set_Repeat(repeatbtn.Get_Toggle_State());
                     break;
-                case GADGET_INPUT_RENAME2(BUTTON_SOUND_OK):
+                case GADGET_BUTTON(BUTTON_SOUND_OK):
                     process = false;
                     break;
-                case GADGET_INPUT_RENAME2(SLIDER_SCORE_VOL):
+                case GADGET_BUTTON(SLIDER_SCORE_VOL):
                     g_Options.Set_Score_Volume(fixed_t(scorevolsldr.Get_Value(), 256), true);
                     if (g_Session.Game_To_Play() != GAME_CAMPAIGN) {
                         g_Options.Set_MPlayer_Score_Volume(g_Options.Get_Score_Volume());
                     }
                     break;
-                case GADGET_INPUT_RENAME2(SLIDER_SOUND_VOL):
+                case GADGET_BUTTON(SLIDER_SOUND_VOL):
                     g_Options.Set_Sound_Volume(fixed_t(soundvolsldr.Get_Value(), 256), true);
                     break;
                 default:
