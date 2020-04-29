@@ -35,11 +35,11 @@ void Call_Back()
         return;
     }
 
-    if (g_Session.Game_To_Play() == GAME_NETWORK || g_Session.Game_To_Play() == GAME_INTERNET) {
+    if (g_Session.Game_To_Play() == GAME_LAN || g_Session.Game_To_Play() == GAME_INTERNET) {
         IPX_Call_Back();
     }
 
-    if ((g_Session.Game_To_Play() == GAME_1 || g_Session.Game_To_Play() == GAME_2) && g_Session.Modem_Service()) {
+    if ((g_Session.Game_To_Play() == GAME_MODEM || g_Session.Game_To_Play() == GAME_NULL_MODEM) && g_Session.Modem_Service()) {
         // NullModem.Service();
     }
 

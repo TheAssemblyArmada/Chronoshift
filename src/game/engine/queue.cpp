@@ -86,7 +86,7 @@ void Queue_AI()
                 break;
             case 1:
             case 2:
-            case GAME_NETWORK:
+            case GAME_LAN:
             case GAME_INTERNET:
             case 6:
             case 7:
