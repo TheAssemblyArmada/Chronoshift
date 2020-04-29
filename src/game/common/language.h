@@ -791,6 +791,7 @@ extern const char TXT_CONFIRM_QUIT[];
 extern const char TXT_CHRONOSHIFT_TITLE[];
 extern const char TXT_CHRONOSHIFT_NOTE[];
 extern const char TXT_CHRONOSHIFT_WEBSITE[];
+extern const char TXT_MAP_EDITOR[];
 
 bool Init_Language();
 const char *Language_Name(const char *filename);
