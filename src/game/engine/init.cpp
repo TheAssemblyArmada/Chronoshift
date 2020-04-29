@@ -31,7 +31,6 @@
 #include "mouseshape.h"
 #include "msgbox.h"
 #include "palette.h"
-#include "pcx.h"
 #include "picture.h"
 #include "pk.h"
 #include "ramfile.h"
@@ -682,35 +681,4 @@ void Init_CDROM_Access()
 
         g_RequiredCD = DISK_ANY;
     }
-}
-
-/**
- * Loads a PCX file data into the provided viewport and palette.
- *
- * 0x005B3CD8
- */
-void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteClass *pal)
-{
-    GraphicBufferClass *buff = Read_PCX_File(filename, pal);
-
-    if (buff == nullptr) {
-        return;
-    }
-
-    buff->Blit(*vp);
-    delete buff;
-}
-
-/**
- * Loads and displays the prolog page.
- *
- * 0x004F3E98
- */
-void Load_Prolog_Page()
-{
-    g_Mouse->Hide_Mouse();
-    Load_Title_Screen("prolog.pcx", &g_HidPage, &g_CCPalette);
-    g_HidPage.Blit(g_SeenBuff);
-    g_CCPalette.Set();
-    g_Mouse->Show_Mouse();
 }
