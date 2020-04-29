@@ -77,6 +77,7 @@
 #include "lzopipe.h"
 #include "lzostraw.h"
 #include "main.h"
+#include "mainmenu.h"
 #include "missioncontrol.h"
 #include "mixfile.h"
 #include "mouse.h"
@@ -926,6 +927,10 @@ void Setup_Hooks()
     Hook_Function(0x004F3E98, Load_Prolog_Page);
     Hook_Function(0x004F78D8, Init_One_Time_Systems);
     Hook_Function(0x004F850C, Init_Bulk_Data);
+
+    // mainmenu.h
+    Hook_Function(0x004F44DC, Select_Game);
+    Hook_Function(0x00501D54, Main_Menu);
 
     // super.h
     Hook_Function(0x00552FE8, *SuperClass::Suspend);
