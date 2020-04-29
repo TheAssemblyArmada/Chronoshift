@@ -40,12 +40,14 @@ enum GameEnum
 {
     GAME_NONE = -1,
     GAME_CAMPAIGN,
-    GAME_1, //These two are modem, unknown which.
-    GAME_2,
-    GAME_NETWORK,
+    GAME_MODEM,
+    GAME_NULL_MODEM,
+    GAME_LAN,
     GAME_INTERNET,
     GAME_SKIRMISH,
-    GAME_COUNT
+    GAME_TEN, // Only used in special TEN binary for playing on defunct TEN service.
+    GAME_MPATH, // Only used for special MPlayer binary for defunct MPlayer service.
+    GAME_COUNT,
 };
 
 class MultiMission;
@@ -259,7 +261,7 @@ private:
     DynamicVectorClass<char *> m_PhoneBookEntries;
     DynamicVectorClass<char *> m_InitStrings;
     int m_TrapFrame;
-    RTTIType m_TrapType; // Suspect this is RTTIType but needs confirming.
+    RTTIType m_TrapType;
     int m_TrappedObject;
     coord_t m_TrapCoord;
     target_t m_TrapTarget;
