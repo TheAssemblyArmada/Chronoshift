@@ -35,6 +35,7 @@ class CellClass;
 class GameFileClass;
 class Pipe;
 class Straw;
+class MultiMission;
 
 enum GameEnum
 {
@@ -50,7 +51,12 @@ enum GameEnum
     GAME_COUNT,
 };
 
-class MultiMission;
+enum ModemGameType
+{
+    MODEM_0,
+    MODEM_1,
+};
+
 
 // Temp, this contains a union of a number of different structs.
 struct GlobalPacket
@@ -61,8 +67,8 @@ struct GlobalPacket
 struct MPlayerScoreStruct
 {
     char m_Name[12];
-    int m_field_C; //incrimented in HouseClass::Tally_Score when house !ToDie
-    int m_Score[4];//scores per 4 game sessions
+    int m_field_C; // incrimented in HouseClass::Tally_Score when house !ToDie
+    int m_Score[4]; // scores per 4 game sessions
     PlayerColorType m_Scheme;
 };
 
@@ -114,8 +120,14 @@ public:
 
     GameEnum Game_To_Play() const { return m_GameToPlay; }
     void Set_Game_To_Play(GameEnum game) { m_GameToPlay = game; }
+    ModemGameType Modem_Game_Type() const { return m_ModemGameToPlay; }
+    void Set_Modem_Game_Type(ModemGameType game) { m_ModemGameToPlay = game; }
     CommProtocolEnum Packet_Protocol() const { return m_PacketProtocol; }
-    int Frame_Send_Rate() { return m_FrameSendRate; }
+    int Frame_Send_Rate() const { return m_FrameSendRate; }
+    BOOL Scenario_Is_Official() const { return m_SendScenarioIsOfficial; }
+    void Set_Scenario_Is_Official(BOOL official) { m_SendScenarioIsOfficial = official; }
+
+    MultiMission *Get_Local_Scenario() { return m_MPlayerScenarios[m_Options.m_LocalID]; }
 
     MPlayerOptionsStruct &MPlayer_Options() { return m_Options; }
     BOOL MPlayer_Goodies_Allowed() const { return m_Options.m_Goodies; }
@@ -130,7 +142,12 @@ public:
     void Set_Desired_Frame_Rate(int value) { m_DesiredFrameRate = value; }
     int Processing_Start_Tick() const { return m_ProcessingStartTick; }
     void Set_Processing_Start_Tick(int value) { m_ProcessingStartTick = value; }
-    void Reset_Processing_Values() { m_ProcessingStartTick = 0; m_ProcessingTicks = 0; m_ProcessingFrames = 0; }
+    void Reset_Processing_Values()
+    {
+        //m_ProcessingStartTick = 0;
+        m_ProcessingTicks = 0;
+        m_ProcessingFrames = 0;
+    }
     void Update_Processing_Tick_Value(int value) { m_ProcessingTicks += value; }
     void Tick_Processing_Frame() { ++m_ProcessingFrames; }
 
@@ -232,7 +249,8 @@ private:
     BOOL m_RecordGame : 1; // & 1
     BOOL m_PlaybackGame : 1; // & 2
     BOOL m_AllowAttract : 1; // & 4
-    BOOL m_SuperRecord : 1; // & 8 // Unknown if in RA, but seems to be used as if there is one huge recording file (ie, multipule games)?
+    BOOL m_SuperRecord : 1; // & 8 // Unknown if in RA, but seems to be used as if there is one huge recording file (ie,
+                            // multipule games)?
 #else
     bool m_RecordGame;
     bool m_PlaybackGame;
@@ -257,7 +275,7 @@ private:
     BOOL m_ModemService;
     int m_PhoneIndex;
     SerialSettingsType m_SerialDefaults;
-    char m_ModemGameToPlay;
+    ModemGameType m_ModemGameToPlay;
     DynamicVectorClass<char *> m_PhoneBookEntries;
     DynamicVectorClass<char *> m_InitStrings;
     int m_TrapFrame;
