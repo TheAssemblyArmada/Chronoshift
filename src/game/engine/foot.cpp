@@ -46,7 +46,7 @@ static int g_PathCount;
 
 FootClass::FootClass(RTTIType type, int id, HousesType house) :
     TechnoClass(type, id, house),
-    m_Bit1_1(false),
+    m_LimitedScan(false),
     m_Initiated(false),
     m_Bit1_4(false),
     m_ToLook(false),
@@ -82,7 +82,7 @@ FootClass::FootClass(RTTIType type, int id, HousesType house) :
 
 FootClass::FootClass(const FootClass &that) :
     TechnoClass(that),
-    m_Bit1_1(that.m_Bit1_1),
+    m_LimitedScan(that.m_LimitedScan),
     m_Initiated(that.m_Initiated),
     m_Bit1_4(that.m_Bit1_4),
     m_ToLook(that.m_ToLook),
@@ -116,12 +116,7 @@ FootClass::FootClass(const FootClass &that) :
     memcpy(m_Paths, that.m_Paths, sizeof(m_Paths));
 }
 
-FootClass::FootClass(const NoInitClass &noinit) :
-    TechnoClass(noinit),
-    m_PathDelay(noinit),
-    m_BaseDefenseDelay(noinit)
-{
-}
+FootClass::FootClass(const NoInitClass &noinit) : TechnoClass(noinit), m_PathDelay(noinit), m_BaseDefenseDelay(noinit) {}
 
 #ifdef CHRONOSHIFT_DEBUG
 void FootClass::Debug_Dump(MonoClass *mono) const
@@ -220,7 +215,7 @@ BOOL FootClass::Unlimbo(coord_t coord, DirType dir)
 void FootClass::Detach(target_t target, BOOL a2)
 {
 #ifdef GAME_DLL
-    DEFINE_CALL(func, 0x004C3210, void, FootClass*, target_t, BOOL);
+    DEFINE_CALL(func, 0x004C3210, void, FootClass *, target_t, BOOL);
     func(this, target, a2);
 #endif
 }
@@ -228,7 +223,7 @@ void FootClass::Detach(target_t target, BOOL a2)
 void FootClass::Detach_All(BOOL a1)
 {
 #ifdef GAME_DLL
-    DEFINE_CALL(func, 0x004C2F80, void, FootClass*, BOOL);
+    DEFINE_CALL(func, 0x004C2F80, void, FootClass *, BOOL);
     func(this, a1);
 #endif
 }
@@ -265,7 +260,8 @@ BOOL FootClass::Mark(MarkType mark)
 void FootClass::Active_Click_With(ActionType action, ObjectClass *object)
 {
 #ifdef GAME_DLL
-    void (*func)(FootClass *, ActionType, ObjectClass *) = reinterpret_cast<void (*)(FootClass *, ActionType, ObjectClass *)>(0x004C1E30);
+    void (*func)(FootClass *, ActionType, ObjectClass *) =
+        reinterpret_cast<void (*)(FootClass *, ActionType, ObjectClass *)>(0x004C1E30);
     func(this, action, object);
 #endif
 }
@@ -329,7 +325,7 @@ RadioMessageType FootClass::Receive_Message(RadioClass *radio, RadioMessageType 
 
         case RADIO_NEED_TO_MOVE:
             target = m_NavCom;
-    
+
             if (!Target_Legal(m_NavCom)) {
                 return RADIO_ROGER;
             }
@@ -366,7 +362,7 @@ RadioMessageType FootClass::Receive_Message(RadioClass *radio, RadioMessageType 
             if (bptr == nullptr) {
                 return RADIO_UNABLE_TO_COMPLY;
             }
-    
+
             if (bptr->What_Type() != BUILDING_FIX) {
                 return RADIO_UNABLE_TO_COMPLY;
             }
@@ -402,7 +398,7 @@ void FootClass::Sell_Back(int a1)
  *
  * @address 0x004F9760
  */
-void FootClass::Code_Pointers() 
+void FootClass::Code_Pointers()
 {
     if (m_Member != nullptr && m_Member->m_IsActive) {
         m_Member = reinterpret_cast<FootClass *>(m_Member->As_Target());
@@ -561,14 +557,43 @@ void FootClass::Death_Announcement(TechnoClass *killer) const
 #endif
 }
 
+/**
+ *
+ *
+ * @address
+ */
 target_t FootClass::Greatest_Threat(ThreatType threat)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x004C3174, target_t, FootClass *, ThreatType);
-    return func(this, threat);
-#else
-    return target_t();
-#endif
+    captainslog_assert(m_IsActive);
+
+    if (m_LimitedScan) {
+        // Threat Scan is limited to the object's range only.
+        threat &= ~THREAT_AREA | THREAT_RANGE;
+    }
+
+    if (Get_Owner_House()->Is_Human() && Is_Cloakable() && m_Mission == MISSION_GUARD) {
+        return 0;
+    }
+
+    if (!(threat & THREAT_3D40 | THREAT_GROUND | THREAT_VESSELS)) {
+        if (What_Am_I() == RTTI_VESSEL) {
+            threat |= THREAT_GROUND | THREAT_VESSELS;
+        } else {
+            threat |= THREAT_GROUND;
+        }
+    }
+
+    target_t target = TechnoClass::Greatest_Threat(threat);
+
+    if (m_LimitedScan) {
+        if (!Target_Legal(target)) {
+            // Couldn't find a target using a limited scan.
+            m_LimitedScan = false;
+            return 0;
+        }
+    }
+
+    return target;
 }
 
 void FootClass::Assign_Destination(target_t dest)
@@ -848,7 +873,8 @@ PathType *FootClass::Find_Path(cell_t dest, FacingType *buffer, int length, Move
                     // captainslog_debug("  Find_Path found a right path.");
                     chosen_path = &right_path;
                 } else {
-                    // captainslog_debug("  Find_Path chose path based on length, left %d vs right %d.", left_path.Length, right_path.Length);
+                    // captainslog_debug("  Find_Path chose path based on length, left %d vs right %d.", left_path.Length,
+                    // right_path.Length);
                     chosen_path = left_path.Length >= right_path.Length ? &right_path : &left_path;
                 }
 
@@ -965,7 +991,7 @@ BOOL FootClass::Basic_Path()
                 path = Find_Path(navcell, facings, GEN_PATH_LENGTH, m_PathBreak);
 
                 if (path != nullptr && path->Score != 0) {
-                    //memcpy(&pathobj, path, sizeof(pathobj));
+                    // memcpy(&pathobj, path, sizeof(pathobj));
                     pathobj = *path;
                     do_fixup = true;
 
@@ -1265,7 +1291,7 @@ int FootClass::Optimize_Moves(PathType *path, MoveType move)
     captainslog_assert(m_IsActive);
     captainslog_assert(move != MOVE_NONE);
     // captainslog_dbgassert(move < MOVE_COUNT, "move value is %d which exceed expected %d.\n", move, MOVE_COUNT);
-                
+
     static FacingType _trans[] = { FACING_NORTH,
         FACING_NORTH,
         FACING_NORTH_EAST,
@@ -1381,7 +1407,7 @@ int FootClass::Optimize_Moves(PathType *path, MoveType move)
 
     ++path->Length;
     *moves = FACING_NONE;
-                
+
     return path->Length;
 }
 
@@ -1498,7 +1524,8 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
 
     bool fail = false;
     if (real->StartCell != test->StartCell) {
-        captainslog_debug("ERROR: Find_Path_Wrapper StartCells don't match real %hd test %hd", real->StartCell, test->StartCell);
+        captainslog_debug(
+            "ERROR: Find_Path_Wrapper StartCells don't match real %hd test %hd", real->StartCell, test->StartCell);
         fail = true;
     }
     if (real->Score != test->Score) {
@@ -1510,9 +1537,8 @@ PathType *FootClass::Find_Path_Wrapper(cell_t dest, FacingType *buffer, int leng
         fail = true;
     }
     if (real->PreviousCell != test->PreviousCell) {
-        captainslog_debug("ERROR: Find_Path_Wrapper PreviousCells don't match real %hd test %hd",
-            real->PreviousCell,
-            test->PreviousCell);
+        captainslog_debug(
+            "ERROR: Find_Path_Wrapper PreviousCells don't match real %hd test %hd", real->PreviousCell, test->PreviousCell);
         fail = true;
     }
     if (real->UnravelCheckpoint != test->UnravelCheckpoint) {
@@ -1546,10 +1572,10 @@ BOOL FootClass::Is_Allowed_To_Leave_Map() const
     BOOL (*func)(const FootClass *) = reinterpret_cast<BOOL (*)(const FootClass *)>(0x004C36A4);
     return func(this);
 #else
-    if(!m_LockedOnMap) {
+    if (!m_LockedOnMap) {
         return false;
     }
-    if(!m_IsALoner && m_Mission != MISSION_RETREAT) {
+    if (!m_IsALoner && m_Mission != MISSION_RETREAT) {
         /*
         if(!m_Team->Is_Leaving_Map()) {
             return false;

@@ -190,16 +190,16 @@ enum ThreatType
 {
     THREAT_NONE = -1,
 
-    // absolutely anything
+    // absolutely anything?
     THREAT_ANY = 0,
 
-    // TMission_Patrol sets this, FootClass::Greatest_Threat sets this when m_Bit1_1 set, armed threat?
-    // based on some code in YR, objects on guard mission?
-    THREAT_1 = 1 << 0, // 0x1
+    // Threat scanning is limited to the range of the object.
+    // Usually set when a unit is on a Guard mission.
+    THREAT_RANGE = 1 << 0, // 0x1
 
-    // FootClass::Greatest_Threat clears this when m_Bit1_1 set
-    // based on some code in YR, objects on patrol mission?
-    THREAT_2 = 1 << 1, // 0x2
+    // Threat scan is bound to a defined Area.
+    // Usually set when a unit is on a Area Guard or Patrol mission.
+    THREAT_AREA = 1 << 1, // 0x2
 
     // any aircraft
     THREAT_AIRCRAFT = 1 << 2, // 0x4
@@ -221,7 +221,7 @@ enum ThreatType
     THREAT_VESSELS = 1 << 7, // 0x80
 
     // usually harmless? civilian? easy targets?
-    THREAT_100 = 1 << 8, // 0x100
+    THREAT_CIVILIAN = 1 << 8, // 0x100
 
     // threats that can infiltrate, in RA this seems to only be Thieves
     // in YR this includes Thieves, Spies, Engineers, units with C4
@@ -239,26 +239,19 @@ enum ThreatType
     // any base defenses
     THREAT_BASE_DEFENSES = 1 << 13, // 0x2000
 
-    // used in combination a lot..
-    THREAT_3 = THREAT_1 | THREAT_2,
-
-    // set in WeaponTypeClass::Allowed_Threats
-    // any ground units
+    // any ground
     THREAT_GROUND = THREAT_INFANTRY | THREAT_VEHICLES | THREAT_BUILDINGS, // 0x38
-
-    // set when it checks vessels
-    THREAT_B8 = THREAT_GROUND | THREAT_VESSELS, // 0xB8
 
     // set in InfantryClass::Greatest_Threat if Thief
     THREAT_THEFT = THREAT_INFILTRATORS | THREAT_ECONOMY, // 0x240
 
     // checked in TechnoClass::Greatest_Threat
-    THREAT_2108 = THREAT_INFANTRY | THREAT_100 | THREAT_BASE_DEFENSES, // 0x2108
+    THREAT_2108 = THREAT_INFANTRY | THREAT_CIVILIAN | THREAT_BASE_DEFENSES, // 0x2108
 
     // checked in TechnoClass::Greatest_Threat
-    // easy/defenseless targets?
-    THREAT_3D60 = THREAT_BUILDINGS | THREAT_ECONOMY | THREAT_100 | THREAT_FAKES | THREAT_POWER_FACILTIES
-        | THREAT_FACTORIES | THREAT_BASE_DEFENSES, // 0x3D60
+    // 
+    THREAT_3D40 = THREAT_ECONOMY | THREAT_CIVILIAN | THREAT_FAKES | THREAT_POWER_FACILTIES
+        | THREAT_FACTORIES | THREAT_BASE_DEFENSES, // 0x3D40
 };
 
 // This is used within TechnoClass::Greatest_Threat

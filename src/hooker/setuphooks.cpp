@@ -814,6 +814,7 @@ void Setup_Hooks()
     Hook_Function(0x004C160C, *FootClass::Stun);
     Hook_Function(0x004C2BFC, *FootClass::Receive_Message);
     Hook_Function(0x004C14C8, *FootClass::Start_Driver);
+    Hook_Function(0x004C3174, *FootClass::Greatest_Threat);
 
     // abstract.h
     Hook_Function(0x004CD8E0, *AbstractClass::Hook_Ctor_NoInit);
@@ -1057,6 +1058,7 @@ void Setup_Hooks()
     Hook_Function(0x0045B79C, *BuildingClass::Hook_Sort_Y);
     Hook_Function(0x0045A138, *BuildingClass::Repair);
     Hook_Function(0x0045A288, *BuildingClass::Sell_Back);
+    Hook_Function(0x00459AC0, *BuildingClass::Greatest_Threat);
 
     // unit.cpp
     Hook_Function(0x00581730, *UnitClass::Limbo);
@@ -1098,6 +1100,7 @@ void Setup_Hooks()
     Hook_Function(0x0058C26C, *VesselClass::Transport_Close_Door);
     Hook_Function(0x0058CEE4, *VesselClass::Rotation_AI);
     Hook_Function(0x0058D300, *VesselClass::Repair_AI);
+    Hook_Function(0x0058B6F8, *VesselClass::Greatest_Threat);
 
     // overlay.cpp
     Hook_Function(0x00526D64, *OverlayClass::Mark);
