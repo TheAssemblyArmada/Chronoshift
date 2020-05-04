@@ -4,7 +4,7 @@
  * @author CCHyper
  * @author OmniBlade
  *
- * @brief 
+ * @brief
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -14,11 +14,11 @@
  *            LICENSE
  */
 #include "vessel.h"
+#include "coord.h"
+#include "gameini.h"
+#include "globals.h"
 #include "house.h"
 #include "iomap.h"
-#include "gameini.h"
-#include "coord.h"
-#include "globals.h"
 #include "rules.h"
 #include <cstdio>
 
@@ -58,10 +58,7 @@ VesselClass::VesselClass(const VesselClass &that) :
 }
 
 VesselClass::VesselClass(const NoInitClass &noinit) :
-    DriveClass(noinit),
-    m_TransportDoorTimer(noinit),
-    m_SubmergeTimer(noinit),
-    m_SecondaryTurretFacing(noinit)
+    DriveClass(noinit), m_TransportDoorTimer(noinit), m_SubmergeTimer(noinit), m_SecondaryTurretFacing(noinit)
 {
 }
 
@@ -104,7 +101,8 @@ MoveType VesselClass::Can_Enter_Cell(cell_t cellnum, FacingType facing) const
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    MoveType const (*func)(const VesselClass *, cell_t, FacingType) = reinterpret_cast<MoveType const (*)(const VesselClass *, cell_t, FacingType)>(0x00589ECC);
+    MoveType const (*func)(const VesselClass *, cell_t, FacingType) =
+        reinterpret_cast<MoveType const (*)(const VesselClass *, cell_t, FacingType)>(0x00589ECC);
     return func(this, cellnum, facing);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -172,7 +170,8 @@ ActionType VesselClass::What_Action(ObjectClass *object) const
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    ActionType (*func)(const VesselClass *, ObjectClass *) = reinterpret_cast<ActionType (*)(const VesselClass *, ObjectClass *)>(0x0058AAA0);
+    ActionType (*func)(const VesselClass *, ObjectClass *) =
+        reinterpret_cast<ActionType (*)(const VesselClass *, ObjectClass *)>(0x0058AAA0);
     return func(this, object);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -196,7 +195,7 @@ ActionType VesselClass::What_Action(cell_t cellnum) const
             return ACTION_ATTACK;
         }
     }
-    return action;  
+    return action;
 }
 
 /**
@@ -207,16 +206,13 @@ coord_t VesselClass::Fire_Coord(WeaponSlotType weapon) const
 {
     captainslog_assert(m_IsActive);
 
-    switch (What_Type())
-    {
-        case VESSEL_CRUISER:
-        {
+    switch (What_Type()) {
+        case VESSEL_CRUISER: {
             DirType dir = (m_Bit2_16 ? m_Facing.Get_Current() + -128 : m_Facing.Get_Current());
             coord_t coord = Coord_Move(Coord_Move(Center_Coord(), dir, 256), DIR_NORTH, 48);
             return Coord_Move(coord, Turret_Facing(), 64);
         }
-        case VESSEL_PT_BOAT:
-        {
+        case VESSEL_PT_BOAT: {
             coord_t coord = Coord_Move(Coord_Move(Center_Coord(), m_Facing.Get_Current(), 128), DIR_NORTH, 32);
             return Coord_Move(coord, Turret_Facing(), 16);
         }
@@ -230,7 +226,8 @@ const int16_t *VesselClass::Overlap_List(BOOL a1) const
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    const int16_t *(*func)(const VesselClass *, BOOL) = reinterpret_cast<const int16_t *(*)(const VesselClass *, BOOL)>(0x0058A494);
+    const int16_t *(*func)(const VesselClass *, BOOL) =
+        reinterpret_cast<const int16_t *(*)(const VesselClass *, BOOL)>(0x0058A494);
     return func(this, a1);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -264,7 +261,8 @@ void VesselClass::Draw_It(int x, int y, WindowNumberType window) const
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    void (*func)(const VesselClass *, int, int, WindowNumberType) = reinterpret_cast<void (*)(const VesselClass *, int, int, WindowNumberType)>(0x0058A0FC);
+    void (*func)(const VesselClass *, int, int, WindowNumberType) =
+        reinterpret_cast<void (*)(const VesselClass *, int, int, WindowNumberType)>(0x0058A0FC);
     return func(this, x, y, window);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -301,7 +299,8 @@ DamageResultType VesselClass::Take_Damage(int &damage, int a2, WarheadType warhe
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    DamageResultType (*func)(VesselClass *, int &, int, WarheadType, TechnoClass *, int) = reinterpret_cast<DamageResultType (*)(VesselClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0058AD50);
+    DamageResultType (*func)(VesselClass *, int &, int, WarheadType, TechnoClass *, int) =
+        reinterpret_cast<DamageResultType (*)(VesselClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0058AD50);
     return func(this, damage, a2, warhead, object, a5);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -326,7 +325,8 @@ RadioMessageType VesselClass::Receive_Message(RadioClass *radio, RadioMessageTyp
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    RadioMessageType (*func)(VesselClass *, RadioClass *, RadioMessageType, target_t &) = reinterpret_cast<RadioMessageType (*)(VesselClass *, RadioClass *, RadioMessageType, target_t &)>(0x0058BA50);
+    RadioMessageType (*func)(VesselClass *, RadioClass *, RadioMessageType, target_t &) =
+        reinterpret_cast<RadioMessageType (*)(VesselClass *, RadioClass *, RadioMessageType, target_t &)>(0x0058BA50);
     return func(this, radio, message, target);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -376,7 +376,8 @@ DirType VesselClass::Desired_Load_Dir(ObjectClass *object, cell_t &cellnum) cons
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    DirType const (*func)(const VesselClass *, ObjectClass *, cell_t &) = reinterpret_cast<DirType const (*)(const VesselClass *, ObjectClass *, cell_t &)>(0x0058C074);
+    DirType const (*func)(const VesselClass *, ObjectClass *, cell_t &) =
+        reinterpret_cast<DirType const (*)(const VesselClass *, ObjectClass *, cell_t &)>(0x0058C074);
     return func(this, object, cellnum);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -400,7 +401,8 @@ FireErrorType VesselClass::Can_Fire(target_t target, WeaponSlotType weapon) cons
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
-    FireErrorType (*func)(const VesselClass *, target_t, WeaponSlotType) = reinterpret_cast<FireErrorType (*)(const VesselClass *, target_t, WeaponSlotType)>(0x0058AFF8);
+    FireErrorType (*func)(const VesselClass *, target_t, WeaponSlotType) =
+        reinterpret_cast<FireErrorType (*)(const VesselClass *, target_t, WeaponSlotType)>(0x0058AFF8);
     return func(this, target, weapon);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
@@ -408,17 +410,45 @@ FireErrorType VesselClass::Can_Fire(target_t target, WeaponSlotType weapon) cons
 #endif
 }
 
+/**
+ *
+ *
+ */
 target_t VesselClass::Greatest_Threat(ThreatType threat)
 {
-    captainslog_assert(m_IsActive);
+    if (What_Type() == VESSEL_SUBMARINE) {
+        // Any threats in range
+        threat &= THREAT_AREA | THREAT_RANGE;
+        // Any vessels and naval yards.
+        threat |= THREAT_VESSELS | THREAT_BUILDINGS | THREAT_FACTORIES;
+    } else {
+        if (!(threat & THREAT_GROUND | THREAT_BASE_DEFENSES | THREAT_FACTORIES | THREAT_POWER_FACILTIES | THREAT_VESSELS
+                | THREAT_ECONOMY)) {
 
-#ifdef GAME_DLL
-    target_t (*func)(VesselClass *, ThreatType) = reinterpret_cast<target_t (*)(VesselClass *, ThreatType)>(0x0058B6F8);
-    return func(this, threat);
-#else
-    captainslog_dbgassert(false, "Unimplemented function called!\n");
-    return 0;
-#endif
+            WeaponTypeClass *wptr = Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY);
+            
+            if (wptr != nullptr) {
+                threat |= wptr->Allowed_Threats();
+            }
+
+            wptr = Class_Of().Get_Weapon(WEAPON_SLOT_SECONDARY);
+
+            if (wptr != nullptr) {
+                threat |= wptr->Allowed_Threats();
+            }
+        }
+
+        if (What_Type() == VESSEL_CRUISER) {
+            threat &= ~THREAT_INFANTRY;
+        }
+    }
+
+    if (What_Type() == VESSEL_CARRIER) {
+        // The Helicarrier can't target on its own.
+        return 0;
+    }
+
+    return FootClass::Greatest_Threat(threat);
 }
 
 /**

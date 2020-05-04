@@ -28,23 +28,15 @@
 TFixedIHeapClass<BuildingClass> g_Buildings;
 #endif
 
-BuildingClass::BuildingClass(BuildingType type, HousesType house) :
-    TechnoClass(RTTI_BUILDING, g_Buildings.ID(this), house)
+BuildingClass::BuildingClass(BuildingType type, HousesType house) : TechnoClass(RTTI_BUILDING, g_Buildings.ID(this), house)
 {
 }
 
-BuildingClass::BuildingClass(const BuildingClass &that) :
-    TechnoClass(that)
-{
-}
+BuildingClass::BuildingClass(const BuildingClass &that) : TechnoClass(that) {}
 
-BuildingClass::BuildingClass(const NoInitClass &noinit) :
-    TechnoClass(noinit)
-{
-}
+BuildingClass::BuildingClass(const NoInitClass &noinit) : TechnoClass(noinit) {}
 
-BuildingClass::~BuildingClass()
-{}
+BuildingClass::~BuildingClass() {}
 
 coord_t BuildingClass::Center_Coord() const
 {
@@ -96,7 +88,6 @@ void *BuildingClass::Get_Image_Data() const
     }
     return TechnoClass::Get_Image_Data();
 }
-
 
 ActionType BuildingClass::What_Action(ObjectClass *object) const
 {
@@ -189,7 +180,6 @@ coord_t BuildingClass::Sort_Y() const
 
         default:
             break;
-            
     }
 
     return Coord_Add(Center_Coord(), Coord_From_Lepton_XY(0, (Class_Of().Height() * 256) / 3));
@@ -413,7 +403,7 @@ DamageResultType BuildingClass::Take_Damage(int &damage, int a2, WarheadType war
  */
 void BuildingClass::Fire_Out()
 {
-    //empty
+    // empty
 }
 
 /**
@@ -495,7 +485,7 @@ void BuildingClass::Repair(int mode)
 
             m_IsRepairing = true;
             break;
-    
+
         default:
             break;
     }
@@ -531,7 +521,7 @@ void BuildingClass::Sell_Back(int mode)
 {
     if (Class_Of().Get_Buildup_Data()) {
         bool to_deconstruct = false;
-    
+
         switch (mode) {
             case -1:
                 to_deconstruct = m_Mission != MISSION_DECONSTRUCTION;
@@ -733,14 +723,34 @@ FireErrorType BuildingClass::Can_Fire(target_t target, WeaponSlotType weapon) co
 #endif
 }
 
+/**
+ *
+ */
 target_t BuildingClass::Greatest_Threat(ThreatType threat)
 {
-#ifdef GAME_DLL
-    DEFINE_CALL(func, 0x00459AC0, target_t, BuildingClass *, ThreatType);
-    return func(this, threat);
-#else
-    return 0;
-#endif
+    captainslog_assert(g_Buildings.ID(this) == m_HeapID);
+    captainslog_assert(m_IsActive);
+
+    WeaponTypeClass *wptr = Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY);
+
+    if (wptr != nullptr) {
+        threat |= wptr->Allowed_Threats();
+    }
+
+    wptr = Class_Of().Get_Weapon(WEAPON_SLOT_SECONDARY);
+
+    if (wptr != nullptr) {
+        threat |= wptr->Allowed_Threats();
+    }
+
+    if (Get_Owner_House()->Is_Human()) {
+        // Human buildings can't pick buildings as targets?
+        threat &= ~THREAT_BUILDINGS;
+    }
+
+    threat |= THREAT_RANGE;
+
+    return TechnoClass::Greatest_Threat(threat);
 }
 
 /**

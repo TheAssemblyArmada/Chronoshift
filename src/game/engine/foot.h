@@ -136,7 +136,7 @@ public:
 
 protected:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_Bit1_1 : 1; // 1
+    BOOL m_LimitedScan : 1; // 1
     BOOL m_Initiated : 1; // 2
     BOOL m_Bit1_4 : 1; // 4
     BOOL m_ToLook : 1; // 8
@@ -151,7 +151,7 @@ protected:
     BOOL m_ToScatter : 1; // 8
     BOOL m_Bit2_16 : 1; // 16
 #else
-    bool m_Bit1_1;
+    bool m_LimitedScan; // Target Scan is limited to objects Range.
     bool m_Initiated;
     bool m_Bit1_4;
     bool m_ToLook;

@@ -129,7 +129,7 @@ TechnoClass::TechnoClass(const TechnoClass &that) :
  *
  * @address 0x004CDAA0
  */
-TechnoClass::TechnoClass(const NoInitClass &noinit) : 
+TechnoClass::TechnoClass(const NoInitClass &noinit) :
     RadioClass(noinit),
     m_Flasher(noinit),
     m_AnimStage(noinit),
@@ -259,7 +259,7 @@ BOOL TechnoClass::Can_Repair() const
  */
 BOOL TechnoClass::Can_Player_Fire() const
 {
-    if(!m_OwnerHouse->Player_Has_Control()) {
+    if (!m_OwnerHouse->Player_Has_Control()) {
         return false;
     }
     if (Is_Techno() && Is_Weapon_Equipped()) {
@@ -353,7 +353,7 @@ void TechnoClass::Record_The_Kill(TechnoClass *object)
  */
 void TechnoClass::Do_Shimmer()
 {
-    //this function is quite different in TD
+    // this function is quite different in TD
 
     Do_Uncloak();
 }
@@ -365,7 +365,7 @@ void TechnoClass::Do_Shimmer()
  */
 int TechnoClass::Exit_Object(TechnoClass *object)
 {
-    //empty
+    // empty
     return 0;
 }
 
@@ -437,7 +437,7 @@ void TechnoClass::Draw_It(int x, int y, WindowNumberType window) const
                 adj_y = 4;
             }
 
-            //this seems useless cause we did that already....
+            // this seems useless cause we did that already....
             if (m_RTTI == RTTI_VESSEL) {
                 center_x = dim_w / 2;
             }
@@ -726,7 +726,7 @@ void TechnoClass::Override_Mission(MissionType mission, int target1, int target2
  */
 BOOL TechnoClass::Restore_Mission()
 {
-    if(!MissionClass::Restore_Mission()){
+    if (!MissionClass::Restore_Mission()) {
         return false;
     }
     Assign_Target(m_SuspendedTarCom);
@@ -807,7 +807,7 @@ InfantryType TechnoClass::Crew_Type() const
     if (m_OwnerHouse->Acts_Like() == HOUSES_NEUTRAL) {
         return (InfantryType)g_Scen.Get_Random_Value(INFANTRY_C1, INFANTRY_C9);
     }
-    if (Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr && g_Scen.Check_Random_Chance(50)){
+    if (Techno_Class_Of().Get_Weapon(WEAPON_SLOT_PRIMARY) == nullptr && g_Scen.Check_Random_Chance(50)) {
         if (g_Scen.Check_Random_Chance(50)) {
             return INFANTRY_C1;
         }
@@ -904,7 +904,7 @@ int TechnoClass::Threat_Range(int a1) const
  */
 void TechnoClass::Response_Select()
 {
-    //empty
+    // empty
 }
 
 /**
@@ -914,7 +914,7 @@ void TechnoClass::Response_Select()
  */
 void TechnoClass::Response_Move()
 {
-    //empty
+    // empty
 }
 
 /**
@@ -924,7 +924,7 @@ void TechnoClass::Response_Move()
  */
 void TechnoClass::Response_Attack()
 {
-    //empty
+    // empty
 }
 
 /**
@@ -967,17 +967,21 @@ int TechnoClass::Made_A_Kill()
  */
 BOOL TechnoClass::Target_Something_Nearby(ThreatType threat)
 {
-    threat = threat & (THREAT_2 | THREAT_1);
+    // Try to find a target thats in range or within a area.
+    threat = threat & (THREAT_AREA | THREAT_RANGE);
+
     if (Target_Legal(m_TarCom)) {
-        if (threat & THREAT_1) {
+        if (threat & THREAT_RANGE) {
             if (In_Range(What_Weapon_Should_I_Use(m_TarCom))) {
                 Assign_Target(0);
             }
         }
     }
+
     if (!Target_Legal(m_TarCom)) {
         Assign_Target(Greatest_Threat(threat));
     }
+
     return Target_Legal(m_TarCom);
 }
 
@@ -1206,7 +1210,7 @@ BOOL TechnoClass::Is_Ready_To_Random_Animate() const
  */
 BOOL TechnoClass::Random_Animate()
 {
-    //empty
+    // empty
     return false;
 }
 
@@ -1250,7 +1254,6 @@ void TechnoClass::Techno_Draw_Object(
     captainslog_assert(m_IsActive);
 
     if (shape != nullptr) {
-
         VisualType visual = Visual_Character();
 
         void *remap_table = Remap_Table();
@@ -1436,7 +1439,8 @@ int TechnoClass::Evaluate_Object(ThreatType threat, int scan, int intval2, Techn
 #endif
 }
 
-int TechnoClass::Evaluate_Cell(ThreatType threat, int scan, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3)
+int TechnoClass::Evaluate_Cell(
+    ThreatType threat, int scan, cell_t cellnum, int intval2, TechnoClass **techno, int &distance, int intval3)
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x005634A8, int, const TechnoClass *, ThreatType, int, cell_t, int, TechnoClass **, int &, int);
@@ -1509,7 +1513,8 @@ int TechnoClass::Anti_Air()
         return 0;
     }
 
-    int effectiveness = (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_LIGHT) * weapon->Get_Range()) / weapon->Get_ROF();
+    int effectiveness =
+        (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_LIGHT) * weapon->Get_Range()) / weapon->Get_ROF();
 
     if (tech_type.Is_Two_Shooter()) {
         effectiveness *= 2;
@@ -1536,8 +1541,9 @@ int TechnoClass::Anti_Armor()
     }
 
     lepton_t range = min<lepton_t>(weapon->Get_Range(), 1024);
-    int effectiveness = (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_HEAVY) * range
-        * weapon->Get_Warhead()->Get_Spread()) / weapon->Get_ROF();
+    int effectiveness =
+        (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_HEAVY) * range * weapon->Get_Warhead()->Get_Spread())
+        / weapon->Get_ROF();
 
     if (tech_type.Is_Two_Shooter()) {
         effectiveness *= 2;
@@ -1568,8 +1574,9 @@ int TechnoClass::Anti_Infantry()
     }
 
     lepton_t range = min<lepton_t>(weapon->Get_Range(), 1024);
-    int effectiveness = (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_NONE) * range
-        * weapon->Get_Warhead()->Get_Spread()) / weapon->Get_ROF();
+    int effectiveness =
+        (weapon->Get_Damage() * weapon->Get_Warhead()->Get_Verses(ARMOR_NONE) * range * weapon->Get_Warhead()->Get_Spread())
+        / weapon->Get_ROF();
 
     if (tech_type.Is_Two_Shooter()) {
         effectiveness *= 2;
@@ -1588,7 +1595,7 @@ int TechnoClass::Anti_Infantry()
  */
 BOOL TechnoClass::Can_Teleport_Here(cell_t cell) const
 {
-    if (m_RTTI == RTTI_INFANTRY){
+    if (m_RTTI == RTTI_INFANTRY) {
         return false;
     }
     if (g_Map.In_Radar(cell)) {
