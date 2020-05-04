@@ -30,6 +30,8 @@ public:
     void Set_Digest(const char *digest);
     void Set_Official(int official);
     void Set_Expansion(int expansion);
+    int Official() const { return m_IsOfficial; }
+
 private:
     char m_Description[44];
     char m_Filename[512];
