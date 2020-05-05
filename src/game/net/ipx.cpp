@@ -113,7 +113,90 @@ int IPXInterfaceClass::Open_Socket(unsigned port)
  */
 int IPXInterfaceClass::Message_Handler(void *hwnd, uint32_t msg, uint32_t wparam, int32_t lparam)
 {
-    // TODO
+#ifdef PLATFORM_WINDOWS
+    struct sockaddr_ipx from;
+    socklen_t fromlen = sizeof(from);
+    int recv_len;
+    WinsockBufferType *buff = nullptr;
+    char node_num[6];
+    char net_num[4];
+
+    if (msg != IPX_MESSAGE) {
+        return 1;
+    }
+
+    switch (lparam & 0xFFFF) {
+        case SOCKET_READ:
+            if ((lparam & 0xFFFF0000) >> 16) {
+                Clear_Socket_Error(m_Socket);
+
+                return 0;
+            }
+
+            if ((recv_len = recvfrom(m_Socket, m_RecvBuffer, sizeof(m_RecvBuffer), 0, (struct sockaddr *)&from, &fromlen))
+                == SOCKET_ERROR) {
+                if (LastSocketError == SOCKEWOULDBLOCK) {
+                    Clear_Socket_Error(m_Socket);
+                }
+
+                break;
+            }
+
+            if (recv_len == 0) {
+                return 0;
+            }
+
+            memcpy(net_num, from.sa_netnum, sizeof(net_num));
+            memcpy(node_num, from.sa_nodenum, sizeof(node_num));
+
+            if (memcmp(net_num, m_NetworkNumber, sizeof(net_num)) == 0
+                || memcmp(node_num, m_InBoundNodeNum, sizeof(net_num)) == 0) {
+                return 0;
+            }
+
+            // Queue the data for processing in our in buffer queue.
+            buff = new WinsockBufferType;
+            buff->m_Length = recv_len;
+            memcpy(buff->m_Data, m_RecvBuffer, recv_len);
+            reinterpret_cast<IPXAddressClass *>(buff->m_Header)->Set_Address(net_num, node_num);
+            m_InBuffers.Add(buff);
+
+            return 0;
+        case SOCKET_WRITE:
+            if ((lparam & 0xFFFF0000) >> 16) {
+                Clear_Socket_Error(m_Socket);
+
+                return 0;
+            }
+
+            while (m_OutBuffers.Count()) {
+                buff = m_OutBuffers[0];
+                from.sa_family = AF_IPX;
+                from.sa_socket = htobe16(m_Port);
+
+                if (buff->m_Broadcast) {
+                    memcpy(from.sa_netnum, m_NetworkNumber, sizeof(m_NetworkNumber));
+                    memcpy(from.sa_nodenum, m_OutBoundNodeNum, sizeof(m_OutBoundNodeNum));
+                } else {
+                    reinterpret_cast<IPXAddressClass *>(buff->m_Header)->Get_Address(net_num, node_num);
+                    memcpy(from.sa_netnum, net_num, sizeof(net_num));
+                    memcpy(from.sa_nodenum, node_num, sizeof(node_num));
+                }
+
+                if (sendto(m_Socket, buff->m_Data, buff->m_Length, 0, (sockaddr const *)&from, sizeof(from)) != SOCKET_ERROR
+                    || LastSocketError == SOCKEWOULDBLOCK) {
+                    m_OutBuffers.Delete(0);
+                    delete buff;
+                } else {
+                    Clear_Socket_Error(m_Socket);
+                }
+            }
+
+            return 0;
+        default:
+            break;
+    }
+#endif
     return 0;
 }
 
