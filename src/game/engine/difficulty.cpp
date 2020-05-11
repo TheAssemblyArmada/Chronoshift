@@ -14,15 +14,17 @@
  *            LICENSE
  */
 #include "difficulty.h"
-//#include "callback.h"
+#include "callback.h"
 #include "gameini.h"
+#include "gbuffer.h"
 #include "controlc.h"
 #include "dialog.h"
 #include "language.h"
 #include "mouse.h"
-//#include "rules.h"
+#include "ostimer.h"
+#include "rules.h"
 #include "slider.h"
-#include "stringex.h"
+#include "surfacemonitor.h"
 #include "textbtn.h"
 #include "vector.h"
 
@@ -43,11 +45,9 @@ void Difficulty_Get(GameINIClass &ini, DifficultyClass &diff, const char *sectio
         diff.ContentScan = ini.Get_Bool(section, "ContentScan", false);
     }
 }
+
 int Fetch_Difficulty_Dialog(BOOL one_time_mission)
 {
-    // TODO Requires RuleClass and CallBack
-#if 0
-    DynamicVectorClass<ControlClass *> DialogGadgets(3);
     char strbuff[512];
     bool process = true; // loop while true
     bool to_draw = true;
@@ -70,45 +70,33 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
 
     // empty call sets the font spacing stuff?
     Fancy_Text_Print(nullptr, 0, 0, nullptr, COLOR_TBLACK, TPF_6PT_GRAD | TPF_NOSHADOW);
-
     int str_w = 0;
     int str_h = 0;
-
     Format_Window_String(strbuff, 380, str_w, str_h);
 
-    TextButtonClass okbtn(
-        1, TXT_OK, TPF_CENTER | TPF_6PT_GRAD | TPF_USE_GRAD_PAL | TPF_NOSHADOW , 470, 244, 60);
-    //TextButtonClass cancelbtn(
-    //    BUTTON_CANCEL, TXT_OK, TPF_CENTER | TPF_6PT_GRAD | TPF_USE_GRAD_PAL | TPF_NOSHADOW , 470, 244, 60);
+    TextButtonClass okbtn(1, TXT_OK, TPF_CENTER | TPF_NOSHADOW | TPF_6PT_GRAD, 470, 244, 60);
     SliderClass diffsli(2, 110, 222, 420, 16, true);
 
-    if (g_Rule.FineDiffControl) {
+    if (g_Rule.Fine_Diff_Control()) {
         diffsli.Set_Maximum(DIFF_COUNT);
-        diffsli.Set_Value((diffsli.Get_Maximum() / 2) - 1); // set initial value.    //2
+        diffsli.Set_Value(2); // set initial value.    //2
     } else {
         diffsli.Set_Maximum(3);
-        diffsli.Set_Value((diffsli.Get_Maximum() / 2) - 1); // set initial value.
+        diffsli.Set_Value(1); // set initial value.
     }
 
     diffsli.Add(okbtn);
-    //diffsli.Add(cancelbtn);
 
     // Button linking
-    GadgetClass *active_gadget = &diffsli;
-
-    // Store all the gadgets in an array.
-    DialogGadgets.Add(&okbtn);
-    //DialogGadgets.Add(&cancelbtn);
-    DialogGadgets.Add(&diffsli);
-
+    GadgetClass *active_gadget = &okbtn;
     Set_Logic_Page(&g_SeenBuff);
 
     while (process) {
         if (to_draw) {
             g_Mouse->Hide_Mouse();
 
-            Dialog_Box(200, 200, 500, 160);
-
+            Dialog_Box(70, 120, 500, 160);
+            to_draw = false;
             Fancy_Text_Print(
                 strbuff, 110, 150, GadgetClass::Get_Color_Scheme(), COLOR_TBLACK, TPF_6PT_GRAD | TPF_NOSHADOW | TPF_LEFT);
 
@@ -138,27 +126,22 @@ int Fetch_Difficulty_Dialog(BOOL one_time_mission)
             g_Mouse->Show_Mouse();
         }
 
-        Application_Callback();
+        Call_Back();
 
-        if (AllSurfaces.field_0) {
-            AllSurfaces.field_0 = false;
+        if (g_AllSurfaces.Surfaces_Restored()) {
+            g_AllSurfaces.Clear_Surfaces_Restored();
             to_draw = true;
         } else {
-            KeyNumType input = diffsli.Input();
+            KeyNumType input = active_gadget->Input();
 
-            if (input == KN_RETURN || input == 0x80001) {
+            if (input == KN_RETURN || input == GADGET_BUTTON(1)) {
                 process = false;
             }
+        }
 
-            //if (input == KN_ESC || input == GADGET_INPUT_RENAME(BUTTON_CANCEL)) {
-            //    process = false;
-            //    return DIFF_NONE;
-            //}
-        } 
+        // BUGFIX: Stops high CPU load in this menu.
+        PlatformTimerClass::Sleep(1);
     }
 
-    return (g_Rule.FineDiffControl == false) + 1) * diffsli.Get_Value();
-#else
-    return DIFF_EASIEST;
-#endif
+    return ((g_Rule.Fine_Diff_Control() == false) + 1) * diffsli.Get_Value();
 }
