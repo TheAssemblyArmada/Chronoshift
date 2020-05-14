@@ -15,6 +15,7 @@
  */
 #include "expansion.h"
 #include "gameoptions.h"
+#include <captainslog.h>
 
 #ifdef PLATFORM_WINDOWS
 #include <winreg.h>
@@ -26,21 +27,26 @@ BOOL Is_Counterstrike_Installed()
         return true;
     }
 #ifdef PLATFORM_WINDOWS
+    captainslog_debug("Counterstrike install check from chronoshift.ini failed, checking registry.");
     static BOOL _checked;
     static BOOL _installed;
     HKEY result;
-    BYTE data[4];
-    DWORD cbdata;
 
     if (!_checked) {
         if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Westwood\\Red Alert Windows 95 Edition", 0, KEY_READ, &result)
             != 0) {
+            captainslog_debug(
+                "Failed to open 'SOFTWARE\\Westwood\\Red Alert Windows 95 Edition' subkey in %s.", __CURRENT_FUNCTION__);
             return false;
         }
+
+        DWORD cbdata = 4;
+        BYTE data[4];
 
         if (RegQueryValueExA(result, "CStrikeInstalled", nullptr, nullptr, data, &cbdata) != 0) {
             _installed = false;
         } else {
+            captainslog_debug("Query succeeded, registry value for Counterstrike is %d.", *reinterpret_cast<DWORD *>(data));
             _installed = *reinterpret_cast<DWORD *>(data);
         }
 
@@ -60,21 +66,26 @@ BOOL Is_Aftermath_Installed()
         return true;
     }
 #ifdef PLATFORM_WINDOWS
+    captainslog_debug("Aftermath install check from chronoshift.ini failed, checking registry.");
     static BOOL _checked;
     static BOOL _installed;
     HKEY result;
-    BYTE data[4];
-    DWORD cbdata;
 
     if (!_checked) {
         if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Westwood\\Red Alert Windows 95 Edition", 0, KEY_READ, &result)
             != 0) {
+            captainslog_debug(
+                "Failed to open 'SOFTWARE\\Westwood\\Red Alert Windows 95 Edition' subkey in %s.", __CURRENT_FUNCTION__);
             return false;
         }
+
+        DWORD cbdata = 4;
+        BYTE data[4];
 
         if (RegQueryValueExA(result, "AftermathInstalled", nullptr, nullptr, data, &cbdata) != 0) {
             _installed = false;
         } else {
+            captainslog_debug("Query succeeded, registry value for Aftermath is %d.", *reinterpret_cast<DWORD *>(data));
             _installed = *reinterpret_cast<DWORD *>(data);
         }
 
