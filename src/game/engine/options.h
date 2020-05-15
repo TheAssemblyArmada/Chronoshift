@@ -85,6 +85,7 @@ public:
     BOOL Is_Counterstrike_Enabled() const { return m_CounterstrikeEnabled; }
     BOOL Is_Aftermath_Enabled() const { return m_AftermathEnabled; }
     BOOL Expansion_Options_Present() const { return m_ExpansionOptionsPresent; }
+    void Enable_Expansion_Options() { m_ExpansionOptionsPresent = true; }
     fixed_t Get_Brightness() const { return (m_Brightness - fixed_t::_1_4) / fixed_t::_1_2; }
     fixed_t Get_Saturation() const { return m_Saturation; }
     fixed_t Get_Contrast() const { return (m_Contrast - fixed_t::_1_4) / fixed_t::_1_2; }
