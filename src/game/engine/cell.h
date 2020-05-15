@@ -131,6 +131,7 @@ public:
     BOOL Is_Occuppied() const { return m_OccupantBit != OCCUPANT_NONE; }
 
     cell_t Cell_Number() const { return m_CellNumber; }
+    target_t As_Target() const { return ::As_Target(m_CellNumber); }
     int8_t Get_Zone(MZoneType mzone) const { return m_Zones[mzone]; }
     void Set_Zone(MZoneType mzone, int8_t zone) { m_Zones[mzone] = zone; }
     BOOL Get_Placement_Check() const { return m_PlacementCheck; }

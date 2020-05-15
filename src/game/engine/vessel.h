@@ -89,6 +89,9 @@ class VesselClass : public DriveClass
 
     VesselType What_Type() const { return m_Class->What_Type(); }
 
+    void Set_Self_Repair(BOOL state) { m_ToSelfRepair = state; }
+    void Set_Repairing(BOOL state) { m_Repairing = state; }
+
     static void Init();
 
 #ifdef GAME_DLL

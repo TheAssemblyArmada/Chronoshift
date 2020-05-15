@@ -286,7 +286,7 @@ BOOL FactoryClass::Completed()
 void FactoryClass::Code_Pointers()
 {
     if (m_Object != nullptr) {
-        m_Object = reinterpret_cast<TechnoClass *>(As_Target(m_Object));
+        m_Object = reinterpret_cast<TechnoClass *>(m_Object->As_Target());
     }
     if (m_Owner != nullptr) {
         m_Owner = (HouseClass *)m_Owner->What_Type();

@@ -83,7 +83,7 @@ FootClass *CargoClass::Detach_Object()
 void CargoClass::Code_Pointers()
 {
     if (m_Object != nullptr) {
-        m_Object = reinterpret_cast<FootClass *>(As_Target(m_Object));
+        m_Object = reinterpret_cast<FootClass *>(m_Object->As_Target());
     }
 }
 

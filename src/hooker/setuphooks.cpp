@@ -833,6 +833,8 @@ void Setup_Hooks()
     Hook_Function(0x004C2BFC, *FootClass::Receive_Message);
     Hook_Function(0x004C14C8, *FootClass::Start_Driver);
     Hook_Function(0x004C3174, *FootClass::Greatest_Threat);
+    Hook_Function(0x004C35D0, *FootClass::Queue_Navigation_List);
+    Hook_Function(0x004C3684, *FootClass::Clear_Navigation_List);
 
     // abstract.h
     Hook_Function(0x004CD8E0, *AbstractClass::Hook_Ctor_NoInit);

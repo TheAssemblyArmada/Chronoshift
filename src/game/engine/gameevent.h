@@ -78,18 +78,18 @@ public:
     // General constructors.
     GameEventClass(GameEventType type); // For events: (without special data) - DESTRUCT, SAVEGAME, RETRACT_DRAW, PROPOSE_DRAW, OPTIONS, EXIT
     GameEventClass(GameEventType type, cell_t cell); // For events: SELLCELL
-    GameEventClass(GameEventType type, unsigned int gamespeed); // For events: GAMESPEED
+    GameEventClass(GameEventType type, uint32_t gamespeed); // For events: GAMESPEED
     GameEventClass(GameEventType type, HousesType house); // For events: ALLY
     GameEventClass(GameEventType type, RTTIType rtti); // For events: SUSPEND, ABANDON
-    GameEventClass(GameEventType type, RTTIType rtti, unsigned int heap_id); // For events: PLACE, PRODUCE
+    GameEventClass(GameEventType type, RTTIType rtti, uint32_t heap_id); // For events: PLACE, PRODUCE
     GameEventClass(GameEventType type, RTTIType rtti, cell_t cell); // For events:
     GameEventClass(GameEventType type, SpecialWeaponType special, cell_t cell); // For events: SPECIAL_PLACE
-    GameEventClass(GameEventType type, void *a2, unsigned long a3); // For events:
+    GameEventClass(GameEventType type, void *a2, uint32_t a3); // For events:
     GameEventClass(GameEventType type, TargetClass whom); // For events: PRIMARY, SELL, IDLE, SCATTER, REPAIR
     GameEventClass(GameEventType type, TargetClass whom, TargetClass target); // For events: ARCHIVE
     GameEventClass(GameEventType type, AnimType anim, HousesType owner, coord_t coord); // For events: ANIMATION
-    GameEventClass(GameEventType type, unsigned int crc, unsigned short cmd_count, unsigned char delay); // For events: FRAME_SYNC
-    GameEventClass(GameEventType type, unsigned short desired_frame_rate, unsigned short max_ahead); // For events: TIMING
+    GameEventClass(GameEventType type, uint32_t crc, uint16_t cmd_count, uint8_t delay); // For events: FRAME_SYNC
+    GameEventClass(GameEventType type, uint16_t desired_frame_rate, uint16_t max_ahead); // For events: TIMING
 
     // TODO: Once GameEventClass is complete, and code for event below is under control, move
     //        these above and use the constructors above that explicitly take the event type.
@@ -104,10 +104,10 @@ public:
 
     void Execute();
 
-    int Get_Event_Frame() const { return m_EventFrame; }
-    void Set_Event_Frame(int frame) { m_EventFrame = frame; }
-    int Get_House_ID() const { return m_HouseID; }
-    void Set_House_ID(int id) { m_HouseID = id; }
+    int32_t Get_Event_Frame() const { return m_EventFrame; }
+    void Set_Event_Frame(int32_t frame) { m_EventFrame = frame; }
+    int32_t Get_House_ID() const { return m_HouseID; }
+    void Set_House_ID(int32_t id) { m_HouseID = id; }
     BOOL Is_Executed() const { return m_IsExecuted; }
     void Set_Executed(bool state) { m_IsExecuted = state; }
 
@@ -152,7 +152,7 @@ private:
 
     struct HouseEventStruct
     {
-        int /*HousesType*/ m_Whom;
+        int32_t /*HousesType*/ m_Whom;
     };
 
     struct AnimEventStruct
@@ -181,12 +181,12 @@ private:
     struct RTTIHeapIDEventStruct
     {
         RTTIType m_RTTI;
-        int m_HeapID;
+        int32_t m_HeapID;
     };
 
     struct SpecialPlaceEventStruct
     {
-        int /*SpecialWeaponType*/ m_Special;
+        int32_t /*SpecialWeaponType*/ m_SpecialWeapon;
         cell_t m_Cell;
     };
 
@@ -198,37 +198,37 @@ private:
 
     struct FrameEventStruct
     {
-        unsigned int m_CRC;
-        unsigned short m_CommandCount;
-        unsigned char m_Delay;
+        uint32_t m_CRC;
+        uint16_t m_CommandCount;
+        uint8_t m_Delay;
     };
 
     struct TimingEventStruct
     {
-        unsigned int m_DesiredFrameRate : 16; // 1
-        unsigned int m_MaxAhead : 16; // 16
+        uint32_t m_DesiredFrameRate : 16; // 1
+        uint32_t m_MaxAhead : 16; // 16
     };
 
     struct TimeEventStruct
     {
-        unsigned char m_MaxAhead;
+        uint8_t m_MaxAhead;
     };
 
     struct GameSpeedEventStruct
     {
-        unsigned int m_GameSpeed;
+        uint32_t m_GameSpeed;
     };
 
 private:
     GameEventType m_Type; // The type for this object.
 
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    unsigned int m_EventFrame : 26; //
-    unsigned int m_HouseID : 5; //
+    uint32_t m_EventFrame : 26; //
+    uint32_t m_HouseID : 5; //
     BOOL m_IsExecuted : 1; //
 #else
-    unsigned int m_EventFrame; // The frame this event was created on.
-    unsigned int m_HouseID; // The id of the house that triggered this event.
+    uint32_t m_EventFrame; // The frame this event was created on.
+    uint32_t m_HouseID; // The id of the house that triggered this event.
     bool m_IsExecuted; // Has this event been executed? This use to make sure the event is
                        // not executed twice and also used for cleaning up the queue.
 #endif
@@ -257,7 +257,7 @@ public:
     struct EventInfoStruct
     {
         char const *Name;
-        int RawSize;
+        int32_t RawSize;
     };
 
     static EventInfoStruct s_EventTypeList[EVENT_COUNT];

@@ -215,6 +215,7 @@ public:
 
     RTTIType What_Am_I() const { return m_RTTI; }
     int Get_Heap_ID() const { return m_HeapID; }
+    PlayerColorType Get_Color() const { return m_Color; }
     HousesType What_Type() const { return m_Class->What_Type(); }
     const char *Get_Name() const { return m_Class->Get_Name(); }
 

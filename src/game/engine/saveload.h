@@ -38,8 +38,8 @@ enum
 };
 
 void Put_All(Pipe &pipe, int skip_callback);
-int Save_Game(int number, char *savename, int unknown);
-int Load_Game(int unknown);
+BOOL Save_Game(int number, const char *savename, BOOL unknown);
+BOOL Load_Game(int number);
 int Save_Misc_Values(Pipe &pipe);
 int Load_Misc_Values(Straw &straw);
 int Save_MPlayer_Values(Pipe &pipe);
