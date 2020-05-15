@@ -45,7 +45,7 @@ class BaseClass
 {
 public:
     BaseClass() : m_Nodes() {}
-    ~BaseClass() {}
+    virtual ~BaseClass() {}
 
     BaseNodeClass &operator[](int entry) { return m_Nodes[entry]; }
     const BaseNodeClass &operator[](int entry) const { return m_Nodes[entry]; }
@@ -68,8 +68,8 @@ public:
     BOOL Load(Straw &straw);
     BOOL Save(Pipe &pipe);
 
-    void Code_Pointers() {}
-    void Decode_Pointers() {}
+    virtual void Code_Pointers() {}
+    virtual void Decode_Pointers() {}
 
 private:
     DynamicVectorClass<BaseNodeClass> m_Nodes;
