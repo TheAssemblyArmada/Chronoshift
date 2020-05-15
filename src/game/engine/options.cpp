@@ -262,8 +262,8 @@ void OptionsClass::Save_Settings()
     ini.Put_Bool("Options", "DeathAnnounce", m_DeathAnnounce);
     ini.Put_Bool("Options", "AllowSidebarToggle", m_AllowSidebarToggle);
 
-    // Only add the expansion enable bools if the section already exists in the file.
-    if (ini.Section_Present("Expansions")) {
+    // Only add the expansion enable bools if having the options at all is enabled.
+    if (m_ExpansionOptionsPresent) {
         ini.Put_Bool("Expansions", "CounterstrikeEnabled", m_CounterstrikeEnabled);
         ini.Put_Bool("Expansions", "AftermathEnabled", m_AftermathEnabled);
     }
