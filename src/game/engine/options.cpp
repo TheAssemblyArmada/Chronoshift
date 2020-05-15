@@ -103,6 +103,7 @@ OptionsClass::OptionsClass() :
     m_AllowSidebarToggle(false),
     m_CounterstrikeEnabled(false),
     m_AftermathEnabled(false),
+    m_ExpansionOptionsPresent(false),
     m_KeyForceMove1(KN_LALT),
     m_KeyForceMove2(KN_RALT),
     m_KeyForceAttack1(KN_LCTRL),
@@ -260,8 +261,12 @@ void OptionsClass::Save_Settings()
     ini.Put_Bool("Options", "FreeScrolling", m_FreeScrolling);
     ini.Put_Bool("Options", "DeathAnnounce", m_DeathAnnounce);
     ini.Put_Bool("Options", "AllowSidebarToggle", m_AllowSidebarToggle);
-    ini.Put_Bool("Expansions", "CounterstrikeEnabled", m_CounterstrikeEnabled);
-    ini.Put_Bool("Expansions", "AftermathEnabled", m_AftermathEnabled);
+
+    // Only add the expansion enable bools if the section already exists in the file.
+    if (ini.Section_Present("Expansions")) {
+        ini.Put_Bool("Expansions", "CounterstrikeEnabled", m_CounterstrikeEnabled);
+        ini.Put_Bool("Expansions", "AftermathEnabled", m_AftermathEnabled);
+    }
 
     ini.Put_KeyNumType("WinHotkeys", "KeyForceMove1", m_KeyForceMove1);
     ini.Put_KeyNumType("WinHotkeys", "KeyForceMove2", m_KeyForceMove2);
@@ -348,6 +353,7 @@ void OptionsClass::Load_Settings()
     m_AllowSidebarToggle = ini.Get_Bool("Options", "AllowSidebarToggle", false); // TODO use variable as default when ctor used.
     m_CounterstrikeEnabled = ini.Get_Bool("Expansions", "CounterstrikeEnabled", false); // TODO use variable as default when ctor used.
     m_AftermathEnabled = ini.Get_Bool("Expansions", "AftermathEnabled", false); // TODO use variable as default when ctor used.
+    m_ExpansionOptionsPresent = ini.Section_Present("Expansions");
 
     m_KeyForceMove1 = ini.Get_KeyNumType("WinHotkeys", "KeyForceMove1", m_KeyForceMove1);
     m_KeyForceMove2 = ini.Get_KeyNumType("WinHotkeys", "KeyForceMove2", m_KeyForceMove2);

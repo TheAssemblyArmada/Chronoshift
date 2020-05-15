@@ -84,6 +84,7 @@ public:
     BOOL Free_Scrolling() const { return m_FreeScrolling; }
     BOOL Is_Counterstrike_Enabled() const { return m_CounterstrikeEnabled; }
     BOOL Is_Aftermath_Enabled() const { return m_AftermathEnabled; }
+    BOOL Expansion_Options_Present() const { return m_ExpansionOptionsPresent; }
     fixed_t Get_Brightness() const { return (m_Brightness - fixed_t::_1_4) / fixed_t::_1_2; }
     fixed_t Get_Saturation() const { return m_Saturation; }
     fixed_t Get_Contrast() const { return (m_Contrast - fixed_t::_1_4) / fixed_t::_1_2; }
@@ -209,6 +210,7 @@ private:
     BOOL m_AllowSidebarToggle : 1; // & 64 Chronoshift option.
     BOOL m_CounterstrikeEnabled : 1; // & 128 Chronoshift option.
     BOOL m_AftermathEnabled : 1; // & 256 Chronoshift option.
+    BOOL m_ExpansionOptionsPresent : 1; // & 512 Chronoshift option.
 #else
     bool m_AutoScroll;
     bool m_ScoreRepeats;
@@ -219,6 +221,7 @@ private:
     bool m_AllowSidebarToggle; // Chronoshift option.
     bool m_CounterstrikeEnabled; // Chronoshift option.
     bool m_AftermathEnabled; // Chronoshift option.
+    bool m_ExpansionOptionsPresent; // Chronoshift option.
 #endif
     KeyNumType m_KeyForceMove1;
     KeyNumType m_KeyForceMove2;
