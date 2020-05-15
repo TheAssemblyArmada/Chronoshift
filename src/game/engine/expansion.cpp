@@ -14,6 +14,7 @@
  *            LICENSE
  */
 #include "expansion.h"
+#include "gamefile.h"
 #include "gameoptions.h"
 #include <captainslog.h>
 
@@ -23,78 +24,84 @@
 
 BOOL Is_Counterstrike_Installed()
 {
-    if (g_Options.Expansion_Options_Present()) {
-        return g_Options.Is_Counterstrike_Enabled();
-    }
-#ifdef PLATFORM_WINDOWS
-    captainslog_debug("Counterstrike install check from chronoshift.ini failed, checking registry.");
     static BOOL _checked;
     static BOOL _installed;
-    HKEY result;
 
-    if (!_checked) {
+    if (g_Options.Expansion_Options_Present()) {
+        return g_Options.Is_Counterstrike_Enabled();
+    } else if (!_checked) {
+#ifdef PLATFORM_WINDOWS
+        HKEY result;
+        captainslog_debug("Expansion options in chronoshift.ini not present, checking registry for Counterstrike.");
+
         if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Westwood\\Red Alert Windows 95 Edition", 0, KEY_READ, &result)
-            != 0) {
-            captainslog_debug(
-                "Failed to open 'SOFTWARE\\Westwood\\Red Alert Windows 95 Edition' subkey in %s.", __CURRENT_FUNCTION__);
-            return false;
+            == 0) {
+            DWORD cbdata = 4;
+            BYTE data[4];
+
+            if (RegQueryValueExA(result, "CStrikeInstalled", nullptr, nullptr, data, &cbdata) != 0) {
+                _installed = false;
+            } else {
+                captainslog_debug(
+                    "Query succeeded, registry value for Counterstrike is %d.", *reinterpret_cast<DWORD *>(data));
+                _installed = *reinterpret_cast<DWORD *>(data);
+            }
+
+            RegCloseKey(result);
+            _checked = true;
         }
+#endif
 
-        DWORD cbdata = 4;
-        BYTE data[4];
-
-        if (RegQueryValueExA(result, "CStrikeInstalled", nullptr, nullptr, data, &cbdata) != 0) {
-            _installed = false;
-        } else {
-            captainslog_debug("Query succeeded, registry value for Counterstrike is %d.", *reinterpret_cast<DWORD *>(data));
-            _installed = *reinterpret_cast<DWORD *>(data);
+        if (!_checked) {
+            captainslog_debug("Expansion options in chronoshift.ini not present, checking for expand.mix for Counterstrike.");
+            GameFileClass fc("expand.mix");
+            _installed = fc.Is_Available();
+            _checked = true;
         }
-
-        RegCloseKey(result);
-        _checked = true;
     }
 
     return _installed;
-#else
-    return false;
-#endif
 }
+
 
 BOOL Is_Aftermath_Installed()
 {
-    if (g_Options.Expansion_Options_Present()) {
-        return g_Options.Is_Aftermath_Enabled();
-    }
-#ifdef PLATFORM_WINDOWS
-    captainslog_debug("Aftermath install check from chronoshift.ini failed, checking registry.");
     static BOOL _checked;
     static BOOL _installed;
-    HKEY result;
 
-    if (!_checked) {
+    if (g_Options.Expansion_Options_Present()) {
+        return g_Options.Is_Aftermath_Enabled();
+    } else if (!_checked) {
+#ifdef PLATFORM_WINDOWS
+        HKEY result;
+        captainslog_debug("Expansion options in chronoshift.ini not present, checking registry for Aftermath.");
+
         if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Westwood\\Red Alert Windows 95 Edition", 0, KEY_READ, &result)
-            != 0) {
+            == 0) {
+            DWORD cbdata = 4;
+            BYTE data[4];
+
+            if (RegQueryValueExA(result, "AftermathInstalled", nullptr, nullptr, data, &cbdata) != 0) {
+                _installed = false;
+            } else {
+                captainslog_debug(
+                    "Query succeeded, registry value for Aftermath is %d.", *reinterpret_cast<DWORD *>(data));
+                _installed = *reinterpret_cast<DWORD *>(data);
+            }
+
+            RegCloseKey(result);
+            _checked = true;
+        }
+#endif
+
+        if (!_checked) {
             captainslog_debug(
-                "Failed to open 'SOFTWARE\\Westwood\\Red Alert Windows 95 Edition' subkey in %s.", __CURRENT_FUNCTION__);
-            return false;
+                "Expansion options in chronoshift.ini not present, checking for expand2.mix for Aftermath.");
+            GameFileClass fc("expand2.mix");
+            _installed = fc.Is_Available();
+            _checked = true;
         }
-
-        DWORD cbdata = 4;
-        BYTE data[4];
-
-        if (RegQueryValueExA(result, "AftermathInstalled", nullptr, nullptr, data, &cbdata) != 0) {
-            _installed = false;
-        } else {
-            captainslog_debug("Query succeeded, registry value for Aftermath is %d.", *reinterpret_cast<DWORD *>(data));
-            _installed = *reinterpret_cast<DWORD *>(data);
-        }
-
-        RegCloseKey(result);
-        _checked = true;
     }
 
     return _installed;
-#else
-    return false;
-#endif
 }
