@@ -45,6 +45,7 @@
 #include "drive.h"
 #include "droplist.h"
 #include "excepthandler.h"
+#include "expansion.h"
 #include "facing.h"
 #include "factory.h"
 #include "fading.h"
@@ -689,6 +690,10 @@ void Setup_Hooks()
     Hook_Function(0x0053CD80, *ScenarioClass::Hook_Set_Scenario_Name2);
     Hook_Function(0x00539BF8, *ScenarioClass::Do_BW_Fade);
     Hook_Function(0x00539C40, *ScenarioClass::Do_Fade_AI);
+
+    // expansion.h
+    Hook_Function(0x004ABF88, Is_Counterstrike_Installed);
+    Hook_Function(0x004AC024, Is_Aftermath_Installed);
 
     // mission.h
     Hook_Function(0x00502C70, *MissionClass::Assign_Mission);
