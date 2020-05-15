@@ -98,8 +98,8 @@ class PaletteClass;
 PaletteClass &g_GamePalette = Make_Global<PaletteClass>(0x00669C5C);
 PaletteClass &g_OriginalPalette = Make_Global<PaletteClass>(0x0066A55C);
 PaletteClass &g_CCPalette = Make_Global<PaletteClass>(0x0066995C);
-PaletteClass &g_BlackPalette = Make_Global<PaletteClass>(0x00668F5C);
-PaletteClass &g_WhitePalette = Make_Global<PaletteClass>(0x0066925C);
+PaletteClass &g_BlackPalette = Make_Global<PaletteClass>(0x00669F5C);
+PaletteClass &g_WhitePalette = Make_Global<PaletteClass>(0x0066A25C);
 
 // shape.cpp
 BOOL &g_UseBigShapeBuffer = Make_Global<BOOL>(0x006A1784);
