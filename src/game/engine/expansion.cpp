@@ -23,8 +23,8 @@
 
 BOOL Is_Counterstrike_Installed()
 {
-    if (g_Options.Is_Counterstrike_Enabled()) {
-        return true;
+    if (g_Options.Expansion_Options_Present()) {
+        return g_Options.Is_Counterstrike_Enabled();
     }
 #ifdef PLATFORM_WINDOWS
     captainslog_debug("Counterstrike install check from chronoshift.ini failed, checking registry.");
@@ -62,8 +62,8 @@ BOOL Is_Counterstrike_Installed()
 
 BOOL Is_Aftermath_Installed()
 {
-    if (g_Options.Is_Aftermath_Enabled()) {
-        return true;
+    if (g_Options.Expansion_Options_Present()) {
+        return g_Options.Is_Aftermath_Enabled();
     }
 #ifdef PLATFORM_WINDOWS
     captainslog_debug("Aftermath install check from chronoshift.ini failed, checking registry.");
