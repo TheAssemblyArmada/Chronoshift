@@ -18,8 +18,10 @@
 #include "coord.h"
 #include "drawshape.h"
 #include "fading.h"
+#include "fetchtechtype.h"
 #include "gamefile.h"
 #include "globals.h"
+#include "house.h"
 #include "iomap.h"
 #include "lists.h"
 #include "mixfile.h"
@@ -52,10 +54,7 @@ void *SidebarClass::s_SidebarBottomShape = nullptr;
 
 void *SidebarClass::s_SidebarAddonShape = nullptr;
 
-SidebarClass::SBGadgetClass::SBGadgetClass() :
-    GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false)
-{
-}
+SidebarClass::SBGadgetClass::SBGadgetClass() : GadgetClass(496, 154, 143, 244, MOUSE_LEFT_UP, false) {}
 
 BOOL SidebarClass::SBGadgetClass::Action(unsigned flags, KeyNumType &key)
 {
@@ -92,21 +91,16 @@ void SidebarClass::StripClass::SelectClass::Set_Owner(StripClass &strip, int row
     m_YPos = (48 * row) + strip.m_YPos;
 }
 
-SidebarClass::StripClass::StripClass() :
-    m_ProgressTimer()
-{
-}
+SidebarClass::StripClass::StripClass() : m_ProgressTimer() {}
 
 SidebarClass::StripClass::StripClass(InitClass const &init) :
     m_XPos(0),
     m_YPos(0),
     m_WhichColumn(),
     m_StripToRedraw(true),
-    m_Strip_Boolean2(false),
-    m_Strip_Boolean4(false),
-    m_Strip_Boolean8(false),
-    m_Strip_Boolean16(false),
-    m_Strip_Boolean32(false),
+    m_Busy(false),
+    m_ScrollingDown(false),
+    m_Scrolling(false),
     m_field_21(-1),
     m_CurrentRow(0),
     m_RowStartIndex(0),
@@ -123,19 +117,15 @@ SidebarClass::StripClass::StripClass(InitClass const &init) :
 
 void SidebarClass::StripClass::One_Time(int column)
 {
-    // TODO, needs HouseClass, TabClass, HelpClass.
-#ifdef GAME_DLL
-    void (*func)(const StripClass *, int) = reinterpret_cast<void (*)(const StripClass *, int)>(0x0054DD54);
-    func(this, column);
-#else
-    char icon_fname[16];
-    // s_ClockShapes = GameFileClass::Retrieve("clock.shp");
+    static char *_special_icon_names[SPECIAL_COUNT] = { "sonr", "atom", "warp", "pbmb", "pinf", "cam", "infx", "gpss" };
 
-    // for ( SpecialWeaponType super = SPECIAL_FIRST; super < SPECIAL_COUNT; ++super ) {
-    //    snprintf(icon_fname, sizeof(icon_fname), "%.4sicon.shp", SuperWeaponClass::Get_Special_Icon(super));
-    //    s_SpecialShapes[super] = GameFileClass::Retrieve(icon_fname);
-    //}
-#endif
+    char icon_fname[16];
+    s_ClockShapes = GameFileClass::Retrieve("clock.shp");
+
+    for (SpecialWeaponType super = SPECIAL_FIRST; super < SPECIAL_COUNT; ++super) {
+        snprintf(icon_fname, sizeof(icon_fname), "%.4sicon.shp", _special_icon_names[super]);
+        s_SpecialShapes[super] = GameFileClass::Retrieve(icon_fname);
+    }
 }
 
 void *SidebarClass::StripClass::Get_Special_Cameo(SpecialWeaponType super)
@@ -152,9 +142,9 @@ void SidebarClass::StripClass::Init_Clear()
     m_CurrentRow = 0;
     m_field_2D = 0;
     m_CameoCount = 0;
-    m_Strip_Boolean2 = false;
-    m_Strip_Boolean4 = false;
-    m_Strip_Boolean8 = false;
+    m_Busy = false;
+    m_ScrollingDown = false;
+    m_Scrolling = false;
 
     // Reset all the cameo entries
     for (int i = 0; i < MAX_BUTTONS_PER_COLUMN; ++i) {
@@ -215,11 +205,24 @@ void SidebarClass::StripClass::Init_Theater(TheaterType theater)
 
 void SidebarClass::StripClass::Reload_LogoShapes()
 {
-    // TODO Needs HouseClass
-#ifdef GAME_DLL
-    void (*func)(const StripClass *) = reinterpret_cast<void (*)(const StripClass *)>(0x0054E094);
-    func(this);
-#endif
+    static char *_strip_names[HOUSES_PLAYABLE_COUNT] = {
+        "stripna.shp",
+        "stripna.shp",
+        "stripus.shp",
+        "stripna.shp",
+        "stripus.shp",
+        "stripna.shp",
+        "stripna.shp",
+        "stripna.shp",
+        "stripna.shp",
+        "stripus.shp",
+    };
+
+    int house = HOUSES_SPAIN;
+    if (g_PlayerPtr != nullptr) {
+        house = g_PlayerPtr->Acts_Like();
+    }
+    s_LogoShapes = GameFileClass::Retrieve(_strip_names[house]);
 }
 
 void SidebarClass::StripClass::Activate()
@@ -328,13 +331,35 @@ void SidebarClass::StripClass::Draw_It(BOOL force_redraw)
 
 BOOL SidebarClass::StripClass::Recalc()
 {
-    // TODO Needs HouseClass, HouseTypeClass, and TechnoClass
-#ifdef GAME_DLL
-    BOOL (*func)(const StripClass *) = reinterpret_cast<BOOL (*)(const StripClass *)>(0x0054EB1C);
-    return func(this);
-#else
-    return true;
-#endif
+    if (g_InMapEditor || !m_CameoCount) {
+        return false;
+    }
+
+    bool bool1 = false;
+    bool redraw = false;
+
+    for (int i = 0; i < m_CameoCount; ++i) {
+        TechnoTypeClass *ttptr = Fetch_Techno_Type(m_Entries[i].Type, m_Entries[i].ID);
+
+        if (ttptr != nullptr) {
+            bool1 = ttptr->Who_Can_Build_Me(true, false, g_PlayerPtr->What_Type()) != nullptr;
+        } else if (m_Entries[i].ID < SPECIAL_COUNT) {
+            bool1 = g_PlayerPtr->Special_Weapons((SpecialWeaponType)m_Entries[i].ID).Is_Enabled();
+        }
+
+        if (!bool1) {
+            if (m_CameoCount > 1 && i < m_CameoCount - 1) {
+                memcpy(&m_Entries[i], &m_Entries[i + 1], sizeof(SelectButtonType) * (m_CameoCount - i - 1));
+            }
+
+            m_CurrentRow = 0;
+            m_StripToRedraw = true;
+            redraw = true;
+            --m_CameoCount;
+            --i;
+        }
+    }
+    return redraw;
 }
 
 BOOL SidebarClass::StripClass::Factory_Link(int factory_id, RTTIType type, int id)
@@ -342,7 +367,7 @@ BOOL SidebarClass::StripClass::Factory_Link(int factory_id, RTTIType type, int i
     for (int index = 0; index < m_CameoCount; ++index) {
         if (m_Entries[index].Type == type && m_Entries[index].ID == id) {
             m_Entries[index].Factory = factory_id;
-            m_Strip_Boolean2 = true;
+            m_Busy = true;
             Flag_To_Redraw();
 
             return true;
@@ -352,24 +377,41 @@ BOOL SidebarClass::StripClass::Factory_Link(int factory_id, RTTIType type, int i
     return false;
 }
 
-int SidebarClass::StripClass::Abandon_Production(int unk1)
+int SidebarClass::StripClass::Abandon_Production(int factory)
 {
-    // TODO Needs FactoryClass
-#ifdef GAME_DLL
-    int (*func)(const StripClass *, int) = reinterpret_cast<int (*)(const StripClass *, int)>(0x0054F434);
-    return func(this, unk1);
-#else
-    return 0;
-#endif
+    bool abandon = false;
+    bool bool1 = true;
+
+    for (int i = 0; i < m_CameoCount; ++i) {
+        if (m_Entries[i].Factory == factory) {
+            g_Factories[factory].Abandon();
+
+            m_Entries[i].Factory = -1;
+            abandon = true;
+
+        } else if (m_Entries[i].Factory != -1) {
+            bool1 = false;
+        }
+    }
+
+    if (abandon) {
+        Flag_To_Redraw();
+    }
+
+    if (bool1) {
+        m_Busy = false;
+    }
+
+    return abandon;
 }
 
 SidebarClass::SidebarClass() :
     PowerClass(),
-    m_SidebarIsDrawn(false),
+    m_SidebarIsShown(false),
     m_SidebarToRedraw(true),
-    m_SidebarBit4(false),
-    m_SidebarBit8(false),
-    m_SidebarBit16(false)
+    m_RepairActive(false),
+    m_UpgradeActive(false),
+    m_DemolishActive(false)
 {
     InitClass init;
     for (int column = 0; column < COLUMN_COUNT; ++column) {
@@ -408,9 +450,9 @@ void SidebarClass::Init_Clear()
     PowerClass::Init_Clear();
     m_SidebarToRedraw = true;
     if (!g_InMapEditor) {
-        m_SidebarBit4 = false;
-        m_SidebarBit8 = false;
-        m_SidebarBit16 = false;
+        m_RepairActive = false;
+        m_UpgradeActive = false;
+        m_DemolishActive = false;
 
         for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
             m_Columns[column].Init_Clear();
@@ -457,8 +499,8 @@ void SidebarClass::Init_IO()
             m_Columns[column].Init_IO(column);
         }
 
-        if (m_SidebarIsDrawn) {
-            m_SidebarIsDrawn = false;
+        if (m_SidebarIsShown) {
+            m_SidebarIsShown = false;
             Activate(1);
         }
     }
@@ -479,12 +521,40 @@ void SidebarClass::Init_Theater(TheaterType theater)
 
 void SidebarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    // Requires HouseClass
-#ifdef GAME_DLL
-    void (*func)(const SidebarClass *, KeyNumType &, int, int) =
-        reinterpret_cast<void (*)(const SidebarClass *, KeyNumType &, int, int)>(0x0054D8F0);
-    func(this, key, mouse_x, mouse_y);
-#endif
+    if (!g_InMapEditor) {
+        SidebarClass::Activate(1);
+    }
+
+    if (!g_InMapEditor) {
+        m_Columns[COLUMN_LEFT].AI(key, mouse_x, mouse_y);
+        m_Columns[COLUMN_RIGHT].AI(key, mouse_x, mouse_y);
+    }
+
+    if (m_SidebarIsShown) {
+        SidebarClass::Activate_Repair(g_PlayerPtr->Get_BScan_Built() != 0);
+
+        if (key == GADGET_BUTTON(BUTTON_REPAIR)) {
+            Repair_Mode_Control(-1);
+        }
+
+        if (key == GADGET_BUTTON(BUTTON_SELL)) {
+            Sell_Mode_Control(-1);
+        }
+
+        if (key == GADGET_BUTTON(BUTTON_ZOOM)) {
+            Zoom_Mode_Control();
+        }
+    }
+
+    if (!Repair_Mode() && s_RepairButton.Get_Toggle_State()) {
+        s_RepairButton.Turn_Off();
+    }
+
+    if (!Sell_Mode() && s_SellButton.Get_Toggle_State()) {
+        s_SellButton.Turn_Off();
+    }
+
+    PowerClass::AI(key, mouse_x, mouse_y);
 }
 
 void SidebarClass::Draw_It(BOOL force_redraw)
@@ -492,19 +562,13 @@ void SidebarClass::Draw_It(BOOL force_redraw)
     PowerClass::Draw_It(force_redraw);
 
     if (!g_InMapEditor) {
-
         BENCHMARK_START(BENCH_SIDEBAR);
 
-        if (m_SidebarIsDrawn && (m_SidebarToRedraw || force_redraw) && !g_InMapEditor ) {
+        if (m_SidebarIsShown && (m_SidebarToRedraw || force_redraw) && !g_InMapEditor) {
             m_SidebarToRedraw = false;
             if (g_LogicPage->Lock()) {
                 if (s_SidebarShape != nullptr) {
-                    CC_Draw_Shape(s_SidebarShape,
-                        0,
-                        480,
-                        16,
-                        WINDOW_0,
-                        SHAPE_WIN_REL);
+                    CC_Draw_Shape(s_SidebarShape, 0, 480, 16, WINDOW_0, SHAPE_WIN_REL);
                 }
 
                 if (s_SidebarMiddleShape != nullptr) {
@@ -529,12 +593,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
                 if (g_LogicPage->Get_Height() > 400) {
                     if (s_SidebarAddonShape != nullptr) {
                         int addonheight = Get_Build_Frame_Height(s_SidebarAddonShape);
-                        CC_Draw_Shape(s_SidebarAddonShape,
-                            0,
-                            480,
-                            400,
-                            WINDOW_0,
-                            SHAPE_WIN_REL);
+                        CC_Draw_Shape(s_SidebarAddonShape, 0, 480, 400, WINDOW_0, SHAPE_WIN_REL);
                     }
                 }
 
@@ -550,7 +609,7 @@ void SidebarClass::Draw_It(BOOL force_redraw)
             }
         }
 
-        if (m_SidebarIsDrawn) {
+        if (m_SidebarIsShown) {
             for (ColumnType column = COLUMN_FIRST; column < COLUMN_COUNT; ++column) {
                 m_Columns[column].Draw_It(force_redraw);
             }
@@ -587,13 +646,8 @@ void SidebarClass::Refresh_Cells(cell_t cellnum, const int16_t *list)
 
 void SidebarClass::Reload_Sidebar()
 {
-// TODO Needs HouseClass
-#ifdef GAME_DLL
-    void (*func)(const SidebarClass *) = reinterpret_cast<void (*)(const SidebarClass *)>(0x0054D340);
-    func(this);
-#elif 0
     // in order of the houses.
-    static char sidebarnames[HOUSES_COUNT][12] = { "side?na.shp",
+    static char _sidebar_names[HOUSES_COUNT][12] = { "side?na.shp",
         "side?na.shp",
         "side?us.shp",
         "side?na.shp",
@@ -604,26 +658,21 @@ void SidebarClass::Reload_Sidebar()
         "side?na.shp",
         "side?us.shp" };
 
-    int side_index;
+    int side_index = g_PlayerPtr != nullptr ? g_PlayerPtr->Acts_Like() : 0;
 
-    if (PlayerPtr) {
-        side_index = PlayerPtr->Side;
-    } else {
-        side_index = 0;
-    }
-
+    char name[16];
+    strcpy(name, _sidebar_names[side_index]);
     // this basicly replaces the '?' in the filenames above with a number.
-    sidebarnames[side_index][4] = '1';
-    s_SidebarShape = GameFileClass::Retrieve(sidebarnames[side_index]);
-    sidebarnames[side_index][4] = '2';
-    s_SidebarMiddleShape = GameFileClass::Retrieve(sidebarnames[side_index]);
-    sidebarnames[side_index][4] = '3';
-    s_SidebarBottomShape = GameFileClass::Retrieve(sidebarnames[side_index]);
+    name[4] = '1';
+    s_SidebarShape = GameFileClass::Retrieve(name);
+    name[4] = '2';
+    s_SidebarMiddleShape = GameFileClass::Retrieve(name);
+    name[4] = '3';
+    s_SidebarBottomShape = GameFileClass::Retrieve(name);
 
     // reload the side specific stip backgrounds.
-    Strips[COLUMN_LEFT].Reload_LogoShapes();
-    Strips[COLUMN_LEFT].Reload_LogoShapes();
-#endif
+    m_Columns[COLUMN_LEFT].Reload_LogoShapes();
+    m_Columns[COLUMN_RIGHT].Reload_LogoShapes();
 }
 
 int SidebarClass::Which_Column(RTTIType type)
@@ -660,20 +709,20 @@ BOOL SidebarClass::Activate_Repair(int state)
     bool to_redraw = m_SidebarToRedraw;
 
     if (state == -1) {
-        state = (m_SidebarBit4 == 0);
+        state = (m_RepairActive == 0);
     }
 
     if (state == 1) {
-        m_SidebarBit4 = true;
+        m_RepairActive = true;
     } else {
-        m_SidebarBit4 = false;
+        m_RepairActive = false;
     }
 
     if (m_SidebarToRedraw != to_redraw) {
         Flag_To_Redraw();
         m_SidebarToRedraw = true;
 
-        if (!m_SidebarBit4) {
+        if (!m_RepairActive) {
             Help_Text(TXT_NONE);
             Set_Default_Mouse(MOUSE_POINTER);
         }
@@ -687,20 +736,20 @@ BOOL SidebarClass::Activate_Upgrade(int state) // Actually Sell?
     bool to_redraw = m_SidebarToRedraw;
 
     if (state == -1) {
-        state = (m_SidebarBit8 == 0);
+        state = (m_UpgradeActive == 0);
     }
 
     if (state == 1) {
-        m_SidebarBit8 = true;
+        m_UpgradeActive = true;
     } else {
-        m_SidebarBit8 = false;
+        m_UpgradeActive = false;
     }
 
     if (m_SidebarToRedraw != to_redraw) {
         Flag_To_Redraw();
         m_SidebarToRedraw = true;
 
-        if (!m_SidebarBit8) {
+        if (!m_UpgradeActive) {
             Set_Default_Mouse(MOUSE_POINTER);
         }
     }
@@ -713,20 +762,20 @@ BOOL SidebarClass::Activate_Demolish(int state) // Actually Zoom?
     bool to_redraw = m_SidebarToRedraw;
 
     if (state == -1) {
-        state = (m_SidebarBit16 == 0);
+        state = (m_DemolishActive == 0);
     }
 
     if (state == 1) {
-        m_SidebarBit16 = true;
+        m_DemolishActive = true;
     } else {
-        m_SidebarBit16 = false;
+        m_DemolishActive = false;
     }
 
     if (m_SidebarToRedraw != to_redraw) {
         Flag_To_Redraw();
         m_SidebarToRedraw = true;
 
-        if (!m_SidebarBit16) {
+        if (!m_DemolishActive) {
             Set_Default_Mouse(MOUSE_POINTER);
         }
     }
@@ -805,13 +854,13 @@ void SidebarClass::Recalc()
 
 BOOL SidebarClass::Activate(int mode)
 {
-    bool prevvalue = m_SidebarIsDrawn;
+    bool prevvalue = m_SidebarIsShown;
 
     if (!g_InMapEditor) {
         if (!g_Session.Playback_Game()) {
-            m_SidebarIsDrawn = (mode == SIDEBAR_TOGGLE ? !m_SidebarIsDrawn : mode == SIDEBAR_ACTIVATE);
+            m_SidebarIsShown = (mode == SIDEBAR_TOGGLE ? !m_SidebarIsShown : mode == SIDEBAR_ACTIVATE);
 
-            bool newvalue = m_SidebarIsDrawn;
+            bool newvalue = m_SidebarIsShown;
 
             if (newvalue != prevvalue) {
                 if (newvalue) {

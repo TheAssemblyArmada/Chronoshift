@@ -104,7 +104,7 @@ class SidebarClass : public PowerClass
         void Draw_It(BOOL force_redraw = false);
         BOOL Recalc();
         BOOL Factory_Link(int factory_id, RTTIType type, int id);
-        int Abandon_Production(int unk1);
+        int Abandon_Production(int factory);
 
         void Set_Position(int x, int y)
         {
@@ -159,19 +159,14 @@ class SidebarClass : public PowerClass
         int m_WhichColumn; // 0x19 -650
 #ifndef CHRONOSHIFT_NO_BITFIELDS
         BOOL m_StripToRedraw : 1; // 1
-        BOOL m_Strip_Boolean2 : 1; // 2
-        BOOL m_Strip_Boolean4 : 1; // 4    // related to some direction?
-        BOOL m_Strip_Boolean8 : 1; // 8    // Flags if the icons are scrolling?
-        BOOL m_Strip_Boolean16 : 1; // 16
-        BOOL m_Strip_Boolean32 : 1; // 32
+        BOOL m_Busy : 1; // 2
+        BOOL m_ScrollingDown : 1; // 4    // related to some direction?
+        BOOL m_Scrolling : 1; // 8
 #else
-        // bitfield 0x1D
-        bool m_StripToRedraw; // 1
-        bool m_Strip_Boolean2; // 2
-        bool m_Strip_Boolean4; // 4    // related to some direction?
-        bool m_Strip_Boolean8; // 8    // Flags if the icons are scrolling?
-        bool m_Strip_Boolean16; // 16
-        bool m_Strip_Boolean32; // 32
+        bool m_StripToRedraw;
+        bool m_Busy; // Currently building something from the strip.
+        bool m_ScrollingDown; // related to some direction?
+        bool m_Scrolling; // Strip is scrolling.
 #endif
 
         int m_field_21; // Icon with build clock active?
@@ -209,7 +204,7 @@ public:
     void Zoom_Mode_Control();
 
     void Flag_Sidebar_To_Redraw() { m_SidebarToRedraw = true; }
-    BOOL Is_Sidebar_Drawn() const { return m_SidebarIsDrawn; }
+    BOOL Is_Sidebar_Shown() const { return m_SidebarIsShown; }
     void Disable_Zoom_Button() { s_ZoomButton.Disable(); }
     void Enable_Zoom_Button() { s_ZoomButton.Enable(); }
     void Flag_Strip_Redraw(ColumnType strip) { m_Columns[strip].Flag_To_Redraw(); }
@@ -223,18 +218,17 @@ public:
 protected:
     StripClass m_Columns[COLUMN_COUNT];
 #ifndef CHRONOSHIFT_NO_BITFIELDS
-    BOOL m_SidebarIsDrawn : 1; // 1
+    BOOL m_SidebarIsShown : 1; // 1
     BOOL m_SidebarToRedraw : 1; // 2
-    BOOL m_SidebarBit4 : 1; // 4
-    BOOL m_SidebarBit8 : 1; // 8
-    BOOL m_SidebarBit16 : 1; // 16
+    BOOL m_RepairActive : 1; // 4
+    BOOL m_UpgradeActive : 1; // 8
+    BOOL m_DemolishActive : 1; // 16
 #else
-    // bitfield 0x15F6
-    bool m_SidebarIsDrawn; // when set to false, the sidebar is not drawn.(related to the sidebar TAB hidding in C&C)
+    bool m_SidebarIsShown; // when set to false, the sidebar is not drawn.(related to the sidebar TAB hidding in C&C)
     bool m_SidebarToRedraw; // buttons to redraw?
-    bool m_SidebarBit4; // repair active
-    bool m_SidebarBit8; // upgrade active
-    bool m_SidebarBit16; // demolish active
+    bool m_RepairActive;
+    bool m_UpgradeActive;
+    bool m_DemolishActive;
 #endif
 
 #ifdef GAME_DLL

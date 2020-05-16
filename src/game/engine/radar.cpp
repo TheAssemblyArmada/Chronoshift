@@ -53,7 +53,7 @@ RadarClass::RTacticalClass::RTacticalClass() :
  */
 BOOL RadarClass::RTacticalClass::Action(unsigned flags, KeyNumType &key)
 {
-    if (g_Map.Is_Sidebar_Drawn()) {
+    if (g_Map.Is_Sidebar_Shown()) {
         g_Map.Help_Text(TXT_NULL);
     }
 
@@ -190,7 +190,7 @@ BOOL RadarClass::RTacticalClass::Action(unsigned flags, KeyNumType &key)
         return true;
     }
 
-    if (g_Map.Is_Sidebar_Drawn()) {
+    if (g_Map.Is_Sidebar_Shown()) {
         g_Map.Override_Mouse_Shape(MOUSE_POINTER);
     }
 
@@ -276,7 +276,7 @@ void RadarClass::Init_Clear()
  */
 void RadarClass::AI(KeyNumType &key, int mouse_x, int mouse_y)
 {
-    if (m_RadarActive && g_Map.Is_Sidebar_Drawn() && m_RadarCursorFrame > 0) {
+    if (m_RadarActive && g_Map.Is_Sidebar_Shown() && m_RadarCursorFrame > 0) {
         --m_RadarCursorFrame;
         m_RadarToRedraw = true;
         m_RadarCursorRedraw = true;
@@ -393,7 +393,7 @@ void RadarClass::Draw_It(BOOL force_redraw)
                 Radar_Anim();
                 g_Map.Draw_Sidebar_Buttons();
                 m_RadarToRedraw = false;
-            } else if (g_Map.Is_Sidebar_Drawn()) {
+            } else if (g_Map.Is_Sidebar_Shown()) {
                 if (m_RadarActive) {
                     if (force_redraw || !m_RadarToRedraw || s_FullRedraw || m_RadarPulseActive) {
                         GraphicViewPortClass *prevlogic = Set_Logic_Page(g_HidPage);
@@ -662,7 +662,7 @@ void RadarClass::Activate_Pulse()
  */
 void RadarClass::Radar_Pixel(cell_t cellnum)
 {
-    if (m_RadarActive && g_Map.Is_Sidebar_Drawn() && Cell_On_Radar(cellnum)) {
+    if (m_RadarActive && g_Map.Is_Sidebar_Shown() && Cell_On_Radar(cellnum)) {
         m_RadarToRedraw = true;
         m_Array[cellnum].Set_Bit1(true);
 
@@ -855,7 +855,7 @@ BOOL RadarClass::Is_Zoomable() const
 int RadarClass::Click_In_Radar(int &x, int &y, BOOL set_coords) const
 {
     // TODO: make sidebar check virtual so don't need global object.
-    if (g_Map.Is_Sidebar_Drawn() && m_RadarActive) {
+    if (g_Map.Is_Sidebar_Shown() && m_RadarActive) {
         unsigned x_diff = x - (m_MinRadarX + m_RadarButtonXPos);
         unsigned y_diff = y - (m_MinRadarY + m_RadarButtonYPos);
 
@@ -937,7 +937,7 @@ void RadarClass::Set_Radar_Position(cell_t cellnum)
         m_MiniMapYOffset = ypos;
         m_MiniMapCell = cellnum;
 
-        if (g_Map.Is_Sidebar_Drawn() && m_RadarActive) {
+        if (g_Map.Is_Sidebar_Shown() && m_RadarActive) {
             int movex = m_MiniMapCellWidth - std::abs(diffx);
             int movey = m_MiniMapCellHeight - std::abs(diffy);
 
@@ -1049,7 +1049,7 @@ void RadarClass::Cell_XY_To_Radar_Pixel(int cell_x, int cell_y, int &x, int &y)
  */
 void RadarClass::Radar_Anim()
 {
-    if (!m_RadarDrawNames && g_Map.Is_Sidebar_Drawn()) {
+    if (!m_RadarDrawNames && g_Map.Is_Sidebar_Shown()) {
         GraphicViewPortClass *old_vp = Set_Logic_Page(&g_HidPage);
         GraphicViewPortClass vp(g_LogicPage->Get_Graphic_Buffer(),
             m_MinRadarX + m_RadarButtonXPos + g_LogicPage->Get_XPos(),
@@ -1177,7 +1177,7 @@ void RadarClass::Player_Names(BOOL draw)
  */
 BOOL RadarClass::Draw_House_Info()
 {
-    if (g_Map.Is_Sidebar_Drawn()) {
+    if (g_Map.Is_Sidebar_Shown()) {
         int x = m_MinRadarX + m_RadarButtonXPos + 12;
         int y = m_MinRadarY + m_RadarButtonYPos + 4;
         CC_Draw_Shape(s_RadarFrame, 1, m_RadarButtonXPos, m_RadarButtonYPos + 2);
@@ -1236,7 +1236,7 @@ BOOL RadarClass::Draw_House_Info()
  */
 void RadarClass::Draw_Names()
 {
-    if (g_Map.Is_Sidebar_Drawn()) {
+    if (g_Map.Is_Sidebar_Shown()) {
         CC_Draw_Shape(s_RadarFrame, 1, m_RadarButtonXPos, m_RadarButtonYPos + 2);
 
         Fancy_Text_Print(TXT_NAME_COLON,
@@ -1463,7 +1463,7 @@ int RadarClass::Radar_Activate(int mode)
             break;
 
         case RADAR_0: // Turn radar off
-            if (!g_Map.Is_Sidebar_Drawn()) {
+            if (!g_Map.Is_Sidebar_Shown()) {
                 Radar_Activate(RADAR_2);
 
                 return is_active;
@@ -1489,7 +1489,7 @@ int RadarClass::Radar_Activate(int mode)
             return is_active;
 
         case RADAR_1: // Turn radar on
-            if (!g_Map.Is_Sidebar_Drawn()) {
+            if (!g_Map.Is_Sidebar_Shown()) {
                 Radar_Activate(RADAR_3);
 
                 return is_active;

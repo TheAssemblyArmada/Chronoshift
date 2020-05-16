@@ -40,7 +40,7 @@ PowerClass::PowerButtonClass::PowerButtonClass() :
  */
 BOOL PowerClass::PowerButtonClass::Action(unsigned flags, KeyNumType &key)
 {
-    if (!g_Map.Is_Sidebar_Drawn()) {
+    if (!g_Map.Is_Sidebar_Shown()) {
         return false;
     }
 
