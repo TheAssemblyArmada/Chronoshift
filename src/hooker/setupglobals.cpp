@@ -605,6 +605,8 @@ ChronalVortexClass &g_ChronalVortex = Make_Global<ChronalVortexClass>(0x006904B4
 #include "vox.h"
 void **g_SpeechBuffer = Make_Pointer<void *>(0x006680D8);
 VoxType *g_SpeechRecord = Make_Pointer<VoxType>(0x006680E0);
+VoxType &g_SpeakQueue = Make_Global<VoxType>(0x006016BC);
+VoxType &g_CurrentVoice = Make_Global<VoxType>(0x005FE830);
 
 // warheadtype.cpp
 TFixedIHeapClass<WarheadTypeClass> &g_WarheadTypes = Make_Global<TFixedIHeapClass<WarheadTypeClass> >(0x00691600);

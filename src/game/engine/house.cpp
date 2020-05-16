@@ -193,9 +193,9 @@ HouseClass::HouseClass(HousesType type) :
     new (&m_Specials[SPECIAL_SONAR_PULSE])
         SuperClass(g_Rule.Get_Recharge_Sonar() * 900, false, VOX_NONE, VOX_SONAR_PULSE_AVAILABLE, VOX_NONE, VOX_NONE);
     new (&m_Specials[SPECIAL_ATOM_BOMB])
-        SuperClass(g_Rule.Get_Recharge_Nuke() * 900, true, VOX_ABOMB_PREPING, VOX_ABOMB_READY, VOX_NONE, VOX_NO_POWER);
+        SuperClass(g_Rule.Get_Recharge_Nuke() * 900, true, VOX_ABOMB_PREPPING, VOX_ABOMB_READY, VOX_NONE, VOX_NO_POWER);
     new (&m_Specials[SPECIAL_WARP_SPHERE])
-        SuperClass(g_Rule.Get_Recharge_Chrono() * 900, true, VOX_CHROCHR1, VOX_CHRORDY1, VOX_NONE, VOX_NO_POWER);
+        SuperClass(g_Rule.Get_Recharge_Chrono() * 900, true, VOX_CHRONO_CHARGING, VOX_CHRONO_READY, VOX_NONE, VOX_NO_POWER);
     new (&m_Specials[SPECIAL_PARA_BOMB])
         SuperClass(g_Rule.Get_Recharge_ParaBomb() * 900, false, VOX_NONE, VOX_NONE, VOX_NONE, VOX_NONE);
     new (&m_Specials[SPECIAL_PARA_INFANTRY])

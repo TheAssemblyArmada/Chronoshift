@@ -2,8 +2,9 @@
  * @file
  *
  * @author CCHyper
+ * @author tomsons26
  *
- * @brief Vox enum and conversion to and from string.
+ * @brief Speech handling functions, Vox enum and conversion to and from string.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -13,7 +14,18 @@
  *            LICENSE
  */
 #include "vox.h"
+#include "audio.h"
+#include "gameoptions.h"
+#include "globals.h"
 #include <captainslog.h>
+
+#ifdef GAME_DLL
+extern int16_t &g_SoundType;
+extern int16_t &g_SampleType;
+#else
+extern int16_t g_SoundType;
+extern int16_t g_SampleType;
+#endif
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -22,127 +34,129 @@
 #ifndef GAME_DLL
 void *g_SpeechBuffer[VOX_BUFFERS];
 VoxType g_SpeechRecord[VOX_BUFFERS];
+VoxType g_SpeakQueue = VOX_NONE;
+VoxType g_CurrentVoice = VOX_NONE;
 #endif
 
 // clang-format off
 // Update the VoxType enum in vox.h if you add additional EVA lines
 const char *VoxName[VOX_COUNT] = {
-    "MISNWON1", // 0
-    "MISNLST1", // 1
-    "PROGRES1", // 2
-    "CONSCMP1", // 3
-    "UNITRDY1", // 4
-    "NEWOPT1", // 5
-    "NODEPLY1", // 6
-    "STRCKIL1", // 7
-    "NOPOWR1", // 8
-    "NOFUNDS1", // 9
-    "BCT1", // 10
-    "REINFOR1", // 11
-    "CANCLD1", // 12
-    "ABLDGIN1", // 13
-    "LOPOWER1", // 14
-    "NOFUNDS1", // 15    //duplicate?!
-    "BASEATK1", // 16
-    "NOBUILD1", // 17
-    "PRIBLDG1", // 18
-    "TANK01", // 19
+    "misnwon1", // 0
+    "misnlst1", // 1
+    "progres1", // 2
+    "conscmp1", // 3
+    "unitrdy1", // 4
+    "newopt1", // 5
+    "nodeply1", // 6
+    "strckil1", // 7
+    "nopowr1", // 8
+    "nofunds1", // 9
+    "bct1", // 10
+    "reinfor1", // 11
+    "cancld1", // 12
+    "abldgin1", // 13
+    "lopower1", // 14
+    "nofunds1", // 15    //duplicate?!
+    "baseatk1", // 16
+    "nobuild1", // 17
+    "pribldg1", // 18
+    "tank01", // 19
     "<none>", // 20
-    "UNITLST1", // 21
-    "SLCTTGT1", // 22
-    "ENMYAPP1", // 23
-    "SILOND1", // 24
-    "ONHOLD1", // 25
-    "REPAIR1", // 26
+    "unitlst1", // 21
+    "slcttgt1", // 22
+    "enmyapp1", // 23
+    "silond1", // 24
+    "onhold1", // 25
+    "repair1", // 26
     "<none>", // 27
     "<none>", // 28
-    "AUNITL1", // 29
+    "aunitl1", // 29
     "<none>", // 30
-    "AAPPRO1", // 31
-    "AARRIVE1", // 32
+    "aappro1", // 31
+    "aarrive1", // 32
     "<none>", // 33
     "<none>", // 34
-    "BLDGINF1", // 35
-    "CHROCHR1", // 36
-    "CHRORDY1", // 37
-    "CHROYES1", // 38
-    "CMDCNTR1", // 39
-    "CNTLDED1", // 40
-    "CONVYAP1", // 41
-    "CONVLST1", // 42
-    "XPLOPLC1", // 43
-    "CREDIT1", // 44
-    "NAVYLST1", // 45
-    "SATLNCH1", // 46
-    "PULSE1", // 47
+    "bldginf1", // 35
+    "chrochr1", // 36
+    "chrordy1", // 37
+    "chroyes1", // 38
+    "cmdcntr1", // 39
+    "cntlded1", // 40
+    "convyap1", // 41
+    "convlst1", // 42
+    "xploplc1", // 43
+    "credit1", // 44
+    "navylst1", // 45
+    "satlnch1", // 46
+    "pulse1", // 47
     "<none>", // 48
-    "SOVFAPP1", // 49
-    "SOVREIN1", // 50
-    "TRAIN1", // 51
-    "AREADY1", // 52
-    "ALAUNCH1", // 53
-    "AARRIVN1", // 54
-    "AARRIVS1", // 55
-    "AARIVE1", // 56
-    "AARRIVW1", // 57
-    "1OBJMET1", // 58
-    "2OBJMET1", // 59
-    "3OBJMET1", // 60
-    "IRONCHG1", // 61
-    "IRONRDY1", // 62
-    "KOSYRES1", // 63
-    "OBJNMET1", // 64
-    "FLAREN1", // 65
-    "FLARES1", // 66
-    "FLAREE1", // 67
-    "FLAREW1", // 68
-    "SPYPLN1", // 69
-    "TANYAF1", // 70
-    "ARMORUP1", // 71
-    "FIREPO1", // 72
-    "UNITSPD1", // 73
-    "MTIMEIN1", // 74
-    "UNITFUL1", // 75
-    "UNITREP1", // 76
-    "40MINR", // 77
-    "30MINR", // 78
-    "20MINR", // 79
-    "10MINR", // 80
-    "5MINR", // 81
-    "4MINR", // 82
-    "3MINR", // 83
-    "2MINR", // 84
-    "1MINR", // 85
-    "TIMERNO1", // 86
-    "UNITSLD1", // 87
-    "TIMERGO1", // 88
-    "TARGRES1", // 89
-    "TARGFRE1", // 90
-    "TANYAR1", // 91
-    "STRUSLD1", // 92
-    "SOVFORC1", // 93
-    "SOVEMP1", // 94
-    "SOVEFAL1", // 95
-    "OPTERM1", // 96
-    "OBJRCH1", // 97
-    "OBJNRCH1", // 98
-    "OBJMET1", // 99
-    "MERCR1", // 100
-    "MERCF1", // 101
-    "KOSYFRE1", // 102
-    "FLARE1", // 103
-    "COMNDOR1", // 104
-    "COMNDOF1", // 105
-    "BLDGPRG1", // 106
-    "ATPREP1", // 107
-    "ASELECT1", // 108
-    "APREP1", // 109
-    "ATLNCH1", // 110
-    "AFALLEN1", // 111
-    "AAVAIL1", // 112
-    "AARRIVE1", // 113    //duplicate with 32?
-    "SAVE1", // 114
-    "LOAD1" // 115
+    "sovfapp1", // 49
+    "sovrein1", // 50
+    "train1", // 51
+    "aready1", // 52
+    "alaunch1", // 53
+    "aarrivn1", // 54
+    "aarrivs1", // 55
+    "aarive1", // 56
+    "aarrivw1", // 57
+    "1objmet1", // 58
+    "2objmet1", // 59
+    "3objmet1", // 60
+    "ironchg1", // 61
+    "ironrdy1", // 62
+    "kosyres1", // 63
+    "objnmet1", // 64
+    "flaren1", // 65
+    "flares1", // 66
+    "flaree1", // 67
+    "flarew1", // 68
+    "spypln1", // 69
+    "tanyaf1", // 70
+    "armorup1", // 71
+    "firepo1", // 72
+    "unitspd1", // 73
+    "mtimein1", // 74
+    "unitful1", // 75
+    "unitrep1", // 76
+    "40minr", // 77
+    "30minr", // 78
+    "20minr", // 79
+    "10minr", // 80
+    "5minr", // 81
+    "4minr", // 82
+    "3minr", // 83
+    "2minr", // 84
+    "1minr", // 85
+    "timerno1", // 86
+    "unitsld1", // 87
+    "timergo1", // 88
+    "targres1", // 89
+    "targfre1", // 90
+    "tanyar1", // 91
+    "strusld1", // 92
+    "sovforc1", // 93
+    "sovemp1", // 94
+    "sovefal1", // 95
+    "opterm1", // 96
+    "objrch1", // 97
+    "objnrch1", // 98
+    "objmet1", // 99
+    "mercr1", // 100
+    "mercf1", // 101
+    "kosyfre1", // 102
+    "flare1", // 103
+    "comndor1", // 104
+    "comndof1", // 105
+    "bldgprg1", // 106
+    "atprep1", // 107
+    "aselect1", // 108
+    "aprep1", // 109
+    "atlnch1", // 110
+    "afallen1", // 111
+    "aavail1", // 112
+    "aarrive1", // 113    //duplicate with 32?
+    "save1", // 114
+    "load1" // 115
 };
 // clang-format on
 
@@ -161,6 +175,7 @@ VoxType Vox_From_Name(const char *name)
             }
         }
     }
+
     return VOX_NONE;
 }
 
@@ -169,5 +184,94 @@ const char *Name_From_Vox(VoxType vox)
     if (vox != VOX_NONE && vox < VOX_COUNT) {
         return VoxName[vox];
     }
+
     return "<none>";
+}
+
+/**
+ * Allocates buffers where to load speech files into.
+ */
+void Init_Speech_Buffers()
+{
+    for (int i = 0; i < VOX_BUFFERS; ++i) {
+        g_SpeechBuffer[i] = new char[VOX_BUFFER_SIZE];
+        g_SpeechRecord[i] = VOX_NONE;
+    }
+}
+
+/**
+ * Queue's a speech to play and plays it if possible.
+ */
+void Speak(VoxType vox)
+{
+    if (!g_Debug_Quiet && g_Options.Get_Sound_Volume() > 0 && g_SampleType && vox != VOX_NONE) {
+        if (vox != g_SpeakQueue && vox != g_CurrentVoice && g_SpeakQueue == VOX_NONE) {
+            g_SpeakQueue = vox;
+            Speak_AI();
+        }
+    }
+}
+
+/**
+ * speech playback handling loop.
+ */
+void Speak_AI()
+{
+    static int _index = 0;
+
+    char string[NAME_MAX];
+
+    if (!g_Debug_Quiet && g_SampleType && !Is_Sample_Playing(g_SpeechBuffer[_index])) {
+        g_CurrentVoice = VOX_NONE;
+
+        if (VOX_NONE != g_SpeakQueue) {
+            void *sample = nullptr;
+
+            _index = (_index + 1) % VOX_BUFFERS;
+
+            snprintf(string, sizeof(string), "%s.aud", VoxName[g_SpeakQueue]);
+            GameFileClass file(string);
+
+            if (file.Is_Available() && file.Read(g_SpeechBuffer[_index], VOX_BUFFER_SIZE)) {
+                sample = g_SpeechBuffer[_index];
+                g_SpeechRecord[_index] = g_SpeakQueue;
+            }
+
+            if (sample != nullptr) {
+                Play_Sample(sample, 254, g_Options.Get_Sound_Volume() * 256, 0);
+                g_CurrentVoice = g_SpeakQueue;
+            }
+
+            g_SpeakQueue = VOX_NONE;
+        }
+    }
+}
+
+/**
+ * Stops speech playback.
+ */
+void Stop_Speaking()
+{
+    g_SpeakQueue = VOX_NONE;
+    // TODO: To look into, g_SpeechBuffer[0] will fail when Speak_AI's _index is not 0
+    Stop_Sample_Playing(g_SpeechBuffer[0]);
+}
+
+/**
+ * Is there any speech playing?
+ */
+BOOL Is_Speaking()
+{
+    Speak_AI();
+
+    if (g_Debug_Quiet || !g_SampleType) {
+        return false;
+    }
+
+    // TODO: To look into, g_SpeechBuffer[0] will fail when Speak_AI's _index is not 0
+    if (g_SpeakQueue == VOX_NONE && !Is_Sample_Playing(g_SpeechBuffer[0])) {
+        return false;
+    }
+
+    return true;
 }

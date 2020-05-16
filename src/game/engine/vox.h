@@ -2,8 +2,9 @@
  * @file
  *
  * @author CCHyper
+ * @author tomsons26
  *
- * @brief Vox enum and conversion to and from string.
+ * @brief Speech handling functions, Vox enum and conversion to and from string.
  *
  * @copyright Chronoshift is free software: you can redistribute it and/or
  *            modify it under the terms of the GNU General Public License
@@ -18,9 +19,6 @@
 #define VOX_H
 
 #include "always.h"
-
-// VOX_ALLIES_S
-// 5_SOVIET_REINFORCEMENTS
 
 enum VoxType
 {
@@ -40,33 +38,33 @@ enum VoxType
     VOX_BUILDING,
     VOX_LOW_POWER,
     VOX_NOFUNDS1_DUP, // duplicate of 9
-    VOX_BASER_UNDER_ATTACK,
+    VOX_BASE_UNDER_ATTACK,
     VOX_UNABLE_TO_BUILD,
     VOX_PRIMARY_BUILDING,
     VOX_MAD_TANK_DEPLOYED,
     VOX_SPEECH_NULL1, // NULL
     VOX_UNIT_LOST,
     VOX_SELECT_TARGET,
-    VOX_ENMYAPP1,
+    VOX_ENEMY_APPROACHING,
     VOX_SILOS_NEEDED,
     VOX_ON_HOLD,
     VOX_REPAIRING,
     VOX_SPEECH_NULL2, // NULL
     VOX_SPEECH_NULL3, // NULL
-    VOX_AUNITL1,
+    VOX_AIRBORNE_LOST,
     VOX_SPEECH_NULL4, // NULL
-    VOX_AAPPRO1,
-    VOX_AARRIVE1,
+    VOX_ALLIED_FORCES_APPROACHING,
+    VOX_ALLIED_APPROACHING,
     VOX_SPEECH_NULL5, // NULL
     VOX_SPEECH_NULL6, // NULL
     VOX_BUILDING_INFILTRATED,
-    VOX_CHROCHR1,
-    VOX_CHRORDY1,
+    VOX_CHRONO_CHARGING,
+    VOX_CHRONO_READY,
     VOX_CHROYES1,
     VOX_CMDCNTR1,
     VOX_CNTLDED1,
-    VOX_CONVYAP1,
-    VOX_CONVLST1,
+    VOX_CONVOY_APPROACHING,
+    VOX_CONVOY_UNIT_LOST,
     VOX_EXPLOSIVE_PLACED,
     VOX_CREDITS_STOLEN,
     VOX_NAVAL_LOST,
@@ -78,10 +76,10 @@ enum VoxType
     VOX_TRAINING,
     VOX_ABOMB_READY,
     VOX_ABOMB_LAUNCH,
-    VOX_AARRIVN1,
-    VOX_AARRIVS1,
-    VOX_AARIVE1,
-    VOX_AARRIVW1,
+    VOX_ALLIED_REINF_N,
+    VOX_ALLIED_REINF_S,
+    VOX_ALLIED_REINF_E,
+    VOX_ALLIED_REINF_W,
     VOX_OBJECTIVE1,
     VOX_OBJECTIVE2,
     VOX_OBJECTIVE3,
@@ -120,24 +118,24 @@ enum VoxType
     VOX_SOVIET_FORCES_FALLEN,
     VOX_SOVIET_SELECTED,
     VOX_SOVIET_FALLEN,
-    VOX_OPTERM1,
-    VOX_OBJRCH1,
-    VOX_OBJNRCH1,
-    VOX_OBJMET1,
-    VOX_MERCR1,
-    VOX_MERCF1,
+    VOX_OP_CONTROL_TERMINATED,
+    VOX_OBJECTIVE_REACHED,
+    VOX_OBJECTIVE_NOT_REACHED,
+    VOX_OBJECTIVE_MET,
+    VOX_MERCENARY_RESCUED,
+    VOX_MERCENARY_FREED,
     VOX_KOSYGIN_FREED,
     VOX_FLARE_DETECTED,
-    VOX_COMNDOR1,
-    VOX_COMNDOF1,
+    VOX_COMMANDO_RESCUED,
+    VOX_COMMANDO_FREED,
     VOX_BUILDING_IN_PROGRESS,
-    VOC_ATOMBOMB_PREPING,
+    VOC_ATOMBOMB_PREPPING,
     VOX_ALLIED_SELECTED,
-    VOX_ABOMB_PREPING,
+    VOX_ABOMB_PREPPING,
     VOX_ATOMBOMB_LAUNCH,
-    VOX_AFALLEN1,
+    VOX_ALLIED_FALLEN,
     VOX_ABOMB_AVAILABLE,
-    VOX_AARRIVE1_DUP, // duplicate of 32
+    VOX_ALLIED_APPROACHING_DUP, // duplicate of 32
     VOX_MISSION_SAVED,
     VOX_MISSION_LOADED,
 
@@ -149,52 +147,31 @@ enum VoxType
 
 DEFINE_ENUMERATION_OPERATORS(VoxType);
 
-#define VOX_BUFFERS 2
+#define VOX_BUFFERS 2 // Number of buffers for audio files.
 
 // Hook the original binary's globals until standalone or have implemented and hooked all references.
 #ifdef GAME_DLL
+#define VOX_BUFFER_SIZE 50000 // ~48 kb
 extern void **g_SpeechBuffer;
 extern VoxType *g_SpeechRecord;
+extern VoxType &g_SpeakQueue;
+extern VoxType &g_CurrentVoice;
 #else
-extern void *g_SpeechBuffer[VOX_BUFFERS];
-extern VoxType g_SpeechRecord[VOX_BUFFERS];
+#define VOX_BUFFER_SIZE 126000 // ~123 kb - Size of the buffer where the audio file of the speech is loaded into.
+extern void *g_SpeechBuffer[VOX_BUFFERS]; // Loaded speech audio file buffer.
+extern VoxType g_SpeechRecord[VOX_BUFFERS]; // Loaded speech types.
+extern VoxType g_SpeakQueue; // Queued speech to be played.
+extern VoxType g_CurrentVoice; // Currently playing speech.
 #endif
 
 VoxType Vox_From_Name(const char *name);
 const char *Name_From_Vox(VoxType vox);
 
-inline void Speak(VoxType vox)
-{
-#ifdef GAME_DLL
-    void (*call_Speak)(VoxType) = reinterpret_cast<void (*)(VoxType)>(0x00426158);
-    call_Speak(vox);
-#endif
-}
 
-inline void Speak_AI()
-{
-#ifdef GAME_DLL
-    void (*call_Speak_AI)() = reinterpret_cast<void (*)()>(0x004261B4);
-    call_Speak_AI();
-#endif
-}
-
-inline void Stop_Speaking()
-{
-#ifdef GAME_DLL
-    void (*call_Stop_Speaking)() = reinterpret_cast<void (*)()>(0x0042632C);
-    call_Stop_Speaking();
-#endif
-}
-
-inline BOOL Is_Speaking()
-{
-#ifdef GAME_DLL
-    BOOL (*call_Is_Speaking)() = reinterpret_cast<BOOL (*)()>(0x00426344);
-    return call_Is_Speaking();
-#else
-    return 0;
-#endif
-}
+void Init_Speech_Buffers();
+void Speak(VoxType vox);
+void Speak_AI();
+void Stop_Speaking();
+BOOL Is_Speaking();
 
 #endif // VOX_H
