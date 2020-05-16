@@ -1248,6 +1248,12 @@ void Setup_Hooks()
     Hook_Function(0x005D8360, Simple_Copy);
     Hook_Function(0x005D8440, Sample_Copy);
     Hook_Function(0x005D8670, Maintenance_Callback);
+
+    // vox.cpp
+    Hook_Function(0x00426158, Speak);
+    Hook_Function(0x004261B4, Speak_AI);
+    Hook_Function(0x0042632C, Stop_Speaking);
+    Hook_Function(0x00426344, Is_Speaking);
 #endif
 }
 
