@@ -873,7 +873,7 @@ BOOL AircraftClass::Is_LZ_Clear(target_t lzone)
         if (optr == this) {
             return true;
         }
-        return Radio_Valid() && m_Radio == optr;
+        return In_Contact() && m_Radio == optr;
     }
     return g_Map[cell].Is_Clear_To_Move(SPEED_TRACK);
 }

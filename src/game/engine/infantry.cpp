@@ -368,8 +368,8 @@ void InfantryClass::Assign_Destination(target_t dest)
     }
 
     TechnoClass *tptr = As_Techno(dest);
-    if (tptr != nullptr && (m_Mission == MISSION_ENTER || m_MissionQueue == MISSION_ENTER) && !Radio_Valid()) {
-        if (tptr->Radio_Valid()) {
+    if (tptr != nullptr && (m_Mission == MISSION_ENTER || m_MissionQueue == MISSION_ENTER) && !In_Contact()) {
+        if (tptr->In_Contact()) {
             m_Archive = dest;
         } else if (Transmit_Message(RADIO_HELLO, tptr) == RADIO_ROGER) {
             if (Transmit_Message(RADIO_TRYING_TO_LOAD) == RADIO_ROGER) {
