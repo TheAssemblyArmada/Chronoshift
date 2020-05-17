@@ -66,7 +66,7 @@ public:
     virtual BOOL Mark(MarkType mark) final;
     virtual void Active_Click_With(ActionType action, ObjectClass *object) final;
     virtual void Active_Click_With(ActionType action, cell_t cellnum) final;
-    virtual DamageResultType Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) final;
+    virtual DamageResultType Take_Damage(int &damage, int distance, WarheadType warhead, TechnoClass *object = nullptr, BOOL force = false) final;
     virtual void Fire_Out() final;
     virtual int Value() const final;
     virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target) final;

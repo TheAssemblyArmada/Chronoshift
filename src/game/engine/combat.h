@@ -25,10 +25,10 @@
 
 class TechnoClass;
 
-int Modify_Damage(int damage, WarheadType warhead, ArmorType armor, int intval);
+int Modify_Damage(int damage, WarheadType warhead, ArmorType armor, int distance);
 void Explosion_Damage(coord_t coord, int intval, TechnoClass *object, WarheadType warhead);
 AnimType Combat_Anim(int damage, WarheadType warhead, LandType land);
-void Wide_Area_Damage(coord_t coord, uint16_t shortval, int damage, TechnoClass *object, WarheadType warhead);
+void Wide_Area_Damage(coord_t coord, uint16_t radius, int damage, TechnoClass *object, WarheadType warhead);
 
 void Shake_The_Screen(int shakes);
 

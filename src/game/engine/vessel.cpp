@@ -294,14 +294,14 @@ void VesselClass::Active_Click_With(ActionType action, cell_t cellnum)
     DriveClass::Active_Click_With(action, cellnum);
 }
 
-DamageResultType VesselClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
+DamageResultType VesselClass::Take_Damage(int &damage, int distance, WarheadType warhead, TechnoClass *object, BOOL force)
 {
     captainslog_assert(m_IsActive);
 
 #ifdef GAME_DLL
     DamageResultType (*func)(VesselClass *, int &, int, WarheadType, TechnoClass *, int) =
         reinterpret_cast<DamageResultType (*)(VesselClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0058AD50);
-    return func(this, damage, a2, warhead, object, a5);
+    return func(this, damage, distance, warhead, object, force);
 #else
     captainslog_dbgassert(false, "Unimplemented function called!\n");
     return DAMAGE_NONE;

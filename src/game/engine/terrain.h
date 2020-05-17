@@ -59,7 +59,7 @@ public:
     virtual BOOL Mark(MarkType mark) override;
     virtual void Clicked_As_Target(int a1) override {}
     virtual DamageResultType Take_Damage(
-        int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) override;
+        int &damage, int distance, WarheadType warhead, TechnoClass *object = nullptr, BOOL force = false) override;
     virtual BOOL Catch_Fire() override;
     virtual void Fire_Out() override;
 

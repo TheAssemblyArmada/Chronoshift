@@ -439,18 +439,14 @@ enum MoveType
 
 DEFINE_ENUMERATION_OPERATORS(MoveType);
 
-//TODO: consider renaming enum.
-// these definately needs renaming.
 enum DamageResultType
 {
-    DAMAGE_NONE = -1,
-    DAMAGE_UNAFFECTED = 0,
-    DAMAGE_UNDAMAGED = 1,
-    DAMAGE_YELLOW = 2,
-    DAMAGE_RED = 3,
+    DAMAGE_NONE = 0, // No damage dealt.
+    DAMAGE_LIGHT = 1, // Light damage dealt.
+    DAMAGE_MEDIUM = 2, // Object left with half of health.
+    DAMAGE_HEAVY = 3, // Object left with quarter of health.
     DAMAGE_DEAD = 4,
-    DAMAGE_POST_MORTEM = 5,
-    DAMAGE_COUNT = 6
+    DAMAGE_POST_MORTEM = 5, // Some kind of error/zombie state? Unused in RA
 };
 
 // "per cell process" types.

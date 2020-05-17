@@ -585,11 +585,11 @@ int TechnoClass::Weapon_Range(WeaponSlotType weapon) const
     return 0;
 }
 
-DamageResultType TechnoClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
+DamageResultType TechnoClass::Take_Damage(int &damage, int distance, WarheadType warhead, TechnoClass *object, BOOL force)
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x00566438, DamageResultType, TechnoClass *, int &, int, WarheadType, TechnoClass *, BOOL);
-    return func(this, damage, a2, warhead, object, a5);
+    return func(this, damage, distance, warhead, object, force);
 #else
     return DamageResultType();
 #endif

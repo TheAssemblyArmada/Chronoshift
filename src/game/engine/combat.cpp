@@ -17,11 +17,11 @@
 #include "hooker.h"
 #endif
 
-int Modify_Damage(int damage, WarheadType warhead, ArmorType armor, int intval)
+int Modify_Damage(int damage, WarheadType warhead, ArmorType armor, int distance)
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x004A31F0, int, int, WarheadType, ArmorType, int);
-    return func(damage, warhead, armor, intval);
+    return func(damage, warhead, armor, distance);
 #else
     return 0;
 #endif
@@ -45,11 +45,11 @@ AnimType Combat_Anim(int damage, WarheadType warhead, LandType land)
 #endif
 }
 
-void Wide_Area_Damage(coord_t coord, uint16_t shortval, int damage, TechnoClass *object, WarheadType warhead)
+void Wide_Area_Damage(coord_t coord, uint16_t radius, int damage, TechnoClass *object, WarheadType warhead)
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x004A37D4, void, coord_t, uint16_t, int, TechnoClass *, WarheadType);
-    func(coord, shortval, damage, object, warhead);
+    func(coord, radius, damage, object, warhead);
 #endif
 }
 

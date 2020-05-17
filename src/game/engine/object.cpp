@@ -712,26 +712,26 @@ void ObjectClass::Unselect()
     }
 }
 
-DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
+DamageResultType ObjectClass::Take_Damage(int &damage, int distance, WarheadType warhead, TechnoClass *object, BOOL force)
 {
 #ifdef GAME_DLL
     DamageResultType (*func)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int) =
         reinterpret_cast<DamageResultType (*)(ObjectClass *, int &, int, WarheadType, TechnoClass *, int)>(0x0051E07C);
-    return func(this, damage, a2, warhead, object, a5);
+    return func(this, damage, distance, warhead, object, force);
 #elif 0
     // Needs IOMap DisplayClass, Damage
-    DamageResultType result = DAMAGE_UNAFFECTED;
+    DamageResultType result = DAMAGE_NONE;
 
     int health = m_Health;
 
-    if (health <= 0 || !damage || (!a5 && Class_Of().Is_Immune())) {
-        return DAMAGE_UNAFFECTED;
+    if (health <= 0 || !damage || (!force && Class_Of().Is_Immune())) {
+        return DAMAGE_NONE;
     }
 
     int strength = Class_Of().Get_Strength();
 
-    if (!a5) {
-        damage = Modify_Damage(damage, warhead, Class_Of().Get_Armor(), a2); // needs confirming
+    if (!force) {
+        damage = Modify_Damage(damage, warhead, Class_Of().Get_Armor(), distance);
 
         if (object != nullptr) {
             if (object->RTTI == RTTI_INFANTRY) {
@@ -749,16 +749,16 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
     }
 
     if (damage <= 0) {
-        return DAMAGE_UNAFFECTED;
+        return DAMAGE_NONE;
     }
 
     if (damage > 0) {
-        result = DAMAGE_UNDAMAGED;
+        result = DAMAGE_LIGHT;
 
         if (health <= damage) {
             damage = health;
         } else if ((strength / 2 <= health) && (health - damage < strength / 2)) {
-            result = DAMAGE_YELLOW;
+            result = DAMAGE_MEDIUM;
         }
 
         m_Health -= damage;
@@ -785,7 +785,7 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
             }
 
         } else if (m_Health == 1) {
-            result = DAMAGE_RED;
+            result = DAMAGE_HEAVY;
         }
 
         if (object != nullptr) {
@@ -794,7 +794,7 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
             }
         }
 
-        if (result != DAMAGE_UNAFFECTED && m_Selected) {
+        if (result != DAMAGE_NONE && m_Selected) {
             Mark(MARK_REDRAW);
         }
         
@@ -812,9 +812,9 @@ DamageResultType ObjectClass::Take_Damage(int &damage, int a2, WarheadType warhe
         }
     }
 
-    return DAMAGE_UNAFFECTED;
+    return DAMAGE_NONE;
 #else
-    return DAMAGE_UNAFFECTED;
+    return DAMAGE_NONE;
 #endif
 }
 
