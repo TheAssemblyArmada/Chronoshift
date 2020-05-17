@@ -3,6 +3,7 @@
  *
  * @author OmniBlade
  * @author CCHyper
+ * @author tomsons26
  *
  * @brief Class providing a fuse function for weapons that need some time to arm.
  *
@@ -18,59 +19,51 @@
 #include "coord.h"
 
 /**
- * @brief Sets the fuse countdown running.
+ * @brief Arms the fuse, sets its target location and distance to it.
  */
-void FuseClass::Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_time)
+void FuseClass::Arm_Fuse(coord_t pos, coord_t target, int duration, int arm_delay)
 {
-    if (duration <= arm_time) {
-        duration = arm_time;
-    }
-
-    if (duration >= 255) {
-        duration = 255;
-    }
-
-    m_Duration = duration;
-
-    if (arm_time >= 255) {
-        arm_time = 255;
-    }
-
-    m_ArmTimer = arm_time;
-    m_Position = arm_pos;
-    m_ArmDistance = Coord_Distance(pos, arm_pos);
+    m_Duration = std::min(std::max(duration, arm_delay), 255);
+    m_ArmDelay = std::min(arm_delay, 255);
+    m_Target = target;
+    m_Proximity = Coord_Distance(pos, target);
 }
 
 /**
- * @brief Checks the state of the fuse.
+ * @brief Checks if the fuse should ignite.
  */
-int FuseClass::Fuse_Checkup(coord_t pos)
+FuseResultType FuseClass::Fuse_Checkup(coord_t pos)
 {
     if (m_Duration > 0) {
         --m_Duration;
     }
 
-    if (m_ArmTimer > 0) {
-        --m_ArmTimer;
-    } else {
-        if (m_Duration == 0) {
-            return FUSE_1;
-        }
-
-        int dist = Coord_Distance(pos, m_Position);
-
-        if (dist < 16) {
-            return FUSE_1;
-        }
-
-        if (dist < 256 && dist > m_ArmDistance) {
-            return FUSE_1;
-        }
-
-        m_ArmDistance = dist;
+    if (m_ArmDelay > 0) {
+        --m_ArmDelay;
+        // Has not been armed yet.
+        return FUSE_WAIT;
     }
 
-    return FUSE_0;
+    if (m_Duration == 0) {
+        return FUSE_EXPLODE;
+    }
+
+    int dist = Coord_Distance(pos, m_Target);
+
+    if (dist < 16) {
+        // Is close enough to the ignition position.
+        return FUSE_EXPLODE;
+    }
+
+    if (dist < 256 && dist > m_Proximity) {
+        // This returns FUSE_2 in later games.
+        return FUSE_EXPLODE;
+    }
+
+    // Still too far from target position so set the new distance.
+    m_Proximity = dist;
+
+    return FUSE_WAIT;
 }
 
 /**
@@ -79,9 +72,9 @@ int FuseClass::Fuse_Checkup(coord_t pos)
 void FuseClass::Fuse_Write(FileClass &file)
 {
     file.Write(&m_Duration, sizeof(m_Duration));
-    file.Write(&m_ArmTimer, sizeof(m_ArmTimer));
-    file.Write(&m_Position, sizeof(m_Position));
-    file.Write(&m_ArmDistance, sizeof(m_ArmDistance));
+    file.Write(&m_ArmDelay, sizeof(m_ArmDelay));
+    file.Write(&m_Target, sizeof(m_Target));
+    file.Write(&m_Proximity, sizeof(m_Proximity));
 }
 
 /**
@@ -90,7 +83,7 @@ void FuseClass::Fuse_Write(FileClass &file)
 void FuseClass::Fuse_Read(FileClass &file)
 {
     file.Read(&m_Duration, sizeof(m_Duration));
-    file.Read(&m_ArmTimer, sizeof(m_ArmTimer));
-    file.Read(&m_Position, sizeof(m_Position));
-    file.Read(&m_ArmDistance, sizeof(m_ArmDistance));
+    file.Read(&m_ArmDelay, sizeof(m_ArmDelay));
+    file.Read(&m_Target, sizeof(m_Target));
+    file.Read(&m_Proximity, sizeof(m_Proximity));
 }
