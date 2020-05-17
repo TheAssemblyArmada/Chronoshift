@@ -242,7 +242,7 @@ void BulletClass::AI()
                 to_explode = Is_Forced_To_Explode(m_Coord);
             }
 
-            if (to_explode || (!Class_Of().Is_Dropping() && m_Fuse.Fuse_Checkup(m_Coord))) {
+            if (to_explode || (!Class_Of().Is_Dropping() && m_Fuse.Fuse_Checkup(m_Coord) != FUSE_WAIT)) {
                 Bullet_Explodes(to_explode);
 
                 // bullet exploded, we can be deleted now.
@@ -661,8 +661,8 @@ void BulletClass::Bullet_Explodes(BOOL a1)
     captainslog_assert(m_IsActive);
 
     if ((m_Payback != nullptr && m_Payback->What_Am_I() == RTTI_INFANTRY && static_cast<InfantryClass *>(m_Payback)->Class_Of().Is_Canine()
-        || !a1) && (!Class_Of().Get_Arcing() && !Homes_In() && m_Fuse.Get_Position())) {
-        m_Coord = m_Fuse.Get_Position();
+        || !a1) && (!Class_Of().Get_Arcing() && !Homes_In() && m_Fuse.Get_Target())) {
+        m_Coord = m_Fuse.Get_Target();
     }
 
     if (!Target_Is_Aircraft(m_Target) || (As_Aircraft(m_Target)->In_Which_Layer() == LAYER_GROUND)) {

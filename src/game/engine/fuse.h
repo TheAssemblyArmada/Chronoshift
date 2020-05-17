@@ -3,6 +3,7 @@
  *
  * @author OmniBlade
  * @author CCHyper
+ * @author tomsons26
  *
  * @brief Class providing a fuse function for weapons that need some time to arm.
  *
@@ -27,21 +28,21 @@ class FileClass;
 
 enum FuseResultType
 {
-    FUSE_0 = 0,
-    FUSE_1 = 1,
+    FUSE_WAIT = 0,
+    FUSE_EXPLODE = 1,
     FUSE_2 = 2,
 };
 
 class FuseClass
 {
 public:
-    FuseClass() : m_Duration(0), m_ArmTimer(0), m_Position(0), m_ArmDistance(0) {}
+    FuseClass() : m_Duration(0), m_ArmDelay(0), m_Target(0), m_Proximity(0) {}
     FuseClass(const NoInitClass &noinit) {}
 
-    void Arm_Fuse(coord_t pos, coord_t arm_pos, int duration, int arm_time);
-    int Fuse_Checkup(coord_t a1);
+    void Arm_Fuse(coord_t pos, coord_t target, int duration, int arm_delay);
+    FuseResultType Fuse_Checkup(coord_t pos);
 
-    coord_t Get_Position() const { return m_Position; }
+    coord_t Get_Target() const { return m_Target; }
 
     void Code_Pointers() {}
     void Decode_Pointers() {}
@@ -50,10 +51,10 @@ public:
     void Fuse_Read(FileClass &file);
 
 private:
-    uint8_t m_Duration;
-    uint8_t m_ArmTimer;
-    coord_t m_Position;
-    int16_t m_ArmDistance;
+    uint8_t m_Duration; // Total life span of the fuse.
+    uint8_t m_ArmDelay; // Delay until fuse is armed.
+    coord_t m_Target; // Position where the fuse should ignite.
+    int16_t m_Proximity; // Last registered distance to target position.
 };
 
 #endif // FUSE_H
