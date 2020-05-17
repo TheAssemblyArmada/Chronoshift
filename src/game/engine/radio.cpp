@@ -2,6 +2,7 @@
  * @file
  *
  * @author CCHyper
+ * @author tomsons26
  *
  * @brief Object communication layer of object class hierachy.
  *
@@ -13,6 +14,7 @@
  *            LICENSE
  */
 #include "radio.h"
+#include "techno.h"
 #include "target.h"
 
 // A invalid target instance parsed into targets as a default param.
@@ -62,9 +64,6 @@ const char *RadioClass::s_Messages[RADIO_COUNT] = {
 
 RadioClass::RadioClass(RTTIType type, int id) :
     MissionClass(type, id),
-    /*m_ReceivedMessage(RADIO_STATIC),
-    m_TransmittedMessage(RADIO_STATIC),
-    m_LastMessage(RADIO_STATIC),*/
     //m_MessageHistory(), // TODO: When fully standalone, uncomment this line and remove the 'for' loop below.
     m_Radio(nullptr)
 {
@@ -75,11 +74,11 @@ RadioClass::RadioClass(RTTIType type, int id) :
 
 RadioClass::RadioClass(const RadioClass &that) :
     MissionClass(that),
-    /*m_ReceivedMessage(that.m_ReceivedMessage),
-    m_TransmittedMessage(that.m_TransmittedMessage),
-    m_LastMessage(that.m_LastMessage),*/
     m_Radio(that.m_Radio)
 {
+    for (int i = 0; i < ARRAY_SIZE(m_MessageHistory); ++i){
+        m_MessageHistory[i] = that.m_MessageHistory[i];
+    }
 }
 
 RadioClass::~RadioClass()
@@ -96,6 +95,8 @@ void RadioClass::Debug_Dump(MonoClass *mono) const
 
 BOOL RadioClass::Limbo()
 {
+    captainslog_assert(m_IsActive);
+
     if (!m_InLimbo) {
         Transmit_Message(RADIO_OVER_AND_OUT);
     }
@@ -105,15 +106,10 @@ BOOL RadioClass::Limbo()
 
 RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target)
 {
+    captainslog_assert(m_IsActive);
     captainslog_assert(radio != nullptr);
     captainslog_assert(message != RADIO_NONE);
     captainslog_assert(message < RADIO_COUNT);
-
-#ifdef GAME_DLL
-    RadioMessageType (*func)(RadioClass *, RadioMessageType, target_t &) =
-        reinterpret_cast<RadioMessageType (*)(RadioClass *, RadioMessageType, target_t &)>(0x00532A70);
-    return func(radio, message, target);
-#elif 0 // TODO Needs HouseClass.
 
     // Basic circular tracker of received message history.
     if (message != m_MessageHistory[0]) {
@@ -122,34 +118,29 @@ RadioMessageType RadioClass::Receive_Message(RadioClass *radio, RadioMessageType
         m_MessageHistory[0] = message;
     }
 
-    if (m_Radio != radio || message != RADIO_OVER_AND_OUT) {
-        if (message == RADIO_HELLO && m_Health > 0) {
-            if ((m_Radio == nullptr || m_Radio == radio) && radio != nullptr) {
-                TechnoClass *t_radioptr = reinterpret_cast<TechnoClass *>(radio);
-                TechnoClass *t_this = reinterpret_cast<TechnoClass *>(this);
-
-                if (t_radioptr != nullptr && t_this != nullptr) {
-                    if (t_radioptr->OwnerHouse->Is_Ally(this) && t_this->OwnerHouse->Is_Ally(t_radioptr)) {
-                        m_Radio = radio;
-                        return RADIO_ROGER;
-                    }
-                }
-            }
-
-            return RADIO_UNABLE_TO_COMPLY;
-        }
-
-        return ObjectClass::Receive_Message(radio, RADIO_OVER_AND_OUT, target);
+    if (m_Radio == radio && message == RADIO_OVER_AND_OUT) {
+        ObjectClass::Receive_Message(radio, RADIO_OVER_AND_OUT, target);
+        Break_Contact();
+        return RADIO_ROGER;
     }
 
-    ObjectClass::Receive_Message(radio, RADIO_OVER_AND_OUT, target);
+    if (message == RADIO_HELLO && m_Health > 0) {
+        if (m_Radio == radio || radio == nullptr) {
+            TechnoClass *t_radioptr = reinterpret_cast<TechnoClass *>(radio);
+            TechnoClass *t_this = reinterpret_cast<TechnoClass *>(this);
 
-    m_Radio = nullptr;
+            // BUGFIX : Backported check. Make sure what we are contacting we are allied to and is allied us.
+            if (Is_Techno() && t_radioptr->Get_Owner_House()->Is_Ally(t_this)
+                && t_this->Get_Owner_House()->Is_Ally(t_radioptr)) {
+                m_Radio = radio;
+                return RADIO_ROGER;
+            }
+        }
+        return RADIO_UNABLE_TO_COMPLY;
+    }
 
-    return RADIO_ROGER;
-#else
-    return RADIO_ROGER;
-#endif
+    // Message was not handled here so pass it on.
+    return ObjectClass::Receive_Message(radio, message, target);
 }
 
 RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t &target, RadioClass *radio)
@@ -157,28 +148,29 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, target_t
     captainslog_assert(message != RADIO_NONE);
     captainslog_assert(message < RADIO_COUNT);
 
-    RadioClass *radioptr = radio == nullptr ? reinterpret_cast<RadioClass *>(m_Radio) : radio;
+    RadioClass *radioptr = radio == nullptr ? m_Radio : radio;
 
     if (radioptr == nullptr) {
         return RADIO_STATIC;
     }
 
     if (m_Radio == radioptr && message == RADIO_OVER_AND_OUT) {
-        m_Radio = nullptr;
+        Break_Contact();
     }
 
-    if (message != RADIO_HELLO) {
-        return radioptr->Receive_Message(this, message, target);
+    if (message == RADIO_HELLO) {
+        Transmit_Message(RADIO_OVER_AND_OUT);
+
+        if (radioptr->Receive_Message(this, message, target) == RADIO_ROGER) {
+            m_Radio = radioptr;
+            return RADIO_ROGER;
+        }
+
+        return RADIO_UNABLE_TO_COMPLY;
     }
 
-    Transmit_Message(RADIO_OVER_AND_OUT);
-
-    if (radioptr->Receive_Message(this, message, target) == RADIO_ROGER) {
-        m_Radio = radioptr;
-        return RADIO_ROGER;
-    }
-
-    return RADIO_UNABLE_TO_COMPLY;
+    // Message was not handled here.
+    return radioptr->Receive_Message(this, message, target);
 }
 
 RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioClass *radio)
@@ -193,7 +185,7 @@ RadioMessageType RadioClass::Transmit_Message(RadioMessageType message, RadioCla
 void RadioClass::Code_Pointers()
 {
     if (m_Radio != nullptr) {
-        m_Radio = reinterpret_cast<ObjectClass *>(m_Radio->As_Target());
+        m_Radio = reinterpret_cast<RadioClass *>(m_Radio->As_Target());
     }
 
     MissionClass::Code_Pointers();
@@ -202,7 +194,7 @@ void RadioClass::Code_Pointers()
 void RadioClass::Decode_Pointers()
 {
     if (m_Radio != nullptr) {
-        m_Radio = reinterpret_cast<ObjectClass *>(As_Techno((uintptr_t)(m_Radio)));
+        m_Radio = reinterpret_cast<RadioClass *>(As_Techno((uintptr_t)(m_Radio)));
         captainslog_assert(m_Radio != nullptr);
     }
 

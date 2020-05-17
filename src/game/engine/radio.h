@@ -2,6 +2,7 @@
  * @file
  *
  * @author CCHyper
+ * @author tomsons26
  *
  * @brief Object communication layer of object class hierachy.
  *
@@ -48,24 +49,10 @@ public:
         RadioMessageType message, target_t &target = RadioClass::Get_LParam(), RadioClass *radio = nullptr);
     virtual RadioMessageType Transmit_Message(RadioMessageType message, RadioClass *radio);
 
-    // TODO, rename!
-    bool const Radio_Valid() const { return m_Radio != nullptr; }
-
-    TechnoClass *Radio_As_Techno() const
-    {
-        if (Radio_Valid()) {
-            return (TechnoClass *)&m_Radio;
-        }
-        return nullptr;
-    }
-
-    FootClass *Radio_As_Foot() const
-    {
-        if (Radio_Valid()) {
-            return (FootClass *)&m_Radio;
-        }
-        return nullptr;
-    }
+    void Set_Contact(RadioClass *radio) { m_Radio = radio; }
+    BOOL In_Contact() const { return m_Radio != nullptr; }
+    void Break_Contact() { m_Radio = nullptr; }
+    TechnoClass *Contact_With_Whom() const { return (TechnoClass *)m_Radio; }
 
     static target_t &Get_LParam();
 
@@ -76,12 +63,8 @@ private:
     static const char *s_Messages[RADIO_COUNT];
 
 protected:
-    //RadioMessageType m_ReceivedMessage;
-    //RadioMessageType m_TransmittedMessage;
-    //RadioMessageType m_LastMessage;
-    RadioMessageType m_MessageHistory[3]; // Seems it was a tracker of the last 3 messages, lets see how this turns out...
-
-    ObjectClass *m_Radio; // 0x3A
+    RadioMessageType m_MessageHistory[3];
+    RadioClass *m_Radio;
 };
 
 #endif // RADIO_H
