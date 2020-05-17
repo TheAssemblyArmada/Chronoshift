@@ -20,9 +20,9 @@
  */
 void DoorClass::AI()
 {
-    if (m_DoorTimer.Stage_Changed()) {
+    if (m_DoorTimer.Stage_AI()) {
         if (m_DoorTimer.Get_Stage() >= m_Stage) {
-            m_DoorTimer.Set_Delay(0);
+            m_DoorTimer.Set_Rate(0);
 
             switch (m_State) {
                 case DOOR_OPENING:
@@ -41,9 +41,9 @@ void DoorClass::AI()
 }
 
 /**
- * @brief Sets the door opening process to take the given stages with the given frame delay between each stage.
+ * @brief Sets the door opening process to take the given stages with the given rate between each stage.
  */
-BOOL DoorClass::Open_Door(int delay, int stages)
+BOOL DoorClass::Open_Door(int rate, int stages)
 {
     if (m_State != DOOR_CLOSED && m_State != DOOR_CLOSING) {
         return false;
@@ -52,15 +52,15 @@ BOOL DoorClass::Open_Door(int delay, int stages)
     m_State = DOOR_OPENING;
     m_Stage = stages - 1;
     m_DoorTimer.Set_Stage(0);
-    m_DoorTimer.Set_Delay(delay);
+    m_DoorTimer.Set_Rate(rate);
 
     return true;
 }
 
 /**
- * @brief Sets the door closing process to take the given stages with the given frame delay between each stage.
+ * @brief Sets the door closing process to take the given stages with the given rate between each stage.
  */
-BOOL DoorClass::Close_Door(int delay, int stages)
+BOOL DoorClass::Close_Door(int rate, int stages)
 {
     if (m_State != DOOR_OPEN && m_State != DOOR_OPENING) {
         return false;
@@ -69,7 +69,7 @@ BOOL DoorClass::Close_Door(int delay, int stages)
     m_State = DOOR_CLOSING;
     m_Stage = stages - 1;
     m_DoorTimer.Set_Stage(0);
-    m_DoorTimer.Set_Delay(delay);
+    m_DoorTimer.Set_Rate(rate);
 
     return true;
 }

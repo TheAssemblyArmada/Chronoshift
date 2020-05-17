@@ -44,7 +44,7 @@ TerrainClass::TerrainClass(TerrainType type, cell_t cellnum) :
             delete this;
         }
     }
-    m_AnimStage.Set_Delay(0);
+    m_AnimStage.Set_Rate(0);
 }
 
 /**
@@ -144,7 +144,7 @@ void TerrainClass::AI()
     if (What_Type() == TERRAIN_MINE && !(g_GameFrame % (900 * g_Rule.Ore_Growth_Rate()))) {
         g_Map[As_Cell(As_Target())].Spread_Ore(true);
     }
-    if (m_AnimStage.Stage_Changed()) {
+    if (m_AnimStage.Stage_AI()) {
         Mark(MARK_REMOVE);
         if (m_Crumbling) {
             if (m_AnimStage.Get_Stage() == Get_Build_Frame_Count(Get_Image_Data()) - 1) {
@@ -331,7 +331,7 @@ void TerrainClass::Start_To_Crumble()
     if (!m_Crumbling) {
         m_Crumbling = true;
         m_AnimStage.Set_Stage(0);
-        m_AnimStage.Set_Delay(2);
+        m_AnimStage.Set_Rate(2);
     }
 }
 

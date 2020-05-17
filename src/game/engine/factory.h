@@ -61,7 +61,7 @@ public:
     BOOL Abandon();
     int Completion() const { return m_ProductionTime.Get_Stage(); }
     BOOL Has_Completed() const;
-    BOOL Is_Building() const { return m_ProductionTime.Get_Delay() != 0; }
+    BOOL Is_Building() const { return m_ProductionTime.Get_Rate() != 0; }
     TechnoClass *const Get_Object() const { return m_Object; }
     int Get_Special_Item() const { return m_SpecialItem; }
     unsigned int Cost_Per_Tick() const;

@@ -1157,7 +1157,7 @@ void TechnoClass::Do_Uncloak()
 
             m_CloakState = CLOAK_UNCLOAKING;
             m_CloakingStage.Set_Stage(0);
-            m_CloakingStage.Set_Delay(1);
+            m_CloakingStage.Set_Rate(1);
 
             // BUGFIX: The following stops the uncloaking sound from playing upon game start.
             if (g_GameFrame > 25) {
@@ -1183,7 +1183,7 @@ void TechnoClass::Do_Cloak()
 
             m_CloakState = CLOAK_CLOAKING;
             m_CloakingStage.Set_Stage(0);
-            m_CloakingStage.Set_Delay(1);
+            m_CloakingStage.Set_Rate(1);
 
             // BUGFIX: The following stops the cloaking sound from playing upon game start.
             if (g_GameFrame > 25) {
