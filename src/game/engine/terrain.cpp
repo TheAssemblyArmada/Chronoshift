@@ -254,18 +254,18 @@ BOOL TerrainClass::Mark(MarkType mark)
  *
  * @address 0x0057AAE8
  */
-DamageResultType TerrainClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
+DamageResultType TerrainClass::Take_Damage(int &damage, int distance, WarheadType warhead, TechnoClass *object, BOOL force)
 {
     if (m_OnFire && warhead != WARHEAD_FIRE) {
-        return DAMAGE_UNAFFECTED;
+        return DAMAGE_NONE;
     }
     if (warhead == WARHEAD_SA) {
-        return DAMAGE_UNAFFECTED;
+        return DAMAGE_NONE;
     }
     if (m_Class->Is_Immune()) {
-        return DAMAGE_UNAFFECTED;
+        return DAMAGE_NONE;
     }
-    DamageResultType ret = ObjectClass::Take_Damage(damage, a2, warhead, object, a5);
+    DamageResultType ret = ObjectClass::Take_Damage(damage, distance, warhead, object, force);
     if (damage > 0 && warhead == WARHEAD_FIRE) {
         Catch_Fire();
     }

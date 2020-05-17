@@ -274,11 +274,11 @@ void FootClass::Active_Click_With(ActionType action, cell_t cellnum)
 #endif
 }
 
-DamageResultType FootClass::Take_Damage(int &damage, int a2, WarheadType warhead, TechnoClass *object, BOOL a5)
+DamageResultType FootClass::Take_Damage(int &damage, int distance, WarheadType warhead, TechnoClass *object, BOOL force)
 {
 #ifdef GAME_DLL
     DEFINE_CALL(func, 0x004C1BC8, DamageResultType, FootClass *, int &, int, WarheadType, TechnoClass *, BOOL)
-    return func(this, damage, a2, warhead, object, a5);
+    return func(this, damage, distance, warhead, object, force);
 #else
     return DamageResultType();
 #endif

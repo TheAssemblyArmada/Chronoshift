@@ -96,7 +96,7 @@ public:
     virtual BOOL In_Range(coord_t coord, WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual int Weapon_Range(WeaponSlotType weapon = WEAPON_SLOT_PRIMARY) const override;
     virtual DamageResultType Take_Damage(
-        int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) override;
+        int &damage, int distance, WarheadType warhead, TechnoClass *object = nullptr, BOOL force = false) override;
     virtual int Value() const override;
     virtual void Per_Cell_Process(PCPType pcp) override;
     virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target) override;

@@ -51,7 +51,7 @@ class VesselClass : public DriveClass
     virtual void Active_Click_With(ActionType action, ObjectClass *object) override;
     virtual void Active_Click_With(ActionType action, cell_t cellnum) override;
     virtual DamageResultType Take_Damage(
-        int &damage, int a2, WarheadType warhead, TechnoClass *object = nullptr, BOOL a5 = false) override;
+        int &damage, int distance, WarheadType warhead, TechnoClass *object = nullptr, BOOL force = false) override;
     virtual void Per_Cell_Process(PCPType pcp) override;
     virtual RadioMessageType Receive_Message(RadioClass *radio, RadioMessageType message, target_t &target) override;
 
