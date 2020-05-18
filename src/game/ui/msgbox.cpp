@@ -20,6 +20,7 @@
 #include "globals.h"
 #include "keyboard.h"
 #include "mouse.h"
+#include "ostimer.h"
 #include "stringex.h"
 #include "surfacemonitor.h"
 #include "textbtn.h"
@@ -123,6 +124,7 @@ int MessageBoxClass::Process(
         style |= TPF_CENTER;
     }
 
+    Set_Logic_Page(&g_SeenBuff);
     // Perform a full blit of contents of visible to shadow buffer to allow removal of message later.
     g_VisiblePage.Blit(shadow_buffer, 0, 0, 0, 0, g_VisiblePage.Get_Width(), g_VisiblePage.Get_Height(), false);
     TextButtonClass button1(MSGBOX_IDOK,
@@ -165,19 +167,18 @@ int MessageBoxClass::Process(
         buttons[0] = &button1;
         button_idx[0] = MSGBOX_IDOK;
 
-        if (button_count <= 2) {
-            if (button_count == 2) {
-                button2.Add(button1);
-                buttons[1] = &button2;
-                button_idx[1] = MSGBOX_IDCANCEL;
-            }
-        } else {
+        if (button_count > 2) {
             button3.Add(button1);
             buttons[1] = &button3;
             button_idx[1] = MSGBOX_IDABORT;
+
             button2.Add(button1);
             buttons[2] = &button2;
             button_idx[2] = MSGBOX_IDCANCEL;
+        } else if (button_count == 2) {
+            button2.Add(button1);
+            buttons[1] = &button2;
+            button_idx[1] = MSGBOX_IDCANCEL;
         }
 
         button_head->Turn_On();
@@ -348,7 +349,8 @@ int MessageBoxClass::Process(
                 process_action = false;
             }
 
-            // TODO we probably need a g_PlatformTimer::Sleep(1) here to make it behave nicely with other programs.
+            // BUGFIX: Stops high CPU load in this menu.
+            PlatformTimerClass::Sleep(1);
         }
     } else {
         g_Keyboard->Clear();
