@@ -171,8 +171,13 @@ void SidebarClass::StripClass::Init_IO(int column)
         s_DownButton[m_WhichColumn].Set_Shape(GameFileClass::Retrieve("stripdn.shp"));
         s_DownButton[m_WhichColumn].Set_Sticky(true);
 
+        // Yes actual code they had, some silly math hack.
+        // The scroll buttons are one pixel row larger han they should be so this readjusts their Y pos.
+        s_UpButton[m_WhichColumn].Set_YPos(s_UpButton[m_WhichColumn].Get_YPos() - 1);
+        s_DownButton[m_WhichColumn].Set_YPos(s_DownButton[m_WhichColumn].Get_YPos() - 1);
+
         for (int index = 0; index < ROW_COUNT; ++index) {
-            s_SelectButton[m_WhichColumn][index].Set_ID(220);
+            s_SelectButton[m_WhichColumn][index].Set_ID(GADGET_STRIP_SELECT_BUTTON);
             s_SelectButton[m_WhichColumn][index].Set_Size(64, 48);
             s_SelectButton[m_WhichColumn][index].Set_XPos(m_XPos);
             s_SelectButton[m_WhichColumn][index].Set_YPos(m_YPos + index * 48);

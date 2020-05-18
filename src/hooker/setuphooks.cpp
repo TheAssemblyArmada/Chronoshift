@@ -1313,6 +1313,7 @@ ASSERT_SIZEOF(ScenarioClass, 0x7D7);
 ASSERT_SIZEOF(ScrollClass, 0x1661);
 ASSERT_SIZEOF(ShapeButtonClass, 0x38);
 ASSERT_SIZEOF(SidebarClass, 0x15FA);
+ASSERT_SIZEOF(SidebarClass::StripClass, 0x2DC);
 ASSERT_SIZEOF(SliderClass, 0x54);
 ASSERT_SIZEOF(SmudgeClass, 0x2B);
 ASSERT_SIZEOF(SmudgeTypeClass, 0x145);
