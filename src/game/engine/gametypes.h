@@ -60,6 +60,7 @@ enum ControlID
     // Sidebar UI ID's
     GADGET_STRIP_COLUMN_LEFT = 200,
     GADGET_STRIP_COLUMN_RIGHT = 210,
+    GADGET_STRIP_SELECT_BUTTON = 220,
 
     // Sound Controls ID's
     BUTTON_SOUND_STOP = 605,
