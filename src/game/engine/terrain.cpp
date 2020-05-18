@@ -344,19 +344,25 @@ uint8_t *const TerrainClass::Radar_Icon(short cellnum) const
 {
     struct IconStruct
     {
-        uint8_t X;
-        uint8_t Y;
+        uint8_t Width;
+        uint8_t Height;
+        uint8_t Data[1];
     };
     IconStruct *icon = (IconStruct *)m_Class->Get_Radar_Icon_Data();
-    uint8_t *icondata = (uint8_t *)&icon[1];
+
+    int width = icon->Width;
+    int height = icon->Height;
+    uint8_t *data = icon->Data;
 
     cell_t cell = Coord_To_Cell(m_Coord);
 
-    uint8_t x = Cell_Get_X(cell) - Cell_Get_X(cellnum);
-    uint8_t y = Cell_Get_Y(cell) - Cell_Get_Y(cellnum);
+    int x = Cell_Get_X(cellnum) - Cell_Get_X(cell);
+    int y = Cell_Get_Y(cellnum) - Cell_Get_Y(cell);
+
     // see OverlayTypeClass::Radar_Icon for explaination whats going on
-    if (x < icon->X && y < icon->Y) {
-        return icondata + 9 * (icon->X + x * y);
+    if (x < width && y < height ) {
+        return &data[9 * (x + width * y)];
     }
+
     return nullptr;
 }
