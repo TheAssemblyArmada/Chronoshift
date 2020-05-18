@@ -14,9 +14,9 @@
  *            LICENSE
  */
 #include "dialog.h"
-#include "gamefile.h"
 #include "drawshape.h"
 #include "gadget.h"
+#include "gamefile.h"
 #include "gbuffer.h"
 #include "globals.h"
 #include "language.h"
@@ -37,6 +37,7 @@ WindowType g_WindowList[WINDOW_COUNT] = {
     { 40, 30, 240, 140, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 15, 12, 0, 0 }
 };
+
 unsigned g_Window;
 int g_WindowColumns = 40;
 int g_WindowLines = 25;
@@ -316,7 +317,7 @@ void Conquer_Clip_Text_Print(const char *string, unsigned x, unsigned y, RemapCo
     char fmt_buff[512];
 
     if (string) {
-        strncpy(fmt_buff, string, 512);
+        strncpy(fmt_buff, string, sizeof(fmt_buff));
         fmt_buff[511] = '\0';
 
         // These calls to Simple_Text_Print with a NULL string cause the global
@@ -329,25 +330,7 @@ void Conquer_Clip_Text_Print(const char *string, unsigned x, unsigned y, RemapCo
         bool chars_to_process = true;
 
         while (chars_to_process && current_tab < x_max) {
-            char *tab_finder = fmt_ptr;
-
-            // Scan the string for any tab chars to process
-            while (*tab_finder != '\t') {
-                if (*tab_finder) {
-                    ++tab_finder;
-                    char current_byte = *tab_finder;
-                    if (current_byte == '\t') {
-                        break;
-                    }
-
-                    ++tab_finder;
-                    if (current_byte) {
-                        continue;
-                    }
-                }
-                tab_finder = nullptr;
-                break;
-            }
+            char *tab_finder = strchr(fmt_ptr, '\t');
 
             // Replace the tab char with '\0' to terminate string at the tab but
             // only if we found a tab in the first place
@@ -369,15 +352,13 @@ void Conquer_Clip_Text_Print(const char *string, unsigned x, unsigned y, RemapCo
                 // If we exceeded max, back up and flag to end the loop as well
                 // as nulling the prev char in the buffer
                 if (current_tab + x_add >= x_max) {
-                    int last_char_x = Char_Pixel_Width(*(str_ptr - 1));
-                    *(str_ptr - 1) = '\0';
-                    x_add -= last_char_x;
+                    x_add -= Char_Pixel_Width(*--str_ptr);
+                    *str_ptr = '\0';
                     chars_to_process = false;
                 }
 
-                int print_xpos = current_tab + x;
+                Simple_Text_Print(fmt_ptr, current_tab + x, y, remapper, bgcolor, style);
                 current_tab += x_add;
-                Simple_Text_Print(fmt_ptr, print_xpos, y, remapper, bgcolor, style);
             }
 
             // At this point, if we didn't find a tab we will have printed the
@@ -705,7 +686,7 @@ void Draw_Box(int x_pos, int y_pos, int width, int height, BoxStyleEnum style, B
 {
     captainslog_assert(style != BOX_STYLE_NONE);
     captainslog_assert(style < BOX_STYLE_COUNT);
-    
+
     // this is a list of colour indices for rendering the bevel effect of a box i think.
     // Looks like each style has 4 colours, one for the body of the button,
     // two for a beveled look if its a button and 1 for the bevel corner transitions
