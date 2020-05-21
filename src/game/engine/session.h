@@ -137,6 +137,7 @@ public:
     BOOL MPlayer_Blitz() const { return m_MPlayerBlitz; }
     void Set_MPlayer_Blitz(BOOL onoff) { m_MPlayerBlitz = onoff; }
     int MPlayer_Max() const { return m_MPlayerMax; }
+    void Set_MPlayer_Max(int mp_max) { m_MPlayerMax = mp_max; }
 
     int Desired_Frame_Rate() const { return m_DesiredFrameRate; }
     void Set_Desired_Frame_Rate(int value) { m_DesiredFrameRate = value; }
@@ -168,6 +169,11 @@ public:
 
     MPlayerScoreStruct &MPlayer_Score_Info(HousesType house) { return m_MPlayerScores[house]; }
     int MPlayer_Current_Game() const { return m_MPlayerCurrentGame; }
+    int MPlayer_Num_Scores() const { return m_MPlayerNumScores; }
+    int MPlayer_Games_Played() const { return m_MPlayerGamesPlayed; }
+    void Set_MPlayer_Current_Game(int game) { m_MPlayerCurrentGame = game; }
+    void Set_MPlayer_Num_Scores(int scores) { m_MPlayerNumScores = scores; }
+    void Set_MPlayer_Games_Played(int played) { m_MPlayerGamesPlayed = played; }
     void MPlayer_Clear_Game_Name() { m_MPlayerGameName[0] = '\0'; }
 
     GameFileClass &Recording_File() { return m_RecordFile; }

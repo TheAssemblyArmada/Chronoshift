@@ -39,6 +39,8 @@ void Bootstrap();
 void Init_CDROM_Access();
 void Load_Title_Screen(const char *filename, GraphicViewPortClass *vp, PaletteClass *pal);
 void Load_Prolog_Page();
+void Init_Heaps();
+void Anim_Init();
 BOOL Init_Game(int argc, char **argv);
 
 #endif // INIT_H
