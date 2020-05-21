@@ -418,7 +418,7 @@ int main(int argc, char **argv)
     
     // TODO set Memory_Error_Exit handler here.
     
-    Game_Main(argc, argv);
+    Main_Game(argc, argv);
 
     // Start tidying up before quit.
     g_VisiblePage.Clear();

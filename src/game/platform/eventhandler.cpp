@@ -44,7 +44,7 @@ void Prog_End()
     g_PlatformTimer = nullptr;
 }
 
-// This probably needs moving later as its also called in Game_Main.
+// This probably needs moving later as its also called in Main_Game.
 void Shutdown_Network()
 {
     g_Session.MPlayer_Clear_Game_Name();

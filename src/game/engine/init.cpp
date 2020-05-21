@@ -682,3 +682,13 @@ void Init_CDROM_Access()
         g_RequiredCD = DISK_ANY;
     }
 }
+
+BOOL Init_Game(int argc, char **argv)
+{
+#ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004F4060, BOOL, int, char **);
+    return func(argc, argv);
+#else
+    return false;
+#endif
+}

@@ -29,8 +29,8 @@ void GameOptionsClass::Process()
 {
     // TODO
 #ifdef GAME_DLL
-    void (*process)() = reinterpret_cast<void (*)()>(0x004C9EE0);
-    process();
+    void (*process)(const GameOptionsClass *) = reinterpret_cast<void (*)(const GameOptionsClass *)>(0x004C9EE0);
+    process(this);
 #endif
 }
 
