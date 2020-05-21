@@ -19,6 +19,6 @@
 
 #include "always.h"
 
-void Game_Main(int argc, char **argv);
+void Main_Game(int argc, char **argv);
 
 #endif // GAMEMAIN_H
