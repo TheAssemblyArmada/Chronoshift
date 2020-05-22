@@ -874,6 +874,9 @@ void Setup_Hooks()
     Hook_Function(0x00403F40, *AircraftTypeClass::One_Time);
     Hook_Function(0x00401350, *AircraftTypeClass::Init_Heap);
 
+    // buildingtype.h
+    Hook_Function(0x00429F38, *BuildingTypeClass::Init_Heap);
+
     Hook_Function(0x005B42F4, Buffer_Print);
     Hook_Function(0x005B96F0, &MixFileClass<GameFileClass>::Offset);
     Hook_Function(0x005B9330, &MixFileClass<GameFileClass>::Retrieve);
