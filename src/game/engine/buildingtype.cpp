@@ -15,6 +15,7 @@
  */
 #include "buildingtype.h"
 #include "aircrafttype.h"
+#include "buildingdata.h"
 #include "coord.h"
 #include "globals.h"
 #include "lists.h"
@@ -627,12 +628,106 @@ BuildingType BuildingTypeClass::From_Name(const char *name)
  */
 void BuildingTypeClass::Init_Heap()
 {
-#ifdef GAME_DLL
-    void (*func)() = reinterpret_cast<void (*)()>(0x00429F38);
-    func();
-#else
     // The order of heap initialisation MUST match the BuildingType enum in buildingtype.h
-#endif
+    new BuildingTypeClass(BuildingAdvancedTech);
+    new BuildingTypeClass(BuildingIronCurtain);
+    new BuildingTypeClass(BuildingWeapon);
+    new BuildingTypeClass(BuildingChronosphere);
+    new BuildingTypeClass(BuildingPillbox);
+    new BuildingTypeClass(BuildingCamoPillbox);
+    new BuildingTypeClass(BuildingCommand); // RadarDome
+    new BuildingTypeClass(BuildingGapGenerator);
+    new BuildingTypeClass(BuildingTurret);
+    new BuildingTypeClass(BuildingAAGun);
+    new BuildingTypeClass(BuildingFlameTurret);
+    new BuildingTypeClass(BuildingConst);
+    new BuildingTypeClass(BuildingRefinery);
+    new BuildingTypeClass(BuildingStorage);
+    new BuildingTypeClass(BuildingHelipad);
+    new BuildingTypeClass(BuildingSAM);
+    new BuildingTypeClass(BuildingAirStrip);
+    new BuildingTypeClass(BuildingPower);
+    new BuildingTypeClass(BuildingAdvancedPower);
+    new BuildingTypeClass(BuildingSovietTech);
+    new BuildingTypeClass(BuildingHospital);
+    new BuildingTypeClass(BuildingBarracks);
+    new BuildingTypeClass(BuildingTent);
+    new BuildingTypeClass(BuildingKennel);
+    new BuildingTypeClass(BuildingRepair);
+    new BuildingTypeClass(BuildingBioLab);
+    new BuildingTypeClass(BuildingMission); // Mission specific Prison/Tech Centre
+    new BuildingTypeClass(BuildingShipYard);
+    new BuildingTypeClass(BuildingSubPen);
+    new BuildingTypeClass(BuildingMissileSilo);
+    new BuildingTypeClass(BuildingForwardCom);
+    new BuildingTypeClass(BuildingTesla);
+
+    // Fakes
+    new BuildingTypeClass(BuildingFakeWeapon);
+    new BuildingTypeClass(BuildingFakeConst);
+    new BuildingTypeClass(BuildingFakeShipYard);
+    new BuildingTypeClass(BuildingFakeSubPen);
+    new BuildingTypeClass(BuildingFakeCommand);
+
+    // Walls
+    new BuildingTypeClass(BuildingSandbag);
+    new BuildingTypeClass(BuildingCyclone);
+    new BuildingTypeClass(BuildingBrick);
+    new BuildingTypeClass(BuildingBarbwire);
+    new BuildingTypeClass(BuildingWood);
+    new BuildingTypeClass(BuildingFence);
+
+    // Mines
+    new BuildingTypeClass(BuildingAVMine);
+    new BuildingTypeClass(BuildingAPMine);
+
+    //
+    new BuildingTypeClass(BuildingV01);
+    new BuildingTypeClass(BuildingV02);
+    new BuildingTypeClass(BuildingV03);
+    new BuildingTypeClass(BuildingV04);
+    new BuildingTypeClass(BuildingV05);
+    new BuildingTypeClass(BuildingV06);
+    new BuildingTypeClass(BuildingV07);
+    new BuildingTypeClass(BuildingV08);
+    new BuildingTypeClass(BuildingV09);
+    new BuildingTypeClass(BuildingV10);
+    new BuildingTypeClass(BuildingV11);
+    new BuildingTypeClass(BuildingV12);
+    new BuildingTypeClass(BuildingV13);
+    new BuildingTypeClass(BuildingV14);
+    new BuildingTypeClass(BuildingV15);
+    new BuildingTypeClass(BuildingV16);
+    new BuildingTypeClass(BuildingV17);
+    new BuildingTypeClass(BuildingV18);
+    new BuildingTypeClass(BuildingV19);
+    new BuildingTypeClass(BuildingV20);
+    new BuildingTypeClass(BuildingV21);
+    new BuildingTypeClass(BuildingV22);
+    new BuildingTypeClass(BuildingV23);
+    new BuildingTypeClass(BuildingV24);
+    new BuildingTypeClass(BuildingV25);
+    new BuildingTypeClass(BuildingV26);
+    new BuildingTypeClass(BuildingV27);
+    new BuildingTypeClass(BuildingV28);
+    new BuildingTypeClass(BuildingV29);
+    new BuildingTypeClass(BuildingV30);
+    new BuildingTypeClass(BuildingV31);
+    new BuildingTypeClass(BuildingV32);
+    new BuildingTypeClass(BuildingV33);
+    new BuildingTypeClass(BuildingV34);
+    new BuildingTypeClass(BuildingV35);
+    new BuildingTypeClass(BuildingV36);
+    new BuildingTypeClass(BuildingV37);
+
+    // Barrels
+    new BuildingTypeClass(BuildingBarrel);
+    new BuildingTypeClass(BuildingBarrel3);
+
+    // Ants
+    new BuildingTypeClass(BuildingQueen);
+    new BuildingTypeClass(BuildingLarva1);
+    new BuildingTypeClass(BuildingLarva2);
 }
 
 /**
