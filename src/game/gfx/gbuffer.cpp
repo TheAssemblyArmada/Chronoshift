@@ -31,11 +31,11 @@ BOOL GraphicViewPortClass::s_AllowStretchBlits;
 int GraphicViewPortClass::s_ScreenWidth = 640;
 int GraphicViewPortClass::s_ScreenHeight = 400;
 GraphicViewPortClass *g_LogicPage = nullptr;
-GraphicViewPortClass g_SeenBuff;
-GraphicViewPortClass g_HidPage;
+GraphicViewPortClass g_SeenBuff(&g_VisiblePage, 0, 0, 640, 480);
+GraphicViewPortClass g_HidPage(&g_HiddenPage, 0, 0, 640, 480);
 GraphicBufferClass g_VisiblePage;
 GraphicBufferClass g_HiddenPage;
-GraphicBufferClass g_SysMemPage;
+GraphicBufferClass g_SysMemPage(320, 200, 0);
 GraphicBufferClass g_ModeXBuff;
 #endif
 
