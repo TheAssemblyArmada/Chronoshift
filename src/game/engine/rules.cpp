@@ -197,6 +197,8 @@ RulesClass::RulesClass() :
     m_OreFarScan(8192) //32 cells in leptons
 #ifndef GAME_DLL
     ,
+    m_EngineerDamage("0.33"),
+    m_EngineerCaptureLevel("0.25"),
     m_ChronoTankDuration("0.0"),
     m_MTankDistance(30),
     m_CarrierLaunchDelay(60),
@@ -221,6 +223,8 @@ RulesClass::RulesClass() :
     m_IQControls.m_SellBack = 2;
 
 #ifdef GAME_DLL
+    m_EngineerDamage = "0.33";
+    m_EngineerCaptureLevel = "0.25";
     m_ChronoTankDuration = "0.0";
     m_MTankDistance = 30;
     m_CarrierLaunchDelay = 60;

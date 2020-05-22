@@ -38,7 +38,7 @@ void *RadarClass::s_RadarAnim = nullptr;
 void *RadarClass::s_RadarPulse = nullptr;
 void *RadarClass::s_RadarFrame = nullptr;
 BOOL RadarClass::s_FullRedraw;
-GraphicBufferClass RadarClass::s_TileStage;
+GraphicBufferClass RadarClass::s_TileStage(CELL_PIXELS, CELL_PIXELS);
 #endif
 
 GraphicBufferClass RadarClass::s_IconStage(3, 3);
