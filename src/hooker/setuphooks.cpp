@@ -83,6 +83,7 @@
 #include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
+#include "movie.h"
 #include "msgbox.h"
 #include "msglist.h"
 #include "options.h"
@@ -1257,6 +1258,9 @@ void Setup_Hooks()
     Hook_Function(0x004261B4, Speak_AI);
     Hook_Function(0x0042632C, Stop_Speaking);
     Hook_Function(0x00426344, Is_Speaking);
+
+    // movie.cpp
+    Hook_Function(0x004F55B0, Play_Intro);
 #endif
 }
 

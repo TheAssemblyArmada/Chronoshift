@@ -218,19 +218,18 @@ void Play_Intro(BOOL flag)
 
     g_Keyboard->Clear();
 
-    if ( flag ) {
-
+    if (flag) {
         // If counter is less than zero or greater than MOVIE_COUNT, reset it.
-        if ( _counter < MOVIE_FIRST || _counter > MOVIE_COUNT ) {
+        if (_counter < MOVIE_FIRST || _counter > MOVIE_COUNT) {
             _counter = MOVIE_COUNT;
         }
 
         // We dont want to play the intro movies in our cycle, so go down one entry.
-        if ( _counter == MOVIE_ENGLISH || _counter == MOVIE_REDINTRO ) {
+        if (_counter == MOVIE_ENGLISH || _counter == MOVIE_REDINTRO) {
             --_counter;
         }
 
-        //dobule check before we try to play.
+        // dobule check before we try to play.
         captainslog_assert(_counter != MOVIE_NONE);
         captainslog_assert(_counter < MOVIE_COUNT);
 
@@ -240,13 +239,9 @@ void Play_Intro(BOOL flag)
 
         // Decrement the counter to get the next movie entry for next time.
         --_counter;
-
     } else {
-
         g_VisiblePage.Clear();
-
         Play_Movie(MOVIE_PROLOG, THEME_NONE, false);
-
     }
 }
 
