@@ -229,19 +229,22 @@ void Play_Intro(BOOL flag)
             --_counter;
         }
 
-        // dobule check before we try to play.
+        // double check before we try to play.
         captainslog_assert(_counter != MOVIE_NONE);
         captainslog_assert(_counter < MOVIE_COUNT);
 
+        g_Mouse->Hide_Mouse();
         g_VisiblePage.Clear();
-
+        g_Mouse->Show_Mouse();
         Play_Movie(_counter);
 
         // Decrement the counter to get the next movie entry for next time.
         --_counter;
     } else {
+        g_Mouse->Hide_Mouse();
         g_VisiblePage.Clear();
-        Play_Movie(MOVIE_PROLOG, THEME_NONE, false);
+        g_Mouse->Show_Mouse();
+        Play_Movie(MOVIE_ENGLISH, THEME_NONE, false);
     }
 }
 
