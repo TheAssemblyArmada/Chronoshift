@@ -382,6 +382,7 @@ off_t RawFileClass::Seek(off_t offset, int whence)
             break;
 
         case FS_SEEK_END:
+            whence = FS_SEEK_START;
             offset += m_BiasLength + m_BiasStart;
             break;
 

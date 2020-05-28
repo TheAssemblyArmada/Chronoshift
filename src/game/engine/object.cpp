@@ -512,7 +512,7 @@ BOOL ObjectClass::Render(BOOL force_render)
  */
 const int16_t *ObjectClass::Occupy_List(BOOL a1) const
 {
-    return Class_Of().Occupy_List();
+    return Class_Of().Occupy_List(a1);
 }
 
 /**
