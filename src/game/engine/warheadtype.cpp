@@ -14,8 +14,9 @@
  *            LICENSE
  */
 #include "warheadtype.h"
-#include "warheaddata.h"
 #include "gameini.h"
+#include "warheaddata.h"
+
 
 #ifndef GAME_DLL
 TFixedIHeapClass<WarheadTypeClass> g_WarheadTypes;
@@ -155,7 +156,7 @@ WarheadTypeClass *WarheadTypeClass::As_Pointer(WarheadType warhead)
 BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
 {
     char verses_buffer[128];
-    char verses_format_buffer[128];
+    static char _verses_format_buffer[128];
 
     if (ini.Find_Section(m_Name) != nullptr) {
         m_Spread = ini.Get_Int(m_Name, "Spread", m_Spread);
@@ -165,20 +166,28 @@ BOOL WarheadTypeClass::Read_INI(GameINIClass &ini)
         m_Explosion = ini.Get_Int(m_Name, "Explosion", m_Explosion);
         m_Death = ini.Get_Int(m_Name, "InfDeath", m_Death);
 
-        // NOTE: If you add or remove from the ArmorTypes, you need to change VERSUS_FORMAT!
-        // Build the verses format based on the armor count.
-        for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
-            size_t check = strlcat(verses_format_buffer, "100%%", sizeof(verses_format_buffer));
-            captainslog_assert(check <= sizeof(verses_format_buffer));
+        static bool _one_time = false;
 
-            if (armor != (ARMOR_COUNT - 1)) {
-                check = strlcat(verses_format_buffer, ",", sizeof(verses_format_buffer));
-                captainslog_assert(check <= sizeof(verses_format_buffer));
+        if (_one_time) {
+            _verses_format_buffer[0] = '\0';
+
+            // Build the verses format based on the armor count.
+            for (ArmorType armor = ARMOR_FIRST; armor < ARMOR_COUNT; ++armor) {
+                size_t check = strlcat(_verses_format_buffer, "100%%", sizeof(_verses_format_buffer));
+                captainslog_assert(check <= sizeof(_verses_format_buffer));
+
+                if (armor != (ARMOR_COUNT - 1)) {
+                    check = strlcat(_verses_format_buffer, ",", sizeof(_verses_format_buffer));
+                    captainslog_assert(check <= sizeof(_verses_format_buffer));
+                }
             }
+
+            _one_time = true;
         }
 
-        if (ini.Get_String(m_Name, "Verses", verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
+        if (ini.Get_String(m_Name, "Verses", _verses_format_buffer, verses_buffer, sizeof(verses_buffer)) > 0) {
             char *value = strtok(verses_buffer, ",");
+
             for (ArmorType armor = ARMOR_FIRST; (armor < ARMOR_COUNT) && (value != nullptr); ++armor) {
                 captainslog_assert(value != nullptr);
                 m_Verses[armor] = fixed_t(value);
