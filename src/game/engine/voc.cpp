@@ -202,7 +202,7 @@ VocType Voc_From_Name(const char *name)
 
     if (name != nullptr) {
         for (VocType voc = VOC_FIRST; voc < VOC_COUNT; ++voc) {
-            if (strcasecmp(name, g_SoundEffectName[voc].BaseName)) {
+            if (strcasecmp(name, g_SoundEffectName[voc].BaseName) == 0) {
                 return voc;
             }
         }

@@ -266,6 +266,8 @@ int main(int argc, char **argv)
     logfile = curbuf;
 #endif
     captainslog_init(LOGLEVEL_DEBUG, logfile, true, false, false);
+    captainslog_ignoreasserts(false);
+    captainslog_allowpopups(true);
 
     // Make pretty log header for debug logging builds.
     captainslog_line("================================================================================");
