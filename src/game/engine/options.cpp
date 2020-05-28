@@ -516,10 +516,10 @@ int OptionsClass::Normalize_Delay(int delay) const
     }
 
     if (delay < 5) {
-        return _adjust[delay][m_GameSpeed];
+        return _adjust[delay - 1][m_GameSpeed];
     }
 
-    return 8 * delay / (m_GameSpeed + 1);
+    return (delay * 8) / (m_GameSpeed + 1);
 }
 
 /**
