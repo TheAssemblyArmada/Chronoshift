@@ -936,6 +936,7 @@ void Setup_Hooks()
     Hook_Function(0x004F3E98, Load_Prolog_Page);
     Hook_Function(0x004F78D8, Init_One_Time_Systems);
     Hook_Function(0x004F850C, Init_Bulk_Data);
+    Hook_Function(0x004F769C, Init_Heaps);
 
     // mainmenu.h
     Hook_Function(0x004F44DC, Select_Game);

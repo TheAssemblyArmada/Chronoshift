@@ -15,7 +15,12 @@
  *            LICENSE
  */
 #include "init.h"
+#include "aircraft.h"
+#include "anim.h"
+#include "building.h"
+#include "bullet.h"
 #include "callback.h"
+#include "expansion.h"
 #include "gadget.h"
 #include "gamefile.h"
 #include "gameini.h"
@@ -23,23 +28,35 @@
 #include "gbuffer.h"
 #include "globals.h"
 #include "house.h"
+#include "infantry.h"
 #include "iomap.h"
 #include "keyboard.h"
 #include "language.h"
+#include "mainmenu.h"
 #include "mixfile.h"
 #include "mouse.h"
 #include "mouseshape.h"
 #include "msgbox.h"
+#include "overlay.h"
+#include "pal.h"
 #include "palette.h"
 #include "picture.h"
 #include "pk.h"
 #include "ramfile.h"
+#include "rules.h"
 #include "scenario.h"
 #include "session.h"
 #include "shape.h"
+#include "smudge.h"
+#include "special.h"
 #include "surfacemonitor.h"
+#include "template.h"
+#include "terrain.h"
 #include "textprint.h"
 #include "theme.h"
+#include "unit.h"
+#include "vessel.h"
+#include "vox.h"
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
@@ -683,12 +700,153 @@ void Init_CDROM_Access()
     }
 }
 
-BOOL Init_Game(int argc, char **argv)
+/**
+ * Initialises the object heaps for in game allocation.
+ */
+void Init_Heaps()
+{
+#if 0 // def GAME_DLL
+    DEFINE_CALL(func, 0x004F769C, void);
+    func();
+#else
+    g_Vessels.Set_Heap(g_Rule.Max_Vessel());
+    g_Units.Set_Heap(g_Rule.Max_Unit());
+    g_Factories.Set_Heap(g_Rule.Max_Factory());
+    g_Terrains.Set_Heap(g_Rule.Max_Terrain());
+    g_Templates.Set_Heap(g_Rule.Max_Template());
+    g_Smudges.Set_Heap(g_Rule.Max_Smudge());
+    g_Overlays.Set_Heap(g_Rule.Max_Overlay());
+    g_Infantry.Set_Heap(g_Rule.Max_Infantry());
+    g_Bullets.Set_Heap(g_Rule.Max_Bullet());
+    g_Buildings.Set_Heap(g_Rule.Max_Building());
+    g_Anims.Set_Heap(g_Rule.Max_Anim());
+    g_Aircraft.Set_Heap(g_Rule.Max_Aircraft());
+    g_Triggers.Set_Heap(g_Rule.Max_Trigger());
+    g_TeamTypes.Set_Heap(g_Rule.Max_TeamType());
+    g_Teams.Set_Heap(g_Rule.Max_Team());
+    g_Houses.Set_Heap(HOUSES_COUNT + 1);
+    g_TriggerTypes.Set_Heap(g_Rule.Max_TrigType());
+
+    // Looks like these two just got stuffed in here?
+    Init_Speech_Buffers();
+    DisplayClass::s_TheaterBuffer = new BufferClass(1100000);
+#endif
+}
+
+void Anim_Init()
 {
 #ifdef GAME_DLL
+    DEFINE_CALL(func, 0x004F57A0, void);
+    func();
+#endif
+}
+
+/**
+ * Performs initialisation of most game systems.
+ */
+BOOL Init_Game(int argc, char **argv)
+{
+#if 0 // def GAME_DLL
     DEFINE_CALL(func, 0x004F4060, BOOL, int, char **);
     return func(argc, argv);
 #else
-    return false;
+    // Init essential mix files and ensure we have CD data available.
+    Init_Keys();
+    Bootstrap();
+    Init_Mouse();
+    Init_CDROM_Access();
+
+    if (s_Special.Is_First_Run()) {
+        Load_Prolog_Page();
+    }
+
+    // Init the mix files from the current CD and set up the type heaps.
+    Init_Secondary_Mixfiles();
+    g_HouseTypes.Set_Heap(HOUSES_COUNT);
+    g_BuildingTypes.Set_Heap(BUILDING_COUNT);
+    g_AircraftTypes.Set_Heap(AIRCRAFT_COUNT);
+    g_InfantryTypes.Set_Heap(INFANTRY_COUNT);
+    g_BulletTypes.Set_Heap(BULLET_COUNT);
+    g_AnimTypes.Set_Heap(ANIM_COUNT);
+    g_UnitTypes.Set_Heap(UNIT_COUNT);
+    g_VesselTypes.Set_Heap(VESSEL_COUNT);
+    g_TemplateTypes.Set_Heap(TEMPLATE_COUNT);
+    g_TerrainTypes.Set_Heap(TERRAIN_COUNT);
+    g_OverlayTypes.Set_Heap(OVERLAY_COUNT);
+    g_SmudgeTypes.Set_Heap(SMUDGE_COUNT);
+    HouseTypeClass::Init_Heap();
+    BuildingTypeClass::Init_Heap();
+    AircraftTypeClass::Init_Heap();
+    InfantryTypeClass::Init_Heap();
+    BulletTypeClass::Init_Heap();
+    AnimTypeClass::Init_Heap();
+    UnitTypeClass::Init_Heap();
+    VesselTypeClass::Init_Heap();
+    TemplateTypeClass::Init_Heap();
+    TerrainTypeClass::Init_Heap();
+    OverlayTypeClass::Init_Heap();
+    SmudgeTypeClass::Init_Heap();
+
+    // Load the rules files to finish initialising game objects.
+    GameFileClass rules("rules.ini");
+    GameFileClass amrules("aftrmath.ini");
+
+    if (g_RuleINI.Load(rules)) {
+        g_Rule.Process(g_RuleINI);
+    }
+
+    if (Is_Aftermath_Installed() && g_AftermathINI.Load(amrules)) {
+        g_Rule.Process(g_AftermathINI);
+    }
+
+    g_Session.Set_MPlayer_Max(g_Rule.Max_Players());
+    Init_Heaps();
+    Anim_Init();
+
+    if (s_Special.Is_First_Run() || s_Special.Is_Spawned()) {
+        memset(g_CurrentPalette, 1, 768);
+    } else {
+        g_VisiblePage.Clear();
+        Play_Intro();
+        memset(g_CurrentPalette, 1, 768);
+        g_WhitePalette.Set();
+    }
+
+    Init_Color_Remaps();
+    Set_Logic_Page(g_SeenBuff);
+
+    if (!s_Special.Is_First_Run()) {
+        Load_Title_Page();
+        g_Mouse->Hide_Mouse();
+        Fancy_Text_Print(TXT_PLEASE_STANDBY,
+            320,
+            240,
+            &g_ColorRemaps[REMAP_10],
+            COLOR_TBLACK,
+            TPF_6PT_GRAD | TPF_SHADOW | TPF_NOSHADOW | TPF_CENTER);
+        g_Mouse->Show_Mouse();
+        g_CCPalette.Set();
+        Call_Back();
+    }
+
+    Init_Bulk_Data();
+    g_Session.Set_MPlayer_Games_Played(0);
+    g_Session.Set_MPlayer_Num_Scores(0);
+    g_Session.Set_MPlayer_Current_Game(0);
+
+    for (HousesType i = HOUSES_FIRST; i < HOUSES_MULTI_COUNT; ++i) {
+        MPlayerScoreStruct &scores = g_Session.MPlayer_Score_Info(i);
+        scores.m_Name[0] = '\0';
+        scores.m_field_C = 0;
+
+        for (int j = 0; j < 4; ++j) {
+            scores.m_Score[j] = -1;
+        }
+    }
+
+    g_GamePalette = g_OriginalPalette = g_CCPalette;
+    g_Options.Load_Settings();
+
+    return true;
 #endif
 }
