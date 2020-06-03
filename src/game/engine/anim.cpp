@@ -56,9 +56,9 @@ AnimClass::AnimClass(AnimType type, coord_t coord, unsigned char loop_delay, uns
         m_Class->Set_End(m_Class->Get_End());
     }
     if (m_Class->Is_Normalized()) {
-        m_LoopStage.Set_Delay(g_Options.Normalize_Delay(m_Class->Get_Rate()));
+        m_LoopStage.Set_Rate(g_Options.Normalize_Delay(m_Class->Get_Rate()));
     } else {
-        m_LoopStage.Set_Delay(m_Class->Get_Rate());
+        m_LoopStage.Set_Rate(m_Class->Get_Rate());
     }
     m_LoopStage.Set_Stage(0);
     if (m_Class->Is_Surface()) {

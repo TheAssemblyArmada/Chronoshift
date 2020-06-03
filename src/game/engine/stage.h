@@ -24,40 +24,50 @@
 class StageClass
 {
 public:
-    StageClass() : m_Stage(0), m_Timer(0), m_Delay(0) {}
+    StageClass() : m_Stage(0), m_Timer(0), m_Rate(0) {}
     StageClass(const NoInitClass &noinit) : m_Timer(noinit) {}
     StageClass &operator=(StageClass &that);
 
     int Get_Stage() const { return m_Stage; }
     void Set_Stage(int stage) { m_Stage = stage; }
-    int Get_Delay() const { return m_Delay; }
-    void Set_Delay(int delay);
-    BOOL Stage_Changed();
+    int Get_Rate() const { return m_Rate; }
+    void Set_Rate(int rate);
+    BOOL To_Change();
+    BOOL Stage_AI();
     void Reset();
 
 private:
     int m_Stage; // Current stage we are at.
     TCountDownTimerClass<FrameTimerClass> m_Timer; // Countdown timer, 0 indicates time to go to next stage.
-    int m_Delay; // Delay in frames to the next stage transition.
+    int m_Rate; // Rate at which the stage transition occurs.
 };
 
 /**
  * @brief Sets the delay between stage transitions in game frames.
  */
-inline void StageClass::Set_Delay(int delay)
+inline void StageClass::Set_Rate(int rate)
 {
-    m_Timer = delay;
-    m_Delay = delay;
+    m_Timer = rate;
+    m_Rate = rate;
 }
 
 /**
- * @brief Checks if a stage change has occured.
+ * @brief Is a stage change going to occur.
  */
-inline BOOL StageClass::Stage_Changed()
+inline BOOL StageClass::To_Change()
 {
-    if (m_Timer.Time() <= 0 && m_Delay > 0) {
+    return m_Timer.Expired() && m_Rate > 0;
+}
+
+/**
+ * @brief Handles a stage change should it be needed.
+ * Returns if a stage change has occured.
+ */
+inline BOOL StageClass::Stage_AI()
+{
+    if (To_Change()) {
         ++m_Stage;
-        m_Timer = m_Delay;
+        m_Timer = m_Rate;
 
         return true;
     }
@@ -72,7 +82,7 @@ inline void StageClass::Reset()
 {
     m_Stage = 0;
     m_Timer = 0;
-    m_Delay = 0;
+    m_Rate = 0;
 }
 
 inline StageClass &StageClass::operator=(StageClass &that)
@@ -80,7 +90,7 @@ inline StageClass &StageClass::operator=(StageClass &that)
     if (this != &that) {
         m_Stage = that.m_Stage;
         m_Timer = that.m_Timer;
-        m_Delay = that.m_Delay;
+        m_Rate = that.m_Rate;
     }
 
     return *this;

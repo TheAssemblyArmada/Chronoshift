@@ -79,7 +79,7 @@ void FactoryClass::AI()
 {
     if (!m_IsSuspended && (m_Object != nullptr || m_SpecialItem != -1)) {
         if (!Has_Completed()) {
-            if (m_ProductionTime.Stage_Changed()) {
+            if (m_ProductionTime.Stage_AI()) {
                 m_IsDifferent = true;
                 unsigned int tick_cost = std::min(Cost_Per_Tick(), m_Balance);
                 if (m_Owner->Available_Money() >= tick_cost) {
@@ -95,7 +95,7 @@ void FactoryClass::AI()
             #endif
                 if (m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
                     m_IsSuspended = true;
-                    m_ProductionTime.Set_Delay(0);
+                    m_ProductionTime.Set_Rate(0);
                     m_Owner->Spend_Money(m_Balance);
                     m_Balance = 0;
                 }
@@ -123,7 +123,7 @@ BOOL FactoryClass::Set(TechnoTypeClass &objecttype, HouseClass &house)
     m_IsSuspended = true;
 
     m_ProductionTime.Set_Stage(0);
-    m_ProductionTime.Set_Delay(0);
+    m_ProductionTime.Set_Rate(0);
 
     m_Balance = 0;
 
@@ -161,7 +161,7 @@ BOOL FactoryClass::Set(int &special, HouseClass &house)
     m_Balance = 0;
 
     m_ProductionTime.Set_Stage(0);
-    m_ProductionTime.Set_Delay(0);
+    m_ProductionTime.Set_Rate(0);
 
     return m_SpecialItem != -1;
 }
@@ -178,14 +178,14 @@ void FactoryClass::Set(TechnoClass &object)
     m_Balance = 0;
 
     m_ProductionTime.Set_Stage(0);
-    m_ProductionTime.Set_Delay(0);
+    m_ProductionTime.Set_Rate(0);
 }
 
 BOOL FactoryClass::Suspend()
 {
     if (!m_IsSuspended) {
         m_IsSuspended = true;
-        m_ProductionTime.Set_Delay(0);
+        m_ProductionTime.Set_Rate(0);
         return true;
     }
     return false;
@@ -216,7 +216,7 @@ BOOL FactoryClass::Abandon()
         m_IsDifferent = true;
 
         m_ProductionTime.Set_Stage(0);
-        m_ProductionTime.Set_Delay(0);
+        m_ProductionTime.Set_Rate(0);
 
         ++g_ScenarioInit;
 
@@ -264,7 +264,7 @@ BOOL FactoryClass::Completed()
         m_IsSuspended = true;
         m_IsDifferent = true;
         m_ProductionTime.Set_Stage(0);
-        m_ProductionTime.Set_Delay(0);
+        m_ProductionTime.Set_Rate(0);
         return true;
     }
     if (m_SpecialItem != -1 && m_ProductionTime.Get_Stage() == MAX_CLOCK_STAGES) {
@@ -272,7 +272,7 @@ BOOL FactoryClass::Completed()
         m_IsSuspended = true;
         m_IsDifferent = true;
         m_ProductionTime.Set_Stage(0);
-        m_ProductionTime.Set_Delay(0);
+        m_ProductionTime.Set_Rate(0);
         return true;
     }
     return false;

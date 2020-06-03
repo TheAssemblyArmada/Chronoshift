@@ -50,7 +50,7 @@ UnitClass::UnitClass(UnitType type, HousesType house) :
     m_Cloakable = Class_Of().Is_Cloakable();
 
     if (Class_Of().Is_Viceroid()) {
-         m_AnimStage.Set_Delay(g_Options.Normalize_Delay(3));
+         m_AnimStage.Set_Rate(g_Options.Normalize_Delay(3));
     }
 
     m_Bit2_16 = !Class_Of().Is_Two_Shooter();

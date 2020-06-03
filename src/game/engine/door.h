@@ -37,8 +37,8 @@ public:
     DoorClass(const NoInitClass &noinit) : m_DoorTimer(noinit) {}
 
     void AI();
-    BOOL Open_Door(int delay, int stages);
-    BOOL Close_Door(int delay, int stages);
+    BOOL Open_Door(int rate, int stages);
+    BOOL Close_Door(int rate, int stages);
     int Door_Stage() const;
     void Mark_To_Redraw() const { m_ToRedraw = true; }
     BOOL To_Redraw() const { return m_ToRedraw; }
