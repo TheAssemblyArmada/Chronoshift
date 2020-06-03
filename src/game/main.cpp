@@ -352,7 +352,7 @@ int main(int argc, char **argv)
         if (!redalertfile.Is_Available()) {
             captainslog_debug("Red Alert settings ini not found, continuing with default settings.");
             settingsini.Put_Int("Sound", "Card", 0);
-            settingsini.Put_Int("Sound", "Port", 0x3F8, INIINTEGER_AS_HEX);
+            settingsini.Put_Int("Sound", "Port", 0x3F8, INI_INTEGER_AS_HEX);
             settingsini.Put_Int("Sound", "IRQ", 4);
             settingsini.Put_Int("Sound", "DMA", -1);
             settingsini.Put_Bool("Options", "HardwareFills", false);

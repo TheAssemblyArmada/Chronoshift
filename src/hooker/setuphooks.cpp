@@ -444,6 +444,84 @@ void Setup_Hooks()
     // lzostraw.h
     Hook_Function(0x005D5BF4, *LZOStraw::Get);
 
+    // ini.h
+    Hook_Function(0x004F3B34, *INISection::Find_Section);
+    Hook_Function(0x004F2F08, static_cast<int (*)(FileClass &)>(&INIClass::Save));
+    Hook_Function(0x004F2F44, static_cast<int (*)(Pipe &)>(&INIClass::Save));
+    Hook_Function(0x004F28C4, static_cast<int (*)(FileClass &)>(&INIClass::Load));
+    Hook_Function(0x004F2900, static_cast<int (*)(Straw &)>(&INIClass::Load));
+    Hook_Function(0x004F2670, *INIClass::Clear);
+    Hook_Function(0x004F3150, *INIClass::Find_Section);
+    Hook_Function(0x004F31AC, *INIClass::Section_Count);
+    Hook_Function(0x004F31D4, *INIClass::Find_Entry);
+    Hook_Function(0x004F31BC, *INIClass::Entry_Count);
+    Hook_Function(0x004F31EC, *INIClass::Get_Entry);
+    Hook_Function(0x004F3248, *INIClass::Put_UUBlock);
+    Hook_Function(0x004F3338, *INIClass::Get_UUBlock);
+    Hook_Function(0x004F343C, *INIClass::Put_TextBlock);
+    Hook_Function(0x004F3528, *INIClass::Get_TextBlock);
+    Hook_Function(0x004F35E8, *INIClass::Put_Int);
+    Hook_Function(0x004F3660, *INIClass::Get_Int);
+    Hook_Function(0x004F3AB0, *INIClass::Put_Bool);
+    Hook_Function(0x004F3ACC, *INIClass::Get_Bool);
+    Hook_Function(0x004F36F0, *INIClass::Put_Hex);
+    Hook_Function(0x004F3724, *INIClass::Get_Hex);
+    Hook_Function(0x004F3760, *INIClass::Put_String);
+    Hook_Function(0x004F3A34, *INIClass::Get_String);
+    Hook_Function(0x004F3D80, *INIClass::Put_Fixed);
+    Hook_Function(0x004F3D08, *INIClass::Get_Fixed);
+
+    // gameini.h
+    Hook_Function(0x0046300C, static_cast<int (*)(FileClass &, BOOL)>(&GameINIClass::Save));
+    Hook_Function(0x00463048, static_cast<int (*)(Pipe &, BOOL)>(&GameINIClass::Save));
+    Hook_Function(0x00462F50, static_cast<int (*)(FileClass &, BOOL)>(&GameINIClass::Load));
+    Hook_Function(0x00462F8C, static_cast<int (*)(Straw &, BOOL)>(&GameINIClass::Load));
+    Hook_Function(0x004630A8, *GameINIClass::Get_Lepton);
+    Hook_Function(0x004630FC, *GameINIClass::Put_Lepton);
+    Hook_Function(0x00463134, *GameINIClass::Get_MPHType);
+    Hook_Function(0x004631A4, *GameINIClass::Put_MPHType);
+    Hook_Function(0x004631E4, *GameINIClass::Get_Owners);
+    Hook_Function(0x00463244, *GameINIClass::Put_Owners);
+    Hook_Function(0x004633D4, *GameINIClass::Get_ArmorType);
+    Hook_Function(0x00463410, *GameINIClass::Put_ArmorType);
+    Hook_Function(0x00463428, *GameINIClass::Get_VocType);
+    Hook_Function(0x00463464, *GameINIClass::Put_VocType);
+    Hook_Function(0x00463490, *GameINIClass::Get_AnimType);
+    Hook_Function(0x004634D0, *GameINIClass::Put_AnimType);
+    Hook_Function(0x004634FC, *GameINIClass::Get_UnitType);
+    Hook_Function(0x00463548, *GameINIClass::Put_UnitType);
+    Hook_Function(0x00463574, *GameINIClass::Get_WeaponType);
+    Hook_Function(0x004635B4, *GameINIClass::Put_WeaponType);
+    Hook_Function(0x004635E0, *GameINIClass::Get_WarheadType);
+    Hook_Function(0x00463648, *GameINIClass::Put_WarheadType);
+    Hook_Function(0x00463674, *GameINIClass::Get_OverlayType);
+    Hook_Function(0x004636B4, *GameINIClass::Put_OverlayType);
+    Hook_Function(0x004636D4, *GameINIClass::Get_BulletType);
+    Hook_Function(0x0046373C, *GameINIClass::Put_BulletType);
+    Hook_Function(0x00463768, *GameINIClass::Get_HousesType);
+    Hook_Function(0x004637A8, *GameINIClass::Put_HousesType);
+    Hook_Function(0x004637C8, *GameINIClass::Get_MovieType);
+    Hook_Function(0x00463830, *GameINIClass::Put_MovieType);
+    Hook_Function(0x00463854, *GameINIClass::Get_TheaterType);
+    Hook_Function(0x00463894, *GameINIClass::Put_TheaterType);
+    Hook_Function(0x004638BC, *GameINIClass::Get_TriggerType);
+    Hook_Function(0x004638F4, *GameINIClass::Put_TriggerType);
+    Hook_Function(0x00463904, *GameINIClass::Get_ThemeType);
+    Hook_Function(0x00463948, *GameINIClass::Put_ThemeType);
+    Hook_Function(0x00463970, *GameINIClass::Get_SourceType);
+    Hook_Function(0x004639B0, *GameINIClass::Put_SourceType);
+    Hook_Function(0x004639C8, *GameINIClass::Get_CrateType);
+    Hook_Function(0x00463A08, *GameINIClass::Put_CrateType);
+    Hook_Function(0x00463A20, *GameINIClass::Get_TerrainType);
+    Hook_Function(0x00463A68, *GameINIClass::Put_TerrainType);
+    Hook_Function(0x00463A88, *GameINIClass::Get_Buildings);
+    Hook_Function(0x00463AFC, *GameINIClass::Put_Buildings);
+    Hook_Function(0x00463BD4, *GameINIClass::Get_Unique_ID);
+    Hook_Function(0x00463C10, *GameINIClass::Calculate_Message_Digest);
+    Hook_Function(0x00463CB4, *GameINIClass::Invalidate_Message_Digest);
+    Hook_Function(0x004F3B90, *GameINIClass::Put_PKey);
+    Hook_Function(0x004F3BF4, *GameINIClass::Get_PKey);
+
     // version.h
     Hook_Function(0x00589960, ::Version_Name);
 
@@ -1303,6 +1381,7 @@ ASSERT_SIZEOF(HelpClass, 0x1659);
 ASSERT_SIZEOF(HouseClass, 0x17A8);
 ASSERT_SIZEOF(InfantryClass, 0x154);
 ASSERT_SIZEOF(InfantryTypeClass, 0x1A2);
+ASSERT_SIZEOF(INIClass, 0x24);
 ASSERT_SIZEOF(ListClass, 0x122);
 ASSERT_SIZEOF(MissionControlClass, 0x9);
 ASSERT_SIZEOF(MixFileClass<GameFileClass>, 0x24);

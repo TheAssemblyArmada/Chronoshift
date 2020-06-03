@@ -52,118 +52,123 @@ class GameINIClass : public INIClass
 {
 public:
     GameINIClass();
-    ~GameINIClass();
+    ~GameINIClass() {}
 
-    const lepton_t Get_Lepton(const char *section, const char *entry, const lepton_t defvalue = 0) const;
-    BOOL Put_Lepton(const char *section, const char *entry, const lepton_t value);
+    int Save(FileClass &file, BOOL save_digest = false);
+    int Save(Pipe &pipe, BOOL save_digest = false);
+    int Load(FileClass &file, BOOL load_digest = false);
+    int Load(Straw &straw, BOOL load_digest = false);
 
-    const MPHType Get_MPHType(const char *section, const char *entry, const MPHType defvalue = MPH_MIN) const;
-    BOOL Put_MPHType(const char *section, const char *entry, const MPHType value);
+    lepton_t Get_Lepton(const char *section, const char *entry, lepton_t defvalue = 0) const;
+    BOOL Put_Lepton(const char *section, const char *entry, lepton_t value);
 
-    const MissionType Get_MissionType(const char *section, const char *entry, const MissionType defvalue = MISSION_NONE) const;
-    BOOL Put_MissionType(const char *section, const char *entry, const MissionType value);
+    MPHType Get_MPHType(const char *section, const char *entry, MPHType defvalue = MPH_MIN) const;
+    BOOL Put_MPHType(const char *section, const char *entry, MPHType value);
 
-    const ArmorType Get_ArmorType(const char *section, const char *entry, const ArmorType defvalue = ARMOR_NONE) const;
-    BOOL Put_ArmorType(const char *section, const char *entry, const ArmorType value);
+    MissionType Get_MissionType(const char *section, const char *entry, MissionType defvalue = MISSION_NONE) const;
+    BOOL Put_MissionType(const char *section, const char *entry, MissionType value);
 
-    const VocType Get_VocType(const char *section, const char *entry, const VocType defvalue = VOC_NONE) const;
-    BOOL Put_VocType(const char *section, const char *entry, const VocType value);
+    ArmorType Get_ArmorType(const char *section, const char *entry, ArmorType defvalue = ARMOR_NONE) const;
+    BOOL Put_ArmorType(const char *section, const char *entry, ArmorType value);
 
-    const VoxType Get_VoxType(const char *section, const char *entry, const VoxType defvalue = VOX_NONE) const;
-    BOOL Put_VoxType(const char *section, const char *entry, const VoxType value);
+    VocType Get_VocType(const char *section, const char *entry, VocType defvalue = VOC_NONE) const;
+    BOOL Put_VocType(const char *section, const char *entry, VocType value);
 
-    const AnimType Get_AnimType(const char *section, const char *entry, const AnimType defvalue = ANIM_NONE) const;
-    BOOL Put_AnimType(const char *section, const char *entry, const AnimType value);
+    VoxType Get_VoxType(const char *section, const char *entry, VoxType defvalue = VOX_NONE) const;
+    BOOL Put_VoxType(const char *section, const char *entry, VoxType value);
 
-    const UnitType Get_UnitType(const char *section, const char *entry, const UnitType defvalue = UNIT_NONE) const;
-    BOOL Put_UnitType(const char *section, const char *entry, const UnitType value);
+    AnimType Get_AnimType(const char *section, const char *entry, AnimType defvalue = ANIM_NONE) const;
+    BOOL Put_AnimType(const char *section, const char *entry, AnimType value);
 
-    const InfantryType Get_InfantryType(const char *section, const char *entry, const InfantryType defvalue = INFANTRY_NONE) const;
-    BOOL Put_InfantryType(const char *section, const char *entry, const InfantryType value);
+    UnitType Get_UnitType(const char *section, const char *entry, UnitType defvalue = UNIT_NONE) const;
+    BOOL Put_UnitType(const char *section, const char *entry, UnitType value);
 
-    const AircraftType Get_AircraftType(const char *section, const char *entry, const AircraftType defvalue = AIRCRAFT_NONE) const;
-    BOOL Put_AircraftType(const char *section, const char *entry, const AircraftType value);
+    InfantryType Get_InfantryType(const char *section, const char *entry, InfantryType defvalue = INFANTRY_NONE) const;
+    BOOL Put_InfantryType(const char *section, const char *entry, InfantryType value);
 
-    const VesselType Get_VesselType(const char *section, const char *entry, const VesselType defvalue = VESSEL_NONE) const;
-    BOOL Put_VesselType(const char *section, const char *entry, const VesselType value);
+    AircraftType Get_AircraftType(const char *section, const char *entry, AircraftType defvalue = AIRCRAFT_NONE) const;
+    BOOL Put_AircraftType(const char *section, const char *entry, AircraftType value);
 
-    const BuildingType Get_BuildingType(const char *section, const char *entry, const BuildingType defvalue = BUILDING_NONE) const;
-    BOOL Put_BuildingType(const char *section, const char *entry, const BuildingType value);
+    VesselType Get_VesselType(const char *section, const char *entry, VesselType defvalue = VESSEL_NONE) const;
+    BOOL Put_VesselType(const char *section, const char *entry, VesselType value);
 
-    const WeaponType Get_WeaponType(const char *section, const char *entry, const WeaponType defvalue = WEAPON_NONE) const;
-    BOOL Put_WeaponType(const char *section, const char *entry, const WeaponType value);
+    BuildingType Get_BuildingType(const char *section, const char *entry, BuildingType defvalue = BUILDING_NONE) const;
+    BOOL Put_BuildingType(const char *section, const char *entry, BuildingType value);
 
-    const WarheadType Get_WarheadType(const char *section, const char *entry, const WarheadType defvalue = WARHEAD_NONE) const;
-    BOOL Put_WarheadType(const char *section, const char *entry, const WarheadType value);
+    WeaponType Get_WeaponType(const char *section, const char *entry, WeaponType defvalue = WEAPON_NONE) const;
+    BOOL Put_WeaponType(const char *section, const char *entry, WeaponType value);
 
-    const OverlayType Get_OverlayType(const char *section, const char *entry, const OverlayType defvalue = OVERLAY_NONE) const;
-    BOOL Put_OverlayType(const char *section, const char *entry, const OverlayType value);
+    WarheadType Get_WarheadType(const char *section, const char *entry, WarheadType defvalue = WARHEAD_NONE) const;
+    BOOL Put_WarheadType(const char *section, const char *entry, WarheadType value);
 
-    const SmudgeType Get_SmudgeType(const char *section, const char *entry, const SmudgeType defvalue = SMUDGE_NONE) const;
-    BOOL Put_SmudgeType(const char *section, const char *entry, const SmudgeType value);
+    OverlayType Get_OverlayType(const char *section, const char *entry, OverlayType defvalue = OVERLAY_NONE) const;
+    BOOL Put_OverlayType(const char *section, const char *entry, OverlayType value);
 
-    const BulletType Get_BulletType(const char *section, const char *entry, const BulletType defvalue = BULLET_NONE) const;
-    BOOL Put_BulletType(const char *section, const char *entry, const BulletType value);
+    SmudgeType Get_SmudgeType(const char *section, const char *entry, SmudgeType defvalue = SMUDGE_NONE) const;
+    BOOL Put_SmudgeType(const char *section, const char *entry, SmudgeType value);
 
-    HousesType Get_HousesType(const char *section, const char *entry, const HousesType defvalue = HOUSES_NONE) const;
-    BOOL Put_HousesType(const char *section, const char *entry, const HousesType value);
+    BulletType Get_BulletType(const char *section, const char *entry, BulletType defvalue = BULLET_NONE) const;
+    BOOL Put_BulletType(const char *section, const char *entry, BulletType value);
 
-    const MovieType Get_MovieType(const char *section, const char *entry, const MovieType defvalue = MOVIE_NONE);
-    BOOL Put_MovieType(const char *section, const char *entry, const MovieType value);
+    HousesType Get_HousesType(const char *section, const char *entry, HousesType defvalue = HOUSES_NONE) const;
+    BOOL Put_HousesType(const char *section, const char *entry, HousesType value);
 
-    const TheaterType Get_TheaterType(const char *section, const char *entry, const TheaterType defvalue = THEATER_NONE);
-    BOOL Put_TheaterType(const char *section, const char *entry, const TheaterType value);
+    MovieType Get_MovieType(const char *section, const char *entry, MovieType defvalue = MOVIE_NONE);
+    BOOL Put_MovieType(const char *section, const char *entry, MovieType value);
 
-    const TriggerTypeClass *Get_TriggerType(const char *section, const char *entry) const;
-    BOOL Put_TriggerType(const char *section, const char *entry, const TriggerTypeClass *value);
+    TheaterType Get_TheaterType(const char *section, const char *entry, TheaterType defvalue = THEATER_NONE);
+    BOOL Put_TheaterType(const char *section, const char *entry, TheaterType value);
 
-    const ThemeType Get_ThemeType(const char *section, const char *entry, const ThemeType defvalue = THEME_NONE) const;
-    BOOL Put_ThemeType(const char *section, const char *entry, const ThemeType value);
+    TriggerTypeClass *Get_TriggerType(const char *section, const char *entry) const;
+    BOOL Put_TriggerType(const char *section, const char *entry, TriggerTypeClass *value);
 
-    const SourceType Get_SourceType(const char *section, const char *entry, const SourceType defvalue = SOURCE_NONE) const;
-    BOOL Put_SourceType(const char *section, const char *entry, const SourceType value);
+    ThemeType Get_ThemeType(const char *section, const char *entry, ThemeType defvalue = THEME_NONE) const;
+    BOOL Put_ThemeType(const char *section, const char *entry, ThemeType value);
 
-    const CrateType Get_CrateType(const char *section, const char *entry, const CrateType defvalue = CRATE_NONE) const;
-    BOOL Put_CrateType(const char *section, const char *entry, const CrateType value);
+    SourceType Get_SourceType(const char *section, const char *entry, SourceType defvalue = SOURCE_NONE) const;
+    BOOL Put_SourceType(const char *section, const char *entry, SourceType value);
 
-    const LandType Get_LandType(const char *section, const char *entry, const LandType defvalue = LAND_NONE) const;
-    BOOL Put_LandType(const char *section, const char *entry, const LandType value);
+    CrateType Get_CrateType(const char *section, const char *entry, CrateType defvalue = CRATE_NONE) const;
+    BOOL Put_CrateType(const char *section, const char *entry, CrateType value);
 
-    const MZoneType Get_MZoneType(const char *section, const char *entry, const MZoneType defvalue = MZONE_NONE) const;
-    BOOL Put_MZoneType(const char *section, const char *entry, const MZoneType value);
+    LandType Get_LandType(const char *section, const char *entry, LandType defvalue = LAND_NONE) const;
+    BOOL Put_LandType(const char *section, const char *entry, LandType value);
 
-    const GroundType Get_GroundType(const char *section, const char *entry, const GroundType defvalue = GROUND_NONE) const;
-    BOOL Put_GroundType(const char *section, const char *entry, const GroundType value);
+    MZoneType Get_MZoneType(const char *section, const char *entry, MZoneType defvalue = MZONE_NONE) const;
+    BOOL Put_MZoneType(const char *section, const char *entry, MZoneType value);
 
-    const TerrainType Get_TerrainType(const char *section, const char *entry, const TerrainType defvalue = TERRAIN_NONE) const;
-    BOOL Put_TerrainType(const char *section, const char *entry, const TerrainType value);
+    GroundType Get_GroundType(const char *section, const char *entry, GroundType defvalue = GROUND_NONE) const;
+    BOOL Put_GroundType(const char *section, const char *entry, GroundType value);
 
-    const RTTIType Get_RTTIType(const char *section, const char *entry, const RTTIType defvalue = RTTI_NONE) const;
-    BOOL Put_RTTIType(const char *section, const char *entry, const RTTIType value);
+    TerrainType Get_TerrainType(const char *section, const char *entry, TerrainType defvalue = TERRAIN_NONE) const;
+    BOOL Put_TerrainType(const char *section, const char *entry, TerrainType value);
 
-    const ActionType Get_ActionType(const char *section, const char *entry, const ActionType defvalue = ACTION_NONE) const;
-    BOOL Put_ActionType(const char *section, const char *entry, const ActionType value);
+    RTTIType Get_RTTIType(const char *section, const char *entry, RTTIType defvalue = RTTI_NONE) const;
+    BOOL Put_RTTIType(const char *section, const char *entry, RTTIType value);
 
-    const int Get_Owners(const char *section, const char *entry, const int defvalue = OWNER_NONE) const;
-    BOOL Put_Owners(const char *section, const char *entry, const int value);
+    ActionType Get_ActionType(const char *section, const char *entry, ActionType defvalue = ACTION_NONE) const;
+    BOOL Put_ActionType(const char *section, const char *entry, ActionType value);
 
-    const int Get_Units(const char *section, const char *entry, const int defvalue = 0) const;
-    BOOL Put_Units(const char *section, const char *entry, const int value);
+    uint32_t Get_Owners(const char *section, const char *entry, uint32_t defvalue = OWNER_NONE) const;
+    BOOL Put_Owners(const char *section, const char *entry, uint32_t value);
 
-    const int Get_Infantry(const char *section, const char *entry, const int defvalue = 0) const;
-    BOOL Put_Infantry(const char *section, const char *entry, const int value);
+    uint32_t Get_Units(const char *section, const char *entry, uint32_t defvalue = 0) const;
+    BOOL Put_Units(const char *section, const char *entry, uint32_t value);
 
-    const int Get_Aircrafts(const char *section, const char *entry, const int defvalue = 0) const;
-    BOOL Put_Aircrafts(const char *section, const char *entry, const int value);
+    uint32_t Get_Infantry(const char *section, const char *entry, uint32_t defvalue = 0) const;
+    BOOL Put_Infantry(const char *section, const char *entry, uint32_t value);
 
-    const int Get_Vessels(const char *section, const char *entry, const int defvalue = 0) const;
-    BOOL Put_Vessels(const char *section, const char *entry, const int value);
+    uint32_t Get_Aircrafts(const char *section, const char *entry, uint32_t defvalue = 0) const;
+    BOOL Put_Aircrafts(const char *section, const char *entry, uint32_t value);
 
-    const int Get_Buildings(const char *section, const char *entry, const int defvalue = 0) const;
-    BOOL Put_Buildings(const char *section, const char *entry, const int value);
+    uint32_t Get_Vessels(const char *section, const char *entry, uint32_t defvalue = 0) const;
+    BOOL Put_Vessels(const char *section, const char *entry, uint32_t value);
 
-    const KeyNumType Get_KeyNumType(const char *section, const char *entry, const KeyNumType defvalue = KN_NONE) const;
-    BOOL Put_KeyNumType(const char *section, const char *entry, const KeyNumType value);
+    uint32_t Get_Buildings(const char *section, const char *entry, uint32_t defvalue = 0) const;
+    BOOL Put_Buildings(const char *section, const char *entry, uint32_t value);
+
+    KeyNumType Get_KeyNumType(const char *section, const char *entry, KeyNumType defvalue = KN_NONE) const;
+    BOOL Put_KeyNumType(const char *section, const char *entry, KeyNumType value);
 
     const PKey Get_PKey(BOOL fast) const;
     BOOL Put_PKey(PKey &key);
@@ -171,7 +176,7 @@ public:
     void Calculate_Message_Digest();
     void Invalidate_Message_Digest();
 
-    int32_t const Get_Unique_ID();
+    int32_t Get_Unique_ID();
 
 private:
 #ifndef CHRONOSHIFT_NO_BITFIELDS
@@ -179,7 +184,7 @@ private:
 #else
     bool m_DigestValid;
 #endif
-    SHAEngine::SHADigest s_Digest;
+    SHAEngine::SHADigest m_Digest;
 };
 
 #ifdef GAME_DLL
