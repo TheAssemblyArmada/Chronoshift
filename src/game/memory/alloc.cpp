@@ -13,11 +13,11 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
-#include "alloc.h"
-#include <captainslog.h>
 #include <cstdlib>
 #include <cstring>
-#include <malloc.h>
+#include <stdlib.h>
+#include <captainslog.h>
+#include "alloc.h"
 
 #ifdef PLATFORM_WINDOWS
 #ifdef __WATCOMC__
@@ -30,8 +30,6 @@
 #ifndef PLATFORM_WINDOWS
 #include <sys/sysinfo.h>
 #endif
-
-using std::memset;
 
 #ifndef GAME_DLL
 memerrorhandler_t g_MemoryError = nullptr; // Memory error handler function pointer.
@@ -46,14 +44,14 @@ unsigned int g_maxRam;
 void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags)
 {
     // captainslog_debug("Attempting to allocate memory of size %d with flags %d.", bytes_to_alloc, flags);
-    void *ptr = malloc(bytes_to_alloc);
+    void *ptr = std::malloc(bytes_to_alloc);
 
     if (ptr == nullptr && g_MemoryError != nullptr) {
         g_MemoryError();
     }
 
     if (ptr != nullptr && (flags & MEM_CLEAR) != 0) {
-        memset(ptr, 0, bytes_to_alloc);
+        std::memset(ptr, 0, bytes_to_alloc);
     }
 
     ++g_memoryCalls;
@@ -64,17 +62,14 @@ void *Alloc(unsigned int bytes_to_alloc, MemoryFlagType flags)
 void Free(void *ptr)
 {
     if (ptr != nullptr) {
-        free(ptr);
+        std::free(ptr);
         --g_memoryCalls;
     }
 }
 
 void *Resize_Alloc(void *original_ptr, unsigned int new_size_in_bytes)
 {
-    void *temp = nullptr;
-
-    temp = realloc(original_ptr, new_size_in_bytes);
-
+    void *temp = std::realloc(original_ptr, new_size_in_bytes);
     if (temp == nullptr && g_MemoryError != nullptr) {
         g_MemoryError();
     }
@@ -91,7 +86,7 @@ int Ram_Free()
     GlobalMemoryStatusEx(&mem);
 
     return mem.ullAvailPhys > INT32_MAX ? INT32_MAX : mem.ullAvailPhys;
-#elif defined PLATFORM_LINUX
+#elif defined PLATFORM_LINUX || defined PLATFORM_FREEBSD
     struct sysinfo mem;
     sysinfo(&mem);
     return mem.freeram * mem.mem_unit > INT32_MAX ? INT32_MAX : mem.freeram * mem.mem_unit;

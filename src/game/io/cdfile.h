@@ -21,7 +21,7 @@
 #include "always.h"
 #include "bfiofile.h"
 #include "cd.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 class CDFileClass : public BufferIOFileClass
 {

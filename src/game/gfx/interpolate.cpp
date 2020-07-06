@@ -12,15 +12,15 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
+#include <stdlib.h>
+#include <algorithm>
+#include <captainslog.h>
 #include "interpolate.h"
 #include "gamefile.h"
 #include "endiantype.h"
 #include "gbuffer.h"
 #include "mouse.h"
 #include "palette.h"
-#include <malloc.h>
-#include <algorithm>
-#include <captainslog.h>
 
 // PaletteClass *g_interpolationPalette = &PaletteClass::CurrentPalette;
 #ifdef GAME_DLL

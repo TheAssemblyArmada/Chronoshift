@@ -19,7 +19,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fcntl.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h> // for strdup
 #include <sys/stat.h>
 #include <sys/types.h>
