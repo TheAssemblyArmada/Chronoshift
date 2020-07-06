@@ -18,6 +18,8 @@
 #include "keyboard.h"
 #include <captainslog.h>
 #include <cstdio>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 using std::sprintf;
 using std::sscanf;
