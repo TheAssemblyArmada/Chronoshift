@@ -12,15 +12,12 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
+#include <cstdio>
 #include "smudge.h"
 #include "cell.h"
 #include "gameini.h"
 #include "globals.h"
 #include "iomap.h"
-
-using std::snprintf;
-using std::strtok;
-using std::atoi;
 
 #ifndef GAME_DLL
 TFixedIHeapClass<SmudgeClass> g_Smudges;

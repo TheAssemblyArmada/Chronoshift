@@ -19,6 +19,7 @@
 #include "palette.h"
 #include "stringex.h"
 #include <cstdio>
+#include <cctype>
 
 using std::snprintf;
 

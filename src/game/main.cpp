@@ -41,6 +41,13 @@
 #include "win32compat.h"
 #include <captainslog.h>
 
+#ifdef PLATFORM_FREEBSD
+#include <sys/sysctl.h>
+#include <sys/syslimits.h>  // For PATH_MAX
+#include <sys/types.h>
+#endif
+
+
 #ifdef PLATFORM_WINDOWS
 #include <direct.h>
 #include <shellapi.h>
@@ -121,6 +128,17 @@ void Set_Working_Directory()
     char path[PATH_MAX];
     int size = PATH_MAX;
     _NSGetExecutablePath(path, &size);
+    chdir(dirname(path));
+
+#elif defined(PLATFORM_FREEBSD)
+    int mib[4];
+    mib[0] = CTL_KERN;
+    mib[1] = KERN_PROC;
+    mib[2] = KERN_PROC_PATHNAME;
+    mib[3] = -1;
+    char path[1024];
+    size_t cb = sizeof(path);
+    sysctl(mib, 4, path, &cb, NULL, 0);
     chdir(dirname(path));
 
 #else //

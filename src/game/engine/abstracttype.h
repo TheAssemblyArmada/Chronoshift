@@ -18,6 +18,7 @@
 #ifndef ABSTRACTTYPE_H
 #define ABSTRACTTYPE_H
 
+#include <cstring>
 #include "always.h"
 #include "rtti.h"
 #include "gametypes.h"

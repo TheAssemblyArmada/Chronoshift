@@ -13,6 +13,9 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
+#include <cstdio>
+#include <cstring>
+#include <cctype>
 #include "msglist.h"
 #include "gbuffer.h"
 #include "mouse.h"
@@ -21,8 +24,6 @@
 #include "ttimer.h"
 #include "txtlabel.h"
 #include <algorithm>
-#include <cstdio>
-#include <cstring>
 
 using std::snprintf;
 using std::strlen;
@@ -548,9 +549,9 @@ int MessageListClass::Input(KeyNumType &key)
     KeyASCIIType ascii_char = g_Keyboard->To_ASCII(key);
     char raw_char = ascii_char & 0xFF;
 
-    if (key & KEY_VK_BIT && isdigit(raw_char)) {
+    if (key & KEY_VK_BIT && std::isdigit(raw_char)) {
         key = (KeyNumType)(key & ~KEY_VK_BIT);
-    } else if (key & KEY_VK_BIT || key & KN_BUTTON || !isprint(raw_char)) {
+    } else if (key & KEY_VK_BIT || key & KN_BUTTON || !std::isprint(raw_char)) {
         int raw_key = key & 0xFF;
 
         if (raw_key != KN_KEYPAD_RETURN && raw_key != KN_BACKSPACE && raw_key != KN_ESC) {

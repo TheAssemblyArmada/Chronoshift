@@ -13,6 +13,7 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
+#include <cctype>
 #include "cmdline.h"
 #include "globals.h"
 #include "special.h"
@@ -140,7 +141,7 @@ BOOL Parse_Command_Line(int argc, char **argv)
             MessageBoxA(nullptr, _help_text, "Chronoshift", MB_ICONINFORMATION);
 #else
             printf("Chronoshift by The Assembly Armada\n");
-            printf(_help_text);
+            printf("%s", _help_text);
 #endif
             return false;
         }

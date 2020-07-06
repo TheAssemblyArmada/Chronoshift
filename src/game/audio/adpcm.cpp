@@ -1,10 +1,7 @@
-
-#include "adpcm.h"
-#include "endiantype.h"
 #include <algorithm>
 #include <cstring>
-
-using std::memset;
+#include "adpcm.h"
+#include "endiantype.h"
 
 // clang-format off
 static const int16_t g_ADPCMStepTab[89] = {
@@ -514,7 +511,7 @@ unsigned __cdecl Audio_Unzap(void *input, void *output, int length)
                 break;
 
             default: // just copy (sample) (count+1) times to output
-                memset(dst, std::clamp<int16_t>(sample, 0, 255), ++count);
+                std::memset(dst, std::clamp<int16_t>(sample, 0, 255), ++count);
                 remaining -= count;
                 dst += count;
                 break;

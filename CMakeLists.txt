@@ -86,7 +86,7 @@ if(WATCOM)
 else()
     # Require that we have at least C++11 when not using Watcom.
     set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 17)
 endif()
 
 # If we exclude Watcom and MSVC we now assume GCC like compiler syntax.
@@ -94,7 +94,7 @@ if(NOT MSVC AND NOT WATCOM)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
     if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-var-template")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-var-template -Wno-macro-redefined")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-varargs")
     endif()
 endif()

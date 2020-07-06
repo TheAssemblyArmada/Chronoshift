@@ -13,21 +13,24 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
+#include <cstdarg>
+#include <cstring>
+#include <captainslog.h>
 #include "shape.h"
 #include "alloc.h"
 #include "endiantype.h"
 #include "gbuffer.h"
 #include "lcw.h"
 #include "xordelta.h"
-#include <captainslog.h>
-#include <cstdarg>
-#include <cstring>
 
 #ifndef PLATFORM_WINDOWS
 #include <unistd.h>
 #endif
 
-using std::memcpy;
+#ifdef PLATFORM_FREEBSD
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#endif
 
 #define SHP_HAS_PAL 0x0001
 #define SHP_LCW_FRAME 0x80
@@ -1094,7 +1097,7 @@ void Check_Use_Compressed_Shapes()
     g_UseBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
     g_OriginalUseBigShapeBuffer = Buffer.ullTotalPhys > 0x1000000;
     // captainslog_debug("Using Big Shape Buffer and Original Buffer is %s.", Buffer.ullTotalPhys > 0x1000000 ? "true" : "false");
-#elif defined PLATFORM_OSX
+#elif defined PLATFORM_OSX || defined PLATFORM_FREEBSD
     size_t totalmem;
     size_t len = sizeof(totalmem);
 

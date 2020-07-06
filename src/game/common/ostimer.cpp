@@ -13,6 +13,7 @@
  *            A full copy of the GNU General Public License can be found in
  *            LICENSE
  */
+#include <time.h>
 #include "ostimer.h"
 #include "timer.h"
 #include <captainslog.h>

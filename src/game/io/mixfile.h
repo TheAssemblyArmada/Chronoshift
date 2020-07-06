@@ -18,6 +18,9 @@
 #ifndef MIXFILE_H
 #define MIXFILE_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <captainslog.h>
 #include "always.h"
 #include "basefile.h"
 #include "buffer.h"
@@ -31,9 +34,6 @@
 #include "sha.h"
 #include "shastraw.h"
 #include "startup.h"
-#include <captainslog.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #ifndef PLATFORM_WINDOWS
 // Needed for basename
